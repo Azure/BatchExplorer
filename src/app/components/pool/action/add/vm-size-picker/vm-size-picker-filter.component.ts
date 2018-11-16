@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, forwardRef } from "@angular/core";
 import { FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { VmSizeFilterValue } from "app/models";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { distinctUntilChanged } from "rxjs/operators";
 
-export interface VmSizeFilterCategoryName {
-    label: string;
-    value: string;
+export interface VmSizeFilterValue {
+    category: string;
+    searchName?: string;
 }
 
 @Component({
@@ -18,23 +17,10 @@ export interface VmSizeFilterCategoryName {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VmSizePickerFilterComponent {
-    @Input() public set categoriesDisplayName(names: any) {
-        this._categoriesDisplayName = Object.keys(names).map((nameKey) => {
-            return {
-                label: names[nameKey],
-                value: nameKey,
-            } as VmSizeFilterCategoryName;
-        });
-    }
-
-    public get categoriesDisplayName() {
-        return this._categoriesDisplayName;
-    }
+    @Input() public categoriesDisplayName: {[key: string]: string };
+    @Output() public filterChange = new EventEmitter<VmSizeFilterValue>();
     public form: FormGroup;
 
-    @Output() public filterChange = new EventEmitter<VmSizeFilterValue>();
-
-    private _categoriesDisplayName: VmSizeFilterCategoryName[];
     private _propagateChange: (value: VmSizeFilterValue) => void = null;
 
     constructor(formBuilder: FormBuilder) {
@@ -42,18 +28,12 @@ export class VmSizePickerFilterComponent {
             category: ["all"],
             searchName: [],
         });
-
-        this.form.valueChanges
-        .pipe(debounceTime(400), distinctUntilChanged())
-        .subscribe((value) => {
-            if (this._propagateChange) {
-                this._propagateChange(value);
-            }
-            this.filterChange.emit(value);
-        });
-    }
-
-    public trackCategory(index, category: string) {
-        return category;
+        this.form.valueChanges.pipe(distinctUntilChanged())
+            .subscribe((value) => {
+                if (this._propagateChange) {
+                    this._propagateChange(value);
+                }
+                this.filterChange.emit(value);
+            });
     }
 }

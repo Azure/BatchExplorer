@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { StringUtils, log } from "@batch-flask/utils";
-import { ArmBatchAccount, BatchAccount, VmSize, batchExplorerDataVms } from "app/models";
+import { log } from "@batch-flask/utils";
+import { ArmBatchAccount, BatchAccount, VmSize } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 import { filter, map, share, shareReplay, take } from "rxjs/operators";
@@ -49,7 +49,7 @@ export class VmSizeService {
     };
 
     private _sizes = new BehaviorSubject<List<VmSize>>(null);
-    private _includedSizes = new BehaviorSubject<IncludedSizes>(null);
+    private _includedSizes = new BehaviorSubject<IncludedSizes|null>(null);
     private _vmSizeCategories = new BehaviorSubject<StringMap<string[]>>(null);
 
     private _currentAccount: BatchAccount;
@@ -124,17 +124,6 @@ export class VmSizeService {
                 this._includedSizes.next(data.included);
             },
             error: (error) => {
-                // fallback to hard coded data if github has connection issue
-                const data: VmSizeData = {
-                    category: batchExplorerDataVms.category,
-                    included: {
-                        all: batchExplorerDataVms.all,
-                        paas: batchExplorerDataVms.paas,
-                        iaas: batchExplorerDataVms.iaas,
-                    },
-                };
-                this._vmSizeCategories.next(data.category);
-                this._includedSizes.next(data.included);
                 log.error("Error loading included vm sizes from github", error);
             },
         });
@@ -160,7 +149,7 @@ export class VmSizeService {
         }
         return List<VmSize>(sizes.filter((size) => {
             for (const regex of includedPatterns) {
-                if (StringUtils.regexExpTest(size.name.toLowerCase(), regex)) {
+                if (new RegExp(regex).test(size.name.toLowerCase())) {
                     return true;
                 }
             }

@@ -10,12 +10,12 @@ import { ElectronModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
-import { ArmBatchAccount, VmSize, batchExplorerDataVms } from "app/models";
+import { ArmBatchAccount, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { BatchAccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { of } from "rxjs";
-import { allVmSizes, supportedVms } from "./mock-vm-size";
+import { allVmSizes, batchExplorerDataVms, supportedVms } from "./mock-vm-size";
 
 @Component({
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,

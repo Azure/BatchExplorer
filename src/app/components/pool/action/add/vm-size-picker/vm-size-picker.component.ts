@@ -5,8 +5,8 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { LoadingStatus } from "@batch-flask/ui";
-import { StringUtils, exists, prettyBytes } from "@batch-flask/utils";
-import { VmSize, VmSizeFilterValue } from "app/models";
+import { exists, prettyBytes } from "@batch-flask/utils";
+import { VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
@@ -14,6 +14,7 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { TableConfig } from "@batch-flask/ui/table";
+import { VmSizeFilterValue } from "./vm-size-picker-filter.component";
 import "./vm-size-picker.scss";
 
 const categoriesDisplayName = {
@@ -24,15 +25,6 @@ const categoriesDisplayName = {
     storage: "Storage optimized",
     gpu: "GPU",
     hpc: "High performance compute",
-    a: "A series",
-    d: "D series",
-    ev3: "Ev3 series",
-    f: "F series",
-    g: "G series",
-    h: "H series",
-    nc: "NC series",
-    nv: "NV series",
-    m: "M series",
 };
 
 export class VmSizeDecorator {
@@ -47,7 +39,7 @@ export class VmSizeDecorator {
 
     constructor(public vmSize: VmSize, prices: OSPricing) {
         this.id = vmSize.id;
-        this.title = this.prettyTitle(vmSize.name);
+        this.title = vmSize.name;
         this.prettyCores = this.prettyMb(vmSize.numberOfCores);
         this.prettyRAM = this.prettyMb(vmSize.memoryInMB);
         this.prettyOSDiskSize = this.prettyMb(vmSize.osDiskSizeInMB);
@@ -64,10 +56,6 @@ export class VmSizeDecorator {
 
     public prettyMb(megaBytes: number) {
         return prettyBytes(megaBytes * 1000 * 1000, 0);
-    }
-
-    public prettyTitle(vmSize: string) {
-        return vmSize.replace(/_/g, " ");
     }
 }
 
@@ -208,7 +196,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     private _filterByCategory(size: VmSize, patterns: string[]) {
         for (const pattern of patterns) {
-            if (StringUtils.regexExpTest(size.name.toLowerCase(), pattern)) {
+            if (new RegExp(pattern).test(size.name.toLowerCase())) {
                 return true;
             }
         }
