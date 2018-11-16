@@ -83,15 +83,14 @@
     "no-shadowed-variable": false,
     "trackBy-function": true,
     "banana-in-box": true
-
-    // Rxjs
-    // "rxjs-collapse-imports": true,
-    // "rxjs-pipeable-operators-only": true,
-    // "rxjs-no-static-observable-methods": true,
-    // "rxjs-proper-imports": true
   },
   "jsRules": {
     "object-literal-sort-keys": false,
     "trailing-comma": [false]
+  },
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**"
+    ]
   }
 }
