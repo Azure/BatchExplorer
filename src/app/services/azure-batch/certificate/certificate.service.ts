@@ -11,7 +11,7 @@ import {
     ListResponse,
     ListView,
 } from "@batch-flask/core";
-import { FileUrlUtils } from "@batch-flask/utils";
+import { FileUrlUtils, SanitizedError } from "@batch-flask/utils";
 import { Certificate } from "app/models";
 import { Constants } from "common";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
@@ -27,7 +27,7 @@ export interface CertificateParams {
 export interface CertificateListOptions extends ListOptionsAttributes {
 }
 
-export interface  NewCertificateDto {
+export interface NewCertificateDto {
     password: string;
     certificateFormat: string;
     thumbprintAlgorithm: string;
@@ -40,6 +40,12 @@ export const defaultThumbprintAlgorithm = "sha1";
 export enum CertificateFormat {
     pfx = "pfx",
     cer = "cer",
+}
+
+export class InvalidCertificateFormatError extends SanitizedError {
+    constructor(message: string) {
+        super(message);
+    }
 }
 
 @Injectable()
@@ -191,7 +197,7 @@ export class CertificateService {
                 certDer = forge.asn1.toDer(outAsn1).getBytes();
                 break;
             default:
-                throw new Error(`Supported certificate type are CER and PFX,
+                throw new InvalidCertificateFormatError(`Supported certificate type are CER and PFX,
                     current certificate type is not supported.`);
         }
         const md = forge.md.sha1.create();

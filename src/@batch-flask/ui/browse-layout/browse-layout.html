@@ -1,5 +1,5 @@
-<div class="layout-container" [class.filtering]="showAdvancedFilter">
-    <section class="list-view">
+<bl-split-pane [config]="splitPaneConfig" class="layout-container" [class.filtering]="showAdvancedFilter">
+    <section blFirstPane class="list-view">
         <div class="left-pane">
             <div class="quick-filter-content">
                 <div class="layout-list-header">
@@ -16,9 +16,7 @@
                     </div>
                 </div>
                 <div class="quicksearch">
-                    <div class="pre-quicksearch">
-                        <ng-content select="[pre-quicksearch]"></ng-content>
-                    </div>
+                    <ng-content select="[pre-quicksearch]"></ng-content>
                     <input blInput autofocus
                         type="search"
                         [formControl]="quickSearchQuery"
@@ -40,7 +38,7 @@
         </div>
     </section>
 
-    <section class="content-view">
+    <section blSecondPane class="content-view">
         <bl-scrollable class="block">
             <div class="content-wrapper">
                 <div style="position:relative;">
@@ -54,4 +52,4 @@
             </div>
         </bl-scrollable>
     </section>
-</div>
+</bl-split-pane>

@@ -1,6 +1,9 @@
 import { log } from "@batch-flask/utils";
 import { ResourceDescriptor } from "app/models";
 
+export class InvalidArmResourceIdError extends Error {
+
+}
 // tslint:disable:max-line-length
 /**
  * Class for parsing and testing Batch and ARM resource ID's.
@@ -106,7 +109,7 @@ export class ArmResourceUtils {
      */
     private static _resourceDescriptorParser(id: string): ResourceDescriptor {
         if (!this.isResourceId(id)) {
-            throw new Error("Invalid resource id: " + id);
+            throw new InvalidArmResourceIdError("Invalid resource id: " + id);
         }
 
         // extract the subscription id and resource group id, if available.
@@ -123,7 +126,7 @@ export class ArmResourceUtils {
         // extract the provider and resources. produces [ id, provider, resources ]
         tokens = ArmResourceUtils.regExpProviderExtractor.exec(id);
         if (!tokens) {
-            throw new Error("Invalid resource id: " + id);
+            throw new InvalidArmResourceIdError("Invalid resource id: " + id);
         }
 
         result.provider = tokens[1];
@@ -140,7 +143,7 @@ export class ArmResourceUtils {
         // tslint:disable-next-line
         while (tokens = ArmResourceUtils.regExpResourceTypeExtractor.exec(resources)) {
             if (!tokens) {
-                throw new Error("Invalid resource id: " + id);
+                throw new InvalidArmResourceIdError("Invalid resource id: " + id);
             }
 
             result.types.push(tokens[1]);

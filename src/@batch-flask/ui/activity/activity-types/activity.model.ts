@@ -229,6 +229,7 @@ export class Activity {
      * Marks the activity as failed (a type of completion) by emitting Failed to the statusSubject
      * Also marks the activity as done by completing its done async subject
      */
+    // tslint:disable-next-line:ban-types
     private _markAsFailed(withError: Error) {
         this.isComplete = true;
 

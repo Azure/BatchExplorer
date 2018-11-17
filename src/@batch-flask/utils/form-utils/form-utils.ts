@@ -1,6 +1,7 @@
 import { AbstractControl, FormControl, FormGroup } from "@angular/forms";
 import { Observable, of } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
+import { SanitizedError } from "../error";
 
 export class FormUtils {
     public static getControl(formGroup: FormGroup, path: string | string[]): AbstractControl {
@@ -9,7 +10,7 @@ export class FormUtils {
         for (const segment of actualPath) {
             current = current.get(segment);
             if (!current) {
-                throw new Error(`Path ${actualPath} is invalid, there is no control with name '${segment}'`);
+                throw new SanitizedError(`Path ${actualPath} is invalid, there is no control with name '${segment}'`);
             }
         }
         return current;

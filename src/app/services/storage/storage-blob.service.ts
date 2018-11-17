@@ -69,6 +69,10 @@ export interface BulkUploadStatus {
     current: FileUpload;
 }
 
+export class InvalidSasUrlError extends Error {
+    constructor(message: string) { super(message); }
+}
+
 // Regex to extract the host, container and blob from a sasUrl
 const storageBlobUrlRegex = /^(https:\/\/[\w\._\-]+)\/([\w\-_]+)\/([\w\-_.]+)\?(.*)$/i;
 
@@ -397,7 +401,7 @@ export class StorageBlobService {
         const match = storageBlobUrlRegex.exec(sasUrl);
 
         if (match.length < 5) {
-            throw new Error(`Invalid sas url "${sasUrl}"`);
+            throw new InvalidSasUrlError(`Invalid sas url "${sasUrl}"`);
         }
 
         return {
