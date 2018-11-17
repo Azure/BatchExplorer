@@ -179,7 +179,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         this.loadingStatus = LoadingStatus.Ready;
         let vmSizes = this._vmSizes.toArray();
         if (this._currentFilter && this._categoryRegex) {
-            if (this._currentFilter.category && this._categoryRegex[this._currentFilter.category]) {
+            if (this._currentFilter.category && (this._currentFilter.category in this._categoryRegex)) {
                 vmSizes = vmSizes.filter(vmSize => {
                     return this._filterByCategory(vmSize, this._categoryRegex[this._currentFilter.category]);
                 });
