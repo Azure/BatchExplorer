@@ -29,8 +29,9 @@
         </bl-job-id>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.batchContainerImage">
-        <bl-batch-container-image-picker [formControl]="parameterValue" [label]="parameter.name" class="form-element" [hint]="parameter.description">
+        <bl-batch-container-image-picker [formControl]="parameterValue" [label]="parameter.name" class="form-element" >
         </bl-batch-container-image-picker>
+        <bl-hint align="end"> {{ parameter.description }} </bl-hint>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.dropDown">
         <bl-form-field>
