@@ -1,7 +1,7 @@
 <bl-storage-error-display [noClassic]="true"></bl-storage-error-display>
 <ng-container *ngIf="autoStorageService.hasArmAutoStorage | async">
     <div class="header">
-        <h1>Gallery applications {{activeApplication}}</h1>
+        <h1>Gallery applications</h1>
         <bl-refresh-btn [refresh]="refresh" type="round"></bl-refresh-btn>
     </div>
     <div class="gallery-content">

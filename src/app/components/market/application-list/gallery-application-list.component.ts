@@ -60,7 +60,7 @@ export class GalleryApplicationListComponent implements OnChanges, OnDestroy {
 
     public selectApplication(application: Application) {
         this.active = {
-            portfolioId: application.id,
+            portfolioId: application.portfolioId,
             applicationId: application.id,
         };
 

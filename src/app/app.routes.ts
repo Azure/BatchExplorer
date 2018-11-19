@@ -90,25 +90,31 @@ export const routes: Routes = [
             { path: ":thumbprint", component: CertificateDetailsComponent }, // certificate/{certificate.thumbprint}
         ],
     },
+    { path: "market", redirectTo: "gallery", pathMatch: "full" },
+    { path: "market/:applicationId/actions", redirectTo: "gallery/microsoft-offical/:applicationId" },
     {
-        path: "market",
+        path: "market/:applicationId/actions/:actionId/submit",
+        redirectTo: "gallery/microsoft-offical/:applicationId/:actionId/submit",
+    },
+    {
+        path: "gallery",
         canActivate: [NavigationGuard],
         component: MarketComponent,
     },
     {
-        path: "market/local",
+        path: "gallery/local",
         component: LocalTemplateExplorerComponent,
     },
     {
-        path: "market/recent/:id",
+        path: "gallery/recent/:id",
         component: SubmitRecentTemplateComponent,
     },
     {
-        path: "market/:applicationId/actions",
+        path: "gallery/:portfolioId/:applicationId",
         component: MarketComponent,
     },
     {
-        path: "market/:applicationId/actions/:actionId/submit",
+        path: "gallery/:portfolioId/:applicationId/:actionId/submit",
         component: MarketComponent,
     },
     {

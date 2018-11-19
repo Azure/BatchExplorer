@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { DialogService, ElectronShell } from "@batch-flask/ui";
-import { GithubDataService, NcjTemplateService } from "app/services";
+import { GithubDataService, MICROSOFT_PORTFOLIO, NcjTemplateService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -45,7 +45,12 @@ export class MarketComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.activeRoute.params.pipe(takeUntil(this._destroy)).subscribe((params) => {
-            this.activeApplication = params["applicationId"];
+            if ("applicationId" in params) {
+                this.activeApplication = {
+                    applicationId: params["applicationId"],
+                    portfolioId: params["portfolioId"] || MICROSOFT_PORTFOLIO.id,
+                };
+            }
         });
     }
 
@@ -62,9 +67,9 @@ export class MarketComponent implements OnInit, OnDestroy {
         this.activeApplication = application;
         this.changeDetector.markForCheck();
         if (application) {
-            this.router.navigate(["/market", application.applicationId, "actions"]);
+            this.router.navigate(["/gallery", application.portfolioId, application.applicationId]);
         } else {
-            this.router.navigate(["/market"]);
+            this.router.navigate(["/gallery"]);
         }
     }
 

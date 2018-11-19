@@ -47,6 +47,7 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
 
     public ngOnChanges(changes) {
         if (changes.application) {
+            console.log("THis", this.application);
             this._application.next(this.application);
         }
     }
