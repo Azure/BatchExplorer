@@ -4,7 +4,7 @@ import {
 import { isNotNullOrUndefined } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { ApplicationAction } from "app/models";
-import { NcjTemplateService } from "app/services";
+import { MICROSOFT_PORTFOLIO, NcjTemplateService } from "app/services";
 import { List } from "immutable";
 import { BehaviorSubject, Subject } from "rxjs";
 import { distinctUntilChanged, filter, switchMap, takeUntil } from "rxjs/operators";
@@ -38,7 +38,7 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
             takeUntil(this._destroy),
             filter(isNotNullOrUndefined),
             distinctUntilChanged(),
-            switchMap(({portfolioId, applicationId}) => this.templateService.listActions(portfolioId, applicationId)),
+            switchMap(({ portfolioId, applicationId }) => this.templateService.listActions(portfolioId, applicationId)),
         ).subscribe((actions) => {
             this.actions = actions;
             this.changeDetector.markForCheck();
@@ -47,7 +47,6 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
 
     public ngOnChanges(changes) {
         if (changes.application) {
-            console.log("THis", this.application);
             this._application.next(this.application);
         }
     }
@@ -62,12 +61,18 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     }
 
     public viewOnGithub(action: ApplicationAction) {
-        // TODO-TIM
-        // const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${this.applicationId}/${action.id}`;
-        // this.electronShell.openExternal(link);
+        if (this.isMicrosoftOfficial) {
+            const { applicationId } = this.application;
+            const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${applicationId}/${action.id}`;
+            this.electronShell.openExternal(link);
+        }
     }
 
     public selectAction(action: ApplicationAction) {
         this.actionChange.emit(action.id);
+    }
+
+    public get isMicrosoftOfficial() {
+        return this.application.portfolioId === MICROSOFT_PORTFOLIO.id;
     }
 }

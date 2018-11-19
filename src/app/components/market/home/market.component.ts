@@ -59,8 +59,9 @@ export class MarketComponent implements OnInit, OnDestroy {
         this._destroy.complete();
     }
 
+    @autobind()
     public refresh() {
-        this.templateService.refresh();
+        return this.templateService.refresh();
     }
 
     public selectApplication(application: ApplicationSelection) {

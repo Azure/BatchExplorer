@@ -6,7 +6,7 @@ import { Application } from "app/models";
 import { NcjTemplateService } from "app/services";
 import { List } from "immutable";
 import { BehaviorSubject, Subject, combineLatest } from "rxjs";
-import { map, startWith, switchMap, takeUntil } from "rxjs/operators";
+import { map, takeUntil } from "rxjs/operators";
 import "./gallery-application-list.scss";
 
 export interface ApplicationSelection {
@@ -27,18 +27,11 @@ export class GalleryApplicationListComponent implements OnChanges, OnDestroy {
     public displayedApplications: List<any> = List([]);
 
     private _filter = new BehaviorSubject("");
-    private _refresh = new Subject();
     private _destroy = new Subject();
 
     constructor(private changeDetector: ChangeDetectorRef, private templateService: NcjTemplateService) {
-
-        const applicationObs = this._refresh.pipe(
-            startWith(null),
+        combineLatest(this.templateService.applications, this._filter).pipe(
             takeUntil(this._destroy),
-            switchMap(() => this.templateService.listAllApplications()),
-        );
-
-        combineLatest(applicationObs, this._filter).pipe(
             map(([applications, filter]) => this._filterApplications(applications, filter)),
         ).subscribe((applications) => {
             this.displayedApplications = applications;
@@ -55,7 +48,6 @@ export class GalleryApplicationListComponent implements OnChanges, OnDestroy {
     public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();
-        this._refresh.complete();
     }
 
     public selectApplication(application: Application) {

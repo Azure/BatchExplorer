@@ -11,8 +11,8 @@ import {
 import { LocalFileStorage } from "app/services/local-file-storage.service";
 import { List } from "immutable";
 import loadJsonFile from "load-json-file";
-import { BehaviorSubject, Observable, forkJoin, from, of } from "rxjs";
-import { map, share,  switchMap, take } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subject, forkJoin, from, of } from "rxjs";
+import { map, share, startWith, switchMap, take, tap } from "rxjs/operators";
 import { Portfolio, PortfolioService } from "./portfolio";
 
 const recentSubmitKey = "ncj-recent-submit";
@@ -34,15 +34,23 @@ export interface RecentSubmission extends RecentSubmissionParams {
 
 @Injectable()
 export class NcjTemplateService {
+    public applications: Observable<List<Application>>;
+
     public recentSubmission: Observable<RecentSubmission[]>;
 
     private _recentSubmission = new BehaviorSubject<RecentSubmission[]>([]);
+    private _updates = new Subject();
 
     constructor(
         private portfolioService: PortfolioService,
         private fs: FileSystemService,
         private localFileStorage: LocalFileStorage) {
         this.recentSubmission = this._recentSubmission.asObservable();
+        this.applications = this._updates.pipe(
+            startWith(null),
+            switchMap(() => this.portfolioService.portfolios),
+            switchMap(() => this.listAllApplications()),
+        );
     }
 
     public init() {
@@ -50,8 +58,13 @@ export class NcjTemplateService {
     }
 
     public refresh(): Observable<any> {
-        // TODO-TIM
-        return null;
+        return this.portfolioService.portfolios.pipe(
+            switchMap((portfolios) => {
+                return forkJoin(portfolios.map(x => x.refresh()));
+            }),
+            tap(_ => this._updates.next()),
+            share(),
+        );
     }
 
     /**
@@ -138,10 +151,8 @@ export class NcjTemplateService {
     }
 
     public listActions(portfolioId: string, applicationId: string): Observable<List<ApplicationAction>> {
-        console.log("List actions", portfolioId, applicationId);
         return this.get(portfolioId, `${applicationId}/index.json`).pipe(
             map(([_, actions]) => {
-                console.log("Actions", actions);
                 return List<ApplicationAction>(actions.map(x => new ApplicationAction(x)));
             }),
             share(),
