@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { StringUtils, log } from "@batch-flask/utils";
+import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, BatchAccount, VmSize } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
@@ -10,14 +10,14 @@ import { computeUrl } from "./compute.service";
 import { ArmListResponse } from "./core";
 import { GithubDataService } from "./github-data";
 
-const excludedVmsSizesPath = "data/vm-sizes.json";
+const includedVmsSizesPath = "data/vm-sizes-list.json";
 
 interface VmSizeData {
     category: StringMap<string[]>;
-    excluded: ExcludedSizes;
+    included: IncludedSizes;
 }
 
-interface ExcludedSizes {
+interface IncludedSizes {
     all: string[];
     paas: string[];
     iaas: string[];
@@ -49,34 +49,35 @@ export class VmSizeService {
     };
 
     private _sizes = new BehaviorSubject<List<VmSize>>(null);
-    private _excludedSizes = new BehaviorSubject<ExcludedSizes>(null);
+    private _includedSizes = new BehaviorSubject<IncludedSizes|null>(null);
     private _vmSizeCategories = new BehaviorSubject<StringMap<string[]>>(null);
 
     private _currentAccount: BatchAccount;
 
     constructor(
         private arm: ArmHttpService,
-        private githubData: GithubDataService, private accountService: BatchAccountService) {
+        private githubData: GithubDataService,
+        private accountService: BatchAccountService) {
 
-        const obs = combineLatest(this._sizes, this._excludedSizes);
+        const obs = combineLatest(this._sizes, this._includedSizes);
         this.sizes = this._sizes.pipe(filter(x => x !== null));
 
         this.cloudServiceSizes = obs.pipe(
-            map(([sizes, excluded]) => {
-                if (!excluded) {
+            map(([sizes, included]) => {
+                if (!included) {
                     return sizes;
                 }
-                return this._filterSizes(sizes, excluded.all.concat(excluded.paas));
+                return this.filterSizes(sizes, included.all.concat(included.paas));
             }),
             shareReplay(1),
         );
 
         this.virtualMachineSizes = obs.pipe(
-            map(([sizes, excluded]) => {
-                if (!excluded) {
+            map(([sizes, included]) => {
+                if (!included) {
                     return sizes;
                 }
-                return this._filterSizes(sizes, excluded.all.concat(excluded.iaas));
+                return this.filterSizes(sizes, included.all.concat(included.iaas));
             }),
             shareReplay(1),
         );
@@ -108,14 +109,22 @@ export class VmSizeService {
     }
 
     public loadVmSizeData() {
-        this.githubData.get(excludedVmsSizesPath).subscribe({
+        this.githubData.get(includedVmsSizesPath).subscribe({
             next: (response: string) => {
-                const data: VmSizeData = JSON.parse(response);
+                const responseJson = JSON.parse(response);
+                const data: VmSizeData = {
+                    category: responseJson.category,
+                    included: {
+                        all: responseJson.all,
+                        paas: responseJson.paas,
+                        iaas: responseJson.iaas,
+                    },
+                };
                 this._vmSizeCategories.next(data.category);
-                this._excludedSizes.next(data.excluded);
+                this._includedSizes.next(data.included);
             },
             error: (error) => {
-                log.error("Error loading excluded vm sizes from github", error);
+                log.error("Error loading included vm sizes from github", error);
             },
         });
     }
@@ -130,21 +139,21 @@ export class VmSizeService {
         );
     }
     /**
-     * Filter the given list of vm sizes by excluding any patching the given patterns.
+     * Filter the given list of vm sizes by including any patching the given patterns.
      * @param sizes Sizes to filter
-     * @param excludePatterns List of wildcard patterns to exclude
+     * @param includedPatterns List of regex patterns to include
      */
-    private _filterSizes(sizes: List<VmSize>, excludePatterns: string[]): List<VmSize> {
+    public filterSizes(sizes: List<VmSize>, includedPatterns: string[]): List<VmSize> {
         if (!sizes) {
             return null;
         }
         return List<VmSize>(sizes.filter((size) => {
-            for (const wildcard of excludePatterns) {
-                if (StringUtils.matchWildcard(size.name, wildcard)) {
-                    return false;
+            for (const regex of includedPatterns) {
+                if (new RegExp(regex).test(size.name.toLowerCase())) {
+                    return true;
                 }
             }
-            return true;
+            return false;
         }));
     }
 }

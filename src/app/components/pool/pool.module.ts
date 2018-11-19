@@ -29,6 +29,7 @@ import {
     PoolResizeDialogComponent,
     PoolScalePickerComponent,
     VmSizePickerComponent,
+    VmSizePickerFilterComponent,
 } from "app/components/pool/action";
 
 const components = [
@@ -36,8 +37,8 @@ const components = [
     ContainerConfigurationPickerComponent, ContaienrImagesPickerComponent, ContainerRegistryPickerComponent,
     DeallocationOptionPickerComponent, DeletePoolDialogComponent, LicenseEulaDialogComponent, OsOfferTileComponent,
     PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent, PoolHomeComponent, PoolListComponent,
-    PoolOsPickerComponent, PoolScalePickerComponent, VmSizePickerComponent, PoolResizeDialogComponent,
-    CustomImagePickerComponent,
+    PoolOsPickerComponent, PoolScalePickerComponent, VmSizePickerComponent, VmSizePickerFilterComponent,
+    PoolResizeDialogComponent, CustomImagePickerComponent,
 ];
 
 const modules = [
