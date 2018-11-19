@@ -82,21 +82,8 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
                 filter: FilterBuilder.prop("name").startswith(Constants.ncjFileGroupPrefix),
             });
 
-            this.fileGroupsData.fetchAll().subscribe((groups: List<BlobContainer>) => {
+            this.fileGroupsData.fetchAll().subscribe(() => {
                 this._loading = false;
-                // if we have a filegroup that was pre-populated and it doesn't exist in the
-                // collection, then create it.
-                const nameWithPrefix = this.value.value;
-                if (groups && nameWithPrefix && !this._fileGroupExists(nameWithPrefix)) {
-                    const nameWithoutPrefix = this.fileGroupService.removeFileGroupPrefix(nameWithPrefix);
-                    this.fileGroupService.create(nameWithoutPrefix).subscribe({
-                        next: () => {
-                            this.storageContainerService.onContainerAdded.next(nameWithPrefix);
-                        },
-                        error: () => null,
-                    });
-                }
-
                 this._checkValid(this.value.value);
             });
         });
@@ -139,11 +126,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     private _checkValid(value: string) {
-        const valid = this._loading || !value || this._fileGroupExists(value);
+        const valid = this._loading || !value || this.fileGroups.map(x => x.name).includes(value);
         this.warning = !valid;
-    }
-
-    private _fileGroupExists(value: string) {
-        return this.fileGroups.map(x => x.name).includes(value);
     }
 }

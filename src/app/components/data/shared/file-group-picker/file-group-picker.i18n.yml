@@ -1,0 +1,3 @@
+file-group-picker:
+  create: Create a new file group
+  warning: This file group doesn't seem to exist. It will be created for you when the job is submitted.
