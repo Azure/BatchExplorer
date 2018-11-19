@@ -2,8 +2,12 @@
     <i class="fa fa-desktop logo"></i>
     <div class="name">Local templates</div>
 </a>
-<a *ngFor="let application of displayedApplications;trackBy: trackApplication" class="application"
-    [title]="application.description" [routerLink]="['/market', application.id, 'actions']">
+<bl-clickable
+    *ngFor="let application of displayedApplications;trackBy: trackApplication"
+    class="application"
+    [class.active]="application.id === active"
+    [title]="application.description"
+    (do)="selectApplication(application)">
     <img class="logo" [src]="application.icon" alt="Logo of {{application.name}}">
     <div class="name">{{application.name}}</div>
-</a>
+</bl-clickable>

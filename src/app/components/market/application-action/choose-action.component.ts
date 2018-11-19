@@ -1,66 +1,66 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "@batch-flask/core";
+import { autobind, isNotNullOrUndefined } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { BehaviorSubject, Subject, Subscription } from "rxjs";
 
 import { Application, ApplicationAction } from "app/models";
 import { NcjTemplateService } from "app/services";
+import { distinctUntilChanged, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
 import "./choose-action.scss";
 
 @Component({
     selector: "bl-choose-action",
     templateUrl: "choose-action.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChooseActionComponent implements OnInit, OnDestroy {
+export class ChooseActionComponent implements OnChanges, OnDestroy {
     public static breadcrumb() {
         return { name: "Choose Action" };
     }
 
-    public applicationId: string;
+    @Input() public applicationId: string;
+
     public application: Application;
     public actions: List<ApplicationAction>;
 
-    private _paramsSubscriber: Subscription;
+    private _applicationId = new BehaviorSubject<string | null>(null);
+    private _destroy = new Subject();
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private electronShell: ElectronShell,
-        private templateService: NcjTemplateService,
-        private route: ActivatedRoute) { }
+        private templateService: NcjTemplateService) {
 
-    public ngOnInit() {
-        this._paramsSubscriber = this.route.params.subscribe((params) => {
-            this.applicationId = params["applicationId"];
-            this._updateActions();
+        this._applicationId.pipe(
+            takeUntil(this._destroy),
+            filter(isNotNullOrUndefined),
+            distinctUntilChanged(),
+            switchMap((applicationId) => this.templateService.listActions(applicationId)),
+        ).subscribe((actions) => {
+            this.actions = actions;
+            this.changeDetector.markForCheck();
         });
     }
 
+    public ngOnChanges(changes) {
+        if (changes.applicationId) {
+            this._applicationId.next(this.applicationId);
+        }
+    }
+
     public ngOnDestroy() {
-        this._paramsSubscriber.unsubscribe();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
-    @autobind()
-    public openReadme() {
-        const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${this.application.id}`;
-        this.electronShell.openExternal(link, { activate: true });
-    }
-
-    public trackAction(index, action: ApplicationAction) {
+    public trackAction(_, action: ApplicationAction) {
         return action.id;
     }
 
     public viewOnGithub(action: ApplicationAction) {
         const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${this.application.id}/${action.id}`;
         this.electronShell.openExternal(link);
-    }
-
-    private _updateActions() {
-        this.templateService.getApplication(this.applicationId).subscribe((application) => {
-            this.application = application;
-        });
-        this.templateService.listActions(this.applicationId).subscribe((actions) => {
-            this.actions = actions;
-        });
     }
 }

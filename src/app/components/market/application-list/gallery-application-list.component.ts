@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output,
+} from "@angular/core";
 import { Application } from "app/models";
 import { NcjTemplateService } from "app/services";
 import { List } from "immutable";
@@ -13,6 +16,8 @@ import "./gallery-application-list.scss";
 })
 export class GalleryApplicationListComponent implements OnChanges, OnDestroy {
     @Input() public filter: string;
+    @Input() public active: string;
+    @Output() public activeChange = new EventEmitter<string>();
 
     public displayedApplications: List<any> = List([]);
 
@@ -49,6 +54,11 @@ export class GalleryApplicationListComponent implements OnChanges, OnDestroy {
         this._refresh.complete();
     }
 
+    public selectApplication(application: Application) {
+        this.active = application.id;
+        this.activeChange.emit(this.active);
+        this.changeDetector.markForCheck();
+    }
     /**
      * Filter all the application according to the current filter.
      * It will set the displayedApplication.

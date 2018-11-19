@@ -1,7 +1,3 @@
-<bl-toolbar>
-    <div toolbarLabel>Recent</div>
-</bl-toolbar>
-
 <div class="recent-submission">
     <div *ngFor="let recent of recentSubmissions;trackBy: trackTemplate">
         <bl-clickable [routerLink]="['/market', 'recent', recent.id]" class="submission">

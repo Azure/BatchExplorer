@@ -28,6 +28,11 @@ bl-gallery-application-list {
             font-size: 20px;
             font-weight: 300;
         }
+
+        &.active {
+            background: $selection-color;
+            color: $main-background;
+        }
     }
 
     .application.local-templates {

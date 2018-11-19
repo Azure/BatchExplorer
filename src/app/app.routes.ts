@@ -107,7 +107,7 @@ export const routes: Routes = [
     },
     {
         path: "market/:applicationId/actions",
-        component: ChooseActionComponent,
+        component: MarketComponent,
     },
     {
         path: "market/:applicationId/actions/:actionId/submit",
