@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { autobind, isNotNullOrUndefined } from "@batch-flask/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { isNotNullOrUndefined } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { List } from "immutable";
-import { BehaviorSubject, Subject, Subscription } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 
-import { Application, ApplicationAction } from "app/models";
+import { ApplicationAction } from "app/models";
 import { NcjTemplateService } from "app/services";
-import { distinctUntilChanged, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
+import { distinctUntilChanged, filter, switchMap, takeUntil } from "rxjs/operators";
 import "./choose-action.scss";
 
 @Component({
@@ -22,7 +21,6 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
 
     @Input() public applicationId: string;
 
-    public application: Application;
     public actions: List<ApplicationAction>;
 
     private _applicationId = new BehaviorSubject<string | null>(null);
@@ -60,7 +58,7 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     }
 
     public viewOnGithub(action: ApplicationAction) {
-        const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${this.application.id}/${action.id}`;
+        const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${this.applicationId}/${action.id}`;
         this.electronShell.openExternal(link);
     }
 }
