@@ -32,7 +32,7 @@ export class BatchContainerImagePickerComponent implements ControlValueAccessor,
         private batchContainerImageService: BatchContainerImageService,
         private formBuilder: FormBuilder) {
 
-        this.pickedImage = this.formBuilder.control([], null);
+        this.pickedImage = this.formBuilder.control("", null);
     }
 
     public ngOnInit() {
@@ -42,7 +42,7 @@ export class BatchContainerImagePickerComponent implements ControlValueAccessor,
     }
 
     public trackImage(_, image: string) {
-        return this.pickedImage.value;
+        return this.pickedImage;
     }
 
     public ngOnDestroy() {
