@@ -1,6 +1,6 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component,
-    EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output,
+    EventEmitter, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
 import { Application } from "app/models";
 import { NcjTemplateService } from "app/services";

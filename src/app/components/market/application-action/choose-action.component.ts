@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
+} from "@angular/core";
 import { isNotNullOrUndefined } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { List } from "immutable";

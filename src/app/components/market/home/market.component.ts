@@ -55,7 +55,6 @@ export class MarketComponent implements OnInit, OnDestroy {
     public selectApplication(applicationId: string) {
         this.activeApplication = applicationId;
         this.changeDetector.markForCheck();
-        console.log("Here", applicationId);
         if (applicationId) {
             this.router.navigate(["/market", applicationId, "actions"]);
         } else {
