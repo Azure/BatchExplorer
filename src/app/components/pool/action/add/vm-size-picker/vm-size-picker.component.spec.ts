@@ -32,18 +32,42 @@ describe("VmSizePickerComponent", () => {
     let vmSizeServiceSpy;
     let accountServiceSpy;
     let pricingServiceSpy;
-
     beforeEach(() => {
+        accountServiceSpy = {
+            currentAccount: of(new ArmBatchAccount({ location: "westus" } as any)),
+        };
+
+        pricingServiceSpy = {
+            getPrice: () => of(0),
+            getPrices: () => of(new OSPricing("westus", "linux")),
+        };
+
         vmSizeServiceSpy = {
             vmSizeCategories: of({
-                standard: ["Standard_A*"],
-                compute: ["Standard_C*"],
-                memory: ["Standard_M*"],
+                all: [
+                    ".*",
+                ],
+                standard: [
+                    "^standard_a[0-9a-z]*$",
+                ],
+                compute: [
+                    "^standard_c[0-9a-z]*$",
+                ],
+                memory: [
+                    "^standard_m",
+                ],
             }),
             virtualMachineSizes: of(List([
                 new VmSize({ name: "Standard_A1" } as any),
                 new VmSize({ name: "Standard_A2" } as any),
                 new VmSize({ name: "Standard_A3" } as any),
+                new VmSize({ name: "Standard_A1_v2" } as any),
+                new VmSize({ name: "Standard_A2_v2" } as any),
+                new VmSize({ name: "Standard_A4_v2" } as any),
+                new VmSize({ name: "Standard_A8_v2" } as any),
+                new VmSize({ name: "Standard_A2m_v2" } as any),
+                new VmSize({ name: "Standard_A4m_v2" } as any),
+                new VmSize({ name: "Standard_A8m_v2" } as any),
                 new VmSize({ name: "Standard_C1" } as any),
                 new VmSize({ name: "Standard_C2" } as any),
                 new VmSize({ name: "Standard_O1" } as any),
@@ -54,25 +78,19 @@ describe("VmSizePickerComponent", () => {
                 new VmSize({ name: "Standard_A3" } as any),
                 new VmSize({ name: "Standard_C1" } as any),
                 new VmSize({ name: "Standard_C2" } as any),
+                new VmSize({ name: "Standard_A8_v2" } as any),
+                new VmSize({ name: "Standard_A2m_v2" } as any),
+                new VmSize({ name: "Standard_A8m_v2" } as any),
             ])),
-        };
-
-        accountServiceSpy = {
-            currentAccount: of(new ArmBatchAccount({ location: "westus" } as any)),
-        };
-
-        pricingServiceSpy = {
-            getPrice: () => of(0),
-            getPrices: () => of(new OSPricing("westus", "linux")),
         };
 
         TestBed.configureTestingModule({
             imports: [FormsModule, TableTestingModule, NoopAnimationsModule, ElectronModule, RouterTestingModule],
             declarations: [VmSizePickerComponent, TestComponent],
             providers: [
-                { provide: VmSizeService, useValue: vmSizeServiceSpy },
                 { provide: BatchAccountService, useValue: accountServiceSpy },
                 { provide: PricingService, useValue: pricingServiceSpy },
+                { provide: VmSizeService, useValue: vmSizeServiceSpy },
                 { provide: BreadcrumbService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
@@ -84,37 +102,54 @@ describe("VmSizePickerComponent", () => {
         fixture.detectChanges();
     });
 
-    it("Should show 3 categories(Including other)", () => {
-        const tabLabels = de.queryAll(By.css("mat-tab"));
-        expect(tabLabels.length).toBe(3);
-        expect(tabLabels[0].properties.label).toContain("General purpose (3)");
-        expect(tabLabels[1].properties.label).toContain("Compute optimized (2)");
-        expect(tabLabels[2].properties.label).toContain("Other (1)");
-    });
-
-    it("Should show vm sizes by category", () => {
-        const tabs = de.queryAll(By.css("mat-tab"));
-        expect(tabs.length).toBe(3);
-
-        const tab1Sizes = tabs[0].queryAll(By.css("bl-table bl-row-render"));
-        expect(tab1Sizes.length).toBe(3, "First tab should have 3 rows");
-        expect(tab1Sizes[0].nativeElement.textContent).toContain("Standard A1");
-        expect(tab1Sizes[1].nativeElement.textContent).toContain("Standard A2");
-        expect(tab1Sizes[2].nativeElement.textContent).toContain("Standard A3");
-
-        const tab2Sizes = tabs[1].queryAll(By.css("bl-table bl-row-render"));
-        expect(tab2Sizes.length).toBe(2, "Second tab should have 2 rows");
-        expect(tab2Sizes[0].nativeElement.textContent).toContain("Standard C1");
-        expect(tab2Sizes[1].nativeElement.textContent).toContain("Standard C2");
-
-        const tab3Sizes = tabs[2].queryAll(By.css("bl-table bl-row-render"));
-        expect(tab3Sizes.length).toBe(1, "Third tab should have 1 rows");
-        expect(tab3Sizes[0].nativeElement.textContent).toContain("Standard O1");
-    });
-
     it("should select the size if click on it", () => {
         component.pickSize("Standard_A2");
         fixture.detectChanges();
         expect(testComponent.vmSize).toEqual("Standard_A2");
+    });
+
+    it("Should show all vm with no searchName presents", () => {
+        const searchResult = de.queryAll(By.css("bl-table bl-row-render"))
+            .map(t => t.nativeElement.textContent.toLowerCase());
+        expect(searchResult[0]).toContain("a1");
+        expect(searchResult[1]).toContain("a2");
+        expect(searchResult[2]).toContain("a3");
+        expect(searchResult[3]).toContain("a1_v2");
+        expect(searchResult[4]).toContain("a2_v2");
+        expect(searchResult[5]).toContain("a4_v2");
+        expect(searchResult[6]).toContain("a8_v2");
+        expect(searchResult[7]).toContain("a2m_v2");
+        expect(searchResult[8]).toContain("a4m_v2");
+        expect(searchResult[9]).toContain("a8m_v2");
+        expect(searchResult[10]).toContain("c1");
+        expect(searchResult[11]).toContain("c2");
+        expect(searchResult[12]).toContain("o1");
+    });
+
+    it("Should show av2 vm series by when user search in filter", () => {
+        component.onFilterChange({
+            category: "a",
+            searchName: "_v2",
+        });
+        fixture.detectChanges();
+        const searchResult = de.queryAll(By.css("bl-table bl-row-render"))
+            .map(t => t.nativeElement.textContent.toLowerCase());
+        expect(searchResult[0]).toContain("a1_v2");
+        expect(searchResult[1]).toContain("a2_v2");
+        expect(searchResult[2]).toContain("a4_v2");
+        expect(searchResult[3]).toContain("a8_v2");
+        expect(searchResult[4]).toContain("a2m_v2");
+        expect(searchResult[5]).toContain("a4m_v2");
+        expect(searchResult[6]).toContain("a8m_v2");
+    });
+
+    it("Should show all vm with no searchName presents", () => {
+        component.onFilterChange({
+            category: "all",
+            searchName: "",
+        });
+        fixture.detectChanges();
+        const searchResult = de.queryAll(By.css("bl-table bl-row-render")).map(t => t.nativeElement.textContent);
+        expect(searchResult.length).toEqual(13);
     });
 });
