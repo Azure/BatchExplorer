@@ -211,6 +211,7 @@ export const KnownQueryParameters = {
     inputParameter: "input-parameter",
     assetContainer: "asset-container",
     assetPaths: "asset-paths",
+    outputs: "outputs",
 };
 
 const cdn = "https://batchexplorer.azureedge.net";
