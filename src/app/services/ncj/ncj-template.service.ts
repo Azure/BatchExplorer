@@ -138,9 +138,11 @@ export class NcjTemplateService {
     }
 
     public listActions(portfolioId: string, applicationId: string): Observable<List<ApplicationAction>> {
+        console.log("List actions", portfolioId, applicationId);
         return this.get(portfolioId, `${applicationId}/index.json`).pipe(
-            map((apps) => {
-                return List<ApplicationAction>(apps.map(x => new ApplicationAction(x)));
+            map(([_, actions]) => {
+                console.log("Actions", actions);
+                return List<ApplicationAction>(actions.map(x => new ApplicationAction(x)));
             }),
             share(),
         );
