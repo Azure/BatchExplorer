@@ -22,7 +22,7 @@ bl-market {
     }
 
     .gallery-applications {
-        width: 50%;
+        flex: 0 0 50%;
         height: calc(#{$contentview-height} - #{$header-height});
 
         .filter {

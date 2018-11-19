@@ -9,6 +9,11 @@ import { BehaviorSubject, Subject, combineLatest } from "rxjs";
 import { map, startWith, switchMap, takeUntil } from "rxjs/operators";
 import "./gallery-application-list.scss";
 
+export interface ApplicationSelection {
+    portfolioId: string;
+    applicationId: string;
+}
+
 @Component({
     selector: "bl-gallery-application-list",
     templateUrl: "gallery-application-list.html",
@@ -16,8 +21,8 @@ import "./gallery-application-list.scss";
 })
 export class GalleryApplicationListComponent implements OnChanges, OnDestroy {
     @Input() public filter: string;
-    @Input() public active: string;
-    @Output() public activeChange = new EventEmitter<string>();
+    @Input() public active: ApplicationSelection;
+    @Output() public activeChange = new EventEmitter<ApplicationSelection>();
 
     public displayedApplications: List<any> = List([]);
 
@@ -26,12 +31,11 @@ export class GalleryApplicationListComponent implements OnChanges, OnDestroy {
     private _destroy = new Subject();
 
     constructor(private changeDetector: ChangeDetectorRef, private templateService: NcjTemplateService) {
-        this.templateService.listApplications();
 
         const applicationObs = this._refresh.pipe(
             startWith(null),
             takeUntil(this._destroy),
-            switchMap(() => this.templateService.listApplications()),
+            switchMap(() => this.templateService.listAllApplications()),
         );
 
         combineLatest(applicationObs, this._filter).pipe(
@@ -55,7 +59,11 @@ export class GalleryApplicationListComponent implements OnChanges, OnDestroy {
     }
 
     public selectApplication(application: Application) {
-        this.active = application.id;
+        this.active = {
+            portfolioId: application.id,
+            applicationId: application.id,
+        };
+
         this.activeChange.emit(this.active);
         this.changeDetector.markForCheck();
     }

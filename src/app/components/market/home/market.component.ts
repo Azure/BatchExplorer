@@ -3,10 +3,11 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { DialogService, ElectronShell } from "@batch-flask/ui";
-import { GithubDataService } from "app/services";
+import { GithubDataService, NcjTemplateService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { ApplicationSelection } from "../application-list";
 import { SubmitMarketApplicationComponent } from "../submit";
 import "./market.scss";
 
@@ -22,7 +23,7 @@ export class MarketComponent implements OnInit, OnDestroy {
     public query: string = "";
     public quicksearch = new FormControl("");
 
-    public activeApplication: string | null = null;
+    public activeApplication: ApplicationSelection | null = null;
 
     private _destroy = new Subject();
 
@@ -32,6 +33,7 @@ export class MarketComponent implements OnInit, OnDestroy {
         private activeRoute: ActivatedRoute,
         private electronShell: ElectronShell,
         private dialogService: DialogService,
+        private templateService: NcjTemplateService,
         public githubDataService: GithubDataService,
         public autoStorageService: AutoStorageService) {
 
@@ -52,11 +54,15 @@ export class MarketComponent implements OnInit, OnDestroy {
         this._destroy.complete();
     }
 
-    public selectApplication(applicationId: string) {
-        this.activeApplication = applicationId;
+    public refresh() {
+        this.templateService.refresh();
+    }
+
+    public selectApplication(application: ApplicationSelection) {
+        this.activeApplication = application;
         this.changeDetector.markForCheck();
-        if (applicationId) {
-            this.router.navigate(["/market", applicationId, "actions"]);
+        if (application) {
+            this.router.navigate(["/market", application.applicationId, "actions"]);
         } else {
             this.router.navigate(["/market"]);
         }
@@ -71,7 +77,8 @@ export class MarketComponent implements OnInit, OnDestroy {
     public submitAction(actionId: string) {
         const ref = this.dialogService.open(SubmitMarketApplicationComponent);
         ref.componentInstance.configure({
-            applicationId: this.activeApplication,
+            portfolioId: this.activeApplication.portfolioId,
+            applicationId: this.activeApplication.applicationId,
             actionId: actionId,
         });
     }

@@ -26,4 +26,5 @@ export class Application extends Record<ApplicationAttributes> {
      * Path to the readme file.
      */
     @Prop() public readme: string;
+    @Prop() public portfolioId: string;
 }

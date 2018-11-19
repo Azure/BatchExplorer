@@ -4,7 +4,6 @@ import { Routes } from "@angular/router";
 import { ActivityMonitorComponent } from "@batch-flask/ui/activity/activity-monitor";
 import { NavigationGuard } from "app/components/common/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
-import { ChooseActionComponent } from "app/components/market/application-action";
 import { SubmitRecentTemplateComponent } from "app/components/market/submit-recent-template";
 import { ThemeColorsComponent } from "app/components/misc";
 import { PoolStandaloneGraphsComponent } from "app/components/pool/graphs/standalone";
@@ -24,7 +23,6 @@ import { JobDefaultComponent, JobDetailsComponent } from "./components/job/detai
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { MarketComponent } from "./components/market/home";
 import { LocalTemplateExplorerComponent } from "./components/market/local-template-explorer";
-import { SubmitMarketApplicationComponent } from "./components/market/submit";
 import { NodeDefaultComponent, NodeDetailsComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
 import { PoolDefaultComponent, PoolDetailsComponent } from "./components/pool/details";

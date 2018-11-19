@@ -2,7 +2,7 @@
 <ng-container *ngIf="autoStorageService.hasArmAutoStorage | async">
     <div class="header">
         <h1>Gallery applications {{activeApplication}}</h1>
-        <bl-refresh-btn [refresh]="refreshApplications" type="round"></bl-refresh-btn>
+        <bl-refresh-btn [refresh]="refresh" type="round"></bl-refresh-btn>
     </div>
     <div class="gallery-content">
         <div class="gallery-applications">
@@ -19,7 +19,7 @@
                 <bl-clickable (do)="openReadme(activeApplication)">View readme</bl-clickable>
                 <bl-clickable (do)="selectApplication(null)">Back</bl-clickable>
             </div>
-            <bl-choose-action [applicationId]="activeApplication" (actionChange)="submitAction($event)"></bl-choose-action>
+            <bl-choose-action [application]="activeApplication" (actionChange)="submitAction($event)"></bl-choose-action>
         </div>
         <div class="gallery-application-recent" *ngIf="!activeApplication">
             <bl-recent-template-list></bl-recent-template-list>

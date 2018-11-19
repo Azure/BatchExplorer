@@ -11,9 +11,9 @@ import {
 import { LocalFileStorage } from "app/services/local-file-storage.service";
 import { List } from "immutable";
 import loadJsonFile from "load-json-file";
-import { BehaviorSubject, Observable, from } from "rxjs";
-import { flatMap, map, share, shareReplay } from "rxjs/operators";
-import { GithubDataService } from "./github-data";
+import { BehaviorSubject, Observable, forkJoin, from, of } from "rxjs";
+import { map, share,  switchMap, take } from "rxjs/operators";
+import { Portfolio, PortfolioService } from "./portfolio";
 
 const recentSubmitKey = "ncj-recent-submit";
 const maxRecentSubmissions = 10;
@@ -39,7 +39,7 @@ export class NcjTemplateService {
     private _recentSubmission = new BehaviorSubject<RecentSubmission[]>([]);
 
     constructor(
-        private githubDataService: GithubDataService,
+        private portfolioService: PortfolioService,
         private fs: FileSystemService,
         private localFileStorage: LocalFileStorage) {
         this.recentSubmission = this._recentSubmission.asObservable();
@@ -49,32 +49,38 @@ export class NcjTemplateService {
         this._loadRecentSubmission();
     }
 
+    public refresh(): Observable<any> {
+        // TODO-TIM
+        return null;
+    }
+
     /**
      * Get a file from the batch data repo relative to the ncj folder.
      * @param path: path to the file
      */
-    public get(uri: string): Observable<any> {
-        return this.githubDataService.ready.pipe(
-            flatMap(() => {
-                const promise = loadJsonFile(this.githubDataService.getLocalPath(uri)).then((json) => {
-                    return json;
+    public get(portfolioId: string, uri: string): Observable<[Portfolio, any]> {
+        return this.portfolioService.getReady(portfolioId).pipe(
+            switchMap((portfolio: Portfolio) => {
+                const promise = loadJsonFile<any>(portfolio.getPath(uri)).then((json: any) => {
+                    return [portfolio, json];
                 }).catch((error) => {
                     log.error(`File is not valid json: ${error.message}`);
                 });
 
-                return from(promise);
+                return from(promise as any);
             }),
             share(),
         );
     }
 
-    public listApplications(): Observable<List<Application>> {
-        return this.get("index.json").pipe(
-            map((apps) => {
+    public listApplications(portfolioId: string): Observable<List<Application>> {
+        return this.get(portfolioId, "index.json").pipe(
+            map(([portfolio, apps]) => {
                 return List<Application>(apps.map(data => {
                     return new Application({
                         ...data,
-                        icon: this.getApplicationIcon(data.id),
+                        portfolioId,
+                        icon: this.getApplicationIcon(portfolio, data.id),
                         readme: this.getApplicationReadme(data.id),
                     });
                 }));
@@ -83,13 +89,31 @@ export class NcjTemplateService {
         );
     }
 
-    public getApplication(applicationId: string): Observable<Application> {
-        return this.get("index.json").pipe(
-            map((apps) => {
+    public listAllApplications(): Observable<List<Application>> {
+        return this.portfolioService.portfolios.pipe(
+            take(1),
+            switchMap((portfolios) => {
+                return forkJoin(portfolios.map(x => this.listApplications(x.id)));
+            }),
+            map((apps: Array<List<Application>>) => {
+                let all = [];
+
+                for (const list of apps) {
+                    all = all.concat(list.toArray());
+                }
+                return List<Application>(all);
+            }),
+            share(),
+        );
+    }
+
+    public getApplication(portfolioId: string, applicationId: string): Observable<Application> {
+        return this.get(portfolioId, "index.json").pipe(
+            map(([portfolio, apps]) => {
                 const data = apps.filter(app => app.id === applicationId).first();
                 return data && new Application({
                     ...data,
-                    icon: this.getApplicationIcon(data.id),
+                    icon: this.getApplicationIcon(portfolio, data.id),
                     readme: this.getApplicationReadme(data.id),
                 });
             }),
@@ -101,8 +125,8 @@ export class NcjTemplateService {
      * Return the application icon path
      * @param applicationId Id of the application
      */
-    public getApplicationIcon(applicationId: string): string {
-        return "file:" + this.githubDataService.getLocalPath(`${applicationId}/icon.svg`);
+    public getApplicationIcon(portfolio: Portfolio, applicationId: string): string {
+        return "file:" + portfolio.getPath(`${applicationId}/icon.svg`);
     }
 
     /**
@@ -113,8 +137,8 @@ export class NcjTemplateService {
         return `ncj/${applicationId}/readme.md`;
     }
 
-    public listActions(applicationId: string): Observable<List<ApplicationAction>> {
-        return this.get(`${applicationId}/index.json`).pipe(
+    public listActions(portfolioId: string, applicationId: string): Observable<List<ApplicationAction>> {
+        return this.get(portfolioId, `${applicationId}/index.json`).pipe(
             map((apps) => {
                 return List<ApplicationAction>(apps.map(x => new ApplicationAction(x)));
             }),
@@ -122,12 +146,12 @@ export class NcjTemplateService {
         );
     }
 
-    public getJobTemplate(applicationId: string, actionId: string): Observable<NcjJobTemplate> {
-        return this.get(`${applicationId}/${actionId}/job.template.json`);
+    public getJobTemplate(portfolioId: string, applicationId: string, actionId: string): Observable<NcjJobTemplate> {
+        return this.get(portfolioId, `${applicationId}/${actionId}/job.template.json`).pipe(map(x => x[1]));
     }
 
-    public getPoolTemplate(applicationId: string, actionId: string): Observable<NcjPoolTemplate> {
-        return this.get(`${applicationId}/${actionId}/pool.template.json`);
+    public getPoolTemplate(portfolioId: string, applicationId: string, actionId: string): Observable<NcjPoolTemplate> {
+        return this.get(portfolioId, `${applicationId}/${actionId}/pool.template.json`).pipe(map(x => x[1]));
     }
 
     public addRecentSubmission(submission: RecentSubmissionParams) {
@@ -141,12 +165,7 @@ export class NcjTemplateService {
     }
 
     public getRecentSubmission(id: string): Observable<RecentSubmission> {
-        return this.githubDataService.ready.pipe(
-            map(() => {
-                return this._recentSubmission.value.filter(x => x.id === id).first();
-            }),
-            shareReplay(1),
-        );
+        return of(this._recentSubmission.value.filter(x => x.id === id).first());
     }
 
     public createParameterFileFromSubmission(path: string, submission: RecentSubmission) {

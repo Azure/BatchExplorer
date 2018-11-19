@@ -3,12 +3,12 @@ import {
 } from "@angular/core";
 import { isNotNullOrUndefined } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
-import { List } from "immutable";
-import { BehaviorSubject, Subject } from "rxjs";
-
 import { ApplicationAction } from "app/models";
 import { NcjTemplateService } from "app/services";
+import { List } from "immutable";
+import { BehaviorSubject, Subject } from "rxjs";
 import { distinctUntilChanged, filter, switchMap, takeUntil } from "rxjs/operators";
+import { ApplicationSelection } from "../application-list";
 import "./choose-action.scss";
 
 @Component({
@@ -21,12 +21,12 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
         return { name: "Choose Action" };
     }
 
-    @Input() public applicationId: string;
+    @Input() public application: ApplicationSelection;
     @Output() public actionChange = new EventEmitter<string>();
 
     public actions: List<ApplicationAction>;
 
-    private _applicationId = new BehaviorSubject<string | null>(null);
+    private _application = new BehaviorSubject<ApplicationSelection | null>(null);
     private _destroy = new Subject();
 
     constructor(
@@ -34,11 +34,11 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
         private electronShell: ElectronShell,
         private templateService: NcjTemplateService) {
 
-        this._applicationId.pipe(
+        this._application.pipe(
             takeUntil(this._destroy),
             filter(isNotNullOrUndefined),
             distinctUntilChanged(),
-            switchMap((applicationId) => this.templateService.listActions(applicationId)),
+            switchMap(({portfolioId, applicationId}) => this.templateService.listActions(portfolioId, applicationId)),
         ).subscribe((actions) => {
             this.actions = actions;
             this.changeDetector.markForCheck();
@@ -46,8 +46,8 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnChanges(changes) {
-        if (changes.applicationId) {
-            this._applicationId.next(this.applicationId);
+        if (changes.application) {
+            this._application.next(this.application);
         }
     }
 
@@ -61,8 +61,9 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     }
 
     public viewOnGithub(action: ApplicationAction) {
-        const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${this.applicationId}/${action.id}`;
-        this.electronShell.openExternal(link);
+        // TODO-TIM
+        // const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${this.applicationId}/${action.id}`;
+        // this.electronShell.openExternal(link);
     }
 
     public selectAction(action: ApplicationAction) {
