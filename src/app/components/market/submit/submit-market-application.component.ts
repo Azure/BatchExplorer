@@ -1,5 +1,4 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Component } from "@angular/core";
 import { forkJoin, of } from "rxjs";
 
 import { log } from "@batch-flask/utils";
@@ -8,11 +7,16 @@ import { NcjTemplateService } from "app/services";
 import { catchError } from "rxjs/operators";
 import "./submit-market-application.scss";
 
+export interface GallerySubmissionConfig {
+    applicationId: string;
+    actionId: string;
+}
+
 @Component({
     selector: "bl-submit-market-application",
     templateUrl: "submit-market-application.html",
 })
-export class SubmitMarketApplicationComponent implements OnInit {
+export class SubmitMarketApplicationComponent {
     public static breadcrumb() {
         return { name: "Submit" };
     }
@@ -27,19 +31,17 @@ export class SubmitMarketApplicationComponent implements OnInit {
     private actionId: string;
 
     constructor(
-        private route: ActivatedRoute,
         private templateService: NcjTemplateService) {
     }
 
-    public ngOnInit() {
-        this.route.params.subscribe((params) => {
-            this.applicationId = params["applicationId"];
-            this.actionId = params["actionId"];
-            this.title = `Run ${this.actionId} from ${this.applicationId}`;
+    public configure(config: GallerySubmissionConfig) {
+        this.applicationId = config.applicationId;
+        this.actionId = config.actionId;
 
-            this.templateService.getApplication(this.applicationId).subscribe((application) => {
-                this._updateTemplates();
-            });
+        this.title = `Run ${this.actionId} from ${this.applicationId}`;
+
+        this.templateService.getApplication(this.applicationId).subscribe((application) => {
+            this._updateTemplates();
         });
     }
 

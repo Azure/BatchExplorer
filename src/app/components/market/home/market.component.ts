@@ -2,11 +2,12 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { ElectronShell } from "@batch-flask/ui";
+import { DialogService, ElectronShell } from "@batch-flask/ui";
 import { GithubDataService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { SubmitMarketApplicationComponent } from "../submit";
 import "./market.scss";
 
 @Component({
@@ -30,6 +31,7 @@ export class MarketComponent implements OnInit, OnDestroy {
         private router: Router,
         private activeRoute: ActivatedRoute,
         private electronShell: ElectronShell,
+        private dialogService: DialogService,
         public githubDataService: GithubDataService,
         public autoStorageService: AutoStorageService) {
 
@@ -65,5 +67,13 @@ export class MarketComponent implements OnInit, OnDestroy {
     public openReadme(applicationId: string) {
         const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${applicationId}`;
         this.electronShell.openExternal(link, { activate: true });
+    }
+
+    public submitAction(actionId: string) {
+        const ref = this.dialogService.open(SubmitMarketApplicationComponent);
+        ref.componentInstance.configure({
+            applicationId: this.activeApplication,
+            actionId: actionId,
+        });
     }
 }

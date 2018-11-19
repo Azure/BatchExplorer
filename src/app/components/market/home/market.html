@@ -19,7 +19,7 @@
                 <bl-clickable (do)="openReadme(activeApplication)">View readme</bl-clickable>
                 <bl-clickable (do)="selectApplication(null)">Back</bl-clickable>
             </div>
-            <bl-choose-action [applicationId]="activeApplication"></bl-choose-action>
+            <bl-choose-action [applicationId]="activeApplication" (actionChange)="submitAction($event)"></bl-choose-action>
         </div>
         <div class="gallery-application-recent" *ngIf="!activeApplication">
             <bl-recent-template-list></bl-recent-template-list>

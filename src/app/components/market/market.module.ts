@@ -41,6 +41,7 @@ const modules = [
     entryComponents: [
         NcjTemplateViewerComponent,
         SubmitLocalTemplateComponent,
+        SubmitMarketApplicationComponent,
     ],
 })
 export class MarketModule {

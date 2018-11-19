@@ -1,6 +1,6 @@
 <div class="actions">
     <bl-card *ngFor="let action of actions;trackBy: trackAction" class="action">
-        <bl-clickable class="action-link" [routerLink]="['/market', applicationId, 'actions', action.id, 'submit']">
+        <bl-clickable class="action-link" (do)="selectAction(action)">
             <div class="name">{{action.name}}</div>
             <div class="description">{{action.description}}</div>
         </bl-clickable>

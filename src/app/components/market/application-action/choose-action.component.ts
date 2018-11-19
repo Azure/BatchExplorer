@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { isNotNullOrUndefined } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { List } from "immutable";
@@ -20,6 +20,7 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     }
 
     @Input() public applicationId: string;
+    @Output() public actionChange = new EventEmitter<string>();
 
     public actions: List<ApplicationAction>;
 
@@ -60,5 +61,9 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     public viewOnGithub(action: ApplicationAction) {
         const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${this.applicationId}/${action.id}`;
         this.electronShell.openExternal(link);
+    }
+
+    public selectAction(action: ApplicationAction) {
+        this.actionChange.emit(action.id);
     }
 }
