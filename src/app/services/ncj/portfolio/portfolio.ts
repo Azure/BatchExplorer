@@ -1,7 +1,7 @@
 import { FileSystemService, LoadingStatus } from "@batch-flask/ui";
 import * as path from "path";
 import { BehaviorSubject, Observable, of } from "rxjs";
-import { catchError, filter, map, switchMap, take, tap } from "rxjs/operators";
+import { catchError, filter, map, share, switchMap, take, tap } from "rxjs/operators";
 
 export enum PortfolioType {
     Github = "github",
@@ -32,6 +32,8 @@ export abstract class Portfolio {
         this.id = reference.id;
         this.type = reference.type;
         this.source = reference.source;
+
+        this._cacheData().subscribe();
     }
 
     public refresh() {
@@ -76,6 +78,7 @@ export abstract class Portfolio {
                 this._loadingStatus.next(LoadingStatus.Error);
                 return of(e);
             }),
+            share(),
         );
     }
 }

@@ -1,15 +1,16 @@
 import { Injectable } from "@angular/core";
+import { isNotNullOrUndefined } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/ui";
 import { Constants } from "common";
 import { BehaviorSubject, Observable, of } from "rxjs";
-import { map, share, switchMap, take, tap } from "rxjs/operators";
+import { filter, map, share, switchMap, take, tap } from "rxjs/operators";
 import { GithubPortfolio, Portfolio, PortfolioReference, PortfolioType } from ".";
 import { LocalFileStorage } from "../../local-file-storage.service";
 
 export const MICROSOFT_PORTFOLIO = {
     id: "microsoft-offical",
     type: PortfolioType.Github,
-    source: "https://github.com/Azure/BatchExplorer",
+    source: "https://github.com/Azure/BatchExplorer-data",
 };
 
 interface PortfolioData {
@@ -19,10 +20,12 @@ interface PortfolioData {
 @Injectable()
 export class PortfolioService {
     public portfolios: Observable<Portfolio[]>;
-    private _portfolios = new BehaviorSubject<Map<string, Portfolio>>(new Map());
+    private _portfolios = new BehaviorSubject<Map<string, Portfolio> | null>(null);
+    private _microsoftPortfolio = new GithubPortfolio(MICROSOFT_PORTFOLIO, this.fs);
 
     constructor(private localFileStorage: LocalFileStorage, private fs: FileSystemService) {
         this.portfolios = this._portfolios.pipe(
+            filter(isNotNullOrUndefined),
             map(x => [...x.values()]),
         );
         this._loadPortfolios().subscribe();
@@ -51,25 +54,31 @@ export class PortfolioService {
 
     public setPortfolios(portfolios: PortfolioReference[], save = true) {
         const map = new Map();
-        map.set(MICROSOFT_PORTFOLIO.id, new GithubPortfolio(MICROSOFT_PORTFOLIO, this.fs));
+        map.set(MICROSOFT_PORTFOLIO.id, this._microsoftPortfolio);
         for (const portfolio of portfolios) {
             map.set(portfolio.id, new GithubPortfolio(portfolio, this.fs));
         }
         this._portfolios.next(map);
-        this._savePortfolios();
+        if (save) {
+            this._savePortfolios();
+        }
     }
 
     private _savePortfolios(): Observable<any> {
-        return this.localFileStorage.set<PortfolioData>(Constants.SavedDataFilename.localTemplates, {
-            portfolios: [...this._portfolios.value.values()].map(x => x.reference),
+        return this.localFileStorage.set<PortfolioData>(Constants.SavedDataFilename.portfolios, {
+            portfolios: [...this._portfolios.value.values()]
+                .filter(x => x.id !== MICROSOFT_PORTFOLIO.id)
+                .map(x => x.reference),
         });
     }
 
     private _loadPortfolios(): Observable<any> {
-        return this.localFileStorage.get<PortfolioData>(Constants.SavedDataFilename.localTemplates).pipe(
+        return this.localFileStorage.get<PortfolioData>(Constants.SavedDataFilename.portfolios).pipe(
             tap((data) => {
                 if (data && data.portfolios) {
                     this.setPortfolios(data.portfolios, false);
+                } else {
+                    this.setPortfolios([], false);
                 }
             }),
             share(),

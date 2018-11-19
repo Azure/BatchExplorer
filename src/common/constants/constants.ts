@@ -37,9 +37,10 @@ export const forms = {
 };
 
 export const SavedDataFilename = {
-    sshPublicKeys: "ssh-pub-keys.json",
-    autosacleFormula: "autoscale-formula.json",
-    localTemplates: "local-templates",
+    sshPublicKeys: "data/ssh-pub-keys.json",
+    autosacleFormula: "data/autoscale-formula.json",
+    localTemplates: "data/local-templates",
+    portfolios: "data/portfolios",
 };
 
 export const localStorageKey = {

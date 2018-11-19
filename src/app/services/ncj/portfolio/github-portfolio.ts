@@ -12,6 +12,7 @@ interface SyncFile {
 const CACHE_TIME = 1; // In days
 
 export class GithubPortfolio extends Portfolio {
+    private _user: string;
     private _repo: string;
     private _branch: string;
 
@@ -19,9 +20,11 @@ export class GithubPortfolio extends Portfolio {
         super(ref, fs);
 
         const url = new URL(this.source);
-        const [repo, branch] = url.pathname.slice(0).split("/");
-        this._repo = repo;
-        this._branch = branch;
+        const segments = url.pathname.slice(1).split("/");
+
+        this._user = segments[0];
+        this._repo = segments[1];
+        this._branch = segments[3] || "master";
     }
 
     public get path() {
@@ -59,7 +62,6 @@ export class GithubPortfolio extends Portfolio {
         await this.fs.download(this._zipUrl, tmpZip);
         await this.fs.unzip(tmpZip, dest);
         await this._saveSyncData(this._zipUrl);
-
         this._loadingStatus.next(LoadingStatus.Ready);
     }
 
@@ -74,11 +76,11 @@ export class GithubPortfolio extends Portfolio {
     }
 
     private get _repoDownloadRoot() {
-        return path.join(this.fs.commonFolders.temp, "BatchExplorer", "portfolios", this.id);
+        return path.join(this.fs.commonFolders.temp, "batch-explorer", "portfolios", this.id);
     }
 
     private get _zipUrl() {
-        return `https://github.com/${this._repo}/archive/${this._branch}.zip`;
+        return `https://github.com/${this._user}/${this._repo}/archive/${this._branch}.zip`;
     }
 
     private get _syncFile() {
