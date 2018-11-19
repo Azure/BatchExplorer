@@ -20,8 +20,12 @@ import { PoolPickerComponent } from "app/components/job/action/add";
 import { ParameterInputComponent, SubmitNcjTemplateComponent } from "app/components/market/submit";
 import { NcjJobTemplate, NcjParameterRawType, NcjPoolTemplate, NcjTemplateMode, Pool } from "app/models";
 import {
-    NcjFileGroupService, NcjSubmitService,
-    NcjTemplateService, PoolOsService, PoolService,
+    NcjFileGroupService,
+    NcjSubmitService,
+    NcjTemplateService,
+    PoolOsService,
+    PoolService,
+    SettingsService,
     VmSizeService,
 } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
@@ -111,6 +115,7 @@ describe("SubmitNcjTemplateComponent", () => {
     let storageBlobServiceSpy;
     let fileGroupServiceSpy;
     let poolOsServiceSpy;
+    let settingsServiceSpy;
 
     const blendFile = "myscene.blend";
     let queryParameters;
@@ -195,6 +200,13 @@ describe("SubmitNcjTemplateComponent", () => {
                 return `${Constants.ncjFileGroupPrefix}${fgName}`;
             }),
         };
+
+        settingsServiceSpy = {
+            settings: {
+                "job-template.default-output-container": "foo",
+            },
+        };
+
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
@@ -225,6 +237,7 @@ describe("SubmitNcjTemplateComponent", () => {
                 { provide: StorageBlobService, useValue: storageBlobServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },
                 { provide: PoolOsService, useValue: poolOsServiceSpy },
+                { provide: SettingsService, useValue: settingsServiceSpy },
             ],
 
             schemas: [NO_ERRORS_SCHEMA],

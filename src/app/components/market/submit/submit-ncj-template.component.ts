@@ -77,9 +77,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private settingsService: SettingsService) {
 
         this.form = new FormGroup({});
-        this.settingsService.settingsObs.subscribe((settings) => {
-            this._defaultOutputDataContainer = settings["job-template.default-output-container"];
-        });
+        this._defaultOutputDataContainer = this.settingsService.settings["job-template.default-output-container"];
     }
 
     public ngOnInit() {
