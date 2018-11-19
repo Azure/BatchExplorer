@@ -37,5 +37,5 @@
 
   // Default file group container to use when submitting Gallery template jobs.
   // Don't include the 'fgrp-' file group prefix
-  "job-template.default-output-container": null
+  "job-template.default-output-filegroup": null
 }

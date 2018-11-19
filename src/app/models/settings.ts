@@ -15,5 +15,5 @@ export interface Settings {
     "github-data.source.branch": string;
     "github-data.source.repo": string;
     "update.channel": string;
-    "job-template.default-output-container": string;
+    "job-template.default-output-filegroup": string;
 }

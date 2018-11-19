@@ -203,7 +203,7 @@ describe("SubmitNcjTemplateComponent", () => {
 
         settingsServiceSpy = {
             settings: {
-                "job-template.default-output-container": "foo",
+                "job-template.default-output-filegroup": "foo",
             },
         };
 
