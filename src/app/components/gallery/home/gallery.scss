@@ -3,12 +3,15 @@
 bl-gallery {
     width: 100%;
     height: $contentview-height;
-    $header-height: 50px;
+    $header-height: 40px;
 
     .header {
         display: flex;
         height: $header-height;
         margin: 10px;
+        h1 {
+            margin-right: 5px;
+        }
     }
 
     .gallery-content {
@@ -28,7 +31,11 @@ bl-gallery {
     }
 
     .gallery-application-recent {
-        margin: auto;
+        margin: 0 auto;
+
+        h2 {
+            color: $primary-text;
+        }
     }
 
     .gallery-application-actions {

@@ -76,7 +76,7 @@ export class GithubPortfolio extends Portfolio {
     }
 
     private get _repoDownloadRoot() {
-        return path.join(this.fs.commonFolders.temp, "batch-explorer", "portfolios", this.id);
+        return path.join(this.fs.commonFolders.temp, "portfolios", this.id);
     }
 
     private get _zipUrl() {
