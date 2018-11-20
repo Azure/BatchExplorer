@@ -6,12 +6,8 @@ import { SubmitRecentTemplateComponent } from "./submit-recent-template";
 
 const routes: Routes = [
     {
-        path: "local",
-        component: LocalTemplateExplorerComponent,
-    },
-    {
-        path: "recent/:id",
-        component: SubmitRecentTemplateComponent,
+        path: "",
+        component: MarketComponent,
     },
     {
         path: ":portfolioId/:applicationId",
@@ -20,6 +16,14 @@ const routes: Routes = [
     {
         path: ":portfolioId/:applicationId/:actionId/submit",
         component: MarketComponent,
+    },
+    {
+        path: "local",
+        component: LocalTemplateExplorerComponent,
+    },
+    {
+        path: "recent/:id",
+        component: SubmitRecentTemplateComponent,
     },
 ];
 
