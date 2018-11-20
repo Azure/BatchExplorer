@@ -5,10 +5,12 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
 import { MaterialModule, ServerError } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { PermissionService, SelectComponent, SelectModule } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { FormModule } from "@batch-flask/ui/form";
+import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Subject, of, throwError } from "rxjs";
 
@@ -125,6 +127,8 @@ describe("ParameterInputComponent", () => {
                 ButtonsModule,
                 FormModule,
                 FormsModule,
+                I18nTestingModule,
+                I18nUIModule,
                 MaterialModule,
                 NoopAnimationsModule,
                 RouterTestingModule,

@@ -77,6 +77,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
             this.fileGroupsData.params = {
                 storageAccountId,
             };
+
             this.fileGroupsData.setOptions({
                 filter: FilterBuilder.prop("name").startswith(Constants.ncjFileGroupPrefix),
             });
