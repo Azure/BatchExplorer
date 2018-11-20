@@ -4,7 +4,7 @@ import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { RouterModule } from "@angular/router";
+import { PreloadAllModules, RouterModule } from "@angular/router";
 
 // application router
 import { routes } from "./app.routes";
@@ -124,7 +124,11 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         MaterialModule,
         ReactiveFormsModule,
         RendererTelemetryModule,
-        RouterModule.forRoot(routes, { useHash: true, paramsInheritanceStrategy: "always" }),
+        RouterModule.forRoot(routes, {
+            useHash: true,
+            paramsInheritanceStrategy: "always",
+            preloadingStrategy: PreloadAllModules,
+        }),
         BaseModule,
         HttpClientModule,
         ...modules,

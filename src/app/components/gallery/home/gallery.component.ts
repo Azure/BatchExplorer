@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
@@ -12,10 +12,11 @@ import { SubmitMarketApplicationComponent } from "../submit";
 import "./market.scss";
 
 @Component({
-    selector: "bl-market",
+    selector: "bl-gallery",
     templateUrl: "market.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketComponent implements OnInit, OnDestroy {
+export class GalleryComponent implements OnInit, OnDestroy {
     public static breadcrumb() {
         return { name: "Gallery" };
     }

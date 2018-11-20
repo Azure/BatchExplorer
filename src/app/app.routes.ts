@@ -95,7 +95,7 @@ export const routes: Routes = [
     {
         path: "gallery",
         canActivate: [NavigationGuard],
-        loadChildren: "./components/market/gallery.module#GalleryModule",
+        loadChildren: "./components/gallery/gallery.module#GalleryModule",
     },
     {
         path: "applications",

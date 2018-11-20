@@ -1,21 +1,21 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { MarketComponent } from "./home";
+import { GalleryComponent } from "./home";
 import { LocalTemplateExplorerComponent } from "./local-template-explorer";
 import { SubmitRecentTemplateComponent } from "./submit-recent-template";
 
 const routes: Routes = [
     {
         path: "",
-        component: MarketComponent,
+        component: GalleryComponent,
     },
     {
         path: ":portfolioId/:applicationId",
-        component: MarketComponent,
+        component: GalleryComponent,
     },
     {
         path: ":portfolioId/:applicationId/:actionId/submit",
-        component: MarketComponent,
+        component: GalleryComponent,
     },
     {
         path: "local",
