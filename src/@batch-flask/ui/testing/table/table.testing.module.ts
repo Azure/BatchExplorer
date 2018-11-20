@@ -1,7 +1,7 @@
 
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";

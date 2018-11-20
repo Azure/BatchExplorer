@@ -5,16 +5,10 @@ bl-gallery {
     height: $contentview-height;
     $header-height: 50px;
 
-    h1 {
-        margin: 10px;
-    }
-
     .header {
         display: flex;
         height: $header-height;
-        h1 {
-            flex: 1;
-        }
+        margin: 10px;
     }
 
     .gallery-content {

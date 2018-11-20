@@ -1,5 +1,5 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { ModuleWithProviders, NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 

@@ -1,5 +1,5 @@
-import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
 
 import { VTabsModule } from "@batch-flask/ui/vtabs";
 import { MetricsMonitorGraphComponent } from "./metrics-monitor-metric";

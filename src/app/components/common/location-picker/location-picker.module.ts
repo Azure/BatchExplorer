@@ -1,6 +1,6 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { CommonModule } from "@angular/common";
 import { I18nModule } from "@batch-flask/core";
 import { FormModule, I18nUIModule, SelectModule } from "@batch-flask/ui";
 import { LocationModule } from "../location/location.module";

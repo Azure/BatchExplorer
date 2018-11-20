@@ -1,7 +1,7 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material";
-import { CommonModule } from "@angular/common";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { FileViewerModule } from "@batch-flask/ui/file/file-viewer";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";

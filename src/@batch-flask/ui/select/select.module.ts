@@ -1,6 +1,6 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { CommonModule } from "@angular/common";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { SelectOptionComponent } from "./option";
 import { OptionTemplateDirective } from "./option-template.directive";

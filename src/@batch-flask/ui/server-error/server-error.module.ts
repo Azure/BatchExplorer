@@ -1,5 +1,5 @@
-import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { ServerErrorComponent } from "./server-error.component";
 
