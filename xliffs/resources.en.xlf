@@ -271,6 +271,15 @@
       <trans-unit id="file-explorer.unknownFile">
         <source>Cannot find this file. Check the path.</source>
       </trans-unit>
+      <trans-unit id="file-group-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="file-group-picker.create">
+        <source>Create a new file group</source>
+      </trans-unit>
+      <trans-unit id="file-group-picker.warning">
+        <source>This file group doesn't seem to exist. It will be created for you when the job is submitted.</source>
+      </trans-unit>
       <trans-unit id="file-viewer-container">
         <source/>
       </trans-unit>
