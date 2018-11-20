@@ -1,6 +1,6 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, Optional } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { MatCheckboxChange } from "@angular/material";
+import { MatCheckboxChange, MatDialogRef } from "@angular/material";
 import { DynamicForm, autobind } from "@batch-flask/core";
 import {
     Activity,
@@ -41,7 +41,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     private _pathsControl: FormControl;
 
     constructor(
-        public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
+        @Optional() public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
+        @Optional() public dialogRef: MatDialogRef<FileGroupCreateFormComponent>,
         private formBuilder: FormBuilder,
         private fileGroupService: NcjFileGroupService,
         private fs: FileSystemService,
