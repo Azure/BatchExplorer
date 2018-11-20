@@ -18,7 +18,6 @@ import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
 import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas";
 import { JobIdComponent } from "app/components/data/shared/job-id";
-import { NcjParameterExtendedType, NcjParameterWrapper, ParameterInputComponent } from "app/components/market/submit";
 import { BlobContainer, NcjParameterRawType } from "app/models";
 import { JobService, NcjFileGroupService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
@@ -28,6 +27,8 @@ import * as Fixtures from "test/fixture";
 import { updateInput } from "test/utils/helpers";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
+import { NcjParameterExtendedType, NcjParameterWrapper } from "../market-application.model";
+import { ParameterInputComponent } from "./parameter-input.component";
 
 @Component({
     template: `

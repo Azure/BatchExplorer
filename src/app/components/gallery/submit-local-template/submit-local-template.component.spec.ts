@@ -4,10 +4,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { MaterialModule } from "@batch-flask/core";
 import { SanitizedError } from "@batch-flask/utils";
-import { SubmitNcjTemplateComponent } from "app/components/market/submit";
-import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
 import { NcjTemplateType } from "app/models";
 import { LocalTemplateService } from "app/services";
+import { SubmitNcjTemplateComponent } from "../submit";
+import { SubmitLocalTemplateComponent } from "./submit-local-template.component";
 
 describe("SubmitLocalTemplateComponent", () => {
     let fixture: ComponentFixture<SubmitLocalTemplateComponent>;

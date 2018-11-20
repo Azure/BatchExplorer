@@ -17,7 +17,6 @@ import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
 import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas";
 import { PoolPickerComponent } from "app/components/job/action/add";
-import { ParameterInputComponent, SubmitNcjTemplateComponent } from "app/components/market/submit";
 import { NcjJobTemplate, NcjParameterRawType, NcjPoolTemplate, NcjTemplateMode, Pool } from "app/models";
 import {
     NcjFileGroupService,
@@ -36,6 +35,8 @@ import { I18nUIModule, SelectModule } from "@batch-flask/ui";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
+import { ParameterInputComponent } from "./parameter-input";
+import { SubmitNcjTemplateComponent } from "./submit-ncj-template.component";
 
 @Component({
     template: `

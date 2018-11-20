@@ -1,5 +1,5 @@
-import { NcjParameterExtendedType, NcjParameterWrapper } from "app/components/market/submit";
 import { NcjParameterRawType } from "app/models";
+import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
 
 describe("marketApplicationModel", () => {
     let parameter: NcjParameterWrapper;
