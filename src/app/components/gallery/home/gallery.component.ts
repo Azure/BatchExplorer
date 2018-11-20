@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { DialogService, ElectronShell } from "@batch-flask/ui";
-import { GithubDataService, MICROSOFT_PORTFOLIO, NcjTemplateService } from "app/services";
+import { MICROSOFT_PORTFOLIO, NcjTemplateService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -36,7 +36,6 @@ export class GalleryComponent implements OnInit, OnDestroy {
         private electronShell: ElectronShell,
         private dialogService: DialogService,
         private templateService: NcjTemplateService,
-        public githubDataService: GithubDataService,
         public autoStorageService: AutoStorageService) {
 
         this.quicksearch.valueChanges.pipe(takeUntil(this._destroy)).subscribe((query) => {
