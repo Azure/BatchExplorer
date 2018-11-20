@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { MaterialModule } from "@batch-flask/core";
 
 import { DropdownModule } from "@batch-flask/ui/dropdown";
@@ -23,7 +23,7 @@ const privateComponents = [];
     ],
     exports: [...publicComponents],
     imports: [
-        BrowserModule,
+        CommonModule,
         FormsModule,
         DropdownModule,
         MaterialModule,

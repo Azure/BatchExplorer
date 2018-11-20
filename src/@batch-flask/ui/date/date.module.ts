@@ -1,12 +1,12 @@
 import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { DateComponent } from "./date.component";
 
 const publicComponents = [DateComponent];
 const privateComponents = [];
 
 @NgModule({
-    imports: [BrowserModule],
+    imports: [CommonModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
     entryComponents: [],

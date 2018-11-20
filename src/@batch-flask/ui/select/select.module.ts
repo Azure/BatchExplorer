@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { SelectOptionComponent } from "./option";
 import { OptionTemplateDirective } from "./option-template.directive";
@@ -11,7 +11,7 @@ const publicComponents = [SelectComponent, SelectOptionComponent, OptionTemplate
 const privateComponents = [SelectDropdownComponent];
 
 @NgModule({
-    imports: [BrowserModule, ReactiveFormsModule, FormsModule, ButtonsModule],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, ButtonsModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
     entryComponents: [SelectDropdownComponent],

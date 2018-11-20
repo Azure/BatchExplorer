@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
@@ -39,7 +39,7 @@ const privateComponents = [
     declarations: [...publicComponents, ...privateComponents],
     entryComponents: [],
     exports: publicComponents,
-    imports: [ButtonsModule, BrowserModule, MaterialModule, RouterModule, EditorModule],
+    imports: [ButtonsModule, CommonModule, MaterialModule, RouterModule, EditorModule],
     providers: [],
 })
 

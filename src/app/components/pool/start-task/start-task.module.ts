@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
@@ -14,7 +14,7 @@ const components = [StartTaskEditFormComponent, StartTaskPickerComponent];
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [BrowserModule, MaterialModule, RouterModule, FormsModule, ReactiveFormsModule,
+    imports: [CommonModule, MaterialModule, RouterModule, FormsModule, ReactiveFormsModule,
         BaseModule, TaskBaseModule],
     entryComponents: [StartTaskEditFormComponent],
 })

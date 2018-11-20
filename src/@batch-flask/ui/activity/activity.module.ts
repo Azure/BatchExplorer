@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DropdownModule } from "@batch-flask/ui/dropdown";
@@ -20,7 +20,7 @@ import { ActivityService } from "./activity.service";
 
 @NgModule({
     imports: [
-        BrowserModule,
+        CommonModule,
         ButtonsModule,
         FocusSectionModule,
         FormsModule,

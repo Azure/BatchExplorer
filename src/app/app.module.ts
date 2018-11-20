@@ -21,7 +21,6 @@ import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
 import { JobModule } from "app/components/job/job.module";
-import { MarketModule } from "app/components/market/market.module";
 import { NodeModule } from "app/components/node/node.module";
 import { PoolModule } from "app/components/pool/pool.module";
 import { SettingsModule } from "app/components/settings";
@@ -101,7 +100,7 @@ import { RendererTelemetryModule } from "./services/telemetry";
 const modules = [
     AccountModule, ApplicationModule, CertificateModule,
     DataModule, FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
-    SettingsModule, TaskModule, MarketModule, LayoutModule,
+    SettingsModule, TaskModule, LayoutModule,
     MiscModule,
     NcjModule,
 ];

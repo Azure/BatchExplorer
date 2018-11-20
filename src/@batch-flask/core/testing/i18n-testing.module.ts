@@ -1,5 +1,5 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
 import { I18nModule, TranslationsLoaderService } from "../i18n";
 
 const publicComponents = [];
@@ -10,7 +10,7 @@ export class TestTranslatationsLoaderService extends TranslationsLoaderService {
 }
 
 @NgModule({
-    imports: [BrowserModule, I18nModule],
+    imports: [CommonModule, I18nModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
     entryComponents: [],

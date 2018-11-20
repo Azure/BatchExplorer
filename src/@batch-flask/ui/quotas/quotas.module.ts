@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { MatProgressBarModule } from "@angular/material";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 
 import { QuotaDisplayComponent } from "./quota-display";
 
@@ -8,7 +8,7 @@ const privateComponents = [];
 const publicComponents = [QuotaDisplayComponent];
 
 @NgModule({
-    imports: [BrowserModule, MatProgressBarModule],
+    imports: [CommonModule, MatProgressBarModule],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,
 })

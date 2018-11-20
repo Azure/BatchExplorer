@@ -1,4 +1,5 @@
 import { NgModule } from "@angular/core";
+import { FileTypeAssociationService } from "@batch-flask/ui/file/file-viewer/file-type-association";
 import { commonModules } from "app/common";
 import { DataSharedModule } from "app/components/data/shared";
 import { JobActionModule } from "app/components/job/action";
@@ -7,10 +8,9 @@ import { MarketComponent } from "app/components/market/home";
 import {
     ParameterInputComponent, SubmitMarketApplicationComponent, SubmitNcjTemplateComponent,
 } from "app/components/market/submit";
-
-import { FileTypeAssociationService } from "@batch-flask/ui/file/file-viewer/file-type-association";
 import { TaskBaseModule } from "app/components/task/base";
 import { GalleryApplicationListComponent } from "./application-list";
+import { GalleryRoutingModule } from "./gallery-routing.module";
 import { RecentTemplateListComponent } from "./home/recent-template-list";
 import { LocalTemplateExplorerModule } from "./local-template-explorer";
 import { NcjTemplateViewerComponent } from "./ncj-template-viewer";
@@ -37,15 +37,15 @@ const modules = [
 @NgModule({
     declarations: components,
     exports: [...modules, ...components],
-    imports: [...modules, LocalTemplateExplorerModule],
+    imports: [...modules, LocalTemplateExplorerModule, GalleryRoutingModule],
     entryComponents: [
         NcjTemplateViewerComponent,
         SubmitLocalTemplateComponent,
         SubmitMarketApplicationComponent,
     ],
 })
-export class MarketModule {
-    public constructor(fileAssociationService: FileTypeAssociationService) {
+export class GalleryModule {
+    constructor(fileAssociationService: FileTypeAssociationService) {
         fileAssociationService.registerViewer({
             name: "ncj-template",
             component: NcjTemplateViewerComponent,

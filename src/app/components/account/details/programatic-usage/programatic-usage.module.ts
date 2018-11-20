@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 import {
@@ -24,6 +25,7 @@ const publicComponents = [
 ];
 
 const modules = [
+    CommonModule,
     ...commonModules,
 ];
 

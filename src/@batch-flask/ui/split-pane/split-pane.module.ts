@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
@@ -16,7 +16,7 @@ const publicComponents = [
 @NgModule({
     declarations: [...privateComponents, ...publicComponents],
     exports: publicComponents,
-    imports: [BrowserModule, MaterialModule, RouterModule],
+    imports: [CommonModule, MaterialModule, RouterModule],
 })
 export class SplitPaneModule {
 

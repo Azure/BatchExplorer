@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
@@ -13,7 +13,7 @@ const components = [NodeListComponent, NodeAdvancedFilterComponent, NodeListDisp
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [BrowserModule, MaterialModule, RouterModule, BaseModule],
+    imports: [CommonModule, MaterialModule, RouterModule, BaseModule],
 })
 export class NodeBrowseModule {
 

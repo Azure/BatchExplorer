@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
@@ -22,7 +22,7 @@ const components = [
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [BrowserModule, MaterialModule, RouterModule, BaseModule, ReactiveFormsModule],
+    imports: [CommonModule, MaterialModule, RouterModule, BaseModule, ReactiveFormsModule],
 })
 export class JobGraphsModule {
 

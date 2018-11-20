@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 
 import { ButtonsModule } from "../buttons/buttons.module";
 import { LoadingComponent } from "./loading.component";
@@ -9,7 +9,7 @@ const privateComponents = [];
 const publicComponents = [LoadingComponent, SimpleLoadingComponent];
 
 @NgModule({
-    imports: [BrowserModule, ButtonsModule],
+    imports: [CommonModule, ButtonsModule],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,
 })

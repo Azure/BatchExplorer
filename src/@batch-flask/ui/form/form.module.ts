@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { I18nModule, MaterialModule } from "@batch-flask/core";
 import { EditorModule } from "@batch-flask/ui/editor";
@@ -58,7 +58,7 @@ const components = [
     imports: [
         I18nModule,
         I18nUIModule,
-        BrowserModule,
+        CommonModule,
         ButtonsModule,
         FormsModule,
         MaterialModule,
