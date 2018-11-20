@@ -33,5 +33,9 @@
   // Which channel to use for auto update. Can be:
   //  - stable: Recommended
   //  - insider: This is the latest build from master. Use at your own risk.
-  "update.channel": null
+  "update.channel": null,
+
+  // Default file group container to use when submitting Gallery template jobs.
+  // Don't include the 'fgrp-' file group prefix
+  "job-template.default-output-filegroup": null
 }

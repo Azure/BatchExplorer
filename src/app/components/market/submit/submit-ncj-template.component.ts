@@ -15,7 +15,7 @@ import { exists, log } from "@batch-flask/utils";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
-import { NcjFileGroupService, NcjSubmitService, NcjTemplateService } from "app/services";
+import { NcjFileGroupService, NcjSubmitService, NcjTemplateService, SettingsService } from "app/services";
 import { StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { Subscription, of } from "rxjs";
@@ -62,6 +62,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _parameterTypeMap = {};
     private _queryParameters: {};
     private _loaded = false;
+    private _defaultOutputDataContainer = null;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -72,9 +73,11 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private ncjSubmitService: NcjSubmitService,
         private sidebarManager: SidebarManager,
         private fileGroupService: NcjFileGroupService,
-        private storageService: StorageContainerService) {
+        private storageService: StorageContainerService,
+        private settingsService: SettingsService) {
 
         this.form = new FormGroup({});
+        this._defaultOutputDataContainer = this.settingsService.settings["job-template.default-output-filegroup"];
     }
 
     public ngOnInit() {
@@ -83,6 +86,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             if (!this._loaded) {
                 // subscribe is fired every time a value changes now so don't want to re-apply
                 this._checkForAutoPoolParam();
+                this._checkForOutputContainerParam();
                 this._checkForAssetsToSync();
                 this._applyinitialData();
                 this._loaded = true;
@@ -227,6 +231,16 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
                 : NcjTemplateMode.ExistingPoolAndJob;
 
             this.pickMode(modeAutoSelect);
+        }
+    }
+
+    private _checkForOutputContainerParam() {
+        const outputParamKey = Constants.KnownQueryParameters.outputs;
+        const outputContainer = this._queryParameters[outputParamKey];
+        if (!outputContainer && this._defaultOutputDataContainer) {
+            // output file-group parameter was not passed in, but we have one in the default user
+            // settings, so add it to the query parameters.
+            this._queryParameters[outputParamKey] = this._defaultOutputDataContainer;
         }
     }
 
