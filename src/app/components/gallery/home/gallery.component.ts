@@ -9,11 +9,12 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ApplicationSelection } from "../application-list";
 import { SubmitMarketApplicationComponent } from "../submit";
-import "./market.scss";
+
+import "./gallery.scss";
 
 @Component({
     selector: "bl-gallery",
-    templateUrl: "market.html",
+    templateUrl: "gallery.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GalleryComponent implements OnInit, OnDestroy {
