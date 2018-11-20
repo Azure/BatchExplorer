@@ -59,6 +59,11 @@ export class GalleryApplicationListComponent implements OnChanges, OnDestroy {
         this.activeChange.emit(this.active);
         this.changeDetector.markForCheck();
     }
+
+    public trackApplication(_, application: Application) {
+        return application.portfolioId + "/" + application.id;
+    }
+
     /**
      * Filter all the application according to the current filter.
      * It will set the displayedApplication.

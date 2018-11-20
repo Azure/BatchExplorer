@@ -6,6 +6,7 @@ export interface ApplicationAttributes {
     description: string;
     icon: string;
     readme: string;
+    portfolioId: string;
 }
 
 /**

@@ -27,7 +27,9 @@ module.exports = function(config) {
         ],
 
         // proxied base paths
-        proxies: {},
+        proxies: {
+            "/fixtures/": "/base/src/test/fixtures/"
+        },
 
         port: 9876,
 
