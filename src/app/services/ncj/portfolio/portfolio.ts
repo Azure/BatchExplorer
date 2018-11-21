@@ -61,6 +61,7 @@ export abstract class Portfolio {
         return of(null).pipe(
             switchMap(_ => {
                 if (forceRefresh) {
+
                     return of(true);
                 } else {
                     return this.isReloadNeeded();

@@ -57,7 +57,7 @@ export class GithubPortfolio extends Portfolio {
     }
 
     private async _downloadRepo() {
-        const tmpZip = path.join(this.fs.commonFolders.temp, "batch-explorer-data.zip");
+        const tmpZip = path.join(this.fs.commonFolders.temp, "portfolios", "zips", `${this.id}.zip`);
         const dest = this._repoDownloadRoot;
         await this.fs.download(this._zipUrl, tmpZip);
         await this.fs.unzip(tmpZip, dest);
