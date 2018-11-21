@@ -86,8 +86,17 @@ export const routes: Routes = [
             { path: ":thumbprint", component: CertificateDetailsComponent }, // certificate/{certificate.thumbprint}
         ],
     },
-    { path: "market", redirectTo: "gallery", pathMatch: "full" },
-    { path: "market/:applicationId/actions", redirectTo: "gallery/microsoft-offical/:applicationId" },
+    // Redirect for old Gallery URL not to break plugins using it
+    {
+        path: "market",
+        redirectTo: "gallery",
+        pathMatch: "full",
+    },
+    {
+        path: "market/:applicationId/actions",
+        redirectTo: "gallery/microsoft-offical/:applicationId",
+        pathMatch: "full",
+    },
     {
         path: "market/:applicationId/actions/:actionId/submit",
         redirectTo: "gallery/microsoft-offical/:applicationId/:actionId/submit",

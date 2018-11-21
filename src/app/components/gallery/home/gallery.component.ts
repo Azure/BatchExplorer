@@ -51,6 +51,11 @@ export class GalleryComponent implements OnInit, OnDestroy {
                     applicationId: params["applicationId"],
                     portfolioId: params["portfolioId"] || MICROSOFT_PORTFOLIO.id,
                 };
+                this.changeDetector.markForCheck();
+            }
+            if ("actionId" in params) {
+                this.submitAction(params["actionId"]);
+                this.changeDetector.markForCheck();
             }
         });
     }
@@ -87,6 +92,11 @@ export class GalleryComponent implements OnInit, OnDestroy {
             portfolioId: this.activeApplication.portfolioId,
             applicationId: this.activeApplication.applicationId,
             actionId: actionId,
+        });
+        ref.afterClosed().subscribe(() => {
+            this.router.navigate(["/gallery",
+                this.activeApplication.portfolioId,
+                this.activeApplication.applicationId]);
         });
     }
 }

@@ -171,7 +171,20 @@ export class BatchExplorerApplication {
 
     public openFromArguments(argv: string[], showWhenReady = true): MainWindow | null {
         if (ClientConstants.isDev) {
-            return this.windows.openNewWindow(undefined, showWhenReady);
+            // return this.windows.openNewWindow(undefined, showWhenReady);
+            const assets = "D:\\Azure\\assets\\multi-sources\\monster.blend";
+            const route = "route/market/blender/actions/render-windows/submit";
+            const params = `sessionId=${Date.now()}`
+                + "&frameStart=1"
+                + "&frameEnd=1"
+                + "&auto-pool=0"
+                + "&input-parameter=inputData"
+                + "&asset-container=blender-monster"
+                + "&blendFile=monster.blend"
+                + `&asset-paths=${assets}`
+                + "&outputs=my-app-outputs";
+
+            return this.windows.openNewWindow(`ms-batchlabs://${route}?${params}`, false);
         }
         const program = commander
             .version(app.getVersion())

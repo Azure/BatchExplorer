@@ -9,8 +9,8 @@ import {
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ServerError, autobind } from "@batch-flask/core";
+import { DialogService } from "@batch-flask/ui";
 import { NotificationService } from "@batch-flask/ui/notifications";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { exists, log } from "@batch-flask/utils";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
@@ -71,7 +71,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private router: Router,
         private templateService: NcjTemplateService,
         private ncjSubmitService: NcjSubmitService,
-        private sidebarManager: SidebarManager,
+        private dialogService: DialogService,
         private fileGroupService: NcjFileGroupService,
         private storageService: StorageContainerService,
         private settingsService: SettingsService) {
@@ -256,17 +256,17 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     private _syncFileGroup(container: string, paths: string[]) {
-        const sidebarRef = this.sidebarManager.open("sync-file-group", FileGroupCreateFormComponent);
+        const sidebarRef = this.dialogService.open(FileGroupCreateFormComponent);
 
-        sidebarRef.component.setValue(new FileGroupCreateDto({
+        sidebarRef.componentInstance.setValue(new FileGroupCreateDto({
             name: this.fileGroupService.removeFileGroupPrefix(container),
             paths: paths.map((path) => new FileOrDirectoryDto({ path: path })),
             includeSubDirectories: true,
         }));
 
-        sidebarRef.afterCompletion.subscribe(() => {
+        sidebarRef.afterClosed().subscribe(() => {
             this.storageService.onContainerUpdated.next();
-            const fileGroupName = sidebarRef.component.getCurrentValue().name;
+            const fileGroupName = sidebarRef.componentInstance.getCurrentValue().name;
 
             if (fileGroupName && this._queryParameters[Constants.KnownQueryParameters.inputParameter]) {
                 // we know what the control is called so update it with the new value
