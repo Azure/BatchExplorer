@@ -1,17 +1,6 @@
 @import "app/styles/variables";
 
 bl-datetime-picker {
-    > .grow {
-        align-items: center;
-    }
-
-    .gcol {
-        height: 40px;
-        bl-form-field {
-            width: 100%;
-        }
-    }
-
     .label {
         display: flex;
         flex-direction: column;
@@ -32,8 +21,9 @@ bl-datetime-picker {
             flex: 0 0 40px;
         }
     }
+
     .timezone {
-        margin-left: 34%;
+        margin-left: 10pc;
         color: $secondary-text;
     }
 
