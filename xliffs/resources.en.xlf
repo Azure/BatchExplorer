@@ -148,6 +148,9 @@
       <trans-unit id="common">
         <source/>
       </trans-unit>
+      <trans-unit id="common.back">
+        <source>Back</source>
+      </trans-unit>
       <trans-unit id="common.configuration">
         <source>Configuration</source>
       </trans-unit>
@@ -315,6 +318,24 @@
       </trans-unit>
       <trans-unit id="form-footer.buttons.select">
         <source>Select</source>
+      </trans-unit>
+      <trans-unit id="gallery">
+        <source/>
+      </trans-unit>
+      <trans-unit id="gallery.actions">
+        <source>Actions</source>
+      </trans-unit>
+      <trans-unit id="gallery.myLibrary">
+        <source>My library</source>
+      </trans-unit>
+      <trans-unit id="gallery.recentTemplates">
+        <source>Recent templates</source>
+      </trans-unit>
+      <trans-unit id="gallery.title">
+        <source>Gallery applications</source>
+      </trans-unit>
+      <trans-unit id="gallery.viewReadme">
+        <source>View readme</source>
       </trans-unit>
       <trans-unit id="job-progress-status">
         <source/>
