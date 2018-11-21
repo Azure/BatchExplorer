@@ -66,11 +66,13 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         });
 
         this._subs.push(this.selectedDate.valueChanges.subscribe((value: any) => {
+            console.log("Date update", value);
             this._date = moment(value);
             this._setDateTime();
         }));
 
         this._subs.push(this.selectedTime.valueChanges.subscribe((value: any) => {
+            console.log("Time updated", value);
             this._setDateTime();
         }));
     }
@@ -111,6 +113,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     private _setDateTime() {
         this._setTime();
         this._datetime = this._date.toISOString();
+        console.log("Date time", this._datetime);
         if (this._propagateChange) {
             this._propagateChange(this._datetime);
         }
