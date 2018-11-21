@@ -3,7 +3,9 @@
         {{ label }}
     </div>
     <div>
-        <input blInput [matDatepicker]="datePicker" [placeholder]="'datetime-picker.date' | i18n" formControlName="date"
+        <input blInput [matDatepicker]="datePicker"
+             placeholder="mm/dd/yyyy"
+            formControlName="date"
             attr.aria-label="{{label}} {{'datetime-picker.date' | i18n}}">
         <mat-datepicker-toggle blFormFieldSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker></mat-datepicker>

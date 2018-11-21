@@ -71,7 +71,6 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         }));
 
         this._subs.push(this.selectedTime.valueChanges.subscribe((value: any) => {
-            console.log("Value", value, typeof value);
             this._setDateTime();
         }));
     }
