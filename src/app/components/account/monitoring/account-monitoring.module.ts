@@ -1,5 +1,5 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
 import { AccountMonitoringHomeComponent } from "./account-monitoring-home";
 import { MonitorChartComponent } from "./monitor-chart";
@@ -11,7 +11,7 @@ const publicComponents = [
 ];
 
 @NgModule({
-    imports: [...commonModules],
+    imports: [CommonModule, ...commonModules],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,
     entryComponents: [

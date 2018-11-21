@@ -20,7 +20,7 @@ export * from "./pinned-entity";
 export * from "./ncj";
 export * from "./ncj-file-group.service";
 export * from "./ncj-submit.service";
-export * from "./ncj-template.service";
+export * from "./ncj/ncj-template.service";
 export * from "./pricing.service";
 export * from "./quota.service";
 export * from "./resource-access";

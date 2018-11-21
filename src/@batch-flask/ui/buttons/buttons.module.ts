@@ -1,5 +1,5 @@
+import { CommonModule } from "@angular/common";
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
@@ -29,7 +29,7 @@ const components = [
     declarations: components,
     entryComponents: [],
     exports: [...components],
-    imports: [BrowserModule, MaterialModule, RouterModule],
+    imports: [CommonModule, MaterialModule, RouterModule],
     providers: [],
 })
 

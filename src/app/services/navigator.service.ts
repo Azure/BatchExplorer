@@ -26,7 +26,9 @@ export class NavigatorService {
     public init() {
         this.ipc.on(Constants.rendererEvents.batchExplorerLink, (event, link) => {
             this.zone.run(() => {
-                this.openBatchExplorerLink(link);
+                setTimeout(() => {
+                    this.openBatchExplorerLink(link);
+                });
             });
         });
     }
@@ -51,10 +53,10 @@ export class NavigatorService {
         }
     }
 
-    public goto(route: string, options: GotoOptions = {}) {
+    public goto(route: string, options: GotoOptions = {}): Promise<boolean> {
         if (options.accountId) {
             this.accountService.selectAccount(options.accountId);
         }
-        this.router.navigateByUrl(route);
+        return this.router.navigateByUrl(route);
     }
 }

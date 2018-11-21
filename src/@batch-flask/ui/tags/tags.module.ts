@@ -1,6 +1,6 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { FormModule } from "@batch-flask/ui/form";
@@ -13,7 +13,7 @@ const publicComponents = [TagsComponent];
 @NgModule({
     imports: [
         ButtonsModule,
-        BrowserModule,
+        CommonModule,
         FormsModule,
         MaterialModule,
         FormModule],

@@ -1,5 +1,5 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { BreadcrumbComponent } from "./breadcrumb";
 import { BreadcrumbGroupComponent } from "./breadcrumb-group";
@@ -13,7 +13,7 @@ const internalComponents = [BreadcrumbComponent];
     declarations: [...components, ...internalComponents],
     exports: components,
     providers: [BreadcrumbService],
-    imports: [BrowserModule, ButtonsModule],
+    imports: [CommonModule, ButtonsModule],
 })
 export class BreadcrumbModule {
 

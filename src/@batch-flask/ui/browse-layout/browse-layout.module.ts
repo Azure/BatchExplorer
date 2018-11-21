@@ -1,6 +1,6 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { AutoFocusModule } from "@batch-flask/ui/auto-focus";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
@@ -21,7 +21,7 @@ const publicComponents = [
 
 @NgModule({
     imports: [
-        ScrollableModule, BrowserModule, FormsModule,
+        ScrollableModule, CommonModule, FormsModule,
         ReactiveFormsModule, ButtonsModule, RouterModule, FormModule,
         AutoFocusModule, SplitPaneModule,
     ],

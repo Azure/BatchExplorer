@@ -6,3 +6,4 @@ common:
   configuration: Configuration
   confirm: Confirm
   required: Required
+  back: Back

@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 import { MatOptionSelectionChange } from "@angular/material";
 import { FilterBuilder, ListView } from "@batch-flask/core";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { DialogService } from "@batch-flask/ui";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { NcjFileGroupService } from "app/services";
@@ -16,7 +16,6 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import "./file-group-picker.scss";
 
-// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-file-group-picker",
     templateUrl: "file-group-picker.html",
@@ -42,7 +41,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         private fileGroupService: NcjFileGroupService,
         private autoStorageService: AutoStorageService,
         private storageContainerService: StorageContainerService,
-        private sidebarManager: SidebarManager) {
+        private dialogService: DialogService) {
 
         this.fileGroupsData = this.storageContainerService.listView();
 
@@ -113,9 +112,9 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     public createFileGroup(event: MatOptionSelectionChange) {
         // isUserInput true when selected, false when not
         if (!event.source.value && event.isUserInput) {
-            const sidebar = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
-            sidebar.afterCompletion.subscribe(() => {
-                const newFileGroupName = sidebar.component.getCurrentValue().name;
+            const dialog = this.dialogService.open(FileGroupCreateFormComponent);
+            dialog.afterClosed().subscribe(() => {
+                const newFileGroupName = dialog.componentInstance.getCurrentValue().name;
                 this.value.setValue(this.fileGroupService.addFileGroupPrefix(newFileGroupName));
             });
         }

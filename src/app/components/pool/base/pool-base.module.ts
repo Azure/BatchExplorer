@@ -1,6 +1,6 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 import { BaseModule } from "@batch-flask/ui";
@@ -18,7 +18,7 @@ const publicComponents = [
     declarations: publicComponents,
     exports: publicComponents,
     imports: [
-        BrowserModule, MaterialModule, RouterModule, BaseModule, FormsModule,
+        CommonModule, MaterialModule, RouterModule, BaseModule, FormsModule,
         ReactiveFormsModule,
     ],
 })

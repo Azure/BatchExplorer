@@ -4,7 +4,7 @@ import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { RouterModule } from "@angular/router";
+import { PreloadAllModules, RouterModule } from "@angular/router";
 
 // application router
 import { routes } from "./app.routes";
@@ -21,7 +21,6 @@ import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
 import { JobModule } from "app/components/job/job.module";
-import { MarketModule } from "app/components/market/market.module";
 import { NodeModule } from "app/components/node/node.module";
 import { PoolModule } from "app/components/pool/pool.module";
 import { SettingsModule } from "app/components/settings";
@@ -72,7 +71,6 @@ import {
     NcjFileGroupService,
     NcjModule,
     NcjSubmitService,
-    NcjTemplateService,
     NetworkConfigurationService,
     NodeConnectService,
     NodeService,
@@ -102,7 +100,7 @@ import { RendererTelemetryModule } from "./services/telemetry";
 const modules = [
     AccountModule, ApplicationModule, CertificateModule,
     DataModule, FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
-    SettingsModule, TaskModule, MarketModule, LayoutModule,
+    SettingsModule, TaskModule, LayoutModule,
     MiscModule,
     NcjModule,
 ];
@@ -126,7 +124,11 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         MaterialModule,
         ReactiveFormsModule,
         RendererTelemetryModule,
-        RouterModule.forRoot(routes, { useHash: true, paramsInheritanceStrategy: "always" }),
+        RouterModule.forRoot(routes, {
+            useHash: true,
+            paramsInheritanceStrategy: "always",
+            preloadingStrategy: PreloadAllModules,
+        }),
         BaseModule,
         HttpClientModule,
         ...modules,
@@ -165,7 +167,6 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         NavigatorService,
         NcjFileGroupService,
         NcjSubmitService,
-        NcjTemplateService,
         NetworkConfigurationService,
         NodeService,
         NodeUserService,

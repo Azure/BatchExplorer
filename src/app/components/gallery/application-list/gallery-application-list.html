@@ -1,0 +1,13 @@
+<a class="application local-templates" title="All your local templates" routerLink="/market/local">
+    <i class="fa fa-book logo" aria-hidden="true"></i>
+    <div class="name">{{'gallery.myLibrary' | i18n }}</div>
+</a>
+<bl-clickable
+    *ngFor="let application of displayedApplications;trackBy: trackApplication"
+    class="application"
+    [class.active]="application.id === active?.applicationId && application.portfolioId === active?.portfolioId"
+    [title]="application.description"
+    (do)="selectApplication(application)">
+    <img class="logo" [src]="application.icon" alt="Logo of {{application.name}}">
+    <div class="name">{{application.name}}</div>
+</bl-clickable>

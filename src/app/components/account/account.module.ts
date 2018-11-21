@@ -25,12 +25,12 @@ const components = [
 ];
 
 const modules = [
+    ...commonModules,
     AccountBrowseModule,
     AccountMonitoringModule,
     PoolBaseModule,
     ProgramaticUsageModule,
     PoolGraphsModule,
-    ...commonModules,
 ];
 
 @NgModule({
