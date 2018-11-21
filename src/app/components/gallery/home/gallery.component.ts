@@ -54,7 +54,9 @@ export class GalleryComponent implements OnInit, OnDestroy {
                 this.changeDetector.markForCheck();
             }
             if ("actionId" in params) {
-                this.submitAction(params["actionId"]);
+                setTimeout(() => {
+                    this.submitAction(params["actionId"]);
+                });
                 this.changeDetector.markForCheck();
             }
         });
