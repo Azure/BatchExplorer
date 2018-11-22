@@ -15,7 +15,7 @@ class TestComponent {
     public control = new FormControl();
 }
 
-fdescribe("DatetimePickerComponent", () => {
+describe("DatetimePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
