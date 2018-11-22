@@ -205,6 +205,18 @@
       <trans-unit id="custom-image-picker.nodeAgentSku.label">
         <source>Node agent</source>
       </trans-unit>
+      <trans-unit id="datetime-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="datetime-picker.currentTimeZone">
+        <source>Current timezone</source>
+      </trans-unit>
+      <trans-unit id="datetime-picker.date">
+        <source>date</source>
+      </trans-unit>
+      <trans-unit id="datetime-picker.time">
+        <source>time</source>
+      </trans-unit>
       <trans-unit id="duration-picker">
         <source/>
       </trans-unit>
