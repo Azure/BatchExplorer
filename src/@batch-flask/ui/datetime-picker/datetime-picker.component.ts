@@ -49,8 +49,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     public datetime: FormGroup;
     public currentTimeZone: string;
 
-    private _propagateChange: (value: string) => void = null;
-    private _datetime: string;
+    private _propagateChange: (value: Date) => void = null;
     private _date: moment.Moment;
     private _subs: Subscription[] = [];
 
@@ -66,13 +65,11 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         });
 
         this._subs.push(this.selectedDate.valueChanges.subscribe((value: any) => {
-            console.log("Date update", value);
             this._date = moment(value);
             this._setDateTime();
         }));
 
         this._subs.push(this.selectedTime.valueChanges.subscribe((value: any) => {
-            console.log("Time updated", value);
             this._setDateTime();
         }));
     }
@@ -85,8 +82,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    public writeValue(value: string): void {
-        this._datetime = value;
+    public writeValue(value: Date|string|null): void {
         this._parseDateTime(value);
     }
 
@@ -112,10 +108,8 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
 
     private _setDateTime() {
         this._setTime();
-        this._datetime = this._date.toISOString();
-        console.log("Date time", this._datetime);
         if (this._propagateChange) {
-            this._propagateChange(this._datetime);
+            this._propagateChange(this._date.toDate());
         }
         this.changeDetector.markForCheck();
     }
@@ -128,7 +122,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         });
     }
 
-    private _parseDateTime(value: string) {
+    private _parseDateTime(value: Date | string | null) {
         if (!value) {
             return;
         }

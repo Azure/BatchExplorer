@@ -15,7 +15,7 @@ class TestComponent {
     public control = new FormControl();
 }
 
-describe("DatetimePickerComponent", () => {
+fdescribe("DatetimePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -46,7 +46,7 @@ describe("DatetimePickerComponent", () => {
     it("propagate the changes when updating the date", () => {
         updateInput(dateInputEl, "12/14/2017");
 
-        expect(testComponent.control.value).toEqual(new Date(2017, 12, 14).toISOString());
+        expect(testComponent.control.value).toEqual(new Date(2017, 11, 14));
     });
 
     it("propagate null when only the time is set", () => {
@@ -59,6 +59,18 @@ describe("DatetimePickerComponent", () => {
         updateInput(dateInputEl, "12/14/2017");
         updateInput(timeInputEl, "17:32");
 
-        expect(testComponent.control.value).toEqual(new Date(2017, 12, 14, 17, 32).toISOString());
+        expect(testComponent.control.value).toEqual(new Date(2017, 11, 14, 17, 32));
+    });
+
+    it("updates the inputs when setting the date time as a string", () => {
+        testComponent.control.setValue(new Date(2017, 11, 14, 17, 32).toISOString());
+        expect(dateInputEl.nativeElement.value).toEqual("12/14/2017");
+        expect(timeInputEl.nativeElement.value).toEqual("17:32");
+    });
+
+    it("updates the inputs when setting the date time as a date", () => {
+        testComponent.control.setValue(new Date(2017, 11, 14, 17, 32));
+        expect(dateInputEl.nativeElement.value).toEqual("12/14/2017");
+        expect(timeInputEl.nativeElement.value).toEqual("17:32");
     });
 });
