@@ -7,7 +7,7 @@
     <span *ngIf="collapsed">
         <ng-content select="[collapsed-preview]"></ng-content>
     </span>
-    <bl-button color="light" type="round" [action]="triggerEdit" *ngIf="edit"><i class="fa fa-pencil"></i></bl-button>
+    <bl-button color="light" type="round" [action]="triggerEdit" *ngIf="edit" title="Edit"><i class="fa fa-pencil"></i></bl-button>
 </bl-clickable>
 <div class="group-content" *ngIf="!collapsed" [id]="contentId">
     <div class="warning-message" *ngIf="warningMessage">
