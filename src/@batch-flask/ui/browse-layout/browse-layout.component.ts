@@ -5,7 +5,7 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
+import { Filter, FilterBuilder, I18nService, autobind } from "@batch-flask/core";
 import { KeyCode } from "@batch-flask/core/keys";
 import { ListSelection } from "@batch-flask/core/list";
 import { SanitizedError } from "@batch-flask/utils";
@@ -15,6 +15,7 @@ import { SplitPaneComponent, SplitPaneConfig } from "../split-pane";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import "./browse-layout.scss";
 
 export interface BrowseLayoutConfig {
@@ -97,6 +98,8 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
 
     constructor(
         activeRoute: ActivatedRoute,
+        private i18n: I18nService,
+        private liveAnouncer: LiveAnnouncer,
         private changeDetector: ChangeDetectorRef) {
 
         activeRoute.queryParams.subscribe((params: any) => {
@@ -188,6 +191,7 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
 
         if (this.showAdvancedFilter) {
             this._splitPane.updateSize(700);
+            this.liveAnouncer.announce(this.i18n.t("browse-layout.openedAdvancedFilter"));
             setTimeout(() => {
                 const el = this.advancedFilterContainer.nativeElement.querySelectorAll(
                     `[tabindex]:not([tabindex="-1"])`, "input", "textarea", "button", "[href]")[0];

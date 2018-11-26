@@ -3,3 +3,4 @@ file-explorer:
   unknownFile: Cannot find this file. Check the path.
   noPathMatch: No files found for "{path}"
   noFiles: No files
+  collapseAll: Collapse all

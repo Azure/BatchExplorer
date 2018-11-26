@@ -76,11 +76,11 @@ describe("PropertyGroupComponent", () => {
         expect(header.attributes["aria-expanded"]).toEqual("true");
     });
 
-    it("has the aria owns attributes", () => {
+    it("has the aria controls attributes", () => {
         const content = de.query(By.css(".group-content"));
 
-        expect(header.attributes["aria-owns"]).not.toBeFalsy();
-        expect(header.attributes["aria-owns"]).toEqual(content.nativeElement.id);
+        expect(header.attributes["aria-controls"]).not.toBeFalsy();
+        expect(header.attributes["aria-controls"]).toEqual(content.nativeElement.id);
     });
 
     describe("when group is collapsed", () => {

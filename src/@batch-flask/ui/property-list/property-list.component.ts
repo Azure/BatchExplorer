@@ -4,7 +4,7 @@ import "./property-list.scss";
 
 @Component({
     selector: "bl-property-list",
-    template: `<fieldset><ng-content></ng-content></fieldset>`,
+    template: `<ng-content></ng-content>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyListComponent {
