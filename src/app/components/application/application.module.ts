@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
 } from "./action";
+import { BatchApplicationRoutingModule } from "./batch-application-routing.module";
 import { ApplicationListComponent, ApplicationPreviewComponent } from "./browse";
 import { ApplicationConfigurationComponent, ApplicationDefaultComponent , ApplicationDetailsComponent,
     ApplicationPackageTableComponent, ApplicationPackagesComponent,
@@ -10,7 +11,8 @@ import { ApplicationConfigurationComponent, ApplicationDefaultComponent , Applic
 import { ApplicationErrorDisplayComponent } from "./errors";
 import { ApplicationHomeComponent } from "./home";
 
-const components = [ActivatePackageDialogComponent, ApplicationCreateDialogComponent, ApplicationDefaultComponent,
+const components = [
+    ActivatePackageDialogComponent, ApplicationCreateDialogComponent, ApplicationDefaultComponent,
     ApplicationDetailsComponent, ApplicationEditDialogComponent, ApplicationErrorDisplayComponent,
     ApplicationHomeComponent, ApplicationListComponent, ApplicationPackagesComponent, ApplicationPackageTableComponent,
     ApplicationPreviewComponent, ApplicationConfigurationComponent,
@@ -19,7 +21,7 @@ const components = [ActivatePackageDialogComponent, ApplicationCreateDialogCompo
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [...commonModules ],
+    imports: [BatchApplicationRoutingModule, ...commonModules ],
     entryComponents: [
         ActivatePackageDialogComponent,
         ApplicationCreateDialogComponent,

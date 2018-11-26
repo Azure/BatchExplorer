@@ -6,6 +6,7 @@ import { JobScheduleAdvancedFilterComponent } from "./browse/filter/job-schedule
 import { JobScheduleListComponent } from "./browse/job-schedule-list.component";
 import { JobScheduleDetailsModule } from "./details/job-schedule-details.module";
 import { JobScheduleHomeComponent } from "./home/job-schedule-home.component";
+import { JobScheduleRoutingModule } from "./job-schedule-routing.module";
 
 const components = [
     JobScheduleAdvancedFilterComponent,
@@ -14,7 +15,7 @@ const components = [
 ];
 
 const modules = [
-    JobScheduleActionModule, JobScheduleDetailsModule, ...commonModules,
+    JobScheduleRoutingModule, JobScheduleActionModule, JobScheduleDetailsModule, ...commonModules,
 ];
 
 @NgModule({

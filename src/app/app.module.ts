@@ -15,11 +15,7 @@ import { AppComponent } from "app/app.component";
 // extenal modules
 import { BaseModule } from "@batch-flask/ui";
 import { AccountModule } from "app/components/account/account.module";
-import { ApplicationModule } from "app/components/application/application.module";
-import { CertificateModule } from "app/components/certificate/certificate.module";
-import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
-import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
 import { SettingsModule } from "app/components/settings";
 
 // unhandled application error handler
@@ -94,9 +90,8 @@ import { UsageDetailsService } from "./services/azure-consumption";
 import { RendererTelemetryModule } from "./services/telemetry";
 
 const modules = [
-    AccountModule, ApplicationModule, CertificateModule,
-    DataModule, FileModule,
-    JobScheduleModule,
+    AccountModule,
+    FileModule,
     SettingsModule,
     LayoutModule,
     MiscModule,
