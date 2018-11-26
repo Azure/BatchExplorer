@@ -30,6 +30,7 @@ export class QuickListRowRenderComponent implements OnChanges {
     @Input() public stateDef: QuickListRowStateDirective;
     @Input() public extraDef: QuickListRowExtraDirective;
     @Input() public statusDef: QuickListRowStatusDirective;
+    @Input() public current: boolean;
     @Input() @HostBinding("class.focused") public focused: boolean;
     @Input() @HostBinding("class.selected") public selected: boolean;
 
@@ -41,6 +42,8 @@ export class QuickListRowRenderComponent implements OnChanges {
     @HostBinding("attr.aria-setsize") public get ariaSetSize() {
         return this.list.items.length;
     }
+
+    public context: any;
 
     constructor(
         @Inject(forwardRef(() => QuickListComponent)) private list: QuickListComponent,
@@ -59,6 +62,14 @@ export class QuickListRowRenderComponent implements OnChanges {
                 });
             }
         }
+
+        if (changes.focused || changes.item) {
+            this.context = {
+                $implicit: this.item,
+                focused: this.current,
+                active: this.focused,
+            };
+        }
     }
 
     @HostListener("click", ["$event"])
@@ -74,4 +85,5 @@ export class QuickListRowRenderComponent implements OnChanges {
     public get id() {
         return this.item.id;
     }
+
 }

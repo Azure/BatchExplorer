@@ -18,6 +18,7 @@ import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { Permission, PermissionService } from "@batch-flask/ui/permission";
 import { Subscription } from "rxjs";
 
+import { exists } from "@batch-flask/utils";
 import "./clickable.scss";
 
 @Component({
@@ -40,7 +41,14 @@ export class ClickableComponent implements OnChanges, OnDestroy {
      */
     @HostBinding("class.disabled") public get isDisabled() { return this.disabled || this._permissionDisabled; }
     @Output() public do = new EventEmitter<Event>();
-    @HostBinding("tabindex") public get tabindex() {
+
+    @Input() @HostBinding("tabindex") public set tabindex(tabindex: string | undefined) {
+        this._tabindex = tabindex;
+    }
+    public get tabindex() {
+        if (exists(this._tabindex)) {
+            return this._tabindex;
+        }
         return this.isDisabled ? "-1" : "0";
     }
     @HostBinding("class.focus-outline") public focusOutline = true;
@@ -57,6 +65,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     private _routerLink?: RouterLink;
     private _sub: Subscription;
     private _permissionDisabled = false;
+    private _tabindex: string | undefined;
 
     constructor(injector: Injector, @Self() @Optional() routerLink: RouterLink) {
         this._routerLink = routerLink;
