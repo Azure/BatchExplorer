@@ -1,5 +1,5 @@
-<bl-clickable class="group-header" (do)="toogleCollapsed()" *ngIf="label" [attr.aria-expanded]="!collapsed" [attr.aria-owns]="contentId">
-    <div class="collapse-icon" *ngIf="collapsable">
+<bl-clickable class="group-header" (do)="toogleCollapsed()" *ngIf="label" [attr.aria-expanded]="!collapsed" [attr.aria-controls]="contentId">
+    <div class="collapse-icon" *ngIf="collapsable" aria-hidden="true">
         <i class="fa fa-caret-right" *ngIf="collapsed"></i>
         <i class="fa fa-caret-down" *ngIf="!collapsed"></i>
     </div>
@@ -9,7 +9,7 @@
     </span>
     <bl-button color="light" type="round" [action]="triggerEdit" *ngIf="edit"><i class="fa fa-pencil"></i></bl-button>
 </bl-clickable>
-<div class="group-content" *ngIf="!collapsed" [id]="contentId" role="application">
+<div class="group-content" *ngIf="!collapsed" [id]="contentId">
     <div class="warning-message" *ngIf="warningMessage">
         <i class="fa fa-warning"></i>
         <span>{{warningMessage}}</span>

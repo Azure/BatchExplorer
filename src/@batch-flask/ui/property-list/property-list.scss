@@ -8,7 +8,7 @@ bl-property-list {
 bl-bool-property {
     &.enabled {
         .fa-toggle-on {
-            color: map-get($success, 500);
+            color: $success-color;
         }
     }
 }
