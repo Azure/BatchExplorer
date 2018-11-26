@@ -43,7 +43,7 @@ export const TranslatedLocales = {
     [Locale.ChineseTraditional]: "中文(繁體)‎",
 };
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export abstract class LocaleService {
     public locale: Locale;
 

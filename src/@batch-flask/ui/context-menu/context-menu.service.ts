@@ -8,7 +8,7 @@ import {
     MultiContextMenuItem,
 } from "./context-menu.model";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ContextMenuService {
     constructor(private zone: NgZone, private remote: ElectronRemote) {
 

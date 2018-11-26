@@ -5,7 +5,7 @@ import { SanitizedError } from "@batch-flask/utils";
  * Injectable service wrapping electron shell.
  * This makes it easier to mock the electron shell.
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ElectronShell {
     private _shell: Electron.Shell;
     constructor() {

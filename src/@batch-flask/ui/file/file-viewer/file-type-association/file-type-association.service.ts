@@ -21,7 +21,7 @@ export interface ViewerRegistration {
     extensions?: string[];
 }
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class FileTypeAssociationService implements OnDestroy {
     private _associations: FileAssociation[] = [];
     private _settingsSub: Subscription;

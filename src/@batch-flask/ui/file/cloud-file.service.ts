@@ -9,7 +9,7 @@ import { FileLoadOptions, FileLoadResult, FileLoader } from "./file-loader";
 import { FileDialogViewerComponent } from "./file-viewer";
 import { File } from "./file.model";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class CloudFileService {
     constructor(
         private dialogService: DialogService,

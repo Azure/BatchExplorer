@@ -14,7 +14,7 @@ export interface TelemetryUploader {
 
 export const TELEMETRY_UPLOADER = new InjectionToken("TELEMETRY_UPLOADER");
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class TelemetryService {
 
     private _enable = false;

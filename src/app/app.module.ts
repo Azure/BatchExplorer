@@ -20,8 +20,6 @@ import { CertificateModule } from "app/components/certificate/certificate.module
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
-import { JobModule } from "app/components/job/job.module";
-import { NodeModule } from "app/components/node/node.module";
 import { PoolModule } from "app/components/pool/pool.module";
 import { SettingsModule } from "app/components/settings";
 import { TaskModule } from "app/components/task/task.module";
@@ -30,7 +28,7 @@ import { TaskModule } from "app/components/task/task.module";
 import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
-import { LocaleService, MaterialModule, PollService, TranslationsLoaderService } from "@batch-flask/core";
+import { LocaleService, MaterialModule, TranslationsLoaderService } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
@@ -99,7 +97,7 @@ import { RendererTelemetryModule } from "./services/telemetry";
 
 const modules = [
     AccountModule, ApplicationModule, CertificateModule,
-    DataModule, FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
+    DataModule, FileModule, JobScheduleModule, PoolModule,
     SettingsModule, TaskModule, LayoutModule,
     MiscModule,
     NcjModule,
@@ -171,7 +169,6 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         NodeService,
         NodeUserService,
         PinnedEntityService,
-        PollService,
         PoolService,
         PoolNodeCountService,
         PoolOsService,

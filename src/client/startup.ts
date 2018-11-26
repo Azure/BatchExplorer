@@ -50,7 +50,7 @@ async function startApplication(batchExplorerApp: BatchExplorerApplication, menu
     batchExplorerApp.init().then(() => {
         menu.applyMenu();
         batchExplorerApp.start();
-        // batchExplorerApp.debugCrash();
+        batchExplorerApp.debugCrash();
     });
 }
 

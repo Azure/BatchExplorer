@@ -9,7 +9,7 @@ export const AUTO_UPDATE_MAIN_SERVICE_TOKEN = "AUTO_UPDATE_SERVICE";
 
 export const AUTO_UPDATE_CHECK_INTERVAL = 3600_000; // Every hour
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AutoUpdateMainService extends AutoUpdateService implements OnDestroy {
 
     public set autoInstallOnAppQuit(value: boolean) {

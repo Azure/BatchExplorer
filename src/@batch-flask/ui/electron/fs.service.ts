@@ -6,7 +6,7 @@ import { ElectronRemote } from "../../electron/remote.service";
 /**
  * Service to handle saving files to the client FileSystem
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class FileSystemService {
     public commonFolders: any;
     private _fs: any;

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { ObjectUtils, SecureUtils } from "@batch-flask/utils";
 import { Observable, Subscription, timer } from "rxjs";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class PollService {
     private _pollTrackers: StringMap<StringMap<PollTracker>> = {};
     private _activePoolTrackers: StringMap<PollTracker> = {};

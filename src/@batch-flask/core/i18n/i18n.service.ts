@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { TranslationsLoaderService } from "@batch-flask/core/i18n/translations-loader.service";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class I18nService {
     private _translations = new Map<string, string>();
 

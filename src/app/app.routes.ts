@@ -17,10 +17,6 @@ import { DataDefaultComponent, DataDetailsComponent } from "./components/data/de
 import { DataHomeComponent } from "./components/data/home/data-home.component";
 import { JobScheduleDefaultComponent, JobScheduleDetailsComponent } from "./components/job-schedule/details";
 import { JobScheduleHomeComponent } from "./components/job-schedule/home/job-schedule-home.component";
-import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
-import { JobHomeComponent } from "./components/job/home/job-home.component";
-import { NodeDefaultComponent, NodeDetailsComponent } from "./components/node/details";
-import { NodeHomeComponent } from "./components/node/home";
 import { PoolDefaultComponent, PoolDetailsComponent } from "./components/pool/details";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
 import { TaskDefaultComponent, TaskDetailsComponent } from "./components/task/details";
@@ -53,11 +49,7 @@ export const routes: Routes = [
     {
         path: "jobs",
         canActivate: [NavigationGuard],
-        component: JobHomeComponent,
-        children: [
-            { path: "", component: JobDefaultComponent }, // jobs/
-            { path: ":id", component: JobDetailsComponent }, // jobs/{job.id}
-        ],
+        loadChildren: "./components/job/job.module#JobModule",
     },
     {
         path: "jobschedules",
@@ -130,11 +122,7 @@ export const routes: Routes = [
     },
     {
         path: "pools/:poolId/nodes",
-        component: NodeHomeComponent,
-        children: [
-            { path: "", component: NodeDefaultComponent }, // pools/{pool.id}/nodes
-            { path: ":id", component: NodeDetailsComponent }, // pools/{pool.id}/nodes/{node.id}
-        ],
+        loadChildren: "./components/node/node.module#NodeModule",
     },
     {
         path: "jobs/:jobId/tasks",

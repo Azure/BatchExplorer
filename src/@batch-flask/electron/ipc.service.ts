@@ -15,7 +15,7 @@ export const IpcPromiseEvent = {
 /**
  * Wrapper around electron ipcRenderer
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class IpcService {
     private _ipcRenderer: Electron.IpcRenderer;
     constructor() {
