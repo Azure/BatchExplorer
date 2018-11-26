@@ -20,9 +20,7 @@ import { CertificateModule } from "app/components/certificate/certificate.module
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
-import { PoolModule } from "app/components/pool/pool.module";
 import { SettingsModule } from "app/components/settings";
-import { TaskModule } from "app/components/task/task.module";
 
 // unhandled application error handler
 import { BatchExplorerErrorHandler } from "app/error-handler";
@@ -97,8 +95,10 @@ import { RendererTelemetryModule } from "./services/telemetry";
 
 const modules = [
     AccountModule, ApplicationModule, CertificateModule,
-    DataModule, FileModule, JobScheduleModule, PoolModule,
-    SettingsModule, TaskModule, LayoutModule,
+    DataModule, FileModule,
+    JobScheduleModule,
+    SettingsModule,
+    LayoutModule,
     MiscModule,
     NcjModule,
 ];
@@ -123,7 +123,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         ReactiveFormsModule,
         RendererTelemetryModule,
         RouterModule.forRoot(routes, {
-            useHash: true,
+            // useHash: true,
             paramsInheritanceStrategy: "always",
             preloadingStrategy: PreloadAllModules,
         }),

@@ -17,10 +17,6 @@ import { DataDefaultComponent, DataDetailsComponent } from "./components/data/de
 import { DataHomeComponent } from "./components/data/home/data-home.component";
 import { JobScheduleDefaultComponent, JobScheduleDetailsComponent } from "./components/job-schedule/details";
 import { JobScheduleHomeComponent } from "./components/job-schedule/home/job-schedule-home.component";
-import { PoolDefaultComponent, PoolDetailsComponent } from "./components/pool/details";
-import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
-import { TaskDefaultComponent, TaskDetailsComponent } from "./components/task/details";
-import { TaskHomeComponent } from "./components/task/home";
 
 // set up the routing table
 export const routes: Routes = [
@@ -63,11 +59,7 @@ export const routes: Routes = [
     {
         path: "pools",
         canActivate: [NavigationGuard],
-        component: PoolHomeComponent,
-        children: [
-            { path: "", component: PoolDefaultComponent }, // pools/
-            { path: ":id", component: PoolDetailsComponent }, // pools/{pool.id}
-        ],
+        loadChildren: "./components/pool/pool.module#PoolModule",
     },
     {
         path: "certificates",
@@ -126,11 +118,7 @@ export const routes: Routes = [
     },
     {
         path: "jobs/:jobId/tasks",
-        component: TaskHomeComponent,
-        children: [
-            { path: "", component: TaskDefaultComponent }, // jobs/{job.id}/tasks
-            { path: ":id", component: TaskDetailsComponent }, // jobs/{job.id}/tasks/{task.id}
-        ],
+        loadChildren: "./components/task/task.module#TaskModule",
     },
     {
         path: "jobs/:jobId/graphs",

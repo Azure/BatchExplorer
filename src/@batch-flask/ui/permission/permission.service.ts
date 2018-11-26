@@ -15,10 +15,6 @@ export enum Permission {
 export class PermissionService {
     private _userPermissionProvider: () => Observable<Permission>;
 
-    constructor() {
-        console.log("Build dis service");
-    }
-
     public setUserPermissionProvider(provider: () => Observable<Permission>) {
         this._userPermissionProvider = provider;
     }
