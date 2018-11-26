@@ -145,6 +145,12 @@
       <trans-unit id="blob-container-picker.loading">
         <source>Loading containers</source>
       </trans-unit>
+      <trans-unit id="browse-layout">
+        <source/>
+      </trans-unit>
+      <trans-unit id="browse-layout.openedAdvancedFilter">
+        <source>Opened advanced filter blade</source>
+      </trans-unit>
       <trans-unit id="common">
         <source/>
       </trans-unit>
@@ -162,6 +168,12 @@
       </trans-unit>
       <trans-unit id="common.no">
         <source>No</source>
+      </trans-unit>
+      <trans-unit id="common.refresh">
+        <source>Refresh</source>
+      </trans-unit>
+      <trans-unit id="common.refreshing">
+        <source>Refreshing</source>
       </trans-unit>
       <trans-unit id="common.required">
         <source>Required</source>
@@ -271,8 +283,20 @@
       <trans-unit id="entity-command.confirm.single.title">
         <source>Are you sure you want to {action} this {type}</source>
       </trans-unit>
+      <trans-unit id="entity-configuration">
+        <source/>
+      </trans-unit>
+      <trans-unit id="entity-configuration.viewAsJSON">
+        <source>View as JSON</source>
+      </trans-unit>
+      <trans-unit id="entity-configuration.viewClassic">
+        <source>Classic view</source>
+      </trans-unit>
       <trans-unit id="file-explorer">
         <source/>
+      </trans-unit>
+      <trans-unit id="file-explorer.collapseAll">
+        <source>Collapse all</source>
       </trans-unit>
       <trans-unit id="file-explorer.noFiles">
         <source>No files</source>
