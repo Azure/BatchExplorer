@@ -8,7 +8,6 @@ import { SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { AccountMonitoringHomeComponent } from "./components/account/monitoring";
-import { DataHomeComponent } from "./components/data/home/data-home.component";
 
 // set up the routing table
 export const routes: Routes = [
@@ -81,10 +80,6 @@ export const routes: Routes = [
     },
     {
         path: "data",
-        component: DataHomeComponent,
-    },
-    {
-        path: "data/:dataSource/containers",
         canActivate: [NavigationGuard],
         loadChildren: "./components/data/data.module#DataModule",
     },

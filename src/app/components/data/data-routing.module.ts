@@ -7,6 +7,10 @@ const routes: Routes = [
     {
         path: "",
         component: DataHomeComponent,
+    },
+    {
+        path: ":dataSource/containers",
+        component: DataHomeComponent,
         children: [
             { path: "", component: DataDefaultComponent }, // data/
             { path: ":id", component: DataDetailsComponent }, // data/{file-group.id}
@@ -18,6 +22,6 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class JobScheduleRoutingModule {
+export class DataRoutingModule {
 
 }
