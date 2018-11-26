@@ -6,6 +6,7 @@ import { SanitizedError, exists } from "@batch-flask/utils";
 import { Observable, Subject } from "rxjs";
 
 export interface TableColumnRef {
+    id: string;
     name: string;
     defaultWidth: number;
     minWidth: number;

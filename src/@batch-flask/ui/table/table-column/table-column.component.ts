@@ -13,12 +13,16 @@ import { TableColumnRef } from "../table-column-manager";
 import { TableHeadCellDefDirective } from "../table-head-cell-def";
 import { TableComponent } from "../table.component";
 
+let idCounter = 0;
+
 @Component({
     selector: "bl-column",
     template: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges {
+    @Input() public id = `bl-column-${idCounter++}`;
+
     @Input() public defaultWidth: number = null;
     /**
      * What should be the minimum width of the column
@@ -62,6 +66,7 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
 
     public getRef(): TableColumnRef {
         return {
+            id: this.id,
             name: this.name,
             defaultWidth: this.defaultWidth,
             minWidth: this.minWidth,
