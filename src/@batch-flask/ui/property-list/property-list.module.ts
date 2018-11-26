@@ -5,6 +5,7 @@ import { MaterialModule } from "@batch-flask/core";
 
 import { EditorModule } from "@batch-flask/ui/editor";
 import { ButtonsModule } from "../buttons";
+import { I18nUIModule } from "../i18n";
 import { BoolPropertyComponent } from "./bool-property";
 import { EntityConfigurationComponent } from "./entity-configuration";
 import { LinkPropertyComponent } from "./link-property";
@@ -39,7 +40,7 @@ const privateComponents = [
     declarations: [...publicComponents, ...privateComponents],
     entryComponents: [],
     exports: publicComponents,
-    imports: [ButtonsModule, CommonModule, MaterialModule, RouterModule, EditorModule],
+    imports: [I18nUIModule, ButtonsModule, CommonModule, MaterialModule, RouterModule, EditorModule],
     providers: [],
 })
 
