@@ -16,7 +16,6 @@ import { BrowseLayoutModule } from "./browse-layout";
 import { ButtonsModule } from "./buttons";
 import { CardModule } from "./card";
 import { ChartsModule } from "./charts";
-import { ContextMenuModule } from "./context-menu";
 import { DateModule } from "./date";
 import { DatetimePickerComponent } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
@@ -66,7 +65,6 @@ const modules = [
     ButtonsModule,
     CardModule,
     ChartsModule,
-    ContextMenuModule,
     DateModule,
     DialogsModule,
     DropdownModule,

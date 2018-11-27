@@ -8,7 +8,6 @@ import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import { FileDialogViewerComponent } from "./file-dialog-viewer";
 import { FileTooLargeComponent } from "./file-too-large";
-import { FileTypeAssociationService } from "./file-type-association";
 import { FileViewerContainerComponent, FileViewerHeaderComponent } from "./file-viewer-container";
 import { ImageFileViewerComponent } from "./image-file-viewer";
 import { LogFileViewerComponent } from "./log-file-viewer";
@@ -42,9 +41,6 @@ const publicComponents = [
         LogFileViewerComponent,
         ImageFileViewerComponent,
         TextFileViewerComponent,
-    ],
-    providers: [
-        FileTypeAssociationService,
     ],
 })
 export class FileViewerModule {

@@ -69,8 +69,6 @@ const components = [
         ServerErrorModule,
         ...modules,
     ],
-    providers: [
-    ],
 })
 export class FormModule {
 }
