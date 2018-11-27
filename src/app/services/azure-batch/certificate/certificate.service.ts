@@ -48,7 +48,7 @@ export class InvalidCertificateFormatError extends SanitizedError {
     }
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class CertificateService {
     /**
      * Triggered only when a certificate is added through this app.

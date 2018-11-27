@@ -19,7 +19,7 @@ export class ThemeNotFoundError extends Error {
 /**
  * Service handling theme selection
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ThemeService implements OnDestroy {
     public baseTheme = "classic";
     public defaultTheme = "classic";

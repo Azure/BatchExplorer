@@ -10,7 +10,7 @@ const defaultSettings: BatchFlaskSettings = {
     fileAssociations: {},
 };
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class BatchFlaskSettingsService {
     public settingsObs: Observable<BatchFlaskSettings>;
 

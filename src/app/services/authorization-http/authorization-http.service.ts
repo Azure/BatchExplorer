@@ -23,7 +23,7 @@ export enum BatchAccountPermission {
  * Wrapper around the http service so call the azure ARM authorization api.
  * Set the Authorization header and the api version
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AuthorizationHttpService {
     private _permission: Observable<Permission>;
     constructor(

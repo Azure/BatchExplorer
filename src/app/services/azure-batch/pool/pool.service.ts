@@ -24,7 +24,7 @@ export interface PoolParams {
     id?: string;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PoolService {
     /**
      * Triggered only when a pool is added through this app.

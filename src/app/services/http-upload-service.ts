@@ -18,7 +18,7 @@ export interface UploadBlockOptions {
 /**
  * Http service for uploading files into storage
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class HttpUploadService {
     constructor(private http: HttpClient) {
     }

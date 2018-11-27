@@ -8,7 +8,7 @@ export interface JobHookTaskListParams {
     jobId?: string;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class JobHookTaskService {
     private _cache = new TargetedDataCache<JobHookTaskListParams, JobHookTask>({
         key: ({ jobId }) => jobId,

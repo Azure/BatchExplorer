@@ -9,7 +9,7 @@ import { LocalFileStorage } from "./local-file-storage.service";
 
 const filename = Constants.SavedDataFilename.autosacleFormula;
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AutoscaleFormulaService {
     public formulas: Observable<List<AutoscaleFormula>>;
 

@@ -14,7 +14,7 @@ import { TaskStatesMetrics } from "./task-states-metrics";
 /**
  * Wrapper around the http service so call the azure ARM monitor api.
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class InsightsMetricsService {
 
     constructor(

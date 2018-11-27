@@ -32,7 +32,7 @@ export interface RecentSubmission extends RecentSubmissionParams {
     id: string;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class NcjTemplateService {
     public applications: Observable<List<Application>>;
 

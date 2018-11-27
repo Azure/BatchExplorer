@@ -25,8 +25,6 @@ const components = [
         MaterialModule,
         FormModule,
     ],
-    providers: [
-    ],
 })
 export class AdvancedFilterModule {
 }

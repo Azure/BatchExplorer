@@ -3,7 +3,7 @@ import { ActivityFifoQueue } from "@batch-flask/ui/activity/activity-fifo-queue"
 import { ActivityHistoryQueue } from "@batch-flask/ui/activity/activity-history-queue";
 import { Activity, ActivityProcessor } from "@batch-flask/ui/activity/activity-types";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ActivityService {
     private processor: ActivityProcessor;
     private historyQueue: ActivityHistoryQueue;

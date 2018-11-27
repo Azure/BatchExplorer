@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable, empty } from "rxjs";
 import { expand, filter, map, reduce, share, shareReplay } from "rxjs/operators";
 import { AzureBatchHttpService, BatchListResponse } from "../core";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PoolOsService {
     public offers: Observable<PoolOsSkus>;
     public nodeAgentSkus: Observable<List<NodeAgentSku>>;

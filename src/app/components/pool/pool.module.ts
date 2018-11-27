@@ -31,6 +31,7 @@ import {
     VmSizePickerComponent,
     VmSizePickerFilterComponent,
 } from "app/components/pool/action";
+import { PoolRoutingModule } from "./pool-routing.module";
 
 const components = [
     AppLicensePickerComponent, CertificatePickerComponent,
@@ -42,6 +43,7 @@ const components = [
 ];
 
 const modules = [
+    PoolRoutingModule,
     AutoScaleFormulaPickerModule, PoolBaseModule, PoolDetailsModule, NetworkConfigurationModule, PoolGraphsModule,
     StartTaskModule, UserAccountModule,
     TaskBaseModule, ...commonModules,

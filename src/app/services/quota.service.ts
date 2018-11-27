@@ -14,7 +14,7 @@ import { VmSizeService } from "./vm-size.service";
 /**
  * Service grouping all quotas needed
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class QuotaService implements OnDestroy {
     public quotas: Observable<BatchQuotas>;
     public usage: Observable<BatchQuotas>;

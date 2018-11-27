@@ -15,7 +15,7 @@ interface SyncFile {
     source: string;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class GithubDataService implements OnDestroy {
     private _branch = null;
     private _repo = null;

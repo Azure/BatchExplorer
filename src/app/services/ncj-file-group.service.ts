@@ -11,7 +11,7 @@ import { StorageContainerService } from "./storage/storage-container.service";
 /**
  * Service to handle file-group calls to the Python RPC service.
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class NcjFileGroupService {
     constructor(
         private autoStorageService: AutoStorageService,

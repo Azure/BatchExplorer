@@ -18,7 +18,7 @@ interface RoleListParams {
     scope: string;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ResourceAccessService {
     private _rolesAssignmentListGetter: ArmListGetter<RoleAssignment, RoleAssignmentListParams>;
     private _rolesListGetter: ArmListGetter<RoleDefinition, RoleListParams>;

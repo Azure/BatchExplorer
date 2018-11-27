@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 
-import { BaseModule } from "@batch-flask/ui";
+import { BaseModule, SidebarModule } from "@batch-flask/ui";
 import { TaskBaseModule } from "app/components/task/base";
 import {
     JobCreateBasicDialogComponent,
@@ -23,7 +23,7 @@ const components = [
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [...commonModules, TaskBaseModule, BaseModule],
+    imports: [...commonModules, TaskBaseModule, BaseModule, SidebarModule],
     entryComponents: [
         JobCreateBasicDialogComponent, DisableJobDialogComponent, PatchJobComponent,
     ],

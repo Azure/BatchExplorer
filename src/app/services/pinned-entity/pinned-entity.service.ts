@@ -19,7 +19,7 @@ pinnedTypeMap.set(PinnedEntityType.Certificate, Certificate);
 pinnedTypeMap.set(PinnedEntityType.StorageContainer, BlobContainer);
 
 const filename = "data/pinned-entities";
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PinnedEntityService implements OnDestroy {
     public loaded: Observable<boolean>;
 

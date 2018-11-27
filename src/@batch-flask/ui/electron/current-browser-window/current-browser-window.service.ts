@@ -4,7 +4,7 @@ import { ElectronRemote } from "@batch-flask/electron";
 import { BrowserWindow } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class CurrentBrowserWindow implements OnDestroy {
     /**
      * Observable that emit if the window is in full screen mode

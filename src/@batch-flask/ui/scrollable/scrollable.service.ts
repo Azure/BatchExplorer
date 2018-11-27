@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 import { ScrollableComponent } from "./scrollable.component";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ScrollableService {
     private _map: { [id: string]: ScrollableComponent } = {};
 

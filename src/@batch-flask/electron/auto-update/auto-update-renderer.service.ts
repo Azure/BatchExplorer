@@ -5,7 +5,7 @@ import { SharedServiceInjector } from "../shared-service-injector";
 import { AUTO_UPDATE_MAIN_SERVICE_TOKEN } from "./auto-update-main.service";
 import { AutoUpdateService, UpdateStatus } from "./base";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AutoUpdateRendererService extends AutoUpdateService implements OnDestroy {
 
     private _main: AutoUpdateService;

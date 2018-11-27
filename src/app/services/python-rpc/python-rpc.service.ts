@@ -11,7 +11,7 @@ import { catchError, first, flatMap, share, tap } from "rxjs/operators";
 import { AdalService } from "../adal";
 import { BatchAccountService } from "../batch-account";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PythonRpcService {
     public connected: Observable<boolean>;
     private _socket: WebSocket;

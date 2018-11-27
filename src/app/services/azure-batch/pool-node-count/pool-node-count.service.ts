@@ -126,7 +126,7 @@ export class PoolNodeCounts extends Record<any> implements NodeCountsAttributes 
 
 const NODE_COUNT_REFRESH_INTERVAL = 30000; // 30 seconds
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PoolNodeCountService implements OnDestroy {
 
     /**

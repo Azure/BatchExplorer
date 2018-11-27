@@ -25,12 +25,12 @@ import { DialogService } from "./dialog.service";
         FormModule,
         I18nUIModule,
     ],
-    providers: [
-        DialogService,
-    ],
     entryComponents: [
         ConfirmationDialogComponent,
         PromptDialogComponent,
+    ],
+    providers: [
+        DialogService, // This needs to be here otherwise entry components in lazy loaded doesn't work
     ],
 })
 export class DialogsModule {

@@ -19,7 +19,7 @@ interface PortfolioData {
     portfolios: PortfolioReference[];
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PortfolioService implements OnDestroy {
     public portfolios: Observable<Portfolio[]>;
     private _portfolios = new BehaviorSubject<Map<string, Portfolio> | null>(null);

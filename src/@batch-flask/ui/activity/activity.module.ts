@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
@@ -16,7 +16,6 @@ import {
 } from "./activity-monitor";
 import { ActivityMonitorFooterComponent } from "./activity-monitor-footer";
 import { ActivityMonitorFooterItemComponent } from "./activity-monitor-footer-item";
-import { ActivityService } from "./activity.service";
 
 @NgModule({
     imports: [
@@ -42,15 +41,6 @@ import { ActivityService } from "./activity.service";
         ActivityMonitorFooterComponent,
         ActivityMonitorComponent,
     ],
-    providers: [
-        ActivityService,
-    ],
 })
 export class ActivityModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: ActivityModule,
-            providers: [],
-        };
-    }
 }

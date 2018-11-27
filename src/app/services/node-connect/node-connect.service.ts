@@ -11,7 +11,7 @@ import { AddNodeUserAttributes } from "../azure-batch";
 import { SettingsService } from "../settings.service";
 import { SSHKeyService } from "../ssh-key.service";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class NodeConnectService implements OnDestroy {
     private _defaultUsername: string;
     private _settingsSub: Subscription;

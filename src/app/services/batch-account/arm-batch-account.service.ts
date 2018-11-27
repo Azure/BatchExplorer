@@ -38,7 +38,7 @@ export class ArmBatchAccountSubscriptionError extends SanitizedError {
 
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ArmBatchAccountService implements OnDestroy {
     public accounts: Observable<List<ArmBatchAccount>>;
     private _accounts = new BehaviorSubject<List<ArmBatchAccount>>(null);

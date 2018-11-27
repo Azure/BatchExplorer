@@ -8,7 +8,7 @@ import { map, shareReplay } from "rxjs/operators";
 export class StorageAccountKeyMissingError extends Error {
     constructor(message: string) { super(message); }
 }
-@Injectable()
+@Injectable({providedIn: "root"})
 export class StorageAccountKeysService {
     private _cache = new Map<string, StorageKeys>();
 

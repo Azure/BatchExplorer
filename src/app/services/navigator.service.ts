@@ -14,7 +14,7 @@ export interface GotoOptions {
     accountId?: string;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class NavigatorService {
     constructor(
         private accountService: BatchAccountService,

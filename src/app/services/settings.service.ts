@@ -12,7 +12,7 @@ import { LocalFileStorage } from "./local-file-storage.service";
 // tslint:disable-next-line:no-var-requires
 const defaultSettings = JSON.parse(stripJsonComments(require("app/components/settings/default-settings.json")));
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class SettingsService implements OnDestroy {
     public settingsObs: Observable<Settings>;
     public keybindings: Observable<KeyBindings[]>;

@@ -26,7 +26,7 @@ export interface LocalTemplateSettings {
     sources: LocalTemplateFolder[];
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class LocalTemplateService implements OnDestroy {
     public sources: Observable<LocalTemplateFolder[]>;
 

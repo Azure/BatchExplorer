@@ -13,7 +13,7 @@ export enum VersionType {
 
 const versionRegex = /\d+\.\d+\.\d+\-([a-z]+)(\.\d+)?/;
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class VersionService implements OnDestroy {
     public version: string;
 

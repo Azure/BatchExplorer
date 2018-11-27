@@ -7,7 +7,7 @@ import { flatMap, map, share } from "rxjs/operators";
 import { AdalService } from "./adal";
 import { BatchExplorerService } from "./batch-explorer.service";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class TenantDetailsService {
     public get serviceUrl() {
         return this.batchExplorer.azureEnvironment.aadGraph;

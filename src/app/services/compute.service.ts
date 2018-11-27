@@ -31,7 +31,7 @@ export interface ComputeUsage {
 const computeProvider = "Microsoft.Compute";
 const computeImageProvider = computeProvider + "/images";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ComputeService {
     constructor(
         private arm: ArmHttpService,

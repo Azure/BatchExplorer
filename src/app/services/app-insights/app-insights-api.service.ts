@@ -20,7 +20,7 @@ function mergeOptions(original: HttpRequestOptions, body?: any): HttpRequestOpti
     return options;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AppInsightsApiService implements HttpInterface {
     constructor(
         private http: HttpClient,

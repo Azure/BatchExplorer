@@ -66,7 +66,7 @@ export const fileIgnoredErrors = [
     HttpCode.Conflict,
 ];
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class FileService {
     private _basicProperties: string = "name, url";
     private _nodeFilecache = new TargetedDataCache<NodeFileListParams, File>({

@@ -9,13 +9,9 @@
         <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
     <% } %>
 
-    <!-- <script>
-    console.time("Load scripts");
-
-    window.onload = function() {
-       console.timeEnd("Load scripts");
-    };
-    </script> -->
+    <script>
+        window.STARTUP_TIME = new Date().getTime();
+    </script>
 </head>
 
 <body>

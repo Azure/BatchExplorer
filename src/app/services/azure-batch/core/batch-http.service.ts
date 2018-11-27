@@ -15,7 +15,7 @@ import { BatchSharedKeyAuthenticator } from "./batch-shared-key-authenticator";
 export class InvalidAccountError extends Error {
 
 }
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AzureBatchHttpService extends HttpService {
     public get serviceUrl() {
         return this.batchExplorer.azureEnvironment.batchUrl;

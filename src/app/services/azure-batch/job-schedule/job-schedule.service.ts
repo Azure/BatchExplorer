@@ -24,7 +24,7 @@ export interface JobScheduleParams {
 export interface JobScheduleListOptions extends ListOptionsAttributes {
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class JobScheduleService {
     /**
      * Triggered only when a job schedule is added through this app.

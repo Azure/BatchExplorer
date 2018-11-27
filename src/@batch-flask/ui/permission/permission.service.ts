@@ -11,7 +11,7 @@ export enum Permission {
 /**
  * PermissionService is a generic service to handle permisison
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PermissionService {
     private _userPermissionProvider: () => Observable<Permission>;
 
