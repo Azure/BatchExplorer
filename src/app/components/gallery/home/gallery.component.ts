@@ -95,7 +95,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
             applicationId: this.activeApplication.applicationId,
             actionId: actionId,
         });
-        ref.afterClosed().subscribe(() => {
+        ref.afterClosed().pipe(takeUntil(this._destroy)).subscribe(() => {
             this.router.navigate(["/gallery",
                 this.activeApplication.portfolioId,
                 this.activeApplication.applicationId]);
