@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 import { AsyncTask, ServerError } from "@batch-flask/core";
 import { FormPageComponent } from "@batch-flask/ui/form/form-page";
 import { Subscription } from "rxjs";
@@ -58,7 +58,6 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
     @Input() public jsonValue: FormControl;
     @Input() public showJsonEditor: boolean;
     @Input() public currentPage: FormPageComponent;
-    @Input() public formGroup: FormGroup;
     @Input() public error: ServerError;
     @Input() public showError: boolean;
     @Output() public showErrorChange = new EventEmitter<boolean>();
