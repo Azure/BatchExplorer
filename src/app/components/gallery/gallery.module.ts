@@ -4,6 +4,7 @@ import { commonModules } from "app/common";
 import { DataSharedModule } from "app/components/data/shared";
 import { JobActionModule } from "app/components/job/action";
 import { TaskBaseModule } from "app/components/task/base";
+import { FileGroupCreateModule } from "../data/action/add";
 import { ChooseActionComponent } from "./application-action";
 import { GalleryApplicationListComponent } from "./application-list";
 import { GalleryRoutingModule } from "./gallery-routing.module";
@@ -33,7 +34,7 @@ const components = [
 ];
 
 const modules = [
-    TaskBaseModule, JobActionModule, DataSharedModule, ...commonModules,
+    TaskBaseModule, JobActionModule, DataSharedModule, FileGroupCreateModule, ...commonModules,
 ];
 
 @NgModule({

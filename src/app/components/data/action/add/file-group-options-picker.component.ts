@@ -11,7 +11,6 @@ import { distinctUntilChanged } from "rxjs/operators";
     selector: "bl-file-group-options-picker",
     templateUrl: "file-group-options-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileGroupOptionsPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => FileGroupOptionsPickerComponent), multi: true },
     ],
