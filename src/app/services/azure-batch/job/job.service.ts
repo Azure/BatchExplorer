@@ -27,7 +27,7 @@ export interface JobParams {
 export interface JobListOptions extends ListOptionsAttributes {
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class JobService {
     /**
      * Triggered only when a job is added through this app.

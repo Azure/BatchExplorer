@@ -34,7 +34,7 @@ export interface PoolListOptions extends ListOptionsAttributes {
 
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class NodeService {
     private _basicProperties: string = "id,state,schedulingState,vmSize";
     private _cache = new TargetedDataCache<NodeListParams, Node>({

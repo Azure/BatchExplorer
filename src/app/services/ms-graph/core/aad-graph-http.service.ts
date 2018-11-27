@@ -11,7 +11,7 @@ import { Constants } from "common";
 import { Observable, throwError } from "rxjs";
 import { catchError, flatMap, retryWhen, shareReplay, take, tap } from "rxjs/operators";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AADGraphHttpService extends HttpService {
     public get serviceUrl() {
         return this.batchExplorer.azureEnvironment.aadGraph;

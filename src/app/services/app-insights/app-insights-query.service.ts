@@ -24,7 +24,7 @@ const metrics: StringMap<MetricDefinition> = {
     networkRead: { appInsightsMetricId: "customMetrics/Network read", segment: "cloud/roleInstance" },
     networkWrite: { appInsightsMetricId: "customMetrics/Network write", segment: "cloud/roleInstance" },
 };
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AppInsightsQueryService {
     constructor(private appInsightsApi: AppInsightsApiService) { }
 

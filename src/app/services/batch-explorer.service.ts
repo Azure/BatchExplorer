@@ -9,7 +9,7 @@ import { BatchExplorerLink } from "common";
 import { IpcEvent } from "common/constants";
 import { BehaviorSubject, Observable } from "rxjs";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class BatchExplorerService {
     public pythonServer: PythonRpcServerProcess;
     public aadService: AADService;

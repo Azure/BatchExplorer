@@ -23,7 +23,7 @@ interface IncludedSizes {
     iaas: string[];
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class VmSizeService {
     /**
      * All sizes

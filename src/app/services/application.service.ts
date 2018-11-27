@@ -31,7 +31,7 @@ const applicationIgnoredErrors = [
     HttpCode.Conflict,
 ];
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ApplicationService {
     /**
      * Triggered when an application is added through this app.

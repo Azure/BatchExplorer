@@ -76,7 +76,7 @@ export class InvalidSasUrlError extends Error {
 // Regex to extract the host, container and blob from a sasUrl
 const storageBlobUrlRegex = /^(https:\/\/[\w\._\-]+)\/([\w\-_]+)\/([\w\-_.]+)\?(.*)$/i;
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class StorageBlobService {
     public maxBlobPageSize: number = 100; // 500 slows down the UI too much.
     public maxContainerPageSize: number = 50;

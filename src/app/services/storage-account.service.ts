@@ -19,7 +19,7 @@ function getSubscriptionIdFromAccountId(accountId: string) {
     }
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class StorageAccountService {
     constructor(private azure: AzureHttpService, private subscriptionService: SubscriptionService) { }
 

@@ -4,7 +4,7 @@ import { ElectronRemote } from "@batch-flask/ui";
 import { SanitizedError, log } from "@batch-flask/utils";
 import { Constants } from "common";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class RendererTelemetryUploader implements TelemetryUploader {
     private _enabled = false;
     private _initialized = false;

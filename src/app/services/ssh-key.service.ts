@@ -9,7 +9,7 @@ import { LocalFileStorage } from "./local-file-storage.service";
 
 const filename = Constants.SavedDataFilename.sshPublicKeys;
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class SSHKeyService {
     public keys: Observable<List<SSHPublicKey>>;
 

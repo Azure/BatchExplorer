@@ -46,7 +46,7 @@ export class InvalidSubscriptionOrTenant extends Error {
  * Wrapper around the http service so call the azure ARM api.
  * Set the Authorization header and the api version
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AzureHttpService {
     constructor(private http: HttpClient, private adal: AdalService, private batchExplorer: BatchExplorerService) {
     }

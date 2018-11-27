@@ -61,7 +61,7 @@ const softwareMeterId = {
     "e2d2d63e-8741-499a-8989-f5f7ec5c3b3f": BatchSoftwareLicense.vray,
 };
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PricingService {
     public pricing: Observable<BatchPricing>;
     private _pricingMap = new BehaviorSubject<BatchPricing>(null);

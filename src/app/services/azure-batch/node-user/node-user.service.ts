@@ -17,7 +17,7 @@ export interface AddNodeUserAttributes extends UpdateNodeUserAttributes {
     expiryTime?: Date;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class NodeUserService {
     constructor(private http: AzureBatchHttpService) {
     }

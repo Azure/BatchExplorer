@@ -5,7 +5,7 @@ import { BatchAccountService } from "../batch-account";
 
 export type StorageDataSource = string | "file-groups";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AutoStorageService {
     public storageAccountId: Observable<string>;
     public hasArmAutoStorage: Observable<boolean>;

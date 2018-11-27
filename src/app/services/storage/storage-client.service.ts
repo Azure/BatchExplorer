@@ -22,7 +22,7 @@ export interface StorageKeyCachedItem {
     keys: StorageKeys;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class StorageClientService {
     public hasAutoStorage: Observable<boolean>;
     public hasArmAutoStorage: Observable<boolean>;

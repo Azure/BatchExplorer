@@ -18,11 +18,15 @@ import "./environment";
 import "./styles/main.scss";
 
 interface LoadingTimeResults {
+    startup: number;
     loadTranslations: number;
     bootstrap: number;
 }
 
-const starts = {};
+const starts = {
+    startup: (window as any).STARTUP_TIME,
+};
+
 const durations: LoadingTimeResults = {} as any;
 
 function time(key: keyof (LoadingTimeResults)) {
@@ -37,6 +41,7 @@ function timeEnd(key: keyof (LoadingTimeResults)) {
     }
 }
 
+timeEnd("startup");
 ipcRenderer.send("initializing");
 
 Promise.resolve().then(() => {
@@ -50,7 +55,8 @@ Promise.resolve().then(() => {
     return platformBrowserDynamic().bootstrapModule(AppModule);
 }).then(() => {
     timeEnd("bootstrap");
-    // console.log("Loading times", durations);
+    // tslint:disable-next-line:no-console
+    console.log("Loading times", durations);
 }).catch(error => {
     log.error("Bootstrapping failed :: ", error);
     handleCoreError(error);

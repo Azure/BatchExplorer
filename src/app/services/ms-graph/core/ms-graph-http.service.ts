@@ -11,7 +11,7 @@ import { catchError, flatMap, retryWhen, shareReplay, take, tap } from "rxjs/ope
 /**
  * Class wrapping around the http service to call Microsoft Graph api
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class MsGraphHttpService extends HttpService {
     public get serviceUrl() {
         return this.batchExplorer.azureEnvironment.msGraph;

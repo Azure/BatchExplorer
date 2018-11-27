@@ -66,7 +66,7 @@ export class UsageDetailsUnsupportedSubscription extends Error {
     }
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class UsageDetailsService {
     constructor(private accountService: BatchAccountService, private azure: AzureHttpService) { }
 
