@@ -32,6 +32,7 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
         localTemplateService.sources.subscribe((sources) => {
             this.sources = sources;
             this._updateWorkspace();
+            this.changeDetector.markForCheck();
         });
 
     }

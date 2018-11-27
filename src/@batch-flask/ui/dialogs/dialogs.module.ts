@@ -6,6 +6,7 @@ import { PromptDialogComponent } from "@batch-flask/ui/dialogs/prompt";
 import { FormModule } from "@batch-flask/ui/form";
 import { I18nUIModule } from "../i18n";
 import { ConfirmationDialogComponent } from "./confirmation-dialog.component";
+import { DialogService } from "./dialog.service";
 
 @NgModule({
     declarations: [
@@ -27,6 +28,9 @@ import { ConfirmationDialogComponent } from "./confirmation-dialog.component";
     entryComponents: [
         ConfirmationDialogComponent,
         PromptDialogComponent,
+    ],
+    providers: [
+        DialogService, // This needs to be here otherwise entry components in lazy loaded doesn't work
     ],
 })
 export class DialogsModule {

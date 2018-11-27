@@ -28,7 +28,7 @@ export interface PromptOptions {
  * Dialog service is a service to help open commonly used dialog such as a confirmation dialog.
  * It can also open a dialog the same way material does so you only need to inject this service and not the MatDialog
  */
-@Injectable({providedIn: "root"})
+@Injectable()
 export class DialogService {
     constructor(private matDialog: MatDialog) { }
 
