@@ -64,6 +64,7 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
     @Output() public showJsonEditorChanges = new EventEmitter<boolean>();
 
     public isMainWindow: boolean;
+    private _valid: boolean = true;
     private _actionConfig: FormActionConfig;
     private _statusSub: Subscription;
 
@@ -75,11 +76,11 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
             if (this._statusSub) {
                 this._statusSub.unsubscribe();
             }
-            if (this.currentPage && this.currentPage.formGroup) {
-                this._statusSub = this.currentPage.formGroup.statusChanges.pipe(distinctUntilChanged())
-                    .subscribe((status) => {
-                        this.changeDetector.markForCheck();
-                    });
+            if (this.currentPage) {
+                this._statusSub = this.currentPage.valid.pipe(distinctUntilChanged()).subscribe((valid) => {
+                    this._valid = valid;
+                    this.changeDetector.markForCheck();
+                });
             }
         }
     }
@@ -117,7 +118,7 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
         if (this.showJsonEditor) {
             return this.jsonValue.valid;
         } else if (this.currentPage) {
-            return !this.currentPage.formGroup || this.currentPage.formGroup.valid;
+            return !this.currentPage.formGroup || this._valid;
         } else {
             return false;
         }

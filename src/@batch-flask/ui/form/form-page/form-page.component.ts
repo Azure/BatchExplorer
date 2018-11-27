@@ -1,12 +1,25 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ContentChildren, EventEmitter, Inject,
-    Input, Output, QueryList, TemplateRef, ViewChild, forwardRef,
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    EventEmitter,
+    Inject, Input,
+    OnChanges,
+    OnDestroy,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    forwardRef,
 } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { ComplexFormComponent } from "../complex-form";
 import { FormSectionComponent } from "../form-section";
 
+import { startWith } from "rxjs/operators";
 import "./form-page.scss";
 
 export interface FocusableElement {
@@ -18,7 +31,14 @@ export interface FocusableElement {
     templateUrl: "form-page.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormPageComponent implements AfterViewInit {
+export class FormPageComponent implements OnChanges, AfterContentInit, OnDestroy {
+
+    /**
+     * Enabled if the formGroup is valid or there is no formGroup
+     */
+    public get submitEnabled() {
+        return !this.formGroup || this.formGroup.valid;
+    }
     /**
      * Title of the page. It will be shown when this page is the current page of a form.
      */
@@ -52,16 +72,37 @@ export class FormPageComponent implements AfterViewInit {
      */
     public openedWith: FocusableElement;
 
-    // tslint:disable-next-line:no-forward-ref
+    public valid: Observable<boolean>;
+    public _statusSub: Subscription;
+    private _valid = new BehaviorSubject(false);
+
     constructor(
         @Inject(forwardRef(() => ComplexFormComponent)) private form: ComplexFormComponent,
         private changeDetector: ChangeDetectorRef) {
+        this.valid = this._valid.asObservable();
     }
 
-    public ngAfterViewInit() {
+    public ngAfterContentInit() {
         this.sections.changes.subscribe(() => {
             this.changeDetector.markForCheck();
         });
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.formGroup) {
+            this._clearStatusSub();
+            if (this.formGroup) {
+                this._statusSub = this.formGroup.statusChanges.pipe(startWith(null)).subscribe(() => {
+                    this._valid.next(this.formGroup.valid);
+                });
+            } else {
+                this._valid.next(true);
+            }
+        }
+    }
+
+    public ngOnDestroy() {
+        this._clearStatusSub();
     }
     /**
      * Open the given page. It will push on top of the page stack.
@@ -72,14 +113,13 @@ export class FormPageComponent implements AfterViewInit {
         this.form.openPage(this);
     }
 
-    /**
-     * Enabled if the formGroup is valid or there is no formGroup
-     */
-    public get submitEnabled() {
-        return !this.formGroup || this.formGroup.valid;
-    }
-
     public trackByFn(_, section: FormSectionComponent) {
         return section.title;
+    }
+
+    private _clearStatusSub() {
+        if (this._statusSub) {
+            this._statusSub.unsubscribe();
+        }
     }
 }
