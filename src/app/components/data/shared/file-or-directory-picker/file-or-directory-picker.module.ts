@@ -1,6 +1,6 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { CommonModule } from "@angular/common";
 import { FormModule, I18nUIModule } from "@batch-flask/ui";
 import { FileOrDirectoryPickerComponent } from "./file-or-directory-picker.component";
 

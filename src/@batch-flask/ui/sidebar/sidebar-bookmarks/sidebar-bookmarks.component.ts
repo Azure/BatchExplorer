@@ -7,8 +7,7 @@ import {
 import { MouseButton } from "@batch-flask/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { Subscription } from "rxjs";
-
-import { SidebarManager } from "../sidebar-manager";
+import { GlobalSidebarService } from "../sidebar-manager";
 import { SidebarRef } from "../sidebar-ref";
 
 import "./sidebar-bookmarks.scss";
@@ -24,7 +23,7 @@ export class SidebarBookmarksComponent implements OnDestroy {
     private _sub: Subscription;
 
     constructor(
-        public sidebarManager: SidebarManager,
+        public sidebarManager: GlobalSidebarService,
         private contextMenuService: ContextMenuService,
         private changeDetector: ChangeDetectorRef) {
 
