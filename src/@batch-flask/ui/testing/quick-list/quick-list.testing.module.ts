@@ -6,7 +6,6 @@ import { MaterialModule } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { AbstractListModule } from "@batch-flask/ui/abstract-list";
 import { BreadcrumbModule } from "@batch-flask/ui/breadcrumbs";
-import { ContextMenuModule } from "@batch-flask/ui/context-menu";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import {
     NoItemComponent,
@@ -39,7 +38,6 @@ const publicComponents = [
         FormsModule,
         RouterModule,
         MaterialModule,
-        ContextMenuModule,
         LoadingModule,
         BreadcrumbModule,
         AbstractListModule,
