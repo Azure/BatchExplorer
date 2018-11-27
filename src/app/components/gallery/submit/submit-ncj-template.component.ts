@@ -137,14 +137,6 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         this.modeState = mode;
     }
 
-    public get submitToolTip(): string {
-        if (this.isFormValid()) {
-            return "Click to submit form";
-        }
-
-        return "Form is not valid";
-    }
-
     public isFormValid() {
         switch (this.modeState) {
             case NcjTemplateMode.NewPoolAndJob:
