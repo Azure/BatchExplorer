@@ -9,7 +9,7 @@ import { log } from "@batch-flask/utils";
 import { SidebarContentComponent } from "./sidebar-content";
 import { SidebarRef } from "./sidebar-ref";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class SidebarManager {
     public sidebar: MatSidenav = null;
     public sidebarContent: SidebarContentComponent = null;
