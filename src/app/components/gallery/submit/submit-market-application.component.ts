@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
-import { forkJoin, of } from "rxjs";
-
+import { MatDialogRef } from "@angular/material";
 import { log } from "@batch-flask/utils";
 import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { NcjTemplateService } from "app/services";
+import { forkJoin, of } from "rxjs";
 import { catchError } from "rxjs/operators";
 import "./submit-market-application.scss";
 
@@ -33,6 +33,7 @@ export class SubmitMarketApplicationComponent {
     private actionId: string;
 
     constructor(
+        public dialogRef: MatDialogRef<any>,
         private templateService: NcjTemplateService) {
     }
 

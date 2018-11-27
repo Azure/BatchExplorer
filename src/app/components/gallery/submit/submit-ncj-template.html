@@ -1,4 +1,4 @@
-<bl-complex-form [formGroup]="form" [hideFooter]="true" [stickyFooter]="false" [containerRef]="containerRef">
+<bl-complex-form [formGroup]="form" size="fit" [stickyFooter]="true" [containerRef]="containerRef" [submit]="submit">
     <bl-form-page [title]="title" main-form-page>
         <bl-form-section title="Mode" *ngIf="multipleModes">
             <div class="modes">
@@ -24,7 +24,4 @@
 </bl-complex-form>
 <div class="submit-box" *ngIf="modeState !== NcjTemplateMode.None">
     <bl-server-error [error]="error"> </bl-server-error>
-    <bl-button [title]="submitToolTip" [disabled]="!isFormValid()" [action]="submit" type="wide" class="submit-job" color="success">
-        <i class="fa fa-play"></i>
-    </bl-button>
 </div>
