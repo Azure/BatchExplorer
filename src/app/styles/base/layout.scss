@@ -313,13 +313,13 @@ bl-card.details {
 
 
 bl-app {
+    #content-inner > mat-sidenav-container {
+        height: 100%;
+    }
+
     .fullscreen {
         height: 100vh;
         width: 100vw;
         position: relative;
-
-        > mat-sidenav-container {
-            height: 100%;
-        }
     }
 }
