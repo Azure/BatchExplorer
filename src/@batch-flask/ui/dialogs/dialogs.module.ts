@@ -6,7 +6,6 @@ import { PromptDialogComponent } from "@batch-flask/ui/dialogs/prompt";
 import { FormModule } from "@batch-flask/ui/form";
 import { I18nUIModule } from "../i18n";
 import { ConfirmationDialogComponent } from "./confirmation-dialog.component";
-import { DialogService } from "./dialog.service";
 
 @NgModule({
     declarations: [
@@ -24,9 +23,6 @@ import { DialogService } from "./dialog.service";
         MaterialModule,
         FormModule,
         I18nUIModule,
-    ],
-    providers: [
-        DialogService,
     ],
     entryComponents: [
         ConfirmationDialogComponent,

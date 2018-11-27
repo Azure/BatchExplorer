@@ -28,7 +28,6 @@ import { MiscModule } from "app/components/misc";
 import {
     AppLocaleService,
     AppTranslationsLoaderService,
-    NcjModule,
 } from "./services";
 import { RendererTelemetryModule } from "./services/telemetry";
 
@@ -38,7 +37,6 @@ const modules = [
     SettingsModule,
     LayoutModule,
     MiscModule,
-    NcjModule,
 ];
 
 @NgModule({

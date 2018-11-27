@@ -43,7 +43,6 @@ const publicComponents = [
     ],
     exports: publicComponents,
     declarations: [...privateComponents, publicComponents],
-    providers: [],
 })
 export class TableModule {
 }

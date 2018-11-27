@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
@@ -30,14 +30,7 @@ const components = [
     entryComponents: [],
     exports: [...components],
     imports: [CommonModule, MaterialModule, RouterModule],
-    providers: [],
 })
 
 export class ButtonsModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: ButtonsModule,
-            providers: [],
-        };
-    }
 }
