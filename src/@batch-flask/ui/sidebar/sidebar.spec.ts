@@ -1,7 +1,7 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
 
-import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { GlobalSidebarService, SidebarManager } from "@batch-flask/ui/sidebar";
 import { AppTestComponent, FakeComponent, setupSidebarTest } from "./sidebar-spec-helper.spec";
 
 describe("SidebarPageComponent", () => {
@@ -10,13 +10,15 @@ describe("SidebarPageComponent", () => {
     let fixture: ComponentFixture<AppTestComponent>;
     let de: DebugElement;
     let el: HTMLElement;
+    let globalSidebarService: GlobalSidebarService;
 
     beforeEach(() => {
         setupSidebarTest();
     });
 
-    beforeEach(inject([SidebarManager], (d: SidebarManager) => {
+    beforeEach(inject([SidebarManager, GlobalSidebarService], (d: SidebarManager, g: GlobalSidebarService) => {
         sidebarManager = d;
+        globalSidebarService = g;
     }));
 
     beforeEach(() => {
@@ -98,7 +100,7 @@ describe("SidebarPageComponent", () => {
         fixture.detectChanges();
         expect(el.textContent).not.toContain("First component text");
         expect(el.textContent).toContain("Second component text");
-        expect(sidebarManager.sidebar.opened).toBe(false);
+        expect(globalSidebarService.sidebar.opened).toBe(false);
     });
 
     it("Should notifiy afterCompletion when the sidebar is destroyed", () => {

@@ -1,12 +1,12 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
-import { SidebarManager, SidebarPageComponent, SidebarRef } from "@batch-flask/ui/sidebar";
+import { GlobalSidebarService, SidebarManager, SidebarPageComponent, SidebarRef } from "@batch-flask/ui/sidebar";
 
 import { FakeComponent, setupSidebarTest } from "./sidebar-spec-helper.spec";
 
 describe("SidebarPageComponent", () => {
     let component: SidebarPageComponent;
-    let sidebarManager: SidebarManager;
+    let globalSidebarService: GlobalSidebarService;
     let fixture: ComponentFixture<SidebarPageComponent>;
     let onOpenSpy: jasmine.Spy;
     let de: DebugElement;
@@ -17,9 +17,9 @@ describe("SidebarPageComponent", () => {
         onOpenSpy = jasmine.createSpy("spy");
     });
 
-    beforeEach(inject([SidebarManager], (d: SidebarManager) => {
-        sidebarManager = d;
-        sidebarManager.sidebar = {
+    beforeEach(inject([SidebarManager], (d: GlobalSidebarService) => {
+        globalSidebarService = d;
+        globalSidebarService.sidebar = {
             onOpen: {
                 subscribe: onOpenSpy,
             },

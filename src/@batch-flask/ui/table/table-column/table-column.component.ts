@@ -54,9 +54,6 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
         if (changes.name) {
             this._validateName();
         }
-        if (changes.defaultWidth) {
-            // TODO-tim handle this
-        }
     }
 
     public update() {
