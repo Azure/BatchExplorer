@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 import { MaterialModule } from "@batch-flask/core";
 import { SidebarContentComponent } from "./sidebar-content";
-import { SidebarManager } from "./sidebar-manager";
+import { GlobalSidebarService } from "./sidebar-manager";
 import { SidebarModule } from "./sidebar.module";
 
 @Component({
@@ -35,7 +35,7 @@ export class AppTestComponent implements AfterViewInit {
     @ViewChild("sidebarContent")
     public sidebarContent: SidebarContentComponent;
 
-    constructor(private sidebarManager: SidebarManager) {
+    constructor(private sidebarManager: GlobalSidebarService) {
     }
 
     public ngAfterViewInit() {
