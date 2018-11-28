@@ -14,7 +14,7 @@ If ($branch -like "refs/heads/stable") {
     $buildType="stable"
 }
 
-# TODO-TIM revert
+# Change to curent branch for testing
 If ($branch -like "refs/heads/feature/signing-vsts") {
     $buildType="testing"
 }

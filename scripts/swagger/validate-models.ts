@@ -180,7 +180,6 @@ class SwaggerModelValidator {
                     this.addPropertyError(name, `Expected type to be a array but wasn't defined as a list. ${property}`
                         + `Check it has the @ListProp property not @Prop`);
                 }
-                // TODO-TIM check array type
             } else if (swaggerProperty.$ref) {
                 const refTypeName = swaggerProperty.$ref.replace("#/definitions/", "");
                 const nestedType = this.specs.getDefinition(refTypeName);
