@@ -3,6 +3,7 @@ import {
     Component,
     ComponentFactoryResolver,
     ComponentRef,
+    HostBinding,
     Injector,
     NgZone,
     OnDestroy,
@@ -27,6 +28,9 @@ import { SidebarRef } from "./sidebar-ref";
 })
 export class SidebarPageComponent implements OnDestroy {
     public display = true;
+
+    @HostBinding("attr.role") public role = "dialog";
+    @HostBinding("attr.aria-modal") public ariaModal = true;
 
     @ViewChild(PortalHostDirective)
     private portalHost: PortalHostDirective;
