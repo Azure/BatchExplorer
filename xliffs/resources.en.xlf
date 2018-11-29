@@ -823,6 +823,9 @@
       <trans-unit id="resource-permission-button.none">
         <source>None</source>
       </trans-unit>
+      <trans-unit id="resource-permission-button.permission">
+        <source>permission</source>
+      </trans-unit>
       <trans-unit id="resource-permission-button.removeAccess">
         <source>Remove access</source>
       </trans-unit>
