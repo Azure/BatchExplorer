@@ -11,12 +11,17 @@ const allowedRoleNames = new Set([
     "Contributor",
     "Reader",
 ]);
+
+let idCounter = 0;
+
 @Component({
     selector: "bl-resource-permission-button",
     templateUrl: "resource-permission-button.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourcePermissionButtonComponent implements OnChanges {
+    @Input() public id = `bl-resource-permission-button-${idCounter++}`;
+
     @Input() public labelledBy: string;
 
     /**

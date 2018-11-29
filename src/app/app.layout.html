@@ -7,16 +7,16 @@
             <bl-app-nav></bl-app-nav>
         </nav>
         <section id="content">
-            <div id="content-inner">
-                <bl-toasts-container class="tr"></bl-toasts-container>
-                <mat-sidenav-container>
-                    <mat-sidenav #rightSidebar position="end">
-                        <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
+            <bl-toasts-container class="tr"></bl-toasts-container>
+            <mat-sidenav-container>
+                <mat-sidenav #rightSidebar position="end">
+                    <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
 
-                    </mat-sidenav>
+                </mat-sidenav>
+                <div [attr.aria-hidden]="rightSidebar.opened">
                     <router-outlet></router-outlet>
-                </mat-sidenav-container>
-            </div>
+                </div>
+            </mat-sidenav-container>
         </section>
         <footer>
             <bl-footer></bl-footer>

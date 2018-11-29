@@ -1,4 +1,9 @@
-<bl-button type="wide" [color]="color" [matMenuTriggerFor]="pickRoleMenu" [disabled]="loading" [attr.aria-describedby]="labelledBy">
+<bl-button
+    type="wide"
+    [color]="color"
+    [matMenuTriggerFor]="pickRoleMenu"
+    [disabled]="loading"
+    attr.aria-labelledby="{{labelledBy}} {{id}}-label">
     <ng-container *ngIf="loading">
         <i class="fa fa-spinner fa-spin"></i> {{'common.loading' | i18n}}
     </ng-container>
@@ -19,3 +24,6 @@
         </span>
     </button>
 </mat-menu>
+<div hidden id="{{id}}-label">
+    {{'resource-permission-button.permission' | i18n}} {{currentRole?.properties.roleName || 'resource-permission-button.none' | i18n}}
+</div>
