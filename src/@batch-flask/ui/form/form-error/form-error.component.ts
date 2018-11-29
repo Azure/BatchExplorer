@@ -1,6 +1,6 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component,
-    HostBinding, Input, OnChanges, OnDestroy, Optional,
+    Input, OnChanges, OnDestroy, Optional,
 } from "@angular/core";
 import { AbstractControl, ControlContainer, FormControl, FormGroupDirective } from "@angular/forms";
 import { SanitizedError } from "@batch-flask/utils";
@@ -9,11 +9,11 @@ import { Subscription } from "rxjs";
 let idCounter = 0;
 @Component({
     selector: "bl-error",
-    template: `<div *ngIf="hasError"><ng-content></ng-content></div>`,
+    template: `<div *ngIf="hasError" [id]="id" role="alert"><ng-content></ng-content></div>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormErrorComponent implements OnChanges, OnDestroy {
-    @Input() @HostBinding("attr.id") public id = `bl-error-${idCounter++}`;
+    @Input() public id = `bl-error-${idCounter++}`;
 
     /**
      * Form control.
