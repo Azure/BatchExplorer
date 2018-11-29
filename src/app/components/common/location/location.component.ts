@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import "./location.scss";
 
-const countryCodes = {
+export const countryCodes = {
     eastasia: "HK",
     southeastasia: "SG",
     centralus: "US",
@@ -42,23 +42,7 @@ const countryCodes = {
     templateUrl: "location.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LocationComponent implements OnChanges {
+export class LocationComponent {
     @Input() public location: string;
 
-    public iconCls: string;
-
-    public ngOnChanges(changes) {
-        if (changes.location) {
-            this.iconCls = this._computeFlag();
-        }
-    }
-
-    private _computeFlag() {
-        const code = countryCodes[this.location];
-        if (code) {
-            return `flag-icon-${code.toLowerCase()}`;
-        } else {
-            return null;
-        }
-    }
 }
