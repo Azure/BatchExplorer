@@ -1,5 +1,6 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     Input,
     OnChanges,
@@ -8,7 +9,7 @@ import {
 } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { ServerError, autobind } from "@batch-flask/core";
+import { autobind } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { exists, log } from "@batch-flask/utils";
@@ -19,7 +20,7 @@ import { NcjFileGroupService, NcjSubmitService, NcjTemplateService, SettingsServ
 import { StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { Subscription, of } from "rxjs";
-import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
 
 import "./submit-ncj-template.scss";
@@ -55,16 +56,24 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public poolParams: FormGroup;
     public jobParametersWrapper: NcjParameterWrapper[];
     public poolParametersWrapper: NcjParameterWrapper[];
-    public error: ServerError;
 
     private _routeParametersSub: Subscription;
     private _controlChanges: Subscription[] = [];
     private _parameterTypeMap = {};
     private _queryParameters: {};
     private _loaded = false;
-    private _defaultOutputDataContainer = null;
+    private _defaultOutputDataContainer: string | undefined | null = null;
+
+    public get actionName() {
+        if (this.modeState === NcjTemplateMode.NewPool) {
+            return "Create";
+        } else {
+            return "Run";
+        }
+    }
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
         private notificationService: NotificationService,
@@ -135,26 +144,21 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
     public pickMode(mode: NcjTemplateMode) {
         this.modeState = mode;
+
+        this.form = this.formBuilder.group({
+            pool: this.showPoolForm ? this.poolParams : undefined,
+            job: this.showJobForm ? this.jobParams : undefined,
+            poolpicker: this.showPoolPicker ? this.pickedPool : undefined,
+        });
+        this.changeDetector.markForCheck();
     }
 
-    public isFormValid() {
-        switch (this.modeState) {
-            case NcjTemplateMode.NewPoolAndJob:
-                return this.jobParams.valid && this.poolParams.valid;
-            case NcjTemplateMode.ExistingPoolAndJob:
-                return this.jobParams.valid && (this.jobTemplateIsAutoPool || this.pickedPool.valid);
-            case NcjTemplateMode.NewPool:
-                return this.poolParams.valid;
-        }
-    }
-
-    public trackParameter(index, param: NcjParameterWrapper) {
+    public trackParameter(_, param: NcjParameterWrapper) {
         return param.id;
     }
 
     @autobind()
     public submit() {
-        this.error = null;
         let method;
         const methods = {
             [NcjTemplateMode.NewPoolAndJob]: this._createJobWithAutoPool,
@@ -165,9 +169,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
         if (method) {
             const obs = method();
-            obs.subscribe({
-                error: (err) => this.error = err,
-            });
+            obs.subscribe();
 
             return obs;
         } else {
@@ -180,7 +182,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _createJobWithAutoPool() {
         this._saveTemplateAsRecent();
         return this.ncjSubmitService.expandPoolTemplate(this.poolTemplate, this.poolParams.value).pipe(
-            flatMap(data => this._runJobWithPool(data)),
+            switchMap(data => this._runJobWithPool(data)),
         );
     }
 
@@ -354,7 +356,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _createForms() {
         this.jobParams = this._getFormGroup(this.jobTemplate);
         this.poolParams = this._getFormGroup(this.poolTemplate);
-        this.form = this.formBuilder.group({ pool: this.poolParams, job: this.jobParams, poolpicker: this.pickedPool });
+        this.changeDetector.markForCheck();
     }
 
     private _runJobWithPool(expandedPoolTemplate) {

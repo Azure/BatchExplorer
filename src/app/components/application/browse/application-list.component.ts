@@ -39,6 +39,7 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
         this._subs.push(this.data.items.subscribe((applications) => {
             this.applications = applications;
             this._filterApplications();
+            this.changeDetector.markForCheck();
         }));
 
         this.data.status.subscribe((status) => {
