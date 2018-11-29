@@ -33,35 +33,6 @@ describe("LocationComponent", () => {
         expect(de.nativeElement.textContent).toContain("eastus2");
     });
 
-    it("show us flag for centralus", () => {
-        testComponent.location = "centralus";
-        fixture.detectChanges();
-        expect(de.query(By.css(".flag-icon-us"))).not.toBeFalsy();
-        expect(de.query(By.css(".fa-globe"))).toBeFalsy();
-    });
-
-    it("show french flag for francesouth", () => {
-        testComponent.location = "francesouth";
-        fixture.detectChanges();
-
-        expect(de.query(By.css(".flag-icon-fr"))).not.toBeFalsy();
-        expect(de.query(By.css(".fa-globe"))).toBeFalsy();
-    });
-
-    it("show uk flag for ukwest", () => {
-        testComponent.location = "ukwest";
-        fixture.detectChanges();
-        expect(de.query(By.css(".flag-icon-gb"))).not.toBeFalsy();
-        expect(de.query(By.css(".fa-globe"))).toBeFalsy();
-    });
-
-    it("show singapor flag for southeastasia", () => {
-        testComponent.location = "southeastasia";
-        fixture.detectChanges();
-        expect(de.query(By.css(".flag-icon-sg"))).not.toBeFalsy();
-        expect(de.query(By.css(".fa-globe"))).toBeFalsy();
-    });
-
     it("show globefor unkown location", () => {
         testComponent.location = "somenewloc";
         fixture.detectChanges();
