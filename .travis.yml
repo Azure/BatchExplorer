@@ -6,6 +6,7 @@ addons:
   apt:
     packages:
       - libsecret-1-dev
+      - python2
       # - libgnome-keyring-dev
       # - openjpeg-tools # or libopenjp2-tools
       # - graphicsmagick
