@@ -1,5 +1,5 @@
 <bl-loading [status]="loadingStatus">
-    <div class="no-vm-sizes-basic-input" *ngIf="loadingStatus !== LoadingStatus.Loading">
+    <div class="no-vm-sizes-basic-input" *ngIf="loadingStatus !== LoadingStatus.Loading && !filteredCategories">
         <bl-form-field>
             <input blInput placeholder="VM size" [formControl]="basicInput">
             <bl-hint>Cannot load VM sizes. You can enter it instead.</bl-hint>
