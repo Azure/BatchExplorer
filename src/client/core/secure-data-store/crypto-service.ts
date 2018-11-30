@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import * as crypto from "crypto";
-import * as keytar from "keytar";
+import { KeytarService } from "./keytar.service";
 
 /**
  * Keytar service and key to save the master key
  */
-const BATCH_APPLICATION = "batch-explorer";
-const KEYTAR_KEY = "key";
+const BATCH_APPLICATION = "BatchExplorer";
+const KEYTAR_KEY = "master";
 
 /**
  * Length of the initialization vector
@@ -25,7 +25,7 @@ const DEFAULT_STRING_ENCODING = "base64";
 export class CryptoService {
     private _masterKey: Promise<string>;
 
-    constructor() {
+    constructor(private keytar: KeytarService) {
         this._masterKey = this._loadMasterKey();
     }
 
@@ -66,10 +66,10 @@ export class CryptoService {
     }
 
     private async _loadMasterKey(): Promise<string> {
-        let masterKey = await keytar.getPassword(BATCH_APPLICATION, KEYTAR_KEY);
+        let masterKey = await this.keytar.getPassword(BATCH_APPLICATION, KEYTAR_KEY);
         if (!masterKey) {
             masterKey = this._generateMasterKey();
-            await keytar.setPassword(BATCH_APPLICATION, KEYTAR_KEY, masterKey);
+            await this.keytar.setPassword(BATCH_APPLICATION, KEYTAR_KEY, masterKey);
         }
         return masterKey;
     }
