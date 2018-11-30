@@ -61,6 +61,18 @@ linux:
     - "deb"
     - "rpm"
 
+deb:
+  depends:
+    # --- Default START
+    - gconf2
+    - gconfg-service
+    - libnotify4
+    - libappindicator1
+    - libxtst6
+    - libnss3
+    # --- Default END
+    - libsecret-1-0 # This is needed for keytar on linux
+
 directories:
   buildResources: "resources"
   output: "release"

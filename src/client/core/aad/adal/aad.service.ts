@@ -6,6 +6,7 @@ import { BatchExplorerApplication } from "client/core/batch-explorer-application
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { fetch } from "client/core/fetch";
 import { BatchExplorerProperties } from "client/core/properties";
+import { SecureDataStore } from "client/core/secure-data-store";
 import { Constants } from "common";
 import { IpcEvent } from "common/constants";
 import { Deferred } from "common/deferred";
@@ -47,8 +48,9 @@ export class AADService {
         @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
         private localStorage: DataStore,
         private properties: BatchExplorerProperties,
+        secureStore: SecureDataStore,
         ipcMain: BlIpcMain) {
-        this._tokenCache = new AccessTokenCache(localStorage);
+        this._tokenCache = new AccessTokenCache(secureStore);
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenantsIds = this._tenantsIds.asObservable();

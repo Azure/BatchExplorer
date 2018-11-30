@@ -39,7 +39,7 @@ export class BatchExplorerProperties {
 
     private async _loadAzureEnvironment() {
         const initialEnv = await this.store.getItem(Constants.localStorageKey.azureEnvironment);
-        if (initialEnv in SupportedEnvironments) {
+        if (initialEnv && initialEnv in SupportedEnvironments) {
             this._azureEnvironment.next(SupportedEnvironments[initialEnv]);
         }
     }

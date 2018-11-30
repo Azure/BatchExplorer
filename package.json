@@ -55,7 +55,9 @@
     "start-publish": "npm run -s ts scripts/publish/publish.ts",
     "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package",
     "webpack": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
-    "webpack-dev-server": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js"
+    "webpack-dev-server": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "rebuild:keytar": "electron-rebuild -w keytar -p -f",
+    "postinstall": "npm run -s rebuild:keytar"
   },
   "license": "MIT",
   "engines": {
@@ -92,6 +94,7 @@
     "devtron": "^1.4.0",
     "electron": "^3.0.7",
     "electron-builder": "20.28.4",
+    "electron-rebuild": "^1.8.2",
     "file-loader": "^2.0.0",
     "fork-ts-checker-webpack-plugin": "^0.4.14",
     "html-webpack-plugin": "^3.2.0",
@@ -151,6 +154,7 @@
     "@angular/platform-server": "^7.0.1",
     "@angular/router": "^7.0.1",
     "@azure/storage-blob": "^10.1.0-preview",
+    "@types/keytar": "^4.0.1",
     "applicationinsights": "^1.0.6",
     "azure-storage": "^2.10.2",
     "bunyan": "^1.8.12",
@@ -173,6 +177,7 @@
     "inflection": "^1.12.0",
     "js-yaml": "^3.12.0",
     "jschardet": "^1.6.0",
+    "keytar": "^4.3.0",
     "load-json-file": "^5.1.0",
     "mkdirp": "^0.5.1",
     "moment": "^2.22.2",
