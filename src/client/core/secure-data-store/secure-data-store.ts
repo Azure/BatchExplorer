@@ -1,19 +1,20 @@
 import { Injectable } from "@angular/core";
 import { DataStore, InMemoryDataStore } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { LocalFileStorage } from "../local-file-storage";
+import * as path from "path";
+import { FileSystem } from "../fs";
 import { CryptoService } from "./crypto-service";
 
-const SECRET_DATA_FILE = "data/secure";
+const SECRET_DATA_FILE = "data/secure.enc";
 
 /**
  * Implementation of the browser local storage
  */
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class SecureDataStore extends InMemoryDataStore implements DataStore {
     private _loadPromise: Promise<void>;
 
-    constructor(private localFileStorage: LocalFileStorage, private crypto: CryptoService) {
+    constructor(private fs: FileSystem, private crypto: CryptoService) {
         super();
         this._loadPromise = this._load();
     }
@@ -47,11 +48,11 @@ export class SecureDataStore extends InMemoryDataStore implements DataStore {
         }
         const content = JSON.stringify(obj);
         const encryptedContent = await this.crypto.encrypt(content);
-        await this.localFileStorage.set(SECRET_DATA_FILE, encryptedContent);
+        await this.fs.saveFile(this._getFile(), encryptedContent);
     }
 
     private async _load(): Promise<void> {
-        const encryptedContent = await this.localFileStorage.read(SECRET_DATA_FILE);
+        const encryptedContent: string | null = await this.fs.readFile(this._getFile()).catch(_ => null);
         if (!encryptedContent) {
             return;
         }
@@ -63,5 +64,9 @@ export class SecureDataStore extends InMemoryDataStore implements DataStore {
         } catch (e) {
             log.error("Invalid JSON in the secret store file. This could be because we lost the master key.");
         }
+    }
+
+    private _getFile() {
+        return path.join(this.fs.commonFolders.userData, SECRET_DATA_FILE);
     }
 }

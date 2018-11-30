@@ -2,10 +2,24 @@ import { Injectable } from "@angular/core";
 import * as crypto from "crypto";
 import * as keytar from "keytar";
 
+/**
+ * Keytar service and key to save the master key
+ */
 const BATCH_APPLICATION = "batch-explorer";
 const KEYTAR_KEY = "key";
 
+/**
+ * Length of the initialization vector
+ */
+const IV_BYTES = 16;
+
+/**
+ * Algorithm to use when encrypting
+ */
 const ENCRYPT_ALGORITHM = "aes-256-ctr";
+
+// What encoding to use when converting buffer to string
+const DEFAULT_STRING_ENCODING = "base64";
 
 @Injectable({ providedIn: "root" })
 export class CryptoService {
@@ -15,20 +29,40 @@ export class CryptoService {
         this._masterKey = this._loadMasterKey();
     }
 
-    public async encrypt(content: string): Promise<string> {
-        const key = await this._masterKey;
-        const cipher = crypto.createCipheriv(ENCRYPT_ALGORITHM, key, this._getIV());
-        let crypted = cipher.update(content, "utf8", "hex");
-        crypted += cipher.final("hex");
-        return crypted;
+    public async encrypt(content: Buffer): Promise<Buffer>;
+    public async encrypt(content: string): Promise<string>;
+    public async encrypt(content: Buffer | string): Promise<Buffer | string> {
+        if (typeof content === "string") {
+            const buffer = await this._encryptBuffer(Buffer.from(content));
+            return buffer.toString(DEFAULT_STRING_ENCODING);
+        } else {
+            return this._encryptBuffer(content);
+        }
     }
 
-    public async decrypt(encryptedContent: string): Promise<string> {
+    public async decrypt(content: Buffer): Promise<Buffer>;
+    public async decrypt(content: string): Promise<string>;
+    public async decrypt(content: Buffer | string): Promise<Buffer | string> {
+        if (typeof content === "string") {
+            const buffer = await this._decryptBuffer(Buffer.from(content, DEFAULT_STRING_ENCODING));
+            return buffer.toString("utf8");
+        } else {
+            return this._decryptBuffer(content);
+        }
+    }
+
+    private async _encryptBuffer(content: Buffer): Promise<Buffer> {
         const key = await this._masterKey;
-        const decipher = crypto.createDecipheriv(ENCRYPT_ALGORITHM, key, this._getIV());
-        let dec = decipher.update(encryptedContent, "hex", "utf8");
-        dec += decipher.final("utf8");
-        return dec;
+        const iv = this._getIV();
+        const cipher = crypto.createCipheriv(ENCRYPT_ALGORITHM, key, iv);
+        return Buffer.concat([iv, cipher.update(content), cipher.final()]);
+    }
+
+    private async _decryptBuffer(content: Buffer): Promise<Buffer> {
+        const key = await this._masterKey;
+        const iv = content.slice(0, IV_BYTES);
+        const decipher = crypto.createDecipheriv(ENCRYPT_ALGORITHM, key, iv);
+        return Buffer.concat([decipher.update(content.slice(16)), decipher.final()]);
     }
 
     private async _loadMasterKey(): Promise<string> {
@@ -45,6 +79,6 @@ export class CryptoService {
     }
 
     private _getIV() {
-        return crypto.pseudoRandomBytes(16);
+        return crypto.randomBytes(IV_BYTES);
     }
 }
