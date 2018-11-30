@@ -31,8 +31,8 @@ matrix:
         - npm config set python $(pyenv which python)
         - pyenv versions
         - pyenv install --list
-        - pyenv install 3.6.0
-        - pyenv global 3.6.0
+        - pyenv install -s 3.6
+        - pyenv global 3.6
         - python --version
         - python3 --version
       before_script:
