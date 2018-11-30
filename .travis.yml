@@ -6,7 +6,6 @@ addons:
   apt:
     packages:
       - libsecret-1-dev
-      - python2.7
       # - libgnome-keyring-dev
       # - openjpeg-tools # or libopenjp2-tools
       # - graphicsmagick
@@ -26,10 +25,11 @@ matrix:
       os: linux
       services: docker
       before_install:
-        - which python
+        - pyenv install 2.7
+        - pyenv global 2.7
         - python --version
-        - which python27
-        - npm config set python $(which python27)
+        - which python
+        - npm config set python $(which python)
         - pyenv versions
         - pyenv install --list
         - pyenv install 3.6.0
