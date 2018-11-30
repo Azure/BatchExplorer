@@ -127,10 +127,14 @@ export class VmSizeService implements OnDestroy {
 
     public get(vmSize: string): Observable<VmSize> {
         return this.sizes.pipe(
-            map(sizes => {
-                return sizes.filter(x => x.name.toLowerCase() === vmSize.toLowerCase()).first();
-            }),
             take(1),
+            map((sizes) => {
+                if (sizes) {
+                    return sizes.filter(x => x.name.toLowerCase() === vmSize.toLowerCase()).first();
+                } else {
+                    return null;
+                }
+            }),
             share(),
         );
     }

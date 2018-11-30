@@ -11,9 +11,10 @@ import { PoolOsSources } from "app/models/forms";
 import { PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 
 import { TableConfig } from "@batch-flask/ui/table";
+import { distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { VmSizeFilterValue } from "./vm-size-picker-filter.component";
 import "./vm-size-picker.scss";
 
@@ -69,6 +70,8 @@ export class VmSizeDecorator {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
+    public LoadingStatus = LoadingStatus;
+
     @Input() public osSource: PoolOsSources;
 
     @Input() public osType: "linux" | "windows";
@@ -79,6 +82,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     public filteredCategories: VmSizeDecorator[];
     public prices: OSPricing = null;
     public categoriesDisplayName = categoriesDisplayName;
+    public basicInput = new FormControl();
 
     public tableConfig: TableConfig = {
         sorting: {
@@ -94,17 +98,28 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     private _categoryRegex: StringMap<string[]>;
     private _vmSizes: List<VmSize> = List([]);
     private _sizeSub: Subscription;
-    private _categorySub: Subscription;
+    private _destroy = new Subject();
     private _currentFilter: VmSizeFilterValue = { category: "all" };
 
     constructor(
         public vmSizeService: VmSizeService,
         private changeDetector: ChangeDetectorRef,
         private pricingService: PricingService) {
+
+        this.basicInput.valueChanges.pipe(
+            takeUntil(this._destroy),
+            distinctUntilChanged(),
+        ).subscribe((value) => {
+            if (this._propagateChange) {
+                this._propagateChange(value);
+            }
+        });
     }
 
     public ngOnInit() {
-        this._categorySub = this.vmSizeService.vmSizeCategories.subscribe((categories) => {
+        this.vmSizeService.vmSizeCategories.pipe(
+            takeUntil(this._destroy),
+        ).subscribe((categories) => {
             this._categoryRegex = categories;
             this._categorizeSizes();
         });
@@ -135,17 +150,16 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     }
 
     public ngOnDestroy() {
-        if (this._sizeSub) {
-            this._sizeSub.unsubscribe();
-        }
-        this._categorySub.unsubscribe();
+        this._destroy.next();
+        this._destroy.unsubscribe();
     }
 
-    public writeValue(value: any) {
+    public writeValue(value: string) {
         this.pickedSize = value;
+        this.basicInput.setValue(value);
     }
 
-    public registerOnChange(fn) {
+    public registerOnChange(fn: (value: string) => void) {
         this._propagateChange = fn;
     }
 
@@ -175,8 +189,8 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     }
 
     private _categorizeSizes() {
-        if (!this._vmSizes) { return; }
         this.loadingStatus = LoadingStatus.Ready;
+        if (!this._vmSizes) { return; }
         let vmSizes = this._vmSizes.toArray();
         if (this._currentFilter && this._categoryRegex) {
             if (this._currentFilter.category && (this._currentFilter.category in this._categoryRegex)) {
