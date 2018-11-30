@@ -2,16 +2,17 @@ language: node_js
 dist: trusty
 sudo: false
 
-# addons:
-#   apt:
-#     packages:
-#       - libgnome-keyring-dev
-#       - openjpeg-tools # or libopenjp2-tools
-#       - graphicsmagick
-#       - libreadline6
-#       - xz-utils
-#       - rpm
-#       - bsdtar
+addons:
+  apt:
+    packages:
+      - libsecret-1-dev
+      # - libgnome-keyring-dev
+      # - openjpeg-tools # or libopenjp2-tools
+      # - graphicsmagick
+      # - libreadline6
+      # - xz-utils
+      # - rpm
+      # - bsdtar
 
 node_js:
   - 10.8.0
