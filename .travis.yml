@@ -26,6 +26,7 @@ matrix:
       os: linux
       services: docker
       before_install:
+        - npm config set python $(which python)
         - pyenv versions
         - pyenv install --list
         - pyenv install 3.6.0
