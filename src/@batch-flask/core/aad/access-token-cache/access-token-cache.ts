@@ -66,6 +66,7 @@ export class AccessTokenCache {
         }
         try {
             const data = JSON.parse(tokenStr);
+            console.log("Got dem token", data);
             const tokens = this._processSerializedTokens(data);
             if (Object.keys(tokens).length !== 0) {
                 this._tokens = tokens;
