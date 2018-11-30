@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { log } from "@batch-flask/utils";
-import { ArmBatchAccount, BatchAccount, VmSize } from "app/models";
+import { ArmBatchAccount, VmSize } from "app/models";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, combineLatest } from "rxjs";
-import { filter, map, share, shareReplay, take } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
+import { catchError, map, publishReplay, refCount, share, switchMap, take, takeUntil } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { BatchAccountService } from "./batch-account";
 import { computeUrl } from "./compute.service";
@@ -23,12 +23,12 @@ interface IncludedSizes {
     iaas: string[];
 }
 
-@Injectable({providedIn: "root"})
-export class VmSizeService {
+@Injectable({ providedIn: "root" })
+export class VmSizeService implements OnDestroy {
     /**
      * All sizes
      */
-    public sizes: Observable<List<VmSize>>;
+    public sizes: Observable<List<VmSize> | null>;
 
     /**
      * Only cloud services sizes supported
@@ -48,19 +48,31 @@ export class VmSizeService {
         extralarge: 8,
     };
 
-    private _sizes = new BehaviorSubject<List<VmSize>>(null);
-    private _includedSizes = new BehaviorSubject<IncludedSizes|null>(null);
+    private _includedSizes = new BehaviorSubject<IncludedSizes | null>(null);
     private _vmSizeCategories = new BehaviorSubject<StringMap<string[]>>(null);
-
-    private _currentAccount: BatchAccount;
+    private _destroy = new Subject();
 
     constructor(
         private arm: ArmHttpService,
         private githubData: GithubDataService,
-        private accountService: BatchAccountService) {
+        accountService: BatchAccountService) {
 
-        const obs = combineLatest(this._sizes, this._includedSizes);
-        this.sizes = this._sizes.pipe(filter(x => x !== null));
+        this.loadVmSizeData();
+
+        this.sizes = accountService.currentAccount.pipe(
+            takeUntil(this._destroy),
+            switchMap((account) => {
+                if (!(account instanceof ArmBatchAccount)) {
+                    return of(null);
+                } else {
+                    return this._fetchVmSizesForAccount(account);
+                }
+            }),
+            publishReplay(1),
+            refCount(),
+        );
+
+        const obs = combineLatest(this.sizes, this._includedSizes);
 
         this.cloudServiceSizes = obs.pipe(
             map(([sizes, included]) => {
@@ -69,7 +81,8 @@ export class VmSizeService {
                 }
                 return this.filterSizes(sizes, included.all.concat(included.paas));
             }),
-            shareReplay(1),
+            publishReplay(1),
+            refCount(),
         );
 
         this.virtualMachineSizes = obs.pipe(
@@ -79,33 +92,16 @@ export class VmSizeService {
                 }
                 return this.filterSizes(sizes, included.all.concat(included.iaas));
             }),
-            shareReplay(1),
+            publishReplay(1),
+            refCount(),
         );
 
         this.vmSizeCategories = this._vmSizeCategories.asObservable();
     }
 
-    public init() {
-        this.accountService.currentAccount.subscribe((account: BatchAccount) => {
-            this._currentAccount = account;
-            this.load();
-        });
-        this.loadVmSizeData();
-    }
-
-    public load() {
-        if (!(this._currentAccount instanceof ArmBatchAccount)) { return; }
-        const { subscription, location } = this._currentAccount;
-        const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/vmSizes`;
-        this.arm.get<ArmListResponse<any>>(url).subscribe({
-            next: (response) => {
-                const sizes = response.value.map(x => new VmSize(x));
-                this._sizes.next(List<VmSize>(sizes));
-            },
-            error: (error) => {
-                log.error("Error loading vm sizes for account ", { account: this._currentAccount.toJS(), error });
-            },
-        });
+    public ngOnDestroy() {
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public loadVmSizeData() {
@@ -155,5 +151,20 @@ export class VmSizeService {
             }
             return false;
         }));
+    }
+
+    private _fetchVmSizesForAccount(account: ArmBatchAccount): Observable<List<VmSize> | null> {
+        const { subscription, location } = account;
+        const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/vmSizes`;
+        return this.arm.get<ArmListResponse<any>>(url).pipe(
+            map((response) => {
+                const sizes = response.value.map(x => new VmSize(x));
+                return List<VmSize>(sizes);
+            }),
+            catchError((error) => {
+                log.error("Error loading vm sizes for account ", { account: account.toJS(), error });
+                return of(null);
+            }),
+        );
     }
 }
