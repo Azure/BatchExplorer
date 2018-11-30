@@ -25,7 +25,6 @@ matrix:
       os: linux
       services: docker
       before_install:
-        - pyenv install 2.7
         - pyenv global 2.7
         - python --version
         - which python
