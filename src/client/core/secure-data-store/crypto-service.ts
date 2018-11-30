@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import crypto from "crypto";
-import keytar from "keytar";
+import * as crypto from "crypto";
+import * as keytar from "keytar";
 
 const BATCH_APPLICATION = "batch-explorer";
 const KEYTAR_KEY = "key";
@@ -17,7 +17,7 @@ export class CryptoService {
 
     public async encrypt(content: string): Promise<string> {
         const key = await this._masterKey;
-        const cipher = crypto.createCipher(ENCRYPT_ALGORITHM, key);
+        const cipher = crypto.createCipheriv(ENCRYPT_ALGORITHM, key, this._getIV());
         let crypted = cipher.update(content, "utf8", "hex");
         crypted += cipher.final("hex");
         return crypted;
@@ -25,7 +25,7 @@ export class CryptoService {
 
     public async decrypt(encryptedContent: string): Promise<string> {
         const key = await this._masterKey;
-        const decipher = crypto.createDecipher(ENCRYPT_ALGORITHM, key);
+        const decipher = crypto.createDecipheriv(ENCRYPT_ALGORITHM, key, this._getIV());
         let dec = decipher.update(encryptedContent, "hex", "utf8");
         dec += decipher.final("utf8");
         return dec;
@@ -41,6 +41,10 @@ export class CryptoService {
     }
 
     private _generateMasterKey() {
-        return crypto.randomBytes(64).toString("base64");
+        return crypto.randomBytes(16).toString("hex");
+    }
+
+    private _getIV() {
+        return crypto.pseudoRandomBytes(16);
     }
 }
