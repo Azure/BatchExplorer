@@ -4,11 +4,11 @@ import { ArmBatchAccount, VmSize } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
 import { catchError, map, publishReplay, refCount, share, switchMap, take, takeUntil } from "rxjs/operators";
-import { ArmHttpService } from "./arm-http.service";
-import { BatchAccountService } from "./batch-account";
-import { computeUrl } from "./compute.service";
-import { ArmListResponse } from "./core";
-import { GithubDataService } from "./github-data";
+import { ArmHttpService } from "../arm-http.service";
+import { BatchAccountService } from "../batch-account";
+import { computeUrl } from "../compute.service";
+import { ArmListResponse } from "../core";
+import { GithubDataService } from "../github-data";
 
 const includedVmsSizesPath = "data/vm-sizes-list.json";
 
@@ -62,6 +62,7 @@ export class VmSizeService implements OnDestroy {
         this.sizes = accountService.currentAccount.pipe(
             takeUntil(this._destroy),
             switchMap((account) => {
+                console.log("New acc", account.name);
                 if (!(account instanceof ArmBatchAccount)) {
                     return of(null);
                 } else {

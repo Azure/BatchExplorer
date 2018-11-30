@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
 
 import { RouterTestingModule } from "@angular/router/testing";
-import { ElectronModule } from "@batch-flask/ui";
+import { ElectronModule, FormModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
@@ -85,7 +85,9 @@ describe("VmSizePickerComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [FormsModule, TableTestingModule, NoopAnimationsModule, ElectronModule, RouterTestingModule],
+            imports: [
+                FormsModule, TableTestingModule, NoopAnimationsModule, ElectronModule, RouterTestingModule, FormModule,
+            ],
             declarations: [VmSizePickerComponent, TestComponent],
             providers: [
                 { provide: BatchAccountService, useValue: accountServiceSpy },

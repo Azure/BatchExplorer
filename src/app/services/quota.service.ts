@@ -8,8 +8,8 @@ import { ApplicationService } from "./application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";
 import { BatchAccountService } from "./batch-account";
+import { VmSizeService } from "./compute";
 import { ComputeService } from "./compute.service";
-import { VmSizeService } from "./vm-size.service";
 
 /**
  * Service grouping all quotas needed
