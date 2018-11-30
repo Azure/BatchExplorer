@@ -8,7 +8,7 @@ export class InMemoryDataStore implements DataStore {
         return Promise.resolve();
     }
 
-    public async getItem<T>(key: string): Promise<T> {
+    public async getItem<T>(key: string): Promise<T | undefined> {
         return Promise.resolve(this._data.get(key));
     }
 

@@ -1,6 +1,6 @@
 import { CryptoService } from "./crypto-service";
 
-fdescribe("CryptoService", () => {
+describe("CryptoService", () => {
     let service: CryptoService;
     let keytarSpy;
 

@@ -25,7 +25,7 @@ export class SecureDataStore extends InMemoryDataStore implements DataStore {
         return this._save();
     }
 
-    public async getItem<T = string>(key: string): Promise<T> {
+    public async getItem<T = string>(key: string): Promise<T | undefined> {
         await this._loadPromise;
         return super.getItem<T>(key);
     }
