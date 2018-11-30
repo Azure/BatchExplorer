@@ -62,7 +62,6 @@ export class VmSizeService implements OnDestroy {
         this.sizes = accountService.currentAccount.pipe(
             takeUntil(this._destroy),
             switchMap((account) => {
-                console.log("New acc", account.name);
                 if (!(account instanceof ArmBatchAccount)) {
                     return of(null);
                 } else {
