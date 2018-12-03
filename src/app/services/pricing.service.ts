@@ -8,8 +8,8 @@ import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { BatchAccountService } from "./batch-account";
+import { VmSizeService } from "./compute";
 import { LocalFileStorage } from "./local-file-storage.service";
-import { VmSizeService } from "./vm-size.service";
 
 const pricingFilename = "pricing.json";
 

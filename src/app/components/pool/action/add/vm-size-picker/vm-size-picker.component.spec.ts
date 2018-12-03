@@ -1,12 +1,12 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
-import { By } from "@angular/platform-browser";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserModule, By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
 
 import { RouterTestingModule } from "@angular/router/testing";
-import { ElectronModule } from "@batch-flask/ui";
+import { ElectronModule, FormModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
@@ -14,7 +14,8 @@ import { ArmBatchAccount, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { BatchAccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
-import { of } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
+import { updateInput } from "test/utils/helpers";
 
 @Component({
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,
@@ -57,7 +58,7 @@ describe("VmSizePickerComponent", () => {
                     "^standard_m",
                 ],
             }),
-            virtualMachineSizes: of(List([
+            virtualMachineSizes: new BehaviorSubject(List([
                 new VmSize({ name: "Standard_A1" } as any),
                 new VmSize({ name: "Standard_A2" } as any),
                 new VmSize({ name: "Standard_A3" } as any),
@@ -72,7 +73,7 @@ describe("VmSizePickerComponent", () => {
                 new VmSize({ name: "Standard_C2" } as any),
                 new VmSize({ name: "Standard_O1" } as any),
             ])),
-            cloudServiceSizes: of(List([
+            cloudServiceSizes: new BehaviorSubject(List([
                 new VmSize({ name: "Standard_A1" } as any),
                 new VmSize({ name: "Standard_A2" } as any),
                 new VmSize({ name: "Standard_A3" } as any),
@@ -85,7 +86,10 @@ describe("VmSizePickerComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [FormsModule, TableTestingModule, NoopAnimationsModule, ElectronModule, RouterTestingModule],
+            imports: [
+                BrowserModule, FormsModule, ReactiveFormsModule, TableTestingModule,
+                NoopAnimationsModule, ElectronModule, RouterTestingModule, FormModule,
+            ],
             declarations: [VmSizePickerComponent, TestComponent],
             providers: [
                 { provide: BatchAccountService, useValue: accountServiceSpy },
@@ -151,5 +155,24 @@ describe("VmSizePickerComponent", () => {
         fixture.detectChanges();
         const searchResult = de.queryAll(By.css("bl-table bl-row-render")).map(t => t.nativeElement.textContent);
         expect(searchResult.length).toEqual(13);
+    });
+
+    describe("when it fails to load the vm sizes", () => {
+        let plainInputEl: DebugElement;
+
+        beforeEach(() => {
+            vmSizeServiceSpy.virtualMachineSizes.next(null);
+            fixture.detectChanges();
+            plainInputEl = de.query(By.css(".no-vm-sizes-basic-input input"));
+        });
+
+        it("shows a plain input when its unable to load the vm sizes", () => {
+            expect(plainInputEl).not.toBeFalsy();
+        });
+
+        it("propagate the changes when updating the input", () => {
+            updateInput(plainInputEl, "Standard_D4_V2");
+            expect(testComponent.vmSize).toEqual("Standard_D4_V2");
+        });
     });
 });

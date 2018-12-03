@@ -2,6 +2,8 @@
 
 bl-vm-size-picker {
     display: block;
+    position: relative;
+
     .vm-size-list {
         height: 400px;
         border: 1px solid $border-color;

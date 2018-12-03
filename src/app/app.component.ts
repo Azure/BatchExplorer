@@ -13,7 +13,6 @@ import {
     AutoscaleFormulaService,
     BatchAccountService,
     CommandService,
-    GithubDataService,
     NavigatorService,
     NcjTemplateService,
     PoolOsService,
@@ -24,7 +23,6 @@ import {
     SettingsService,
     SubscriptionService,
     ThemeService,
-    VmSizeService,
 } from "app/services";
 import { filter, first, takeUntil } from "rxjs/operators";
 
@@ -50,12 +48,10 @@ export class AppComponent implements OnInit, OnDestroy {
         private accountService: BatchAccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
-        private githubDataService: GithubDataService,
         private poolOsService: PoolOsService,
         private sshKeyService: SSHKeyService,
         remote: ElectronRemote,
         pythonRpcService: PythonRpcService,
-        private vmSizeService: VmSizeService,
         themeService: ThemeService,
         private route: ActivatedRoute,
         permissionService: PermissionService,
@@ -71,12 +67,10 @@ export class AppComponent implements OnInit, OnDestroy {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
         this._initWorkspaces();
-        this.githubDataService.init();
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
         this.navigatorService.init();
-        this.vmSizeService.init();
         this.accountService.loadInitialData();
         this.ncjTemplateService.init();
         pythonRpcService.init();
