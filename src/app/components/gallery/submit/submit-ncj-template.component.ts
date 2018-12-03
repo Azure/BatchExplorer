@@ -402,7 +402,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         }
 
         if (this.initialModeState) {
-            this.modeState = this.initialModeState;
+            this.pickMode(this.initialModeState);
         }
     }
 
