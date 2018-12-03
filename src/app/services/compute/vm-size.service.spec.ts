@@ -93,6 +93,10 @@ describe("VMSizeService", () => {
         service = new VmSizeService(armSpy, githubDataSpy, accountServiceSpy);
     });
 
+    afterEach(() => {
+        service.ngOnDestroy();
+    });
+
     it("use the batch account subscription and location for the sizes", async () => {
         await service.sizes.pipe(take(1)).toPromise();
         expect(armSpy.get).toHaveBeenCalledOnce();
@@ -193,4 +197,27 @@ describe("VMSizeService", () => {
         expect(sizes).toBeFalsy();
     });
 
+    it("get a size by id", async () => {
+        const size1 = await service.get("standard_a1").toPromise();
+        expect(size1.toJS()).toEqual({
+            id: "standard_a1",
+            name: "Standard_A1",
+            numberOfCores: 1,
+            osDiskSizeInMB: 1047552,
+            resourceDiskSizeInMB: 71680,
+            memoryInMB: 1792,
+            maxDataDiskCount: 2,
+        });
+
+        const size2 = await service.get("StanDard_D1").toPromise();
+        expect(size2.toJS()).toEqual({
+            id: "standard_d1",
+            name: "Standard_D1",
+            numberOfCores: 1,
+            osDiskSizeInMB: 1047552,
+            resourceDiskSizeInMB: 51200,
+            memoryInMB: 3584,
+            maxDataDiskCount: 4,
+        });
+    });
 });
