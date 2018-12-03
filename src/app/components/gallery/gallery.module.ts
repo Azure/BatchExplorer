@@ -45,6 +45,7 @@ const modules = [
         NcjTemplateViewerComponent,
         SubmitLocalTemplateComponent,
         SubmitMarketApplicationComponent,
+        SubmitRecentTemplateComponent,
     ],
 })
 export class GalleryModule {

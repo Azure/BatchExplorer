@@ -10,6 +10,7 @@ import {
 } from "app/components/node/details";
 import { NodeHomeComponent } from "app/components/node/home";
 import { PoolGraphsModule } from "app/components/pool/graphs";
+import { StartTaskModule } from "../pool/start-task";
 import { TaskBaseModule } from "../task/base";
 import { NodeActionModule } from "./action";
 import { ComputeNodeRoutingModule } from "./node-routing.module";
@@ -20,13 +21,14 @@ const components = [
 ];
 
 const modules = [
-    ComputeNodeRoutingModule, FileBrowseModule, NodeBrowseModule, NodeConnectModule, NodeActionModule, TaskBaseModule,
+    ComputeNodeRoutingModule, StartTaskModule, FileBrowseModule,
+    NodeBrowseModule, NodeConnectModule, NodeActionModule, TaskBaseModule,
 ];
 
 @NgModule({
     declarations: components,
     exports: [...modules, ...components],
-    imports: [...modules, ...commonModules, PoolGraphsModule] ,
+    imports: [...modules, ...commonModules, PoolGraphsModule],
     entryComponents: [
     ],
 })

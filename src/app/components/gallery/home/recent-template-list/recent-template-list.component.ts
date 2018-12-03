@@ -1,9 +1,11 @@
 import { Component, OnDestroy } from "@angular/core";
 import { ElectronRemote } from "@batch-flask/electron";
-import { Subscription } from "rxjs";
-
+import { DialogService } from "@batch-flask/ui";
 import { NcjTemplateMode } from "app/models";
 import { NcjTemplateService, RecentSubmission } from "app/services";
+import { Subscription } from "rxjs";
+import { SubmitRecentTemplateComponent } from "../../submit-recent-template";
+
 import "./recent-template-list.scss";
 
 @Component({
@@ -15,7 +17,10 @@ export class RecentTemplateListComponent implements OnDestroy {
 
     private _subs: Subscription[] = [];
 
-    constructor(private templateService: NcjTemplateService, private remote: ElectronRemote) {
+    constructor(
+        private templateService: NcjTemplateService,
+        private remote: ElectronRemote,
+        private dialogService: DialogService) {
         this._subs.push(this.templateService.recentSubmission.subscribe((value) => {
             this.recentSubmissions = value;
         }));
@@ -51,6 +56,11 @@ export class RecentTemplateListComponent implements OnDestroy {
 
     public trackTemplate(index, recent: RecentSubmission) {
         return recent.id;
+    }
+
+    public run(recent: RecentSubmission) {
+        const ref = this.dialogService.open(SubmitRecentTemplateComponent);
+        ref.componentInstance.recentTemplateId = recent.id;
     }
 
     private _getParameterFileName(mode: NcjTemplateMode) {
