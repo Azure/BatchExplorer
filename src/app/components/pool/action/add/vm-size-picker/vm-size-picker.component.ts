@@ -138,7 +138,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
                 sizes = this.vmSizeService.cloudServiceSizes;
             }
             this.loadingStatus = LoadingStatus.Loading;
-            this._sizeSub = sizes.subscribe(x => {
+            this._sizeSub = sizes.subscribe((x) => {
                 this._vmSizes = x;
                 this._categorizeSizes();
             });
@@ -190,7 +190,11 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     private _categorizeSizes() {
         this.loadingStatus = LoadingStatus.Ready;
-        if (!this._vmSizes) { return; }
+        if (!this._vmSizes) {
+            this.filteredCategories = null;
+            this.changeDetector.markForCheck();
+            return;
+        }
         let vmSizes = this._vmSizes.toArray();
         if (this._currentFilter && this._categoryRegex) {
             if (this._currentFilter.category && (this._currentFilter.category in this._categoryRegex)) {
