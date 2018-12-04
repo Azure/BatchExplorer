@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
+import { JobActionModule } from "app/components/job/action";
 import { NodeBrowseModule } from "app/components/node/browse";
 import { PoolBaseModule } from "app/components/pool/base";
 import { PoolErrorDisplayComponent } from "app/components/pool/details/error-display";
@@ -18,8 +19,14 @@ const components = [
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [...commonModules,
-        PoolBaseModule, PoolGraphsModule, NodeBrowseModule, StartTaskModule],
+    imports: [
+        ...commonModules,
+        PoolBaseModule,
+        PoolGraphsModule,
+        JobActionModule,
+        NodeBrowseModule,
+        StartTaskModule,
+    ],
 })
 export class PoolDetailsModule {
 }
