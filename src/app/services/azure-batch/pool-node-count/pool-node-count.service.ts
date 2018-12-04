@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { Model, Prop, Record } from "@batch-flask/core";
 import { BatchAccountService } from "app/services/batch-account";
 import { BehaviorSubject, Observable, combineLatest, empty, timer } from "rxjs";
-import { expand, flatMap, map, publishReplay, reduce, refCount, share, take, tap } from "rxjs/operators";
+import { expand, map, publishReplay, reduce, refCount, share, switchMap, tap } from "rxjs/operators";
 import { AzureBatchHttpService, BatchListResponse } from "../core";
 
 export interface NodeCountsAttributes {
@@ -143,8 +143,10 @@ export class PoolNodeCountService implements OnDestroy {
             accountService.currentAccountId,
             timer(0, NODE_COUNT_REFRESH_INTERVAL),
         ).pipe(
-            flatMap(() => this.refresh()),
-            flatMap(() => this._counts.pipe(take(1))),
+            switchMap(() => this.refresh()),
+            switchMap(() => {
+                return this._counts;
+            }),
             publishReplay(1),
             refCount(),
         );

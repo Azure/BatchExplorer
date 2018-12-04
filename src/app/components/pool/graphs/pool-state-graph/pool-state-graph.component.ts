@@ -93,7 +93,7 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
     @HostListener("contextmenu")
     public showContextMenu() {
         this.contextMenuService.openMenu(new ContextMenu([
-            new ContextMenuItem({ label: "Refresh", click: () => this.poolNodeCountSerivce.refresh() }),
+            new ContextMenuItem({ label: "Refresh", click: () => this.poolNodeCountSerivce.refresh().subscribe() }),
         ]));
     }
 
