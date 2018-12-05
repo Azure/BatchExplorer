@@ -56,7 +56,7 @@ export class NcjTemplateService {
     public get(uri: string): Observable<any> {
         return this.githubDataService.ready.pipe(
             flatMap(() => {
-                const promise = loadJsonFile(this.githubDataService.getLocalPath(uri)).then((json) => {
+                const promise = loadJsonFile(this.githubDataService.getLocalNcjPath(uri)).then((json) => {
                     return json;
                 }).catch((error) => {
                     log.error(`File is not valid json: ${error.message}`);
@@ -102,7 +102,7 @@ export class NcjTemplateService {
      * @param applicationId Id of the application
      */
     public getApplicationIcon(applicationId: string): string {
-        return "file:" + this.githubDataService.getLocalPath(`${applicationId}/icon.svg`);
+        return "file:" + this.githubDataService.getLocalNcjPath(`${applicationId}/icon.svg`);
     }
 
     /**

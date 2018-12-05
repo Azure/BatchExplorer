@@ -80,7 +80,11 @@ export class GithubDataService implements OnDestroy {
         return `${this._repoUrl}/${path}`;
     }
 
-    public getLocalPath(uri: string) {
+    public getLocalNcjPath(uri: string) {
+        return path.join(this._ncjRoot, uri);
+    }
+
+    public getLocalDataPath(uri: string) {
         return path.join(this._dataRoot, uri);
     }
 
@@ -129,9 +133,14 @@ export class GithubDataService implements OnDestroy {
         return path.join(this.fs.commonFolders.temp, "batch-explorer-data");
     }
 
-    private get _dataRoot() {
+    private get _ncjRoot() {
         const repo = this._repo && this._repo.split("/")[1];
         return path.join(this._repoDownloadRoot, `${repo}-${this._branch}`, "ncj");
+    }
+
+    private get _dataRoot() {
+        const repo = this._repo && this._repo.split("/")[1];
+        return path.join(this._repoDownloadRoot, `${repo}-${this._branch}`, "data");
     }
 
     private get _zipUrl() {
