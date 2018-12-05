@@ -216,4 +216,23 @@ describe("EntityCommand", () => {
         });
     });
 
+    it("should call the multiple method instead if it's provided", () => {
+        const actionSpy = jasmine.createSpy("action").and.returnValue(of("some-obs-value"));
+        const multipleSpy = jasmine.createSpy("multiple").and.returnValue(of("some-obs-value"));
+
+        const command = newCommand({
+            label: "my-label",
+            action: actionSpy,
+            name: "my-label",
+            multiple: multipleSpy,
+            confirm: false,
+        });
+
+        command.executeMultiple([entity1, entity2]);
+
+        expect(dialogServiceSpy.confirm).not.toHaveBeenCalled();
+        expect(actionSpy).not.toHaveBeenCalled();
+        expect(multipleSpy).toHaveBeenCalledOnce();
+        expect(multipleSpy).toHaveBeenCalledWith([entity1, entity2], undefined);
+    });
 });

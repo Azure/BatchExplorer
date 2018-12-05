@@ -180,6 +180,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
                     count: entities.length,
                     type,
                 });
+
                 this.dialogService.confirm(
                     message,
                     {
