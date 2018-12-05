@@ -2,6 +2,9 @@
 
 bl-pool-state-graph {
     display: block;
-    // width: 500px;
-    // height: 200px;
+
+    canvas {
+        width: 300px;
+        height: 150px;
+    }
 }

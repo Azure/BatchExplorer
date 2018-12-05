@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
 import { BaseModule } from "@batch-flask/ui";
+import { NodeConnectModule } from "app/components/node/connect";
 import { NodesHeatmapComponent, NodesHeatmapLegendComponent } from "./heatmap";
 import { HistoryGraphComponent } from "./history-graph";
 import {
@@ -28,7 +29,15 @@ const components = [NodesHeatmapComponent,
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [CommonModule, MaterialModule, RouterModule, BaseModule, FormsModule, ReactiveFormsModule],
+    imports: [
+        CommonModule,
+        NodeConnectModule,
+        MaterialModule,
+        RouterModule,
+        BaseModule,
+        FormsModule,
+        ReactiveFormsModule,
+    ],
 })
 export class PoolGraphsModule {
 

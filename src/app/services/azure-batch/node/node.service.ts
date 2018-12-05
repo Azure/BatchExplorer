@@ -34,7 +34,7 @@ export interface PoolListOptions extends ListOptionsAttributes {
 
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class NodeService {
     private _basicProperties: string = "id,state,schedulingState,vmSize";
     private _cache = new TargetedDataCache<NodeListParams, Node>({
@@ -88,7 +88,7 @@ export class NodeService {
 
     public exist(params: NodeParams): Observable<boolean> {
         const httpParams = new HttpParams().set("$select", "id");
-        return this.http.get(`/pools/${params.poolId}/nodes/${params.id}`, {params: httpParams}).pipe(
+        return this.http.get(`/pools/${params.poolId}/nodes/${params.id}`, { params: httpParams }).pipe(
             map(_ => true),
             catchError((error: ServerError) => {
                 if (error.status === HttpCode.NotFound) {
@@ -194,9 +194,9 @@ export class NodeService {
         return this.http.post(`/pools/${poolId}/nodes/${nodeId}/enablescheduling`, null);
     }
 
-    public delete(poolId: string, nodeId: string): Observable<any> {
+    public delete(poolId: string, nodeId: string | string[]): Observable<any> {
         return this.http.post(`/pools/${poolId}/removenodes`, {
-            nodeList: [nodeId],
+            nodeList: Array.isArray(nodeId) ? nodeId : [nodeId],
         });
     }
 

@@ -28,7 +28,7 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
     action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
     enabled?: (entity: TEntity) => boolean;
     visible?: (entity: TEntity) => boolean;
-    multiple?: boolean;
+    multiple?: boolean | ((entities: TEntity[], options?: any) => Observable<any>);
     confirm?: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     notify?: EntityCommandNotify | boolean;
     permission?: Permission;
@@ -40,7 +40,7 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
 export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     public name: string;
     public notify: EntityCommandNotify;
-    public multiple: boolean;
+    public multiple: boolean | ((entities: TEntity[], options?: any) => Observable<any>);
     public enabled: (entity: TEntity) => boolean;
     public confirm: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     public definition: EntityCommands<TEntity>;
@@ -180,6 +180,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
                     count: entities.length,
                     type,
                 });
+
                 this.dialogService.confirm(
                     message,
                     {
@@ -221,8 +222,18 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
 
     private _executeMultiple(entities: TEntity[], options?: any) {
         this._trackConfirm(entities.length);
-
         const label = this.label(entities[0]);
+
+        if (typeof this.multiple === "function") {
+            return this.multiple(entities, options).subscribe({
+                next: () => {
+                    this._notifySuccess(`${label} was successful.`, "");
+                },
+                error: (e: ServerError) => {
+                    this._notifyError(`${label} failed.`, e.message);
+                },
+            });
+        }
         const enabledEntities = entities.filter(x => this.enabled(x));
         const type = inflection.pluralize(this.definition.typeName.toLowerCase());
 
