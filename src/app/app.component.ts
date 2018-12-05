@@ -12,7 +12,6 @@ import {
     AuthorizationHttpService,
     AutoscaleFormulaService,
     BatchAccountService,
-    BatchContainerImageService,
     CommandService,
     GithubDataService,
     NavigatorService,
@@ -51,7 +50,6 @@ export class AppComponent implements OnInit {
         private sshKeyService: SSHKeyService,
         remote: ElectronRemote,
         pythonRpcService: PythonRpcService,
-        private batchContainerImageService: BatchContainerImageService,
         private vmSizeService: VmSizeService,
         themeService: ThemeService,
         private route: ActivatedRoute,
@@ -73,7 +71,6 @@ export class AppComponent implements OnInit {
         this.commandService.init();
         this.pricingService.init();
         this.navigatorService.init();
-        this.batchContainerImageService.init();
         this.vmSizeService.init();
         this.accountService.loadInitialData();
         this.ncjTemplateService.init();

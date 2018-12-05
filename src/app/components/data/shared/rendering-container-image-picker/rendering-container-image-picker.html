@@ -1,0 +1,15 @@
+<form [formGroup]="pickerFormGroup" >
+    <bl-form-field>
+        <bl-select>
+                <bl-option *ngFor="let version of appVersions;trackBy: trackAppVersion" [value]=pickedAppVersion></bl-option>
+        </bl-select>
+    </bl-form-field>
+    <bl-form-field>
+        <bl-select>
+                <bl-option *ngFor="let version of rendererVersions;trackBy: trackRenderVersion" [value]=pickedRendererVersion></bl-option>
+        </bl-select>
+    </bl-form-field>
+    <bl-form-field>
+            <bl-input [formControlName]="pickedContainerImage" [value]="pickedContainerImage">
+    </bl-form-field>
+</form>

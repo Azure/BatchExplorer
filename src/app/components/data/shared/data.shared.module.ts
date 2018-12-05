@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
 import { FileBrowseModule } from "app/components/file/browse";
-import { BatchContainerImagePickerComponent } from "./batch-container-image-picker";
 import { BlobContainerPickerComponent } from "./blob-container-picker";
 import { CloudFilePickerComponent, CloudFilePickerDialogComponent } from "./cloud-file-picker";
 import { StorageErrorDisplayComponent } from "./errors";
@@ -11,10 +10,10 @@ import { FileGroupSasComponent } from "./file-group-sas";
 import { FileGroupsPickerComponent } from "./file-groups-picker";
 import { FileOrDirectoryPickerComponent } from "./file-or-directory-picker";
 import { JobIdComponent } from "./job-id/job-id.component";
+import { RenderingContainerImagePickerComponent } from "./rendering-container-image-picker";
 import { StorageAccountPickerComponent } from "./storage-account-picker";
 
 const components = [
-    BatchContainerImagePickerComponent,
     BlobContainerPickerComponent,
     CloudFilePickerComponent,
     CloudFilePickerDialogComponent,
@@ -23,6 +22,7 @@ const components = [
     FileGroupsPickerComponent,
     FileOrDirectoryPickerComponent,
     JobIdComponent,
+    RenderingContainerImagePickerComponent,
     StorageAccountPickerComponent,
     StorageErrorDisplayComponent,
 ];
