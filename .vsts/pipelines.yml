@@ -22,11 +22,14 @@ jobs:
     displayName: Register dependencies
     pool:
       vmImage: vs2017-win2016
-    condition: ne(variables['Build.Reason'], 'PullRequest')
+    # condition: ne(variables['Build.Reason'], 'PullRequest')
     continueOnError: true
     steps:
       - template: ./dependencies.yml
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.6.x'
       - script: npm ci
         displayName: Install node modules
-      - task: ComponentGovernanceComponentDetection@0
-        displayName: 'Component Detection'
+      # - task: ComponentGovernanceComponentDetection@0
+      #   displayName: 'Component Detection'
