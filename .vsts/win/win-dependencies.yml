@@ -5,7 +5,6 @@ steps:
       versionSpec: '3.6.x'
   - powershell: |
       $ErrorActionPreference = "Stop"
-      npm install --global windows-build-tools
       node --version
       npm install -g npm
       npm ci
