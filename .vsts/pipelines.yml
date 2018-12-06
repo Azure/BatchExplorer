@@ -27,17 +27,7 @@ jobs:
       EnableDetectorPip: true
     continueOnError: true
     steps:
-      - template: ./dependencies.yml
+      - template: ./win/win-dependencies.yml
       - script: npm config list
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: '3.6.x'
-      - powershell: |
-          npm install --global windows-build-tools
-          node --version
-          npm install -g npm
-          npm ci
-          pip install -r python/requirements.txt
-        displayName: Install dependencies
       # - task: ComponentGovernanceComponentDetection@0
       #   displayName: 'Component Detection'
