@@ -2,6 +2,15 @@ steps:
   - template: ../dependencies.yml
   - task: UsePythonVersion@0
     inputs:
+      versionSpec: '2.7.x'
+
+  - powershell: |
+      $pythonPath = where python
+      echo "Python2 $pythonPath"
+      npm config set python $pythonPath
+
+  - task: UsePythonVersion@0
+    inputs:
       versionSpec: '3.6.x'
   - powershell: |
       $ErrorActionPreference = "Stop"
