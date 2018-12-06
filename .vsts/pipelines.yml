@@ -33,6 +33,7 @@ jobs:
         inputs:
           versionSpec: '3.6.x'
       - powershell: |
+          npm install --global windows-build-tools
           node --version
           npm install -g npm
           npm ci
