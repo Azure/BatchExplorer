@@ -13,18 +13,19 @@ import "./gpu-usage-graph.scss";
 })
 export class GpuUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     @Input() public showIndividualGpu = false;
-     public max = 100;
+
+    public max = 100;
     public unit = "%";
-     public gpuUsages: NodesPerformanceMetric = {};
+    public gpuUsages: NodesPerformanceMetric = {};
     public individualGpuUsages: PerformanceMetric[][] = [];
     public gpuCount = 1;
     public showOverallUsage = true;
     public lastGpuUsage: PerformanceMetric;
     public lastIndividualGpuUsage: PerformanceMetric[];
-     constructor(router: Router, changeDetector: ChangeDetectorRef) {
+    constructor(router: Router, changeDetector: ChangeDetectorRef) {
         super(router, changeDetector);
     }
-     public ngOnChanges(changes) {
+    public ngOnChanges(changes) {
         super.ngOnChanges(changes);
         if (changes.data) {
             this._clearMetricSubs();
@@ -45,24 +46,24 @@ export class GpuUsageGraphComponent extends PerformanceGraphComponent implements
                 }));
         }
     }
-     public updateData() {
+    public updateData() {
         if (this.showOverallUsage) {
             this._showOverallGpuUsage();
         } else {
             this._showIndiviualGpuUsage();
         }
     }
-     public changeShowOverallUsage(newValue) {
+    public changeShowOverallUsage(newValue) {
         this.showOverallUsage = newValue;
         this.updateData();
     }
-     public trackGpu(index) {
+    public trackGpu(index) {
         return index;
     }
-     private _showOverallGpuUsage() {
+    private _showOverallGpuUsage() {
         this.datasets = this._getDatasetsGroupedByNode(this.gpuUsages, "rgb(9, 94, 168)");
     }
-     private _showIndiviualGpuUsage() {
+    private _showIndiviualGpuUsage() {
         this.datasets = this.individualGpuUsages.map((usages, gpuN) => {
             return {
                 data: usages.map(x => {
@@ -76,7 +77,7 @@ export class GpuUsageGraphComponent extends PerformanceGraphComponent implements
             };
         });
     }
-     private _updateStatus() {
+    private _updateStatus() {
         if (this.lastGpuUsage) {
             this.status.next(`${this.lastGpuUsage.value}%`);
         } else {
