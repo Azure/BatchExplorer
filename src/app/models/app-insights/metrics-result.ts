@@ -52,6 +52,10 @@ export interface BatchPerformanceMetrics {
 export enum BatchPerformanceMetricType {
     cpuUsage = "cpuUsage",
     individualCpuUsage = "individualCpuUsage",
+    gpuUsage = "gpuUsage",
+    individualGpuUsage = "individualGpuUsage",
+    gpuMemory = "gpuMemory",
+    individualGpuMemory = "individualGpuMemory",
     memoryAvailable = "memoryAvailable",
     memoryUsed = "memoryUsed",
     diskRead = "diskRead",

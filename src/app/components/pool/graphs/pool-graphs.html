@@ -61,6 +61,16 @@
 
             <bl-network-usage-graph blMonitorGraphChart  metric="network" [data]="performanceData" class="full-display"></bl-network-usage-graph>
         </bl-metrics-monitor-metric>
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Gpu usage">
+            <bl-gpu-usage-graph blMonitorGraphPreview #gpuUsage [data]="performanceData" [interactive]="false"></bl-gpu-usage-graph>
+            <div blMetricsStatus>{{gpuUsage.status | async}}</div>
+             <bl-gpu-usage-graph blMonitorGraphChart [data]="performanceData" [showIndividualGpu]="node" class="full-display"></bl-gpu-usage-graph>
+        </bl-metrics-monitor-metric>
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Gpu memory">
+            <bl-gpu-memory-usage-graph blMonitorGraphPreview #gpuUsage [data]="performanceData" [interactive]="false"></bl-gpu-memory-usage-graph>
+            <div blMetricsStatus>{{gpuUsage.status | async}}</div>
+             <bl-gpu-memory-usage-graph blMonitorGraphChart [data]="performanceData" [showIndividualGpu]="node" class="full-display"></bl-gpu-memory-usage-graph>
+        </bl-metrics-monitor-metric>
     </ng-container>
     <ng-container *ngIf="!appInsightsEnabled">
         <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Application Insights">
