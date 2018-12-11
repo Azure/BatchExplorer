@@ -3,15 +3,19 @@ steps:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '2.7.x'
+    displayName: Install python 2.7 for node-gyp
 
   - powershell: |
       $pythonPath = Get-Command python | Select-Object -ExpandProperty Definition
       echo "Python2 $pythonPath"
       npm config set python $pythonPath
+    displayName: Configure python2 for node-gyp
 
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.6.x'
+    displayName: Install python 3.6 for BatchExplorer
+
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"

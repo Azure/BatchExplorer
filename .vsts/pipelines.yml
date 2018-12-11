@@ -28,6 +28,5 @@ jobs:
     continueOnError: true
     steps:
       - template: ./win/win-dependencies.yml
-      - script: npm config list
-      # - task: ComponentGovernanceComponentDetection@0
-      #   displayName: 'Component Detection'
+      - task: ComponentGovernanceComponentDetection@0
+        displayName: 'Component Detection'
