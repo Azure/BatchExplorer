@@ -6,7 +6,9 @@ import {
     PerformanceMetric,
 } from "app/models/app-insights/metrics-result";
 import { PerformanceGraphComponent } from "../performance-graph.component";
+
 import "./gpu-memory-usage-graph.scss";
+
 @Component({
     selector: "bl-gpu-memory-usage-graph",
     templateUrl: "gpu-memory-usage-graph.html",
@@ -22,9 +24,11 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
     public showOverallUsage = true;
     public lastGpuUsage: PerformanceMetric;
     public lastIndividualGpuUsage: PerformanceMetric[];
+
     constructor(router: Router, changeDetector: ChangeDetectorRef) {
         super(router, changeDetector);
     }
+
     public ngOnChanges(changes) {
         super.ngOnChanges(changes);
         if (changes.data) {
@@ -46,6 +50,7 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
                 }));
         }
     }
+
     public updateData() {
         if (this.showOverallUsage) {
             this._showOverallGpuUsage();
@@ -53,16 +58,20 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
             this._showIndiviualGpuUsage();
         }
     }
+
     public changeShowOverallUsage(newValue) {
         this.showOverallUsage = newValue;
         this.updateData();
     }
+
     public trackGpu(index) {
         return index;
     }
+
     private _showOverallGpuUsage() {
         this.datasets = this._getDatasetsGroupedByNode(this.gpuUsages, "rgb(9, 94, 168)");
     }
+
     private _showIndiviualGpuUsage() {
         this.datasets = this.individualGpuUsages.map((usages, gpuN) => {
             return {
@@ -77,6 +86,7 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
             };
         });
     }
+
     private _updateStatus() {
         if (this.lastGpuUsage) {
             this.status.next(`${this.lastGpuUsage.value}%`);

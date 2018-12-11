@@ -28,6 +28,7 @@ const metrics: StringMap<MetricDefinition> = {
     networkRead: { appInsightsMetricId: "customMetrics/Network read", segment: "cloud/roleInstance" },
     networkWrite: { appInsightsMetricId: "customMetrics/Network write", segment: "cloud/roleInstance" },
 };
+
 @Injectable({providedIn: "root"})
 export class AppInsightsQueryService {
     constructor(private appInsightsApi: AppInsightsApiService) { }
@@ -99,6 +100,7 @@ export class AppInsightsQueryService {
             return poolFilter;
         }
     }
+
     private _processMetrics(data: AppInsightsMetricsResult): BatchPerformanceMetrics {
         const performances = {};
         for (const metricResult of data) {
