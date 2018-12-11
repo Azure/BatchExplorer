@@ -17,8 +17,8 @@ steps:
   - powershell: |
       $ErrorActionPreference = "Stop"
       node --version
-      npm install -g npm
-      npm ci
+      npm i npm@4.6.1 -g
+      npm install
       npm run --debug rebuild:keytar
       pip install -r python/requirements.txt
     displayName: Install dependencies
