@@ -211,6 +211,10 @@ export class PoolUtils {
         };
     }
 
+    public static hasGPU(pool: Pool): boolean {
+        return pool.vmSize && pool.vmSize.toLowerCase().startsWith("standard_n");
+    }
+
     private static _getPoolNodes(pool, target = false) {
         if (target) {
             return {

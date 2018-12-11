@@ -11,7 +11,7 @@ import { Job, Node, NodeState, Pool, Task } from "app/models";
 import {
     AppInsightsQueryService, BatchExplorerService, NodeListParams, NodeService,
 } from "app/services";
-import { ComponentUtils } from "app/utils";
+import { ComponentUtils, PoolUtils } from "app/utils";
 import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";
@@ -47,6 +47,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     public startTaskFailedError: any;
     public isPaasPool: boolean = false;
+    public hasGPU: boolean = false;
 
     public runningTaskHistory = new RunningTasksHistoryData();
     public runningNodesHistory = new NodesStateHistoryData([NodeState.running, NodeState.idle]);
@@ -110,6 +111,8 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
                 this.runningNodesHistory.reset();
                 this.runningTaskHistory.reset();
             }
+
+            this.hasGPU = PoolUtils.hasGPU(this.pool);
         }
 
         if (changes.node) {
