@@ -8,8 +8,8 @@ steps:
       $pythonPath = Get-Command python | Select-Object -ExpandProperty Definition
       echo "Python2 $pythonPath"
       npm config set python $pythonPath
-      npm install --global --production --vs2015 windows-build-tools
-      npm config set msvs_version 2015
+      npm install --global --production windows-build-tools@4.0.0
+      # npm config set msvs_version 2015
 
   - task: UsePythonVersion@0
     inputs:
