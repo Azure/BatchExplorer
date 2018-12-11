@@ -5,11 +5,11 @@ steps:
       versionSpec: '2.7.x'
 
   - powershell: |
-      # npm install --global --production --vs2015 windows-build-tools
       $pythonPath = Get-Command python | Select-Object -ExpandProperty Definition
       echo "Python2 $pythonPath"
       npm config set python $pythonPath
-      npm config set msvs_version auto
+      npm install --global --production --vs2015 windows-build-tools
+      # npm config set msvs_version auto
 
   - task: UsePythonVersion@0
     inputs:
@@ -18,7 +18,9 @@ steps:
       $ErrorActionPreference = "Stop"
       node --version
       npm install -g npm
-      npm run --debug rebuild:keytar
       npm ci
+      npm run --debug rebuild:keytar
       pip install -r python/requirements.txt
     displayName: Install dependencies
+  - script: npm run --debug rebuild:keytar
+    displayName: "REbuild keytar"
