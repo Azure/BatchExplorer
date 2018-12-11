@@ -6,6 +6,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import * as monaco from "monaco-editor";
 import "./editor.scss";
+import { AutoscaleLanguage } from "./monaco-languages";
 
 export interface EditorKeyBinding {
     key: any;
@@ -112,6 +113,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
 
     public async initMonaco() {
         const monaco = await import("monaco-editor");
+        AutoscaleLanguage.define();
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         const options: monaco.editor.IEditorConstructionOptions = this.config;
 

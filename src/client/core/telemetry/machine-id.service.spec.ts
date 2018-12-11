@@ -15,7 +15,8 @@ describe("MachineIdService", () => {
         const id = await service.get();
 
         expect(id).not.toBeNull();
-        expect(await dataStore.getItem(Constants.localStorageKey.machineId)).toEqual(id);
+        const value = await dataStore.getItem(Constants.localStorageKey.machineId);
+        expect(value).toEqual(id);
     });
 
     it("use id in local storage", async () => {
