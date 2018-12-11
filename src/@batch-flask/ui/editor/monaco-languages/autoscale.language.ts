@@ -120,26 +120,33 @@ export class AutoscaleLanguage {
         // Register a completion item provider for the new language
         monaco.languages.registerCompletionItemProvider("batch-autoscale", {
             provideCompletionItems: (editor, position) => {
-                return [
-                    ...[...variables, ...timeInterval].map((x) => {
-                        return {
-                            label: x,
-                            kind: monaco.languages.CompletionItemKind.Variable,
-                        };
-                    }),
-                    ...[...mathFunc, ...systemFunc].map((x) => {
-                        return {
-                            label: x,
-                            kind: monaco.languages.CompletionItemKind.Function,
-                        };
-                    }),
-                    ...types.map((x) => {
-                        return {
-                            label: x,
-                            kind: monaco.languages.CompletionItemKind.Keyword,
-                        };
-                    }),
-                ];
+                const list: monaco.languages.CompletionList =  {
+                    suggestions: [
+                        ...[...variables, ...timeInterval].map((x) => {
+                            return {
+                                label: x,
+                                insertText: x,
+                                kind: monaco.languages.CompletionItemKind.Variable,
+                            };
+                        }),
+                        ...[...mathFunc, ...systemFunc].map((x) => {
+                            return {
+                                label: x,
+                                insertText: x,
+                                kind: monaco.languages.CompletionItemKind.Function,
+                            };
+                        }),
+                        ...types.map((x) => {
+                            return {
+                                label: x,
+                                insertText: x,
+                                kind: monaco.languages.CompletionItemKind.Keyword,
+                            };
+                        }),
+                    ],
+                };
+
+                return list;
             },
         });
 
