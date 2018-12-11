@@ -46,6 +46,9 @@ export class AutoscaleLanguage {
         });
 
         monaco.languages.setMonarchTokensProvider("batch-autoscale", {
+            name: "batch-autoscale",
+            mimeTypes: ["text/batch-autoscale"],
+            defaultToken: "invalid",
             brackets: [
                 { open: "[", close: "]", token: "delimiter.square" },
                 { open: "(", close: ")", token: "delimiter.parenthesis" },
@@ -66,17 +69,13 @@ export class AutoscaleLanguage {
                     { include: "@whitespace" },
                     { include: "@numbers" },
                     { include: "@strings" },
+                    { include: "@comments" },
 
-                    [/@symbols/, {
-                        cases: {
-                            "@operators": "delimiter",
-                            "@default": "",
-                        },
-                    }],
+                    [/[;,.]/, "delimiter"],
+                    [/[()\[\]]/, "@brackets"],
+                    [/[<>=!%&+\-*/|~^]/, "operator"],
 
                     // numbers
-                    [/[;,.]/, "delimiter"],
-                    [/[()]/, "@brackets"],
                     [/[\w@#]+/, {
                         cases: {
                             "@keywords": "keyword",
@@ -92,27 +91,22 @@ export class AutoscaleLanguage {
                         },
                     }],
                 ],
-                whitespace: [
-                    [/[ \t\r\n]+/, ""],
-                    [/\/\*/, "comment", "@comment"],
-                    [/\/\/.*$/, "comment"],
-                ],
-                comment: [
-                    [/[^\/*]+/, "comment"],
-                    [/[\/*]/, "comment"],
-                ],
+                whitespace: [[/\s+/, "white"]],
+                comments: [["\\/\\/+.*", "comment"]],
                 numbers: [
                     [/0[xX][0-9a-fA-F]*/, "number"],
-                    [/0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i, "number"],
+                    [/[$][+-]*\d*(\.\d*)?/, "number"],
+                    [/((\d+(\.\d*)?)|(\.\d+))([eE][\-+]?\d+)?/, "number"],
                 ],
                 strings: [
-                    [/N"/, { token: "string", next: "@string" }],
-                    [/"/, { token: "string", next: "@string" }],
+                    [/H'/, { token: "string.quote", bracket: "@open", next: "@string" }],
+                    [/h'/, { token: "string.quote", bracket: "@open", next: "@string" }],
+                    [/'/, { token: "string.quote", bracket: "@open", next: "@string" }],
                 ],
                 string: [
                     [/[^']+/, "string"],
-                    [/""/, "string"],
-                    [/"/, { token: "string", next: "@pop" }],
+                    [/''/, "string"],
+                    [/'/, { token: "string.quote", bracket: "@close", next: "@pop" }],
                 ],
             },
         } as any);
@@ -120,26 +114,33 @@ export class AutoscaleLanguage {
         // Register a completion item provider for the new language
         monaco.languages.registerCompletionItemProvider("batch-autoscale", {
             provideCompletionItems: (editor, position) => {
-                return [
-                    ...[...variables, ...timeInterval].map((x) => {
-                        return {
-                            label: x,
-                            kind: monaco.languages.CompletionItemKind.Variable,
-                        };
-                    }),
-                    ...[...mathFunc, ...systemFunc].map((x) => {
-                        return {
-                            label: x,
-                            kind: monaco.languages.CompletionItemKind.Function,
-                        };
-                    }),
-                    ...types.map((x) => {
-                        return {
-                            label: x,
-                            kind: monaco.languages.CompletionItemKind.Keyword,
-                        };
-                    }),
-                ];
+                const list: monaco.languages.CompletionList =  {
+                    suggestions: [
+                        ...[...variables, ...timeInterval].map((x) => {
+                            return {
+                                label: x,
+                                insertText: x,
+                                kind: monaco.languages.CompletionItemKind.Variable,
+                            };
+                        }),
+                        ...[...mathFunc, ...systemFunc].map((x) => {
+                            return {
+                                label: x,
+                                insertText: x,
+                                kind: monaco.languages.CompletionItemKind.Function,
+                            };
+                        }),
+                        ...types.map((x) => {
+                            return {
+                                label: x,
+                                insertText: x,
+                                kind: monaco.languages.CompletionItemKind.Keyword,
+                            };
+                        }),
+                    ],
+                };
+
+                return list;
             },
         });
 

@@ -52,8 +52,10 @@ describe("SecureDataStore", () => {
         });
 
         it("initialize with keys", async () => {
-            expect(await store.getItem("key1")).toEqual("value1");
-            expect(await store.getItem("key2")).toEqual("value2");
+            const value1 = await store.getItem("key1");
+            const value2 = await store.getItem("key2");
+            expect(value1).toEqual("value1");
+            expect(value2).toEqual("value2");
             expect(cryptoSpy.decrypt).toHaveBeenCalledTimes(1);
             expect(cryptoSpy.decrypt).toHaveBeenCalledWith("somecontent");
         });
