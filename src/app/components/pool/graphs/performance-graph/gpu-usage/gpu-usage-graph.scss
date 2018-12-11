@@ -1,0 +1,30 @@
+bl-gpu-usage-graph {
+    .gpu-usage-container {
+        height: 100%;
+        display: flex;
+        > .details {
+            flex: 0 0 100px;
+        }
+        .overall-toggle {
+            margin: 5px;
+        }
+        .individual-gpus {
+            margin: 0 10px;
+            width: 100%;
+            .individual-gpu {
+                font-size: 16px;
+                margin-bottom: 5px;
+                > .name {
+                    white-space: nowrap;
+                    margin-right: 5px;
+                }
+                > .usage {
+                }
+            }
+        }
+        [blChart] {
+            min-width: 50px;
+            width: 100%;
+        }
+    }
+}
