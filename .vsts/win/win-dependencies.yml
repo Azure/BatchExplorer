@@ -13,12 +13,10 @@ steps:
     inputs:
       versionSpec: '3.6.x'
   - powershell: |
+      . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       node --version
-      npm i -g npm
-      npm install
-      npm run --debug rebuild:keytar
-      pip install -r python/requirements.txt
+      exec { npm i -g npm }
+      exec { npm install }
+      exec { pip install -r python/requirements.txt }
     displayName: Install dependencies
-  - script: npm run --debug rebuild:keytar
-    displayName: "REbuild keytar"
