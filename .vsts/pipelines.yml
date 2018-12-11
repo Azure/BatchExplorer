@@ -21,7 +21,7 @@ jobs:
   - job: RegisterDependencies
     displayName: Register dependencies
     pool:
-      vmImage: vs2015-win2012r2
+      vmImage: vs2017-win2016
     # condition: ne(variables['Build.Reason'], 'PullRequest')
     variables:
       EnableDetectorPip: true

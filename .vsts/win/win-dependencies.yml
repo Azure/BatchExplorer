@@ -1,14 +1,15 @@
 steps:
   - template: ../dependencies.yml
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '2.7.x'
+  # - task: UsePythonVersion@0
+  #   inputs:
+  #     versionSpec: '2.7.x'
 
   - powershell: |
-      $pythonPath = Get-Command python | Select-Object -ExpandProperty Definition
-      echo "Python2 $pythonPath"
-      npm config set python $pythonPath
-      npm config set msvs_version 2015
+      npm install --global --production windows-build-tools
+      # $pythonPath = Get-Command python | Select-Object -ExpandProperty Definition
+      # echo "Python2 $pythonPath"
+      # npm config set python $pythonPath
+      # npm config set msvs_version 2015
 
   - task: UsePythonVersion@0
     inputs:
