@@ -63,7 +63,7 @@ class StorageAccountCardMockComponent {
     @Input() public account: BatchAccount;
 }
 
-describe("AccountSummaryCardComponent", () => {
+fdescribe("AccountSummaryCardComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
