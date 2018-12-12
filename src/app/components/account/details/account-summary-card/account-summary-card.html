@@ -7,11 +7,11 @@
         </div>
         <div>
             <span class="label">{{'account-summary-card.subscription' | i18n }}</span>
-            <bl-clickable (do)="openSubscriptionInPortal()">{{account.subscription?.displayName}}</bl-clickable>
+            <bl-clickable (do)="openSubscriptionInPortal()">{{subscriptionName}}</bl-clickable>
         </div>
         <div *ngIf="account.resourceGroup">
             <span class="label">{{'account-summary-card.resourceGroup' | i18n }}</span>
-            <bl-clickable (do)="openResourceGroupInPortal()">{{account.resourceGroup}}</bl-clickable>
+            <bl-clickable (do)="openResourceGroupInPortal()">{{resourceGroup}}</bl-clickable>
         </div>
     </div>
     <bl-button-group summaryActions>
