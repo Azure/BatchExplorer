@@ -1,8 +1,14 @@
+import { HttpClient } from "@angular/common/http";
 import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { TelemetryService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { ButtonsModule, EntityCommandsListModule, I18nUIModule, SummaryCardComponent } from "@batch-flask/ui";
+import { MockElectronShell } from "@batch-flask/electron/testing";
+import {
+    ButtonsModule, DialogService, ElectronShell, EntityCommandsListModule,
+    I18nUIModule, PermissionService, SummaryCardComponent,
+} from "@batch-flask/ui";
 import {
     ArmBatchAccount,
     BatchAccount,
@@ -11,6 +17,8 @@ import {
     PoolAllocationMode,
     Subscription,
 } from "app/models";
+import { BatchAccountService } from "app/services";
+import { click } from "test/utils/helpers";
 import { AccountSummaryCardComponent } from "./account-summary-card.component";
 
 const sub1 = new Subscription({
@@ -69,8 +77,15 @@ describe("AccountSummaryCardComponent", () => {
     let de: DebugElement;
     let titleEl: DebugElement;
     let detailsEl: DebugElement;
+    let shellSpy: MockElectronShell;
+    let accountServiceSpy;
 
     beforeEach(() => {
+        shellSpy = new MockElectronShell();
+        accountServiceSpy = {
+
+        };
+
         TestBed.configureTestingModule({
             imports: [
                 I18nTestingModule,
@@ -84,6 +99,14 @@ describe("AccountSummaryCardComponent", () => {
                 SummaryCardComponent,
                 AccountQuotasCardMockComponent,
                 StorageAccountCardMockComponent,
+            ],
+            providers: [
+                { provide: ElectronShell, useValue: shellSpy },
+                { provide: HttpClient, useValue: null },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
+                { provide: DialogService, useValue: null },
+                { provide: TelemetryService, useValue: null },
+                { provide: PermissionService, useValue: null },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
@@ -122,6 +145,20 @@ describe("AccountSummaryCardComponent", () => {
             const storageAccountEl = de.query(By.css("bl-storage-account-card"));
             expect(storageAccountEl).not.toBeFalsy();
             expect(storageAccountEl.componentInstance.account).toEqual(acc1);
+        });
+
+        it("opens the subscription in the Azure Portal when clicking on it", () => {
+            click(detailsEl.query(By.css(".subscription")));
+            expect(shellSpy.openExternal).toHaveBeenCalledOnce();
+            expect(shellSpy.openExternal).toHaveBeenCalledWith(
+                "https://portal.azure.com/#resource/subscriptions/sub-1/overview");
+        });
+
+        it("opens the subscription in the Azure Portal when clicking on it", () => {
+            click(detailsEl.query(By.css(".resource-group")));
+            expect(shellSpy.openExternal).toHaveBeenCalledOnce();
+            expect(shellSpy.openExternal).toHaveBeenCalledWith(
+                "https://portal.azure.com/#resource/subscriptions/sub-1/resourceGroups/group-1/overview");
         });
     });
 
