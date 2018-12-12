@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { EntityView, ListView, ServerError, autobind } from "@batch-flask/core";
-import { BatchAccount, BatchApplication, Job, Pool } from "app/models";
+import { ArmBatchAccount, BatchAccount, BatchApplication, Job, Pool } from "app/models";
 import {
     ApplicationListParams, ApplicationService, BatchAccountService,
     JobListParams, JobService, PoolListParams, PoolService,
@@ -9,8 +9,9 @@ import {
 import { Subscription } from "rxjs";
 import { BatchAccountCommands } from "../action";
 
-import { TableConfig } from "@batch-flask/ui";
+import { ElectronShell, TableConfig } from "@batch-flask/ui";
 
+import { Constants } from "common";
 import "./account-details.scss";
 
 @Component({
@@ -54,6 +55,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         private accountService: BatchAccountService,
         private applicationService: ApplicationService,
         private jobService: JobService,
+        private shell: ElectronShell,
         private poolService: PoolService) {
         this.data = this.accountService.view();
         this.data.item.subscribe((account) => {
@@ -100,6 +102,38 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     public selectAccount(accountId: string): void {
         this.noLinkedStorage = false;
         this.accountService.selectAccount(accountId);
+    }
+
+    public get subscriptionId(): string | undefined {
+        if (this.account instanceof ArmBatchAccount) {
+            const sub = this.account.subscription;
+            return sub && sub.subscriptionId;
+        } else {
+            return undefined;
+        }
+    }
+
+    public get resourceGroup(): string | undefined {
+        if (this.account instanceof ArmBatchAccount) {
+            return this.account.resourceGroup;
+        } else {
+            return undefined;
+        }
+    }
+
+    public openSubscriptionInPortal() {
+        const subscriptionId = this.subscriptionId;
+        if (subscriptionId) {
+            this.shell.openExternal(Constants.ExternalLinks.subscriptionUrl.format(subscriptionId));
+        }
+    }
+
+    public openResourceGroupInPortal() {
+        const subscriptionId = this.subscriptionId;
+        const resourceGroup = this.resourceGroup;
+        if (subscriptionId && resourceGroup) {
+            this.shell.openExternal(Constants.ExternalLinks.resourceGroupUrl.format(subscriptionId, resourceGroup));
+        }
     }
 
     public trackByFn(item: Pool | Job | BatchApplication) {

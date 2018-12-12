@@ -7,8 +7,18 @@
         <bl-summary-card>
             <div summaryTitle>{{account.name}}</div>
             <div summaryDetails>
-                <div>{{account.url}}</div>
-                <div>{{account.subscription?.displayName}}</div>
+                <div>
+                    <span class="label">{{'account-details.url' | i18n }}</span>
+                    {{account.url}}
+                </div>
+                <div>
+                    <span class="label">{{'account-details.subscription' | i18n }}</span>
+                    <bl-clickable (do)="openSubscriptionInPortal()">{{account.subscription?.displayName}}</bl-clickable>
+                </div>
+                <div *ngIf="account.resourceGroup">
+                    <span class="label">{{'account-details.resourceGroup' | i18n }}</span>
+                    <bl-clickable (do)="openResourceGroupInPortal()">{{account.resourceGroup}}</bl-clickable>
+                </div>
             </div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
@@ -28,7 +38,7 @@
                 <bl-monitor-chart chartType="coreCount"></bl-monitor-chart>
             </a>
             <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
-                <bl-monitor-chart  chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
+                <bl-monitor-chart chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
             </a>
             <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
                 <bl-monitor-chart chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
@@ -38,7 +48,7 @@
             </a>
             <div class="monitor-chart current-node-counts">
                 <h2>Current node counts</h2>
-                <bl-pool-state-graph ></bl-pool-state-graph>
+                <bl-pool-state-graph></bl-pool-state-graph>
             </div>
         </div>
 
@@ -58,7 +68,7 @@
                                     <a href="#" routerLink="/jobs">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard" [data]="jobData.items | async"  [config]="tableConfig">
+                            <bl-table class="dashboard" [data]="jobData.items | async" [config]="tableConfig">
                                 <bl-column name="id">
                                     <div *blCellDef="let job">{{job.id}}</div>
                                 </bl-column>
@@ -92,10 +102,14 @@
                                     <div *blCellDef="let pool">{{pool.id}}</div>
                                 </bl-column>
                                 <bl-column name="state" [defaultWidth]="30">
-                                    <div *blCellDef="let pool"><bl-pool-os-icon [pool]="pool"></bl-pool-os-icon></div>
+                                    <div *blCellDef="let pool">
+                                        <bl-pool-os-icon [pool]="pool"></bl-pool-os-icon>
+                                    </div>
                                 </bl-column>
                                 <bl-column name="nodes" [defaultWidth]="60">
-                                    <div *blCellDef="let pool"><bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview></div>
+                                    <div *blCellDef="let pool">
+                                        <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
+                                    </div>
                                 </bl-column>
                             </bl-table>
                         </bl-loading>
@@ -122,7 +136,7 @@
                                     <a href="#" routerLink="/applications">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard" [data]="applicationData.items | async"  [config]="tableConfig">
+                            <bl-table class="dashboard" [data]="applicationData.items | async" [config]="tableConfig">
                                 <bl-column name="id">
                                     <div *blCellDef="let app">{{app.id}}</div>
                                 </bl-column>
