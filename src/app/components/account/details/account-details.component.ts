@@ -1,22 +1,19 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { EntityView, ListView, ServerError, autobind } from "@batch-flask/core";
+import { EntityView, ListView, ServerError } from "@batch-flask/core";
+import { TableConfig } from "@batch-flask/ui";
 import { BatchAccount, BatchApplication, Job, Pool } from "app/models";
 import {
     ApplicationListParams, ApplicationService, BatchAccountService,
     JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
 import { Subscription } from "rxjs";
-import { BatchAccountCommands } from "../action";
-
-import { TableConfig } from "@batch-flask/ui";
 
 import "./account-details.scss";
 
 @Component({
     selector: "bl-account-details",
     templateUrl: "account-details.html",
-    providers: [BatchAccountCommands],
 })
 export class AccountDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }) {
@@ -48,7 +45,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     private initialOptions = { maxItems: 10 };
 
     constructor(
-        public commands: BatchAccountCommands,
         private changeDetector: ChangeDetectorRef,
         private activatedRoute: ActivatedRoute,
         private accountService: BatchAccountService,
@@ -90,11 +86,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         this.poolData.dispose();
         this.jobData.dispose();
         this.applicationData.dispose();
-    }
-
-    @autobind()
-    public refresh() {
-        return this.commands.get(this.accountId);
     }
 
     public selectAccount(accountId: string): void {

@@ -4,31 +4,14 @@
 </bl-banner>
 <bl-loading [status]="data.status">
     <div *ngIf="account">
-        <bl-summary-card>
-            <div summaryTitle>{{account.name}}</div>
-            <div summaryDetails>
-                <div>{{account.url}}</div>
-                <div>{{account.subscription?.displayName}}</div>
-            </div>
-            <bl-button-group summaryActions>
-                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-commands-list [commands]="commands" [entity]="account"></bl-commands-list>
-            </bl-button-group>
-            <div summaryTile>
-                <bl-account-quotas-card [account]="account"></bl-account-quotas-card>
-            </div>
-            <div summaryTile>
-                <bl-storage-account-card [account]="account">
-                </bl-storage-account-card>
-            </div>
-        </bl-summary-card>
-        <h1 class="section-title">Monitoring</h1>
+        <bl-account-summary-card [account]="account"></bl-account-summary-card>
+        <h1 class="section-title">{{'account-details.monitoring' | i18n }}</h1>
         <div class="monitor-charts">
             <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
                 <bl-monitor-chart chartType="coreCount"></bl-monitor-chart>
             </a>
             <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
-                <bl-monitor-chart  chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
+                <bl-monitor-chart chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
             </a>
             <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
                 <bl-monitor-chart chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
@@ -38,12 +21,12 @@
             </a>
             <div class="monitor-chart current-node-counts">
                 <h2>Current node counts</h2>
-                <bl-pool-state-graph ></bl-pool-state-graph>
+                <bl-pool-state-graph></bl-pool-state-graph>
             </div>
         </div>
 
         <bl-account-cost-card></bl-account-cost-card>
-        <h1 class="section-title">Resources</h1>
+        <h1 class="section-title">{{'account-details.resources' | i18n }}</h1>
         <div class="account-cards">
             <bl-card class="account-card">
                 <div class="title">
@@ -58,7 +41,7 @@
                                     <a href="#" routerLink="/jobs">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard" [data]="jobData.items | async"  [config]="tableConfig">
+                            <bl-table class="dashboard" [data]="jobData.items | async" [config]="tableConfig">
                                 <bl-column name="id">
                                     <div *blCellDef="let job">{{job.id}}</div>
                                 </bl-column>
@@ -92,10 +75,14 @@
                                     <div *blCellDef="let pool">{{pool.id}}</div>
                                 </bl-column>
                                 <bl-column name="state" [defaultWidth]="30">
-                                    <div *blCellDef="let pool"><bl-pool-os-icon [pool]="pool"></bl-pool-os-icon></div>
+                                    <div *blCellDef="let pool">
+                                        <bl-pool-os-icon [pool]="pool"></bl-pool-os-icon>
+                                    </div>
                                 </bl-column>
                                 <bl-column name="nodes" [defaultWidth]="60">
-                                    <div *blCellDef="let pool"><bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview></div>
+                                    <div *blCellDef="let pool">
+                                        <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
+                                    </div>
                                 </bl-column>
                             </bl-table>
                         </bl-loading>
@@ -122,7 +109,7 @@
                                     <a href="#" routerLink="/applications">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard" [data]="applicationData.items | async"  [config]="tableConfig">
+                            <bl-table class="dashboard" [data]="applicationData.items | async" [config]="tableConfig">
                                 <bl-column name="id">
                                     <div *blCellDef="let app">{{app.id}}</div>
                                 </bl-column>

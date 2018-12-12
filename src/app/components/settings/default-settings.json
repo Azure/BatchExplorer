@@ -22,7 +22,7 @@
   "terminal.external": "default",
 
   // Default username to connect to a remote node
-  "node-connect.default-username": "batchlabs-user",
+  "node-connect.default-username": "batchexplorer-user",
 
   // Branch to be used when loading data from github(This is mostly for experimenting with new NCJ templates)
   "github-data.source.branch": "master",

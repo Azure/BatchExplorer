@@ -117,6 +117,8 @@ export const ExternalLinks = {
     license: "https://azure.github.io/BatchExplorer/EULA.html",
     privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
     submitIssue: "https://github.com/Azure/BatchExplorer/issues",
+    subscriptionUrl:  "https://portal.azure.com/#resource/subscriptions/{0}/overview",
+    resourceGroupUrl: "https://portal.azure.com/#resource/subscriptions/{0}/resourceGroups/{1}/overview",
 };
 
 export const ODataFields = {

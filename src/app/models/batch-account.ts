@@ -1,5 +1,5 @@
 import { ArmRecord, Model, Prop, Record } from "@batch-flask/core";
-import { StorageUtils } from "app/utils";
+import { ArmResourceUtils, StorageUtils } from "app/utils";
 import { Subscription } from "./subscription";
 
 export enum PoolAllocationMode {
@@ -82,6 +82,13 @@ export class ArmBatchAccount extends ArmRecord<BatchAccountAttributes> implement
     @Prop() public location: string;
     @Prop() public properties: BatchAccountProperties;
     @Prop() public subscription: Subscription;
+    public readonly resourceGroup: string | null;
+
+    constructor(data: BatchAccountAttributes) {
+        super(data);
+        this.resourceGroup = ArmResourceUtils.getResourceGroupFromResourceId(this.id) || null;
+    }
+
     public get isBatchManaged() {
         return this.properties && this.properties.poolAllocationMode === PoolAllocationMode.BatchService;
     }

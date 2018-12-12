@@ -9,6 +9,7 @@ bl-account-quotas-card {
     // How to show a border only in between elements
     grid-gap: 1px;
     background-color: $border-color;
+    height: 100%;
 
     .quota {
         background: $card-background;

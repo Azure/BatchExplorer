@@ -29,6 +29,21 @@ export class ArmResourceUtils {
         }
     }
 
+    /**
+     * Parse the arm resource id uri to retrieve the subscription id inside.
+     * This could also be used for any arm url depending on subscriptions
+     * @param id Arm resource id
+     */
+    public static getResourceGroupFromResourceId(id: string): string | undefined | null {
+        if (!id) { return null; }
+        try {
+            return this._resourceDescriptorParser(id).resourceGroup;
+        } catch (e) {
+            log.error("Failed to extract resource group from resource Id", { id });
+            return null;
+        }
+    }
+
     /*
      * Returns the account name from a resource id
      */
