@@ -3,7 +3,6 @@ import { Router } from "@angular/router";
 import { SidebarManager } from "@batch-flask/ui";
 import { BatchAccountService } from "app/services";
 import { Subscription } from "rxjs";
-import { BatchAccountCommands } from "../action";
 import { BatchAccountCreateComponent } from "../action/create";
 
 @Component({
@@ -28,7 +27,6 @@ export class AccountDefaultComponent implements OnInit, OnDestroy {
     private accountChangeSubscription: Subscription;
 
     constructor(
-        public commands: BatchAccountCommands,
         private accountService: BatchAccountService,
         private sidebarManager: SidebarManager,
         private router: Router) {
