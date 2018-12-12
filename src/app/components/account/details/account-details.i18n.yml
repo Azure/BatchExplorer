@@ -1,0 +1,4 @@
+account-details:
+  url: Url
+  subscription: Subscription
+  resourceGroup: Resource group
