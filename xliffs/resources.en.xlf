@@ -40,6 +40,27 @@
       <trans-unit id="account-cost-card.usingLocalAccount">
         <source>Cannot get cost with local batch account</source>
       </trans-unit>
+      <trans-unit id="account-details">
+        <source/>
+      </trans-unit>
+      <trans-unit id="account-details.monitoring">
+        <source>Monitoring</source>
+      </trans-unit>
+      <trans-unit id="account-details.resources">
+        <source>Resources</source>
+      </trans-unit>
+      <trans-unit id="account-summary-card">
+        <source/>
+      </trans-unit>
+      <trans-unit id="account-summary-card.resourceGroup">
+        <source>Resource group</source>
+      </trans-unit>
+      <trans-unit id="account-summary-card.subscription">
+        <source>Subscription</source>
+      </trans-unit>
+      <trans-unit id="account-summary-card.url">
+        <source>Url</source>
+      </trans-unit>
       <trans-unit id="add-certificate-form">
         <source/>
       </trans-unit>
