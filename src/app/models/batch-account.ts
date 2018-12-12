@@ -82,11 +82,11 @@ export class ArmBatchAccount extends ArmRecord<BatchAccountAttributes> implement
     @Prop() public location: string;
     @Prop() public properties: BatchAccountProperties;
     @Prop() public subscription: Subscription;
-    public readonly resourceGroup: string;
+    public readonly resourceGroup: string | null;
 
     constructor(data: BatchAccountAttributes) {
         super(data);
-        this.resourceGroup = ArmResourceUtils.getResourceGroupFromResourceId(this.id);
+        this.resourceGroup = ArmResourceUtils.getResourceGroupFromResourceId(this.id) || null;
     }
 
     public get isBatchManaged() {

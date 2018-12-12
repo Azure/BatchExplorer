@@ -34,7 +34,7 @@ export class ArmResourceUtils {
      * This could also be used for any arm url depending on subscriptions
      * @param id Arm resource id
      */
-    public static getResourceGroupFromResourceId(id: string) {
+    public static getResourceGroupFromResourceId(id: string): string | undefined | null {
         if (!id) { return null; }
         try {
             return this._resourceDescriptorParser(id).resourceGroup;

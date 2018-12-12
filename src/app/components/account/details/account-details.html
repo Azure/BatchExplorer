@@ -4,35 +4,8 @@
 </bl-banner>
 <bl-loading [status]="data.status">
     <div *ngIf="account">
-        <bl-summary-card>
-            <div summaryTitle>{{account.name}}</div>
-            <div summaryDetails>
-                <div>
-                    <span class="label">{{'account-details.url' | i18n }}</span>
-                    {{account.url}}
-                </div>
-                <div>
-                    <span class="label">{{'account-details.subscription' | i18n }}</span>
-                    <bl-clickable (do)="openSubscriptionInPortal()">{{account.subscription?.displayName}}</bl-clickable>
-                </div>
-                <div *ngIf="account.resourceGroup">
-                    <span class="label">{{'account-details.resourceGroup' | i18n }}</span>
-                    <bl-clickable (do)="openResourceGroupInPortal()">{{account.resourceGroup}}</bl-clickable>
-                </div>
-            </div>
-            <bl-button-group summaryActions>
-                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-commands-list [commands]="commands" [entity]="account"></bl-commands-list>
-            </bl-button-group>
-            <div summaryTile>
-                <bl-account-quotas-card [account]="account"></bl-account-quotas-card>
-            </div>
-            <div summaryTile>
-                <bl-storage-account-card [account]="account">
-                </bl-storage-account-card>
-            </div>
-        </bl-summary-card>
-        <h1 class="section-title">Monitoring</h1>
+        <bl-account-summary-card [account]="account"></bl-account-summary-card>
+        <h1 class="section-title">{{'account-details.monitoring' | i18n }}</h1>
         <div class="monitor-charts">
             <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
                 <bl-monitor-chart chartType="coreCount"></bl-monitor-chart>
@@ -53,7 +26,7 @@
         </div>
 
         <bl-account-cost-card></bl-account-cost-card>
-        <h1 class="section-title">Resources</h1>
+        <h1 class="section-title">{{'account-details.resources' | i18n }}</h1>
         <div class="account-cards">
             <bl-card class="account-card">
                 <div class="title">
