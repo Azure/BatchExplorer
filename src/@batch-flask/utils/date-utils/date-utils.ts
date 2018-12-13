@@ -56,9 +56,19 @@ export class DateUtils {
      */
     public static prettyDuration(duration: Duration, showMilli = false) {
         duration = this.ensureDuration(duration);
-        let format = "d[d] h[h] mm[m] ss[s]";
+        let format: string | null = null;
+        if (duration.as("days") > 1) {
+            format = "d'd' h'h' mm'm' ss's'";
+        } else if (duration.as("hours") > 1) {
+            format = "h'h' mm'm' ss's'";
+        } else if (duration.as("minutes") > 1) {
+            format = "mm'm' ss's'";
+        } else {
+            format = "s's'";
+        }
+
         if (showMilli) {
-            format += " SSS[ms]";
+            format += " SSS'ms'";
         }
         return duration.toFormat(format);
     }

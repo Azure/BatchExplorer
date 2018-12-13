@@ -10,7 +10,7 @@ import { Node, Pool } from "app/models";
 import { BatchAccountService, NodeService } from "app/services";
 import { AutoStorageService, StorageBlobService } from "app/services/storage";
 import { StorageUtils } from "app/utils";
-import * as moment from "moment";
+import { DateTime, Duration } from "luxon";
 import { concat, of, timer } from "rxjs";
 import { distinctUntilChanged, first, flatMap, map, share, takeWhile } from "rxjs/operators";
 
@@ -61,12 +61,12 @@ export class UploadNodeLogsDialogComponent {
     ) {
         this.form = formBuilder.group({
             container: ["", Validators.required],
-            startTime: [moment().subtract(2, "hour").toDate(), Validators.required],
+            startTime: [DateTime.local().minus(Duration.fromObject({ hours: 2 })).toJSDate(), Validators.required],
             endTime: [new Date(), Validators.required],
         });
 
         this.form.valueChanges.pipe(distinctUntilChanged()).subscribe((value) => {
-            const diff = moment.duration(moment(value.endTime).diff(value.startTime));
+            const diff = DateTime.fromJSDate(value.endTime).diff(DateTime.fromJSDate(value.startTime));
             this.warningTimeRange = diff.as("day") > 1;
             this.changeDetector.markForCheck();
         });
@@ -77,7 +77,7 @@ export class UploadNodeLogsDialogComponent {
         let startTime;
         switch (preset) {
             case TimeRangePreset.LastDay:
-                startTime = moment(now).subtract(24, "hour").toDate();
+                startTime = DateTime.local().minus(Duration.fromObject({ hours: 24 })).toJSDate();
                 break;
             case TimeRangePreset.SinceCreated:
                 startTime = this.node.allocationTime;
