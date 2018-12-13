@@ -96,7 +96,7 @@ export class Task extends Record<TaskAttributes> {
         if (info.exitCode === 0) {
             return false;
         }
-        const maxTime = constraints.maxWallClockTime.asMilliseconds();
+        const maxTime = constraints.maxWallClockTime.as("milliseconds");
         const runningTime = moment(info.endTime).diff(moment(info.startTime));
         return maxTime - runningTime < 0;
     }

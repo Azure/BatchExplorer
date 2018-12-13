@@ -89,5 +89,5 @@ export const UNLIMITED_DURATION_THRESHOLD = 365;
  * @param duration
  */
 export function TransformDuration(duration: Duration) {
-    return (duration && duration.asDays() < UNLIMITED_DURATION_THRESHOLD) ? duration : null;
+    return (duration && duration.as("day") < UNLIMITED_DURATION_THRESHOLD) ? duration : null;
 }

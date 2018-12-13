@@ -1,3 +1,4 @@
+import { Duration } from "luxon";
 import * as moment from "moment";
 import { Task } from "./task";
 
@@ -27,7 +28,7 @@ describe("Task model", () => {
                     failureInfo,
                 },
                 constraints: {
-                    maxWallClockTime: moment.duration("PT4M"),
+                    maxWallClockTime: Duration.fromISO("PT4M"),
                 },
             } as any);
         }

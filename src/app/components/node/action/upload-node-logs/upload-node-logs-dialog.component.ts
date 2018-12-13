@@ -67,7 +67,7 @@ export class UploadNodeLogsDialogComponent {
 
         this.form.valueChanges.pipe(distinctUntilChanged()).subscribe((value) => {
             const diff = moment.duration(moment(value.endTime).diff(value.startTime));
-            this.warningTimeRange = diff.asDays() > 1;
+            this.warningTimeRange = diff.as("day") > 1;
             this.changeDetector.markForCheck();
         });
     }

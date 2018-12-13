@@ -2,12 +2,10 @@ import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-
-import * as moment from "moment";
-
 import { JobErrorDisplayComponent } from "app/components/job/details";
 import { Job, JobState, JobTerminateReason } from "app/models";
 import { JobService } from "app/services";
+import { Duration } from "luxon";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
@@ -80,7 +78,7 @@ describe("JobErrorDisplayComponent", () => {
             testComponent.job = new Job({
                 state: JobState.completed,
                 constraints: {
-                    maxWallClockTime: moment.duration("PT2M"),
+                    maxWallClockTime: Duration.fromISO("PT2M"),
                 },
                 executionInfo: {
                     terminateReason: JobTerminateReason.MaxWallClockTimeExpiry,
@@ -109,7 +107,7 @@ describe("JobErrorDisplayComponent", () => {
             testComponent.job = new Job({
                 state: JobState.completed,
                 constraints: {
-                    maxWallClockTime: moment.duration("PT2M"),
+                    maxWallClockTime: Duration.fromISO("PT2M"),
                 },
                 executionInfo: {
                     schedulingError: {

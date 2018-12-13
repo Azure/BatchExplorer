@@ -3,6 +3,7 @@ import { DateUtils } from "@batch-flask/utils";
 import { Job, Task } from "app/models";
 import { NumberUtils } from "app/utils";
 import { List } from "immutable";
+import { Duration } from "luxon";
 import * as moment from "moment";
 
 import "./job-progress-graph.scss";
@@ -164,7 +165,7 @@ export class JobProgressGraphComponent implements OnChanges {
         const x = parseInt(tooltipItem.xLabel, 10);
         let type: string;
         let task: Task;
-        const time = DateUtils.prettyDuration(moment.duration({ milliseconds: x }), true);
+        const time = DateUtils.prettyDuration(Duration.fromObject({ milliseconds: x }), true);
         if (tooltipItem.datasetIndex === 0) {
             task = this._sortedStartTimes[tooltipItem.index].task;
             type = "task started ";

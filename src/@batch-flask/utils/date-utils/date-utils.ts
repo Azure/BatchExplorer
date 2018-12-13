@@ -1,4 +1,5 @@
 import * as moment from "moment";
+import { Duration, DurationObject, DateTime } from "luxon";
 
 export class DateUtils {
     /**
@@ -39,26 +40,36 @@ export class DateUtils {
         }
     }
 
+    public static ensureDuration(value: Duration | DurationObject | string): Duration {
+        if (value instanceof Duration) {
+            return value;
+        } else if (typeof value === "string") {
+            return Duration.fromISO(value);
+        } else {
+            return Duration.fromObject(value);
+        }
+    }
+
     /**
      * Return a pretty duration
      * 3d 2h 4m 1s
      */
-    public static prettyDuration(duration: moment.Duration, showMilli = false) {
-        duration = moment.duration(duration);
+    public static prettyDuration(duration: Duration, showMilli = false) {
+        duration = this.ensureDuration(duration);
         let format = "d[d] h[h] mm[m] ss[s]";
         if (showMilli) {
             format += " SSS[ms]";
         }
-        return (duration as any).format(format);
+        return duration.toFormat(format);
     }
 
     /**
      * Return a compact duration
      * 3:02:04:1.902
      */
-    public static compactDuration(duration: moment.Duration, showMilli = false) {
-        duration = moment.duration(duration);
-        if (duration.asMilliseconds() < 1000) {
+    public static compactDuration(duration: Duration, showMilli = false) {
+        duration = this.ensureDuration(duration);
+        if (duration.as("milliseconds") < 1000) {
             return `0.${(duration as any).format("SSS")}`;
         }
         let format = "d:hh:mm:ss";
@@ -89,9 +100,8 @@ export class DateUtils {
         if (!startTime) {
             return null;
         }
-
-        const currentEndTime = endTime === null ? moment.utc() : moment.utc(endTime);
-        const runtime = moment.duration(currentEndTime.diff(moment(startTime)));
+        const currentEndTime = endTime === null ? DateTime.utc() : DateTime.fromJSDate(endTime);
+        const runtime = currentEndTime.diff(DateTime.fromJSDate(startTime));
         return DateUtils.prettyDuration(runtime);
     }
 

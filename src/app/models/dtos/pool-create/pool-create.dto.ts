@@ -2,6 +2,7 @@ import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
 import { NodeFillType } from "app/models/task-scheduling-policy";
 import * as moment from "moment";
 
+import { Duration } from "luxon";
 import { AppPackageReferenceDto } from "../application-package-reference.dto";
 import { CertificateReferenceDto } from "../certificate-reference.dto";
 import { CloudServiceConfiguration } from "../cloud-service-configuration.dto";
@@ -24,7 +25,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public networkConfiguration?: NetworkConfigurationDto;
 
-    @DtoAttr(moment.duration) public resizeTimeout?: moment.Duration;
+    @DtoAttr(moment.duration) public resizeTimeout?: Duration;
 
     @DtoAttr() public targetDedicatedNodes?: number;
 
@@ -38,7 +39,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public autoScaleFormula?: string;
 
-    @DtoAttr(moment.duration) public autoScaleEvaluationInterval?: moment.Duration;
+    @DtoAttr(moment.duration) public autoScaleEvaluationInterval?: Duration;
 
     @DtoAttr() public enableAutoScale?: boolean;
 

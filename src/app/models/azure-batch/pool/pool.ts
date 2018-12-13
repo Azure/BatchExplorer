@@ -1,6 +1,3 @@
-import { List } from "immutable";
-import { Duration, duration } from "moment";
-
 import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { CloudServiceConfiguration } from "app/models/cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "app/models/metadata";
@@ -14,6 +11,7 @@ import {
     VirtualMachineConfigurationAttributes,
 } from "app/models/virtual-machine-configuration";
 import { ModelUtils, PoolUtils } from "app/utils";
+import { List } from "immutable";
 import { AutoScaleRun, AutoScaleRunAttributes } from "./auto-scale-run";
 import { PoolStatistics, PoolStatisticsAttributes } from "./pool-statistics";
 
@@ -21,6 +19,8 @@ export enum OSType {
     Windows = "windows",
     Linux = "linux",
 }
+
+import { Duration } from "luxon";
 
 export interface PoolAttributes {
     allocationState: string;
@@ -95,7 +95,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @ListProp(ResizeError) public resizeErrors: List<ResizeError> = List([]);
 
-    @Prop(duration) public resizeTimeout: Duration;
+    @Prop() public resizeTimeout: Duration;
 
     @Prop() public state: string;
 
@@ -107,7 +107,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop() public autoScaleFormula: string;
 
-    @Prop(duration) public autoScaleEvaluationInterval: Duration;
+    @Prop() public autoScaleEvaluationInterval: Duration;
 
     @Prop() public taskSchedulingPolicy: TaskSchedulingPolicy;
 

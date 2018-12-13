@@ -10,6 +10,7 @@ import {
     BatchAccountService, InsightsMetricsService,
     MonitorChartMetrics, MonitorChartTimeFrame, MonitorChartType, ThemeService,
 } from "app/services";
+import { Duration } from "luxon";
 import { map } from "rxjs/operators";
 
 import "./monitor-chart.scss";
@@ -27,7 +28,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public title = "";
     public datasets: Chart.ChartDataSets[];
     public total: any[] = [];
-    public interval: moment.Duration;
+    public interval: Duration;
     public timeFrame: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;

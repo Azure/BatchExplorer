@@ -78,7 +78,7 @@ export class TaskTimelineComponent {
         if (!(info && constraints && constraints.maxWallClockTime)) {
             return false;
         }
-        const maxTime = constraints.maxWallClockTime.asMilliseconds();
+        const maxTime = constraints.maxWallClockTime.as("milliseconds");
         const runningTime = moment(info.endTime).diff(moment(info.startTime));
         const diff = maxTime - runningTime;
         // If less than 10%

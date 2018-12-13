@@ -9,6 +9,7 @@ import * as moment from "moment";
 import { click, updateInput } from "test/utils/helpers";
 import { DurationPickerComponent, DurationUnit } from "./duration-picker.component";
 import { DurationPickerModule } from "./duration-picker.module";
+import { Duration } from "luxon";
 @Component({
     template: `
         <bl-duration-picker label="My duration picker"
@@ -162,14 +163,14 @@ describe("DurationPickerComponent", () => {
 
         describe("writing value", () => {
             it("set day units when value is in days", () => {
-                testComponent.control.setValue(moment.duration("P5D"));
+                testComponent.control.setValue(Duration.fromISO("P5D"));
                 fixture.detectChanges();
                 expect(component.unit).toEqual(DurationUnit.Days);
                 expect(component.time).toEqual("5");
             });
 
             it("set day units when value is in hours", () => {
-                testComponent.control.setValue(moment.duration("PT17H"));
+                testComponent.control.setValue(Duration.fromISO("PT17H"));
                 fixture.detectChanges();
                 expect(component.unit).toEqual(DurationUnit.Hours);
                 expect(component.time).toEqual("17");
