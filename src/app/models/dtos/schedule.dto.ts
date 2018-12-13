@@ -1,5 +1,3 @@
-import * as moment from "moment";
-
 import { Dto, DtoAttr } from "@batch-flask/core";
 import { Duration } from "luxon";
 
@@ -8,7 +6,7 @@ export class ScheduleDto extends Dto<ScheduleDto> {
 
     @DtoAttr() public doNotRunUntil: string;
 
-    @DtoAttr(moment.duration) public recurrenceInterval: Duration;
+    @DtoAttr() public recurrenceInterval: Duration;
 
-    @DtoAttr(moment.duration) public startWindow: Duration;
+    @DtoAttr() public startWindow: Duration;
 }

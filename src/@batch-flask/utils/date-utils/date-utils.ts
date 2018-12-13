@@ -1,5 +1,5 @@
+import { DateTime, Duration, DurationObject } from "luxon";
 import * as moment from "moment";
-import { Duration, DurationObject, DateTime } from "luxon";
 
 export class DateUtils {
     /**
@@ -62,7 +62,7 @@ export class DateUtils {
         } else if (duration.as("hours") > 1) {
             format = "h'h' mm'm' ss's'";
         } else if (duration.as("minutes") > 1) {
-            format = "mm'm' ss's'";
+            format = "m'm' ss's'";
         } else {
             format = "s's'";
         }

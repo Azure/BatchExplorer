@@ -19,6 +19,7 @@ import { ExternalApplication } from "common/constants";
 import { Observable, from } from "rxjs";
 import { flatMap, share } from "rxjs/operators";
 import "./node-connect.scss";
+import { DateTime, Duration } from "luxon";
 
 @Component({
     selector: "bl-node-connect",
@@ -121,7 +122,7 @@ export class NodeConnectComponent implements OnInit {
 
         const credentials = {...this.credentials};
         if (!credentials.expiryTime) {
-            credentials.expiryTime = moment().add(moment.duration({days: 1})).toDate();
+            credentials.expiryTime = DateTime.local().plus(Duration.fromObject({days: 1})).toJSDate();
         }
 
         if (this.linux) {

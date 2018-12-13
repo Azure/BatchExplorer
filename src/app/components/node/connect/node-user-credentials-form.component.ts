@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
-import * as moment from "moment";
-
 import { AddNodeUserAttributes } from "app/services";
+import { Duration, DateTime } from "luxon";
 
 export enum CredentialsMode {
     Password,
@@ -42,7 +41,7 @@ export class NodeUserCredentialsFormComponent {
             password: [""],
             sshPublicKey: [""],
             isAdmin: [true],
-            expireIn: [moment.duration({ days: 1 })],
+            expireIn: [Duration.fromObject({ days: 1 })],
         });
     }
 
@@ -52,7 +51,7 @@ export class NodeUserCredentialsFormComponent {
         const credentials: AddNodeUserAttributes = {
             name: value.username,
             isAdmin: value.isAdmin,
-            expiryTime: moment().add(value.expireIn).toDate(),
+            expiryTime: DateTime.local().plus(value.expireIn).toJSDate(),
         };
         if (value.mode === CredentialsMode.SSHPublicKey) {
             credentials.sshPublicKey = value.sshPublicKey;

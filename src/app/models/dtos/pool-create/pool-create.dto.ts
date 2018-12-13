@@ -25,7 +25,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public networkConfiguration?: NetworkConfigurationDto;
 
-    @DtoAttr(moment.duration) public resizeTimeout?: Duration;
+    @DtoAttr() public resizeTimeout?: Duration;
 
     @DtoAttr() public targetDedicatedNodes?: number;
 
@@ -39,7 +39,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public autoScaleFormula?: string;
 
-    @DtoAttr(moment.duration) public autoScaleEvaluationInterval?: Duration;
+    @DtoAttr() public autoScaleEvaluationInterval?: Duration;
 
     @DtoAttr() public enableAutoScale?: boolean;
 
