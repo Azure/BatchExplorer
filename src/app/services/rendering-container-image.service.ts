@@ -1,15 +1,17 @@
 import { Injectable } from "@angular/core";
 import { FileSystemService } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
-import { RenderEngine, RenderingContainerImage, RenderingImageReference } from "app/models/rendering-container-image";
-import { BehaviorSubject, Observable } from "rxjs";
+import { RenderApplication, RenderEngine,
+    RenderingContainerImage, RenderingImageReference } from "app/models/rendering-container-image";
+import { BehaviorSubject, Observable, from } from "rxjs";
+import { map, share } from "rxjs/operators";
 import { GithubDataService } from "./github-data";
 
 const dataFile = "rendering-container-images.json";
 
 interface RenderingImagesData {
-    imageReferences: RenderingImageReference[];
-    containerImages: RenderingContainerImage[];
+    image_references: RenderingImageReference[];
+    container_images: RenderingContainerImage[];
 }
 
 @Injectable()
@@ -32,67 +34,63 @@ export class RenderingContainerImageService {
         // (and move loadImageData call out of component)
     }
 
-    public async loadImageData() {
-        await this.fs.readFile(this.githubDataService.getLocalDataPath(dataFile)).then((content) => {
+    public loadImageData(): Observable<any>  {
+        return from(this.fs.readFile(this.githubDataService.getLocalDataPath(dataFile)).then((content) => {
         try {
             const data: RenderingImagesData = JSON.parse(content);
-            this._imageReferences.next(data.imageReferences);
-            this._containerImages.next(data.containerImages);
+            this._imageReferences.next(data.image_references);
+            this._containerImages.next(data.container_images);
+
+            // tslint:disable-next-line:no-console
+            console.log("Read imageReferences of length:" + data.image_references.length);
+            // tslint:disable-next-line:no-console
+            console.log("Read containerImages of length:" + data.container_images.length);
         } catch (error) {
             log.error(`File is not valid json: ${error.message}`);
-        }});
+        }}));
     }
 
-    public getSelectedContainerImage(
-        renderer: RenderEngine, selectedBaseImage: string, selectedAppVersion: string, selectedRendererVersion: string)
-        : string  {
-        let images = this._containerImages.value;
-        images = images.filter(x => x.imageReferenceId === selectedBaseImage && x.mayaVersion === selectedAppVersion);
-
-        switch (renderer) {
-            case RenderEngine.MayaSW: {
-                // already filtered above
-                break;
-            }
-            case RenderEngine.Arnold: {
-                images = images.filter(x => x.arnoldVersion === selectedRendererVersion);
-            }
-            case RenderEngine.VRay: {
-                images = images.filter(x => x.vrayVersion === selectedRendererVersion);
-            }
-        }
-
-        return images.first().containerImage;
+    public findContainerImageById(containerImageId: string): Observable<RenderingContainerImage> {
+        return this.containerImages.pipe(
+            map(images => images.find(image => image.containerImage === containerImageId)), share());
     }
 
-    public getMayaDisplayList(selectedBaseImage?: string): Set<string> {
-        let images = this._containerImages.value;
-        if (selectedBaseImage) {
-            images = images.filter(x => x.imageReferenceId === selectedBaseImage);
-        }
-        return new Set<string>(images.map(image => image.mayaVersion));
+    public getContainerImagesForAppVersion(
+        app: RenderApplication, renderer: RenderEngine, selectedBaseImage?: string, selectedAppVersion?: string):
+        Observable<RenderingContainerImage[]> {
+            return this.containerImages.pipe(
+                map(images => {
+                    images = images.filter(image => image.app === app.toLowerCase());
+
+                    if (selectedBaseImage) {
+                        images = images.filter(image => image.imageReferenceId === selectedBaseImage);
+                    }
+                    if (selectedAppVersion) {
+                        images = images.filter(image => image.appVersion === selectedAppVersion);
+                    }
+
+                    // tslint:disable-next-line:no-console
+                    console.log("selected containerImages:" + images.length);
+                    return images;
+                    }),
+            share(),
+        );
     }
 
-    public getRendererDisplayList(
-        renderer: RenderEngine, selectedBaseImage?: string, selectedMaya?: string): Set<string> {
-        let images = this._containerImages.value;
-        if (selectedBaseImage) {
-            images = images.filter(x => x.imageReferenceId === selectedBaseImage);
-        }
-        if (selectedMaya) {
-            images = images.filter(x => x.mayaVersion === selectedMaya);
-        }
+    public getAppVersionDisplayList(app: RenderApplication, imageReferenceId: string): Observable<string[]> {
+        return this.containerImages.pipe(
+            map(images => {
+                // tslint:disable-next-line:no-console
+                console.log("Getting appVersionDisplayList for app, imageRef:" + app + " " + imageReferenceId);
+                images = images.filter(x =>
+                    x.imageReferenceId === imageReferenceId &&
+                    x.app === app.toLowerCase());
 
-        switch (renderer) {
-            case RenderEngine.MayaSW: {
-                return new Set<string>(images.map(image => image.mayaVersion));
-            }
-            case RenderEngine.Arnold: {
-                return new Set<string>(images.map(image => image.arnoldVersion));
-            }
-            case RenderEngine.VRay: {
-                return new Set<string>(images.map(image => image.vrayVersion));
-            }
-        }
+                // tslint:disable-next-line:no-console
+                console.log("Returning appVersionDisplayList of length:" + images.length);
+                return Array.from(new Set(images.map(image => image.appVersion)));
+            }),
+            share(),
+        );
     }
 }

@@ -1,6 +1,11 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 import { ImageReference, MarketImageReferenceAttributes } from "./image-reference";
 
+export enum RenderApplication {
+    Maya = "maya",
+    _3dsMax = "3dsmax",
+}
+
 export enum RenderEngine {
     MayaSW = "mayasw",
     Arnold = "arnold",
@@ -23,10 +28,11 @@ export class RenderingImageReference extends Record<RenderingImageReferenceAttri
 export interface RenderingContainerImageAttributes {
     containerImage: string;
     os: string;
-    mayaVersion: string;
     imageReferenceId: string;
-    arnoldVersion?: string;
-    vrayVersion?: string;
+    app: string;
+    appVersion: string;
+    renderer: string;
+    rendererVersion: string;
 }
 
 @Model()
@@ -34,7 +40,8 @@ export class RenderingContainerImage extends Record<RenderingContainerImageAttri
     @Prop() public containerImage: string;
     @Prop() public imageReferenceId: string;
     @Prop() public os: string;
-    @Prop() public mayaVersion: string;
-    @Prop() public arnoldVersion?: string;
-    @Prop() public vrayVersion?: string;
+    @Prop() public app: string;
+    @Prop() public appVersion: string;
+    @Prop() public renderer: string;
+    @Prop() public rendererVersion: string;
 }

@@ -1,15 +1,50 @@
-<form [formGroup]="pickerFormGroup" >
-    <bl-form-field>
-        <bl-select>
-                <bl-option *ngFor="let version of appVersions;trackBy: trackAppVersion" [value]=pickedAppVersion></bl-option>
-        </bl-select>
-    </bl-form-field>
-    <bl-form-field>
-        <bl-select>
-                <bl-option *ngFor="let version of rendererVersions;trackBy: trackRenderVersion" [value]=pickedRendererVersion></bl-option>
-        </bl-select>
-    </bl-form-field>
-    <bl-form-field>
-            <bl-input [formControlName]="pickedContainerImage" [value]="pickedContainerImage">
-    </bl-form-field>
-</form>
+<div>
+    <table class="noselect" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <th>App Version</th>
+                <th>Renderer Version</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <bl-select [formControl]="appVersionControl">
+                            <bl-option *ngFor="let version of appVersions;trackBy: trackAppVersion" [value]=version [label]="version"></bl-option>
+                    </bl-select>
+                </td>
+                <td>
+                    <bl-select [formControl]="rendererVersionControl">
+                        <bl-option *ngFor="let image of containerImages;trackBy: trackContainerImage" [value]=image.containerImage [label]="image.rendererVersion"></bl-option>
+                    </bl-select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        Container Image which the compute nodes of the pool will run: {{ containerImage }}
+    </div>
+</div>
+
+
+<!--
+<div class="grow">
+        <div class="gcol">
+            <bl-form-field class="form-element" placeholder="Application Version">
+                <bl-select [formControl]="appVersionControl">
+                    <bl-option *ngFor="let version of appVersions;trackBy: trackAppVersion" [value]=version [label]="version"></bl-option>
+                </bl-select>
+            </bl-form-field>
+        </div>
+        <div class="gcol">
+            <bl-form-field class="form-element" placeholder="Renderer Version">
+                <bl-select [formControl]="rendererVersionControl">
+                    <bl-option *ngFor="let image of containerImages;trackBy: trackContainerImage" [value]=image.containerImage [label]="image.rendererVersion"></bl-option>
+                </bl-select>
+            </bl-form-field>
+        </div>
+        <div>
+            Container Image which the compute nodes of the pool will run: {{ containerImage }}
+        </div>
+    </div>
+     -->

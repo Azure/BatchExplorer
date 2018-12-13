@@ -29,7 +29,7 @@
         </bl-job-id>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.renderingContainerImage">
-        <bl-rendering-container-image-picker [imageReferenceId]="parameter.imageReferenceId" [renderEngine]="parameter.renderEngine" [formControl]="parameterValue" class="form-element" >
+        <bl-rendering-container-image-picker [app]="parameter.app" [imageReferenceId]="parameter.imageReferenceId" [renderEngine]="parameter.renderEngine" [formControl]="parameterValue" class="form-element" >
         </bl-rendering-container-image-picker>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.dropDown">
