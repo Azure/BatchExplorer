@@ -60,7 +60,7 @@ export class RenderingContainerImageService {
         Observable<RenderingContainerImage[]> {
             return this.containerImages.pipe(
                 map(images => {
-                    images = images.filter(image => image.app === app.toLowerCase());
+                    images = images.filter(image => image.app === app && image.renderer === renderer);
 
                     if (selectedBaseImage) {
                         images = images.filter(image => image.imageReferenceId === selectedBaseImage);
@@ -84,7 +84,7 @@ export class RenderingContainerImageService {
                 console.log("Getting appVersionDisplayList for app, imageRef:" + app + " " + imageReferenceId);
                 images = images.filter(x =>
                     x.imageReferenceId === imageReferenceId &&
-                    x.app === app.toLowerCase());
+                    x.app === app);
 
                 // tslint:disable-next-line:no-console
                 console.log("Returning appVersionDisplayList of length:" + images.length);

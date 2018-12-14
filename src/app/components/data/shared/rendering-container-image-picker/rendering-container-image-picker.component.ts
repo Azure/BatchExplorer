@@ -35,12 +35,9 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
     public containerImagesData: Observable<RenderingContainerImage[]>;
     public containerImage: string;
 
-    @Input() public app: string = "maya";
-    @Input() public imageReferenceId: string = "centos-75-container";
-    @Input() public renderEngine: string = "arnold"; // TODO should be cast and stored
-    // as enum type RenderEngine once to validate
-
-    // private _appVersions = new BehaviorSubject<string[]>(null);
+    @Input() public app: RenderApplication;
+    @Input() public imageReferenceId: string;
+    @Input() public renderEngine: RenderEngine;
 
     private _propagateChange: (value: string) => void = null;
     private _subs: Subscription[] = [];
@@ -60,7 +57,7 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
         this._subs.push(this.appVersionControl.valueChanges.subscribe((appVersion: string) => {
             this.containerImagesData =
                 this.renderingContainerImageService.getContainerImagesForAppVersion(
-                RenderApplication[this.app], RenderEngine[this.renderEngine], this.imageReferenceId, appVersion);
+                this.app, this.renderEngine, this.imageReferenceId, appVersion);
 
             this.containerImagesData.subscribe((containerImages) => {
                 this.containerImages = containerImages;
@@ -76,7 +73,7 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
 
         this._subs.push(this.renderingContainerImageService.loadImageData().pipe(flatMap(() => {
             this.appVersionsData = this.renderingContainerImageService.getAppVersionDisplayList(
-                RenderApplication[this.app], this.imageReferenceId);
+                this.app, this.imageReferenceId);
             return this.appVersionsData;
                 })).subscribe((appVersions) => {
             this.appVersions = appVersions;
@@ -116,17 +113,25 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
         return null;
     }
 
+    public get appDisplay() {
+        return this.UpperCaseFirstChar(this.app);
+    }
+
+    public get renderEngineDisplay() {
+        return this.UpperCaseFirstChar(this.renderEngine);
+    }
+
     public ngOnChanges(changes) {
         if (changes) {
-            // tslint:disable-next-line:no-console
-            console.log("onChange app value:" + this.app);
-            // tslint:disable-next-line:no-console
-            console.log("onChange imageReferenceId value:" + this.imageReferenceId);
             this.changeDetector.markForCheck();
         }
     }
 
     public ngOnDestroy() {
         this._subs.forEach(sub => sub.unsubscribe());
+    }
+
+    private UpperCaseFirstChar(lower: string) {
+        return lower.charAt(0).toUpperCase() + lower.substr(1);
     }
 }

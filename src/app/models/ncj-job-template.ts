@@ -12,6 +12,7 @@ export interface NcjParameter {
     minLength?: any;
     maxLength?: any;
     metadata: StringMap<string>;
+    additionalProperties?: StringMap<string>;
 }
 
 export interface NcjJobConfiguration {
