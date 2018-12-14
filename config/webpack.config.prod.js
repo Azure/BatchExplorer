@@ -16,6 +16,9 @@ module.exports = merge(config, {
     optimization: {
         minimize: false,
     },
+    resolve: {
+        mainFields: ["es2015", "browser", "module", "main"],
+    },
     output: {
         /**
          * The output directory as absolute path (required).

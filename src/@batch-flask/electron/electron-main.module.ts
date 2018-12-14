@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
-import { AUTO_UPDATE_MAIN_SERVICE_TOKEN, AutoUpdateMainService, AutoUpdateService } from "./auto-update";
+import { AUTO_UPDATE_MAIN_SERVICE_TOKEN, AutoUpdateService } from "./auto-update";
+import { AutoUpdateMainService } from "./auto-update/auto-update-main.service";
 
 @NgModule({
     imports: [],
