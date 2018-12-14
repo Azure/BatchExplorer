@@ -21,7 +21,6 @@ export class FormPickerItemTemplateDirective {
     selector: "bl-form-multi-picker",
     templateUrl: "form-multi-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FormMultiPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => FormMultiPickerComponent), multi: true },
     ],
@@ -53,6 +52,8 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     private _buttons: QueryList<ElementRef>;
 
     private _propagateChange: (value: any) => void;
+    private _registerTouched: () => void;
+
     private _currentEditIndex = -1;
     constructor(formBuilder: FormBuilder) {
         this.values = [null];
@@ -66,8 +67,8 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         this._propagateChange = fn;
     }
 
-    public registerOnTouched() {
-        // Do nothing
+    public registerOnTouched(fn) {
+        this._registerTouched = fn;
     }
 
     public validate(c: FormControl) {
@@ -103,6 +104,9 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         this.values = values;
         this.currentEditValue.setValue(null);
         this._emitNewValue();
+        if (this._registerTouched) {
+            this._registerTouched();
+        }
     }
 
     /**

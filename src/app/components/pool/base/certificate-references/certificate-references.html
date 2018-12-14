@@ -21,6 +21,5 @@
             [osType]="osType">
         </bl-certificate-picker>
     </div>
-
-    <bl-error [control]="references" code="duplicate">Cannot reference the same certificate twice {{references.errors?.duplicate?.value}}</bl-error>
 </bl-form-multi-picker>
+<bl-error [control]="references" code="duplicate">{{references.errors?.duplicate?.message}}</bl-error>

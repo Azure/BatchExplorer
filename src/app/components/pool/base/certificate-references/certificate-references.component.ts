@@ -4,7 +4,7 @@ import {
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
-import { autobind } from "@batch-flask/core";
+import { I18nService, autobind } from "@batch-flask/core";
 import { Certificate, CertificateReferenceAttributes, OSType } from "app/models";
 import { CertificateService } from "app/services";
 import { Subject } from "rxjs";
@@ -45,6 +45,7 @@ export class CertificateReferencesComponent implements OnDestroy, ControlValueAc
     private _destroy = new Subject();
 
     constructor(
+        private i18n: I18nService,
         private certificateService: CertificateService,
         private changeDetector: ChangeDetectorRef) {
 
@@ -83,37 +84,37 @@ export class CertificateReferencesComponent implements OnDestroy, ControlValueAc
         }
     }
 
-    public registerOnChange(fn: any): void {
-        // Nothing
+    public registerOnChange(fn: (value: CertificateReferenceAttributes[]) => void): void {
+        this._propagateChange = fn;
+
     }
 
-    public registerOnTouched(fn: (value: CertificateReferenceAttributes[]) => void): void {
-        this._propagateChange = fn;
+    public registerOnTouched(fn: any): void {
+        // Nothing
     }
 
     @autobind()
     private _duplicateValidator(control: FormControl<CertificateReferenceAttributes[]>): ValidationErrors | null {
-        if (control.value === null) {
+        const certificates = control.value;
+        if (certificates === null) {
             return null;
         }
         let duplicate: string | null = null;
-        const certificates = control.value;
         const thumprints = new Set<string>();
 
-        if (certificates) {
-            for (const certificate of certificates) {
-                if (thumprints.has(certificate.thumbprint)) {
-                    duplicate = certificate.thumbprint;
-                    break;
-                }
-                thumprints.add(certificate.thumbprint);
+        for (const certificate of certificates) {
+            if (thumprints.has(certificate.thumbprint)) {
+                duplicate = certificate.thumbprint;
+                return {
+                    duplicate: {
+                        value: duplicate,
+                        message: this.i18n.t("certificate-references.duplicate", { thumbprint: duplicate }),
+                    },
+                };
             }
+            thumprints.add(certificate.thumbprint);
         }
-        return duplicate ? {
-            duplicate: {
-                value: duplicate,
-            },
-        } : null;
-    }
 
+        return null;
+    }
 }
