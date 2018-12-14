@@ -14,7 +14,7 @@ import { takeUntil } from "rxjs/operators";
     name: "trimThumbprint",
     pure: true,
 })
-export class I18nPipe implements PipeTransform {
+export class TrimThumbprintPipe implements PipeTransform {
     public transform(thumbprint: string) {
         if (!thumbprint) {
             return null;
@@ -29,7 +29,6 @@ export class I18nPipe implements PipeTransform {
     templateUrl: "certificate-references.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        I18nPipe,
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => CertificateReferencesComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => CertificateReferencesComponent), multi: true },
     ],
