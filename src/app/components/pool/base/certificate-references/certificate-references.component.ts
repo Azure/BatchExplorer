@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, Pipe, PipeTransform, forwardRef,
+} from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
@@ -8,11 +10,26 @@ import { CertificateService } from "app/services";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
+@Pipe({
+    name: "trimThumbprint",
+    pure: true,
+})
+export class I18nPipe implements PipeTransform {
+    public transform(thumbprint: string) {
+        if (!thumbprint) {
+            return null;
+        }
+        const length = 15;
+        return thumbprint.length > length ? thumbprint.substring(0, length) + "..." : thumbprint;
+    }
+}
+
 @Component({
     selector: "bl-certificate-references",
     templateUrl: "certificate-references.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
+        I18nPipe,
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => CertificateReferencesComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => CertificateReferencesComponent), multi: true },
     ],
@@ -48,6 +65,7 @@ export class CertificateReferencesComponent implements OnDestroy, ControlValueAc
         this._destroy.next();
         this._destroy.complete();
     }
+
     public validate(c: FormControl): ValidationErrors | null {
         if (this.references.valid) {
             return null;

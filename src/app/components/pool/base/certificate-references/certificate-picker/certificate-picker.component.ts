@@ -5,11 +5,9 @@ import {
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-
-import { autobind } from "@batch-flask/core";
 import { Certificate, CertificateStoreLocation, CertificateVisibility, CommonStoreName, OSType } from "app/models";
 import { defaultThumbprintAlgorithm } from "app/services";
+import { Subscription } from "rxjs";
 
 import "./certificate-picker.scss";
 

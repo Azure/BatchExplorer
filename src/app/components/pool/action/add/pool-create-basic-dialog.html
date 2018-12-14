@@ -132,28 +132,7 @@
         </bl-form-section>
 
         <bl-form-section title="Certificate" subtitle="Reference to certificates to be installed on compute nodes in a pool.">
-            <bl-certificate-references></bl-certificate-references>
-            <!-- <bl-form-multi-picker
-                *ngIf="certificates.length > 0"
-                formControlName="certificateReferences"
-                #certificatesPicker addTitle="Add a certificate">
-                <ng-template blFormPickerItem let-value>
-                    <div title>
-                        {{ trimThumbprint(value?.thumbprint) }}
-                    </div>
-                    <div subtitle class="unaccent">
-                        {{value?.thumbprintAlgorithm}}
-                    </div>
-                </ng-template>
-                <div nested-form>
-                    <bl-certificate-picker
-                        [formControl]="certificatesPicker.currentEditValue"
-                        [certificates]="certificates"
-                        [currentCertificates]="form.controls.certificateReferences.value"
-                        [osType]="osType">
-                    </bl-certificate-picker>
-                </div>
-            </bl-form-multi-picker> -->
+            <bl-certificate-references formControlName="certificateReferences" [osType]="osType"></bl-certificate-references>
         </bl-form-section>
     </bl-form-page>
     <div blFormSummary>

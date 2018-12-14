@@ -6,7 +6,7 @@ import { DynamicForm, autobind } from "@batch-flask/core";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { Certificate, NodeFillType, Pool } from "app/models";
+import { NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
 import { BatchAccountService, PoolService, PricingService } from "app/services";
@@ -26,7 +26,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public complexFormConfig: ComplexFormConfig;
     public fileUri = "create.pool.batch.json";
     public armNetworkOnly = true;
-    public certificates: Certificate[] = [];
     public title = "Add pool";
 
     private _osControl: FormControl;
@@ -146,14 +145,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public formToDto(data: any): PoolCreateDto {
         return createPoolToData(data);
-    }
-
-    public trimThumbprint(thumbprint: string) {
-        if (!thumbprint) {
-            return null;
-        }
-        const length = 15;
-        return thumbprint.length > length ? thumbprint.substring(0, length) + "..." : thumbprint;
     }
 
     public get startTask() {
