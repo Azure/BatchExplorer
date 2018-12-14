@@ -1,21 +1,21 @@
 <div>
     <div class="grow">
-            <div class="gcol">
-                <bl-form-field class="form-element">
-                    <bl-select [formControl]="appVersionControl"  placeholder="{{appDisplay}} Version">
-                        <bl-option *ngFor="let version of appVersions;trackBy: trackAppVersion" [value]=version [label]="version"></bl-option>
-                    </bl-select>
-                </bl-form-field>
-            </div>
-            <div class="gcol">
-                <bl-form-field class="form-element" >
-                    <bl-select [formControl]="rendererVersionControl" placeholder="{{renderEngineDisplay}} Version">
-                        <bl-option *ngFor="let image of containerImages;trackBy: trackContainerImage" [value]=image.containerImage [label]="image.rendererVersion"></bl-option>
-                    </bl-select>
-                </bl-form-field>
-            </div>
+        <div class="gcol">
+            <bl-form-field class="form-element">
+                <bl-select [formControl]="appVersionControl"  placeholder="{{appDisplay}} Version">
+                    <bl-option *ngFor="let version of appVersions;trackBy: trackAppVersion" [value]=version [label]="version"></bl-option>
+                </bl-select>
+            </bl-form-field>
         </div>
-    <div>
-        Container Image which the compute nodes of the pool will run: {{ containerImage }}
+        <div class="gcol">
+            <bl-form-field class="form-element" >
+                <bl-select [formControl]="rendererVersionControl" placeholder="{{renderEngineDisplay}} Version">
+                    <bl-option *ngFor="let image of containerImages;trackBy: trackContainerImage" [value]=image.containerImage [label]="image.rendererVersion"></bl-option>
+                </bl-select>
+            </bl-form-field>
+        </div>
     </div>
+    <p *ngIf="containerImage">
+        Selected Container Image:      {{ containerImage }}
+    </p>
 </div>

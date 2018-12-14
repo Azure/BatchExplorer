@@ -63,11 +63,11 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
                 this.containerImages = containerImages;
             });
 
-            if (!this.rendererVersionControl.value) {
-                const defaultImage = (Array.isArray(this.containerImagesData) &&
-                    this.containerImagesData.length > 0) ? this.containerImagesData[0].containerImage : null;
-                this.rendererVersionControl.setValue(defaultImage);
-            }
+            const defaultImage = (Array.isArray(this.containerImages) &&
+                this.containerImages.length > 0) ? this.containerImages[0].containerImage : null;
+
+            this.rendererVersionControl.setValue(defaultImage);
+
             this.changeDetector.markForCheck();
         }));
 

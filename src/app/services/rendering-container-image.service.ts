@@ -40,11 +40,6 @@ export class RenderingContainerImageService {
             const data: RenderingImagesData = JSON.parse(content);
             this._imageReferences.next(data.image_references);
             this._containerImages.next(data.container_images);
-
-            // tslint:disable-next-line:no-console
-            console.log("Read imageReferences of length:" + data.image_references.length);
-            // tslint:disable-next-line:no-console
-            console.log("Read containerImages of length:" + data.container_images.length);
         } catch (error) {
             log.error(`File is not valid json: ${error.message}`);
         }}));
@@ -68,9 +63,6 @@ export class RenderingContainerImageService {
                     if (selectedAppVersion) {
                         images = images.filter(image => image.appVersion === selectedAppVersion);
                     }
-
-                    // tslint:disable-next-line:no-console
-                    console.log("selected containerImages:" + images.length);
                     return images;
                     }),
             share(),
@@ -80,14 +72,10 @@ export class RenderingContainerImageService {
     public getAppVersionDisplayList(app: RenderApplication, imageReferenceId: string): Observable<string[]> {
         return this.containerImages.pipe(
             map(images => {
-                // tslint:disable-next-line:no-console
-                console.log("Getting appVersionDisplayList for app, imageRef:" + app + " " + imageReferenceId);
                 images = images.filter(x =>
                     x.imageReferenceId === imageReferenceId &&
                     x.app === app);
 
-                // tslint:disable-next-line:no-console
-                console.log("Returning appVersionDisplayList of length:" + images.length);
                 return Array.from(new Set(images.map(image => image.appVersion)));
             }),
             share(),
