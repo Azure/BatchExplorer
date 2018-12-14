@@ -9,7 +9,7 @@ import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 import { List } from "immutable";
 import { flatMap } from "rxjs/operators";
-import { EditAppPackageFormComponent } from "../../action/edit";
+import { EditAppPackageFormComponent, EditCertificateReferencesComponent } from "../../action/edit";
 
 // tslint:disable:trackBy-function
 @Component({
@@ -63,7 +63,7 @@ export class PoolConfigurationComponent {
 
     @autobind()
     public editCertificates() {
-        const ref = this.sidebarManager.open(`edit-certificates-${this._pool.id}`, StartTaskEditFormComponent);
+        const ref = this.sidebarManager.open(`edit-certificates-${this._pool.id}`, EditCertificateReferencesComponent);
         ref.component.pool = this.pool;
     }
 

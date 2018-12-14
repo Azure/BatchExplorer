@@ -1,0 +1,12 @@
+<bl-simple-form
+    [formGroup]="references"
+    [containerRef]="sidebarRef"
+    [submit]="submit"
+    saveText="Update"
+    [multiUse]="false"
+    [title]="'edit-app-package-form.title' | i18n: {poolId: pool.id}">
+
+    <form novalidate>
+        <bl-certificate-references-picker [formControl]="references"></bl-certificate-references-picker>
+    </form>
+</bl-simple-form>
