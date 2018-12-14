@@ -9,7 +9,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Certificate, NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { BatchAccountService, CertificateService, PoolService, PricingService } from "app/services";
+import { BatchAccountService, PoolService, PricingService } from "app/services";
 import { NumberUtils } from "app/utils";
 import { Constants } from "common";
 
@@ -39,7 +39,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         public sidebarRef: SidebarRef<PoolCreateBasicDialogComponent>,
         private poolService: PoolService,
         private accountService: BatchAccountService,
-        private certificateService: CertificateService,
         private pricingService: PricingService,
         changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) {
@@ -120,8 +119,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             }
             this._lastFormValue = value;
         });
-
-        this._setCertificates();
     }
 
     public ngOnDestroy() {
@@ -201,11 +198,5 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 fromDto: (value) => this.dtoToForm(value),
             },
         };
-    }
-
-    private _setCertificates() {
-        this._subs.push(this.certificateService.listAll().subscribe(certificates => {
-            this.certificates = certificates.toArray();
-        }));
     }
 }

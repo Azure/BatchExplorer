@@ -132,10 +132,8 @@
         </bl-form-section>
 
         <bl-form-section title="Certificate" subtitle="Reference to certificates to be installed on compute nodes in a pool.">
-            <p *ngIf="certificates.length === 0">
-                No certificate(s) found for this batch account, please upload your certificate(s) first.
-            </p>
-            <bl-form-multi-picker
+            <bl-certificate-references></bl-certificate-references>
+            <!-- <bl-form-multi-picker
                 *ngIf="certificates.length > 0"
                 formControlName="certificateReferences"
                 #certificatesPicker addTitle="Add a certificate">
@@ -155,7 +153,7 @@
                         [osType]="osType">
                     </bl-certificate-picker>
                 </div>
-            </bl-form-multi-picker>
+            </bl-form-multi-picker> -->
         </bl-form-section>
     </bl-form-page>
     <div blFormSummary>
