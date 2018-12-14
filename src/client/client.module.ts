@@ -20,8 +20,6 @@ import { TerminalService } from "./core/terminal";
 import { MenuModule } from "./menu/menu.module";
 import { ProxySettingsManager } from "./proxy";
 
-console.log("CLient module??");
-
 /**
  * List services here that needs to be create even if they are not injected anywhere
  */
