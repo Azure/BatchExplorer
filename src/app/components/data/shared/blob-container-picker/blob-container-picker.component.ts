@@ -11,11 +11,11 @@ import {
     AutoStorageService, ListContainerParams, StorageContainerService,
 } from "app/services/storage";
 import { List } from "immutable";
-import * as moment from "moment";
 import { Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
 
 import "./blob-container-picker.scss";
+import { DateTime } from "luxon";
 
 export enum BlobContainerPickerOutput {
     Name = "name",
@@ -130,8 +130,8 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
                 Permissions: this.sasPermissions,
                 ResourceTypes: "CONTAINER",
                 Services: "BLOB",
-                Start: moment.utc().add(-15, "minutes").toDate(),
-                Expiry: moment.utc().add(1, "day").toDate(),
+                Start: DateTime.utc().minus({ minutes: 15 }).toJSDate(),
+                Expiry: DateTime.utc().plus({ days: 1 }).toJSDate(),
             },
         };
 

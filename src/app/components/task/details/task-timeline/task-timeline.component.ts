@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { DateUtils } from "@batch-flask/utils";
 import { Job, Task, TaskState } from "app/models";
-import * as moment from "moment";
 
 import "./task-timeline.scss";
+import { DateTime } from "luxon";
 
 @Component({
     selector: "bl-task-timeline",
@@ -79,7 +79,9 @@ export class TaskTimelineComponent {
             return false;
         }
         const maxTime = constraints.maxWallClockTime.as("milliseconds");
-        const runningTime = moment(info.endTime).diff(moment(info.startTime));
+        const runningTime = DateTime.fromJSDate(info.endTime)
+            .diff(DateTime.fromJSDate(info.startTime))
+            .as("milliseconds");
         const diff = maxTime - runningTime;
         // If less than 10%
         return diff / maxTime < 0.1;

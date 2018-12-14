@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import { DateTime } from "luxon";
 
 export interface HistoryItem {
     time: Date;
@@ -12,7 +12,8 @@ export class HistoryDataBase {
     private _historySize = 10;
 
     public hasTimePassed(time: Date) {
-        const passed = !this._lastTime || moment(time).diff(this._lastTime) >= 5 * 1000 - 10;
+        const passed = !this._lastTime || DateTime.fromJSDate(time)
+            .diff(DateTime.fromJSDate(this._lastTime)).as("milliseconds") >= 5 * 1000 - 10;
         if (passed) {
             this._lastTime = time;
             return true;
@@ -42,12 +43,12 @@ export class HistoryDataBase {
     }
 
     public cleanup() {
-        const maxTime = moment().subtract(this._historySize, "minutes").subtract(1, "seconds");
+        const maxTime = DateTime.local().minus({ minutes: this._historySize, seconds: 1 });
         const history = this.history;
         // Keep  at least 1
         while (history.length > 1) {
             const data = history.first();
-            const diff = moment(data.time).diff(maxTime);
+            const diff = DateTime.fromJSDate(data.time).diff(maxTime).as("millisecond");
             if (diff < 0) {
                 history.shift();
             } else {

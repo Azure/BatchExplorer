@@ -3,8 +3,7 @@ import { DateUtils } from "@batch-flask/utils";
 import { Job, Task } from "app/models";
 import { NumberUtils } from "app/utils";
 import { List } from "immutable";
-import { Duration } from "luxon";
-import * as moment from "moment";
+import { Duration, DateTime } from "luxon";
 
 import "./job-progress-graph.scss";
 
@@ -122,7 +121,7 @@ export class JobProgressGraphComponent implements OnChanges {
         if (!this.job) {
             return;
         }
-        const jobStartTime = moment(this.job.executionInfo.startTime);
+        const jobStartTime = DateTime.fromJSDate(this.job.executionInfo.startTime);
         const startTimes = [];
         const endTimes = [];
         this.tasks.forEach((task, index) => {
@@ -132,13 +131,13 @@ export class JobProgressGraphComponent implements OnChanges {
             const { startTime, endTime } = task.executionInfo;
 
             startTimes.push({
-                time: moment(startTime).diff(jobStartTime),
+                time: DateTime.fromJSDate(startTime).diff(jobStartTime).as("milliseconds"),
                 index: index,
                 task: task,
             });
 
             endTimes.push({
-                time: moment(endTime).diff(jobStartTime),
+                time: DateTime.fromJSDate(endTime).diff(jobStartTime).as("milliseconds"),
                 index: index,
                 task: task,
             });

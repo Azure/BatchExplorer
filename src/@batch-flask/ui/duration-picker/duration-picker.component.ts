@@ -228,7 +228,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                     return null;
                 } else {
                     const duration = Duration.fromObject({
-                        [this.unit]: Number(this.time)
+                        [this.unit]: Number(this.time),
                     });
                     return this._isDurationUnlimited(duration) ? null : duration;
                 }

@@ -7,9 +7,10 @@ import { BlobContainer } from "app/models";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { List } from "immutable";
-import * as moment from "moment";
 import { Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+
+import { DateTime } from "luxon";
 
 import "./file-group-sas.scss";
 
@@ -118,8 +119,8 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
                 Permissions: this.allowWrite ? "rwl" : "rl",
                 ResourceTypes: "CONTAINER",
                 Services: "BLOB",
-                Start: moment.utc().add(-15, "minutes").toDate(),
-                Expiry: moment.utc().add(7, "day").toDate(),
+                Start: DateTime.utc().minus({ minutes: 15 }).toJSDate(),
+                Expiry: DateTime.utc().plus({ days: 7 }).toJSDate(),
             },
         };
 

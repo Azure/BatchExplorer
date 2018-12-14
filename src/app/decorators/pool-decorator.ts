@@ -5,7 +5,6 @@ import {
 import { PoolUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
 import { List } from "immutable";
-import * as moment from "moment";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
 import { PoolEndpointConfigurationDecorator } from "./pool-endpoint-configuration-decorator";
 import { VirtualMachineConfigurationDecorator } from "./virtual-machine-configuration-decorator";
@@ -71,7 +70,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.autoScaleEvaluationInterval = this.timespanField(pool.autoScaleEvaluationInterval);
         this.url = this.stringField(pool.url);
         this.vmSize = this.stringField(pool.vmSize);
-        this.lastResized = moment(this.pool.allocationStateTransitionTime).fromNow();
         this.userAccounts = pool.userAccounts.map(x => this._decorateUserAccount(x)).join(", ");
         this.dedicatedNodes = PoolUtils.poolNodesStatus(pool, pool.currentDedicatedNodes, pool.targetDedicatedNodes);
         this.startTask = pool.startTask && new StartTaskDecorator(pool.startTask);

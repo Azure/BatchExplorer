@@ -1,7 +1,6 @@
-import * as moment from "moment";
-
 import { AccessToken, ServerError } from "@batch-flask/core";
 import { AdalService } from "app/services/adal";
+import { DateTime } from "luxon";
 import { BehaviorSubject } from "rxjs";
 import { F } from "test/utils";
 
@@ -9,11 +8,11 @@ const tenant1 = "tenant-1";
 const resource1 = "http://example.com";
 const token1 = new AccessToken({
     access_token: "sometoken",
-    expires_on: moment().add(1, "hour").toDate(),
+    expires_on: DateTime.local().minus({hours: 1}).toJSDate(),
     expires_in: 3600,
     token_type: "Bearer",
     ext_expires_in: 3600,
-    not_before: moment().add(1, "hour").toDate(),
+    not_before: DateTime.local().minus({hours: 1}).toJSDate(),
     refresh_token: "foorefresh",
 });
 

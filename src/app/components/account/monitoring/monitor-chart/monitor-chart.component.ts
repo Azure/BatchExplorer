@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import * as moment from "moment";
 import { BehaviorSubject, Observable, Subscription, combineLatest } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
@@ -10,7 +9,7 @@ import {
     BatchAccountService, InsightsMetricsService,
     MonitorChartMetrics, MonitorChartTimeFrame, MonitorChartType, ThemeService,
 } from "app/services";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 import { map } from "rxjs/operators";
 
 import "./monitor-chart.scss";
@@ -274,9 +273,9 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
 
     private _computeTooltipTitle(item: Chart.ChartTooltipItem, data) {
         const interval = this._metricList.interval;
-        const start = moment(item.xLabel);
-        const end = moment(start).add(interval);
-        return `Data between ${start.format("hh:mm A")} and ${end.format("hh:mm A")} on ${start.format("LL")}`;
+        const start = DateTime.fromISO(item.xLabel);
+        const end = start.plus(interval);
+        return `Data between ${start.toFormat("hh:mm A")} and ${end.toFormat("hh:mm A")} on ${start.toFormat("LL")}`;
     }
 
     /**

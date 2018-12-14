@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { List } from "immutable";
-import * as moment from "moment";
 import { Subscription } from "rxjs";
 
 import { FormControl } from "@angular/forms";
@@ -8,6 +7,7 @@ import { FilterBuilder, autobind } from "@batch-flask/core";
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
 import "./all-job-graphs-home.scss";
+import { DateTime } from "luxon";
 
 enum TimeRange {
     hour = 1,
@@ -71,22 +71,22 @@ export class AllJobGraphsComponent implements OnInit, OnDestroy {
     }
 
     private _getRangeFilter() {
-        let date: moment.Moment;
-        const now = moment();
+        let date: DateTime;
+        const now = DateTime.local();
         switch (this.selectedTimeRange.value) {
             case TimeRange.hour:
-                date = now.subtract(1, "hour");
+                date = now.minus({ hours: 1 });
                 break;
             case TimeRange.day:
-                date = now.subtract(1, "day");
+                date = now.minus({ days: 1 });
                 break;
             case TimeRange.week:
-                date = now.subtract(1, "week");
+                date = now.minus({ weeks: 1 });
                 break;
             default:
-                date = now.subtract(1, "day");
+                date = now.minus({ days: 1 });
                 break;
         }
-        return FilterBuilder.prop("executionInfo/endTime").ge(date.toDate());
+        return FilterBuilder.prop("executionInfo/endTime").ge(date.toJSDate());
     }
 }

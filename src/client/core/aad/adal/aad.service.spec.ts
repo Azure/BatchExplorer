@@ -1,7 +1,6 @@
-import * as moment from "moment";
-
 import { AccessToken, InMemoryDataStore } from "@batch-flask/core";
 import { Constants } from "common";
+import { DateTime } from "luxon";
 import { F } from "test/utils";
 import { MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import { AADUser } from "./aad-user";
@@ -58,7 +57,7 @@ describe("AADService", () => {
 
     it("when there is no item in the localstorage it should not set the id_token", () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
-        const tmpService = new AADService(appSpy, localStorage, propertiesSpy,  localStorage as any, ipcMainMock);
+        const tmpService = new AADService(appSpy, localStorage, propertiesSpy, localStorage as any, ipcMainMock);
         tmpService.init();
         let user: AADUser | null = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -87,9 +86,11 @@ describe("AADService", () => {
 
         beforeEach(() => {
             refreshedToken = new AccessToken({
-                access_token: "refreshedToken", expires_on: moment().add(1, "hour").toDate(),
+                access_token: "refreshedToken", expires_on: DateTime.local().minus({ hours: 1 }).toJSDate(),
             } as any);
-            newToken = new AccessToken({ access_token: "newToken", expires_on: moment().add(1, "hour") } as any);
+            newToken = new AccessToken({
+                access_token: "newToken", expires_on: DateTime.local().minus({ hours: 1 })
+            } as any);
             const authorizeResult = {
                 id_token: "someidtoken",
                 code: "somecode",
@@ -109,7 +110,7 @@ describe("AADService", () => {
         it("should use the cached token if not expired", F(async () => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
-                expires_on: moment().add(1, "hour"),
+                expires_on: DateTime.local().minus({ hours: 1 }),
             } as any));
             token = await service.accessTokenData(tenant1, resource1);
             expect(token).not.toBeNull();
@@ -119,7 +120,7 @@ describe("AADService", () => {
         it("should reload a new token if the token is expiring before the safe margin", F(async () => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
-                expires_on: moment().add(1, "minute").toDate(),
+                expires_on: DateTime.local().minus({ minutes: 1 }).toJSDate(),
                 refresh_token: "somerefreshtoken",
             } as any));
             token = await service.accessTokenData(tenant1, resource1);
@@ -134,7 +135,7 @@ describe("AADService", () => {
         it("should load a new token if getting a token for another resource", async (done) => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
-                expires_on: moment().add(1, "hour"),
+                expires_on: DateTime.local().minus({ hours: 1 }),
             } as any));
             token = await service.accessTokenData(tenant1, "http://other-resource.com");
             expect(redeemSpy).toHaveBeenCalled();
@@ -149,7 +150,7 @@ describe("AADService", () => {
         it("should load a new token if getting a token for another tenant", async (done) => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
-                expires_on: moment().add(1, "hour"),
+                expires_on: DateTime.local().minus({ hours: 1 }),
             } as any));
             token = await service.accessTokenData("tenant-2", resource1);
             expect(redeemSpy).toHaveBeenCalled();

@@ -1,7 +1,6 @@
 import { HttpParams } from "@angular/common/http";
 import { HttpRequestOptions } from "@batch-flask/core";
-import { Duration } from "luxon";
-import * as moment from "moment";
+import { Duration, DateTime } from "luxon";
 
 /**
  * TimeFrame defines the enumeration for monitor chart timeframe picker
@@ -173,22 +172,22 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
      * Timespan start and timespan end are two ISO format string
      */
     private _computeTimeSpan(): void {
-        const timespan = moment();
-        this._timeSpanEnd = timespan.toISOString();
+        const timespan = DateTime.local();
+        this._timeSpanEnd = timespan.toISO();
         switch (this.timespan) {
             case MonitorChartTimeFrame.Hour:
-                timespan.subtract(hourTimeSpan);
+                timespan.minus(hourTimeSpan);
                 break;
             case MonitorChartTimeFrame.Day:
-                timespan.subtract(dayTimeSpan);
+                timespan.minus(dayTimeSpan);
                 break;
             case MonitorChartTimeFrame.Week:
-                timespan.subtract(weekTimeSpan);
+                timespan.minus(weekTimeSpan);
                 break;
             case MonitorChartTimeFrame.Month:
-                timespan.subtract(monthTimeSpan);
+                timespan.minus(monthTimeSpan);
                 break;
         }
-        this._timeSpanStart = timespan.toISOString();
+        this._timeSpanStart = timespan.toISO();
     }
 }

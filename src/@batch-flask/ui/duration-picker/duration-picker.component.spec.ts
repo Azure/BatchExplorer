@@ -5,11 +5,11 @@ import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { I18nUIModule, SelectComponent } from "@batch-flask/ui";
 import { FormModule } from "@batch-flask/ui/form";
-import * as moment from "moment";
+import { Duration } from "luxon";
 import { click, updateInput } from "test/utils/helpers";
 import { DurationPickerComponent, DurationUnit } from "./duration-picker.component";
 import { DurationPickerModule } from "./duration-picker.module";
-import { Duration } from "luxon";
+
 @Component({
     template: `
         <bl-duration-picker label="My duration picker"
@@ -110,7 +110,7 @@ describe("DurationPickerComponent", () => {
                 fixture.detectChanges();
                 expect(component.time).toBe("15");
                 expect(de.queryAll(By.css(".error")).length).toBe(0, "Should not have any errors");
-                expect(moment.isDuration(component.value)).toBe(true);
+                expect(component.value instanceof Duration).toBe(true);
                 expect(testComponent.control.value.toISOString()).toEqual("PT15H");
             });
 
@@ -156,7 +156,7 @@ describe("DurationPickerComponent", () => {
                 fixture.detectChanges();
                 expect(component.time).toBe("P4DT4H");
                 expect(de.queryAll(By.css(".error")).length).toBe(0, "Should not have any errors");
-                expect(moment.isDuration(component.value)).toBe(true);
+                expect(component.value  instanceof Duration).toBe(true);
                 expect(testComponent.control.value.toISOString()).toEqual("P4DT4H");
             });
         });

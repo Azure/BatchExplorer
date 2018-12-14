@@ -1,5 +1,4 @@
-import { Duration } from "luxon";
-import * as moment from "moment";
+import { DateTime, Duration } from "luxon";
 import { Task } from "./task";
 
 describe("Task model", () => {
@@ -49,14 +48,14 @@ describe("Task model", () => {
         });
 
         it("should return false if runnnig time is less than clock time", () => {
-            const current = moment();
-            const task = createTask(0, current.clone().subtract(3, "minute").toDate(), current.toDate(), true);
+            const current = DateTime.local();
+            const task = createTask(0, current.minus({ minutes: 3 }).toJSDate(), current.toJSDate(), true);
             expect(task.didTimeout).toBe(false);
         });
 
         it("should return true if runnnig time is more than clock time", () => {
-            const current = moment();
-            const task = createTask(-10, current.clone().subtract(5, "minute").toDate(), current.toDate(), true);
+            const current = DateTime.local();
+            const task = createTask(-10, current.minus({ minutes: 5 }).toJSDate(), current.toJSDate(), true);
             expect(task.didTimeout).toBe(true);
         });
     });

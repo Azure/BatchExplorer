@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { ServerError, autobind } from "@batch-flask/core";
 import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/ui";
-import * as moment from "moment";
 import * as path from "path";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -16,10 +15,10 @@ import {
 } from "app/services";
 import { PoolUtils } from "app/utils";
 import { ExternalApplication } from "common/constants";
+import { DateTime, Duration } from "luxon";
 import { Observable, from } from "rxjs";
 import { flatMap, share } from "rxjs/operators";
 import "./node-connect.scss";
-import { DateTime, Duration } from "luxon";
 
 @Component({
     selector: "bl-node-connect",

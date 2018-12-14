@@ -1,5 +1,3 @@
-import * as moment from "moment";
-
 import { Dto, DtoAttr } from "@batch-flask/core";
 import { Duration } from "luxon";
 

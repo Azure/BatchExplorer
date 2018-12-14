@@ -1,5 +1,4 @@
-import { DateTime, Duration, DurationObject } from "luxon";
-import * as moment from "moment";
+import { DateTime, Duration, DurationObject, DurationUnit } from "luxon";
 
 export class DateUtils {
     /**
@@ -10,8 +9,11 @@ export class DateUtils {
      *
      * @example withinRange(date, 3, "days") // Check if date is less than 3 days old
      */
-    public static withinRange(date: Date | moment.Moment, amount: number, unit: moment.unitOfTime.Diff) {
-        return moment().diff(moment(date), unit) < amount;
+    public static withinRange(date: Date | DateTime, amount: number, unit: DurationUnit) {
+        if (!(date instanceof DateTime)) {
+            date = DateTime.fromJSDate(date);
+        }
+        return DateTime.local().diff(date).as(unit) < amount;
     }
 
     /**
@@ -27,16 +29,20 @@ export class DateUtils {
      * - Feb 2, 2016
      * - Nob 12, 2015
      */
-    public static prettyDate(date: Date | moment.Moment, prettyDateRelativeRange = 20) {
+    public static prettyDate(date: Date | DateTime, prettyDateRelativeRange = 20) {
         if (!date) {
             return "";
         }
 
-        const momentDate = moment(date);
-        if (DateUtils.withinRange(momentDate, prettyDateRelativeRange, "days")) {
-            return momentDate.fromNow();
+        if (!(date instanceof DateTime)) {
+            date = DateTime.fromJSDate(date);
+        }
+        if (DateUtils.withinRange(date, prettyDateRelativeRange, "days")) {
+            // TODO switch back when luxon support fromNOW
+            // return date.fromNow();
+            return date.toFormat("MMM D, yyyy");
         } else {
-            return momentDate.format("MMM D, YYYY");
+            return date.toFormat("MMM D, yyyy");
         }
     }
 
@@ -93,10 +99,24 @@ export class DateUtils {
      * Returns a full date and time
      * @example Feb 14th, 2017, 14:03:01
      */
-    public static fullDateAndTime(date: Date | moment.Moment) {
-        return date
-            ? moment(date).format("MMM Do, YYYY, HH:mm:ss.SSS Z")
-            : "";
+    public static fullDateAndTime(date: Date | DateTime): string {
+        if (!date) { return null; }
+        if (!(date instanceof DateTime)) {
+            date = DateTime.fromJSDate(date);
+        }
+
+        let formatted = date.toLocaleString({
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+        });
+
+        if (date.millisecond > 0) {
+            formatted += `.${date.millisecond.toString().padStart(3, "0")}`;
+        }
+        return formatted;
     }
 
     /**
@@ -123,6 +143,9 @@ export class DateUtils {
         if (!timeToCompare) {
             return null;
         }
-        return moment(timeToCompare).fromNow();
+        // TODO Switch when luxon support fromNow
+        // return DateTime.fromJSDate(timeToCompare).fromNow();
+
+        return this.fullDateAndTime(timeToCompare);
     }
 }
