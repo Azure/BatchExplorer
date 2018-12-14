@@ -17,7 +17,6 @@ import "./virtual-network-picker.scss";
     selector: "bl-virtual-network-picker",
     templateUrl: "virtual-network-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => VirtualNetworkPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => VirtualNetworkPickerComponent), multi: true },
     ],

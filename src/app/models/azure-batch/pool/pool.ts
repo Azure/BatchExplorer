@@ -67,9 +67,9 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop() public allocationStateTransitionTime: Date;
 
-    @ListProp(Object) public applicationPackageReferences: List<any>;
+    @ListProp(Object) public applicationPackageReferences: List<any> = List([]);
 
-    @ListProp(Object) public certificateReferences: List<any>;
+    @ListProp(Object) public certificateReferences: List<any> = List([]);
 
     @Prop() public cloudServiceConfiguration: CloudServiceConfiguration;
 

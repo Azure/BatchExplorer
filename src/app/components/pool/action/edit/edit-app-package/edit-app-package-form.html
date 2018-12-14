@@ -1,0 +1,12 @@
+<bl-simple-form
+    [formGroup]="appPackages"
+    [containerRef]="sidebarRef"
+    [submit]="submit"
+    saveText="Update"
+    [multiUse]="false"
+    title="Edit application package reference for pool: {{pool.id}}">
+
+    <form novalidate>
+        <bl-app-package-picker [formControl]="appPackages"></bl-app-package-picker>
+    </form>
+</bl-simple-form>
