@@ -1,8 +1,8 @@
 import { SanitizedError } from "@batch-flask/utils";
-import { Duration } from "moment";
 import { RecordMissingExtendsError } from "./errors";
 import { setProp, updateTypeMetadata } from "./helpers";
 import { Record } from "./record";
+import { Duration } from "luxon";
 
 // tslint:disable:only-arrow-functions
 
