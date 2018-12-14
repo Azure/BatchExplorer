@@ -1,8 +1,7 @@
-import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { validJsonConfig } from "@batch-flask/utils/validators";
-import { Uri } from "monaco-editor";
 import { Subscription } from "rxjs";
 
 import "./form-json-editor.scss";
@@ -15,30 +14,27 @@ const emptyJson = "{\n\n}";
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FormJsonEditorComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy {
     public jsonControl = new FormControl(emptyJson, null, validJsonConfig);
 
-    public editorConfig: EditorConfig = {
-        language: "json",
-        tabSize: 2,
-        minimap: {
-            enabled: false,
-        },
-    };
+    public editorConfig: EditorConfig;
 
     @Input()
     public set fileUri(uri: string) {
-        this.editorConfig.uri = Uri.file(uri);
+        this._fileUri = uri;
     }
 
+    private _fileUri: string;
     private _propagateChange: any;
     private _sub: Subscription;
 
-    constructor() {
+    constructor(private changeDetector: ChangeDetectorRef) {
         this._sub = this.jsonControl.valueChanges.subscribe((value) => {
             this.valueChange(value);
         });
+        this._computeOptions();
     }
 
     public ngOnDestroy() {
@@ -60,5 +56,19 @@ export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy 
 
     public registerOnTouched(fn: any): void {
         // Nothing
+    }
+
+    private async _computeOptions() {
+        const { Uri } = await import("monaco-editor");
+
+        this.editorConfig = {
+            language: "json",
+            tabSize: 2,
+            minimap: {
+                enabled: false,
+            },
+            uri: this._fileUri && Uri.file(this._fileUri),
+        };
+        this.changeDetector.markForCheck();
     }
 }

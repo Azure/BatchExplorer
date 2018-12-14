@@ -4,7 +4,7 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import * as elementResizeDetectorMaker from "element-resize-detector";
-import * as monaco from "monaco-editor";
+import { Uri, editor } from "monaco-editor";
 import "./editor.scss";
 import { AutoscaleLanguage } from "./monaco-languages";
 
@@ -13,11 +13,11 @@ export interface EditorKeyBinding {
     action: any;
 }
 
-export interface EditorConfig extends monaco.editor.IEditorConstructionOptions {
+export interface EditorConfig extends editor.IEditorConstructionOptions {
     /**
      * Optional filename used for language specific schemas
      */
-    uri?: monaco.Uri;
+    uri?: Uri;
     language?: string;
     readOnly?: boolean;
     tabSize?: number;

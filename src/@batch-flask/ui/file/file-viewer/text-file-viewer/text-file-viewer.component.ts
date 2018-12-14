@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { Uri } from "monaco-editor";
 import { FileViewer } from "../file-viewer";
 
 import { Subscription } from "rxjs";
@@ -45,7 +44,9 @@ export class TextFileViewerComponent extends FileViewer {
         });
     }
 
-    private _computeEditorOptions() {
+    private async _computeEditorOptions() {
+        const { Uri } = await import("monaco-editor");
+
         this.editorConfig = {
             readOnly: true,
             minimap: {
@@ -53,6 +54,7 @@ export class TextFileViewerComponent extends FileViewer {
             },
             uri: this.fileLoader && Uri.file(this.fileLoader.filename),
         };
+        this.changeDetector.markForCheck();
     }
 
     private _cleanupSub() {
