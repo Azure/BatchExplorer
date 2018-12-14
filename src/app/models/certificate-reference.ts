@@ -41,6 +41,6 @@ export class CertificateReference extends Record<CertificateReferenceAttributes>
     @Prop() public thumbprint: string;
     @Prop() public thumbprintAlgorithm: string;
     @Prop() public storeLocation: CertificateStoreLocation;
-    @Prop() public storeName: CommonStoreName;
+    @Prop() public storeName: CommonStoreName | string;
     @ListProp(String) public visibility: List<CertificateVisibility> = List([]);
 }

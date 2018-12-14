@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, Pipe, PipeTransform, forwardRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, Pipe, PipeTransform, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
@@ -25,7 +25,7 @@ export class TrimThumbprintPipe implements PipeTransform {
 }
 
 @Component({
-    selector: "bl-certificate-references-picker-picker",
+    selector: "bl-certificate-references-picker",
     templateUrl: "certificate-references-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
@@ -37,7 +37,7 @@ export class TrimThumbprintPipe implements PipeTransform {
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => CertificateReferencesPickerComponent), multi: true },
     ],
 })
-export class CertificateReferencesPickerComponent implements OnDestroy, ControlValueAccessor, Validator {
+export class CertificateReferencesPickerComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
 
     @Input() public osType: OSType;
 
@@ -53,15 +53,17 @@ export class CertificateReferencesPickerComponent implements OnDestroy, ControlV
         private certificateService: CertificateService,
         private changeDetector: ChangeDetectorRef) {
 
-        this.certificateService.listAll().subscribe((certificates) => {
-            this.certificates = certificates.toArray();
-            this.changeDetector.markForCheck();
-        });
-
         this.references.valueChanges.pipe(takeUntil(this._destroy)).subscribe((value) => {
             if (this._propagateChange) {
                 this._propagateChange(value);
             }
+        });
+    }
+
+    public ngOnInit() {
+        this.certificateService.listAll().subscribe((certificates) => {
+            this.certificates = certificates.toArray();
+            this.changeDetector.markForCheck();
         });
     }
 

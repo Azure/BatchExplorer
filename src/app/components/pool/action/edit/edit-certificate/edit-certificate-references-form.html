@@ -8,7 +8,7 @@
 
     <bl-form-page main-form-page [title]="'edit-app-package-form.title' | i18n: {poolId: pool.id}" [formGroup]="references">
         <bl-form-section>
-            <bl-certificate-references [formControl]="references"></bl-certificate-references>
+            <bl-certificate-references-picker [formControl]="references"></bl-certificate-references-picker>
         </bl-form-section>
     </bl-form-page>
 </bl-complex-form>
