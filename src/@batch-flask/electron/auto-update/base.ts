@@ -9,6 +9,8 @@ export enum UpdateStatus {
     NotAvailable,
 }
 
+export const AUTO_UPDATE_MAIN_SERVICE_TOKEN = "AUTO_UPDATE_SERVICE";
+
 export abstract class AutoUpdateService {
     public status: Observable<UpdateStatus>;
     /**

@@ -1,15 +1,15 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { ProgressInfo } from "builder-util-runtime";
+// Electron-updater has not sideEffects: false so it fail to tree shake
+//  Make sure this file is not imported in Browser environment with export *
 import { UpdateCheckResult, autoUpdater } from "electron-updater";
 import { BehaviorSubject, Observable, Subscription, interval } from "rxjs";
 import { map } from "rxjs/operators";
 import { AutoUpdateService, UpdateStatus } from "./base";
 
-export const AUTO_UPDATE_MAIN_SERVICE_TOKEN = "AUTO_UPDATE_SERVICE";
-
 export const AUTO_UPDATE_CHECK_INTERVAL = 3600_000; // Every hour
 
-@Injectable({providedIn: "root"})
+@Injectable()
 export class AutoUpdateMainService extends AutoUpdateService implements OnDestroy {
 
     public set autoInstallOnAppQuit(value: boolean) {
