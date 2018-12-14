@@ -6,7 +6,7 @@ import { MaterialModule } from "@batch-flask/core";
 import { BaseModule } from "@batch-flask/ui";
 import { AppPackagePickerComponent } from "./app-packages/app-package-picker.component";
 import {
-    CertificatePickerComponent, CertificateReferencesComponent, TrimThumbprintPipe,
+    CertificatePickerComponent, CertificateReferencesPickerComponent, TrimThumbprintPipe,
 } from "./certificate-references";
 import { PoolNodesPreviewComponent } from "./pool-nodes-preview.component";
 import { PoolOsIconComponent } from "./pool-os-icon";
@@ -19,7 +19,7 @@ const publicComponents = [
     PoolNodesPreviewComponent,
     PoolOsIconComponent,
     CertificatePickerComponent,
-    CertificateReferencesComponent,
+    CertificateReferencesPickerComponent,
 ];
 
 @NgModule({

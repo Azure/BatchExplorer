@@ -1,3 +1,0 @@
-certificate-references:
-  noCertificates: No certificate(s) found for this batch account, please upload your certificate(s) first.
-  duplicate: Cannot reference the same certificate twice {thumbprint}
