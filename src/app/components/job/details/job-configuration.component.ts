@@ -68,7 +68,7 @@ export class JobConfigurationComponent implements OnDestroy {
         const ref = this.sidebarManager.open(`edit-job-metadata-${id}`, EditMetadataFormComponent);
         ref.component.metadata = this.job.metadata;
         ref.component.save = (metadata) => {
-            return this.jobService.patch(id, new JobPatchDto({ metadata })).pipe(
+            return this.jobService.patch(id, new JobPatchDto({ metadata } as any)).pipe(
                 flatMap(() => this.jobService.get(id)),
             );
         };
