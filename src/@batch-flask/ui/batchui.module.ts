@@ -1,24 +1,21 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
 // components
-import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { WorkspaceModule } from "@batch-flask/ui/workspace";
 import { AbstractListModule } from "./abstract-list";
 import { ActivityModule } from "./activity";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { AutoFocusModule } from "./auto-focus";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
-import { BatchFlaskSettingsModule } from "./batch-flask-settings";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { BrowseLayoutModule } from "./browse-layout";
 import { ButtonsModule } from "./buttons";
 import { CardModule } from "./card";
 import { ChartsModule } from "./charts";
-import { ContextMenuModule } from "./context-menu";
 import { DateModule } from "./date";
 import { DatetimePickerComponent } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
@@ -63,13 +60,11 @@ const modules = [
     AbstractListModule,
     AdvancedFilterModule,
     AutoFocusModule,
-    BatchFlaskSettingsModule,
     BreadcrumbModule,
     BrowseLayoutModule,
     ButtonsModule,
     CardModule,
     ChartsModule,
-    ContextMenuModule,
     DateModule,
     DialogsModule,
     DropdownModule,
@@ -123,15 +118,12 @@ const components = [
     ],
     exports: [...modules, ...components],
     imports: [
-        BrowserModule,
+        CommonModule,
         FormsModule,
         MaterialModule,
         ReactiveFormsModule,
         RouterModule,
         ...modules,
-    ],
-    providers: [
-        LiveAnnouncer,
     ],
 })
 export class BaseModule {

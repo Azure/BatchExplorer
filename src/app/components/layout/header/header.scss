@@ -71,3 +71,7 @@ bl-header {
         }
     }
 }
+
+.batch-explorer.high-contrast bl-header {
+    border-bottom: 1px solid $border-color;
+}

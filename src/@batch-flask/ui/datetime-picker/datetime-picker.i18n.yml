@@ -1,0 +1,4 @@
+datetime-picker:
+  currentTimeZone: Current timezone
+  time: "time"
+  date: "date"

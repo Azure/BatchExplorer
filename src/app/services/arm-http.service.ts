@@ -19,7 +19,7 @@ function mergeOptions(original: HttpRequestOptions, body?: any): HttpRequestOpti
 /**
  * Small helper that will use the current account to get current tenantId.
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ArmHttpService implements HttpInterface {
     constructor(private http: AzureHttpService, adal: AdalService, private accountService: BatchAccountService) {
     }

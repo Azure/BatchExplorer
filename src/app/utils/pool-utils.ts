@@ -187,7 +187,7 @@ export class PoolUtils {
         vmSpec: VmSize,
         nodeCost: VMPrices,
         softwarePricing: SoftwarePricing,
-        options: PoolPriceOptions = {}): PoolPrice {
+        options: PoolPriceOptions = {}): PoolPrice | null {
         if (!nodeCost) {
             return null;
         }
@@ -198,7 +198,7 @@ export class PoolUtils {
         let dedicatedPrice = nodeCost.regular * dedicatedCount;
         let lowPriPrice = nodeCost.lowpri * lowPriCount;
 
-        pool.applicationLicenses.forEach((license) => {
+        pool.applicationLicenses.forEach((license: string) => {
             dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * dedicatedCount;
             lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * lowPriCount;
         });
@@ -209,6 +209,10 @@ export class PoolUtils {
             total: dedicatedPrice + lowPriPrice,
             unit: "USD",
         };
+    }
+
+    public static hasGPU(pool: Pool): boolean {
+        return Boolean(pool.vmSize && pool.vmSize.toLowerCase().startsWith("standard_n"));
     }
 
     private static _getPoolNodes(pool, target = false) {

@@ -1,7 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, HostBinding, OnDestroy, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
-import { combineLatest } from "rxjs";
+import { Subject, combineLatest } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
 import { TelemetryService } from "@batch-flask/core";
@@ -13,7 +13,6 @@ import {
     AutoscaleFormulaService,
     BatchAccountService,
     CommandService,
-    GithubDataService,
     NavigatorService,
     NcjTemplateService,
     PoolOsService,
@@ -24,17 +23,21 @@ import {
     SettingsService,
     SubscriptionService,
     ThemeService,
-    VmSizeService,
 } from "app/services";
-import { filter, first } from "rxjs/operators";
+import { filter, first, takeUntil } from "rxjs/operators";
 
 @Component({
     selector: "bl-app",
     templateUrl: "app.layout.html",
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
     public isAppReady = false;
     public fullscreen = false;
+
+    @HostBinding("class.batch-explorer") public readonly beCls = true;
+    @HostBinding("class.high-contrast") public isHighContrast = false;
+
+    private _destroy = new Subject();
 
     constructor(
         matIconRegistry: MatIconRegistry,
@@ -45,12 +48,10 @@ export class AppComponent implements OnInit {
         private accountService: BatchAccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
-        private githubDataService: GithubDataService,
         private poolOsService: PoolOsService,
         private sshKeyService: SSHKeyService,
         remote: ElectronRemote,
         pythonRpcService: PythonRpcService,
-        private vmSizeService: VmSizeService,
         themeService: ThemeService,
         private route: ActivatedRoute,
         permissionService: PermissionService,
@@ -66,12 +67,10 @@ export class AppComponent implements OnInit {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
         this._initWorkspaces();
-        this.githubDataService.init();
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
         this.navigatorService.init();
-        this.vmSizeService.init();
         this.accountService.loadInitialData();
         this.ncjTemplateService.init();
         pythonRpcService.init();
@@ -81,12 +80,13 @@ export class AppComponent implements OnInit {
         combineLatest(
             settingsService.hasSettingsLoaded,
             workspaceService.haveWorkspacesLoaded,
-        ).subscribe((loadedArray) => {
+        ).pipe(takeUntil(this._destroy)).subscribe((loadedArray) => {
             this.isAppReady = loadedArray[0] && loadedArray[1];
         });
 
         // Wait for the first account to be loaded.
         accountService.currentAccount.pipe(
+            takeUntil(this._destroy),
             filter(x => Boolean(x)),
             first(),
         ).subscribe((x) => {
@@ -95,7 +95,7 @@ export class AppComponent implements OnInit {
 
         registerIcons(matIconRegistry, sanitizer);
 
-        this.route.queryParams.subscribe(({ fullscreen }) => {
+        this.route.queryParams.pipe(takeUntil(this._destroy)).subscribe(({ fullscreen }) => {
             this.fullscreen = Boolean(fullscreen);
         });
 
@@ -104,11 +104,20 @@ export class AppComponent implements OnInit {
         });
 
         ipc.sendEvent("app-ready");
+
+        themeService.currentTheme.pipe(takeUntil(this._destroy)).subscribe((theme) => {
+            this.isHighContrast = theme.isHighContrast;
+        });
     }
 
     public ngOnInit() {
         this.subscriptionService.load();
         this.accountService.load().subscribe();
+    }
+
+    public ngOnDestroy() {
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     /**

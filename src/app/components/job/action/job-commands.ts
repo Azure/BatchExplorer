@@ -3,7 +3,7 @@ import { from } from "rxjs";
 
 import { ElectronRemote } from "@batch-flask/electron";
 import {
-    COMMAND_LABEL_ICON,  EntityCommand,
+    COMMAND_LABEL_ICON, EntityCommand,
     EntityCommands, FileSystemService, Permission,
 } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -199,10 +199,10 @@ export class JobCommands extends EntityCommands<Job> {
     }
 
     private _pinJob(job: Job) {
-        this.pinnedEntityService.pinFavorite(job).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(job);
-            }
-        });
+        if (this.pinnedEntityService.isFavorite(job)) {
+            return this.pinnedEntityService.unPinFavorite(job);
+        } else {
+            return this.pinnedEntityService.pinFavorite(job);
+        }
     }
 }

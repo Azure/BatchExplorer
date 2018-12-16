@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, from } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { GithubDataService } from "./github-data";
 
-const dataFile = "rendering-container-images.json";
+const dataFile = "data/rendering-container-images.json";
 
 interface RenderingImagesData {
     image_references: RenderingImageReference[];
@@ -24,8 +24,7 @@ export class RenderingContainerImageService {
     private _containerImages = new BehaviorSubject<RenderingContainerImage[]>(null);
 
     constructor(
-        private githubDataService: GithubDataService,
-        private fs: FileSystemService) {
+        private githubDataService: GithubDataService) {
 
         this.imageReferences = this._imageReferences.asObservable();
         this.containerImages = this._containerImages.asObservable();
@@ -34,15 +33,15 @@ export class RenderingContainerImageService {
         // (and move loadImageData call out of component)
     }
 
-    public loadImageData(): Observable<any>  {
-        return from(this.fs.readFile(this.githubDataService.getLocalDataPath(dataFile)).then((content) => {
+    public loadImageData() {
+        return this.githubDataService.get(dataFile).subscribe((content) => {
         try {
             const data: RenderingImagesData = JSON.parse(content);
             this._imageReferences.next(data.image_references);
             this._containerImages.next(data.container_images);
         } catch (error) {
             log.error(`File is not valid json: ${error.message}`);
-        }}));
+        }});
     }
 
     public findContainerImageById(containerImageId: string): Observable<RenderingContainerImage> {

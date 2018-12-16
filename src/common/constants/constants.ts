@@ -26,7 +26,7 @@ export const forms = {
             appVersion: /^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/i,
             appFilename: /\.zip$/i,
             certificateFileName: /(\.pfx|\.cer)$/i,
-            fileGroup: /^[a-z0-9]([a-z0-9]|-(?!-|\z))*$/,
+            fileGroup: /^(?!.*--)[a-z0-9-]+$/,
             batchAccount: /^[0-9a-z]*$/,
         },
         range: {
@@ -37,9 +37,10 @@ export const forms = {
 };
 
 export const SavedDataFilename = {
-    sshPublicKeys: "ssh-pub-keys.json",
-    autosacleFormula: "autoscale-formula.json",
-    localTemplates: "local-templates",
+    sshPublicKeys: "data/ssh-pub-keys.json",
+    autosacleFormula: "data/autoscale-formula.json",
+    localTemplates: "data/local-templates",
+    portfolios: "data/portfolios",
 };
 
 export const localStorageKey = {
@@ -115,7 +116,9 @@ export const ExternalLinks = {
     setupStorageAccount: "https://portal.azure.com/#resource{0}/storageAccount",
     license: "https://azure.github.io/BatchExplorer/EULA.html",
     privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
-    submitIssue: "https://privacy.microsoft.com/en-us/privacystatement",
+    submitIssue: "https://github.com/Azure/BatchExplorer/issues",
+    subscriptionUrl:  "https://portal.azure.com/#resource/subscriptions/{0}/overview",
+    resourceGroupUrl: "https://portal.azure.com/#resource/subscriptions/{0}/resourceGroups/{1}/overview",
 };
 
 export const ODataFields = {
@@ -211,6 +214,7 @@ export const KnownQueryParameters = {
     inputParameter: "input-parameter",
     assetContainer: "asset-container",
     assetPaths: "asset-paths",
+    outputs: "outputs",
 };
 
 const cdn = "https://batchexplorer.azureedge.net";

@@ -20,7 +20,7 @@ function breadcrumbMethodMissingMessage(componentName) {
 `;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class BreadcrumbService {
     public crumbs: Observable<Breadcrumb[]>;
     public _crumbs = new BehaviorSubject<Breadcrumb[]>([]);

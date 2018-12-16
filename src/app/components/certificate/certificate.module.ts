@@ -4,6 +4,7 @@ import { commonModules } from "app/common";
 import { CertificateActionModule } from "./action";
 import { CertificateListComponent } from "./browse/certificate-list.component";
 import { CertificateAdvancedFilterComponent } from "./browse/filter/certificate-advanced-filter.component";
+import { CertificateRoutingModule } from "./certificate-routing.module";
 import { CertificateDetailsModule } from "./details/certificate-details.module";
 import { CertificateHomeComponent } from "./home/certificate-home.component";
 
@@ -14,7 +15,7 @@ const components = [
 ];
 
 const modules = [
-    CertificateActionModule, CertificateDetailsModule, ...commonModules,
+    CertificateRoutingModule, CertificateActionModule, CertificateDetailsModule, ...commonModules,
 ];
 
 @NgModule({

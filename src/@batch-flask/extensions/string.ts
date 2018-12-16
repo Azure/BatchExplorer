@@ -52,8 +52,8 @@ if (!String.prototype.clearWhitespace) {
 String.prototype.trimEnd = function (this: string, ...values: string[]) {
     let input = String(this) || "";
     while (input) {
-        const match = values.find((value) => {
-            return value && input.endsWith(value);
+        const match = values.find((value: string) => {
+            return Boolean(value && input.endsWith(value));
         });
 
         if (!match) {

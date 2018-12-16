@@ -12,7 +12,10 @@ import { Observable, from, throwError } from "rxjs";
 import { catchError, flatMap, map, retryWhen, shareReplay, take } from "rxjs/operators";
 import { BatchSharedKeyAuthenticator } from "./batch-shared-key-authenticator";
 
-@Injectable()
+export class InvalidAccountError extends Error {
+
+}
+@Injectable({providedIn: "root"})
 export class AzureBatchHttpService extends HttpService {
     public get serviceUrl() {
         return this.batchExplorer.azureEnvironment.batchUrl;
@@ -38,7 +41,7 @@ export class AzureBatchHttpService extends HttpService {
                 } else if (account instanceof LocalBatchAccount) {
                     obs = this._setupRequestForSharedKey(account, method, url, options);
                 } else {
-                    throw new Error(`Invalid account type ${account}`);
+                    throw new InvalidAccountError(`Invalid account type ${account}`);
                 }
                 return obs.pipe(
                     flatMap((options) => {
@@ -79,7 +82,10 @@ export class AzureBatchHttpService extends HttpService {
         return from(sharedKey.signRequest(method, uri, options)).pipe(map(() => options));
     }
 
-    private _addApiVersion(uri: string, options: HttpRequestOptions): HttpRequestOptions {
+    private _addApiVersion(uri: string, options: HttpRequestOptions | null): HttpRequestOptions {
+        if (!options) {
+            options = {};
+        }
         if (!(options.params instanceof HttpParams)) {
             options.params = new HttpParams({ fromObject: options.params });
         }

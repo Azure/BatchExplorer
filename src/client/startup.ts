@@ -106,7 +106,7 @@ function secureRemoteContentLoading() {
 
     // This reject any permissions requested by remove websites(Like asking for location).
     // This should never get called as the above call shouldn't open any remote links
-    session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    session.defaultSession!.setPermissionRequestHandler((webContents, permission, callback) => {
         return callback(false);
     });
 }

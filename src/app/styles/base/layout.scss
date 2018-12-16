@@ -46,12 +46,6 @@ nav {
     width: calc(100vw - #{$navigationbar-width});
     height: calc(100vh - #{$content-top-position + $footer-height});
     overflow: hidden;
-
-    > #content-inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
 }
 
 .flex-fill {
@@ -313,13 +307,13 @@ bl-card.details {
 
 
 bl-app {
+    #content-inner > mat-sidenav-container {
+        height: 100%;
+    }
+
     .fullscreen {
         height: 100vh;
         width: 100vw;
         position: relative;
-
-        > mat-sidenav-container {
-            height: 100%;
-        }
     }
 }

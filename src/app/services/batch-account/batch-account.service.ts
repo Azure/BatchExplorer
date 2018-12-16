@@ -24,7 +24,7 @@ interface AccountFavorite {
     id: string;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class BatchAccountService implements OnDestroy {
     public accountLoaded: Observable<boolean>;
     public accounts: Observable<List<BatchAccount>>;

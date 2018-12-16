@@ -129,11 +129,11 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
     }
 
     private _pinContainer(container: BlobContainer) {
-        this.pinnedEntityService.pinFavorite(container).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(container);
-            }
-        });
+        if (this.pinnedEntityService.isFavorite(container)) {
+            return this.pinnedEntityService.unPinFavorite(container);
+        } else {
+            return this.pinnedEntityService.pinFavorite(container);
+        }
     }
 
     private _confirmDeletion(entities: BlobContainer[]) {

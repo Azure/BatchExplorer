@@ -35,7 +35,7 @@ export interface SubtaskListParams {
 export interface TaskListOptions extends ListOptionsAttributes {
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class TaskService {
     /**
      * Notify the list of a new item being added

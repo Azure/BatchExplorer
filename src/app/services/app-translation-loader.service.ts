@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { TranslationsLoaderService } from "@batch-flask/core";
 import { remote } from "electron";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AppTranslationsLoaderService extends TranslationsLoaderService {
     public translations = new Map<string, string>();
 

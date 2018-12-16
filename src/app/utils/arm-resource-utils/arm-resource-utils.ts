@@ -1,6 +1,9 @@
 import { log } from "@batch-flask/utils";
 import { ResourceDescriptor } from "app/models";
 
+export class InvalidArmResourceIdError extends Error {
+
+}
 // tslint:disable:max-line-length
 /**
  * Class for parsing and testing Batch and ARM resource ID's.
@@ -26,10 +29,25 @@ export class ArmResourceUtils {
         }
     }
 
+    /**
+     * Parse the arm resource id uri to retrieve the subscription id inside.
+     * This could also be used for any arm url depending on subscriptions
+     * @param id Arm resource id
+     */
+    public static getResourceGroupFromResourceId(id: string): string | undefined | null {
+        if (!id) { return null; }
+        try {
+            return this._resourceDescriptorParser(id).resourceGroup;
+        } catch (e) {
+            log.error("Failed to extract resource group from resource Id", { id });
+            return null;
+        }
+    }
+
     /*
      * Returns the account name from a resource id
      */
-    public static getAccountNameFromResourceId(id: string): string {
+    public static getAccountNameFromResourceId(id: string): string | null {
         if (!id) { return null; }
         try {
             return this._resourceDescriptorParser(id).resource;
@@ -106,16 +124,15 @@ export class ArmResourceUtils {
      */
     private static _resourceDescriptorParser(id: string): ResourceDescriptor {
         if (!this.isResourceId(id)) {
-            throw new Error("Invalid resource id: " + id);
+            throw new InvalidArmResourceIdError("Invalid resource id: " + id);
         }
 
         // extract the subscription id and resource group id, if available.
         let tokens = ArmResourceUtils.regExpSubscriptionAndResourceGroupExtractor.exec(id);
-        const tokensLength = tokens && tokens.length;
 
         const result = new ResourceDescriptor();
-        result.subscription = tokensLength > 1 && tokens[1] || undefined;
-        result.resourceGroup = tokensLength > 2 && tokens[2] || undefined;
+        result.subscription = tokens && tokens[1] || undefined;
+        result.resourceGroup = tokens && tokens[2] || undefined;
 
         // prefix all ids with '/providers/Microsoft.Resources'. This allows us to generically look
         // for the last '/providers' token and whatever follows (the resources) in any type of resource.
@@ -124,7 +141,7 @@ export class ArmResourceUtils {
         // extract the provider and resources. produces [ id, provider, resources ]
         tokens = ArmResourceUtils.regExpProviderExtractor.exec(id);
         if (!tokens) {
-            throw new Error("Invalid resource id: " + id);
+            throw new InvalidArmResourceIdError("Invalid resource id: " + id);
         }
 
         result.provider = tokens[1];
@@ -134,14 +151,14 @@ export class ArmResourceUtils {
         let partialType = result.provider;
         result.type = undefined;
         result.types = [];
-        result.resource = undefined;
+        result.resource = null;
         result.resources = [];
         result.resourceMap = {};
 
         // tslint:disable-next-line
         while (tokens = ArmResourceUtils.regExpResourceTypeExtractor.exec(resources)) {
             if (!tokens) {
-                throw new Error("Invalid resource id: " + id);
+                throw new InvalidArmResourceIdError("Invalid resource id: " + id);
             }
 
             result.types.push(tokens[1]);

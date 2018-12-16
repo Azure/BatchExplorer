@@ -23,7 +23,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
     private _prepend: BehaviorSubject<OrderedSet<string>> = new BehaviorSubject(OrderedSet([]));
 
     private _getter: ListGetter<TEntity, TParams>;
-    private _nextLink: ContinuationToken = null;
+    private _nextLink: ContinuationToken | null = null;
     private _lastRequest: { params: TParams, options: ListOptions };
 
     /**
@@ -40,7 +40,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
             this._itemKeys.pipe(distinctUntilChanged()),
             this._prepend.pipe(distinctUntilChanged())).pipe(
                 map(([itemKeys, prependKeys]) => {
-                    prependKeys = prependKeys.filter(x => !itemKeys.has(x)) as any;
+                    prependKeys = prependKeys.filter((x: string) => !itemKeys.has(x)) as any;
 
                     const allKeys = prependKeys.concat(itemKeys.toJS());
 
@@ -49,13 +49,16 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
                         if (this._options.maxItems) {
                             keys = allKeys.slice(0, this._options.maxItems);
                         }
-                        return List<TEntity>(keys.map((x) => {
+                        return List<TEntity>(keys.map((x: string) => {
                             const item = items.get(x);
                             if (!item && prependKeys.has(x)) {
                                 return new this._getter.type({ [this.cache.uniqueField]: x });
                             }
                             return item;
                         }).filter((item) => {
+                            if (!item) {
+                                return false;
+                            }
                             const matcher = new FilterMatcher<TEntity>();
                             if (this._options.filter && prependKeys.has(item[this.cache.uniqueField])) {
                                 return matcher.test(this._options.filter, item);
@@ -121,7 +124,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
             this._tryToLoadFromCache(forceNew);
             fetchObs = () => this._getter.fetch(this._params, this._options, true);
         } else {
-            fetchObs = () => this._getter.fetch(this._nextLink);
+            fetchObs = () => this._getter.fetch(this._nextLink!);
         }
         return this.fetchData({
             getData: fetchObs,
@@ -251,7 +254,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
     }
 
     private _retrieveKeys(items: List<TEntity>): OrderedSet<string> {
-        return OrderedSet(items.map((x => x[this.cache.uniqueField].toString())));
+        return OrderedSet(items.map(((x: TEntity) => x[this.cache.uniqueField].toString())));
     }
 
     private _handleChanges() {

@@ -1,13 +1,12 @@
 
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { AbstractListModule } from "@batch-flask/ui/abstract-list";
 import { BreadcrumbModule } from "@batch-flask/ui/breadcrumbs";
-import { ContextMenuModule } from "@batch-flask/ui/context-menu";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import {
@@ -36,14 +35,13 @@ const publicComponents = [
 
 @NgModule({
     imports: [
-        BrowserModule,
+        CommonModule,
         RouterModule,
         FocusSectionModule,
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
         LoadingModule,
-        ContextMenuModule,
         BreadcrumbModule,
         AbstractListModule,
 

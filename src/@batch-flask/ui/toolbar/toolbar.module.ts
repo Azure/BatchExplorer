@@ -1,12 +1,12 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
 import { ToolbarComponent } from "./toolbar.component";
 
 const publicComponents = [ToolbarComponent];
 const privateComponents = [];
 
 @NgModule({
-    imports: [BrowserModule],
+    imports: [CommonModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
     entryComponents: [],

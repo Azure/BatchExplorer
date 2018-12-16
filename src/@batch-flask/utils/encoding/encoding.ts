@@ -13,7 +13,7 @@ export enum Encoding {
 }
 
 export interface EncodingResult {
-    encoding: Encoding;
+    encoding: Encoding | null;
     seemsBinary: boolean;
 }
 export class EncodingUtils {
@@ -96,7 +96,7 @@ export class EncodingUtils {
         return { seemsBinary, encoding };
     }
 
-    public static detectEncodingByBOMFromBuffer(buffer: any, bytesRead: number): Encoding {
+    public static detectEncodingByBOMFromBuffer(buffer: any, bytesRead: number): Encoding | null {
         if (!buffer || bytesRead < 2) {
             return null;
         }
@@ -128,7 +128,7 @@ export class EncodingUtils {
         return null;
     }
 
-    public static async guessEncodingByBuffer(buffer): Promise<Encoding> {
+    public static async guessEncodingByBuffer(buffer): Promise<Encoding | null> {
         jschardet.Constants.MINIMUM_THRESHOLD = MINIMUM_THRESHOLD;
 
         const guessed = jschardet.detect(buffer);

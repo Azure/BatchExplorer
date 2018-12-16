@@ -73,11 +73,15 @@ export class InputColor extends ThemeElement<EntityColorDefinition> {
     @CssColor() public placeholder: string;
     @CssColor() public border: string;
     @CssColor("focus-border") public focusBorder: string;
+    @CssColor("disabled-text") public disabledText: string;
+    @CssColor("disabled-border") public disabledBorder: string;
     @CssColor("disabled-background") public disabledBackground: string;
 
     constructor(def) {
         super(def);
         this.focusBorder = this.focusBorder || this.border;
+        this.disabledBorder = this.disabledBorder || this.disabledBorder;
+        this.disabledText = this.disabledText || this.text;
         this.disabledBackground = this.disabledBackground || this.background;
     }
 }
@@ -124,6 +128,7 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor("main-background") public mainBackground: string;
     @CssColor("secondary-background") public secondaryBackground: string;
     @CssColor("card-background") public cardBackground: string;
+    @CssColor("hover-bg") public hoverBackground: string;
     @CssColor() public selection: string;
     @CssColor() public border: string;
     @CssColor() public outline: string;
@@ -139,6 +144,12 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public editor: string;
     @CssColor("chart-colors") public chartColors: ChartColors;
 
+    public isHighContrast: boolean;
+
+    constructor(data: ThemeDefinition) {
+        super(data);
+        this.isHighContrast = data.type === "high-contrast";
+    }
 }
 
 function multiply(rgb1, rgb2) {

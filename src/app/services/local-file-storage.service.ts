@@ -9,7 +9,7 @@ import { BatchExplorerService } from "./batch-explorer.service";
  * Prefer this for writing big data over LocalFileStorage
  * Each key is a different file under userData.
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class LocalFileStorage {
     private _localStorage: NodeLocalFileStorage;
 

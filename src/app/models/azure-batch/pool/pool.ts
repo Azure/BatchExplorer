@@ -147,7 +147,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
     public currentNodes: number;
 
     public readonly osName: string;
-    public readonly osType: OSType;
+    public readonly osType: OSType | null;
 
     constructor(data: Partial<PoolAttributes> = {}) {
         super(data);
@@ -160,6 +160,10 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     public get routerLink(): string[] {
         return ["/pools", this.id];
+    }
+
+    public get uid() {
+        return this.url;
     }
 }
 

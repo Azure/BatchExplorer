@@ -16,7 +16,9 @@
                 {{favorite.name || favorite.id}}
                 <i *ngIf="favorite.url === currentUrl" class="extra fa fa-check"></i>
             </span>
-            <i class="fa fa-times" (click)="removeFavorite(favorite)"></i>
+            <bl-clickable class="delete" (do)="removeFavorite(favorite)">
+                <i class="fa fa-times" ></i>
+            </bl-clickable>
         </div>
     </div>
 </bl-dropdown>

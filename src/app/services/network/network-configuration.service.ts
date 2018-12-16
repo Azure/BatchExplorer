@@ -26,7 +26,7 @@ export interface Subnet {
  * Wrapper around the http service so call the azure ARM network api.
  * Set the Authorization header and the api version
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class NetworkConfigurationService {
     constructor(private armService: ArmHttpService) {
     }

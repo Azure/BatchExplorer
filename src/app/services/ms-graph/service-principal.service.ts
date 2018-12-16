@@ -17,7 +17,7 @@ export interface ServicePrincipalParams {
 export interface ServicePrincipalCreateParams {
     appId: string;
 }
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ServicePrincipalService {
     private _getter: AADGraphEntityGetter<ServicePrincipal, ServicePrincipalParams>;
     private _listGetter: AADGraphListGetter<ServicePrincipal, ServicePrincipalListParams>;

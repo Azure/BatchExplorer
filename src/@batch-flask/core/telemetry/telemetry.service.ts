@@ -14,7 +14,7 @@ export interface TelemetryUploader {
 
 export const TELEMETRY_UPLOADER = new InjectionToken("TELEMETRY_UPLOADER");
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class TelemetryService {
 
     private _enable = false;
@@ -26,6 +26,7 @@ export class TelemetryService {
         await this._uploader.init(enabled);
     }
 
+    // tslint:disable-next-line:ban-types
     public trackError(error: Error) {
         this.trackException({ exception: error });
     }

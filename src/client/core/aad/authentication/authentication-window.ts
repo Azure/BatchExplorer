@@ -1,3 +1,4 @@
+import { SanitizedError } from "@batch-flask/utils";
 import { UniqueWindow } from "client/core/unique-window";
 import { BrowserWindow } from "electron";
 
@@ -25,30 +26,30 @@ export class AuthenticationWindow extends UniqueWindow {
 
     public loadURL(url: string) {
         if (!this._window) {
-            throw new Error("AuthenticationWindow not created. Cannot call loadURL");
+            throw new SanitizedError("AuthenticationWindow not created. Cannot call loadURL");
         }
         this._window.loadURL(url);
     }
 
     public onRedirect(callback: (newUrl: string) => void) {
-        this._window.webContents.session.webRequest.onBeforeRedirect((details) => {
+        this._window!.webContents.session.webRequest.onBeforeRedirect((details) => {
             callback(details.redirectURL);
         });
     }
 
     public onNavigate(callback: (url: string) => void) {
-        this._window.webContents.on("did-navigate", (event, url) => {
+        this._window!.webContents.on("did-navigate", (event, url) => {
             callback(url);
         });
     }
 
     public onClose(callback: () => void) {
-        this._window.on("close", (event) => {
+        this._window!.on("close", (event) => {
             callback();
         });
     }
 
     public clearCookies() {
-        this._window.webContents.session.clearStorageData({ storages: ["cookies"] });
+        this._window!.webContents.session.clearStorageData({ storages: ["cookies"] });
     }
 }

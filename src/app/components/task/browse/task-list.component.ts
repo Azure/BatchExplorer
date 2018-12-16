@@ -5,7 +5,6 @@ import {
     Input,
     OnChanges,
     OnDestroy,
-    OnInit,
     forwardRef,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
@@ -19,7 +18,7 @@ import { Task, TaskState } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 import { TaskCommands } from "../action";
 
 import { map } from "rxjs/operators";
@@ -34,7 +33,7 @@ import "./task-list.scss";
     }],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskListComponent extends ListBaseComponent implements OnInit, OnChanges, OnDestroy {
+export class TaskListComponent extends ListBaseComponent implements OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     @Input() public jobId: string;
@@ -93,10 +92,6 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnCh
         }
     }
 
-    public ngOnInit() {
-        this.data.fetchNext();
-    }
-
     public ngOnDestroy() {
         this._onTaskAddedSub.unsubscribe();
         this.data.dispose();
@@ -117,12 +112,19 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnCh
         } else {
             this.data.setOptions({ ...this._baseOptions, filter: filter });
         }
-
-        return this.data.fetchNext().pipe(map(x => x.items.size));
+        if (this.jobId) {
+            return this.data.fetchNext().pipe(map(x => x.items.size));
+        } else {
+            return of(null);
+        }
     }
 
     public onScrollToBottom(): Observable<any> {
-        return this.data.fetchNext();
+        if (this.jobId) {
+            return this.data.fetchNext();
+        } else {
+            return of(null);
+        }
     }
 
     public deleteSelection(selection: ListSelection) {

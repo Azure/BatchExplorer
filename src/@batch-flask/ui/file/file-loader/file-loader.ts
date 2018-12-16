@@ -4,7 +4,8 @@ import { CloudPathUtils, exists, log } from "@batch-flask/utils";
 import * as path from "path";
 import { BehaviorSubject, Observable, from, of } from "rxjs";
 import {
-    catchError, concatMap, distinctUntilChanged, flatMap, map, publishReplay, refCount, share, skip, take, tap,
+    catchError, concatMap, distinctUntilChanged, filter,
+    map, publishReplay, refCount, share, skip, switchMap, take, tap,
 } from "rxjs/operators";
 import { File } from "../file.model";
 
@@ -40,6 +41,10 @@ export interface FileLoadResult {
     content: string;
 }
 
+function isNotNullOrUndefined<T>(input: null | undefined | T): input is T {
+    return input != null;
+}
+
 export class FileLoader {
     public properties: Observable<File | ServerError>;
 
@@ -59,7 +64,7 @@ export class FileLoader {
     private _properties = new BehaviorSubject<File | ServerError | null>(null);
     private _propertiesGetter: PropertiesFunc;
     private _content: ContentFunc;
-    private _download: DownloadFunc;
+    private _download: DownloadFunc | undefined;
     private _logIgnoreError: number[];
 
     constructor(config: FileLoaderConfig) {
@@ -73,15 +78,16 @@ export class FileLoader {
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [];
 
         this.properties = of(null).pipe(
-            flatMap(() => this.refreshProperties()),
-            flatMap(() => this._properties),
+            switchMap(() => this.refreshProperties()),
+            switchMap(() => this._properties),
+            filter(isNotNullOrUndefined),
             distinctUntilChanged((a, b) => {
                 if (a === b) {
                     return true;
                 } else if (a instanceof ServerError || b instanceof ServerError) {
                     return false;
                 } else {
-                    return a.equals(b);
+                    return a!.equals(b!);
                 }
             }),
             publishReplay(1),
@@ -120,8 +126,8 @@ export class FileLoader {
         if (this._download) {
             const checkDirObs = from(this._fs.ensureDir(path.dirname(dest)));
             return checkDirObs.pipe(
-                flatMap(() => this._download(dest)),
-                map(x => dest),
+                switchMap(() => this._download!(dest)),
+                map(_ => dest),
                 share(),
             );
         }
@@ -143,10 +149,10 @@ export class FileLoader {
      */
     public cache(): Observable<string> {
         return this.getProperties().pipe(
-            flatMap((file: File) => {
+            switchMap((file: File) => {
                 const destination = this._getCacheDestination(file);
                 return from(this._fs.exists(destination)).pipe(
-                    flatMap((exists) => {
+                    switchMap((exists) => {
                         if (exists) {
                             return of(destination);
                         } else {

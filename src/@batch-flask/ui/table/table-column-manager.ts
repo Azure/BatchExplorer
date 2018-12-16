@@ -1,9 +1,12 @@
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { TemplateRef } from "@angular/core";
 import { ListDataPresenter, SortingInfo } from "@batch-flask/ui/abstract-list/list-data-presenter";
 import { SortDirection } from "@batch-flask/ui/abstract-list/list-data-sorter";
+import { SanitizedError, exists } from "@batch-flask/utils";
 import { Observable, Subject } from "rxjs";
 
 export interface TableColumnRef {
+    id: string;
     name: string;
     defaultWidth: number;
     minWidth: number;
@@ -18,11 +21,11 @@ export class TableColumnManager {
     public dimensionsChange = new Subject();
 
     public columnMap = new Map<string, TableColumnRef>();
-    public columnOrder = [];
-    private _columns = [];
+    public columnOrder: string[] = [];
+    private _columns: TableColumnRef[] = [];
     private _dimensions = new Map<string, number>();
 
-    constructor(private dataPresenter: ListDataPresenter) {
+    constructor(private dataPresenter: ListDataPresenter, private liveAnnouncer: LiveAnnouncer) {
         this.sorting = dataPresenter.sortingByObs;
     }
 
@@ -31,11 +34,11 @@ export class TableColumnManager {
     }
 
     public set columns(columns: TableColumnRef[]) {
-        this.columnOrder = columns.map(x => x.name);
+        this.columnOrder = columns.map((x: TableColumnRef) => x.name);
         this.columnMap.clear();
         for (const column of columns) {
             if (this.columnMap.has(column.name)) {
-                throw new Error(`bl-column name '${column.name}' must be unique`);
+                throw new SanitizedError(`bl-column name '${column.name}' must be unique`);
             }
             this.columnMap.set(column.name, column);
         }
@@ -68,7 +71,10 @@ export class TableColumnManager {
     }
 
     public getColumnWidth(name: string) {
-        return this._dimensions.get(name) || this.columnMap.get(name).defaultWidth;
+        const width = this._dimensions.get(name);
+        if (exists(width)) { return width; }
+        const column = this.columnMap.get(name);
+        return column && column.defaultWidth;
     }
 
     public getAllColumnWidth(): StringMap<number> {
@@ -90,11 +96,13 @@ export class TableColumnManager {
     }
 
     public sortBy(column: string, direction: SortDirection = SortDirection.Asc) {
+        const dirStr = direction === SortDirection.Asc ? "Ascending" : "Descending";
+        this.liveAnnouncer.announce(`Sorting by ${column} ${dirStr}`);
         this.dataPresenter.sortBy(column, direction);
     }
 
     private _computeColumns() {
-        this._columns = this.columnOrder.map(x => this.columnMap.get(x));
+        this._columns = this.columnOrder.map(x => this.columnMap.get(x)!);
     }
 
     private _setColumnWidth(name: string, width: number) {

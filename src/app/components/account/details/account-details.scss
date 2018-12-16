@@ -1,6 +1,14 @@
 @import "app/styles/variables";
 
 bl-account-details {
+
+    [summaryDetails] {
+        .label {
+            margin-right: 5px;
+            font-weight: bold;
+        }
+    }
+
     .account-cards {
         margin: 0 auto;
         text-align: justify;

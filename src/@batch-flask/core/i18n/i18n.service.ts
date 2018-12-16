@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { TranslationsLoaderService } from "@batch-flask/core/i18n/translations-loader.service";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class I18nService {
     private _translations = new Map<string, string>();
 
@@ -44,7 +44,7 @@ export class I18nService {
         }
     }
 
-    private _noTranslation(key: string, params: StringMap<string> | null) {
+    private _noTranslation(key: string, params?: StringMap<string> | null) {
         if (params) {
             const prettyParams = Object.entries(params).map(([k, v]) => `${k}:${v}`).join(", ");
             return `${key}(${prettyParams})`;

@@ -10,13 +10,15 @@ import { TaskBaseModule } from "app/components/task/base";
 import { JobBaseModule } from "./base";
 import { JobGraphsModule } from "./graphs";
 import { JobHookTaskModule } from "./job-hook-task";
+import { JobRoutingModule } from "./job-routing.module";
 
 const components = [
     JobAdvancedFilterComponent, JobHomeComponent, JobListComponent,
 ];
 
 const modules = [
-    JobActionModule, JobDetailsModule, JobHookTaskModule, JobGraphsModule, TaskBaseModule, ...commonModules,
+    JobRoutingModule, JobActionModule, JobDetailsModule,
+    JobHookTaskModule, JobGraphsModule, TaskBaseModule, ...commonModules,
 ];
 
 @NgModule({

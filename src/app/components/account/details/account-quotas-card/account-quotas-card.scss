@@ -2,21 +2,21 @@
 
 bl-account-quotas-card {
     font-size: 0; // This is needed to remove the white space between the quota inline-block
-    > div {
-        height: 50%;
-        &:not(:last-child) {
-            border-bottom: 1px solid $border-color;
-        }
-    }
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+
+    // How to show a border only in between elements
+    grid-gap: 1px;
+    background-color: $border-color;
+    height: 100%;
+
     .quota {
+        background: $card-background;
         display: inline-block;
         width: 140px;
         height: 100%;
         padding: 0;
         vertical-align: top;
-
-        &:not(:last-child) {
-            border-right: 1px solid $border-color;
-        }
     }
 }

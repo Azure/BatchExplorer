@@ -3,6 +3,7 @@ import {
     ContinuationToken,
     DataCache,
     EntityView,
+    HttpCode,
     ListOptionsAttributes,
     ListResponse,
     ListView,
@@ -13,8 +14,8 @@ import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } fr
 import { ModelUtils } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
-import { Observable, Subject } from "rxjs";
-import { map } from "rxjs/operators";
+import { Observable, Subject, of, throwError } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 
 export interface PoolListParams { }
@@ -23,7 +24,7 @@ export interface PoolParams {
     id?: string;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PoolService {
     /**
      * Triggered only when a pool is added through this app.
@@ -51,6 +52,19 @@ export class PoolService {
 
     public get basicProperties(): string {
         return this._basicProperties;
+    }
+
+    public exist(params: PoolParams): Observable<boolean> {
+        return this.http.head(`/pools/${params.id}`).pipe(
+            map(_ => true),
+            catchError((error: ServerError) => {
+                if (error.status === HttpCode.NotFound) {
+                    return of(false);
+                } else {
+                    return throwError(error);
+                }
+            }),
+        );
     }
 
     public add(pool: PoolCreateDto, options: any = {}): Observable<any> {

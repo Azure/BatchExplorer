@@ -29,18 +29,21 @@ import {
     PoolResizeDialogComponent,
     PoolScalePickerComponent,
     VmSizePickerComponent,
+    VmSizePickerFilterComponent,
 } from "app/components/pool/action";
+import { PoolRoutingModule } from "./pool-routing.module";
 
 const components = [
     AppLicensePickerComponent, CertificatePickerComponent,
     ContainerConfigurationPickerComponent, ContaienrImagesPickerComponent, ContainerRegistryPickerComponent,
     DeallocationOptionPickerComponent, DeletePoolDialogComponent, LicenseEulaDialogComponent, OsOfferTileComponent,
     PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent, PoolHomeComponent, PoolListComponent,
-    PoolOsPickerComponent, PoolScalePickerComponent, VmSizePickerComponent, PoolResizeDialogComponent,
-    CustomImagePickerComponent,
+    PoolOsPickerComponent, PoolScalePickerComponent, VmSizePickerComponent, VmSizePickerFilterComponent,
+    PoolResizeDialogComponent, CustomImagePickerComponent,
 ];
 
 const modules = [
+    PoolRoutingModule,
     AutoScaleFormulaPickerModule, PoolBaseModule, PoolDetailsModule, NetworkConfigurationModule, PoolGraphsModule,
     StartTaskModule, UserAccountModule,
     TaskBaseModule, ...commonModules,

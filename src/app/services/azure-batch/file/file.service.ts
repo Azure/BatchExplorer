@@ -19,7 +19,7 @@ import { EncodingUtils, exists } from "@batch-flask/utils";
 import * as fs from "fs";
 import * as path from "path";
 import { Observable, from } from "rxjs";
-import { flatMap, map, share } from "rxjs/operators";
+import { flatMap, map, share, switchMap } from "rxjs/operators";
 import { AzureBatchHttpService } from "../core";
 
 export interface NodeFileListParams {
@@ -40,9 +40,13 @@ export interface TaskFileParams extends TaskFileListParams {
     name: string;
 }
 
+export interface FileContentOptions {
+    rangeStart?: number | null;
+    rangeEnd?: number | null;
+}
+
 export interface FileContentResult {
     content: string;
-    result: any;
 }
 
 export interface NaviagateNodeFileConfig {
@@ -62,7 +66,7 @@ export const fileIgnoredErrors = [
     HttpCode.Conflict,
 ];
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class FileService {
     private _basicProperties: string = "name, url";
     private _nodeFilecache = new TargetedDataCache<NodeFileListParams, File>({
@@ -109,7 +113,7 @@ export class FileService {
         this._taskFileListGetter = new BasicListGetter(File, {
             cache: (params) => this.getTaskFileCache(params),
             supplyData: (params, options, nextLink) => {
-                const uri = `/jobs/${params.jobId}/tasks/${params.taskId}/files`;
+                const uri = nextLink || `/jobs/${params.jobId}/tasks/${params.taskId}/files`;
                 return this._listFiles(uri, options, nextLink);
             },
             logIgnoreError: fileIgnoredErrors,
@@ -118,7 +122,7 @@ export class FileService {
         this._nodeFileListGetter = new BasicListGetter(File, {
             cache: (params) => this.getNodeFileCache(params),
             supplyData: (params, options, nextLink) => {
-                const uri = `/pools/${params.poolId}/nodes/${params.nodeId}/files`;
+                const uri = nextLink || `/pools/${params.poolId}/nodes/${params.nodeId}/files`;
                 return this._listFiles(uri, options, nextLink);
             },
             logIgnoreError: fileIgnoredErrors,
@@ -197,12 +201,7 @@ export class FileService {
                 return this.getFilePropertiesFromComputeNode(poolId, nodeId, filename);
             },
             content: (options) => {
-                let ocpRange = "";
-                if (exists(options.rangeStart) && exists(options.rangeEnd)) {
-                    ocpRange = `bytes=${options.rangeStart}-${options.rangeEnd}`;
-                }
-                const batchOptions = { fileGetFromComputeNodeOptions: { ocpRange } };
-                return this.getComputeNodeFile(poolId, nodeId, filename, batchOptions);
+                return this.getComputeNodeFile(poolId, nodeId, filename, options);
             },
             download: (dest: string) => {
                 return this.downloadFromNode(poolId, nodeId, filename, dest);
@@ -228,12 +227,7 @@ export class FileService {
                 return this.getFilePropertiesFromTask(jobId, taskId, filename);
             },
             content: (options) => {
-                let ocpRange = "";
-                if (exists(options.rangeStart) && exists(options.rangeEnd)) {
-                    ocpRange = `bytes=${options.rangeStart}-${options.rangeEnd}`;
-                }
-                const batchOptions = { fileGetFromTaskOptions: { ocpRange } };
-                return this.getTaskFile(jobId, taskId, filename, batchOptions);
+                return this.getTaskFile(jobId, taskId, filename, options);
             },
             download: (dest: string) => {
                 return this.downloadFromTask(jobId, taskId, filename, dest);
@@ -258,13 +252,14 @@ export class FileService {
         return this._download(`/jobs/${jobId}/tasks/${taskId}/files/${filename}`, dest);
 
     }
-    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options) {
+    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: FileContentOptions) {
         filename = encodeURIComponent(filename);
-        return this._getContent(`/pools/${poolId}/nodes/${nodeId}/files/${filename}`);
+        return this._getContent(`/pools/${poolId}/nodes/${nodeId}/files/${filename}`, options);
     }
-    public getTaskFile(jobId: string, taskId: string, filename: string, options) {
+
+    public getTaskFile(jobId: string, taskId: string, filename: string, options?: FileContentOptions) {
         filename = encodeURIComponent(filename);
-        return this._getContent(`/jobs/${jobId}/tasks/${taskId}/files/${filename}`);
+        return this._getContent(`/jobs/${jobId}/tasks/${taskId}/files/${filename}`, options);
     }
 
     private _download(uri: string, dest: string) {
@@ -289,20 +284,34 @@ export class FileService {
             reader.onerror = (error) => {
                 reject(error);
             };
-            reader.readAsArrayBuffer(response.body);
+            reader.readAsArrayBuffer(response.body as any);
         });
     }
 
-    private _getContent(uri: string): Observable<{ content: string }> {
-        return this.http.get(uri, { observe: "response", responseType: "arraybuffer" }).pipe(
-            flatMap((response) => from(this._readContent(response))),
+    private _getContent(uri: string, options?: FileContentOptions): Observable<FileContentResult> {
+        const httpOptions: HttpRequestOptions<"response", "arraybuffer"> = {
+            observe: "response",
+            responseType: "arraybuffer",
+        };
+
+        if (options) {
+            if (exists(options.rangeStart) && exists(options.rangeEnd)) {
+                httpOptions.headers = new HttpHeaders()
+                    .set("ocp-range", `bytes=${options.rangeStart}-${options.rangeEnd}`);
+            }
+        }
+
+        return this.http.get(uri, httpOptions).pipe(
+            switchMap((response) => from(this._readContent(response))),
             share(),
         );
     }
 
-    private async _readContent(response: HttpResponse<ArrayBuffer>): Promise<{ content: string }> {
+    private async _readContent(response: HttpResponse<ArrayBuffer>): Promise<FileContentResult> {
         const buffer = response.body;
-
+        if (!buffer) {
+            return { content: "" };
+        }
         const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
             buffer: Buffer.from(buffer),
             bytesRead: buffer.byteLength,
@@ -311,7 +320,7 @@ export class FileService {
     }
 
     private _parseHeadersToFile(headers: HttpHeaders, filename: string) {
-        const contentLength = parseInt(headers.get("content-length"), 10);
+        const contentLength = parseInt(headers.get("content-length") || "0", 10);
         return {
             name: filename,
             isDirectory: headers.get("ocp-batch-file-isdirectory") === "True",
@@ -319,25 +328,25 @@ export class FileService {
             properties: {
                 contentLength: isNaN(contentLength) ? 0 : contentLength,
                 contentType: headers.get("content-type"),
-                creationTime: new Date(headers.get("ocp-creation-time")),
-                lastModified: new Date(headers.get("last-modified")),
+                creationTime: headers.has("ocp-creation-time") ? new Date(headers.get("ocp-creation-time")!) : null,
+                lastModified: headers.has("last-modified") ? new Date(headers.get("last-modified")!) : null,
             },
         };
     }
 
-    private _listFiles(uri: string, options: ListOptions, nextLink) {
-        let httpOptions: HttpRequestOptions = null;
+    private _listFiles(uri: string, options: ListOptions | null, nextLink) {
+        let httpOptions: HttpRequestOptions | undefined;
         if (nextLink) {
             uri = nextLink;
         } else {
             const query: any = {};
-            if (options.original.folder) {
+            if (options && options.original.folder) {
                 query["$filter"] = `startswith(name, '${options.original.folder}')`;
             }
-            if (options.original.limit) {
+            if (options && options.original.limit) {
                 query["maxresults"] = options.original.limit;
             }
-            query.recursive = Boolean(options.original.recursive);
+            query.recursive = Boolean(options && options.original.recursive);
             httpOptions = { params: new HttpParams({ fromObject: query }) };
         }
         return this.http.get<any>(uri, httpOptions).pipe(

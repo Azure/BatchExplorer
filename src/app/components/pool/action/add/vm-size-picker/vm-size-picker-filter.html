@@ -1,0 +1,9 @@
+<div [formGroup]="form" class="vmsize-filters">
+    <bl-select formControlName="category">
+        <bl-option *ngFor="let category of categoriesDisplayName | keyvalue; trackBy: trackByCategory"
+            [value]="category.key"
+            [label]="category.value">
+        </bl-option>
+    </bl-select>
+    <input blInput formControlName="searchName" class="search-input" [placeholder]="'Search by name'" />
+</div>

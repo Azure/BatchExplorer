@@ -102,7 +102,7 @@ function extractCustomDetails(rec) {
     const skip = new Set(["name", "hostname", "pid", "level", "component", "msg",
         "time", "v", "src", "err", "client_req", "client_res", "req", "res"]);
 
-    const details = [];
+    const details: string[] = [];
     const extras = {};
 
     for (const key of Object.keys(rec)) {
@@ -176,7 +176,7 @@ export class PrettyStream extends Stream {
     }
 
     private formatRecord(rec) {
-        let details = [];
+        let details: string[] = [];
         let extras = [];
 
         const time = extractTime(rec);

@@ -15,7 +15,7 @@ describe("EntityView", () => {
     let getter: EntityGetter<FakeModel, FakeParams>;
 
     let view: EntityView<FakeModel, FakeParams>;
-    let item: FakeModel;
+    let item: FakeModel | null;
 
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
@@ -43,7 +43,7 @@ describe("EntityView", () => {
         view.fetch();
         tick();
         expect(dataSpy).toHaveBeenCalledTimes(1);
-        expect(item.toJS()).toEqual(data[0]);
+        expect(item!.toJS()).toEqual(data[0]);
         expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
     }));
 
@@ -53,25 +53,25 @@ describe("EntityView", () => {
         view.item.subscribe(x => item = x);
         view.fetch();
         expect(item).not.toBeFalsy();
-        expect(item.toJS()).toEqual({ id: "1", state: "creating", name: "Fake1" });
+        expect(item!.toJS()).toEqual({ id: "1", state: "creating", name: "Fake1" });
 
         tick(); // This should be the return from the fetched data
-        expect(item.toJS()).toEqual(data[0]);
+        expect(item!.toJS()).toEqual(data[0]);
     }));
 
     it("Update the data when refreshing", fakeAsync(() => {
         view.item.subscribe(x => item = x);
         view.fetch();
         tick();
-        expect(item.toJS()).toEqual(data[0]);
+        expect(item!.toJS()).toEqual(data[0]);
 
         view.refresh();
         tick();
-        expect(item.toJS()).toEqual(data[1]);
+        expect(item!.toJS()).toEqual(data[1]);
 
         view.refresh();
         tick();
-        expect(item.toJS()).toEqual(data[2]);
+        expect(item!.toJS()).toEqual(data[2]);
         expect(dataSpy).toHaveBeenCalledTimes(3);
     }));
 
@@ -80,7 +80,7 @@ describe("EntityView", () => {
         view.params = { id: "2" };
         view.fetch();
         tick();
-        expect(item.toJS()).toEqual(data[0]);
+        expect(item!.toJS()).toEqual(data[0]);
         expect(dataSpy).toHaveBeenCalledWith({ id: "2" });
     }));
 
@@ -89,7 +89,7 @@ describe("EntityView", () => {
         view.params = { id: "2" };
         view.fetch();
         tick();
-        expect(item.toJS()).toEqual(data[0]);
+        expect(item!.toJS()).toEqual(data[0]);
         expect(dataSpy).toHaveBeenCalledWith({ id: "2" });
     }));
 
@@ -97,19 +97,19 @@ describe("EntityView", () => {
         view.item.subscribe(x => item = x);
         view.fetch();
         tick();
-        expect(item.toJS()).toEqual(data[0]);
+        expect(item!.toJS()).toEqual(data[0]);
         expect(item).toEqualImmutable(new FakeModel(data[0]));
         expect(dataSpy).toHaveBeenCalledTimes(1);
         expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
 
         cache.addItem(new FakeModel(data[2]));
         tick();
-        expect(item.toJS()).toEqual(data[2]);
+        expect(item!.toJS()).toEqual(data[2]);
     }));
 
     describe("When it return a 404 error", () => {
-        let item: FakeModel;
-        let deleted: string;
+        let item: FakeModel | null;
+        let deleted: string | null;
 
         beforeEach(() => {
             item = null;
@@ -149,7 +149,7 @@ describe("EntityView", () => {
             view.deleted.subscribe((x) => deleted = x);
             view.fetch();
             tick();
-            expect(item).toBeUndefined();
+            expect(item).toBeNull();
             expect(deleted).toBe(null);
         }));
 

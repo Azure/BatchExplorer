@@ -5,18 +5,21 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { LoadingStatus } from "@batch-flask/ui";
-import { StringUtils, exists, prettyBytes } from "@batch-flask/utils";
+import { exists, prettyBytes } from "@batch-flask/utils";
 import { VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 
 import { TableConfig } from "@batch-flask/ui/table";
+import { distinctUntilChanged, takeUntil } from "rxjs/operators";
+import { VmSizeFilterValue } from "./vm-size-picker-filter.component";
 import "./vm-size-picker.scss";
 
 const categoriesDisplayName = {
+    all: "All",
     standard: "General purpose",
     compute: "Compute optimized",
     memory: "Memory optimized",
@@ -37,7 +40,7 @@ export class VmSizeDecorator {
 
     constructor(public vmSize: VmSize, prices: OSPricing) {
         this.id = vmSize.id;
-        this.title = this.prettyTitle(vmSize.name);
+        this.title = vmSize.name;
         this.prettyCores = this.prettyMb(vmSize.numberOfCores);
         this.prettyRAM = this.prettyMb(vmSize.memoryInMB);
         this.prettyOSDiskSize = this.prettyMb(vmSize.osDiskSizeInMB);
@@ -55,10 +58,6 @@ export class VmSizeDecorator {
     public prettyMb(megaBytes: number) {
         return prettyBytes(megaBytes * 1000 * 1000, 0);
     }
-
-    public prettyTitle(vmSize: string) {
-        return vmSize.replace(/_/g, " ");
-    }
 }
 
 @Component({
@@ -71,16 +70,19 @@ export class VmSizeDecorator {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
+    public LoadingStatus = LoadingStatus;
+
     @Input() public osSource: PoolOsSources;
 
     @Input() public osType: "linux" | "windows";
 
     public pickedSize: string;
-
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
     public categoryNames: string[];
-    public categories: StringMap<VmSizeDecorator[]>;
+    public filteredCategories: VmSizeDecorator[];
     public prices: OSPricing = null;
+    public categoriesDisplayName = categoriesDisplayName;
+    public basicInput = new FormControl();
 
     public tableConfig: TableConfig = {
         sorting: {
@@ -93,20 +95,32 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     };
 
     private _propagateChange: (value: string) => void = null;
-    private _categories: StringMap<string[]> = {};
+    private _categoryRegex: StringMap<string[]>;
     private _vmSizes: List<VmSize> = List([]);
     private _sizeSub: Subscription;
-    private _categorySub: Subscription;
+    private _destroy = new Subject();
+    private _currentFilter: VmSizeFilterValue = { category: "all" };
 
     constructor(
+        public vmSizeService: VmSizeService,
         private changeDetector: ChangeDetectorRef,
-        private vmSizeService: VmSizeService,
         private pricingService: PricingService) {
+
+        this.basicInput.valueChanges.pipe(
+            takeUntil(this._destroy),
+            distinctUntilChanged(),
+        ).subscribe((value) => {
+            if (this._propagateChange) {
+                this._propagateChange(value);
+            }
+        });
     }
 
     public ngOnInit() {
-        this._categorySub = this.vmSizeService.vmSizeCategories.subscribe((categories) => {
-            this._categories = categories;
+        this.vmSizeService.vmSizeCategories.pipe(
+            takeUntil(this._destroy),
+        ).subscribe((categories) => {
+            this._categoryRegex = categories;
             this._categorizeSizes();
         });
         this._loadPrices();
@@ -124,7 +138,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
                 sizes = this.vmSizeService.cloudServiceSizes;
             }
             this.loadingStatus = LoadingStatus.Loading;
-            this._sizeSub = sizes.subscribe(x => {
+            this._sizeSub = sizes.subscribe((x) => {
                 this._vmSizes = x;
                 this._categorizeSizes();
             });
@@ -136,17 +150,16 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     }
 
     public ngOnDestroy() {
-        if (this._sizeSub) {
-            this._sizeSub.unsubscribe();
-        }
-        this._categorySub.unsubscribe();
+        this._destroy.next();
+        this._destroy.unsubscribe();
     }
 
-    public writeValue(value: any) {
+    public writeValue(value: string) {
         this.pickedSize = value;
+        this.basicInput.setValue(value);
     }
 
-    public registerOnChange(fn) {
+    public registerOnChange(fn: (value: string) => void) {
         this._propagateChange = fn;
     }
 
@@ -158,6 +171,11 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         return null;
     }
 
+    public onFilterChange(filter: VmSizeFilterValue) {
+        this._currentFilter = filter;
+        this._categorizeSizes();
+    }
+
     public pickSize(size: string) {
         if (size === this.pickedSize) { return; }
         this.pickedSize = size;
@@ -166,66 +184,45 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         }
     }
 
-    public categoryLabelName(categoryName: string) {
-        let count = 0;
-        let name = categoryName;
-        if (categoryName in this.categories) {
-            count = this.categories[categoryName].length;
-        }
-        if (categoryName in categoriesDisplayName) {
-            name = categoriesDisplayName[categoryName];
-        }
-        return `${name} (${count})`;
-    }
-
-    public trackCategory(index, category: string) {
-        return category;
-    }
-
     public trackVmSize(index, size: VmSizeDecorator) {
         return size.vmSize.id;
     }
 
     private _categorizeSizes() {
-        if (!this._vmSizes) { return; }
         this.loadingStatus = LoadingStatus.Ready;
-        let remainingSizes = this._vmSizes.toArray();
-        const categories = {};
-        for (const category of Object.keys(this._categories)) {
-            const { match, remain } = this._getSizeForCategory(remainingSizes, this._categories[category]);
-            remainingSizes = remain;
-            categories[category] = match.map(x => new VmSizeDecorator(x, this.prices));
+        if (!this._vmSizes) {
+            this.filteredCategories = null;
+            this.changeDetector.markForCheck();
+            return;
         }
-        categories["Other"] = remainingSizes.map(x => new VmSizeDecorator(x, this.prices));
-        this.categories = categories;
-
-        // Move standard to the first position
-        const names = ["standard"].concat(Object.keys(categories).filter(x => x !== "standard"));
-        this.categoryNames = names.filter(x => categories[x] && categories[x].length > 0);
+        let vmSizes = this._vmSizes.toArray();
+        if (this._currentFilter && this._categoryRegex) {
+            if (this._currentFilter.category && (this._currentFilter.category in this._categoryRegex)) {
+                vmSizes = vmSizes.filter(vmSize => {
+                    return this._filterByCategory(vmSize, this._categoryRegex[this._currentFilter.category]);
+                });
+            }
+            if (this._currentFilter.searchName) {
+                vmSizes = vmSizes.filter(vmSize => {
+                    return this._filterBySearchName(vmSize, this._currentFilter.searchName);
+                });
+            }
+        }
+        this.filteredCategories = vmSizes.map(x => new VmSizeDecorator(x, this.prices));
         this.changeDetector.markForCheck();
     }
 
-    private _getSizeForCategory(sizes: VmSize[], patterns: string[]) {
-        const match = [];
-        const remain = [];
-
-        for (const size of sizes) {
-            if (this._sizeMatchPattern(size, patterns)) {
-                match.push(size);
-            } else {
-                remain.push(size);
-            }
-        }
-        return { match, remain };
-    }
-
-    private _sizeMatchPattern(size: VmSize, patterns: string[]) {
+    private _filterByCategory(size: VmSize, patterns: string[]) {
         for (const pattern of patterns) {
-            if (StringUtils.matchWildcard(size.name, pattern)) {
+            if (new RegExp(pattern).test(size.name.toLowerCase())) {
                 return true;
             }
         }
         return false;
+    }
+
+    private _filterBySearchName(size: VmSize, searchName: string) {
+        return size.name.toLowerCase().includes(searchName.toLowerCase());
     }
 
     private _loadPrices() {

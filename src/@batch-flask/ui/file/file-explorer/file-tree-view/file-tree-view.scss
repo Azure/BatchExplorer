@@ -27,7 +27,7 @@ bl-file-tree-view {
         color: $secondary-text;
 
         &:hover {
-            color: $selection-color;
+            color: $hover-bg-color;
         }
     }
 

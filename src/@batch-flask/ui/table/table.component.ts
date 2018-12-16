@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import {
     AfterContentInit, ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -47,11 +48,12 @@ export interface TableConfig extends AbstractListBaseConfig {
     hideHeader?: boolean;
 }
 
-export const tableDefaultConfig = {
+export const tableDefaultConfig: Required<TableConfig> = {
     ...abstractListDefaultConfig,
     showCheckbox: false,
     droppable: false,
     resizableColumn: true,
+    hideHeader: false,
 };
 
 export interface DropEvent {
@@ -88,6 +90,8 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     // Aria
     // https://www.w3.org/TR/wai-aria-practices/examples/grid/dataGrids.html
     @HostBinding("attr.role") public readonly role = "grid";
+    @HostBinding("attr.aria-readonly") public readonly ariaReadonly = true;
+    @HostBinding("attr.aria-multiselectable") public readonly ariaMultiSelectable = true;
     @HostBinding("attr.aria-rowcount") public get ariaRowCount() {
         return this.items.length;
     }
@@ -95,11 +99,11 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         return this.columnManager.columns.length;
     }
 
-    public dropTargetRowKey: string = null;
+    public dropTargetRowKey: string | null = null;
 
     public columnManager: TableColumnManager;
 
-    protected _config: TableConfig = tableDefaultConfig;
+    protected _config: Required<TableConfig> = tableDefaultConfig;
 
     /**
      * To enable keyboard navigation in the list it must be inside a focus section
@@ -109,10 +113,11 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         changeDetection: ChangeDetectorRef,
         router: Router,
         elementRef: ElementRef,
+        liveAnnouncer: LiveAnnouncer,
         breadcrumbService: BreadcrumbService) {
         super(contextmenuService, router, breadcrumbService, elementRef, changeDetection);
 
-        this.columnManager = new TableColumnManager(this.dataPresenter);
+        this.columnManager = new TableColumnManager(this.dataPresenter, liveAnnouncer);
     }
 
     public ngAfterContentInit() {
@@ -127,7 +132,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
 
     @HostListener("dragover", ["$event"])
     public handleDragHover(event: DragEvent) {
-        DragUtils.allowDrop(event, this.config.droppable);
+        DragUtils.allowDrop(event, this._config.droppable);
     }
 
     public updateColumns() {
@@ -165,6 +170,6 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.dropTargetRowKey = null;
         this.isDraging = 0;
 
-        this.dropOnRow.emit({ key: item.id, data: event.dataTransfer });
+        this.dropOnRow.emit({ key: item.id, data: event.dataTransfer! });
     }
 }

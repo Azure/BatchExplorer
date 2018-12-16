@@ -1,4 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
+import { I18nService } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/electron";
 import {
     COMMAND_LABEL_ICON, EntityCommand, EntityCommands, FileSystemService, Permission, SidebarManager,
@@ -23,6 +24,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         injector: Injector,
         private fs: FileSystemService,
         private remote: ElectronRemote,
+        private i18n: I18nService,
         private jobScheduleService: JobScheduleService,
         private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
@@ -45,12 +47,12 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         return this.jobScheduleService.getFromCache(jobScheduleId);
     }
 
-    private _pinJobSchedule(jobSchedule: JobSchedule) {
-        this.pinnedEntityService.pinFavorite(jobSchedule).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(jobSchedule);
-            }
-        });
+    private _pinJobSchedule(job: JobSchedule) {
+        if (this.pinnedEntityService.isFavorite(job)) {
+            return this.pinnedEntityService.unPinFavorite(job);
+        } else {
+            return this.pinnedEntityService.pinFavorite(job);
+        }
     }
 
     private _buildCommands() {
@@ -74,7 +76,8 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
 
         this.terminate = this.simpleCommand({
             name: "terminate",
-            ...COMMAND_LABEL_ICON.Terminate,
+            label: this.i18n.t("task-commands.terminate"),
+            icon: "fa fa-stop",
             action: (jobSchedule) => this.jobScheduleService.terminate(jobSchedule.id),
             enabled: (jobSchedule) => jobSchedule.state !== JobScheduleState.completed,
             permission: Permission.Write,

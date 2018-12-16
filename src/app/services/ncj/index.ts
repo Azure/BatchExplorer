@@ -1,2 +1,2 @@
 export * from "./local-template.service";
-export * from "./ncj.module";
+export * from "./portfolio/portfolio.service";

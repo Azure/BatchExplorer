@@ -1,4 +1,4 @@
-import { nil } from "@batch-flask/utils";
+import { SanitizedError, nil } from "@batch-flask/utils";
 
 const primitives = new Set(["Array", "Number", "String", "Object", "Boolean"]);
 
@@ -12,7 +12,7 @@ function metadataForDto<T>(dto: Dto<T>) {
  * It will only assign defined attributes.
  */
 export class Dto<T> {
-    constructor(data: AttrOf<T>) {
+    constructor(data: Partial<AttrOf<T>>) {
         const attrs = metadataForDto(this);
         for (const key of Object.keys(attrs)) {
             const typeMetadata = attrs[key];
@@ -42,7 +42,7 @@ export class Dto<T> {
     }
 
     public merge?(other: this): this {
-        const data = { ...(this.toJS() as any), ...(other.toJS() as any) };
+        const data = { ...(this.toJS!() as any), ...(other.toJS!() as any) };
         return new (this.constructor as any)(data);
     }
 
@@ -74,7 +74,7 @@ export function DtoAttr<T>(type?: any) {
             type = Reflect.getMetadata("design:type", target, attr);
         }
         if (!type) {
-            throw new Error(`Cannot retrieve the type for DtoAttr ${target.constructor.name}#${attr}`
+            throw new SanitizedError(`Cannot retrieve the type for DtoAttr ${target.constructor.name}#${attr}`
                 + "Check your nested type is defined in another file or above this DtoAttr");
         }
         const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};

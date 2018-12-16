@@ -31,7 +31,7 @@ const storageIgnoredErrors = [
     HttpCode.Conflict,
 ];
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class StorageContainerService {
     /**
      * Triggered only when a file group is added through this app.

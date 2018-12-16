@@ -9,7 +9,7 @@ export const AUTO_UPDATE_MAIN_SERVICE_TOKEN = "AUTO_UPDATE_SERVICE";
 
 export const AUTO_UPDATE_CHECK_INTERVAL = 3600_000; // Every hour
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AutoUpdateMainService extends AutoUpdateService implements OnDestroy {
 
     public set autoInstallOnAppQuit(value: boolean) {
@@ -24,7 +24,7 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
     public disabled: boolean = false;
     private _status = new BehaviorSubject(UpdateStatus.Checking);
     private _autoCheckSub: Subscription;
-    private _downloadProgress = new BehaviorSubject<ProgressInfo>(null);
+    private _downloadProgress = new BehaviorSubject<ProgressInfo | null>(null);
 
     constructor() {
         super();
@@ -77,7 +77,7 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
     }
 
     public async checkForUpdates(): Promise<UpdateCheckResult | null> {
-        if (this.disabled) { return; }
+        if (this.disabled) { return null; }
         const info = await autoUpdater.checkForUpdates();
         return this._status.value === UpdateStatus.Ready ? info : null;
     }

@@ -1,16 +1,12 @@
-<div>
-    <div class="quota">
-        <bl-quota-display label="Pools quota" [use]="use.pools" [quota]="quotas.pools"></bl-quota-display>
-    </div>
-    <div class="quota">
-        <bl-quota-display label="Jobs quota" [use]="use.jobs" [quota]="quotas.jobs"></bl-quota-display>
-    </div>
+<div class="quota">
+    <bl-quota-display label="Pools quota" [use]="use.pools" [quota]="quotas.pools"></bl-quota-display>
 </div>
-<div>
-    <div class="quota">
-        <bl-quota-display label="Dedicated cores quota" [use]="use.dedicatedCores" [quota]="quotas.dedicatedCores"></bl-quota-display>
-    </div>
-    <div class="quota" title="Low priority nodes only work with pools allocated with the Batch Service">
-        <bl-quota-display label="Low priority cores quota" [use]="use.lowpriCores" [quota]="quotas.lowpriCores"></bl-quota-display>
-    </div>
+<div class="quota">
+    <bl-quota-display label="Jobs quota" [use]="use.jobs" [quota]="quotas.jobs"></bl-quota-display>
+</div>
+<div class="quota">
+    <bl-quota-display label="Dedicated cores quota" [use]="use.dedicatedCores" [quota]="quotas.dedicatedCores"></bl-quota-display>
+</div>
+<div class="quota" title="Low priority nodes only work with pools allocated with the Batch Service">
+    <bl-quota-display label="Low priority cores quota" [use]="use.lowpriCores" [quota]="quotas.lowpriCores"></bl-quota-display>
 </div>

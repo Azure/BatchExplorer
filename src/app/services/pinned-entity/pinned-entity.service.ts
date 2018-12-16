@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, of } from "rxjs";
+import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
 
 import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import {
-    BatchApplication, BlobContainer, Certificate, Job, JobSchedule, Pool,
+    BatchAccount, BatchApplication, BlobContainer, Certificate, Job, JobSchedule, Pool,
 } from "app/models";
-import { map, share } from "rxjs/operators";
+import { map, share, switchMap, take, takeUntil } from "rxjs/operators";
 import { BatchAccountService } from "../batch-account";
 import { LocalFileStorage } from "../local-file-storage.service";
 
@@ -18,30 +18,45 @@ pinnedTypeMap.set(PinnedEntityType.JobSchedule, JobSchedule);
 pinnedTypeMap.set(PinnedEntityType.Certificate, Certificate);
 pinnedTypeMap.set(PinnedEntityType.StorageContainer, BlobContainer);
 
-@Injectable()
-export class PinnedEntityService {
+const filename = "data/pinned-entities";
+@Injectable({providedIn: "root"})
+export class PinnedEntityService implements OnDestroy {
     public loaded: Observable<boolean>;
-    public favourites: Observable<List<PinnableEntity>>;
 
-    private _pinnedFavouritesJsonFileName: string = "pinned";
-    private _favorites: BehaviorSubject<List<PinnableEntity>> = new BehaviorSubject(List([]));
+    /**
+     * List of favourties for the currently selected Batch Account
+     */
+    public favorites: Observable<List<PinnableEntity>>;
+    public _currentAccount: BatchAccount;
+
+    private _favorites: BehaviorSubject<Map<string, Map<string, PinnableEntity>>> = new BehaviorSubject(new Map());
     private _loaded = new BehaviorSubject<boolean>(false);
-    private _currentAccountEndpoint: string = "";
+    private _destroy = new Subject();
 
     constructor(
         private localFileStorage: LocalFileStorage,
         private accountService: BatchAccountService) {
 
         this.loaded = this._loaded.asObservable();
-        this.accountService.currentAccount.subscribe((account) => {
-            this._currentAccountEndpoint = account.url;
-            this._favorites.next(List<PinnableEntity>());
-            this._loadInitialData();
+        this._loadInitialData();
+
+        this.accountService.currentAccount.pipe(takeUntil(this._destroy)).subscribe((account) => {
+            this._currentAccount = account;
         });
+        this.favorites = combineLatest(this.accountService.currentAccount, this._favorites).pipe(
+            takeUntil(this._destroy),
+            map(([account, favorites]) => {
+                const map = favorites.get(account.id);
+                return List(map ? map.values() : []);
+            }),
+        );
     }
 
-    public get favorites(): Observable<List<PinnableEntity>> {
-        return this._favorites.asObservable();
+    public ngOnDestroy() {
+        this._destroy.next();
+        this._destroy.complete();
+        this._favorites.complete();
+        this._loaded.complete();
     }
 
     public pinFavorite(entity: NavigableRecord): Observable<any> {
@@ -49,39 +64,48 @@ export class PinnedEntityService {
             return of(true);
         }
 
-        const subject = new AsyncSubject();
         const favourite: PinnableEntity = {
             id: entity.id,
             name: entity.name,
             routerLink: entity.routerLink,
             pinnableType: this.getEntityType(entity),
-            url: this._fudgeArmUrl(entity),
+            uid: entity.uid,
         };
 
-        this._favorites.next(this._favorites.getValue().push(favourite));
-        this._saveAccountFavorites().subscribe({
-            next: (favourite) => {
-                subject.complete();
-            }, error: (e) => {
-                subject.error(e);
-            },
-        });
-
-        return subject.asObservable();
+        return this.accountService.currentAccount.pipe(
+            take(1),
+            switchMap((account) => {
+                const map = this._favorites.value;
+                const perAccount = map.get(account.id) || new Map();
+                perAccount.set(favourite.uid, favourite);
+                map.set(account.id, perAccount);
+                this._favorites.next(map);
+                return this._saveAccountFavorites();
+            }),
+        );
     }
 
-    public unPinFavorite(entity: NavigableRecord | PinnableEntity) {
+    public unPinFavorite(entity: NavigableRecord | PinnableEntity): Observable<any> {
         if (!this.isFavorite(entity)) {
-            return;
+            return of(null);
         }
 
-        const url = this._fudgeArmUrl(entity);
-        const newFavorites = this._favorites.getValue().filter(pinned => pinned.url !== url);
-        this._favorites.next(List<PinnableEntity>(newFavorites));
-        this._saveAccountFavorites();
+        return this.accountService.currentAccount.pipe(
+            take(1),
+            switchMap((account) => {
+                const map = this._favorites.value;
+                if (map.has(account.id)) {
+                    const perAccount = map.get(account.id);
+                    perAccount!.delete(entity.uid);
+                    this._favorites.next(map);
+                }
+                return this._saveAccountFavorites();
+            }),
+            share(),
+        );
     }
 
-    public getEntityType(entity: NavigableRecord | PinnableEntity): PinnedEntityType {
+    public getEntityType(entity: NavigableRecord | PinnableEntity): PinnedEntityType | null {
         for (const [type, cls] of pinnedTypeMap) {
             if (entity instanceof cls) {
                 return type as any;
@@ -94,16 +118,10 @@ export class PinnedEntityService {
     }
 
     public isFavorite(entity: NavigableRecord | PinnableEntity): boolean {
-        const id = entity.id.toLowerCase();
-        const favorites = this._favorites.getValue();
-        const entityType = this.getEntityType(entity);
-        if (!entityType) { return false; }
-
-        const found = favorites.filter((pinned) => {
-            return pinned.id.toLowerCase() === id && pinned.pinnableType === entityType;
-        }).first();
-
-        return Boolean(found);
+        if (!this._currentAccount) { return false; }
+        const favorites = this._favorites.value.get(this._currentAccount.id);
+        if (!favorites) { return false; }
+        return favorites.has(entity.uid);
     }
 
     private _loadInitialData() {
@@ -114,36 +132,28 @@ export class PinnedEntityService {
         });
     }
 
-    private _loadFavorites(): Observable<List<PinnableEntity>> {
-        return this.localFileStorage.get(this._jsonFilename).pipe(
+    private _loadFavorites(): Observable<Map<string, Map<string, PinnableEntity>>> {
+        return this.localFileStorage.get(filename).pipe(
             map((data) => {
-                if (Array.isArray(data)) {
-                    return List(data);
-                } else {
-                    return List([]);
+                const map = new Map<string, Map<string, PinnableEntity>>();
+                if (!data || typeof data !== "object") { return map; }
+                for (const [accountId, perAccountObj] of Object.entries(data)) {
+                    const perAccountMap = new Map<string, PinnableEntity>(perAccountObj);
+                    map.set(accountId, perAccountMap);
+
                 }
+                return map;
             }),
             share(),
         );
     }
 
-    private _saveAccountFavorites(favourites: List<PinnableEntity> = null): Observable<any> {
-        favourites = favourites === null ? this._favorites.getValue() : favourites;
-        return this.localFileStorage.set(this._jsonFilename, favourites.toJS());
-    }
-
-    /**
-     * Only RDFE entities have a URL property. We need to invent
-     * one for ARM entities so we can use the current ID selection in
-     * the drop down.
-     */
-    private _fudgeArmUrl(favorite: NavigableRecord) {
-        return !favorite.url
-            ? `${this._currentAccountEndpoint}${favorite.routerLink.join("/")}`
-            : favorite.url;
-    }
-
-    private get _jsonFilename(): string {
-        return `${this._currentAccountEndpoint}.${this._pinnedFavouritesJsonFileName}`;
+    private _saveAccountFavorites(): Observable<any> {
+        const map = {};
+        for (const [accountId, perAccountMap] of this._favorites.value.entries()) {
+            const perAccountObj = [...perAccountMap.entries()];
+            map[accountId] = perAccountObj;
+        }
+        return this.localFileStorage.set(filename, map);
     }
 }

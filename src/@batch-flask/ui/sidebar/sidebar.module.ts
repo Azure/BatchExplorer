@@ -1,8 +1,7 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
-
 import { DropdownModule } from "@batch-flask/ui/dropdown";
 import { SidebarBookmarksComponent } from "./sidebar-bookmarks";
 import { SidebarContentComponent } from "./sidebar-content";
@@ -23,13 +22,13 @@ const privateComponents = [];
     ],
     exports: [...publicComponents],
     imports: [
-        BrowserModule,
+        CommonModule,
         FormsModule,
         DropdownModule,
         MaterialModule,
     ],
     providers: [
-        SidebarManager,
+        SidebarManager, // This needs to be here otherwise entry components in lazy loaded doesn't work
     ],
 })
 export class SidebarModule {

@@ -1,10 +1,11 @@
 import { Injectable, Injector } from "@angular/core";
 
+import { I18nService } from "@batch-flask/core";
 import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
     EntityCommands, FileSystemService, Permission, SidebarManager,
 } from "@batch-flask/ui";
-import { Task, TaskState } from "app/models";
+import { Task, TaskExecutionResult, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import { from } from "rxjs";
 import { AddTaskFormComponent } from "../action";
@@ -16,12 +17,14 @@ export interface TaskParams {
 @Injectable()
 export class TaskCommands extends EntityCommands<Task, TaskParams> {
     public delete: EntityCommand<Task, void>;
+    public rerun: EntityCommand<Task, void>;
     public terminate: EntityCommand<Task, void>;
     public clone: EntityCommand<Task, void>;
     public exportAsJSON: EntityCommand<Task, void>;
 
     constructor(
         injector: Injector,
+        private i18n: I18nService,
         private sidebarManager: SidebarManager,
         private fs: FileSystemService,
         private remote: ElectronRemote,
@@ -45,16 +48,26 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
     private _buildCommands() {
         this.delete = this.simpleCommand({
             name: "delete",
-            ...COMMAND_LABEL_ICON.Delete,
+            label: this.i18n.t("task-commands.delete"),
+            icon: "fa fa-trash-o",
             action: (task: Task) => this._deleteTask(task),
             permission: Permission.Write,
         });
 
         this.terminate = this.simpleCommand({
             name: "terminate",
-            ...COMMAND_LABEL_ICON.Terminate,
+            label: this.i18n.t("task-commands.terminate"),
+            icon: "fa fa-stop",
             action: (task) => this.taskService.terminate(this.params.jobId, task.id),
             enabled: (task) => task.state !== TaskState.completed,
+        });
+
+        this.rerun = this.simpleCommand({
+            name: "rerun",
+            label: this.i18n.t("task-commands.rerun"),
+            icon: "fa fa-repeat",
+            action: (task) => this.taskService.reactivate(this.params.jobId, task.id),
+            visible: (task) => task.executionInfo.result === TaskExecutionResult.Failure,
         });
 
         this.clone = this.simpleCommand({
@@ -79,6 +92,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
         this.commands = [
             this.delete,
             this.terminate,
+            this.rerun,
             this.clone,
             this.exportAsJSON,
         ];

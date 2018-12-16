@@ -14,6 +14,7 @@ export enum HttpCode {
     Forbidden = 403,
     RequestTimeout = 408,
     Conflict = 409,
+    UnprocessableEntity = 422,
     InteralServerError = 500,
     BadGateway = 502,
     ServiceUnavailable = 503,

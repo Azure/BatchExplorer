@@ -6,7 +6,7 @@ import { ContinuationToken } from "../list-options";
 
 const noQueryKey = "no-query";
 
-const maxQuery =  1;
+const maxQuery = 1;
 
 export class CachedKeyList {
     public createdAt: Date;
@@ -27,7 +27,7 @@ export class QueryCache {
         this.cleanCache();
     }
 
-    public addKeyToQuery(filter: string, key: string) {
+    public addKeyToQuery(filter: string | null, key: string) {
         if (!filter) {
             filter = noQueryKey;
         }
@@ -38,7 +38,7 @@ export class QueryCache {
         query.keys = query.keys.add(key);
     }
 
-    public getKeys(filter: string, select?: string): CachedKeyList {
+    public getKeys(filter: string | null, select?: string | null): CachedKeyList {
         const key = this._cacheKey(filter, select);
         return this._cache[key];
     }
@@ -69,7 +69,7 @@ export class QueryCache {
         }
     }
 
-    private _cacheKey(filter: string, select: string) {
+    private _cacheKey(filter: string | null, select: string | null | undefined) {
         return `${filter || null}|${select || null}`;
     }
 }

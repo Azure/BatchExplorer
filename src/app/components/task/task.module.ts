@@ -13,13 +13,15 @@ import {
     MultiInstanceSettingsPickerComponent,
     RerunTaskFormComponent,
 } from "app/components/task/action";
+import { TaskRoutingModule } from "./task-routing.module";
 
 const components = [
     TaskHomeComponent, RerunTaskFormComponent, AddTaskFormComponent, MultiInstanceSettingsPickerComponent,
 ];
 
 const modules = [
-    DataSharedModule, PoolBaseModule, TaskBaseModule, TaskBrowseModule, TaskDetailsModule, ...commonModules,
+    TaskRoutingModule, DataSharedModule, PoolBaseModule,
+    TaskBaseModule, TaskBrowseModule, TaskDetailsModule, ...commonModules,
 ];
 
 @NgModule({

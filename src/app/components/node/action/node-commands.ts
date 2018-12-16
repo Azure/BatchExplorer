@@ -4,7 +4,8 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, NodeSchedulingState } from "app/models";
 import { NodeService, PoolService } from "app/services";
-import { flatMap } from "rxjs/operators";
+import { forkJoin } from "rxjs";
+import { flatMap, switchMap } from "rxjs/operators";
 import { NodeConnectComponent } from "../connect";
 
 @Injectable()
@@ -54,6 +55,7 @@ export class NodeCommands extends EntityCommands<Node> {
             ...COMMAND_LABEL_ICON.Delete,
             action: (node: Node) => this._delete(node),
             permission: Permission.Write,
+            multiple: (nodes: Node[]) => this._deleteMultiple(nodes),
         });
 
         this.reboot = this.simpleCommand({
@@ -132,7 +134,16 @@ export class NodeCommands extends EntityCommands<Node> {
 
     private _delete(node: Node) {
         return this.nodeService.delete(this.params["poolId"], node.id).pipe(
-            flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
+            switchMap(() => this.nodeService.get(this.params["poolId"], node.id)),
+        );
+    }
+
+    private _deleteMultiple(nodes: Node[]) {
+        const nodeIds = nodes.map(x => x.id);
+        return this.nodeService.delete(this.params["poolId"], nodeIds).pipe(
+            switchMap(() => {
+                return forkJoin(nodes.map(x => this.nodeService.get(this.params["poolId"], x.id)));
+            }),
         );
     }
 

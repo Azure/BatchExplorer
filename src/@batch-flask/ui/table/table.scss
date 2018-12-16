@@ -102,11 +102,11 @@ bl-table {
         }
 
         &.drop-target {
-            background: $selection-color;
+            background: $hover-bg-color;
         }
 
         &:hover:not(.selected) {
-            background-color: $selection-color;
+            background-color: $hover-bg-color;
         }
 
         &:last-child {
@@ -159,7 +159,7 @@ bl-table {
         outline: none;
 
         &:focus {
-            color: $selection-color;
+            color: $hover-bg-color;
         }
 
         &.sortable {
@@ -171,11 +171,11 @@ bl-table {
             }
 
             &:hover:not(.sorting) > .sort-icon {
-                color: $selection-color;
+                color: $hover-bg-color;
             }
 
             &:focus:not(.sorting) > .sort-icon {
-                color: $selection-color;
+                color: $hover-bg-color;
             }
         }
 

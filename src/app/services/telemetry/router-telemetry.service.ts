@@ -6,7 +6,7 @@ import { filter } from "rxjs/operators";
 /**
  * Send telemetry about which components are loaded
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class RouterTelemetryService {
     constructor(
         private router: Router,

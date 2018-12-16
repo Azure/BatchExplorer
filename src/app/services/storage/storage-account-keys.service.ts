@@ -1,11 +1,14 @@
 import { Injectable } from "@angular/core";
+import { SanitizedError } from "@batch-flask/utils";
+import { StorageKeys } from "app/models";
 import { ArmHttpService } from "app/services/arm-http.service";
 import { of } from "rxjs";
-
-import { StorageKeys } from "app/models";
 import { map, shareReplay } from "rxjs/operators";
 
-@Injectable()
+export class StorageAccountKeyMissingError extends Error {
+    constructor(message: string) { super(message); }
+}
+@Injectable({providedIn: "root"})
 export class StorageAccountKeysService {
     private _cache = new Map<string, StorageKeys>();
 
@@ -14,7 +17,7 @@ export class StorageAccountKeysService {
     }
     public getFor(storageAccountId: string) {
         if (!storageAccountId) {
-            throw new Error(`Cannot get keys for storage account id ${storageAccountId}`);
+            throw new SanitizedError(`Cannot get keys for storage account id ${storageAccountId}`);
         }
         if (this._cache.has(storageAccountId)) {
             return of(this._cache.get(storageAccountId));
@@ -30,7 +33,7 @@ export class StorageAccountKeysService {
             map((keys: StorageKeys) => {
                 // bail out if we didn't get any keys
                 if (!keys.primaryKey && !keys.secondaryKey) {
-                    throw new Error(`Failed to load storage keys for: ${storageAccountId}`);
+                    throw new StorageAccountKeyMissingError(`Failed to load storage keys for: ${storageAccountId}`);
                 }
                 this._cache.set(storageAccountId, keys);
                 return keys;

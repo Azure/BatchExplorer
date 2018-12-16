@@ -7,8 +7,9 @@ import { PythonRpcServerProcess } from "client/python-process";
 import { SplashScreen } from "client/splash-screen";
 import { BatchExplorerLink } from "common";
 import { IpcEvent } from "common/constants";
+import { BehaviorSubject, Observable } from "rxjs";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class BatchExplorerService {
     public pythonServer: PythonRpcServerProcess;
     public aadService: AADService;
@@ -26,15 +27,21 @@ export class BatchExplorerService {
      * Points to the resource folder if running packaged app or the root of the app if in dev
      */
     public resourcesFolder: string;
+    public isOSHighContrast: Observable<boolean>;
 
     private _app: BatchExplorerApplication;
     private _azureEnvironment: AzureEnvironment;
+    private _isOSHighContrast = new BehaviorSubject(false);
 
     constructor(private remote: ElectronRemote) {
         this._app = remote.getCurrentWindow().batchExplorerApp;
+        this.isOSHighContrast = this._isOSHighContrast.asObservable();
         this._app.properties.azureEnvironmentObs.subscribe((x) => {
             // Clone the environement to prevent calling the electron ipc sync for every key
             this._azureEnvironment = new AzureEnvironment(x);
+        });
+        this._app.properties.isOSHighContrast.subscribe((x) => {
+            this._isOSHighContrast.next(x);
         });
         this.aadService = this._app.aadService;
         this.pythonServer = this._app.pythonServer;

@@ -27,4 +27,8 @@ export class BatchApplication extends Record<BatchApplicationAttributes> impleme
     public get routerLink(): string[] {
         return ["/applications", this.id];
     }
+
+    public get uid() {
+        return "/applications/" + this.id;
+    }
 }

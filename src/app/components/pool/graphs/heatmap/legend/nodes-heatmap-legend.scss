@@ -24,7 +24,7 @@ bl-nodes-heatmap-legend {
         align-items: center;
         color: $primary-text;
         &:hover {
-            background: $selection-color;
+            background: $hover-bg-color;
         }
 
         &.highlighted {

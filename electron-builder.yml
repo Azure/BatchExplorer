@@ -29,7 +29,7 @@ protocols:
 
 # Mac OS configuration
 mac:
-  icon: "app/assets/images/icon.icns"
+  icon: "src/app/assets/images/icon.icns"
 
 # Config for OSX dmg
 dmg:
@@ -43,7 +43,7 @@ dmg:
 
 # Windows configuration
 win:
-  icon: "app/assets/images/icon.ico"
+  icon: "src/app/assets/images/icon.ico"
   target:
     - "zip"
     - "nsis"
@@ -60,6 +60,18 @@ linux:
     - "AppImage"
     - "deb"
     - "rpm"
+
+deb:
+  depends:
+    # --- Default START
+    - gconf2
+    - gconfg-service
+    - libnotify4
+    - libappindicator1
+    - libxtst6
+    - libnss3
+    # --- Default END
+    - libsecret-1-0 # This is needed for keytar on linux
 
 directories:
   buildResources: "resources"

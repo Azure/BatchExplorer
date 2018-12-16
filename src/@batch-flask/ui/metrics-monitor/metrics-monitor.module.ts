@@ -1,5 +1,5 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
 
 import { VTabsModule } from "@batch-flask/ui/vtabs";
 import { MetricsMonitorGraphComponent } from "./metrics-monitor-metric";
@@ -9,7 +9,7 @@ const privateComponents = [];
 const publicComponents = [MetricsMonitorComponent, MetricsMonitorGraphComponent];
 
 @NgModule({
-    imports: [BrowserModule, VTabsModule],
+    imports: [CommonModule, VTabsModule],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,
 })

@@ -12,6 +12,7 @@ import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent, GettingStartedCardComponent } from "./details";
 import { AccountCostCardComponent } from "./details/account-cost-card";
 import { AccountQuotasCardComponent } from "./details/account-quotas-card";
+import { AccountSummaryCardComponent } from "./details/account-summary-card";
 import { ProgramaticUsageModule } from "./details/programatic-usage";
 import { StorageAccountCardComponent } from "./details/storage-account-card";
 import { AccountHomeComponent } from "./home";
@@ -22,15 +23,16 @@ const components = [
     BatchAccountCreateComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
     EditStorageAccountFormComponent, AutoStorageAccountPickerComponent, AccountQuotasCardComponent,
     GettingStartedCardComponent, AddLocalBatchAccountComponent, AccountCostCardComponent,
+    AccountSummaryCardComponent,
 ];
 
 const modules = [
+    ...commonModules,
     AccountBrowseModule,
     AccountMonitoringModule,
     PoolBaseModule,
     ProgramaticUsageModule,
     PoolGraphsModule,
-    ...commonModules,
 ];
 
 @NgModule({

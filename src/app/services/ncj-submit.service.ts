@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { NcjJobTemplate, NcjPoolTemplate } from "app/models";
 import { PythonRpcService } from "./python-rpc";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class NcjSubmitService {
     constructor(private pythonRpcService: PythonRpcService) { }
 

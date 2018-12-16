@@ -6,7 +6,7 @@ import { AADService } from "client/core/aad";
 import { Constants } from "common";
 import { BehaviorSubject, Observable, from } from "rxjs";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AdalService implements OnDestroy {
     public tenantsIds: Observable<string[]>;
 

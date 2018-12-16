@@ -66,7 +66,7 @@ export class UsageDetailsUnsupportedSubscription extends Error {
     }
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class UsageDetailsService {
     constructor(private accountService: BatchAccountService, private azure: AzureHttpService) { }
 
@@ -110,7 +110,7 @@ export class UsageDetailsService {
                 return [...batchAccounts, ...response.value];
             }, []),
             catchError((error: ServerError) => {
-                if (error.status === HttpCode.BadRequest) {
+                if (error.status === HttpCode.UnprocessableEntity) {
                     return throwError(new UsageDetailsUnsupportedSubscription(subscription.subscriptionId));
                 } else {
                     return throwError(error);

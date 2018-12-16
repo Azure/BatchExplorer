@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { SidebarManager } from "@batch-flask/ui";
-import { Subscription } from "rxjs";
-
 import { BatchAccountService } from "app/services";
+import { Subscription } from "rxjs";
 import { BatchAccountCreateComponent } from "../action/create";
 
 @Component({

@@ -39,7 +39,7 @@ export interface SecretParams {
     endDate?: Date;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AADApplicationService {
     private _getter: AADGraphEntityGetter<AADApplication, AADApplicationParams>;
     private _listGetter: AADGraphListGetter<AADApplication, AADApplicationListParams>;

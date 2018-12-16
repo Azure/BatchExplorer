@@ -6,6 +6,7 @@ export interface ApplicationAttributes {
     description: string;
     icon: string;
     readme: string;
+    portfolioId: string;
 }
 
 /**
@@ -26,4 +27,5 @@ export class Application extends Record<ApplicationAttributes> {
      * Path to the readme file.
      */
     @Prop() public readme: string;
+    @Prop() public portfolioId: string;
 }

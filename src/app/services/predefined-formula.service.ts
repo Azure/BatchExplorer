@@ -12,7 +12,7 @@ interface SampleFormulaIndex {
     value: string;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PredefinedFormulaService {
     public predefinedFormulas: Observable<AutoscaleFormula[]>;
     private _predefinedFormulas = new BehaviorSubject<AutoscaleFormula[]>(null);

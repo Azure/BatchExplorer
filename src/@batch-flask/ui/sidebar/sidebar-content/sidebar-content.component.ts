@@ -2,6 +2,7 @@ import { ComponentPortal, PortalHostDirective } from "@angular/cdk/portal";
 import {
     Component,
     ComponentRef,
+    Injector,
     Input,
     OnInit,
     Type,
@@ -9,7 +10,7 @@ import {
 } from "@angular/core";
 import { MatSidenav } from "@angular/material";
 import { log } from "@batch-flask/utils";
-import { SidebarManager } from "../sidebar-manager";
+import { GlobalSidebarService } from "../sidebar-manager";
 import { SidebarPageComponent } from "../sidebar-page";
 import { SidebarRef } from "../sidebar-ref";
 
@@ -28,11 +29,11 @@ export class SidebarContentComponent implements OnInit {
 
     private componentRefs: { [key: string]: ComponentRef<SidebarPageComponent> } = {};
 
-    constructor(private sidebarManager: SidebarManager) { }
+    constructor(private reference: GlobalSidebarService) { }
 
     public ngOnInit() {
-        this.sidebarManager.sidebar = this.sidebar;
-        this.sidebarManager.sidebarContent = this;
+        this.reference.sidebar = this.sidebar;
+        this.reference.sidebarContent = this;
     }
 
     /**
@@ -40,13 +41,13 @@ export class SidebarContentComponent implements OnInit {
      * i.e If the sidebar is not open it will open
      *     otherwise it will hide the current component and show this one instead.
      */
-    public open<T>(componentType: Type<T>, sidebarRef: SidebarRef<T>) {
+    public open<T>(componentType: Type<T>, sidebarRef: SidebarRef<T>, injector: Injector) {
         const id = sidebarRef.id;
         if (id in this.componentRefs) {
             this.componentRefs[id].destroy();
         }
 
-        const componentPortal = new ComponentPortal(SidebarPageComponent);
+        const componentPortal = new ComponentPortal(SidebarPageComponent, null, injector);
         const component = this.portalHost.attachComponentPortal(componentPortal);
         component.instance.attachComponent(componentType, sidebarRef);
         this.componentRefs[id] = component;

@@ -13,7 +13,7 @@ import { ArmListResponse } from "./core";
 import { SettingsService } from "./settings.service";
 import { TenantDetailsService } from "./tenant-details.service";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class SubscriptionService {
     public subscriptions: Observable<List<Subscription>>;
     public accountSubscriptionFilter: Observable<Set<string>>;

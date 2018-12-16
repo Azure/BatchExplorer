@@ -3,8 +3,8 @@ import { BatchAccountService, Theme, ThemeService } from "app/services";
 import {
     ConsumptionMeterDetails, UsageDetail, UsageDetailsService, UsageDetailsUnsupportedSubscription,
 } from "app/services/azure-consumption";
-import { Subject, combineLatest } from "rxjs";
-import { filter, switchMap, takeUntil } from "rxjs/operators";
+import { Subject, combineLatest, of } from "rxjs";
+import { catchError, filter, switchMap, takeUntil } from "rxjs/operators";
 
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
@@ -46,19 +46,28 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                 this.changeDetector.markForCheck();
                 return this.isArmBatchAccount;
             }),
-            switchMap(() => this.usageService.getUsage()),
+            switchMap(() => {
+                return this.usageService.getUsage().pipe(
+                    catchError((error) => {
+                        if (error instanceof UsageDetailsUnsupportedSubscription) {
+                            this.unsupportedSubscription = true;
+                            this.changeDetector.markForCheck();
+                        } else {
+                            log.error("Error retrieving cost", error);
+                        }
+                        return of(null);
+                    }),
+                );
+            }),
         );
 
-        combineLatest(obs, this.themeService.currentTheme).pipe(takeUntil(this._destroy)).subscribe({
+        combineLatest(obs, this.themeService.currentTheme).pipe(
+            takeUntil(this._destroy),
+        ).subscribe({
             next: ([usages, theme]) => {
-                this._computeDataSets(usages, theme);
-            },
-            error: (error) => {
-                if (error instanceof UsageDetailsUnsupportedSubscription) {
-                    this.unsupportedSubscription = true;
-                    this.changeDetector.markForCheck();
-                } else {
-                    log.error("Error retrieving cost", error);
+                if (usages) {
+                    this.unsupportedSubscription = false;
+                    this._computeDataSets(usages, theme);
                 }
             },
         });

@@ -32,13 +32,13 @@ describe("Dto", () => {
     });
 
     it("should assign nested dto types correctly", () => {
-        const dto = new FakeDto({ id: "foo", nested: { foo: "bar", name: null } });
+        const dto = new FakeDto({ id: "foo", nested: { foo: "bar", name: null } } as any);
         expect(dto.id).toEqual("foo");
         const nested = dto.nested;
         expect(nested).not.toBeUndefined();
         expect(nested instanceof FakeNestedDto).toBe(true);
-        expect(nested.foo).toEqual("bar");
-        expect(nested.name).toBeUndefined();
+        expect(nested!.foo).toEqual("bar");
+        expect(nested!.name).toBeUndefined();
     });
 
     it("should not assign unknown nested dto types correctly", () => {
@@ -52,7 +52,7 @@ describe("Dto", () => {
     it("should merge with another dto", () => {
         const base = new FakeDto({ id: "foo", nested: { foo: "bar", other: "wrong" } } as any);
         const overrides = new FakeDto({ id: "foo2", num: 3 } as any);
-        const result = base.merge(overrides);
+        const result = base.merge!(overrides);
 
         expect(result.id).toEqual("foo2");
         expect(result.num).toEqual(3);
@@ -68,11 +68,11 @@ describe("Dto", () => {
             nestedList: [{ foo: "bar", name: null, other: "with-value" }],
         } as any);
         const nestedList = dto.nestedList;
-        expect(nestedList).not.toBeUndefined();
-        expect(nestedList.length).toBe(1);
-        expect(nestedList[0] instanceof FakeNestedDto).toBe(true);
-        expect(nestedList[0].name).toBeUndefined();
-        expect((nestedList[0] as any).other).toBeUndefined();
+        expect(nestedList).not.toBeFalsy();
+        expect(nestedList!.length).toBe(1);
+        expect(nestedList![0] instanceof FakeNestedDto).toBe(true);
+        expect(nestedList![0].name).toBeUndefined();
+        expect((nestedList![0] as any).other).toBeUndefined();
     });
 
     it("remove null attributes when toJS()", () => {
@@ -80,26 +80,26 @@ describe("Dto", () => {
             id: "foo",
             nested: { foo: null, name: "some" },
             nestedList: [{ foo: "bar", name: null }],
-        });
+        } as any);
 
-        const result = dto.toJS();
+        const result = dto.toJS!();
         expect(result.nested).not.toBeUndefined();
-        expect(result.nested.name).toBe("some");
-        expect("foo" in result.nested).toBe(false);
+        expect(result!.nested!.name).toBe("some");
+        expect("foo" in result.nested!).toBe(false);
 
-        expect(result.nestedList).not.toBeUndefined();
-        expect(result.nestedList.length).toBe(1);
-        expect(result.nestedList[0].foo).toBe("bar");
-        expect("name" in result.nestedList[0]).toBe(false);
+        expect(result!.nestedList).not.toBeUndefined();
+        expect(result!.nestedList!.length).toBe(1);
+        expect(result!.nestedList![0].foo).toBe("bar");
+        expect("name" in result.nestedList![0]).toBe(false);
     });
 
     it("doesn't set null list attributes", () => {
         const dto = new FakeDto({
             id: "foo",
-            nestedList: null,
+            nestedList: undefined,
         });
 
-        const result = dto.toJS();
+        const result = dto.toJS!();
         expect(result).toEqual({ id: "foo" });
     });
 });

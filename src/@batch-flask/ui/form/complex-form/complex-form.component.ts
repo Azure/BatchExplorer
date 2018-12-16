@@ -3,7 +3,7 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { AsyncTask, Dto, ServerError, autobind } from "@batch-flask/core";
-import { log } from "@batch-flask/utils";
+import { SanitizedError, log } from "@batch-flask/utils";
 import { validJsonConfig } from "@batch-flask/utils/validators";
 import { Observable, Subscription, of } from "rxjs";
 import { filter, first, flatMap, share, shareReplay, tap } from "rxjs/operators";
@@ -90,7 +90,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
     public ngAfterViewInit() {
         const page = this.pages.first;
         if (!page) {
-            throw new Error("Expect form to have at least 1 page. Add bl-form-page in the bl-complex-form");
+            throw new SanitizedError("Expect form to have at least 1 page. Add bl-form-page in the bl-complex-form");
         }
         this.currentPage = page;
         this.mainPage = page;

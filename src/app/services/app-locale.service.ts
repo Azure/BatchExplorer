@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Locale, LocaleService } from "@batch-flask/core";
 import { remote } from "electron";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class AppLocaleService extends LocaleService {
     private _clientLocaleService: LocaleService;
 

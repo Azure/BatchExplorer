@@ -15,6 +15,10 @@ import { AppInsightQueryResultProcessor } from "./query-result-processor";
 const metrics: StringMap<MetricDefinition> = {
     cpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "cloud/roleInstance" },
     individualCpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "customDimensions/[Cpu #]" },
+    gpuUsage: { appInsightsMetricId: "customMetrics/Gpu usage", segment: "cloud/roleInstance" },
+    individualGpuUsage: { appInsightsMetricId: "customMetrics/Gpu usage", segment: "customDimensions/[Gpu #]" },
+    gpuMemory: { appInsightsMetricId: "customMetrics/Gpu memory usage", segment: "cloud/roleInstance" },
+    individualGpuMemory: { appInsightsMetricId: "customMetrics/Gpu memory usage", segment: "customDimensions/[Gpu #]" },
     memoryAvailable: { appInsightsMetricId: "customMetrics/Memory available", segment: "cloud/roleInstance" },
     memoryUsed: { appInsightsMetricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
     diskRead: { appInsightsMetricId: "customMetrics/Disk read", segment: "cloud/roleInstance" },
@@ -24,7 +28,8 @@ const metrics: StringMap<MetricDefinition> = {
     networkRead: { appInsightsMetricId: "customMetrics/Network read", segment: "cloud/roleInstance" },
     networkWrite: { appInsightsMetricId: "customMetrics/Network write", segment: "cloud/roleInstance" },
 };
-@Injectable()
+
+@Injectable({providedIn: "root"})
 export class AppInsightsQueryService {
     constructor(private appInsightsApi: AppInsightsApiService) { }
 
@@ -95,6 +100,7 @@ export class AppInsightsQueryService {
             return poolFilter;
         }
     }
+
     private _processMetrics(data: AppInsightsMetricsResult): BatchPerformanceMetrics {
         const performances = {};
         for (const metricResult of data) {
@@ -103,7 +109,9 @@ export class AppInsightsQueryService {
             const segments = metricResult.body.value.segments;
             switch (id) {
                 case BatchPerformanceMetricType.individualCpuUsage:
-                    performances[id] = this._processIndividualCpuUsage(segments);
+                case BatchPerformanceMetricType.individualGpuUsage:
+                case BatchPerformanceMetricType.individualGpuMemory:
+                    performances[id] = this._processIndividualDeviceUsage(id, segments);
                     break;
                 default:
                     performances[id] = this._processSegmentedMetric(id, data);
@@ -112,7 +120,7 @@ export class AppInsightsQueryService {
         return performances as BatchPerformanceMetrics;
     }
 
-    private _processIndividualCpuUsage(segments) {
+    private _processIndividualDeviceUsage(id: string, segments) {
         let usages: any[] = null;
         for (const segment of segments) {
             const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
@@ -122,7 +130,7 @@ export class AppInsightsQueryService {
             }
             for (let i = 0; i < individualSegments.length; i++) {
                 const individualSegment = individualSegments[i];
-                const value = individualSegment[this._getAppInsightsMetricId("individualCpuUsage")].avg;
+                const value = individualSegment[this._getAppInsightsMetricId(id)].avg;
                 usages[i].push({
                     time,
                     value,

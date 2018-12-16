@@ -17,7 +17,7 @@ import { IpcService } from "./ipc.service";
  * Injectable service wrapping electron shell.
  * This makes it easier to mock the electron shell.
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class ElectronRemote {
     // tslint:disable-next-line:variable-name
     public Menu: typeof Electron.Menu;

@@ -77,9 +77,9 @@ export class MockSplashScreen extends MockUniqueWindow {
 
 export class MockAuthenticationWindow extends MockUniqueWindow {
     public loadURL: jasmine.Spy;
-    private _onRedirectCallbacks = [];
-    private _onNavigateCallbacks = [];
-    private _onCloseCallbacks = [];
+    private _onRedirectCallbacks: any[] = [];
+    private _onNavigateCallbacks: any[] = [];
+    private _onCloseCallbacks: any[] = [];
 
     constructor() {
         super();

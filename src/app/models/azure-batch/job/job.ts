@@ -96,6 +96,10 @@ export class Job extends Record<JobAttributes> implements NavigableRecord {
     public get routerLink(): string[] {
         return ["/jobs", this.id];
     }
+
+    public get uid() {
+        return this.url;
+    }
 }
 
 export enum JobState {

@@ -6,10 +6,12 @@ import { DialogService } from "@batch-flask/ui/dialogs";
 import { FileNavigator, FileTreeNode } from "@batch-flask/ui/file/file-navigator";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { SplitPaneConfig } from "@batch-flask/ui/split-pane";
-import { FileUrlUtils } from "@batch-flask/utils";
-import { Subscription } from "rxjs";
+import { CloudPathUtils, FileUrlUtils } from "@batch-flask/utils";
+import * as path from "path";
+import { Subscription, of } from "rxjs";
 import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "./file-explorer-workspace";
 
+import { FileSystemService } from "@batch-flask/ui/electron";
 import { FileViewerConfig } from "../file-viewer";
 import "./file-explorer.scss";
 
@@ -104,6 +106,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     constructor(
         private changeDetector: ChangeDetectorRef,
         private dialogService: DialogService,
+        private fs: FileSystemService,
         private activityService: ActivityService) {
         this._updateSplitPanelConfig();
     }
@@ -145,7 +148,14 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     }
 
     public handleDrop(event: FileDropEvent) {
-        this.dropFiles.emit(event);
+        this.dialogService.confirm(`Upload files`, {
+            description: `Files will be uploaded to /${event.path}`,
+            yes: () => {
+                this._uploadFiles(event);
+
+                return of(null);
+            },
+        });
     }
 
     public trackSource(index, source: FileSource) {
@@ -173,7 +183,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
                     };
 
                     // create a folder deletion activity, and run it
-                    const activity = new Activity (name, initializer);
+                    const activity = new Activity(name, initializer);
                     this.activityService.exec(activity);
                 } else {
                     const name = `Deleting file ${event.path}`;
@@ -221,5 +231,46 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
             initialDividerPosition: 250,
         };
         this.changeDetector.markForCheck();
+    }
+
+    private async _getFilesToUpload(base: string, files: any[]) {
+        const result = [];
+        for (const file of files) {
+            const stats = await this.fs.lstat(file.path);
+            const filename = path.basename(file.path);
+            if (stats.isFile()) {
+                result.push({ localPath: file.path, remotePath: CloudPathUtils.join(base, filename) });
+            } else {
+
+                const dirFiles = await this.fs.readdir(file.path);
+                for (const dirFile of dirFiles) {
+                    result.push({
+                        localPath: path.join(file.path, dirFile),
+                        remotePath: CloudPathUtils.join(base, CloudPathUtils.normalize(dirFile)),
+                    });
+                }
+            }
+        }
+        return result;
+    }
+
+    private _createUploadActivities(files: any[]) {
+        return files.map((file) => {
+            const filename = path.basename(file.localPath);
+            const activity = new Activity(`Uploading ${filename}`, () => {
+                return this.currentSource.navigator.uploadFile(file.remotePath, file.localPath);
+            });
+            activity.done.subscribe(() => this.currentSource.navigator.loadFile(file.remotePath).subscribe());
+            return activity;
+        });
+    }
+
+    private async _uploadFiles(event: FileDropEvent) {
+        const files = await this._getFilesToUpload(event.path, event.files);
+        const activities = this._createUploadActivities(files);
+
+        const name = `Uploading ${files.length} files`;
+        const activity = new Activity(name, () => of(activities));
+        this.activityService.exec(activity);
     }
 }

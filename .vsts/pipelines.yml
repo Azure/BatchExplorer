@@ -23,10 +23,10 @@ jobs:
     pool:
       vmImage: vs2017-win2016
     condition: ne(variables['Build.Reason'], 'PullRequest')
+    variables:
+      EnableDetectorPip: true
     continueOnError: true
     steps:
-      - template: ./dependencies.yml
-      - script: npm ci
-        displayName: Install node modules
+      - template: ./win/win-dependencies.yml
       - task: ComponentGovernanceComponentDetection@0
         displayName: 'Component Detection'

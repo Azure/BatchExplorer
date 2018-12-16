@@ -17,6 +17,7 @@ import { Subscription } from "rxjs";
 import { FileTypeAssociationService, FileViewerType } from "../file-type-association";
 import { FileViewer, FileViewerConfig } from "../file-viewer";
 
+import { SanitizedError } from "@batch-flask/utils";
 import "./file-viewer-container.scss";
 
 const defaultConfig = Object.freeze({
@@ -97,6 +98,7 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     public openAs(type: string) {
         this._fileType = type;
         this._findComponentType();
+        this._computeViewer();
         this.changeDetector.markForCheck();
     }
 
@@ -109,7 +111,7 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     private _findFileType() {
         const filename = this.fileLoader.filename;
         if (!filename) {
-            throw new Error(`Expect filename to be a valid string but was "${filename}"`);
+            throw new SanitizedError(`Expect filename to be a valid string but was "${filename}"`);
         }
 
         this._fileType = this.fileAssociationService.getType(this.fileLoader.filename);

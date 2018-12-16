@@ -46,6 +46,10 @@ export class TableHeadCellComponent extends ClickableComponent implements OnInit
         return this.column.maxWidth;
     }
 
+    @HostBinding("attr.id") public get id() {
+        return this.column.id;
+    }
+
     public sortDirection: SortDirection;
 
     @HostBinding("class.sorting")

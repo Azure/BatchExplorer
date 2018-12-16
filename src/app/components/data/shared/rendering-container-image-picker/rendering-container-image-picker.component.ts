@@ -9,7 +9,7 @@ import {
 import { RenderApplication, RenderEngine, RenderingContainerImage } from "app/models/rendering-container-image";
 import { RenderingContainerImageService } from "app/services";
 import { Observable, Subscription } from "rxjs";
-import { flatMap, map } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import "./rendering-container-image-picker.scss";
 
 @Component({
@@ -46,6 +46,15 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
         private changeDetector: ChangeDetectorRef,
         private renderingContainerImageService: RenderingContainerImageService) {
 
+        this.renderingContainerImageService.loadImageData();
+
+        this.appVersionsData = this.renderingContainerImageService.getAppVersionDisplayList(
+            this.app, this.imageReferenceId);
+
+        this.appVersionsData.subscribe((appVersions) => {
+            this.appVersions = appVersions;
+        });
+
         this._subs.push(this.rendererVersionControl.valueChanges.subscribe((containerImage: string) => {
             if (this._propagateChange) {
                 this._propagateChange(containerImage);
@@ -70,14 +79,6 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
 
             this.changeDetector.markForCheck();
         }));
-
-        this._subs.push(this.renderingContainerImageService.loadImageData().pipe(flatMap(() => {
-            this.appVersionsData = this.renderingContainerImageService.getAppVersionDisplayList(
-                this.app, this.imageReferenceId);
-            return this.appVersionsData;
-                })).subscribe((appVersions) => {
-            this.appVersions = appVersions;
-            }));
     }
 
     public trackContainerImage(_, image: RenderingContainerImage) {

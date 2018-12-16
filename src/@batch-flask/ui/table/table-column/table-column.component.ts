@@ -7,10 +7,13 @@ import {
     forwardRef,
 } from "@angular/core";
 
+import { SanitizedError } from "@batch-flask/utils";
 import { TableCellDefDirective } from "../table-cell-def";
 import { TableColumnRef } from "../table-column-manager";
 import { TableHeadCellDefDirective } from "../table-head-cell-def";
 import { TableComponent } from "../table.component";
+
+let idCounter = 0;
 
 @Component({
     selector: "bl-column",
@@ -18,6 +21,8 @@ import { TableComponent } from "../table.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges {
+    @Input() public id = `bl-column-${idCounter++}`;
+
     @Input() public defaultWidth: number = null;
     /**
      * What should be the minimum width of the column
@@ -49,9 +54,6 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
         if (changes.name) {
             this._validateName();
         }
-        if (changes.defaultWidth) {
-            // TODO-tim handle this
-        }
     }
 
     public update() {
@@ -61,6 +63,7 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
 
     public getRef(): TableColumnRef {
         return {
+            id: this.id,
             name: this.name,
             defaultWidth: this.defaultWidth,
             minWidth: this.minWidth,
@@ -73,14 +76,14 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
 
     private _validateName() {
         if (!this.name) {
-            throw new Error("bl-column must have a unique name but not was provided.");
+            throw new SanitizedError("bl-column must have a unique name but not was provided.");
         }
     }
 
     private _validateCellDef() {
         if (!this.cell) {
             const example = `<div *blCellDef="let item">item.value</div>`;
-            throw new Error(`bl-column '${this.name}' must have a cell definition. Add '${example}'`);
+            throw new SanitizedError(`bl-column '${this.name}' must have a cell definition. Add '${example}'`);
         }
     }
 }

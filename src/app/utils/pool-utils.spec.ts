@@ -223,4 +223,14 @@ describe("PoolUtils", () => {
             expect(poolCost.unit).toBe("USD");
         });
     });
+
+    it("#hasGPU()", () => {
+        expect(PoolUtils.hasGPU(new Pool({ vmSize: "standard_a1" }))).toBe(false);
+        expect(PoolUtils.hasGPU(new Pool({ vmSize: "Standard_A2" }))).toBe(false);
+        expect(PoolUtils.hasGPU(new Pool({ vmSize: "Standard_d3_v2" }))).toBe(false);
+
+        expect(PoolUtils.hasGPU(new Pool({ vmSize: "Standard_N1" }))).toBe(true);
+        expect(PoolUtils.hasGPU(new Pool({ vmSize: "Standard_nc1" }))).toBe(true);
+        expect(PoolUtils.hasGPU(new Pool({ vmSize: "standard_nc1_V2" }))).toBe(true);
+    });
 });

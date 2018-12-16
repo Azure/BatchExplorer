@@ -6,6 +6,7 @@ import { BatchExplorerApplication } from "client/core/batch-explorer-application
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { fetch } from "client/core/fetch";
 import { BatchExplorerProperties } from "client/core/properties";
+import { SecureDataStore } from "client/core/secure-data-store";
 import { Constants } from "common";
 import { IpcEvent } from "common/constants";
 import { Deferred } from "common/deferred";
@@ -27,19 +28,19 @@ const adalConfig: AADConfig = {
 
 @Injectable()
 export class AADService {
-    public currentUser: Observable<AADUser>;
+    public currentUser: Observable<AADUser | null>;
 
     public tenantsIds: Observable<string[]>;
 
     public userAuthorization: AuthenticationService;
-    public authenticationState: Observable<AuthenticationState>;
+    public authenticationState: Observable<AuthenticationState | null>;
 
-    private _authenticationState = new BehaviorSubject<AuthenticationState>(null);
+    private _authenticationState = new BehaviorSubject<AuthenticationState | null>(null);
     private _accessTokenService: AccessTokenService;
     private _userDecoder: UserDecoder;
     private _newAccessTokenSubject: StringMap<Deferred<AccessToken>> = {};
 
-    private _currentUser = new BehaviorSubject<AADUser>(null);
+    private _currentUser = new BehaviorSubject<AADUser | null>(null);
     private _tenantsIds = new BehaviorSubject<string[]>([]);
     private _tokenCache: AccessTokenCache;
 
@@ -47,8 +48,9 @@ export class AADService {
         @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
         private localStorage: DataStore,
         private properties: BatchExplorerProperties,
+        secureStore: SecureDataStore,
         ipcMain: BlIpcMain) {
-        this._tokenCache = new AccessTokenCache(localStorage);
+        this._tokenCache = new AccessTokenCache(secureStore);
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenantsIds = this._tenantsIds.asObservable();
@@ -111,7 +113,7 @@ export class AADService {
         await this.userAuthorization.logout();
     }
 
-    public async accessTokenFor(tenantId: string, resource: string = null) {
+    public async accessTokenFor(tenantId: string, resource?: string) {
         return this.accessTokenData(tenantId, resource).then(x => x.access_token);
     }
 
@@ -120,7 +122,7 @@ export class AADService {
      * @param tenantId
      * @param resource
      */
-    public async accessTokenData(tenantId: string, resource: string = null): Promise<AccessToken> {
+    public async accessTokenData(tenantId: string, resource?: string): Promise<AccessToken> {
         resource = resource || this._getDefaultResource();
         if (this._tokenCache.hasToken(tenantId, resource)) {
             const token = this._tokenCache.getToken(tenantId, resource);
@@ -186,8 +188,8 @@ export class AADService {
 
             const result = await this._authorizeUser(tenantId, forceReLogin);
             this._processUserToken(result.id_token);
-            const tid = tenantId === "common" ? this._currentUser.value.tid : tenantId;
-            const token = await this._accessTokenService.redeem(resource, tid, result.code);
+            const tid = tenantId === "common" ? this._currentUser.value!.tid : tenantId;
+            const token = await this._accessTokenService.redeem(resource, tid!, result.code);
             this._processAccessToken(tenantId, resource, token);
             delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
             defer.resolve(token);

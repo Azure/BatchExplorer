@@ -22,12 +22,11 @@ export interface StorageKeyCachedItem {
     keys: StorageKeys;
 }
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class StorageClientService {
     public hasAutoStorage: Observable<boolean>;
     public hasArmAutoStorage: Observable<boolean>;
 
-    private _currentAccountId: string;
     private _storageClientFactory: StorageClientProxyFactory;
     private _sharedKeyMap = new Map<string, any>();
 
@@ -38,7 +37,6 @@ export class StorageClientService {
 
         this._storageClientFactory = new StorageClientProxyFactory();
 
-        this.accountService.currentAccountId.subscribe(x => this._currentAccountId = x);
         this.hasAutoStorage = this.accountService.currentAccount.pipe(map((account) => {
             return Boolean(account.autoStorage);
         }));
@@ -49,10 +47,6 @@ export class StorageClientService {
     }
 
     public getAutoStorage(): Observable<any> {
-        if (!this._currentAccountId) {
-            throw new Error("No account currently selected ...");
-        }
-
         return this.accountService.currentAccount.pipe(
             first(),
             flatMap((account) => {

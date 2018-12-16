@@ -151,7 +151,7 @@ bl-banner > bl-card.warning {
 }
 
 bl-banner > bl-card.notice {
-    @include banner-scheme($secondary-background, $selection-color);
+    @include banner-scheme($secondary-background, $hover-bg-color);
     color: $primary-color;
 }
 

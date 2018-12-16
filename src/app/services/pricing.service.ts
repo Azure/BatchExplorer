@@ -8,8 +8,8 @@ import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { BatchAccountService } from "./batch-account";
+import { VmSizeService } from "./compute";
 import { LocalFileStorage } from "./local-file-storage.service";
-import { VmSizeService } from "./vm-size.service";
 
 const pricingFilename = "pricing.json";
 
@@ -61,7 +61,7 @@ const softwareMeterId = {
     "e2d2d63e-8741-499a-8989-f5f7ec5c3b3f": BatchSoftwareLicense.vray,
 };
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class PricingService {
     public pricing: Observable<BatchPricing>;
     private _pricingMap = new BehaviorSubject<BatchPricing>(null);

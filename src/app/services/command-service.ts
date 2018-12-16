@@ -8,7 +8,7 @@ import { SettingsService } from "./settings.service";
 
 // export const commands: any[] = ObjectUtils.values(CommandMap as any).filter((x: any) => x.id !== undefined);
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class CommandService {
     private _commandMap: { [key: string]: CommandBase } = {};
     private _setOnce = false;

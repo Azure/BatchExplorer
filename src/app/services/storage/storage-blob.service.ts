@@ -69,10 +69,14 @@ export interface BulkUploadStatus {
     current: FileUpload;
 }
 
+export class InvalidSasUrlError extends Error {
+    constructor(message: string) { super(message); }
+}
+
 // Regex to extract the host, container and blob from a sasUrl
 const storageBlobUrlRegex = /^(https:\/\/[\w\._\-]+)\/([\w\-_]+)\/([\w\-_.]+)\?(.*)$/i;
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class StorageBlobService {
     public maxBlobPageSize: number = 100; // 500 slows down the UI too much.
     public maxContainerPageSize: number = 50;
@@ -147,6 +151,7 @@ export class StorageBlobService {
             getter: this._blobListGetter,
             getFile: (filename: string) => this.getBlobContent(storageAccountId, container, filename),
             delete: (filename: string) => this.deleteBlobIfExists(storageAccountId, container, filename),
+            upload: (path: string, localPath: string) => this.uploadFile(storageAccountId, container, localPath, path),
             onError: options.onError,
             wildcards: options.wildcards,
             fetchAll: options.fetchAll,
@@ -397,7 +402,7 @@ export class StorageBlobService {
         const match = storageBlobUrlRegex.exec(sasUrl);
 
         if (match.length < 5) {
-            throw new Error(`Invalid sas url "${sasUrl}"`);
+            throw new InvalidSasUrlError(`Invalid sas url "${sasUrl}"`);
         }
 
         return {

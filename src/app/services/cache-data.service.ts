@@ -6,7 +6,7 @@ import * as path from "path";
 /**
  * Service used to cache large set of data to be reused
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class CacheDataService {
 
     constructor(private fs: FileSystemService) { }

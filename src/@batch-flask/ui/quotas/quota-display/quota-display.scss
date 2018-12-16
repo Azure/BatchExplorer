@@ -6,6 +6,7 @@ bl-quota-display {
     vertical-align: top;
     display: block;
     overflow: auto;
+    position: relative;
 
     > .details > .label {
         color: $secondary-text;
@@ -15,7 +16,16 @@ bl-quota-display {
         color: $primary-text;
     }
 
+    > .progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
     > .progress mat-progress-bar {
+        margin-top: 0;
+
         &.low-usage > .mat-progress-bar-fill:after {
             background-color: $success-color;
         }
@@ -64,6 +74,10 @@ bl-quota-display {
             > .label {
                 flex: 1;
             }
+        }
+
+        > .progress {
+            position: relative;
         }
 
         > .progress mat-progress-bar {

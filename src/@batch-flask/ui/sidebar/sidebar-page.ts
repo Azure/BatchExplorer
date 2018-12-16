@@ -1,10 +1,9 @@
 import { ComponentPortal, PortalHostDirective } from "@angular/cdk/portal";
 import {
     Component,
-    ComponentFactoryResolver,
     ComponentRef,
+    HostBinding,
     Injector,
-    NgZone,
     OnDestroy,
     Type,
     ViewChild,
@@ -13,7 +12,6 @@ import {
 
 import { log } from "@batch-flask/utils";
 import { SidebarInjector } from "./sidebar-injector";
-import { SidebarManager } from "./sidebar-manager";
 import { SidebarRef } from "./sidebar-ref";
 
 @Component({
@@ -28,17 +26,16 @@ import { SidebarRef } from "./sidebar-ref";
 export class SidebarPageComponent implements OnDestroy {
     public display = true;
 
+    @HostBinding("attr.role") public role = "dialog";
+    @HostBinding("attr.aria-modal") public ariaModal = true;
+
     @ViewChild(PortalHostDirective)
     private portalHost: PortalHostDirective;
 
     private componentRef: ComponentRef<any> = null;
     private onSideBarOpenEvent: any;
 
-    constructor(
-        private injector: Injector,
-        componentFactoryResolver: ComponentFactoryResolver,
-        ngZone: NgZone,
-        sidebarManager: SidebarManager) {
+    constructor(private injector: Injector) {
     }
 
     public attachComponent<T>(componentType: Type<T>, sidebarRef: SidebarRef<T>) {

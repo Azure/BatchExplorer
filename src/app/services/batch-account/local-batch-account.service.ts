@@ -11,7 +11,7 @@ export const LOCAL_BATCH_ACCOUNT_KEY = "local-batch-accounts";
 /**
  * Service that handle loading, adding and updating local back accounts
  */
-@Injectable()
+@Injectable({providedIn: "root"})
 export class LocalBatchAccountService implements OnDestroy {
     public accounts: Observable<List<LocalBatchAccount>>;
     private _accounts = new BehaviorSubject<List<LocalBatchAccount>>(null);
