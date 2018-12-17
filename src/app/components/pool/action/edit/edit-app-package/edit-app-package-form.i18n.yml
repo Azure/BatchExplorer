@@ -1,4 +1,3 @@
 edit-app-package-form:
   title: Edit application package references for pool {poolId}
   updated: Application packages for {poolId} were updated
-  rebootAll: Reboot all

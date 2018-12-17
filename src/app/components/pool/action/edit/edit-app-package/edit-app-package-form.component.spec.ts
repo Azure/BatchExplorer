@@ -112,7 +112,7 @@ describe("EditAppPackageFormComponent", () => {
         const notifcation = notificationServiceSpy.lastNotification;
 
         expect(notifcation.config.actions.length).toEqual(1);
-        expect(notifcation.config.actions[0].name).toEqual("edit-app-package-form.rebootAll");
+        expect(notifcation.config.actions[0].name).toEqual("common.rebootAll");
 
         expect(nodeServiceSpy.rebootAll).not.toHaveBeenCalled();
         notifcation.config.actions[0].do();

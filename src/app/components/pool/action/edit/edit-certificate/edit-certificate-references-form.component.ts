@@ -54,7 +54,7 @@ export class EditCertificateReferencesComponent {
 
     private _notifySuccess() {
         const actions = [
-            { name: "Reboot all", do: () => this.nodeService.rebootAll(this.pool.id) },
+            { name:  this.i18n.t("common.rebootAll"), do: () => this.nodeService.rebootAll(this.pool.id) },
         ];
 
         this.notificationService.success(

@@ -54,7 +54,7 @@ export class EditAppPackageFormComponent {
     private _notifySuccess() {
         const actions = [
             {
-                name: this.i18n.t("edit-app-package-form.rebootAll"),
+                name: this.i18n.t("common.rebootAll"),
                 do: () => this.nodeService.rebootAll(this.pool.id),
             },
         ];
