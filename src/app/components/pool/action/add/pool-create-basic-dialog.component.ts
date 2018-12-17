@@ -41,6 +41,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private pricingService: PricingService,
         changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) {
+
         super(PoolCreateDto);
         this._setComplexFormConfig();
 

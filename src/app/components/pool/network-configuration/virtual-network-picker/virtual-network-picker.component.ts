@@ -1,6 +1,6 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component,
-    Input, OnChanges, OnDestroy, forwardRef,
+    Input, OnChanges, OnDestroy, SimpleChanges, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
@@ -76,7 +76,7 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
         this.virtualNetworkControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe(this._virtualNetworkOnChange);
     }
 
-    public ngOnChanges(changes) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes.armNetworkOnly) {
             this._armNetworkOnly.next(this.armNetworkOnly);
         }
