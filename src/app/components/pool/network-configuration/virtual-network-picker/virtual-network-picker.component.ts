@@ -9,7 +9,8 @@ import { autobind } from "@batch-flask/core";
 import { ArmBatchAccount } from "app/models";
 import { BatchAccountService, NetworkConfigurationService, Subnet, VirtualNetwork } from "app/services";
 import { ArmResourceUtils } from "app/utils";
-import { Subscription } from "rxjs";
+import { BehaviorSubject, Subject, combineLatest, forkJoin } from "rxjs";
+import { filter, switchMap, takeUntil, tap } from "rxjs/operators";
 
 import "./virtual-network-picker.scss";
 
@@ -23,66 +24,68 @@ import "./virtual-network-picker.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VirtualNetworkPickerComponent implements ControlValueAccessor, Validator, OnChanges, OnDestroy {
+
     @Input() public armNetworkOnly: boolean = true;
-    public virtualNetworkControl = new FormControl();
-    public subnetControl = new FormControl();
-    public subnets: Subnet[];
+
+    public virtualNetworkControl = new FormControl<string | null>(null);
+    public subnetControl = new FormControl<string | null>(null);
+    public subnets: Subnet[] = [];
     public subscriptionId: string;
     public location: string;
+    public isArmBatchAccout = true;
+    public virtualNetworks: VirtualNetwork[];
 
-    private _propagateChange: (value: string) => void = null;
-    private _subs: Subscription[] = [];
-    private _armVnetSub: Subscription;
-    private _classicVnetSub: Subscription;
-    private _armVnets: VirtualNetwork[] = [];
-    private _classicVnets: VirtualNetwork[] = [];
+    private _propagateChange: (value: string | null) => void = null;
+    private _destroy = new Subject();
+    private _armNetworkOnly = new BehaviorSubject(true);
 
     constructor(
         private changeDetector: ChangeDetectorRef,
         private accountService: BatchAccountService,
         private networkService: NetworkConfigurationService) {
 
-        this._subs.push(this.subnetControl.valueChanges.subscribe((subnetId: string) => {
+        this.subnetControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe((subnetId: string | null) => {
+            console.log("Set value ehre", subnetId);
             if (this._propagateChange) {
                 this._propagateChange(subnetId);
             }
+        });
+
+        const networkObs = this.accountService.currentAccount.pipe(
+            takeUntil(this._destroy),
+            tap(account => this.isArmBatchAccout = (account instanceof ArmBatchAccount)),
+            filter(() => this.isArmBatchAccout),
+            tap((account: ArmBatchAccount) => {
+                this.subscriptionId = account.subscriptionId;
+                this.location = account.location;
+            }),
+            switchMap(() => {
+                return forkJoin(
+                    this.networkService.listArmVirtualNetworks(this.subscriptionId, this.location),
+                    this.networkService.listClassicVirtualNetworks(this.subscriptionId, this.location),
+                );
+            }),
+        );
+
+        combineLatest(networkObs, this._armNetworkOnly).subscribe(([[armVNet, classicVNet], armOnly]) => {
+            this.virtualNetworks = armOnly ? armVNet : armVNet.concat(classicVNet);
+
+            this._virtualNetworkOnChange(this.virtualNetworkControl.value);
             this.changeDetector.markForCheck();
-        }));
+        });
 
-        this._subs.push(this.accountService.currentAccount.subscribe(account => {
-            if (!(account instanceof ArmBatchAccount)) { return; }
-            this.subscriptionId = account && account.subscription && account.subscription.subscriptionId;
-            this.location = account.location;
-            if (!this.subscriptionId || !this.location) {
-                return;
-            }
-            this._disposeVnetSubscription();
-            this._armVnetSub = this.networkService.listArmVirtualNetworks(this.subscriptionId, this.location)
-                .subscribe(value => {
-                    this._armVnets = value;
-                    this._virtualNetworkOnChange(this.virtualNetworkControl.value);
-                    this.changeDetector.markForCheck();
-                });
-
-            this._classicVnetSub = this.networkService.listClassicVirtualNetworks(this.subscriptionId, this.location)
-                .subscribe(value => {
-                    this._classicVnets = value;
-                    this._virtualNetworkOnChange(this.virtualNetworkControl.value);
-                    this.changeDetector.markForCheck();
-                });
-        }));
-        this._subs.push(this.virtualNetworkControl.valueChanges.subscribe(this._virtualNetworkOnChange));
+        this.virtualNetworkControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe(this._virtualNetworkOnChange);
     }
 
     public ngOnChanges(changes) {
-        if (changes) {
-            this.changeDetector.markForCheck();
+        if (changes.armNetworkOnly) {
+            this._armNetworkOnly.next(this.armNetworkOnly);
         }
     }
 
     public ngOnDestroy() {
-        this._subs.forEach(sub => sub.unsubscribe());
-        this._disposeVnetSubscription();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public writeValue(subnetId: string) {
@@ -115,17 +118,6 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
         return subnet.id;
     }
 
-    public get virtualNetworks() {
-        return this.armNetworkOnly ? this._armVnets : this._armVnets.concat(this._classicVnets);
-    }
-
-    public get subnet() {
-        if (!this.subnetControl.value) {
-            return "-";
-        }
-        return this.subnetControl.value;
-    }
-
     private _setVirtualNetworkValue(subnetId: string) {
         const descriptor = ArmResourceUtils.getResourceDescriptor(subnetId);
         // Virtual network is not part of request, it's necessary to parse subnet id to get virtual network id
@@ -141,29 +133,26 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
     }
 
     @autobind()
-    private _virtualNetworkOnChange(vnetId: string) {
-        let subnets = null;
-        if (vnetId && this.virtualNetworks) {
-            const selectedVnets = this.virtualNetworks.find(vnet => vnet.id === vnetId);
-            if (selectedVnets) {
-                subnets = selectedVnets.subnets;
+    private _virtualNetworkOnChange(vnetId: string | null) {
+        if (!vnetId) {
+            this.subnetControl.setValue(null);
+            this.subnets = [];
+        } else {
+            let subnets = [];
+            if (this.virtualNetworks) {
+                const selectedVnets = this.virtualNetworks.find(vnet => vnet.id === vnetId);
+                if (selectedVnets) {
+                    subnets = selectedVnets.subnets;
+                }
+            }
+            this.subnets = subnets;
+            if (!this.subnetControl.value) {
+                const defaultId = (Array.isArray(this.subnets) && this.subnets.length > 0) ? this.subnets[0].id : null;
+                this.subnetControl.setValue(defaultId);
             }
         }
-        this.subnets = subnets;
-        if (!this.subnetControl.value) {
-            const defaultId = (Array.isArray(this.subnets) && this.subnets.length > 0) ? this.subnets[0].id : null;
-            this.subnetControl.setValue(defaultId);
-        }
-        this.changeDetector.markForCheck();
-    }
 
-    private _disposeVnetSubscription() {
-        if (this._armVnetSub) {
-            this._armVnetSub.unsubscribe();
-        }
-        if (this._classicVnetSub) {
-            this._classicVnetSub.unsubscribe();
-        }
+        this.changeDetector.markForCheck();
     }
 
     private _getVirtualNetworkId(subId: string, rg: string, provider: string) {
