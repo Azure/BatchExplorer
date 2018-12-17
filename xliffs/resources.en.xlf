@@ -172,6 +172,18 @@
       <trans-unit id="browse-layout.openedAdvancedFilter">
         <source>Opened advanced filter blade</source>
       </trans-unit>
+      <trans-unit id="certificate-references">
+        <source/>
+      </trans-unit>
+      <trans-unit id="certificate-references.addOne">
+        <source>Add a certificate</source>
+      </trans-unit>
+      <trans-unit id="certificate-references.duplicate">
+        <source>Cannot reference the same certificate twice {thumbprint}</source>
+      </trans-unit>
+      <trans-unit id="certificate-references.noCertificates">
+        <source>No certificate(s) found for this batch account, please upload your certificate(s) first.</source>
+      </trans-unit>
       <trans-unit id="common">
         <source/>
       </trans-unit>
@@ -190,6 +202,9 @@
       <trans-unit id="common.no">
         <source>No</source>
       </trans-unit>
+      <trans-unit id="common.rebootAll">
+        <source>Reboot all</source>
+      </trans-unit>
       <trans-unit id="common.refresh">
         <source>Refresh</source>
       </trans-unit>
@@ -198,6 +213,9 @@
       </trans-unit>
       <trans-unit id="common.required">
         <source>Required</source>
+      </trans-unit>
+      <trans-unit id="common.updated">
+        <source>Updated</source>
       </trans-unit>
       <trans-unit id="common.yes">
         <source>Yes</source>
@@ -276,6 +294,24 @@
       </trans-unit>
       <trans-unit id="duration-picker.unit.unlimited">
         <source>Unlimited</source>
+      </trans-unit>
+      <trans-unit id="edit-app-package-form">
+        <source/>
+      </trans-unit>
+      <trans-unit id="edit-app-package-form.title">
+        <source>Edit application package references for pool {poolId}</source>
+      </trans-unit>
+      <trans-unit id="edit-app-package-form.updated">
+        <source>Application packages for {poolId} were updated</source>
+      </trans-unit>
+      <trans-unit id="edit-certificate-references-form">
+        <source/>
+      </trans-unit>
+      <trans-unit id="edit-certificate-references-form.title">
+        <source>Edit certificate references for pool {poolId}</source>
+      </trans-unit>
+      <trans-unit id="edit-certificate-references-form.updated">
+        <source>Certificates for {poolId} were updated</source>
       </trans-unit>
       <trans-unit id="editable-table">
         <source/>
