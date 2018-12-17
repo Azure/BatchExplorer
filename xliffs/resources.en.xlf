@@ -202,6 +202,9 @@
       <trans-unit id="common.no">
         <source>No</source>
       </trans-unit>
+      <trans-unit id="common.none">
+        <source>None</source>
+      </trans-unit>
       <trans-unit id="common.rebootAll">
         <source>Reboot all</source>
       </trans-unit>
@@ -1122,6 +1125,21 @@
       </trans-unit>
       <trans-unit id="task-resource-files.none">
         <source>This task contains no resource files</source>
+      </trans-unit>
+      <trans-unit id="virtual-network-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="virtual-network-picker.noneAvailable">
+        <source>There are no virtual networks available under subscription '{subscriptionId}' and location '{location}'.</source>
+      </trans-unit>
+      <trans-unit id="virtual-network-picker.notArm">
+        <source>Can't use VNET when using a local batch account</source>
+      </trans-unit>
+      <trans-unit id="virtual-network-picker.subnet">
+        <source>Subnet</source>
+      </trans-unit>
+      <trans-unit id="virtual-network-picker.virtualNetwork">
+        <source>Virtual network</source>
       </trans-unit>
     </body>
   </file>
