@@ -45,7 +45,6 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
         private networkService: NetworkConfigurationService) {
 
         this.subnetControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe((subnetId: string | null) => {
-            console.log("Set value ehre", subnetId);
             if (this._propagateChange) {
                 this._propagateChange(subnetId);
             }
@@ -110,11 +109,11 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
         return null;
     }
 
-    public trackVirtualNetwork(index, vnet: VirtualNetwork) {
+    public trackVirtualNetwork(_, vnet: VirtualNetwork) {
         return vnet.id;
     }
 
-    public trackSubnet(index, subnet: Subnet) {
+    public trackSubnet(_, subnet: Subnet) {
         return subnet.id;
     }
 

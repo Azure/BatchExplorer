@@ -1,0 +1,5 @@
+virtual-network-picker:
+  virtualNetwork: Virtual network
+  subnet: Subnet
+  noneAvailable: There are no virtual networks available under subscription '{subscriptionId}' and location '{location}'.
+  notArm: Can't use VNET when using a local batch account
