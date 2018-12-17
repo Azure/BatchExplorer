@@ -1,8 +1,9 @@
 import {
-    Component, ContentChild, Directive, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, forwardRef,
+    ChangeDetectorRef, Component, ContentChild, Directive,
+    ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 
 import { FormPageComponent } from "../form-page";
@@ -55,7 +56,7 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     private _registerTouched: () => void;
 
     private _currentEditIndex = -1;
-    constructor(formBuilder: FormBuilder) {
+    constructor(private changeDetector: ChangeDetectorRef) {
         this.values = [null];
     }
 
@@ -86,6 +87,7 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         this.currentEditValue.setValue(this.values[index]);
         this._currentEditIndex = index;
         this._page.activate(this);
+        this.changeDetector.markForCheck();
     }
 
     public nestedFormSubmit() {

@@ -88,6 +88,7 @@ export class CertificateReferencesPickerComponent implements OnInit, OnDestroy, 
         } else {
             this.references.setValue([]);
         }
+        this.changeDetector.markForCheck();
     }
 
     public registerOnChange(fn: (value: CertificateReferenceAttributes[]) => void): void {

@@ -9,6 +9,7 @@ import { Certificate, CertificateReferenceAttributes } from "app/models";
 import { CertificateService } from "app/services";
 import { List } from "immutable";
 import { of } from "rxjs";
+import { click } from "test/utils/helpers";
 import { CertificatePickerComponent } from "./certificate-picker";
 import { CertificateReferencesPickerComponent, TrimThumbprintPipe } from "./certificate-references-picker.component";
 
@@ -32,10 +33,9 @@ const certificates: Certificate[] = [
     new Certificate({ thumbprint: "defdefdefdefdefdefdefdefdefdef", thumbprintAlgorithm: "sha-1" }),
 ];
 
-fdescribe("CertificateReferencesPickerComponent", () => {
+describe("CertificateReferencesPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: CertificateReferencesPickerComponent;
     let de: DebugElement;
     let certificateServiceSpy;
     let availableCertificates: Certificate[];
@@ -68,36 +68,86 @@ fdescribe("CertificateReferencesPickerComponent", () => {
         fixture.detectChanges();
 
         de = fixture.debugElement.query(By.css("bl-certificate-references-picker"));
-        component = de.componentInstance;
         fixture.detectChanges();
+    }
+
+    function getButtons() {
+        return de.queryAll(By.css(".form-picker"));
     }
 
     it("shows a warning when there is no certificates", () => {
         availableCertificates = [];
         setup();
         expect(de.nativeElement.textContent).toContain("certificate-references-picker.noCertificates");
+        const buttons = getButtons();
+        expect(buttons.length).toEqual(0);
         expect(de.nativeElement.textContent).not.toContain("certificate-references-picker.addOne");
     });
 
     it("shows add a new certificate button when there is certificates", () => {
-        expect(de.nativeElement.textContent).toContain("certificate-references-picker.addOne");
+        const buttons = getButtons();
+        expect(buttons.length).toEqual(1);
+        expect(buttons[0].nativeElement.textContent).toContain("certificate-references-picker.addOne");
         expect(de.nativeElement.textContent).not.toContain("certificate-references-picker.noCertificates");
     });
 
-    it("shows selected references", () => {
-        testComponent.references.setValue([
-            {
-                thumbprint: certificates[0].thumbprint,
-                thumbprintAlgorithm: "sha-1",
-                storeLocation: "FOo",
-                storeName: "My",
-                visibility: ["User"],
-            },
-        ]);
+    it("opens the edit form when clicking on add one", () => {
+        let buttons = getButtons();
+        click(buttons[0]);
+        fixture.detectChanges();
+        const certPicker = fixture.debugElement.query(By.css("bl-certificate-picker"));
+        expect(certPicker).not.toBeFalsy();
+        certPicker.componentInstance.form.setValue({
+            thumbprint: certificates[0].thumbprint,
+            thumbprintAlgorithm: "sha-1",
+            storeLocation: "FOo",
+            storeName: "My",
+            visibility: ["User"],
+        });
+        fixture.detectChanges();
+        click(fixture.debugElement.query(By.css("bl-button.select")));
+        fixture.detectChanges();
 
+        buttons = getButtons();
+        expect(buttons.length).toBe(2);
         // Trimed the thumbprint
-        expect(de.nativeElement.textContent).toContain("abcdefabcdefabc");
-        expect(de.nativeElement.textContent).not.toContain("abcdefabcdefabcdefabcdef");
+        expect(buttons[0].nativeElement.textContent).toContain("abcdefabcdefabc");
+        expect(buttons[1].nativeElement.textContent).toContain("certificate-references-picker.addOne");
+    });
 
+    describe("when certificate is preselected", () => {
+        beforeEach(() => {
+            testComponent.references.setValue([
+                {
+                    thumbprint: certificates[0].thumbprint,
+                    thumbprintAlgorithm: "sha-1",
+                    storeLocation: "FOo",
+                    storeName: "My",
+                    visibility: ["User"],
+                },
+            ]);
+            fixture.detectChanges();
+        });
+
+        it("shows selected references", () => {
+            const buttons = getButtons();
+
+            // Trimed the thumbprint buttons = getButtons();
+            expect(buttons.length).toBe(2);
+            // Trimed the thumbprint
+            expect(buttons[0].nativeElement.textContent).toContain("abcdefabcdefabc");
+            expect(buttons[0].nativeElement.textContent).not.toContain("abcdefabcdefabcdefabcdef");
+            expect(buttons[1].nativeElement.textContent).toContain("certificate-references-picker.addOne");
+            expect(de.nativeElement.textContent).toContain("abcdefabcdefabc");
+        });
+
+        it("remove certificate when clicking delete", () => {
+            let buttons = getButtons();
+            click(buttons[0].query(By.css(".clear-btn")));
+            fixture.detectChanges();
+            buttons = getButtons();
+            expect(buttons.length).toBe(1);
+            expect(buttons[0].nativeElement.textContent).toContain("certificate-references-picker.addOne");
+        });
     });
 });

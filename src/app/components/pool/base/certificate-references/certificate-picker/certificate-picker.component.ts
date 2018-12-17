@@ -90,7 +90,7 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
         if (value) {
             this.form.patchValue(value);
         } else {
-            this.form.reset({
+            this.form.setValue({
                 thumbprintAlgorithm: defaultThumbprintAlgorithm,
                 thumbprint: null,
                 visibility: defaultVisibility,
