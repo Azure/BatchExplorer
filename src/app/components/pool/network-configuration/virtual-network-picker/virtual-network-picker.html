@@ -1,34 +1,35 @@
-<div *ngIf="virtualNetworks && virtualNetworks.length > 0">
-    <table class="noselect" cellspacing="0" cellpadding="0">
-        <thead>
-            <tr>
-                <th>Virtual Network</th>
-                <th>Subnet</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <bl-select [formControl]="virtualNetworkControl">
-                        <bl-option *ngFor="let virtualNetwork of virtualNetworks;trackBy: trackVirtualNetwork" [value]="virtualNetwork.id" label="({{ virtualNetwork.category }}) {{ virtualNetwork.name }}">
-                        </bl-option>
-                    </bl-select>
-                </td>
-                <td>
-                    <bl-select [formControl]="subnetControl">
-                        <ng-container *ngIf="subnets">
+<ng-container *ngIf="isArmBatchAccout">
+    <div *ngIf="virtualNetworks.length > 0">
+        <table class="noselect" cellspacing="0" cellpadding="0">
+            <thead>
+                <tr>
+                    <th>{{'virtual-network-picker.virtualNetwork' | i18n}}</th>
+                    <th>{{'virtual-network-picker.subnet' | i18n}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <bl-select [formControl]="virtualNetworkControl" class="network">
+                            <bl-option [value]="null" [label]="'common.none' | i18n"></bl-option>
+                            <bl-option *ngFor="let virtualNetwork of virtualNetworks;trackBy: trackVirtualNetwork" [value]="virtualNetwork.id" label="({{ virtualNetwork.category }}) {{ virtualNetwork.name }}">
+                            </bl-option>
+                        </bl-select>
+                    </td>
+                    <td>
+                        <bl-select [formControl]="subnetControl" class="subnet">
                             <bl-option *ngFor="let subnet of subnets;trackBy: trackSubnet" [value]="subnet.id" [label]="subnet.name">
                             </bl-option>
-                        </ng-container>
-                    </bl-select>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <div>
-        Virtual network subnet which the compute nodes of the pool will join: {{ subnet }}
+                        </bl-select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-</div>
-<div *ngIf="virtualNetworks && virtualNetworks.length === 0">
-    There are no virtual networks available under subscription '{{subscriptionId}}' and location '{{location}}'.
+    <div *ngIf="virtualNetworks.length === 0">
+        {{'virtual-network-picker.noneAvailable' | i18n: {subscriptionId: subscriptionId, location: location} }}
+    </div>
+</ng-container>
+<div *ngIf="!isArmBatchAccout">
+        {{'virtual-network-picker.notArm' | i18n }}
 </div>
