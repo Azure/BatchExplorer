@@ -33,7 +33,7 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
     public subscriptionId: string;
     public location: string;
     public isArmBatchAccout = true;
-    public virtualNetworks: VirtualNetwork[];
+    public virtualNetworks: VirtualNetwork[] = [];
 
     private _propagateChange: (value: string | null) => void = null;
     private _destroy = new Subject();
@@ -52,11 +52,15 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
 
         const networkObs = this.accountService.currentAccount.pipe(
             takeUntil(this._destroy),
-            tap(account => this.isArmBatchAccout = (account instanceof ArmBatchAccount)),
+            tap((account) => {
+                this.isArmBatchAccout = (account instanceof ArmBatchAccount);
+                this.changeDetector.markForCheck();
+            }),
             filter(() => this.isArmBatchAccout),
             tap((account: ArmBatchAccount) => {
                 this.subscriptionId = account.subscriptionId;
                 this.location = account.location;
+                this.changeDetector.markForCheck();
             }),
             switchMap(() => {
                 return forkJoin(
@@ -87,7 +91,7 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
         this._destroy.complete();
     }
 
-    public writeValue(subnetId: string) {
+    public writeValue(subnetId: string | null) {
         if (subnetId) {
             this.subnetControl.setValue(subnetId);
             this._setVirtualNetworkValue(subnetId);

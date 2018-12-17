@@ -1,5 +1,5 @@
 <ng-container *ngIf="isArmBatchAccout">
-    <div *ngIf="virtualNetworks && virtualNetworks.length > 0">
+    <div *ngIf="virtualNetworks.length > 0">
         <table class="noselect" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
@@ -10,14 +10,14 @@
             <tbody>
                 <tr>
                     <td>
-                        <bl-select [formControl]="virtualNetworkControl">
+                        <bl-select [formControl]="virtualNetworkControl" class="network">
                             <bl-option [value]="null" [label]="'common.none' | i18n"></bl-option>
                             <bl-option *ngFor="let virtualNetwork of virtualNetworks;trackBy: trackVirtualNetwork" [value]="virtualNetwork.id" label="({{ virtualNetwork.category }}) {{ virtualNetwork.name }}">
                             </bl-option>
                         </bl-select>
                     </td>
                     <td>
-                        <bl-select [formControl]="subnetControl">
+                        <bl-select [formControl]="subnetControl" class="subnet">
                             <bl-option *ngFor="let subnet of subnets;trackBy: trackSubnet" [value]="subnet.id" [label]="subnet.name">
                             </bl-option>
                         </bl-select>
@@ -26,7 +26,7 @@
             </tbody>
         </table>
     </div>
-    <div *ngIf="virtualNetworks && virtualNetworks.length === 0">
+    <div *ngIf="virtualNetworks.length === 0">
         {{'virtual-network-picker.noneAvailable' | i18n: {subscriptionId: subscriptionId, location: location} }}
     </div>
 </ng-container>
