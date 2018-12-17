@@ -9,3 +9,6 @@ common:
   back: Back
   refresh: Refresh
   refreshing: Refreshing
+  updated: Updated
+  rebootAll: Reboot all
+

@@ -10,14 +10,13 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
 
-import "@batch-flask/ui/form/editable-table/editable-table.scss";
+import "./app-package-picker.scss";
 
 interface PackageReference {
     applicationId?: string;
     version?: string;
 }
 
-// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-app-package-picker",
     templateUrl: "app-package-picker.html",
