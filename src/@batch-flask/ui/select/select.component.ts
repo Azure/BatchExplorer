@@ -32,7 +32,6 @@ import { Subject, Subscription } from "rxjs";
 import { OptionTemplateDirective } from "./option-template.directive";
 import { BL_OPTION_PARENT, OptionParent, SelectOptionComponent } from "./option/option.component";
 
-import { noUndefined } from "@angular/compiler/src/util";
 import "./select.scss";
 
 /** Custom injector type specifically for instantiating components with a dialog. */
