@@ -60,7 +60,7 @@ export function ListProp<T>(type: any) {
 }
 
 export function Model() {
-    return <T extends { new(...args: any[]): {} }>(ctr: T) => {
+    return <T extends new(...args: any[]) => {}>(ctr: T) => {
         if (!(ctr.prototype instanceof Record)) {
             throw new RecordMissingExtendsError(ctr);
         }

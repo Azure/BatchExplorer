@@ -82,7 +82,8 @@
     "import-destructuring-spacing": true,
     "no-shadowed-variable": false,
     "trackBy-function": true,
-    "banana-in-box": true
+    "banana-in-box": true,
+    "function-constructor": true
   },
   "jsRules": {
     "object-literal-sort-keys": false,
