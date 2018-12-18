@@ -85,7 +85,6 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private storageService: StorageContainerService,
         private settingsService: SettingsService) {
 
-        this.form = new FormGroup({});
         this._defaultOutputDataContainer = this.settingsService.settings["job-template.default-output-filegroup"];
     }
 
@@ -106,15 +105,14 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public ngOnChanges(changes) {
         this.multipleModes = Boolean(this.jobTemplate && this.poolTemplate);
         if (changes.jobTemplate || changes.poolTemplate) {
-            if (!this.multipleModes) {
-                this.modeState = this.poolTemplate ? NcjTemplateMode.NewPool : NcjTemplateMode.ExistingPoolAndJob;
-            }
-
             if (!this._loaded) {
                 this._queryParameters = {};
                 this._parameterTypeMap = {};
                 this._processParameters();
                 this._createForms();
+            }
+            if (!this.multipleModes) {
+                this.pickMode(this.poolTemplate ? NcjTemplateMode.NewPool : NcjTemplateMode.ExistingPoolAndJob);
             }
         }
     }
