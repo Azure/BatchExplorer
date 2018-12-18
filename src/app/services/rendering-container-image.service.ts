@@ -60,6 +60,9 @@ export class RenderingContainerImageService {
     }
 
     public getAppVersionDisplayList(app: RenderApplication, imageReferenceId: string): Observable<string[]> {
+
+        // TODO should pass renderEngine in here and only return appVersions
+        // which have at least one rendererVersion available
         return this.containerImages.pipe(
             map(images => {
                 images = images.filter(x =>
