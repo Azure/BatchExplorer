@@ -11,6 +11,9 @@ steps:
   - powershell: npm run build-and-pack
     displayName: Build and package
 
+  - powershell: npm run spectron
+    displayName: Running spectron
+
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-antimalware.AntiMalware@3
     displayName: 'AntiMalware Scanner'
     inputs:
