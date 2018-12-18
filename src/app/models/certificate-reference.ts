@@ -2,6 +2,29 @@ import { List } from "immutable";
 
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 
+export enum CertificateVisibility {
+    StartTask = "StartTask",
+    Task = "Task",
+    RemoteUser = "RemoteUser",
+}
+
+export enum CertificateStoreLocation {
+    CurrentUser = "CurrentUser",
+    LocalMachine = "LocalMachine",
+}
+
+export enum CommonStoreName {
+    My = "My",
+    Root = "Root",
+    CA = "CA",
+    Trust = "Trust",
+    Disallowed = "Disallowed",
+    TrustedPeople = "TrustedPeople",
+    TrustedPublisher = "TrustedPublisher",
+    AuthRoot = "AuthRoot",
+    AddressBook = "AddressBook",
+}
+
 export interface CertificateReferenceAttributes {
     thumbprint: string;
     thumbprintAlgorithm: string;
@@ -17,7 +40,7 @@ export interface CertificateReferenceAttributes {
 export class CertificateReference extends Record<CertificateReferenceAttributes> {
     @Prop() public thumbprint: string;
     @Prop() public thumbprintAlgorithm: string;
-    @Prop() public storeLocation: string;
-    @Prop() public storeName: string;
-    @ListProp(String) public visibility: List<string> = List([]);
+    @Prop() public storeLocation: CertificateStoreLocation;
+    @Prop() public storeName: CommonStoreName | string;
+    @ListProp(String) public visibility: List<CertificateVisibility> = List([]);
 }

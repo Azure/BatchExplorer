@@ -53,7 +53,7 @@ const baseConfig = {
         ]),
         new HtmlWebpackPlugin({
             template: "src/app/index.html",
-            chunksSortMode: function(a, b) {
+            chunksSortMode: (a, b) => {
                 const entryPoints = ["app", "vendor", "styles", "sw-register", "polyfills", "inline"];
                 return entryPoints.indexOf(b.names[0]) - entryPoints.indexOf(a.names[0]);
             },

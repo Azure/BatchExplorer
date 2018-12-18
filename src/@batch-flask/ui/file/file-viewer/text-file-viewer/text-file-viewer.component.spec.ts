@@ -1,5 +1,5 @@
 import { Component, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { File } from "@batch-flask/ui/file/file.model";
 import { LoadingModule } from "@batch-flask/ui/loading";
@@ -21,6 +21,10 @@ describe("TextFileViewer", () => {
     let de: DebugElement;
     let editorComponent: EditorMockComponent;
 
+    beforeAll(async () => {
+        await import("monaco-editor");
+    });
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [EditorTestingModule, LoadingModule],
@@ -33,23 +37,24 @@ describe("TextFileViewer", () => {
         editorComponent = de.query(By.css("bl-editor")).componentInstance;
     });
 
-    it("gets the content of the file loader when set", () => {
+    it("gets the content of the file loader when set", fakeAsync(() => {
         testComponent.fileLoader = {
             filename: "foo.ts",
             content: () => of({ content: "export const FOO=1" }),
             properties: new Subject(),
         };
         fixture.detectChanges();
-
         expect(editorComponent.value).toEqual("export const FOO=1");
-    });
+    }));
 
-    it("gets the content of the file loader when set", () => {
+    it("set the config correctly of the file loader when set", async () => {
         testComponent.fileLoader = {
             filename: "foo.ts",
             content: () => of({ content: "export const FOO=1" }),
             properties: new Subject(),
         };
+        fixture.detectChanges();
+        await new Promise((resolve) => setTimeout(resolve));
         fixture.detectChanges();
 
         expect(editorComponent.config).toEqual({

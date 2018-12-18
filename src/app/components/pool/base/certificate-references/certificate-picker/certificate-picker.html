@@ -17,7 +17,7 @@
         <bl-form-field>
             <input blInput [matAutocomplete]="auto" formControlName="storeName" placeholder="Store name" />
             <mat-autocomplete #auto="matAutocomplete">
-                <bl-option *ngFor="let storeName of commonStoreNames;trackBy: trackByIndex"
+                <bl-option *ngFor="let storeName of commonStoreNames;trackBy: trackByValue"
                     [value]="storeName">{{storeName}}</bl-option>
             </mat-autocomplete>
         </bl-form-field>
@@ -26,7 +26,7 @@
     <div class="form-element" *ngIf="isWindows">
         <bl-form-field>
             <bl-select formControlName="storeLocation" color="primary" placeholder="Store location">
-                <bl-option *ngFor="let location of storeLocations;trackBy: trackByIndex" [value]="location" [label]="location"></bl-option>
+                <bl-option *ngFor="let location of storeLocations;trackBy: trackByValue" [value]="location" [label]="location"></bl-option>
             </bl-select>
         </bl-form-field>
         <bl-error controlName="storeLocation" code="required">StoreLocation is a required field</bl-error>
@@ -34,7 +34,7 @@
     <div class="form-element">
         <bl-form-field>
             <bl-select formControlName="visibility" color="primary" placeholder="Visibility" multiple>
-                <bl-option *ngFor="let visibility of visibilities;trackBy: trackByIndex" [value]="visibility" [label]="visibility"></bl-option>
+                <bl-option *ngFor="let visibility of visibilities;trackBy: trackByValue" [value]="visibility" [label]="visibility"></bl-option>
             </bl-select>
         </bl-form-field>
         <bl-error controlName="visibility" code="required">Visibility is a required field</bl-error>

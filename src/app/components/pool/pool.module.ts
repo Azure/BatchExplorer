@@ -15,7 +15,6 @@ import { UserAccountModule } from "./user-account";
 import {
     AppLicensePickerComponent,
     AutoScaleFormulaPickerModule,
-    CertificatePickerComponent,
     ContaienrImagesPickerComponent,
     ContainerConfigurationPickerComponent,
     ContainerRegistryPickerComponent,
@@ -31,10 +30,11 @@ import {
     VmSizePickerComponent,
     VmSizePickerFilterComponent,
 } from "app/components/pool/action";
+import { EditPoolModule } from "./action/edit/edit-pool.module";
 import { PoolRoutingModule } from "./pool-routing.module";
 
 const components = [
-    AppLicensePickerComponent, CertificatePickerComponent,
+    AppLicensePickerComponent,
     ContainerConfigurationPickerComponent, ContaienrImagesPickerComponent, ContainerRegistryPickerComponent,
     DeallocationOptionPickerComponent, DeletePoolDialogComponent, LicenseEulaDialogComponent, OsOfferTileComponent,
     PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent, PoolHomeComponent, PoolListComponent,
@@ -43,16 +43,26 @@ const components = [
 ];
 
 const modules = [
+    TaskBaseModule,
+    ...commonModules,
+];
+
+const publicModules = [
+    StartTaskModule,
+    UserAccountModule,
+    AutoScaleFormulaPickerModule,
+    PoolBaseModule,
+    PoolDetailsModule,
+    NetworkConfigurationModule,
+    PoolGraphsModule,
     PoolRoutingModule,
-    AutoScaleFormulaPickerModule, PoolBaseModule, PoolDetailsModule, NetworkConfigurationModule, PoolGraphsModule,
-    StartTaskModule, UserAccountModule,
-    TaskBaseModule, ...commonModules,
+    EditPoolModule,
 ];
 
 @NgModule({
     declarations: components,
-    exports: [...modules, ...components],
-    imports: [...modules],
+    exports: [...modules, ...publicModules, ...components],
+    imports: [...modules, ...publicModules],
     entryComponents: [
         DeletePoolDialogComponent,
         LicenseEulaDialogComponent,

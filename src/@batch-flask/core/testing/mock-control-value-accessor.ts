@@ -2,7 +2,7 @@ import { Component, Type, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
-    selector: "bl-autoscale-formula-picker",
+    selector: "bl-mock-control-value-accessor",
     template: "",
 })
 export class MockControlValueAccessorComponent<T> implements ControlValueAccessor {
