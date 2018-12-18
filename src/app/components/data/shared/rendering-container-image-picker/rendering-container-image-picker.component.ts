@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
-    OnChanges, OnDestroy, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
+    OnChanges, OnDestroy, forwardRef,
+} from "@angular/core";
 import {
     ControlValueAccessor,
     FormControl,
@@ -8,8 +10,8 @@ import {
 
 import { RenderApplication, RenderEngine, RenderingContainerImage } from "app/models/rendering-container-image";
 import { RenderingContainerImageService } from "app/services";
-import { Observable, Subscription } from "rxjs";
-import { map } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
+import { map, switchMap, takeUntil } from "rxjs/operators";
 import "./rendering-container-image-picker.scss";
 
 @Component({
@@ -17,13 +19,23 @@ import "./rendering-container-image-picker.scss";
     templateUrl: "rendering-container-image-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() =>
-            RenderingContainerImagePickerComponent), multi: true },
+        {
+            provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() =>
+                RenderingContainerImagePickerComponent), multi: true,
+        },
         RenderingContainerImageService,
     ],
 })
 
 export class RenderingContainerImagePickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
+
+    public get appDisplay() {
+        return this.UpperCaseFirstChar(this.app);
+    }
+
+    public get renderEngineDisplay() {
+        return this.UpperCaseFirstChar(this.renderEngine);
+    }
 
     public appVersionControl = new FormControl();
     public rendererVersionControl = new FormControl();
@@ -31,7 +43,6 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
     public appVersions: string[];
     public containerImages: RenderingContainerImage[];
 
-    public appVersionsData: Observable<string[]>;
     public containerImagesData: Observable<RenderingContainerImage[]>;
     public containerImage: string;
 
@@ -39,46 +50,46 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
     @Input() public imageReferenceId: string;
     @Input() public renderEngine: RenderEngine;
 
+    private _app = new BehaviorSubject(null);
+    private _imageReferenceId = new BehaviorSubject(null);
+    private _renderEngine = new BehaviorSubject(null);
+
     private _propagateChange: (value: string) => void = null;
-    private _subs: Subscription[] = [];
+
+    private _destroy = new Subject();
 
     constructor(
         private changeDetector: ChangeDetectorRef,
         private renderingContainerImageService: RenderingContainerImageService) {
 
-        this.renderingContainerImageService.loadImageData();
-
-        this.appVersionsData = this.renderingContainerImageService.getAppVersionDisplayList(
-            this.app, this.imageReferenceId);
-
-        this.appVersionsData.subscribe((appVersions) => {
+        combineLatest(this._app, this._imageReferenceId).pipe(
+            takeUntil(this._destroy),
+            switchMap(([app, imageReferenceId]) => {
+                return this.renderingContainerImageService.getAppVersionDisplayList(app, imageReferenceId);
+            }),
+        ).subscribe((appVersions) => {
             this.appVersions = appVersions;
+            this.changeDetector.markForCheck();
         });
 
-        this._subs.push(this.rendererVersionControl.valueChanges.subscribe((containerImage: string) => {
+        this.rendererVersionControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe((containerImage: string) => {
             if (this._propagateChange) {
                 this._propagateChange(containerImage);
             }
             this.containerImage = containerImage;
             this.changeDetector.markForCheck();
-        }));
+        });
 
-        this._subs.push(this.appVersionControl.valueChanges.subscribe((appVersion: string) => {
-            this.containerImagesData =
-                this.renderingContainerImageService.getContainerImagesForAppVersion(
-                this.app, this.renderEngine, this.imageReferenceId, appVersion);
-
-            this.containerImagesData.subscribe((containerImages) => {
-                this.containerImages = containerImages;
-            });
-
-            const defaultImage = (Array.isArray(this.containerImages) &&
-                this.containerImages.length > 0) ? this.containerImages[0].containerImage : null;
-
-            this.rendererVersionControl.setValue(defaultImage);
-
+        combineLatest(this._renderEngine, this._app, this._imageReferenceId, this.appVersionControl.valueChanges).pipe(
+            takeUntil(this._destroy),
+            switchMap(([renderEngine, app, imageReferenceId, value]) => {
+                return this.renderingContainerImageService.getContainerImagesForAppVersion(
+                    app, renderEngine, imageReferenceId, value);
+            }),
+        ).subscribe((containerImages: RenderingContainerImage[]) => {
+            this.containerImages = containerImages;
             this.changeDetector.markForCheck();
-        }));
+        });
     }
 
     public trackContainerImage(_, image: RenderingContainerImage) {
@@ -86,15 +97,15 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
     }
 
     public trackAppVersion(_, image: string) {
-       return image;
+        return image;
     }
 
     public writeValue(containerImageId: string) {
         if (containerImageId) {
             this.renderingContainerImageService.findContainerImageById(containerImageId)
-            .pipe(map(image => {
-                this.appVersionControl.setValue(image.appVersion);
-                this.rendererVersionControl.setValue(image.rendererVersion);
+                .pipe(map(image => {
+                    this.appVersionControl.setValue(image.appVersion);
+                    this.rendererVersionControl.setValue(image.rendererVersion);
                 }));
         } else {
             this.appVersionControl.setValue(null);
@@ -114,22 +125,24 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
         return null;
     }
 
-    public get appDisplay() {
-        return this.UpperCaseFirstChar(this.app);
-    }
-
-    public get renderEngineDisplay() {
-        return this.UpperCaseFirstChar(this.renderEngine);
-    }
-
     public ngOnChanges(changes) {
-        if (changes) {
-            this.changeDetector.markForCheck();
+        if (changes.app) {
+            this._app.next(this.app);
+        }
+        if (changes.renderEngine) {
+            this._renderEngine.next(this.renderEngine);
+        }
+        if (changes.imageReferenceId) {
+            this._imageReferenceId.next(this.imageReferenceId);
         }
     }
 
     public ngOnDestroy() {
-        this._subs.forEach(sub => sub.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
+        this._app.complete();
+        this._imageReferenceId.complete();
+        this._renderEngine.complete();
     }
 
     private UpperCaseFirstChar(lower: string) {
