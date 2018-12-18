@@ -94,6 +94,7 @@ export class BatchExplorerApplication {
         this._setCommonHeaders();
         this.aadService.login();
         this._initializer.setTaskStatus("window", "Loading application");
+        log.debug("process.argv", process.argv);
         const window = this.openFromArguments(process.argv, false);
         if (!window) { return; }
         const windowSub = window.state.subscribe((state) => {
@@ -178,7 +179,7 @@ export class BatchExplorerApplication {
             .option("--updated", "If the application was just updated")
             .parse(["", ...argv]);
         const arg = program.args[0];
-        if (!arg) {
+        if (!arg || arg.startsWith("data:")) {
             return this.windows.openNewWindow(undefined, showWhenReady);
         }
         try {

@@ -10,12 +10,23 @@
  */
 
 // 1. Add the src/ folder to the NODE_PATH to be able to do absolute import(Relative to src folder)
+import * as commander from "commander";
 import * as path from "path";
 import "./init";
 
 // 2. Update electron user data folder
+const program = commander
+    .option("--user-data-dir <path>", "Change the user data directory. Used for tests")
+    .parse(process.argv);
+
 import { app } from "electron";
-app.setPath("userData", path.join(app.getPath("appData"), "BatchExplorer"));
+const original = app.getPath("userData");
+if (program.opts().userDataDir) {
+    app.setPath("userData", program.opts().userDataDir);
+} else {
+    app.setPath("userData", path.join(app.getPath("appData"), "BatchExplorer"));
+
+}
 
 // 3. Initialize the logger
 import { initLogger } from "client/logger";
@@ -30,6 +41,11 @@ import "@batch-flask/extensions";
 // 5. Call startBatchExplorer from startup.ts
 import { log } from "@batch-flask/utils";
 import { startBatchExplorer } from "./startup";
+
+log.info("Args: ", process.argv);
+log.info("Progran: ", program.opts());
+log.info("User data is by default: ", original);
+log.info("User data is now: ", app.getPath("userData"));
 
 startBatchExplorer().catch((e) => {
     log.error("Error starting Batch Explorer", e);
