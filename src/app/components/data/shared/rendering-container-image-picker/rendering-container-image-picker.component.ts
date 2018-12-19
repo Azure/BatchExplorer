@@ -7,10 +7,9 @@ import {
     FormControl,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-
 import { RenderApplication, RenderEngine, RenderingContainerImage } from "app/models/rendering-container-image";
 import { RenderingContainerImageService } from "app/services";
-import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
+import { BehaviorSubject, Subject, combineLatest } from "rxjs";
 import { map, switchMap, takeUntil } from "rxjs/operators";
 import "./rendering-container-image-picker.scss";
 
@@ -30,11 +29,11 @@ import "./rendering-container-image-picker.scss";
 export class RenderingContainerImagePickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
 
     public get appDisplay() {
-        return this.UpperCaseFirstChar(this.app);
+        return this._upperCaseFirstChar(this.app);
     }
 
     public get renderEngineDisplay() {
-        return this.UpperCaseFirstChar(this.renderEngine);
+        return this._upperCaseFirstChar(this.renderEngine);
     }
 
     public appVersionControl = new FormControl();
@@ -43,7 +42,6 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
     public appVersions: string[];
     public containerImages: RenderingContainerImage[];
 
-    public containerImagesData: Observable<RenderingContainerImage[]>;
     public containerImage: string;
 
     @Input() public app: RenderApplication;
@@ -62,10 +60,11 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
         private changeDetector: ChangeDetectorRef,
         private renderingContainerImageService: RenderingContainerImageService) {
 
-        combineLatest(this._app, this._imageReferenceId).pipe(
+        combineLatest(this._app, this._renderEngine, this._imageReferenceId).pipe(
             takeUntil(this._destroy),
-            switchMap(([app, imageReferenceId]) => {
-                return this.renderingContainerImageService.getAppVersionDisplayList(app, imageReferenceId);
+            switchMap(([app, renderEngine, imageReferenceId]) => {
+                return this.renderingContainerImageService.getAppVersionDisplayList(
+                    app, renderEngine, imageReferenceId);
             }),
         ).subscribe((appVersions) => {
             this.appVersions = appVersions;
@@ -103,10 +102,11 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
     public writeValue(containerImageId: string) {
         if (containerImageId) {
             this.renderingContainerImageService.findContainerImageById(containerImageId)
-                .pipe(map(image => {
+                .subscribe(image => {
                     this.appVersionControl.setValue(image.appVersion);
-                    this.rendererVersionControl.setValue(image.rendererVersion);
-                }));
+                    this.rendererVersionControl.setValue(image);
+                    this.containerImage = image.containerImage;
+                });
         } else {
             this.appVersionControl.setValue(null);
             this.rendererVersionControl.setValue(null);
@@ -145,7 +145,7 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
         this._renderEngine.complete();
     }
 
-    private UpperCaseFirstChar(lower: string) {
+    private _upperCaseFirstChar(lower: string) {
         return lower.charAt(0).toUpperCase() + lower.substr(1);
     }
 }

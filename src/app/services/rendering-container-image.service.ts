@@ -25,14 +25,14 @@ export class RenderingContainerImageService {
                     return JSON.parse(content);
                 } catch (error) {
                     log.error(`File is not valid json: ${error.message}`);
-                    return { image_references: [], container_images: [] };
+                    return { imageReferences: [], containerImages: [] };
                 }
             }),
             publishReplay(1),
             refCount());
 
-        this.imageReferences = data.pipe(map(x => x.image_references));
-        this.containerImages = data.pipe(map(x => x.container_images));
+        this.imageReferences = data.pipe(map(x => x.imageReferences));
+        this.containerImages = data.pipe(map(x => x.containerImages));
     }
 
     public findContainerImageById(containerImageId: string): Observable<RenderingContainerImage> {
@@ -41,14 +41,14 @@ export class RenderingContainerImageService {
     }
 
     public getContainerImagesForAppVersion(
-        app: RenderApplication, renderer: RenderEngine, selectedBaseImage?: string, selectedAppVersion?: string):
+        app: RenderApplication, renderer: RenderEngine, imageReferenceId?: string, selectedAppVersion?: string):
         Observable<RenderingContainerImage[]> {
         return this.containerImages.pipe(
             map(images => {
                 images = images.filter(image => image.app === app && image.renderer === renderer);
 
-                if (selectedBaseImage) {
-                    images = images.filter(image => image.imageReferenceId === selectedBaseImage);
+                if (imageReferenceId) {
+                    images = images.filter(image => image.imageReferenceId === imageReferenceId);
                 }
                 if (selectedAppVersion) {
                     images = images.filter(image => image.appVersion === selectedAppVersion);
@@ -59,15 +59,16 @@ export class RenderingContainerImageService {
         );
     }
 
-    public getAppVersionDisplayList(app: RenderApplication, imageReferenceId: string): Observable<string[]> {
+    public getAppVersionDisplayList(
+        app: RenderApplication,  renderer: RenderEngine, imageReferenceId: string):
+        Observable<string[]> {
 
-        // TODO should pass renderEngine in here and only return appVersions
-        // which have at least one rendererVersion available
         return this.containerImages.pipe(
             map(images => {
                 images = images.filter(x =>
-                    x.imageReferenceId === imageReferenceId &&
-                    x.app === app);
+                    x.app === app &&
+                    x.renderer === renderer &&
+                    x.imageReferenceId === imageReferenceId);
 
                 return Array.from(new Set(images.map(image => image.appVersion)));
             }),
