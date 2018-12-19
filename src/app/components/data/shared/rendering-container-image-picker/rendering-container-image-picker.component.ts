@@ -10,7 +10,8 @@ import {
 import { RenderApplication, RenderEngine, RenderingContainerImage } from "app/models/rendering-container-image";
 import { RenderingContainerImageService } from "app/services";
 import { BehaviorSubject, Subject, combineLatest } from "rxjs";
-import { map, switchMap, takeUntil } from "rxjs/operators";
+import { switchMap, takeUntil } from "rxjs/operators";
+
 import "./rendering-container-image-picker.scss";
 
 @Component({
@@ -95,17 +96,19 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
         return image.containerImage;
     }
 
-    public trackAppVersion(_, image: string) {
-        return image;
+    public trackAppVersion(_, appVersion: string) {
+        return appVersion;
     }
 
-    public writeValue(containerImageId: string) {
+    public writeValue(containerImageId: any) {
         if (containerImageId) {
             this.renderingContainerImageService.findContainerImageById(containerImageId)
                 .subscribe(image => {
-                    this.appVersionControl.setValue(image.appVersion);
-                    this.rendererVersionControl.setValue(image);
-                    this.containerImage = image.containerImage;
+                    if (image) {
+                        this.appVersionControl.setValue(image.appVersion);
+                        this.rendererVersionControl.setValue(image);
+                        this.containerImage = image.containerImage;
+                    }
                 });
         } else {
             this.appVersionControl.setValue(null);
