@@ -1,4 +1,5 @@
 import { SanitizedError } from "@batch-flask/utils";
+import { ClientConstants } from "client/client-constants";
 import { UniqueWindow } from "client/core/unique-window";
 import { BrowserWindow } from "electron";
 
@@ -10,11 +11,13 @@ export class AuthenticationWindow extends UniqueWindow {
             show: false,
             center: true,
             webPreferences: {
+                devTools: true,
                 nodeIntegration: false,
+                preload: ClientConstants.urls.preloadInsecureTest,
             },
             title: `BatchExplorer: Login to ${this.properties.azureEnvironment.name}`,
         });
-
+        console.log("OATH", ClientConstants.urls.preloadInsecureTest);
         window.on("page-title-updated", (e, title) => {
             e.preventDefault();
         });

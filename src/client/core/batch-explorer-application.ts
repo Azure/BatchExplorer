@@ -3,13 +3,13 @@ import { LocaleService, TelemetryService, TranslationsLoaderService } from "@bat
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { AutoUpdateService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
+import { parseArguments } from "client/cli";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { BatchExplorerProperties } from "client/core/properties";
 import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
-import * as commander from "commander";
 import { BatchExplorerLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
 import { app, dialog, ipcMain, session } from "electron";
@@ -174,10 +174,7 @@ export class BatchExplorerApplication {
         if (ClientConstants.isDev) {
             return this.windows.openNewWindow(undefined, showWhenReady);
         }
-        const program = commander
-            .version(app.getVersion())
-            .option("--updated", "If the application was just updated")
-            .parse(["", ...argv]);
+        const program = parseArguments(argv);
         const arg = program.args[0];
         if (!arg || arg.startsWith("data:")) {
             return this.windows.openNewWindow(undefined, showWhenReady);
