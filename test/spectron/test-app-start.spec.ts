@@ -1,4 +1,4 @@
-import { Application } from "spectron";
+import { Application, SpectronClient } from "spectron";
 import { getExePath } from "./utils";
 
 const MAIN_WINDOW_INDEX = 0;
@@ -22,8 +22,10 @@ describe("Bundled application is starting correctly", () => {
     });
 
     afterEach(() => {
-        if (app && app.isRunning()) {
-            return app.stop();
+        if (!process.env.SPECTRON_NO_CLEANUP) {
+            if (app && app.isRunning()) {
+                return app.stop();
+            }
         }
     });
 
@@ -51,6 +53,30 @@ describe("Bundled application is starting correctly", () => {
             width: 800,
             height: 700,
         }));
+
+        await signIn(app.client);
+        expect(await app.client.getWindowCount()).toBe(2, "Should have closed the authentiction window");
     });
 
 });
+
+/**
+ * Method that is going throught he signing experience
+ * @param client
+ */
+async function signIn(client: SpectronClient) {
+    await client.element(`input[type="email"]`).setValue(process.env.SPECTRON_AAD_USER_EMAIL);
+    await client.element(`input[type="submit"]`).click();
+    await delay(2000);
+
+    const url = await client.url().value;
+    if (url.startsWith("https://msft.sts.microsoft.com")) {
+        await client.element(`#loginMessage .actionLink`).click(); // Click on "Sign with email or passwork instead"
+    }
+    await client.element(`input[type="password"]`).setValue(process.env.SPECTRON_AAD_USER_PASSWORD);
+    await client.element(`input[type="submit"]`).click();
+}
+
+function delay(time?: number) {
+    return new Promise(r => setTimeout(r, time));
+}
