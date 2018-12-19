@@ -65,15 +65,20 @@ describe("Bundled application is starting correctly", () => {
  * @param client
  */
 async function signIn(client: SpectronClient) {
-    await client.element(`input[type="email"]`).setValue(process.env.SPECTRON_AAD_USER_EMAIL);
-    await client.element(`input[type="submit"]`).click();
-    await delay(2000);
+    const email = process.env.SPECTRON_AAD_USER_EMAIL;
+    const password = process.env.SPECTRON_AAD_USER_PASSWORD || "foobar";
+    expect(email).toBeTruthy("Should have an email provided");
+    expect(password).toBeTruthy("Should have a password provided");
+    if (!email || !password) { return; }
 
-    const url = await client.url().value;
-    if (url.startsWith("https://msft.sts.microsoft.com")) {
+    await client.element(`input[type="email"]`).setValue(email);
+    await client.element(`input[type="submit"]`).click();
+    await delay(5000);
+    const url = await client.url();
+    if (url.value.startsWith("https://msft.sts.microsoft.com")) {
         await client.element(`#loginMessage .actionLink`).click(); // Click on "Sign with email or passwork instead"
     }
-    await client.element(`input[type="password"]`).setValue(process.env.SPECTRON_AAD_USER_PASSWORD);
+    await client.element(`input[type="password"]`).setValue(password);
     await client.element(`input[type="submit"]`).click();
 }
 
