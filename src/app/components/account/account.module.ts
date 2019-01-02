@@ -11,6 +11,7 @@ import { DeleteAccountDialogComponent } from "./action/delete/delete-account-dia
 import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent, GettingStartedCardComponent } from "./details";
 import { AccountCostCardComponent } from "./details/account-cost-card";
+import { AccountMonitoringSectionComponent } from "./details/account-monitoring-section";
 import { AccountQuotasCardComponent } from "./details/account-quotas-card";
 import { AccountSummaryCardComponent } from "./details/account-summary-card";
 import { ProgramaticUsageModule } from "./details/programatic-usage";
@@ -23,7 +24,7 @@ const components = [
     BatchAccountCreateComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
     EditStorageAccountFormComponent, AutoStorageAccountPickerComponent, AccountQuotasCardComponent,
     GettingStartedCardComponent, AddLocalBatchAccountComponent, AccountCostCardComponent,
-    AccountSummaryCardComponent,
+    AccountSummaryCardComponent, AccountMonitoringSectionComponent,
 ];
 
 const modules = [
