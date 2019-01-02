@@ -1,6 +1,9 @@
 <div>
     <h1 class="section-title">{{'account-details.monitoring' | i18n }}</h1>
-
+    <a [blCallout]="callout">Last hour</a>
+    <bl-callout #callout="blCallout">
+        Do some stuff
+    </bl-callout>
 </div>
 
 <div class="monitor-charts" *ngIf="isArmAccount">
