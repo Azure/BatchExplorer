@@ -1,0 +1,16 @@
+<a [blCallout]="callout" href="#">Time range</a>
+
+<bl-callout #callout="blCallout">
+    <div class="time-range-picker-callout">
+        <div class="custom-range">
+            <h4>Custom range</h4>
+            <bl-datetime-picker label="From"></bl-datetime-picker>
+            <bl-datetime-picker label="To"></bl-datetime-picker>
+            <bl-button type="wide">Apply</bl-button>
+        </div>
+        <div class="quick-ranges">
+            <h4>Quick ranges</h4>
+            <bl-clickable *ngFor="let range of quickRanges">{{range.label}}</bl-clickable>
+        </div>
+    </div>
+</bl-callout>

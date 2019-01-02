@@ -55,9 +55,8 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
 
     constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
         this.timeOptions = this._buildTimeOptions();
-        const zoneMatch = getTimezoneRegex.exec(new Date().toString());
-        const timeZoneName = Array.isArray(zoneMatch) ? zoneMatch[0] : "";
-        this.currentTimeZone = `${moment().format("Z")} ${timeZoneName}`;
+        const timeZoneName = new Date().toLocaleTimeString("en-us", {timeZoneName: "short"}).split(" ")[2];
+        this.currentTimeZone = `${moment().format("Z z")} ${timeZoneName}`;
 
         this.datetime = formBuilder.group({
             date: this.selectedDate,

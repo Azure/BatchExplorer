@@ -1,0 +1,23 @@
+@import "app/styles/variables";
+
+bl-time-range-picker {
+
+}
+
+
+.time-range-picker-callout {
+    padding: 10px;
+    display: flex;
+
+    .custom-range {
+        margin-right: 10px;
+    }
+
+    .quick-ranges {
+        margin-left: 10px;
+
+        bl-clickable {
+            display: block;
+        }
+    }
+}

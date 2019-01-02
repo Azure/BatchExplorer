@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
-
-import { CalloutModule } from "@batch-flask/ui";
+import { TimeRangePickerModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { AutoStorageAccountPickerComponent } from "app/components/account/base/auto-storage-account-picker";
@@ -42,7 +41,7 @@ const modules = [
     exports: [...modules, ...components],
     imports: [
         ...modules,
-        CalloutModule,
+        TimeRangePickerModule,
     ],
     entryComponents: [
         AddLocalBatchAccountComponent,

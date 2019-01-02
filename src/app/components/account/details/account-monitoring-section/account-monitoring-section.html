@@ -1,9 +1,6 @@
-<div>
+<div class="monitoring-header">
     <h1 class="section-title">{{'account-details.monitoring' | i18n }}</h1>
-    <a [blCallout]="callout">Last hour</a>
-    <bl-callout #callout="blCallout">
-        Do some stuff
-    </bl-callout>
+    <bl-time-range-picker></bl-time-range-picker>
 </div>
 
 <div class="monitor-charts" *ngIf="isArmAccount">
@@ -24,6 +21,6 @@
         <bl-pool-state-graph></bl-pool-state-graph>
     </div>
 </div>
-<div  *ngIf="isArmAccount">
+<div  *ngIf="!isArmAccount">
     Account monitoring is only enabled for ARM batch accounts
 </div>

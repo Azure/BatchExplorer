@@ -27,6 +27,7 @@ export * from "./select";
 export * from "./sidebar";
 export * from "./summary-card";
 export * from "./table";
+export * from "./time-range-picker";
 export * from "./toolbar";
 export * from "./vtabs";
 export * from "./workspace";

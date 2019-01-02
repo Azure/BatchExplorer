@@ -58,7 +58,7 @@ export class CalloutDirective {
                 overlayX: "start",
                 overlayY: "top",
                 offsetX: 0,
-                offsetY: 0,
+                offsetY: 5,
             },
             {
                 originX: "start",
@@ -66,7 +66,23 @@ export class CalloutDirective {
                 overlayX: "start",
                 overlayY: "bottom",
                 offsetX: 0,
-                offsetY: 0,
+                offsetY: 5,
+            },
+            {
+                originX: "end",
+                originY: "bottom",
+                overlayX: "end",
+                overlayY: "top",
+                offsetX: 0,
+                offsetY: 5,
+            },
+            {
+                originX: "end",
+                originY: "top",
+                overlayX: "end",
+                overlayY: "bottom",
+                offsetX: 0,
+                offsetY: 5,
             },
         ];
 
