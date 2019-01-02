@@ -21,7 +21,7 @@ import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
-import { AADService, AuthenticationState, AuthenticationWindow } from "./aad";
+import { AADService, AuthenticationState, AuthenticationWindow, AuthorizeResponseError } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
 
@@ -92,7 +92,13 @@ export class BatchExplorerApplication {
         this._initializer.init();
 
         this._setCommonHeaders();
-        this.aadService.login();
+        this.aadService.login().catch((e: AuthorizeResponseError) => {
+            dialog.showMessageBox({
+                type: "error",
+                message: e.toString(),
+            });
+            this.logoutAndLogin();
+        });
         this._initializer.setTaskStatus("window", "Loading application");
         log.debug("process.argv", process.argv);
         const window = this.openFromArguments(process.argv, false);

@@ -79,7 +79,7 @@ async function signIn(client: SpectronClient) {
         await client.element(`#loginMessage .actionLink`).click(); // Click on "Sign with email or passwork instead"
     }
     await client.element(`input[type="password"]`).setValue(password);
-    await client.element(`input[type="submit"]`).click();
+    await client.element(`input.submit`).click();
 }
 
 function delay(time?: number) {
