@@ -74,6 +74,7 @@ export class MainWindow extends GenericWindow {
             titleBarStyle: "hidden",
             webPreferences: {
                 webSecurity: false,
+                allowRunningInsecureContent: false,
             },
         });
 
