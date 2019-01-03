@@ -17,7 +17,7 @@ export class AuthenticationWindow extends UniqueWindow {
             },
             title: `BatchExplorer: Login to ${this.properties.azureEnvironment.name}`,
         });
-        console.log("OATH", ClientConstants.urls.preloadInsecureTest);
+
         window.on("page-title-updated", (e, title) => {
             e.preventDefault();
         });
