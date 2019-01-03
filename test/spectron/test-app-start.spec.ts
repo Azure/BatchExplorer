@@ -29,7 +29,7 @@ describe("Bundled application is starting correctly", () => {
         }
     });
 
-    it("Show the splash screen and auth window", async () => {
+    it("Show the splash screen, auth window then login", async () => {
         const windowCount = await app.client.getWindowCount();
         // Splash screen + Auth window + Main window
         expect(windowCount).toEqual(3);
@@ -55,7 +55,15 @@ describe("Bundled application is starting correctly", () => {
         }));
 
         await signIn(app.client);
-        expect(await app.client.getWindowCount()).toBe(2, "Should have closed the authentiction window");
+        await app.client.waitUntil(async () => {
+            return await app.client.getWindowCount() === 1;
+        });
+
+        await app.client.windowByIndex(MAIN_WINDOW_INDEX);
+        expect(await app.browserWindow.isVisible()).toBe(true);
+        expect(await app.browserWindow.getTitle()).toEqual("Batch Explorer");
+        await app.client.waitUntilTextExists("bl-account-list .quick-list-row-title", "prodtest1");
+
     });
 
 });
