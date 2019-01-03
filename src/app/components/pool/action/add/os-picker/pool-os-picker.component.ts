@@ -99,13 +99,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
 
     public writeValue(value: any) {
         this.value = value;
-        if (value && value.virtualMachineConfiguration) {
-            const ref = value.virtualMachineConfiguration.imageReference;
-            if (ref.virtualMachineImageId) {
-                this.customImage.patchValue(ref.virtualMachineImageId);
-            }
-            this.nodeAgentSku.patchValue(value.virtualMachineConfiguration.nodeAgentSKUId);
-        }
         this._updateSelection();
     }
 
