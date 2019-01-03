@@ -6,10 +6,9 @@ import { ask } from "yesno";
 import {
     createIssue, createPullRequest, getMilestone, githubToken, listMilestoneIssues, listPullRequests,
 } from "./github-api";
-import { issueUrl } from "./github-urls";
 
 const root = path.resolve(path.join(__dirname, "../.."));
-const allMessages = [];
+const allMessages: string[] = [];
 const repoName = "Azure/BatchExplorer";
 const newIssueBody = `
 - [x] Update version in package.json

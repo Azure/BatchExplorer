@@ -1,3 +1,62 @@
+# 0.19.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/27?closed=1)
+
+### feature:
+
+
+### bug:
+
+
+### other:
+
+* VNet picker should alllow removing selection [\#1822](https://github.com/Azure/BatchExplorer/issues/1822)
+* Show Resource Group of Batch Account [\#1818](https://github.com/Azure/BatchExplorer/issues/1818)
+* Recent template not working [\#1813](https://github.com/Azure/BatchExplorer/issues/1813)
+* Multi delete nodes support [\#1812](https://github.com/Azure/BatchExplorer/issues/1812)
+* VM size picker alternative if can't load the vm sizes(Local account) [\#1810](https://github.com/Azure/BatchExplorer/issues/1810)
+* Setup new secure storage [\#1808](https://github.com/Azure/BatchExplorer/issues/1808)
+* Remove flags as this is not compliant with Microsoft policy [\#1806](https://github.com/Azure/BatchExplorer/issues/1806)
+* Drag and drop upload is broken [\#1801](https://github.com/Azure/BatchExplorer/issues/1801)
+* Insider build icon is showing electron icon [\#1793](https://github.com/Azure/BatchExplorer/issues/1793)
+* Redesign of the gallery to simplify navigation [\#1791](https://github.com/Azure/BatchExplorer/issues/1791)
+* Auto add file group output container [\#1790](https://github.com/Azure/BatchExplorer/issues/1790)
+* Refactor VM size picker with filter [\#1783](https://github.com/Azure/BatchExplorer/issues/1783)
+* Unable to report issue through program [\#1779](https://github.com/Azure/BatchExplorer/issues/1779)
+* Leaving the node file explorer with the stdout.txt file open appends content over and over [\#1778](https://github.com/Azure/BatchExplorer/issues/1778)
+* Add a link to the pool/node in the task summary [\#1776](https://github.com/Azure/BatchExplorer/issues/1776)
+* Green on light blue is very hard to read [\#1774](https://github.com/Azure/BatchExplorer/issues/1774)
+* Favourites are not persisted any more [\#1771](https://github.com/Azure/BatchExplorer/issues/1771)
+* Navigating to a job for the first time make an extra call with undefined jobId [\#1770](https://github.com/Azure/BatchExplorer/issues/1770)
+* Viewing a folder with lots of files in it (>10k) errors [\#1766](https://github.com/Azure/BatchExplorer/issues/1766)
+* Prep task status is always failure even when completed [\#1765](https://github.com/Azure/BatchExplorer/issues/1765)
+* Allow for multiple failed tasks to be rescheduled [\#1763](https://github.com/Azure/BatchExplorer/issues/1763)
+* High contrast theme [\#1762](https://github.com/Azure/BatchExplorer/issues/1762)
+* Clicking item in quick-list doesn't work on the first click. [\#1757](https://github.com/Azure/BatchExplorer/issues/1757)
+* Can't view images from task node file explorer [\#1756](https://github.com/Azure/BatchExplorer/issues/1756)
+* Rescale should wait for resize operation to be completed when disabling autoscale [\#1754](https://github.com/Azure/BatchExplorer/issues/1754)
+* Provide actual cost of batch account [\#1748](https://github.com/Azure/BatchExplorer/issues/1748)
+* Migrate out of @angular/http [\#1745](https://github.com/Azure/BatchExplorer/issues/1745)
+* Cannot view text/log files in file explorer [\#1741](https://github.com/Azure/BatchExplorer/issues/1741)
+* 2 errors overlay when task node doesnt exist [\#1740](https://github.com/Azure/BatchExplorer/issues/1740)
+* New pool os picker design [\#1735](https://github.com/Azure/BatchExplorer/issues/1735)
+* Sort xliffs translations alphabetically [\#1731](https://github.com/Azure/BatchExplorer/issues/1731)
+* Virtual scroll switch to custom ngFor directive [\#1710](https://github.com/Azure/BatchExplorer/issues/1710)
+* Ability to type the file path in the file explorer [\#1702](https://github.com/Azure/BatchExplorer/issues/1702)
+* File viewer redesign to be more extensible [\#1700](https://github.com/Azure/BatchExplorer/issues/1700)
+* File viewer syntax highlighting  [\#1699](https://github.com/Azure/BatchExplorer/issues/1699)
+* Local template library [\#1696](https://github.com/Azure/BatchExplorer/issues/1696)
+* Azure DevOps switch to ubuntu pool(Linux preview deprecated) [\#1695](https://github.com/Azure/BatchExplorer/issues/1695)
+* Release step make resilient to storage error [\#1689](https://github.com/Azure/BatchExplorer/issues/1689)
+* Add local batch account with IP [\#1685](https://github.com/Azure/BatchExplorer/issues/1685)
+* Setup tree shaking [\#1670](https://github.com/Azure/BatchExplorer/issues/1670)
+* Replace all new Error to be typed [\#1661](https://github.com/Azure/BatchExplorer/issues/1661)
+* Add a regular check for updates while the app is open [\#1656](https://github.com/Azure/BatchExplorer/issues/1656)
+* Add validation on container length(Between 3 and 63 characters) [\#1641](https://github.com/Azure/BatchExplorer/issues/1641)
+* Need to be able to resize quick-list panel [\#1544](https://github.com/Azure/BatchExplorer/issues/1544)
+* Manage certificates and app packages for existing pools. [\#1334](https://github.com/Azure/BatchExplorer/issues/1334)
+* Redesign how the upload works by having a addFile property on file navigator [\#1292](https://github.com/Azure/BatchExplorer/issues/1292)
+* Add CI to check the bundled app(.exe, .app) is working [\#580](https://github.com/Azure/BatchExplorer/issues/580)
+
 # 0.18.4
 
 ### Bug fixes
