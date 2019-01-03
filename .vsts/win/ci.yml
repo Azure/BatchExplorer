@@ -1,4 +1,5 @@
 steps:
+  - powershell: Write-Host "EMAIL $(uiTestingAccountEmail)"
   # Static analysis before build
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
     displayName: 'Run CredScan'
@@ -16,6 +17,8 @@ steps:
       $ErrorActionPreference = "Stop"
       $env:SPECTRON_AAD_USER_EMAIL = "$(uiTestingAccountPassword)"
       $env:SPECTRON_AAD_USER_PASSWORD = "$(uiTestingAccountEmail)"
+
+      Write-Host "EMAIL $(uiTestingAccountPassword)"
       npm run spectron
     displayName: Running spectron
 
