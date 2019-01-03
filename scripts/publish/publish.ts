@@ -32,7 +32,7 @@ function success(message: string) {
 
 async function run(command: string): Promise<{ stdout: string, stderr: string }> {
     return new Promise<{ stdout: string, stderr: string }>((resolve, reject) => {
-        exec(command, (error, stdout, stderr) => {
+        exec(command, { maxBuffer: 100_000_000 }, (error, stdout, stderr) => {
             if (error) {
                 reject(error);
                 return;
