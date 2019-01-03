@@ -11,7 +11,17 @@ steps:
   - powershell: npm run build-and-pack
     displayName: Build and package
 
-  - powershell: npm run spectron
+  - task: AzureKeyVault@1
+    inputs:
+      azureSubscription: Batch-UI-Subscription
+      keyVaultName: AzureBatchUITesting
+
+  - powershell: |
+      . .vsts/win/exec.ps1
+      $ErrorActionPreference = "Stop"
+      $env:SPECTRON_AAD_USER_EMAIL = "$(uiTestingAccountPassword)"
+      $env:SPECTRON_AAD_USER_PASSWORD = "$(uiTestingAccountEmail)"
+      npm run spectron
     displayName: Running spectron
 
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-antimalware.AntiMalware@3
