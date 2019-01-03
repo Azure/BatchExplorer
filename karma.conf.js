@@ -17,7 +17,7 @@ module.exports = function(config) {
                 watched: false
             },
             {
-                pattern: "./test/fixtures/**/*",
+                pattern: "./src/test/fixtures/**/*",
                 watched: false,
                 included: false,
                 served: true,
@@ -27,7 +27,9 @@ module.exports = function(config) {
         ],
 
         // proxied base paths
-        proxies: {},
+        proxies: {
+            "/fixtures/": "/base/src/test/fixtures/"
+        },
 
         port: 9876,
 

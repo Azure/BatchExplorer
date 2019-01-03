@@ -1,0 +1,12 @@
+<bl-form-field *ngIf="locations.length">
+    <bl-select [formControl]="location" placeholder="Location" [filterable]="true">
+        <div *blOptionTemplate="let location"> <bl-location [location]="location.name"></bl-location> ({{location.displayName}})</div>
+
+        <bl-option *ngFor="let location of locations;trackBy: trackLocation"
+            [item]="location"
+            [value]="location.name"
+            [label]="location.displayName">
+        </bl-option>
+    </bl-select>
+</bl-form-field>
+<span *ngIf="!locations.length">{{'noLocationInSubscription' | i18n:{name: subscription.displayName} }}</span>

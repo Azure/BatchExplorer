@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { OS, Platform } from "@batch-flask/utils";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class OSService {
     public platform: Platform;
 

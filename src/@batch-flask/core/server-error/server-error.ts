@@ -1,5 +1,3 @@
-import { Response } from "@angular/http";
-
 import { HttpErrorResponse } from "@angular/common/http";
 import { exists, log } from "@batch-flask/utils";
 import { BatchError } from "./batch-error";
@@ -12,16 +10,16 @@ export interface ErrorDetail {
 
 interface ServerErrorAttributes {
     status: number;
-    statusText?: string;
-    code: string;
+    statusText?: string | null;
+    code?: string | null;
     message: string;
-    details?: ErrorDetail[];
-    requestId?: string;
-    timestamp?: Date;
-    original?: any;
+    details?: ErrorDetail[] | null;
+    requestId?: string | null;
+    timestamp?: Date | null;
+    original?: any | null;
 }
 
-function parseValueFromLine(line: string): string {
+function parseValueFromLine(line: string): string | null {
     if (!line) { return null; }
     const data = line.split(":");
     data.shift();
@@ -32,17 +30,17 @@ function parseValueFromLine(line: string): string {
     }
 }
 
-function parseRequestIdFromLine(line: string): string {
+function parseRequestIdFromLine(line: string): string | null {
     return parseValueFromLine(line);
 }
 
-function parseTimestampFromLine(line: string): Date {
+function parseTimestampFromLine(line: string): Date | null {
     const timeStr = parseValueFromLine(line);
     if (!timeStr) { return null; }
     return new Date(timeStr);
 }
 
-function parseMessage(fullMessage: string) {
+function parseMessage(fullMessage: string | null | undefined) {
     if (!fullMessage) {
         return { message: null, requestId: null, timestamp: null };
     }
@@ -119,35 +117,35 @@ export class ServerError {
             status: error.statusCode,
             original: error,
             code: error.code,
-            message: message,
+            message: message || "",
             requestId: error.requestId,
             timestamp,
         });
     }
 
-    public static fromARM(response: Response): ServerError {
-        const { error } = response.json();
-        let requestId = null;
-        let timestamp = null;
+    public static fromARM(response: HttpErrorResponse): ServerError {
+        const error = response.error || {};
+        let requestId: string | null = null;
+        let timestamp: Date | null = null;
         let code = null;
         let message = null;
 
         if (response.headers) {
             requestId = response.headers.get("x-ms-request-id");
             const date = response.headers.get("Date");
-            timestamp = date && new Date(date);
+            timestamp = date ? new Date(date) : null;
         }
 
-        if (error) {
-            code = error.code;
-            message = error.message;
+        if (error.error) {
+            code = error.error.code;
+            message = error.error.message;
         }
         return new ServerError({
             status: response.status,
             code: code,
             statusText: response.statusText,
             original: response,
-            message: message,
+            message: message || "",
             requestId,
             timestamp,
         });
@@ -171,7 +169,7 @@ export class ServerError {
         return new ServerError({
             status: error.data && error.data.status,
             code: ServerError._mapPythonErrorCode(error.code),
-            message: message,
+            message: message || "",
             details,
             original: error,
             requestId,
@@ -182,9 +180,9 @@ export class ServerError {
     public static fromMsGraph(response: HttpErrorResponse): ServerError {
         const { error } = response.error;
         let requestId = null;
-        let timestamp = null;
+        let timestamp: Date | null = null;
         let code = null;
-        let message = null;
+        let message: string | null = null;
 
         if (error.innerError) {
             requestId = error.innerError["request-id"];
@@ -201,7 +199,7 @@ export class ServerError {
             code: code,
             statusText: response.statusText,
             original: response,
-            message: message,
+            message: message || "",
             requestId,
             timestamp,
         });
@@ -212,7 +210,7 @@ export class ServerError {
         let requestId = null;
         const timestamp = null;
         let code = null;
-        let message = null;
+        let message: string | null = null;
         let details = null;
         if (error) {
             code = error.code;
@@ -227,7 +225,7 @@ export class ServerError {
             code: code,
             statusText: response.statusText,
             original: response,
-            message: message,
+            message: message || "",
             requestId,
             timestamp,
             details,
@@ -246,12 +244,12 @@ export class ServerError {
     }
 
     public status: number;
-    public statusText: string;
-    public code: string;
+    public statusText: string | null | undefined;
+    public code: string | null | undefined;
     public message: string;
     public details: ErrorDetail[];
-    public requestId: string;
-    public timestamp: Date;
+    public requestId: string | null | undefined;
+    public timestamp: Date | null | undefined;
     public original: any;
 
     constructor(attributes: ServerErrorAttributes) {
@@ -270,7 +268,7 @@ export class ServerError {
     }
 
     public detailsToString() {
-        return this.details.map(({key, value}) => {
+        return this.details.map(({ key, value }) => {
             return `${key}: ${value}`;
         }).join("\n");
     }

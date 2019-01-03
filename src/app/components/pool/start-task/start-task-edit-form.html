@@ -1,0 +1,16 @@
+<bl-simple-form [formGroup]="form" [containerRef]="sidebarRef" [submit]="submit" saveText="Update" [multiUse]="false" title="Edit start task for pool: {{pool.id}}">
+    <form novalidate [formGroup]="form">
+        <div class="form-element">
+            <mat-checkbox formControlName="enableStartTask" color="primary">
+                Enable start task
+            </mat-checkbox>
+        </div>
+        <div *ngIf="enableStartTask">
+            <bl-start-task-picker
+                formControlName="startTask"
+                [userAccounts]="pool.userAccounts"
+                [virtualMachineConfiguration]="pool.virtualMachineConfiguration">
+            </bl-start-task-picker>
+        </div>
+    </form>
+</bl-simple-form>

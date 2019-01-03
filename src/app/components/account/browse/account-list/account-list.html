@@ -1,0 +1,34 @@
+<bl-quick-list
+    [data]="displayedAccounts"
+    [status]="loadingStatus"
+    [(activeItem)]="activeItem"
+    [(selection)]="selection"
+    [commands]="commands">
+
+    <ng-container *blQuickListRowStatus="let account">
+        <bl-quick-list-item-status [status]="accountStatus(account.id)"></bl-quick-list-item-status>
+    </ng-container>
+    <ng-container *blQuickListRowTitle="let account">
+        {{account.displayName}}
+        <ng-container *ngIf="account.name !== account.displayName">
+            ({{account.name}})
+        </ng-container>
+    </ng-container>
+    <ng-container *blQuickListRowState="let account">
+        <div *ngIf="account.armEnabled" class="account-location">
+            <bl-location [location]="account.location"></bl-location>
+        </div>
+        <ng-container *ngIf="!account.armEnabled">
+            <span class="account-type">Local</span>
+        </ng-container>
+    </ng-container>
+
+    <ng-container *blQuickListRowExtra="let account;let focused=focused">
+        <bl-clickable *ngIf="!isAccountFavorite(account.id)" (do)="toggleFavorite(account.id)" aria-label="Favorite" [tabindex]="focused ? 0 : -1">
+            <i class="fa fa-star" [class.favorite]="isAccountFavorite(account.id)" aria-hidden="true"></i>
+        </bl-clickable>
+        <bl-clickable *ngIf="isAccountFavorite(account.id)" (do)="toggleFavorite(account.id)" aria-label="Unfavorite" [tabindex]="focused ? 0 : -1">
+            <i class="fa fa-star favorite" aria-hidden="true"></i>
+        </bl-clickable>
+    </ng-container>
+</bl-quick-list>

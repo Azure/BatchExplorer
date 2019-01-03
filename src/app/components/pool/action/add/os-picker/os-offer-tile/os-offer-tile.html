@@ -1,0 +1,20 @@
+<div class="main" (click)="onClickTile()">
+    <div class="icon">
+        <bl-icon [icon]="icon"></bl-icon>
+    </div>
+    <div class="details">
+        <div class="title">
+            <span class="name">{{prettyName}}</span>
+            <ng-content></ng-content>
+        </div>
+        <div class="selected-version">
+            <ng-container *ngIf="active">{{selectedSku}}</ng-container>
+        </div>
+    </div>
+</div>
+<button class="select-version" [matMenuTriggerFor]="menu" title="Select version">
+    <i class="fa fa-cog"></i>
+</button>
+<mat-menu #menu="matMenu">
+    <button mat-menu-item *ngFor="let sku of skus;trackBy: trackSku" (click)="onClickSku(sku)">{{sku.name}}</button>
+</mat-menu>

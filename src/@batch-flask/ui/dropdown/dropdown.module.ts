@@ -1,6 +1,6 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { ScrollableModule } from "../scrollable";
@@ -14,7 +14,7 @@ import { DropdownComponent } from "./dropdown.component";
         DropdownComponent,
     ],
     imports: [
-        BrowserModule,
+        CommonModule,
         FormsModule,
         MaterialModule,
         ScrollableModule,

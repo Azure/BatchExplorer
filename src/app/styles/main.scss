@@ -1,0 +1,35 @@
+
+// Themes
+@import "./mixins";
+
+@import "./variables";
+@import "./common/type";
+
+// Base styles
+@import "./base/buttons";
+@import "./base/graphs/gauge";
+@import "./base/focus-section";
+@import "./base/forms";
+@import "./base/layout";
+@import "./base/scaffolding";
+@import "./base/list";
+@import "./base/scrollable";
+@import "./base/advanced-filter";
+
+// Pool styles
+@import "./pool/base";
+
+// Job styles
+@import "./job/base";
+
+// Partial styles
+@import "./partials/grid";
+@import "./partials/loading-indicators";
+@import "./partials/icons";
+
+// Vendor styles
+@import "./vendor/material-theme.scss";
+
+select {
+    cursor: pointer;
+}

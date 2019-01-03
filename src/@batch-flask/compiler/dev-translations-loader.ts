@@ -35,7 +35,7 @@ export class DevTranslationsLoader {
     private _flatten(translations: StringMap<any>): StringMap<string> {
         const output = {};
 
-        function step(object, prev = null, currentDepth = 0) {
+        function step(object: any, prev: string | null = null, currentDepth: number = 0) {
             currentDepth = currentDepth || 1;
             for (const key of Object.keys(object)) {
                 const value = object[key];

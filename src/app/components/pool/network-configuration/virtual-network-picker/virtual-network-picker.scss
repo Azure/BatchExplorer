@@ -1,0 +1,15 @@
+@import "app/styles/variables";
+
+bl-virtual-network-picker {
+    width: 100%;
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    td {
+        width: 50%;
+    }
+}

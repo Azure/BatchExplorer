@@ -1,3 +1,3 @@
-<bl-button type="wide" (click)="launchBrowse()"><ng-content></ng-content></bl-button>
+<bl-button type="wide" (do)="launchBrowse()" [attr.aria-describedby]="ariaDescribedBy"><ng-content></ng-content></bl-button>
 <input *ngIf="canPickFile" #picker type="file" (change)="pickTarget($event)" [hidden]="true" />
 <input *ngIf="!canPickFile" #picker type="file" (change)="pickTarget($event)" [hidden]="true" webkitdirectory />

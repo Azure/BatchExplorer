@@ -24,18 +24,16 @@ bl-property-content {
     }
 
     &.link {
-        color: map-get($primary, 400);
+        color: $primary-color;
+
         i {
             padding-left: 4px;
         }
+
         &:hover {
             font-weight: 400;
-            background-color: $mercuryGray;
+            background-color: $hover-bg-color;
             cursor: pointer;
-        }
-
-        &:active {
-            background-color: $athensGrey;
         }
     }
 }

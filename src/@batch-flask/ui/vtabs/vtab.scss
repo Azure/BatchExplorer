@@ -17,11 +17,10 @@ bl-vtab-group {
             padding: 10px;
 
             &:hover {
-                background: $athens-grey;
+                background: $hover-bg-color;
             }
 
             &:focus {
-                outline: none;
                 background: $main-background;
             }
 

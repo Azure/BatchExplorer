@@ -1,5 +1,5 @@
 <div class="action-btn" [ngClass]="type" [matTooltip]="tooltipTitle" [matTooltipPosition]="tooltipPosition" [ngSwitch]="status">
-    <div [class.hide]="status !== SubmitStatus.Idle">
+    <div [class.hide]="status !== SubmitStatus.Idle" class="label">
         <i [class]="icon"></i>
         <ng-content></ng-content>
     </div>
@@ -11,3 +11,4 @@
         </span>
     </div>
 </div>
+<div *ngIf="type !== 'square' && type !== 'plain'" [hidden]="true" id="{{id}}-described">{{title}}</div>

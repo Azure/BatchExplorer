@@ -1,0 +1,9 @@
+<bl-form-field>
+    <bl-select [formControl]="subscriptionId" placeholder="Subscription" [filterable]="true">
+        <bl-option
+            *ngFor="let subscription of subscriptionList;trackBy: trackBySubscriptionId"
+            [value]="subscription.id"
+            label="{{subscription.displayName}} ({{subscription.tenant?.displayName}})">
+        </bl-option>
+    </bl-select>
+</bl-form-field>

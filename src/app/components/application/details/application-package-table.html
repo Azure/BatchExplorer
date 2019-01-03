@@ -1,0 +1,26 @@
+<ng-container *ngIf="displayedPackages.size > 0">
+    <bl-table [(activeItem)]="activeItem" [(selection)]="selection" [data]="displayedPackages">
+        <bl-column name="version">
+            <div *blHeadCellDef>Version</div>
+            <div *blCellDef="let package">{{package.version}}</div>
+        </bl-column>
+        <bl-column name="state">
+            <div *blHeadCellDef>State</div>
+            <div *blCellDef="let package">{{package.state}}</div>
+        </bl-column>
+        <bl-column name="format">
+            <div *blHeadCellDef>Format</div>
+            <div *blCellDef="let package">{{package.format}}</div>
+        </bl-column>
+        <bl-column name="lastActivationTime">
+            <div *blHeadCellDef>Last activation time</div>
+            <div *blCellDef="let package">{{formatDate(package.lastActivationTime)}}</div>
+        </bl-column>
+    </bl-table>
+</ng-container>
+
+<bl-no-item [itemCount]="displayedPackages.size" [filter]="filter">
+    <i icon class="fa fa-file-archive-o"></i>
+    <span no-filter>This application contains no package versions</span>
+    <span with-filter>Current filter returned no matches</span>
+</bl-no-item>

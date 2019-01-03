@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { FormModule } from "@batch-flask/ui/form";
-import { CloudFileService } from "./cloud-file.service";
 import { DownloadFolderComponent } from "./download-folder-dialog";
 import { FileExplorerModule } from "./file-explorer";
 import { FileViewerModule } from "./file-viewer";
@@ -21,9 +20,6 @@ const publicModules = [
     declarations: [...privateComponents, ...publicComponents],
     exports: [...publicModules, ...publicComponents],
     imports: [FormModule, FormsModule, ReactiveFormsModule,  ButtonsModule, ...publicModules],
-    providers: [
-        CloudFileService,
-    ],
     entryComponents: [
         DownloadFolderComponent,
     ],

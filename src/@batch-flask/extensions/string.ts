@@ -49,24 +49,22 @@ if (!String.prototype.clearWhitespace) {
     };
 }
 
-if (!String.prototype.trimEnd) {
-    String.prototype.trimEnd = function (this: string, ...values: string[]) {
-        let input = String(this) || "";
-        while (input) {
-            const match = values.find((value) => {
-                return value && input.endsWith(value);
-            });
+String.prototype.trimEnd = function (this: string, ...values: string[]) {
+    let input = String(this) || "";
+    while (input) {
+        const match = values.find((value: string) => {
+            return Boolean(value && input.endsWith(value));
+        });
 
-            if (!match) {
-                break;
-            }
-
-            input = input.substr(0, input.length - match.length);
+        if (!match) {
+            break;
         }
 
-        return input;
-    };
-}
+        input = input.substr(0, input.length - match.length);
+    }
+
+    return input;
+};
 
 if (!String.prototype.contains) {
     String.prototype.contains = function (this: string, substr: string) {

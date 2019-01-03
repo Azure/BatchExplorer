@@ -39,7 +39,7 @@ bl-file-table-view {
             vertical-align: middle;
 
             &:hover {
-                background: $selection-color;
+                background: $hover-bg-color;
             }
             .fa {
                 // color: $minshaft-grey;
@@ -53,6 +53,7 @@ bl-file-table-view {
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
+            width: 100%;
         }
     }
     .icon {

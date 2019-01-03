@@ -1,0 +1,32 @@
+.advanced-filter-container {
+    min-height: 100%;
+    width: 100%;
+
+    .odata-preview {
+        display: flex;
+
+        .label {
+            padding: 2px 5px;
+            background-color: $primary-contrast-color;
+            color: $primary-color;
+            border: 1px solid $border-color;
+        }
+
+        .value {
+            flex: 1;
+            font-size: 13px;
+            background: $main-background;
+            padding: 2px 5px;
+        }
+    }
+}
+
+bl-adv-filter-statepicker {
+    legend {
+        color: $primary-color;
+    }
+    .state-checkbox {
+        margin-right: 10px;
+    }
+}
+

@@ -21,11 +21,20 @@ bl-quick-list-row-render {
     }
 
     &.focused {
+        outline: none;
         background-color: $primary-color;
+
+        .quick-list-row-title {
+            color: $card-background;
+        }
+
+        .quick-list-row-state {
+            color: $card-background;
+        }
     }
 
     &:hover:not(.selected) {
-        background-color: $selection-color;
+        background-color: $hover-bg-color;
     }
 
     .quick-list-row-title {
@@ -64,13 +73,13 @@ bl-quick-list-row-render {
         }
 
         .fa-hourglass-half {
-            color: map-get($primary, 400);
+            color: $primary-color;
         }
     }
 
     bl-quick-list-item-status {
         position: relative;
-        color: map-get($primary, 500);
+        color: $primary-color;
         flex: 0 0 8px;
         display: flex;
         align-items: stretch;
@@ -95,9 +104,9 @@ bl-quick-list-row-render {
                     45deg,
                     transparent,
                     transparent 5px,
-                    $concreteGray 5px,
-                    $concreteGray 10px
-                ), map-get($primary, 500);
+                    $secondary-background 5px,
+                    $secondary-background 10px
+                ), $primary-color;
             }
         }
     }

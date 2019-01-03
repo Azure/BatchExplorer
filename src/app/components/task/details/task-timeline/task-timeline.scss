@@ -1,0 +1,97 @@
+@import "app/styles/variables";
+
+bl-task-timeline {
+    $tile-size: 30px;
+    $separator-width: 60px;
+    $separator-height: 2px;
+    $state-reached-color: map-get($primary, 300);
+
+    .timeline {
+        display: flex;
+
+        bl-task-timeline-state {
+            position: relative;
+            display: flex;
+
+            &.clickable {
+                cursor: pointer;
+            }
+
+            > .tile {
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                width: $tile-size;
+                height: $tile-size;
+                border-radius: $tile-size / 2;
+
+                > .fa {
+                    color: $main-background;
+                }
+                > .subtitle {
+                    font-size: 12px;
+                    font-weight: 400;
+                }
+            }
+
+            > .details {
+                margin-left: 5px;
+                font-size: 12px;
+                text-align: left;
+                line-height: 14px;
+
+                > .state-name {
+                    font-weight: bold;
+                }
+
+                > .info {
+                    color: $secondary-text;
+
+                    .warn {
+                        color: $warn-color;
+                    }
+
+                    .error {
+                        font-weight: bold;
+                        color: $danger-color;
+                    }
+                }
+            }
+
+            &.done > .tile {
+                background: $state-reached-color;
+            }
+
+            &.active > .tile {
+                background: $state-reached-color;
+            }
+
+            &.locked > .tile {
+                color: $secondary-text;
+                background: $secondary-text;
+            }
+
+            &.warn > .tile {
+                background: $warn-color;
+            }
+
+            &.error > .tile {
+                background: $danger-color;
+            }
+        }
+
+        .state-link {
+            height: $separator-height;
+            width: $separator-width;
+            background: $state-reached-color;
+            margin: 0 5px;
+            margin-top: ($tile-size - $separator-height )/ 2;
+
+            &.locked {
+                background: $secondary-text;
+            }
+        }
+    }
+}

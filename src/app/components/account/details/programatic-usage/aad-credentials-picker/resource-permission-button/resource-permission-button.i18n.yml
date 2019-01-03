@@ -1,0 +1,5 @@
+resource-permission-button:
+  removeAccess: Remove access
+  giveRole: Give {role} role
+  none: None
+  permission: permission

@@ -1,22 +1,47 @@
-<div class="select-button-container">
-   <div #selectButton class="select-button" (click)="clickSelectButton($event)" [title]="title" [tabindex]="disabled ? -1 : 0">
+<div class="select-button-container" role="presentation">
+   <div #selectButton class="select-button"
+        (click)="clickSelectButton($event)"
+        [tabindex]="disabled ? -1 : 0"
+        role="textbox"
+        [attr.aria-label]="ariaLabel"
+        [attr.aria-controls]="dropdownId"
+        [attr.aria-activedescendant]="focusedOption?.id"
+        attr.aria-autocomplete="list"
+        [attr.aria-readonly]="true"
+        (blur)="onButtonBlur()">
         <div class="label">
             <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
             <ng-container *ngIf="hasValueSelected">
                 <ng-container *ngIf="hasMultipleSelected">
                     {{selected.size}} selected
                 </ng-container>
-                <ng-container *ngIf="!hasMultipleSelected">
-                    {{firstSelection ? firstSelection.label : ""}}
+                <ng-container *ngIf="!firstSelection && value === null">{{placeholder}}</ng-container>
+                <ng-container *ngIf="!hasMultipleSelected && firstSelection">
+                    <ng-container *ngIf="optionTemplate">
+                        <ng-template [ngTemplateOutlet]="optionTemplate" [ngTemplateOutletContext]="{$implicit: firstSelection.item}"></ng-template>
+                    </ng-container>
+                    <ng-container *ngIf="!optionTemplate">
+                        {{firstSelection.label}}
+                    </ng-container>
                 </ng-container>
             </ng-container>
         </div>
         <div class="caret">
-            <i class="fa fa-caret-down" *ngIf="!dropdownOpen"></i>
-            <i class="fa fa-caret-up" *ngIf="dropdownOpen"></i>
+            <i class="fa fa-caret-down" aria-hidden="true" *ngIf="!dropdownOpen"></i>
+            <i class="fa fa-caret-up" aria-hidden="true" *ngIf="dropdownOpen"></i>
         </div>
    </div>
    <ng-container *ngIf="dropdownOpen && filterable">
-       <input class="select-filter" #filterInput [ngModel]="filter" (ngModelChange)="filterChanged($event)" placeholder="Filter items...">
+       <input class="select-filter"
+            #filterInput
+            role="textbox"
+            [ngModel]="filter"
+            (ngModelChange)="filterChanged($event)"
+            placeholder="Filter items..."
+            [attr.aria-label]="ariaLabel"
+            [attr.aria-controls]="dropdownId"
+            [attr.aria-activedescendant]="focusedOption?.id"
+            attr.aria-autocomplete="list"
+            (blur)="onInputBlur()">
    </ng-container>
 </div>

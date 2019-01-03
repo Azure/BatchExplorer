@@ -23,7 +23,7 @@ export class ListDataPresenter {
     public sortingStatus: Observable<SortingStatus>;
     public sortingByObs: Observable<SortingInfo>;
     public autoUpdating: Observable<boolean>;
-    public config: ListSortConfig<AbstractListItem> | null | false;
+    public config: ListSortConfig<AbstractListItem> | null | undefined | false;
 
     private _sub: Subscription;
     private _items = new BehaviorSubject<AbstractListItem[]>([]);
@@ -69,7 +69,7 @@ export class ListDataPresenter {
         this.update();
     }
 
-    public updateSortDirection(direction?: SortDirection) {
+    public updateSortDirection(direction: SortDirection) {
         if (direction !== this.sortingBy.direction) {
             this._sortingBy.next({ key: this.sortingBy.key, direction });
             this._items.next([...this._items.value].reverse());

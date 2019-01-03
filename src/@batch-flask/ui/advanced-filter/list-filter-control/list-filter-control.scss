@@ -1,0 +1,11 @@
+@import "app/styles/variables";
+
+bl-adv-filter-list {
+    legend {
+        color: $primary-color;
+    }
+
+    .value {
+        width: 300px;
+    }
+}

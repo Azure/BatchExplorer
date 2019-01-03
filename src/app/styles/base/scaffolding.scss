@@ -1,0 +1,60 @@
+html, body, button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    height: 100%;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.text-left           { text-align: left; }
+.text-right          { text-align: right; }
+.text-center         { text-align: center; }
+
+// Lists
+// --------------------------------------------------
+ul, ol {
+    padding: 0;
+    list-style-type: none;
+}
+
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+    margin-bottom: 0;
+}
+
+.danger {
+    color: $danger-color;
+}
+
+.warning, .warn {
+    color: $warn-color;
+}
+
+.highlight {
+    color: $primary-color;
+}
+
+.unaccent {
+    color: $secondary-text;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.focus-outline:focus:not(.focus-visible), a:focus:not(.focus-visible) {
+    outline: none;
+}
+
+.focus-outline.focus-visible, a.focus-visible {
+    outline-color: $outline-color;
+    outline-width: 1px;
+    outline-style: solid;
+    outline-offset: -1px;
+    opacity: 1!important;
+}

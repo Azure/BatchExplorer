@@ -1,7 +1,7 @@
 import { ObjectUtils } from "@batch-flask/utils";
 
 export interface OptionsBase {
-    select?: string;
+    select?: string | null;
 
     /**
      * Other options
@@ -10,7 +10,7 @@ export interface OptionsBase {
 }
 
 export class ProxyOptions {
-    public select: string;
+    public select: string | null | undefined;
 
     /**
      * All the remaining attributes

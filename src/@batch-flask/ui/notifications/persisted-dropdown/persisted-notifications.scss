@@ -7,7 +7,7 @@ bl-persisted-notifications-dropdown {
     }
 
     .count {
-        color: whitesmoke;
+        color: map-get($footer-color, text);
         font-size: 10px;
         position: absolute;
         left: 0;
@@ -29,7 +29,7 @@ bl-persisted-notifications-dropdown {
             margin-right: 10px;
 
             .fa-exclamation-triangle {
-                color: map-get($warn, 500);
+                color: $warn-color;
             }
         }
 
@@ -62,7 +62,7 @@ bl-persisted-notifications-dropdown {
 
         .dismiss {
             flex: 0 0 20px;
-            background-color: white;
+            background-color: map-get($footer-color, text);
             color: $primary-color-dark;
             border-radius: 10px;
             width: 20px;
@@ -73,7 +73,7 @@ bl-persisted-notifications-dropdown {
             cursor: pointer;
 
             &:hover {
-                color: white;
+                color: map-get($footer-color, text);
                 background-color: map-get($danger, 400);
             }
 

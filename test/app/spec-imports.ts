@@ -1,6 +1,6 @@
 // tslint:disable-next-line
 /// <reference path="../../src/test/utils/matchers/index.d.ts"/>
-jasmine.MAX_PRETTY_PRINT_DEPTH = 2;
+jasmine.MAX_PRETTY_PRINT_DEPTH = 3;
 
 import "reflect-metadata";
 
@@ -19,4 +19,4 @@ import "hammerjs";
 import "moment-duration-format";
 import "test/utils/matchers";
 
-import "../../app/styles/main.scss";
+import "app/styles/main.scss";

@@ -1,0 +1,45 @@
+.fa-cog, .fa-gear {
+    color: map-get($primary, 300);
+}
+
+.fa-ban, .fa-times, .fa-warning, .fa-times-circle {
+    color: $danger-color;
+}
+
+.fa-check, .fa-check-circle-o, .fa-check-circle {
+    color: map-get($success, 800);
+}
+
+.fa-question-circle-o {
+    color: map-get($success, 800);
+}
+
+button {
+    &[mat-button] {
+        i {
+            font-size: 16px;
+        }
+
+        i.fa-play, i.fa-pause, .fa-expand, .fa-clone {
+            font-size: 14px;
+        }
+
+        &[disabled] {
+            i {
+                color: rgba(0, 0, 0, 0.38);
+            }
+        }
+    }
+}
+
+.fa-2 {
+    font-size: 1.5em;
+}
+
+.fa-3 {
+    font-size: 2em;
+}
+
+.fa-ban {
+    color: $danger-color;
+}

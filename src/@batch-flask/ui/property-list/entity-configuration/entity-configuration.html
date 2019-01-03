@@ -1,9 +1,9 @@
 <div class="toggle-mode" *ngIf="enableJsonView">
-    <bl-button type="square" [disabled]="!showJson" (do)="toggleShowJson(false)">
-        <i class="fa fa-list-ul"></i>
+    <bl-button type="square" [disabled]="!showJson" (do)="toggleShowJson(false)" [title]="'entity-configuration.viewClassic' | i18n">
+        <i class="fa fa-list-ul" aria-hidden="true"></i>
     </bl-button>
-    <bl-button type="square" [disabled]="showJson" (do)="toggleShowJson(true)">
-        <i class="fa fa-code"></i>
+    <bl-button type="square" [disabled]="showJson" (do)="toggleShowJson(true)" [title]="'entity-configuration.viewAsJSON' | i18n">
+        <i class="fa fa-code" aria-hidden="true"></i>
     </bl-button>
 </div>
 <div *ngIf="showJson" class="editor-container">

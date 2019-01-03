@@ -1,0 +1,72 @@
+@import "app/styles/variables";
+
+bl-ssh-key-picker {
+    display: block;
+    .ssh-key-picker {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        height: 300px;
+        border: 1px solid $border-color;
+
+        .editor {
+            flex: 1 1 100px;
+            height: 100%;
+            overflow: hidden;
+
+            > textarea {
+                width: 100%;
+                resize: none;
+                height: 100%;
+                border: none;
+                outline: none;
+
+                &:focus {
+                    border-bottom: 1px solid $primary-color;
+                }
+            }
+        }
+
+
+        .saved-key-list {
+            height: 100%;
+            overflow: auto;
+            border-top: 1px solid #d5d5d5;
+            border-bottom: 1px solid #d5d5d5;
+
+            > .saved-key {
+                display: flex;
+                align-items: center;
+                height: 24px;
+
+                cursor: pointer;
+                padding: 5px;
+
+                > .label {
+                    flex: 1;
+                }
+
+                &:not(:last-child) {
+                    border-bottom: 1px solid #d5d5d5;
+                }
+
+                &:hover {
+                    background: #e5e5e5;
+                }
+            }
+
+            .no-saved-key {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 30px 10px;
+
+                .fa-file-code-o {
+                    font-size: 30px;
+                    margin-bottom: 10px;
+                    color: $primary-color;
+                }
+            }
+        }
+    }
+}

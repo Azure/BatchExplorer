@@ -2,10 +2,12 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ElementRef,
     HostBinding,
     HostListener,
     Inject,
     Input,
+    OnChanges,
     OnDestroy,
     OnInit,
     forwardRef,
@@ -20,12 +22,18 @@ import { TableComponent, TableConfig } from "../table.component";
     templateUrl: "table-row-render.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowRenderComponent implements OnInit, OnDestroy {
+export class TableRowRenderComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public item: any;
     @Input() public columns: TableColumnRef[];
     @Input() public tableConfig: TableConfig;
     @Input() @HostBinding("class.focused") public focused: boolean;
     @Input() @HostBinding("class.selected") public selected: boolean;
+
+    // Aria
+    @HostBinding("attr.role") public readonly role = "row";
+    @HostBinding("attr.aria-selected") public get ariaSelected() {
+        return this.selected;
+    }
 
     public dimensions: number[] = [];
     public columnWidths: StringMap<number> = {};
@@ -33,6 +41,7 @@ export class TableRowRenderComponent implements OnInit, OnDestroy {
 
     constructor(
         @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
+        private elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
 
     }
@@ -43,6 +52,19 @@ export class TableRowRenderComponent implements OnInit, OnDestroy {
             this.columnWidths = this.table.columnManager.getAllColumnWidth();
             this.changeDetector.markForCheck();
         });
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.focused) {
+            if (this.focused) {
+                setTimeout(() => {
+                    // Check it is still focused. Might have focused out already
+                    if (this.focused) {
+                        this.elementRef.nativeElement.focus();
+                    }
+                });
+            }
+        }
     }
 
     public ngOnDestroy() {

@@ -1,0 +1,76 @@
+<bl-quick-list *ngIf="quicklist"
+    [config]="listConfig"
+    [data]="pools"
+    [status]="status"
+    [(activeItem)]="activeItem"
+    [(selection)]="selection"
+    [commands]="commands"
+    (scrollBottom)="onScrollToBottom()">
+
+    <ng-container *blQuickListRowStatus="let pool">
+        <bl-quick-list-item-status [status]="poolStatus(pool)" [tooltip]="poolStatusText(pool)"></bl-quick-list-item-status>
+    </ng-container>
+    <ng-container *blQuickListRowTitle="let pool">{{pool.id}}</ng-container>
+    <ng-container *blQuickListRowState="let pool">
+        <bl-pool-os-icon [pool]="pool"></bl-pool-os-icon>
+        {{pool.state}}
+        <bl-tags [tags]="pool?.tags" [maxTags]="3"></bl-tags>
+    </ng-container>
+
+    <ng-container *blQuickListRowExtra="let pool">
+        <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
+        <bl-pool-state-graph [pool]="pool" [interactive]="false"></bl-pool-state-graph>
+    </ng-container>
+</bl-quick-list>
+
+<bl-table *ngIf="!quicklist"
+    [config]="tableConfig"
+    [data]="pools"
+    [status]="status"
+    [(activeItem)]="activeItem"
+    [(selection)]="selection"
+    [commands]="commands"
+    (scrollBottom)="onScrollToBottom()">
+
+    <bl-column name="id">
+        <div *blHeadCellDef>ID</div>
+        <div *blCellDef="let pool"><bl-pool-os-icon [pool]="pool"></bl-pool-os-icon>{{pool.id}}</div>
+    </bl-column>
+
+    <bl-column name="state">
+        <div *blHeadCellDef>State</div>
+        <div *blCellDef="let pool">{{pool.state}}</div>
+    </bl-column>
+
+    <bl-column name="allocationState">
+        <div *blHeadCellDef>Allocation state</div>
+        <div *blCellDef="let pool">{{pool.allocationState}}</div>
+    </bl-column>
+
+    <bl-column name="vmSize">
+        <div *blHeadCellDef>Node size</div>
+        <div *blCellDef="let pool">{{pool.vmSize}}</div>
+    </bl-column>
+
+    <bl-column name="targetDedicatedNodes">
+        <div *blHeadCellDef>Dedicated <i class="fa fa-tv"></i></div>
+        <div *blCellDef="let pool">{{pool.targetDedicatedNodes}}</div>
+    </bl-column>
+
+    <bl-column name="targetLowPriorityNodes">
+        <div *blHeadCellDef>Low pri <i class="fa fa-tv"></i></div>
+        <div *blCellDef="let pool">{{pool.targetLowPriorityNodes}}</div>
+    </bl-column>
+
+    <bl-column name="poolState">
+        <div *blHeadCellDef>Node counts</div>
+        <div *blCellDef="let pool"><bl-pool-state-graph [pool]="pool" [interactive]="false"></bl-pool-state-graph></div>
+    </bl-column>
+</bl-table>
+
+<bl-no-item [itemCount]="pools.size" [filter]="filter" [status]="status">
+    <i icon class="fa fa-database small"></i>
+    <span no-filter>No pools</span>
+    <span with-filter>No pools match this filter</span>
+</bl-no-item>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>

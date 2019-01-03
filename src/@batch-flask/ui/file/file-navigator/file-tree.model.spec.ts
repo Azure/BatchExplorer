@@ -190,12 +190,25 @@ describe("FileTreeStructure", () => {
             expect(sub.loadingStatus).toEqual(LoadingStatus.Ready);
         });
 
-        it("should a folder if doesn't exists", () => {
+        it("should a folder if doesn't exist", () => {
             const sub = tree.getNode("wd/unknown");
             expect(sub.name).toEqual("unknown");
             expect(sub.path).toEqual("wd/unknown");
             expect(sub.isDirectory).toBe(true);
+            expect(sub.isUnknown).toBe(true);
             expect(sub.loadingStatus).toEqual(LoadingStatus.Loading);
+        });
+
+        it("mark a file as unkown(Loaded)", () => {
+            let node = tree.getNode("foo/invalid");
+            expect(node.isUnknown).toBe(true);
+            expect(node.loadingStatus).toBe(LoadingStatus.Loading);
+
+            tree.markFileAsLoadedAndUnkown("foo/invalid");
+            node = tree.getNode("foo/invalid");
+            expect(node.isUnknown).toBe(true);
+            expect(node.loadingStatus).toBe(LoadingStatus.Ready);
+
         });
     });
 
@@ -262,6 +275,7 @@ describe("FileTreeStructure", () => {
             `));
         });
     });
+
     describe("#setFilesAt()", () => {
         beforeEach(() => {
             tree = new FileTreeStructure();
@@ -306,7 +320,6 @@ describe("FileTreeStructure", () => {
             | + folder
             |   + subfolder
             |     + subsubfolder
-            |       - file4.txt
             |     - file3.txt
             |   - file1.txt
             | + other
@@ -350,6 +363,24 @@ describe("FileTreeStructure", () => {
             |   + my-virtual
             |   - file2.txt
             |   - file3.txt
+            | + other
+            |   - file1.txt
+            |   - file2.txt
+            | - root.txt
+            `));
+        });
+
+        it("removes all nested indexes", () => {
+            const files = List([
+                makeFile("folder/subfolder/file2.txt"),
+                makeFile("folder/subfolder/file3.txt"),
+            ]);
+            tree.setFilesAt("folder", files);
+            expect(reprTree(tree)).toEqual(cleanupRepr(`
+            | + folder
+            |   + subfolder
+            |     - file2.txt
+            |     - file3.txt
             | + other
             |   - file1.txt
             |   - file2.txt

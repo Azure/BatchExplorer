@@ -1,16 +1,19 @@
 import { Component, DebugElement, OnDestroy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import {
     ButtonsModule,
     DialogService,
     File,
+    ToolbarModule,
 } from "@batch-flask/ui";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
+import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { click, rightClick } from "test/utils/helpers";
 import {
     ContextMenuServiceMock,
-    ElectronTestingModule,
     MockFileNavigator,
     NotificationServiceMock,
 } from "test/utils/mocks";
@@ -86,14 +89,22 @@ describe("FileTreeViewComponent", () => {
     let contextMenuServiceSpy: ContextMenuServiceMock;
     let notificationServiceSpy: NotificationServiceMock;
 
+    function getContent() {
+        return de.query(By.css(".tree-view-content"));
+    }
+
     function getRows() {
         return de.queryAll(By.css("bl-file-tree-view-row"));
     }
+
     beforeEach(() => {
         contextMenuServiceSpy = new ContextMenuServiceMock();
         notificationServiceSpy = new NotificationServiceMock();
         TestBed.configureTestingModule({
-            imports: [ButtonsModule, FocusSectionModule, ElectronTestingModule],
+            imports: [
+                ButtonsModule, FocusSectionModule, ElectronTestingModule,
+                ToolbarModule, I18nTestingModule, I18nUIModule,
+            ],
             declarations: [FileTreeViewComponent, FileTreeViewRowComponent, TestComponent],
             providers: [
                 { provide: DialogService, useValue: null },
@@ -105,6 +116,7 @@ describe("FileTreeViewComponent", () => {
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-file-tree-view"));
         fixture.detectChanges();
+
     });
 
     beforeEach((done) => {
@@ -117,6 +129,38 @@ describe("FileTreeViewComponent", () => {
     it("show the tree view name in the header", () => {
         const header = de.query(By.css(".tree-view-header"));
         expect(header.nativeElement.textContent).toContain("MyTreeView");
+    });
+
+    it("container has tabindex 0", () => {
+        expect(getContent().attributes.tabindex).toEqual("0");
+    });
+
+    it("container has tree role", () => {
+        expect(getContent().attributes.role).toEqual("tree");
+    });
+
+    it("rows have the treeitem role", () => {
+        const rows = getRows();
+        expect(rows.length).toBe(4);
+        expect(rows[0].attributes.role).toEqual("treeitem");
+        expect(rows[1].attributes.role).toEqual("treeitem");
+        expect(rows[2].attributes.role).toEqual("treeitem");
+        expect(rows[3].attributes.role).toEqual("treeitem");
+    });
+
+    it("hide the tree view content when clicking the toolbar caret", () => {
+        const caret = de.query(By.css(".tree-view-header .caret"));
+        expect(caret.attributes["aria-expanded"]).toEqual("true");
+        expect(getContent()).not.toBeFalsy();
+        click(caret);
+        fixture.detectChanges();
+        expect(caret.attributes["aria-expanded"]).toEqual("false");
+        expect(getContent()).toBeFalsy();
+
+        click(caret);
+        fixture.detectChanges();
+        expect(caret.attributes["aria-expanded"]).toEqual("true");
+        expect(getContent()).not.toBeFalsy();
     });
 
     it("list root files and folders alphabetically", () => {

@@ -1,0 +1,18 @@
+@import "app/styles/variables";
+
+bl-refresh-btn {
+    .fa-check {
+        color: $success-color;
+    }
+
+    .fa-warning {
+        color: $danger-color;
+    }
+
+    .success-container {
+        width: 1em;
+        text-align: left;
+        display: inline-block;
+    }
+}
+

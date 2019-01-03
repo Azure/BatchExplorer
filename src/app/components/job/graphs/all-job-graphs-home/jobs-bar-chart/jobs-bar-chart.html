@@ -1,0 +1,16 @@
+<div class="graph">
+    <canvas blChart
+        [datasets]="datasets"
+        [options]="options"
+        [chartType]="chartType"
+        [labels]="labels"
+        (elContextMenu)="showContextMenu($event)"
+        [attr.aria-label]="label"
+        [colors]="colors">
+    </canvas>
+</div>
+<div class="footer">
+    <bl-clickable *ngIf="jobHiddenCount" class="reset-hidden-jobs" (click)="resetHiddenJobs()">
+        {{jobHiddenCount}} jobs hidden. Click to reset
+    </bl-clickable>
+</div>

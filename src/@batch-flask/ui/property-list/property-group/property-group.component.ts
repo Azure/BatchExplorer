@@ -3,12 +3,16 @@ import { autobind } from "@batch-flask/core";
 
 import "./property-group.scss";
 
+let idCounter = 0;
+
 @Component({
     selector: "bl-property-group",
     templateUrl: "property-group.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyGroupComponent {
+    @Input() public id = `bl-property-group-${idCounter++}`;
+
     @Output() public collapsedChange = new EventEmitter();
 
     /**
@@ -27,9 +31,9 @@ export class PropertyGroupComponent {
         this.collapsedChange.emit(collapsed);
     }
 
-    public get collapsed() {
-        return this._collapsed;
-    }
+    public get contentId() { return `${this.id}_content`; }
+
+    public get collapsed() { return this._collapsed; }
 
     private _collapsed = false;
 

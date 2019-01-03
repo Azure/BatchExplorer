@@ -1,0 +1,3 @@
+entity-configuration:
+  viewClassic: Classic view
+  viewAsJSON: View as JSON

@@ -2,7 +2,6 @@
 
 bl-select-dropdown {
     display: block;
-    background-color: white;
     min-width: 100%;
     z-index: 100;
     max-height: 50vh;
@@ -29,21 +28,21 @@ bl-select-dropdown {
                 background: $primary-color;
             }
             &:not(.focused) {
-                background: $selection-color;
+                background: $hover-bg-color;
             }
         }
 
         &.active {
-            background: $selection-color;
+            background: $hover-bg-color;
         }
 
         &.focused {
-            color: white;
+            color: $primary-contrast-color;
             background: $primary-color-light;
         }
 
         &.disabled {
-            color: $altoGray;
+            color: $button-disabled-text-color;
             cursor: default;
         }
 

@@ -1,10 +1,9 @@
-
 import { platformDynamicServer } from "@angular/platform-server";
 import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { MainApplicationMenu } from "client/menu";
-import { app, protocol } from "electron";
+import { app, protocol, session, shell } from "electron";
 import { autoUpdater } from "electron-updater";
 import { Constants } from "./client-constants";
 import { BatchExplorerClientModule, initializeServices } from "./client.module";
@@ -20,14 +19,16 @@ function initAutoUpdate() {
 
 function setupSingleInstance(batchExplorerApp: BatchExplorerApplication) {
     if (Constants.isDev) { return; }
-    const shouldQuit = app.makeSingleInstance((commandLine) => {
-        log.info("Try to open labs again", commandLine);
-        batchExplorerApp.openFromArguments(commandLine);
-    });
 
-    if (shouldQuit) {
+    const gotTheLock = app.requestSingleInstanceLock();
+    if (!gotTheLock) {
         log.info("There is already an instance of BatchExplorer open. Closing this one.");
         batchExplorerApp.quit();
+    } else {
+        app.on("second-instance", (event, commandLine, workingDirectory) => {
+            log.info("Try to open labs again", commandLine);
+            batchExplorerApp.openFromArguments(commandLine);
+        });
     }
 }
 
@@ -41,6 +42,7 @@ function registerAuthProtocol() {
 }
 
 async function startApplication(batchExplorerApp: BatchExplorerApplication, menu: MainApplicationMenu) {
+    secureRemoteContentLoading();
     initAutoUpdate();
     registerAuthProtocol();
 
@@ -88,5 +90,23 @@ export async function startBatchExplorer() {
 
     process.on("SIGINT", () => {
         process.exit(-2);
+    });
+}
+
+function secureRemoteContentLoading() {
+    app.on("web-contents-created", (event, contents) => {
+        contents.on("new-window", (event, navigationUrl) => {
+            // In this example, we'll ask the operating system
+            // to open this event's url in the default browser.
+            event.preventDefault();
+
+            shell.openExternal(navigationUrl);
+        });
+    });
+
+    // This reject any permissions requested by remove websites(Like asking for location).
+    // This should never get called as the above call shouldn't open any remote links
+    session.defaultSession!.setPermissionRequestHandler((webContents, permission, callback) => {
+        return callback(false);
     });
 }

@@ -1,12 +1,20 @@
-<bl-simple-form [submit]="submit" [containerRef]="dialogRef" actionColor="warn" actionName="Confirm" [multiUse]="false" size="small"
-    [title]="title" [formGroup]="promptControl">
+<bl-simple-form [submit]="submit"
+    [containerRef]="dialogRef"
+    actionColor="warn"
+    [actionName]="'common.confirm' | i18n"
+    [multiUse]="false"
+    size="small"
+    [stickyFooter]="false"
+    [title]="title"
+    [formGroup]="promptControl">
+
     <ng-container [formGroup]="form">
         <div class="message" *ngIf="description">
             <p>{{description}}</p>
         </div>
 
         <bl-form-field class="form-element">
-            <input blInput [formControl]="promptControl">
+            <input blInput [formControl]="promptControl" [attr.aria-label]="title">
         </bl-form-field>
         <bl-error controlName="prompt" [code]="entry.code" *ngFor="let entry of validatorMessages;trackBy: trackByFn">{{entry.message}}</bl-error>
     </ng-container>

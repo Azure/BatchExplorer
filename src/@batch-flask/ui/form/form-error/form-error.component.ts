@@ -1,13 +1,25 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { AbstractControl, ControlContainer, FormGroupDirective } from "@angular/forms";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    Input, OnChanges, OnDestroy, Optional,
+} from "@angular/core";
+import { AbstractControl, ControlContainer, FormControl, FormGroupDirective } from "@angular/forms";
+import { SanitizedError } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 
+let idCounter = 0;
 @Component({
     selector: "bl-error",
-    template: `<div *ngIf="hasError"><ng-content></ng-content></div>`,
+    template: `<div *ngIf="hasError" [id]="id" role="alert"><ng-content></ng-content></div>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormErrorComponent implements OnChanges, OnDestroy {
+    @Input() public id = `bl-error-${idCounter++}`;
+
+    /**
+     * Form control.
+     * Exclusive with controlName
+     */
+    @Input() public control: FormControl;
 
     /**
      * Name of the control.
@@ -25,13 +37,14 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
     private _sub: Subscription;
 
     constructor(
-        private formGroup: FormGroupDirective,
-        private parent: ControlContainer,
-        private changeDetector: ChangeDetectorRef) {
+        private changeDetector: ChangeDetectorRef,
+        @Optional() private formGroup?: FormGroupDirective,
+        @Optional() private parent?: ControlContainer,
+    ) {
     }
 
     public ngOnChanges(inputs) {
-        if (inputs.controlName) {
+        if (inputs.controlName || inputs.control) {
             this._control = this.retrieveControl();
         }
         this._listenForChanges();
@@ -46,11 +59,12 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
     public get path(): string[] { return [...this.parent.path, this.controlName]; }
 
     public retrieveControl(): AbstractControl {
+        if (this.control) { return this.control; }
         let current: AbstractControl = this.formGroup.control;
         for (const segment of this.path) {
             current = current.get(segment);
             if (!current) {
-                throw new Error(`Path ${this.path} for bl-error is invalid,`
+                throw new SanitizedError(`Path ${this.path} for bl-error is invalid,`
                     + ` there is no control with name '${segment}'`);
             }
         }
@@ -66,6 +80,10 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
      */
     private _computeHasError() {
         const control = this._control;
+        if (!control) {
+            throw new SanitizedError(`bl-error must have a form control.`
+                + `Either set the [control] input or use a form group and set the formControlName`);
+        }
         this._hasError = control.hasError(this.code);
         this.changeDetector.markForCheck();
     }

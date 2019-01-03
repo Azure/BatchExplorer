@@ -1,0 +1,132 @@
+@import "app/styles/variables";
+
+bl-pool-picker {
+    $tile-width: 235px;
+    $tile-height: 50px;
+
+    display: block;
+    position: relative;
+
+    .pool-filters {
+        display: flex;
+        align-items: center;
+
+        .search-input {
+            flex: 1;
+        }
+
+        > * {
+            margin: 5px;
+        }
+    }
+
+    .pool-list {
+        min-height: 100px;
+    }
+
+    .pool, .auto-pool {
+        display: inline-flex;
+        position: relative;
+        width: $tile-width;
+        height: $tile-height;
+        padding: 0;
+        margin: 5px;
+        vertical-align: top;
+
+        border: 1px solid $border-color;
+        background: $input-background-color;
+        outline: none;
+        user-select: none;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $hover-bg-color;
+        }
+
+        &.active {
+            color: $primary-contrast-color;
+            border-color: $primary-color;
+            background:  $primary-color;
+
+            > .icon {
+                color: $primary-contrast-color;
+            }
+            > .info > .details {
+                color: $primary-contrast-color;
+            }
+
+            > .info > .title {
+                color: $primary-contrast-color;
+            }
+
+            .pool-tags .tag {
+                color: $primary-color;
+                background-color: $primary-contrast-color;
+            }
+        }
+
+        > .icon {
+            color: $primary-color;
+            font-size: 30px;
+            height: 30px;
+            flex: 0 0 30px;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+
+            svg {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        > .info {
+            padding: 0 5px;
+            text-align: left;
+            overflow: hidden;
+
+            > .title {
+                color: $primary-text;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                margin-top: 3px;
+            }
+
+            > .details {
+                color: $secondary-text;
+                display: flex;
+                align-items: center;
+
+                .fa {
+                    margin-right: 3px;
+                }
+
+                .metric {
+                    flex-shrink: 0;
+                    min-width: 10px;
+                    margin-right: 3px;
+                }
+
+                bl-tags {
+                    flex-shrink: 1;
+                    min-width: 0;
+                }
+            }
+        }
+    }
+
+    > .pool-tags {
+        margin: 0 5px;
+        overflow: hidden;
+
+        .tag {
+            line-height: 11px;
+            margin-right: 3px;
+        }
+    }
+
+    .reset-filters {
+        color: $link-color;
+    }
+}

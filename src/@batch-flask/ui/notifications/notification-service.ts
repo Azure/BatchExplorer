@@ -5,10 +5,10 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { Notification, NotificationConfig, NotificationLevel, NotificationTimer } from "./notification";
 
 function mergeConfig(defaultConfig: NotificationConfig, userConfig: NotificationConfig) {
-    return {...defaultConfig, ...userConfig};
+    return { ...defaultConfig, ...userConfig };
 }
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class NotificationService {
     public notifications: Observable<List<Notification>>;
     public persistedNotifications: Observable<List<Notification>>;

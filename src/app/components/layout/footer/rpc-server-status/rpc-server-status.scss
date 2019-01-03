@@ -1,0 +1,23 @@
+@import "app/styles/variables";
+
+bl-rpc-server-status {
+    display: block;
+    cursor: pointer;
+    user-select: none;
+
+    > bl-clickable {
+        display: block;
+        padding: 0 5px;
+    }
+
+    &:not(.connected) {
+        background-color: $primary-color;
+
+        &:hover, &.active {
+            background-color: $primary-color-dark;
+        }
+        .fa {
+            margin-right: 2px;
+        }
+    }
+}

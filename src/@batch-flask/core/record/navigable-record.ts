@@ -9,15 +9,25 @@ export enum PinnedEntityType {
 
 export interface PinnableEntity {
     id: string;
+
+    /**
+     * Unique identifier across all batch accounts
+     */
+    uid: string;
+
     name?: string;
     routerLink: string[];
-    pinnableType: PinnedEntityType;
-    url: string;
+    pinnableType: PinnedEntityType | null;
 }
 
 export interface NavigableRecord {
     id: string;
+
+    /**
+     * Unique identifier across all batch accounts
+     */
+    uid: string;
+
     name?: string;
     routerLink: string[];
-    url: string;
 }

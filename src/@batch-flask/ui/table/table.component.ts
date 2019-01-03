@@ -1,13 +1,14 @@
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import {
     AfterContentInit, ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
     Input,
-    Optional,
     Output,
     QueryList,
     ViewChild,
@@ -15,7 +16,6 @@ import {
 import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
-import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableColumnComponent } from "./table-column";
@@ -48,11 +48,12 @@ export interface TableConfig extends AbstractListBaseConfig {
     hideHeader?: boolean;
 }
 
-export const tableDefaultConfig = {
+export const tableDefaultConfig: Required<TableConfig> = {
     ...abstractListDefaultConfig,
     showCheckbox: false,
     droppable: false,
     resizableColumn: true,
+    hideHeader: false,
 };
 
 export interface DropEvent {
@@ -60,12 +61,16 @@ export interface DropEvent {
     data: DataTransfer;
 }
 
+let idCounter = 0;
+
 @Component({
     selector: "bl-table",
     templateUrl: "table.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent extends AbstractListBase implements AfterContentInit {
+    @Input() public id = `bl-table-${idCounter++}`;
+
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
         this.dataPresenter.config = this._config.sorting;
@@ -80,11 +85,25 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     @HostBinding("class.activable") public get activable() {
         return this.config.activable;
     }
-    public dropTargetRowKey: string = null;
+
+    // ----------------------------------------------------------------------
+    // Aria
+    // https://www.w3.org/TR/wai-aria-practices/examples/grid/dataGrids.html
+    @HostBinding("attr.role") public readonly role = "grid";
+    @HostBinding("attr.aria-readonly") public readonly ariaReadonly = true;
+    @HostBinding("attr.aria-multiselectable") public readonly ariaMultiSelectable = true;
+    @HostBinding("attr.aria-rowcount") public get ariaRowCount() {
+        return this.items.length;
+    }
+    @HostBinding("attr.aria-colcount") public get ariaColCount() {
+        return this.columnManager.columns.length;
+    }
+
+    public dropTargetRowKey: string | null = null;
 
     public columnManager: TableColumnManager;
 
-    protected _config: TableConfig = tableDefaultConfig;
+    protected _config: Required<TableConfig> = tableDefaultConfig;
 
     /**
      * To enable keyboard navigation in the list it must be inside a focus section
@@ -93,11 +112,12 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         contextmenuService: ContextMenuService,
         changeDetection: ChangeDetectorRef,
         router: Router,
-        breadcrumbService: BreadcrumbService,
-        @Optional() focusSection?: FocusSectionComponent) {
-        super(contextmenuService, router, breadcrumbService, changeDetection, focusSection);
+        elementRef: ElementRef,
+        liveAnnouncer: LiveAnnouncer,
+        breadcrumbService: BreadcrumbService) {
+        super(contextmenuService, router, breadcrumbService, elementRef, changeDetection);
 
-        this.columnManager = new TableColumnManager(this.dataPresenter);
+        this.columnManager = new TableColumnManager(this.dataPresenter, liveAnnouncer);
     }
 
     public ngAfterContentInit() {
@@ -112,7 +132,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
 
     @HostListener("dragover", ["$event"])
     public handleDragHover(event: DragEvent) {
-        DragUtils.allowDrop(event, this.config.droppable);
+        DragUtils.allowDrop(event, this._config.droppable);
     }
 
     public updateColumns() {
@@ -150,6 +170,6 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.dropTargetRowKey = null;
         this.isDraging = 0;
 
-        this.dropOnRow.emit({ key: item.id, data: event.dataTransfer });
+        this.dropOnRow.emit({ key: item.id, data: event.dataTransfer! });
     }
 }

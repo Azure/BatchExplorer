@@ -1,0 +1,96 @@
+<div class="header">
+    <h1>
+        {{'programatic-usage.title' | i18n}}
+    </h1>
+
+    <div class="credential-type-picker">
+        {{'programatic-usage.authenticationType' | i18n}}
+        <bl-select [placeholder]="'programatic-usage.authenticationType' | i18n" [ngModel]="pickedCredentialType" (ngModelChange)="pickCredentialType($event)">
+            <bl-option [value]="CredentialType.SharedKey" label="Shared key"></bl-option>
+            <bl-option [value]="CredentialType.AAD" label="Azure AD"></bl-option>
+        </bl-select>
+    </div>
+</div>
+<bl-vtab-group #tabs class="content">
+    <bl-vtab id="credentials">
+        <div tabLabel>
+            <div>
+                {{'programatic-usage.credentials' | i18n}}
+            </div>
+            <div *ngIf="pickedCredentialType === CredentialType.AAD && !aadCredentials" class="aad-needs-setup-creds"
+                matTooltip="Pick an application and generate a key to have the templates filled with the correct informations">
+                <i class="fa fa-warning"></i>{{'programatic-usage.setup' | i18n}}
+            </div>
+
+        </div>
+        <bl-property-list *ngIf="pickedCredentialType === CredentialType.SharedKey">
+            <bl-property-group label="Batch account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
+                <bl-text-property label="Name" [value]="sharedKeyCredentials?.batchAccount?.resource.name"></bl-text-property>
+                <bl-text-property label="Resource ID" [value]="sharedKeyCredentials?.batchAccount?.resource.id"></bl-text-property>
+                <bl-text-property label="URL" [value]="'https://' + sharedKeyCredentials?.batchAccount?.resource.properties.accountEndpoint"></bl-text-property>
+                <bl-text-property label="Primary key" [value]="sharedKeyCredentials?.batchAccount?.primary"></bl-text-property>
+                <bl-text-property label="Secondary key" [value]="sharedKeyCredentials?.batchAccount?.secondary"></bl-text-property>
+            </bl-property-group>
+            <bl-property-group label="Auto storage account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
+                <bl-text-property label="Name" [value]="sharedKeyCredentials?.storageAccount?.resource.name"></bl-text-property>
+                <bl-text-property label="Resource ID" [value]="sharedKeyCredentials?.storageAccount?.resource.id"></bl-text-property>
+                <bl-text-property label="URL" [value]="sharedKeyCredentials?.storageAccount?.resource?.properties?.primaryEndpoints?.blob"></bl-text-property>
+                <bl-text-property label="Primary key" [value]="sharedKeyCredentials?.storageAccount?.primary"></bl-text-property>
+                <bl-text-property label="Secondary key" [value]="sharedKeyCredentials?.storageAccount?.resource.secondary"></bl-text-property>
+            </bl-property-group>
+        </bl-property-list>
+        <bl-aad-credentials-picker [account]="account" (credentialsChange)="updateAADCredentials($event)" [hidden]="pickedCredentialType !== CredentialType.AAD"></bl-aad-credentials-picker>
+    </bl-vtab>
+    <bl-vtab id="python">
+        <div tabLabel>
+            Python
+        </div>
+        <bl-programing-sample target="python"
+            [account]="account"
+            [credentialType]="pickedCredentialType"
+            [sharedKeyCredentials]="sharedKeyCredentials"
+            [aadCredentials]="aadCredentials"></bl-programing-sample>
+    </bl-vtab>
+    <bl-vtab id="csharp">
+        <div tabLabel aria-label="C Sharp">
+            <!-- This is needed so it reads C Sharp and not C Number https://dev.azure.com/azurebatch/BatchExplorer/_workitems/edit/144 -->
+            <span aria-hidden="true">C#</span>
+        </div>
+        <bl-programing-sample target="csharp"
+            [account]="account"
+            [credentialType]="pickedCredentialType"
+            [sharedKeyCredentials]="sharedKeyCredentials"
+            [aadCredentials]="aadCredentials"></bl-programing-sample>
+    </bl-vtab>
+
+    <bl-vtab id="nodejs">
+        <div tabLabel>
+            Node.js
+        </div>
+        <bl-programing-sample target="nodejs"
+            [account]="account"
+            [credentialType]="pickedCredentialType"
+            [sharedKeyCredentials]="sharedKeyCredentials"
+            [aadCredentials]="aadCredentials"></bl-programing-sample>
+    </bl-vtab>
+    <bl-vtab id="aztk">
+        <div tabLabel>
+            Aztk
+        </div>
+        <bl-programing-sample target="aztk"
+            [account]="account"
+            [credentialType]="pickedCredentialType"
+            [sharedKeyCredentials]="sharedKeyCredentials"
+            [aadCredentials]="aadCredentials"></bl-programing-sample>
+    </bl-vtab>
+    <bl-vtab id="doAzureParallel">
+        <div tabLabel>
+            doAzureParallel
+        </div>
+        <bl-programing-sample target="doAzureParallel"
+            [account]="account"
+            [credentialType]="pickedCredentialType"
+            [sharedKeyCredentials]="sharedKeyCredentials"
+            [aadCredentials]="aadCredentials"></bl-programing-sample>
+    </bl-vtab>
+</bl-vtab-group>

@@ -1,0 +1,4 @@
+pool-details:
+  graphs: Graphs
+  openInNewWindow: Open in a new window
+  estimatedCost: Estimated cost of this pool at this current state

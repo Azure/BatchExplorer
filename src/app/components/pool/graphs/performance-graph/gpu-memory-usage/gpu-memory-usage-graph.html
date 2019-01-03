@@ -1,0 +1,14 @@
+<div class="gpu-usage-container">
+    <div *ngIf="interactive && showIndividualGpu && lastIndividualGpuUsage" class="details">
+        <mat-checkbox class="overall-toggle" [ngModel]="!separateGpuGraphs" (ngModelChange)="changeShowOverallUsage($event)" color="primary">Overall</mat-checkbox>
+        <table class="individual-gpus">
+            <tr *ngFor="let usage of lastIndividualGpuUsage;trackBy: trackGpu;let gpuN = index" class="individual-gpu">
+                <td class="name">Gpu {{gpuN + 1}}</td>
+                <td class="value">{{usage.value}}%</td>
+            </tr>
+        </table>
+    </div>
+    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" (elDblClick)="handleDblClick($event)">
+    </canvas>
+    <div class="info-overlay" *ngIf="(data.loading | async) && interactive">Loading...</div>
+</div>

@@ -1,0 +1,97 @@
+@import "app/styles/variables";
+@import "./heatmap-variables";
+
+
+bl-nodes-heatmap {
+    display: block;
+    height: 100%;
+    overflow: hidden;
+
+    rect {
+        stroke: #fff;
+        stroke-width: 0.1px;
+    }
+
+
+    .heatmap-graph {
+        display: flex;
+        flex-direction: row-reverse;
+        height: 100%;
+        width: 100%;
+        position: relative;
+
+        > .legend {
+            border-left: 1px solid $border-color;
+        }
+
+        > .heatmap-container {
+            $container-margin: 2px;
+            width: calc(100% - #{$legend-width} - #{$container-margin * 2});
+            flex: 1 0 calc(100% - #{$legend-width} - #{$container-margin * 2});
+            height: 100%;
+            max-height: 100%;
+            margin: $container-margin;
+            position: relative;
+        }
+
+        g.node-group {
+            cursor: pointer;
+            rect {
+                stroke: $primary-color;
+            }
+
+            text {
+                font-size: 16px;
+                user-select: none;
+                color: $primary-text;
+            }
+        }
+
+        &.interactive {
+            g.node-group:hover {
+                rect {
+                    stroke: $primary-color;
+                    fill-opacity: 0.7;
+                }
+            }
+        }
+    }
+
+    .clear-highlight {
+        margin-top: 10px;
+        cursor: pointer;
+        height: 20px;
+    }
+
+    .no-nodes-container {
+        top: 0;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        font-size: 16px;
+        color: $main-background;
+
+        > div {
+            padding: 10px 20px;
+            background: $secondary-text;
+            height: 36px;
+        }
+    }
+
+    &:not(.interactive) {
+
+
+        .no-nodes-container {
+            font-size: 10px;
+            // white-space: nowrap;
+            line-height: 12px;
+
+            > div {
+                height: 100%;
+                padding: 5px;
+            }
+        }
+    }
+}

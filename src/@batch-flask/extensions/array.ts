@@ -39,7 +39,7 @@ if (!Array.prototype.last) {
 
 if (!Array.prototype.flatten) {
     Array.prototype.flatten = function <T>(this: T[]) {
-        return [].concat(...this);
+        return ([] as T[]).concat(...this);
     };
 }
 

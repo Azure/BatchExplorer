@@ -1,13 +1,12 @@
 import {
     A,
-    DOWN_ARROW,
     NINE,
-    UP_ARROW,
     Z,
     ZERO,
 } from "@angular/cdk/keycodes";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime, filter, map, tap } from "rxjs/operators";
+import { KeyCode } from "../keys";
 
 export interface KeyNavigableListItem {
     disabled: boolean;
@@ -20,7 +19,7 @@ export interface KeyNavigableListItem {
 
 export class ListKeyNavigator<T extends KeyNavigableListItem> {
     /** Stream that emits whenever the focused item of the list manager changes. */
-    public change = new Subject<T>();
+    public change = new Subject<T | null>();
 
     public set items(items: T[]) {
         this._items = items;
@@ -39,7 +38,7 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
     // Buffer for the letters that the user has pressed when the typeahead option is turned on.
     private _pressedLetters: string[] = [];
     private _focusedItemIndex = -1;
-    private _focusedItem: T = null;
+    private _focusedItem: T | null = null;
     private _wrap = false;
     private _typeaheadSubscription = Subscription.EMPTY;
 
@@ -47,7 +46,7 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
         return this._focusedItemIndex;
     }
 
-    public get focusedItem(): T {
+    public get focusedItem(): T | null {
         return this._focusedItem;
     }
 
@@ -132,11 +131,11 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
      */
     public onKeydown(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
-        switch (keyCode) {
-            case DOWN_ARROW:
+        switch (event.code) {
+            case KeyCode.ArrowDown:
                 this.focusNextItem();
                 break;
-            case UP_ARROW:
+            case KeyCode.ArrowUp:
                 this.focusPreviousItem();
                 break;
             default:

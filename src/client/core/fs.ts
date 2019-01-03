@@ -48,7 +48,7 @@ export class FileSystem {
 
     /**
      * This make sure the given dir exists. Will recusrivelly create any missing directory.
-     * @param directory: Path that we expect to exists
+     * @param directory: Path that we expect to exist
      */
     public ensureDir(directory: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
@@ -108,10 +108,21 @@ export class FileSystem {
         });
     }
 
+    public async stat(path: string): Promise<fs.Stats> {
+        return new Promise<fs.Stats>((resolve, reject) => {
+            fs.stat(path, (error, stats) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(stats);
+            });
+        });
+    }
+
     public async readdir(dir: string, recursive = true): Promise<string[]> {
         const content = await this._readDir(dir);
         if (!recursive) { return content; }
-        let result = [];
+        let result: string[] = [];
         for (const entry of content) {
             const stats = await this.lstat(path.join(dir, entry));
             if (stats.isFile()) {

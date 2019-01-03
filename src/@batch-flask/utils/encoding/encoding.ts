@@ -1,3 +1,5 @@
+import * as jschardet from "jschardet";
+
 const ZERO_BYTE_DETECTION_BUFFER_MAX_LEN = 512; // number of bytes to look at to decide about a file being binary or not
 // const NO_GUESS_BUFFER_MAX_LEN = 512; 			// when not auto guessing the encoding, small number of bytes are enough
 // const AUTO_GUESS_BUFFER_MAX_LEN = 512 * 8; 		// with auto guessing we want a lot more content to be read for guessing
@@ -11,7 +13,7 @@ export enum Encoding {
 }
 
 export interface EncodingResult {
-    encoding: Encoding;
+    encoding: Encoding | null;
     seemsBinary: boolean;
 }
 export class EncodingUtils {
@@ -94,7 +96,7 @@ export class EncodingUtils {
         return { seemsBinary, encoding };
     }
 
-    public static detectEncodingByBOMFromBuffer(buffer: any, bytesRead: number): Encoding {
+    public static detectEncodingByBOMFromBuffer(buffer: any, bytesRead: number): Encoding | null {
         if (!buffer || bytesRead < 2) {
             return null;
         }
@@ -126,8 +128,7 @@ export class EncodingUtils {
         return null;
     }
 
-    public static async guessEncodingByBuffer(buffer): Promise<Encoding> {
-        const jschardet = await import("jschardet");
+    public static async guessEncodingByBuffer(buffer): Promise<Encoding | null> {
         jschardet.Constants.MINIMUM_THRESHOLD = MINIMUM_THRESHOLD;
 
         const guessed = jschardet.detect(buffer);

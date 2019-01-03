@@ -1,0 +1,20 @@
+@import "app/styles/variables";
+
+bl-footer {
+    display: flex;
+    height: $footer-height;
+    align-items: center;
+    color: map-get($footer-color, text);
+    background-color: map-get($footer-color, bg);
+    width: 100vw;
+    font-size: 12px;
+    line-height: $footer-height;
+
+    > .menu-item {
+        margin: 0 5px;
+    }
+}
+
+.batch-explorer.high-contrast bl-footer {
+    border-top: 1px solid $border-color;
+}

@@ -1,0 +1,28 @@
+<div class="header">
+    <bl-button type="square" (do)="cancel.emit()" title="Back">
+        <i class="fa fa-arrow-left"></i>
+    </bl-button>
+    <h2>{{'create-new-aad-app.title' | i18n }}</h2>
+</div>
+<div class="form-container" [formGroup]="form">
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput placeholder="Application name" class="app-name" formControlName="name">
+        </bl-form-field>
+    </div>
+    <div class="form-element">
+        <h4>{{'create-new-aad-app.secret.label' | i18n }}</h4>
+        <bl-aad-app-secret-picker formControlName="secretValue">
+        </bl-aad-app-secret-picker>
+    </div>
+
+    <div class="submit">
+        <bl-button [action]="create" type="wide" color="primary" [disabled]="!form.valid">
+            {{'create-new-aad-app.create' | i18n }}
+        </bl-button>
+
+        <div class="create-status">
+            {{createStatus}}
+        </div>
+    </div>
+</div>

@@ -1,18 +1,19 @@
-import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
+import { AutoUpdateService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
+import { parseArguments } from "client/cli";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { BatchExplorerProperties } from "client/core/properties";
 import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
-import * as commander from "commander";
 import { BatchExplorerLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
 import { app, dialog, ipcMain, session } from "electron";
-import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
+import { UpdateCheckResult } from "electron-updater";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
 import * as os from "os";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -20,7 +21,7 @@ import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
-import { AADService, AuthenticationState, AuthenticationWindow } from "./aad";
+import { AADService, AuthenticationState, AuthenticationWindow, AuthorizeResponseError } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
 
@@ -32,8 +33,6 @@ export enum BatchExplorerState {
     Loading,
     Ready,
 }
-
-export const AUTO_UPDATER = new InjectionToken("AUTO_UPDATER");
 
 @Injectable()
 export class BatchExplorerApplication {
@@ -47,18 +46,17 @@ export class BatchExplorerApplication {
 
     private _state = new BehaviorSubject<BatchExplorerState>(BatchExplorerState.Loading);
     private _initializer: BatchExplorerInitializer;
-    private _currentlyAskingForCredentials: Promise<any>;
+    private _currentlyAskingForCredentials: Promise<any> | null;
 
     constructor(
-        @Inject(AUTO_UPDATER) public autoUpdater: AppUpdater,
+        public autoUpdater: AutoUpdateService,
         public translationLoader: TranslationsLoaderService,
         public localeService: LocaleService,
-        private injector: Injector,
+        public injector: Injector,
         public properties: BatchExplorerProperties,
         private telemetryService: TelemetryService,
         private telemetryManager: TelemetryManager,
         private ipcMain: BlIpcMain) {
-
         this.windows = new MainWindowManager(this, this.telemetryManager);
         this.state = this._state.asObservable();
 
@@ -94,9 +92,17 @@ export class BatchExplorerApplication {
         this._initializer.init();
 
         this._setCommonHeaders();
-        this.aadService.login();
+        this.aadService.login().catch((e: AuthorizeResponseError) => {
+            dialog.showMessageBox({
+                type: "error",
+                message: e.toString(),
+            });
+            this.logoutAndLogin();
+        });
         this._initializer.setTaskStatus("window", "Loading application");
+        log.debug("process.argv", process.argv);
         const window = this.openFromArguments(process.argv, false);
+        if (!window) { return; }
         const windowSub = window.state.subscribe((state) => {
             switch (state) {
                 case WindowState.Loading:
@@ -170,17 +176,14 @@ export class BatchExplorerApplication {
         return this.windows.openNewWindow(link);
     }
 
-    public openFromArguments(argv: string[], showWhenReady = true): MainWindow {
+    public openFromArguments(argv: string[], showWhenReady = true): MainWindow | null {
         if (ClientConstants.isDev) {
-            return this.windows.openNewWindow(null, showWhenReady);
+            return this.windows.openNewWindow(undefined, showWhenReady);
         }
-        const program = commander
-            .version(app.getVersion())
-            .option("--updated", "If the application was just updated")
-            .parse(["", ...argv]);
+        const program = parseArguments(argv);
         const arg = program.args[0];
-        if (!arg) {
-            return this.windows.openNewWindow(null, showWhenReady);
+        if (!arg || arg.startsWith("data:")) {
+            return this.windows.openNewWindow(undefined, showWhenReady);
         }
         try {
             const link = new BatchExplorerLink(arg);
@@ -196,6 +199,7 @@ export class BatchExplorerApplication {
                     this.quit();
                 }
             });
+            return null;
         }
     }
 
@@ -209,7 +213,7 @@ export class BatchExplorerApplication {
     }
 
     public checkForUpdates(): Promise<UpdateCheckResult> {
-        return autoUpdater.checkForUpdates();
+        return this.autoUpdater.checkForUpdates();
     }
 
     public askUserForProxyCredentials(): Promise<ProxyCredentials> {
@@ -226,7 +230,7 @@ export class BatchExplorerApplication {
         return this._currentlyAskingForCredentials;
     }
 
-    public askUserForProxyConfiguration(current?: ProxySettings): Promise<ProxySettings> {
+    public askUserForProxyConfiguration(current?: ProxySettings | null): Promise<ProxySettings | null> {
         const proxyCredentials = new ManualProxyConfigurationWindow(this, current);
         proxyCredentials.create();
         return proxyCredentials.settings;
@@ -267,6 +271,7 @@ export class BatchExplorerApplication {
             process.exit(1);
         });
 
+        // tslint:disable-next-line:ban-types
         process.on("uncaughtException" as any, (error: Error) => {
             log.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
@@ -315,7 +320,7 @@ export class BatchExplorerApplication {
 
     private _setCommonHeaders() {
         const requestFilter = { urls: ["https://*", "http://*"] };
-        session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
+        session!.defaultSession!.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
             if (details.url.includes("batch.azure.com")) {
                 details.requestHeaders["Origin"] = "http://localhost";
                 details.requestHeaders["Cache-Control"] = "no-cache";

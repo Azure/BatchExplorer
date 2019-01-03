@@ -2,16 +2,17 @@ language: node_js
 dist: trusty
 sudo: false
 
-# addons:
-#   apt:
-#     packages:
-#       - libgnome-keyring-dev
-#       - openjpeg-tools # or libopenjp2-tools
-#       - graphicsmagick
-#       - libreadline6
-#       - xz-utils
-#       - rpm
-#       - bsdtar
+addons:
+  apt:
+    packages:
+      - libsecret-1-dev
+      # - libgnome-keyring-dev
+      # - openjpeg-tools # or libopenjp2-tools
+      # - graphicsmagick
+      # - libreadline6
+      # - xz-utils
+      # - rpm
+      # - bsdtar
 
 node_js:
   - 10.8.0
@@ -24,10 +25,14 @@ matrix:
       os: linux
       services: docker
       before_install:
+        - pyenv global 2.7
+        - python --version
+        - pyenv which python
+        - npm config set python $(pyenv which python)
         - pyenv versions
         - pyenv install --list
-        - pyenv install 3.6.0
-        - pyenv global 3.6.0
+        - pyenv install -s 3.6
+        - pyenv global 3.6
         - python --version
         - python3 --version
       before_script:

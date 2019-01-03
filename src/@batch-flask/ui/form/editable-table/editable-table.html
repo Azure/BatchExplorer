@@ -1,5 +1,6 @@
-<div [formGroup]="form">
-    <table class="noselect" cellspacing="0" cellpadding="0" formArrayName="items">
+<ng-container [formGroup]="form">
+    <div class="caption" [hidden]="hideCaption">{{label}}</div>
+    <table class="noselect" cellspacing="0" cellpadding="0" formArrayName="items" [attr.aria-label]="label" role="grid">
         <thead>
             <tr>
                 <th *ngFor="let column of columns;trackBy: trackColumn">
@@ -23,9 +24,11 @@
                     </ng-container>
                 </td>
                 <td class="action-column">
-                    <bl-clickable *ngIf="!isLast" class="delete-item-btn" (do)="deleteItem(i)"><i class="fa fa-times" ></i></bl-clickable>
+                    <bl-clickable *ngIf="!isLast" class="delete-item-btn" [attr.aria-label]="'editable-table.deleteRow' | i18n" (do)="deleteItem(i)">
+                        <i class="fa fa-times" ></i>
+                    </bl-clickable>
                 </td>
             </tr>
         </tbody>
     </table>
-</div>
+</ng-container>

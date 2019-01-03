@@ -5,6 +5,9 @@ import {
 import { autobind } from "@batch-flask/core";
 import { Observable, Subscription } from "rxjs";
 
+import { LiveAnnouncer } from "@angular/cdk/a11y";
+import "./refresh-btn.scss";
+
 export enum RefreshStatus {
     Idle,
     Refreshing,
@@ -44,7 +47,7 @@ export class RefreshButtonComponent implements OnDestroy {
     private _status = RefreshStatus.Idle;
     private _refreshSub: Subscription;
 
-    constructor(private changeDetector: ChangeDetectorRef) {
+    constructor(private changeDetector: ChangeDetectorRef, private liveAnnouncer: LiveAnnouncer) {
     }
 
     public ngOnDestroy() {
@@ -59,14 +62,21 @@ export class RefreshButtonComponent implements OnDestroy {
         this._refreshSub = this.refresh().subscribe(
             () => {
                 this.status = RefreshStatus.Succeeded;
+                this.liveAnnouncer.announce("Refreshed");
+                this.changeDetector.markForCheck();
                 setTimeout(() => {
                     this.status = RefreshStatus.Idle;
+                    this.changeDetector.markForCheck();
                 }, 500);
             },
             () => {
                 this.status = RefreshStatus.Failed;
+                this.liveAnnouncer.announce("Refresh failed");
+                this.changeDetector.markForCheck();
+
                 setTimeout(() => {
                     this.status = RefreshStatus.Idle;
+                    this.changeDetector.markForCheck();
                 }, 1000);
             },
         );

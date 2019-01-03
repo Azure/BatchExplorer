@@ -2,11 +2,15 @@ import { log } from "@batch-flask/utils";
 import { BatchExplorerProperties } from "client/core/properties";
 import { BatchExplorerApplication } from ".";
 
+export class ClosedWindowError extends Error {
+    constructor(message: string) { super(message); }
+}
+
 export abstract class GenericWindow {
     public expectedClose = false;
     public domReady: Promise<void>;
     protected properties: BatchExplorerProperties;
-    protected _window: Electron.BrowserWindow;
+    protected _window: Electron.BrowserWindow | null;
     private _resolveDomReady: () => void;
 
     constructor(protected batchExplorerApp: BatchExplorerApplication) {
@@ -51,7 +55,7 @@ export abstract class GenericWindow {
      * @param focus If we should focus on the window if it is already visible. @default false
      */
     public show(focus: boolean = false) {
-        if (focus || (this._window && !this._window.isVisible())) {
+        if (this._window && (focus || !this._window.isVisible())) {
             this._window.show();
         }
     }
@@ -79,7 +83,9 @@ export abstract class GenericWindow {
     }
 
     public reload() {
-        this._window.reload();
+        if (this._window) {
+            this._window.reload();
+        }
     }
 
     protected abstract createWindow(): Electron.BrowserWindow;
@@ -91,7 +97,7 @@ export abstract class GenericWindow {
 export abstract class UniqueWindow extends GenericWindow {
     public create() {
         super.create();
-        this.setupCommonEvents(this._window);
+        this.setupCommonEvents(this._window!);
     }
 
     public setupCommonEvents(window: Electron.BrowserWindow) {

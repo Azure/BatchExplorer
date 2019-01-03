@@ -17,21 +17,31 @@
         <ng-container *ngIf="currentNode">
             <bl-file-table-view *ngIf="currentNode.treeNode.isDirectory && !currentNode.treeNode.isUnknown"
                 [name]="currentSource.name"
+                [navigator]="currentSource.navigator"
                 [treeNode]="currentNode.treeNode"
                 [canDropExternalFiles]="config.canDropExternalFiles"
                 [loadingStatus]="currentNode.treeNode.loadingStatus"
                 [error]="currentSource.navigator.error"
-                (select)="nodeSelected($event)"
+                (navigate)="navigateTo($event, source)"
+                (nodeSelected)="nodeSelected($event)"
                 (back)="goBack()"
                 (dropFiles)="handleDrop($event)">
             </bl-file-table-view>
 
-            <bl-file-viewer *ngFor="let file of workspace.openedFiles | async;trackBy: trackOpenedFile"
+            <bl-file-viewer-container *ngFor="let file of workspace.openedFiles | async;trackBy: trackOpenedFile"
                 [fileLoader]="file.loader"
-                [tailable]="config.tailable"
+                [config]="config.viewer"
                 [hidden]="file.path !== currentNode.path"
                 (back)="goBack()">
-            </bl-file-viewer>
+            </bl-file-viewer-container>
         </ng-container>
+
+        <div *ngIf="currentNode.treeNode.isUnknown && currentNode.treeNode.loadingStatus !== 0 && !currentNode.isOpenedFile" class="info-overlay">
+            {{'file-explorer.unknownFile' | i18n}}
+        </div>
+
+        <div *ngIf="currentNode.treeNode.loadingStatus === 0 && !currentNode.isOpenedFile" class="info-overlay">
+            {{'common.loading' | i18n}}
+        </div>
     </section>
 </bl-split-pane>

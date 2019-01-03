@@ -14,6 +14,10 @@ import "./toast.scss";
 export class ToastComponent extends ClickableComponent {
     @Input() public notification: Notification;
 
+    // Aria
+    @HostBinding("attr.role") public readonly role = "alert";
+    @HostBinding("attr.live") public readonly ariaLive = "assertive";
+
     @HostBinding("class")
     public get notificationClass(): string {
         const level = this.notification && this.notification.level;

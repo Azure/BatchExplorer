@@ -1,0 +1,53 @@
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
+    <bl-form-page main-form-page [title]="title" [formGroup]="form">
+        <bl-form-section title="General info" subtitle="Basic information about the batch account">
+            <div class="form-element">
+                <bl-subscription-picker formControlName="subscription"></bl-subscription-picker>
+                <bl-error controlName="subscription" code="required">{{'batch-account-create.subscription.required' | i18n}}</bl-error>
+            </div>
+            <div class="form-element" *ngIf="selectedSubscription">
+                <bl-form-field>
+                    <input blInput [matAutocomplete]="auto" formControlName="resourceGroup" placeholder="Resource group" />
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResourceGroup">
+                        <mat-option *ngFor="let resourceGroup of resourceGroups;trackBy: trackByResourceGroup" [value]="resourceGroup">
+                            {{resourceGroup.name}} ({{resourceGroup.location}})
+                        </mat-option>
+                    </mat-autocomplete>
+                    <bl-error controlName="resourceGroup" code="required">{{'batch-account-create.resourceGroup.required' | i18n}}</bl-error>
+                    <bl-error controlName="resourceGroup" code="noPermission">{{'batch-account-create.resourceGroup.notAllowed' | i18n}}</bl-error>
+                    <bl-error controlName="resourceGroup" code="serverError">{{ form.controls.resourceGroup.errors?.serverError }}</bl-error>
+                </bl-form-field>
+                <span *ngIf="isNewResourceGroup">{{'batch-account-create.resourceGroup.notAllowed' | i18n}}</span>
+            </div>
+            <div class="form-element" *ngIf="selectedSubscription">
+                <bl-location-picker formControlName="location" [subscription]="selectedSubscription"></bl-location-picker>
+                <bl-error controlName="location" code="required">{{'batch-account-create.location.required' | i18n}}</bl-error>
+                <bl-error controlName="location" code="quotaReached">
+                    <bl-i18n key="batch-account-create.location.reachedQuota">
+                        <ng-container *i18nParam="'used'">{{form.controls.location.errors?.quotaReached?.used}}</ng-container>
+                        <ng-container *i18nParam="'quota'">{{form.controls.location.errors?.quotaReached?.quota}}</ng-container>
+                        <ng-container *i18nParam="'subscription'">{{selectedSubscription.displayName}}</ng-container>
+                    </bl-i18n>
+                </bl-error>
+            </div>
+            <div class="form-element">
+                <bl-form-field>
+                    <input blInput formControlName="name" placeholder="Account name" />
+                    <div blFormFieldSuffix *ngIf="selectedLocation">{{accountUrlSuffix}}</div>
+                    <bl-error controlName="name" code="required">{{'batch-account-create.accountName.required' | i18n}}</bl-error>
+                    <bl-error controlName="name" code="minLength">{{'batch-account-create.accountName.minLength' | i18n}}</bl-error>
+                    <bl-error controlName="name" code="maxlength">{{'batch-account-create.accountName.maxlength' | i18n}}</bl-error>
+                    <bl-error controlName="name" code="pattern">{{'batch-account-create.accountName.pattern' | i18n}}</bl-error>
+                    <bl-error controlName="name" code="accountExists">{{ form.controls.name.errors?.accountExists?.message }}</bl-error>
+                    <bl-error controlName="name" code="serverError">{{ form.controls.name.errors?.serverError }}</bl-error>
+                </bl-form-field>
+            </div>
+        </bl-form-section>
+        <bl-form-section title="Storage account" subtitle="Pick a storage account that will be assigned with this batch account.">
+            <span *ngIf="!account">{{'batch-account-create.storageAccount.missingSubscription' | i18n}}</span>
+            <div class="form-element" *ngIf="account">
+                <bl-auto-storage-account-picker formControlName="storageAccountId" [account]="account"></bl-auto-storage-account-picker>
+            </div>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

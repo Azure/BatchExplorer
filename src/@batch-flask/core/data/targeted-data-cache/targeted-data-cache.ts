@@ -27,7 +27,7 @@ export class TargetedDataCache<TParams, TEntity extends Record<any>> {
      * Return the key of the cache associated to the given params
      */
     public getCacheKey(params: TParams) {
-        return this._options.key(params);
+        return this._options.key!(params);
     }
 
     public getCache(params: TParams): DataCache<TEntity> {

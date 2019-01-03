@@ -25,12 +25,15 @@ export interface TreeRow {
     virtual: boolean;
 }
 
+let idCounter = 0;
+
 @Component({
     selector: "bl-file-tree-view",
     templateUrl: "file-tree-view.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileTreeViewComponent implements OnChanges, OnDestroy {
+    @Input() public id = `bl-file-tree-view_${idCounter++}`;
     @Input() public fileNavigator: FileNavigator;
     @Input() public currentPath: string;
     @Input() public active: boolean = true;
@@ -124,6 +127,9 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public setFocus(focus: boolean) {
         this.isFocused = focus;
+        if (this.focusedIndex > this.treeRows.length) {
+            this.focusedIndex = 0;
+        }
         this.changeDetector.markForCheck();
     }
 

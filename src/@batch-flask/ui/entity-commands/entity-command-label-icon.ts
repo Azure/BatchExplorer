@@ -5,7 +5,6 @@ export const COMMAND_LABEL_ICON = {
     AddFile: {  label: "Add more files to the file group", icon: "fa fa-plus" },
     Delete: { label: "Delete", icon: "fa fa-trash-o" },
     ExportAsJSON: { label: "Export as JSON", icon: "fa fa-code" },
-    Terminate: { label: "Terminate", icon: "fa fa-stop" },
     Edit: { label: "Edit", icon: "fa fa-edit" },
     EditStartTask: { label: "Edit start task", icon: "fa fa-pencil-square-o" },
     Resize: { label: "Resize", icon: "fa fa-arrows-v" },

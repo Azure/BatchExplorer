@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { Workspace } from "./workspace.model";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class WorkspaceService implements OnDestroy {
     private _workspaces: BehaviorSubject<List<Workspace>> = new BehaviorSubject(List([]));
     private _currentWorkspace: BehaviorSubject<Workspace> = new BehaviorSubject(null);

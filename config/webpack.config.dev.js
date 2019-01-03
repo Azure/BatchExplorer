@@ -4,7 +4,6 @@ const webpack = require("webpack");
 const merge = require("webpack-merge");
 const helpers = require("./helpers");
 const DefinePlugin = require("webpack/lib/DefinePlugin");
-const AddAssetHtmlPlugin = require("add-asset-html-webpack-plugin");
 const WriteFilePlugin = require("write-file-webpack-plugin");
 const { defineEnv } = require("./webpack.common");
 const EvalSourceMapDevToolPlugin = require("webpack/lib/EvalSourceMapDevToolPlugin");

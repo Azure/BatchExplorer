@@ -1,0 +1,29 @@
+<bl-storage-error-display [noClassic]="true"></bl-storage-error-display>
+<ng-container *ngIf="autoStorageService.hasArmAutoStorage | async">
+    <div class="header">
+        <h1>{{'gallery.title' | i18n }}</h1>
+        <bl-refresh-btn [refresh]="refresh" type="round"></bl-refresh-btn>
+    </div>
+    <div class="gallery-content">
+        <div class="gallery-applications">
+            <div class="filter">
+                <input autofocus blInput [formControl]="quicksearch" placeholder="Search">
+            </div>
+            <div class="gallery-content">
+                <bl-gallery-application-list [filter]="query" [active]="activeApplication" (activeChange)="selectApplication($event)"></bl-gallery-application-list>
+            </div>
+        </div>
+        <div class="gallery-application-actions" *ngIf="activeApplication">
+            <div class="actions-header">
+                <h2>{{'gallery.actions' | i18n }}</h2>
+                <bl-clickable (do)="openReadme(activeApplication)">{{'gallery.viewReadme' | i18n }}</bl-clickable>
+                <bl-clickable (do)="selectApplication(null)">{{'common.back' | i18n }}</bl-clickable>
+            </div>
+            <bl-choose-action [application]="activeApplication" (actionChange)="submitAction($event)"></bl-choose-action>
+        </div>
+        <div class="gallery-application-recent" *ngIf="!activeApplication">
+            <h2>{{'gallery.recentTemplates' | i18n }}</h2>
+            <bl-recent-template-list></bl-recent-template-list>
+        </div>
+    </div>
+</ng-container>

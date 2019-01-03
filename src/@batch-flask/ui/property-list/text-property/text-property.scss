@@ -3,16 +3,16 @@
 bl-text-property {
     .clipboard {
         font-size: 16px;
-        color: $genericGray;
+        color: $secondary-text;
         cursor: pointer;
         margin-left: 5px;
 
         &:hover {
-            color: $dusty-grey;
+            color: $hover-bg-color;
         }
 
         &:active {
-            color: map-get($primary, 200);
+            color: $primary-color-light;
         }
     }
 }

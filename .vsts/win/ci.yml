@@ -1,8 +1,37 @@
 steps:
+  # Static analysis before build
+  - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+    displayName: 'Run CredScan'
+    inputs:
+      suppressionsFile: test/cred-scan-exclude.json
+      debugMode: false
+
   - template: ./win-dependencies.yml
 
   - powershell: npm run build-and-pack
     displayName: Build and package
+
+  - powershell: |
+      . .vsts/win/exec.ps1
+      $ErrorActionPreference = "Stop"
+      $env:SPECTRON_AAD_USER_EMAIL = "$(uiTestingAccountEmail)"
+      $env:SPECTRON_AAD_USER_PASSWORD = "$(uiTestingAccountPassword)"
+      npm run spectron
+    displayName: Running spectron
+
+  - task: securedevelopmentteam.vss-secure-development-tools.build-task-antimalware.AntiMalware@3
+    displayName: 'AntiMalware Scanner'
+    inputs:
+      EnableServices: true
+
+  - task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@2
+    displayName: 'Publish Security Analysis Logs'
+
+  - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
+    displayName: 'Post Analysis'
+    inputs:
+      CredScan: true
+
 
   - template: ../common/publish-artifacts.yml
     parameters:

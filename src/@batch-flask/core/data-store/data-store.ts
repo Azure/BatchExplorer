@@ -6,7 +6,7 @@ export abstract class DataStore {
 
     public abstract setItem<T= string>(key: string, value: T): Promise<void>;
 
-    public abstract getItem<T= string>(key: string): Promise<T>;
+    public abstract getItem<T= string>(key: string): Promise<T | undefined>;
 
     public abstract removeItem(key: string): Promise<void>;
 

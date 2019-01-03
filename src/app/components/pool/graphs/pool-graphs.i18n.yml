@@ -1,0 +1,14 @@
+pool-graphs:
+  cpu: CPU
+  memory: Memory
+  diskIO: Disk IO
+  diskUsage: Disk usage
+  network: Network
+  notEnabled: Cpu, memory, disk, etc.
+  last: Last
+  timespan:
+    label: Graphs timespan
+    10min: 10 minutes
+    1h: 1 hour
+    24h: 24 hours
+    7d: 7 days

@@ -1,8 +1,12 @@
+import { ServerError } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/ui/electron";
 import { CloudPathUtils, exists, log } from "@batch-flask/utils";
 import * as path from "path";
-import { Observable, Subject, from, of } from "rxjs";
-import { concatMap, flatMap, map, share } from "rxjs/operators";
+import { BehaviorSubject, Observable, from, of } from "rxjs";
+import {
+    catchError, concatMap, distinctUntilChanged, filter,
+    map, publishReplay, refCount, share, skip, switchMap, take, tap,
+} from "rxjs/operators";
 import { File } from "../file.model";
 
 export type PropertiesFunc = () => Observable<File>;
@@ -37,7 +41,13 @@ export interface FileLoadResult {
     content: string;
 }
 
+function isNotNullOrUndefined<T>(input: null | undefined | T): input is T {
+    return input != null;
+}
+
 export class FileLoader {
+    public properties: Observable<File | ServerError>;
+
     public readonly filename: string;
     public readonly source: string;
     /**
@@ -46,26 +56,20 @@ export class FileLoader {
     public readonly groupId: string;
 
     /**
-     * Event that notify when the file is different
-     */
-    public readonly fileChanged: Observable<File>;
-
-    /**
      * Base path to show the file as relative to this.
      */
     public basePath: string;
 
     private _fs: FileSystemService;
-    private _properties: PropertiesFunc;
+    private _properties = new BehaviorSubject<File | ServerError | null>(null);
+    private _propertiesGetter: PropertiesFunc;
     private _content: ContentFunc;
-    private _download: DownloadFunc;
-    private _cachedProperties: File;
-    private _fileChanged = new Subject<File>();
+    private _download: DownloadFunc | undefined;
     private _logIgnoreError: number[];
 
     constructor(config: FileLoaderConfig) {
         this.filename = config.filename;
-        this._properties = config.properties;
+        this._propertiesGetter = config.properties;
         this._content = config.content;
         this.groupId = config.groupId || "";
         this.source = config.source;
@@ -73,31 +77,45 @@ export class FileLoader {
         this._download = config.download;
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [];
 
-        this.fileChanged = this._fileChanged.asObservable();
+        this.properties = of(null).pipe(
+            switchMap(() => this.refreshProperties()),
+            switchMap(() => this._properties),
+            filter(isNotNullOrUndefined),
+            distinctUntilChanged((a, b) => {
+                if (a === b) {
+                    return true;
+                } else if (a instanceof ServerError || b instanceof ServerError) {
+                    return false;
+                } else {
+                    return a!.equals(b!);
+                }
+            }),
+            publishReplay(1),
+            refCount(),
+        );
     }
 
     /**
-     * Returns the properties once. This doesn't need any cleanup(i.e. no need to call dispose)
-     * @param forceNew If set to false it will use the last value loaded
+     * Event that notify when the file is different
      */
-    public getProperties(forceNew = false): Observable<File> {
-        if (!forceNew && this._cachedProperties) {
-            return of(this._cachedProperties);
-        }
+    public get fileChanged() {
+        return this.properties.pipe(skip(1));
+    }
 
-        const obs = this._properties();
-        obs.subscribe({
-            next: (file) => {
-                this._updateProperties(file);
-            },
-            error: (error) => {
+    public getProperties() {
+        return this.properties.pipe(take(1));
+    }
+
+    public refreshProperties() {
+        return this._propertiesGetter().pipe(
+            catchError(error => {
                 if (error && error.status && !this._logIgnoreError.includes(error.status)) {
                     log.error("Error getting the file properties!", Object.assign({}, error));
                 }
-            },
-        });
-
-        return obs;
+                return of(error);
+            }),
+            tap(value => this._properties.next(value)),
+        );
     }
 
     public content(options: FileLoadOptions = {}): Observable<FileLoadResult> {
@@ -108,8 +126,8 @@ export class FileLoader {
         if (this._download) {
             const checkDirObs = from(this._fs.ensureDir(path.dirname(dest)));
             return checkDirObs.pipe(
-                flatMap(() => this._download(dest)),
-                map(x => dest),
+                switchMap(() => this._download!(dest)),
+                map(_ => dest),
                 share(),
             );
         }
@@ -131,10 +149,10 @@ export class FileLoader {
      */
     public cache(): Observable<string> {
         return this.getProperties().pipe(
-            flatMap((file: File) => {
+            switchMap((file: File) => {
                 const destination = this._getCacheDestination(file);
                 return from(this._fs.exists(destination)).pipe(
-                    flatMap((exists) => {
+                    switchMap((exists) => {
                         if (exists) {
                             return of(destination);
                         } else {
@@ -164,14 +182,6 @@ export class FileLoader {
         segements.push(`${hash}.${filename}`);
 
         return path.join(...segements);
-    }
-
-    private _updateProperties(file: File) {
-        const last = this._cachedProperties;
-        this._cachedProperties = file;
-        if (last && !last.equals(file)) {
-            this._fileChanged.next(file);
-        }
     }
 
     /**

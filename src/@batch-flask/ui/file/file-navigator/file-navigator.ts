@@ -3,8 +3,8 @@ import { Activity } from "@batch-flask/ui/activity";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { CloudPathUtils, StringUtils, log } from "@batch-flask/utils";
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, Subscription, interval, of } from "rxjs";
-import { catchError, flatMap, map, mergeMap, share, shareReplay, take, tap } from "rxjs/operators";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription, interval, of, throwError } from "rxjs";
+import { catchError, flatMap, map, mergeMap, share, shareReplay, switchMap, take, tap } from "rxjs/operators";
 import { FileLoader } from "../file-loader";
 import { File } from "../file.model";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
@@ -52,6 +52,11 @@ export interface FileNavigatorConfig<TParams = any> {
     delete?: (filename: string) => Observable<any>;
 
     /**
+     * Optional function to handle delete in the file navigator
+     */
+    upload?: (path: string, localPath: string) => Observable<any>;
+
+    /**
      * Optional callback that gets called when an error is returned listing files.
      * You can that way ignore the error or modify it.
      * Return null to ignore error.
@@ -81,7 +86,10 @@ export class FileNavigator<TParams = any> {
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
     private _getter: ListGetter<File, TParams>;
-    private _deleteFile: (filename: string) => Observable<any>;
+
+    private _deleteFile?: (filename: string) => Observable<any>;
+    private _uploadFile?: (path: string, localPath: string) => Observable<any>;
+
     private _params: TParams;
     private _cache: DataCache<File>;
     private _fileDeletedSub: Subscription;
@@ -97,6 +105,7 @@ export class FileNavigator<TParams = any> {
         this._params = config.params;
         this._getFileLoader = config.getFile;
         this._deleteFile = config.delete;
+        this._uploadFile = config.upload;
         this._onError = config.onError;
         this._tree.next(new FileTreeStructure(this.basePath));
         this.tree = this._tree.asObservable();
@@ -135,12 +144,20 @@ export class FileNavigator<TParams = any> {
             }),
             shareReplay(1),
         );
-        obs.subscribe(); // Make sure it trigger at least once
+        obs.subscribe({ error: () => null }); // Make sure it trigger at least once
         return obs;
+    }
+
+    public loadFile(path: string) {
+        return this._loadFilesInPath(path, true);
     }
 
     public listAllFiles(path: string = ""): Observable<List<File>> {
         return this._loadPath(path, true);
+    }
+
+    public listFiles(path: string = "", limit?: number): Observable<List<File>> {
+        return this._loadPath(path, true, limit);
     }
 
     /**
@@ -155,7 +172,7 @@ export class FileNavigator<TParams = any> {
                 map(() => {
                     return this._tree.value.getNode(path);
                 }),
-                catchError(() => {
+                catchError((e) => {
                     return of(null);
                 }),
             );
@@ -208,6 +225,14 @@ export class FileNavigator<TParams = any> {
         return this._deleteFile(filename);
     }
 
+    public uploadFile(path: string, localPath: string): Observable<any> {
+        if (!this._uploadFile) {
+            log.error("Cannot delete file with this file navigator has delete is not implemented");
+            return;
+        }
+        return this._uploadFile(path, localPath);
+    }
+
     public deleteFiles(files: string[]): Observable<DeleteProgress> {
         if (!this._deleteFile) {
             log.error("Cannot delete file with this file navigator has delete is not implemented");
@@ -215,7 +240,7 @@ export class FileNavigator<TParams = any> {
         }
         return interval(100).pipe(
             take(files.length),
-            flatMap((i) => {
+            switchMap((i) => {
                 return this._deleteFile(files[i]).pipe(map(() => {
                     this._removeFile(files[i]);
                     return { deleted: i, total: files.length, current: files[i] };
@@ -286,12 +311,24 @@ export class FileNavigator<TParams = any> {
      * Given a path will return all the files underneath
      * @param path Path to the folder to load
      * @param recursive If it should list sub folders content too(Default: false)
+     * @param limit If it should limit the results
      */
-    private _loadPath(path: string, recursive = false): Observable<List<File>> {
-        return this._getter.fetchAll(this._params, {
-            recursive: recursive || this._fetchAll,
-            folder: path,
-        }).pipe(
+    private _loadPath(path: string, recursive = false, limit?: number): Observable<List<File>> {
+        let obs: Observable<List<File>>;
+        if (limit) {
+            obs = this._getter.fetch(this._params, {
+                recursive: recursive || this._fetchAll,
+                folder: path,
+                limit,
+            }, true).pipe(map(x => x.items));
+        } else {
+            obs = this._getter.fetchAll(this._params, {
+                recursive: recursive || this._fetchAll,
+                folder: path,
+            });
+        }
+
+        return obs.pipe(
             map((files) => {
                 if (!this._wildcards) {
                     return files;
@@ -313,23 +350,31 @@ export class FileNavigator<TParams = any> {
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
         if (!node.isUnknown) { return of(node.isDirectory); }
-        const subject = new AsyncSubject<boolean>();
-        this._loadPath(this._getFolderToLoad(node.path, false)).subscribe({
-            next: (files: List<File>) => {
-                if (files.size === 0) { return false; }
+
+        return this._loadPath(this._getFolderToLoad(node.path, false), false, 1).pipe(
+            map((files: List<File>) => {
+                const tree = this._tree.value;
+                if (files.size === 0) {
+                    tree.markFileAsLoadedAndUnkown(node.path);
+                    this._tree.next(tree);
+                    return false;
+                }
                 const file = files.first();
-                this._tree.value.addFiles(files);
-                subject.next(file.isDirectory);
-                subject.complete();
-            },
-            error: (e) => (error) => {
-                subject.error(error);
-            },
-        });
-        return subject.asObservable();
+                tree.addFiles(files);
+                this._tree.next(tree);
+                return file.isDirectory;
+            }),
+            catchError((e) => {
+                const tree = this._tree.value;
+                tree.markFileAsLoadedAndUnkown(node.path);
+                this._tree.next(tree);
+                return throwError(e);
+            }),
+            share(),
+        );
     }
 
-    private _loadFilesInPath(path: string): Observable<FileTreeNode> {
+    private _loadFilesInPath(path: string, isFile = false): Observable<FileTreeNode> {
         this.loadingStatus = LoadingStatus.Loading;
         const tree = this._tree.value;
         const node = tree.getNode(path);
@@ -338,7 +383,7 @@ export class FileNavigator<TParams = any> {
         }
         node.markAsLoading();
         const output = new AsyncSubject<FileTreeNode>();
-        this._loadPath(this._getFolderToLoad(path)).subscribe({
+        this._loadPath(isFile ? path : this._getFolderToLoad(path)).subscribe({
             next: (files: List<File>) => {
                 this.loadingStatus = LoadingStatus.Ready;
                 const tree = this._tree.value;

@@ -1,8 +1,9 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
-    HostBinding, HostListener, Inject, Input, OnDestroy, OnInit, forwardRef,
+    HostBinding, Inject, Injector, Input, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { SortDirection } from "@batch-flask/ui/abstract-list";
+import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { TableColumnRef } from "@batch-flask/ui/table/table-column-manager";
 import { TableComponent } from "@batch-flask/ui/table/table.component";
 import { Subscription } from "rxjs";
@@ -14,7 +15,7 @@ import "./table-head-cell.scss";
     templateUrl: "table-head-cell.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeadCellComponent implements OnInit, OnDestroy {
+export class TableHeadCellComponent extends ClickableComponent implements OnInit, OnDestroy {
     public SortDirection = SortDirection;
 
     @Input() public column: TableColumnRef;
@@ -45,18 +46,36 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
         return this.column.maxWidth;
     }
 
+    @HostBinding("attr.id") public get id() {
+        return this.column.id;
+    }
+
     public sortDirection: SortDirection;
 
     @HostBinding("class.sorting")
     public isSorting: boolean = false;
 
+    // Aria
+    @HostBinding("attr.role") public readonly role = "columnheader";
+    @HostBinding("attr.aria-sort") public get ariaSort() {
+        if (this.sortable) {
+            if (this.isSorting) {
+                return this.sortDirection === SortDirection.Asc ? "ascending" : "descending";
+            } else {
+                return "none";
+            }
+        } else {
+            return null;
+        }
+    }
     private _subs: Subscription[] = [];
 
     constructor(
-        @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
+        injector: Injector,
+        @Inject(forwardRef(() => TableComponent)) public table: any,
         public elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
-
+        super(injector, null);
     }
 
     public ngOnInit() {
@@ -82,8 +101,9 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    @HostListener("click")
-    public onClick() {
+    public handleAction(event: Event) {
+        event.stopPropagation();
+        super.handleAction(event);
         if (!this.sortable) {
             return;
         }

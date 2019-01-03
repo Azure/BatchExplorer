@@ -2,8 +2,6 @@ import * as commander from "commander";
 import * as fs from "fs";
 import fetch from "node-fetch";
 import * as path from "path";
-import { Writable } from "stream";
-import * as util from "util";
 import { Constants } from "../../src/client/client-constants";
 
 export interface ThirdPartyNoticeOptions {
@@ -16,7 +14,7 @@ const defaultThirdPartyNoticeOptions: ThirdPartyNoticeOptions = {
 
 const thirdPartyNoticeFile = path.join(Constants.root, "ThirdPartyNotices.txt");
 
-const output = [];
+const output: string[] = [];
 const gitUrlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/[-\w.]+\/)?(.*?)(\.git)?(\/?|\#[-\d\w._]+?)$/;
 const repoNameRegex = /https?:\/\/github\.com\/(.*)/;
 const innerSeparator = "-".repeat(60);
@@ -111,17 +109,18 @@ function getRepoUrl(dependency) {
     return `https://github.com/${match[2]}`;
 }
 
-function getRepoName(repoUrl: string | null): string {
+function getRepoName(repoUrl: string | null): string | null {
     if (!repoUrl) { return null; }
     const match = repoNameRegex.exec(repoUrl);
     if (!match) {
         console.error("Couldn't get repo name for ", repoUrl);
+        return null;
     }
     const value = match[1];
     return value.split("/").slice(0, 2).join("/");
 }
 
-function loadLicense(repoUrl: string): Promise<any> {
+function loadLicense(repoUrl: string | null): Promise<any> {
     const repoName = getRepoName(repoUrl);
     return fetch(`https://api.github.com/repos/${repoName}/license`, {
         headers: {

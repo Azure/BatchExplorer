@@ -5,6 +5,7 @@ import { AsyncSubject } from "rxjs";
 
 import { BannerComponent, BannerOtherFixDirective } from "@batch-flask/ui/banner";
 import { mouseenter } from "test/utils/helpers";
+import { ClickableComponent } from "../buttons";
 
 @Component({
     template: `
@@ -40,7 +41,7 @@ describe("BannerComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [BannerComponent, BannerOtherFixDirective, BannerTestComponent],
+            declarations: [BannerComponent, BannerOtherFixDirective, BannerTestComponent, ClickableComponent],
             schemas: [NO_ERRORS_SCHEMA],
         });
 

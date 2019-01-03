@@ -1,0 +1,53 @@
+@import "app/styles/variables";
+
+bl-settings {
+    display: block;
+    height: $contentview-height;
+
+    $settings-header-height: 60px;
+    $settings-content-height: calc(#{$contentview-height} - #{$settings-header-height});
+    $settings-label-height: 24px;
+    $settings-editor-height: calc(#{$settings-content-height} - #{$settings-label-height});
+
+    .settings-header {
+        height: $settings-header-height;
+        padding: 10px 20px;
+        display: flex;
+
+        > h1 {
+            flex: 1;
+
+            &:not(.focus-visible) {
+                outline: none;
+            }
+        }
+
+        .modified {
+            position: absolute;
+            right: 3px;
+            top: 0;
+        }
+    }
+
+    .settings-editor {
+        display: flex;
+        height: $settings-content-height;
+        width: 100%;
+
+        > .default-settings, > .user-settings {
+            flex-grow: 1;
+            margin: 0 10px;
+            min-height: 100px;
+            position: relative;
+            width: 50%;
+
+            .error {
+                color: $danger-color;
+            }
+
+            bl-editor {
+                height: $settings-editor-height !important;
+            }
+        }
+    }
+}

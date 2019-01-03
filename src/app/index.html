@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Batch Explorer</title>
+
+    <% if (htmlWebpackPlugin.options.metadata.isDevServer) { %>
+        <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
+    <% } %>
+
+    <script>
+        window.STARTUP_TIME = new Date().getTime();
+    </script>
+</head>
+
+<body>
+    <bl-app>
+        <!--This should only show if doing a manual refresh of the page (F5, ctrl+R)-->
+        Loading...
+    </bl-app>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<bl-loading [status]="data.newDataStatus | async">
+    <div *ngIf="task && job" class="fit-details-container">
+        <bl-summary-card>
+            <div summaryTitle>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </div>
+            <div summaryDetails>Job: {{jobId}}</div>
+            <bl-button-group summaryActions>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-commands-list [commands]="commands" [entity]="task"></bl-commands-list>
+            </bl-button-group>
+            <div summaryTile style="padding: 5px;border-left: none">
+                <bl-task-timeline [job]="job" [task]="task"></bl-task-timeline>
+                <bl-task-node-info *ngIf="task.nodeInfo" [nodeInfo]="task.nodeInfo"></bl-task-node-info>
+            </div>
+        </bl-summary-card>
+        <bl-task-error-display [jobId]="jobId" [task]="task"></bl-task-error-display>
+        <bl-card class="details">
+            <bl-tab-group>
+                <bl-tab key="outputs">
+                    <bl-tab-label>Task Outputs</bl-tab-label>
+                    <bl-task-outputs [jobId]="jobId" [task]="task"></bl-task-outputs>
+                </bl-tab>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-task-configuration [job]="job" [task]="task"></bl-task-configuration>
+                </bl-tab>
+                <bl-tab key="resource-files">
+                    <bl-tab-label>Resource Files</bl-tab-label>
+                    <div class="tab-padding">
+                        <bl-task-resource-files [task]="task"></bl-task-resource-files>
+                    </div>
+                </bl-tab>
+
+                <bl-tab key="sub-tasks" [disabled]="!hasMultiInstanceSettings">
+                    <bl-tab-label>Sub Tasks</bl-tab-label>
+                    <div class="tab-padding">
+                        <bl-task-sub-tasks-tab [jobId]="job.id" [taskId]="task.id"></bl-task-sub-tasks-tab>
+                    </div>
+                </bl-tab>
+                <bl-tab key="dependencies" [disabled]="!hasDependencies">
+                    <bl-tab-label>Dependencies</bl-tab-label>
+                    <bl-task-dependency-browser [jobId]="job.id" [task]="task"></bl-task-dependency-browser>
+                </bl-tab>
+            </bl-tab-group>
+        </bl-card>
+    </div>
+</bl-loading>

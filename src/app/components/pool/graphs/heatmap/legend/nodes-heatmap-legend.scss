@@ -1,0 +1,47 @@
+@import "app/styles/variables";
+@import "../heatmap-variables";
+
+bl-nodes-heatmap-legend {
+    width: $legend-width;
+    flex: 1 0 $color-width;
+    position: relative;
+
+    .legend-item {
+        width: $legend-width;
+        margin: 2px 0;
+        cursor: pointer;
+
+        padding-left: 5px;
+    }
+
+    .legend-subitem {
+        padding-left: $color-width + 5px;
+        cursor: pointer;
+    }
+
+    .legend-item, .legend-subitem {
+        display: flex;
+        align-items: center;
+        color: $primary-text;
+        &:hover {
+            background: $hover-bg-color;
+        }
+
+        &.highlighted {
+            color: $primary-contrast-color;
+            background: $primary-color;
+        }
+    }
+
+    .label {
+        display: inline-block;
+        width: calc(100% - #{$color-width } - 5px);
+        margin-left: 5px;
+    }
+
+    .color {
+        display: inline-block;
+        width: $color-width;
+        height: $color-width;
+    }
+}

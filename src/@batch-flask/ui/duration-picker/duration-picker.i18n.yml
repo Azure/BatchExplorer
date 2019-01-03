@@ -1,8 +1,10 @@
 duration-picker:
   unit:
+    label: Unit
     unlimited: Unlimited
     days: Days
     minutes: Minutes
     hours: Hours
     seconds: Seconds
     custom: Custom (ISO format)
+

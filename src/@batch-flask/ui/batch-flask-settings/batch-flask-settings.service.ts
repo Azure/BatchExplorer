@@ -7,10 +7,10 @@ const defaultSettings: BatchFlaskSettings = {
         defaultView: EntityConfigurationView.pretty,
     },
     autoUpdateOnQuit: true,
-    fileTypes: {},
+    fileAssociations: {},
 };
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class BatchFlaskSettingsService {
     public settingsObs: Observable<BatchFlaskSettings>;
 

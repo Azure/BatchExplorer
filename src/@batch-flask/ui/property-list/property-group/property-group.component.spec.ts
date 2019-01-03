@@ -2,7 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
-import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { ButtonComponent, ClickableComponent } from "@batch-flask/ui/buttons";
 import { PropertyGroupComponent } from "@batch-flask/ui/property-list";
 import { click } from "test/utils/helpers";
 
@@ -28,7 +28,7 @@ describe("PropertyGroupComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [TestGroupComponent, PropertyGroupComponent, ButtonComponent],
+            declarations: [TestGroupComponent, PropertyGroupComponent, ButtonComponent, ClickableComponent],
             schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestGroupComponent);
@@ -72,6 +72,17 @@ describe("PropertyGroupComponent", () => {
         expect(message.nativeElement.textContent).toContain("Some warning");
     });
 
+    it("should have aria-expanded true on the header", () => {
+        expect(header.attributes["aria-expanded"]).toEqual("true");
+    });
+
+    it("has the aria controls attributes", () => {
+        const content = de.query(By.css(".group-content"));
+
+        expect(header.attributes["aria-controls"]).not.toBeFalsy();
+        expect(header.attributes["aria-controls"]).toEqual(content.nativeElement.id);
+    });
+
     describe("when group is collapsed", () => {
         beforeEach(() => {
             component.collapsed = true;
@@ -80,6 +91,10 @@ describe("PropertyGroupComponent", () => {
 
         it("should show preview content", () => {
             expect(header.nativeElement.textContent).toContain("Preview of content");
+        });
+
+        it("should have aria-expanded false on the header", () => {
+            expect(header.attributes["aria-expanded"]).toEqual("false");
         });
 
         it("should not show the group content", () => {

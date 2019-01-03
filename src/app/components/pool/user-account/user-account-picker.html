@@ -1,0 +1,19 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="name" placeholder="Username">
+        </bl-form-field>
+        <bl-error controlName="name" code="required">Username is a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput type="password" formControlName="password" placeholder="Password">
+        </bl-form-field>
+        <bl-error controlName="password" code="required">Password is a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <mat-checkbox formControlName="runElevated" color="primary">
+            Run as admin
+        </mat-checkbox>
+    </div>
+</div>

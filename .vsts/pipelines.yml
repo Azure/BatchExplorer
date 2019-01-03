@@ -1,9 +1,8 @@
 name: $(SourceBranch)$(Rev:.r)
 jobs:
   - job: Linux
-    pool: Hosted Linux Preview
-    # pool:
-      # vmImage: ubuntu-16.04
+    pool:
+      vmImage: ubuntu-16.04
     steps:
        - template: ./linux/ci.yml
 
@@ -24,11 +23,10 @@ jobs:
     pool:
       vmImage: vs2017-win2016
     condition: ne(variables['Build.Reason'], 'PullRequest')
+    variables:
+      EnableDetectorPip: true
+    continueOnError: true
     steps:
-      - template: ./dependencies.yml
-      - script: npm ci
-      - task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
+      - template: ./win/win-dependencies.yml
+      - task: ComponentGovernanceComponentDetection@0
         displayName: 'Component Detection'
-        inputs:
-          governanceProduct: '395dd579-66b8-e811-af11-00155d7ffd9f'
-

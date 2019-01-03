@@ -1,12 +1,12 @@
-<ng-template [ngTemplateOutlet]="statusDef" [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
+<ng-template [ngTemplateOutlet]="statusDef" [ngTemplateOutletContext]="context"></ng-template>
 <div class="quick-list-details noselect">
     <div class="quick-list-row-title">
-        <ng-template [ngTemplateOutlet]="titleDef" [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
+        <ng-template [ngTemplateOutlet]="titleDef" [ngTemplateOutletContext]="context"></ng-template>
     </div>
     <div class="quick-list-row-state">
-        <ng-template [ngTemplateOutlet]="stateDef" [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
+        <ng-template [ngTemplateOutlet]="stateDef" [ngTemplateOutletContext]="context"></ng-template>
     </div>
 </div>
 <div class="quick-list-row-extra">
-    <ng-template [ngTemplateOutlet]="extraDef" [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
+    <ng-template [ngTemplateOutlet]="extraDef" [ngTemplateOutletContext]="context"></ng-template>
 </div>

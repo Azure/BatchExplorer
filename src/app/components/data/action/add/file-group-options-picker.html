@@ -1,0 +1,16 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="prefix" placeholder="Prefix" />
+        </bl-form-field>
+        <bl-error controlName="prefix" code="pattern">Prefix can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
+    </div>
+    <div class="form-element">
+        <mat-checkbox formControlName="flatten" color="primary">Flatten</mat-checkbox>
+        <bl-error controlName="flatten" code="invalid">If 'Full path' is selected, you cannot also select 'Flatten'</bl-error>
+    </div>
+    <div class="form-element">
+        <mat-checkbox formControlName="fullPath" color="primary">Full path</mat-checkbox>
+        <bl-error controlName="fullPath" code="invalid">If 'Flatten' is selected, you cannot also select 'Full path'</bl-error>
+    </div>
+</div>

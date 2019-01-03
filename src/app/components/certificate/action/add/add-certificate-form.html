@@ -1,0 +1,30 @@
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
+    <bl-form-page main-form-page [title]="'add-certificate-form.title' | i18n" [formGroup]="form">
+        <bl-form-section
+            [title]="'add-certificate-form.certificate.label' | i18n"
+            [subtitle]="'add-certificate-form.certificate.description' | i18n">
+            <div class="form-element">
+                <p>{{ form.controls.certificate.value }}</p>
+                <bl-directory-picker (eventChange)="fileSelected($event)" [canPickFile]="true" attr.aria-describedby="{{id}}-certificate-required {{id}}-certificate-pattern">
+                    <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;{{'add-certificate-form.certificate.select' | i18n}}
+                </bl-directory-picker>
+                <bl-error id="{{id}}-certificate-required" controlName="certificate" code="required">
+                    {{'add-certificate-form.certificate.required' | i18n}}
+                </bl-error>
+                <bl-error id="{{id}}-certificate-pattern" controlName="certificate" code="pattern">
+                    {{'add-certificate-form.certificate.invalid' | i18n}}
+                </bl-error>
+            </div>
+        </bl-form-section>
+        <bl-form-section *ngIf="showPassword" [title]="'add-certificate-form.password.label' | i18n">
+            <div class="form-element">
+                <bl-form-field>
+                    <input blInput formControlName="password" [placeholder]="'add-certificate-form.password.label' | i18n" type="password" />
+                </bl-form-field>
+                <bl-error controlName="password" code="pfxPasswordRequired">
+                        {{'add-certificate-form.password.required' | i18n}}
+                </bl-error>
+            </div>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

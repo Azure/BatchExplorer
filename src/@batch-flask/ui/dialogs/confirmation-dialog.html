@@ -1,4 +1,9 @@
-<bl-simple-form [submit]="submit" [containerRef]="dialogRef" actionColor="warn" actionName="Yes" [multiUse]="false" size="small"
+<bl-simple-form
+    [submit]="submit"
+    [containerRef]="dialogRef"
+    [actionName]="'common.yes' | i18n"
+    [multiUse]="false"
+    size="small"
     [stickyFooter]="false"
     [title]="title">
     <div class="message" *ngIf="description">

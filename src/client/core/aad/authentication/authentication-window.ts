@@ -1,3 +1,5 @@
+import { SanitizedError } from "@batch-flask/utils";
+import { ClientConstants } from "client/client-constants";
 import { UniqueWindow } from "client/core/unique-window";
 import { BrowserWindow } from "electron";
 
@@ -10,6 +12,7 @@ export class AuthenticationWindow extends UniqueWindow {
             center: true,
             webPreferences: {
                 nodeIntegration: false,
+                preload: ClientConstants.urls.preloadInsecureTest,
             },
             title: `BatchExplorer: Login to ${this.properties.azureEnvironment.name}`,
         });
@@ -25,30 +28,30 @@ export class AuthenticationWindow extends UniqueWindow {
 
     public loadURL(url: string) {
         if (!this._window) {
-            throw new Error("AuthenticationWindow not created. Cannot call loadURL");
+            throw new SanitizedError("AuthenticationWindow not created. Cannot call loadURL");
         }
         this._window.loadURL(url);
     }
 
     public onRedirect(callback: (newUrl: string) => void) {
-        this._window.webContents.on("did-get-redirect-request", (event, oldUrl, newUrl) => {
-            callback(newUrl);
+        this._window!.webContents.session.webRequest.onBeforeRedirect((details) => {
+            callback(details.redirectURL);
         });
     }
 
     public onNavigate(callback: (url: string) => void) {
-        this._window.webContents.on("did-navigate", (event, url) => {
+        this._window!.webContents.on("did-navigate", (event, url) => {
             callback(url);
         });
     }
 
     public onClose(callback: () => void) {
-        this._window.on("close", (event) => {
+        this._window!.on("close", (event) => {
             callback();
         });
     }
 
     public clearCookies() {
-        this._window.webContents.session.clearStorageData({ storages: ["cookies"] });
+        this._window!.webContents.session.clearStorageData({ storages: ["cookies"] });
     }
 }

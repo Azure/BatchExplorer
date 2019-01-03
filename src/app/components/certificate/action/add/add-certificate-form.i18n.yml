@@ -1,0 +1,11 @@
+add-certificate-form:
+  title: Create certificate
+  certificate:
+    label: Certificate
+    select: Select a certificate
+    description: Select a certificate (pfx or cer) to upload
+    required: Please select a valid certificate file
+    invalid: Certificate need to be valid CER or PFX files only
+  password:
+    label: Certificate password
+    required: Password is required if the certificate format is '.pfx'

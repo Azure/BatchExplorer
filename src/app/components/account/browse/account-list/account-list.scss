@@ -1,0 +1,43 @@
+@import "app/styles/variables";
+
+bl-account-list {
+    bl-quick-list-row-render:hover {
+        .fa-star:not(.favorite):not(:hover) {
+            color: $main-background;
+        }
+    }
+
+    bl-quick-list-row-render.selected, bl-quick-list-row-render.focused {
+        .fa-star.favorite {
+            text-shadow: -1px 0 $main-background, 0 1px $main-background, 1px 0 $main-background, 0 -1px $main-background;
+        }
+    }
+
+    .fa-star {
+        font-size: 2em;
+        color: $hover-bg-color;
+        margin-top: 5px;
+
+        &:hover {
+            color: $warn-color-light;
+        }
+
+        &.favorite {
+            color: $warn-color;
+        }
+    }
+
+    .account-type {
+        background: $primary-color;
+        color: $primary-contrast-color;
+        padding: 2px 5px;
+    }
+
+    .account-location {
+        display: flex;
+
+        .fa-globe {
+            margin-right: 3px;
+        }
+    }
+}

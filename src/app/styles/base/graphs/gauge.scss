@@ -1,0 +1,15 @@
+bl-gauge {
+    display: block;
+
+    .chart-filled {
+        fill: $primary-color;
+    }
+
+    .chart-empty {
+        fill: $secondary-background;
+    }
+
+    text.val-legend {
+        fill: $secondary-text;
+    }
+}

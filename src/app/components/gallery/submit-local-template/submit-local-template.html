@@ -1,0 +1,11 @@
+<bl-submit-ncj-template
+    [title]="title"
+    [jobTemplate]="jobTemplate"
+    [poolTemplate]="poolTemplate"
+    [autoRedirect]="false"
+    [notify]="true"
+    [containerRef]="dialogRef"
+    *ngIf="loaded"></bl-submit-ncj-template>
+<div class="error" *ngIf="error">
+    {{error}}
+</div>

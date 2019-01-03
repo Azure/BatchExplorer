@@ -1,0 +1,77 @@
+@import "app/styles/variables";
+
+bl-header {
+    display: flex;
+    height: $header-height;
+    width: 100vw;
+    user-select: none;
+    color: map-get($header-color, text);
+    background-color: map-get($header-color, bg);
+    font-size: 12px;
+    line-height: $footer-height;
+    -webkit-app-region: drag;
+
+    &.skip-osx-buttons {
+        padding-left: 70px;
+    }
+
+    > .menu-item {
+        margin: 0 5px;
+    }
+
+    .back-nav {
+        > .back, > .forward {
+            padding-top: 2px;
+            display:  inline-block;
+            width: 34px;
+            height: $header-height;
+            color: map-get($header-color, text);
+            cursor: pointer;
+            text-align: center;
+
+            &:hover, &:focus {
+                background-color: map-get($header-color, hover-bg);
+                color: map-get($header-color, hover-text);
+            }
+
+            > .fa {
+                font-size: 26px;
+                margin: 0 10px;
+            }
+        }
+    }
+
+    .logo {
+        padding: 5px 10px 0;
+        height: 100%;
+        color: map-get($header-color, text);
+        font-size: 16px;
+
+        &:hover, &:focus {
+            background-color: map-get($header-color, hover-bg);
+            color: map-get($header-color, hover-text);
+        }
+
+        > .fa {
+            margin-right: 5px;
+        }
+    }
+
+    > * {
+        flex-shrink: 0;
+    }
+
+    > bl-breadcrumb-group {
+        flex: 1;
+        min-width: 200px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        &::-webkit-scrollbar {
+            height: 1px;
+        }
+    }
+}
+
+.batch-explorer.high-contrast bl-header {
+    border-bottom: 1px solid $border-color;
+}

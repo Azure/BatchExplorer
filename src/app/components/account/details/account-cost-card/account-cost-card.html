@@ -1,0 +1,21 @@
+<header>
+    <h2>{{'account-cost-card.title' | i18n}}</h2>
+    <span class="subtitle">{{'account-cost-card.subtitle' | i18n}}</span>
+</header>
+<ng-container *ngIf="isArmBatchAccount && !unsupportedSubscription">
+    <div class="graph">
+        <canvas blChart
+            [datasets]="datasets"
+            [options]="options"
+            [chartType]="chartType"
+            [attr.aria-label]="label">
+        </canvas>
+    </div>
+    <div class="total">{{'account-cost-card.total' | i18n}}: {{total}} {{currency}}</div>
+</ng-container>
+<div *ngIf="!isArmBatchAccount" class="unavailable-info">
+    {{'account-cost-card.usingLocalAccount' | i18n}}
+</div>
+<div *ngIf="unsupportedSubscription" class="unavailable-info">
+    {{'account-cost-card.unsupportedSubscription' | i18n}}
+</div>

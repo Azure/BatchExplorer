@@ -1,7 +1,7 @@
-import { BrowserWindow, app, ipcMain } from "electron";
-
+import { AUTO_UPDATE_MAIN_SERVICE_TOKEN } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import { TelemetryManager } from "client/core/telemetry";
+import { BrowserWindow, app, ipcMain } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
 import { BatchExplorerApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
@@ -32,7 +32,7 @@ export class MainWindow extends GenericWindow {
     public state: Observable<WindowState>;
 
     public get webContents() {
-        return this._window.webContents;
+        return this._window!.webContents;
     }
 
     private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
@@ -58,7 +58,7 @@ export class MainWindow extends GenericWindow {
     }
 
     public once(event: any, callback: (...args) => void) {
-        return this._window.once(event, callback);
+        return this._window!.once(event, callback);
     }
 
     protected createWindow() {
@@ -74,6 +74,7 @@ export class MainWindow extends GenericWindow {
             titleBarStyle: "hidden",
             webPreferences: {
                 webSecurity: false,
+                allowRunningInsecureContent: false,
             },
         });
 
@@ -85,7 +86,10 @@ export class MainWindow extends GenericWindow {
         anyWindow.windowHandler = this;
         anyWindow.logger = renderLogger;
         anyWindow.batchExplorerApp = this.batchExplorerApp;
-        anyWindow.autoUpdater = this.batchExplorerApp.autoUpdater;
+        anyWindow._sharedServices = {
+            [AUTO_UPDATE_MAIN_SERVICE_TOKEN]: this.batchExplorerApp.autoUpdater,
+        };
+        anyWindow._injector = this.batchExplorerApp.injector;
         anyWindow.authenticationWindow = this.batchExplorerApp.authenticationWindow;
         anyWindow.translationsLoader = this.batchExplorerApp.translationLoader;
         anyWindow.localeService = this.batchExplorerApp.localeService;
@@ -137,6 +141,7 @@ export class MainWindow extends GenericWindow {
             log.error("Fail to load", error);
         });
 
+        // tslint:disable-next-line:ban-types
         window.on("unresponsive", (error: Error) => {
             log.error("There was a crash", error);
             this.batchExplorerApp.recoverWindow.createWithError(error.message);

@@ -7,10 +7,10 @@ export enum BatchExplorerLinkAction {
 
 export interface BatchExplorerLinkAttributes {
     action: BatchExplorerLinkAction;
-    path: string;
+    path: string | null;
     queryParams: Url.URLSearchParams;
-    session: string;
-    accountId: string;
+    session: string | null;
+    accountId: string | null;
 }
 
 export class BatchExplorerInvalidLinkError extends Error {
@@ -24,19 +24,19 @@ export class BatchExplorerInvalidLinkError extends Error {
  */
 export class BatchExplorerLink implements BatchExplorerLinkAttributes {
     public action: BatchExplorerLinkAction;
-    public path: string;
+    public path: string | null;
     public queryParams: Url.URLSearchParams;
 
     /**
      * Session that can be used by the application
      * opening batchlabs to update a specific window instead of opening a new one
      */
-    public session: string;
+    public session: string | null;
 
     /**
      *
      */
-    public accountId: string;
+    public accountId: string | null;
 
     constructor(link?: string | BatchExplorerLinkAttributes | BatchExplorerLink) {
         if (!link) { return; }
@@ -75,7 +75,7 @@ export class BatchExplorerLink implements BatchExplorerLinkAttributes {
         this.accountId = queryParams.get("accountId");
         this.session = queryParams.get("session");
         this.action = url.host as BatchExplorerLinkAction;
-        this.path = url.pathname;
+        this.path = url.pathname || null;
 
         queryParams.delete("accountId");
         queryParams.delete("session");

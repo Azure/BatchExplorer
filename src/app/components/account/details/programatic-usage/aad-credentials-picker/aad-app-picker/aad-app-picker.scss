@@ -1,0 +1,43 @@
+@import "app/styles/variables";
+
+bl-aad-app-picker {
+    display: block;
+    margin: 10px;
+    position: relative;
+    height: calc(100% - 20px);
+    width: calc(100% - 20px);
+
+    .app-lists {
+        display: grid;
+        grid-template-rows: 40px 20px 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+
+        grid-column-gap: 10px;
+        height: 100%;
+        overflow: hidden;
+        > .heading {
+            grid-column: 1 / 3;
+        }
+
+        > .create-new {
+            grid-row: 1;
+            grid-column: 4;
+
+            > bl-button {
+                width: 100%;
+            }
+        }
+
+        > .app-list-subtitle {
+            margin-bottom: 4px;
+            color: $secondary-text;
+            grid-column: span 4;
+        }
+
+        > .app-list {
+            grid-column: span 4;
+            overflow: auto;
+            border: 1px solid $border-color;
+        }
+    }
+}

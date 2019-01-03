@@ -1,14 +1,17 @@
 import {
     ChangeDetectorRef,
+    ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Input,
     OnDestroy,
     Output,
+    ViewChild,
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { ListKeyNavigator, ListView, autobind } from "@batch-flask/core";
-import { ENTER, SPACE } from "@batch-flask/core/keys";
+import { ListKeyNavigator, ListView } from "@batch-flask/core";
+import { KeyCode } from "@batch-flask/core/keys";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
 import { ListDataPresenter } from "@batch-flask/ui/abstract-list/list-data-presenter";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
@@ -20,7 +23,7 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { List } from "immutable";
 import * as inflection from "inflection";
 import { Subscription, of } from "rxjs";
-import { FocusSectionComponent } from "../focus-section";
+import { VirtualScrollComponent } from "../virtual-scroll";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
 import { ListSortConfig, SortDirection, SortingStatus } from "./list-data-sorter";
@@ -49,10 +52,11 @@ export interface AbstractListBaseConfig<TEntity = any> {
     sorting?: ListSortConfig<TEntity> | null | false;
 }
 
-export const abstractListDefaultConfig: AbstractListBaseConfig = {
+export const abstractListDefaultConfig: Required<AbstractListBaseConfig> = {
     activable: true,
     scrollBottomBuffer: 0,
     forceBreadcrumb: false,
+    sorting: null,
 };
 
 /**
@@ -66,13 +70,21 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public LoadingStatus = LoadingStatus;
     public SortingStatus = SortingStatus;
 
+    @Input() @HostBinding("attr.id") public id: string;
     @Input() public commands: EntityCommands<any>;
-
+    @Input() public status: LoadingStatus;
     @Input() public set data(
         data: ListView<any, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
         this.dataProvider.data = data;
     }
-    @Input() public status: LoadingStatus;
+    @HostBinding("attr.aria-activedescendant")
+    public get ariaActiveDescendent() {
+        if (this.focusedItem) {
+            return `${this.id}-row-${this.focusedItem.id}`;
+        } else {
+            return null;
+        }
+    }
 
     public set items(items: any[]) {
         this._items = items;
@@ -81,18 +93,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
     public get items() { return this._items; }
 
-    /**
-     * List of items that are currently being displayed with the virtual scroll
-     */
-    public viewPortItems: AbstractListItem[] = [];
-
     @Input() public set config(config: AbstractListBaseConfig) {
         this._config = { ...abstractListDefaultConfig, ...config };
         this.dataPresenter.config = this._config.sorting;
     }
     public get config() { return this._config; }
-
-    @Output() public scrollBottom = new EventEmitter();
 
     @HostBinding("style.display")
     public get showComponent() {
@@ -106,6 +111,12 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
     public get selection() { return super.selection; }
 
+    // Aria
+    @HostBinding("attr.tabindex") public readonly tabindex = 0;
+    @HostBinding("attr.aria-multiselectable") public ariaMultiSelectable = true;
+
+    @Output() public scrollBottom = new EventEmitter();
+
     public listFocused: boolean = false;
     public focusedItem: AbstractListItem | null;
     public showScrollShadow: boolean;
@@ -113,28 +124,26 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public dataProvider: ListDataProvider;
     public dataPresenter: ListDataPresenter;
 
-    protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
+    protected _config: Required<AbstractListBaseConfig> = abstractListDefaultConfig;
 
+    @ViewChild(VirtualScrollComponent) private _virtualScroll: VirtualScrollComponent;
     private _subs: Subscription[] = [];
     private _items: any[] = [];
     private _keyNavigator: ListKeyNavigator<AbstractListItem>;
+
+    private _clicking = false;
 
     constructor(
         private contextmenuService: ContextMenuService,
         private router: Router,
         private breadcrumbService: BreadcrumbService,
-        changeDetection: ChangeDetectorRef,
-        focusSection: FocusSectionComponent) {
+        private elementRef: ElementRef,
+        changeDetection: ChangeDetectorRef) {
         super(changeDetection);
         this._initKeyNavigator();
 
         this.dataProvider = new ListDataProvider();
         this.dataPresenter = new ListDataPresenter(this.dataProvider);
-        if (focusSection) {
-            this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
-            this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
-            this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
-        }
 
         this.dataProvider.status.subscribe((status) => {
             this.status = status;
@@ -162,8 +171,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         }
     }
 
+    public focus() {
+        this.elementRef.nativeElement.focus();
+    }
+
     public updateViewPortItems(items) {
-        this.viewPortItems = items;
         if (items.length === this.items.length) {
             this.scrollBottom.emit();
         }
@@ -181,7 +193,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
      * Test to check if the given key is the active item.
      */
     public isActive(key: string): boolean {
-        return this.config.activable && Boolean(this.activeItem === key);
+        return Boolean(this.config.activable && this.activeItem === key);
     }
 
     /**
@@ -213,7 +225,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public handleScrollChange(event) {
         const show = event.target.scrollTop > 0;
         const bottom = event.target.scrollTop + event.target.offsetHeight;
-        const hitBottom = event.target.scrollHeight - bottom <= this.config.scrollBottomBuffer;
+        const hitBottom = event.target.scrollHeight - bottom <= this._config.scrollBottomBuffer;
         if (this.showScrollShadow !== show) {
             this.showScrollShadow = show;
             this.changeDetector.markForCheck();
@@ -239,7 +251,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         let foundStart = false;
         const activeKey = this.activeItem;
         const selection = new ListSelection(this.selection);
-        this.items.some((item) => {
+        this.items.some((item: any) => {
             const id = item.id || item.key;
             if (!foundStart && (id === activeKey || id === key)) {
                 foundStart = true;
@@ -251,27 +263,40 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
                     return true;
                 }
             }
+            return false;
         });
         this.selection = selection;
     }
 
-    @autobind()
-    public onFocus(event: FocusEvent) {
-        this.listFocused = true;
-        if (!this._keyNavigator.focusedItem) {
-            if (this.activeItem) {
-                this._keyNavigator.focusItem(this.items.find(x => x.id === this.activateItem));
-            } else {
-                this._keyNavigator.focusFirstItem();
-            }
-            this.changeDetector.markForCheck();
-        }
+    @HostListener("mousedown")
+    public handleMousedown() {
+       this._clicking = true;
     }
 
-    @autobind()
-    public onBlur(event) {
+    @HostListener("mouseup")
+    public handleMouseup() {
+       this._clicking = false;
+    }
+
+    @HostListener("focus", ["$event"])
+    public handleFocusViaKeyboard(event: FocusEvent) {
+        this.listFocused = true;
+        if (!this._clicking) {
+            this._pickFocusedItem();
+        }
+        this.changeDetector.markForCheck();
+    }
+
+    /**
+     * When an item is being focused out, check if its because we are focusing another.
+     * - If so all good.
+     * - Otherwise means we focused out of the list
+     * @param event FocusEvent emitted
+     * @param item Item displayed in the row
+     */
+    @HostListener("blur", ["$event"])
+    public handleBlur(event: FocusEvent) {
         this.listFocused = false;
-        this._keyNavigator.focusItem(null);
         this.changeDetector.markForCheck();
     }
 
@@ -280,9 +305,9 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    @autobind()
+    @HostListener("keydown", ["$event"])
     public keyPressed(event: KeyboardEvent) {
-        if (event.key === SPACE || event.key === ENTER) {
+        if (event.code === KeyCode.Space || event.code === KeyCode.Enter) {
             this.activateItem(this.focusedItem);
             event.preventDefault();
         } else {
@@ -325,7 +350,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         return item.id;
     }
 
-    public activateItem(item: AbstractListItem) {
+    public activateItem(item: AbstractListItem | null) {
         this.activeItem = item && item.id;
         if (!item) { return; }
         const link = item.routerLink;
@@ -368,6 +393,17 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         });
     }
 
+    private _pickFocusedItem() {
+        if (!this._keyNavigator.focusedItem) {
+            if (this.activeItem) {
+                this._keyNavigator.focusItem(this.items.find(x => x.id === this.activeItem));
+            } else {
+                this._keyNavigator.focusFirstItem();
+            }
+            this.changeDetector.markForCheck();
+        }
+    }
+
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */
     private _initKeyNavigator() {
         this._keyNavigator = new ListKeyNavigator<AbstractListItem>()
@@ -375,12 +411,13 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
         this._keyNavigator.change.subscribe(() => {
             this.focusedItem = this._keyNavigator.focusedItem;
+            this._virtualScroll.ensureItemVisible(this.focusedItem);
             this.changeDetector.markForCheck();
         });
     }
 
     private _createSortByMenu() {
-        const sortOptions = Object.keys(this.config.sorting).map((key) => {
+        const sortOptions = Object.keys(this._config.sorting as any).map((key) => {
             return new ContextMenuItem({
                 label: inflection.humanize(inflection.underscore(key)),
                 click: () => {

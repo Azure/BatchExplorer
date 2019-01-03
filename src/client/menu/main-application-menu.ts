@@ -176,8 +176,7 @@ export class MainApplicationMenu {
                     label: "New Window",
                     accelerator: "CmdOrCtrl+Shift+N",
                     click: () => {
-                        // TODO-TIM
-                        // this.batchExplorerApp.openNewWindow();
+                        this.app.openNewWindow();
                     },
                 },
                 { role: "minimize" },

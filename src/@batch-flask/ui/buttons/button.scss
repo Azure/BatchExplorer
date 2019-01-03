@@ -14,6 +14,7 @@ bl-button {
     line-height: $action-btn-size;
     position: relative;
     margin: 2px;
+
     .hide {
         opacity: 0;
     }
@@ -108,7 +109,7 @@ bl-button {
             }
 
             &:active {
-                background: map-get($primary, 600);
+                background: $primary-color;
             }
         }
 

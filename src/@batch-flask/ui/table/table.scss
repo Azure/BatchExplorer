@@ -10,6 +10,7 @@ bl-table {
     position: relative;
     width: 100%;
     height: 100%;
+    outline: none;
     -webkit-user-drag: none;
 
     bl-thead, bl-row-render {
@@ -101,11 +102,11 @@ bl-table {
         }
 
         &.drop-target {
-            background: $selection-color;
+            background: $hover-bg-color;
         }
 
         &:hover:not(.selected) {
-            background-color: $selection-color;
+            background-color: $hover-bg-color;
         }
 
         &:last-child {
@@ -155,6 +156,12 @@ bl-table {
             display: inline;
         }
 
+        outline: none;
+
+        &:focus {
+            color: $hover-bg-color;
+        }
+
         &.sortable {
             cursor: pointer;
 
@@ -164,7 +171,11 @@ bl-table {
             }
 
             &:hover:not(.sorting) > .sort-icon {
-                color: $selection-color;
+                color: $hover-bg-color;
+            }
+
+            &:focus:not(.sorting) > .sort-icon {
+                color: $hover-bg-color;
             }
         }
 

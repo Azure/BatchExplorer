@@ -1,9 +1,9 @@
-<div class="layout-container" [class.filtering]="showAdvancedFilter">
-    <section class="list-view">
+<bl-split-pane [config]="splitPaneConfig" class="layout-container" [class.filtering]="showAdvancedFilter">
+    <section blFirstPane class="list-view">
         <div class="left-pane">
             <div class="quick-filter-content">
                 <div class="layout-list-header">
-                    <div class="title">
+                    <div class="title" id="{{id}}-title">
                         <ng-content select="[blBrowseLayoutTitle]"></ng-content>
                     </div>
                     <div class="flex-separator"></div>
@@ -16,10 +16,15 @@
                     </div>
                 </div>
                 <div class="quicksearch">
-                    <div class="pre-quicksearch">
-                        <ng-content select="[pre-quicksearch]"></ng-content>
-                    </div>
-                    <input blInput [formControl]="quickSearchQuery" placeholder="Search (Startwith)" #quickSearchInput (keydown)="handleKeyPressedInQuickSearch($event)"/>
+                    <ng-content select="[pre-quicksearch]"></ng-content>
+                    <input blInput autofocus
+                        type="search"
+                        [formControl]="quickSearchQuery"
+                        placeholder="Search (Startwith)"
+                        #quickSearchInput
+                        attr.aria-labelledby="{{id}}-title"
+                        (keydown)="handleKeyPressedInQuickSearch($event)"
+                    />
                     <bl-toggle-filter-button *ngIf="advancedFilterDirective" (do)="toggleFilter()" [advancedFilter]="advancedFilter" >
                     </bl-toggle-filter-button>
                 </div>
@@ -33,16 +38,18 @@
         </div>
     </section>
 
-    <section class="content-view">
+    <section blSecondPane class="content-view">
         <bl-scrollable class="block">
             <div class="content-wrapper">
                 <div style="position:relative;">
-                    <router-outlet></router-outlet>
-                    <div class="advanced-filter-content" [hidden]="!showAdvancedFilter">
+                    <div [hidden]="showAdvancedFilter">
+                        <router-outlet></router-outlet>
+                    </div>
+                    <div #advancedFilterContainer class="advanced-filter-content" [hidden]="!showAdvancedFilter">
                         <ng-content select="[blBrowseLayoutAdvancedFilter]"></ng-content>
                     </div>
                 </div>
             </div>
         </bl-scrollable>
     </section>
-</div>
+</bl-split-pane>

@@ -1,0 +1,87 @@
+@import "app/styles/variables";
+
+bl-job-graphs-home {
+    $padding: 10px;
+    $graph-header-height: 50px;
+    $graph-height: calc(#{$contentview-height} - #{$graph-header-height + $padding * 2});
+
+
+    display: block;
+    position: relative;
+    padding: $padding;
+    height: $contentview-height;
+
+    > .graph-header {
+        height: $graph-header-height;
+        display: flex;
+        align-items: center;
+
+        > .summary {
+            flex: 1;
+        }
+
+        h1 {
+            color: $primary-text;
+
+            a {
+                color: $primary-color;
+            }
+        }
+
+        .description {
+            color: $primary-text;
+            font-style: italic;
+        }
+
+        .task-count {
+            color: $secondary-text;
+            margin-right: 10px;
+
+            bl-clickable {
+                color: $primary-color;
+            }
+        }
+
+        .actions {
+            > * {
+                margin: 0 3px;
+            }
+        }
+        .buttons {
+            display: flex;
+
+            .btn {
+                color: $primary-color;
+                margin: 0 4px;
+                cursor: pointer;
+
+                &.active {
+                    color: $secondary-text;
+                    cursor: default;
+                }
+            }
+        }
+    }
+
+    > .graph-container {
+        height: $graph-height;
+    }
+
+    .loading-overlay {
+        $loading-overlay-width: 400px;
+        $loading-overlay-height: 70px;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: calc(50% - #{$loading-overlay-height/2});
+        left: calc(50% - #{$loading-overlay-width/2});
+        margin: auto;
+        font-size: 16px;
+        width: $loading-overlay-width;
+        height: $loading-overlay-height;
+        background: $secondary-text;
+        color: $main-background;
+        opacity: 0.5;
+    }
+}

@@ -1,0 +1,22 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <mat-checkbox (change)="onSlideToggle($event)" color="primary" [checked]="customValue">
+            Sepcify container registry
+        </mat-checkbox>
+    </div>
+    <div *ngIf="customValue" class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="username" placeholder="Username" type="text">
+        </bl-form-field>
+    </div>
+    <div *ngIf="customValue" class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="password" placeholder="Password" type="text">
+        </bl-form-field>
+    </div>
+    <div *ngIf="customValue" class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="registryServer" placeholder="Registry server" type="text">
+        </bl-form-field>
+    </div>
+</div>

@@ -2,6 +2,7 @@
 
 bl-property-group {
     width: 100%;
+    $property-group-padding: 28px;
 
     &.wide {
         .group-content {
@@ -24,7 +25,6 @@ bl-property-group {
 
     display: block;
     position: relative;
-    padding: 0 28px;
 
     &:not(:last-child) {
         border-bottom: 1px solid $border-color;
@@ -43,10 +43,10 @@ bl-property-group {
         width: 100%;
         display: flex;
         align-items: center;
-        padding: 10px 0;
         padding-bottom: 5px;
         border: 0;
         cursor: pointer;
+        padding: 10px $property-group-padding;
 
         .collapse-icon {
             display: flex;
@@ -75,6 +75,6 @@ bl-property-group {
     }
 
     .group-content {
-        padding-bottom: 10px;
+        padding: 0 $property-group-padding 10px;
     }
 }

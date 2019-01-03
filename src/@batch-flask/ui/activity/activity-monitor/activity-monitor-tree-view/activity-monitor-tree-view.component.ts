@@ -38,7 +38,6 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
     public focusedIndex: number = -1;
     public hoveredIndex: number;
     public focusedAction: number = null;
-    public viewPortRows: TreeRow[] = [];
     public viewPortStart: number = 0;
     public flashIndex: number = -1;
 
@@ -159,11 +158,6 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
 
     public treeRowTrackBy(treeRow: TreeRow) {
         return treeRow.id;
-    }
-
-    public updateViewPortItems(items: TreeRow[]) {
-        this.viewPortRows = items;
-        this.changeDetector.markForCheck();
     }
 
     public onViewScroll(event: ChangeEvent) {

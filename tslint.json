@@ -19,7 +19,7 @@
     "no-bitwise": false,
     "object-literal-shorthand": false,
     "adjacent-overload-signatures": false,
-    "max-classes-per-file": [false],
+    "max-classes-per-file": false,
     "arrow-parens": false,
     "no-inferrable-types": [false],
     "interface-name": [ true,  "never-prefix" ],
@@ -46,6 +46,7 @@
         {"name": "fit", "message": "Don't keep jasmine fit methods in the code."},
         {"name": "allowInsecureRequest", "message": "This is only for development with proxy don't leave in the code"}
     ],
+    "ban-types": [true, ["Error", "Try not to use a basic Error but a SanitizedError if possible or a custom error class"]],
     "no-empty-interface":  false,
     "space-before-function-paren": [false],
     "no-irregular-whitespace": true,
@@ -81,16 +82,16 @@
     "import-destructuring-spacing": true,
     "no-shadowed-variable": false,
     "trackBy-function": true,
-    "banana-in-box": true
-
-    // Rxjs
-    // "rxjs-collapse-imports": true,
-    // "rxjs-pipeable-operators-only": true,
-    // "rxjs-no-static-observable-methods": true,
-    // "rxjs-proper-imports": true
+    "banana-in-box": true,
+    "function-constructor": true
   },
   "jsRules": {
     "object-literal-sort-keys": false,
     "trailing-comma": [false]
+  },
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**"
+    ]
   }
 }

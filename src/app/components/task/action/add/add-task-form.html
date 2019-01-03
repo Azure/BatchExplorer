@@ -1,0 +1,91 @@
+<bl-complex-form [formGroup]="form" [submit]="submit" [asyncTasks]="asyncTasks" [containerRef]="sidebarRef" [multiUse]="multiUse" [actionName]="actionName" [config]="complexFormConfig" [fileUri]="fileUri">
+    <bl-form-page main-form-page [title]="title" [formGroup]="form">
+        <bl-form-section title="General info" subtitle="Basic information about the task">
+            <div class="grow">
+                <div class="gcol">
+                    <bl-form-field class="form-element">
+                        <input blInput formControlName="id" placeholder="ID">
+                    </bl-form-field>
+                    <bl-error controlName="id" code="required">ID is a required field</bl-error>
+                    <bl-error controlName="id" code="maxlength">ID has a maximum length of 64 characters</bl-error>
+                    <bl-error controlName="id" code="pattern">ID can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
+                </div>
+
+                <div class="gcol">
+                    <bl-form-field class="form-element">
+                        <input blInput formControlName="displayName" placeholder="Display name">
+                    </bl-form-field>
+                    <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
+                </div>
+            </div>
+
+            <div class="form-element">
+                <bl-form-field>
+                    <textarea blInput matTextareaAutosize matAutosizeMinRows="1" blSingleLineTextarea formControlName="commandLine" placeholder="Command line"></textarea>
+                </bl-form-field>
+                <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
+            </div>
+
+            <div class="form-element pad-top">
+                <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
+                </bl-user-identity-picker>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="Constraints" subtitle="The execution constraints that apply to this task">
+            <div formGroupName="constraints">
+                <div class="form-element">
+                    <bl-form-field>
+                        <bl-duration-picker formControlName="maxWallClockTime" label="Max wall-clock time"></bl-duration-picker>
+                    </bl-form-field>
+                </div>
+                <div class="form-element">
+                    <bl-form-field>
+                        <input blInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
+                    </bl-form-field>
+                    <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
+                </div>
+                <div class="form-element">
+                    <bl-form-field>
+                        <bl-duration-picker formControlName="retentionTime" label="Retention time"></bl-duration-picker>
+                    </bl-form-field>
+                </div>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="Resource files" subtitle="List of files to be used by this task">
+            <bl-resourcefile-picker formControlName="resourceFiles"  [hideCaption]="true" (upload)="registerFileUpload($event)"></bl-resourcefile-picker>
+        </bl-form-section>
+
+        <bl-form-section title="Environment variables" subtitle="A list of environment variable settings for the task">
+            <bl-key-value-picker label="Environment variables" [hideCaption]="true" formControlName="environmentSettings"></bl-key-value-picker>
+        </bl-form-section>
+
+        <bl-form-section *ngIf="hasLinkedStorage" title="Choose one or multiple application packages" subtitle="Select application packages to be downloaded onto the compute node for use with this task">
+            <div class="form-element">
+                <bl-app-package-picker (hasLinkedStorage)="handleHasLinkedStorage($event)" formControlName="appPackages"></bl-app-package-picker>
+                <bl-error controlName="appPackages" code="invalid">Please select valid combinations of application package versions</bl-error>
+                <bl-error controlName="appPackages" code="duplicate">There is a duplicate package version selected</bl-error>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section *ngIf="virtualMachineConfiguration?.containerConfiguration" title="Task container settings" subtitle="The settings for the container under which the task runs.">
+            <bl-container-settings-picker
+                formControlName="containerSettings"
+                [containerConfiguration]="virtualMachineConfiguration.containerConfiguration">
+            </bl-container-settings-picker>
+        </bl-form-section>
+
+        <bl-form-section title="Multi instance settings" subtitle="Settings which specify how to run a multi-instance task.">
+            <bl-form-picker formControlName="multiInstanceSettings" #mpiPicker>
+                <div no-value-title>Configure</div>
+                <div value-title>{{mpiPicker?.nestedValue.value?.coordinationCommandLine}}</div>
+                <div nested-form>
+                    <bl-multi-instance-settings-picker
+                        [formControl]="mpiPicker.nestedValue">
+                    </bl-multi-instance-settings-picker>
+                </div>
+            </bl-form-picker>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

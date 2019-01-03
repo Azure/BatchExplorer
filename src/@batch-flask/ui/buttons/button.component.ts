@@ -4,15 +4,20 @@ import {
     ChangeDetectorRef,
     Component,
     HostBinding,
+    HostListener,
     Injector,
     Input,
+    Optional,
+    Self,
+    ViewChild,
 } from "@angular/core";
-import { Observable, isObservable } from "rxjs";
-
+import { MatTooltip } from "@angular/material";
 import { log } from "@batch-flask/utils";
-
-import "./button.scss";
+import { Observable, isObservable } from "rxjs";
 import { ClickableComponent } from "./clickable";
+
+import { RouterLink } from "@angular/router";
+import "./button.scss";
 
 export type ButtonType = "square" | "round" | "wide" | "plain";
 export type ButtonColor = "primary" | "light" | "danger" | "warn" | "success";
@@ -24,6 +29,8 @@ export enum SubmitStatus {
     Succeeded,
     Failed,
 }
+
+let idCounter = 0;
 
 @Component({
     selector: "bl-button",
@@ -40,20 +47,6 @@ export enum SubmitStatus {
 
 })
 export class ButtonComponent extends ClickableComponent {
-    public SubmitStatus = SubmitStatus;
-
-    @Input() public action: ButtonAction;
-    @Input() public icon: string;
-    @Input() public title: string;
-    @Input() public tooltipPosition: string = "above";
-
-    /**
-     * If set to true the check mark animation will not be shown
-     */
-    @Input() public skipSuccess: boolean = false;
-    @Input() @HostBinding("attr.type") public type: ButtonType = "square";
-    @Input() @HostBinding("attr.color") public color: ButtonColor = "primary";
-    @Input() public routerLink: string;
 
     public set status(value: SubmitStatus) {
         this._status = value;
@@ -62,13 +55,46 @@ export class ButtonComponent extends ClickableComponent {
 
     public get status() { return this._status; }
     public get tooltipTitle() { return `${this.title || ""}${this.subtitle || ""}`; }
+    public SubmitStatus = SubmitStatus;
+
+    @Input() public id = `bl-button-${idCounter++}`;
+    @Input() public action: ButtonAction;
+    @Input() public icon: string;
+    @Input() public title: string;
+    @Input() public tooltipPosition: string = "above";
+    // tslint:disable-next-line:no-input-rename
+    @Input("attr.aria-describedby") public userAriaDescribedBy: string;
+
+    /**
+     * If set to true the check mark animation will not be shown
+     */
+    @Input() public skipSuccess: boolean = false;
+    @Input() @HostBinding("attr.type") public type: ButtonType = "square";
+    @Input() @HostBinding("attr.color") public color: ButtonColor = "primary";
+    @Input() @HostBinding("attr.aria-label") public get ariaLabel() {
+        if (this.type === "square" || this.type === "plain") {
+            return this.title;
+        }
+    }
+
+    @ViewChild(MatTooltip) private _tooltip: MatTooltip;
 
     private _status = SubmitStatus.Idle;
 
     constructor(
         injector: Injector,
+        @Self() @Optional() routerLink: RouterLink,
         private changeDetectionRef: ChangeDetectorRef) {
-        super(injector, null);
+        super(injector, routerLink);
+    }
+
+    // Aria
+    // @HostBinding("attr.aria-label") public get ariaLabel() { return this.title; }
+    @HostBinding("attr.aria-describedby") public get ariaDescribedBy() {
+        const tooltipDescribe = this.type === "plain" || this.type === "square" ? "" : `${this.id}-described`;
+        const userDescribe = this.userAriaDescribedBy || "";
+
+        return `${tooltipDescribe} ${userDescribe}`;
     }
 
     public handleAction(event: Event) {
@@ -77,6 +103,16 @@ export class ButtonComponent extends ClickableComponent {
             return;
         }
         this._execute(event);
+    }
+
+    @HostListener("focus")
+    public showTooltip() {
+        this._tooltip.show();
+    }
+
+    @HostListener("blur")
+    public hideTooltip() {
+        this._tooltip.hide();
     }
 
     public done() {

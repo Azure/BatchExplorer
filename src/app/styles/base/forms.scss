@@ -1,0 +1,185 @@
+.required-alert, bl-error {
+    color: $validation-error-color;
+}
+
+.button-bar {
+    margin-top: 25px;
+    display: block;
+
+    button {
+        margin-right: 15px;
+    }
+}
+
+fieldset {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 15px;
+    border: 0;
+}
+
+.confirmation-dialog {
+    margin: 24px;
+    min-width: 450px;
+
+    p {
+        line-height: 1.2em;
+        padding-top: 10px;
+    }
+
+    .message {
+        line-height: 1.4em;
+        font-size: 1.5em;
+    }
+
+    .options {
+        h3 {
+            padding-top: 10px;
+        }
+
+        hr {
+            margin: 0;
+        }
+
+        p {
+            padding: 4px 0;
+        }
+
+        mat-radio-group {
+            mat-radio-button {
+                font-size: 11pt;
+            }
+        }
+    }
+
+    .buttons {
+        margin: 30px 0 0;
+    }
+
+    .error {
+        padding-top: 15px;
+
+        p {
+            color: $danger-color;
+            margin-bottom: 0.1em;
+        }
+    }
+}
+
+.infobox {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 0;
+    border: 1px solid #aaa;
+    background-color: $secondary-text;
+    margin-top: 16px;
+
+    .infobox-image {
+        width: 45px;
+        height: 45px;
+        padding: 10px;
+        background-color: $main-background;
+
+        i {
+            color: $primary-color;
+        }
+    }
+
+    .infobox-text {
+        margin-left: 4px;
+        padding: 4px;
+    }
+}
+
+.large-slideout-form {
+    width: 800px;
+}
+
+.slideout-form, .edit-form {
+    width: 640px;
+}
+
+.slideout-form, .large-slideout-form, .edit-form, bl-complex-form {
+
+    &.content-wrapper {
+        padding: 0;
+    }
+
+    .form-element {
+        width: 100%;
+        margin: 10px 0;
+
+        &.element-spacer {
+            margin-bottom: 15px;
+        }
+
+        &.pad-top {
+            margin-top: 20px;
+        }
+
+        // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
+
+        input[type=file] {
+            width: 100%;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        bl-form-field {
+            width: 100%;
+        }
+
+        bl-form-field.ng-invalid.ng-touched {
+            label {
+                color: $validation-error-color;
+
+                .mat-placeholder-required {
+                    color: $validation-error-color;
+                }
+            }
+
+            .mat-input-underline {
+                border-color: $validation-error-color;
+                border-width: 2px;
+
+                .mat-input-ripple.mat-focused {
+                    opacity: 0;
+                }
+            }
+
+            bl-hint {
+                color: $validation-error-color;
+            }
+        }
+
+        .input-summary {
+            margin-top: 15px;
+            padding-bottom: 5px;
+
+            p {
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
+
+.dialog-form {
+    width: 500px;
+
+    hr {
+        margin: 0.4em 0 1.4em;
+    }
+}
+
+.form-element mat-checkbox {
+    display: block;
+    margin: 10px 0;
+}
+
+mat-tab-group.form-tabs {
+    .mat-tab-label {
+        min-width: auto;
+        line-height: 32px;
+        height: 32px;
+    }
+}

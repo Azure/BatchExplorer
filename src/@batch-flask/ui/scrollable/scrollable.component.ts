@@ -1,5 +1,7 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
@@ -25,6 +27,7 @@ enum Orientation {
     encapsulation: ViewEncapsulation.None,
     selector: "bl-scrollable",
     templateUrl: "scrollable.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScrollableComponent implements OnDestroy, AfterViewInit {
     public orientations = Orientation;
@@ -86,7 +89,10 @@ export class ScrollableComponent implements OnDestroy, AfterViewInit {
     private _currentDragEventCallbacks: any;
     private _lastScroll = { left: 0, top: 0 };
 
-    constructor(private elementRef: ElementRef, private scrollableService: ScrollableService) {
+    constructor(
+        private elementRef: ElementRef,
+        private scrollableService: ScrollableService,
+        private changeDetector: ChangeDetectorRef) {
         this.id = SecureUtils.uuid();
         this.scrollableService.registerScrollable(this);
     }
@@ -229,6 +235,7 @@ export class ScrollableComponent implements OnDestroy, AfterViewInit {
         }
 
         this.flashTimeout = window.setTimeout(this.hideScrollbar.bind(this, orientation), 1000);
+        this.changeDetector.markForCheck();
     }
 
     /**
@@ -240,6 +247,7 @@ export class ScrollableComponent implements OnDestroy, AfterViewInit {
         if (this.flashTimeout) {
             window.clearTimeout(this.flashTimeout);
         }
+        this.changeDetector.markForCheck();
     }
 
     /**

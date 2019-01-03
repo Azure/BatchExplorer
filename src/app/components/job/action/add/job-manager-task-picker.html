@@ -1,0 +1,58 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="id" placeholder="ID">
+        </bl-form-field>
+        <bl-error controlName="id" code="required">ID is a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="displayName" placeholder="Display name">
+        </bl-form-field>
+    </div>
+    <div class="form-element">
+        <bl-form-field>
+            <textarea blInput matTextareaAutosize matAutosizeMinRows="1" blSingleLineTextarea formControlName="commandLine" placeholder="Command line"></textarea>
+        </bl-form-field>
+        <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
+    </div>
+    <div formGroupName="constraints">
+        <bl-form-field>
+            <bl-duration-picker formControlName="maxWallClockTime" label="Max wall-clock time"></bl-duration-picker>
+        </bl-form-field>
+        <bl-form-field>
+            <input blInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
+            <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
+        </bl-form-field>
+        <bl-form-field>
+            <bl-duration-picker formControlName="retentionTime" label="Retention time"></bl-duration-picker>
+        </bl-form-field>
+    </div>
+    <div class="form-element pad-top">
+        <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
+        </bl-user-identity-picker>
+    </div>
+    <div class="form-element">
+        <mat-checkbox formControlName="killJobOnCompletion" color="primary">
+            Kill job on completion
+        </mat-checkbox>
+    </div>
+    <div class="form-element">
+        <mat-checkbox formControlName="runExclusive" color="primary">
+            Run exclusive
+        </mat-checkbox>
+    </div>
+    <div class="form-element pad-top">
+        <bl-resourcefile-picker formControlName="resourceFiles"></bl-resourcefile-picker>
+    </div>
+    <div class="form-element pad-top">
+        <bl-key-value-picker formControlName="environmentSettings" label="Environment variables"></bl-key-value-picker>
+    </div>
+    <div *ngIf="virtualMachineConfiguration?.containerConfiguration" class="form-element pad-top">
+        <h4>Container settings</h4>
+        <bl-container-settings-picker
+            formControlName="containerSettings"
+            [containerConfiguration]="virtualMachineConfiguration.containerConfiguration">
+        </bl-container-settings-picker>
+    </div>
+</div>

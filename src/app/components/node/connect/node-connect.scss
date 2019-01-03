@@ -1,0 +1,112 @@
+@import "app/styles/variables";
+
+bl-node-connect {
+    position: relative;
+    display: block;
+    padding: 15px;
+
+    .close-button {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+    }
+
+    .connect-content {
+        min-height: calc(100% - 85px);
+
+        .connection-data-loader {
+            min-height: 150px;
+            display: flex;
+            justify-content: center;
+
+            span {
+                position: absolute;
+                top: 100px;
+            }
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .credentials-inputs {
+            width: 400px;
+            display: flex;
+            align-items: center;
+            margin: 10px;
+
+            > input {
+                width: 200px;
+                margin: 5px;
+                padding: 5px;
+            }
+        }
+
+        .credentials-source {
+            display: flex;
+            justify-content: center;
+
+            > bl-button {
+                user-select: none;
+                width: 150px;
+                height: 150px;
+                font-size: 20px;
+                margin: 10px 20px;
+                text-align: center;
+                cursor: pointer;
+                position: relative;
+
+                .button-icon-frame {
+                    position: absolute;
+                    left: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 150px;
+                    height: 150px;
+
+                    i {
+                        font-size: 50px;
+                    }
+                }
+
+                .button-label {
+                    position: absolute;
+                    top: 135px;
+                    left: 10px;
+                    line-height: 0;
+                    font-size: 15px;
+                }
+            }
+        }
+
+        .waiting-for-process {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 75px;
+            font-size: 12pt;
+        }
+
+        .warn-text {
+            margin: 10px 0;
+        }
+
+        bl-node-user-credentials-form {
+            display: block;
+            margin-bottom: 20px;
+
+            .username-mode-input {
+                display: flex;
+                align-items: center;
+
+                bl-form-field {
+                    flex: 1;
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
+}

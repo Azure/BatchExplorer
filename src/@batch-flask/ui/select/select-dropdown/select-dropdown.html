@@ -1,11 +1,23 @@
-<div class="option {{option.cssClass}}" *ngFor="let option of rows;trackBy: trackOption" (click)="handleClickOption($event, option)"
-    [class.focused]="focusedOption === option" [class.disabled]="option.disabled">
+<div class="option {{option.cssClass}}"
+    *ngFor="let option of rows;trackBy: trackOption"
+    role="option"
+    [id]="option.id"
+    [class.focused]="focusedOption === option"
+    [class.disabled]="option.disabled"
+    [attr.aria-disabled]="option.disabled"
+    [attr.aria-selected]="selected.has(option.value)"
+    (mousedown)="handleClickOption($event, option)">
 
-    <div class="checkbox" *ngIf="multiple">
+    <div class="checkbox" *ngIf="multiple" aria-hidden="true">
         <i class="fa fa-check" *ngIf="selected.has(option.value)"></i>
     </div>
     <div class="option-content">
-        <ng-template [ngTemplateOutlet]="option.content"></ng-template>
+        <ng-container *ngIf="select.optionTemplate">
+            <ng-template [ngTemplateOutlet]="select.optionTemplate" [ngTemplateOutletContext]="{$implicit: option.item}"></ng-template>
+        </ng-container>
+        <ng-container *ngIf="!select.optionTemplate">
+            {{option.label}}
+        </ng-container>
     </div>
 </div>
 <div class="no-option" *ngIf="displayedOptions.length === 0 && select.filter">

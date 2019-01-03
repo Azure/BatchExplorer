@@ -25,8 +25,11 @@
     "success": {"$ref": "#/definitions/color"},
     "success-contrast": {"$ref": "#/definitions/color"},
     "main-background": {"$ref": "#/definitions/color"},
-    "card-background": {"$ref": "#/definitions/color"},
     "secondary-background": {"$ref": "#/definitions/color"},
+    "card-background": {"$ref": "#/definitions/color"},
+    "hover-bg": {"$ref": "#/definitions/color"},
+    "selection": {"$ref": "#/definitions/color"},
+    "border": {"$ref": "#/definitions/color"},
     "outline": {"$ref": "#/definitions/color"},
     "editor": {"type": "string"},
     "text": {
@@ -64,8 +67,14 @@
         "placeholder": {"$ref": "#/definitions/color"},
         "border": {"$ref": "#/definitions/color"},
         "focus-border": {"$ref": "#/definitions/color"},
+        "disabled-border": {"$ref": "#/definitions/color"},
+        "disabled-text": {"$ref": "#/definitions/color"},
         "disabled-background": {"$ref": "#/definitions/color"}
       }
+    },
+    "chart-colors": {
+      "type": "array",
+      "items": {"$ref": "#/definitions/color"}
     }
   }
 }

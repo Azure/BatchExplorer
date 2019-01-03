@@ -7,46 +7,11 @@ bl-file-tree-view {
     flex-direction: column;
 
     .tree-view-header {
-        background: $secondary-background;
-        display: flex;
-        align-items: stretch;
-        height: $tree-view-header-height;
-        cursor: pointer;
-
-        > * {
-            vertical-align: middle;
-            line-height: $tree-view-header-height;
-        }
+        padding-left: 0;
 
         .caret {
             padding: 0 5px;
             width: 20px;
-        }
-
-        .name {
-            display: inline-block;
-            flex: 1;
-            font-size: 11px;
-            color: $secondary-text;
-            font-weight: 700;
-            user-select: none;
-            text-transform: uppercase;
-        }
-
-        .error {
-            color: $danger-color;
-            padding: 0 5px;
-        }
-
-        .action {
-            padding: 4px 5px;
-            cursor: pointer;
-            color: $secondary-text;
-            font-size: 16px;
-
-            &:hover {
-                color: $selection-color;
-            }
         }
     }
 
@@ -62,7 +27,7 @@ bl-file-tree-view {
         color: $secondary-text;
 
         &:hover {
-            color: $selection-color;
+            color: $hover-bg-color;
         }
     }
 
@@ -71,8 +36,13 @@ bl-file-tree-view {
     }
 
     .tree-view-content {
+        outline: none;
         position: relative;
         height: calc(100% - #{$tree-view-header-height});
+
+        &.no-rows:focus {
+            border: 1px solid $outline-color;
+        }
     }
 
     .tree-rows-container {

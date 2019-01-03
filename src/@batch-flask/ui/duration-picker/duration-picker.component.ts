@@ -71,8 +71,6 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     public set id(value: string) { this._id = value || this._uid; }
 
     @Input()
-    @HostBinding("attr.aria-label")
-    @HostBinding("attr.placeholder")
     public label: string;
 
     @Input() public allowUnlimited: boolean = true;
@@ -86,6 +84,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
         }
         return this._disabled;
     }
+
     public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
     }

@@ -12,11 +12,13 @@ import {
     Self,
     SimpleChanges,
 } from "@angular/core";
-import { Subscription } from "rxjs";
-
+import { MatMenuTrigger } from "@angular/material";
 import { RouterLink } from "@angular/router";
 import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { Permission, PermissionService } from "@batch-flask/ui/permission";
+import { Subscription } from "rxjs";
+
+import { exists } from "@batch-flask/utils";
 import "./clickable.scss";
 
 @Component({
@@ -39,34 +41,51 @@ export class ClickableComponent implements OnChanges, OnDestroy {
      */
     @HostBinding("class.disabled") public get isDisabled() { return this.disabled || this._permissionDisabled; }
     @Output() public do = new EventEmitter<Event>();
-    @HostBinding("tabindex") public get tabindex() {
+
+    @Input() @HostBinding("tabindex") public set tabindex(tabindex: string | undefined) {
+        this._tabindex = tabindex;
+    }
+    public get tabindex() {
+        if (exists(this._tabindex)) {
+            return this._tabindex;
+        }
         return this.isDisabled ? "-1" : "0";
     }
     @HostBinding("class.focus-outline") public focusOutline = true;
+
+    // Aria
+    @Input() @HostBinding("attr.role") public role = "button";
+    @HostBinding("attr.aria-disabled") public get ariaDisabled() { return this.disabled; }
+
     public subtitle = "";
 
-    private permissionService?: PermissionService;
+    private permissionService: PermissionService | null;
+    private _matMenuTrigger: MatMenuTrigger | null;
     // Router link directive if any
     private _routerLink?: RouterLink;
     private _sub: Subscription;
     private _permissionDisabled = false;
+    private _tabindex: string | undefined;
 
     constructor(injector: Injector, @Self() @Optional() routerLink: RouterLink) {
         this._routerLink = routerLink;
-        this.permissionService = injector.get(PermissionService, null);
+        this._matMenuTrigger = injector.get<MatMenuTrigger | null>(MatMenuTrigger, null, 2);
+        this.permissionService = injector.get<PermissionService | null>(PermissionService, null);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.permission) {
             this._clearSubscription();
-            this._sub = this.permissionService.hasPermission(this.permission).subscribe((hasPermission) => {
-                this._permissionDisabled = !hasPermission;
-                if (hasPermission) {
-                    this.subtitle = "";
-                } else {
-                    this.subtitle = " (You don't have permission to perform this action)";
-                }
-            });
+            if (this.permissionService && this.permission) {
+                this._sub = this.permissionService.hasPermission(this.permission).subscribe((hasPermission) => {
+                    this._permissionDisabled = !hasPermission;
+                    if (hasPermission) {
+                        this.subtitle = "";
+                    } else {
+                        this.subtitle = " (You don't have permission to perform this action)";
+                    }
+                });
+            }
         }
     }
 
@@ -98,6 +117,9 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
         if (this._routerLink) {
             this._routerLink.onClick();
+        }
+        if (this._matMenuTrigger) {
+            this._matMenuTrigger.openMenu();
         }
     }
 

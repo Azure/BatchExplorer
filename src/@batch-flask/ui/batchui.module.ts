@@ -1,6 +1,6 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
@@ -9,14 +9,13 @@ import { WorkspaceModule } from "@batch-flask/ui/workspace";
 import { AbstractListModule } from "./abstract-list";
 import { ActivityModule } from "./activity";
 import { AdvancedFilterModule } from "./advanced-filter";
+import { AutoFocusModule } from "./auto-focus";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
-import { BatchFlaskSettingsModule } from "./batch-flask-settings";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { BrowseLayoutModule } from "./browse-layout";
 import { ButtonsModule } from "./buttons";
 import { CardModule } from "./card";
 import { ChartsModule } from "./charts";
-import { ContextMenuModule } from "./context-menu";
 import { DateModule } from "./date";
 import { DatetimePickerComponent } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
@@ -51,6 +50,7 @@ import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
 import { TimespanComponent } from "./timespan";
+import { ToolbarModule } from "./toolbar";
 import { VirtualScrollModule } from "./virtual-scroll";
 import { VTabsModule } from "./vtabs";
 
@@ -59,13 +59,12 @@ const modules = [
     ActivityModule,
     AbstractListModule,
     AdvancedFilterModule,
-    BatchFlaskSettingsModule,
+    AutoFocusModule,
     BreadcrumbModule,
     BrowseLayoutModule,
     ButtonsModule,
     CardModule,
     ChartsModule,
-    ContextMenuModule,
     DateModule,
     DialogsModule,
     DropdownModule,
@@ -87,6 +86,7 @@ const modules = [
     TableModule,
     TabsModule,
     TagsModule,
+    ToolbarModule,
     FormModule,
     QuotasModule,
     ServerErrorModule,
@@ -118,14 +118,12 @@ const components = [
     ],
     exports: [...modules, ...components],
     imports: [
-        BrowserModule,
+        CommonModule,
         FormsModule,
         MaterialModule,
         ReactiveFormsModule,
         RouterModule,
         ...modules,
-    ],
-    providers: [
     ],
 })
 export class BaseModule {

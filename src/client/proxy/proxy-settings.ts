@@ -11,8 +11,8 @@ import { BehaviorSubject } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
 
 export interface ProxySettingConfiguration {
-    settings: ProxySettings;
-    credentials: ProxyCredentials;
+    settings: ProxySettings | null;
+    credentials: ProxyCredentials | null;
 }
 
 // @ts-ignore
@@ -22,7 +22,7 @@ function allowInsecureRequest() {
 
 @Injectable()
 export class ProxySettingsManager {
-    private _settings = new BehaviorSubject<ProxySettingConfiguration>(undefined);
+    private _settings = new BehaviorSubject<ProxySettingConfiguration | null>(null);
     constructor(
         @Inject(forwardRef(() => BatchExplorerApplication)) private batchExplorerApp: BatchExplorerApplication,
         private batchExplorerProcess: BatchExplorerProcess,
@@ -33,15 +33,15 @@ export class ProxySettingsManager {
         await this._loadSettingsFromStorage();
     }
 
-    public get settings(): Promise<ProxySettings> {
+    public get settings(): Promise<ProxySettings | null> {
         return this._settings.pipe(
-            filter(x => x !== undefined),
+            filter(x => x !== null),
             take(1),
-            map(x => x.settings),
+            map(x => x!.settings),
         ).toPromise();
     }
 
-    public async configureManualy(): Promise<ProxySettings> {
+    public async configureManualy(): Promise<ProxySettings | null> {
         const config = this._settings.value;
         const settings = await this.batchExplorerApp.askUserForProxyConfiguration(config && config.settings);
         this._settings.next({
@@ -77,7 +77,7 @@ export class ProxySettingsManager {
             };
             log.debug("Loaded proxy settings", {
                 http: settings.http && this._safePrintProxySetting(settings.http),
-                https:  settings.http && this._safePrintProxySetting(settings.https),
+                https: settings.http && this._safePrintProxySetting(settings.https),
             });
             this._settings.next({
                 settings,
@@ -119,6 +119,8 @@ export class ProxySettingsManager {
         const value = this._settings.value;
         const { settings } = value;
 
-        return value.credentials || settings.https.credentials || settings.http.credentials;
+        return value.credentials
+            || (settings && settings.https && settings.https.credentials)
+            || (settings && settings.http && settings.http.credentials);
     }
 }

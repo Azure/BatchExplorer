@@ -1,13 +1,13 @@
 import { Encoding, EncodingUtils } from "@batch-flask/utils";
 
 async function loadFile(file: string): Promise<Buffer> {
-    const response = await fetch(`base/test/fixtures/encoding/${file}`);
+    const response = await fetch(`base/src/test/fixtures/encoding/${file}`);
     const reader = response.body.getReader();
     const result = await reader.read();
     if (result.value) {
-        return new Buffer(result.value.buffer);
+        return Buffer.from(result.value.buffer);
     } else {
-        return new Buffer("");
+        return Buffer.from("");
     }
 }
 
@@ -66,7 +66,6 @@ describe("Encoding", () => {
 
         it("detectEncodingFromBuffer (XML saved as PNG) as non binary", async () => {
             const buffer = await loadFile("some.xml.png");
-
             const mimes = await EncodingUtils.detectEncodingFromBuffer({ buffer, bytesRead: buffer.length });
             expect(mimes.seemsBinary).toEqual(false);
         });

@@ -7,4 +7,4 @@
         [class.fa-folder-open]="treeRow.isDirectory &&treeRow.expanded"
         [class.fa-file]="!treeRow.isDirectory"></i>
 </span>
-<span class="label">{{treeRow.name}}</span>
+<span class="label" [title]="title">{{treeRow.name}}</span>

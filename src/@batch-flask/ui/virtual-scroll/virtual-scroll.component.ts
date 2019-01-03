@@ -1,6 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ElementRef,
@@ -17,12 +18,11 @@ import {
     SimpleChanges,
     ViewChild,
 } from "@angular/core";
-import * as tween from "@tweenjs/tween.js";
-import * as elementResizeDetectorMaker from "element-resize-detector";
-
 import { autobind } from "@batch-flask/core";
+import * as elementResizeDetectorMaker from "element-resize-detector";
 import { VirtualScrollTailComponent } from "./virtual-scroll-tail";
 
+import { VirtualScrollRowDirective } from "./virtual-scroll-row.directive";
 import "./virtual-scroll.scss";
 
 export interface ChangeEvent {
@@ -83,7 +83,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
     @Output() public end = new EventEmitter<ChangeEvent>();
     @Output() public scroll = new EventEmitter<Event>();
 
-    public viewPortItems: any[];
+    public viewportItems: any[] = [];
 
     @ViewChild("content", { read: ElementRef })
     public contentElementRef: ElementRef;
@@ -94,6 +94,8 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         this.refresh();
     }
     public get tail() { return this._tail; }
+
+    @ContentChild(VirtualScrollRowDirective) public rowDef: VirtualScrollRowDirective<any>;
 
     public topPadding: number;
     public previousStart: number;
@@ -115,6 +117,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         private readonly element: ElementRef,
         private readonly zone: NgZone,
         private readonly renderer: Renderer2,
+        private changeDetector: ChangeDetectorRef,
     ) { }
 
     @HostBinding("style.overflow-y")
@@ -177,7 +180,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         this.scrollToItemAt(index);
     }
 
-    public scrollToItemAt(index: number) {
+    public scrollToItemAt(index: number, behavior: ScrollBehavior = "auto") {
         const el = this._getScrollElement();
         if (index < 0 || index >= (this.items || []).length) { return; }
 
@@ -188,35 +191,51 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         if (this.currentTween) {
             this.currentTween.stop();
         }
-        let animationRequest;
+        el.scrollTo({
+            top: scrollTop,
+            behavior,
+        });
+    }
 
-        this.currentTween = new tween.Tween({ scrollTop: el.scrollTop })
-            .to({ scrollTop }, 500)
-            .easing(tween.Easing.Quadratic.Out)
-            .onUpdate((data) => {
-                if (!isNaN(data.scrollTop)) {
-                    this.renderer.setProperty(el, "scrollTop", data.scrollTop);
-                }
-                this.refresh();
-            })
-            .onStop(() => {
-                cancelAnimationFrame(animationRequest);
-            })
-            .onComplete(() => {
-                cancelAnimationFrame(animationRequest);
-            })
-            .start();
+    /**
+     * This will make sure the item is visible.
+     * Difference with scroll to item is it will try to scroll the least possible.
+     */
+    public ensureItemVisible(item: any, behavior: ScrollBehavior = "auto") {
+        const index: number = (this.items || []).indexOf(item);
+        if (index < 0 || index >= (this.items || []).length) { return; }
+        this.ensureItemAtVisible(index, behavior);
+    }
 
-        const animate = (time?) => {
-            this.currentTween.update(time);
-            if (this.currentTween._object.scrollTop !== scrollTop) {
-                this.zone.runOutsideAngular(() => {
-                    animationRequest = requestAnimationFrame(animate);
-                });
-            }
-        };
+    /**
+     * This will make sure the item is visible.
+     * Difference with scroll to item is it will try to scroll the least possible.
+     */
+    public ensureItemAtVisible(index: number, behavior: ScrollBehavior = "auto") {
+        const el = this._getScrollElement();
+        if (index < 0 || index >= (this.items || []).length) { return; }
 
-        animate();
+        const d = this._calculateDimensions();
+        const top = (Math.floor(index / d.itemsPerRow) * d.childHeight);
+        const buffer = (d.childHeight * Math.min(index, this.bufferAmount));
+        const maxScrollTop = top - buffer - d.childHeight;
+        const minScrollTop = top - d.viewHeight + d.childHeight + buffer;
+
+        if (this.currentTween) {
+            this.currentTween.stop();
+        }
+
+        if (el.scrollTop > maxScrollTop) {
+            el.scrollTo({
+                top: maxScrollTop,
+                behavior,
+            });
+        } else if (el.scrollTop < minScrollTop) {
+            el.scrollTo({
+                top: minScrollTop,
+                behavior,
+            });
+        }
     }
 
     private _getScrollElement(): Element {
@@ -298,7 +317,6 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
 
     private _computeRange(d: VirtualScrollDimensions) {
         const scrollTop = this._computeScrollTop(d);
-
         const indexByScrollTop = scrollTop / d.scrollHeight * d.itemCount / d.itemsPerRow;
         const end = Math.min(d.itemCount, d.itemsPerRow * (Math.ceil(indexByScrollTop) + d.itemsPerCol + 1));
         let maxStartEnd = end;
@@ -353,8 +371,8 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         // To prevent from accidentally selecting the entire array with a negative 1 (-1) in the end position.
         const _end = end >= 0 ? end : 0;
         // update the scroll list
-        this.viewPortItems = items.slice(start, _end);
-        this.update.emit(this.viewPortItems);
+        this.viewportItems = items.slice(start, _end);
+        this.update.emit(this.viewportItems);
 
         // emit 'start' event
         if (start !== this.previousStart && this.startupLoop === false) {
@@ -374,5 +392,6 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         } else {
             this.change.emit({ start, end });
         }
+        this.changeDetector.markForCheck();
     }
 }

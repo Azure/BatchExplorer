@@ -13,21 +13,22 @@ bl-summary-card {
         flex: 1;
         display: flex;
         flex-direction: column;
+        min-width: 0;
 
         > .content-container {
             display: flex;
             > .content {
                 > .title {
                     font-size: 16px;
-                    color: map-get($primary, 500);
+                    color: $primary-color;
                 }
 
                 > .subtitle {
-                    color: $generic-grey;
+                    color: $secondary-text;
                 }
 
                 > .details {
-                    color: $generic-grey;
+                    color: $secondary-text;
                 }
             }
         }
@@ -40,6 +41,12 @@ bl-summary-card {
     }
 
     > [summaryTile] {
+        flex: 0 0 auto;
         border-left: 1px solid $border-color;
     }
+}
+
+.batch-explorer.high-contrast bl-summary-card {
+    border-bottom: 1px solid $border-color;
+    border-left: 1px solid $border-color;
 }

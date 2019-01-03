@@ -1,9 +1,10 @@
+import { CommonModule } from "@angular/common";
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-
 import { MaterialModule } from "@batch-flask/core";
+import { KeyCode } from "@batch-flask/core/keys";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import {
@@ -16,8 +17,8 @@ import {
     TableHeadComponent,
 } from "@batch-flask/ui/table";
 import { TableRowRenderComponent } from "@batch-flask/ui/table/table-row-render";
-import { VirtualScrollTestingModule } from "@batch-flask/ui/testing";
-import { click, dblclick, mousedown } from "test/utils/helpers";
+import { VirtualScrollMockComponent, VirtualScrollTestingModule } from "@batch-flask/ui/testing";
+import { click, dblclick, keydown,  mousedown } from "test/utils/helpers";
 
 const sizeA = { id: "size_a", name: "Size A", numberOfCores: 1, resourceDiskSizeInMB: 1000 };
 const sizeB = { id: "size_b", name: "Size B", numberOfCores: 8, resourceDiskSizeInMB: 2000 };
@@ -29,12 +30,13 @@ const sizeD = { id: "size_d", name: "Size D", numberOfCores: 2, resourceDiskSize
 
 class BaseTestComponent {
     public sizes: any[] = [];
-    public picedSize: string;
+    public pickedSize: string;
     public tableConfig: TableConfig = {};
 }
+
 @Component({
     template: `
-        <bl-table [data]="sizes" [(activeItem)]="pickedSize" [config]="tableConfig" style="width: 600px">
+        <bl-table id="mytable-1" [data]="sizes" [(activeItem)]="pickedSize" [config]="tableConfig" style="width: 600px">
             <bl-column name="name">
                 <div *blHeadCellDef>Name</div>
                 <div *blCellDef="let size">{{size.name}}</div>
@@ -63,6 +65,7 @@ describe("TableComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: BaseTestComponent;
     let de: DebugElement;
+    let virtualScrollComponent: VirtualScrollMockComponent;
 
     function getRows(): HTMLElement[] {
         // Cannot use de.queryAll angular bug: https://github.com/angular/angular/issues/13066
@@ -71,7 +74,7 @@ describe("TableComponent", () => {
 
     function setup(component) {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, BrowserModule, MaterialModule, VirtualScrollTestingModule],
+            imports: [RouterTestingModule, BrowserModule, CommonModule, MaterialModule, VirtualScrollTestingModule],
             declarations: [
                 TableColumnComponent,
                 TableComponent,
@@ -91,9 +94,97 @@ describe("TableComponent", () => {
         fixture = TestBed.createComponent(component);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-table"));
+        virtualScrollComponent = de.query(By.css("bl-virtual-scroll")).componentInstance;
         testComponent.sizes = [sizeA, sizeB, sizeC, sizeD];
         fixture.detectChanges();
     }
+
+    describe("General", () => {
+        beforeEach(() => {
+            setup(TestComponent);
+        });
+        it("has the gridbox role", () => {
+            expect(de.attributes["role"]).toEqual("grid");
+        });
+
+        it("has the multi selectable role", () => {
+            expect(de.attributes["aria-multiselectable"]).toEqual("true");
+        });
+
+        it("has tabindex", () => {
+            expect(de.attributes["tabindex"]).toEqual("0");
+        });
+
+        it("sets aria-rowcount with the number of items", () => {
+            expect(de.attributes["aria-rowcount"]).toEqual("4");
+        });
+
+        it("sets aria-colcount with the number of column", () => {
+            expect(de.attributes["aria-colcount"]).toEqual("3");
+        });
+
+        it("each row should have a unique id", () => {
+            const rows = getRows();
+            expect(rows.length).toBe(4);
+            expect(rows[0].id).toEqual("mytable-1-row-size_a");
+            expect(rows[1].id).toEqual("mytable-1-row-size_b");
+            expect(rows[2].id).toEqual("mytable-1-row-size_c");
+            expect(rows[3].id).toEqual("mytable-1-row-size_d");
+        });
+
+        it("should focus the first item when triggering focus for the first time", () => {
+            de.componentInstance.focus();
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(de.nativeElement);
+            const rows = getRows();
+
+            expect(rows[0].classList).toContain("focused");
+        });
+
+        it("should focus the active item and ensure it is visible if exists", () => {
+            testComponent.pickedSize = sizeC.id;
+            fixture.detectChanges();
+
+            de.componentInstance.focus();
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(de.nativeElement);
+            expect(virtualScrollComponent.ensureItemVisible).toHaveBeenCalledOnce();
+            const rows = getRows();
+
+            expect(rows[0].classList).not.toContain("focused");
+            expect(rows[2].classList).toContain("focused");
+        });
+
+        it("it navigate with the keyboard", () => {
+            de.componentInstance.focus();
+            fixture.detectChanges();
+            const rows = getRows();
+            expect(rows[0].classList).toContain("focused");
+
+            keydown(de, KeyCode.ArrowDown, KeyCode.ArrowDown);
+            fixture.detectChanges();
+            expect(rows[0].classList).not.toContain("focused");
+            expect(rows[1].classList).toContain("focused");
+
+            keydown(de, KeyCode.ArrowDown, KeyCode.ArrowDown);
+            fixture.detectChanges();
+            expect(rows[1].classList).not.toContain("focused");
+            expect(rows[2].classList).toContain("focused");
+
+            keydown(de, KeyCode.Space, KeyCode.Space);
+            fixture.detectChanges();
+            expect(testComponent.pickedSize).toEqual("size_c");
+
+            keydown(de, KeyCode.ArrowUp, KeyCode.ArrowUp);
+            fixture.detectChanges();
+            expect(rows[0].classList).not.toContain("focused");
+            expect(rows[1].classList).toContain("focused");
+
+            keydown(de, KeyCode.Enter, KeyCode.Enter);
+            fixture.detectChanges();
+            expect(testComponent.pickedSize).toEqual("size_b");
+        });
+    });
 
     describe("Sort", () => {
         let columns: DebugElement[];

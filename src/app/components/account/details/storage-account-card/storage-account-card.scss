@@ -1,0 +1,32 @@
+@import "app/styles/variables";
+
+bl-storage-account-card > .storage-account-card {
+    margin-top: 5px;
+    padding: 5px 10px;
+
+    > .content {
+        display: flex;
+        align-items: center;
+        > .icon {
+            font-size: 48px;
+            margin-right: 10px;
+            color: $secondary-text;
+        }
+
+        > .details {
+            flex: 1;
+
+            > .title {
+                font-size: 16px;
+            }
+            .error {
+                color: $danger-color;
+            }
+        }
+    }
+
+    > .actions {
+        margin-left: 10px;
+        text-align: center;
+    }
+}

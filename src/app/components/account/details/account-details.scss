@@ -1,0 +1,88 @@
+@import "app/styles/variables";
+
+bl-account-details {
+
+    [summaryDetails] {
+        .label {
+            margin-right: 5px;
+            font-weight: bold;
+        }
+    }
+
+    .account-cards {
+        margin: 0 auto;
+        text-align: justify;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+
+        .account-card {
+            margin-top: 5px;
+            margin-right: 5px;
+            padding: 12px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+
+            > .title {
+                margin-bottom: 5px;
+            }
+
+            > .content {
+                flex: 1;
+            }
+
+            > .actions {
+                color: $link-color;
+                margin-top: 10px;
+                text-align: right;
+            }
+
+            bl-banner .message {
+                white-space: normal;
+            }
+        }
+    }
+
+    .monitor-charts {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: repeat(4, 105px);
+        grid-gap: 5px;
+        text-align: justify;
+        margin-top: 5px;
+        margin-right: 5px;
+
+        > .monitor-chart {
+            min-width: 0;
+            grid-row: span 2;
+            grid-column: span 2;
+            background-color: $card-background;
+        }
+
+        > .current-node-counts {
+            padding: 5px 10px;
+        }
+
+        > .node-states {
+            grid-column: span 3;
+        }
+    }
+
+    bl-table.dashboard {
+        bl-cell {
+            padding: 0 5px;
+        }
+    }
+
+    bl-getting-started-card {
+        width: 400px;
+    }
+
+    .section-title {
+        padding: 10px;
+    }
+
+    bl-getting-started-card {
+        margin-bottom: 15px;
+    }
+}

@@ -1,9 +1,9 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
 import { TelemetryService } from "@batch-flask/core/telemetry/telemetry.service";
 
 @NgModule({
-    imports: [BrowserModule],
+    imports: [CommonModule],
     providers: [TelemetryService],
 })
 export class TelemetryModule {

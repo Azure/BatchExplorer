@@ -14,7 +14,7 @@ export class DragUtils {
      */
     public static allowDrop(event: DragEvent, allowed: boolean, effect: DropEffect = DropEffect.move) {
         if (!allowed) { return; }
-        event.dataTransfer.dropEffect = effect;
+        event.dataTransfer!.dropEffect = effect;
         event.stopPropagation();
         event.preventDefault();
     }

@@ -42,7 +42,7 @@ export class FileTreeNode {
 
     constructor(params: FileTreeNodeParams) {
         this.path = params.path;
-        this.originalPath = exists(params.originalPath) ? params.originalPath :  params.path;
+        this.originalPath = exists(params.originalPath) ? params.originalPath : params.path;
         this.isDirectory = params.isDirectory;
         this.children = params.children || new Map();
         this.loadingStatus = params.loadingStatus || (this.isDirectory ? LoadingStatus.Loading : LoadingStatus.Ready);
@@ -83,6 +83,8 @@ export class FileTreeStructure {
     public directories: StringMap<FileTreeNode> = {};
     public readonly basePath: string;
 
+    private _unkownFiles = new Set<string>();
+
     constructor(basePath: string = "") {
         this.basePath = CloudPathUtils.asBaseDirectory(basePath);
         this.root = new FileTreeNode({
@@ -93,10 +95,19 @@ export class FileTreeStructure {
         this.directories[""] = this.root;
     }
 
+    public markFileAsLoadedAndUnkown(path: string) {
+        const nodePath = CloudPathUtils.normalize(path);
+        this._unkownFiles.add(nodePath);
+    }
+
     public addFiles(files: List<File>) {
         const directories = this.directories;
         for (const file of files.toArray()) {
             const node = fileToTreeNode(file, this.basePath);
+
+            if (this._unkownFiles.has(node.path)) {
+                this._unkownFiles.delete(node.path);
+            }
 
             const folder = CloudPathUtils.dirname(node.path);
             this._checkDirInTree(folder);
@@ -128,13 +139,7 @@ export class FileTreeStructure {
     public setFilesAt(folder: string, files: List<File>) {
         folder = CloudPathUtils.normalize(folder);
         this._checkDirInTree(folder);
-        const directories = this.directories;
-        const rootDir = directories[folder];
-        for (const [dir, node] of rootDir.children.entries()) {
-            if (!node.virtual) {
-                rootDir.children.delete(dir);
-            }
-        }
+        this._clearDirectory(folder);
         this.addFiles(files);
     }
 
@@ -153,7 +158,7 @@ export class FileTreeStructure {
 
             return new FileTreeNode({
                 path: nodePath,
-                loadingStatus: LoadingStatus.Loading,
+                loadingStatus: this._unkownFiles.has(nodePath) ? LoadingStatus.Ready : LoadingStatus.Loading,
                 isDirectory: true,
                 isUnknown: true,
                 virtual: true,
@@ -201,10 +206,26 @@ export class FileTreeStructure {
     }
 
     /**
+     * Clear the content of a directory and clear indexes
+     */
+    private _clearDirectory(name: string) {
+        const directory = this.directories[name];
+        for (const [dir, node] of directory.children.entries()) {
+            if (!node.virtual) {
+                if (dir in this.directories) {
+                    this._clearDirectory(dir);
+                    delete this.directories[dir];
+                }
+                directory.children.delete(dir);
+            }
+        }
+    }
+
+    /**
      *
-     * @param directory Ensure the given directory exist in the path
-     * @param virtual If the dictory doesn't exists it will be flagged as virtual if this is true.
-     *                If this is false and the directory exisist but is virtual it will be changed to non virtual
+     * @param directory Ensure the given directory exists in the path
+     * @param virtual If the dictory doesn't exist it will be flagged as virtual if this is true.
+     *                If this is false and the directory exists but is virtual, it will be changed to non virtual.
      */
     private _checkDirInTree(directory: string, virtual = false) {
         const directories = this.directories;

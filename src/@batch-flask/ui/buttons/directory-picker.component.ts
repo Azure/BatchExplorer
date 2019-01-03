@@ -8,8 +8,10 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@
     templateUrl: "directory-picker.html",
 })
 export class DirectoryPickerComponent {
-    @Input()
-    public canPickFile: boolean = false;
+    // tslint:disable-next-line:no-input-rename
+    @Input("attr.aria-describedby") public ariaDescribedBy: string;
+
+    @Input() public canPickFile: boolean = false;
 
     @Output()
     public onChange = new EventEmitter<string>();

@@ -11,14 +11,36 @@ export const badHttpCodeMaxRetryCount = 5;
 export type HttpResponseType = "arraybuffer" | "blob" | "json" | "text";
 export type HttpObserve = "body" | "events" | "response";
 
-export interface HttpRequestOptions<O extends HttpObserve = "body", R extends HttpResponseType = "json"> {
+export interface HttpRequestOptionsDefault {
     body?: any;
     headers?: HttpHeaders | { [header: string]: string | string[] };
-    observe?: O;
+    observe?: "body";
     params?: HttpParams | { [param: string]: string | string[] };
     reportProgress?: boolean;
-    responseType?: R;
+    responseType?: "json";
     withCredentials?: boolean;
+}
+
+export interface HttpRequestOptionsCustom<O extends HttpObserve = "body", R extends HttpResponseType = "json"> {
+    body?: any;
+    headers?: HttpHeaders | { [header: string]: string | string[] };
+    observe: O;
+    params?: HttpParams | { [param: string]: string | string[] };
+    reportProgress?: boolean;
+    responseType: R;
+    withCredentials?: boolean;
+}
+
+export type HttpRequestOptions<O extends HttpObserve = "body", R extends HttpResponseType = "json">
+    = HttpRequestOptionsDefault | HttpRequestOptionsCustom<O, R>;
+
+export enum HttpMethod {
+    Get = "GET",
+    Post = "POST",
+    Patch = "PATCH",
+    Head = "HEAD",
+    Put = "PUT",
+    Delete = "DELETE",
 }
 
 /**
@@ -68,4 +90,16 @@ export abstract class HttpService extends HttpClient {
         options.headers = options.headers.set("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
         return options;
     }
+}
+
+export interface HttpInterface {
+    get<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
+
+    post<T>(uri: string, body?: any, options?: HttpRequestOptions): Observable<T>;
+
+    put<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
+
+    patch<T>(uri: string, body: any, options?: HttpRequestOptions): Observable<T>;
+
+    delete<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
 }

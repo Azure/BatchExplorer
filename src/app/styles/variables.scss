@@ -1,0 +1,43 @@
+@import "./vars/zindex";
+@import "./themes/core";
+
+// Text
+//---------------------------------------------
+$headings-color             : $primary-color;
+$link-color                 : $primary-color;
+$link-color-hover           : $primary-color-dark;
+$validation-error-color     : $danger-color;
+
+
+$font-size-base     : 13px;
+$font-size-large    : 15px;
+$baseLineHeight     : 1.4em;
+
+
+$headingsFontWeight : semilight;
+$headingWeightBold  : semibold;
+$headingsLineHeight : $baseLineHeight;
+$main-font          : -apple-system,BlinkMacSystemFont,Segoe WPC,Segoe UI,HelveticaNeue-Light,Ubuntu,Droid Sans,sans-serif;
+
+
+$h1FontSize         : $font-size-base * 1.8;
+$h2FontSize         : $font-size-base * 1.6;
+$h3FontSize         : $font-size-base * 1.4;
+$h4FontSize         : $font-size-base * 1.2;
+$h5FontSize         : $font-size-base * 1.1;
+$h6FontSize         : $font-size-base;
+
+// Layout sizing
+//---------------------------------------------
+$header-height                       : 30px;
+$footer-height                       : 22px;
+$navigationbar-width                 : 60px;
+$listview-width                      : 350px;
+$listview-filtering-width            : 55vw;
+$listview-header-height              : 90px;
+$content-top-position                : $header-height;
+$contentview-height                  : calc(100vh - #{$header-height} - #{$footer-height});
+
+
+// Base component dimensions
+$action-btn-size: 32px;

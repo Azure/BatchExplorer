@@ -1,0 +1,14 @@
+# To put here some common translations that are reused across the app
+common:
+  back: Back
+  configuration: Configuration
+  confirm: Confirm
+  loading: Loading
+  no: "No"
+  none: None
+  rebootAll: Reboot all
+  refresh: Refresh
+  refreshing: Refreshing
+  required: Required
+  updated: Updated
+  yes: "Yes"

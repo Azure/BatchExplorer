@@ -1,8 +1,16 @@
 <div class="toggle-mode" *ngIf="config.jsonEditor">
-    <bl-button type="square" [disabled]="classicFormDisabled" (do)="toggleJsonEditor(false)">
+    <bl-button type="square"
+        [attr.aria-pressed]="classicFormDisabled"
+        [disabled]="classicFormDisabled"
+        [title]="'form-footer.buttons.normalForm' |i18n"
+        (do)="toggleJsonEditor(false)">
         <i class="fa fa-commenting"></i>
     </bl-button>
-    <bl-button type="square" [disabled]="showJsonEditor" (do)="toggleJsonEditor(true)">
+    <bl-button type="square"
+        [attr.aria-pressed]="showJsonEditor"
+        [disabled]="showJsonEditor"
+        [title]="'form-footer.buttons.jsonEditor' |i18n"
+        (do)="toggleJsonEditor(true)">
         <i class="fa fa-code"></i>
     </bl-button>
 </div>
@@ -30,7 +38,7 @@
         </span>
     </div>
     <div *ngIf="!isMainWindow">
-        <bl-button type="wide" class="cancel" color="primary" [action]="form.cancelPage">Cancel</bl-button>
-        <bl-button type="wide" class="select" color="primary" [action]="form.closePageOrSubmit" [disabled]="!submitEnabled">Select</bl-button>
+        <bl-button type="wide" class="cancel" color="primary" [action]="form.cancelPage">{{'form-footer.buttons.cancel' | i18n}}</bl-button>
+        <bl-button type="wide" class="select" color="primary" [action]="form.closePageOrSubmit" [disabled]="!submitEnabled">{{'form-footer.buttons.select' | i18n}}</bl-button>
     </div>
 </div>

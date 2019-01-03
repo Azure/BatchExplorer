@@ -1,15 +1,21 @@
 import {
-    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, OnChanges, OnInit,
+    AfterContentInit, ChangeDetectionStrategy,
+    ChangeDetectorRef, Component, ContentChild,
+    ElementRef, Input, OnChanges, OnInit, ViewChild,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
+import { Filter, FilterBuilder, I18nService, autobind } from "@batch-flask/core";
+import { KeyCode } from "@batch-flask/core/keys";
 import { ListSelection } from "@batch-flask/core/list";
+import { SanitizedError } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { SplitPaneComponent, SplitPaneConfig } from "../split-pane";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import "./browse-layout.scss";
 
 export interface BrowseLayoutConfig {
@@ -32,12 +38,16 @@ const defaultConfig: BrowseLayoutConfig = {
     quickSearchField: "id",
     keyField: "id",
 };
+
+let idCounter = 0;
+
 @Component({
     selector: "bl-browse-layout",
     templateUrl: "browse-layout.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChanges {
+    @Input() public id = `bl-browse-layout-${idCounter++}`;
     /**
      * Field for the quicksearch.
      * @default id.
@@ -48,10 +58,25 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     public get config() { return this._config; }
     @Input() public keyField = "id";
 
+    @ViewChild("advancedFilterContainer")
+    public advancedFilterContainer: ElementRef;
+
     @ContentChild(BrowseLayoutListDirective)
     public listDirective: BrowseLayoutListDirective;
+
     @ContentChild(BrowseLayoutAdvancedFilterDirective)
     public advancedFilterDirective: BrowseLayoutAdvancedFilterDirective;
+
+    public splitPaneConfig: SplitPaneConfig = {
+        firstPane: {
+            minSize: 200,
+        },
+        secondPane: {
+            minSize: 600,
+        },
+        initialDividerPosition: 350,
+        separatorThickness: 0,
+    };
 
     public quickSearchQuery = new FormControl("");
     public filter: Filter = FilterBuilder.none();
@@ -64,11 +89,18 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
 
     public selection = new ListSelection();
 
+    @ViewChild(SplitPaneComponent)
+    private _splitPane: SplitPaneComponent;
+
     private _activeItemKey: string = null;
     private _config: BrowseLayoutConfig = defaultConfig;
     private _selectionChangeSub: Subscription;
 
-    constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef) {
+    constructor(
+        activeRoute: ActivatedRoute,
+        private i18n: I18nService,
+        private liveAnouncer: LiveAnnouncer,
+        private changeDetector: ChangeDetectorRef) {
 
         activeRoute.queryParams.subscribe((params: any) => {
             if (params.filter) {
@@ -112,7 +144,7 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
 
     public ngAfterContentInit() {
         if (!this.listDirective) {
-            throw new Error("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
+            throw new SanitizedError("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
         }
         const component = this.listDirective.component;
         component.quicklist = !this.showAdvancedFilter;
@@ -138,21 +170,38 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
      * If it is arrow down it will move the focus down in the list so you can navigate elements there.
      */
     public handleKeyPressedInQuickSearch(event: KeyboardEvent) {
-        if (event.code === "ArrowDown") {
+        if (event.code === KeyCode.ArrowDown) {
             event.preventDefault();
             event.stopPropagation();
-            if (this.listDirective.component.focusSection) {
-                this.listDirective.component.focusSection.focus();
+            if (this.listDirective.component.list) {
+                this.listDirective.component.list.focus();
             }
         }
     }
 
     public toggleFilter(value?: boolean) {
-        this.showAdvancedFilter = (value === undefined ? !this.showAdvancedFilter : value);
+        const newValue = (value === undefined ? !this.showAdvancedFilter : value);
+        if (newValue === this.showAdvancedFilter) {return; }
+        this.showAdvancedFilter = newValue;
+
         if (this.listDirective) {
             this.listDirective.component.quicklist = !this.showAdvancedFilter;
         }
         this.changeDetector.markForCheck();
+
+        if (this.showAdvancedFilter) {
+            this._splitPane.updateSize(700);
+            this.liveAnouncer.announce(this.i18n.t("browse-layout.openedAdvancedFilter"));
+            setTimeout(() => {
+                const el = this.advancedFilterContainer.nativeElement.querySelectorAll(
+                    `[tabindex]:not([tabindex="-1"])`, "input", "textarea", "button", "[href]")[0];
+                if (el) {
+                    el.focus();
+                }
+            });
+        } else {
+            this._splitPane.resetDividerPosition();
+        }
     }
 
     public listScrolledToBottom() {

@@ -1,0 +1,48 @@
+@import "app/styles/variables";
+
+bl-all-job-graphs-home {
+    $padding: 10px;
+    $graph-header-height: 40px;
+    $graphs-content-height: calc(100% - #{$graph-header-height  + $padding * 2});
+
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: $padding;
+
+    .graph-header {
+        height: $graph-header-height;
+        display: flex;
+        align-items: center;
+
+        > .summary {
+            flex: 1;
+        }
+
+        h1 {
+            color: $primary-text;
+
+            a {
+                color: $primary-color;
+            }
+        }
+
+        .filters {
+            padding-left: 20px;
+
+            > .bl-form-field {
+                width: 150px;
+            }
+        }
+    }
+
+    .graph-content {
+        height: $graphs-content-height;
+        position: relative;
+
+        .job-graph {
+            width: 600px;
+            height: 50%;
+        }
+    }
+}

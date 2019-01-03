@@ -1,16 +1,16 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
-import { MaterialModule } from "@batch-flask/core";
-
+import { I18nModule, MaterialModule } from "@batch-flask/core";
 import { EditorModule } from "@batch-flask/ui/editor";
 import { SelectModule } from "@batch-flask/ui/select";
 import { ServerErrorModule } from "@batch-flask/ui/server-error";
 import { ButtonsModule } from "../buttons";
+import { I18nUIModule } from "../i18n";
 import { ComplexFormComponent } from "./complex-form";
 import { FormFooterComponent } from "./complex-form/footer";
-import { EditableTableColumnComponent, EditableTableComponent } from "./editable-table";
+import { EditableTableModule } from "./editable-table";
 import { ExpandingTextareaComponent } from "./expanding-textarea";
 import { FormErrorComponent } from "./form-error";
 import { FormFieldComponent, FormFieldPrefixDirective, FormFieldSuffixDirective } from "./form-field";
@@ -27,6 +27,7 @@ import { SingleLineTextareaDirective } from "./single-line-textarea";
 // components
 // Add submodules there
 const modules = [
+    EditableTableModule,
 ];
 
 // Add subcomponnent not in a module here
@@ -39,8 +40,6 @@ const components = [
     FormMultiPickerComponent,
     FormPickerComponent,
     FormPickerItemTemplateDirective,
-    EditableTableComponent,
-    EditableTableColumnComponent,
     KeyValuePickerComponent,
     ExpandingTextareaComponent,
     SingleLineTextareaDirective,
@@ -57,7 +56,9 @@ const components = [
     declarations: components,
     exports: [...modules, ...components],
     imports: [
-        BrowserModule,
+        I18nModule,
+        I18nUIModule,
+        CommonModule,
         ButtonsModule,
         FormsModule,
         MaterialModule,
@@ -67,8 +68,6 @@ const components = [
         EditorModule,
         ServerErrorModule,
         ...modules,
-    ],
-    providers: [
     ],
 })
 export class FormModule {

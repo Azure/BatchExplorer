@@ -1,10 +1,9 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 import { AbstractListModule } from "@batch-flask/ui/abstract-list";
-import { ContextMenuModule } from "@batch-flask/ui/context-menu";
 import { FocusSectionModule } from "../focus-section";
 import { LoadingModule } from "../loading";
 import { VirtualScrollModule } from "../virtual-scroll";
@@ -30,7 +29,7 @@ const publicComponents = [
 
 @NgModule({
     imports: [
-        BrowserModule,
+        CommonModule,
         RouterModule,
         FocusSectionModule,
         FormsModule,
@@ -38,12 +37,10 @@ const publicComponents = [
         MaterialModule,
         VirtualScrollModule,
         LoadingModule,
-        ContextMenuModule,
         AbstractListModule,
     ],
     exports: publicComponents,
     declarations: [...privateComponents, publicComponents],
-    providers: [],
 })
 export class TableModule {
 }

@@ -1,0 +1,35 @@
+<div class="graph-header">
+    <div class="summary">
+        <h1>
+            Jobs graphs
+        </h1>
+    </div>
+
+    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+
+    <div class="filters">
+        <bl-form-field>
+            <bl-select placeholder="Job completion time range" [formControl]="selectedTimeRange">
+                <bl-option [value]="TimeRange.hour" label="Last hour"></bl-option>
+                <bl-option [value]="TimeRange.day"label="Last 24 hours"></bl-option>
+                <bl-option [value]="TimeRange.week"label="Last week"></bl-option>
+            </bl-select>
+        </bl-form-field>
+    </div>
+</div>
+<div *ngIf="jobs" class="graph-content">
+    <div class="job-graph">
+        <bl-jobs-running-time-graph [jobs]="jobs"></bl-jobs-running-time-graph>
+    </div>
+    <div class="job-graph">
+        <bl-jobs-cpu-wait-time-graph [jobs]="jobs"></bl-jobs-cpu-wait-time-graph>
+    </div>
+</div>
+
+<div class="info-overlay" *ngIf="loading">
+    Loading jobs for graphs.
+</div>
+
+<div class="info-overlay" *ngIf="jobs && jobs.size === 0 && !loading">
+    No completed jobs in the selected time range
+</div>

@@ -1,0 +1,54 @@
+@import "../variables";
+@import "../mixins";
+
+/**
+ * This file contains default override for native elements(a, p h1,h2,etc.)
+ */
+
+body {
+    font-family: $main-font;
+    font-size: $font-size-base;
+    line-height: $baseLineHeight;
+    color: $primary-color;
+}
+
+p {
+    font-size: $font-size-base;
+    margin: 0 0 $baseLineHeight / 2;
+}
+
+// Links
+// -------------------------
+a {
+    color: $link-color;
+    text-decoration: none;
+}
+
+a:hover, a:focus {
+    color: $link-color-hover;
+    text-decoration: none;
+}
+
+// Headings
+// --------------------------------------------------
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    text-rendering: optimizelegibility; // Fix the character spacing for headings
+    display: block;
+    color: $headings-color;
+    font-weight: 300;
+}
+
+h1, h2, h3, h4, h5 {
+    line-height: $headingsLineHeight;
+}
+
+h1 { font-size: $h1FontSize; }
+h2 { font-size: $h2FontSize; }
+h3 { font-size: $h3FontSize; }
+h4 { font-size: $h4FontSize; }
+h5 { font-size: $h5FontSize; }
+h6 {
+    font-size: $h6FontSize;
+    line-height: 19px;
+}

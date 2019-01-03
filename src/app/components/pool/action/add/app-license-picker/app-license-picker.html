@@ -1,0 +1,21 @@
+<bl-table [data]="licenses" [config]="tableConfig" [selection]="pickedLicenses" (selectionChange)="updateSelection($event)">
+    <bl-column name="description" [defaultWidth]="200">
+        <div *blHeadCellDef>Software license name</div>
+        <div *blCellDef="let license">{{license.description}}</div>
+    </bl-column>
+    <bl-column name="eula" [defaultWidth]="85">
+        <div *blHeadCellDef>EULA</div>
+        <div *blCellDef="let license"><span class="link" (click)="viewEula(license)">EULA</span></div>
+    </bl-column>
+    <bl-column name="cost">
+        <div *blHeadCellDef>Cost (in addition to VM)</div>
+        <div *blCellDef="let license">
+            <span>{{license.cost}}</span>
+            <span> *</span>
+        </div>
+    </bl-column>
+</bl-table>
+<div class="note">* charged while VM is running</div>
+<!-- Read EULA checkbox -->
+<mat-checkbox (change)="eulaCheck($event)" color="primary">I have read each of the end user license agreements (EULA) for the software licenses selected, and I agree to be bound by
+    the terms and conditions of each end user license agreement.</mat-checkbox>

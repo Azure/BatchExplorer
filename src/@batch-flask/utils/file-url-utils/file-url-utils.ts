@@ -6,6 +6,6 @@ export class FileUrlUtils {
     }
 
     public static getFileExtension(fileUrl: string): string {
-        return fileUrl.split(".").pop();
+        return fileUrl.split(".").pop()!;
     }
 }
