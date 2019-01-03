@@ -11,11 +11,6 @@ steps:
   - powershell: npm run build-and-pack
     displayName: Build and package
 
-  - task: AzureKeyVault@1
-    inputs:
-      azureSubscription: Batch-UI-Subscription
-      keyVaultName: AzureBatchUITesting
-
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
