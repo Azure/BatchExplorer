@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonsModule } from "../buttons";
 import { CalloutModule } from "../callout";
 import { DatetimePickerModule } from "../datetime-picker";
@@ -10,7 +11,15 @@ const publicComponents = [TimeRangePickerComponent];
 const privateComponents = [];
 
 @NgModule({
-    imports: [CommonModule, CalloutModule, ButtonsModule, DatetimePickerModule, I18nUIModule],
+    imports: [
+        CommonModule,
+        CalloutModule,
+        ButtonsModule,
+        DatetimePickerModule,
+        I18nUIModule,
+        FormsModule,
+        ReactiveFormsModule,
+    ],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
     entryComponents: [],

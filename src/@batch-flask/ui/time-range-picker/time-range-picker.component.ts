@@ -1,11 +1,28 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef } from "@angular/core";
-import { NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import "./time-range-picker.scss";
 
-export interface TimeRange {
+export interface TimeRangeAttributes {
     start?: Date;
     end?: Date;
+}
+
+export class TimeRange {
+    private _start: Date | undefined;
+    private _end: Date | undefined;
+    constructor(range: TimeRangeAttributes) {
+        this._start = range.start;
+        this._end = range.end;
+    }
+    public get start(): Date {
+        return null;
+
+    }
+
+    public get end(): Date {
+        return null;
+    }
 }
 
 @Component({
@@ -19,12 +36,18 @@ export interface TimeRange {
 })
 export class TimeRangePickerComponent {
     public quickRanges = [
-        {label: "Last 24h"},
-        {label: "Last week"},
-        {label: "Last month"},
+        { label: "Last 24h" },
+        { label: "Last week" },
+        { label: "Last month" },
     ];
-    constructor(private changeDetector: ChangeDetectorRef) {
+    public customRange: FormGroup;
 
+    constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
+        this.changeDetector.markForCheck();
+        this.customRange = formBuilder.group({
+            from: [null],
+            to: [null],
+        });
     }
 
     public pickQuickRange(value: TimeRange) {

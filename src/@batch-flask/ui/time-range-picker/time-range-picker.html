@@ -2,10 +2,10 @@
 
 <bl-callout #callout="blCallout">
     <div class="time-range-picker-callout">
-        <div class="custom-range">
+        <div class="custom-range" [formGroup]="customRange">
             <h4>Custom range</h4>
-            <bl-datetime-picker label="From"></bl-datetime-picker>
-            <bl-datetime-picker label="To"></bl-datetime-picker>
+            <bl-datetime-picker label="From" formControlName="from"></bl-datetime-picker>
+            <bl-datetime-picker label="To" formControlName="to"></bl-datetime-picker>
             <bl-button type="wide">Apply</bl-button>
         </div>
         <div class="quick-ranges">

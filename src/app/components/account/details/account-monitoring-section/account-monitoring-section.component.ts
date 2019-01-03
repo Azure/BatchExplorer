@@ -14,7 +14,7 @@ export class AccountMonitoringSectionComponent {
     public isArmAccount = true;
 
     constructor(private changeDetector: ChangeDetectorRef) {
-
+        this.changeDetector.markForCheck();
     }
 
     public ngOnChange(changes) {

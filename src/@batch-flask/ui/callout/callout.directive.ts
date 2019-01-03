@@ -28,25 +28,23 @@ export class CalloutDirective {
     public open() {
         this._overlayRef = this.overlay.create(this._getOverlayConfig());
         this._backDropClickSub = this._overlayRef.backdropClick().subscribe(() => {
+            console.log("Click backdrop?");
             this.close();
         });
 
         const portal = new TemplatePortal(this.component.template, this.viewContainerRef);
-        const ref = this._overlayRef.attach(portal);
-        ref.onDestroy(() => {
-            this._overlayRef = null;
-
-            if (this._backDropClickSub) {
-                this._backDropClickSub.unsubscribe();
-                this._backDropClickSub = null;
-            }
-        });
+        this._overlayRef.attach(portal);
     }
 
     public close() {
+        console.log("Close?");
         if (this._overlayRef) {
             this._overlayRef.dispose();
             this._overlayRef = null;
+        }
+        if (this._backDropClickSub) {
+            this._backDropClickSub.unsubscribe();
+            this._backDropClickSub = null;
         }
     }
 
