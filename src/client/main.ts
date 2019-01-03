@@ -17,7 +17,7 @@ import "./init";
 import { parseArguments } from "./cli";
 const program = parseArguments(process.argv);
 import { app } from "electron";
-const original = app.getPath("userData");
+
 if (program.userDataDir) {
     app.setPath("userData", program.userDataDir);
 } else {
@@ -38,11 +38,6 @@ import "@batch-flask/extensions";
 // 5. Call startBatchExplorer from startup.ts
 import { log } from "@batch-flask/utils";
 import { startBatchExplorer } from "./startup";
-
-log.info("Args: ", process.argv);
-log.info("Progran: ", program.userDataDir, program.updated, program.args);
-log.info("User data is by default: ", original);
-log.info("User data is now: ", app.getPath("userData"));
 
 startBatchExplorer().catch((e) => {
     log.error("Error starting Batch Explorer", e);
