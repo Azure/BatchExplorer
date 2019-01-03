@@ -15,8 +15,8 @@ steps:
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
-      $env:SPECTRON_AAD_USER_EMAIL = "$(uiTestingAccountPassword)"
-      $env:SPECTRON_AAD_USER_PASSWORD = "$(uiTestingAccountEmail)"
+      $env:SPECTRON_AAD_USER_EMAIL = "$(uiTestingAccountEmail)"
+      $env:SPECTRON_AAD_USER_PASSWORD = "$(uiTestingAccountPassword)"
 
       Write-Host "EMAIL $(uiTestingAccountPassword)"
       npm run spectron
