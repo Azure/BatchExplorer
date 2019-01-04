@@ -16,7 +16,6 @@ require("zone.js/dist/fake-async-test");
 
 import "@batch-flask/extensions";
 import "hammerjs";
-import "moment-duration-format";
 import "test/utils/matchers";
 
 import "app/styles/main.scss";
