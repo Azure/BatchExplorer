@@ -151,7 +151,7 @@ export class PoolService {
     public updateTags(pool: Pool, tags: List<string>) {
         const attributes = new PoolPatchDto({
             metadata: ModelUtils.updateMetadataWithTags(pool.metadata, tags),
-        });
+        } as any);
         return this.patch(pool.id, attributes);
     }
 

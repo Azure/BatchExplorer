@@ -99,7 +99,7 @@ export class DateUtils {
      * Returns a full date and time
      * @example Feb 14th, 2017, 14:03:01
      */
-    public static fullDateAndTime(date: Date | DateTime): string {
+    public static fullDateAndTime(date: Date | DateTime): string | null {
         if (!date) { return null; }
         if (!(date instanceof DateTime)) {
             date = DateTime.fromJSDate(date);
@@ -130,7 +130,7 @@ export class DateUtils {
         if (!startTime) {
             return null;
         }
-        const currentEndTime = endTime === null ? DateTime.utc() : DateTime.fromJSDate(endTime);
+        const currentEndTime = endTime ? DateTime.fromJSDate(endTime) : DateTime.utc();
         const runtime = currentEndTime.diff(DateTime.fromJSDate(startTime));
         return DateUtils.prettyDuration(runtime);
     }

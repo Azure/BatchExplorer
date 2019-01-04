@@ -55,9 +55,9 @@ export class AccessToken {
         this.refresh_token = data.refresh_token;
         this.token_type = data.token_type;
         this.expires_in = data.expires_in;
-        this.expires_on = data.expires_on;
+        this.expires_on = new Date(data.expires_on);
         this.ext_expires_in = data.ext_expires_in;
-        this.not_before = data.not_before;
+        this.not_before = new Date(data.not_before);
     }
 
     /**
