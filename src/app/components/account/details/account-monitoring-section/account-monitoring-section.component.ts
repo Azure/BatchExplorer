@@ -22,7 +22,7 @@ export class AccountMonitoringSectionComponent {
         this.timeRange.valueChanges.subscribe((value) => {
             this.currentRange = value instanceof TimeRange ? value : new TimeRange(value);
             this.changeDetector.markForCheck();
-        })
+        });
     }
 
     public ngOnChange(changes) {

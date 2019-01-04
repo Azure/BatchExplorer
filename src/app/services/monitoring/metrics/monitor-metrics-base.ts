@@ -132,6 +132,8 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
             return "PT15M";
         } else if (hours >= 12) {
             return "PT5M";
+        } else {
+            return "PT1M";
         }
     }
 

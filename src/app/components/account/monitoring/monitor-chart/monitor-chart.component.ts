@@ -126,6 +126,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         this._sub = obs.subscribe(response => {
             this._metricList = response;
             this.interval = response.interval;
+            console.log("Response", response.metrics);
             this._metrics.next(response.metrics);
             this._updateLoadingStatus(LoadingStatus.Ready);
         }, (error) => {

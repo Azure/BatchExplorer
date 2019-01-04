@@ -51,6 +51,7 @@ export class TimeRange {
 
 // tslint:disable-next-line:variable-name
 export const QuickRange = {
+    lastHour: { label: "Last hour", start: Duration.fromObject({ hours: -1 }) },
     last24h: { label: "Last 24h", start: Duration.fromObject({ hours: -24 }) },
     lastWeek: { label: "Last week", start: Duration.fromObject({ weeks: -1 }) },
     lastMonth: { label: "Last month", start: Duration.fromObject({ months: -1 }) },
@@ -71,6 +72,7 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
     @HostBinding("attr.id") public id = `bl-timerange-picker-${idCounter++}`;
 
     public quickRanges: QuickRange[] = [
+        QuickRange.lastHour,
         QuickRange.last24h,
         QuickRange.lastWeek,
         QuickRange.lastMonth,
