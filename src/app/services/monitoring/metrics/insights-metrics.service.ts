@@ -5,7 +5,7 @@ import { TimeRange } from "@batch-flask/ui";
 import { Metric, MetricValue, MonitoringMetricList } from "app/models/monitoring";
 import { ArmHttpService } from "app/services/arm-http.service";
 import { BatchAccountService } from "app/services/batch-account";
-import { flatMap, map, share, switchMap, take } from "rxjs/operators";
+import { map, share, switchMap, take } from "rxjs/operators";
 import { CoreCountMetrics } from "./core-count-metrics";
 import { FailedTaskMetrics } from "./failed-task-metrics";
 import { MonitoringMetricDefinition } from "./monitor-metrics-base";

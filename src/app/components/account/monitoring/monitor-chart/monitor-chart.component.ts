@@ -23,7 +23,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     @Input() public preview: boolean = false;
     @Input() public timeRange: TimeRange;
 
-    public type: string = "bar";
+    public type: string = "line";
     public title = "";
     public datasets: Chart.ChartDataSets[];
     public total: any[] = [];
@@ -72,17 +72,17 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             this.colors = this._computeColors(metrics, theme);
             this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
 
-                const total = metric.data.map(x => x.total || 0).reduce((a, b) => {
+                const total = metric.data.map(x => x.average || 0).reduce((a, b) => {
                     return a + b;
                 }, 0);
-                this.total.push(total);
+                this.total.push((total / metric.data.length).toFixed(1));
 
                 return {
                     label: metric.label,
                     data: metric.data.map(data => {
                         return {
                             x: data.timeStamp,
-                            y: data.total || 0,
+                            y: data.average || 0,
                         } as Chart.ChartPoint;
                     }),
                     borderWidth: 1,
@@ -126,7 +126,6 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         this._sub = obs.subscribe(response => {
             this._metricList = response;
             this.interval = response.interval;
-            console.log("Response", response.metrics);
             this._metrics.next(response.metrics);
             this._updateLoadingStatus(LoadingStatus.Ready);
         }, (error) => {

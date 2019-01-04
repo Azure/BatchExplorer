@@ -88,7 +88,7 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
             .set(MonitorChartMetricsParams.Timespan, this._timeSpanParam)
             .set(MonitorChartMetricsParams.Interval, this.interval)
             .set(MonitorChartMetricsParams.Metric, this._metricsParam)
-            .set(MonitorChartMetricsParams.Aggregation, this._aggregationParam);
+            .set(MonitorChartMetricsParams.Aggregation, "average,total");
         return { params };
     }
 
@@ -111,13 +111,6 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
      */
     private get _metricsParam(): string {
         return `${this.metrics.map(x => x.name).join(parameterDelimiter)}`;
-    }
-
-    /**
-     * Get aggregation parameter value which is used for constructing request url
-     */
-    private get _aggregationParam(): string {
-        return `${this.metrics.map(x => x.aggregation).join(parameterDelimiter)}`;
     }
 
     private _computeTimeInterval(): string {
