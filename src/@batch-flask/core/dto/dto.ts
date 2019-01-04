@@ -27,9 +27,9 @@ export class Dto<T> {
 
             if (typeMetadata) {
                 if (typeMetadata.list) {
-                    this[key] = value && value.map(x => this._createType(typeMetadata.type, x));
+                    this[key] = value && value.map(x => this._createType!(typeMetadata.type, x));
                 } else {
-                    this[key] = this._createType(typeMetadata.type, value);
+                    this[key] = this._createType!(typeMetadata.type, value);
                 }
             } else {
                 this[key] = value;

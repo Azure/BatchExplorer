@@ -187,8 +187,6 @@
     "load-json-file": "^5.1.0",
     "luxon": "^1.9.0",
     "mkdirp": "^0.5.1",
-    "moment": "^2.22.2",
-    "moment-duration-format": "^2.2.2",
     "monaco-editor": "^0.15.6",
     "mousetrap": "^1.6.2",
     "node-forge": "^0.7.6",
