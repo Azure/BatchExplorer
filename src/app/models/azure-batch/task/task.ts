@@ -14,10 +14,10 @@ import { TaskExitConditions } from "app/models/task-exit-conditions";
 import { TaskOutputFile } from "app/models/task-output-file";
 import { UserIdentity } from "app/models/user-identity";
 import { List } from "immutable";
+import { DateTime } from "luxon";
 import { AuthenticationTokenSettings, AuthenticationTokenSettingsAttributes } from "../authentication-token-settings";
 import { AffinityInformation } from "./affinity-information";
 import { TaskStatistics, TaskStatisticsAttributes } from "./task-statistics";
-import { DateTime } from "luxon";
 
 export interface TaskAttributes {
     id: string;

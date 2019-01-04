@@ -5,10 +5,10 @@ import { DateUtils } from "@batch-flask/utils";
 import { Job, Task } from "app/models";
 import { Theme, ThemeService } from "app/services";
 import { List } from "immutable";
+import { DateTime } from "luxon";
 import { Subscription } from "rxjs";
 
 import "./tasks-running-time-graph.scss";
-import { DateTime } from "luxon";
 
 interface TaskPoint {
     task: Task;
