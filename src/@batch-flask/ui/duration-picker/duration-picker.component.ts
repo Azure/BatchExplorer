@@ -28,7 +28,7 @@ import { Subject, Subscription } from "rxjs";
 import "./duration-picker.scss";
 
 /**
- * Enumration of time unit picker that can be directly used in momentjs
+ * Enumration of time unit picker that can be directly used in luxon
  * Days, hours, minutes and seconds
  */
 export enum DurationUnit {

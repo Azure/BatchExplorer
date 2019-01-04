@@ -5,7 +5,7 @@ export class DateUtils {
      * Check if the given date is withing the range of the last amount of unit given
      * @param date Date to Check
      * @param amount Amount of given unit
-     * @param unit Moment.js Unit for the amount(days, year,etc)
+     * @param unit {DurationUnit} from luxon
      *
      * @example withinRange(date, 3, "days") // Check if date is less than 3 days old
      */
