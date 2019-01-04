@@ -30,4 +30,6 @@ export const DEFAULT_FILE_ASSOCIATIONS = {
     ".html": "text",
     ".css": "text",
     ".scss": "text",
+    ".go": "text",
+    ".rs": "text",
 };

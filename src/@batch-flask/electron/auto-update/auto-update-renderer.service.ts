@@ -2,8 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { ProgressInfo } from "builder-util-runtime";
 import { BehaviorSubject, Subscription } from "rxjs";
 import { SharedServiceInjector } from "../shared-service-injector";
-import { AUTO_UPDATE_MAIN_SERVICE_TOKEN } from "./auto-update-main.service";
-import { AutoUpdateService, UpdateStatus } from "./base";
+import { AUTO_UPDATE_MAIN_SERVICE_TOKEN, AutoUpdateService, UpdateStatus } from "./base";
 
 @Injectable({providedIn: "root"})
 export class AutoUpdateRendererService extends AutoUpdateService implements OnDestroy {

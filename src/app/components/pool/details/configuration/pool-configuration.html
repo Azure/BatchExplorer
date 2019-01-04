@@ -102,7 +102,7 @@
             </bl-no-item>
         </bl-property-group>
 
-        <bl-property-group label="Application packages" class="wide" [collapsed]="true">
+        <bl-property-group label="Application packages" class="wide" [collapsed]="true"  [edit]="editApplicationPackages">
             <div collapsed-preview>
                 <span>{{appPackages?.size}} application package references</span>
             </div>
@@ -121,7 +121,7 @@
             </bl-no-item>
         </bl-property-group>
 
-        <bl-property-group label="Certificates" class="wide" [collapsed]="true">
+        <bl-property-group label="Certificates" class="wide" [collapsed]="true" [edit]="editCertificates">
             <div collapsed-preview>
                 <span>{{certificates?.size}} certificate references</span>
             </div>

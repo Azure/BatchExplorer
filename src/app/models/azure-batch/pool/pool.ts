@@ -1,4 +1,8 @@
 import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import {
+    ApplicationPackageReference, ApplicationPackageReferenceAttributes,
+} from "app/models/application-package-reference";
+import { CertificateReference } from "app/models/certificate-reference";
 import { CloudServiceConfiguration } from "app/models/cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "app/models/metadata";
 import { NetworkConfiguration } from "app/models/network-configuration";
@@ -12,6 +16,7 @@ import {
 } from "app/models/virtual-machine-configuration";
 import { ModelUtils, PoolUtils } from "app/utils";
 import { List } from "immutable";
+import { Duration } from "luxon";
 import { AutoScaleRun, AutoScaleRunAttributes } from "./auto-scale-run";
 import { PoolStatistics, PoolStatisticsAttributes } from "./pool-statistics";
 
@@ -20,12 +25,10 @@ export enum OSType {
     Linux = "linux",
 }
 
-import { Duration } from "luxon";
-
 export interface PoolAttributes {
     allocationState: string;
     allocationStateTransitionTime: Date;
-    applicationPackageReferences: any[];
+    applicationPackageReferences: ApplicationPackageReferenceAttributes[];
     certificateReferences: any[];
     cloudServiceConfiguration: Partial<CloudServiceConfiguration>;
     creationTime: Date;
@@ -67,9 +70,10 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop() public allocationStateTransitionTime: Date;
 
-    @ListProp(Object) public applicationPackageReferences: List<any>;
+    @ListProp(ApplicationPackageReference)
+    public applicationPackageReferences: List<ApplicationPackageReference> = List([]);
 
-    @ListProp(Object) public certificateReferences: List<any>;
+    @ListProp(CertificateReference) public certificateReferences: List<CertificateReference> = List([]);
 
     @Prop() public cloudServiceConfiguration: CloudServiceConfiguration;
 

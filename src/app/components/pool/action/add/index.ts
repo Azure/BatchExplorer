@@ -1,5 +1,4 @@
 export * from "./app-license-picker";
-export * from "./certificate-reference";
 export * from "./container-configuration-picker";
 export * from "./container-images-picker.component";
 export * from "./container-registry-picker.component";

@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { ServerModule } from "@angular/platform-server";
 import { DevTranslationsLoader } from "@batch-flask/compiler";
 import { DataStore, I18nModule, LocaleService, TranslationsLoaderService } from "@batch-flask/core";
-import { ElectronMainModule } from "@batch-flask/electron";
+import { ElectronMainModule } from "@batch-flask/electron/electron-main.module";
 import { OSService } from "@batch-flask/ui/electron/os.service";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { ClientLocaleService } from "./core";

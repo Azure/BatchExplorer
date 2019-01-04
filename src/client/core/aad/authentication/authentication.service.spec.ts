@@ -83,7 +83,7 @@ describe("AuthenticationService", () => {
             expect(result).toBeNull();
             expect(error).not.toBeNull();
             expect(error!.error).toEqual("someerror");
-            expect(error!.error_description).toEqual("There was an error");
+            expect(error!.description).toEqual("There was an error");
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
         }));
@@ -144,7 +144,10 @@ describe("AuthenticationService", () => {
 
     describe("Try Authorize silently first", () => {
         const goodResult: AuthorizeResult = { id_token: "sometoken", code: "somecode" } as any;
-        const badResult: AuthorizeError = { error: "someerror", error_description: "There was an error" };
+        const badResult: AuthorizeError = new AuthorizeError({
+            error: "someerror",
+            error_description: "There was an error",
+        });
 
         let result: AuthorizeResult | null;
         let error: AuthorizeError | null;

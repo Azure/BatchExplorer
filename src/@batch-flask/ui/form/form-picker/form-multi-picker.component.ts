@@ -1,8 +1,9 @@
 import {
-    Component, ContentChild, Directive, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, forwardRef,
+    ChangeDetectorRef, Component, ContentChild, Directive,
+    ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 
 import { FormPageComponent } from "../form-page";
@@ -21,7 +22,6 @@ export class FormPickerItemTemplateDirective {
     selector: "bl-form-multi-picker",
     templateUrl: "form-multi-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FormMultiPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => FormMultiPickerComponent), multi: true },
     ],
@@ -53,8 +53,10 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     private _buttons: QueryList<ElementRef>;
 
     private _propagateChange: (value: any) => void;
+    private _registerTouched: () => void;
+
     private _currentEditIndex = -1;
-    constructor(formBuilder: FormBuilder) {
+    constructor(private changeDetector: ChangeDetectorRef) {
         this.values = [null];
     }
 
@@ -66,8 +68,8 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         this._propagateChange = fn;
     }
 
-    public registerOnTouched() {
-        // Do nothing
+    public registerOnTouched(fn) {
+        this._registerTouched = fn;
     }
 
     public validate(c: FormControl) {
@@ -85,6 +87,7 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         this.currentEditValue.setValue(this.values[index]);
         this._currentEditIndex = index;
         this._page.activate(this);
+        this.changeDetector.markForCheck();
     }
 
     public nestedFormSubmit() {
@@ -103,6 +106,9 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         this.values = values;
         this.currentEditValue.setValue(null);
         this._emitNewValue();
+        if (this._registerTouched) {
+            this._registerTouched();
+        }
     }
 
     /**

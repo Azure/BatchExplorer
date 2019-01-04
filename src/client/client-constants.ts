@@ -28,12 +28,14 @@ function getPort(port = portrange): Promise<number> {
 // tslint:disable-next-line:no-var-requires
 const packageConfig = require(`${root}/package.json`);
 
-function clientUrl(path: string): { dev: string, prod: string } {
+function clientUrl(path: string, protocol = true): { dev: string, prod: string } {
+    const prefix = protocol ? "file://" : "";
     return {
-        dev: `file://${root}/src/client/${path}`,
-        prod: `file://${root}/build/client/${path}`,
+        dev: `${prefix}${root}/src/client/${path}`,
+        prod: `${prefix}${root}/build/client/${path}`,
     };
 }
+
 const urls = {
     main: {
         dev: "http://localhost:3178/index.html",
@@ -50,6 +52,7 @@ const urls = {
         dev: `file://${root}/src/client/recover-window/recover-window.html`,
         prod: `file://${root}/build/client/recover-window/recover-window.html`,
     },
+    preloadInsecureTest: `${root}/build/client/preload-insecure-test.js`,
     icon: __dirname + "/../assets/images/icon.ico",
 };
 

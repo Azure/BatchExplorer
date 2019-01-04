@@ -88,6 +88,7 @@ export class AADService {
                 throw error;
             } else {
                 log.error("Error login in ", error);
+                throw error;
             }
         }
         try {

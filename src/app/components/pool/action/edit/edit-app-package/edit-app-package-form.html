@@ -1,0 +1,12 @@
+<bl-simple-form
+    [formGroup]="appPackages"
+    [containerRef]="sidebarRef"
+    [submit]="submit"
+    saveText="Update"
+    [multiUse]="false"
+    [title]="'edit-app-package-form.title' | i18n: {poolId: pool.id}">
+
+    <form novalidate>
+        <bl-app-package-picker [formControl]="appPackages"></bl-app-package-picker>
+    </form>
+</bl-simple-form>
