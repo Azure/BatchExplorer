@@ -62,7 +62,7 @@ export class Dto<T> {
         return output;
     }
 
-    private _createType(type: any, value: any) {
+    private _createType?(type: any, value: any) {
         const isPrimitive = primitives.has(type.name);
         if (isPrimitive) {
             return value;

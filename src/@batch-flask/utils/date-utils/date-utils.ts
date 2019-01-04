@@ -83,23 +83,31 @@ export class DateUtils {
      * 3:02:04:1.902
      */
     public static compactDuration(duration: Duration, showMilli = false) {
+        if (!duration) { return "-"; }
         duration = this.ensureDuration(duration);
-        if (duration.as("milliseconds") < 1000) {
-            return `0.${(duration as any).format("SSS")}`;
+        let format: string | null = null;
+        if (duration.as("days") > 1) {
+            format = "d:hh:mm:ss";
+        } else if (duration.as("hours") > 1) {
+            format = "hh:mm:ss";
+        } else if (duration.as("minutes") > 1) {
+            format = "mm:ss";
+        } else {
+            format = "ss";
         }
-        let format = "d:hh:mm:ss";
+
         if (showMilli) {
             format += ".SSS";
         }
-        return (duration as any).format(format);
+        return duration.toFormat(format);
     }
 
     /**
      * Returns a full date and time
      * @example Feb 14th, 2017, 14:03:01
      */
-    public static fullDateAndTime(date: Date | DateTime): string | null {
-        if (!date) { return null; }
+    public static fullDateAndTime(date: Date | DateTime): string {
+        if (!date) { return ""; }
         if (!(date instanceof DateTime)) {
             date = DateTime.fromJSDate(date);
         }
