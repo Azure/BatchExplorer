@@ -148,9 +148,9 @@ export class UserIdentityComponent implements OnChanges, OnDestroy {
             }
             return {
                 label,
-                identity: { username: x.name },
+                identity: { username: x.name } as any,
             };
         });
-        this.options = options.concat(defaultUsers);
+        this.options = options.concat(defaultUsers as any);
     }
 }

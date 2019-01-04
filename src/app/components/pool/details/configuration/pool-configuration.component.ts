@@ -42,7 +42,7 @@ export class PoolConfigurationComponent {
         const ref = this.sidebarManager.open(`edit-pool-metadata-${id}`, EditMetadataFormComponent);
         ref.component.metadata = this.pool.metadata;
         ref.component.save = (metadata) => {
-            const data = new PoolPatchDto({ metadata });
+            const data = new PoolPatchDto({ metadata } as any);
             return this.poolService.patch(id, data).pipe(
                 flatMap(() => this.poolService.get(id)),
             );

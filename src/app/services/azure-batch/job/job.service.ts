@@ -129,7 +129,7 @@ export class JobService {
 
     public updateTags(job: Job, tags: List<string>) {
         const attributes = new JobPatchDto({
-            metadata: ModelUtils.updateMetadataWithTags(job.metadata, tags),
+            metadata: ModelUtils.updateMetadataWithTags(job.metadata, tags) as any,
         });
         return this.patch(job.id, attributes);
     }

@@ -1,5 +1,5 @@
 import { SanitizedError } from "@batch-flask/utils";
-import { Duration } from "moment";
+import { Duration } from "luxon";
 import { RecordMissingExtendsError } from "./errors";
 import { setProp, updateTypeMetadata } from "./helpers";
 import { Record } from "./record";
@@ -89,5 +89,5 @@ export const UNLIMITED_DURATION_THRESHOLD = 365;
  * @param duration
  */
 export function TransformDuration(duration: Duration) {
-    return (duration && duration.asDays() < UNLIMITED_DURATION_THRESHOLD) ? duration : null;
+    return (duration && duration.as("day") < UNLIMITED_DURATION_THRESHOLD) ? duration : null;
 }

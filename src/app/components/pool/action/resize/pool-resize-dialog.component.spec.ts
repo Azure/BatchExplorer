@@ -9,7 +9,7 @@ import { SidebarRef } from "@batch-flask/ui";
 import { Pool, PoolAllocationState } from "app/models";
 import { NodeDeallocationOption, PoolEnableAutoScaleDto, PoolResizeDto } from "app/models/dtos";
 import { PoolService } from "app/services";
-import { duration } from "moment";
+import { Duration } from "luxon";
 import { BehaviorSubject, of } from "rxjs";
 import { NotificationServiceMock } from "test/utils/mocks";
 import { PoolScaleSelection } from "../scale";
@@ -129,14 +129,14 @@ describe("PoolResizeDialog", () => {
             scalePicker.updateValue({
                 enableAutoScale: true,
                 autoScaleFormula: "$target = 5;",
-                autoScaleEvaluationInterval: duration("PT40M"),
+                autoScaleEvaluationInterval: Duration.fromISO("PT40M"),
             });
             component.submit();
             expect(poolServiceSpy.resize).not.toHaveBeenCalled();
             expect(poolServiceSpy.enableAutoScale).toHaveBeenCalledOnce();
             expect(poolServiceSpy.enableAutoScale).toHaveBeenCalledWith("fixed-pool-1", new PoolEnableAutoScaleDto({
                 autoScaleFormula: "$target = 5;",
-                autoScaleEvaluationInterval: duration("PT40M"),
+                autoScaleEvaluationInterval: Duration.fromISO("PT40M"),
             }));
             expect(poolServiceSpy.get).toHaveBeenCalledOnce();
             expect(notificationServiceSpy.success).toHaveBeenCalledOnce();
@@ -167,13 +167,13 @@ describe("PoolResizeDialog", () => {
             scalePicker.updateValue({
                 enableAutoScale: false,
                 autoScaleFormula: "$target = 21;",
-                autoScaleEvaluationInterval: duration("PT40M"),
+                autoScaleEvaluationInterval: Duration.fromISO("PT40M"),
             });
 
             expect(component.form.value.scale).toEqual({
                 enableAutoScale: false,
                 autoScaleFormula: "$target = 21;",
-                autoScaleEvaluationInterval: duration("PT40M"),
+                autoScaleEvaluationInterval: Duration.fromISO("PT40M"),
             });
         });
 
@@ -181,14 +181,14 @@ describe("PoolResizeDialog", () => {
             scalePicker.updateValue({
                 enableAutoScale: true,
                 autoScaleFormula: "$target = 21;",
-                autoScaleEvaluationInterval: duration("PT40M"),
+                autoScaleEvaluationInterval: Duration.fromISO("PT40M"),
             });
             component.submit();
             expect(poolServiceSpy.resize).not.toHaveBeenCalled();
             expect(poolServiceSpy.enableAutoScale).toHaveBeenCalledOnce();
             expect(poolServiceSpy.enableAutoScale).toHaveBeenCalledWith("auto-pool-1", new PoolEnableAutoScaleDto({
                 autoScaleFormula: "$target = 21;",
-                autoScaleEvaluationInterval: duration("PT40M"),
+                autoScaleEvaluationInterval: Duration.fromISO("PT40M"),
             }));
             expect(poolServiceSpy.get).toHaveBeenCalledOnce();
             expect(notificationServiceSpy.success).toHaveBeenCalledOnce();

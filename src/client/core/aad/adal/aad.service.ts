@@ -131,7 +131,6 @@ export class AADService {
                 return token;
             }
         }
-
         return this._retrieveNewAccessToken(tenantId, resource);
     }
 

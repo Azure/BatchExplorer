@@ -1,4 +1,5 @@
 import { SanitizedError, nil } from "@batch-flask/utils";
+import { Duration } from "luxon";
 
 const primitives = new Set(["Array", "Number", "String", "Object", "Boolean"]);
 
@@ -25,15 +26,10 @@ export class Dto<T> {
             }
 
             if (typeMetadata) {
-                const isPrimitive = primitives.has(typeMetadata.type.name);
                 if (typeMetadata.list) {
-                    this[key] = value && value.map(x => isPrimitive ? x : new typeMetadata.type(x));
+                    this[key] = value && value.map(x => this._createType!(typeMetadata.type, x));
                 } else {
-                    if (isPrimitive) {
-                        this[key] = value;
-                    } else {
-                        this[key] = new typeMetadata.type(value);
-                    }
+                    this[key] = this._createType!(typeMetadata.type, value);
                 }
             } else {
                 this[key] = value;
@@ -59,11 +55,30 @@ export class Dto<T> {
             }
             if (value.toJS) {
                 output[key] = value.toJS();
-            } else {
+            } else if (value instanceof Duration) {
+                output[key] = value.toISO();
+            }  else {
                 output[key] = value;
             }
         }
         return output;
+    }
+
+    private _createType?(type: any, value: any) {
+        const isPrimitive = primitives.has(type.name);
+        if (isPrimitive) {
+            return value;
+        }
+        if (type === Duration) {
+            if (value instanceof Duration) {
+                return value;
+            } else if (typeof value === "string") {
+                return Duration.fromISO(value);
+            } else {
+                return Duration.fromObject(value);
+            }
+        }
+        return new type(value);
     }
 }
 
@@ -78,7 +93,7 @@ export function DtoAttr<T>(type?: any) {
                 + "Check your nested type is defined in another file or above this DtoAttr");
         }
         const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};
-        metadata[attr] = {type};
+        metadata[attr] = { type };
         Reflect.defineMetadata(attrMetadataKey, metadata, ctr);
     };
 }
@@ -87,7 +102,7 @@ export function ListDtoAttr<T>(type: any) {
     return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
         const ctr = target.constructor;
         const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};
-        metadata[attr] = {type, list: true};
+        metadata[attr] = { type, list: true };
         Reflect.defineMetadata(attrMetadataKey, metadata, ctr);
     };
 }

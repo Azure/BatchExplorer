@@ -1,6 +1,6 @@
 import { HttpParams } from "@angular/common/http";
 import { HttpRequestOptions } from "@batch-flask/core";
-import * as moment from "moment";
+import { DateTime, Duration } from "luxon";
 
 /**
  * TimeFrame defines the enumeration for monitor chart timeframe picker
@@ -68,13 +68,13 @@ export interface MonitorChartColorPair {
 /**
  * Timespan and interval constants used for rendering the charts
  */
-const hourTimeSpan = moment.duration({ hours: 1 });
-const dayTimeSpan = moment.duration({ days: 1 });
-const weekTimeSpan = moment.duration({ weeks: 1 });
-const monthTimeSpan = moment.duration({ month: 1 });
-const minInterval = moment.duration({ minutes: 1 });
-const quarterHourInterval = moment.duration({ minutes: 15 });
-const oneHoursInterval = moment.duration({ hours: 1 });
+const hourTimeSpan = Duration.fromObject({ hours: 1 });
+const dayTimeSpan =  Duration.fromObject({ days: 1 });
+const weekTimeSpan =  Duration.fromObject({ weeks: 1 });
+const monthTimeSpan =  Duration.fromObject({ months: 1 });
+const minInterval =  Duration.fromObject({ minutes: 1 });
+const quarterHourInterval =  Duration.fromObject({ minutes: 15 });
+const oneHoursInterval =  Duration.fromObject({ hours: 1 });
 const parameterDelimiter = ",";
 
 export interface MonitoringMetric {
@@ -93,7 +93,7 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
     public name: string;
     public timespan: MonitorChartTimeFrame;
     public metrics: MonitoringMetric[];
-    public interval: moment.Duration;
+    public interval: Duration;
     private _timeSpanEnd: string;
     private _timeSpanStart: string;
 
@@ -133,7 +133,7 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
      * Get interval parameter value which is used for constructing request url
      */
     private get _intervalParam(): string {
-        return `${this.interval.toISOString()}`;
+        return `${this.interval.toISO()}`;
     }
 
     /**
@@ -172,22 +172,22 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
      * Timespan start and timespan end are two ISO format string
      */
     private _computeTimeSpan(): void {
-        const timespan = moment();
-        this._timeSpanEnd = timespan.toISOString();
+        const timespan = DateTime.local();
+        this._timeSpanEnd = timespan.toISO();
         switch (this.timespan) {
             case MonitorChartTimeFrame.Hour:
-                timespan.subtract(hourTimeSpan);
+                timespan.minus(hourTimeSpan);
                 break;
             case MonitorChartTimeFrame.Day:
-                timespan.subtract(dayTimeSpan);
+                timespan.minus(dayTimeSpan);
                 break;
             case MonitorChartTimeFrame.Week:
-                timespan.subtract(weekTimeSpan);
+                timespan.minus(weekTimeSpan);
                 break;
             case MonitorChartTimeFrame.Month:
-                timespan.subtract(monthTimeSpan);
+                timespan.minus(monthTimeSpan);
                 break;
         }
-        this._timeSpanStart = timespan.toISOString();
+        this._timeSpanStart = timespan.toISO();
     }
 }

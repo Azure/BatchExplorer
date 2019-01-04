@@ -24,19 +24,18 @@ function userAccountToFormModel(userAccount: UserAccountDto) {
 }
 
 function userAccountToDto(userAccount: UserAccountFormModel): UserAccountDto {
-    return {
+    return new UserAccountDto({
         name: userAccount.name,
         password: userAccount.password,
         elevationLevel: userAccount.runElevated ? UserAccountElevationLevel.admin : UserAccountElevationLevel.nonadmin,
         sshPrivateKey: userAccount.sshPrivateKey,
-    };
+    });
 }
 
 @Component({
     selector: "bl-user-account-picker",
     templateUrl: "user-account-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UserAccountPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => UserAccountPickerComponent), multi: true },
     ],

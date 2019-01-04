@@ -1,5 +1,5 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 import { TaskExecutionResult } from "./azure-batch";
 import { FailureInfo, FailureInfoAttributes } from "./failure-info";
 import {
@@ -37,6 +37,6 @@ export class TaskExecutionInformation extends Record<TaskExecutionInformationAtt
     @Prop() public result: TaskExecutionResult;
 
     public get runningTime() {
-        return moment.duration(moment(this.endTime).diff(this.startTime));
+        return DateTime.fromJSDate(this.endTime).diff(DateTime.fromJSDate(this.startTime));
     }
 }

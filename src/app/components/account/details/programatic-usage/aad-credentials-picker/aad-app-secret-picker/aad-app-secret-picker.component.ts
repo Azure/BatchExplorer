@@ -2,7 +2,7 @@ import { Component, forwardRef } from "@angular/core";
 import {
     AbstractControl, ControlValueAccessor, FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 import "./aad-app-secret-picker.scss";
 
 enum Expire {
@@ -60,14 +60,14 @@ export class AADAppSecretPickerComponent implements ControlValueAccessor, Valida
     }
 
     private _computeEndDate(expireIn: Expire) {
-        const now = moment();
+        const now = DateTime.local();
         switch (expireIn) {
             case Expire.month1:
-                return now.add(1, "month").toDate();
+                return now.plus({months: 1}).toJSDate();
             case Expire.year1:
-                return now.add(1, "year").toDate();
+                return now.plus({years: 1}).toJSDate();
             case Expire.year2:
-                return now.add(2, "year").toDate();
+                return now.plus({years: 2}).toJSDate();
             default:
                 return new Date(2299, 12, 31);
         }

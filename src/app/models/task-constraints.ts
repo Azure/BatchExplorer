@@ -1,5 +1,5 @@
 import { Model, Prop, TransformDuration } from "@batch-flask/core";
-import { Duration, duration } from "moment";
+import { Duration } from "luxon";
 
 import { Constraints } from "./constraints";
 
@@ -8,5 +8,5 @@ import { Constraints } from "./constraints";
  */
 @Model()
 export class TaskConstraints extends Constraints {
-    @Prop(duration, TransformDuration) public retentionTime: Duration;
+    @Prop(undefined, TransformDuration) public retentionTime: Duration;
 }

@@ -3,7 +3,7 @@ import { autobind } from "@batch-flask/core";
 import { DateUtils } from "@batch-flask/utils";
 import { Job } from "app/models";
 import { List } from "immutable";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 
 import "./jobs-cpu-wait-time-graph.scss";
 
@@ -17,10 +17,10 @@ export class JobsCpuWaitTimeGraphComponent {
     @autobind()
     public computeDataSets(displayedJobs: List<Job>) {
         const dataCpu = displayedJobs.map((job) => {
-            return job.stats.userCPUTime.asMilliseconds();
+            return job.stats.userCPUTime.as("milliseconds");
         }).toArray();
         const dataWait = displayedJobs.map((job) => {
-            return job.stats.waitTime.asMilliseconds();
+            return job.stats.waitTime.as("milliseconds");
         }).toArray();
 
         return [
@@ -37,7 +37,8 @@ export class JobsCpuWaitTimeGraphComponent {
 
     @autobind()
     public getTooltip(job: Job) {
-        const runningTime = moment.duration(moment(job.executionInfo.endTime).diff(job.executionInfo.startTime));
+        const runningTime = DateTime.fromJSDate(job.executionInfo.endTime).diff(
+            DateTime.fromJSDate(job.executionInfo.startTime));
         return [
             `Job id: ${job.id}`,
             "",

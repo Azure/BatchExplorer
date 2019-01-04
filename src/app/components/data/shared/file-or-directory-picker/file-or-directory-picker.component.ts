@@ -110,7 +110,7 @@ export class FileOrDirectoryPickerComponent implements AsyncValidator, ControlVa
     }
 
     private _addPath(path: string) {
-        const filesAndFolders = this.paths.value.concat([{ path: path }]);
+        const filesAndFolders = this.paths.value.concat([{ path: path } as any]);
         this.paths.setValue(filesAndFolders);
     }
 
