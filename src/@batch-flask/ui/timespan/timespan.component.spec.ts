@@ -23,9 +23,9 @@ describe("TimespanComponent", () => {
     let de: DebugElement;
     let nowDate;
 
-    function passTime(milli: number) {
-        nowDate = nowDate.add(milli, "milliseconds");
-        tick(milli);
+    function passTime(milliseconds: number) {
+        nowDate = nowDate.plus({ milliseconds });
+        tick(milliseconds);
     }
 
     beforeEach(() => {
@@ -46,7 +46,7 @@ describe("TimespanComponent", () => {
         beforeEach(() => {
             const start = DateTime.local();
             testComponent.startTime = start.toJSDate();
-            testComponent.endTime = start.plus({seconds: 83}).toJSDate();
+            testComponent.endTime = start.plus({ seconds: 83 }).toJSDate();
             fixture.detectChanges();
         });
 
@@ -63,31 +63,31 @@ describe("TimespanComponent", () => {
 
     describe("when providing only start time", () => {
         function reset() {
-            const start = DateTime.local().minus({seconds: 123}).toJSDate();
+            const start = DateTime.local().minus({ seconds: 123 }).toJSDate();
             testComponent.startTime = start;
             fixture.detectChanges();
         }
 
         it("should show the duration between start and end", () => {
             reset();
-            expect(de.nativeElement.textContent).toContain("2:03");
+            expect(de.nativeElement.textContent).toContain("02:02");
         });
 
         it("should update with time", fakeAsync(() => {
             reset();
             passTime(4000);
             fixture.detectChanges();
-            expect(de.nativeElement.textContent).toContain("2:07");
+            expect(de.nativeElement.textContent).toContain("02:06");
             passTime(1000);
             fixture.detectChanges();
-            expect(de.nativeElement.textContent).toContain("2:08");
+            expect(de.nativeElement.textContent).toContain("02:07");
             discardPeriodicTasks();
         }));
     });
 
     describe("when providing only end time", () => {
         function reset() {
-            const end = DateTime.local().plus({seconds: 234}).toJSDate();
+            const end = DateTime.local().plus({ seconds: 234 }).toJSDate();
             testComponent.endTime = end;
             fixture.detectChanges();
         }

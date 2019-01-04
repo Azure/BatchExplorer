@@ -20,7 +20,7 @@ import { DurationPickerModule } from "./duration-picker.module";
 })
 class TestComponent {
     public allowUnlimited = true;
-    public control = new FormControl();
+    public control = new FormControl<Duration>();
 }
 
 @Component({
@@ -111,7 +111,7 @@ describe("DurationPickerComponent", () => {
                 expect(component.time).toBe("15");
                 expect(de.queryAll(By.css(".error")).length).toBe(0, "Should not have any errors");
                 expect(component.value instanceof Duration).toBe(true);
-                expect(testComponent.control.value.toISOString()).toEqual("PT15H");
+                expect(testComponent.control.value.toISO()).toEqual("PT15H");
             });
 
             it("should disable input and select when disabled", async () => {
@@ -157,7 +157,7 @@ describe("DurationPickerComponent", () => {
                 expect(component.time).toBe("P4DT4H");
                 expect(de.queryAll(By.css(".error")).length).toBe(0, "Should not have any errors");
                 expect(component.value  instanceof Duration).toBe(true);
-                expect(testComponent.control.value.toISOString()).toEqual("P4DT4H");
+                expect(testComponent.control.value.toISO()).toEqual("P4DT4H");
             });
         });
 

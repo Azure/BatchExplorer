@@ -55,7 +55,9 @@ export class Dto<T> {
             }
             if (value.toJS) {
                 output[key] = value.toJS();
-            } else {
+            } else if (value instanceof Duration) {
+                output[key] = value.toISO();
+            }  else {
                 output[key] = value;
             }
         }
