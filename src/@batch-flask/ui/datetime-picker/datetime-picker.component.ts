@@ -65,7 +65,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         });
 
         this._subs.push(this.selectedDate.valueChanges.subscribe((value: any) => {
-            this._date = DateTime.local(value);
+            this._date = DateTime.fromJSDate(new Date(value));
             this._setDateTime();
         }));
 
@@ -116,7 +116,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
 
     private _setTime() {
         const time = DateTime.fromISO(this.selectedTime.value);
-        this._date.set({
+        this._date = this._date.set({
             hour: time.hour,
             minute: time.minute,
         });
