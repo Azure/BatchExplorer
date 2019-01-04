@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { BehaviorSubject, Observable, Subscription, combineLatest } from "rxjs";
-
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { TimeRange } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { log } from "@batch-flask/utils";
 import { Metric, MonitoringMetricList } from "app/models/monitoring";
 import {
     BatchAccountService, InsightsMetricsService,
-    MonitorChartMetrics, MonitorChartTimeFrame, MonitorChartType, ThemeService,
+    MonitorChartMetrics, MonitorChartType, ThemeService,
 } from "app/services";
 import { DateTime, Duration } from "luxon";
+import { BehaviorSubject, Observable, Subscription, combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
 
 import "./monitor-chart.scss";
@@ -22,13 +21,13 @@ import "./monitor-chart.scss";
 export class MonitorChartComponent implements OnChanges, OnDestroy {
     @Input() public chartType: MonitorChartType;
     @Input() public preview: boolean = false;
+    @Input() public timeRange: TimeRange;
 
     public type: string = "bar";
     public title = "";
     public datasets: Chart.ChartDataSets[];
     public total: any[] = [];
     public interval: Duration;
-    public timeFrame: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
     public options: Chart.ChartOptions = {};
@@ -42,8 +41,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         themeService: ThemeService,
         private accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef,
-        private monitor: InsightsMetricsService,
-        private contextMenuService: ContextMenuService) {
+        private monitor: InsightsMetricsService) {
         this._setChartOptions();
 
         const chartTheme = themeService.currentTheme.pipe(
@@ -104,6 +102,10 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             this.refreshMetrics();
             this._updateTitle();
         }
+        if (changes.timeRange) {
+            this.refreshMetrics();
+            this._updateTitle();
+        }
         if (changes.preview) {
             this._setChartOptions();
         }
@@ -132,40 +134,6 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         });
     }
 
-    public openTimeFramePicker(event: Event) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        event.stopPropagation();
-        const items = [
-            new ContextMenuItem({
-                label: "Past hour", click: () => {
-                    this.timeFrame = MonitorChartTimeFrame.Hour;
-                    this.refreshMetrics();
-                },
-            }),
-            new ContextMenuItem({
-                label: "Past day", click: () => {
-                    this.timeFrame = MonitorChartTimeFrame.Day;
-                    this.refreshMetrics();
-                },
-            }),
-            new ContextMenuItem({
-                label: "Past week", click: () => {
-                    this.timeFrame = MonitorChartTimeFrame.Week;
-                    this.refreshMetrics();
-                },
-            }),
-            new ContextMenuItem({
-                label: "Past month", click: () => {
-                    this.timeFrame = MonitorChartTimeFrame.Month;
-                    this.refreshMetrics();
-                },
-            }),
-        ];
-        this.contextMenuService.openMenu(new ContextMenu(items));
-        this.changeDetector.markForCheck();
-    }
-
     public get isChartReady() {
         return this.loadingStatus === LoadingStatus.Ready && this.datasets;
     }
@@ -181,13 +149,13 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     private _loadMetrics(): Observable<MonitoringMetricList> {
         switch (this.chartType) {
             case MonitorChartType.CoreCount:
-                return this.monitor.getCoreMinutes(this.timeFrame);
+                return this.monitor.getCoreMinutes(this.timeRange);
             case MonitorChartType.FailedTask:
-                return this.monitor.getFailedTask(this.timeFrame);
+                return this.monitor.getFailedTask(this.timeRange);
             case MonitorChartType.NodeStates:
-                return this.monitor.getNodeStates(this.timeFrame);
+                return this.monitor.getNodeStates(this.timeRange);
             case MonitorChartType.TaskStates:
-                return this.monitor.getTaskStates(this.timeFrame);
+                return this.monitor.getTaskStates(this.timeRange);
         }
     }
 

@@ -16,8 +16,13 @@ export class AccountMonitoringSectionComponent {
     public isArmAccount = true;
 
     public timeRange = new FormControl<TimeRange | QuickRange>(QuickRange.last24h);
+    public currentRange = new TimeRange(QuickRange.last24h);
 
     constructor(private changeDetector: ChangeDetectorRef) {
+        this.timeRange.valueChanges.subscribe((value) => {
+            this.currentRange = value instanceof TimeRange ? value : new TimeRange(value);
+            this.changeDetector.markForCheck();
+        })
     }
 
     public ngOnChange(changes) {

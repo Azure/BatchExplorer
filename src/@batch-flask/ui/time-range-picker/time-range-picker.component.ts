@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy, forwardRef,
+} from "@angular/core";
+import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { DateTime, Duration } from "luxon";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
 
 import { DateUtils } from "@batch-flask/utils";
 import "./time-range-picker.scss";
@@ -33,11 +34,15 @@ export class TimeRange {
         return this._computeDate(this._end);
     }
 
+    public get duration() {
+        return DateTime.fromJSDate(this.end).diff(DateTime.fromJSDate(this.start));
+    }
+
     private _computeDate(value: Date | Duration | undefined | null) {
         if (!value) {
             return new Date();
         } else if (value instanceof Duration) {
-            return DateTime.local().minus(value).toJSDate();
+            return DateTime.local().plus(value).toJSDate();
         } else {
             return value;
         }
@@ -66,10 +71,10 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
     @HostBinding("attr.id") public id = `bl-timerange-picker-${idCounter++}`;
 
     public quickRanges: QuickRange[] = [
-       QuickRange.last24h,
-       QuickRange.lastWeek,
-       QuickRange.lastMonth,
-       QuickRange.last90Days,
+        QuickRange.last24h,
+        QuickRange.lastWeek,
+        QuickRange.lastMonth,
+        QuickRange.last90Days,
     ];
 
     public customRange: FormGroup;
@@ -107,7 +112,6 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
     }
 
     public pickQuickRange(value: TimeRange | null) {
-        console.log("Pick dis");
         this.current = value;
         this.currentLabel = this._computeCurrentRangeLabel();
         this.changeDetector.markForCheck();
@@ -118,7 +122,6 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
     }
 
     public writeValue(range: TimeRange | QuickRange): void {
-        console.log("Range", range);
         if (!range) {
             return;
         }

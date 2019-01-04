@@ -2,10 +2,6 @@
     <div class="header">
         <h2>
             {{ title }}
-            <bl-clickable (do)="openTimeFramePicker($event)" class="timeframe-picker">
-                <i class="fa fa-clock-o" aria-hidden="true"></i>
-                <span>&nbsp;{{timeFrame}}</span>
-            </bl-clickable>
         </h2>
     </div>
     <ng-container *ngIf="isChartReady">
