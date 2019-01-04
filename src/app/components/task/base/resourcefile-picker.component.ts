@@ -11,7 +11,7 @@ import { SettingsService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { BlobUtilities } from "azure-storage";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 import * as path from "path";
 import { Observable, Subscription } from "rxjs";
 import { flatMap, share, tap } from "rxjs/operators";
@@ -174,7 +174,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
                             AccessPolicy: {
                                 Permissions: BlobUtilities.SharedAccessPermissions.READ,
                                 Start: new Date(),
-                                Expiry: moment().add(1, "week").toDate(),
+                                Expiry: DateTime.local().plus({weeks: 1}).toJSDate(),
                             },
                         };
                         return this.storageBlobService.generateSharedAccessBlobUrl(storageAccountId,

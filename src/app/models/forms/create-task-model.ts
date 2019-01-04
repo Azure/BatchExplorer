@@ -1,12 +1,11 @@
-import * as moment from "moment";
-
 import { TaskContainerSettingsDto, TaskCreateDto } from "app/models/dtos";
+import { Duration } from "luxon";
 import { PackageReferenceModel } from "./create-pool-model";
 
 export interface TaskConstraintsModel {
-    maxWallClockTime: moment.Duration;
+    maxWallClockTime: Duration;
     maxTaskRetryCount: number;
-    retentionTime: moment.Duration;
+    retentionTime: Duration;
 }
 
 export interface CreateTaskModel {

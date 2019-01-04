@@ -7,7 +7,7 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 import { Subscription } from "rxjs";
 
 import "./datetime-picker.scss";
@@ -37,12 +37,12 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     public currentTimeZone: string;
 
     private _propagateChange: (value: Date) => void = null;
-    private _date: moment.Moment;
+    private _date: DateTime;
     private _subs: Subscription[] = [];
 
     constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
         const timeZoneName = new Date().toLocaleTimeString("en-us", {timeZoneName: "short"}).split(" ")[2];
-        this.currentTimeZone = `${moment().format("Z z")} ${timeZoneName}`;
+        this.currentTimeZone = `${DateTime.local().toFormat("Z z")} ${timeZoneName}`;
 
         this.datetime = formBuilder.group({
             date: this.selectedDate,
@@ -50,7 +50,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         });
 
         this._subs.push(this.selectedDate.valueChanges.subscribe((value: any) => {
-            this._date = moment(value);
+            this._date = DateTime.fromJSDate(new Date(value));
             this._setDateTime();
         }));
 
@@ -67,7 +67,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    public writeValue(value: Date|string|null): void {
+    public writeValue(value: Date | string | null): void {
         this._parseDateTime(value);
     }
 
@@ -94,16 +94,16 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     private _setDateTime() {
         this._setTime();
         if (this._propagateChange) {
-            this._propagateChange(this._date.toDate());
+            this._propagateChange(this._date.toJSDate());
         }
         this.changeDetector.markForCheck();
     }
 
     private _setTime() {
-        const time = moment(this.selectedTime.value, "hh:mm");
-        this._date.set({
-            hour: time.hour(),
-            minute: time.minute(),
+        const time = DateTime.fromISO(this.selectedTime.value);
+        this._date = this._date.set({
+            hour: time.hour,
+            minute: time.minute,
         });
     }
 
@@ -111,9 +111,17 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         if (!value) {
             return;
         }
-        const datetime = moment(value);
-        this.selectedDate.setValue(datetime.toDate());
-        this.selectedTime.patchValue(`${datetime.hour()}:${datetime.minute()}`);
+        const datetime = this._getDate(value);
+        this.selectedDate.setValue(datetime.toJSDate());
+        this.selectedTime.patchValue(`${datetime.hour}:${datetime.minute}`);
         this.changeDetector.markForCheck();
+    }
+
+    private _getDate(value: Date | string): DateTime {
+        if (typeof value === "string") {
+            return DateTime.fromISO(value);
+        } else {
+            return DateTime.fromJSDate(value);
+        }
     }
 }

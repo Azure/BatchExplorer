@@ -1,9 +1,8 @@
-import * as moment from "moment";
-
 import { JobCreateDto, MetaDataDto } from "app/models/dtos";
+import { Duration } from "luxon";
 
 export interface JobConstraintsModel {
-    maxWallClockTime: moment.Duration;
+    maxWallClockTime: Duration;
     maxTaskRetryCount: number;
 }
 

@@ -1,8 +1,7 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import * as moment from "moment";
-
+import { DateTime } from "luxon";
 import { TimespanComponent, TimespanDisplayType } from "./timespan.component";
 
 @Component({
@@ -24,13 +23,13 @@ describe("TimespanComponent", () => {
     let de: DebugElement;
     let nowDate;
 
-    function passTime(milli: number) {
-        nowDate = nowDate.add(milli, "milliseconds");
-        tick(milli);
+    function passTime(milliseconds: number) {
+        nowDate = nowDate.plus({ milliseconds });
+        tick(milliseconds);
     }
 
     beforeEach(() => {
-        nowDate = moment.utc();
+        nowDate = DateTime.local();
         TestBed.configureTestingModule({
             imports: [],
             declarations: [TimespanComponent, TestComponent],
@@ -45,9 +44,9 @@ describe("TimespanComponent", () => {
 
     describe("when providing start and endtime", () => {
         beforeEach(() => {
-            const start = moment();
-            testComponent.startTime = start.toDate();
-            testComponent.endTime = start.add(83, "seconds").toDate();
+            const start = DateTime.local();
+            testComponent.startTime = start.toJSDate();
+            testComponent.endTime = start.plus({ seconds: 83 }).toJSDate();
             fixture.detectChanges();
         });
 
@@ -64,32 +63,32 @@ describe("TimespanComponent", () => {
 
     describe("when providing only start time", () => {
         function reset() {
-            const start = moment().subtract(123, "seconds");
-            testComponent.startTime = start.toDate();
+            const start = DateTime.local().minus({ seconds: 123 }).toJSDate();
+            testComponent.startTime = start;
             fixture.detectChanges();
         }
 
         it("should show the duration between start and end", () => {
             reset();
-            expect(de.nativeElement.textContent).toContain("2:03");
+            expect(de.nativeElement.textContent).toContain("02:02");
         });
 
         it("should update with time", fakeAsync(() => {
             reset();
             passTime(4000);
             fixture.detectChanges();
-            expect(de.nativeElement.textContent).toContain("2:07");
+            expect(de.nativeElement.textContent).toContain("02:06");
             passTime(1000);
             fixture.detectChanges();
-            expect(de.nativeElement.textContent).toContain("2:08");
+            expect(de.nativeElement.textContent).toContain("02:07");
             discardPeriodicTasks();
         }));
     });
 
     describe("when providing only end time", () => {
         function reset() {
-            const end = moment().add(234, "seconds");
-            testComponent.endTime = end.toDate();
+            const end = DateTime.local().plus({ seconds: 234 }).toJSDate();
+            testComponent.endTime = end;
             fixture.detectChanges();
         }
 

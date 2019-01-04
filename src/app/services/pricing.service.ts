@@ -3,7 +3,7 @@ import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils } from "app/utils";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
@@ -61,7 +61,7 @@ const softwareMeterId = {
     "e2d2d63e-8741-499a-8989-f5f7ec5c3b3f": BatchSoftwareLicense.vray,
 };
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class PricingService {
     public pricing: Observable<BatchPricing>;
     private _pricingMap = new BehaviorSubject<BatchPricing>(null);
@@ -201,9 +201,9 @@ export class PricingService {
                     return null;
                 }
 
-                const lastSync = moment(data.lastSync);
-                const weekOld = moment().subtract(7, "days");
-                if (lastSync.isBefore(weekOld)) {
+                const lastSync = DateTime.fromISO(data.lastSync);
+                const weekOld = DateTime.local().minus({ days: 7 });
+                if (lastSync < weekOld) {
                     return null;
                 }
                 return BatchPricing.fromJS(data.map);

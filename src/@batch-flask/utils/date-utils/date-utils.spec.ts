@@ -1,71 +1,73 @@
-import * as moment from "moment";
+import { DateTime, Duration } from "luxon";
 import { DateUtils } from "./date-utils";
 
 describe("DateUtils", () => {
     describe("#withinRange()", () => {
         it("return false when older", () => {
-            expect(DateUtils.withinRange(moment().subtract(2, "days"), 1, "days")).toBe(false);
-            expect(DateUtils.withinRange(moment().subtract(1, "year"), 1, "days")).toBe(false);
-            expect(DateUtils.withinRange(moment().subtract(65, "seconds"), 1, "minute")).toBe(false);
+            expect(DateUtils.withinRange(DateTime.local().minus({ days: 2 }), 1, "days")).toBe(false);
+            expect(DateUtils.withinRange(DateTime.local().minus({ years: 1 }), 1, "days")).toBe(false);
+            expect(DateUtils.withinRange(DateTime.local().minus({ seconds: 65 }), 1, "minute")).toBe(false);
         });
 
         it("return true when NOT older", () => {
-            expect(DateUtils.withinRange(moment(), 1, "days")).toBe(true);
-            expect(DateUtils.withinRange(moment().subtract(1, "days"), 2, "days")).toBe(true);
-            expect(DateUtils.withinRange(moment().subtract(48, "seconds"), 1, "minute")).toBe(true);
+            expect(DateUtils.withinRange(new Date(), 1, "days")).toBe(true);
+            expect(DateUtils.withinRange(DateTime.local().minus({ days: 1 }), 2, "days")).toBe(true);
+            expect(DateUtils.withinRange(DateTime.local().minus({ seconds: 48 }), 1, "minute")).toBe(true);
         });
     });
 
     describe("#prettyDate()", () => {
         it("return a relative time when less than 20 days", () => {
-            expect(DateUtils.prettyDate(moment().subtract(2, "days"))).toEqual("2 days ago");
-            expect(DateUtils.prettyDate(moment().subtract(3, "minutes"))).toEqual("3 minutes ago");
-            expect(DateUtils.prettyDate(moment().subtract(55, "seconds"))).toEqual("a minute ago");
-            expect(DateUtils.prettyDate(moment().subtract(83, "seconds"))).toEqual("a minute ago");
-            expect(DateUtils.prettyDate(moment().subtract(19, "days"))).toEqual("19 days ago");
+            expect(DateUtils.prettyDate(DateTime.local().minus({ days: 2 }))).toEqual("2 days ago");
+            expect(DateUtils.prettyDate(DateTime.local().minus({ minutes: 3 }))).toEqual("3 minutes ago");
+            expect(DateUtils.prettyDate(DateTime.local().minus({ seconds: 55 }))).toEqual("55 seconds ago");
+            expect(DateUtils.prettyDate(DateTime.local().minus({ seconds: 83 }))).toEqual("1 minute ago");
+            expect(DateUtils.prettyDate(DateTime.local().minus({ days: 19 }))).toEqual("19 days ago");
         });
 
-        it("return a absoluate time when more than 20 days", () => {
-            const date1 = moment().subtract(20, "days");
-            const date2 = moment().subtract(1, "year");
-            expect(DateUtils.prettyDate(date1)).toEqual(date1.format("MMM D, YYYY"));
-            expect(DateUtils.prettyDate(date2)).toEqual(date2.format("MMM D, YYYY"));
+        it("return a absolute time when more than 20 days", () => {
+            const date1 = DateTime.local().minus({ days: 20 });
+            const date2 = DateTime.local().minus({ years: 1 });
+            expect(DateUtils.prettyDate(date1)).toEqual(date1.toFormat("MMM d, yyyy"));
+            expect(DateUtils.prettyDate(date2)).toEqual(date2.toFormat("MMM d, yyyy"));
         });
     });
 
     describe("#prettyDuration()", () => {
         it("show the duration in pretty format", () => {
-            expect(DateUtils.prettyDuration(moment.duration({ hour: 2, minute: 3 }))).toEqual("2h 03m 00s");
-            expect(DateUtils.prettyDuration(moment.duration({ hour: 2, minute: 3, seconds: 57 })))
+            expect(DateUtils.prettyDuration(Duration.fromObject({ hours: 2, minutes: 3 }))).toEqual("2h 03m 00s");
+            expect(DateUtils.prettyDuration(Duration.fromObject({ hours: 2, minutes: 3, seconds: 57 })))
                 .toEqual("2h 03m 57s");
             expect(DateUtils.prettyDuration(
-                moment.duration({ hour: 2, minute: 3, seconds: 57, milliseconds: 876 }))).toEqual("2h 03m 58s");
+                Duration.fromObject({ hours: 2, minutes: 3, seconds: 57, milliseconds: 876 }))).toEqual("2h 03m 57s");
         });
         it("show the duration in pretty format with milliseconds if ask", () => {
-            expect(DateUtils.prettyDuration(moment.duration({ hour: 2, minute: 3 }), true)).toEqual("2h 03m 00s 000ms");
-            expect(DateUtils.prettyDuration(moment.duration({ hour: 2, minute: 3, seconds: 57 }), true))
+            expect(DateUtils.prettyDuration(Duration.fromObject({ hours: 2, minutes: 3 }), true))
+                .toEqual("2h 03m 00s 000ms");
+            expect(DateUtils.prettyDuration(Duration.fromObject({ hours: 2, minutes: 3, seconds: 57 }), true))
                 .toEqual("2h 03m 57s 000ms");
             expect(DateUtils.prettyDuration(
-                moment.duration({ hour: 2, minute: 3, seconds: 57, milliseconds: 876 }), true))
+                Duration.fromObject({ hours: 2, minutes: 3, seconds: 57, milliseconds: 876 }), true))
                 .toEqual("2h 03m 57s 876ms");
         });
     });
 
     describe("#compactDuration()", () => {
         it("show the duration in pretty format", () => {
-            expect(DateUtils.compactDuration(moment.duration({ hour: 2, minute: 3 }))).toEqual("2:03:00");
-            expect(DateUtils.compactDuration(moment.duration({ hour: 2, minute: 3, seconds: 57 })))
-                .toEqual("2:03:57");
+            expect(DateUtils.compactDuration(Duration.fromObject({ hours: 2, minutes: 3 }))).toEqual("02:03:00");
+            expect(DateUtils.compactDuration(Duration.fromObject({ hours: 2, minutes: 3, seconds: 57 })))
+                .toEqual("02:03:57");
             expect(DateUtils.compactDuration(
-                moment.duration({ hour: 2, minute: 3, seconds: 57, milliseconds: 876 }))).toEqual("2:03:58");
+                Duration.fromObject({ hours: 2, minutes: 3, seconds: 57, milliseconds: 876 }))).toEqual("02:03:57");
         });
         it("show the duration in pretty format with milliseconds if ask", () => {
-            expect(DateUtils.compactDuration(moment.duration({ hour: 2, minute: 3 }), true)).toEqual("2:03:00.000");
-            expect(DateUtils.compactDuration(moment.duration({ hour: 2, minute: 3, seconds: 57 }), true))
-                .toEqual("2:03:57.000");
+            expect(DateUtils.compactDuration(Duration.fromObject({ hours: 2, minutes: 3 }), true))
+                .toEqual("02:03:00.000");
+            expect(DateUtils.compactDuration(Duration.fromObject({ hours: 2, minutes: 3, seconds: 57 }), true))
+                .toEqual("02:03:57.000");
             expect(DateUtils.compactDuration(
-                moment.duration({ hour: 2, minute: 3, seconds: 57, milliseconds: 876 }), true))
-                .toEqual("2:03:57.876");
+                Duration.fromObject({ hours: 2, minutes: 3, seconds: 57, milliseconds: 876 }), true))
+                .toEqual("02:03:57.876");
         });
     });
 
@@ -77,9 +79,14 @@ describe("DateUtils", () => {
         it("returns formatted full date", () => {
             // note: date month array starts at 0 for jan
             const date = new Date(2017, 11, 24, 10, 55, 2);
-            expect(DateUtils.fullDateAndTime(date)).toEqual(moment(date).format("MMM Do, YYYY, HH:mm:ss.SSS Z"));
-            // Timezone depends who runs the test so just check for the rest
-            expect(DateUtils.fullDateAndTime(date)).toContain("Dec 24th, 2017, 10:55:02.000");
+            expect(DateUtils.fullDateAndTime(date)).toEqual(
+                DateTime.fromJSDate(date).toLocaleString({
+                    month: "short",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                }));
         });
     });
 
@@ -91,7 +98,7 @@ describe("DateUtils", () => {
         });
 
         it("compute the duration between start and current time", () => {
-            const date = moment().subtract({ hour: 2, minutes: 43 }).toDate();
+            const date = DateTime.local().minus({ hours: 2, minutes: 43 }).toJSDate();
             expect(DateUtils.computeRuntime(date)).toEqual("2h 43m 00s");
         });
     });

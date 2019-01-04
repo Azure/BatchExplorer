@@ -122,7 +122,7 @@ export class JobScheduleService {
 
     public updateTags(jobSchedule: JobSchedule, tags: List<string>) {
         const attributes = new JobSchedulePatchDto({
-            metadata: ModelUtils.updateMetadataWithTags(jobSchedule.metadata, tags),
+            metadata: ModelUtils.updateMetadataWithTags(jobSchedule.metadata, tags) as any,
         });
         return this.patch(jobSchedule.id, attributes);
     }

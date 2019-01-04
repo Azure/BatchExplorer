@@ -27,6 +27,6 @@ export function taskToCsvRow(task: Task) {
         info && info.startTime && info.startTime.toISOString(),
         info && info.endTime && info.endTime.toISOString(),
         nodeInfo && nodeInfo.nodeId,
-        runtime && runtime.asMilliseconds(),
+        runtime && runtime.as("milliseconds"),
     ].join(",");
 }

@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { ServerError, autobind } from "@batch-flask/core";
-import * as moment from "moment";
-
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Pool, PoolAllocationState } from "app/models";
@@ -84,7 +82,7 @@ export class PoolResizeDialogComponent {
     private _enableAutoScale(value: PoolScaleSelection) {
         const dto = new PoolEnableAutoScaleDto({
             autoScaleFormula: value.autoScaleFormula,
-            autoScaleEvaluationInterval: moment.duration(value.autoScaleEvaluationInterval, "minutes") as any,
+            autoScaleEvaluationInterval: value.autoScaleEvaluationInterval,
         });
 
         return this.poolService.enableAutoScale(this.pool.id, dto);

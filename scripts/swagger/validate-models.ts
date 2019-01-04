@@ -10,7 +10,7 @@ import "reflect-metadata";
 import "zone.js";
 
 console.log("Nodepath", process.env.NODE_PATH);
-import * as moment from "moment";
+import { Duration } from "luxon";
 import fetch from "node-fetch";
 import { metadataForCtr } from "../../src/@batch-flask/core/record/helpers";
 import * as models from "../../src/app/models";
@@ -160,7 +160,7 @@ class SwaggerModelValidator {
                     this.addPropertyError(name, `Expected type to be a date but was ${type}`);
                 }
             } else if (swaggerType === "string" && swaggerProperty.format === "duration") {
-                if (type !== moment.duration) {
+                if (type !== Duration) {
                     this.addPropertyError(name, `Expected type to be a duration but was ${type}`);
                 }
             } else if (swaggerType === "string") {

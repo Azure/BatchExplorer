@@ -21,14 +21,14 @@ import {
 } from "@angular/forms";
 import { FlagInput, UNLIMITED_DURATION_THRESHOLD, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
-import * as moment from "moment";
-
 import { SelectComponent } from "@batch-flask/ui/select";
+import { Duration } from "luxon";
 import { Subject, Subscription } from "rxjs";
+
 import "./duration-picker.scss";
 
 /**
- * Enumration of time unit picker that can be directly used in momentjs
+ * Enumration of time unit picker that can be directly used in luxon
  * Days, hours, minutes and seconds
  */
 export enum DurationUnit {
@@ -95,7 +95,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
 
     public readonly stateChanges = new Subject<void>();
 
-    public value: moment.Duration;
+    public value: Duration;
 
     public ngControl: NgControl;
     public time: string = "";
@@ -110,8 +110,8 @@ export class DurationPickerComponent implements FormFieldControl<any>,
 
     protected _uid = `bl-input-${nextUniqueId++}`;
 
-    protected _propagateChange: (value: moment.Duration) => void = null;
-    protected _duration: moment.Duration;
+    protected _propagateChange: (value: Duration) => void = null;
+    protected _duration: Duration;
 
     @ViewChild("inputEl") private _inputEl: ElementRef;
     @ViewChild(SelectComponent) private _select: SelectComponent;
@@ -153,13 +153,13 @@ export class DurationPickerComponent implements FormFieldControl<any>,
         this._controlSub.unsubscribe();
     }
 
-    public writeValue(value: moment.Duration | string): void {
+    public writeValue(value: Duration | string): void {
         if (value === null || value === undefined) {
             this.value = null;
-        } else if (moment.isMoment(value)) {
-            this.value = value as moment.Duration;
+        } else if (value instanceof Duration) {
+            this.value = value;
         } else {
-            this.value = moment.duration(value);
+            this.value = Duration.fromISO(value);
         }
         this._setTimeAndUnitFromDuration(this.value);
         this.changeDetector.markForCheck();
@@ -212,7 +212,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
         this.changeDetector.markForCheck();
     }
 
-    private _getDuration(): moment.Duration {
+    private _getDuration(): Duration {
         this.invalidTimeNumber = false;
         this.invalidCustomDuration = false;
 
@@ -227,17 +227,19 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                     this.invalidTimeNumber = true;
                     return null;
                 } else {
-                    const duration = moment.duration(Number(this.time), this.unit);
+                    const duration = Duration.fromObject({
+                        [this.unit]: Number(this.time),
+                    });
                     return this._isDurationUnlimited(duration) ? null : duration;
                 }
         }
     }
 
-    private _isDurationUnlimited(duration: moment.Duration): boolean {
+    private _isDurationUnlimited(duration: Duration): boolean {
         if (!duration) {
             return true;
         }
-        const days = duration.asDays();
+        const days = duration.as("day");
         // Days must not be greater than threshold, otherwise just set it to unlimited
         return days > UNLIMITED_DURATION_THRESHOLD;
     }
@@ -247,17 +249,17 @@ export class DurationPickerComponent implements FormFieldControl<any>,
      * Unit is checked from 'days' to 'seconds'. Value will be taken when current unit has an integer value,
      * otherwise next smaller unit will be checked until last unit.
      */
-    private _setTimeAndUnitFromDuration(duration: moment.Duration) {
+    private _setTimeAndUnitFromDuration(duration: Duration) {
         if (this._isDurationUnlimited(duration)) {
             this.unit = DurationUnit.Unlimited;
             this.time = "";
             return;
         }
 
-        const days = duration.asDays();
-        const hours = duration.asHours();
-        const minutes = duration.asMinutes();
-        const seconds = duration.asSeconds();
+        const days = duration.as("day");
+        const hours = duration.as("hour");
+        const minutes = duration.as("minute");
+        const seconds = duration.as("second");
         if (this._isValidUnit(days)) {
             this.time = days.toString();
             this.unit = DurationUnit.Days;
@@ -272,21 +274,21 @@ export class DurationPickerComponent implements FormFieldControl<any>,
             this.time = seconds.toString();
             this.unit = DurationUnit.Seconds;
         } else {
-            this.time = duration.toISOString();
+            this.time = duration.toISO();
             this.unit = DurationUnit.Custom;
         }
     }
 
     private _getCustomDuration(time: string) {
-        const duration = moment.duration(time);
+        const duration = Duration.fromISO(time);
         if (time === "P0D") {
             return duration;
         }
-        if (duration.toISOString() === "P0D") {
+        if (!duration.isValid) {
             this.invalidCustomDuration = true;
             return null;
         } else {
-            return moment.duration(time);
+            return Duration.fromISO(time);
         }
     }
 

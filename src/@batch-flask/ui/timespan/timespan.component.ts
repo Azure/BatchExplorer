@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy,
 } from "@angular/core";
 import { DateUtils } from "@batch-flask/utils";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 import { Subscription, interval } from "rxjs";
 
 export enum TimespanDisplayType {
@@ -46,7 +46,7 @@ export class TimespanComponent implements OnChanges, OnDestroy {
     }
 
     public now() {
-        return moment.utc();
+        return DateTime.utc();
     }
 
     public ngOnDestroy() {
@@ -71,9 +71,9 @@ export class TimespanComponent implements OnChanges, OnDestroy {
 
     private _computeTimespan() {
         if (!this.startTime && !this.endTime) { return null; }
-        const startTime = this.startTime ? moment.utc(this.startTime) : this.now();
-        const endTime = this.endTime ? moment.utc(this.endTime) : this.now();
-        return moment.duration(endTime.diff(moment(startTime)));
+        const startTime = this.startTime ? DateTime.fromJSDate(this.startTime) : this.now();
+        const endTime = this.endTime ? DateTime.fromJSDate(this.endTime) : this.now();
+        return endTime.diff(startTime);
     }
 
     private _formatDuration(duration: any) {

@@ -1,5 +1,5 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-import { Duration, duration } from "moment";
+import { Duration } from "luxon";
 
 export interface ResourceStatisticsAttributes {
     avgCPUPercentage: number;
@@ -42,7 +42,7 @@ export interface UsageStatisticsAttributes {
 
 @Model()
 export class UsageStatistics extends Record<UsageStatisticsAttributes> {
-    @Prop(duration) public dedicatedCoreTime: Duration;
+    @Prop() public dedicatedCoreTime: Duration;
     @Prop() public lastUpdateTime: Date;
     @Prop() public startTime: Date;
 }

@@ -19,9 +19,24 @@ export interface AuthorizeResult {
     state: string;
 }
 
-export interface AuthorizeError {
+export interface AuthorizeResponseError {
     error: string;
     error_description: string;
+    state?: string;
+}
+
+export class AuthorizeError extends Error {
+    public error: string;
+    public description: string;
+    public state?: string;
+
+    constructor(error: AuthorizeResponseError) {
+        const description  = error.error_description && error.error_description.replace(/\+/g, " ");
+        super(`${error.error}: ${description}`);
+        this.error = error.error;
+        this.description = description;
+        this.state = error.state;
+    }
 }
 
 interface AuthorizeQueueItem {
@@ -184,7 +199,7 @@ export class AuthenticationService {
         this._currentAuthorization = null;
 
         if ((params as any).error) {
-            auth.deferred.reject(params as AuthorizeError);
+            auth.deferred.reject(new AuthorizeError(params as AuthorizeResponseError));
         } else {
             this._state.next(AuthenticationState.Authenticated);
             auth.deferred.resolve(params as AuthorizeResult);
@@ -202,12 +217,12 @@ export class AuthenticationService {
     /**
      * Extract params return in the redirect_uri
      */
-    private _getRedirectUrlParams(url: string): AuthorizeResult | AuthorizeError {
+    private _getRedirectUrlParams(url: string): AuthorizeResult | AuthorizeResponseError {
         const segments = url.split("#");
         const params = {};
         for (const str of segments[1].split("&")) {
             const [key, value] = str.split("=");
-            params[key] = value;
+            params[key] = decodeURIComponent(value);
         }
         return params as any;
     }

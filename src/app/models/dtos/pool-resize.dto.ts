@@ -1,5 +1,5 @@
 import { Dto, DtoAttr } from "@batch-flask/core";
-import * as moment from "moment";
+import { Duration } from "luxon";
 
 export enum NodeDeallocationOption {
     requeue = "requeue",
@@ -12,8 +12,8 @@ export class PoolResizeDto extends Dto<PoolResizeDto> {
     @DtoAttr()
     public nodeDeallocationOption: NodeDeallocationOption;
 
-    @DtoAttr(moment.duration)
-    public resizeTimeout?: moment.Duration;
+    @DtoAttr()
+    public resizeTimeout?: Duration;
 
     @DtoAttr()
     public targetDedicatedNodes: number;

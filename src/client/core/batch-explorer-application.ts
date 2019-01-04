@@ -3,13 +3,13 @@ import { LocaleService, TelemetryService, TranslationsLoaderService } from "@bat
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { AutoUpdateService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
+import { parseArguments } from "client/cli";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { BatchExplorerProperties } from "client/core/properties";
 import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
-import * as commander from "commander";
 import { BatchExplorerLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
 import { app, dialog, ipcMain, session } from "electron";
@@ -21,7 +21,7 @@ import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
-import { AADService, AuthenticationState, AuthenticationWindow } from "./aad";
+import { AADService, AuthenticationState, AuthenticationWindow, AuthorizeResponseError } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
 
@@ -92,8 +92,15 @@ export class BatchExplorerApplication {
         this._initializer.init();
 
         this._setCommonHeaders();
-        this.aadService.login();
+        this.aadService.login().catch((e: AuthorizeResponseError) => {
+            dialog.showMessageBox({
+                type: "error",
+                message: e.toString(),
+            });
+            this.logoutAndLogin();
+        });
         this._initializer.setTaskStatus("window", "Loading application");
+        log.debug("process.argv", process.argv);
         const window = this.openFromArguments(process.argv, false);
         if (!window) { return; }
         const windowSub = window.state.subscribe((state) => {
@@ -173,12 +180,9 @@ export class BatchExplorerApplication {
         if (ClientConstants.isDev) {
             return this.windows.openNewWindow(undefined, showWhenReady);
         }
-        const program = commander
-            .version(app.getVersion())
-            .option("--updated", "If the application was just updated")
-            .parse(["", ...argv]);
+        const program = parseArguments(argv);
         const arg = program.args[0];
-        if (!arg) {
+        if (!arg || arg.startsWith("data:")) {
             return this.windows.openNewWindow(undefined, showWhenReady);
         }
         try {

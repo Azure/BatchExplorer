@@ -88,6 +88,7 @@ export class AADService {
                 throw error;
             } else {
                 log.error("Error login in ", error);
+                throw error;
             }
         }
         try {
@@ -130,7 +131,6 @@ export class AADService {
                 return token;
             }
         }
-
         return this._retrieveNewAccessToken(tenantId, resource);
     }
 

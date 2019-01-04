@@ -21,7 +21,7 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 11. @angular/platform-server(https://github.com/angular/angular#readme) - MIT
 12. @angular/router(https://github.com/angular/angular/tree/master/packages/router) - MIT
 13. @azure/storage-blob(https://github.com/Azure/azure-storage-js#readme) - MIT
-14. @tweenjs/tween.js(https://github.com/tweenjs/tween.js) - MIT
+14. @types/keytar(https://github.com/DefinitelyTyped/DefinitelyTyped#readme) - MIT
 15. applicationinsights(https://github.com/Microsoft/ApplicationInsights-node.js#readme) - MIT
 16. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
 17. bunyan(https://github.com/trentm/node-bunyan#readme) - MIT
@@ -34,7 +34,7 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 24. electron-updater(https://github.com/electron-userland/electron-builder) - MIT
 25. element-resize-detector(https://github.com/wnr/element-resize-detector) - MIT
 26. extract-zip(https://github.com/maxogden/extract-zip#readme) - BSD-2-Clause
-27. flag-icon-css(https://github.com/lipis/flag-icon-css#readme) - undefined
+27. focus-visible(https://github.com/WICG/focus-visible) - W3C
 28. font-awesome(http://fontawesome.io/) - (OFL-1.1 AND MIT)
 29. get-proxy-settings(https://github.com/Azure/get-proxy-settings) - MIT
 30. glob(https://github.com/isaacs/node-glob#readme) - ISC
@@ -44,26 +44,27 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 34. inflection(https://github.com/dreamerslab/node.inflection#readme) - MIT
 35. js-yaml(https://github.com/nodeca/js-yaml) - MIT
 36. jschardet(https://github.com/aadsm/jschardet#readme) - LGPL-2.1+
-37. load-json-file(https://github.com/sindresorhus/load-json-file#readme) - MIT
-38. mkdirp(https://github.com/substack/node-mkdirp#readme) - MIT
-39. moment(http://momentjs.com) - MIT
-40. moment-duration-format(https://github.com/jsmreese/moment-duration-format) - MIT
-41. monaco-editor(https://github.com/Microsoft/monaco-editor#readme) - MIT
-42. mousetrap(https://github.com/ccampbell/mousetrap#readme) - Apache-2.0 WITH LLVM-exception
-43. node-forge(https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
-44. patternomaly(https://github.com/ashiguruma/patternomaly#readme) - MIT
-45. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
-46. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
-47. strip-json-comments(https://github.com/sindresorhus/strip-json-comments#readme) - MIT
-48. tinycolor2(https://github.com/TinyColor) - MIT
-49. write-file-webpack-plugin(https://github.com/gajus/write-file-webpack-plugin#readme) - BSD-3-Clause
-50. xml2js(https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
-51. zone.js(https://github.com/angular/zone.js#readme) - MIT
-52. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
-53. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
-54. node.js(https://nodejs.org/en/) - MIT
-55. python(https://www.python.org/) - PSF
-56. Electron(https://electronjs.org/) - electron
+37. keytar(http://atom.github.io/node-keytar) - MIT
+38. load-json-file(https://github.com/sindresorhus/load-json-file#readme) - MIT
+39. mkdirp(https://github.com/substack/node-mkdirp#readme) - MIT
+40. moment(http://momentjs.com) - MIT
+41. moment-duration-format(https://github.com/jsmreese/moment-duration-format) - MIT
+42. monaco-editor(https://github.com/Microsoft/monaco-editor#readme) - MIT
+43. mousetrap(https://github.com/ccampbell/mousetrap#readme) - Apache-2.0 WITH LLVM-exception
+44. node-forge(https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
+45. patternomaly(https://github.com/ashiguruma/patternomaly#readme) - MIT
+46. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
+47. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
+48. strip-json-comments(https://github.com/sindresorhus/strip-json-comments#readme) - MIT
+49. tinycolor2(https://github.com/TinyColor) - MIT
+50. write-file-webpack-plugin(https://github.com/gajus/write-file-webpack-plugin#readme) - BSD-3-Clause
+51. xml2js(https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
+52. zone.js(https://github.com/angular/zone.js#readme) - MIT
+53. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
+54. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
+55. node.js(https://nodejs.org/en/) - MIT
+56. python(https://www.python.org/) - PSF
+57. Electron(https://electronjs.org/) - electron
 
 ============================================================
     Start license for @angular/animations
@@ -99,7 +100,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2018 Google LLC.
+Copyright (c) 2019 Google LLC.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -302,7 +303,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2018 Google LLC.
+Copyright (c) 2019 Google LLC.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -472,34 +473,19 @@ THE SOFTWARE.
 ============================================================
 
 ============================================================
-    Start license for @tweenjs/tween.js
+    Start license for @types/keytar
 ------------------------------------------------------------
-The MIT License
+This project is licensed under the MIT license.
+Copyrights are respective of each contributor listed at the beginning of each definition file.
 
-Copyright (c) 2010-2012 Tween.js authors.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-Easing equations Copyright (c) 2001 Robert Penner http://robertpenner.com/easing/
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ------------------------------------------------------------
-    End license for @tweenjs/tween.js
+    End license for @types/keytar
 ============================================================
 
 ============================================================
@@ -981,8 +967,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ============================================================
 
 ============================================================
-    Start license for flag-icon-css
+    Start license for focus-visible
 ------------------------------------------------------------
+All Reports in this Repository are licensed by Contributors under the 
+[W3C Software and Document
+License](http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document). Contributions to
+Specifications are made under the [W3C CLA](https://www.w3.org/community/about/agreements/cla/).
+
+
+------------------------------------------------------------
+    End license for focus-visible
+============================================================
+
 ============================================================
     Start license for font-awesome
 ------------------------------------------------------------
@@ -998,7 +994,7 @@ In the Font Awesome Free download, the CC BY 4.0 license applies to all icons
 packaged as SVG and JS file types.
 
 # Fonts: SIL OFL 1.1 License (https://scripts.sil.org/OFL)
-In the Font Awesome Free download, the SIL OLF license applies to all icons
+In the Font Awesome Free download, the SIL OFL license applies to all icons
 packaged as web and desktop font files.
 
 # Code: MIT License (https://opensource.org/licenses/MIT)
@@ -1006,7 +1002,7 @@ In the Font Awesome Free download, the MIT license applies to all non-font and
 non-icon files.
 
 # Attribution
-Attribution is required by MIT, SIL OLF, and CC BY licenses. Downloaded Font
+Attribution is required by MIT, SIL OFL, and CC BY licenses. Downloaded Font
 Awesome Free files already contain embedded comments with sufficient
 attribution, so you shouldn't need to do anything additional when using these
 files normally.
@@ -1680,6 +1676,34 @@ That's all there is to it!
 
 ------------------------------------------------------------
     End license for jschardet
+============================================================
+
+============================================================
+    Start license for keytar
+------------------------------------------------------------
+Copyright (c) 2013 GitHub Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------
+    End license for keytar
 ============================================================
 
 ============================================================
@@ -2767,7 +2791,7 @@ THE SOFTWARE.
 ============================================================
     Start license for websockets
 ------------------------------------------------------------
-Copyright (c) 2013-2017 Aymeric Augustin and contributors.
+Copyright (c) 2013-2019 Aymeric Augustin and contributors.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -2899,7 +2923,7 @@ The externally maintained libraries used by Node.js are:
 
 - c-ares, located at deps/cares, is licensed as follows:
   """
-    Copyright (c) 2007 - 2016, Daniel Stenberg with many contributors, see AUTHORS
+    Copyright (c) 2007 - 2018, Daniel Stenberg with many contributors, see AUTHORS
     file.
 
     Copyright 1998 by the Massachusetts Institute of Technology.
@@ -3427,6 +3451,32 @@ The externally maintained libraries used by Node.js are:
       - android-ifaddrs.h, android-ifaddrs.c, copyright Berkeley Software Design
         Inc, Kenneth MacKay and Emergya (Cloud4all, FP7/2007-2013, grant agreement
         n° 289016). Three clause BSD license.
+  """
+
+- llhttp, located at deps/llhttp, is licensed as follows:
+  """
+    This software is licensed under the MIT License.
+
+    Copyright Fedor Indutny, 2018.
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to permit
+    persons to whom the Software is furnished to do so, subject to the
+    following conditions:
+
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+    NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+    DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+    OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+    USE OR OTHER DEALINGS IN THE SOFTWARE.
   """
 
 - OpenSSL, located at deps/openssl, is licensed as follows:
@@ -4123,6 +4173,29 @@ The externally maintained libraries used by Node.js are:
     IN THE SOFTWARE.
   """
 
+- large_pages, located at src/large_pages, is licensed as follows:
+  """
+     Copyright (C) 2018 Intel Corporation
+
+     Permission is hereby granted, free of charge, to any person obtaining a copy
+     of this software and associated documentation files (the "Software"),
+     to deal in the Software without restriction, including without limitation
+     the rights to use, copy, modify, merge, publish, distribute, sublicense,
+     and/or sell copies of the Software, and to permit persons to whom
+     the Software is furnished to do so, subject to the following conditions:
+
+     The above copyright notice and this permission notice shall be included
+     in all copies or substantial portions of the Software.
+
+     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+     OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+     THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+     OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+     ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+     OR OTHER DEALINGS IN THE SOFTWARE.
+  """
+
 ------------------------------------------------------------
     End license for node.js
 ============================================================
@@ -4205,8 +4278,8 @@ analyze, test, perform and/or display publicly, prepare derivative works,
 distribute, and otherwise use Python alone or in any derivative version,
 provided, however, that PSF's License Agreement and PSF's notice of copyright,
 i.e., "Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
-2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 Python Software Foundation; All
-Rights Reserved" are retained in Python alone or in any derivative version
+2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 Python Software Foundation;
+All Rights Reserved" are retained in Python alone or in any derivative version
 prepared by Licensee.
 
 3. In the event Licensee prepares a derivative work that is based on

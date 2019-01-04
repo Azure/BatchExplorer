@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from "@angular/core";
 import { HistoryItem } from "app/components/pool/graphs/history-data/history-data-base";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 
 @Component({
     selector: "bl-history-graph",
@@ -92,14 +92,14 @@ export class HistoryGraphComponent implements OnChanges {
     public updateData() {
         const minToMilli = 60 * 1000;
         const max = this.historySize * minToMilli / 100;
-        const now = moment();
+        const now = DateTime.local();
         const last = this.history.last();
         this.datasets = [
             {
                 data:
                 [
                     ...this.history.map(x => {
-                        const val = moment(x.time).diff(now);
+                        const val = DateTime.fromJSDate(x.time).diff(now).as("milliseconds");
                         return {
                             x: val / max,
                             y: x.y,

@@ -1,5 +1,5 @@
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
-import { Duration, duration } from "moment";
+import { Duration } from "luxon";
 
 import { List } from "immutable";
 import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./container-setup";
@@ -28,8 +28,8 @@ export class JobReleaseTask extends Record<JobReleaseTaskAttributes> {
     @Prop() public commandLine: string;
     @ListProp(ResourceFile) public resourceFiles: List<ResourceFile> = List([]);
     @ListProp(NameValuePair) public environmentSettings: List<NameValuePair> = List([]);
-    @Prop(duration) public maxWallClockTime: Duration;
-    @Prop(duration) public retentionTime: Duration;
+    @Prop() public maxWallClockTime: Duration;
+    @Prop() public retentionTime: Duration;
     @Prop() public containerSettings: TaskContainerSettings;
     @Prop() public userIdentity: UserIdentity;
 }
