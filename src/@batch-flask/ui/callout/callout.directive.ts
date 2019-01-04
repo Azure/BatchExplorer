@@ -28,7 +28,6 @@ export class CalloutDirective {
     public open() {
         this._overlayRef = this.overlay.create(this._getOverlayConfig());
         this._backDropClickSub = this._overlayRef.backdropClick().subscribe(() => {
-            console.log("Click backdrop?");
             this.close();
         });
 

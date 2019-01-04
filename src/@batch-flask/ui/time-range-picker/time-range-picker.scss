@@ -1,7 +1,9 @@
 @import "app/styles/variables";
 
 bl-time-range-picker {
-
+    .time-range {
+        color: $link-color;
+    }
 }
 
 

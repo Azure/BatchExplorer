@@ -1,16 +1,20 @@
-<a [blCallout]="callout" href="#">Time range</a>
+<bl-clickable [blCallout]="callout" class="time-range">
+    Time range: {{currentLabel}}
+</bl-clickable>
 
 <bl-callout #callout="blCallout">
     <div class="time-range-picker-callout">
         <div class="custom-range" [formGroup]="customRange">
-            <h4>Custom range</h4>
+            <h4>{{'time-range-picker.customRange' | i18n }}</h4>
             <bl-datetime-picker label="From" formControlName="from"></bl-datetime-picker>
             <bl-datetime-picker label="To" formControlName="to"></bl-datetime-picker>
-            <bl-button type="wide">Apply</bl-button>
+            <bl-button type="wide" (do)="pickCustomRange()">Apply</bl-button>
         </div>
         <div class="quick-ranges">
-            <h4>Quick ranges</h4>
-            <bl-clickable *ngFor="let range of quickRanges">{{range.label}}</bl-clickable>
+            <h4>{{'time-range-picker.quickRange' | i18n }}</h4>
+            <bl-clickable *ngFor="let range of quickRanges" (do)="pickQuickRange(range)">
+                {{range.label}}
+            </bl-clickable>
         </div>
     </div>
 </bl-callout>
