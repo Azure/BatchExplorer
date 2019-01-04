@@ -14,8 +14,8 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
 
-import "./blob-container-picker.scss";
 import { DateTime } from "luxon";
+import "./blob-container-picker.scss";
 
 export enum BlobContainerPickerOutput {
     Name = "name",

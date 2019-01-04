@@ -77,6 +77,7 @@ export class AdalService implements OnDestroy {
         }
         if (this.tokenCache.hasToken(tenantId, resource)) {
             const token = this.tokenCache.getToken(tenantId, resource);
+
             if (!token.expireInLess(Constants.AAD.refreshMargin)) {
                 return token;
             }

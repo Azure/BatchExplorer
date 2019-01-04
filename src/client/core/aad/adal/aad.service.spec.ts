@@ -86,10 +86,10 @@ describe("AADService", () => {
 
         beforeEach(() => {
             refreshedToken = new AccessToken({
-                access_token: "refreshedToken", expires_on: DateTime.local().minus({ hours: 1 }).toJSDate(),
+                access_token: "refreshedToken", expires_on: DateTime.local().plus({ hours: 1 }).toJSDate(),
             } as any);
             newToken = new AccessToken({
-                access_token: "newToken", expires_on: DateTime.local().minus({ hours: 1 })
+                access_token: "newToken", expires_on: DateTime.local().plus({ hours: 1 }),
             } as any);
             const authorizeResult = {
                 id_token: "someidtoken",
@@ -110,7 +110,7 @@ describe("AADService", () => {
         it("should use the cached token if not expired", F(async () => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
-                expires_on: DateTime.local().minus({ hours: 1 }),
+                expires_on: DateTime.local().plus({ hours: 1 }),
             } as any));
             token = await service.accessTokenData(tenant1, resource1);
             expect(token).not.toBeNull();
@@ -120,7 +120,7 @@ describe("AADService", () => {
         it("should reload a new token if the token is expiring before the safe margin", F(async () => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
-                expires_on: DateTime.local().minus({ minutes: 1 }).toJSDate(),
+                expires_on: DateTime.local().plus({ minutes: 1 }).toJSDate(),
                 refresh_token: "somerefreshtoken",
             } as any));
             token = await service.accessTokenData(tenant1, resource1);
@@ -135,7 +135,7 @@ describe("AADService", () => {
         it("should load a new token if getting a token for another resource", async (done) => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
-                expires_on: DateTime.local().minus({ hours: 1 }),
+                expires_on: DateTime.local().plus({ hours: 1 }),
             } as any));
             token = await service.accessTokenData(tenant1, "http://other-resource.com");
             expect(redeemSpy).toHaveBeenCalled();
@@ -150,7 +150,7 @@ describe("AADService", () => {
         it("should load a new token if getting a token for another tenant", async (done) => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
-                expires_on: DateTime.local().minus({ hours: 1 }),
+                expires_on: DateTime.local().plus({ hours: 1 }),
             } as any));
             token = await service.accessTokenData("tenant-2", resource1);
             expect(redeemSpy).toHaveBeenCalled();
