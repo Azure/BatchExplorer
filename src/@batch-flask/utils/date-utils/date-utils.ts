@@ -58,7 +58,8 @@ export class DateUtils {
      * Return a pretty duration
      * 3d 2h 4m 1s
      */
-    public static prettyDuration(duration: Duration, showMilli = false) {
+    public static prettyDuration(duration: Duration | null, showMilli = false) {
+        if (!duration) { return "-"; }
         duration = this.ensureDuration(duration);
         let format: string | null = null;
         if (duration.as("days") > 1) {
