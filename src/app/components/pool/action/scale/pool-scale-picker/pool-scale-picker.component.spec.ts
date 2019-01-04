@@ -8,9 +8,9 @@ import {
 } from "@batch-flask/core/testing";
 import { DurationPickerComponent, DurationPickerModule, FormModule, I18nUIModule } from "@batch-flask/ui";
 import { Pool } from "app/models";
+import { Duration } from "luxon";
 import { click, updateInput } from "test/utils/helpers";
 import { PoolScalePickerComponent } from "./pool-scale-picker.component";
-import { Duration } from "luxon";
 
 @Component({
     template: `<bl-pool-scale-picker [formControl]="control"></bl-pool-scale-picker>`,

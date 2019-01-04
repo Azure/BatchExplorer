@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { AddNodeUserAttributes } from "app/services";
-import { Duration, DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
 
 export enum CredentialsMode {
     Password,

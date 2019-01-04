@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { DateUtils } from "@batch-flask/utils";
 import { Job, Task, TaskState } from "app/models";
+import { DateTime } from "luxon";
 
 import "./task-timeline.scss";
-import { DateTime } from "luxon";
 
 @Component({
     selector: "bl-task-timeline",

@@ -1,6 +1,6 @@
 import { HttpParams } from "@angular/common/http";
 import { HttpRequestOptions } from "@batch-flask/core";
-import { Duration, DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
 
 /**
  * TimeFrame defines the enumeration for monitor chart timeframe picker

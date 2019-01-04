@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
-
 import { FormControl } from "@angular/forms";
 import { FilterBuilder, autobind } from "@batch-flask/core";
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
-import "./all-job-graphs-home.scss";
+import { List } from "immutable";
 import { DateTime } from "luxon";
+import { Subscription } from "rxjs";
+
+import "./all-job-graphs-home.scss";
 
 enum TimeRange {
     hour = 1,

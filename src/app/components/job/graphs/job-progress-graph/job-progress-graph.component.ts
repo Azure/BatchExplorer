@@ -3,7 +3,7 @@ import { DateUtils } from "@batch-flask/utils";
 import { Job, Task } from "app/models";
 import { NumberUtils } from "app/utils";
 import { List } from "immutable";
-import { Duration, DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
 
 import "./job-progress-graph.scss";
 
