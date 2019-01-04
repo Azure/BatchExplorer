@@ -50,6 +50,8 @@
   },
   "files": [
     "definitions/index.d.ts",
+    "definitions/luxon-ext.d.ts",
+    "definitions/missing-defs.d.ts",
     "node_modules/monaco-editor/monaco.d.ts"
   ],
   // This is not actually used for building but to let the editor know what files use this config

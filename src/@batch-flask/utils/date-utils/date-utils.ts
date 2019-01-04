@@ -38,11 +38,9 @@ export class DateUtils {
             date = DateTime.fromJSDate(date);
         }
         if (DateUtils.withinRange(date, prettyDateRelativeRange, "days")) {
-            // TODO switch back when luxon support fromNOW
-            // return date.fromNow();
-            return date.toFormat("MMM D, yyyy");
+            return date.toRelative();
         } else {
-            return date.toFormat("MMM D, yyyy");
+            return date.toFormat("MMM d, yyyy");
         }
     }
 
@@ -143,9 +141,6 @@ export class DateUtils {
         if (!timeToCompare) {
             return null;
         }
-        // TODO Switch when luxon support fromNow
-        // return DateTime.fromJSDate(timeToCompare).fromNow();
-
-        return this.fullDateAndTime(timeToCompare);
+        return DateTime.fromJSDate(timeToCompare).toRelative();
     }
 }

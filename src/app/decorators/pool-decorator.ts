@@ -5,6 +5,7 @@ import {
 import { PoolUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
 import { List } from "immutable";
+import { DateTime } from "luxon";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
 import { PoolEndpointConfigurationDecorator } from "./pool-endpoint-configuration-decorator";
 import { VirtualMachineConfigurationDecorator } from "./virtual-machine-configuration-decorator";
@@ -50,6 +51,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
 
     constructor(public pool: Pool) {
         super(pool);
+        this.lastResized = DateTime.fromJSDate(pool.allocationStateTransitionTime).toRelative();
         this.displayName = this.stringField(pool.displayName);
         this.allocationState = this.stateField(pool.allocationState);
         this.allocationStateTransitionTime = this.dateField(pool.allocationStateTransitionTime);
