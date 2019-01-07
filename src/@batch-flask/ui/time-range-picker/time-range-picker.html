@@ -10,7 +10,7 @@
             <bl-datetime-picker label="To" formControlName="end"></bl-datetime-picker>
 
             <bl-error [control]="customRange" code="invalidRange">{{customRange.errors?.invalidRange.message}}</bl-error>
-            <bl-button type="wide" (do)="pickCustomRange()">Apply</bl-button>
+            <bl-button type="wide" (do)="pickCustomRange()">{{'common.apply' | i18n }}</bl-button>
         </div>
         <div class="quick-ranges">
             <h4>{{'time-range-picker.quickRange' | i18n }}</h4>

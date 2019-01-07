@@ -102,7 +102,6 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
                 validators: [this._validateCustomRange.bind(this)],
             },
         );
-
     }
 
     public ngOnDestroy() {
@@ -124,13 +123,13 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
         }
     }
 
-    public pickQuickRange(value: TimeRange | null) {
+    public pickQuickRange(value: QuickRange | null) {
         this.current = value;
         this.currentLabel = this._computeCurrentRangeLabel();
         this.changeDetector.markForCheck();
 
         if (this._propagateChanges) {
-            this._propagateChanges(new TimeRange(value));
+            this._propagateChanges(value);
         }
     }
 
