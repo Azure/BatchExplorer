@@ -11,7 +11,8 @@ import { ButtonsModule } from "../buttons";
 import { CalloutModule } from "../callout";
 import { FormModule } from "../form";
 import { I18nUIModule } from "../i18n";
-import { QuickRanges, TimeRange, TimeRangePickerComponent } from "./time-range-picker.component";
+import { TimeRangePickerComponent } from "./time-range-picker.component";
+import { QuickRanges, TimeRange } from "./time-range.model";
 
 @Component({
     selector: "bl-datetime-picker", template: "",
