@@ -6,6 +6,9 @@ bl-account-monitoring-home {
     width: 100%;
     background: $card-background;
 
+    .chart-settings {
+        border-bottom: 1px solid $border-color;
+    }
     .tab-content {
         // height: 500px;
     }
