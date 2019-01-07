@@ -37,7 +37,6 @@ interface SwaggerDefinition {
 const nameMapping = [
     { swagger: "TaskContainerExecutionInformation", app: "TaskContainerExecutionInfo" },
     { swagger: "TaskFailureInformation", app: "FailureInfo" },
-    { swagger: "OSDisk", app: "PoolOSDisk" },
     { swagger: "CloudTask", app: "Task" },
     { swagger: "CloudJob", app: "Job" },
     { swagger: "CloudPool", app: "Pool" },
