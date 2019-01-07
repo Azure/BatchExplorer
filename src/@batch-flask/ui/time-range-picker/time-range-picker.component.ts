@@ -13,10 +13,6 @@ export interface TimeRangeAttributes {
     end?: Date | Duration | null;
 }
 
-export interface QuickRange extends TimeRangeAttributes {
-    label: string;
-}
-
 export class TimeRange {
     private _start: Date | Duration | undefined | null;
     private _end: Date | Duration | undefined | null;
@@ -49,13 +45,22 @@ export class TimeRange {
     }
 }
 
+export class QuickRange extends TimeRange {
+    public label: string;
+
+    constructor(data: { label: string } & TimeRangeAttributes) {
+        super(data);
+        this.label = data.label;
+    }
+}
+
 // tslint:disable-next-line:variable-name
-export const QuickRange = {
-    lastHour: { label: "Last hour", start: Duration.fromObject({ hours: -1 }) },
-    last24h: { label: "Last 24h", start: Duration.fromObject({ hours: -24 }) },
-    lastWeek: { label: "Last week", start: Duration.fromObject({ weeks: -1 }) },
-    lastMonth: { label: "Last month", start: Duration.fromObject({ months: -1 }) },
-    last90Days: { label: "Last 90 days", start: Duration.fromObject({ days: -90 }) },
+export const QuickRanges = {
+    lastHour: new QuickRange({ label: "Last hour", start: Duration.fromObject({ hours: -1 }) }),
+    last24h: new QuickRange({ label: "Last 24h", start: Duration.fromObject({ hours: -24 }) }),
+    lastWeek: new QuickRange({ label: "Last week", start: Duration.fromObject({ weeks: -1 }) }),
+    lastMonth: new QuickRange({ label: "Last month", start: Duration.fromObject({ months: -1 }) }),
+    last90Days: new QuickRange({ label: "Last 90 days", start: Duration.fromObject({ days: -90 }) }),
 };
 
 let idCounter = 0;
@@ -72,11 +77,11 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
     @HostBinding("attr.id") public id = `bl-timerange-picker-${idCounter++}`;
 
     public quickRanges: QuickRange[] = [
-        QuickRange.lastHour,
-        QuickRange.last24h,
-        QuickRange.lastWeek,
-        QuickRange.lastMonth,
-        QuickRange.last90Days,
+        QuickRanges.lastHour,
+        QuickRanges.last24h,
+        QuickRanges.lastWeek,
+        QuickRanges.lastMonth,
+        QuickRanges.last90Days,
     ];
 
     public customRange: FormGroup;
@@ -88,8 +93,8 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
 
     constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
         this.customRange = formBuilder.group({
-            from: [null],
-            to: [null],
+            start: [null],
+            end: [null],
         });
 
     }
@@ -161,6 +166,8 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
         if ("label" in this.current) {
             return this.current.label;
         }
+
+        console.log("PRerty ", this.current);
 
         const startStr = this._prettyPoint(this.current.start);
         const endStr = this._prettyPoint(this.current.end);

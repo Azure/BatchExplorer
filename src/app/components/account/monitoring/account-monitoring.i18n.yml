@@ -1,0 +1,7 @@
+account-monitoring:
+  coreCount: Core minutes
+  failedTask: Failed task
+  nodeStates: Node states
+  taskStates: Task states
+  currentNodeStates: Current node states
+  notARM: Account monitoring is only enabled for ARM batch accounts

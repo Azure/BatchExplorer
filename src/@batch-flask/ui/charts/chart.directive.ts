@@ -10,10 +10,16 @@ import {
     Output,
     SimpleChanges,
 } from "@angular/core";
-
-// tslint:disable-next-line
-const Chart = require("chart.js");
+import * as Chart from "chart.js";
 import { getColors } from "./helpers";
+
+export enum ChartType {
+    Bar = "bar",
+    Line = "line",
+    Radar = "radar",
+    Doughnut = "doughnut",
+    Pie = "pie",
+}
 
 @Directive({ selector: "canvas[blChart]" })
 export class ChartDirective implements OnDestroy, OnChanges, OnInit {
@@ -22,7 +28,7 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     @Input() public datasets: any[];
     @Input() public labels: string[] = [];
     @Input() public options: Chart.ChartOptions = {};
-    @Input() public chartType: string;
+    @Input() public chartType: ChartType;
     @Input() public colors: any[];
     @Input() public legend: boolean;
 

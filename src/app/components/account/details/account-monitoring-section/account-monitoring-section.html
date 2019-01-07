@@ -1,26 +1,29 @@
-<div class="monitoring-header">
+<div class="monitoring-header" [formGroup]="settings">
     <h1 class="section-title">{{'account-details.monitoring' | i18n }}</h1>
-    <bl-time-range-picker [formControl]="timeRange"></bl-time-range-picker>
+
+    <div>
+        <mat-button-toggle-group formControlName="chartType">
+            <mat-button-toggle [value]="ChartType.Line">
+                <i class="fa fa-line-chart"></i> Line
+            </mat-button-toggle>
+            <mat-button-toggle [value]="ChartType.Bar">
+                <i class="fa fa-bar-chart"></i> Bar
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <bl-time-range-picker formControlName="timeRange"></bl-time-range-picker>
+    </div>
 </div>
 
 <div class="monitor-charts" *ngIf="isArmAccount">
-    <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
-        <bl-monitor-chart chartType="coreCount" [timeRange]="currentRange"></bl-monitor-chart>
-    </a>
-    <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
-        <bl-monitor-chart chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']" role="link" [timeRange]="currentRange"></bl-monitor-chart>
-    </a>
-    <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
-        <bl-monitor-chart chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']" role="link" [timeRange]="currentRange"></bl-monitor-chart>
-    </a>
-    <a class="monitor-chart node-states" [routerLink]="['/accounts', account.id, 'monitor']">
-        <bl-monitor-chart chartType="nodeStates" [routerLink]="['/accounts', account.id, 'monitor']" role="link" [timeRange]="currentRange"></bl-monitor-chart>
+    <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']" *ngFor="let metricType of chartTypes;trackBy: trackMetric">
+        <bl-monitor-chart [metrics]="metricType" [timeRange]="currentRange" [chartType]="chartType"></bl-monitor-chart>
     </a>
     <div class="monitor-chart current-node-counts">
-        <h2>Current node counts</h2>
+        <h2>{{'account-monitoring.currentNodeStates' | i18n }}</h2>
         <bl-pool-state-graph></bl-pool-state-graph>
     </div>
 </div>
 <div  *ngIf="!isArmAccount">
-    Account monitoring is only enabled for ARM batch accounts
+        {{'account-monitoring.notARM' | i18n }}
 </div>

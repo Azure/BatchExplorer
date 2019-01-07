@@ -6,8 +6,8 @@
     <div class="time-range-picker-callout">
         <div class="custom-range" [formGroup]="customRange">
             <h4>{{'time-range-picker.customRange' | i18n }}</h4>
-            <bl-datetime-picker label="From" formControlName="from"></bl-datetime-picker>
-            <bl-datetime-picker label="To" formControlName="to"></bl-datetime-picker>
+            <bl-datetime-picker label="From" formControlName="start"></bl-datetime-picker>
+            <bl-datetime-picker label="To" formControlName="end"></bl-datetime-picker>
             <bl-button type="wide" (do)="pickCustomRange()">Apply</bl-button>
         </div>
         <div class="quick-ranges">

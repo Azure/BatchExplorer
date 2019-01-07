@@ -1,12 +1,12 @@
 <ng-container *ngIf="!preview">
     <div class="header">
         <h2>
-            {{ title }}
+            {{ 'account-monitoring.' + metrics | i18n }}
         </h2>
     </div>
     <ng-container *ngIf="isChartReady">
         <div class="chart-container">
-            <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" [colors]="colors"></canvas>
+            <canvas blChart [datasets]="datasets" [options]="options" [chartType]="chartType" [colors]="colors"></canvas>
         </div>
         <div class="legend">
             <div class="legend-item" *ngFor="let dataset of datasets;trackBy: trackDataSet;let index=index">
@@ -29,5 +29,5 @@
 </ng-container>
 
 <div class="monitor-chart-preview" *ngIf="isChartReady && preview">
-   <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" [colors]="colors"></canvas>
+    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="chartType" [colors]="colors"></canvas>
 </div>

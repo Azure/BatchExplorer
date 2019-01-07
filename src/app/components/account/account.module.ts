@@ -1,4 +1,5 @@
 import { NgModule } from "@angular/core";
+import { MatButtonToggleModule } from "@angular/material";
 import { TimeRangePickerModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
@@ -42,6 +43,7 @@ const modules = [
     imports: [
         ...modules,
         TimeRangePickerModule,
+        MatButtonToggleModule,
     ],
     entryComponents: [
         AddLocalBatchAccountComponent,

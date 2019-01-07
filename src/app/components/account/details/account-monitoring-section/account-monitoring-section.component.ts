@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
-import { FormControl } from "@angular/forms";
-import { QuickRange, TimeRange } from "@batch-flask/ui";
+import { FormControl, FormGroup } from "@angular/forms";
+import { ChartType, QuickRanges } from "@batch-flask/ui";
 import { ArmBatchAccount, BatchAccount } from "app/models";
+import { MonitorChartType } from "app/services";
 
 import "./account-monitoring-section.scss";
 
@@ -11,16 +12,25 @@ import "./account-monitoring-section.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountMonitoringSectionComponent {
+    public ChartType = ChartType;
+    public chartTypes = Object.values(MonitorChartType);
+
     @Input() public account: BatchAccount;
 
     public isArmAccount = true;
 
-    public timeRange = new FormControl<TimeRange | QuickRange>(QuickRange.last24h);
-    public currentRange = new TimeRange(QuickRange.last24h);
+    public settings: FormGroup;
+    public currentRange = QuickRanges.last24h;
+    public chartType: ChartType = ChartType.Line;
 
     constructor(private changeDetector: ChangeDetectorRef) {
-        this.timeRange.valueChanges.subscribe((value) => {
-            this.currentRange = value instanceof TimeRange ? value : new TimeRange(value);
+        this.settings = new FormGroup({
+            timeRange: new FormControl(this.currentRange),
+            chartType: new FormControl(this.chartType),
+        });
+        this.settings.valueChanges.subscribe(({ timeRange, chartType }) => {
+            this.currentRange = timeRange;
+            this.chartType = chartType;
             this.changeDetector.markForCheck();
         });
     }
@@ -29,5 +39,9 @@ export class AccountMonitoringSectionComponent {
         if (changes.account) {
             this.isArmAccount = this.account instanceof ArmBatchAccount;
         }
+    }
+
+    public trackMetric(_: number, value: string) {
+        return value;
     }
 }

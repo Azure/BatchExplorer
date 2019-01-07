@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { TimeRange } from "@batch-flask/ui";
+import { ChartType, TimeRange } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { log } from "@batch-flask/utils";
 import { Metric, MonitoringMetricList } from "app/models/monitoring";
@@ -19,11 +19,11 @@ import "./monitor-chart.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
-    @Input() public chartType: MonitorChartType;
+    @Input() public chartType: ChartType = ChartType.Line;
+    @Input() public metrics: MonitorChartType;
     @Input() public preview: boolean = false;
     @Input() public timeRange: TimeRange;
 
-    public type: string = "line";
     public title = "";
     public datasets: Chart.ChartDataSets[];
     public total: any[] = [];
@@ -98,13 +98,11 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnChanges(changes): void {
-        if (changes.chartType) {
+        if (changes.metrics) {
             this.refreshMetrics();
-            this._updateTitle();
         }
         if (changes.timeRange) {
             this.refreshMetrics();
-            this._updateTitle();
         }
         if (changes.preview) {
             this._setChartOptions();
@@ -129,7 +127,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             this._metrics.next(response.metrics);
             this._updateLoadingStatus(LoadingStatus.Ready);
         }, (error) => {
-            log.error(`Error loading metrics for account metrics type: ${this.chartType}`, error);
+            log.error(`Error loading metrics for account metrics type: ${this.metrics}`, error);
             this._updateLoadingStatus(LoadingStatus.Error);
         });
     }
@@ -147,7 +145,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     }
 
     private _loadMetrics(): Observable<MonitoringMetricList> {
-        switch (this.chartType) {
+        switch (this.metrics) {
             case MonitorChartType.CoreCount:
                 return this.monitor.getCoreMinutes(this.timeRange);
             case MonitorChartType.FailedTask:
@@ -157,24 +155,6 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             case MonitorChartType.TaskStates:
                 return this.monitor.getTaskStates(this.timeRange);
         }
-    }
-
-    private _updateTitle() {
-        switch (this.chartType) {
-            case MonitorChartType.CoreCount:
-                this.title = "Core minutes";
-                break;
-            case MonitorChartType.FailedTask:
-                this.title = "Failed task";
-                break;
-            case MonitorChartType.NodeStates:
-                this.title = "Node states";
-                break;
-            case MonitorChartType.TaskStates:
-                this.title = "Task states";
-                break;
-        }
-        this.changeDetector.markForCheck();
     }
 
     private _setChartOptions() {

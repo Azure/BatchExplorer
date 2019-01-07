@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-
 import { TimeRange } from "@batch-flask/ui";
 import { Metric, MetricValue, MonitoringMetricList } from "app/models/monitoring";
 import { ArmHttpService } from "app/services/arm-http.service";
 import { BatchAccountService } from "app/services/batch-account";
+import { Observable } from "rxjs";
 import { map, share, switchMap, take } from "rxjs/operators";
 import { CoreCountMetrics } from "./core-count-metrics";
 import { FailedTaskMetrics } from "./failed-task-metrics";
