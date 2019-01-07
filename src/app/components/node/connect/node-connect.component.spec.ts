@@ -235,9 +235,8 @@ describe("NodeConnectComponent", () => {
                 testComponent.pool = new Pool({
                     id: "a",
                     cloudServiceConfiguration: {
-                        currentOSVersion: "*",
+                        osVersion: "*",
                         osFamily: "4",
-                        targetOSVersion: "*",
                     },
                 } as any);
                 fixture.detectChanges();

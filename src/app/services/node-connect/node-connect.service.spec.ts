@@ -169,9 +169,8 @@ describe("NodeConnectService", () => {
             pool = new Pool({
                 id: "a",
                 cloudServiceConfiguration: {
-                    currentOSVersion: "*",
                     osFamily: "4",
-                    targetOSVersion: "*",
+                    osVersion: "*",
                 },
             } as any);
 

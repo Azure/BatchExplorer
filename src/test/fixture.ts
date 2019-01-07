@@ -142,8 +142,7 @@ export const pool = new FixtureFactory<Pool>(Pool, {
     vmSize: "standard_a1",
     cloudServiceConfiguration: {
         osFamily: "4",
-        targetOSVersion: "WA-GUEST-OS-2.28_201409-01",
-        currentOSVersion: "WA-GUEST-OS-2.28_201409-01",
+        osVersion: "WA-GUEST-OS-2.28_201409-01",
     },
     resizeTimeout: Duration.fromISO("PT15M"),
     currentDedicated: 5,

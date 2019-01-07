@@ -194,7 +194,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
 
     private _addResourceFile(blobSource: string, filePath: string) {
         const files = this.files.value.concat([{
-            blobSource,
+            httpUrl: blobSource,
             filePath,
         }]);
         this.files.setValue(files);

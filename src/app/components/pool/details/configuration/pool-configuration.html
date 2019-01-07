@@ -33,8 +33,7 @@
             </div>
 
             <bl-text-property label="OS family" [value]="decorator.cloudServiceConfiguration.osFamily"></bl-text-property>
-            <bl-text-property label="Curent OS version" [value]="decorator.cloudServiceConfiguration.currentOSVersion"></bl-text-property>
-            <bl-text-property label="Target OS version" [value]="decorator.cloudServiceConfiguration.targetOSVersion"></bl-text-property>
+            <bl-text-property label="OS version" [value]="decorator.cloudServiceConfiguration.osVersion"></bl-text-property>
         </bl-property-group>
 
         <bl-property-group label="Virtual machine configuration" class="wide" [collapsed]="true" *ngIf="pool.virtualMachineConfiguration">
