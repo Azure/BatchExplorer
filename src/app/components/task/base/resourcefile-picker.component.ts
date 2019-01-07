@@ -192,9 +192,9 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         obs.subscribe();
     }
 
-    private _addResourceFile(blobSource: string, filePath: string) {
+    private _addResourceFile(httpUrl: string, filePath: string) {
         const files = this.files.value.concat([{
-            httpUrl: blobSource,
+            httpUrl,
             filePath,
         }]);
         this.files.setValue(files);
