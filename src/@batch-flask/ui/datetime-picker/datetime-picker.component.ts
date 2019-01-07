@@ -12,18 +12,6 @@ import { Subscription } from "rxjs";
 
 import "./datetime-picker.scss";
 
-// Currently building a custom dropdown for time, gap is 30 minutes
-// Use material datetime picker once time picker is fully supported with timezone
-const startHour = 0;
-const endHour = 24;
-const minutes = ["00", "30"];
-const getTimezoneRegex = /\(([^)]+)\)/;
-
-export interface TimeSelectionOption {
-    label: string;
-    value: string;
-}
-
 let idCounter = 0;
 
 /**
@@ -43,7 +31,6 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     @Input() public label: string;
     @Input() public timePicker: boolean = true;
 
-    public timeOptions: TimeSelectionOption[];
     public selectedDate = new FormControl();
     public selectedTime = new FormControl();
     public datetime: FormGroup;
@@ -54,10 +41,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     private _subs: Subscription[] = [];
 
     constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
-        this.timeOptions = this._buildTimeOptions();
-        const zoneMatch = getTimezoneRegex.exec(new Date().toString());
-        const timeZoneName = Array.isArray(zoneMatch) ? zoneMatch[0] : "";
-        this.currentTimeZone = `${DateTime.local().toFormat("Z")} ${timeZoneName}`;
+        this.currentTimeZone = new Date().toLocaleTimeString("en-us", {timeZoneName: "short"}).split(" ")[2];
 
         this.datetime = formBuilder.group({
             date: this.selectedDate,
@@ -138,21 +122,5 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         } else {
             return DateTime.fromJSDate(value);
         }
-    }
-    private _buildTimeOptions(): TimeSelectionOption[] {
-        const timeArray: TimeSelectionOption[] = [];
-        for (let i = startHour; i < endHour; i++) {
-            minutes.forEach(minute => {
-                const hour = i > 9 ? "" + i : "0" + i;
-                const ampm = i >= 12 ? "PM" : "AM";
-                const time = `${hour}:${minute}`;
-                const label = `${time} ${ampm}`;
-                timeArray.push({
-                    value: time,
-                    label: label,
-                } as TimeSelectionOption);
-            });
-        }
-        return timeArray;
     }
 }

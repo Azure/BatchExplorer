@@ -1,0 +1,29 @@
+<div class="monitoring-header" [formGroup]="settings">
+    <h1 class="section-title">{{'account-details.monitoring' | i18n }}</h1>
+
+    <div>
+        <mat-button-toggle-group formControlName="chartType">
+            <mat-button-toggle [value]="ChartType.Line">
+                <i class="fa fa-line-chart"></i> Line
+            </mat-button-toggle>
+            <mat-button-toggle [value]="ChartType.Bar">
+                <i class="fa fa-bar-chart"></i> Bar
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <bl-time-range-picker formControlName="timeRange"></bl-time-range-picker>
+    </div>
+</div>
+
+<div class="monitor-charts" *ngIf="isArmAccount">
+    <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']" *ngFor="let metricType of chartTypes;trackBy: trackMetric">
+        <bl-monitor-chart [metrics]="metricType" [timeRange]="currentRange" [chartType]="chartType"></bl-monitor-chart>
+    </a>
+    <div class="monitor-chart current-node-counts">
+        <h2>{{'account-monitoring.currentNodeStates' | i18n }}</h2>
+        <bl-pool-state-graph></bl-pool-state-graph>
+    </div>
+</div>
+<div  *ngIf="!isArmAccount">
+        {{'account-monitoring.notARM' | i18n }}
+</div>

@@ -1,8 +1,8 @@
+import { TimeRange } from "@batch-flask/ui";
+import { Duration } from "luxon";
 import { Subscription, of } from "rxjs";
 import * as Fixtures from "test/fixture";
-
 import { InsightsMetricsService } from "./insights-metrics.service";
-import { MonitorChartTimeFrame } from "./monitor-metrics-base";
 
 describe("InsightsMetricsService", () => {
     let monitorService: InsightsMetricsService;
@@ -84,7 +84,9 @@ describe("InsightsMetricsService", () => {
             }],
         };
 
-        subs.push(monitorService.getTaskStates(MonitorChartTimeFrame.Hour).subscribe(response => {
+        subs.push(monitorService.getTaskStates(
+            new TimeRange({ start: Duration.fromObject({ hours: -1 }) }),
+        ).subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Insights/metrics");
             expect(response.metrics.length).toEqual(2);
             expect(response.metrics[0].name).toEqual("TaskCompleteEvent");
@@ -109,7 +111,9 @@ describe("InsightsMetricsService", () => {
             }],
         };
 
-        subs.push(monitorService.getNodeStates(MonitorChartTimeFrame.Hour).subscribe(response => {
+        subs.push(monitorService.getNodeStates(
+            new TimeRange({ start: Duration.fromObject({ hours: -1 }) }),
+        ).subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Insights/metrics");
             expect(response.metrics.length).toEqual(1);
             expect(response.metrics[0].name).toEqual("StartingNodeCount");

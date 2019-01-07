@@ -1,18 +1,18 @@
+<div [formGroup]="settings" class="chart-settings">
+    <mat-button-toggle-group formControlName="chartType">
+        <mat-button-toggle [value]="ChartType.Line">
+            <i class="fa fa-line-chart"></i> Line
+        </mat-button-toggle>
+        <mat-button-toggle [value]="ChartType.Bar">
+            <i class="fa fa-bar-chart"></i> Bar
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <bl-time-range-picker formControlName="timeRange"></bl-time-range-picker>
+</div>
 <bl-metrics-monitor>
-    <bl-metrics-monitor-metric label="Core Minutes">
-        <bl-monitor-chart blMonitorGraphPreview chartType="coreCount" [preview]="true"></bl-monitor-chart>
-        <bl-monitor-chart blMonitorGraphChart chartType="coreCount"></bl-monitor-chart>
-    </bl-metrics-monitor-metric>
-    <bl-metrics-monitor-metric label="Failed task">
-        <bl-monitor-chart blMonitorGraphPreview chartType="failedTask" [preview]="true"></bl-monitor-chart>
-        <bl-monitor-chart blMonitorGraphChart chartType="failedTask"></bl-monitor-chart>
-    </bl-metrics-monitor-metric>
-    <bl-metrics-monitor-metric label="Task states">
-        <bl-monitor-chart blMonitorGraphPreview chartType="taskStates" [preview]="true"></bl-monitor-chart>
-        <bl-monitor-chart blMonitorGraphChart chartType="taskStates"></bl-monitor-chart>
-    </bl-metrics-monitor-metric>
-    <bl-metrics-monitor-metric label="Node states">
-        <bl-monitor-chart blMonitorGraphPreview chartType="nodeStates" [preview]="true"></bl-monitor-chart>
-        <bl-monitor-chart blMonitorGraphChart chartType="nodeStates"></bl-monitor-chart>
+    <bl-metrics-monitor-metric [label]="('account-monitoring.' + metricType) | i18n" *ngFor="let metricType of chartTypes;trackBy: trackMetric">
+        <bl-monitor-chart blMonitorGraphPreview [metrics]="metricType" [preview]="true" [timeRange]="currentRange" [chartType]="chartType"></bl-monitor-chart>
+        <bl-monitor-chart blMonitorGraphChart [metrics]="metricType"  [timeRange]="currentRange" [chartType]="chartType"></bl-monitor-chart>
     </bl-metrics-monitor-metric>
 </bl-metrics-monitor>

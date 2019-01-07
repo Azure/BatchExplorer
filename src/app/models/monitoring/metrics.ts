@@ -4,6 +4,7 @@ import { Duration } from "luxon";
 export interface MetricValue {
     timeStamp: string;
     total: number;
+    average: number;
 }
 
 export interface Metric {

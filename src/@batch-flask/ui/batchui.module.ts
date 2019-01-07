@@ -17,7 +17,7 @@ import { ButtonsModule } from "./buttons";
 import { CardModule } from "./card";
 import { ChartsModule } from "./charts";
 import { DateModule } from "./date";
-import { DatetimePickerComponent } from "./datetime-picker";
+import { DatetimePickerModule } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
 import { DurationPickerModule } from "./duration-picker";
@@ -98,6 +98,7 @@ const modules = [
     VTabsModule,
     ElectronModule,
     WorkspaceModule,
+    DatetimePickerModule,
 ];
 
 // Add subcomponnent not in a module here
@@ -106,7 +107,6 @@ const components = [
     BannerOtherFixDirective,
     TimespanComponent,
     EntityDetailsListComponent,
-    DatetimePickerComponent,
     IconComponent,
     SimpleDialogComponent,
 ];

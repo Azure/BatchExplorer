@@ -1,0 +1,22 @@
+<bl-clickable [blCallout]="callout" class="time-range">
+    {{'time-range-picker.timeRange' | i18n }}: {{currentLabel}}
+</bl-clickable>
+
+<bl-callout #callout="blCallout">
+    <div class="time-range-picker-callout">
+        <div class="custom-range" [formGroup]="customRange">
+            <h4>{{'time-range-picker.customRange' | i18n }}</h4>
+            <bl-datetime-picker label="From" formControlName="start"></bl-datetime-picker>
+            <bl-datetime-picker label="To" formControlName="end"></bl-datetime-picker>
+
+            <bl-error [control]="customRange" code="invalidRange">{{customRange.errors?.invalidRange.message}}</bl-error>
+            <bl-button type="wide" (do)="pickCustomRange()">{{'common.apply' | i18n }}</bl-button>
+        </div>
+        <div class="quick-ranges">
+            <h4>{{'time-range-picker.quickRange' | i18n }}</h4>
+            <bl-clickable *ngFor="let range of quickRanges;trackBy: trackQuickRange" (do)="pickQuickRange(range)">
+                {{range.label}}
+            </bl-clickable>
+        </div>
+    </div>
+</bl-callout>
