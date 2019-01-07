@@ -121,7 +121,7 @@ describe("ResourcefilePickerComponent", () => {
             component.handleDrop(event as any);
             expect(component.files.value.length).toBe(1);
             expect(component.files.value.first()).toEqual({
-                blobSource: "https://example.com/path/file1.txt",
+                httpUrl: "https://example.com/path/file1.txt",
                 filePath: "file1.txt",
             });
         });
@@ -142,7 +142,7 @@ describe("ResourcefilePickerComponent", () => {
                 fixture.detectChanges();
                 expect(component.files.value.length).toBe(1);
                 expect(component.files.value.first()).toEqual({
-                    blobSource: "storage-acc-1.test-custom-container?key=abc",
+                    httpUrl: "storage-acc-1.test-custom-container?key=abc",
                     filePath: "file1.txt",
                 });
                 done();
