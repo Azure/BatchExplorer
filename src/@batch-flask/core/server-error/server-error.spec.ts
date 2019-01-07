@@ -34,10 +34,8 @@ describe("ServerError.model", () => {
             const error = ServerError.fromARM(new HttpErrorResponse({
                 status: 409,
                 error: {
-                    error: {
-                        code: "AlreadyExists",
-                        message: "This is an error message",
-                    },
+                    code: "AlreadyExists",
+                    message: "This is an error message",
                 },
                 headers: new HttpHeaders({
                     "x-ms-request-id": "abc-def",
