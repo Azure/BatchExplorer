@@ -49,6 +49,30 @@
       <trans-unit id="account-details.resources">
         <source>Resources</source>
       </trans-unit>
+      <trans-unit id="account-monitoring">
+        <source/>
+      </trans-unit>
+      <trans-unit id="account-monitoring.aggregatedOver">
+        <source>Aggregated over {{interval}} interval</source>
+      </trans-unit>
+      <trans-unit id="account-monitoring.coreCount">
+        <source>Core minutes</source>
+      </trans-unit>
+      <trans-unit id="account-monitoring.currentNodeStates">
+        <source>Current node states</source>
+      </trans-unit>
+      <trans-unit id="account-monitoring.failedTask">
+        <source>Failed task</source>
+      </trans-unit>
+      <trans-unit id="account-monitoring.nodeStates">
+        <source>Node states</source>
+      </trans-unit>
+      <trans-unit id="account-monitoring.notARM">
+        <source>Account monitoring is only enabled for ARM batch accounts</source>
+      </trans-unit>
+      <trans-unit id="account-monitoring.taskStates">
+        <source>Task states</source>
+      </trans-unit>
       <trans-unit id="account-summary-card">
         <source/>
       </trans-unit>
@@ -186,6 +210,9 @@
       </trans-unit>
       <trans-unit id="common">
         <source/>
+      </trans-unit>
+      <trans-unit id="common.apply">
+        <source>Apply</source>
       </trans-unit>
       <trans-unit id="common.back">
         <source>Back</source>
@@ -1125,6 +1152,27 @@
       </trans-unit>
       <trans-unit id="task-resource-files.none">
         <source>This task contains no resource files</source>
+      </trans-unit>
+      <trans-unit id="time-range-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="time-range-picker.customRange">
+        <source>Custom range</source>
+      </trans-unit>
+      <trans-unit id="time-range-picker.errors">
+        <source/>
+      </trans-unit>
+      <trans-unit id="time-range-picker.errors.invalidRange">
+        <source>Start time must be less than end time</source>
+      </trans-unit>
+      <trans-unit id="time-range-picker.errors.required">
+        <source>At least start time or end time must be provided</source>
+      </trans-unit>
+      <trans-unit id="time-range-picker.quickRange">
+        <source>Quick range</source>
+      </trans-unit>
+      <trans-unit id="time-range-picker.timeRange">
+        <source>Time range</source>
       </trans-unit>
       <trans-unit id="virtual-network-picker">
         <source/>
