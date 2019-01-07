@@ -14,7 +14,7 @@
         </div>
         <div class="quick-ranges">
             <h4>{{'time-range-picker.quickRange' | i18n }}</h4>
-            <bl-clickable *ngFor="let range of quickRanges" (do)="pickQuickRange(range)">
+            <bl-clickable *ngFor="let range of quickRanges;trackBy: trackQuickRange" (do)="pickQuickRange(range)">
                 {{range.label}}
             </bl-clickable>
         </div>

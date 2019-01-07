@@ -109,6 +109,10 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
         // Nothing
     }
 
+    public trackQuickRange(_: number, range: QuickRange) {
+        return range.label;
+    }
+
     private _computeCurrentRangeLabel() {
         if (!this.current) {
             return "-";

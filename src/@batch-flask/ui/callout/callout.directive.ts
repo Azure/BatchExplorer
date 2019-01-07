@@ -36,7 +36,6 @@ export class CalloutDirective {
     }
 
     public close() {
-        console.log("Close?");
         if (this._overlayRef) {
             this._overlayRef.dispose();
             this._overlayRef = null;
