@@ -1,7 +1,7 @@
 <bl-table [data]="resourceFiles" (activeItemChange)="openResourceFile($event)">
     <bl-column name="blobSource">
-        <div *blHeadCellDef>{{'task-resource-files.blobSource' | i18n}}</div>
-        <div *blCellDef="let resourceFile">{{resourceFile.blobSource}}</div>
+        <div *blHeadCellDef>{{'task-resource-files.httpUrl' | i18n}}</div>
+        <div *blCellDef="let resourceFile">{{resourceFile.httpUrl}}</div>
     </bl-column>
     <bl-column name="filePath" [defaultWidth]="400">
         <div *blHeadCellDef>{{'task-resource-files.filePath' | i18n}}</div>

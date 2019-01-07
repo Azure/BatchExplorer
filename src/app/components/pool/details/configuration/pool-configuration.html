@@ -72,11 +72,11 @@
             </ng-container>
             <bl-table-property label="Resource files" *ngIf="startTask.resourceFiles?.size > 0">
                 <bl-table-property-header>
-                    <div tp-column>Blob source</div>
+                    <div tp-column>Http url</div>
                     <div tp-column>File path</div>
                 </bl-table-property-header>
                 <bl-table-property-row *ngFor="let file of startTask.resourceFiles">
-                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.httpUrl"></bl-tp-cell>
                     <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
