@@ -19,11 +19,12 @@
             </div>
         </div>
         <div class="interval-label" *ngIf="interval">
-            Aggregated over {{interval}} interval
+            {{'account-monitoring.aggregatedOver' | i18n: {interval: interval} }}
         </div>
     </ng-container>
     <div *ngIf="chartError">
         There is an error occurred when loading this chart
+        {{chartError.message}}
     </div>
     <bl-loading [status]="loadingStatus"></bl-loading>
 </ng-container>

@@ -1,3 +1,7 @@
 time-range-picker:
+  timeRange: Time range
   customRange: Custom range
   quickRange: Quick range
+  errors:
+    required: At least start time or end time must be provided
+    invalidRange: Start time must be less than end time

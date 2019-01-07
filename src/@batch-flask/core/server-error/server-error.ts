@@ -127,8 +127,8 @@ export class ServerError {
         const error = response.error || {};
         let requestId: string | null = null;
         let timestamp: Date | null = null;
-        let code = null;
-        let message = null;
+        const code = error.code;
+        const message = error.message;
 
         if (response.headers) {
             requestId = response.headers.get("x-ms-request-id");
@@ -136,10 +136,6 @@ export class ServerError {
             timestamp = date ? new Date(date) : null;
         }
 
-        if (error.error) {
-            code = error.error.code;
-            message = error.error.message;
-        }
         return new ServerError({
             status: response.status,
             code: code,

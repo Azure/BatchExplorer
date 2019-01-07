@@ -5,3 +5,4 @@ account-monitoring:
   taskStates: Task states
   currentNodeStates: Current node states
   notARM: Account monitoring is only enabled for ARM batch accounts
+  aggregatedOver: Aggregated over {{interval}} interval

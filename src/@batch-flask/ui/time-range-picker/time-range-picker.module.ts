@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonsModule } from "../buttons";
 import { CalloutModule } from "../callout";
 import { DatetimePickerModule } from "../datetime-picker";
+import { FormModule } from "../form";
 import { I18nUIModule } from "../i18n";
 import { TimeRangePickerComponent } from "./time-range-picker.component";
 
@@ -19,6 +20,7 @@ const privateComponents = [];
         I18nUIModule,
         FormsModule,
         ReactiveFormsModule,
+        FormModule,
     ],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,

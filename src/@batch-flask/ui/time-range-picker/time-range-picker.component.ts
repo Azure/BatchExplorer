@@ -1,10 +1,11 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy, forwardRef,
 } from "@angular/core";
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ValidationErrors } from "@angular/forms";
 import { DateTime, Duration } from "luxon";
 import { Subject } from "rxjs";
 
+import { I18nService } from "@batch-flask/core";
 import { DateUtils } from "@batch-flask/utils";
 import "./time-range-picker.scss";
 
@@ -91,11 +92,16 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
     private _propagateChanges: (value: TimeRange) => void;
     private _destroy = new Subject();
 
-    constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
-        this.customRange = formBuilder.group({
-            start: [null],
-            end: [null],
-        });
+    constructor(private changeDetector: ChangeDetectorRef, private i18n: I18nService, formBuilder: FormBuilder) {
+        this.customRange = formBuilder.group(
+            {
+                start: [null],
+                end: [null],
+            },
+            {
+                validators: [this._validateCustomRange.bind(this)],
+            },
+        );
 
     }
 
@@ -167,8 +173,6 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
             return this.current.label;
         }
 
-        console.log("PRerty ", this.current);
-
         const startStr = this._prettyPoint(this.current.start);
         const endStr = this._prettyPoint(this.current.end);
 
@@ -185,4 +189,27 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
         return DateUtils.prettyDate(date);
     }
 
+    private _validateCustomRange(c: FormGroup): ValidationErrors {
+        let { start, end } = c.value;
+        if (!start && !end) {
+            return {
+                invalidRange: {
+                    message: this.i18n.t("time-range-picker.errors.required"),
+                },
+            };
+        }
+
+        start = start || new Date();
+        end = end || new Date();
+
+        if (start.getTime() >= end.getTime()) {
+            return {
+                invalidRange: {
+                    message: this.i18n.t("time-range-picker.errors.invalidRange"),
+                },
+            };
+        }
+
+        return null;
+    }
 }

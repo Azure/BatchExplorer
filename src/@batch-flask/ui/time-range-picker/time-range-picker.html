@@ -1,5 +1,5 @@
 <bl-clickable [blCallout]="callout" class="time-range">
-    Time range: {{currentLabel}}
+    {{'time-range-picker.timeRange' | i18n }}: {{currentLabel}}
 </bl-clickable>
 
 <bl-callout #callout="blCallout">
@@ -8,6 +8,8 @@
             <h4>{{'time-range-picker.customRange' | i18n }}</h4>
             <bl-datetime-picker label="From" formControlName="start"></bl-datetime-picker>
             <bl-datetime-picker label="To" formControlName="end"></bl-datetime-picker>
+
+            <bl-error [control]="customRange" code="invalidRange">{{customRange.errors?.invalidRange.message}}</bl-error>
             <bl-button type="wide" (do)="pickCustomRange()">Apply</bl-button>
         </div>
         <div class="quick-ranges">

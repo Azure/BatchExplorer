@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { ServerError } from "@batch-flask/core";
 import { ChartType, TimeRange } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { log } from "@batch-flask/utils";
@@ -19,6 +20,10 @@ import "./monitor-chart.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
+
+    public get isChartReady() {
+        return this.loadingStatus === LoadingStatus.Ready && this.datasets;
+    }
     @Input() public chartType: ChartType = ChartType.Line;
     @Input() public metrics: MonitorChartType;
     @Input() public preview: boolean = false;
@@ -31,6 +36,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
     public options: Chart.ChartOptions = {};
+    public chartError: ServerError | null = null;
 
     private _accountSub: Subscription;
     private _sub: Subscription;
@@ -116,6 +122,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     }
 
     public refreshMetrics() {
+        this.chartError = null;
         const obs = this._loadMetrics();
         if (!obs) { return; }
 
@@ -127,17 +134,10 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             this._metrics.next(response.metrics);
             this._updateLoadingStatus(LoadingStatus.Ready);
         }, (error) => {
+            this.chartError = error;
             log.error(`Error loading metrics for account metrics type: ${this.metrics}`, error);
             this._updateLoadingStatus(LoadingStatus.Error);
         });
-    }
-
-    public get isChartReady() {
-        return this.loadingStatus === LoadingStatus.Ready && this.datasets;
-    }
-
-    public get chartError() {
-        return this.loadingStatus === LoadingStatus.Error;
     }
 
     public trackDataSet(index, dataset) {
