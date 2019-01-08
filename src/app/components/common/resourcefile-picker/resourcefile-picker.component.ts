@@ -4,7 +4,7 @@ import {
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { FileSystemService } from "@batch-flask/ui";
+import { DialogService, FileSystemService } from "@batch-flask/ui";
 import { CloudPathUtils, DragUtils, SecureUtils, UrlUtils } from "@batch-flask/utils";
 import { ResourceFileAttributes } from "app/models";
 import { SettingsService } from "app/services";
@@ -15,6 +15,7 @@ import { DateTime } from "luxon";
 import * as path from "path";
 import { Observable, Subscription } from "rxjs";
 import { flatMap, share, tap } from "rxjs/operators";
+import { ResourceFileCloudFileDialogComponent } from "./resourcefile-cloud-file-dialog";
 import "./resourcefile-picker.scss";
 
 export interface UploadResourceFileEvent {
@@ -56,6 +57,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         private storageBlobService: StorageBlobService,
         private storageContainerService: StorageContainerService,
         private fs: FileSystemService,
+        private dialogService: DialogService,
         private settingsService: SettingsService,
         private changeDetector: ChangeDetectorRef) {
         this._folderId = SecureUtils.uuid();
@@ -83,17 +85,22 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
 
     public addUrlResourceFile() {
         this.files.push(new FormControl({ httpUrl: "", filePath: "" }));
-        this.changeDetector. markForCheck();
+        this.changeDetector.markForCheck();
     }
 
     public pickFromAzureStorage() {
-        this.files.push(new FormControl({ storageContainerUrl: "", filePath: "" }));
-        this.changeDetector. markForCheck();
+        const ref = this.dialogService.open(ResourceFileCloudFileDialogComponent);
+        ref.afterClosed().subscribe((file) => {
+            if (file) {
+                this.files.push(new FormControl(file));
+                this.changeDetector.markForCheck();
+            }
+        });
     }
 
     public removeRow(i: number) {
         this.files.removeAt(i);
-        this.changeDetector. markForCheck();
+        this.changeDetector.markForCheck();
     }
 
     public registerOnChange(fn) {

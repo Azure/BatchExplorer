@@ -32,6 +32,8 @@ export enum BlobContainerPickerOutput {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlobContainerPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+    @Input() public storageAccountId: string | null | undefined;
+
     @Input() public label: string;
     @Input() public hint: string;
 
