@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
-import { FileBrowseModule } from "app/components/file/browse";
+import { BlobFilesBrowserModule } from "app/components/file/browse";
 import { CloudFilePickerComponent, CloudFilePickerDialogComponent } from "./cloud-file-picker";
 import { StorageErrorDisplayComponent } from "./errors";
 import { FileGroupPickerModule } from "./file-group-picker";
@@ -28,8 +28,9 @@ const modules = [
     declarations: components,
     exports: [...components, ...modules],
     imports: [
-        ...commonModules, FileBrowseModule,
+        ...commonModules,
         ...modules,
+        BlobFilesBrowserModule,
     ],
     entryComponents: [CloudFilePickerDialogComponent],
 })

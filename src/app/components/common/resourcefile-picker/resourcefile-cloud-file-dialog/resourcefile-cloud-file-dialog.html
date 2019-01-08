@@ -1,18 +1,24 @@
-<bl-simple-form [submit]="submit" (done)="close()" [containerRef]="dialogRef" [multiUse]="false" actionName="Pick"
-    [title]="'resourcefile-picker.cloudFileDialog.title' | i18n">
+<bl-simple-form
+    [submit]="submit"
+    [containerRef]="dialogRef"
+    [multiUse]="false"
+    actionName="Pick"
+    [formGroup]="form"
+    [title]="'resourcefile-picker.cloudFileDialog.title' | i18n"
+    (done)="close()"
+    >
+
     <div class="container-pick">
         <bl-storage-account-picker formControlName="storageAccountId"></bl-storage-account-picker>
         <bl-blob-container-picker [storageAccountId]="storageAccountId" output="name" formControlName="containerName"></bl-blob-container-picker>
     </div>
 
-    <!-- <bl-blob-files-browser #blobList
+    <bl-blob-files-browser #blobList
         *ngIf="storageAccountId && containerName"
         [storageAccountId]="storageAccountId"
         [container]="containerName"
         [fileExplorerConfig]="fileExplorerConfig"
         [activeFile]="pickedFile"
-        [filter]="pickedFilter"
-        [fetchAll]="recursiveFetch"
         (activeFileChange)="updatePickedFile($event)">
-</bl-blob-files-browser> -->
+    </bl-blob-files-browser>
 </bl-simple-form>

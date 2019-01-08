@@ -1,6 +1,8 @@
 @import "app/styles/variables";
 
 bl-resourcefile-cloud-file-dialog {
+    min-height: 100px;
+
     .container-pick {
         display: flex;
     }

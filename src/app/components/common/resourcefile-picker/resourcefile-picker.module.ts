@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonsModule, FormModule, I18nUIModule } from "@batch-flask/ui";
 import { EditableTableModule } from "@batch-flask/ui/form/editable-table";
+import { BlobFilesBrowserModule } from "app/components/file/browse";
 import { BlobContainerPickerModule } from "../blob-container-picker";
 import { StorageAccountPickerModule } from "../storage-account-picker";
 import { ResourceFileCloudFileDialogComponent } from "./resourcefile-cloud-file-dialog";
@@ -23,6 +24,7 @@ const privateComponents = [ResourceFilePickerRowComponent, ResourceFileCloudFile
         BlobContainerPickerModule,
         StorageAccountPickerModule,
         I18nUIModule,
+        BlobFilesBrowserModule,
     ],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
