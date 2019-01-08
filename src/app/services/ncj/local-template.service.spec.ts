@@ -13,7 +13,7 @@ describe("LocalTemplateService", () => {
     let userConfigurationSpy;
     let sources: LocalTemplateFolder[] = null;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         userConfigurationSpy = {
             get: jasmine.createSpy("userConfigurationSpy.get").and.returnValue({
                 sources: [source0, source1],
@@ -29,6 +29,7 @@ describe("LocalTemplateService", () => {
 
         service = new LocalTemplateService(userConfigurationSpy, fsSpy);
         service.sources.subscribe(x => sources = x);
+        await Promise.resolve();
     });
 
     it("Loaded the sources", () => {
