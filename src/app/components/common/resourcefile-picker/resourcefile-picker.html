@@ -1,4 +1,13 @@
-<!-- <bl-editafable-table> -->
+<div [formGroup]="files">
+    <div *ngFor="let control of files.controls;let i = index" class="file-row">
+        <bl-resourcefile-picker-row [formControlName]="i" (delete)="removeRow($event)">
+        </bl-resourcefile-picker-row>
+    </div>
+</div>
+
+<bl-button type="wide" (do)="addUrlResourceFile()">Add from url</bl-button>
+<bl-button type="wide" (do)="pickFromAzureStorage()">Add from azure storage</bl-button>
+
 <span class="help">You can drag and drop files here to be uploaded automatically</span>
 <div class="uploading-files" *ngIf="uploadingFiles.length > 0">
     <div class="file" *ngFor="let file of uploadingFiles;trackBy: trackUploadingFile">
@@ -10,4 +19,3 @@
     <i class="fa fa-upload"></i>
     <span class="message">Upload file</span>
 </div>
-<bl-resourcefile-picker-row></bl-resourcefile-picker-row>

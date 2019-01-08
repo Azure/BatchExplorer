@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, forwardRef } from "@angular/core";
 import {
     AbstractControl, ControlValueAccessor, FormControl,
     FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
 
+import { exists } from "@batch-flask/utils";
 import { ResourceFileAttributes } from "app/models";
 import "./resourcefile-picker-row.scss";
 
@@ -21,6 +22,8 @@ enum ResourceFileType {
     ],
 })
 export class ResourceFilePickerRowComponent implements ControlValueAccessor, Validator {
+    @Output() public delete = new EventEmitter();
+
     public ResourceFileType = ResourceFileType;
     public type: ResourceFileType = ResourceFileType.Url;
     public form: FormGroup;
@@ -29,16 +32,29 @@ export class ResourceFilePickerRowComponent implements ControlValueAccessor, Val
 
     constructor(private changeDetector: ChangeDetectorRef) {
         this.form = new FormGroup({
-            localPath: new FormControl(""),
+            filePath: new FormControl(""),
+            httpUrl: new FormControl(""),
+        });
+
+        this.form.valueChanges.subscribe((file) => {
+            switch (this.type) {
+                case ResourceFileType.Url:
+                    this._propagateChange({ filePath: file.filePath, httpUrl: file.httpUrl });
+                    break;
+                case ResourceFileType.Container:
+                    this._propagateChange({ filePath: file.filePath, storageContainerUrl: file.storageContainerUrl });
+                    break;
+            }
         });
     }
 
-    public registerOnValidatorChange?(fn: () => void): void {
-        throw new Error("Method not implemented.");
-    }
-
     public writeValue(file: ResourceFileAttributes): void {
+        console.log("New file", file);
         this._computeType(file);
+        this.form.patchValue({
+            filePath: file.filePath,
+            httpUrl: file.httpUrl,
+        });
     }
 
     public registerOnChange(fn: (value: ResourceFileAttributes) => void): void {
@@ -53,14 +69,14 @@ export class ResourceFilePickerRowComponent implements ControlValueAccessor, Val
         return null;
     }
 
-    private _propagateChanges(value: ResourceFileAttributes) {
+    private _propagateChange(value: ResourceFileAttributes) {
         if (this._propagateFn) {
             this._propagateFn(value);
         }
     }
 
     private _computeType(file: ResourceFileAttributes) {
-        if (file.httpUrl) {
+        if (exists(file.httpUrl)) {
             this.type = ResourceFileType.Url;
         } else {
             this.type = ResourceFileType.Container;

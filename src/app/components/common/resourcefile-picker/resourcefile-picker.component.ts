@@ -2,7 +2,7 @@ import {
     ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnDestroy, Output, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, FormArray, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { FileSystemService } from "@batch-flask/ui";
 import { CloudPathUtils, DragUtils, SecureUtils, UrlUtils } from "@batch-flask/utils";
@@ -37,7 +37,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
      * Event emitted when a file is being uploaded, use this to add async task to the form
      */
     @Output() public upload = new EventEmitter();
-    public files: FormControl<ResourceFileAttributes[]>;
+    public files: FormArray;
     public isDraging = 0;
     public uploadingFiles: string[] = [];
 
@@ -59,7 +59,9 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         private settingsService: SettingsService,
         private changeDetector: ChangeDetectorRef) {
         this._folderId = SecureUtils.uuid();
-        this.files = this.formBuilder.control([]);
+
+        this.files = this.formBuilder.array([]);
+
         this._sub = this.files.valueChanges.subscribe((files) => {
             if (this._propagateChange) {
                 this._propagateChange(files);
@@ -77,6 +79,21 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         if (value) {
             this.files.setValue(value);
         }
+    }
+
+    public addUrlResourceFile() {
+        this.files.push(new FormControl({ httpUrl: "", filePath: "" }));
+        this.changeDetector. markForCheck();
+    }
+
+    public pickFromAzureStorage() {
+        this.files.push(new FormControl({ storageContainerUrl: "", filePath: "" }));
+        this.changeDetector. markForCheck();
+    }
+
+    public removeRow(i: number) {
+        this.files.removeAt(i);
+        this.changeDetector. markForCheck();
     }
 
     public registerOnChange(fn) {
@@ -174,7 +191,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
                             AccessPolicy: {
                                 Permissions: BlobUtilities.SharedAccessPermissions.READ,
                                 Start: new Date(),
-                                Expiry: DateTime.local().plus({weeks: 1}).toJSDate(),
+                                Expiry: DateTime.local().plus({ weeks: 1 }).toJSDate(),
                             },
                         };
                         return this.storageBlobService.generateSharedAccessBlobUrl(storageAccountId,
@@ -193,11 +210,10 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     }
 
     private _addResourceFile(httpUrl: string, filePath: string) {
-        const files = this.files.value.concat([{
+        this.files.push(new FormControl({
             httpUrl,
             filePath,
-        }]);
-        this.files.setValue(files);
+        }));
     }
 
     private _canDrop(dataTransfer: DataTransfer) {

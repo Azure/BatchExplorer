@@ -58,7 +58,7 @@ const modules = [
         ReactiveFormsModule,
         RendererTelemetryModule,
         RouterModule.forRoot(routes, {
-            // useHash: true,
+            useHash: false,
             paramsInheritanceStrategy: "always",
             preloadingStrategy: PreloadAllModules,
         }),

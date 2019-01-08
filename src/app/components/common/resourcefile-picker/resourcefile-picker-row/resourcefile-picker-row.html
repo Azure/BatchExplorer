@@ -1,11 +1,16 @@
-<div class="type" [ngSwitch]="type">
-    <i class="fa fa-file" *ngSwitchCase="ResourceFileType.Url"></i>
-    <i class="fa fa-cloud" *ngSwitchCase="ResourceFileType.Container"></i>
-    <i class="fa fa-question-circle" *ngSwitchDefault></i>
-</div>
-<div class="source">
-    <input blInput placeholder="Local path" formControlName="localPath">
-</div>
-<div class="local-path">
-    <input blInput placeholder="Local path" formControlName="localPath">
-</div>
+<ng-container [formGroup]="form">
+    <div class="type" [ngSwitch]="type">
+        <i class="fa fa-file" *ngSwitchCase="ResourceFileType.Url"></i>
+        <i class="fa fa-cloud" *ngSwitchCase="ResourceFileType.Container"></i>
+        <i class="fa fa-question-circle" *ngSwitchDefault></i>
+    </div>
+    <div class="source" [ngSwitch]="type">
+        <input blInput placeholder="Url" formControlName="httpUrl" *ngSwitchCase="ResourceFileType.Url">
+    </div>
+    <div class="local-path">
+        <input blInput placeholder="Local path" formControlName="filePath">
+    </div>
+    <div class="actions">
+        <bl-button type="square" color="danger" (do)="delete.emit()"><i class="fa fa-times"></i></bl-button>
+    </div>
+</ng-container>

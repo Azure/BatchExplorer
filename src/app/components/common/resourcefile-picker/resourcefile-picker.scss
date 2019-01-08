@@ -4,8 +4,8 @@ bl-resourcefile-picker {
     display: block;
     position: relative;
 
-    table {
-        margin-bottom: 0;
+    .file-row {
+        margin-bottom: 2px;
     }
 
     .uploading-files {
