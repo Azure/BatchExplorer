@@ -21,7 +21,7 @@ class TestComponent {
     public files = [];
 }
 
-fdescribe("ResourcefilePickerComponent", () => {
+describe("ResourcefilePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: ResourcefilePickerComponent;
