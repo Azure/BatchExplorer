@@ -1141,14 +1141,14 @@
       <trans-unit id="task-resource-files">
         <source/>
       </trans-unit>
-      <trans-unit id="task-resource-files.blobSource">
-        <source>Blob source</source>
-      </trans-unit>
       <trans-unit id="task-resource-files.fileMode">
         <source>File mode</source>
       </trans-unit>
       <trans-unit id="task-resource-files.filePath">
         <source>Node file path</source>
+      </trans-unit>
+      <trans-unit id="task-resource-files.httpUrl">
+        <source>Http url</source>
       </trans-unit>
       <trans-unit id="task-resource-files.none">
         <source>This task contains no resource files</source>
