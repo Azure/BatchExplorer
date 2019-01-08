@@ -1,7 +1,10 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface ResourceFileAttributes {
-    blobSource: string;
+    autoStorageContainerName?: string;
+    blobPrefix?: string;
+    httpUrl?: string;
+    storageContainerUrl?: string;
     filePath: string;
     fileMode?: string;
 }
@@ -11,7 +14,13 @@ export interface ResourceFileAttributes {
  */
 @Model()
 export class ResourceFile extends Record<ResourceFileAttributes> {
-    @Prop() public blobSource: string;
+    @Prop() public autoStorageContainerName: string;
+
+    @Prop() public blobPrefix: string;
+
+    @Prop() public httpUrl: string;
+
+    @Prop() public storageContainerUrl: string;
 
     @Prop() public filePath: string;
 

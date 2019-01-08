@@ -83,7 +83,7 @@ describe("ResourcefilePickerComponent", () => {
         const columns = editableTable.columns.toArray();
 
         expect(columns.length).toBe(2);
-        expect(columns[0].name).toBe("blobSource");
+        expect(columns[0].name).toBe("httpUrl");
         expect(columns[1].name).toBe("filePath");
     });
 
@@ -91,18 +91,18 @@ describe("ResourcefilePickerComponent", () => {
         const columns = editableTableEl.queryAll(By.css("thead th"));
 
         expect(columns.length).toBe(3);
-        expect(columns[0].nativeElement.textContent).toContain("Blob source");
+        expect(columns[0].nativeElement.textContent).toContain("Source");
         expect(columns[1].nativeElement.textContent).toContain("File path");
     });
 
     it("Should update the files", () => {
         editableTable.addNewItem();
         editableTable.items.controls[0].setValue({
-            blobSource: "https://example.com/file.json",
+            httpUrl: "https://example.com/file.json",
             filePath: "path/file.json",
         });
         expect(testComponent.files).toEqual([{
-            blobSource: "https://example.com/file.json",
+            httpUrl: "https://example.com/file.json",
             filePath: "path/file.json",
         }]);
     });
@@ -121,7 +121,7 @@ describe("ResourcefilePickerComponent", () => {
             component.handleDrop(event as any);
             expect(component.files.value.length).toBe(1);
             expect(component.files.value.first()).toEqual({
-                blobSource: "https://example.com/path/file1.txt",
+                httpUrl: "https://example.com/path/file1.txt",
                 filePath: "file1.txt",
             });
         });
@@ -142,7 +142,7 @@ describe("ResourcefilePickerComponent", () => {
                 fixture.detectChanges();
                 expect(component.files.value.length).toBe(1);
                 expect(component.files.value.first()).toEqual({
-                    blobSource: "storage-acc-1.test-custom-container?key=abc",
+                    httpUrl: "storage-acc-1.test-custom-container?key=abc",
                     filePath: "file1.txt",
                 });
                 done();

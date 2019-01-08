@@ -18,7 +18,7 @@ export class PoolAdvancedFilterComponent {
     constructor() {
         this.advancedFilter = new AdvancedFilter({
             state: new StatePickerControl("State", [
-                PoolState.active, PoolState.upgrading, PoolState.deleting,
+                PoolState.active, PoolState.deleting,
             ]),
             allocationState: new StatePickerControl("Allocation state", [
                 PoolAllocationState.steady, PoolAllocationState.resizing, PoolAllocationState.stopping,

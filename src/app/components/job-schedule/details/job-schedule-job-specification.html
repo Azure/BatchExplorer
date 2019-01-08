@@ -57,11 +57,11 @@
             </bl-table-property>
             <bl-table-property *ngIf="managerTask.resourceFiles.length > 0" label="Resource files">
                 <bl-table-property-header>
-                    <div tp-column>Blob source</div>
+                    <div tp-column>Http url</div>
                     <div tp-column>File path</div>
                 </bl-table-property-header>
                 <bl-table-property-row *ngFor="let file of managerTask.resourceFiles">
-                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.httpUrl"></bl-tp-cell>
                     <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
@@ -85,11 +85,11 @@
             <bl-bool-property label="Re-run on node reboot" [value]="prepTask.rerunOnNodeRebootAfterSuccess" yesNo="true"></bl-bool-property>
             <bl-table-property *ngIf="prepTask.resourceFiles.length > 0" label="Resource files">
                 <bl-table-property-header>
-                    <div tp-column>Blob source</div>
+                    <div tp-column>Http url</div>
                     <div tp-column>File path</div>
                 </bl-table-property-header>
                 <bl-table-property-row *ngFor="let file of prepTask.resourceFiles">
-                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.httpUrl"></bl-tp-cell>
                     <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
@@ -120,11 +120,11 @@
             <bl-bool-property label="Run elevated" [value]="releaseTask.runElevated" yesNo="true"></bl-bool-property>
             <bl-table-property *ngIf="releaseTask.resourceFiles.length > 0" label="Resource files">
                 <bl-table-property-header>
-                    <div tp-column>Blob source</div>
+                    <div tp-column>Http url</div>
                     <div tp-column>File path</div>
                 </bl-table-property-header>
                 <bl-table-property-row *ngFor="let file of releaseTask.resourceFiles">
-                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.httpUrl"></bl-tp-cell>
                     <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>

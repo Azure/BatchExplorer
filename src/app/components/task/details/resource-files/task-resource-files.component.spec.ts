@@ -57,9 +57,9 @@ describe("TaskResourceFilesComponent", () => {
         beforeEach(() => {
             testComponent.task = new Task({
                 id: "task-no-files", resourceFiles: [
-                    { blobSource: "http://batch.blob.net.windows/some/file/foo.txt", filePath: "local/foo.txt" },
-                    { blobSource: "http://batch.blob.net.windows/some/file/bar.png", filePath: "local/bar.png" },
-                    { blobSource: "http://batch.blob.net.windows/other.py", filePath: "local/other.py" },
+                    { httpUrl: "http://batch.blob.net.windows/some/file/foo.txt", filePath: "local/foo.txt" },
+                    { httpUrl: "http://batch.blob.net.windows/some/file/bar.png", filePath: "local/bar.png" },
+                    { httpUrl: "http://batch.blob.net.windows/other.py", filePath: "local/other.py" },
                 ],
             });
             fixture.detectChanges();

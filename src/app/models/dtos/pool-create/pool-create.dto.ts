@@ -4,7 +4,7 @@ import { NodeFillType } from "app/models/task-scheduling-policy";
 import { Duration } from "luxon";
 import { AppPackageReferenceDto } from "../application-package-reference.dto";
 import { CertificateReferenceDto } from "../certificate-reference.dto";
-import { CloudServiceConfiguration } from "../cloud-service-configuration.dto";
+import { CloudServiceConfigurationDto } from "../cloud-service-configuration.dto";
 import { MetaDataDto } from "../metadata.dto";
 import { NetworkConfigurationDto } from "../network-configuration.dto";
 import { StartTaskDto } from "../start-task.dto";
@@ -18,7 +18,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public vmSize?: string;
 
-    @DtoAttr() public cloudServiceConfiguration?: CloudServiceConfiguration;
+    @DtoAttr() public cloudServiceConfiguration?: CloudServiceConfigurationDto;
 
     @DtoAttr() public virtualMachineConfiguration?: VirtualMachineConfigurationDto;
 

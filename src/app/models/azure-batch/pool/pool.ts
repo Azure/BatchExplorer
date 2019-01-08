@@ -173,7 +173,6 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
 export enum PoolState {
     active = "active",
-    upgrading = "upgrading",
     deleting = "deleting",
 }
 

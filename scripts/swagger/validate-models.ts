@@ -14,8 +14,9 @@ import { Duration } from "luxon";
 import fetch from "node-fetch";
 import { metadataForCtr } from "../../src/@batch-flask/core/record/helpers";
 import * as models from "../../src/app/models";
+import { Constants } from "../../src/common";
 
-const dataPlaneVersion = "2018-08-01.7.0";
+const dataPlaneVersion = Constants.ApiVersion.batchService;
 
 interface SwaggerProperty {
     type: "string" | "integer" | "boolean" | "array" | "number" | undefined;
@@ -36,12 +37,12 @@ interface SwaggerDefinition {
 const nameMapping = [
     { swagger: "TaskContainerExecutionInformation", app: "TaskContainerExecutionInfo" },
     { swagger: "TaskFailureInformation", app: "FailureInfo" },
-    { swagger: "OSDisk", app: "PoolOSDisk" },
     { swagger: "CloudTask", app: "Task" },
     { swagger: "CloudJob", app: "Job" },
     { swagger: "CloudPool", app: "Pool" },
     { swagger: "ComputeNode", app: "Node" },
     { swagger: "TaskCounts", app: "JobTaskCounts" },
+    { swagger: "JobNetworkConfiguration", app: "NetworkConfiguration" },
     { swagger: "ExitConditions", app: "TaskExitConditions" },
     { swagger: "StartTaskInformation", app: "StartTaskInfo" },
     { swagger: "OutputFile", app: "TaskOutputFile" },
