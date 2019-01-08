@@ -83,7 +83,7 @@ describe("ResourcefilePickerComponent", () => {
         const columns = editableTable.columns.toArray();
 
         expect(columns.length).toBe(2);
-        expect(columns[0].name).toBe("blobSource");
+        expect(columns[0].name).toBe("httpUrl");
         expect(columns[1].name).toBe("filePath");
     });
 
@@ -91,18 +91,18 @@ describe("ResourcefilePickerComponent", () => {
         const columns = editableTableEl.queryAll(By.css("thead th"));
 
         expect(columns.length).toBe(3);
-        expect(columns[0].nativeElement.textContent).toContain("Blob source");
+        expect(columns[0].nativeElement.textContent).toContain("Http url");
         expect(columns[1].nativeElement.textContent).toContain("File path");
     });
 
     it("Should update the files", () => {
         editableTable.addNewItem();
         editableTable.items.controls[0].setValue({
-            blobSource: "https://example.com/file.json",
+            httpUrl: "https://example.com/file.json",
             filePath: "path/file.json",
         });
         expect(testComponent.files).toEqual([{
-            blobSource: "https://example.com/file.json",
+            httpUrl: "https://example.com/file.json",
             filePath: "path/file.json",
         }]);
     });
