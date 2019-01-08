@@ -13,6 +13,7 @@ export * from "./decorators";
 export * from "./http-base";
 export * from "./filter-builder";
 export * from "./i18n";
+export * from "./rxjs-operators";
 export * from "./server-error";
 export * from "./telemetry";
-export * from "./rxjs-operators";
+export * from "./user-configuration";

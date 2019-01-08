@@ -1,10 +1,17 @@
 import { NgModule } from "@angular/core";
 import { ServerModule } from "@angular/platform-server";
 import { DevTranslationsLoader } from "@batch-flask/compiler";
-import { DataStore, I18nModule, LocaleService, TranslationsLoaderService } from "@batch-flask/core";
+import {
+    DataStore,
+    I18nModule,
+    LocaleService,
+    TranslationsLoaderService,
+    USER_CONFIGURATION_STORE,
+} from "@batch-flask/core";
 import { ElectronMainModule } from "@batch-flask/electron/electron-main.module";
 import { OSService } from "@batch-flask/ui/electron/os.service";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
+import { MainConfigurationStore } from "client/core/user-configuration";
 import { ClientLocaleService } from "./core";
 import { AADService } from "./core/aad";
 import { BatchExplorerApplication } from "./core/batch-explorer-application";
@@ -51,6 +58,7 @@ export function initializeServices(injector) {
         { provide: LocaleService, useClass: ClientLocaleService },
         { provide: TranslationsLoaderService, useClass: ClientTranslationsLoaderService },
         { provide: DataStore, useClass: LocalDataStore },
+        { provide: USER_CONFIGURATION_STORE, useClass: MainConfigurationStore },
         DevTranslationsLoader,
         BatchExplorerApplication,
         BatchExplorerProcess,

@@ -1,5 +1,4 @@
 import { NcjTemplateType } from "app/models";
-import { Constants } from "common";
 import * as path from "path";
 import { of } from "rxjs";
 import { LocalTemplateFolder, LocalTemplateService } from "./local-template.service";
@@ -11,15 +10,15 @@ const source2 = { name: "My lib 2", path: "/custom/path/lib2" };
 describe("LocalTemplateService", () => {
     let service: LocalTemplateService;
     let fsSpy;
-    let localFileStorageSpy;
+    let userConfigurationSpy;
     let sources: LocalTemplateFolder[] = null;
 
-    beforeEach(() => {
-        localFileStorageSpy = {
-            get: jasmine.createSpy("localFileStorage.get").and.returnValue(of({
+    beforeEach(async () => {
+        userConfigurationSpy = {
+            get: jasmine.createSpy("userConfigurationSpy.get").and.returnValue({
                 sources: [source0, source1],
-            })),
-            set: jasmine.createSpy("localFileStorage.set").and.returnValue(of(null)),
+            }),
+            set: jasmine.createSpy("userConfigurationSpy.set").and.returnValue(of(null)),
         };
         fsSpy = {
             glob: jasmine.createSpy("fs.glob").and.returnValue(Promise.resolve([
@@ -28,21 +27,21 @@ describe("LocalTemplateService", () => {
             ])),
         };
 
-        service = new LocalTemplateService(localFileStorageSpy, fsSpy);
+        service = new LocalTemplateService(userConfigurationSpy, fsSpy);
         service.sources.subscribe(x => sources = x);
+        await Promise.resolve();
     });
 
     it("Loaded the sources", () => {
-        service.init();
         expect(sources).toEqual([source0, source1]);
     });
 
     it("add a source to the list", (done) => {
         service.addSource(source2).subscribe(() => {
             const newSources = [source0, source1, source2];
-            expect(localFileStorageSpy.set).toHaveBeenCalledOnce();
-            expect(localFileStorageSpy.set)
-                .toHaveBeenCalledWith(Constants.SavedDataFilename.localTemplates, { sources: newSources });
+            expect(userConfigurationSpy.set).toHaveBeenCalledOnce();
+            expect(userConfigurationSpy.set)
+                .toHaveBeenCalledWith("localTemplates", { sources: newSources });
             expect(sources).toEqual(newSources);
             done();
         });
@@ -51,9 +50,9 @@ describe("LocalTemplateService", () => {
     it("remove a source to the list", (done) => {
         service.removeSource(source0.path).subscribe(() => {
             const newSources = [source1];
-            expect(localFileStorageSpy.set).toHaveBeenCalledOnce();
-            expect(localFileStorageSpy.set)
-                .toHaveBeenCalledWith(Constants.SavedDataFilename.localTemplates, { sources: newSources });
+            expect(userConfigurationSpy.set).toHaveBeenCalledOnce();
+            expect(userConfigurationSpy.set)
+                .toHaveBeenCalledWith("localTemplates", { sources: newSources });
             expect(sources).toEqual(newSources);
             done();
         });
@@ -62,9 +61,9 @@ describe("LocalTemplateService", () => {
     it("set the sources", (done) => {
         const newSources = [source2, source0];
         service.setSources(newSources).subscribe(() => {
-            expect(localFileStorageSpy.set).toHaveBeenCalledOnce();
-            expect(localFileStorageSpy.set)
-                .toHaveBeenCalledWith(Constants.SavedDataFilename.localTemplates, { sources: newSources });
+            expect(userConfigurationSpy.set).toHaveBeenCalledOnce();
+            expect(userConfigurationSpy.set)
+                .toHaveBeenCalledWith("localTemplates", { sources: newSources });
             expect(sources).toEqual(newSources);
             done();
         });
