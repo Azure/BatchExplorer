@@ -36,7 +36,7 @@ export * from "./node-connect";
 export * from "./themes";
 export * from "./tenant-details.service";
 export * from "./network";
-export * from "./user-configuration-store";
+export * from "./user-configuration";
 export * from "./version";
 
 // This needs to be last(as it does dynamic inject which problably have dependencies on above services)
