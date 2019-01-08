@@ -21,7 +21,7 @@ class TestComponent {
     public files = [];
 }
 
-describe("ResourcefilePickerComponent", () => {
+fdescribe("ResourcefilePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: ResourcefilePickerComponent;
@@ -91,7 +91,7 @@ describe("ResourcefilePickerComponent", () => {
         const columns = editableTableEl.queryAll(By.css("thead th"));
 
         expect(columns.length).toBe(3);
-        expect(columns[0].nativeElement.textContent).toContain("Http url");
+        expect(columns[0].nativeElement.textContent).toContain("Source");
         expect(columns[1].nativeElement.textContent).toContain("File path");
     });
 
