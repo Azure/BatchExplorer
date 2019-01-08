@@ -10,6 +10,7 @@ export interface UserConfigurationStore<T> {
 
     save(config: T): Promise<any>;
 }
+
 @Injectable({ providedIn: "root" })
 export class UserConfigurationService<T extends {}> implements OnDestroy {
     public config: Observable<T>;
@@ -36,14 +37,17 @@ export class UserConfigurationService<T extends {}> implements OnDestroy {
         return this._save();
     }
 
-    public get<K extends keyof T>(key: K): T[K] {
-        return this._config.value && this._config.value[key] as any;
+    public get<K extends keyof T>(key: K): Promise<T[K]> {
+        return this.config.pipe(
+            take(1),
+            map(x => x[key]),
+        ).toPromise();
     }
 
     public watch<K extends keyof T>(key: K): Observable<T[K]> {
         return this.config.pipe(
-            take(1),
             map(x => x[key]),
+            distinctUntilChanged(),
         );
     }
 

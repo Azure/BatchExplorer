@@ -140,8 +140,8 @@ export class LocalTemplateService implements OnDestroy {
         }));
     }
 
-    private _loadSources() {
-        const data = this.userConfiguration.get("localTemplates");
+    private async _loadSources() {
+        const data = await this.userConfiguration.get("localTemplates");
         if (data && data.sources) {
             this._sources.next(data.sources);
         } else {
