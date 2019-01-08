@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
 @Injectable()
-export class MainConfigurationStore<T extends {}> implements UserConfigurationStore<T>, OnDestroy {
+export class RendererConfigurationStore<T extends {}> implements UserConfigurationStore<T>, OnDestroy {
     public config: Observable<T>;
     public _main: UserConfigurationStore<T>;
     private _config = new BehaviorSubject<T | null>(null);
