@@ -1,6 +1,7 @@
 import { Inject, Injectable, OnDestroy } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { distinctUntilChanged, filter, map, take, takeUntil } from "rxjs/operators";
+import { isNotNullOrUndefined } from "../rxjs-operators";
 
 export const USER_CONFIGURATION_STORE = "USER_CONFIGURATION_STORE";
 
@@ -17,7 +18,7 @@ export class UserConfigurationService<T extends {}> implements OnDestroy {
     private _destroy = new Subject<T>();
 
     constructor(@Inject(USER_CONFIGURATION_STORE) private store: UserConfigurationStore<T>) {
-        this.config = this._config.pipe(filter(x => x !== null), distinctUntilChanged());
+        this.config = this._config.pipe(filter(isNotNullOrUndefined), distinctUntilChanged());
         this.store.config.pipe(takeUntil(this._destroy)).subscribe((value) => {
             this._config.next(value);
         });
@@ -30,13 +31,13 @@ export class UserConfigurationService<T extends {}> implements OnDestroy {
     }
 
     public async set<K extends keyof T>(key: K, value: T[K]) {
-        const newConfig = { ...this._config.value, [key]: value };
+        const newConfig = { ...this._config.value, [key]: value } as any;
         this._config.next(newConfig);
         return this._save();
     }
 
     public get<K extends keyof T>(key: K): T[K] {
-        return this._config.value[key];
+        return this._config.value && this._config.value[key] as any;
     }
 
     public watch<K extends keyof T>(key: K): Observable<T[K]> {
@@ -47,10 +48,10 @@ export class UserConfigurationService<T extends {}> implements OnDestroy {
     }
 
     public get current(): T {
-        return this._config.value;
+        return this._config.value!;
     }
 
     private _save() {
-        return this.store.save(this._config.value);
+        return this.store.save(this._config.value!);
     }
 }

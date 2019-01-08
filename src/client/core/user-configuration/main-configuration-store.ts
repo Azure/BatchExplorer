@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { UserConfigurationStore } from "@batch-flask/core";
+import { UserConfigurationStore, isNotNullOrUndefined } from "@batch-flask/core";
 import { LocalFileStorage } from "client/core";
 import { Constants } from "common";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -11,7 +11,7 @@ export class MainConfigurationStore<T extends {}> implements UserConfigurationSt
     private _config = new BehaviorSubject<T | null>(null);
 
     constructor(private localStorage: LocalFileStorage) {
-        this.config = this._config.pipe(filter(x => x !== null));
+        this.config = this._config.pipe(filter(isNotNullOrUndefined));
         this._load();
     }
 
