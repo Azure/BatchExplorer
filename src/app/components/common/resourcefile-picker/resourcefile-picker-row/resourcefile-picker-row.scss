@@ -1,0 +1,18 @@
+@import "app/styles/variables";
+
+bl-resourcefile-picker-row {
+    display: flex;
+    align-items: center;
+
+    > .type {
+        flex: 0 0 20px;
+        color: $secondary-text;
+    }
+
+    > .source {
+    }
+
+    > .local-path {
+        flex: 0 0 300px;
+    }
+}

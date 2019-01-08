@@ -1,0 +1,11 @@
+<div class="type" [ngSwitch]="type">
+    <i class="fa fa-file" *ngSwitchCase="ResourceFileType.Url"></i>
+    <i class="fa fa-cloud" *ngSwitchCase="ResourceFileType.Container"></i>
+    <i class="fa fa-question-circle" *ngSwitchDefault></i>
+</div>
+<div class="source">
+    <input blInput placeholder="Local path" formControlName="localPath">
+</div>
+<div class="local-path">
+    <input blInput placeholder="Local path" formControlName="localPath">
+</div>
