@@ -1,7 +1,3 @@
-import { UserConfigurationService } from "@batch-flask/core";
-
-export type BEUserConfigurationService = UserConfigurationService<BEUserConfiguration>;
-
 /**
  * General configuration used both on browser and desktop
  */
