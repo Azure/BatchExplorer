@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { UserConfigurationStore, isNotNullOrUndefined } from "@batch-flask/core";
-import { LocalFileStorage } from "client/core";
+import { LocalFileStorage } from "client/core/local-file-storage";
 import { Constants } from "common";
 import { BehaviorSubject, Observable } from "rxjs";
 import { filter } from "rxjs/operators";
