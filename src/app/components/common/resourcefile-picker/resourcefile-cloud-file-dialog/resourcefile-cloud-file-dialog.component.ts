@@ -1,12 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "@batch-flask/core";
+import { autobind, isNotNullOrUndefined } from "@batch-flask/core";
 import { FileExplorerConfig, FileExplorerSelectable } from "@batch-flask/ui";
 import { ResourceFileAttributes } from "app/models";
-import { AutoStorageService, StorageBlobService } from "app/services/storage";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
+import { SharedAccessPolicy } from "app/services/storage/models";
+import { BlobUtilities } from "azure-storage";
+import { DateTime } from "luxon";
+import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
+import { filter, map, skip, switchMap, take, takeUntil, tap } from "rxjs/operators";
 
 import "./resourcefile-cloud-file-dialog.scss";
 
@@ -20,22 +23,51 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
     public storageAccountId: string | null;
     public containerName: string | null;
     public pickedFile: string | null;
+    public currentSelection: ResourceFileAttributes;
 
     public fileExplorerConfig: FileExplorerConfig = {
         selectable: FileExplorerSelectable.all,
     };
+    public _autoStorageAccountId: string;
+    private _pickedPath = new BehaviorSubject(null);
+    private _status = new BehaviorSubject(null);
     private _destroy = new Subject();
+
     constructor(
         private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder,
         private autoStorageService: AutoStorageService,
+        private containerService: StorageContainerService,
         private blobService: StorageBlobService,
         public dialogRef: MatDialogRef<any, ResourceFileAttributes>) {
 
-        this.form = this.formBuilder.group({
-            storageAccountId: [null],
-            containerName: [null],
-        });
+        this.form = this.formBuilder.group(
+            {
+                storageAccountId: [null],
+                containerName: [null],
+            },
+            {
+                asyncValidators: [
+                    () => {
+                        return this._status.pipe(
+                            skip(1),
+                            filter(isNotNullOrUndefined),
+                            take(1),
+                            map((value) => {
+                                console.log("Validate?", value);
+                                if (value) {
+                                    return null;
+                                } else {
+                                    return {
+                                        required: true,
+                                    };
+                                }
+                            }),
+                        );
+                    },
+                ],
+            },
+        );
 
         this.form.controls.storageAccountId.valueChanges.pipe(
             takeUntil(this._destroy),
@@ -47,13 +79,39 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
 
         this.form.controls.containerName.valueChanges.pipe(takeUntil(this._destroy)).subscribe((containerName) => {
             this.containerName = containerName;
-            this.pickedFile = null;
+            this.updatePickedFile(null);
+            this.changeDetector.markForCheck();
+        });
+
+        combineLatest(this.form.valueChanges, this._pickedPath).pipe(
+            takeUntil(this._destroy),
+            tap(() => {
+                this.currentSelection = null;
+                this._status.next(null);
+                this.changeDetector.markForCheck();
+            }),
+            filter(([{ storageAccountId, containerName }]) => storageAccountId && containerName),
+            switchMap(([{ storageAccountId, containerName }, pickedPath]) => {
+                return this._checkIfDir(storageAccountId, containerName, pickedPath).pipe(
+                    switchMap((isDirectory) => {
+                        if (isDirectory) {
+                            return this._createResourceFileFromContainer(storageAccountId, containerName, pickedPath);
+                        } else {
+                            return this._createResourceFileFromBlob(storageAccountId, containerName, pickedPath);
+                        }
+                    }),
+                );
+            }),
+        ).subscribe((value: ResourceFileAttributes | null) => {
+            this.currentSelection = value;
+            this._status.next(value ? true : false);
             this.changeDetector.markForCheck();
         });
     }
 
     public ngOnInit() {
         this.autoStorageService.get().subscribe((storageAccountId) => {
+            this._autoStorageAccountId = storageAccountId;
             if (!this.storageAccountId) {
                 this.form.patchValue({ storageAccountId });
             }
@@ -67,26 +125,8 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
 
     public updatePickedFile(file: string) {
         this.pickedFile = file;
+        this._pickedPath.next(file);
         this.changeDetector.markForCheck();
-        console.log("File", file);
-        if (file) {
-            this.blobService.list(this.storageAccountId, this.containerName,
-                {
-                    folder: file,
-                    limit: 1,
-                },
-                true,
-            ).subscribe({
-                next: (response) => {
-                    console.log("NExt", response.items.toJS());
-                    if (response.items.size === 0) {
-                        return;
-                    }
-                    const item = response.items.first();
-                    console.log("Is directory", item.isDirectory);
-                },
-            });
-        }
     }
 
     @autobind()
@@ -96,5 +136,78 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
 
     public close() {
         this.dialogRef.close(null);
+    }
+
+    private _checkIfDir(storageAccountId: string, containerName: string, path: string): Observable<boolean | null> {
+        if (!path || path === "/") {
+            return of(true);
+        }
+
+        return this.blobService.list(storageAccountId, containerName,
+            {
+                folder: path,
+                limit: 1,
+            },
+            true,
+        ).pipe(
+            map((response) => {
+                if (response.items.size === 0) {
+                    return null;
+                }
+                const item = response.items.first();
+                return item.isDirectory;
+            }),
+        );
+    }
+
+    private _createResourceFileFromContainer(
+        storageAccountId: string,
+        containerName: string,
+        folder: string): Observable<ResourceFileAttributes> {
+
+        if (storageAccountId === this._autoStorageAccountId) {
+            return of({ filePath: "", autoStorageContainerName: this.containerName, blobPrefix: folder });
+        }
+
+        const sas: SharedAccessPolicy = {
+            AccessPolicy: {
+                Permissions: BlobUtilities.SharedAccessPermissions.READ,
+                Start: new Date(),
+                Expiry: DateTime.local().plus({ weeks: 1 }).toJSDate(),
+            },
+        };
+
+        return this.containerService.generateSharedAccessUrl(
+            storageAccountId,
+            containerName,
+            sas).pipe(
+                map((storageContainerUrl) => {
+                    return { storageContainerUrl, filePath: "" };
+                }),
+            );
+    }
+
+    private _createResourceFileFromBlob(
+        storageAccountId: string,
+        containerName: string,
+        file: string): Observable<ResourceFileAttributes> {
+
+        const sas: SharedAccessPolicy = {
+            AccessPolicy: {
+                Permissions: BlobUtilities.SharedAccessPermissions.READ,
+                Start: new Date(),
+                Expiry: DateTime.local().plus({ weeks: 1 }).toJSDate(),
+            },
+        };
+
+        return this.blobService.generateSharedAccessBlobUrl(
+            storageAccountId,
+            containerName,
+            file,
+            sas).pipe(
+                map((httpUrl) => {
+                    return { httpUrl, filePath: "" };
+                }),
+            );
     }
 }

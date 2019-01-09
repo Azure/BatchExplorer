@@ -59,7 +59,6 @@ export class BlobStorageClientProxy {
             maxResults: options.limit,
         };
         return new Promise((resolve, reject) => {
-            console.log("new prefix", prefix, storageOptions);
             this.client.listBlobsSegmentedWithPrefix(container, prefix, continuationToken, storageOptions,
                 (error, result, response: any) => {
                     if (error) { return reject(error); }

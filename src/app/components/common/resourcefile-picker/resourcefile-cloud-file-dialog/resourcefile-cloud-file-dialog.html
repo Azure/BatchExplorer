@@ -33,6 +33,19 @@
 
 
     <div blFormSummary>
-
+        <ng-container *ngIf="currentSelection">
+            <ng-container *ngIf="currentSelection.httpUrl">
+                Single file {{pickedFile}}
+            </ng-container>
+            <ng-container *ngIf="currentSelection.autoStorageContainerName">
+                From auto storage {{pickedFile}}
+            </ng-container>
+            <ng-container *ngIf="currentSelection.storageAccountUrl">
+                From {{containerName}} {{pickedFile}}
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="!currentSelection">
+            No files selected
+        </ng-container>
     </div>
 </bl-simple-form>
