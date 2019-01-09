@@ -40,14 +40,17 @@
                 Single file {{pickedFile}}
             </ng-container>
             <ng-container *ngIf="currentSelection.autoStorageContainerName">
-                From auto storage {{pickedFile}}
+                From auto storage {{containerName}} {{pickedFile}}
             </ng-container>
-            <ng-container *ngIf="currentSelection.storageAccountUrl">
-                From {{containerName}} {{pickedFile}}
+            <ng-container *ngIf="currentSelection.storageContainerUrl">
+                From {{storageAccountName}} {{containerName}} {{pickedFile}}
             </ng-container>
         </ng-container>
-        <ng-container *ngIf="!currentSelection">
-            No files selected
+        <ng-container *ngIf="!currentSelection && !storageAccountId || !containerName">
+            No selection
+        </ng-container>
+        <ng-container *ngIf="!currentSelection && storageAccountId && containerName">
+            Validating
         </ng-container>
     </div>
 </bl-simple-form>
