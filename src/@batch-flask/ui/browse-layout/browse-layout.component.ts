@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import {
     AfterContentInit, ChangeDetectionStrategy,
     ChangeDetectorRef, Component, ContentChild,
@@ -9,13 +10,12 @@ import { Filter, FilterBuilder, I18nService, autobind } from "@batch-flask/core"
 import { KeyCode } from "@batch-flask/core/keys";
 import { ListSelection } from "@batch-flask/core/list";
 import { SanitizedError } from "@batch-flask/utils";
-import { Subscription } from "rxjs";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { SplitPaneComponent, SplitPaneConfig } from "../split-pane";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 
-import { LiveAnnouncer } from "@angular/cdk/a11y";
 import "./browse-layout.scss";
 
 export interface BrowseLayoutConfig {
@@ -94,7 +94,7 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
 
     private _activeItemKey: string = null;
     private _config: BrowseLayoutConfig = defaultConfig;
-    private _selectionChangeSub: Subscription;
+    private _destroy = new Subject();
 
     constructor(
         activeRoute: ActivatedRoute,
@@ -153,16 +153,21 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
         this.deleteSelectionIsEnabled = Boolean(component.deleteSelection);
         this.refreshEnabled = Boolean(component.refresh);
         this.changeDetector.markForCheck();
-        this._selectionChangeSub = this.listDirective.component.selectionChange.subscribe((x) => {
+        this.listDirective.component.selectionChange.pipe(takeUntil(this._destroy)).subscribe((x) => {
             this.selection = x;
             this.changeDetector.markForCheck();
+        });
+
+        this.listDirective.component.activeItemChange.pipe(takeUntil(this._destroy)).subscribe((x) => {
+            if (this.showAdvancedFilter) {
+                this.toggleFilter(false);
+            }
         });
     }
 
     public _ngOnDestroy() {
-        if (this._selectionChangeSub) {
-            this._selectionChangeSub.unsubscribe();
-        }
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     /**
@@ -181,7 +186,7 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
 
     public toggleFilter(value?: boolean) {
         const newValue = (value === undefined ? !this.showAdvancedFilter : value);
-        if (newValue === this.showAdvancedFilter) {return; }
+        if (newValue === this.showAdvancedFilter) { return; }
         this.showAdvancedFilter = newValue;
 
         if (this.listDirective) {
