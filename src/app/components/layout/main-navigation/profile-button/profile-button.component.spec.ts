@@ -1,5 +1,5 @@
 import { Component, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { MatTooltip, MatTooltipModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -8,10 +8,13 @@ import { I18nTestingModule } from "@batch-flask/core/testing";
 import {
     AutoUpdateService,
     ClickableComponent,
+    ContextMenuItem,
+    ContextMenuSeparator,
     ElectronRemote,
     ElectronShell,
     FileSystemService,
     I18nUIModule,
+    MultiContextMenuItem,
     UpdateStatus,
 } from "@batch-flask/ui";
 import { AdalService, BatchExplorerService } from "app/services";
@@ -36,8 +39,10 @@ describe("ProfileButtonComponent", () => {
     let batchExplorerServiceSpy;
     let contextMenuServiceSpy: ContextMenuServiceMock;
     let notificationServiceSpy: NotificationServiceMock;
+    let checkForUpdatesResponse: Promise<any>;
 
     beforeEach(() => {
+        checkForUpdatesResponse = Promise.resolve({ updateInfo: { version: "1.2.4" } });
         contextMenuServiceSpy = new ContextMenuServiceMock();
         notificationServiceSpy = new NotificationServiceMock();
         adalServiceSpy = {
@@ -47,6 +52,7 @@ describe("ProfileButtonComponent", () => {
         autoUpdateServiceSpy = {
             status: new BehaviorSubject<UpdateStatus>(null),
             downloadProgress: new BehaviorSubject<ProgressInfo>(null),
+            checkForUpdates: jasmine.createSpy("checkForUpdates").and.callFake(() => checkForUpdatesResponse),
         };
 
         batchExplorerServiceSpy = {};
@@ -127,5 +133,96 @@ describe("ProfileButtonComponent", () => {
         expect(contextMenuServiceSpy.openMenu).toHaveBeenCalledOnce();
         const items = contextMenuServiceSpy.lastMenu.items;
         expect(items.length).toBe(12);
+    });
+
+    describe("Clicking on the profile", () => {
+        it("It shows a context menu", () => {
+            click(clickableEl);
+            expect(contextMenuServiceSpy.openMenu).toHaveBeenCalled();
+            const items = contextMenuServiceSpy.lastMenu.items;
+            expect(items.length).toEqual(12);
+
+            expect(items[0] instanceof ContextMenuItem).toBe(true);
+            expect((items[0] as ContextMenuItem).label).toEqual("Check for updates");
+
+            expect(items[1] instanceof ContextMenuSeparator).toBe(true);
+
+            expect(items[2] instanceof ContextMenuItem).toBe(true);
+            expect((items[2] as ContextMenuItem).label).toEqual("profile-button.settings");
+
+            expect(items[3] instanceof MultiContextMenuItem).toBe(true);
+            expect((items[3] as MultiContextMenuItem).label).toEqual("Language (Preview)");
+
+            expect(items[4] instanceof ContextMenuItem).toBe(true);
+            expect((items[4] as ContextMenuItem).label).toEqual("profile-button.thirdPartyNotices");
+
+            expect(items[5] instanceof ContextMenuItem).toBe(true);
+            expect((items[5] as ContextMenuItem).label).toEqual("profile-button.viewLogs");
+
+            expect(items[6] instanceof ContextMenuItem).toBe(true);
+            expect((items[6] as ContextMenuItem).label).toEqual("profile-button.report");
+
+            expect(items[7] instanceof ContextMenuItem).toBe(true);
+            expect((items[7] as ContextMenuItem).label).toEqual("profile-button.about");
+
+            expect(items[8] instanceof ContextMenuSeparator).toBe(true);
+
+            expect(items[9] instanceof ContextMenuItem).toBe(true);
+            expect((items[9] as ContextMenuItem).label).toEqual("profile-button.viewTheme");
+
+            expect(items[10] instanceof ContextMenuSeparator).toBe(true);
+
+            expect(items[11] instanceof ContextMenuItem).toBe(true);
+            expect((items[11] as ContextMenuItem).label).toEqual("profile-button.logout");
+        });
+
+        it("check for updates and show update notification when there is one", fakeAsync(() => {
+            expect(autoUpdateServiceSpy.checkForUpdates).toHaveBeenCalledTimes(1);
+            click(clickableEl);
+            const items = contextMenuServiceSpy.lastMenu.items;
+            (items[0] as ContextMenuItem).click();
+            expect(autoUpdateServiceSpy.checkForUpdates).toHaveBeenCalledTimes(2);
+            tick(100);
+            expect(notificationServiceSpy.info).toHaveBeenCalledOnce();
+            expect(notificationServiceSpy.info).toHaveBeenCalledWith(
+                "Update available",
+                "Update 1.2.4 is now available.", {
+                    action: jasmine.anything(),
+                });
+            expect(notificationServiceSpy.error).not.toHaveBeenCalled();
+
+        }));
+
+        it("check for updates and show no update available notification when there isn't one", fakeAsync(() => {
+            checkForUpdatesResponse = Promise.resolve(null);
+
+            expect(autoUpdateServiceSpy.checkForUpdates).toHaveBeenCalledTimes(1);
+            click(clickableEl);
+            const items = contextMenuServiceSpy.lastMenu.items;
+            (items[0] as ContextMenuItem).click();
+            expect(autoUpdateServiceSpy.checkForUpdates).toHaveBeenCalledTimes(2);
+            tick(100);
+
+            expect(notificationServiceSpy.info).toHaveBeenCalledOnce();
+            expect(notificationServiceSpy.info).toHaveBeenCalledWith(
+                "There are no updates currently available.",
+                "You  have the latest BatchExplorer version.", {});
+            expect(notificationServiceSpy.error).not.toHaveBeenCalled();
+        }));
+
+        it("check for updates and show no error notification when it resolve to an error", fakeAsync(() => {
+            checkForUpdatesResponse = Promise.reject(new Error("Foo bar error"));
+            expect(autoUpdateServiceSpy.checkForUpdates).toHaveBeenCalledTimes(1);
+            click(clickableEl);
+            const items = contextMenuServiceSpy.lastMenu.items;
+            (items[0] as ContextMenuItem).click();
+            expect(autoUpdateServiceSpy.checkForUpdates).toHaveBeenCalledTimes(2);
+            tick(100);
+            expect(notificationServiceSpy.error).toHaveBeenCalledOnce();
+            expect(notificationServiceSpy.error).toHaveBeenCalledWith(
+                "Failed to check for updates", "Error: Foo bar error");
+
+            expect(notificationServiceSpy.info).not.toHaveBeenCalled();
+        }));
     });
 });

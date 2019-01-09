@@ -13,7 +13,8 @@ import {
 } from "app/services";
 import { Constants } from "common";
 import * as path from "path";
-import { Subscription } from "rxjs";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 import "./profile-button.scss";
 
@@ -28,8 +29,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     public currentUserName: string = "";
     public updateStatus: UpdateStatus;
 
-    private _currentUserSub: Subscription;
-    private _updateSub: Subscription;
+    private _destroy = new Subject();
 
     constructor(
         adalService: AdalService,
@@ -46,7 +46,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
         private fs: FileSystemService,
         private router: Router) {
 
-        this._currentUserSub = adalService.currentUser.subscribe((user) => {
+        adalService.currentUser.pipe(takeUntil(this._destroy)).subscribe((user) => {
             if (user) {
                 this.currentUserName = `${user.name} (${user.unique_name})`;
             } else {
@@ -55,7 +55,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
             this.changeDetector.markForCheck();
         });
 
-        this._updateSub = this.autoUpdateService.status.subscribe((status) => {
+        this.autoUpdateService.status.pipe(takeUntil(this._destroy)).subscribe((status) => {
             this.updateStatus = status;
             this.changeDetector.markForCheck();
         });
@@ -66,8 +66,8 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     public ngOnDestroy() {
-        this._currentUserSub.unsubscribe();
-        this._updateSub.unsubscribe();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public openSettingsContextMenu() {
