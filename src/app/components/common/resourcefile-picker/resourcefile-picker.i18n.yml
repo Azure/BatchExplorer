@@ -1,3 +1,5 @@
 resourcefile-picker:
   cloudFileDialog:
     title: Pick file(s) from storage account
+
+  blobPrefix: Blob prefix

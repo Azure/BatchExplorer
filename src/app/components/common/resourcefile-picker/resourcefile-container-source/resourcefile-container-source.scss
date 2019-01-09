@@ -1,6 +1,8 @@
 @import "app/styles/variables";
 
 bl-resourcefile-container-source {
+    display: flex;
+
     .account {
         margin-right: 5px;
     }
