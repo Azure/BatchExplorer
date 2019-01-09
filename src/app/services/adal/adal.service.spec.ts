@@ -28,6 +28,7 @@ describe("AdalService spec", () => {
     beforeEach(() => {
         aadServiceSpy = {
             tenantsIds: new BehaviorSubject([]),
+            currentUser: new BehaviorSubject([]),
         };
         remoteSpy = {
             send: jasmine.createSpy("accessTokenData").and.returnValue(Promise.resolve(token1)),
