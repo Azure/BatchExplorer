@@ -9,7 +9,9 @@ import { SharedAccessPolicy } from "app/services/storage/models";
 import { BlobUtilities } from "azure-storage";
 import { DateTime } from "luxon";
 import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
-import { distinctUntilChanged, filter, map, publishReplay, refCount, skip, switchMap, take, takeUntil, tap } from "rxjs/operators";
+import {
+    distinctUntilChanged, filter, map, publishReplay, refCount, skip, switchMap, take, takeUntil, tap,
+} from "rxjs/operators";
 
 import { BatchAccountService, StorageAccountService } from "app/services";
 import { ArmResourceUtils, StorageUtils } from "app/utils";
@@ -71,7 +73,6 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
             distinctUntilChanged(),
         ).subscribe((containerName) => {
             this.containerName = containerName;
-            console.log("Update here", containerName);
             this.updatePickedFile(null);
             this.changeDetector.markForCheck();
         });
@@ -152,7 +153,6 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
         return this._resourceFile.pipe(
             skip(this.currentSelection ? 0 : 1), // Skip last value if we are resolving a new one
             tap((file) => {
-                console.log("FIle", file);
                 this.dialogRef.close(file);
             }),
         );
@@ -258,6 +258,5 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
         });
         await Promise.resolve(); // Just wait for the patchValue to trigger the events
         this.updatePickedFile(data.blobPrefix);
-        console.log("Apply2", data.blobPrefix, this.form.value);
     }
 }
