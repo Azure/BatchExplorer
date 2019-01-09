@@ -1,8 +1,8 @@
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import {
-    AfterContentInit, ChangeDetectionStrategy,
-    ChangeDetectorRef, Component, ContentChild,
-    ElementRef, Input, OnChanges, OnInit, ViewChild,
+    AfterContentInit, AfterViewInit,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    ContentChild, ElementRef, Input, OnChanges, OnInit, ViewChild,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -46,7 +46,7 @@ let idCounter = 0;
     templateUrl: "browse-layout.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChanges {
+export class BrowseLayoutComponent implements OnInit, AfterViewInit, AfterContentInit, OnChanges {
     @Input() public id = `bl-browse-layout-${idCounter++}`;
     /**
      * Field for the quicksearch.
@@ -97,16 +97,10 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     private _destroy = new Subject();
 
     constructor(
-        activeRoute: ActivatedRoute,
+        private activeRoute: ActivatedRoute,
         private i18n: I18nService,
         private liveAnouncer: LiveAnnouncer,
         private changeDetector: ChangeDetectorRef) {
-
-        activeRoute.queryParams.subscribe((params: any) => {
-            if (params.filter) {
-                this.toggleFilter(true);
-            }
-        });
 
         activeRoute.url.subscribe((url) => {
             const child = activeRoute.snapshot.firstChild;
@@ -136,6 +130,13 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
         });
     }
 
+    public ngAfterViewInit() {
+        this.activeRoute.queryParams.pipe(takeUntil(this._destroy)).subscribe((params: any) => {
+            if (params.filter) {
+                this.toggleFilter(true);
+            }
+        });
+    }
     public ngOnChanges(changes) {
         if (changes.config) {
             this._updateFilter();
