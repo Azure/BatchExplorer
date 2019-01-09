@@ -12,7 +12,6 @@ import { ResourcefilePickerComponent } from "app/components/task/base";
 import { SettingsService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { of } from "rxjs";
-import { F } from "test/utils";
 
 @Component({
     template: `<bl-resourcefile-picker [(ngModel)]="files"></bl-resourcefile-picker>`,
@@ -171,7 +170,7 @@ describe("ResourcefilePickerComponent", () => {
             uploadFolder = `resource-files/${(component as any)._folderId}`;
         });
 
-        it("should upload list of files", F(async () => {
+        it("should upload list of files", async () => {
             await component.uploadFiles(["some/path/file1.txt", "some/other/file2.txt"]);
             expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledOnce();
             expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledWith("storage-acc-1",
@@ -181,9 +180,9 @@ describe("ResourcefilePickerComponent", () => {
                 "some/path/file1.txt", `${uploadFolder}/file1.txt`);
             expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("storage-acc-1", "test-custom-container",
                 "some/other/file2.txt", `${uploadFolder}/file2.txt`);
-        }));
+        });
 
-        it("should upload list of files when root is defined", F(async () => {
+        it("should upload list of files when root is defined", async () => {
             await component.uploadFiles(["some/path/file1.txt", "some/other/file2.txt"], "custom/path");
             expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledOnce();
             expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledWith("storage-acc-1",
@@ -193,6 +192,6 @@ describe("ResourcefilePickerComponent", () => {
                 "some/path/file1.txt", `${uploadFolder}/custom/path/file1.txt`);
             expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("storage-acc-1", "test-custom-container",
                 "some/other/file2.txt", `${uploadFolder}/custom/path/file2.txt`);
-        }));
+        });
     });
 });

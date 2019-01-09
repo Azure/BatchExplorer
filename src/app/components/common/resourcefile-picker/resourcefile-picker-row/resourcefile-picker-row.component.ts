@@ -65,6 +65,8 @@ export class ResourceFilePickerRowComponent implements ControlValueAccessor, Val
 
     public updateSource(file: ResourceFileAttributes) {
         this.file = { ...this.file, ...file };
+        this.changeDetector.markForCheck();
+        this._propagateChange();
     }
 
     private _propagateChange() {
