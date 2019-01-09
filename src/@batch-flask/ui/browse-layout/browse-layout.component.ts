@@ -2,7 +2,7 @@ import { LiveAnnouncer } from "@angular/cdk/a11y";
 import {
     AfterContentInit, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef, Component,
-    ContentChild, ElementRef, Input, OnChanges, OnInit, ViewChild,
+    ContentChild, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -46,7 +46,7 @@ let idCounter = 0;
     templateUrl: "browse-layout.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BrowseLayoutComponent implements OnInit, AfterViewInit, AfterContentInit, OnChanges {
+export class BrowseLayoutComponent implements OnInit, AfterViewInit, AfterContentInit, OnChanges, OnDestroy {
     @Input() public id = `bl-browse-layout-${idCounter++}`;
     /**
      * Field for the quicksearch.
@@ -166,7 +166,7 @@ export class BrowseLayoutComponent implements OnInit, AfterViewInit, AfterConten
         });
     }
 
-    public _ngOnDestroy() {
+    public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();
     }
