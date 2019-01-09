@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { SidebarManager } from "@batch-flask/ui/sidebar";
-
 @Component({
     selector: "bl-node-home",
     templateUrl: "node-home.html",
@@ -15,7 +13,6 @@ export class NodeHomeComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
-        sidebarManager: SidebarManager,
         private changeDetector: ChangeDetectorRef,
         private activatedRoute: ActivatedRoute) {
     }
@@ -28,6 +25,8 @@ export class NodeHomeComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy() {
-        this._paramsSubscriber.unsubscribe();
+        if (this._paramsSubscriber) {
+            this._paramsSubscriber.unsubscribe();
+        }
     }
 }
