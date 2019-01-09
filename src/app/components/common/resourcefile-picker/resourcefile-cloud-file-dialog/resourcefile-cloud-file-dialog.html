@@ -1,7 +1,7 @@
 <bl-simple-form
     [submit]="submit"
     [containerRef]="dialogRef"
-    [stickyFooter]="true"
+    [stickyFooter]="false"
     [multiUse]="false"
     actionName="Pick"
     [formGroup]="form"
@@ -22,14 +22,16 @@
         </bl-blob-container-picker>
     </div>
 
-    <bl-blob-files-browser #blobList
-        *ngIf="storageAccountId && containerName"
-        [storageAccountId]="storageAccountId"
-        [container]="containerName"
-        [fileExplorerConfig]="fileExplorerConfig"
-        [activeFile]="pickedFile"
-        (activeFileChange)="updatePickedFile($event)">
-    </bl-blob-files-browser>
+    <div class="path-pick">
+        <bl-blob-files-browser #blobList
+            *ngIf="storageAccountId && containerName"
+            [storageAccountId]="storageAccountId"
+            [container]="containerName"
+            [fileExplorerConfig]="fileExplorerConfig"
+            [activeFile]="pickedFile"
+            (activeFileChange)="updatePickedFile($event)">
+        </bl-blob-files-browser>
+    </div>
 
 
     <div blFormSummary>

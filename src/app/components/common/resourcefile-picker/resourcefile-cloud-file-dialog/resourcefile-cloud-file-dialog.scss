@@ -12,6 +12,11 @@ bl-resourcefile-cloud-file-dialog {
         bl-blob-container-picker {
             flex: 1;
         }
+
         margin-bottom: 10px;
+    }
+
+    .path-pick {
+        height: 50vh;
     }
 }

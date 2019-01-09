@@ -54,7 +54,6 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
                             filter(isNotNullOrUndefined),
                             take(1),
                             map((value) => {
-                                console.log("Validate?", value);
                                 if (value) {
                                     return null;
                                 } else {
@@ -131,7 +130,7 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
 
     @autobind()
     public submit() {
-        this.dialogRef.close({ httpUrl: "foo", filePath: "" });
+        this.dialogRef.close(this.currentSelection);
     }
 
     public close() {
