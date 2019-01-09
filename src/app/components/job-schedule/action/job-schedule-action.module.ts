@@ -12,8 +12,12 @@ import { EnableJobScheduleDialogComponent } from "./enable/enable-job-schedule-d
 import { TerminateJobScheduleDialogComponent } from "./terminate/terminate-job-schedule-dialog.component";
 
 const components = [
-    JobScheduleCreateBasicDialogComponent, DeleteJobScheduleDialogComponent, DisableJobScheduleDialogComponent,
-    EnableJobScheduleDialogComponent, TerminateJobScheduleDialogComponent, JobScheduleJobSpecificationComponent,
+    JobScheduleCreateBasicDialogComponent,
+    DeleteJobScheduleDialogComponent,
+    DisableJobScheduleDialogComponent,
+    EnableJobScheduleDialogComponent,
+    TerminateJobScheduleDialogComponent,
+    JobScheduleJobSpecificationComponent,
     PatchJobScheduleComponent,
 ];
 
