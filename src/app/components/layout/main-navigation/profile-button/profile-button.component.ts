@@ -7,7 +7,7 @@ import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem,
 } from "@batch-flask/ui/context-menu";
 import { NotificationService } from "@batch-flask/ui/notifications";
-import { OS } from "@batch-flask/utils";
+import { OS, log } from "@batch-flask/utils";
 import {
     AdalService, BatchExplorerService,
 } from "app/services";
@@ -140,16 +140,24 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private async _checkForUpdates(showNotification = true) {
-        const result = await this.autoUpdateService.checkForUpdates();
-        if (!showNotification) { return; }
-        if (result) {
-            this._notify("Update available", `Update ${result.updateInfo.version} is now available.`, {
-                action: () => this._update(),
-            });
-        } else {
-            this._notify("There are no updates currently available.", `You  have the latest BatchExplorer version.`);
+        try {
+            const result = await this.autoUpdateService.checkForUpdates();
+            if (!showNotification) { return; }
+            if (result) {
+                this._notify("Update available", `Update ${result.updateInfo.version} is now available.`, {
+                    action: () => this._update(),
+                });
+            } else {
+                this._notify("There are no updates currently available.",
+                    `You  have the latest BatchExplorer version.`);
+            }
+        } catch (e) {
+            log.error("Failed to check for updates");
+            if (!showNotification) { return; }
+            this.zone.run((() => {
+                this.notificationService.error("Failed to check for updates", e.toString());
+            }));
         }
-
     }
 
     private _update() {
