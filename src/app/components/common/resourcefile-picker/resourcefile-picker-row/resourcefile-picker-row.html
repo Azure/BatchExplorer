@@ -6,6 +6,9 @@
     </div>
     <div class="source" [ngSwitch]="type">
         <input blInput placeholder="Url" formControlName="httpUrl" *ngSwitchCase="ResourceFileType.Url">
+        <ng-container *ngSwitchCase="ResourceFileType.Container">
+            <bl-resourcefile-container-source [file]="file" (updateSource)="updateSource($event)"></bl-resourcefile-container-source>
+        </ng-container>
     </div>
     <div class="local-path">
         <input blInput placeholder="Local path" formControlName="filePath">

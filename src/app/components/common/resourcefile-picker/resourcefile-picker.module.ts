@@ -7,11 +7,16 @@ import { BlobFilesBrowserModule } from "app/components/file/browse";
 import { BlobContainerPickerModule } from "../blob-container-picker";
 import { StorageAccountPickerModule } from "../storage-account-picker";
 import { ResourceFileCloudFileDialogComponent } from "./resourcefile-cloud-file-dialog";
+import { ResourceFileContainerSourceComponent } from "./resourcefile-container-source";
 import { ResourceFilePickerRowComponent } from "./resourcefile-picker-row";
 import { ResourcefilePickerComponent } from "./resourcefile-picker.component";
 
 const publicComponents = [ResourcefilePickerComponent];
-const privateComponents = [ResourceFilePickerRowComponent, ResourceFileCloudFileDialogComponent];
+const privateComponents = [
+    ResourceFilePickerRowComponent,
+    ResourceFileCloudFileDialogComponent,
+    ResourceFileContainerSourceComponent,
+];
 
 @NgModule({
     imports: [

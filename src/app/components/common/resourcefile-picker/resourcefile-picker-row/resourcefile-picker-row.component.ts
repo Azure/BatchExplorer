@@ -27,6 +27,7 @@ export class ResourceFilePickerRowComponent implements ControlValueAccessor, Val
     public ResourceFileType = ResourceFileType;
     public type: ResourceFileType = ResourceFileType.Url;
     public form: FormGroup;
+    public file: ResourceFileAttributes;
 
     private _propagateFn: (value: ResourceFileAttributes) => void;
 
@@ -36,21 +37,15 @@ export class ResourceFilePickerRowComponent implements ControlValueAccessor, Val
             httpUrl: new FormControl(""),
         });
 
-        this.form.valueChanges.subscribe((file) => {
-            switch (this.type) {
-                case ResourceFileType.Url:
-                    this._propagateChange({ filePath: file.filePath, httpUrl: file.httpUrl });
-                    break;
-                case ResourceFileType.Container:
-                    this._propagateChange({ filePath: file.filePath, storageContainerUrl: file.storageContainerUrl });
-                    break;
-            }
+        this.form.valueChanges.subscribe(() => {
+            this._propagateChange();
         });
     }
 
     public writeValue(file: ResourceFileAttributes): void {
         console.log("New file", file);
         this._computeType(file);
+        this.file = file;
         this.form.patchValue({
             filePath: file.filePath,
             httpUrl: file.httpUrl,
@@ -69,9 +64,32 @@ export class ResourceFilePickerRowComponent implements ControlValueAccessor, Val
         return null;
     }
 
-    private _propagateChange(value: ResourceFileAttributes) {
-        if (this._propagateFn) {
-            this._propagateFn(value);
+    public updateSource(file: ResourceFileAttributes) {
+        this.file = { ...this.file, ...file };
+    }
+
+    private _propagateChange() {
+        if (!this._propagateFn) { return; }
+        const formValue = this.form.value;
+        switch (this.type) {
+            case ResourceFileType.Url:
+                this._propagateFn({ filePath: formValue.filePath, httpUrl: formValue.httpUrl });
+                break;
+            case ResourceFileType.Container:
+                if (this.file.storageContainerUrl) {
+                    this._propagateFn({
+                        filePath: formValue.filePath,
+                        blobPrefix: this.file.blobPrefix,
+                        storageContainerUrl: this.file.storageContainerUrl,
+                    });
+                } else {
+                    this._propagateFn({
+                        filePath: formValue.filePath,
+                        blobPrefix: this.file.blobPrefix,
+                        autoStorageContainerName: this.file.autoStorageContainerName,
+                    });
+                }
+                break;
         }
     }
 

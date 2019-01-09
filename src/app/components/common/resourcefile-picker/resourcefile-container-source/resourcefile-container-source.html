@@ -1,0 +1,6 @@
+<span class="account" [title]="'models.storageAccount' | i18n">{{storageAccountName}}</span>
+<span class="container" [title]="'models.container' | i18n">{{containerName}}</span>
+<span class="prefix" title="Prefix">{{prefix}}</span>
+<bl-clickable (do)="openEditDialog()">
+    <i class="fa fa-pencil"></i>
+</bl-clickable>

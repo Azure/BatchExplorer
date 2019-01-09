@@ -111,6 +111,7 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnCha
     public ngOnChanges(changes) {
         if (changes.storageAccountId) {
             this._storageAccountIdInput.next(this.storageAccountId);
+            this.containers = List([]);
         }
     }
 

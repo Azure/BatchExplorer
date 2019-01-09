@@ -3,15 +3,16 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 import { FileExplorerConfig, FileExplorerSelectable } from "@batch-flask/ui";
-import { ResourceFileAttributes } from "app/models";
+import { ArmBatchAccount, ResourceFileAttributes } from "app/models";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { BlobUtilities } from "azure-storage";
 import { DateTime } from "luxon";
 import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
-import { filter, map, publishReplay, refCount, skip, switchMap, takeUntil, tap } from "rxjs/operators";
+import { filter, map, publishReplay, refCount, skip, switchMap, take, takeUntil, tap } from "rxjs/operators";
 
-import { ArmResourceUtils } from "app/utils";
+import { BatchAccountService, StorageAccountService } from "app/services";
+import { ArmResourceUtils, StorageUtils } from "app/utils";
 import "./resourcefile-cloud-file-dialog.scss";
 
 @Component({
@@ -20,6 +21,7 @@ import "./resourcefile-cloud-file-dialog.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
+
     public form: FormGroup;
     public storageAccountName: string | null;
     public storageAccountId: string | null;
@@ -39,6 +41,8 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
     constructor(
         private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder,
+        private accountService: BatchAccountService,
+        private storageAccountService: StorageAccountService,
         private autoStorageService: AutoStorageService,
         private containerService: StorageContainerService,
         private blobService: StorageBlobService,
@@ -109,6 +113,32 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
     public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();
+    }
+
+    public async setFile(file: ResourceFileAttributes) {
+        console.log("Set file", file);
+        if (file.storageContainerUrl) {
+            const result = StorageUtils.getContainerFromUrl(file.storageContainerUrl);
+            this._findAccountId(result.account).subscribe(async (account) => {
+                console.log("Account", account);
+                this._applyValues({
+                    storageAccountId: account.id,
+                    containerName: result.container,
+                    blobPrefix: file.blobPrefix,
+                });
+                await Promise.resolve(); // Just wait for the patchValue to trigger the events
+                this.form.patchValue({
+                });
+                await Promise.resolve(); // Just wait for the patchValue to trigger the events
+                this.updatePickedFile(file.blobPrefix);
+            });
+        } else if (file.autoStorageContainerName) {
+            this._applyValues({
+                storageAccountId: this._autoStorageAccountId,
+                containerName: file.autoStorageContainerName,
+                blobPrefix: file.blobPrefix,
+            });
+        }
     }
 
     public updatePickedFile(file: string) {
@@ -200,5 +230,31 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
                     return { httpUrl, filePath: "" };
                 }),
             );
+    }
+
+    private _findAccountId(name: string) {
+        return this.accountService.currentAccount.pipe(
+            take(1),
+            switchMap((account) => {
+                if (account instanceof ArmBatchAccount) {
+                    return this.storageAccountService.findByName(account.subscription.subscriptionId, name);
+                } else {
+                    return of(null);
+                }
+            }),
+        );
+    }
+
+    private async _applyValues(data) {
+        this.form.patchValue({
+            storageAccountId: data.storageAccountId,
+            containerName: data.containerName,
+        });
+        await Promise.resolve(); // Just wait for the patchValue to trigger the events
+        this.form.patchValue({
+            containerName: data.containerName,
+        });
+        await Promise.resolve(); // Just wait for the patchValue to trigger the events
+        this.updatePickedFile(data.blobPrefix);
     }
 }
