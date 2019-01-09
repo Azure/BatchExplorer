@@ -17,7 +17,8 @@ const publicComponents = [
     BrowseLayoutComponent,
     BrowseLayoutListDirective,
     ToggleFilterButtonComponent,
-    BrowseLayoutAdvancedFilterDirective];
+    BrowseLayoutAdvancedFilterDirective,
+];
 
 @NgModule({
     imports: [
