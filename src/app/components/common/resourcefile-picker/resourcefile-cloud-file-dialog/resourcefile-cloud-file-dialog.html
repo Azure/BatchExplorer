@@ -1,6 +1,7 @@
 <bl-simple-form
     [submit]="submit"
     [containerRef]="dialogRef"
+    [stickyFooter]="true"
     [multiUse]="false"
     actionName="Pick"
     [formGroup]="form"
@@ -9,8 +10,16 @@
     >
 
     <div class="container-pick">
-        <bl-storage-account-picker formControlName="storageAccountId"></bl-storage-account-picker>
-        <bl-blob-container-picker [storageAccountId]="storageAccountId" output="name" formControlName="containerName"></bl-blob-container-picker>
+        <div class="storage-account">
+            <div>{{'models.storageAccount' | i18n}}</div>
+            <bl-storage-account-picker formControlName="storageAccountId"></bl-storage-account-picker>
+        </div>
+        <bl-blob-container-picker
+            [storageAccountId]="storageAccountId"
+            [label]="'models.container' | i18n"
+            output="name"
+            formControlName="containerName">
+        </bl-blob-container-picker>
     </div>
 
     <bl-blob-files-browser #blobList
@@ -21,4 +30,9 @@
         [activeFile]="pickedFile"
         (activeFileChange)="updatePickedFile($event)">
     </bl-blob-files-browser>
+
+
+    <div blFormSummary>
+
+    </div>
 </bl-simple-form>
