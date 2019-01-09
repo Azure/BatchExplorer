@@ -43,8 +43,8 @@ export class ResourceFilePickerRowComponent implements ControlValueAccessor, Val
     }
 
     public writeValue(file: ResourceFileAttributes): void {
-        console.log("New file", file);
         this._computeType(file);
+        console.log("new row", file);
         this.file = file;
         this.form.patchValue({
             filePath: file.filePath,

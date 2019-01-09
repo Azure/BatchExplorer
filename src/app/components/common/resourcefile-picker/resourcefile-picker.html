@@ -1,6 +1,6 @@
 <div [formGroup]="files">
     <div *ngFor="let control of files.controls;let i = index" class="file-row">
-        <bl-resourcefile-picker-row [formControlName]="i" (delete)="removeRow($event)">
+        <bl-resourcefile-picker-row [formControlName]="i" (delete)="removeRow(i)">
         </bl-resourcefile-picker-row>
     </div>
 </div>

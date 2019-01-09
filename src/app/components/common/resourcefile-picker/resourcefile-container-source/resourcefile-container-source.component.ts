@@ -49,8 +49,8 @@ export class ResourceFileContainerSourceComponent implements OnChanges {
         } else if (this.file.autoStorageContainerName) {
             this.storageAccountName = "Auto storage";
             this.containerName = this.file.autoStorageContainerName;
-            this.prefix = this.file.blobPrefix;
         }
+        this.prefix = this.file.blobPrefix;
     }
 
     private _parseStorageContainerUrl(url: string) {

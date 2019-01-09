@@ -9,7 +9,7 @@ import { SharedAccessPolicy } from "app/services/storage/models";
 import { BlobUtilities } from "azure-storage";
 import { DateTime } from "luxon";
 import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
-import { filter, map, publishReplay, refCount, skip, switchMap, take, takeUntil, tap } from "rxjs/operators";
+import { distinctUntilChanged, filter, map, publishReplay, refCount, skip, switchMap, take, takeUntil, tap } from "rxjs/operators";
 
 import { BatchAccountService, StorageAccountService } from "app/services";
 import { ArmResourceUtils, StorageUtils } from "app/utils";
@@ -57,6 +57,7 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
 
         this.form.controls.storageAccountId.valueChanges.pipe(
             takeUntil(this._destroy),
+            distinctUntilChanged(),
         ).subscribe((storageAccountId) => {
             this.storageAccountId = storageAccountId;
             this.storageAccountName = storageAccountId
@@ -65,8 +66,12 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
             this.changeDetector.markForCheck();
         });
 
-        this.form.controls.containerName.valueChanges.pipe(takeUntil(this._destroy)).subscribe((containerName) => {
+        this.form.controls.containerName.valueChanges.pipe(
+            takeUntil(this._destroy),
+            distinctUntilChanged(),
+        ).subscribe((containerName) => {
             this.containerName = containerName;
+            console.log("Update here", containerName);
             this.updatePickedFile(null);
             this.changeDetector.markForCheck();
         });
@@ -116,27 +121,22 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
     }
 
     public async setFile(file: ResourceFileAttributes) {
-        console.log("Set file", file);
         if (file.storageContainerUrl) {
             const result = StorageUtils.getContainerFromUrl(file.storageContainerUrl);
             this._findAccountId(result.account).subscribe(async (account) => {
-                console.log("Account", account);
                 this._applyValues({
                     storageAccountId: account.id,
                     containerName: result.container,
                     blobPrefix: file.blobPrefix,
                 });
-                await Promise.resolve(); // Just wait for the patchValue to trigger the events
-                this.form.patchValue({
-                });
-                await Promise.resolve(); // Just wait for the patchValue to trigger the events
-                this.updatePickedFile(file.blobPrefix);
             });
         } else if (file.autoStorageContainerName) {
-            this._applyValues({
-                storageAccountId: this._autoStorageAccountId,
-                containerName: file.autoStorageContainerName,
-                blobPrefix: file.blobPrefix,
+            this.autoStorageService.get().subscribe((storageAccountId) => {
+                this._applyValues({
+                    storageAccountId: storageAccountId,
+                    containerName: file.autoStorageContainerName,
+                    blobPrefix: file.blobPrefix,
+                });
             });
         }
     }
@@ -151,7 +151,10 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
     public submit() {
         return this._resourceFile.pipe(
             skip(this.currentSelection ? 0 : 1), // Skip last value if we are resolving a new one
-            tap((file) => this.dialogRef.close(file)),
+            tap((file) => {
+                console.log("FIle", file);
+                this.dialogRef.close(file);
+            }),
         );
     }
 
@@ -203,7 +206,7 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
             containerName,
             sas).pipe(
                 map((storageContainerUrl) => {
-                    return { storageContainerUrl, filePath: "" };
+                    return { filePath: "", storageContainerUrl, blobPrefix: folder };
                 }),
             );
     }
@@ -248,7 +251,6 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
     private async _applyValues(data) {
         this.form.patchValue({
             storageAccountId: data.storageAccountId,
-            containerName: data.containerName,
         });
         await Promise.resolve(); // Just wait for the patchValue to trigger the events
         this.form.patchValue({
@@ -256,5 +258,6 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
         });
         await Promise.resolve(); // Just wait for the patchValue to trigger the events
         this.updatePickedFile(data.blobPrefix);
+        console.log("Apply2", data.blobPrefix, this.form.value);
     }
 }
