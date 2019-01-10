@@ -1,28 +1,41 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
-import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
+import { AccessToken, AccessTokenCache, ServerError, isNotNullOrUndefined } from "@batch-flask/core";
 import { ElectronRemote, NotificationService } from "@batch-flask/ui";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { AADService } from "client/core/aad";
+import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
-import { BehaviorSubject, Observable, from } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, from } from "rxjs";
+import { filter } from "rxjs/operators";
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class AdalService implements OnDestroy {
     public tenantsIds: Observable<string[]>;
+    public currentUser: Observable<AADUser>;
 
     private aadService: AADService;
     private tokenCache = new AccessTokenCache();
     private _waitingPromises: StringMap<Promise<AccessToken>> = {};
+    private _currentUser = new BehaviorSubject<AADUser>(null);
     private _tenantsIds = new BehaviorSubject<string[]>([]);
+    private _subs: Subscription[] = [];
 
     constructor(
         private zone: NgZone,
         private remote: ElectronRemote,
         batchExplorer: BatchExplorerService,
         private notificationService: NotificationService) {
+        this.currentUser = this._currentUser.pipe(filter(isNotNullOrUndefined));
+        this.tenantsIds = this._tenantsIds.asObservable();
+
         this.aadService = batchExplorer.aadService;
+
+        this._subs.push(this.aadService.currentUser.subscribe((value) => {
+            this._currentUser.next(value);
+        }));
+
         // Need to do this as aadService.tenantIds is in the node processs and electron lose information in the transfer
-        this.aadService.tenantsIds.subscribe({
+        this._subs.push(this.aadService.tenantsIds.subscribe({
             next: (val) => {
                 this.zone.run(() => {
                     this._tenantsIds.next(val);
@@ -35,21 +48,19 @@ export class AdalService implements OnDestroy {
                     `Error loading tenants. This could be an issue with proxy settings or your connection.`,
                     serverError.toString());
             },
-        });
-        this.tenantsIds = this._tenantsIds.asObservable();
+        }));
     }
 
     public ngOnDestroy() {
         this._tenantsIds.complete();
+        this._currentUser.complete();
+        this._subs.forEach(x => x.unsubscribe());
+
     }
 
     public logout() {
         this.aadService.logout();
         this._waitingPromises = {};
-    }
-
-    public get currentUser() {
-        return this.aadService.currentUser;
     }
 
     public accessTokenFor(tenantId: string, resource: string = null) {
