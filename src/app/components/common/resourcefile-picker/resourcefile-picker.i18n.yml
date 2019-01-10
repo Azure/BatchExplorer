@@ -1,0 +1,11 @@
+resourcefile-picker:
+  cloudFileDialog:
+    title: Pick file(s) from storage account
+
+  blobPrefix: Blob prefix
+
+  add:
+    fromURL: Add from URL
+    fromStorage: Add from Azure Storage
+    dragAndDrop: You can drag and drop files here to be uploaded automatically
+    uploadFile: Upload file

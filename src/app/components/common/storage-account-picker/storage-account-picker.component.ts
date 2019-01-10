@@ -1,6 +1,6 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component,
-    ContentChildren, OnDestroy, OnInit, QueryList, forwardRef,
+    ContentChildren, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SelectOptionComponent } from "@batch-flask/ui";
@@ -8,8 +8,8 @@ import { ArmBatchAccount, StorageAccount } from "app/models";
 import { BatchAccountService, StorageAccountService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
-import { first } from "rxjs/operators";
+import { Subject, combineLatest } from "rxjs";
+import { filter, switchMap, takeUntil } from "rxjs/operators";
 
 import "./storage-account-picker.scss";
 
@@ -21,17 +21,15 @@ import "./storage-account-picker.scss";
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => StorageAccountPickerComponent), multi: true },
     ],
 })
-export class StorageAccountPickerComponent implements OnInit, AfterContentInit, OnDestroy, ControlValueAccessor {
+export class StorageAccountPickerComponent implements AfterContentInit, OnDestroy, ControlValueAccessor {
     @ContentChildren(SelectOptionComponent)
     public additionalOptions: QueryList<SelectOptionComponent>;
 
-    public autoStorageAccountId: string;
     public loading: boolean = true;
-    public storageAccounts: List<StorageAccount> = List([]);
+    public storageAccounts: StorageAccount[] = [];
     public pickedStorageAccountId: string;
     private _propagateChange: (value: string) => void;
-    private _sub: Subscription;
-    private _storageAccounts: List<StorageAccount> = List([]);
+    private _destroy = new Subject();
 
     constructor(
         private autoStorageService: AutoStorageService,
@@ -39,22 +37,19 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
         private storageAccountService: StorageAccountService,
         private changeDetector: ChangeDetectorRef) {
 
-        this._sub = this.autoStorageService.storageAccountId.subscribe((id) => {
-            this.autoStorageAccountId = id && id.toLowerCase();
-            this._updateStorageAccounts();
-        });
-    }
+        const storageAccounts = this.batchAccountService.currentAccount.pipe(
+            takeUntil(this._destroy),
+            filter(x => x instanceof ArmBatchAccount),
+            switchMap((account: ArmBatchAccount) => {
+                return this.storageAccountService.list(account.subscription.subscriptionId);
+            }),
+        );
 
-    public ngOnInit() {
-        this.batchAccountService.currentAccount.pipe(first()).subscribe((currentAccount) => {
-            if (currentAccount instanceof ArmBatchAccount) {
-                this.storageAccountService.list(currentAccount.subscription.subscriptionId)
-                    .subscribe((storageAccounts) => {
-                        this._storageAccounts = storageAccounts;
-                        this.loading = false;
-                        this._updateStorageAccounts();
-                    });
-            }
+        combineLatest(storageAccounts, this.autoStorageService.storageAccountId).pipe(
+            takeUntil(this._destroy),
+        ).subscribe(([storageAccounts, autoStorageAccountId]) => {
+            this.loading = false;
+            this._updateStorageAccounts(storageAccounts, autoStorageAccountId);
         });
     }
 
@@ -65,7 +60,8 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public pickStorageAccountId(storageAccountId: string) {
@@ -80,6 +76,7 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
 
     public writeValue(value: string): void {
         this.pickedStorageAccountId = value && value.toLowerCase();
+        this.changeDetector.markForCheck();
     }
 
     public registerOnChange(fn: (value: string) => void): void {
@@ -98,11 +95,11 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
         return option.value;
     }
 
-    private _updateStorageAccounts() {
+    private _updateStorageAccounts(storageAccounts: List<StorageAccount>, autoStorageAccountId: string) {
         let autoStorageAccount;
         const accounts = [];
-        this._storageAccounts.forEach((account) => {
-            if (account.id === this.autoStorageAccountId) {
+        storageAccounts.forEach((account) => {
+            if (account.id === autoStorageAccountId) {
                 autoStorageAccount = new StorageAccount({
                     ...account.toJS(),
                     name: `${account.name} (Auto storage)`,
@@ -115,7 +112,7 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
         if (autoStorageAccount) {
             accounts.unshift(autoStorageAccount);
         }
-        this.storageAccounts = List(accounts);
+        this.storageAccounts = accounts;
 
         this.changeDetector.markForCheck();
 

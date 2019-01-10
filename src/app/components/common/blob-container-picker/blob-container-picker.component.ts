@@ -1,18 +1,18 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, forwardRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { ListView } from "@batch-flask/core";
+import { ListView, LoadingStatus } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
 import { BlobContainer } from "app/models";
 import {
     AutoStorageService, ListContainerParams, StorageContainerService,
 } from "app/services/storage";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
-import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
+import { debounceTime, distinctUntilChanged, map, switchMap, take, takeUntil } from "rxjs/operators";
 
 import { DateTime } from "luxon";
 import "./blob-container-picker.scss";
@@ -31,7 +31,11 @@ export enum BlobContainerPickerOutput {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlobContainerPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class BlobContainerPickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
+    public LoadingStatus = LoadingStatus;
+
+    @Input() public storageAccountId: string | null | undefined;
+
     @Input() public label: string;
     @Input() public hint: string;
 
@@ -49,26 +53,42 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
     public container = new FormControl();
     public containersData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
-    public loading: boolean = true;
 
     private _propagateChange: (value: any[]) => void = null;
-    private _subscriptions: Subscription[] = [];
+    private _destroy = new Subject();
+    private _storageAccountId: Observable<string | null>;
+    private _storageAccountIdInput = new BehaviorSubject<string | null>(null);
+    private _autoStorageAccountId = new BehaviorSubject<string | null>(null);
 
     constructor(
+        autoStorageService: AutoStorageService,
         private storageContainerService: StorageContainerService,
-        private autoStorageService: AutoStorageService,
         private changeDetector: ChangeDetectorRef) {
 
         this.containersData = this.storageContainerService.listView();
         autoStorageService.get().subscribe((storageAccountId) => {
-            this.containersData.params = { storageAccountId };
-        });
-        this.containersData.items.subscribe((containers) => {
-            this.containers = containers;
-            changeDetector.markForCheck();
+            this._autoStorageAccountId.next(storageAccountId);
+
         });
 
-        this._subscriptions.push(this.container.valueChanges.pipe(
+        this._storageAccountId = combineLatest(this._storageAccountIdInput, autoStorageService.storageAccountId).pipe(
+            takeUntil(this._destroy),
+            map(([inputId, autoStorageId]) => inputId || autoStorageId),
+            distinctUntilChanged(),
+        );
+
+        this._storageAccountId.subscribe((storageAccountId) => {
+            this.containersData.params = { storageAccountId };
+            this.containersData.fetchAll();
+        });
+
+        this.containersData.items.subscribe((containers) => {
+            this.containers = containers;
+            this.changeDetector.markForCheck();
+        });
+
+        this.container.valueChanges.pipe(
+            takeUntil(this._destroy),
             debounceTime(400),
             distinctUntilChanged(),
         ).subscribe((value) => {
@@ -85,18 +105,19 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
                     this._propagateChange(value);
                 }
             }
-        }));
-    }
-
-    public ngOnInit() {
-        this.containersData.fetchAll().subscribe(() => {
-            this.loading = false;
-            this.changeDetector.markForCheck();
         });
     }
 
+    public ngOnChanges(changes) {
+        if (changes.storageAccountId) {
+            this._storageAccountIdInput.next(this.storageAccountId);
+            this.containers = List([]);
+        }
+    }
+
     public ngOnDestroy() {
-        this._subscriptions.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
         this.containersData.dispose();
     }
 
@@ -135,10 +156,9 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
             },
         };
 
-        return this.autoStorageService.get().pipe(
-            flatMap((storageAccountId) => {
-                return this.storageContainerService.generateSharedAccessUrl(storageAccountId, container, accessPolicy);
-            }),
+        return this._storageAccountId.pipe(
+            take(1),
+            switchMap(x => this.storageContainerService.generateSharedAccessUrl(x, container, accessPolicy)),
         );
     }
 }

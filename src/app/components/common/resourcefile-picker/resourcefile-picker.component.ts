@@ -2,9 +2,9 @@ import {
     ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnDestroy, Output, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, FormArray, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { FileSystemService } from "@batch-flask/ui";
+import { DialogService, FileSystemService } from "@batch-flask/ui";
 import { CloudPathUtils, DragUtils, SecureUtils, UrlUtils } from "@batch-flask/utils";
 import { ResourceFileAttributes } from "app/models";
 import { SettingsService } from "app/services";
@@ -15,6 +15,7 @@ import { DateTime } from "luxon";
 import * as path from "path";
 import { Observable, Subscription } from "rxjs";
 import { flatMap, share, tap } from "rxjs/operators";
+import { ResourceFileCloudFileDialogComponent } from "./resourcefile-cloud-file-dialog";
 import "./resourcefile-picker.scss";
 
 export interface UploadResourceFileEvent {
@@ -37,7 +38,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
      * Event emitted when a file is being uploaded, use this to add async task to the form
      */
     @Output() public upload = new EventEmitter();
-    public files: FormControl<ResourceFileAttributes[]>;
+    public files: FormArray;
     public isDraging = 0;
     public uploadingFiles: string[] = [];
 
@@ -56,10 +57,13 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         private storageBlobService: StorageBlobService,
         private storageContainerService: StorageContainerService,
         private fs: FileSystemService,
+        private dialogService: DialogService,
         private settingsService: SettingsService,
         private changeDetector: ChangeDetectorRef) {
         this._folderId = SecureUtils.uuid();
-        this.files = this.formBuilder.control([]);
+
+        this.files = this.formBuilder.array([]);
+
         this._sub = this.files.valueChanges.subscribe((files) => {
             if (this._propagateChange) {
                 this._propagateChange(files);
@@ -75,8 +79,28 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
 
     public writeValue(value: ResourceFileAttributes[]) {
         if (value) {
-            this.files.setValue(value);
+            this.files.controls = this.formBuilder.array(value).controls;
         }
+    }
+
+    public addUrlResourceFile() {
+        this.files.push(new FormControl({ httpUrl: "", filePath: "" }));
+        this.changeDetector.markForCheck();
+    }
+
+    public pickFromAzureStorage() {
+        const ref = this.dialogService.open(ResourceFileCloudFileDialogComponent);
+        ref.afterClosed().subscribe((file) => {
+            if (file) {
+                this.files.push(new FormControl(file));
+                this.changeDetector.markForCheck();
+            }
+        });
+    }
+
+    public removeRow(i: number) {
+        this.files.removeAt(i);
+        this.changeDetector.markForCheck();
     }
 
     public registerOnChange(fn) {
@@ -174,7 +198,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
                             AccessPolicy: {
                                 Permissions: BlobUtilities.SharedAccessPermissions.READ,
                                 Start: new Date(),
-                                Expiry: DateTime.local().plus({weeks: 1}).toJSDate(),
+                                Expiry: DateTime.local().plus({ weeks: 1 }).toJSDate(),
                             },
                         };
                         return this.storageBlobService.generateSharedAccessBlobUrl(storageAccountId,
@@ -193,11 +217,10 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     }
 
     private _addResourceFile(httpUrl: string, filePath: string) {
-        const files = this.files.value.concat([{
+        this.files.push(new FormControl({
             httpUrl,
             filePath,
-        }]);
-        this.files.setValue(files);
+        }));
     }
 
     private _canDrop(dataTransfer: DataTransfer) {

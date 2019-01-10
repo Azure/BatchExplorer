@@ -1,0 +1,22 @@
+@import "app/styles/variables";
+
+bl-resourcefile-cloud-file-dialog {
+    .container-pick {
+        display: flex;
+
+        .storage-account {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        bl-blob-container-picker {
+            flex: 1;
+        }
+
+        margin-bottom: 10px;
+    }
+
+    .path-pick {
+        height: 50vh;
+    }
+}

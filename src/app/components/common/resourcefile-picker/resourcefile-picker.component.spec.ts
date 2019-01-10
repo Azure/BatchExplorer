@@ -1,37 +1,44 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { FileSystemService, I18nUIModule, SelectModule } from "@batch-flask/ui";
-import { PermissionService } from "@batch-flask/ui/permission";
-
 import { I18nTestingModule } from "@batch-flask/core/testing";
+import { DialogService, FileSystemService, I18nUIModule, SelectModule } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
-import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
 import { ResourcefilePickerComponent } from "app/components/task/base";
+import { ResourceFileAttributes } from "app/models";
 import { SettingsService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { of } from "rxjs";
-import { F } from "test/utils";
+import { click, updateInput } from "test/utils/helpers";
+import { ResourceFileCloudFileDialogComponent } from "./resourcefile-cloud-file-dialog";
+import { ResourceFileContainerSourceComponent } from "./resourcefile-container-source";
+import { ResourceFilePickerRowComponent } from "./resourcefile-picker-row";
 
 @Component({
-    template: `<bl-resourcefile-picker [(ngModel)]="files"></bl-resourcefile-picker>`,
+    template: `<bl-resourcefile-picker [formControl]="files"></bl-resourcefile-picker>`,
 })
 class TestComponent {
-    public files = [];
+    public files = new FormControl([]);
 }
+
+const storageDialogResult: ResourceFileAttributes = {
+    autoStorageContainerName: "foobar",
+    blobPrefix: "abc/def",
+    filePath: "",
+};
 
 describe("ResourcefilePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
+    let de: DebugElement;
     let testComponent: TestComponent;
     let component: ResourcefilePickerComponent;
-    let editableTableEl: DebugElement;
-    let editableTable: EditableTableComponent;
     let storageBlobServiceSpy;
     let fsSpy;
     let settingsServiceSpy;
     let autoStorageServiceSpy;
     let storageContainerServiceSpy;
+    let dialogServiceSpy;
 
     beforeEach(() => {
         storageBlobServiceSpy = {
@@ -58,53 +65,126 @@ describe("ResourcefilePickerComponent", () => {
                 "storage.default-upload-container": "test-custom-container",
             },
         };
+
+        dialogServiceSpy = {
+            open: jasmine.createSpy("dialog.open").and.returnValue({
+                afterClosed: () => of(storageDialogResult),
+            }),
+        };
         TestBed.configureTestingModule({
             imports: [FormsModule, ReactiveFormsModule, SelectModule, ButtonsModule, I18nTestingModule, I18nUIModule],
-            declarations: [ResourcefilePickerComponent, TestComponent,
-                EditableTableComponent, EditableTableColumnComponent],
+            declarations: [
+                ResourcefilePickerComponent,
+                TestComponent,
+                ResourceFilePickerRowComponent,
+                ResourceFileContainerSourceComponent,
+            ],
             providers: [
                 { provide: StorageContainerService, useValue: storageContainerServiceSpy },
                 { provide: StorageBlobService, useValue: storageBlobServiceSpy },
                 { provide: AutoStorageService, useValue: autoStorageServiceSpy },
                 { provide: FileSystemService, useValue: fsSpy },
                 { provide: SettingsService, useValue: settingsServiceSpy },
-                { provide: PermissionService, useValue: {} },
+                { provide: DialogService, useValue: dialogServiceSpy },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
+        de = fixture.debugElement;
         testComponent = fixture.componentInstance;
         component = fixture.debugElement.query(By.css("bl-resourcefile-picker")).componentInstance;
-        editableTableEl = fixture.debugElement.query(By.css("bl-editable-table"));
-        editableTable = editableTableEl.componentInstance;
         fixture.detectChanges();
     });
 
-    it("should have the right column keys", () => {
-        const columns = editableTable.columns.toArray();
-
-        expect(columns.length).toBe(2);
-        expect(columns[0].name).toBe("httpUrl");
-        expect(columns[1].name).toBe("filePath");
+    it("starts with no rows", () => {
+        const rows = de.queryAll(By.css("bl-resourcefile-picker-row"));
+        expect(rows.length).toBe(0);
     });
 
-    it("should have the right column labels", () => {
-        const columns = editableTableEl.queryAll(By.css("thead th"));
+    it("set pass values from parent", () => {
+        testComponent.files.setValue([
+            { httpUrl: "https://example.com/remote/foo.sh", filePath: "some/local/path/foo.sh" },
+        ]);
+        fixture.detectChanges();
 
-        expect(columns.length).toBe(3);
-        expect(columns[0].nativeElement.textContent).toContain("Source");
-        expect(columns[1].nativeElement.textContent).toContain("File path");
+        const rows = de.queryAll(By.css("bl-resourcefile-picker-row"));
+        expect(rows.length).toBe(1);
+        expect(rows[0].query(By.css(".fa-file"))).not.toBeFalsy();
+        expect(rows[0].query(By.css("input[formControlName=httpUrl]"))).not.toBeFalsy();
+        expect(rows[0].query(By.css("input[formControlName=filePath]"))).not.toBeFalsy();
     });
 
-    it("Should update the files", () => {
-        editableTable.addNewItem();
-        editableTable.items.controls[0].setValue({
-            httpUrl: "https://example.com/file.json",
-            filePath: "path/file.json",
+    describe("Adding a file by URL", () => {
+        beforeEach(() => {
+            click(de.query(By.css(".add-by-url")));
+            fixture.detectChanges();
         });
-        expect(testComponent.files).toEqual([{
-            httpUrl: "https://example.com/file.json",
-            filePath: "path/file.json",
-        }]);
+
+        it("adds a new row of http url type", () => {
+            const rows = de.queryAll(By.css("bl-resourcefile-picker-row"));
+            expect(rows.length).toBe(1);
+            expect(rows[0].query(By.css(".fa-file"))).not.toBeFalsy();
+            expect(rows[0].query(By.css("input[formControlName=httpUrl]"))).not.toBeFalsy();
+            expect(rows[0].query(By.css("input[formControlName=filePath]"))).not.toBeFalsy();
+
+            // Doesn't show this
+            expect(rows[0].query(By.css(".fa-folder"))).toBeFalsy();
+            expect(rows[0].query(By.css("bl-resourcefile-container-source"))).toBeFalsy();
+        });
+
+        it("propagate the changes", () => {
+            const rows = de.queryAll(By.css("bl-resourcefile-picker-row"));
+            expect(rows.length).toBe(1);
+
+            const sourceInput = rows[0].query(By.css("input[formControlName=httpUrl]"));
+            updateInput(sourceInput, "https://example.com/remote/foo.sh");
+
+            const localPathInput = rows[0].query(By.css("input[formControlName=filePath]"));
+            updateInput(localPathInput, "some/local/path/foo.sh");
+
+            expect(testComponent.files.value).toEqual([
+                { httpUrl: "https://example.com/remote/foo.sh", filePath: "some/local/path/foo.sh" },
+            ]);
+        });
+    });
+
+    describe("Adding from Azure Storage", () => {
+        beforeEach(() => {
+            click(de.query(By.css(".add-from-storage")));
+            fixture.detectChanges();
+        });
+
+        it("prompted and dialog", () => {
+            expect(dialogServiceSpy.open).toHaveBeenCalledOnce();
+            expect(dialogServiceSpy.open).toHaveBeenCalledWith(ResourceFileCloudFileDialogComponent);
+        });
+
+        it("adds a new row of container type", () => {
+            const rows = de.queryAll(By.css("bl-resourcefile-picker-row"));
+            expect(rows.length).toBe(1);
+            expect(rows[0].query(By.css(".fa-folder"))).not.toBeFalsy();
+            expect(rows[0].query(By.css("bl-resourcefile-container-source"))).not.toBeFalsy();
+            expect(rows[0].query(By.css("input[formControlName=filePath]"))).not.toBeFalsy();
+
+            // Doesn't show this
+            expect(rows[0].query(By.css(".fa-file"))).toBeFalsy();
+            expect(rows[0].query(By.css("input[formControlName=httpUrl]"))).toBeFalsy();
+        });
+
+        it("propagate the changes", () => {
+            const rows = de.queryAll(By.css("bl-resourcefile-picker-row"));
+            expect(rows.length).toBe(1);
+
+            const localPathInput = rows[0].query(By.css("input[formControlName=filePath]"));
+            updateInput(localPathInput, "some/local/path/foo.sh");
+
+            expect(testComponent.files.value).toEqual([
+                {
+                    autoStorageContainerName: "foobar",
+                    blobPrefix: "abc/def",
+                    filePath: "some/local/path/foo.sh",
+                },
+            ]);
+        });
     });
 
     describe("when dropping files", () => {
@@ -171,7 +251,7 @@ describe("ResourcefilePickerComponent", () => {
             uploadFolder = `resource-files/${(component as any)._folderId}`;
         });
 
-        it("should upload list of files", F(async () => {
+        it("should upload list of files", async () => {
             await component.uploadFiles(["some/path/file1.txt", "some/other/file2.txt"]);
             expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledOnce();
             expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledWith("storage-acc-1",
@@ -181,9 +261,9 @@ describe("ResourcefilePickerComponent", () => {
                 "some/path/file1.txt", `${uploadFolder}/file1.txt`);
             expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("storage-acc-1", "test-custom-container",
                 "some/other/file2.txt", `${uploadFolder}/file2.txt`);
-        }));
+        });
 
-        it("should upload list of files when root is defined", F(async () => {
+        it("should upload list of files when root is defined", async () => {
             await component.uploadFiles(["some/path/file1.txt", "some/other/file2.txt"], "custom/path");
             expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledOnce();
             expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledWith("storage-acc-1",
@@ -193,6 +273,6 @@ describe("ResourcefilePickerComponent", () => {
                 "some/path/file1.txt", `${uploadFolder}/custom/path/file1.txt`);
             expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("storage-acc-1", "test-custom-container",
                 "some/other/file2.txt", `${uploadFolder}/custom/path/file2.txt`);
-        }));
+        });
     });
 });

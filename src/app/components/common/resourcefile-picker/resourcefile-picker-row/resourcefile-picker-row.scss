@@ -1,0 +1,39 @@
+@import "app/styles/variables";
+
+bl-resourcefile-picker-row {
+    display: flex;
+    align-items: center;
+
+    > .type {
+        flex: 0 0 20px;
+        color: $secondary-text;
+    }
+
+    > .source {
+        flex: 1;
+        input {
+            width: 100%;
+        }
+    }
+
+    > .local-path {
+        margin-left: 5px;
+        flex: 0 0 300px;
+
+        input {
+            width: 100%;
+        }
+    }
+
+    > .actions {
+        bl-button {
+            width: 26px;
+            height: 26px;
+            line-height: 26px;
+
+        }
+        .fa-times {
+            color: $danger-contrast-color;
+        }
+    }
+}

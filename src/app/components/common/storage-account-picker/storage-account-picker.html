@@ -1,4 +1,4 @@
-<bl-select [filterable]="true" placeholder="Storage account" [ngModel]="pickedStorageAccountId" (ngModelChange)="pickStorageAccountId($event)">
+<bl-select [filterable]="true" [placeholder]="'models.storageAccount' | i18n" [ngModel]="pickedStorageAccountId" (ngModelChange)="pickStorageAccountId($event)">
     <bl-option *ngFor="let option of additionalOptions;trackBy: trackOption"
         [value]="option.value"
         [label]="option.label"
@@ -10,6 +10,6 @@
     </bl-option>
 
     <bl-option [disabled]="true" *ngIf="loading">
-        <i class="fa fa-spinner fa-spin"></i> Loading
+        <i class="fa fa-spinner fa-spin"></i> {{'common.loading' | i18n}}
     </bl-option>
 </bl-select>
