@@ -1,7 +1,8 @@
 import { NgModule } from "@angular/core";
 import { FileModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
-import { FileBrowseModule } from "app/components/file/browse";
+import { BlobFilesBrowserModule, FileBrowseModule } from "app/components/file/browse";
+import { StorageAccountPickerModule } from "../common";
 import {
     DeleteContainerDialogComponent,
 } from "./action";
@@ -30,9 +31,12 @@ const components = [
     declarations: components,
     exports: components,
     imports: [
-        DataRoutingModule, ...commonModules, DataSharedModule,
+        DataRoutingModule, ...commonModules,
+        DataSharedModule,
         FileBrowseModule, FileModule,
         FileGroupCreateModule,
+        BlobFilesBrowserModule,
+        StorageAccountPickerModule,
     ],
     entryComponents: [
         DeleteContainerDialogComponent,

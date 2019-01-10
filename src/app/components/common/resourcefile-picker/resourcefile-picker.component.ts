@@ -79,7 +79,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
 
     public writeValue(value: ResourceFileAttributes[]) {
         if (value) {
-            this.files.setValue(value);
+            this.files.controls = this.formBuilder.array(value).controls;
         }
     }
 

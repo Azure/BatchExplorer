@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { DialogService, FileSystemService, I18nUIModule, SelectModule } from "@batch-flask/ui";
@@ -16,10 +16,10 @@ import { ResourceFileContainerSourceComponent } from "./resourcefile-container-s
 import { ResourceFilePickerRowComponent } from "./resourcefile-picker-row";
 
 @Component({
-    template: `<bl-resourcefile-picker [(ngModel)]="files"></bl-resourcefile-picker>`,
+    template: `<bl-resourcefile-picker [formControl]="files"></bl-resourcefile-picker>`,
 })
 class TestComponent {
-    public files = [];
+    public files = new FormControl([]);
 }
 
 const storageDialogResult: ResourceFileAttributes = {
@@ -28,7 +28,7 @@ const storageDialogResult: ResourceFileAttributes = {
     filePath: "",
 };
 
-describe("ResourcefilePickerComponent", () => {
+fdescribe("ResourcefilePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let de: DebugElement;
     let testComponent: TestComponent;
@@ -100,6 +100,19 @@ describe("ResourcefilePickerComponent", () => {
         expect(rows.length).toBe(0);
     });
 
+    it("set pass values from parent", () => {
+        testComponent.files.setValue([
+            { httpUrl: "https://example.com/remote/foo.sh", filePath: "some/local/path/foo.sh" },
+        ]);
+        fixture.detectChanges();
+
+        const rows = de.queryAll(By.css("bl-resourcefile-picker-row"));
+        expect(rows.length).toBe(1);
+        expect(rows[0].query(By.css(".fa-file"))).not.toBeFalsy();
+        expect(rows[0].query(By.css("input[formControlName=httpUrl]"))).not.toBeFalsy();
+        expect(rows[0].query(By.css("input[formControlName=filePath]"))).not.toBeFalsy();
+    });
+
     describe("Adding a file by URL", () => {
         beforeEach(() => {
             click(de.query(By.css(".add-by-url")));
@@ -128,7 +141,7 @@ describe("ResourcefilePickerComponent", () => {
             const localPathInput = rows[0].query(By.css("input[formControlName=filePath]"));
             updateInput(localPathInput, "some/local/path/foo.sh");
 
-            expect(testComponent.files).toEqual([
+            expect(testComponent.files.value).toEqual([
                 { httpUrl: "https://example.com/remote/foo.sh", filePath: "some/local/path/foo.sh" },
             ]);
         });
@@ -164,7 +177,7 @@ describe("ResourcefilePickerComponent", () => {
             const localPathInput = rows[0].query(By.css("input[formControlName=filePath]"));
             updateInput(localPathInput, "some/local/path/foo.sh");
 
-            expect(testComponent.files).toEqual([
+            expect(testComponent.files.value).toEqual([
                 {
                     autoStorageContainerName: "foobar",
                     blobPrefix: "abc/def",
