@@ -610,6 +610,9 @@
       <trans-unit id="models">
         <source/>
       </trans-unit>
+      <trans-unit id="models.container">
+        <source>Container</source>
+      </trans-unit>
       <trans-unit id="models.node">
         <source>Node</source>
       </trans-unit>
@@ -621,6 +624,9 @@
       </trans-unit>
       <trans-unit id="models.pools">
         <source>Pools</source>
+      </trans-unit>
+      <trans-unit id="models.storageAccount">
+        <source>Storage account</source>
       </trans-unit>
       <trans-unit id="node-configuration">
         <source/>
@@ -915,6 +921,33 @@
       </trans-unit>
       <trans-unit id="resource-permission-button.removeAccess">
         <source>Remove access</source>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.add">
+        <source/>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.add.dragAndDrop">
+        <source>You can drag and drop files here to be uploaded automatically</source>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.add.fromStorage">
+        <source>Add from Azure Storage</source>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.add.fromURL">
+        <source>Add from URL</source>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.add.uploadFile">
+        <source>Upload file</source>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.blobPrefix">
+        <source>Blob prefix</source>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.cloudFileDialog">
+        <source/>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.cloudFileDialog.title">
+        <source>Pick file(s) from storage account</source>
       </trans-unit>
       <trans-unit id="settings">
         <source/>
