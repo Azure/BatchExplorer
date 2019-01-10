@@ -33,24 +33,25 @@
         </bl-blob-files-browser>
     </div>
 
-
-    <div blFormSummary>
-        <ng-container *ngIf="currentSelection">
-            <ng-container *ngIf="currentSelection.httpUrl">
-                Single file {{pickedFile}}
-            </ng-container>
-            <ng-container *ngIf="currentSelection.autoStorageContainerName">
-                From auto storage {{containerName}} {{pickedFile}}
-            </ng-container>
-            <ng-container *ngIf="currentSelection.storageContainerUrl">
-                From {{storageAccountName}} {{containerName}} {{pickedFile}}
-            </ng-container>
-        </ng-container>
-        <ng-container *ngIf="!currentSelection && !storageAccountId || !containerName">
-            No selection
-        </ng-container>
-        <ng-container *ngIf="!currentSelection && storageAccountId && containerName">
-            Validating
-        </ng-container>
+    <div blFormSummary *ngIf="storageAccountId && containerName">
+        <bl-form-field>
+            <div blFormFieldPrefix>
+                <ng-container *ngIf="currentSelection">
+                    <ng-container *ngIf="currentSelection.httpUrl">
+                        <i class="fa fa-file"></i>
+                    </ng-container>
+                    <ng-container *ngIf="currentSelection.autoStorageContainerName">
+                        <i class="fa fa-folder"></i>
+                    </ng-container>
+                    <ng-container *ngIf="currentSelection.storageContainerUrl">
+                        <i class="fa fa-folder"></i>>
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="!currentSelection">
+                    <i class="fa fa-spin fa-spinner"></i>
+                </ng-container>
+            </div>
+            <input blInput formControlName="path">
+        </bl-form-field>
     </div>
 </bl-simple-form>

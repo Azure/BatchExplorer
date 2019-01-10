@@ -8,7 +8,7 @@ import { AutoStorageService, StorageBlobService, StorageContainerService } from 
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { BlobUtilities } from "azure-storage";
 import { DateTime } from "luxon";
-import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
+import { BehaviorSubject, Observable, Subject, of } from "rxjs";
 import {
     distinctUntilChanged, filter, map, publishReplay, refCount, skip, switchMap, take, takeUntil, tap,
 } from "rxjs/operators";
@@ -35,7 +35,6 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
         selectable: FileExplorerSelectable.all,
     };
     public _autoStorageAccountId: string;
-    private _pickedPath = new BehaviorSubject(null);
     private _status = new BehaviorSubject(null);
     private _destroy = new Subject();
     private _resourceFile: Observable<ResourceFileAttributes>;
@@ -54,6 +53,7 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
             {
                 storageAccountId: [null, Validators.required],
                 containerName: [null, Validators.required],
+                path: [""],
             },
         );
 
@@ -77,21 +77,29 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
             this.changeDetector.markForCheck();
         });
 
-        this._resourceFile = combineLatest(this.form.valueChanges, this._pickedPath).pipe(
+        this.form.controls.path.valueChanges.pipe(
+            takeUntil(this._destroy),
+            distinctUntilChanged(),
+        ).subscribe((path) => {
+            this.pickedFile = path;
+            this.changeDetector.markForCheck();
+        });
+
+        this._resourceFile = this.form.valueChanges.pipe(
             takeUntil(this._destroy),
             tap(() => {
                 this.currentSelection = null;
                 this._status.next(null);
                 this.changeDetector.markForCheck();
             }),
-            filter(([{ storageAccountId, containerName }]) => storageAccountId && containerName),
-            switchMap(([{ storageAccountId, containerName }, pickedPath]) => {
-                return this._checkIfDir(storageAccountId, containerName, pickedPath).pipe(
+            filter(({ storageAccountId, containerName }) => storageAccountId && containerName),
+            switchMap(({ storageAccountId, containerName, path }) => {
+                return this._checkIfDir(storageAccountId, containerName, path).pipe(
                     switchMap((isDirectory) => {
                         if (isDirectory) {
-                            return this._createResourceFileFromContainer(storageAccountId, containerName, pickedPath);
+                            return this._createResourceFileFromContainer(storageAccountId, containerName, path);
                         } else {
-                            return this._createResourceFileFromBlob(storageAccountId, containerName, pickedPath);
+                            return this._createResourceFileFromBlob(storageAccountId, containerName, path);
                         }
                     }),
                 );
@@ -143,8 +151,7 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
     }
 
     public updatePickedFile(file: string) {
-        this.pickedFile = file;
-        this._pickedPath.next(file);
+        this.form.patchValue({ path: file });
         this.changeDetector.markForCheck();
     }
 
