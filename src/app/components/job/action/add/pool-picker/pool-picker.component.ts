@@ -76,6 +76,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         }));
 
         this._subs.push(this.vmSizeService.sizes.subscribe((sizes) => {
+            if (!sizes) {return; }
             const vmSizeCoresMap = new Map<string, number>();
             sizes.forEach((size) => {
                 vmSizeCoresMap.set(size.id, size.numberOfCores);

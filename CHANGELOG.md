@@ -1,3 +1,12 @@
+
+# 0.19.1
+
+### Bug fixes
+*  Drilldown into tasks no longer works when filtered [\#1843](https://github.com/Azure/BatchExplorer/issues/1843)
+*  Create job schedule from job is broken  [\#1844](https://github.com/Azure/BatchExplorer/issues/1844)
+*  Check for updates throws uncaught errors sometimes [\#1847](https://github.com/Azure/BatchExplorer/issues/1847)
+*  Null pointer exception in pool picker when using Local Batch account [\#1850](https://github.com/Azure/BatchExplorer/issues/1850)
+
 # 0.19.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/27?closed=1)
 
