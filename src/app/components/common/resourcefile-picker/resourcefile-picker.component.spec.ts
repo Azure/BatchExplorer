@@ -127,7 +127,7 @@ describe("ResourcefilePickerComponent", () => {
             expect(rows[0].query(By.css("input[formControlName=filePath]"))).not.toBeFalsy();
 
             // Doesn't show this
-            expect(rows[0].query(By.css(".fa-cloud"))).toBeFalsy();
+            expect(rows[0].query(By.css(".fa-folder"))).toBeFalsy();
             expect(rows[0].query(By.css("bl-resourcefile-container-source"))).toBeFalsy();
         });
 
@@ -158,10 +158,10 @@ describe("ResourcefilePickerComponent", () => {
             expect(dialogServiceSpy.open).toHaveBeenCalledWith(ResourceFileCloudFileDialogComponent);
         });
 
-        it("adds a new row of http url type", () => {
+        it("adds a new row of container type", () => {
             const rows = de.queryAll(By.css("bl-resourcefile-picker-row"));
             expect(rows.length).toBe(1);
-            expect(rows[0].query(By.css(".fa-cloud"))).not.toBeFalsy();
+            expect(rows[0].query(By.css(".fa-folder"))).not.toBeFalsy();
             expect(rows[0].query(By.css("bl-resourcefile-container-source"))).not.toBeFalsy();
             expect(rows[0].query(By.css("input[formControlName=filePath]"))).not.toBeFalsy();
 

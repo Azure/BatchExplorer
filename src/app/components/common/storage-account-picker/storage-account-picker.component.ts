@@ -26,7 +26,7 @@ export class StorageAccountPickerComponent implements AfterContentInit, OnDestro
     public additionalOptions: QueryList<SelectOptionComponent>;
 
     public loading: boolean = true;
-    public storageAccounts: List<StorageAccount> = List([]);
+    public storageAccounts: StorageAccount[] = [];
     public pickedStorageAccountId: string;
     private _propagateChange: (value: string) => void;
     private _destroy = new Subject();
@@ -76,6 +76,7 @@ export class StorageAccountPickerComponent implements AfterContentInit, OnDestro
 
     public writeValue(value: string): void {
         this.pickedStorageAccountId = value && value.toLowerCase();
+        this.changeDetector.markForCheck();
     }
 
     public registerOnChange(fn: (value: string) => void): void {
@@ -111,7 +112,7 @@ export class StorageAccountPickerComponent implements AfterContentInit, OnDestro
         if (autoStorageAccount) {
             accounts.unshift(autoStorageAccount);
         }
-        this.storageAccounts = List(accounts);
+        this.storageAccounts = accounts;
 
         this.changeDetector.markForCheck();
 
