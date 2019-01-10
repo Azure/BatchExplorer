@@ -8,7 +8,7 @@ import {
     I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,
 } from "@batch-flask/core/testing";
 import { File, FileExplorerConfig, FormModule, I18nUIModule } from "@batch-flask/ui";
-import { StorageAccount } from "app/models";
+import { ArmBatchAccount, StorageAccount, Subscription } from "app/models";
 import { BatchAccountService, StorageAccountService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { BlobUtilities } from "azure-storage";
@@ -44,6 +44,11 @@ class FakeBlobFileBrowserComponent {
     @Input() public activeFile: string;
     @Output() public activeFileChange = new EventEmitter<string>();
 }
+
+const sub1 = new Subscription({
+    id: "/subscriptions/sub1",
+    subscriptionId: "sub1",
+});
 
 describe("ResourceFileCloudFileDialogComponent", () => {
     let fixture: ComponentFixture<ResourceFileCloudFileDialogComponent>;
@@ -87,7 +92,7 @@ describe("ResourceFileCloudFileDialogComponent", () => {
         };
 
         batchAccountServiceSpy = {
-            currentAccount: of(),
+            currentAccount: of(new ArmBatchAccount({ id: "/", subscription: sub1 } as any)),
         };
         TestBed.configureTestingModule({
             imports: [
@@ -148,6 +153,36 @@ describe("ResourceFileCloudFileDialogComponent", () => {
         expect(containerPicker.storageAccountId).toEqual("new-storage-acc-1");
         const fileBrowser = getFileBrowser();
         expect(fileBrowser).toBeFalsy();
+    });
+
+    it("set all the controls when calling setFile with autoStorageContainerName file", async () => {
+        await component.setFile({
+            autoStorageContainerName: "foobar",
+            blobPrefix: "path/to/folder",
+            filePath: "",
+        });
+        fixture.detectChanges();
+
+        expect(storageAccountPicker.value).toEqual("auto-storage-id");
+        expect(containerPicker.value).toEqual("foobar");
+        const pathEl = getPathInputEl();
+        expect(pathEl).not.toBeFalsy();
+        expect(pathEl.nativeElement.value).toEqual("path/to/folder");
+    });
+
+    it("set all the controls by parsing storageContainerUrl when calling setFile", async () => {
+        await component.setFile({
+            storageContainerUrl: "https://found-by-name.blob.core.windows.net/foobar?st=2019-05-05&sig=abcdef",
+            blobPrefix: "path/to/folder",
+            filePath: "",
+        });
+        fixture.detectChanges();
+
+        expect(storageAccountPicker.value).toEqual("found-by-name");
+        expect(containerPicker.value).toEqual("foobar");
+        const pathEl = getPathInputEl();
+        expect(pathEl).not.toBeFalsy();
+        expect(pathEl.nativeElement.value).toEqual("path/to/folder");
     });
 
     describe("when setting a value to container picker with autostorage", () => {

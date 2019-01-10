@@ -132,20 +132,21 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
     public async setFile(file: ResourceFileAttributes) {
         if (file.storageContainerUrl) {
             const result = StorageUtils.getContainerFromUrl(file.storageContainerUrl);
-            this._findAccountId(result.account).subscribe(async (account) => {
-                this._applyValues({
-                    storageAccountId: account.id,
-                    containerName: result.container,
-                    blobPrefix: file.blobPrefix,
-                });
+            const account = await this._findAccountId(result.account).toPromise();
+            if (!account) {
+                return;
+            }
+            return this._applyValues({
+                storageAccountId: account.id,
+                containerName: result.container,
+                blobPrefix: file.blobPrefix,
             });
         } else if (file.autoStorageContainerName) {
-            this.autoStorageService.get().subscribe((storageAccountId) => {
-                this._applyValues({
-                    storageAccountId: storageAccountId,
-                    containerName: file.autoStorageContainerName,
-                    blobPrefix: file.blobPrefix,
-                });
+            const storageAccountId = await this.autoStorageService.get().toPromise();
+            return this._applyValues({
+                storageAccountId: storageAccountId,
+                containerName: file.autoStorageContainerName,
+                blobPrefix: file.blobPrefix,
             });
         }
     }
