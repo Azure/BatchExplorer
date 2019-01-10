@@ -5,10 +5,10 @@
     </div>
 </div>
 
-<bl-button type="wide" (do)="addUrlResourceFile()">Add from url</bl-button>
-<bl-button type="wide" (do)="pickFromAzureStorage()">Add from azure storage</bl-button>
+<bl-button class="add-by-url" type="wide" (do)="addUrlResourceFile()">{{'resourcefile-picker.add.fromURL' | i18n}}</bl-button>
+<bl-button class="add-from-storage" type="wide" (do)="pickFromAzureStorage()">{{'resourcefile-picker.add.fromStorage' | i18n}}</bl-button>
 
-<span class="help">You can drag and drop files here to be uploaded automatically</span>
+<span class="help">{{'resourcefile-picker.add.dragAndDrop' | i18n}}</span>
 <div class="uploading-files" *ngIf="uploadingFiles.length > 0">
     <div class="file" *ngFor="let file of uploadingFiles;trackBy: trackUploadingFile">
         <i class="fa fa-spinner fa-spin"></i>

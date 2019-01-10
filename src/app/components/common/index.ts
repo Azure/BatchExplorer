@@ -10,3 +10,4 @@
 export * from "./location";
 export * from "./resourcefile-picker";
 export * from "./common.module";
+export * from "./blob-container-picker";
