@@ -28,7 +28,7 @@ const storageDialogResult: ResourceFileAttributes = {
     filePath: "",
 };
 
-fdescribe("ResourcefilePickerComponent", () => {
+describe("ResourcefilePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let de: DebugElement;
     let testComponent: TestComponent;
