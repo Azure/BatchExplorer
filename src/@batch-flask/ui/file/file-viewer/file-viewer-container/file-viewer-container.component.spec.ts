@@ -1,4 +1,4 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
@@ -27,7 +27,7 @@ class TestComponent {
 
 const file = new File({ name: "foo.ts", properties: { contentLength: 45 } } as any);
 
-describe("FileViewerContainerComponent", () => {
+fdescribe("FileViewerContainerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -69,6 +69,7 @@ describe("FileViewerContainerComponent", () => {
                 shellSpy.asProvider(),
                 notificationServiceSpy.asProvider(),
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
         TestBed.overrideModule(BrowserDynamicTestingModule, {
             set: {

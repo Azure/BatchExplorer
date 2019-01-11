@@ -2,7 +2,8 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-
+import { TimeZoneTestingModule } from "@batch-flask/core/testing";
+import { DateModule } from "@batch-flask/ui";
 import { TimespanComponent } from "@batch-flask/ui/timespan";
 import { TaskTimelineComponent, TaskTimelineStateComponent } from "app/components/task/details/task-timeline";
 import { Job, Task, TaskState } from "app/models";
@@ -48,7 +49,7 @@ describe("TaskTimelineComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, DateModule, TimeZoneTestingModule],
             declarations: [
                 TimespanComponent, TaskTimelineComponent, TaskTimelineMockComponent, TaskTimelineStateComponent,
             ],
