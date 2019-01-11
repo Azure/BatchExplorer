@@ -9,7 +9,7 @@ import { takeUntil } from "rxjs/operators";
 
 @Component({
     selector: "bl-date-property",
-    template: "{{formatedDate}}",
+    templateUrl: "date-property.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatePropertyComponent implements OnChanges, OnDestroy {
