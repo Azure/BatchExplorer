@@ -27,7 +27,8 @@ export class TimezoneService {
 
     constructor(private userConfiguration: UserConfigurationService<BatchFlaskUserConfiguration>) {
         this.current = this.userConfiguration.watch("timezone").pipe(
-            map((name) => {
+            map((name): Timezone => {
+                name = name || "local";
                 const date = DateTime.local().setZone(name);
                 if (date.isValid) {
                     return {

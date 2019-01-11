@@ -34,6 +34,14 @@ export class TimezoneDropdownComponent implements OnDestroy {
         this.timezoneService.setTimezone(timezone);
     }
 
+    public handleDblClick() {
+        if (this.current.name === "utc") {
+            this.selectTimezone("local");
+        } else {
+            this.selectTimezone("utc");
+        }
+    }
+
     public trackTimezone(_: number, timezone: string) {
         return timezone;
     }

@@ -4,7 +4,6 @@ import { FileNavigator, FileTreeNode } from "@batch-flask/ui/file/file-navigator
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { DropEvent, TableConfig } from "@batch-flask/ui/table";
 import { DragUtils, prettyBytes } from "@batch-flask/utils";
-import { DateTime } from "luxon";
 import { FileDropEvent } from "../file-explorer.component";
 
 import "./file-table-view.scss";
@@ -43,13 +42,6 @@ export class FileTableViewComponent implements OnChanges {
     public prettyFileSize(size: string) {
         // having falsy issues with contentLength = 0
         return prettyBytes(parseInt(size || "0", 10));
-    }
-
-    public prettyDate(date: Date) {
-        // return DateTime.fromJSDate(date).toLoca("MMM Do, YYYY, HH:mm:ss");
-        return DateTime.fromJSDate(date).toLocaleString({
-            month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit",
-        });
     }
 
     public isErrorState(file: any) {
