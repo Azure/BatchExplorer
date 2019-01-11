@@ -7,6 +7,7 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { TimezoneService } from "@batch-flask/core";
 import { DateTime } from "luxon";
 import { Subscription } from "rxjs";
 
@@ -40,8 +41,15 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     private _date: DateTime;
     private _subs: Subscription[] = [];
 
-    constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
-        this.currentTimeZone = new Date().toLocaleTimeString("en-us", {timeZoneName: "short"}).split(" ")[2];
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private timezoneService: TimezoneService,
+        formBuilder: FormBuilder,
+    ) {
+        this.timezoneService.current.subscribe((current) => {
+            this.currentTimeZone = current.offsetNameShort;
+            this.changeDetector.markForCheck();
+        });
 
         this.datetime = formBuilder.group({
             date: this.selectedDate,
@@ -92,6 +100,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
 
     private _setDateTime() {
         this._setTime();
+        this._date.setZone(this.currentTimeZone, {keepLocalTime: true});
         if (this._propagateChange) {
             this._propagateChange(this._date.toJSDate());
         }
