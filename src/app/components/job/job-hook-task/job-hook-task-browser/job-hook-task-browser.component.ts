@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { FilterBuilder, ListView } from "@batch-flask/core";
-import { DateUtils } from "@batch-flask/utils";
 import { Job, JobHookTask, JobHookTaskState } from "app/models";
 import { TaskExecutionResult } from "app/models/azure-batch";
 import { JobHookTaskListParams, JobHookTaskService } from "app/services";
@@ -69,10 +68,6 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
         this._sub.unsubscribe();
     }
 
-    public formatDate(date: Date) {
-        return DateUtils.prettyDate(date, 7);
-    }
-
     public updateType(type) {
         if (type === HookTaskType.ReleaseTask && !this.hasReleaseTask) {
             return;
@@ -107,7 +102,7 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
         return Boolean(this.job.jobReleaseTask);
     }
 
-    public trackTask(index, task: any) {
+    public trackTask(_: number, task: any) {
         return task.id;
     }
 
@@ -118,8 +113,8 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
                 id: task.id,
                 nodeId: task.nodeId,
                 status: this.status(task),
-                startTime: this.formatDate(info && info.startTime),
-                endTime: this.formatDate(info && info.endTime),
+                startTime: info && info.startTime,
+                endTime: info && info.endTime,
                 exitCode: info && info.exitCode,
             };
         }).toArray();
