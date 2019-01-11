@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { DateTime } from "luxon";
 import { Observable } from "rxjs";
 import { map, publishReplay, refCount } from "rxjs/operators";
+import { TelemetryService } from "../telemetry";
 import { BatchFlaskUserConfiguration, UserConfigurationService } from "../user-configuration";
 
 const localDate = DateTime.local();
@@ -25,7 +26,9 @@ export interface Timezone {
 export class TimezoneService {
     public current: Observable<Timezone>;
 
-    constructor(private userConfiguration: UserConfigurationService<BatchFlaskUserConfiguration>) {
+    constructor(
+        private userConfiguration: UserConfigurationService<BatchFlaskUserConfiguration>,
+        private telemetryService: TelemetryService) {
         this.current = this.userConfiguration.watch("timezone").pipe(
             map((name): Timezone => {
                 name = name || "local";
@@ -46,6 +49,7 @@ export class TimezoneService {
     }
 
     public async setTimezone(timezone: string) {
+        this.telemetryService.trackSetting("timezone", timezone);
         return this.userConfiguration.set("timezone", timezone);
     }
 }

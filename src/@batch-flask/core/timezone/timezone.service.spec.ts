@@ -4,6 +4,7 @@ import { DEFAULT_TIMEZONE, Timezone, TimezoneService } from "./timezone.service"
 describe("TimezoneService", () => {
     let service: TimezoneService;
     let configSpy;
+    let telemetryServiceSpy;
     let timezoneSetting: BehaviorSubject<string>;
     let current: Timezone;
     let sub: Subscription;
@@ -14,7 +15,10 @@ describe("TimezoneService", () => {
             watch: jasmine.createSpy("watch").and.returnValue(timezoneSetting),
             set: jasmine.createSpy("set"),
         };
-        service = new TimezoneService(configSpy);
+        telemetryServiceSpy = {
+            trackSetting: jasmine.createSpy("trackSetting"),
+        };
+        service = new TimezoneService(configSpy, telemetryServiceSpy);
         sub = service.current.subscribe(x => current = x);
     });
 
@@ -48,5 +52,16 @@ describe("TimezoneService", () => {
             offsetNameShort: "UTC",
             offsetNameLong: "UTC",
         });
+    });
+
+    it("updates the timezone", () => {
+        service.setTimezone("utc");
+        expect(current).toEqual({
+            name: "utc",
+            offsetNameShort: "UTC",
+            offsetNameLong: "UTC",
+        });
+        expect(telemetryServiceSpy.trackSetting).toHaveBeenCalledOnce();
+        expect(telemetryServiceSpy.trackSetting).toHaveBeenCalledWith("timezone", "utc");
     });
 });

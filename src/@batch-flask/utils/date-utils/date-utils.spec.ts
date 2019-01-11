@@ -80,13 +80,7 @@ describe("DateUtils", () => {
             // note: date month array starts at 0 for jan
             const date = new Date(2017, 11, 24, 10, 55, 2);
             expect(DateUtils.fullDateAndTime(date)).toEqual(
-                DateTime.fromJSDate(date).toLocaleString({
-                    month: "short",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                }));
+                DateTime.fromJSDate(date).toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS));
         });
     });
 

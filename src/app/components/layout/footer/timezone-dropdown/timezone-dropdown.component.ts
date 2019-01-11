@@ -18,7 +18,9 @@ export class TimezoneDropdownComponent implements OnDestroy {
     public current: Timezone | null = null;
     private _destroy = new Subject();
 
-    constructor(private changeDetector: ChangeDetectorRef, private timezoneService: TimezoneService) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private timezoneService: TimezoneService) {
         this.timezoneService.current.pipe(takeUntil(this._destroy)).subscribe((current) => {
             this.current = current;
             this.changeDetector.markForCheck();

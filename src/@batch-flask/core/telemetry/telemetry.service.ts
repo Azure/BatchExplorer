@@ -47,6 +47,24 @@ export class TelemetryService {
         this.track(pageView, TelemetryType.PageView);
     }
 
+    /**
+     * Used to track if a setting is being used
+     *
+     * **ONLY** use for non personal data(No user path)
+     *
+     * @param name Name of the setting
+     * @param value Value used
+     */
+    public trackSetting(name: string, value: string) {
+        this.trackEvent({
+            name: "Setting used",
+            properties: {
+                name,
+                value,
+            },
+        });
+    }
+
     public track(telemetry: Telemetry, type: TelemetryType) {
         if (!this._enable) { return; }
         this._uploader.track(telemetry, type);

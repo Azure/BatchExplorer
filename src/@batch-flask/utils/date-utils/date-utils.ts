@@ -108,6 +108,9 @@ export class DateUtils {
      */
     public static fullDateAndTime(date: Date | DateTime): string {
         if (!date) { return ""; }
+        if (!(date instanceof DateTime)) {
+            date = DateTime.fromJSDate(date);
+        }
         return date.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS);
     }
 
