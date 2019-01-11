@@ -2,7 +2,7 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
-import { TimezoneService } from "@batch-flask/core";
+import { TimeZoneService } from "@batch-flask/core";
 import { DateUtils } from "@batch-flask/utils";
 import { DateTime } from "luxon";
 import { BehaviorSubject } from "rxjs";
@@ -35,7 +35,7 @@ describe("DateComponent", () => {
             imports: [],
             declarations: [DateComponent, TestComponent],
             providers: [
-                { provide: TimezoneService, useValue: timezoneServiceSpy },
+                { provide: TimeZoneService, useValue: timezoneServiceSpy },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);

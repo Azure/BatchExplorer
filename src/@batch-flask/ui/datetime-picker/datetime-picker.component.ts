@@ -6,7 +6,7 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Timezone, TimezoneService } from "@batch-flask/core";
+import { TimeZone, TimeZoneService } from "@batch-flask/core";
 import { DateTime } from "luxon";
 import { Subject } from "rxjs";
 
@@ -33,7 +33,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     @Input() public timePicker: boolean = true;
 
     public datetime: FormGroup;
-    public currentTimeZone: Timezone;
+    public currentTimeZone: TimeZone;
 
     private _datetime = null;
     private _propagateChange: (value: Date) => void = null;
@@ -41,7 +41,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private timezoneService: TimezoneService,
+        private timezoneService: TimeZoneService,
         formBuilder: FormBuilder,
     ) {
         this.timezoneService.current.pipe(takeUntil(this._destroy)).subscribe((current) => {

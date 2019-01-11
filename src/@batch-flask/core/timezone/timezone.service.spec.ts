@@ -1,12 +1,12 @@
 import { BehaviorSubject, Subscription } from "rxjs";
-import { DEFAULT_TIMEZONE, Timezone, TimezoneService } from "./timezone.service";
+import { DEFAULT_TIMEZONE, TimeZone, TimeZoneService } from "./timezone.service";
 
 describe("TimezoneService", () => {
-    let service: TimezoneService;
+    let service: TimeZoneService;
     let configSpy;
     let telemetryServiceSpy;
     let timezoneSetting: BehaviorSubject<string>;
-    let current: Timezone;
+    let current: TimeZone;
     let sub: Subscription;
 
     beforeEach(() => {
@@ -18,7 +18,7 @@ describe("TimezoneService", () => {
         telemetryServiceSpy = {
             trackSetting: jasmine.createSpy("trackSetting"),
         };
-        service = new TimezoneService(configSpy, telemetryServiceSpy);
+        service = new TimeZoneService(configSpy, telemetryServiceSpy);
         sub = service.current.subscribe(x => current = x);
     });
 

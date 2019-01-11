@@ -6,13 +6,13 @@ import { TelemetryService } from "../telemetry";
 import { BatchFlaskUserConfiguration, UserConfigurationService } from "../user-configuration";
 
 const localDate = DateTime.local();
-export const DEFAULT_TIMEZONE: Timezone = {
+export const DEFAULT_TIMEZONE: TimeZone = {
     name: "local",
     offsetNameShort: localDate.offsetNameShort,
     offsetNameLong: localDate.offsetNameLong,
 };
 
-export interface Timezone {
+export interface TimeZone {
     name: string;
     offsetNameShort: string;
     offsetNameLong: string;
@@ -23,14 +23,14 @@ export interface Timezone {
  * By default use the local timezone
  */
 @Injectable({ providedIn: "root" })
-export class TimezoneService {
-    public current: Observable<Timezone>;
+export class TimeZoneService {
+    public current: Observable<TimeZone>;
 
     constructor(
         private userConfiguration: UserConfigurationService<BatchFlaskUserConfiguration>,
         private telemetryService: TelemetryService) {
         this.current = this.userConfiguration.watch("timezone").pipe(
-            map((name): Timezone => {
+            map((name): TimeZone => {
                 name = name || "local";
                 const date = DateTime.local().setZone(name);
                 if (date.isValid) {

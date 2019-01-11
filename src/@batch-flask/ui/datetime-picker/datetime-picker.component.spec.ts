@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDatepickerModule, MatNativeDateModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
-import { TimezoneService } from "@batch-flask/core";
-import { I18nTestingModule, TestTimezoneService, TimeZoneTestingModule } from "@batch-flask/core/testing";
+import { TimeZoneService } from "@batch-flask/core";
+import { I18nTestingModule, TestTimeZoneService, TimeZoneTestingModule } from "@batch-flask/core/testing";
 import { updateInput } from "test/utils/helpers";
 import { I18nUIModule } from "../i18n";
 import { DatetimePickerComponent } from "./datetime-picker.component";
@@ -22,7 +22,7 @@ describe("DatetimePickerComponent", () => {
     let de: DebugElement;
     let dateInputEl: DebugElement;
     let timeInputEl: DebugElement;
-    let timezoneService: TestTimezoneService;
+    let timezoneService: TestTimeZoneService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -42,7 +42,7 @@ describe("DatetimePickerComponent", () => {
         de = fixture.debugElement.query(By.css("bl-datetime-picker"));
         fixture.detectChanges();
 
-        timezoneService = TestBed.get(TimezoneService);
+        timezoneService = TestBed.get(TimeZoneService);
 
         dateInputEl = de.query(By.css("input[formControlName=date]"));
         timeInputEl = de.query(By.css("input[formControlName=time]"));

@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
-import { DEFAULT_TIMEZONE, TimezoneService } from "@batch-flask/core/timezone";
+import { DEFAULT_TIMEZONE, TimeZoneService } from "@batch-flask/core/timezone";
 import { DateTime } from "luxon";
 import { BehaviorSubject } from "rxjs";
 
-export class TestTimezoneService {
+export class TestTimeZoneService {
     public current = new BehaviorSubject({
         name: "utc",
         offsetNameShort: "UTC",
@@ -29,12 +29,12 @@ export class TestTimezoneService {
 
 @NgModule({
     providers: [
-        { provide: TimezoneService, useClass: TestTimezoneService },
+        { provide: TimeZoneService, useClass: TestTimeZoneService },
     ],
 })
 export class TimeZoneTestingModule {
     public static withZone() {
-        const service = new TestTimezoneService();
+        const service = new TestTimeZoneService();
         service.current.next({
             name: "local",
             offsetNameShort: "local",
@@ -43,7 +43,7 @@ export class TimeZoneTestingModule {
         return {
             ngModule: TimeZoneTestingModule,
             providers: [
-                { provide: TestTimezoneService, useValue: service },
+                { provide: TestTimeZoneService, useValue: service },
             ],
         };
     }

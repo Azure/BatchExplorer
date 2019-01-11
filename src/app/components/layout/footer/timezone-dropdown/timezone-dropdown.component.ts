@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { Timezone, TimezoneService } from "@batch-flask/core";
+import { TimeZone, TimeZoneService } from "@batch-flask/core";
 import { DateTime } from "luxon";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -15,12 +15,12 @@ export class TimezoneDropdownComponent implements OnDestroy {
         { label: `Local (${DateTime.local().offsetNameShort})`, value: "local" },
         { label: "UTC", value: "UTC" },
     ];
-    public current: Timezone | null = null;
+    public current: TimeZone | null = null;
     private _destroy = new Subject();
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private timezoneService: TimezoneService) {
+        private timezoneService: TimeZoneService) {
         this.timezoneService.current.pipe(takeUntil(this._destroy)).subscribe((current) => {
             this.current = current;
             this.changeDetector.markForCheck();

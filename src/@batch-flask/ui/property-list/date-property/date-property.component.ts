@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy,
 } from "@angular/core";
-import { TimezoneService } from "@batch-flask/core";
+import { TimeZoneService } from "@batch-flask/core";
 import { DateUtils } from "@batch-flask/utils";
 import { DateTime } from "luxon";
 import { BehaviorSubject, Subject, combineLatest } from "rxjs";
@@ -23,7 +23,7 @@ export class DatePropertyComponent implements OnChanges, OnDestroy {
     private _date = new BehaviorSubject(null);
     private _destroy = new Subject();
 
-    constructor(private changeDetector: ChangeDetectorRef, private timezoneService: TimezoneService) {
+    constructor(private changeDetector: ChangeDetectorRef, private timezoneService: TimeZoneService) {
         combineLatest(this.timezoneService.current, this._date).pipe(
             takeUntil(this._destroy),
         ).subscribe(([zone, jsDate]) => {

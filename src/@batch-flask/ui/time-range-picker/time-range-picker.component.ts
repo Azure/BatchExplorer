@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ValidationErrors } from "@angular/forms";
-import { I18nService, TimezoneService } from "@batch-flask/core";
+import { I18nService, TimeZoneService } from "@batch-flask/core";
 import { DateUtils } from "@batch-flask/utils";
 import { DateTime, Duration } from "luxon";
 import { Subject } from "rxjs";
@@ -43,7 +43,7 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
     constructor(
         private changeDetector: ChangeDetectorRef,
         private i18n: I18nService,
-        timezoneService: TimezoneService,
+        timezoneService: TimeZoneService,
         formBuilder: FormBuilder) {
         this.customRange = formBuilder.group(
             {

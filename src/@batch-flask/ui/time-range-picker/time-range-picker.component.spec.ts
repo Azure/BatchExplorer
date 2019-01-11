@@ -3,7 +3,7 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { TimezoneService } from "@batch-flask/core";
+import { TimeZoneService } from "@batch-flask/core";
 import {
     I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,
 } from "@batch-flask/core/testing";
@@ -55,7 +55,7 @@ describe("TimeRangePickerComponent", () => {
             ],
             declarations: [TimeRangePickerComponent, TestComponent, FakeDateTimePickerComponent],
             providers: [
-                { provide: TimezoneService, useValue: timezoneServiceSpy },
+                { provide: TimeZoneService, useValue: timezoneServiceSpy },
             ],
         });
 
