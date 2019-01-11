@@ -1,7 +1,7 @@
 import { BehaviorSubject, Subscription } from "rxjs";
-import { UserConfigurationService } from "./user-configuration.service";
+import { BatchFlaskUserConfiguration, UserConfigurationService } from "./user-configuration.service";
 
-interface Settings {
+interface Settings extends BatchFlaskUserConfiguration {
     foo: string;
     bar: number;
 }
