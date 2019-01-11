@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
-import { TimezoneService } from "@batch-flask/core/timezone";
+import { DEFAULT_TIMEZONE, TimezoneService } from "@batch-flask/core/timezone";
+import { DateTime } from "luxon";
 import { BehaviorSubject } from "rxjs";
 
 export class TestTimezoneService {
@@ -8,7 +9,21 @@ export class TestTimezoneService {
         offsetNameShort: "UTC",
         offsetNameLong: "UTC",
     });
-    public setTimezone = jasmine.createSpy("setTimezone");
+    public setTimezone = jasmine.createSpy("setTimezone").and.callFake(this._setTimezone.bind(this));
+
+    private _setTimezone(name: string) {
+        name = name || "local";
+        const date = DateTime.local().setZone(name);
+        if (date.isValid) {
+            this.current.next({
+                name,
+                offsetNameShort: date.offsetNameShort,
+                offsetNameLong: date.offsetNameLong,
+            });
+        } else {
+            return this.current.next(DEFAULT_TIMEZONE);
+        }
+    }
 
 }
 

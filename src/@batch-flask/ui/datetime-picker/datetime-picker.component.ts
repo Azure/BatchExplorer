@@ -6,7 +6,7 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { TimezoneService } from "@batch-flask/core";
+import { Timezone, TimezoneService } from "@batch-flask/core";
 import { DateTime } from "luxon";
 import { Subject } from "rxjs";
 
@@ -33,9 +33,9 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     @Input() public timePicker: boolean = true;
 
     public datetime: FormGroup;
-    public currentTimeZone: string;
+    public currentTimeZone: Timezone;
 
-    private _datetime = new Date();
+    private _datetime = null;
     private _propagateChange: (value: Date) => void = null;
     private _destroy = new Subject();
 
@@ -45,7 +45,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         formBuilder: FormBuilder,
     ) {
         this.timezoneService.current.pipe(takeUntil(this._destroy)).subscribe((current) => {
-            this.currentTimeZone = current.offsetNameShort;
+            this.currentTimeZone = current;
             this.changeDetector.markForCheck();
         });
 
@@ -55,17 +55,17 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         });
 
         this.datetime.valueChanges.pipe(takeUntil(this._destroy)).subscribe((value) => {
-            const time = DateTime.fromISO(value.time);
+            const time = value.time ? DateTime.fromISO(value.time) : null;
             const date = DateTime.fromJSDate(value.date, {
-                zone: this.currentTimeZone,
+                zone: this.currentTimeZone.name,
             }).set({
-                hour: time.hour,
-                minute: time.minute,
+                hour: time ? time.hour : 0,
+                minute: time ? time.minute : 0,
             });
 
             if (this._propagateChange && date.isValid) {
                 const jsDate = date.toJSDate();
-                if (jsDate.getTime() !== this._datetime.getTime()) {
+                if (!this._datetime || jsDate.getTime() !== this._datetime.getTime()) {
                     this._datetime = jsDate;
                     this._propagateChange(jsDate);
                 }
@@ -103,7 +103,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         if (!value) {
             return;
         }
-        const datetime = this._getDate(value).setZone(this.currentTimeZone);
+        const datetime = this._getDate(value).setZone(this.currentTimeZone.name);
         this.datetime.patchValue({
             date: datetime.toJSDate(),
             time: `${datetime.hour}:${datetime.minute}`,

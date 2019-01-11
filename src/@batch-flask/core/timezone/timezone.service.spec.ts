@@ -56,11 +56,8 @@ describe("TimezoneService", () => {
 
     it("updates the timezone", () => {
         service.setTimezone("utc");
-        expect(current).toEqual({
-            name: "utc",
-            offsetNameShort: "UTC",
-            offsetNameLong: "UTC",
-        });
+        expect(configSpy.set).toHaveBeenCalledOnce();
+        expect(configSpy.set).toHaveBeenCalledWith("timezone", "utc");
         expect(telemetryServiceSpy.trackSetting).toHaveBeenCalledOnce();
         expect(telemetryServiceSpy.trackSetting).toHaveBeenCalledWith("timezone", "utc");
     });
