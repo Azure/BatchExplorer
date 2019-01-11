@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
 import { ContainerDecorator } from "app/decorators";
 import { BlobContainer } from "app/models";
 
@@ -8,21 +8,17 @@ import { BlobContainer } from "app/models";
     templateUrl: "data-container-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataContainerConfigurationComponent {
-    @Input()
-    public set container(container: BlobContainer) {
-        this._container = container;
-        this.refresh(container);
-    }
-    public get application() { return this._container; }
+export class DataContainerConfigurationComponent implements OnChanges {
+    @Input() public container: BlobContainer;
 
     public decorator: ContainerDecorator = {} as any;
 
-    private _container: BlobContainer;
 
-    public refresh(container: BlobContainer) {
-        if (container) {
-            this.decorator = new ContainerDecorator(container);
+    public ngOnChanges(changes) {
+        if (changes.container) {
+            if (this.container) {
+                this.decorator = new ContainerDecorator(this.container);
+            }
         }
     }
 }
