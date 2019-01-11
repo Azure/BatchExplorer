@@ -2,12 +2,13 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ValidationErrors } from "@angular/forms";
-import { I18nService } from "@batch-flask/core";
+import { I18nService, TimezoneService } from "@batch-flask/core";
 import { DateUtils } from "@batch-flask/utils";
 import { DateTime, Duration } from "luxon";
 import { Subject } from "rxjs";
 import { QuickRange, QuickRanges, TimeRange, TimeRangeAttributes } from "./time-range.model";
 
+import { takeUntil } from "rxjs/operators";
 import "./time-range-picker.scss";
 
 let idCounter = 0;
@@ -34,11 +35,16 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
     public customRange: FormGroup;
     public current: QuickRange | TimeRangeAttributes | null = null;
     public currentLabel: string;
+    public _currentTimezone: string;
 
     private _propagateChanges: (value: TimeRange) => void;
     private _destroy = new Subject();
 
-    constructor(private changeDetector: ChangeDetectorRef, private i18n: I18nService, formBuilder: FormBuilder) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private i18n: I18nService,
+        timezoneService: TimezoneService,
+        formBuilder: FormBuilder) {
         this.customRange = formBuilder.group(
             {
                 start: [null],
@@ -48,6 +54,11 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
                 validators: [this._validateCustomRange.bind(this)],
             },
         );
+
+        timezoneService.current.pipe(takeUntil(this._destroy)).subscribe((current) => {
+            this._currentTimezone = current.name;
+            this._computeCurrentRangeLabel();
+        });
     }
 
     public ngOnDestroy() {
@@ -135,7 +146,7 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
             return DateTime.local().plus(date).toRelative();
         }
 
-        return DateUtils.prettyDate(date);
+        return DateUtils.prettyDate(DateTime.fromJSDate(date).setZone(this._currentTimezone));
     }
 
     private _validateCustomRange(c: FormGroup): ValidationErrors {
