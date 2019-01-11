@@ -5,7 +5,7 @@ import { map, publishReplay, refCount } from "rxjs/operators";
 import { BatchFlaskUserConfiguration, UserConfigurationService } from "../user-configuration";
 
 const localDate = DateTime.local();
-const DEFAULT_TIMEZONE: Timezone = {
+export const DEFAULT_TIMEZONE: Timezone = {
     name: "local",
     offsetNameShort: localDate.offsetNameShort,
     offsetNameLong: localDate.offsetNameLong,
