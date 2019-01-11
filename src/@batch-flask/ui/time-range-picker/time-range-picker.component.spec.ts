@@ -31,7 +31,7 @@ class TestComponent {
     public control = new FormControl(QuickRanges.last24h);
 }
 
-fdescribe("TimeRangePickerComponent", () => {
+describe("TimeRangePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;

@@ -27,7 +27,7 @@ class TestComponent {
 
 const file = new File({ name: "foo.ts", properties: { contentLength: 45 } } as any);
 
-fdescribe("FileViewerContainerComponent", () => {
+describe("FileViewerContainerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
