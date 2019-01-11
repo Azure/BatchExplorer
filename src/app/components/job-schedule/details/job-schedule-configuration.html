@@ -20,8 +20,8 @@
                     Completed: {{ executionInfo.endTimeFromNow }}
                 </span>
             </div>
-            <bl-text-property label="Next run time" [value]="executionInfo.nextRunTime"></bl-text-property>
-            <bl-text-property label="End time" [value]="executionInfo.endTime"></bl-text-property>
+            <bl-date-property label="Next run time" [value]="jobSchedule.executionInfo?.nextRunTime"></bl-date-property>
+            <bl-date-property label="End time" [value]="jobSchedule.executionInfo?.endTime"></bl-date-property>
             <bl-link-property *ngIf="executionInfo.recentJob?.id" label="Most recent job ID" [value]="executionInfo.recentJob?.id" [link]="['/jobs/', executionInfo.recentJob?.id]"></bl-link-property>
             <bl-text-property *ngIf="executionInfo.recentJob?.url" label="Most recent job URL" [value]="executionInfo.recentJob?.url"></bl-text-property>
         </bl-property-group>
