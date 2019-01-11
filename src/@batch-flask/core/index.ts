@@ -16,4 +16,5 @@ export * from "./i18n";
 export * from "./rxjs-operators";
 export * from "./server-error";
 export * from "./telemetry";
+export * from "./timezone";
 export * from "./user-configuration";

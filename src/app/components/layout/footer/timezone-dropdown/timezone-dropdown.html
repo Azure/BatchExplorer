@@ -1,0 +1,18 @@
+
+
+<bl-dropdown [footer]="true" align="left">
+    <div bl-dropdown-btn [title]="'timezone-dropdown.tooltip' | i18n">
+        <i class="fa fa-clock-o"></i>{{current.label}}
+    </div>
+    <div bl-dropdown-content>
+        <bl-clickable *ngFor="let timezone of timezones; trackBy: trackTimezone"
+            class="dropdown-item timezone"
+            (do)="selectTimezone(timezone.value)"
+            [class.selected]="timezone.value === current.value">
+
+            <div class="main">
+                {{timezone.label}}
+            </div>
+        </bl-clickable>
+    </div>
+</bl-dropdown>

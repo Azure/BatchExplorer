@@ -1,7 +1,9 @@
+import { BatchFlaskUserConfiguration } from "@batch-flask/core";
+
 /**
  * General configuration used both on browser and desktop
  */
-export interface BEUserConfiguration {
+export interface BEUserConfiguration extends BatchFlaskUserConfiguration {
 
 }
 
