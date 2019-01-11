@@ -29,7 +29,7 @@ export class DateUtils {
      * - Feb 2, 2016
      * - Nob 12, 2015
      */
-    public static prettyDate(date: Date | DateTime, prettyDateRelativeRange = 20) {
+    public static prettyDate(date: Date | DateTime, zone: string, prettyDateRelativeRange = 20) {
         if (!date) {
             return "";
         }
@@ -37,6 +37,7 @@ export class DateUtils {
         if (!(date instanceof DateTime)) {
             date = DateTime.fromJSDate(date);
         }
+        date = date.setZone(zone);
         if (DateUtils.withinRange(date, prettyDateRelativeRange, "days")) {
             return date.toRelative();
         } else {
