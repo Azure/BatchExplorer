@@ -13,7 +13,6 @@ export class DataContainerConfigurationComponent implements OnChanges {
 
     public decorator: ContainerDecorator = {} as any;
 
-
     public ngOnChanges(changes) {
         if (changes.container) {
             if (this.container) {
