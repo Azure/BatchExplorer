@@ -8,7 +8,7 @@ import { BehaviorSubject, Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
 @Component({
-    selector: "bl-date",
+    selector: "bl-date-property",
     template: "{{formatedDate}}",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
