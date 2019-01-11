@@ -35,7 +35,6 @@ export class TimezoneDropdownComponent implements OnDestroy {
     }
 
     public handleDblClick() {
-        console.log("DBL click");
         if (this.current.name === "utc") {
             this.selectTimezone("local");
         } else {

@@ -2,4 +2,8 @@ bl-timezone-dropdown {
     .fa-clock-o {
         margin-right: 5px;
     }
+
+    [bl-dropdown-btn] {
+        user-select: none;
+    }
 }
