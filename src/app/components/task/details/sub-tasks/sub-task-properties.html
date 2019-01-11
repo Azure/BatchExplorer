@@ -1,13 +1,13 @@
 <bl-property-list>
     <bl-property-group label="General" class="wide">
         <bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
-        <bl-text-property label="Start time" [value]="decorator.startTime"></bl-text-property>
-        <bl-text-property label="End time" [value]="decorator.endTime"></bl-text-property>
+        <bl-date-property label="Start time" [value]="task.startTime"></bl-date-property>
+        <bl-date-property label="End time" [value]="task.endTime"></bl-date-property>
         <bl-text-property label="Exit code" [value]="decorator.exitCode"></bl-text-property>
         <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
-        <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
+        <bl-date-property label="State transition time" [value]="task.stateTransitionTime"></bl-date-property>
         <bl-text-property label="Previous State" [value]="decorator.previousState"></bl-text-property>
-        <bl-text-property label="Previous state transition time" [value]="decorator.previousStateTransitionTime"></bl-text-property>
+        <bl-date-property label="Previous state transition time" [value]="task.previousStateTransitionTime"></bl-date-property>
     </bl-property-group>
 
     <bl-property-group label="Compute node" class="wide">

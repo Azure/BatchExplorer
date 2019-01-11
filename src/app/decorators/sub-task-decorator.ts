@@ -4,14 +4,10 @@ import { ComputeNodeInfoDecorator } from "./compute-node-info-decorator";
 import { FailureInfoDecorator } from "./failure-info-decorator";
 
 export class SubTaskDecorator extends DecoratorBase<SubtaskInformation> {
-    public startTime: string;
-    public endTime: string;
     public exitCode: string;
     public state: string;
-    public stateTransitionTime: string;
     public stateIcon: string;
     public previousState: string;
-    public previousStateTransitionTime: string;
 
     public nodeInfo: {};
     public failureInfo: {};
@@ -19,14 +15,10 @@ export class SubTaskDecorator extends DecoratorBase<SubtaskInformation> {
     constructor(task: SubtaskInformation) {
         super(task);
 
-        this.startTime = this.dateField(task.startTime);
-        this.endTime = this.dateField(task.endTime);
         this.exitCode = this.stringField(task.exitCode);
         this.state = this.stateField(task.state);
-        this.stateTransitionTime = this.dateField(task.stateTransitionTime);
         this.stateIcon = this._getStateIcon(task.state);
         this.previousState = this.stateField(task.previousState);
-        this.previousStateTransitionTime = this.dateField(task.previousStateTransitionTime);
 
         this.nodeInfo = new ComputeNodeInfoDecorator(task.nodeInfo || {} as any);
         this.failureInfo = new FailureInfoDecorator(task.failureInfo || {} as any);

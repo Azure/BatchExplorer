@@ -5,9 +5,9 @@
             <bl-text-property label="Thumbprint" [value]="decorator.thumbprint"></bl-text-property>
             <bl-text-property label="URL" [value]="decorator.url" [wrap]="true"></bl-text-property>
             <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
-            <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
+            <bl-date-property label="State transition time" [value]="certificate.stateTransitionTime"></bl-date-property>
             <bl-text-property label="Previous state" [value]="decorator.previousState"></bl-text-property>
-            <bl-text-property label="Previous transition time" [value]="decorator.previousStateTransitionTime"></bl-text-property>
+            <bl-date-property label="Previous transition time" [value]="certificate.previousStateTransitionTime"></bl-date-property>
             <bl-text-property label="Public data" [value]="decorator.publicData" [wrap]="true"></bl-text-property>
         </bl-property-group>
 

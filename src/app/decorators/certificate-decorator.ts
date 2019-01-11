@@ -4,9 +4,7 @@ import { DeleteCertificateErrorDecorator } from "./delete-certificate-error-deco
 
 export class CertificateDecorator extends DecoratorBase<Certificate> {
     public state: string;
-    public stateTransitionTime: string;
     public previousState: string;
-    public previousStateTransitionTime: string;
     public stateIcon: string;
     public thumbprintAlgorithm: string;
     public thumbprint: string;
@@ -19,10 +17,8 @@ export class CertificateDecorator extends DecoratorBase<Certificate> {
         super(certificate);
 
         this.state = this.stateField(certificate.state);
-        this.stateTransitionTime = this.dateField(certificate.stateTransitionTime);
         this.stateIcon = this._getStateIcon(certificate.state);
         this.previousState = this.stateField(certificate.previousState);
-        this.previousStateTransitionTime = this.dateField(certificate.previousStateTransitionTime);
         this.url = this.stringField(certificate.url);
         this.thumbprintAlgorithm = this.stringField(certificate.thumbprintAlgorithm);
         this.thumbprint = this.stringField(certificate.thumbprint);

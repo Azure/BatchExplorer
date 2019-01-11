@@ -28,7 +28,7 @@ export class DateComponent implements OnChanges, OnDestroy {
         ).subscribe(([zone, jsDate]) => {
             if (jsDate) {
                 const date = DateTime.fromJSDate(jsDate).setZone(zone.name);
-                this.formatedDate = DateUtils.prettyDate(date, zone.name);
+                this.formatedDate = DateUtils.prettyDate(date);
                 this.title = date.toISO();
             } else {
                 this.formatedDate = "-";

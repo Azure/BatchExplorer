@@ -29,7 +29,7 @@ export class DateUtils {
      * - Feb 2, 2016
      * - Nob 12, 2015
      */
-    public static prettyDate(date: Date | DateTime, zone: string, prettyDateRelativeRange = 20) {
+    public static prettyDate(date: Date | DateTime, prettyDateRelativeRange = 20) {
         if (!date) {
             return "";
         }
@@ -37,7 +37,6 @@ export class DateUtils {
         if (!(date instanceof DateTime)) {
             date = DateTime.fromJSDate(date);
         }
-        date = date.setZone(zone);
         if (DateUtils.withinRange(date, prettyDateRelativeRange, "days")) {
             return date.toRelative();
         } else {
@@ -109,22 +108,7 @@ export class DateUtils {
      */
     public static fullDateAndTime(date: Date | DateTime): string {
         if (!date) { return ""; }
-        if (!(date instanceof DateTime)) {
-            date = DateTime.fromJSDate(date);
-        }
-
-        let formatted = date.toLocaleString({
-            month: "short",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-        });
-
-        if (date.millisecond > 0) {
-            formatted += `.${date.millisecond.toString().padStart(3, "0")}`;
-        }
-        return formatted;
+        return date.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS);
     }
 
     /**
