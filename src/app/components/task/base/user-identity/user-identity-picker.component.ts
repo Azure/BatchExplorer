@@ -1,9 +1,11 @@
-import { Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef,
+} from "@angular/core";
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { AutoUserScope, UserAccount, UserAccountElevationLevel } from "app/models";
+import { AutoUserScope, UserAccount, UserAccountElevationLevel, UserIdentityAttributes } from "app/models";
 import { UserIdentityDto } from "app/models/dtos";
 
 interface UserOption {
@@ -50,21 +52,20 @@ const defaultSelectedUser = defaultUsers[0];
     selector: "bl-user-identity-picker",
     templateUrl: "user-identity-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UserIdentityComponent), multi: true },
-        { provide: NG_VALIDATORS, useExisting: forwardRef(() => UserIdentityComponent), multi: true },
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UserIdentityPickerComponent), multi: true },
+        { provide: NG_VALIDATORS, useExisting: forwardRef(() => UserIdentityPickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserIdentityComponent implements OnChanges, OnDestroy {
-    @Input()
-    public userAccounts: List<UserAccount> | UserAccount[];
+export class UserIdentityPickerComponent implements OnChanges, OnDestroy {
+    @Input() public userAccounts: List<UserAccount> | UserAccount[];
 
     public options: UserOption[];
-    public selected = new FormControl();
-    private _propagateChange: (value: UserAccount) => void = null;
+    public selected = new FormControl<UserIdentityAttributes>();
+    private _propagateChange: (value: UserIdentityAttributes) => void = null;
     private _sub: Subscription;
 
-    constructor() {
+    constructor(private changeDetector: ChangeDetectorRef) {
         this._updateOptions();
         this.reset();
         this._sub = this.selected.valueChanges.subscribe((value) => {
@@ -74,15 +75,16 @@ export class UserIdentityComponent implements OnChanges, OnDestroy {
         });
     }
 
-    public writeValue(value: any) {
+    public writeValue(value: UserIdentityAttributes | null) {
         if (value) {
             const options = this.options;
             let picked;
+
             if (value.username) {
                 picked = options.filter(x => x.identity.username === value.username).first();
             } else if (value.autoUser) {
                 picked = options.filter(x => {
-                    return value.autoUser
+                    return x.identity.autoUser
                         && x.identity.autoUser.scope === value.autoUser.scope
                         && x.identity.autoUser.elevationLevel === value.autoUser.elevationLevel;
                 }).first();
@@ -152,5 +154,6 @@ export class UserIdentityComponent implements OnChanges, OnDestroy {
             };
         });
         this.options = options.concat(defaultUsers);
+        this.changeDetector.markForCheck();
     }
 }
