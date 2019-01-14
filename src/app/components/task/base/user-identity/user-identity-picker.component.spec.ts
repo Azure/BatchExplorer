@@ -18,7 +18,7 @@ const user2 = new UserAccount({
 
 @Component({
     template: `
-    <bl-user-identity-picker [userAccounts]="userAccounts" [formControl]="control"></bl-user-identity-picker>
+        <bl-user-identity-picker [userAccounts]="userAccounts" [formControl]="control"></bl-user-identity-picker>
     `,
 })
 class TestComponent {
