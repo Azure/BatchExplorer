@@ -295,6 +295,9 @@
       <trans-unit id="datetime-picker.date">
         <source>date</source>
       </trans-unit>
+      <trans-unit id="datetime-picker.pickDate">
+        <source>Pick a date</source>
+      </trans-unit>
       <trans-unit id="datetime-picker.time">
         <source>time</source>
       </trans-unit>
@@ -1206,6 +1209,12 @@
       </trans-unit>
       <trans-unit id="time-range-picker.timeRange">
         <source>Time range</source>
+      </trans-unit>
+      <trans-unit id="timezone-dropdown">
+        <source/>
+      </trans-unit>
+      <trans-unit id="timezone-dropdown.tooltip">
+        <source>Select the timezone for dates</source>
       </trans-unit>
       <trans-unit id="virtual-network-picker">
         <source/>
