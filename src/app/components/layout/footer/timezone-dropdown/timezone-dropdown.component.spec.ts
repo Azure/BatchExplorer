@@ -47,7 +47,6 @@ describe("TimezoneDropdownComponent", () => {
         timeZoneService.setTimezone("local");
         fixture.detectChanges();
         expect(dropDownButton.nativeElement.textContent).toContain(DateTime.local().offsetNameShort);
-        expect(dropDownButton.nativeElement.textContent).not.toContain(DateTime.utc().offsetNameShort);
     });
 
     it("shows the options when clicking on button", () => {
