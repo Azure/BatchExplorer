@@ -12,12 +12,6 @@ export class DecoratorBase<TEntity> {
         this.id = entity ? (entity as any).id : "";
     }
 
-    protected dateField(value: Date, returnEmptyStringForNullOrUndefined = false): string {
-        return value
-            ? DateUtils.fullDateAndTime(value)
-            : returnEmptyStringForNullOrUndefined ? "" : "n/a";
-    }
-
     protected numberField(value: number | any, returnEmptyStringForNullOrUndefined = false): string {
         return exists(value) ? value as string : returnEmptyStringForNullOrUndefined ? "" : "n/a";
     }

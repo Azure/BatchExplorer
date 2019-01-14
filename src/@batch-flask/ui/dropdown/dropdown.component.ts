@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, Output,
+} from "@angular/core";
 
 import "./dropdown.scss";
 
@@ -10,6 +12,8 @@ import "./dropdown.scss";
 export class DropdownComponent {
     @Input() public footer: boolean = false;
     @Input() public align: "left" | "right" = "right";
+
+    @Output() public dblClick = new EventEmitter();
 
     public forcedOpen = false;
     public showDropdown = false;

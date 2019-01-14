@@ -3,9 +3,11 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
+import { TimeZoneService } from "@batch-flask/core";
 import {
     I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,
 } from "@batch-flask/core/testing";
+import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
 import { ButtonsModule } from "../buttons";
 import { CalloutModule } from "../callout";
@@ -35,8 +37,12 @@ describe("TimeRangePickerComponent", () => {
     let de: DebugElement;
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
+    let timezoneServiceSpy;
 
     beforeEach(() => {
+        timezoneServiceSpy = {
+            current: new BehaviorSubject({ name: "utc", offsetNameShort: "UTC", offsetNameLong: "UTC" }),
+        };
         TestBed.configureTestingModule({
             imports: [
                 I18nTestingModule,
@@ -48,6 +54,9 @@ describe("TimeRangePickerComponent", () => {
                 ButtonsModule,
             ],
             declarations: [TimeRangePickerComponent, TestComponent, FakeDateTimePickerComponent],
+            providers: [
+                { provide: TimeZoneService, useValue: timezoneServiceSpy },
+            ],
         });
 
         fixture = TestBed.createComponent(TestComponent);

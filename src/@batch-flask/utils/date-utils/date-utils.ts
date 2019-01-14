@@ -29,7 +29,7 @@ export class DateUtils {
      * - Feb 2, 2016
      * - Nob 12, 2015
      */
-    public static prettyDate(date: Date | DateTime, prettyDateRelativeRange = 20) {
+    public static prettyDate(date: Date | DateTime, prettyDateRelativeRange = 20): string {
         if (!date) {
             return "";
         }
@@ -58,7 +58,7 @@ export class DateUtils {
      * Return a pretty duration
      * 3d 2h 4m 1s
      */
-    public static prettyDuration(duration: Duration | null, showMilli = false) {
+    public static prettyDuration(duration: Duration | null, showMilli = false): string {
         if (!duration) { return "-"; }
         duration = this.ensureDuration(duration);
         let format: string | null = null;
@@ -82,7 +82,7 @@ export class DateUtils {
      * Return a compact duration
      * 3:02:04:1.902
      */
-    public static compactDuration(duration: Duration, showMilli = false) {
+    public static compactDuration(duration: Duration, showMilli = false): string {
         if (!duration) { return "-"; }
         duration = this.ensureDuration(duration);
         let format: string | null = null;
@@ -111,19 +111,7 @@ export class DateUtils {
         if (!(date instanceof DateTime)) {
             date = DateTime.fromJSDate(date);
         }
-
-        let formatted = date.toLocaleString({
-            month: "short",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-        });
-
-        if (date.millisecond > 0) {
-            formatted += `.${date.millisecond.toString().padStart(3, "0")}`;
-        }
-        return formatted;
+        return date.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS);
     }
 
     /**

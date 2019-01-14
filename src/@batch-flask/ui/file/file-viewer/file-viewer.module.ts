@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { CardModule } from "@batch-flask/ui/card";
+import { DateModule } from "@batch-flask/ui/date";
 import { EditorModule } from "@batch-flask/ui/editor";
 import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { LoadingModule } from "@batch-flask/ui/loading";
@@ -35,6 +36,7 @@ const publicComponents = [
         LoadingModule,
         EditorModule,
         I18nUIModule,
+        DateModule,
     ],
     entryComponents: [
         FileDialogViewerComponent,

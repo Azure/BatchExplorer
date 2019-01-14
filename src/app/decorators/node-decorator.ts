@@ -5,10 +5,7 @@ import { DecoratorBase } from "app/utils/decorators";
 export class NodeDecorator extends DecoratorBase<Node> {
     public url: string;
     public state: string;
-    public stateTransitionTime: string;
     public schedulingState: string;
-    public lastBootTime: string;
-    public allocationTime: string;
     public ipAddress: string;
     public affinityId: string;
     public vmSize: string;
@@ -22,10 +19,7 @@ export class NodeDecorator extends DecoratorBase<Node> {
 
         this.url = this.stringField(node.url);
         this.state = this.stateField(node.state);
-        this.stateTransitionTime = this.dateField(node.stateTransitionTime);
         this.schedulingState = this.stateField(node.schedulingState);
-        this.lastBootTime = this.dateField(node.lastBootTime);
-        this.allocationTime = this.dateField(node.allocationTime);
         this.ipAddress = this.stringField(node.ipAddress);
         this.affinityId = this.stringField(node.affinityId);
         this.vmSize = this.stringField(node.vmSize);

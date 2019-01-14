@@ -8,10 +8,10 @@
             <bl-text-property label="Current low priority" [value]="decorator.currentLowPriorityNodes"></bl-text-property>
             <bl-text-property label="Target low priority" [value]="decorator.targetLowPriorityNodes"></bl-text-property>
             <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
-            <bl-text-property label="State transistion Time" [value]="decorator.stateTransitionTime"></bl-text-property>
+            <bl-date-property label="State transistion Time" [value]="pool.stateTransitionTime"></bl-date-property>
             <bl-text-property label="Allocation state" [value]="decorator.allocationState"></bl-text-property>
-            <bl-text-property label="Allocation state transition time" [value]="decorator.allocationStateTransitionTime"></bl-text-property>
-            <bl-text-property label="Creation time" [value]="decorator.creationTime"></bl-text-property>
+            <bl-date-property label="Allocation state transition time" [value]="pool.allocationStateTransitionTime"></bl-date-property>
+            <bl-date-property label="Creation time" [value]="pool.creationTime"></bl-date-property>
             <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
             <bl-text-property label="Enable autoscale" [value]="decorator.enableAutoScale"></bl-text-property>
             <bl-text-property label="Autoscale evaluation interval" [value]="decorator.autoScaleEvaluationInterval"></bl-text-property>

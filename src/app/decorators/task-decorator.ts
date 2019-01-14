@@ -9,13 +9,9 @@ export class TaskDecorator extends DecoratorBase<Task> {
     public displayName: string;
     public url: string;
     public eTag: string;
-    public lastModified: string;
-    public creationTime: string;
     public state: string;
-    public stateTransitionTime: string;
     public stateIcon: string;
     public previousState: string;
-    public previousStateTransitionTime: string;
     public commandLine: string;
     public successExitCodes: string;
 
@@ -38,12 +34,8 @@ export class TaskDecorator extends DecoratorBase<Task> {
         this.displayName = this.stringField(task.displayName);
         this.url = this.stringField(task.url);
         this.eTag = this.stringField(task.eTag);
-        this.lastModified = this.dateField(task.lastModified);
-        this.creationTime = this.dateField(task.creationTime);
         this.state = this.stateField(task.state);
-        this.stateTransitionTime = this.dateField(task.stateTransitionTime);
         this.previousState = this.stateField(task.previousState);
-        this.previousStateTransitionTime = this.dateField(task.previousStateTransitionTime);
         this.commandLine = this.stringField(task.commandLine);
 
         this.exitConditions = task.exitConditions || {};

@@ -5,7 +5,7 @@
 </div>
 <div class="last-modified" [title]="file?.properties?.lastModified">
     <div class="label">Last modified</div>
-    <div class="value">{{lastModified}}</div>
+    <div class="value"><bl-date [date]="lastModified"></bl-date></div>
 </div>
 <div class="actions">
     <bl-refresh-btn [refresh]="refresh" tooltipPosition="above"></bl-refresh-btn>

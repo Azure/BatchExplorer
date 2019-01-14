@@ -3,7 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDatepickerModule, MatNativeDateModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
-import { I18nTestingModule } from "@batch-flask/core/testing";
+import { TimeZoneService } from "@batch-flask/core";
+import { I18nTestingModule, TestTimeZoneService, TimeZoneTestingModule } from "@batch-flask/core/testing";
 import { updateInput } from "test/utils/helpers";
 import { I18nUIModule } from "../i18n";
 import { DatetimePickerComponent } from "./datetime-picker.component";
@@ -21,6 +22,7 @@ describe("DatetimePickerComponent", () => {
     let de: DebugElement;
     let dateInputEl: DebugElement;
     let timeInputEl: DebugElement;
+    let timezoneService: TestTimeZoneService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -31,6 +33,7 @@ describe("DatetimePickerComponent", () => {
                 I18nTestingModule,
                 I18nUIModule,
                 MatNativeDateModule,
+                TimeZoneTestingModule,
             ],
             declarations: [DatetimePickerComponent, TestComponent],
         });
@@ -39,38 +42,86 @@ describe("DatetimePickerComponent", () => {
         de = fixture.debugElement.query(By.css("bl-datetime-picker"));
         fixture.detectChanges();
 
+        timezoneService = TestBed.get(TimeZoneService);
+
         dateInputEl = de.query(By.css("input[formControlName=date]"));
         timeInputEl = de.query(By.css("input[formControlName=time]"));
     });
 
-    it("propagate the changes when updating the date", () => {
-        updateInput(dateInputEl, "12/14/2017");
+    describe("when using local time", () => {
+        beforeEach(() => {
+            timezoneService.setTimezone("local");
+            fixture.detectChanges();
+        });
 
-        expect(testComponent.control.value).toEqual(new Date(2017, 11, 14));
+        it("propagate the changes when updating the date", () => {
+            updateInput(dateInputEl, "12/14/2017");
+
+            expect(testComponent.control.value).toEqual(new Date(2017, 11, 14));
+        });
+
+        it("propagate null when only the time is set", () => {
+            updateInput(timeInputEl, "17:32");
+
+            expect(testComponent.control.value).toEqual(null);
+        });
+
+        it("propagate the changes when updating the date and time", () => {
+            updateInput(dateInputEl, "12/14/2017");
+            updateInput(timeInputEl, "17:32");
+
+            expect(testComponent.control.value).toEqual(new Date(2017, 11, 14, 17, 32));
+        });
+
+        it("updates the inputs when setting the date time as a string", () => {
+            testComponent.control.setValue(new Date(2017, 11, 14, 17, 32).toISOString());
+            expect(dateInputEl.nativeElement.value).toEqual("12/14/2017");
+            expect(timeInputEl.nativeElement.value).toEqual("17:32");
+        });
+
+        it("updates the inputs when setting the date time as a date", () => {
+            testComponent.control.setValue(new Date(2017, 11, 14, 17, 32));
+            expect(dateInputEl.nativeElement.value).toEqual("12/14/2017");
+            expect(timeInputEl.nativeElement.value).toEqual("17:32");
+        });
     });
 
-    it("propagate null when only the time is set", () => {
-        updateInput(timeInputEl, "17:32");
+    describe("when using utc time", () => {
+        beforeEach(() => {
+            timezoneService.setTimezone("utc");
+            fixture.detectChanges();
+        });
 
-        expect(testComponent.control.value).toEqual(null);
+        it("propagate the changes when updating the date", () => {
+            updateInput(dateInputEl, "12/14/2017");
+
+            expect(testComponent.control.value).toEqual(new Date(Date.UTC(2017, 11, 14)));
+        });
+
+        it("propagate null when only the time is set", () => {
+            updateInput(timeInputEl, "17:32");
+
+            expect(testComponent.control.value).toEqual(null);
+        });
+
+        it("propagate the changes when updating the date and time", () => {
+            updateInput(dateInputEl, "12/14/2017");
+            updateInput(timeInputEl, "17:32");
+
+            expect(testComponent.control.value).toEqual(new Date(Date.UTC(2017, 11, 14, 17, 32)));
+        });
+
+        it("updates the inputs when setting the date time as a string", () => {
+            testComponent.control.setValue(new Date(Date.UTC(2017, 11, 14, 17, 32)).toISOString());
+            expect(dateInputEl.nativeElement.value).toEqual("12/14/2017");
+            expect(timeInputEl.nativeElement.value).toEqual("17:32");
+        });
+
+        it("updates the inputs when setting the date time as a date", () => {
+            testComponent.control.setValue(new Date(Date.UTC(2017, 11, 14, 17, 32)));
+            expect(dateInputEl.nativeElement.value).toEqual("12/14/2017");
+            expect(timeInputEl.nativeElement.value).toEqual("17:32");
+        });
     });
 
-    it("propagate the changes when updating the date and time", () => {
-        updateInput(dateInputEl, "12/14/2017");
-        updateInput(timeInputEl, "17:32");
-
-        expect(testComponent.control.value).toEqual(new Date(2017, 11, 14, 17, 32));
-    });
-
-    it("updates the inputs when setting the date time as a string", () => {
-        testComponent.control.setValue(new Date(2017, 11, 14, 17, 32).toISOString());
-        expect(dateInputEl.nativeElement.value).toEqual("12/14/2017");
-        expect(timeInputEl.nativeElement.value).toEqual("17:32");
-    });
-
-    it("updates the inputs when setting the date time as a date", () => {
-        testComponent.control.setValue(new Date(2017, 11, 14, 17, 32));
-        expect(dateInputEl.nativeElement.value).toEqual("12/14/2017");
-        expect(timeInputEl.nativeElement.value).toEqual("17:32");
-    });
 });

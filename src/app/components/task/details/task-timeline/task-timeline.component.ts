@@ -50,20 +50,6 @@ export class TaskTimelineComponent {
         return this.task.preparationTaskFailed;
     }
 
-    public get creationTime() {
-        return DateUtils.prettyDate(this.task.creationTime);
-    }
-
-    public get startTime() {
-        const info = this.task.executionInfo;
-        return DateUtils.prettyDate(info && info.startTime);
-    }
-
-    public get endTime() {
-        const info = this.task.executionInfo;
-        return DateUtils.prettyDate(info && info.endTime);
-    }
-
     public get retryCount() {
         const info = this.task.executionInfo;
         return info && info.retryCount;

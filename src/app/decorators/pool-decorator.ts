@@ -12,11 +12,9 @@ import { VirtualMachineConfigurationDecorator } from "./virtual-machine-configur
 
 export class PoolDecorator extends DecoratorBase<Pool> {
     public allocationState: string;
-    public allocationStateTransitionTime: string;
     public applicationPackageReferences: List<ApplicationPackageReference>;
     public certificateReferences: List<CertificateReference>;
     public cloudServiceConfiguration: CloudServiceConfigurationDecorator;
-    public creationTime: string;
     public currentDedicatedNodes: string;
     public currentLowPriorityNodes: string;
     public displayName: string;
@@ -27,7 +25,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public resizeError: any;
     public resizeTimeout: string;
     public state: string;
-    public stateTransitionTime: string;
     public targetDedicatedNodes: string;
     public targetLowPriorityNodes: string;
     public autoScaleFormula: string;
@@ -54,18 +51,13 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.lastResized = DateTime.fromJSDate(pool.allocationStateTransitionTime).toRelative();
         this.displayName = this.stringField(pool.displayName);
         this.allocationState = this.stateField(pool.allocationState);
-        this.allocationStateTransitionTime = this.dateField(pool.allocationStateTransitionTime);
-        this.creationTime = this.dateField(pool.creationTime);
         this.currentDedicatedNodes = this.stringField(pool.currentDedicatedNodes);
         this.currentLowPriorityNodes = this.stringField(pool.currentLowPriorityNodes);
         this.enableAutoScale = this.booleanField(pool.enableAutoScale);
         this.enableInterNodeCommunication = this.booleanField(pool.enableInterNodeCommunication);
-        this.lastModified = this.dateField(pool.lastModified);
         this.maxTasksPerNode = this.stringField(pool.maxTasksPerNode);
-        // this.resizeError = <any>;
         this.resizeTimeout = this.timespanField(pool.resizeTimeout);
         this.state = this.stateField(pool.state);
-        this.stateTransitionTime = this.dateField(pool.stateTransitionTime);
         this.targetDedicatedNodes = this.stringField(pool.targetDedicatedNodes);
         this.targetLowPriorityNodes = this.stringField(pool.targetLowPriorityNodes);
         this.autoScaleFormula = this.stringField(pool.autoScaleFormula);

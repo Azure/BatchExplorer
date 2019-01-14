@@ -4,11 +4,11 @@
             <bl-text-property [label]="'id' | i18n" [value]="decorator.id"></bl-text-property>
             <bl-text-property [label]="'label' | i18n" [value]="decorator.url"></bl-text-property>
             <bl-text-property [label]="'state' | i18n" [value]="decorator.state"></bl-text-property>
-            <bl-text-property [label]="'state-transition-time' | i18n" [value]="decorator.stateTransitionTime"></bl-text-property>
+            <bl-date-property [label]="'state-transition-time' | i18n" [value]="node.stateTransitionTime"></bl-date-property>
             <bl-text-property [label]="'scheduling-state' | i18n" [value]="decorator.schedulingState"></bl-text-property>
             <bl-text-property [label]="'node-size' | i18n" [value]="decorator.vmSize"></bl-text-property>
-            <bl-text-property [label]="'last-boot-time' | i18n" [value]="decorator.lastBootTime"></bl-text-property>
-            <bl-text-property [label]="'allocation-time' | i18n" [value]="decorator.allocationTime"></bl-text-property>
+            <bl-date-property [label]="'last-boot-time' | i18n" [value]="node.lastBootTime"></bl-date-property>
+            <bl-date-property [label]="'allocation-time' | i18n" [value]="node.allocationTime"></bl-date-property>
             <bl-text-property [label]="'running-tasks-count' | i18n" [value]="decorator.runningTasksCount"></bl-text-property>
             <bl-text-property [label]="'total-tasks-run' | i18n" [value]="decorator.totalTasksRun"></bl-text-property>
             <bl-text-property [label]="'total-tasks-succeeded' | i18n" [value]="decorator.totalTasksSucceeded"></bl-text-property>
@@ -33,8 +33,8 @@
             </div>
 
             <bl-text-property [label]="'state' | i18n" [value]="decorator.startTaskInfo.state"></bl-text-property>
-            <bl-text-property [label]="'start-time' | i18n" [value]="decorator.startTaskInfo.startTime"></bl-text-property>
-            <bl-text-property [label]="'end-time' | i18n" [value]="decorator.startTaskInfo.endTime"></bl-text-property>
+            <bl-date-property [label]="'start-time' | i18n" [value]="node.startTaskInfo.startTime"></bl-date-property>
+            <bl-date-property [label]="'end-time' | i18n" [value]="node.startTaskInfo.endTime"></bl-date-property>
             <bl-text-property [label]="'run-time' | i18n" [value]="decorator.startTaskInfo.runtime"></bl-text-property>
             <bl-text-property [label]="'exit-code' | i18n" [value]="decorator.startTaskInfo.exitCode"></bl-text-property>
             <bl-text-property [label]="'retry-count' | i18n" [value]="decorator.startTaskInfo.retryCount"></bl-text-property>

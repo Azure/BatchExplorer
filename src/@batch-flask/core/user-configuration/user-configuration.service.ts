@@ -5,6 +5,10 @@ import { isNotNullOrUndefined } from "../rxjs-operators";
 
 export const USER_CONFIGURATION_STORE = "USER_CONFIGURATION_STORE";
 
+export interface BatchFlaskUserConfiguration {
+    timezone?: string;
+}
+
 export interface UserConfigurationStore<T> {
     config: Observable<T>;
 
@@ -12,7 +16,7 @@ export interface UserConfigurationStore<T> {
 }
 
 @Injectable({ providedIn: "root" })
-export class UserConfigurationService<T extends {}> implements OnDestroy {
+export class UserConfigurationService<T extends BatchFlaskUserConfiguration> implements OnDestroy {
     public config: Observable<T>;
 
     private _config = new BehaviorSubject<T | null>({} as any);

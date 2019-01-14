@@ -4,12 +4,12 @@
     </div>
     <div>
         <input blInput [matDatepicker]="datePicker"
-            placeholder="mm/dd/yyyy"
+            [placeholder]="'datetime-picker.pickDate' | i18n"
             formControlName="date"
             attr.aria-label="{{label}} {{'datetime-picker.date' | i18n}}">
         <mat-datepicker-toggle blFormFieldSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker></mat-datepicker>
         <input *ngIf="timePicker" blInput formControlName="time" type="time" attr.aria-label="{{label}} {{'datetime-picker.time' | i18n}}">
-        <span class="timezone" [title]="'datetime-picker.currentTimeZone' | i18n">{{currentTimeZone}}</span>
+        <span class="timezone" [title]="'datetime-picker.currentTimeZone' | i18n">{{currentTimeZone?.offsetNameShort}}</span>
     </div>
 </ng-container>

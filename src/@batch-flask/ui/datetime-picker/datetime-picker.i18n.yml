@@ -1,4 +1,5 @@
 datetime-picker:
+  pickDate: Pick a date
   currentTimeZone: Current timezone
   time: "time"
   date: "date"

@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
+import { DateModule } from "@batch-flask/ui/date";
 import { FileViewerModule } from "@batch-flask/ui/file/file-viewer";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { I18nUIModule } from "@batch-flask/ui/i18n";
@@ -40,6 +41,7 @@ const publicComponents = [
         FormsModule,
         I18nUIModule,
         ToolbarModule,
+        DateModule,
     ],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,

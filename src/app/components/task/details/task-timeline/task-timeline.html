@@ -1,7 +1,7 @@
 <div class="timeline">
     <!-- Active-->
     <bl-task-timeline-state state="active" [currentState]="task.state" [title]="activeMessage">
-        {{creationTime}}
+        <bl-date [date]="task.creationTime"></bl-date>
     </bl-task-timeline-state>
     <div class="state-link" [class.locked]="active"></div>
 
@@ -29,7 +29,7 @@
 
     <!-- Completed-->
     <bl-task-timeline-state state="completed" [currentState]="task.state" [error]="task.didTimeout">
-        <div *ngIf="completed">{{endTime}}</div>
+        <div *ngIf="completed"><bl-date [date]="task.executionInfo?.endTime"></bl-date></div>
         <div *ngIf="task.didTimeout" class="error">Task timed out</div>
         <div *ngIf="completedWarning" class="warn">Exit code {{task.executionInfo?.exitCode}}</div>
     </bl-task-timeline-state>

@@ -2,14 +2,15 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import {
     ControlValueAccessor,
     FormBuilder,
-    FormControl,
     FormGroup,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { TimeZone, TimeZoneService } from "@batch-flask/core";
 import { DateTime } from "luxon";
-import { Subscription } from "rxjs";
+import { Subject } from "rxjs";
 
+import { takeUntil } from "rxjs/operators";
 import "./datetime-picker.scss";
 
 let idCounter = 0;
@@ -31,39 +32,51 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     @Input() public label: string;
     @Input() public timePicker: boolean = true;
 
-    public selectedDate = new FormControl();
-    public selectedTime = new FormControl();
     public datetime: FormGroup;
-    public currentTimeZone: string;
+    public currentTimeZone: TimeZone;
 
+    private _datetime = null;
     private _propagateChange: (value: Date) => void = null;
-    private _date: DateTime;
-    private _subs: Subscription[] = [];
+    private _destroy = new Subject();
 
-    constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
-        this.currentTimeZone = new Date().toLocaleTimeString("en-us", {timeZoneName: "short"}).split(" ")[2];
-
-        this.datetime = formBuilder.group({
-            date: this.selectedDate,
-            time: this.selectedTime,
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private timezoneService: TimeZoneService,
+        formBuilder: FormBuilder,
+    ) {
+        this.timezoneService.current.pipe(takeUntil(this._destroy)).subscribe((current) => {
+            this.currentTimeZone = current;
+            this.changeDetector.markForCheck();
         });
 
-        this._subs.push(this.selectedDate.valueChanges.subscribe((value: any) => {
-            this._date = DateTime.fromJSDate(new Date(value));
-            this._setDateTime();
-        }));
+        this.datetime = formBuilder.group({
+            date: [null],
+            time: [null],
+        });
 
-        this._subs.push(this.selectedTime.valueChanges.subscribe((value: any) => {
-            this._setDateTime();
-        }));
-    }
+        this.datetime.valueChanges.pipe(takeUntil(this._destroy)).subscribe((value) => {
+            const time = value.time ? DateTime.fromISO(value.time) : null;
+            const date = DateTime.fromJSDate(value.date, {
+                zone: this.currentTimeZone.name,
+            }).set({
+                hour: time ? time.hour : 0,
+                minute: time ? time.minute : 0,
+            });
 
-    public onTimeChange(event) {
-        this._setDateTime();
+            if (this._propagateChange && date.isValid) {
+                const jsDate = date.toJSDate();
+                if (!this._datetime || jsDate.getTime() !== this._datetime.getTime()) {
+                    this._datetime = jsDate;
+                    this._propagateChange(jsDate);
+                }
+            }
+            this.changeDetector.markForCheck();
+        });
     }
 
     public ngOnDestroy(): void {
-        this._subs.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public writeValue(value: Date | string | null): void {
@@ -86,33 +99,15 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         return index;
     }
 
-    public get isDatePicked() {
-        return Boolean(this._date);
-    }
-
-    private _setDateTime() {
-        this._setTime();
-        if (this._propagateChange) {
-            this._propagateChange(this._date.toJSDate());
-        }
-        this.changeDetector.markForCheck();
-    }
-
-    private _setTime() {
-        const time = DateTime.fromISO(this.selectedTime.value);
-        this._date = this._date.set({
-            hour: time.hour,
-            minute: time.minute,
-        });
-    }
-
     private _parseDateTime(value: Date | string | null) {
         if (!value) {
             return;
         }
-        const datetime = this._getDate(value);
-        this.selectedDate.setValue(datetime.toJSDate());
-        this.selectedTime.patchValue(`${datetime.hour}:${datetime.minute}`);
+        const datetime = this._getDate(value).setZone(this.currentTimeZone.name);
+        this.datetime.patchValue({
+            date: datetime.toJSDate(),
+            time: `${datetime.hour}:${datetime.minute}`,
+        });
         this.changeDetector.markForCheck();
     }
 

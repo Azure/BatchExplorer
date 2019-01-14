@@ -5,11 +5,11 @@
             <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
             <bl-link-property label="Pool" [value]="executionInfo.poolId" [link]="['/pools/', executionInfo.poolId]"></bl-link-property>
             <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
-            <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
-            <bl-text-property label="Creation time" [value]="decorator.creationTime"></bl-text-property>
-            <bl-text-property label="Last modified" [value]="decorator.lastModified"></bl-text-property>
+            <bl-date-property label="State transition time" [value]="job.stateTransitionTime"></bl-date-property>
+            <bl-date-property label="Creation time" [value]="job.creationTime"></bl-date-property>
+            <bl-date-property label="Last modified" [value]="job.lastModified"></bl-date-property>
             <bl-text-property label="Previous state" [value]="decorator.previousState"></bl-text-property>
-            <bl-text-property label="Previous transition time" [value]="decorator.previousStateTransitionTime"></bl-text-property>
+            <bl-date-property label="Previous transition time" [value]="job.previousStateTransitionTime"></bl-date-property>
             <bl-text-property label="Priority" [value]="decorator.priority"></bl-text-property>
             <bl-bool-property label="Task dependencies" [value]="decorator.usesTaskDependencies"></bl-bool-property>
             <bl-text-property label="When all tasks complete" [value]="decorator.onAllTasksComplete"></bl-text-property>
