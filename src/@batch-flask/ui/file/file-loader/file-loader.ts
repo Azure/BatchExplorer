@@ -84,10 +84,10 @@ export class FileLoader {
             distinctUntilChanged((a, b) => {
                 if (a === b) {
                     return true;
-                } else if (a instanceof ServerError || b instanceof ServerError) {
+                } else if (a == null || b == null || a instanceof ServerError || b instanceof ServerError) {
                     return false;
                 } else {
-                    return a!.equals(b!);
+                    return a.equals(b);
                 }
             }),
             publishReplay(1),

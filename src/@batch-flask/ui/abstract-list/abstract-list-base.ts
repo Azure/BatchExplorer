@@ -20,6 +20,7 @@ import {
 } from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
+import { SanitizedError } from "@batch-flask/utils";
 import { List } from "immutable";
 import * as inflection from "inflection";
 import { Subscription, of } from "rxjs";
@@ -346,7 +347,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         }
     }
 
-    public trackItem(index, item) {
+    public trackItem(_: number, item: AbstractListItem) {
         return item.id;
     }
 
@@ -358,7 +359,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             if (this.config.forceBreadcrumb) {
                 this.breadcrumbService.navigate(link);
             } else {
-                this.router.navigate(link);
+                try {
+                    this.router.navigate(link);
+                } catch (e) {
+                    throw new SanitizedError(e.toString());
+                }
             }
         }
     }
