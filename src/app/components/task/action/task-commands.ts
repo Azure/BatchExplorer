@@ -1,9 +1,9 @@
 import { Injectable, Injector } from "@angular/core";
-
 import { I18nService } from "@batch-flask/core";
+import { ElectronRemote, FileSystemService } from "@batch-flask/electron";
 import {
-    COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
-    EntityCommands, FileSystemService, Permission, SidebarManager,
+    COMMAND_LABEL_ICON, EntityCommand,
+    EntityCommands, Permission, SidebarManager,
 } from "@batch-flask/ui";
 import { Task, TaskExecutionResult, TaskState } from "app/models";
 import { TaskService } from "app/services";

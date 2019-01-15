@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy } from "@angular/core";
-import { ElectronShell, FileSystemService } from "@batch-flask/ui";
+import { ElectronShell, FileSystemService } from "@batch-flask/electron";
 import {
     ContextMenu,
     ContextMenuItem,

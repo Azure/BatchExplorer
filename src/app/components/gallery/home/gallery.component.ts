@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { DialogService, ElectronShell } from "@batch-flask/ui";
+import { ElectronShell } from "@batch-flask/electron";
+import { DialogService } from "@batch-flask/ui";
 import { MICROSOFT_PORTFOLIO, NcjTemplateService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { Subject } from "rxjs";

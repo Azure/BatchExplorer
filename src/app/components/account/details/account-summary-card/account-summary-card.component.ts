@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { ElectronShell } from "@batch-flask/ui";
+import { ElectronShell } from "@batch-flask/electron";
 import { ArmBatchAccount, BatchAccount } from "app/models";
 import { Constants } from "common";
 import { BatchAccountCommands } from "../../action";

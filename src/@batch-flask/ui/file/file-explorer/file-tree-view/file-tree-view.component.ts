@@ -5,7 +5,7 @@ import {
 import { ServerError } from "@batch-flask/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { DialogService } from "@batch-flask/ui/dialogs";
-import { ElectronRemote, ElectronShell } from "@batch-flask/ui/electron";
+import { ElectronRemote, ElectronShell } from "@batch-flask/electron";
 import { DownloadFolderComponent } from "@batch-flask/ui/file/download-folder-dialog";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { CloudPathUtils, DragUtils } from "@batch-flask/utils";

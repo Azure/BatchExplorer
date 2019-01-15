@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { FileSystemService } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
 import { DateUtils } from "@batch-flask/utils";
 import * as path from "path";
 

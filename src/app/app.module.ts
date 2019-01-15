@@ -13,7 +13,7 @@ import { routes } from "./app.routes";
 import { AppComponent } from "app/app.component";
 
 // extenal modules
-import { BaseModule, ElectronRendererModule } from "@batch-flask/ui";
+import { BaseModule } from "@batch-flask/ui";
 import { AccountModule } from "app/components/account/account.module";
 import { FileModule } from "app/components/file/file.module";
 import { SettingsModule } from "app/components/settings";
@@ -23,6 +23,7 @@ import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import { LocaleService, MaterialModule, TranslationsLoaderService, USER_CONFIGURATION_STORE } from "@batch-flask/core";
+import { ElectronRendererModule } from "@batch-flask/electron";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
 import {

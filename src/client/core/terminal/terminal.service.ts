@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { FileSystemService } from "@batch-flask/electron";
-import { OSService } from "@batch-flask/ui/electron";
+import { FileSystemService, OSService } from "@batch-flask/electron";
 import * as cp from "child_process";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { ExternalApplication, IpcEvent } from "common/constants";

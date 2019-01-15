@@ -14,13 +14,14 @@ import {
     ServerError,
     TargetedDataCache,
 } from "@batch-flask/core";
-import { File, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
+import { File, FileLoader, FileNavigator } from "@batch-flask/ui";
 import { EncodingUtils, exists } from "@batch-flask/utils";
 import * as fs from "fs";
 import * as path from "path";
 import { Observable, from } from "rxjs";
 import { flatMap, map, share, switchMap } from "rxjs/operators";
 import { AzureBatchHttpService } from "../core";
+import { FileSystemService } from "@batch-flask/electron";
 
 export interface NodeFileListParams {
     poolId?: string;

@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
-import { ClipboardService } from "@batch-flask/ui/electron";
+import { ClipboardService } from "@batch-flask/electron";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { click } from "test/utils/helpers";
 import {

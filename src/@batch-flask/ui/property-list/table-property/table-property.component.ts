@@ -3,7 +3,7 @@ import {
     ContentChildren, HostBinding, HostListener, Injector, Input, QueryList, TemplateRef, ViewChild,
 } from "@angular/core";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
-import { ClipboardService } from "@batch-flask/ui/electron";
+import { ClipboardService } from "@batch-flask/electron";
 
 import "./table-property.scss";
 

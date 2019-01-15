@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { FileSystemService } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
 import { OS } from "@batch-flask/utils";
 import { ConnectionType, IaasNodeConnectionSettings, Node, NodeConnectionSettings, Pool } from "app/models";
 import { AzureBatchHttpService } from "app/services/azure-batch/core";

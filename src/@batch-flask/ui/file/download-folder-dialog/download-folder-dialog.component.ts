@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 import { Activity, ActivityService } from "@batch-flask/ui/activity";
-import { ElectronShell, FileSystemService } from "@batch-flask/ui/electron";
+import { ElectronShell, FileSystemService } from "@batch-flask/electron";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { SecureUtils } from "@batch-flask/utils";
 import { List } from "immutable";

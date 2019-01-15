@@ -1,5 +1,5 @@
 import { ServerError } from "@batch-flask/core";
-import { FileSystemService } from "@batch-flask/ui/electron";
+import { FileSystemService } from "@batch-flask/electron";
 import { CloudPathUtils, exists, log } from "@batch-flask/utils";
 import * as path from "path";
 import { BehaviorSubject, Observable, from, of } from "rxjs";
