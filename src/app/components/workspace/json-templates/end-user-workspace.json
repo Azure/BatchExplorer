@@ -4,7 +4,7 @@
     "description": "Default end-user workspace that hides a number of advanced features.",
     "features": {
         "job": {
-            "statistics": false,
+            "statistics": true,
             "tags": false,
             "configuration": {
                 "json": false
