@@ -159,7 +159,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
                 radius: 2,
             } as any,
             {
-                label: "Succeded tasks",
+                label: "Succeeded tasks",
                 data: this._tasksToDataPoints(succeededTasks),
             },
         ];
@@ -199,7 +199,13 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
                 return this.tasks;
             case SortOption.startTime:
                 return this.tasks.sort((a, b) => {
-                    return a.executionInfo.startTime.getTime() - b.executionInfo.startTime.getTime();
+                    if (!a.executionInfo.startTime) {
+                        return -1;
+                    } else if (!b.executionInfo.startTime) {
+                        return 1;
+                    } else {
+                        return a.executionInfo.startTime.getTime() - b.executionInfo.startTime.getTime();
+                    }
                 });
             case SortOption.endTime:
                 return this.tasks.sort((a, b) => {
@@ -207,7 +213,13 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
                 });
             case SortOption.node:
                 return this.tasks.sort((a, b) => {
-                    return a.nodeInfo.nodeId.localeCompare(b.nodeInfo.nodeId);
+                    if (!a.nodeInfo.nodeId) {
+                        return -1;
+                    } else if (!b.nodeInfo.nodeId) {
+                        return 1;
+                    } else {
+                        return a.nodeInfo.nodeId.localeCompare(b.nodeInfo.nodeId);
+                    }
                 });
             default:
                 return this.tasks;
