@@ -16,7 +16,7 @@ export interface CommonFolders {
 /**
  * Service to handle saving files to the client FileSystem
  */
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class FileSystemService {
     public commonFolders: any;
     private _fs: typeof import("fs");

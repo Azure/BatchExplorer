@@ -3,10 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { List } from "immutable";
-
 import { RouterTestingModule } from "@angular/router/testing";
-import { ElectronModule, FormModule } from "@batch-flask/ui";
+import { FormModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
@@ -14,6 +12,7 @@ import { ArmBatchAccount, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { BatchAccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
+import { List } from "immutable";
 import { BehaviorSubject, of } from "rxjs";
 import { updateInput } from "test/utils/helpers";
 
@@ -88,7 +87,7 @@ describe("VmSizePickerComponent", () => {
         TestBed.configureTestingModule({
             imports: [
                 BrowserModule, FormsModule, ReactiveFormsModule, TableTestingModule,
-                NoopAnimationsModule, ElectronModule, RouterTestingModule, FormModule,
+                NoopAnimationsModule, RouterTestingModule, FormModule,
             ],
             declarations: [VmSizePickerComponent, TestComponent],
             providers: [

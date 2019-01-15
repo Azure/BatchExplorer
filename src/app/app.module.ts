@@ -13,7 +13,7 @@ import { routes } from "./app.routes";
 import { AppComponent } from "app/app.component";
 
 // extenal modules
-import { BaseModule } from "@batch-flask/ui";
+import { BaseModule, ElectronRendererModule } from "@batch-flask/ui";
 import { AccountModule } from "app/components/account/account.module";
 import { FileModule } from "app/components/file/file.module";
 import { SettingsModule } from "app/components/settings";
@@ -57,6 +57,7 @@ const modules = [
         MaterialModule,
         ReactiveFormsModule,
         RendererTelemetryModule,
+        ElectronRendererModule,
         RouterModule.forRoot(routes, {
             useHash: false,
             paramsInheritanceStrategy: "always",

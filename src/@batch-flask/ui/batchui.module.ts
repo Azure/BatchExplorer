@@ -22,7 +22,6 @@ import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
 import { DurationPickerModule } from "./duration-picker";
 import { EditorModule } from "./editor";
-import { ElectronModule } from "./electron";
 import { EntityCommandsListModule } from "./entity-commands-list";
 import { FileModule } from "./file";
 import { FocusSectionModule } from "./focus-section";
@@ -96,7 +95,6 @@ const modules = [
     SummaryCardModule,
     VirtualScrollModule,
     VTabsModule,
-    ElectronModule,
     WorkspaceModule,
     DatetimePickerModule,
 ];
