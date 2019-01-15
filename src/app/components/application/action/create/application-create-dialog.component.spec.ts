@@ -34,7 +34,7 @@ describe("ApplicationCreateDialogComponent ", () => {
 
                     return throwError(ServerError.fromARM(new HttpErrorResponse({
                         status: 400,
-                        error: { error: { message: "blast, we failed" } },
+                        error: {  message: "blast, we failed" },
                         statusText: "Bad request",
                     })));
                 }
@@ -47,7 +47,7 @@ describe("ApplicationCreateDialogComponent ", () => {
 
                     return throwError(ServerError.fromARM(new HttpErrorResponse({
                         status: 400,
-                        error:  { error: { message: "blast, we failed" } },
+                        error: {  message: "blast, we failed" },
                         statusText: "error, error, error",
                     })));
                 }

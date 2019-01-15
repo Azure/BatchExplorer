@@ -7,6 +7,7 @@ export enum UpdateStatus {
     Downloading,
     Ready,
     NotAvailable,
+    Error,
 }
 
 export const AUTO_UPDATE_MAIN_SERVICE_TOKEN = "AUTO_UPDATE_SERVICE";
@@ -24,6 +25,6 @@ export abstract class AutoUpdateService {
     public abstract set autoInstallOnAppQuit(value: boolean);
     public abstract setFeedUrl(value: string);
     public abstract quitAndInstall();
-    public abstract checkForUpdates();
+    public abstract checkForUpdates(): Promise<any>;
 
 }

@@ -6,11 +6,11 @@
             <bl-text-property [label]="'commandLine.label' | i18n" [value]="decorator.commandLine" [wrap]="true"></bl-text-property>
             <bl-text-property [label]="'state.label' | i18n" [value]="decorator.state"></bl-text-property>
             <bl-text-property [label]="'previousState.label' | i18n" [value]="decorator.previousState"></bl-text-property>
-            <bl-text-property [label]="'creationTime.label' | i18n" [value]="decorator.creationTime"></bl-text-property>
-            <bl-text-property [label]="'lastModified.label' | i18n" [value]="decorator.lastModified"></bl-text-property>
+            <bl-date-property [label]="'creationTime.label' | i18n" [value]="task.creationTime"></bl-date-property>
+            <bl-date-property [label]="'lastModified.label' | i18n" [value]="task.lastModified"></bl-date-property>
             <bl-text-property [label]="'userIdentity.label' | i18n" [value]="decorator.userIdentitySummary"></bl-text-property>
-            <bl-text-property [label]="'stateTransitionTime.label' | i18n" [value]="decorator.stateTransitionTime"></bl-text-property>
-            <bl-text-property [label]="'previousStateTransitionTime.label' | i18n" [value]="decorator.previousStateTransitionTime"></bl-text-property>
+            <bl-date-property [label]="'stateTransitionTime.label' | i18n" [value]="task.stateTransitionTime"></bl-date-property>
+            <bl-date-property [label]="'previousStateTransitionTime.label' | i18n" [value]="task.previousStateTransitionTime"></bl-date-property>
             <bl-text-property [label]="'exitConditions.label' | i18n" *ngIf="!task.exitConditions" value="None"></bl-text-property>
             <bl-text-property [label]="'affinityId.label' | i18n" *ngIf="task.affinityInfo" [value]="task.affinityInfo?.affinityId"></bl-text-property>
 
@@ -91,14 +91,14 @@
                 <span *ngIf="task?.executionInfo?.endTime">Completed in: {{ executionInfo.runtime }}</span>
             </div>
 
-            <bl-text-property label="Start time" [value]="executionInfo.startTime"></bl-text-property>
-            <bl-text-property label="End time" [value]="executionInfo.endTime"></bl-text-property>
+            <bl-date-property label="Start time" [value]="task.executionInfo?.startTime"></bl-date-property>
+            <bl-date-property label="End time" [value]="task.executionInfo?.endTime"></bl-date-property>
             <bl-text-property label="Execution time" [value]="executionInfo.runtime"></bl-text-property>
             <bl-text-property label="Exit code" [value]="executionInfo.exitCode"></bl-text-property>
             <bl-text-property label="Retry count" [value]="executionInfo.retryCount"></bl-text-property>
-            <bl-text-property label="Last retry time" [value]="executionInfo.lastRetryTime" *ngIf="executionInfo.retryCount > 0"></bl-text-property>
+            <bl-date-property label="Last retry time" [value]="task.executionInfo?.lastRetryTime" *ngIf="task.executionInfo?.retryCount > 0"></bl-date-property>
             <bl-text-property label="Requeue count" [value]="executionInfo.requeueCount"></bl-text-property>
-            <bl-text-property label="Last requeue time" [value]="executionInfo.lastRequeueTime" *ngIf="executionInfo.requeueCount > 0"></bl-text-property>
+            <bl-date-property label="Last requeue time" [value]="task.executionInfo?.lastRequeueTime" *ngIf="task.executionInfo?.requeueCount > 0"></bl-date-property>
             <bl-text-property label="Container ID" [value]="executionInfo.containerInfo.containerId" *ngIf="executionInfo.containerInfo?.containerId"></bl-text-property>
             <bl-text-property label="Container state" [value]="executionInfo.containerInfo.state" *ngIf="executionInfo.containerInfo?.state"></bl-text-property>
             <bl-text-property label="Container error" [value]="executionInfo.containerInfo.error" *ngIf="executionInfo.containerInfo?.error"></bl-text-property>

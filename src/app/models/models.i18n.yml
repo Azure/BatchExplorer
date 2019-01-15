@@ -3,3 +3,5 @@ models:
   pools: Pools
   node: Node
   nodes: Nodes
+  container: Container
+  storageAccount: Storage account

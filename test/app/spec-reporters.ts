@@ -1,6 +1,5 @@
 // tslint:disable:no-console
 import * as fs from "fs";
-import * as moment from "moment";
 import { setTimeout } from "timers";
 
 const chromePerformance: any = performance;
@@ -40,10 +39,10 @@ if (process.env.DEBUG_TIME) {
     jasmine.getEnv().clearReporters();
     jasmine.getEnv().addReporter({
         specStarted: (result) => {
-            timer = moment.utc();
+            timer = new Date().getTime();
         },
         specDone: (result) => {
-            const ms = moment.duration(moment.utc().diff(timer)).milliseconds();
+            const ms = new Date().getTime() - timer;
             if (result.status !== "disabled") {
                 console.warn(`${result.description}, executed in: ${ms}ms`);
             }

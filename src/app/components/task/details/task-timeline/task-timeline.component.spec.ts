@@ -2,11 +2,12 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-import * as moment from "moment";
-
+import { TimeZoneTestingModule } from "@batch-flask/core/testing";
+import { DateModule } from "@batch-flask/ui";
 import { TimespanComponent } from "@batch-flask/ui/timespan";
 import { TaskTimelineComponent, TaskTimelineStateComponent } from "app/components/task/details/task-timeline";
 import { Job, Task, TaskState } from "app/models";
+import { DateTime } from "luxon";
 
 @Component({
     template: `
@@ -23,10 +24,10 @@ class TaskTimelineMockComponent {
 function createTask(state: string, timeout = "PT6M") {
     return new Task({
         state,
-        creationTime: moment().subtract(28, "minutes").toDate(),
+        creationTime: DateTime.local().minus({minutes: 28}).toJSDate(),
         executionInfo: {
-            startTime: moment().subtract(25, "minutes").toDate(),
-            endTime: moment().subtract(20, "minutes").toDate(),
+            startTime: DateTime.local().minus({minutes: 25}).toJSDate(),
+            endTime: DateTime.local().minus({minutes: 20}).toJSDate(),
             retryCount: 3,
             exitCode: -3,
             failureInfo: {
@@ -35,7 +36,7 @@ function createTask(state: string, timeout = "PT6M") {
             },
         },
         constraints: {
-            maxWallClockTime: moment.duration(timeout),
+            maxWallClockTime: timeout,
         },
     } as any);
 }
@@ -48,7 +49,7 @@ describe("TaskTimelineComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, DateModule, TimeZoneTestingModule],
             declarations: [
                 TimespanComponent, TaskTimelineComponent, TaskTimelineMockComponent, TaskTimelineStateComponent,
             ],

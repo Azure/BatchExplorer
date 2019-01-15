@@ -1,8 +1,7 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
-import { FileBrowseModule } from "app/components/file/browse";
-import { BlobContainerPickerComponent } from "./blob-container-picker";
+import { BlobFilesBrowserModule } from "app/components/file/browse";
 import { CloudFilePickerComponent, CloudFilePickerDialogComponent } from "./cloud-file-picker";
 import { StorageErrorDisplayComponent } from "./errors";
 import { FileGroupPickerModule } from "./file-group-picker";
@@ -14,7 +13,6 @@ import { RenderingContainerImagePickerComponent } from "./rendering-container-im
 import { StorageAccountPickerComponent } from "./storage-account-picker";
 
 const components = [
-    BlobContainerPickerComponent,
     CloudFilePickerComponent,
     CloudFilePickerDialogComponent,
     FileGroupSasComponent,
@@ -34,8 +32,9 @@ const modules = [
     declarations: components,
     exports: [...components, ...modules],
     imports: [
-        ...commonModules, FileBrowseModule,
+        ...commonModules,
         ...modules,
+        BlobFilesBrowserModule,
     ],
     entryComponents: [CloudFilePickerDialogComponent],
 })

@@ -22,12 +22,13 @@ import { SettingsModule } from "app/components/settings";
 import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
-import { LocaleService, MaterialModule, TranslationsLoaderService } from "@batch-flask/core";
+import { LocaleService, MaterialModule, TranslationsLoaderService, USER_CONFIGURATION_STORE } from "@batch-flask/core";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
 import {
     AppLocaleService,
     AppTranslationsLoaderService,
+    RendererConfigurationStore,
 } from "./services";
 import { RendererTelemetryModule } from "./services/telemetry";
 
@@ -57,7 +58,7 @@ const modules = [
         ReactiveFormsModule,
         RendererTelemetryModule,
         RouterModule.forRoot(routes, {
-            // useHash: true,
+            useHash: false,
             paramsInheritanceStrategy: "always",
             preloadingStrategy: PreloadAllModules,
         }),
@@ -69,6 +70,7 @@ const modules = [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
         { provide: LocaleService, useClass: AppLocaleService },
+        { provide: USER_CONFIGURATION_STORE, useClass: RendererConfigurationStore },
         { provide: ErrorHandler, useClass: BatchExplorerErrorHandler },
     ],
 })

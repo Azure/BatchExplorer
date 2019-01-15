@@ -8,7 +8,7 @@ import {
 } from "@batch-flask/core/testing";
 import { DurationPickerComponent, DurationPickerModule, FormModule, I18nUIModule } from "@batch-flask/ui";
 import { Pool } from "app/models";
-import { duration } from "moment";
+import { Duration } from "luxon";
 import { click, updateInput } from "test/utils/helpers";
 import { PoolScalePickerComponent } from "./pool-scale-picker.component";
 
@@ -83,7 +83,7 @@ describe("PoolScalePickerComponent", () => {
         expect(formEls.targetDedicatedNodes.nativeElement.value).toEqual("0");
 
         expect(formEls.resizeTimeout).not.toBeFalsy();
-        expect(formEls.resizeTimeout.value).toEqual(duration("PT15M"));
+        expect(formEls.resizeTimeout.value).toEqual(Duration.fromISO("PT15M"));
 
     });
 
@@ -111,7 +111,7 @@ describe("PoolScalePickerComponent", () => {
         expect(testComponent.control.value).toEqual({
             enableAutoScale: true,
             autoScaleFormula: "",
-            autoScaleEvaluationInterval: duration("PT15M"),
+            autoScaleEvaluationInterval: Duration.fromISO("PT15M"),
         });
 
         expect(typeSelection.value).toBe(true);
@@ -121,7 +121,7 @@ describe("PoolScalePickerComponent", () => {
         expect(testComponent.control.value).toEqual({
             enableAutoScale: true,
             autoScaleFormula: "$target = 3;",
-            autoScaleEvaluationInterval: duration("PT15M"),
+            autoScaleEvaluationInterval: Duration.fromISO("PT15M"),
         });
     });
 
@@ -134,7 +134,7 @@ describe("PoolScalePickerComponent", () => {
             enableAutoScale: false,
             targetDedicatedNodes: 7,
             targetLowPriorityNodes: 2,
-            resizeTimeout: duration("PT15M"),
+            resizeTimeout: Duration.fromISO("PT15M"),
         });
     });
 });

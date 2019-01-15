@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-
+import { TimeRange } from "@batch-flask/ui";
 import { Metric, MetricValue, MonitoringMetricList } from "app/models/monitoring";
 import { ArmHttpService } from "app/services/arm-http.service";
 import { BatchAccountService } from "app/services/batch-account";
-import { flatMap, map, share, take } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { map, share, switchMap, take } from "rxjs/operators";
 import { CoreCountMetrics } from "./core-count-metrics";
 import { FailedTaskMetrics } from "./failed-task-metrics";
-import { MonitorChartTimeFrame, MonitoringMetricDefinition } from "./monitor-metrics-base";
+import { MonitoringMetricDefinition } from "./monitor-metrics-base";
 import { NodeStatesMetrics } from "./node-states-metrics";
 import { TaskStatesMetrics } from "./task-states-metrics";
 
@@ -25,28 +25,28 @@ export class InsightsMetricsService {
     /**
      * Get core counts observable for rendering core count
      */
-    public getCoreMinutes(timespan: MonitorChartTimeFrame): Observable<MonitoringMetricList> {
-        return this._fetchMetrics(new CoreCountMetrics(timespan));
+    public getCoreMinutes(timeRange: TimeRange): Observable<MonitoringMetricList> {
+        return this._fetchMetrics(new CoreCountMetrics(timeRange));
     }
 
     /**
      * Get task state observable for rendering task states
      */
-    public getTaskStates(timespan: MonitorChartTimeFrame): Observable<MonitoringMetricList> {
-        return this._fetchMetrics(new TaskStatesMetrics(timespan));
+    public getTaskStates(timeRange: TimeRange): Observable<MonitoringMetricList> {
+        return this._fetchMetrics(new TaskStatesMetrics(timeRange));
     }
 
     /**
      * Get failed task observable for rendering failed task
      */
-    public getFailedTask(timespan: MonitorChartTimeFrame): Observable<MonitoringMetricList> {
-        return this._fetchMetrics(new FailedTaskMetrics(timespan));
+    public getFailedTask(timeRange: TimeRange): Observable<MonitoringMetricList> {
+        return this._fetchMetrics(new FailedTaskMetrics(timeRange));
     }
 
     /** Get node states observable for rendering node states */
-    public getNodeStates(timespan: MonitorChartTimeFrame): Observable<MonitoringMetricList> {
+    public getNodeStates(timeRange: TimeRange): Observable<MonitoringMetricList> {
         // Note that here only take first word to truncate legends for node states chart
-        return this._fetchMetrics(new NodeStatesMetrics(timespan));
+        return this._fetchMetrics(new NodeStatesMetrics(timeRange));
     }
 
     /**
@@ -54,8 +54,8 @@ export class InsightsMetricsService {
      */
     private _getCurrentAccount() {
         return this.accountService.currentAccount.pipe(
-            map(account => account && account.id),
             take(1),
+            map(account => account && account.id),
             share(),
         );
     }
@@ -67,7 +67,7 @@ export class InsightsMetricsService {
     private _fetchMetrics(metric: MonitoringMetricDefinition) {
         const options = metric.getRequestOptions();
         return this._getCurrentAccount().pipe(
-            flatMap((resourceId) => this.armService.get(metric.getRequestUrl(resourceId), options)),
+            switchMap((resourceId) => this.armService.get(metric.getRequestUrl(resourceId), options)),
             map(response => this._processResponse(metric, response)),
             share(),
         );

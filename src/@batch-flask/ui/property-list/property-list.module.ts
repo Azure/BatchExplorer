@@ -7,6 +7,7 @@ import { EditorModule } from "@batch-flask/ui/editor";
 import { ButtonsModule } from "../buttons";
 import { I18nUIModule } from "../i18n";
 import { BoolPropertyComponent } from "./bool-property";
+import { DatePropertyComponent } from "./date-property";
 import { EntityConfigurationComponent } from "./entity-configuration";
 import { LinkPropertyComponent } from "./link-property";
 import { PropertyContentComponent } from "./property-content";
@@ -29,6 +30,7 @@ const publicComponents = [
     TablePropertyHeaderComponent,
     TablePropertyRowComponent,
     EntityConfigurationComponent,
+    DatePropertyComponent,
 ];
 
 const privateComponents = [

@@ -34,7 +34,7 @@ export class EditStorageAccountFormComponent {
 
     @autobind()
     public submit(): Observable<any> {
-        const dto = new AccountPatchDto({ autoStorage: { storageAccountId: this.storageAccountId.value } });
+        const dto = new AccountPatchDto({ autoStorage: { storageAccountId: this.storageAccountId.value } } as any);
         const obs = this.accountService.patch(this.account.id, dto);
         obs.subscribe(() => {
             this.accountService.get(this.account.id);

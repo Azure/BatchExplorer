@@ -3,7 +3,7 @@ import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
 import { Pool } from "app/models";
-import { Duration, duration } from "moment";
+import { Duration } from "luxon";
 import { Subscription } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
 
@@ -23,14 +23,14 @@ function cleanSelection(value: PoolScaleSelection): PoolScaleSelection {
         return {
             enableAutoScale: true,
             autoScaleFormula: value.autoScaleFormula,
-            autoScaleEvaluationInterval: value.autoScaleEvaluationInterval || duration("PT15M"),
+            autoScaleEvaluationInterval: value.autoScaleEvaluationInterval || Duration.fromISO("PT15M"),
         };
     } else {
         return {
             enableAutoScale: false,
             targetDedicatedNodes: value.targetDedicatedNodes,
             targetLowPriorityNodes: value.targetLowPriorityNodes,
-            resizeTimeout: value.resizeTimeout || duration("PT15M"),
+            resizeTimeout: value.resizeTimeout || Duration.fromISO("PT15M"),
         };
     }
 }
@@ -63,8 +63,8 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
             autoScaleFormula: this._autoScaleFormulaControl,
             targetDedicatedNodes: this._targetDedicatedNodes,
             targetLowPriorityNodes: this._targetLowPriorityNodes,
-            autoScaleEvaluationInterval: [duration("PT15M")],
-            resizeTimeout: [duration("PT15M")],
+            autoScaleEvaluationInterval: [Duration.fromISO("PT15M")],
+            resizeTimeout: [Duration.fromISO("PT15M")],
         });
 
         this._subs.push(this._enableAutoScaleControl.valueChanges.subscribe((enableAutoScale) => {
@@ -92,7 +92,7 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
                 enableAutoScale: false,
                 targetDedicatedNodes: 0,
                 targetLowPriorityNodes: 0,
-                resizeTimeout: duration("PT15M"),
+                resizeTimeout: Duration.fromISO("PT15M"),
             });
         }
     }

@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from "@angular/common/
 import { TestBed } from "@angular/core/testing";
 import { Pool } from "app/models";
 import { NodeDeallocationOption, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
-import * as moment from "moment";
+import { Duration } from "luxon";
 import { PoolService } from "./pool.service";
 
 describe("PoolService", () => {
@@ -223,7 +223,7 @@ describe("PoolService", () => {
 
         poolService.enableAutoScale("pool-1", new PoolEnableAutoScaleDto({
             autoScaleFormula: formula,
-            autoScaleEvaluationInterval: moment.duration({ minutes: 50 }),
+            autoScaleEvaluationInterval: Duration.fromObject({ minutes: 50 }),
         })).subscribe((res) => {
             done();
         });
@@ -234,7 +234,7 @@ describe("PoolService", () => {
         });
         expect(req.request.body).toEqual({
             autoScaleFormula: formula,
-            autoScaleEvaluationInterval: moment.duration({ minutes: 50 }),
+            autoScaleEvaluationInterval: "PT50M",
         });
         req.flush("");
         httpMock.verify();

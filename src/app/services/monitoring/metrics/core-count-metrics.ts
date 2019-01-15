@@ -1,9 +1,10 @@
+import { TimeRange } from "@batch-flask/ui";
 import {
-    MonitorChartAggregation, MonitorChartMetrics, MonitorChartTimeFrame, MonitoringMetricDefinition,
+    MonitorChartAggregation, MonitorChartMetrics, MonitoringMetricDefinition,
 } from "./monitor-metrics-base";
 
 export class CoreCountMetrics extends MonitoringMetricDefinition {
-    constructor(timespan: MonitorChartTimeFrame) {
+    constructor(timespan: TimeRange) {
         super({
             name: "Core minutes",
             timespan,

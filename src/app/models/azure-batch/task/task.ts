@@ -1,6 +1,3 @@
-import { List } from "immutable";
-import * as moment from "moment";
-
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import {
     ApplicationPackageReference, ApplicationPackageReferenceAttributes,
@@ -16,6 +13,8 @@ import { TaskExecutionInformation } from "app/models/task-execution-information"
 import { TaskExitConditions } from "app/models/task-exit-conditions";
 import { TaskOutputFile } from "app/models/task-output-file";
 import { UserIdentity } from "app/models/user-identity";
+import { List } from "immutable";
+import { DateTime } from "luxon";
 import { AuthenticationTokenSettings, AuthenticationTokenSettingsAttributes } from "../authentication-token-settings";
 import { AffinityInformation } from "./affinity-information";
 import { TaskStatistics, TaskStatisticsAttributes } from "./task-statistics";
@@ -96,8 +95,9 @@ export class Task extends Record<TaskAttributes> {
         if (info.exitCode === 0) {
             return false;
         }
-        const maxTime = constraints.maxWallClockTime.asMilliseconds();
-        const runningTime = moment(info.endTime).diff(moment(info.startTime));
+        const maxTime = constraints.maxWallClockTime.as("milliseconds");
+        const runningTime = DateTime.fromJSDate(info.endTime).diff(DateTime.fromJSDate(info.startTime))
+            .as("milliseconds");
         return maxTime - runningTime < 0;
     }
 

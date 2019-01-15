@@ -35,12 +35,12 @@
 
         <bl-column name="started" *ngIf="!pickedTask" [defaultWidth]="100">
             <div *blHeadCellDef>Started</div>
-            <div *blCellDef="let task">{{task.startTime}}</div>
+            <div *blCellDef="let task"><bl-date [date]="task.startTime"></bl-date></div>
         </bl-column>
 
         <bl-column name="completed" *ngIf="!pickedTask" [defaultWidth]="100">
             <div *blHeadCellDef>Completed</div>
-            <div *blCellDef="let task">{{task.endTime}}</div>
+            <div *blCellDef="let task"><bl-date [date]="task.endTime"></bl-date></div>
         </bl-column>
 
         <bl-column name="exitCode" *ngIf="!pickedTask" [defaultWidth]="100">

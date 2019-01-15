@@ -4,11 +4,11 @@
             <bl-text-property label="ID" [value]="decorator.id"></bl-text-property>
             <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
             <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
-            <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
-            <bl-text-property label="Creation time" [value]="decorator.creationTime"></bl-text-property>
-            <bl-text-property label="Last modified" [value]="decorator.lastModified"></bl-text-property>
+            <bl-date-property label="State transition time" [value]="jobSchedule.stateTransitionTime"></bl-date-property>
+            <bl-date-property label="Creation time" [value]="jobSchedule.creationTime"></bl-date-property>
+            <bl-date-property label="Last modified" [value]="jobSchedule.lastModified"></bl-date-property>
             <bl-text-property label="Previous state" [value]="decorator.previousState"></bl-text-property>
-            <bl-text-property label="Previous transition time" [value]="decorator.previousStateTransitionTime"></bl-text-property>
+            <bl-date-property label="Previous transition time" [value]="jobSchedule.previousStateTransitionTime"></bl-date-property>
         </bl-property-group>
 
         <bl-property-group label="Execution information" class="wide" [collapsed]="true">
@@ -20,15 +20,15 @@
                     Completed: {{ executionInfo.endTimeFromNow }}
                 </span>
             </div>
-            <bl-text-property label="Next run time" [value]="executionInfo.nextRunTime"></bl-text-property>
-            <bl-text-property label="End time" [value]="executionInfo.endTime"></bl-text-property>
+            <bl-date-property label="Next run time" [value]="jobSchedule.executionInfo?.nextRunTime"></bl-date-property>
+            <bl-date-property label="End time" [value]="jobSchedule.executionInfo?.endTime"></bl-date-property>
             <bl-link-property *ngIf="executionInfo.recentJob?.id" label="Most recent job ID" [value]="executionInfo.recentJob?.id" [link]="['/jobs/', executionInfo.recentJob?.id]"></bl-link-property>
             <bl-text-property *ngIf="executionInfo.recentJob?.url" label="Most recent job URL" [value]="executionInfo.recentJob?.url"></bl-text-property>
         </bl-property-group>
 
         <bl-property-group *ngIf="jobSchedule.schedule" label="Schedule" class="wide" [collapsed]="true">
-            <bl-text-property label="Do not run after" [value]="schedule.doNotRunAfter"></bl-text-property>
-            <bl-text-property label="Do not run until" [value]="schedule.doNotRunUntil"></bl-text-property>
+            <bl-date-property label="Do not run after" [value]="jobSchedule.doNotRunAfter"></bl-date-property>
+            <bl-date-property label="Do not run until" [value]="jobSchedule.doNotRunUntil"></bl-date-property>
             <bl-text-property label="Recurrence interval" [value]="schedule.recurrenceInterval"></bl-text-property>
             <bl-text-property label="Start window" [value]="schedule.startWindow"></bl-text-property>
         </bl-property-group>

@@ -1,12 +1,11 @@
-import * as moment from "moment";
-
 import { JobScheduleCreateDto, MetaDataDto } from "app/models/dtos";
+import { Duration } from "luxon";
 
 export interface ScheduleModel {
     doNotRunAfter: string;
     doNotRunUntil: string;
-    recurrenceInterval: moment.Duration;
-    startWindow: moment.Duration;
+    recurrenceInterval: Duration;
+    startWindow: Duration;
 }
 
 export interface CreateJobScheduleModel {

@@ -1,10 +1,10 @@
 import { Component, Input } from "@angular/core";
+import { autobind } from "@batch-flask/core";
 import { DateUtils } from "@batch-flask/utils";
 import { Job } from "app/models";
 import { List } from "immutable";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 
-import { autobind } from "@batch-flask/core";
 import "./jobs-running-time-graph.scss";
 
 @Component({
@@ -18,7 +18,8 @@ export class JobsRunningTimeComponent {
     @autobind()
     public computeDataSets(displayedJobs: List<Job>) {
         const data = displayedJobs.map((job) => {
-            return moment(job.executionInfo.endTime).diff(job.executionInfo.startTime);
+            return DateTime.fromJSDate(job.executionInfo.endTime).diff(
+                DateTime.fromJSDate(job.executionInfo.startTime));
         }).toArray();
         return [
             {
@@ -30,7 +31,8 @@ export class JobsRunningTimeComponent {
 
     @autobind()
     public getTooltip(job: Job) {
-        const runningTime = moment.duration(moment(job.executionInfo.endTime).diff(job.executionInfo.startTime));
+        const runningTime = DateTime.fromJSDate(job.executionInfo.endTime).diff(
+            DateTime.fromJSDate(job.executionInfo.startTime));
         return [
             `Job id: ${job.id}`,
             `Running time: ${DateUtils.compactDuration(runningTime, true)}`,

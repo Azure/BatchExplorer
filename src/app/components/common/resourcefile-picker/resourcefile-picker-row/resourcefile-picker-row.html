@@ -1,0 +1,19 @@
+<ng-container [formGroup]="form">
+    <div class="type" [ngSwitch]="type">
+        <i class="fa fa-file" *ngSwitchCase="ResourceFileType.Url"></i>
+        <i class="fa fa-folder" *ngSwitchCase="ResourceFileType.Container"></i>
+        <i class="fa fa-question-circle" *ngSwitchDefault></i>
+    </div>
+    <div class="source" [ngSwitch]="type">
+        <input blInput placeholder="Url" formControlName="httpUrl" *ngSwitchCase="ResourceFileType.Url">
+        <ng-container *ngSwitchCase="ResourceFileType.Container">
+            <bl-resourcefile-container-source [file]="file" (updateSource)="updateSource($event)"></bl-resourcefile-container-source>
+        </ng-container>
+    </div>
+    <div class="local-path">
+        <input blInput placeholder="Local path" formControlName="filePath">
+    </div>
+    <div class="actions">
+        <bl-button type="square" color="danger" (do)="delete.emit()"><i class="fa fa-times"></i></bl-button>
+    </div>
+</ng-container>

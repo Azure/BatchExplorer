@@ -1,5 +1,6 @@
 # To put here some common translations that are reused across the app
 common:
+  apply: Apply
   back: Back
   configuration: Configuration
   confirm: Confirm

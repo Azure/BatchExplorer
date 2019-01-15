@@ -1,6 +1,7 @@
 import { List } from "immutable";
 
 import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import { NetworkConfiguration } from "app/models/network-configuration";
 import { ModelUtils } from "app/utils";
 import { AllTasksCompleteAction, TaskFailureAction } from "../../job-action";
 import { JobConstraints } from "../../job-constraints";
@@ -38,6 +39,8 @@ export interface JobAttributes {
     metadata: MetadataAttributes[];
     executionInfo: Partial<JobExecutionInformationAttributes>;
     stats: JobStatisticsAttributes;
+    networkConfiguration: NetworkConfiguration;
+
 }
 /**
  * Class for displaying Batch job information.
@@ -68,6 +71,7 @@ export class Job extends Record<JobAttributes> implements NavigableRecord {
     @ListProp(Metadata) public metadata: List<Metadata> = List([]);
     @Prop() public executionInfo: JobExecutionInformation;
     @Prop() public stats: JobStatistics;
+    @Prop() public networkConfiguration: NetworkConfiguration;
 
     /**
      * Tags are computed from the metadata using an internal key

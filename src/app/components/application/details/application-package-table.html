@@ -14,7 +14,7 @@
         </bl-column>
         <bl-column name="lastActivationTime">
             <div *blHeadCellDef>Last activation time</div>
-            <div *blCellDef="let package">{{formatDate(package.lastActivationTime)}}</div>
+            <div *blCellDef="let package"><bl-date [date]="package.lastActivationTime"></bl-date></div>
         </bl-column>
     </bl-table>
 </ng-container>

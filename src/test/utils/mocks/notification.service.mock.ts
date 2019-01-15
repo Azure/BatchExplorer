@@ -7,6 +7,8 @@ export class NotificationServiceMock {
         .and.callFake((...args) => this._createNotification(NotificationLevel.error, ...args));
     public success = jasmine.createSpy("success")
         .and.callFake((...args) => this._createNotification(NotificationLevel.success, ...args));
+    public info = jasmine.createSpy("info")
+        .and.callFake((...args) => this._createNotification(NotificationLevel.info, ...args));
     public lastNotification: Notification;
 
     public asProvider() {

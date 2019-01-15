@@ -5,7 +5,7 @@ import { DateUtils } from "@batch-flask/utils";
 import { Job, Task } from "app/models";
 import { Theme, ThemeService } from "app/services";
 import { List } from "immutable";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 import { Subscription } from "rxjs";
 
 import "./tasks-running-time-graph.scss";
@@ -172,7 +172,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
 
     private _getTaskRunningTime(task: Task) {
         const { startTime, endTime } = task.executionInfo;
-        return moment(endTime).diff(moment(startTime)) / 1000;
+        return DateTime.fromJSDate(endTime).diff(DateTime.fromJSDate(startTime)).as("seconds");
     }
 
     private _tasksToDataPoints(tasks: TaskPoint[]) {

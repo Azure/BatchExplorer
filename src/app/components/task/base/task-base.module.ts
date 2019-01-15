@@ -5,14 +5,14 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
 import { BaseModule } from "@batch-flask/ui";
+import { ResourceFilePickerModule } from "app/components/common";
 import { ContainerSettingsPickerComponent, RegistryPickerComponent } from "./container-settings";
-import { ResourcefilePickerComponent } from "./resourcefile-picker.component";
 import { TaskStateComponent } from "./task-state";
 import { UserIdentityComponent } from "./user-identity";
 
 const components = [
     ContainerSettingsPickerComponent, RegistryPickerComponent,
-    ResourcefilePickerComponent, UserIdentityComponent, TaskStateComponent,
+    UserIdentityComponent, TaskStateComponent,
 ];
 
 @NgModule({
@@ -20,7 +20,7 @@ const components = [
     exports: components,
     imports: [
         CommonModule, MaterialModule, RouterModule, BaseModule, FormsModule,
-        ReactiveFormsModule,
+        ReactiveFormsModule, ResourceFilePickerModule,
     ],
 })
 export class TaskBaseModule {

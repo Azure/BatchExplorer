@@ -1,0 +1,18 @@
+@import "app/styles/variables";
+
+bl-resourcefile-container-source {
+    display: flex;
+
+    .account {
+        margin-right: 5px;
+    }
+
+    .container {
+        margin-right: 5px;
+    }
+
+    .prefix {
+        color: $secondary-text;
+        margin-right: 5px;
+    }
+}

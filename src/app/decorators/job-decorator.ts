@@ -8,7 +8,6 @@ import { JobReleaseTaskDecorator } from "./job-release-task-decorator";
 
 export class JobDecorator extends DecoratorBase<Job> {
     public state: string;
-    public stateTransitionTime: string;
     public stateIcon: string;
     public displayName: string;
     public creationTime: string;
@@ -31,13 +30,9 @@ export class JobDecorator extends DecoratorBase<Job> {
         super(job);
 
         this.state = this.stateField(job.state);
-        this.stateTransitionTime = this.dateField(job.stateTransitionTime);
         this.stateIcon = this._getStateIcon(job.state);
-        this.creationTime = this.dateField(job.creationTime);
-        this.lastModified = this.dateField(job.lastModified);
         this.displayName = this.stringField(job.displayName);
         this.previousState = this.stateField(job.previousState);
-        this.previousStateTransitionTime = this.dateField(job.previousStateTransitionTime);
         this.priority = this.numberField(job.priority);
         this.usesTaskDependencies = job.usesTaskDependencies;
         this.onAllTasksComplete = this._translateAutoComplete(job.onAllTasksComplete);

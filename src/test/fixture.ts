@@ -1,6 +1,4 @@
 import { Type } from "@angular/core";
-import * as moment from "moment";
-
 import { PinnedEntityType } from "@batch-flask/core";
 import { File, Workspace } from "@batch-flask/ui";
 import {
@@ -16,6 +14,7 @@ import {
     SubtaskInformation,
     Task,
 } from "app/models";
+import { Duration } from "luxon";
 
 export class FixtureFactory<TEntity> {
     constructor(private type: Type<TEntity>, private defaultData: any) {
@@ -41,7 +40,7 @@ export const job = new FixtureFactory<Job>(Job, {
     previousStateTransitionTime: new Date(2015, 5, 1, 10, 4, 31),
     priority: 1,
     constraints: {
-        maxWallClockTime: moment.duration("PT2H"),
+        maxWallClockTime: Duration.fromISO("PT2H"),
         maxTaskRetryCount: 3,
     },
     jobManagerTask: {
@@ -118,9 +117,9 @@ export const task = new FixtureFactory<Task>(Task, {
         },
     },
     constraints: {
-        maxWallClockTime: moment.duration("PT2H"),
+        maxWallClockTime: Duration.fromISO("PT2H"),
         maxTaskRetryCount: 3,
-        retentionTime: moment.duration("PT6H"),
+        retentionTime: Duration.fromISO("PT6H"),
     },
     nodeInfo: {
         affinityId: "affinityId",
@@ -143,10 +142,9 @@ export const pool = new FixtureFactory<Pool>(Pool, {
     vmSize: "standard_a1",
     cloudServiceConfiguration: {
         osFamily: "4",
-        targetOSVersion: "WA-GUEST-OS-2.28_201409-01",
-        currentOSVersion: "WA-GUEST-OS-2.28_201409-01",
+        osVersion: "WA-GUEST-OS-2.28_201409-01",
     },
-    resizeTimeout: moment.duration("PT15M"),
+    resizeTimeout: Duration.fromISO("PT15M"),
     currentDedicated: 5,
     targetDedicated: 5,
     enableAutoScale: false,

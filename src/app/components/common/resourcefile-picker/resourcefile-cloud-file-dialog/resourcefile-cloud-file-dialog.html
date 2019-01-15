@@ -1,0 +1,57 @@
+<bl-simple-form
+    [submit]="submit"
+    [containerRef]="dialogRef"
+    [stickyFooter]="false"
+    [multiUse]="false"
+    actionName="Pick"
+    [formGroup]="form"
+    [title]="'resourcefile-picker.cloudFileDialog.title' | i18n"
+    (done)="close()"
+    >
+
+    <div class="container-pick">
+        <div class="storage-account">
+            <div>{{'models.storageAccount' | i18n}}</div>
+            <bl-storage-account-picker formControlName="storageAccountId"></bl-storage-account-picker>
+        </div>
+        <bl-blob-container-picker
+            [storageAccountId]="storageAccountId"
+            [label]="'models.container' | i18n"
+            output="name"
+            formControlName="containerName">
+        </bl-blob-container-picker>
+    </div>
+
+    <div class="path-pick">
+        <bl-blob-files-browser #blobList
+            *ngIf="storageAccountId && containerName"
+            [storageAccountId]="storageAccountId"
+            [container]="containerName"
+            [fileExplorerConfig]="fileExplorerConfig"
+            [activeFile]="pickedFile"
+            (activeFileChange)="updatePickedFile($event)">
+        </bl-blob-files-browser>
+    </div>
+
+    <div blFormSummary *ngIf="storageAccountId && containerName">
+        <bl-form-field>
+            <div blFormFieldPrefix>
+                <ng-container *ngIf="currentSelection">
+                    <ng-container *ngIf="currentSelection.httpUrl">
+                        <i class="fa fa-file"></i>
+                    </ng-container>
+                    <ng-container *ngIf="currentSelection.autoStorageContainerName">
+                        <i class="fa fa-folder"></i>
+                    </ng-container>
+                    <ng-container *ngIf="currentSelection.storageContainerUrl">
+                        <i class="fa fa-folder"></i>>
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="!currentSelection">
+                    <i class="fa fa-spin fa-spinner"></i>
+                </ng-container>
+            </div>
+            <input blInput formControlName="path">
+        </bl-form-field>
+    </div>
+</bl-simple-form>

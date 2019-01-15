@@ -7,13 +7,14 @@ import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem,
 } from "@batch-flask/ui/context-menu";
 import { NotificationService } from "@batch-flask/ui/notifications";
-import { OS } from "@batch-flask/utils";
+import { OS, log } from "@batch-flask/utils";
 import {
     AdalService, BatchExplorerService,
 } from "app/services";
 import { Constants } from "common";
 import * as path from "path";
-import { Subscription } from "rxjs";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 import "./profile-button.scss";
 
@@ -28,8 +29,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     public currentUserName: string = "";
     public updateStatus: UpdateStatus;
 
-    private _currentUserSub: Subscription;
-    private _updateSub: Subscription;
+    private _destroy = new Subject();
 
     constructor(
         adalService: AdalService,
@@ -46,7 +46,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
         private fs: FileSystemService,
         private router: Router) {
 
-        this._currentUserSub = adalService.currentUser.subscribe((user) => {
+        adalService.currentUser.pipe(takeUntil(this._destroy)).subscribe((user) => {
             if (user) {
                 this.currentUserName = `${user.name} (${user.unique_name})`;
             } else {
@@ -55,7 +55,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
             this.changeDetector.markForCheck();
         });
 
-        this._updateSub = this.autoUpdateService.status.subscribe((status) => {
+        this.autoUpdateService.status.pipe(takeUntil(this._destroy)).subscribe((status) => {
             this.updateStatus = status;
             this.changeDetector.markForCheck();
         });
@@ -66,8 +66,8 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     public ngOnDestroy() {
-        this._currentUserSub.unsubscribe();
-        this._updateSub.unsubscribe();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public openSettingsContextMenu() {
@@ -140,16 +140,24 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private async _checkForUpdates(showNotification = true) {
-        const result = await this.autoUpdateService.checkForUpdates();
-        if (!showNotification) { return; }
-        if (result) {
-            this._notify("Update available", `Update ${result.updateInfo.version} is now available.`, {
-                action: () => this._update(),
-            });
-        } else {
-            this._notify("There are no updates currently available.", `You  have the latest BatchExplorer version.`);
+        try {
+            const result = await this.autoUpdateService.checkForUpdates();
+            if (!showNotification) { return; }
+            if (result) {
+                this._notify("Update available", `Update ${result.updateInfo.version} is now available.`, {
+                    action: () => this._update(),
+                });
+            } else {
+                this._notify("There are no updates currently available.",
+                    `You  have the latest BatchExplorer version.`);
+            }
+        } catch (e) {
+            log.error("Failed to check for updates");
+            if (!showNotification) { return; }
+            this.zone.run((() => {
+                this.notificationService.error("Failed to check for updates", e.toString());
+            }));
         }
-
     }
 
     private _update() {

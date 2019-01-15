@@ -3,7 +3,6 @@ import { MatDialog } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { DateUtils } from "@batch-flask/utils";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { List } from "immutable";
@@ -40,10 +39,6 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
     public handleFilter(filter) {
         this._filterPackages();
         return of(this.displayedPackages.size);
-    }
-
-    public formatDate(date: Date) {
-        return DateUtils.fullDateAndTime(date);
     }
 
     public addPackage(event: any) {

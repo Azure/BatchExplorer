@@ -14,8 +14,16 @@ import * as path from "path";
 import "./init";
 
 // 2. Update electron user data folder
+import { parseArguments } from "./cli";
+const program = parseArguments(process.argv);
 import { app } from "electron";
-app.setPath("userData", path.join(app.getPath("appData"), "BatchExplorer"));
+
+if (program.userDataDir) {
+    app.setPath("userData", program.userDataDir);
+} else {
+    app.setPath("userData", path.join(app.getPath("appData"), "BatchExplorer"));
+
+}
 
 // 3. Initialize the logger
 import { initLogger } from "client/logger";

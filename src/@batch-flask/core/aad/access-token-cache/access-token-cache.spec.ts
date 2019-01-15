@@ -1,17 +1,16 @@
-import * as moment from "moment";
-
 import { AccessToken, DataStoreKeys, InMemoryDataStore } from "@batch-flask/core";
+import { DateTime } from "luxon";
 import { AccessTokenCache } from "./access-token-cache";
 
 const tenant1 = "tenant-1";
 const resource1 = "http://example.com";
 const token1 = {
     access_token: "sometoken",
-    expires_on: moment().add(1, "hour").toDate(),
+    expires_on: DateTime.local().plus({ hours: 1 }).toJSDate(),
     expires_in: 3600,
     token_type: "Bearer",
     ext_expires_in: 3600,
-    not_before: moment().add(1, "hour").toDate(),
+    not_before: DateTime.local().plus({ hours: 1 }).toJSDate(),
     refresh_token: "foorefresh",
 };
 
@@ -34,7 +33,10 @@ describe("AccessTokenCache", () => {
         it("if token in local storage is expired it doesn't set it", () => {
             const token = {
                 [tenant1]: {
-                    [resource1]: { access_token: "sometoken", expires_on: moment().subtract(1, "hour") },
+                    [resource1]: {
+                        access_token: "sometoken",
+                        expires_on: DateTime.local().minus({ hours: 1 }).toJSDate(),
+                    },
                 },
             };
             localStorageSpy.setItem(DataStoreKeys.currentAccessToken, JSON.stringify(token));

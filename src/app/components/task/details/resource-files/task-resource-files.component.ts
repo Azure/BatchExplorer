@@ -24,13 +24,13 @@ export class TaskResourceFilesComponent implements OnChanges {
     }
 
     public trackByFn(_, task: ResourceFile) {
-        return task.blobSource;
+        return task.id;
     }
 
     public openResourceFile(id: string) {
         const resourceFile = this.resourceFiles.filter(x => x.id === id).first();
         if (resourceFile) {
-            this.cloudFileService.openFile(resourceFile.blobSource);
+            this.cloudFileService.openFile(resourceFile.httpUrl);
         }
     }
 }

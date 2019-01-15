@@ -27,7 +27,7 @@
                     </bl-column>
                     <bl-column name="lastModified" [defaultWidth]="155">
                         <div *blHeadCellDef>Last Modified</div>
-                        <div *blCellDef="let treeNode">{{treeNode.isDirectory ? '' : prettyDate(treeNode.lastModified)}}</div>
+                        <div *blCellDef="let treeNode"><bl-date *ngIf="!treeNode.isDirectory" [date]="treeNode.lastModified"></bl-date></div>
                     </bl-column>
                 </bl-table>
             </bl-focus-section>

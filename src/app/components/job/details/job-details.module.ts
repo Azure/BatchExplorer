@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { BaseModule, FileModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { FileBrowseModule } from "app/components/file/browse";
+import { JobScheduleActionModule } from "app/components/job-schedule/action";
 import { TaskBrowseModule } from "app/components/task/browse";
 import { TaskModule } from "app/components/task/task.module";
 import { JobActionModule } from "../action";
@@ -25,7 +26,7 @@ const components = [
 
 const modules = [
     BaseModule, FileBrowseModule, FileModule, TaskBrowseModule,
-    JobHookTaskModule, JobGraphsModule, JobActionModule, TaskModule,
+    JobHookTaskModule, JobGraphsModule, JobActionModule, TaskModule, JobScheduleActionModule,
 ];
 
 @NgModule({

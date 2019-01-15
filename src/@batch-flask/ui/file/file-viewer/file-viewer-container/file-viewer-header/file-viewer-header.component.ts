@@ -4,7 +4,7 @@ import { ElectronRemote, ElectronShell } from "@batch-flask/electron";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
 import { NotificationService } from "@batch-flask/ui/notifications";
-import { DateUtils, prettyBytes } from "@batch-flask/utils";
+import { prettyBytes } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 import { FileViewer, FileViewerCommand, FileViewerConfig } from "../../file-viewer";
 
@@ -22,7 +22,7 @@ export class FileViewerHeaderComponent implements OnChanges {
 
     public filename: string;
     public contentSize: string = "-";
-    public lastModified: string = "-";
+    public lastModified: Date;
     public file: File;
     private _propertiesSub: Subscription;
 
@@ -44,7 +44,7 @@ export class FileViewerHeaderComponent implements OnChanges {
                     if (file instanceof File) {
                         this.file = file;
                         this.contentSize = prettyBytes(file.properties.contentLength);
-                        this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
+                        this.lastModified = file.properties.lastModified;
                         this.changeDetector.markForCheck();
                     }
                 },

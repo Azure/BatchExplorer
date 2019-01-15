@@ -5,6 +5,20 @@ export enum UserAccountElevationLevel {
     admin = "admin",
 }
 
+export enum LoginMode {
+    Batch = "batch",
+    Interactive = "interactive",
+}
+
+export interface WindowsUserConfigurationAttributes {
+    loginMode?: LoginMode;
+}
+
+@Model()
+export class WindowsUserConfiguration extends Record<WindowsUserConfigurationAttributes> {
+    @Prop() public loginMode?: LoginMode;
+}
+
 export interface LinuxUserConfigurationAttributes {
     gid: number;
     sshPrivateKey: string;
@@ -32,4 +46,6 @@ export class UserAccount extends Record<UserAccountAttributes> {
     @Prop() public elevationLevel: UserAccountElevationLevel = UserAccountElevationLevel.nonadmin;
 
     @Prop() public linuxUserConfiguration: LinuxUserConfiguration;
+
+    @Prop() public windowsUserConfiguration: WindowsUserConfiguration;
 }
