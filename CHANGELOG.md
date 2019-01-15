@@ -4,6 +4,7 @@
 ### Bug fixes
 *  Authentication window should handle load errors [\#1862](https://github.com/Azure/BatchExplorer/issues/1862)
 *  Fix issues with Job statistics page [\#1843](https://github.com/Azure/BatchExplorer/issues/1843)
+*  Download button has disappeared for files [\#1861](https://github.com/Azure/BatchExplorer/issues/1861)
 *  Null not handled in file loader properties [\#1857](https://github.com/Azure/BatchExplorer/issues/1857)
 *  Add / edit start task won't load when user account present on pool create [\#1855](https://github.com/Azure/BatchExplorer/issues/1855)
 *  Linux deb package not installable [\#1852](https://github.com/Azure/BatchExplorer/issues/1852)
