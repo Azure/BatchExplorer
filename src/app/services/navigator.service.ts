@@ -26,7 +26,6 @@ export class NavigatorService implements OnDestroy {
         private ipc: IpcService) {
     }
 
-
     public ngOnDestroy() {
         if (this._sub) {
             this._sub.unsubscribe();

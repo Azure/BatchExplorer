@@ -1,7 +1,7 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { DialogService } from "@batch-flask/ui/dialogs";
 import { FileSystemService } from "@batch-flask/electron";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { EncodingUtils } from "@batch-flask/utils";
 import { Observable, from } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";

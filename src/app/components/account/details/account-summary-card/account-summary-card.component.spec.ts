@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { TelemetryService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
+import { ElectronShell } from "@batch-flask/electron";
 import { MockElectronShell } from "@batch-flask/electron/testing";
 import {
     ButtonsModule, DialogService,  EntityCommandsListModule,
@@ -20,7 +21,6 @@ import {
 import { BatchAccountService } from "app/services";
 import { click } from "test/utils/helpers";
 import { AccountSummaryCardComponent } from "./account-summary-card.component";
-import { ElectronShell } from "@batch-flask/electron";
 
 const sub1 = new Subscription({
     id: "/subscriptions/sub-1",
