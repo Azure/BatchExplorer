@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
-import { FormModule } from "@batch-flask/ui";
+import { ContextMenuService, FormModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
@@ -86,8 +86,13 @@ describe("VmSizePickerComponent", () => {
 
         TestBed.configureTestingModule({
             imports: [
-                BrowserModule, FormsModule, ReactiveFormsModule, TableTestingModule,
-                NoopAnimationsModule, RouterTestingModule, FormModule,
+                BrowserModule,
+                FormsModule,
+                ReactiveFormsModule,
+                TableTestingModule,
+                NoopAnimationsModule,
+                RouterTestingModule,
+                FormModule,
             ],
             declarations: [VmSizePickerComponent, TestComponent],
             providers: [
@@ -95,6 +100,7 @@ describe("VmSizePickerComponent", () => {
                 { provide: PricingService, useValue: pricingServiceSpy },
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
                 { provide: BreadcrumbService, useValue: null },
+                { provide: ContextMenuService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

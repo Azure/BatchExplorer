@@ -6,6 +6,9 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { LocaleService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import {
+    AutoUpdateService, ElectronRemote, ElectronShell, FileSystemService, UpdateStatus,
+} from "@batch-flask/electron";
+import {
     ClickableComponent,
     ContextMenuItem,
     ContextMenuSeparator,
@@ -18,7 +21,6 @@ import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
 import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";
 import { ProfileButtonComponent } from "./profile-button.component";
-import { UpdateStatus, AutoUpdateService, ElectronShell, ElectronRemote, FileSystemService } from "@batch-flask/electron";
 
 @Component({
     template: `<bl-profile-button></bl-profile-button>`,
