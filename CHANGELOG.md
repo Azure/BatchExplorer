@@ -1,4 +1,12 @@
 
+# 0.19.2
+
+### Bug fixes
+*  Fix issues with Job statistics page [\#1843](https://github.com/Azure/BatchExplorer/issues/1843)
+*  Null not handled in file loader properties [\#1857](https://github.com/Azure/BatchExplorer/issues/1857)
+*  Add / edit start task won't load when user account present on pool create [\#1855](https://github.com/Azure/BatchExplorer/issues/1855)
+*  Linux deb package not installable [\#1852](https://github.com/Azure/BatchExplorer/issues/1852)
+
 # 0.19.1
 
 ### Bug fixes
