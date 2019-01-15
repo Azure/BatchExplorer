@@ -6,7 +6,7 @@ import {
 } from "app/models/rendering-container-image";
 import { Observable } from "rxjs";
 import { map, publishReplay, refCount, share } from "rxjs/operators";
-import { GithubDataService } from "./github-data";
+import { GithubDataService } from "../github-data";
 
 const dataFile = "data/rendering-container-images.json";
 
