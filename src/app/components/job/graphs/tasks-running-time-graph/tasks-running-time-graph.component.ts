@@ -159,7 +159,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
                 radius: 2,
             } as any,
             {
-                label: "Succeded tasks",
+                label: "Succeeded tasks",
                 data: this._tasksToDataPoints(succeededTasks),
             },
         ];
