@@ -170,7 +170,9 @@ export class AuthenticationService {
         const authWindow = this.app.authenticationWindow;
         authWindow.onRedirect(newUrl => this._handleCallback(newUrl));
         authWindow.onNavigate(newUrl => this._handleNavigate(newUrl));
-        authWindow.onError(() => this._handleError());
+        authWindow.onError((error) => {
+            this._handleError(error);
+        });
     }
 
     private _handleNavigate(url: string) {
@@ -208,7 +210,7 @@ export class AuthenticationService {
         this._authorizeNext();
     }
 
-    private _handleError() {
+    private _handleError({code, description}) {
         this._closeWindow();
         this._waitingForAuth = false;
         const auth = this._currentAuthorization;
@@ -216,7 +218,7 @@ export class AuthenticationService {
         this._currentAuthorization = null;
         auth.deferred.reject(new AuthorizeError({
             error: "Failed to authenticate",
-            error_description: "Failed to load the AAD login page",
+            error_description: `Failed to load the AAD login page (${code}:${description})`,
         }));
     }
 

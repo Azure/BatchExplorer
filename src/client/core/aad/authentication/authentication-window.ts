@@ -44,10 +44,19 @@ export class AuthenticationWindow extends UniqueWindow {
         });
     }
 
-    public onError(callback: () => void) {
-        this._window!.webContents.on("did-fail-load", (e) => {
-            log.info("Failed to load auth url", e);
-            callback();
+    public onError(callback: (val: { code: number, description: string }) => void) {
+        this._window!.webContents.on("did-fail-load", (
+            e,
+            errorCode: number,
+            errorDescription: string,
+            validatedUrl: string,
+            isMainframe: boolean) => {
+
+            // ignore error code -3: Aborted request(This happens on the redirect)
+            if (this._window && errorCode !== -3) {
+                log.info("Failed to load auth url", e);
+                callback({ code: errorCode, description: errorDescription });
+            }
         });
     }
 
