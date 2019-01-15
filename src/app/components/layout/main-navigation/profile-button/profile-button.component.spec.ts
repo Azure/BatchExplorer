@@ -6,16 +6,11 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { LocaleService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import {
-    AutoUpdateService,
     ClickableComponent,
     ContextMenuItem,
     ContextMenuSeparator,
-    ElectronRemote,
-    ElectronShell,
-    FileSystemService,
     I18nUIModule,
     MultiContextMenuItem,
-    UpdateStatus,
 } from "@batch-flask/ui";
 import { AdalService, BatchExplorerService } from "app/services";
 import { ProgressInfo } from "builder-util-runtime";
@@ -23,6 +18,7 @@ import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
 import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";
 import { ProfileButtonComponent } from "./profile-button.component";
+import { UpdateStatus, AutoUpdateService, ElectronShell, ElectronRemote, FileSystemService } from "@batch-flask/electron";
 
 @Component({
     template: `<bl-profile-button></bl-profile-button>`,

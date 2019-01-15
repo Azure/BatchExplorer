@@ -6,7 +6,7 @@ import { TelemetryService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { MockElectronShell } from "@batch-flask/electron/testing";
 import {
-    ButtonsModule, DialogService, ElectronShell, EntityCommandsListModule,
+    ButtonsModule, DialogService,  EntityCommandsListModule,
     I18nUIModule, PermissionService, SummaryCardComponent,
 } from "@batch-flask/ui";
 import {
@@ -20,6 +20,7 @@ import {
 import { BatchAccountService } from "app/services";
 import { click } from "test/utils/helpers";
 import { AccountSummaryCardComponent } from "./account-summary-card.component";
+import { ElectronShell } from "@batch-flask/electron";
 
 const sub1 = new Subscription({
     id: "/subscriptions/sub-1",

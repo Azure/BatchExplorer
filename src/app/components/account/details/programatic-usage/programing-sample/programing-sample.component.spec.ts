@@ -2,7 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { ClipboardService } from "@batch-flask/ui";
+import { ClipboardService } from "@batch-flask/electron";
 import { PropertyListModule } from "@batch-flask/ui/property-list";
 import { EditorMockComponent, EditorTestingModule } from "@batch-flask/ui/testing";
 import { BatchExplorerService } from "app/services";

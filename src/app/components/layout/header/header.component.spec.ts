@@ -2,7 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-import { CurrentBrowserWindow, OSService } from "@batch-flask/ui";
+import { CurrentBrowserWindow, OSService } from "@batch-flask/electron";
 import { Platform } from "@batch-flask/utils";
 import { BehaviorSubject } from "rxjs";
 import { HeaderComponent } from "./header.component";
