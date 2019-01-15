@@ -1,12 +1,9 @@
 import { Injectable } from "@angular/core";
 import { log } from "@batch-flask/utils";
-import * as chokidar from "chokidar";
-import { FileUtils } from "client/api";
-import { app } from "electron";
+import { FSWatcher } from "chokidar";
 import * as fs from "fs";
-import * as glob from "glob";
-import * as mkdirp from "mkdirp";
 import * as path from "path";
+import { ElectronApp } from "./electron-app.service";
 
 export interface CommonFolders {
     temp: string;
@@ -16,31 +13,43 @@ export interface CommonFolders {
     home: string;
 }
 
-@Injectable()
-export class FileSystem {
-    public commonFolders: CommonFolders;
-    private _fileUtils: FileUtils;
+/**
+ * Service to handle saving files to the client FileSystem
+ */
+@Injectable({ providedIn: "root" })
+export class FileSystemService {
+    public commonFolders: any;
+    private _fs: typeof import("fs");
+    private _makeDir: typeof import("make-dir");
+    private _glob: typeof import("glob");
+    private _chokidar: typeof import("chokidar");
+    private _download: typeof import("download");
+    private _extractZip: typeof import("extract-zip");
 
-    constructor() {
-        this._fileUtils = new FileUtils();
-        if (process.env.NODE_ENV !== "test") { // App is not defined in the test
-            this.commonFolders = {
-                temp: path.join(app.getPath("temp"), "batch-explorer"),
-                downloads: app.getPath("downloads"),
-                appData: app.getPath("appData"),
-                userData: app.getPath("userData"),
-                home: app.getPath("home"),
-            };
-        }
+    constructor(app: ElectronApp) {
+        this._fs = app.require("fs");
+        this._makeDir = app.require("make-dir");
+        this._glob = app.require("glob");
+        this._chokidar = app.require("chokidar");
+        this._download = app.require("download");
+        this._extractZip = app.require("extract-zip");
+
+        this.commonFolders = {
+            temp: path.join(app.getPath("temp"), "batch-explorer"),
+            downloads: app.getPath("downloads"),
+            appData: app.getPath("appData"),
+            userData: app.getPath("userData"),
+            home: app.getPath("home"),
+        };
     }
 
     /**
      * Check if a file exists async
      * @param path Full path to the file
      */
-    public exists(path: string): Promise<boolean> {
+    public async exists(path: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            fs.exists(path, (exists) => {
+            this._fs.exists(path, (exists) => {
                 resolve(exists);
             });
         });
@@ -48,15 +57,10 @@ export class FileSystem {
 
     /**
      * This make sure the given dir exists. Will recusrivelly create any missing directory.
-     * @param directory: Path that we expect to exist
+     * @param directory: Path that we expect to exists
      */
     public ensureDir(directory: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            mkdirp(directory, (err) => {
-                if (err) { reject(err); }
-                resolve();
-            });
-        });
+        return this._makeDir(directory);
     }
 
     /**
@@ -82,10 +86,30 @@ export class FileSystem {
         });
     }
 
-    public download(source: string, dest: string): Promise<string> {
-        return this.ensureDir(path.dirname(dest)).then(() => {
-            return this._fileUtils.download(source, dest);
+    public async readdir(dir: string, recursive = true): Promise<string[]> {
+        const content = await this._readDir(dir);
+        if (!recursive) { return content; }
+        let result: string[] = [];
+        for (const entry of content) {
+            const stats = await this.lstat(path.join(dir, entry));
+            if (stats.isFile()) {
+                result.push(entry);
+            } else {
+                const subFiles = await this.readdir(path.join(dir, entry), true);
+                result = result.concat(subFiles.map((x) => {
+                    return path.join(path.join(entry, x));
+                }));
+            }
+        }
+        return result;
+    }
+
+    public async download(source: string, dest: string): Promise<string> {
+        await this.ensureDir(path.dirname(dest));
+        await this._download(source, path.dirname(dest), {
+            filename: path.basename(dest),
         });
+        return dest;
     }
 
     /**
@@ -94,7 +118,14 @@ export class FileSystem {
      * @param dest Folder where the zip file should be extracted
      */
     public unzip(source: string, dest: string): Promise<void> {
-        return this._fileUtils.unzip(source, dest);
+        return new Promise((resolve, reject) => {
+            this._extractZip(source, { dir: dest }, (err) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve();
+            });
+        });
     }
 
     public async lstat(path: string): Promise<fs.Stats> {
@@ -119,35 +150,17 @@ export class FileSystem {
         });
     }
 
-    public async readdir(dir: string, recursive = true): Promise<string[]> {
-        const content = await this._readDir(dir);
-        if (!recursive) { return content; }
-        let result: string[] = [];
-        for (const entry of content) {
-            const stats = await this.lstat(path.join(dir, entry));
-            if (stats.isFile()) {
-                result.push(entry);
-            } else {
-                const subFiles = await this.readdir(path.join(dir, entry), true);
-                result = result.concat(subFiles.map((x) => {
-                    return path.join(path.join(entry, x));
-                }));
-            }
-        }
-        return result;
+    public watch(path: string): FSWatcher {
+        return this._chokidar.watch(path);
     }
 
-    public async glob(pattern: string): Promise<string[]> {
+    public glob(pattern: string): Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
-            glob(pattern, (err, files) => {
+            this._glob(pattern, (err, files) => {
                 if (err) { reject(err); return; }
                 resolve(files);
             });
         });
-    }
-
-    public watch(path: string): chokidar.FSWatcher {
-        return chokidar.watch(path);
     }
 
     private _writeFile(path: string, content: string): Promise<string> {

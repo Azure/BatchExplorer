@@ -1,6 +1,9 @@
 export * from "./auto-update";
 export * from "./remote.service";
 export * from "./shell.service";
+export * from "./fs.service";
 export * from "./ipc.service";
-// export * from "./electron-main.module";
+export * from "./electron-app.service";
 export * from "./electron-renderer.module";
+export * from "./os.service";
+export * from "./clipboard.service";

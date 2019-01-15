@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
+import { FileSystemService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import * as path from "path";
-import { FileSystem } from "./fs";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class LocalFileStorage {
-    constructor(private fs: FileSystem) {
+    constructor(private fs: FileSystemService) {
 
     }
     public async get<T>(key: string): Promise<T> {
