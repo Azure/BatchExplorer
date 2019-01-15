@@ -122,9 +122,9 @@ export class MockAuthenticationWindow extends MockUniqueWindow {
         }
     }
 
-    public notifyError() {
+    public notifyError(error: {code: number, description: string}) {
         for (const callback of this._onErrorCallback) {
-            callback();
+            callback(error);
         }
     }
 

@@ -75,13 +75,13 @@ describe("AuthenticationService", () => {
         });
 
         it("Should error it fail to load", async () => {
-            fakeAuthWindow.notifyError ();
+            fakeAuthWindow.notifyError({code: 4, description: "Foo bar"});
             await promise;
 
             expect(result).toBeNull();
             expect(error).not.toBeNull();
             expect(error!.error).toEqual("Failed to authenticate");
-            expect(error!.description).toEqual("Failed to load the AAD login page");
+            expect(error!.description).toEqual("Failed to load the AAD login page (4:Foo bar)");
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
         });
