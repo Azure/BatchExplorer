@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { ClipboardService, ElectronShell } from "@batch-flask/ui";
+import { ClipboardService, ElectronShell } from "@batch-flask/electron";
 import { BehaviorSubject, of } from "rxjs";
 
 import { ClickableComponent } from "@batch-flask/ui/buttons";
