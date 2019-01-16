@@ -106,7 +106,6 @@ export class UserAccountPickerComponent implements ControlValueAccessor, Validat
     }
 
     public writeValue(value: UserAccountDto) {
-        console.log("Write value?", value);
         if (value) {
             this.form.patchValue(userAccountToFormModel(value));
         } else {
