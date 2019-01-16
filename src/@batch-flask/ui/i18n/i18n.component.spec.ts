@@ -2,7 +2,6 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nParameterDirective } from "./i18n.component";
 
 @Component({
     template: `<bl-i18n key="my-key.label"></bl-i18n>`,
