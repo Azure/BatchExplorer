@@ -1,3 +1,3 @@
 user-accounts-picker:
   addOne: Add a user account
-  duplicate: Cannot have 2 users with the same name
+  duplicate: Cannot have 2 users with the same name '{username}'

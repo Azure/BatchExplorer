@@ -54,7 +54,7 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
 
     public writeValue(obj: CertificateReferenceAttributes[] | null): void {
         if (obj) {
-            this.userAccounts.setValue(obj, { emitEvent: false });
+            this.userAccounts.setValue(obj);
         } else {
             this.userAccounts.setValue([]);
         }
@@ -85,7 +85,7 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
                 return {
                     duplicate: {
                         value: duplicate,
-                        message: this.i18n.t("user-accounts-picker.duplicate", { thumbprint: duplicate }),
+                        message: this.i18n.t("user-accounts-picker.duplicate", { username: duplicate }),
                     },
                 };
             }

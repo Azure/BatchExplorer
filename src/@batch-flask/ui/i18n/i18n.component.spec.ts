@@ -32,7 +32,7 @@ describe("I18nComponent", () => {
     function setup(component, providers?) {
         TestBed.configureTestingModule({
             imports: [I18nTestingModule.withTranslations(translations)],
-            declarations: [I18nComponent, I18nParameterDirective, component],
+            declarations: [I18nParameterDirective, component],
             providers,
         });
         fixture = TestBed.createComponent(component);
