@@ -3,10 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testin
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { ServerError, autobind } from "@batch-flask/core";
-import { AsyncSubject } from "rxjs";
-
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule } from "@batch-flask/ui";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import {
     ComplexFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent,
@@ -14,6 +11,7 @@ import {
 import { FormFooterComponent } from "@batch-flask/ui/form/complex-form/footer";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { ServerErrorComponent } from "@batch-flask/ui/server-error";
+import { AsyncSubject } from "rxjs";
 import { click } from "test/utils/helpers";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
@@ -91,7 +89,7 @@ describe("ComplexFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, I18nTestingModule, I18nUIModule],
+            imports: [FormsModule, ReactiveFormsModule, I18nTestingModule],
             declarations: [
                 ButtonComponent,
                 FormTestComponent,

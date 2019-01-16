@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ClipboardService } from "@batch-flask/electron";
 import {
-    BoolPropertyComponent, I18nUIModule, TextPropertyComponent,
+    BoolPropertyComponent, TextPropertyComponent,
 } from "@batch-flask/ui";
 import { TimespanComponent } from "@batch-flask/ui/timespan";
 import { Node, NodeState, Pool } from "app/models";
@@ -48,7 +48,7 @@ describe("NodeConfigurationComponent", () => {
             })),
         };
         TestBed.configureTestingModule({
-            imports: [I18nTestingModule, I18nUIModule],
+            imports: [I18nTestingModule],
             declarations: [
                 NodeConfigurationComponent, TestComponent,
                 TimespanComponent, TextPropertyComponent, BoolPropertyComponent,

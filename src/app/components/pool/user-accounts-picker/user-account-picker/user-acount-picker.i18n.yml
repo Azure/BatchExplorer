@@ -1,0 +1,10 @@
+user-account-picker:
+  username: Username
+  password: Password
+  loginMode: Login mode
+  runAsAdmin: Run as admin
+  windowsConfiguration: Windows specific configuration
+  linuxConfiguration: Linux specific configuration
+  gid: User group id
+  uid: User id
+  sshPrivateKey: SSH private key

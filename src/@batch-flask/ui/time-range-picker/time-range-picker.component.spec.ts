@@ -12,7 +12,6 @@ import { click } from "test/utils/helpers";
 import { ButtonsModule } from "../buttons";
 import { CalloutModule } from "../callout";
 import { FormModule } from "../form";
-import { I18nUIModule } from "../i18n";
 import { TimeRangePickerComponent } from "./time-range-picker.component";
 import { QuickRanges, TimeRange } from "./time-range.model";
 
@@ -46,7 +45,6 @@ describe("TimeRangePickerComponent", () => {
         TestBed.configureTestingModule({
             imports: [
                 I18nTestingModule,
-                I18nUIModule,
                 CalloutModule,
                 ReactiveFormsModule,
                 FormsModule,

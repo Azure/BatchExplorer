@@ -5,7 +5,7 @@ import { BrowserModule, By } from "@angular/platform-browser";
 import {
     I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,
 } from "@batch-flask/core/testing";
-import { FormModule, I18nUIModule, SidebarRef } from "@batch-flask/ui";
+import { FormModule, SidebarRef } from "@batch-flask/ui";
 import { ApplicationPackageReferenceAttributes, Pool } from "app/models";
 import { PoolPatchDto } from "app/models/dtos";
 import { NodeService, PoolService } from "app/services";
@@ -46,7 +46,7 @@ describe("EditAppPackageFormComponent", () => {
             patch: jasmine.createSpy("patch").and.returnValue(of(null)),
         };
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, BrowserModule, FormModule, I18nTestingModule, I18nUIModule],
+            imports: [FormsModule, ReactiveFormsModule, BrowserModule, FormModule, I18nTestingModule],
             declarations: [EditAppPackageFormComponent, FakeAppPackagePickerComponent],
             providers: [
                 { provide: SidebarRef, useValue: sidebarRefSpy },

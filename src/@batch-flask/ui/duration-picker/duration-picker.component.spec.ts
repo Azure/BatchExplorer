@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule, SelectComponent } from "@batch-flask/ui";
+import { SelectComponent } from "@batch-flask/ui";
 import { FormModule } from "@batch-flask/ui/form";
 import { Duration } from "luxon";
 import { click, updateInput } from "test/utils/helpers";
@@ -47,7 +47,7 @@ describe("DurationPickerComponent", () => {
 
     async function setupFor(type) {
         TestBed.configureTestingModule({
-            imports: [FormModule, DurationPickerModule, ReactiveFormsModule, I18nTestingModule, I18nUIModule],
+            imports: [FormModule, DurationPickerModule, ReactiveFormsModule, I18nTestingModule],
             declarations: [type],
         });
         fixture = TestBed.createComponent(type);

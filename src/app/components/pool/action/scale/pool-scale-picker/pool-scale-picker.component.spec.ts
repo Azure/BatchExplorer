@@ -6,7 +6,7 @@ import { By } from "@angular/platform-browser";
 import {
     I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,
 } from "@batch-flask/core/testing";
-import { DurationPickerComponent, DurationPickerModule, FormModule, I18nUIModule } from "@batch-flask/ui";
+import { DurationPickerComponent, DurationPickerModule, FormModule } from "@batch-flask/ui";
 import { Pool } from "app/models";
 import { Duration } from "luxon";
 import { click, updateInput } from "test/utils/helpers";
@@ -45,7 +45,7 @@ describe("PoolScalePickerComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                DurationPickerModule, I18nTestingModule, I18nUIModule,
+                DurationPickerModule, I18nTestingModule,
                 ReactiveFormsModule, FormsModule, MatRadioModule, FormModule,
             ],
             declarations: [PoolScalePickerComponent, TestComponent, MockAutoscaleFormulaPickerComponent],

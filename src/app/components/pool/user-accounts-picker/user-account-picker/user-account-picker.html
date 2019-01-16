@@ -1,0 +1,47 @@
+<ng-container [formGroup]="form">
+    <bl-form-field class="form-element">
+        <input blInput formControlName="name" [placeholder]="'user-account-picker.username' | i18n">
+        <bl-error controlName="name" code="required">{{'common.required' | i18n }}</bl-error>
+    </bl-form-field>
+    <bl-form-field class="form-element">
+        <input blInput type="password" formControlName="password" [placeholder]="'user-account-picker.password' | i18n">
+        <bl-error controlName="password" code="required">{{'common.required' | i18n }}</bl-error>
+    </bl-form-field>
+    <div class="form-element">
+        <mat-checkbox formControlName="runElevated" color="primary">
+            {{'user-account-picker.runAsAdmin' | i18n}}
+        </mat-checkbox>
+    </div>
+
+    <ng-container *ngIf="osType === OSType.Windows" formGroupName="windowsUserConfiguration">
+        <h4>{{'user-account-picker.windowsConfiguration' | i18n}}</h4>
+
+        <div>
+            <label>{{'user-account-picker.loginMode' | i18n}}</label>
+        </div>
+        <mat-button-toggle-group formControlName="loginMode">
+            <mat-button-toggle [value]="LoginMode.Batch">
+                Batch
+            </mat-button-toggle>
+            <mat-button-toggle [value]="LoginMode.Interactive">
+                Interactive
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+    </ng-container>
+
+    <ng-container *ngIf="osType === OSType.Linux" formGroupName="linuxUserConfiguration">
+        <h4>{{'user-account-picker.linuxConfiguration' | i18n}}</h4>
+
+        <div class="grow form-element">
+            <bl-form-field class="gcol">
+                    <input blInput type="number" formControlName="gid" [placeholder]="'user-account-picker.gid' | i18n">
+            </bl-form-field>
+            <bl-form-field class="gcol">
+                <input blInput type="number" formControlName="uid" [placeholder]="'user-account-picker.uid' | i18n">
+            </bl-form-field>
+        </div>
+        <bl-form-field class="form-element">
+            <textarea blInput formControlName="sshPrivateKey" [placeholder]="'user-account-picker.sshPrivateKey' | i18n"></textarea>
+        </bl-form-field>
+    </ng-container>
+</ng-container>

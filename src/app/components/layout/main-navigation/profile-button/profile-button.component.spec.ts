@@ -12,7 +12,6 @@ import {
     ClickableComponent,
     ContextMenuItem,
     ContextMenuSeparator,
-    I18nUIModule,
     MultiContextMenuItem,
 } from "@batch-flask/ui";
 import { AdalService, BatchExplorerService } from "app/services";
@@ -55,7 +54,7 @@ describe("ProfileButtonComponent", () => {
 
         batchExplorerServiceSpy = {};
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, RouterTestingModule, I18nTestingModule, I18nUIModule],
+            imports: [MatTooltipModule, RouterTestingModule, I18nTestingModule],
             declarations: [ProfileButtonComponent, ClickableComponent, TestComponent],
             providers: [
                 { provide: AdalService, useValue: adalServiceSpy },

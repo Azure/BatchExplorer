@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule, SelectComponent, SelectModule } from "@batch-flask/ui";
+import { SelectComponent, SelectModule } from "@batch-flask/ui";
 import { ArmBatchAccount, LocalBatchAccount, Subscription } from "app/models";
 import { BatchAccountService, NetworkConfigurationService, VirtualNetwork } from "app/services";
 import { BehaviorSubject, of } from "rxjs";
@@ -89,7 +89,7 @@ describe("VirtualNetworkPickerComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, SelectModule, I18nTestingModule, I18nUIModule],
+            imports: [FormsModule, ReactiveFormsModule, SelectModule, I18nTestingModule],
             declarations: [VirtualNetworkPickerComponent, TestComponent],
             providers: [
                 { provide: BatchAccountService, useValue: accountServiceSpy },
