@@ -6,7 +6,6 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule, ServerError } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule } from "@batch-flask/ui";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -158,7 +157,7 @@ describe("BatchAccountCreateComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, NoopAnimationsModule, LocationPickerModule, I18nTestingModule, I18nUIModule],
+            imports: [MaterialModule, NoopAnimationsModule, LocationPickerModule, I18nTestingModule],
             declarations: [...complexFormMockComponents, BatchAccountCreateComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },

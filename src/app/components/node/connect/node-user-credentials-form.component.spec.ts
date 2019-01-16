@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule, SelectModule } from "@batch-flask/ui";
+import { SelectModule } from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { DurationPickerComponent } from "@batch-flask/ui/duration-picker";
 import { PermissionService } from "@batch-flask/ui/permission";
@@ -48,7 +48,7 @@ describe("NodeUserCredentialsForm", () => {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule, ReactiveFormsModule, MaterialModule,
-                NoopAnimationsModule, SelectModule, I18nTestingModule, I18nUIModule,
+                NoopAnimationsModule, SelectModule, I18nTestingModule,
             ],
             declarations: [
                 NodeUserCredentialsFormComponent, TestComponent, SimpleFormMockComponent,

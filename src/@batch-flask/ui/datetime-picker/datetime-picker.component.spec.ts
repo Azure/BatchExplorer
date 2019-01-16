@@ -6,7 +6,6 @@ import { By } from "@angular/platform-browser";
 import { TimeZoneService } from "@batch-flask/core";
 import { I18nTestingModule, TestTimeZoneService, TimeZoneTestingModule } from "@batch-flask/core/testing";
 import { updateInput } from "test/utils/helpers";
-import { I18nUIModule } from "../i18n";
 import { DatetimePickerComponent } from "./datetime-picker.component";
 
 @Component({
@@ -31,7 +30,6 @@ describe("DatetimePickerComponent", () => {
                 FormsModule,
                 MatDatepickerModule,
                 I18nTestingModule,
-                I18nUIModule,
                 MatNativeDateModule,
                 TimeZoneTestingModule,
             ],

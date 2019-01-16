@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule, SelectModule } from "@batch-flask/ui";
+import { SelectModule } from "@batch-flask/ui";
 import { FormFieldComponent } from "@batch-flask/ui/form/form-field";
 import { Subscription as ArmSubscription } from "app/models";
 import { SubscriptionService } from "app/services";
@@ -46,7 +46,7 @@ describe("LocationPickerComponent", () => {
             }),
         };
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, SelectModule, LocationModule, I18nTestingModule, I18nUIModule],
+            imports: [FormsModule, ReactiveFormsModule, SelectModule, LocationModule, I18nTestingModule],
             declarations: [LocationPickerComponent, TestComponent, FormFieldComponent],
             providers: [
                 { provide: SubscriptionService, useValue: locationServiceSpy },

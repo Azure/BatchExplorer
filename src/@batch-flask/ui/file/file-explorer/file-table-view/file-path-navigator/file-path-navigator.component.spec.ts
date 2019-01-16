@@ -6,7 +6,6 @@ import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteTrigger } from "
 import { By } from "@angular/platform-browser";
 import { KeyCode } from "@batch-flask/core/keys";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule } from "@batch-flask/ui";
 import { File } from "@batch-flask/ui/file/file.model";
 import { List } from "immutable";
 import { of } from "rxjs";
@@ -57,7 +56,7 @@ describe("FilePathNavigatorComponent", () => {
 
     beforeEach( () => {
         TestBed.configureTestingModule({
-            imports: [MatAutocompleteModule, ReactiveFormsModule, I18nTestingModule, I18nUIModule],
+            imports: [MatAutocompleteModule, ReactiveFormsModule, I18nTestingModule],
             declarations: [FilePathNavigatorComponent, TestComponent],
         });
         setup();

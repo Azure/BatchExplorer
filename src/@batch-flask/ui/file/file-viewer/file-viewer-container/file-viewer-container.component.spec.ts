@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { MockElectronRemote, MockElectronShell } from "@batch-flask/electron/testing";
-import { File, FileLoader, I18nUIModule } from "@batch-flask/ui";
+import { File, FileLoader } from "@batch-flask/ui";
 import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { CardComponent } from "@batch-flask/ui/card";
@@ -51,7 +51,7 @@ describe("FileViewerContainerComponent", () => {
         notificationServiceSpy = new NotificationServiceMock();
 
         TestBed.configureTestingModule({
-            imports: [I18nTestingModule, I18nUIModule, ButtonsModule],
+            imports: [I18nTestingModule, ButtonsModule],
             declarations: [
                 FileViewerContainerComponent, TestComponent,
                 FileViewerHeaderComponent, FileTooLargeComponent, CardComponent,

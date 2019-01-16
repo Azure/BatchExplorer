@@ -4,7 +4,6 @@ import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SortingStatus } from "@batch-flask/ui/abstract-list/list-data-sorter";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
-import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { BehaviorSubject, of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { PartialSortWarningComponent } from "./partial-sort-warning.component";
@@ -41,7 +40,7 @@ describe("PartialSortWarningComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [I18nTestingModule, I18nUIModule],
+            imports: [I18nTestingModule],
             declarations: [PartialSortWarningComponent, TestComponent, ClickableComponent],
         });
         fixture = TestBed.createComponent(TestComponent);
