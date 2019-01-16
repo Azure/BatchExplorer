@@ -125,7 +125,7 @@ export class UserAccountPickerComponent implements ControlValueAccessor, Validat
                 sshPrivateKey: null,
                 gid: null,
                 uid: null,
-            }
+            },
         });
     }
 

@@ -128,7 +128,7 @@ describe("UserAccountsPickerComponent", () => {
         });
     });
 
-    fit("shows error when there is a duplicate username", async () => {
+    it("shows error when there is a duplicate username", async () => {
         component.userAccounts.markAsTouched();
         testComponent.userAccounts.setValue([
             new UserAccountDto({
@@ -146,5 +146,5 @@ describe("UserAccountsPickerComponent", () => {
         await Promise.resolve();
         fixture.detectChanges();
         expect(de.nativeElement.textContent).toContain("user-accounts-picker.duplicate(username:foo)");
-    })
+    });
 });
