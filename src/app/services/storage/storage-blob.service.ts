@@ -8,7 +8,8 @@ import {
     ServerError,
     TargetedDataCache,
 } from "@batch-flask/core";
-import { File, FileLoadOptions, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
+import { File, FileLoadOptions, FileLoader, FileNavigator } from "@batch-flask/ui";
 import { CloudPathUtils, log } from "@batch-flask/utils";
 import { StorageEntityGetter, StorageListGetter } from "app/services/core";
 import { SharedAccessPolicy } from "app/services/storage/models";

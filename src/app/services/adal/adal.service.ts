@@ -1,6 +1,7 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError, isNotNullOrUndefined } from "@batch-flask/core";
-import { ElectronRemote, NotificationService } from "@batch-flask/ui";
+import { ElectronRemote } from "@batch-flask/electron";
+import { NotificationService } from "@batch-flask/ui";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { AADService } from "client/core/aad";
 import { AADUser } from "client/core/aad/adal/aad-user";

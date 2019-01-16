@@ -4,7 +4,7 @@ import { TelemetryManager } from "client/core/telemetry";
 import { BrowserWindow, app, ipcMain } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
-import { BatchExplorerApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
+import { BatchExplorerApplication, GenericWindow, LocalFileStorage } from "../core";
 import { renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1
@@ -94,8 +94,7 @@ export class MainWindow extends GenericWindow {
         anyWindow.translationsLoader = this.batchExplorerApp.translationLoader;
         anyWindow.localeService = this.batchExplorerApp.localeService;
         anyWindow.TELEMETRY_ENABLED = this.telemetryManager.telemetryEnabled;
-        const fs = anyWindow.fs = new FileSystem();
-        anyWindow.localFileStorage = new LocalFileStorage(fs);
+        anyWindow.localFileStorage = this.batchExplorerApp.injector.get(LocalFileStorage);
         anyWindow.clientConstants = Constants;
 
         // Open the DevTools.

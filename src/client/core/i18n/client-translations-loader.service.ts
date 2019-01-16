@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { DevTranslationsLoader } from "@batch-flask/compiler";
 import { Locale, LocaleService, TranslationsLoaderService } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import { Constants as ClientConstants } from "client/client-constants";
-import { FileSystem } from "client/core/fs";
 import * as path from "path";
 
 @Injectable()
@@ -14,7 +14,7 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
     public translations = new Map<string, string>();
 
     constructor(
-        private fs: FileSystem,
+        private fs: FileSystemService,
         private localeService: LocaleService,
         private devTranslationsService: DevTranslationsLoader) {
         super();

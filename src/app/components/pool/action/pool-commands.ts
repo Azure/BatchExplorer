@@ -1,7 +1,7 @@
 import { Injectable, Injector } from "@angular/core";
+import { ElectronRemote, FileSystemService } from "@batch-flask/electron";
 import {
-    COMMAND_LABEL_ICON, DialogService, ElectronRemote,
-    EntityCommand, EntityCommands, FileSystemService, Permission, SidebarManager,
+    COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission, SidebarManager,
 } from "@batch-flask/ui";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";

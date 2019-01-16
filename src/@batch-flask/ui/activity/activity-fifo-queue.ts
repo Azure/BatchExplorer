@@ -52,7 +52,7 @@ export class ActivityFifoQueue {
 
     private _dequeue() {
         if (this.fifoQueue.length === 0) { return; }
-        this._run(this.fifoQueue.shift());
+        this._run(this.fifoQueue.shift()!);
     }
 
     private _run(activity: Activity) {

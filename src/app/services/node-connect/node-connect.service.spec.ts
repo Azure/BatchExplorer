@@ -2,7 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import * as path from "path";
 import { BehaviorSubject, of } from "rxjs";
 
-import { FileSystemService } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
 import { OS, Platform } from "@batch-flask/utils";
 import { ConnectionType, IaasNodeConnectionSettings, NodeConnectionSettings, Pool } from "app/models";
 import { AddNodeUserAttributes, SSHKeyService, SettingsService } from "..";

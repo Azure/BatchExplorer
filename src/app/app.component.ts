@@ -5,7 +5,8 @@ import { Subject, combineLatest } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
 import { TelemetryService } from "@batch-flask/core";
-import { ElectronRemote, IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
+import { ElectronRemote, IpcService } from "@batch-flask/electron";
+import { Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {

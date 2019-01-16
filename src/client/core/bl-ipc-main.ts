@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { IpcPromiseEvent } from "@batch-flask/ui/electron";
+import { IpcPromiseEvent } from "@batch-flask/electron";
 import { ipcMain } from "electron";
 import { EventEmitter } from "events";
 import { Subscription } from "rxjs";

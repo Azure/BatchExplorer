@@ -1,14 +1,13 @@
 import { Injectable, Injector } from "@angular/core";
-import { from } from "rxjs";
-
-import { ElectronRemote } from "@batch-flask/electron";
+import { ElectronRemote, FileSystemService } from "@batch-flask/electron";
 import {
     COMMAND_LABEL_ICON, EntityCommand,
-    EntityCommands, FileSystemService, Permission,
+    EntityCommands, Permission,
 } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobSchedule, JobState } from "app/models";
 import { JobService, PinnedEntityService } from "app/services";
+import { from } from "rxjs";
 
 import { JobScheduleCreateBasicDialogComponent } from "../../job-schedule/action";
 import { AddTaskFormComponent } from "../../task/action";

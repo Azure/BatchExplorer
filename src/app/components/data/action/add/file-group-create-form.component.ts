@@ -2,12 +2,12 @@ import { Component, OnDestroy, Optional } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { MatCheckboxChange, MatDialogRef } from "@angular/material";
 import { DynamicForm, autobind } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/electron";
 import {
     Activity,
     ActivityResponse,
     ActivityService,
     ActivityStatus,
-    FileSystemService,
     NotificationService,
     SidebarRef,
 } from "@batch-flask/ui";

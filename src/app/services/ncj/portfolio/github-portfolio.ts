@@ -1,4 +1,5 @@
-import { FileSystemService, LoadingStatus } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
+import { LoadingStatus } from "@batch-flask/ui";
 import { DateUtils, log } from "@batch-flask/utils";
 import * as path from "path";
 import { Observable, from } from "rxjs";

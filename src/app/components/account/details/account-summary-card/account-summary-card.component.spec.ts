@@ -4,9 +4,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { TelemetryService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
+import { ElectronShell } from "@batch-flask/electron";
 import { MockElectronShell } from "@batch-flask/electron/testing";
 import {
-    ButtonsModule, DialogService, ElectronShell, EntityCommandsListModule,
+    ButtonsModule, DialogService,  EntityCommandsListModule,
     I18nUIModule, PermissionService, SummaryCardComponent,
 } from "@batch-flask/ui";
 import {

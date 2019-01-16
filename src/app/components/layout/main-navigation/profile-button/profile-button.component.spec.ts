@@ -6,16 +6,14 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { LocaleService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import {
-    AutoUpdateService,
+    AutoUpdateService, ElectronRemote, ElectronShell, FileSystemService, UpdateStatus,
+} from "@batch-flask/electron";
+import {
     ClickableComponent,
     ContextMenuItem,
     ContextMenuSeparator,
-    ElectronRemote,
-    ElectronShell,
-    FileSystemService,
     I18nUIModule,
     MultiContextMenuItem,
-    UpdateStatus,
 } from "@batch-flask/ui";
 import { AdalService, BatchExplorerService } from "app/services";
 import { ProgressInfo } from "builder-util-runtime";
