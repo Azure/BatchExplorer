@@ -13,12 +13,12 @@ export interface UserAccountFormModel {
     runElevated: boolean;
     windowsUserConfiguration?: {
         loginMode?: LoginMode;
-    },
+    };
     linuxUserConfiguration?: {
         sshPrivateKey?: string;
         gid?: number;
         uid?: number;
-    }
+    };
 }
 
 function userAccountToFormModel(userAccount: UserAccountDto): UserAccountFormModel {
