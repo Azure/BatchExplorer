@@ -194,6 +194,8 @@
     "rxjs": "^6.3.3",
     "strip-json-comments": "^2.0.1",
     "tinycolor2": "^1.4.1",
+    "winston": "^3.1.0",
+    "winston-daily-rotate-file": "^3.6.0",
     "write-file-webpack-plugin": "^4.5.0",
     "xml2js": "^0.4.19",
     "zone.js": "0.8.26"

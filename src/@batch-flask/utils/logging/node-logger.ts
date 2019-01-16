@@ -1,4 +1,6 @@
-import * as bunyan from "bunyan";
+import * as winston from "winston";
+import * as DailyRotateFile from "winston-daily-rotate-file";
+import * as Transport from "winston-transport";
 
 // import { Constants } from "../client-constants";
 import { SanitizedError } from "../error";
@@ -31,40 +33,37 @@ export class NodeLogger implements Logger {
         return this._mainLogger;
     }
 
-    private _logger: bunyan;
+    private _logger: winston.Logger;
 
     constructor(config: NodeLoggerConfig) {
         if (!config) {
             throw new SanitizedError("Missing configuration for Logger");
         }
 
-        const streams: any[] = [
-            {
-                stream: stream as any,
-            },
+        const transports: Transport[] = [
+            new winston.transports.Console({
+                handleExceptions: true,
+                format: winston.format.combine(
+                    winston.format.colorize(),
+                    winston.format.simple(),
+                ),
+            }),
         ];
 
         if (config.path) {
-            streams.push({
-                type: "rotating-file",
-                path: config.path,
-                period: "1d",       // daily rotation
-                count: 3,           // keep 3 back copies
-            });
+            transports.push(new DailyRotateFile({
+                maxFiles: 3,
+                filename: config.path,
+                format: winston.format.combine(
+                    winston.format.timestamp(),
+                    winston.format.json(),
+                ),
+            }));
         }
-        this._logger = bunyan.createLogger({
-            name: config.name,
+        this._logger = winston.createLogger({
             level: "debug",
-            serializers: bunyan.stdSerializers,
-            streams,
+            transports,
         });
-    }
-
-    /**
-     * Doesn't not log to the console
-     */
-    public trace(message: string) {
-        this._logger.trace(message);
     }
 
     public debug(message: string, ...params: any[]) {
@@ -80,10 +79,6 @@ export class NodeLogger implements Logger {
     }
 
     public error(message: string, error?: any) {
-        if (error instanceof Error) {
-            this._logger.error({ err: error }, message);
-        } else {
-            this._logger.error({ error }, message);
-        }
+        this._logger.error(message, error);
     }
 }

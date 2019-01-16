@@ -10,20 +10,12 @@ export class RendererLogger implements Logger {
         this._logger = (require("electron").remote.getCurrentWindow() as any).logger;
         if (!this._logger) {
             this._logger = {
-                trace: () => null,
                 error: () => null,
                 log: () => null,
                 warn: () => null,
                 info: () => null,
             };
         }
-    }
-    /**
-     * Doesn't not log to the console
-     */
-    public trace(message: string) {
-        console.trace(message);
-        this._logger.trace(message);
     }
 
     public debug(message: string, ...params: any[]) {
