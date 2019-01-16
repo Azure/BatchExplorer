@@ -196,16 +196,16 @@
       <trans-unit id="browse-layout.openedAdvancedFilter">
         <source>Opened advanced filter blade</source>
       </trans-unit>
-      <trans-unit id="certificate-references">
+      <trans-unit id="certificate-references-picker">
         <source/>
       </trans-unit>
-      <trans-unit id="certificate-references.addOne">
+      <trans-unit id="certificate-references-picker.addOne">
         <source>Add a certificate</source>
       </trans-unit>
-      <trans-unit id="certificate-references.duplicate">
+      <trans-unit id="certificate-references-picker.duplicate">
         <source>Cannot reference the same certificate twice {thumbprint}</source>
       </trans-unit>
-      <trans-unit id="certificate-references.noCertificates">
+      <trans-unit id="certificate-references-picker.noCertificates">
         <source>No certificate(s) found for this batch account, please upload your certificate(s) first.</source>
       </trans-unit>
       <trans-unit id="common">
@@ -1215,6 +1215,45 @@
       </trans-unit>
       <trans-unit id="timezone-dropdown.tooltip">
         <source>Select the timezone for dates</source>
+      </trans-unit>
+      <trans-unit id="user-account-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="user-account-picker.gid">
+        <source>User group id</source>
+      </trans-unit>
+      <trans-unit id="user-account-picker.linuxConfiguration">
+        <source>Linux specific configuration</source>
+      </trans-unit>
+      <trans-unit id="user-account-picker.loginMode">
+        <source>Login mode</source>
+      </trans-unit>
+      <trans-unit id="user-account-picker.password">
+        <source>Password</source>
+      </trans-unit>
+      <trans-unit id="user-account-picker.runAsAdmin">
+        <source>Run as admin</source>
+      </trans-unit>
+      <trans-unit id="user-account-picker.sshPrivateKey">
+        <source>SSH private key</source>
+      </trans-unit>
+      <trans-unit id="user-account-picker.uid">
+        <source>User id</source>
+      </trans-unit>
+      <trans-unit id="user-account-picker.username">
+        <source>Username</source>
+      </trans-unit>
+      <trans-unit id="user-account-picker.windowsConfiguration">
+        <source>Windows specific configuration</source>
+      </trans-unit>
+      <trans-unit id="user-accounts-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="user-accounts-picker.addOne">
+        <source>Add a user account</source>
+      </trans-unit>
+      <trans-unit id="user-accounts-picker.duplicate">
+        <source>Cannot have 2 users with the same name '{username}'</source>
       </trans-unit>
       <trans-unit id="virtual-network-picker">
         <source/>
