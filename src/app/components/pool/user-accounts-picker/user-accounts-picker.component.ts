@@ -38,7 +38,6 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
         });
     }
 
-
     public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();

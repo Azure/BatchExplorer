@@ -11,3 +11,4 @@
         <bl-user-account-picker [formControl]="userAccountsPicker.currentEditValue" [osType]="osType"></bl-user-account-picker>
     </div>
 </bl-form-multi-picker>
+<bl-error [control]="references" code="duplicate">{{userAccounts.errors?.duplicate?.message}}</bl-error>
