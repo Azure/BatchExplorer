@@ -70,7 +70,6 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
         // Nothing
     }
 
-
     @autobind()
     private _duplicateValidator(control: FormControl<UserAccountDto[]>): ValidationErrors | null {
         const users = control.value;
