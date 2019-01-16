@@ -10,7 +10,6 @@ import { FileGroupsPickerComponent } from "./file-groups-picker";
 import { FileOrDirectoryPickerModule } from "./file-or-directory-picker";
 import { JobIdComponent } from "./job-id/job-id.component";
 import { RenderingContainerImagePickerComponent } from "./rendering-container-image-picker";
-import { StorageAccountPickerComponent } from "./storage-account-picker";
 
 const components = [
     CloudFilePickerComponent,
@@ -19,7 +18,6 @@ const components = [
     FileGroupsPickerComponent,
     JobIdComponent,
     RenderingContainerImagePickerComponent,
-    StorageAccountPickerComponent,
     StorageErrorDisplayComponent,
 ];
 
