@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { I18nModule, MaterialModule } from "@batch-flask/core";
+import {  MaterialModule } from "@batch-flask/core";
 import { EditorModule } from "@batch-flask/ui/editor";
 import { SelectModule } from "@batch-flask/ui/select";
 import { ServerErrorModule } from "@batch-flask/ui/server-error";
@@ -56,7 +56,6 @@ const components = [
     declarations: components,
     exports: [...modules, ...components],
     imports: [
-        I18nModule,
         I18nUIModule,
         CommonModule,
         ButtonsModule,

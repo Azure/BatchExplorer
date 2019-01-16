@@ -1,0 +1,13 @@
+<bl-form-multi-picker [formControl]="userAccounts" #userAccountsPicker [addTitle]="'user-accounts-picker.addOne' | i18n" [max]="5">
+    <ng-template blFormPickerItem let-value>
+        <div title>
+            {{value?.name}}
+        </div>
+        <div subtitle class="unaccent">
+            {{value?.elevationLevel === UserAccountElevationLevel.admin ? "Admin": ""}}
+        </div>
+    </ng-template>
+    <div nested-form>
+        <bl-user-account-picker [formControl]="userAccountsPicker.currentEditValue" [osType]="osType"></bl-user-account-picker>
+    </div>
+</bl-form-multi-picker>

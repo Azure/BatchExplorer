@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { I18nModule, TranslationsLoaderService } from "../i18n";
+import { I18nUIModule } from "@batch-flask/ui";
+import { TranslationsLoaderService } from "../i18n";
 
 const publicComponents = [];
 const privateComponents = [];
@@ -10,9 +11,9 @@ export class TestTranslatationsLoaderService extends TranslationsLoaderService {
 }
 
 @NgModule({
-    imports: [CommonModule, I18nModule],
+    imports: [CommonModule, I18nUIModule],
     declarations: [...publicComponents, ...privateComponents],
-    exports: publicComponents,
+    exports: [...publicComponents, I18nUIModule],
     entryComponents: [],
     providers: [
         { provide: TranslationsLoaderService, useClass: TestTranslatationsLoaderService },

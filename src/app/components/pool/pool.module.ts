@@ -10,7 +10,7 @@ import { PoolHomeComponent } from "app/components/pool/home/pool-home.component"
 import { StartTaskModule } from "app/components/pool/start-task";
 import { TaskBaseModule } from "app/components/task/base";
 import { NetworkConfigurationModule } from "./network-configuration";
-import { UserAccountModule } from "./user-account";
+import { UserAccountsPickerModule } from "./user-accounts-picker";
 
 import {
     AppLicensePickerComponent,
@@ -49,7 +49,7 @@ const modules = [
 
 const publicModules = [
     StartTaskModule,
-    UserAccountModule,
+    UserAccountsPickerModule,
     AutoScaleFormulaPickerModule,
     PoolBaseModule,
     PoolDetailsModule,

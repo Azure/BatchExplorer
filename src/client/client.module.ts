@@ -3,7 +3,6 @@ import { ServerModule } from "@angular/platform-server";
 import { DevTranslationsLoader } from "@batch-flask/compiler";
 import {
     DataStore,
-    I18nModule,
     LocaleService,
     TranslationsLoaderService,
     USER_CONFIGURATION_STORE,
@@ -47,7 +46,6 @@ export function initializeServices(injector) {
 @NgModule({
     imports: [
         ServerModule,
-        I18nModule,
         ClientTelemetryModule,
         MenuModule,
         ElectronMainModule,
