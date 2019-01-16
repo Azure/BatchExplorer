@@ -34,7 +34,7 @@ describe("i18n.pipe", () => {
     function setup(component, providers?) {
         TestBed.configureTestingModule({
             imports: [I18nTestingModule.withTranslations(translations)],
-            declarations: [I18nPipe, component],
+            declarations: [component],
             providers,
         });
         fixture = TestBed.createComponent(component);
