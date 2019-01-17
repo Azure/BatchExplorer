@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { ElectronRemote } from "@batch-flask/electron";
 import { BatchExplorerApplication, LocalFileStorage } from "client/core";
@@ -7,10 +7,10 @@ import { PythonRpcServerProcess } from "client/python-process";
 import { SplashScreen } from "client/splash-screen";
 import { BatchExplorerLink } from "common";
 import { IpcEvent } from "common/constants";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
-@Injectable({providedIn: "root"})
-export class BatchExplorerService {
+@Injectable({ providedIn: "root" })
+export class BatchExplorerService implements OnDestroy {
     public pythonServer: PythonRpcServerProcess;
     public aadService: AADService;
     /**
@@ -32,6 +32,7 @@ export class BatchExplorerService {
     private _app: BatchExplorerApplication;
     private _azureEnvironment: AzureEnvironment;
     private _isOSHighContrast = new BehaviorSubject(false);
+    private _highContrastSub: Subscription;
 
     constructor(private remote: ElectronRemote) {
         this._app = remote.getCurrentWindow().batchExplorerApp;
@@ -40,8 +41,11 @@ export class BatchExplorerService {
             // Clone the environement to prevent calling the electron ipc sync for every key
             this._azureEnvironment = new AzureEnvironment(x);
         });
-        this._app.properties.isOSHighContrast.subscribe((x) => {
+        this._highContrastSub = this._app.properties.isOSHighContrast.subscribe((x) => {
             this._isOSHighContrast.next(x);
+        });
+        window.addEventListener("beforeunload", () => {
+            this._highContrastSub.unsubscribe();
         });
         this.aadService = this._app.aadService;
         this.pythonServer = this._app.pythonServer;
@@ -50,6 +54,9 @@ export class BatchExplorerService {
         this.resourcesFolder = this._app.resourcesFolder;
     }
 
+    public ngOnDestroy() {
+        this._highContrastSub.unsubscribe();
+    }
     public get azureEnvironment() {
         return this._azureEnvironment;
     }

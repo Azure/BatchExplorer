@@ -2,9 +2,10 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { ProgressInfo } from "builder-util-runtime";
 import { BehaviorSubject, Subscription } from "rxjs";
 import { SharedServiceInjector } from "../shared-service-injector";
+import { warpMainObservable } from "../utils";
 import { AUTO_UPDATE_MAIN_SERVICE_TOKEN, AutoUpdateService, UpdateStatus } from "./base";
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class AutoUpdateRendererService extends AutoUpdateService implements OnDestroy {
 
     private _main: AutoUpdateService;
@@ -58,3 +59,19 @@ export class AutoUpdateRendererService extends AutoUpdateService implements OnDe
         return this._main.checkForUpdates();
     }
 }
+
+const sub = new BehaviorSubject(0);
+
+const obs = warpMainObservable(sub);
+
+obs.subscribe((v) => {
+    console.log("A: ", v);
+});
+
+sub.next(1);
+
+obs.subscribe((v) => {
+    console.log("B: ", v);
+});
+
+sub.next(2);
