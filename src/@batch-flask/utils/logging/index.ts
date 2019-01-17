@@ -10,8 +10,7 @@ if (process.env.NODE_ENV === "test") {
     const { RendererLogger } = require("./renderer-logger");
     _logger = new RendererLogger();
 } else {
-    const { NodeLogger } = require("./node-logger");
-    _logger = NodeLogger.mainLogger;
+    _logger = require("./configuration").mainLogger;
 }
 
 export const log: Logger = _logger;

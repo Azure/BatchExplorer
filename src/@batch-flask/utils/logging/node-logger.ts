@@ -19,20 +19,6 @@ export interface NodeLoggerConfig {
  * Logger helper class that will log
  */
 export class NodeLogger implements Logger {
-    private static _mainLogger: NodeLogger;
-    public static set mainLogger(logger: NodeLogger) {
-        this._mainLogger = logger;
-    }
-
-    public static get mainLogger() {
-        if (!this._mainLogger) {
-            this._mainLogger = new NodeLogger({
-                name: "BatchExplorer TMP",
-            });
-        }
-        return this._mainLogger;
-    }
-
     private _logger: winston.Logger;
 
     constructor(config: NodeLoggerConfig) {
@@ -42,8 +28,8 @@ export class NodeLogger implements Logger {
 
         const transports: Transport[] = [
             new winston.transports.Console({
-                handleExceptions: true,
                 format: winston.format.combine(
+                    winston.format.label({label: config.name, message: true}),
                     winston.format.colorize(),
                     winston.format.simple(),
                 ),
@@ -66,6 +52,9 @@ export class NodeLogger implements Logger {
         });
     }
 
+    public log(level: string, message: string, ...params: any[]) {
+        this._logger.log(level, message, params);
+    }
     public debug(message: string, ...params: any[]) {
         this._logger.debug(message, ...params);
     }
