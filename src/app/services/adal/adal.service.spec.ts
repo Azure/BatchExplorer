@@ -44,7 +44,7 @@ describe("AdalService spec", () => {
         zoneSpy = {
             run: jasmine.createSpy("zone.run").and.callFake(callback => callback()),
         };
-        service = new AdalService(zoneSpy, remoteSpy, batchExplorerSpy, notificationServiceSpy);
+        service = new AdalService(zoneSpy, batchExplorerSpy, remoteSpy, notificationServiceSpy);
     });
 
     afterEach(() => {

@@ -1,6 +1,5 @@
-import { Subscription } from "app/models";
-import { Observable, Subscriber } from "rxjs";
-import { publishReplay, refCount, share } from "rxjs/operators";
+import { Observable, Subscriber, fromEvent } from "rxjs";
+import { share, takeUntil } from "rxjs/operators";
 
 /**
  * Function that wraps an observable passed from the main process.
@@ -26,24 +25,36 @@ import { publishReplay, refCount, share } from "rxjs/operators";
  *   }
  * }
  */
-export function warpMainObservable<T>(obs: Observable<T>): Observable<T> {
-    const sub: Subscription | null = null;
+export function wrapMainObservable<T>(obs: Observable<T>): Observable<T> {
     return new Observable((observer: Subscriber<T>) => {
-        const sub = obs.subscribe(observer);
-
-        const cleanup = () => {
-            observer.complete();
-            sub.unsubscribe();
-        };
-        window.addEventListener("beforeunload", cleanup);
+        // This needs to be this way because of how electron IPC works.
+        // Get issues if you use `.subscribe(observer)` directly
+        const sub = obs.subscribe({
+            next: (value) => {
+                observer.next(value);
+            },
+            error: (error) => {
+                observer.error(error);
+            },
+            complete: () => {
+                observer.complete();
+            },
+        });
 
         return () => {
-            console.log("Unsubscribe");
             sub.unsubscribe();
             observer.complete();
-            window.removeEventListener("beforeunload", cleanup);
         };
     }).pipe(
-        refCount(),
+        takeUntil(willUnload),
     );
+}
+
+export let willUnload: Observable<BeforeUnloadEvent>;
+
+if (typeof window !== "undefined") {
+    /**
+     * Observable that will emit when the beforeunload event emits
+     */
+    willUnload = fromEvent(window, "beforeunload").pipe(share());
 }

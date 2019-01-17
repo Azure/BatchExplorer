@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { DataStore } from "@batch-flask/core";
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { Constants } from "common";
@@ -6,7 +6,7 @@ import { systemPreferences } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable()
-export class BatchExplorerProperties {
+export class BatchExplorerProperties implements OnDestroy {
     public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
     public azureEnvironmentObs: Observable<AzureEnvironment>;
 
@@ -22,6 +22,11 @@ export class BatchExplorerProperties {
             this._isOSHighContrast.next(systemPreferences.isInvertedColorScheme());
         });
         this.azureEnvironmentObs = this._azureEnvironment.asObservable();
+    }
+
+    public ngOnDestroy() {
+        this._azureEnvironment.complete();
+        this._isOSHighContrast.complete();
     }
 
     public async init() {
