@@ -10,7 +10,7 @@ import { BehaviorSubject, Observable, combineLatest, forkJoin, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, shareReplay } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { LocalFileStorage } from "../local-file-storage.service";
-import { SubscriptionService } from "../subscription.service";
+import { SubscriptionService } from "../subscription";
 import { ArmBatchAccountService } from "./arm-batch-account.service";
 import { LocalBatchAccountService } from "./local-batch-account.service";
 
