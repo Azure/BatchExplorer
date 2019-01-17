@@ -9,7 +9,7 @@ import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchAccountCommands } from "app/components/account/action";
 import { BatchAccount } from "app/models";
 import { BatchAccountService, SubscriptionService } from "app/services";
-import { flatMap, shareReplay } from "rxjs/operators";
+import { shareReplay, switchMap } from "rxjs/operators";
 
 import "./account-list.scss";
 
@@ -55,7 +55,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     @autobind()
     public refresh(): Observable<any> {
         return this.subscriptionService.load().pipe(
-            flatMap(() => this.accountService.load()),
+            switchMap(() => this.accountService.load()),
             shareReplay(1),
         );
     }

@@ -5,15 +5,17 @@ import {
 } from "app/models";
 import { Constants } from "common";
 import { List, Set } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, combineLatest, empty } from "rxjs";
-import { expand, filter, first, flatMap, map, reduce, shareReplay, switchMap } from "rxjs/operators";
+import { AsyncSubject, BehaviorSubject, Observable, combineLatest, empty, forkJoin } from "rxjs";
+import {
+    expand, filter, first, flatMap, map, publishReplay, reduce, refCount, shareReplay, switchMap,
+} from "rxjs/operators";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
 import { ArmListResponse } from "./core";
 import { SettingsService } from "./settings.service";
 import { TenantDetailsService } from "./tenant-details.service";
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class SubscriptionService {
     public subscriptions: Observable<List<Subscription>>;
     public accountSubscriptionFilter: Observable<Set<string>>;
@@ -51,9 +53,11 @@ export class SubscriptionService {
         const obs = this.adal.tenantsIds.pipe(
             filter(ids => ids.length > 0),
             first(),
-            flatMap((tenantIds) => {
-                return combineLatest(tenantIds.map(tenantId => this._loadSubscriptionsForTenant(tenantId)));
+            switchMap((tenantIds) => {
+                return forkJoin(tenantIds.map(tenantId => this._loadSubscriptionsForTenant(tenantId)));
             }),
+            publishReplay(1),
+            refCount(),
         );
         obs.subscribe({
             next: (tenantSubscriptions) => {
