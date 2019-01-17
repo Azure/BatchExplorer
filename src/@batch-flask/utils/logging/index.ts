@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === "test") {
     const { TestLogger } = require("./test-logger");
     _logger = new TestLogger();
 } else if (process.env.RENDERER) {
-    const { RendererLogger } = require("./renderer-logger");
+    const { RendererLogger } = require("./renderer");
     _logger = new RendererLogger();
 } else {
     _logger = require("./configuration").mainLogger;
