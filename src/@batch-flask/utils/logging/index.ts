@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === "test") {
     _logger = new TestLogger();
 } else if (process.env.RENDERER) {
     const { RendererLogger } = require("./renderer");
-    _logger = new RendererLogger();
+    _logger = new RendererLogger(require("electron").ipcRenderer);
 } else {
     _logger = require("./configuration").mainLogger;
 }

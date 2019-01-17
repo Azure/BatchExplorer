@@ -30,10 +30,8 @@ export class BrowserLogger implements Logger {
  * This is the same as the Browser logger but also send the logs to the main process to be saved to file
  */
 export class RendererLogger extends BrowserLogger implements Logger {
-    private _ipcRenderer: import("electron").IpcRenderer;
-    constructor() {
+    constructor(private _ipcRenderer: import("electron").IpcRenderer) {
         super();
-        this._ipcRenderer = require("electron").ipcRenderer;
     }
 
     public log(level: LogLevel, message: string, ...params: any[]) {
