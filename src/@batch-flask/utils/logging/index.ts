@@ -7,11 +7,10 @@ if (process.env.NODE_ENV === "test") {
     const { TestLogger } = require("./test-logger");
     _logger = new TestLogger();
 } else if (process.env.RENDERER) {
-    const { RendererLogger } = require("./renderer-logger");
-    _logger = new RendererLogger();
+    const { RendererLogger } = require("./renderer");
+    _logger = new RendererLogger(require("electron").ipcRenderer);
 } else {
-    const { NodeLogger } = require("./node-logger");
-    _logger = NodeLogger.mainLogger;
+    _logger = require("./configuration").mainLogger;
 }
 
 export const log: Logger = _logger;

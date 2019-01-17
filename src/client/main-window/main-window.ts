@@ -5,7 +5,6 @@ import { BrowserWindow, app, ipcMain } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
 import { BatchExplorerApplication, GenericWindow, LocalFileStorage } from "../core";
-import { renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1
 const devServerUrl = Constants.urls.main.dev;
@@ -84,7 +83,6 @@ export class MainWindow extends GenericWindow {
 
         const anyWindow = window as any;
         anyWindow.windowHandler = this;
-        anyWindow.logger = renderLogger;
         anyWindow.batchExplorerApp = this.batchExplorerApp;
         anyWindow._sharedServices = {
             [AUTO_UPDATE_MAIN_SERVICE_TOKEN]: this.batchExplorerApp.autoUpdater,

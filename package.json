@@ -68,7 +68,6 @@
   },
   "devDependencies": {
     "@ngtools/webpack": "^7.1.2",
-    "@types/bunyan": "^1.8.5",
     "@types/chart.js": "^2.7.41",
     "@types/chokidar": "^1.7.5",
     "@types/colors": "^1.2.1",
@@ -162,7 +161,6 @@
     "@types/keytar": "^4.0.1",
     "applicationinsights": "^1.0.7",
     "azure-storage": "^2.10.2",
-    "bunyan": "^1.8.12",
     "chart.js": "^2.7.3",
     "chokidar": "^2.0.4",
     "commander": "^2.19.0",
@@ -194,6 +192,8 @@
     "rxjs": "^6.3.3",
     "strip-json-comments": "^2.0.1",
     "tinycolor2": "^1.4.1",
+    "winston": "^3.1.0",
+    "winston-daily-rotate-file": "^3.6.0",
     "write-file-webpack-plugin": "^4.5.0",
     "xml2js": "^0.4.19",
     "zone.js": "0.8.26"

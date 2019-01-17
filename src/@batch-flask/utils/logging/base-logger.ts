@@ -1,7 +1,9 @@
+export type LogLevel = "debug" | "info" | "warn" | "error";
+
 export interface Logger {
-    trace(message: string);
-    debug(message: string, ...params: any[]);
-    info(message: string, ...params: any[]);
-    warn(message: string, params?: any);
-    error(message: string, error?: any);
+    log(level: LogLevel, message: string, ...params: any[]): void;
+    debug(message: string, ...params: any[]): void;
+    info(message: string, ...params: any[]): void;
+    warn(message: string, params?: any): void;
+    error(message: string, error?: any): void;
 }
