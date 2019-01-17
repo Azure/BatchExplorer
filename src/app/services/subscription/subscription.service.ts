@@ -1,36 +1,45 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { StringUtils, log } from "@batch-flask/utils";
 import {
     Location, LocationAttributes, ResourceGroup, Subscription, SubscriptionAttributes, TenantDetails,
 } from "app/models";
 import { Constants } from "common";
 import { List, Set } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, combineLatest, empty, forkJoin } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest, empty, forkJoin } from "rxjs";
 import {
-    expand, filter, first, flatMap, map, publishReplay, reduce, refCount, shareReplay, switchMap,
+    distinctUntilChanged, expand, filter, first, flatMap, map,
+    publishReplay, reduce, refCount, shareReplay, switchMap, takeUntil,
 } from "rxjs/operators";
-import { AdalService } from "./adal";
-import { AzureHttpService } from "./azure-http.service";
-import { ArmListResponse } from "./core";
-import { SettingsService } from "./settings.service";
-import { TenantDetailsService } from "./tenant-details.service";
+import { AdalService } from "../adal";
+import { AzureHttpService } from "../azure-http.service";
+import { ArmListResponse } from "../core";
+import { SettingsService } from "../settings.service";
+import { TenantDetailsService } from "../tenant-details.service";
 
 @Injectable({ providedIn: "root" })
-export class SubscriptionService {
+export class SubscriptionService implements OnDestroy {
     public subscriptions: Observable<List<Subscription>>;
     public accountSubscriptionFilter: Observable<Set<string>>;
     private _subscriptions = new BehaviorSubject<List<Subscription>>(List([]));
     private _accountSubscriptionFilter = new BehaviorSubject<Set<string>>(Set([]));
     private _subscriptionsLoaded = new AsyncSubject();
-    private _ignoredSubscriptionPatterns = new BehaviorSubject<string[]>([]);
+    private _destroy = new Subject();
 
     constructor(
         private tenantDetailsService: TenantDetailsService,
         private azure: AzureHttpService,
         private adal: AdalService,
         private settingsService: SettingsService) {
+
+        const ignoredPatterns = this.settingsService.settingsObs.pipe(
+            takeUntil(this._destroy),
+            map((settings) => settings["subscription.ignore"] || []),
+            distinctUntilChanged(),
+        );
+
         this.subscriptions = this._subscriptionsLoaded.pipe(
-            flatMap(() => combineLatest(this._subscriptions, this._ignoredSubscriptionPatterns)),
+            flatMap(() => combineLatest(this._subscriptions, ignoredPatterns)),
+            takeUntil(this._destroy),
             map(([subscriptions, ignoredPatterns]) => {
                 return this._ignoreSubscriptions(subscriptions, ignoredPatterns);
             }),
@@ -41,12 +50,12 @@ export class SubscriptionService {
         this._loadCachedSubscriptions();
         this._loadAccountSubscriptionFilter();
 
-        this.settingsService.settingsObs.subscribe((newSettings) => {
-            const ignoredPatterns = newSettings["subscription.ignore"];
-            if (this._ignoredSubscriptionPatterns.value !== ignoredPatterns) {
-                this._ignoredSubscriptionPatterns.next(ignoredPatterns);
-            }
-        });
+    }
+
+    public ngOnDestroy() {
+        this._subscriptions.complete();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public load(): Observable<any> {
