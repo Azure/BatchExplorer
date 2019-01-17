@@ -6,7 +6,7 @@ import {
 import { Constants } from "common";
 import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, combineLatest, empty } from "rxjs";
-import { expand, filter, first, flatMap, map, reduce, shareReplay } from "rxjs/operators";
+import { expand, filter, first, flatMap, map, reduce, shareReplay, switchMap } from "rxjs/operators";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
 import { ArmListResponse } from "./core";
@@ -118,11 +118,11 @@ export class SubscriptionService {
 
     private _loadSubscriptionsForTenant(tenantId: string): Observable<Subscription[]> {
         return this.tenantDetailsService.get(tenantId).pipe(
-            flatMap((tenantDetails) => {
+            switchMap((tenantDetails) => {
                 return this.azure.get<ArmListResponse<SubscriptionAttributes>>(tenantId, "subscriptions").pipe(
-                    expand(response => {
+                    expand((response) => {
                         if (response.nextLink) {
-                            this.azure.get(tenantId, response.nextLink);
+                            return this.azure.get(tenantId, response.nextLink);
                         } else {
                             return empty();
                         }
