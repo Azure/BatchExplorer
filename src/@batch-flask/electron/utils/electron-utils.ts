@@ -50,6 +50,14 @@ export function wrapMainObservable<T>(obs: Observable<T>): Observable<T> {
     );
 }
 
+/**
+ * Observable that emit when the window is about to be unloaded(Refresh/Close)
+ * @example
+ *
+ * myObs.pipe(takeUntil(willUnload)).subscribe(() => {
+ *
+ * })
+ */
 export let willUnload: Observable<BeforeUnloadEvent>;
 
 if (typeof window !== "undefined") {

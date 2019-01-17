@@ -40,7 +40,6 @@ export class AdalService implements OnDestroy {
             publishReplay(1),
             refCount(),
         );
-
     }
 
     public ngOnDestroy() {
