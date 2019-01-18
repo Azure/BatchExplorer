@@ -1,5 +1,4 @@
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
-import { F } from "test/utils";
 import { MockAuthenticationWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import {
     AuthenticationService, AuthenticationState, AuthorizeError, AuthorizeResult,
@@ -62,7 +61,7 @@ describe("AuthenticationService", () => {
             expect(state).toBe(AuthenticationState.UserInput);
         });
 
-        it("Should return the id token and code when sucessfull", F(async () => {
+        it("Should return the id token and code when sucessfull", async () => {
             const newUrl = "http://localhost/#id_token=sometoken&code=somecode";
             fakeAuthWindow.notifyRedirect(newUrl);
             await promise;
@@ -73,9 +72,21 @@ describe("AuthenticationService", () => {
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
             expect(state).toBe(AuthenticationState.Authenticated);
-        }));
+        });
 
-        it("Should error when the url redirect returns an error", F(async () => {
+        it("Should error it fail to load", async () => {
+            fakeAuthWindow.notifyError({code: 4, description: "Foo bar"});
+            await promise;
+
+            expect(result).toBeNull();
+            expect(error).not.toBeNull();
+            expect(error!.error).toEqual("Failed to authenticate");
+            expect(error!.description).toEqual("Failed to load the AAD login page (4:Foo bar)");
+
+            expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
+        });
+
+        it("Should error when the url redirect returns an error", async () => {
             const newUrl = "http://localhost/#error=someerror&error_description=There was an error";
             fakeAuthWindow.notifyRedirect(newUrl);
             await promise;
@@ -86,9 +97,9 @@ describe("AuthenticationService", () => {
             expect(error!.description).toEqual("There was an error");
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it("should only authorize 1 tenant at the time and queue the others", F(async () => {
+        it("should only authorize 1 tenant at the time and queue the others", async () => {
             const obs1 = userAuthorization.authorize("tenant-1");
             const obs2 = userAuthorization.authorize("tenant-2");
             const tenant1Spy = jasmine.createSpy("Tenant-1");
@@ -122,7 +133,7 @@ describe("AuthenticationService", () => {
             expect(tenant2Spy).toHaveBeenCalled();
             expect(tenant2Spy).toHaveBeenCalledWith({ id_token: "sometoken2", code: "somecode2" });
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(2);
-        }));
+        });
     });
 
     describe("Authorize silently", () => {
@@ -167,7 +178,7 @@ describe("AuthenticationService", () => {
             });
         });
 
-        it("Should not call silent false if silent true return sucessfully", F(async () => {
+        it("Should not call silent false if silent true return sucessfully", async () => {
             authorizeOutput = jasmine.createSpy("output").and.returnValue(Promise.resolve(goodResult));
             callAuth();
             await promise;
@@ -176,7 +187,7 @@ describe("AuthenticationService", () => {
 
             expect(userAuthorization.authorize).toHaveBeenCalledTimes(1);
             expect(userAuthorization.authorize).toHaveBeenCalledWith("tenant-1", true);
-        }));
+        });
 
         it("Should call silent false if silent true return sucessfully", async () => {
             authorizeOutput = jasmine.createSpy("output").and.returnValues(

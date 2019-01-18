@@ -9,7 +9,7 @@ const file2 = new File({ name: "foo.ts", properties: { contentLength: 124 } } as
 describe("FileLoader", () => {
     let fileLoader: FileLoader;
     let fsSpy;
-    let file: File;
+    let file: File | null;
     let propertyGetterSpy: jasmine.Spy;
     let contentSpy: jasmine.Spy;
 

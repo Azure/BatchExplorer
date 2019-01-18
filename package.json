@@ -2,6 +2,7 @@
   "name": "batch-explorer",
   "sideEffects": [
     "src/@batch-flask/extensions/*",
+    "src/app/environment.ts",
     "*.scss"
   ],
   "productName": "Batch Explorer",
@@ -14,7 +15,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "0.19.1",
+  "version": "0.19.2",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json --files",

@@ -1,4 +1,4 @@
-import { ServerError } from "@batch-flask/core";
+import { ServerError, isNotNullOrUndefined } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
 import { CloudPathUtils, exists, log } from "@batch-flask/utils";
 import * as path from "path";
@@ -39,10 +39,6 @@ export interface FileLoadOptions {
 
 export interface FileLoadResult {
     content: string;
-}
-
-function isNotNullOrUndefined<T>(input: null | undefined | T): input is T {
-    return input != null;
 }
 
 export class FileLoader {
@@ -87,7 +83,7 @@ export class FileLoader {
                 } else if (a instanceof ServerError || b instanceof ServerError) {
                     return false;
                 } else {
-                    return a!.equals(b!);
+                    return a.equals(b);
                 }
             }),
             publishReplay(1),
@@ -112,7 +108,11 @@ export class FileLoader {
                 if (error && error.status && !this._logIgnoreError.includes(error.status)) {
                     log.error("Error getting the file properties!", Object.assign({}, error));
                 }
-                return of(error);
+                if (error instanceof ServerError) {
+                    return of(error);
+                } else {
+                    return of(null);
+                }
             }),
             tap(value => this._properties.next(value)),
         );

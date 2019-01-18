@@ -14,15 +14,17 @@ import { click } from "test/utils/helpers";
 import { NotificationServiceMock } from "test/utils/mocks";
 import { FileTooLargeComponent } from "../file-too-large";
 import { FileTypeAssociationService } from "../file-type-association";
+import { FileViewerConfig } from "../file-viewer/file-viewer";
 import { ImageFileViewerComponent } from "../image-file-viewer";
 import { FileViewerContainerComponent } from "./file-viewer-container.component";
 import { FileViewerHeaderComponent } from "./file-viewer-header";
 
 @Component({
-    template: `<bl-file-viewer-container [fileLoader]="fileLoader"></bl-file-viewer-container>`,
+    template: `<bl-file-viewer-container [fileLoader]="fileLoader" [config]="config"></bl-file-viewer-container>`,
 })
 class TestComponent {
     public fileLoader: FileLoader;
+    public config: FileViewerConfig  = {};
 }
 
 const file = new File({ name: "foo.ts", properties: { contentLength: 45 } } as any);
@@ -88,6 +90,24 @@ describe("FileViewerContainerComponent", () => {
             content: contentSpy,
         });
         fixture.detectChanges();
+    });
+
+    it("pass the config down to the header", () => {
+        const header: FileViewerHeaderComponent = de.query(By.directive(FileViewerHeaderComponent)).componentInstance;
+        expect(header.config).toEqual({
+            downloadEnabled: true,
+            tailable: false,
+        });
+
+        testComponent.config = {
+            tailable: true,
+        };
+        fixture.detectChanges();
+
+        expect(header.config).toEqual({
+            downloadEnabled: true,
+            tailable: true,
+        });
     });
 
     describe("when file extension is unkown", () => {

@@ -58,7 +58,7 @@ let nextUniqueId = 0;
         { provide: BL_OPTION_PARENT, useExisting: SelectComponent },
     ],
 })
-export class SelectComponent implements FormFieldControl<any>, OptionParent,
+export class SelectComponent<TValue = any> implements FormFieldControl<any>, OptionParent,
     ControlValueAccessor, AfterContentInit, OnDestroy {
 
     @Input() public placeholder = "";
@@ -123,7 +123,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
 
     // Options
     @ContentChildren(SelectOptionComponent, { descendants: true })
-    public options: QueryList<SelectOptionComponent>;
+    public options: QueryList<SelectOptionComponent<TValue>>;
 
     @ContentChild(OptionTemplateDirective, { read: TemplateRef }) public optionTemplate: TemplateRef<any>;
 
