@@ -18,8 +18,8 @@ export interface KeyNavigableListItem {
 }
 
 export interface FocusItemChange<T> {
-    item: T;
-    column: number;
+    item: T | null;
+    column: number | null;
 }
 
 export class ListKeyNavigator<T extends KeyNavigableListItem> {
@@ -129,7 +129,7 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
         const previous = this._focusedItem;
         this.updateFocusedItem(item);
         if (this._focusedItem !== previous) {
-            this.change.next({ item: this._focusedItem, column: this._focusedColumnIndex });
+            this.change.next({ item: this._focusedItem, column:  this.focusedColumn });
         }
     }
 
@@ -141,7 +141,7 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
         }
         if (this._focusedColumnIndex !== index) {
             this._focusedColumnIndex = index;
-            this.change.next({ item: this._focusedItem, column: this._focusedColumnIndex });
+            this.change.next({ item: this._focusedItem, column: this.focusedColumn });
         }
     }
 
