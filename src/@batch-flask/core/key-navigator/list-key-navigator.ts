@@ -134,7 +134,6 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
     }
 
     public focusColumn(index: number) {
-        console.log("Here", index);
         if (index >= this._columnCount) {
             index = this._columnCount - 1;
         } else if (index < -1) {
@@ -142,7 +141,6 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
         }
         if (this._focusedColumnIndex !== index) {
             this._focusedColumnIndex = index;
-            console.log("Focus", this._focusedColumnIndex);
             this.change.next({ item: this._focusedItem, column: this._focusedColumnIndex });
         }
     }
