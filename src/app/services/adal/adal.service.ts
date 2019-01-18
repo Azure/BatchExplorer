@@ -7,7 +7,7 @@ import { AADService } from "client/core/aad";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
 import { Observable, from, throwError } from "rxjs";
-import { catchError, map, publishReplay, refCount } from "rxjs/operators";
+import { catchError, publishReplay, refCount } from "rxjs/operators";
 
 @Injectable({ providedIn: "root" })
 export class AdalService implements OnDestroy {
@@ -25,11 +25,8 @@ export class AdalService implements OnDestroy {
         private notificationService: NotificationService) {
         this._aadService = batchExplorer.aadService;
 
-        this.currentUser = wrapMainObservable(this._aadService.currentUser);
-        this.tenantsIds = wrapMainObservable(this._aadService.tenantsIds).pipe(
-            map((x: string[]) => {
-                return zone.run<string[]>(() => x);
-            }),
+        this.currentUser = wrapMainObservable(this._aadService.currentUser, zone);
+        this.tenantsIds = wrapMainObservable(this._aadService.tenantsIds, zone).pipe(
             catchError((error) => {
                 const serverError = new ServerError(error);
                 this.notificationService.error(

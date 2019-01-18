@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from "@angular/core";
+import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { ElectronRemote } from "@batch-flask/electron";
 import { wrapMainObservable } from "@batch-flask/electron/utils";
@@ -34,9 +34,9 @@ export class BatchExplorerService implements OnDestroy {
     private _azureEnvironment: AzureEnvironment;
     private _envSub: Subscription;
 
-    constructor(private remote: ElectronRemote) {
+    constructor(private remote: ElectronRemote, zone: NgZone) {
         this._app = remote.getCurrentWindow().batchExplorerApp;
-        this.isOSHighContrast = wrapMainObservable(this._app.properties.isOSHighContrast);
+        this.isOSHighContrast = wrapMainObservable(this._app.properties.isOSHighContrast, zone);
 
         this._envSub = this._app.properties.azureEnvironmentObs.subscribe((x) => {
             // Clone the environement to prevent calling the electron ipc sync for every key

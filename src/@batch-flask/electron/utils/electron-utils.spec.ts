@@ -6,11 +6,15 @@ describe("ElectronUtils", () => {
         let subject: Subject<number>;
         let obs: Observable<number>;
         let beforeunloadCallbacks: Array<() => void>;
+        let zoneSpy;
 
         beforeEach(() => {
+            zoneSpy = {
+                run: jasmine.createSpy("zone.run"),
+            };
             beforeunloadCallbacks = [];
             subject = new BehaviorSubject(0);
-            obs = wrapMainObservable(subject);
+            obs = wrapMainObservable(subject, zoneSpy);
 
             spyOn(window, "addEventListener").and.callFake((name, callback) => {
                 expect(name).toEqual("beforeunload");
@@ -90,7 +94,7 @@ describe("ElectronUtils", () => {
         it("doesn't share the last value when original is a subject", () => {
             subject.complete();
             subject = new Subject();
-            obs = wrapMainObservable(subject);
+            obs = wrapMainObservable(subject, zoneSpy);
 
             const spy1 = jasmine.createSpy("spy1");
             const spy2 = jasmine.createSpy("spy2");
