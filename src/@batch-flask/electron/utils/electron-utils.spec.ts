@@ -10,7 +10,7 @@ describe("ElectronUtils", () => {
 
         beforeEach(() => {
             zoneSpy = {
-                run: jasmine.createSpy("zone.run"),
+                run: jasmine.createSpy("zone.run").and.callFake(x => x()),
             };
             beforeunloadCallbacks = [];
             subject = new BehaviorSubject(0);
