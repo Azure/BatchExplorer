@@ -44,7 +44,7 @@ describe("AdalService spec", () => {
         zoneSpy = {
             run: jasmine.createSpy("zone.run").and.callFake(callback => callback()),
         };
-        service = new AdalService(zoneSpy, remoteSpy, batchExplorerSpy, notificationServiceSpy);
+        service = new AdalService(zoneSpy, batchExplorerSpy, remoteSpy, notificationServiceSpy);
     });
 
     afterEach(() => {
@@ -53,6 +53,9 @@ describe("AdalService spec", () => {
     });
 
     it("It notify of error if tenants ids fail", () => {
+        const nextSpy = jasmine.createSpy("next");
+        const errorSpy = jasmine.createSpy("error");
+        service.tenantsIds.subscribe(nextSpy, errorSpy);
         aadServiceSpy.tenantsIds.error(new ServerError({
             status: 300,
             code: "ERRNOCONN",
@@ -64,6 +67,8 @@ describe("AdalService spec", () => {
         expect(notificationServiceSpy.error).toHaveBeenCalledWith(
             "Error loading tenants. This could be an issue with proxy settings or your connection.",
             "300 - ERRNOCONN - Cannot connect");
+
+        expect(errorSpy).toHaveBeenCalledOnce();
     });
 
     it("#accessTokenFor returns observable with token string", (done) => {
