@@ -13,7 +13,7 @@ bl-table {
     outline: none;
     -webkit-user-drag: none;
 
-    bl-thead, bl-row-render {
+    bl-thead {
         display: flex;
         align-items: center;
     }
@@ -80,12 +80,14 @@ bl-table {
     }
 
     bl-row-render {
+        display: flex;
+        align-items: stretch;
         color: $primary-text;
+        height: $table-row-height;
 
         &:not(:last-child) {
             border-bottom: 1px solid $border-color;
         }
-        height: $table-row-height;
 
         &.selected {
             background-color: $primary-color-light;
@@ -123,6 +125,11 @@ bl-table {
         text-overflow: ellipsis;
         flex: 1;
         word-wrap: break-word;
+
+        &.focused {
+            outline: 2px dashed $primary-color;
+            outline-offset: -2px;
+        }
 
         &.fixed-size {
             flex-grow: 0;
@@ -192,6 +199,7 @@ bl-table {
         font-size: 13px;
         position: relative;
         white-space: nowrap;
+        line-height: $table-row-height;
 
         .cell-value {
             width: 98%;

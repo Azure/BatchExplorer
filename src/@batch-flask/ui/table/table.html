@@ -12,6 +12,7 @@
             [tableConfig]="config"
             [selected]="selection.has(item.id)"
             [focused]="listFocused && item === focusedItem"
+            [focusedColumn]="focusedColumn"
             [class.drop-target]="item.id === dropTargetRowKey"
             (dragenter)="dragEnter(item, $event)"
             (dragleave)="dragLeave(item, $event)"

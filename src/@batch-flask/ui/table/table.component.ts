@@ -124,9 +124,10 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.columnManager.columns = this.columnComponents.map(x => x.getRef());
         this.columnComponents.changes.subscribe((columns) => {
             this.columnManager.columns = this.columnComponents.map(x => x.getRef());
+            this._keyNavigator.withColumns(this.columnManager.columns.length);
             this.changeDetector.markForCheck();
         });
-
+        this._keyNavigator.withColumns(this.columnManager.columns.length);
         this.changeDetector.markForCheck();
     }
 
