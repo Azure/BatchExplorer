@@ -211,10 +211,6 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
         this._focusByIndex(0, 1);
     }
 
-    public focusFirstColumn() {
-        this._focusedColumnIndex = 0;
-    }
-
     public focusLastItem() {
         this._focusByIndex(this._items.length - 1, -1);
     }
