@@ -2,6 +2,9 @@
 # 0.19.2
 
 ### Bug fixes
+*  Issue with listing subscriptions when having more than 50 [\#1872](https://github.com/Azure/BatchExplorer/issues/1872)
+*  Observable from main process are not being cleanup when windows refresh or close [\#1874](https://github.com/Azure/BatchExplorer/issues/1874)
+*  Issues with job statistics when switching sorting [\#1859](https://github.com/Azure/BatchExplorer/issues/1859)
 *  Authentication window should handle load errors [\#1862](https://github.com/Azure/BatchExplorer/issues/1862)
 *  Fix issues with Job statistics page [\#1843](https://github.com/Azure/BatchExplorer/issues/1843)
 *  Download button has disappeared for files [\#1861](https://github.com/Azure/BatchExplorer/issues/1861)
