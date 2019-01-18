@@ -23,7 +23,7 @@ import { TableComponent, TableConfig } from "../table.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowRenderComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() public id: string;
+    @Input() @HostBinding("attr.id") public id: string;
     @Input() public item: any;
     @Input() public columns: TableColumnRef[];
     @Input() public tableConfig: TableConfig;
