@@ -65,7 +65,7 @@ deb:
   depends:
     # --- Default START
     - gconf2
-    - gconfg-service
+    - gconf-service
     - libnotify4
     - libappindicator1
     - libxtst6

@@ -8,11 +8,12 @@ import { BaseModule } from "@batch-flask/ui";
 import { ResourceFilePickerModule } from "app/components/common";
 import { ContainerSettingsPickerComponent, RegistryPickerComponent } from "./container-settings";
 import { TaskStateComponent } from "./task-state";
-import { UserIdentityComponent } from "./user-identity";
+import { UserIdentityPickerComponent } from "./user-identity";
 
 const components = [
     ContainerSettingsPickerComponent, RegistryPickerComponent,
-    UserIdentityComponent, TaskStateComponent,
+    TaskStateComponent,
+    UserIdentityPickerComponent, TaskStateComponent,
 ];
 
 @NgModule({

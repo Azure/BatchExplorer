@@ -1,4 +1,4 @@
-import { SanitizedError } from "@batch-flask/utils";
+import { SanitizedError, log } from "@batch-flask/utils";
 import { ClientConstants } from "client/client-constants";
 import { UniqueWindow } from "client/core/unique-window";
 import { BrowserWindow } from "electron";
@@ -25,7 +25,6 @@ export class AuthenticationWindow extends UniqueWindow {
         // window.webContents.openDevTools();
         return window;
     }
-
     public loadURL(url: string) {
         if (!this._window) {
             throw new SanitizedError("AuthenticationWindow not created. Cannot call loadURL");
@@ -42,6 +41,22 @@ export class AuthenticationWindow extends UniqueWindow {
     public onNavigate(callback: (url: string) => void) {
         this._window!.webContents.on("did-navigate", (event, url) => {
             callback(url);
+        });
+    }
+
+    public onError(callback: (val: { code: number, description: string }) => void) {
+        this._window!.webContents.on("did-fail-load", (
+            e,
+            errorCode: number,
+            errorDescription: string,
+            validatedUrl: string,
+            isMainframe: boolean) => {
+
+            // ignore error code -3: Aborted request(This happens on the redirect)
+            if (this._window && errorCode !== -3) {
+                log.info("Failed to load auth url", e);
+                callback({ code: errorCode, description: errorDescription });
+            }
         });
     }
 

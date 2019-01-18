@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
 import { AzureHttpService } from "./azure-http.service";
 import { ArmListResponse } from "./core";
-import { SubscriptionService } from "./subscription.service";
+import { SubscriptionService } from "./subscription";
 
 const STORAGE_ACCOUNT_TYPE_FILTER =
     "resourceType eq 'Microsoft.Storage/storageAccounts'" +

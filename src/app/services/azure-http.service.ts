@@ -6,7 +6,7 @@ import { SanitizedError } from "@batch-flask/utils";
 import { Subscription } from "app/models";
 import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
-import { catchError, flatMap, mergeMap, retryWhen, share } from "rxjs/operators";
+import { catchError, mergeMap, retryWhen, share, switchMap } from "rxjs/operators";
 import { AdalService } from "./adal";
 import { BatchExplorerService } from "./batch-explorer.service";
 
@@ -58,7 +58,7 @@ export class AzureHttpService {
         options: HttpRequestOptions): Observable<any> {
 
         return this.adal.accessTokenData(this._getTenantId(subscriptionOrTenant, uri)).pipe(
-            flatMap((accessToken) => {
+            switchMap((accessToken) => {
                 options = this._setupRequestOptions(uri, options, accessToken);
                 return this.http.request(method, this._computeUrl(uri), options).pipe(
                     retryWhen(attempts => this._retryWhen(attempts)),

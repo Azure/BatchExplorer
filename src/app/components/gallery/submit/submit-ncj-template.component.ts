@@ -265,7 +265,10 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
                 // we know what the control is called so update it with the new value
                 const parameterName = this._queryParameters[Constants.KnownQueryParameters.inputParameter];
                 const fileGroupContainer = this.fileGroupService.addFileGroupPrefix(fileGroupName);
-                (this.form.controls.job as FormGroup).controls[parameterName].setValue(fileGroupContainer);
+                const control = (this.form.controls.job as FormGroup).controls[parameterName];
+                if (control) {
+                    control.setValue(fileGroupContainer);
+                }
             }
         });
     }

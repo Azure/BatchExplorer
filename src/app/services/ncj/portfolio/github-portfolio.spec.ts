@@ -36,6 +36,24 @@ describe("GithubPortfolio", () => {
         return portfolio.ready.toPromise();
     }
 
+    it("parse when branch contains / (e.g. feature/foo)", async () => {
+        portfolio = new GithubPortfolio({
+            id: "my-portfolio-1",
+            source: "https://gitub/my/portfolio/tree/feature/foo",
+            type: PortfolioType.Github,
+        }, fsSpy);
+        await portfolio.ready.toPromise();
+
+        const zipPath = path.join("~/temp/portfolios/zips/my-portfolio-1.zip");
+
+        expect(fsSpy.download).toHaveBeenCalledWith(
+            "https://github.com/my/portfolio/archive/feature/foo.zip",
+            zipPath,
+        );
+
+        expect(portfolio.path).toEqual(path.join("~/temp/portfolios/my-portfolio-1/portfolio-feature-foo/ncj"));
+    });
+
     it("cache the data when no data exists", async () => {
         syncFileExist = false;
 

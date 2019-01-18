@@ -8,7 +8,7 @@ import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
 import { BatchAccountService } from "./batch-account";
 import { ArmListResponse } from "./core";
-import { SubscriptionService } from "./subscription.service";
+import { SubscriptionService } from "./subscription";
 
 export function computeUrl(subscriptionId: string) {
     return `subscriptions/${subscriptionId}/providers/Microsoft.Compute`;
