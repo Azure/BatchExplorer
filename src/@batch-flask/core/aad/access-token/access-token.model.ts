@@ -71,4 +71,8 @@ export class AccessToken {
     public hasExpired(): boolean {
         return this.expireInLess(0);
     }
+
+    public toHeader() {
+        return `${this.token_type} ${this.access_token}`;
+    }
 }
