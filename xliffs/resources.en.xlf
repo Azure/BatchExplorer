@@ -53,7 +53,7 @@
         <source/>
       </trans-unit>
       <trans-unit id="account-monitoring.aggregatedOver">
-        <source>Aggregated over {{interval}} interval</source>
+        <source>Aggregated over {interval} interval</source>
       </trans-unit>
       <trans-unit id="account-monitoring.coreCount">
         <source>Core minutes</source>
