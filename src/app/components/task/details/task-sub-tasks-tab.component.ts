@@ -58,6 +58,7 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
         }
     }
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this.data.dispose();
     }
 

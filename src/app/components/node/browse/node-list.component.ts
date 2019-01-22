@@ -48,6 +48,7 @@ export class NodeListComponent extends ListBaseComponent implements OnChanges, O
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this.data.dispose();
     }
 
