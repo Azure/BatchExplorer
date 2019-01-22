@@ -14,6 +14,7 @@ export class TestLogger implements Logger {
         // Nothing
     }
     public error(message: string, error?: any) {
-        // Nothing
+        // tslint:disable-next-line:no-console
+        console.error(message, error);
     }
 }

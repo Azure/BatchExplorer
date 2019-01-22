@@ -57,7 +57,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         themeService: ThemeService,
         private accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef,
-        private monitor: InsightsMetricsService) {
+        private metricsService: InsightsMetricsService) {
         this._setChartOptions();
 
         const chartTheme = themeService.currentTheme.pipe(
@@ -148,13 +148,13 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     private _loadMetrics(metrics: MonitorChartType, timeRange: TimeRange): Observable<MonitoringMetricList> {
         switch (metrics) {
             case MonitorChartType.CoreCount:
-                return this.monitor.getCoreMinutes(timeRange);
+                return this.metricsService.getCoreMinutes(timeRange);
             case MonitorChartType.FailedTask:
-                return this.monitor.getFailedTask(timeRange);
+                return this.metricsService.getFailedTask(timeRange);
             case MonitorChartType.NodeStates:
-                return this.monitor.getNodeStates(timeRange);
+                return this.metricsService.getNodeStates(timeRange);
             case MonitorChartType.TaskStates:
-                return this.monitor.getTaskStates(timeRange);
+                return this.metricsService.getTaskStates(timeRange);
         }
     }
 
