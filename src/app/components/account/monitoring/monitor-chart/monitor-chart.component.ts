@@ -91,7 +91,9 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                 return this._loadMetrics(metrics, timeRange).pipe(
                     catchError((error) => {
                         this.chartError = error;
-                        log.error(`Error loading metrics for account metrics type: ${this.metrics}`, error);
+                        if (error.code !== "LocalBatchAccount") {
+                            log.error(`Error loading metrics for account metrics type: ${this.metrics}`, error);
+                        }
                         this._updateLoadingStatus(LoadingStatus.Error);
                         return of(null);
                     }),
