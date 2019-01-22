@@ -36,11 +36,11 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
         super(injector);
 
         this.data = this.applicationService.listView(this._baseOptions);
-        this._subs.push(this.data.items.subscribe((applications) => {
+        this.data.items.subscribe((applications) => {
             this.applications = applications;
             this._filterApplications();
             this.changeDetector.markForCheck();
-        }));
+        });
 
         this.data.status.subscribe((status) => {
             this.status = status;
@@ -56,6 +56,7 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this._subs.forEach(x => x.unsubscribe());
         this.data.dispose();
     }

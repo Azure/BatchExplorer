@@ -49,6 +49,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this._accountSub.unsubscribe();
     }
 

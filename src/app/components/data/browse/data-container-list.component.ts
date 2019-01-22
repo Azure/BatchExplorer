@@ -81,6 +81,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this.data.dispose();
         this._onGroupAddedSub.unsubscribe();
     }
