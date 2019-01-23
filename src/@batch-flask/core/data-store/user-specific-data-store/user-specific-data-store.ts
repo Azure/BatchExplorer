@@ -68,14 +68,14 @@ export class UserSpecificDataStore implements DataStore, OnDestroy {
         return this._save();
     }
 
-    public async getItem<T = string>(key: string): Promise<T | undefined> {
+    public async getItem<T = string>(key: string): Promise<T | null> {
         const map = await this._getCurrentData();
         const userId = await this._getCurrentUser();
         const userMap = map.get(userId);
-        if (userMap) {
-            return userMap.get(key);
+        if (userMap && userMap.has(key)) {
+            return userMap.get(key)!;
         } else {
-            return undefined;
+            return null;
         }
     }
 
