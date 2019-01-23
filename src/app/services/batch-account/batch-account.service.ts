@@ -187,6 +187,7 @@ export class BatchAccountService implements OnDestroy {
                     id: accountId,
                 }));
             }),
+            share(),
         );
     }
 
@@ -202,6 +203,7 @@ export class BatchAccountService implements OnDestroy {
                 const newAccounts = accounts.filter(account => account.id.toLowerCase() !== accountId);
                 return this._saveAccountFavorites(List<AccountFavorite>(newAccounts));
             }),
+            share(),
         );
     }
 
