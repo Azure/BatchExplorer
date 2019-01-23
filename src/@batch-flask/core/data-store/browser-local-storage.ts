@@ -8,6 +8,6 @@ export class BrowserLocalStorage extends LocalStorage {
     }
 
     public async read(key: string): Promise<string | null> {
-        return Promise.resolve(localStorage.get(key));
+        return Promise.resolve(localStorage.getItem(key));
     }
 }

@@ -17,7 +17,7 @@ export interface UserService {
 /**
  * Implementation of the browser local storage
  */
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class UserSpecificDataStore implements DataStore, OnDestroy {
     public static KEY = "user-specific";
 

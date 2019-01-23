@@ -10,7 +10,7 @@ export const FileSourceTypes = {
 
 export const forms = {
     validation: {
-        minLength:  {
+        minLength: {
             container: 3,
         },
         maxLength: {
@@ -41,6 +41,10 @@ export const SavedDataFilename = {
     autosacleFormula: "data/autoscale-formula.json",
     portfolios: "data/portfolios",
     settings: "data/settings.json",
+};
+
+export const UserSpecificStoreKeys = {
+    accountFavorites: "account-favorites",
 };
 
 export const localStorageKey = {
@@ -117,7 +121,7 @@ export const ExternalLinks = {
     license: "https://azure.github.io/BatchExplorer/EULA.html",
     privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
     submitIssue: "https://github.com/Azure/BatchExplorer/issues",
-    subscriptionUrl:  "https://portal.azure.com/#resource/subscriptions/{0}/overview",
+    subscriptionUrl: "https://portal.azure.com/#resource/subscriptions/{0}/overview",
     resourceGroupUrl: "https://portal.azure.com/#resource/subscriptions/{0}/resourceGroups/{1}/overview",
 };
 

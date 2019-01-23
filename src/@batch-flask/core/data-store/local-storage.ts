@@ -26,5 +26,5 @@ export abstract class LocalStorage {
     }
 
     public abstract save(key: string, content: string): Promise<void>;
-    public abstract read(key: string): Promise<string>;
+    public abstract read(key: string): Promise<string | null>;
 }
