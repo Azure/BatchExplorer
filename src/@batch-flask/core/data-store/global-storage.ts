@@ -1,6 +1,6 @@
 import { log } from "@batch-flask/utils";
 import { Observable } from "rxjs";
-import { map, publishReplay, refCount } from "rxjs/operators";
+import { map, publishReplay, refCount, take } from "rxjs/operators";
 
 /**
  * Low level storage abstraction.
@@ -53,6 +53,15 @@ export abstract class GlobalStorage {
         return obs;
     }
 
+    /**
+     * To get the value once.
+     * Prefer using watch when possible.
+     * Using get can leads to data invalidation
+     * @param key Storage key
+     */
+    public get<T extends {}>(key: string): Promise<T | null> {
+        return this.watch<T>(key).pipe(take(1)).toPromise();
+    }
     /**
      * @param key Key of the storage
      * @param content Plain content to store

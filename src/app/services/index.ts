@@ -13,7 +13,6 @@ export * from "./cache-data.service";
 export * from "./compute.service";
 export * from "./github-data";
 export * from "./http-upload-service";
-export * from "./local-file-storage.service";
 export * from "./monitoring";
 export * from "./navigator.service";
 export * from "./pinned-entity";

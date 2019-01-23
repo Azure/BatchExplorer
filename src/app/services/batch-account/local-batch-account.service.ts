@@ -1,10 +1,9 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { ServerError } from "@batch-flask/core";
+import { GlobalStorage, ServerError } from "@batch-flask/core";
 import { LOCAL_BATCH_ACCOUNT_PREFIX, LocalBatchAccount } from "app/models";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, throwError } from "rxjs";
+import { BehaviorSubject, Observable, from, throwError } from "rxjs";
 import { filter, flatMap, map, take } from "rxjs/operators";
-import { LocalFileStorage } from "../local-file-storage.service";
 
 export const LOCAL_BATCH_ACCOUNT_KEY = "local-batch-accounts";
 
@@ -16,7 +15,7 @@ export class LocalBatchAccountService implements OnDestroy {
     public accounts: Observable<List<LocalBatchAccount>>;
     private _accounts = new BehaviorSubject<List<LocalBatchAccount>>(null);
 
-    constructor(private localStorage: LocalFileStorage) {
+    constructor(private localStorage: GlobalStorage) {
         this.accounts = this._accounts.pipe(filter(x => x !== null));
     }
 
@@ -25,7 +24,7 @@ export class LocalBatchAccountService implements OnDestroy {
     }
 
     public load() {
-        return this.localStorage.get(LOCAL_BATCH_ACCOUNT_KEY).pipe(
+        return from(this.localStorage.get(LOCAL_BATCH_ACCOUNT_KEY)).pipe(
             map((data) => {
                 if (Array.isArray(data)) {
                     const accounts = data.map(x => new LocalBatchAccount(x));
