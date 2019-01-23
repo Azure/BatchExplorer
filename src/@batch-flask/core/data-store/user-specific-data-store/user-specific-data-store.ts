@@ -1,5 +1,5 @@
 import { Inject, Injectable, OnDestroy } from "@angular/core";
-import { isNotNullOrUndefined } from "@batch-flask/core";
+import { isNotNullOrUndefined } from "@batch-flask/core/rxjs-operators";
 import { Observable, Subject, combineLatest } from "rxjs";
 import { filter, map, publishReplay, refCount, take, takeUntil } from "rxjs/operators";
 import { DataStore } from "../data-store";
