@@ -1,9 +1,9 @@
 import { Inject, Injectable, OnDestroy } from "@angular/core";
 import { isNotNullOrUndefined } from "@batch-flask/core";
-import { Observable, Subject } from "rxjs";
-import { filter, map, take, takeUntil } from "rxjs/operators";
+import { Observable, Subject, combineLatest } from "rxjs";
+import { filter, map, publishReplay, refCount, take, takeUntil } from "rxjs/operators";
 import { DataStore } from "../data-store";
-import { LocalStorage } from "../local-storage";
+import { GlobalStorage } from "../global-storage";
 
 export const USER_SERVICE = "USER_SERVICE";
 
@@ -14,25 +14,37 @@ export interface User {
 export interface UserService {
     currentUser: Observable<User>;
 }
+
 /**
  * Implementation of the browser local storage
  */
 @Injectable({ providedIn: "root" })
 export class UserSpecificDataStore implements DataStore, OnDestroy {
+    public get size() {
+        return 0;
+    }
+
     public static KEY = "user-specific";
 
-    private _loadPromise: Promise<any>;
-    private _map = new Map<string, Map<string, any>>();
+    private _data: Observable<Map<string, Map<string, any>>>;
     private _destroy = new Subject();
     private _currentUser: Observable<string>;
 
-    constructor(private localStorage: LocalStorage, @Inject(USER_SERVICE) private userService: UserService) {
-        this.load();
+    constructor(private localStorage: GlobalStorage, @Inject(USER_SERVICE) private userService: UserService) {
         this._currentUser = this.userService.currentUser.pipe(
             takeUntil(this._destroy),
             filter(isNotNullOrUndefined),
             map(x => x.unique_name),
         );
+
+        this._data = this.localStorage.watch<any>(UserSpecificDataStore.KEY).pipe(
+            map((data) => {
+                return this._parseSerializedData(data);
+            }),
+            publishReplay(1),
+            refCount(),
+        );
+
     }
 
     public ngOnDestroy() {
@@ -41,79 +53,102 @@ export class UserSpecificDataStore implements DataStore, OnDestroy {
     }
 
     public async setItem<T = string>(key: string, value: T) {
-        await this._loadPromise;
+        const map = await this._getCurrentData();
         const userId = await this._getCurrentUser();
-        let map = this._map.get(userId);
+        let userMap = map.get(userId);
 
-        if (!map) {
-            map = new Map<string, any>();
-            this._map.set(userId, map);
+        if (!userMap) {
+            userMap = new Map<string, any>();
+            map.set(userId, map);
         }
 
-        map.set(key, value);
+        userMap.set(key, value);
 
         return this._save();
     }
 
     public async getItem<T = string>(key: string): Promise<T | undefined> {
+        const map = await this._getCurrentData();
         const userId = await this._getCurrentUser();
-        const map = this._map.get(userId);
-        if (map) {
-            return map.get(key);
+        const userMap = map.get(userId);
+        if (userMap) {
+            return userMap.get(key);
         } else {
             return undefined;
         }
     }
 
-    public async removeItem(key: string) {
-        const userId = await this._getCurrentUser();
-        const map = this._map.get(userId);
-        if (map) {
-            map.delete(key);
-        }
+    public watchItem<T = string>(key: string): Observable<T | undefined> {
+        return combineLatest(this._data, this._currentUser).pipe(
+            map(([map, userId]) => {
+                const userMap = map.get(userId);
+                if (userMap) {
+                    return userMap.get(key);
+                } else {
+                    return undefined;
+                }
+            }),
+            publishReplay(1),
+            refCount(),
+        );
     }
 
-    public async load() {
-        this._loadPromise = this.localStorage.get<any>(UserSpecificDataStore.KEY).then((data) => {
-            this._map = new Map();
-            if (data) {
-                for (const [key, value] of Object.entries(this._map)) {
-                    const userMap = new Map();
-                    for (const [userKey, userValue] of Object.entries(value)) {
-                        userMap.set(userKey, userValue);
-                    }
-                    this._map.set(key, userMap);
-                }
-            }
-        });
-        return this._loadPromise;
+    public async removeItem(key: string) {
+        const map = await this._getCurrentData();
+        const userId = await this._getCurrentUser();
+        const userMap = map.get(userId);
+        if (userMap) {
+            userMap.delete(key);
+        }
     }
 
     public async clear() {
         const userId = await this._getCurrentUser();
-        this._map.delete(userId);
+        const map = await this._getCurrentData();
+        map.delete(userId);
         await this._save();
     }
 
     public async clearAll() {
-        await this._map.clear();
+        const map = await this._getCurrentData();
+        await map.clear();
         await this._save();
     }
 
-    public get size() {
-        return this._map.size;
+    private _getCurrentData(): Promise<Map<string, Map<string, any>>> {
+        return this._data.pipe(take(1)).toPromise();
     }
 
     private async _save(): Promise<void> {
+        const map = await this._getCurrentData();
+        await this.localStorage.set(UserSpecificDataStore.KEY, this._serializeData(map));
+    }
+
+    private _parseSerializedData(data: StringMap<StringMap<any>>): Map<string, Map<string, any>> {
+        const map = new Map();
+        if (data) {
+            for (const [key, value] of Object.entries(map)) {
+                const userMap = new Map();
+                for (const [userKey, userValue] of Object.entries(value)) {
+                    userMap.set(userKey, userValue);
+                }
+                map.set(key, userMap);
+            }
+        }
+
+        return map;
+    }
+
+    private _serializeData(map: Map<string, Map<string, any>>): StringMap<StringMap<any>> {
         const obj = {};
-        for (const [key, value] of this._map.entries()) {
+        for (const [key, value] of map.entries()) {
             const userObj = {};
             for (const [userKey, userValue] of value.entries()) {
                 userObj[userKey] = userValue;
             }
             obj[key] = userObj;
         }
-        await this.localStorage.set(UserSpecificDataStore.KEY, obj);
+        return obj;
     }
 
     private _getCurrentUser() {
