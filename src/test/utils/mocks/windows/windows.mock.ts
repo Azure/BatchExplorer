@@ -4,6 +4,8 @@ export class MockBrowserWindow {
     public destroy: jasmine.Spy;
     public loadURL: jasmine.Spy;
     public on: jasmine.Spy;
+    public addListener: jasmine.Spy;
+    public removeListener: jasmine.Spy;
     public webContents: { on: jasmine.Spy, notify: (...args) => void };
 
     private _isVisible = false;
@@ -20,6 +22,22 @@ export class MockBrowserWindow {
                 callback(...data.args);
             });
         });
+        this.addListener = jasmine.createSpy("addListener").and.callFake(
+            (event: string, callback: (...args) => void) => {
+                if (!(event in this._events)) {
+                    this._events[event] = new Subject();
+                }
+                this._events[event].subscribe((data) => {
+                    callback(...data.args);
+                });
+            });
+        this.removeListener = jasmine.createSpy("removeListener").and.callFake(
+            (event: string, _: (...args) => void) => {
+                if (event in this._events) {
+                    this._events[event].complete();
+                    delete this._events[event];
+                }
+            });
         this.webContents = {
             on: jasmine.createSpy("webcontents.on").and.callFake((event: string, callback: (...args) => void) => {
                 this.on(`webcontents.${event}`, callback);
@@ -122,7 +140,7 @@ export class MockAuthenticationWindow extends MockUniqueWindow {
         }
     }
 
-    public notifyError(error: {code: number, description: string}) {
+    public notifyError(error: { code: number, description: string }) {
         for (const callback of this._onErrorCallback) {
             callback(error);
         }

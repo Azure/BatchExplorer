@@ -55,6 +55,7 @@ describe("AccountListComponent", () => {
                 Fixtures.account.create({ id: "acc-3", name: "Account 3", location: "canada", subscription: sub2 }),
                 Fixtures.account.create({ id: "acc-4", name: "Zoo Account 4", location: "eastus", subscription: sub2 }),
             ])),
+            accountFavorites: of([]),
             isAccountFavorite: (accountId) => false,
         };
 
