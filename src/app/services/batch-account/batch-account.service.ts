@@ -92,7 +92,6 @@ export class BatchAccountService implements OnDestroy {
             publishReplay(1),
             refCount(),
         );
-        this._favoriteAccountIds.subscribe();
 
         this.accountFavorites = this._favoriteAccountIds.pipe(
             switchMap((favourites) => {
@@ -184,7 +183,6 @@ export class BatchAccountService implements OnDestroy {
         return this._favoriteAccountIds.pipe(
             take(1),
             switchMap((accounts) => {
-                console.log("Got accounts", accounts.toJS());
                 return this._saveAccountFavorites(accounts.push({
                     id: accountId,
                 }));
