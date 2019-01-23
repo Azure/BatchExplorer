@@ -66,7 +66,7 @@ describe("MainGlobalStorage", () => {
             expect(callback1).toHaveBeenCalledTimes(1);
             expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
 
-            const sub2 = service.watchContent("my-data").subscribe(callback1);
+            const sub2 = service.watchContent("my-data").subscribe(callback2);
             await Promise.resolve();
             expect(callback2).toHaveBeenCalledTimes(1);
             expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
@@ -146,7 +146,7 @@ describe("MainGlobalStorage", () => {
             expect(callback1).toHaveBeenCalledTimes(1);
             expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
 
-            const sub2 = service.watch("my-data").subscribe(callback1);
+            const sub2 = service.watch("my-data").subscribe(callback2);
             await Promise.resolve();
             expect(callback2).toHaveBeenCalledTimes(1);
             expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
