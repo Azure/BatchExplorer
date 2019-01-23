@@ -13,11 +13,23 @@ import { map, publishReplay, refCount } from "rxjs/operators";
  */
 export abstract class GlobalStorage {
     private _parsedObs = new Map<string, Observable<any | null>>();
+
+    /**
+     * Save JS object to storage with the given key
+     * @param key Storage key
+     * @param value Object to store
+     */
     public set<T extends {}>(key: string, value: T) {
         const content = JSON.stringify(value);
         return this.save(key, content);
     }
 
+    /**
+     * Watch the latest value of  JS object in storage with the given key.
+     * Will have null if the data stored is in an invalid state(Invalid JSON)
+     * @param key Storage key
+     * @param value Object to store
+     */
     public watch<T extends {}>(key: string): Observable<T | null> {
         if (this._parsedObs.has(key)) {
             return this._parsedObs.get(key)!;
@@ -41,6 +53,14 @@ export abstract class GlobalStorage {
         return obs;
     }
 
+    /**
+     * @param key Key of the storage
+     * @param content Plain content to store
+     */
     public abstract save(key: string, content: string): Promise<void>;
+
+    /**
+     * Observable to get the latest plain value of this storage key
+     */
     public abstract watchContent(key: string): Observable<string | null>;
 }

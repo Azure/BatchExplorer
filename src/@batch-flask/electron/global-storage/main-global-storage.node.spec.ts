@@ -56,6 +56,23 @@ describe("MainGlobalStorage", () => {
             expect(callback).toHaveBeenCalledWith(`{"foo": "bar"}`);
         });
 
+        it("only reads the file once if watching twice", async () => {
+            expect(fsSpy.readFile).not.toHaveBeenCalled();
+            const callback1 = jasmine.createSpy("callback1");
+            const callback2 = jasmine.createSpy("callback2");
+            sub = service.watchContent("my-data").subscribe(callback1);
+            await Promise.resolve();
+
+            expect(callback1).toHaveBeenCalledTimes(1);
+            expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
+
+            const sub2 = service.watchContent("my-data").subscribe(callback1);
+            await Promise.resolve();
+            expect(callback2).toHaveBeenCalledTimes(1);
+            expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
+            sub2.unsubscribe();
+        });
+
         it("calls the callback when saving data", async () => {
             const callback = jasmine.createSpy("callback");
             sub = service.watchContent("my-data").subscribe(callback);
@@ -117,6 +134,23 @@ describe("MainGlobalStorage", () => {
 
             expect(callback).toHaveBeenCalledTimes(2);
             expect(callback).toHaveBeenCalledWith({ other: 123 });
+        });
+
+        it("only reads the file once if watching twice", async () => {
+            expect(fsSpy.readFile).not.toHaveBeenCalled();
+            const callback1 = jasmine.createSpy("callback1");
+            const callback2 = jasmine.createSpy("callback2");
+            sub = service.watch("my-data").subscribe(callback1);
+            await Promise.resolve();
+
+            expect(callback1).toHaveBeenCalledTimes(1);
+            expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
+
+            const sub2 = service.watch("my-data").subscribe(callback1);
+            await Promise.resolve();
+            expect(callback2).toHaveBeenCalledTimes(1);
+            expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
+            sub2.unsubscribe();
         });
     });
 });
