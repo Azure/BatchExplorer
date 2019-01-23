@@ -6,7 +6,7 @@ import { wrapMainObservable } from "../utils";
 import { GLOBAL_STORAGE } from "./key";
 
 @Injectable()
-export class RendererLocalStorage extends GlobalStorage {
+export class RendererGlobalStorage extends GlobalStorage {
     public _mainService: GlobalStorage;
 
     constructor(injector: SharedServiceInjector, private zone: NgZone) {
@@ -14,8 +14,8 @@ export class RendererLocalStorage extends GlobalStorage {
         this._mainService = injector.get(GLOBAL_STORAGE);
     }
 
-    public watchContent(key: string): Observable<string> {
-        return wrapMainObservable(this._mainService.watchContent(key), this.zone);
+    public watchContent(key: string): Observable<string | null> {
+        return wrapMainObservable<string | null>(this._mainService.watchContent(key), this.zone);
     }
 
     public async save(key: string, content: string): Promise<void> {

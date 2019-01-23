@@ -5,8 +5,8 @@ import { GlobalStorage } from "./global-storage";
 
 @Injectable()
 export class BrowserLocalStorage extends GlobalStorage {
-    private _subscriberMap = new Map<string, Subscriber<any>>();
-    private _obs = new Map<string, Observable<string>>();
+    private _subscriberMap = new Map<string, Subscriber<any | null>>();
+    private _obs = new Map<string, Observable<string | null>>();
 
     public async save(key: string, content: string): Promise<void> {
         localStorage.setItem(key, content);
@@ -16,11 +16,11 @@ export class BrowserLocalStorage extends GlobalStorage {
         return Promise.resolve(localStorage.getItem(key));
     }
 
-    public watchContent(key: string): Observable<string> {
+    public watchContent(key: string): Observable<string | null> {
         if (this._obs.has(key)) {
-            return this._obs.get(key);
+            return this._obs.get(key)!;
         }
-        const obs = new Observable<string>((subscriber) => {
+        const obs = new Observable<string | null>((subscriber) => {
             this._subscriberMap.set(key, subscriber);
             subscriber.next(localStorage.getItem(key));
             return () => {

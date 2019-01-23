@@ -23,8 +23,6 @@ import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import {
-    BrowserLocalStorage,
-    GlobalStorage,
     LocaleService,
     MaterialModule,
     TranslationsLoaderService,
@@ -83,7 +81,6 @@ const modules = [
         { provide: LocaleService, useClass: AppLocaleService },
         { provide: USER_CONFIGURATION_STORE, useClass: RendererConfigurationStore },
         { provide: ErrorHandler, useClass: BatchExplorerErrorHandler },
-        { provide: GlobalStorage, useClass: BrowserLocalStorage },
         { provide: USER_SERVICE, useExisting: AdalService },
     ],
 })

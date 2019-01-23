@@ -12,7 +12,7 @@ import { map, publishReplay, refCount } from "rxjs/operators";
  * Use localStorage if data shouldn't be shared across processes(Browser windows)
  */
 export abstract class GlobalStorage {
-    private _parsedObs = new Map<string, Observable<any>>();
+    private _parsedObs = new Map<string, Observable<any | null>>();
     public set<T extends {}>(key: string, value: T) {
         const content = JSON.stringify(value);
         return this.save(key, content);
@@ -20,7 +20,7 @@ export abstract class GlobalStorage {
 
     public watch<T extends {}>(key: string): Observable<T | null> {
         if (this._parsedObs.has(key)) {
-            return this._parsedObs.get(key);
+            return this._parsedObs.get(key)!;
         }
         const obs = this.watchContent(key).pipe(
             map((content) => {
@@ -36,6 +36,7 @@ export abstract class GlobalStorage {
             publishReplay(1),
             refCount(),
         );
+        obs.subscribe();
         this._parsedObs.set(key, obs);
         return obs;
     }

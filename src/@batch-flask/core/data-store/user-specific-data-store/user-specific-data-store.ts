@@ -30,21 +30,22 @@ export class UserSpecificDataStore implements DataStore, OnDestroy {
     private _destroy = new Subject();
     private _currentUser: Observable<string>;
 
-    constructor(private localStorage: GlobalStorage, @Inject(USER_SERVICE) private userService: UserService) {
+    constructor(private globalStorage: GlobalStorage, @Inject(USER_SERVICE) private userService: UserService) {
         this._currentUser = this.userService.currentUser.pipe(
             takeUntil(this._destroy),
             filter(isNotNullOrUndefined),
             map(x => x.unique_name),
+            publishReplay(1),
+            refCount(),
         );
 
-        this._data = this.localStorage.watch<any>(UserSpecificDataStore.KEY).pipe(
+        this._data = this.globalStorage.watch<any>(UserSpecificDataStore.KEY).pipe(
             map((data) => {
                 return this._parseSerializedData(data);
             }),
             publishReplay(1),
             refCount(),
         );
-
     }
 
     public ngOnDestroy() {
@@ -59,7 +60,7 @@ export class UserSpecificDataStore implements DataStore, OnDestroy {
 
         if (!userMap) {
             userMap = new Map<string, any>();
-            map.set(userId, map);
+            map.set(userId, userMap);
         }
 
         userMap.set(key, value);
@@ -121,13 +122,13 @@ export class UserSpecificDataStore implements DataStore, OnDestroy {
 
     private async _save(): Promise<void> {
         const map = await this._getCurrentData();
-        await this.localStorage.set(UserSpecificDataStore.KEY, this._serializeData(map));
+        await this.globalStorage.set(UserSpecificDataStore.KEY, this._serializeData(map));
     }
 
     private _parseSerializedData(data: StringMap<StringMap<any>>): Map<string, Map<string, any>> {
         const map = new Map();
         if (data) {
-            for (const [key, value] of Object.entries(map)) {
+            for (const [key, value] of Object.entries(data)) {
                 const userMap = new Map();
                 for (const [userKey, userValue] of Object.entries(value)) {
                     userMap.set(userKey, userValue);
@@ -135,7 +136,6 @@ export class UserSpecificDataStore implements DataStore, OnDestroy {
                 map.set(key, userMap);
             }
         }
-
         return map;
     }
 

@@ -20,6 +20,7 @@ export class CurrentBrowserWindow implements OnDestroy {
         this._fullScreen.next(this._electronWindow.isFullScreen());
         this.fullScreen = this._fullScreen.asObservable();
 
+        // TODO TIM -> memory leak no cleanup happening
         this._electronWindow.on("enter-full-screen", this._enterFullscreen);
         this._electronWindow.on("leave-full-screen", this._leaveFullscreen);
     }
