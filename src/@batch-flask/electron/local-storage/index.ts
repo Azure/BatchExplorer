@@ -1,1 +1,1 @@
-export * from "./renderer-local-storage";
+export * from "./main-local-storage";
