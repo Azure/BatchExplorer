@@ -62,6 +62,16 @@ export abstract class GlobalStorage {
     public get<T extends {}>(key: string): Promise<T | null> {
         return this.watch<T>(key).pipe(take(1)).toPromise();
     }
+
+    /**
+     * To get the plain content once.
+     * Prefer using watchContent when possible.
+     * Using get can leads to data invalidation
+     * @param key Storage key
+     */
+    public getContent(key: string): Promise<string | null> {
+        return this.watchContent(key).pipe(take(1)).toPromise();
+    }
     /**
      * @param key Key of the storage
      * @param content Plain content to store

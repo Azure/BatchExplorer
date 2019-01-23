@@ -19,7 +19,6 @@ import {
     PredefinedFormulaService,
     PricingService,
     PythonRpcService,
-    SSHKeyService,
     SettingsService,
     SubscriptionService,
     ThemeService,
@@ -48,7 +47,6 @@ export class AppComponent implements OnInit, OnDestroy {
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
         private poolOsService: PoolOsService,
-        private sshKeyService: SSHKeyService,
         remote: ElectronRemote,
         pythonRpcService: PythonRpcService,
         themeService: ThemeService,
@@ -65,7 +63,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
         this.settingsService.init();
         this._initWorkspaces();
-        this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
         this.navigatorService.init();

@@ -16,7 +16,7 @@ const ref2: PortfolioReference = {
     type: PortfolioType.Github,
 };
 
-fdescribe("Portfolio Service", () => {
+describe("Portfolio Service", () => {
     let service: PortfolioService;
     let fsSpy;
     let globalStorageSpy;

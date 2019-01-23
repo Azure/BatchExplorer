@@ -81,13 +81,13 @@ export class LocalBatchAccountService implements OnDestroy {
 
     }
 
-    public delete(id: string) {
+    public delete(id: string): Observable<any> {
         const newAccounts = this._accounts.value.filter(x => x.id !== id);
         this._accounts.next(List(newAccounts));
         return this._save();
     }
 
     private _save() {
-        return this.localStorage.set(LOCAL_BATCH_ACCOUNT_KEY, this._accounts.value.toJS());
+        return from(this.localStorage.set(LOCAL_BATCH_ACCOUNT_KEY, this._accounts.value.toJS()));
     }
 }

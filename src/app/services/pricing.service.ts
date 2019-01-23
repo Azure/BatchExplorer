@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
+import { GlobalStorage } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils } from "app/utils";
 import { DateTime } from "luxon";
-import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
+import { BehaviorSubject, Observable, forkJoin, from, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { BatchAccountService } from "./batch-account";
 import { VmSizeService } from "./compute";
-import { LocalFileStorage } from "./local-file-storage.service";
 
 const pricingFilename = "pricing.json";
 
@@ -69,7 +69,7 @@ export class PricingService {
     constructor(
         private arm: ArmHttpService,
         private vmSizeService: VmSizeService,
-        private localFileStorage: LocalFileStorage,
+        private gobalStorage: GlobalStorage,
         private accountService: BatchAccountService) {
 
         this.pricing = this._pricingMap.pipe(filter(x => x !== null));
@@ -194,10 +194,10 @@ export class PricingService {
     }
 
     private _loadPricingFromStorage(): Observable<BatchPricing> {
-        return this.localFileStorage.get(pricingFilename).pipe(
-            map((data: { lastSync: string, map: any }) => {
+        return from(this.gobalStorage.get(pricingFilename)).pipe(
+            map((data: { lastSync: string, map: any } | null) => {
                 // If wrong format
-                if (!data.lastSync || !data.map) {
+                if (!data || !data.lastSync || !data.map) {
                     return null;
                 }
 
@@ -220,10 +220,8 @@ export class PricingService {
             lastSync: new Date().toISOString(),
             map: map.toJS(),
         };
-        this.localFileStorage.set(pricingFilename, data).subscribe({
-            error: (error) => {
-                log.error("Error saving harwaremap", error);
-            },
+        this.gobalStorage.set(pricingFilename, data).catch((error) => {
+            log.error("Error saving harwaremap", error);
         });
     }
 

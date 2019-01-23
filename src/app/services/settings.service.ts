@@ -1,18 +1,18 @@
-import { Injectable, NgZone, OnDestroy } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, from } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
+import { GlobalStorage } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { KeyBindings, Settings, defaultKeybindings } from "app/models";
+import { KeyBindings, Settings } from "app/models";
 import { catchError, filter } from "rxjs/operators";
-import { LocalFileStorage } from "./local-file-storage.service";
 
 // tslint:disable-next-line:no-var-requires
 const defaultSettings = JSON.parse(stripJsonComments(require("app/components/settings/default-settings.json")));
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class SettingsService implements OnDestroy {
     public settingsObs: Observable<Settings>;
     public keybindings: Observable<KeyBindings[]>;
@@ -26,12 +26,10 @@ export class SettingsService implements OnDestroy {
     private _keybindings = new BehaviorSubject<KeyBindings[]>(null);
 
     private _filename = "settings";
-    private _keybindingsFilename = "keybindings";
     private _sub: Subscription;
 
     constructor(
-        private zone: NgZone,
-        private storage: LocalFileStorage,
+        private storage: GlobalStorage,
         batchFlaskSettings: BatchFlaskSettingsService) {
         this.settingsObs = this._settingsSubject.pipe(filter(x => Boolean(x)));
         this.keybindings = this._keybindings.pipe(filter(x => Boolean(x)));
@@ -59,11 +57,11 @@ export class SettingsService implements OnDestroy {
         this.userSettingsStr = userSettings;
         this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
         this._settingsSubject.next(this.settings);
-        return this.storage.write(this._filename, userSettings);
+        return from(this.storage.save(this._filename, userSettings));
     }
 
     private loadSettings() {
-        this.storage.read(this._filename).pipe(
+        from(this.storage.getContent(this._filename)).pipe(
             catchError((error) => {
                 log.error("Error loading user settings", error);
                 return null;
@@ -73,21 +71,6 @@ export class SettingsService implements OnDestroy {
             this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
             this._hasSettingsLoaded.next(true);
             this._settingsSubject.next(this.settings);
-        });
-
-        this.storage.get(this._keybindingsFilename).subscribe((data: KeyBindings[]) => {
-            this.zone.run(() => {
-                // If the file has never been init create it
-                if (!Array.isArray(data)) {
-                    this.storage.set(this._keybindingsFilename, []).pipe(
-                        catchError((e) => {
-                            log.error("Error saving the initial keybinding settings.", e);
-                            return null;
-                        }),
-                    ).subscribe();
-                }
-                this._keybindings.next(defaultKeybindings.concat(data));
-            });
         });
     }
 
