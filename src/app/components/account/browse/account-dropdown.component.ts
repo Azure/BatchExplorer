@@ -68,11 +68,11 @@ export class AccountDropDownComponent implements OnDestroy {
         this.contextMenuService.openMenu(new ContextMenu(items));
     }
 
-    public trackByFn(index, account: BatchAccount) {
+    public trackByFn(_: number, account: BatchAccount) {
         return account.id;
     }
 
     private _unFavoriteAccount(account: BatchAccount) {
-        this.accountService.unFavoriteAccount(account.id);
+        this.accountService.unFavoriteAccount(account.id).subscribe();
     }
 }

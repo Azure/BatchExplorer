@@ -10,5 +10,8 @@
   "include": [
     "./src/client/**/*.ts",
     "./src/common/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

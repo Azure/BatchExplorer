@@ -11,7 +11,6 @@ import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
-    AutoscaleFormulaService,
     BatchAccountService,
     CommandService,
     NavigatorService,
@@ -20,7 +19,6 @@ import {
     PredefinedFormulaService,
     PricingService,
     PythonRpcService,
-    SSHKeyService,
     SettingsService,
     SubscriptionService,
     ThemeService,
@@ -43,14 +41,12 @@ export class AppComponent implements OnInit, OnDestroy {
     constructor(
         matIconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
-        private autoscaleFormulaService: AutoscaleFormulaService,
         private settingsService: SettingsService,
         private commandService: CommandService,
         private accountService: BatchAccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
         private poolOsService: PoolOsService,
-        private sshKeyService: SSHKeyService,
         remote: ElectronRemote,
         pythonRpcService: PythonRpcService,
         themeService: ThemeService,
@@ -65,10 +61,8 @@ export class AppComponent implements OnInit, OnDestroy {
         private workspaceService: WorkspaceService,
     ) {
         this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
-        this.autoscaleFormulaService.init();
         this.settingsService.init();
         this._initWorkspaces();
-        this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
         this.navigatorService.init();

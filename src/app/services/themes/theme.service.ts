@@ -29,7 +29,7 @@ export class ThemeService implements OnDestroy {
     private _currentThemeName = null;
     private _watcher: FSWatcher;
     private _themesLoadPath: string[];
-    private _baseThemeDefinition;
+    private _baseThemeDefinition: Promise<Theme>;
     private _destroy = new Subject();
 
     constructor(
@@ -66,7 +66,7 @@ export class ThemeService implements OnDestroy {
     }
 
     public async init() {
-        this._baseThemeDefinition = await this._loadTheme(this.baseTheme);
+        this._baseThemeDefinition = this._loadTheme(this.baseTheme);
     }
 
     public ngOnDestroy() {
@@ -78,7 +78,7 @@ export class ThemeService implements OnDestroy {
         if (this._currentThemeName === name) { return; }
         this._currentThemeName = name;
         const theme = await this._loadTheme(name);
-        this._setTheme(theme);
+        await this._setTheme(theme);
     }
 
     public async findThemeLocation(name: string): Promise<string> {
@@ -117,8 +117,8 @@ export class ThemeService implements OnDestroy {
         }
     }
 
-    private _setTheme(theme: Theme) {
-        const computedTheme = new Theme({} as any).merge(this._baseThemeDefinition).merge(theme);
+    private async _setTheme(theme: Theme) {
+        const computedTheme = new Theme({} as any).merge(await this._baseThemeDefinition).merge(theme);
         computedTheme.isHighContrast = theme.isHighContrast;
         this._currentTheme.next(computedTheme);
     }
