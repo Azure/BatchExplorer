@@ -7,7 +7,6 @@ export const COMMAND_LABEL_ICON = {
     ExportAsJSON: { label: "Export as JSON", icon: "fa fa-code" },
     Edit: { label: "Edit", icon: "fa fa-edit" },
     EditStartTask: { label: "Edit start task", icon: "fa fa-pencil-square-o" },
-    Resize: { label: "Resize", icon: "fa fa-arrows-v" },
     Clone: { label: "Clone", icon: "fa fa-clone" },
     Enable: { label: "Enable", icon: "fa fa-play" },
     Disable: { label: "Disable", icon: "fa fa-pause" },
