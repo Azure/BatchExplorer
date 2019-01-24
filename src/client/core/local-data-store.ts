@@ -1,17 +1,17 @@
 import { Injectable } from "@angular/core";
-import { DataStore, InMemoryDataStore } from "@batch-flask/core";
-import { LocalFileStorage } from "./local-file-storage";
-
-const fileKey = "node-local-storage";
+import { DataStore, GlobalStorage, InMemoryDataStore } from "@batch-flask/core";
 
 /**
  * Implementation of the browser local storage
  */
 @Injectable()
 export class LocalDataStore extends InMemoryDataStore implements DataStore {
+
+    public static readonly KEY = "global";
+
     private _loadPromise: Promise<any>;
 
-    constructor(private localFileStorage: LocalFileStorage) {
+    constructor(private storage: GlobalStorage) {
         super();
         this.load();
     }
@@ -34,7 +34,7 @@ export class LocalDataStore extends InMemoryDataStore implements DataStore {
     }
 
     public async load() {
-        this._loadPromise = this.localFileStorage.get<any>(fileKey).then((data) => {
+        this._loadPromise = this.storage.get<any>(LocalDataStore.KEY).then((data) => {
             this._data = new Map(Object.entries(data));
             return data;
         });
@@ -51,6 +51,6 @@ export class LocalDataStore extends InMemoryDataStore implements DataStore {
         for (const [key, value] of this._data.entries()) {
             obj[key] = value;
         }
-        await this.localFileStorage.set(fileKey, obj);
+        await this.storage.set(LocalDataStore.KEY, obj);
     }
 }
