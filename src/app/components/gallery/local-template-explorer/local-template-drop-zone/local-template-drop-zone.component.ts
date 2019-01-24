@@ -3,6 +3,7 @@ import { FileSystemService } from "@batch-flask/electron";
 import { DialogService, NotificationService } from "@batch-flask/ui";
 import { DragUtils } from "@batch-flask/utils";
 import { SubmitLocalTemplateComponent } from "../../submit-local-template";
+
 import "./local-template-drop-zone.scss";
 
 @Component({
@@ -48,9 +49,9 @@ export class LocalTemplateDropZoneComponent {
 
     @HostListener("dragleave", ["$event"])
     public dragLeave(event: DragEvent) {
-
         if (!this._canDrop(event.dataTransfer)) { return; }
         this.isDraging--;
+
     }
 
     @HostListener("drop", ["$event"])
