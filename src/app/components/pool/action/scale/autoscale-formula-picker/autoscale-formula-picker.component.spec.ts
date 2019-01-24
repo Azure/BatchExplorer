@@ -7,7 +7,7 @@ import { EditorMockComponent, EditorTestingModule } from "@batch-flask/ui/testin
 import { AutoscaleFormula } from "app/models";
 import { AutoscaleFormulaService, PredefinedFormulaService } from "app/services";
 import { List } from "immutable";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { AutoscaleFormulaPickerComponent } from "./autoscale-formula-picker.component";
 
@@ -38,8 +38,8 @@ describe("AutoscaleFormulaPickerComponent", () => {
     beforeEach(() => {
         autoScaleForumlaServiceSpy = {
             formulas: new BehaviorSubject(List([predefinedFormulas[2]])),
-            saveFormula: jasmine.createSpy("saveFormula"),
-            deleteFormula: jasmine.createSpy("deleteFormula"),
+            saveFormula: jasmine.createSpy("saveFormula").and.returnValue(of(null)),
+            deleteFormula: jasmine.createSpy("deleteFormula").and.returnValue(of(null)),
         };
 
         predefinedForumlaServiceSpy = {
