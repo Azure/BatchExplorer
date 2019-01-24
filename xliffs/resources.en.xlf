@@ -724,6 +724,15 @@
       <trans-unit id="partial-sort-warning.update">
         <source>Update</source>
       </trans-unit>
+      <trans-unit id="pool-commands">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-commands.resize">
+        <source>Resize</source>
+      </trans-unit>
+      <trans-unit id="pool-commands.stopResize">
+        <source>Stop resize</source>
+      </trans-unit>
       <trans-unit id="pool-details">
         <source/>
       </trans-unit>
