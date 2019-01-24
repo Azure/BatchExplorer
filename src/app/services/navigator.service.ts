@@ -1,8 +1,9 @@
-import { Injectable, NgZone } from "@angular/core";
+import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
-import { IpcService } from "@batch-flask/ui";
+import { IpcService } from "@batch-flask/electron";
 import { BatchExplorerLink, BatchExplorerLinkAction, Constants } from "common";
 import * as decodeUriComponent from "decode-uri-component";
+import { Subscription } from "rxjs";
 import { URLSearchParams } from "url";
 import { BatchAccountService } from "./batch-account";
 
@@ -14,8 +15,10 @@ export interface GotoOptions {
     accountId?: string;
 }
 
-@Injectable({providedIn: "root"})
-export class NavigatorService {
+@Injectable({ providedIn: "root" })
+export class NavigatorService implements OnDestroy {
+    private _sub: Subscription;
+
     constructor(
         private accountService: BatchAccountService,
         private router: Router,
@@ -23,8 +26,14 @@ export class NavigatorService {
         private ipc: IpcService) {
     }
 
+    public ngOnDestroy() {
+        if (this._sub) {
+            this._sub.unsubscribe();
+        }
+    }
+
     public init() {
-        this.ipc.on(Constants.rendererEvents.batchExplorerLink, (event, link) => {
+        this._sub = this.ipc.on(Constants.rendererEvents.batchExplorerLink, (event, link) => {
             this.zone.run(() => {
                 setTimeout(() => {
                     this.openBatchExplorerLink(link);

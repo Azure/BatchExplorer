@@ -2,7 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
-import { ClipboardService } from "@batch-flask/ui/electron";
+import { ClipboardService } from "@batch-flask/electron";
 import { click, mouseenter, mouseleave } from "test/utils/helpers";
 import { TextPropertyComponent } from "./text-property.component";
 

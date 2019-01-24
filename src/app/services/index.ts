@@ -27,7 +27,7 @@ export * from "./rendering-container-image";
 export * from "./resource-access";
 export * from "./settings.service";
 export * from "./ssh-key.service";
-export * from "./subscription.service";
+export * from "./subscription";
 export * from "./compute";
 export * from "./adal";
 export * from "./python-rpc";

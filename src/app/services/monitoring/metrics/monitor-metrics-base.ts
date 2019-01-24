@@ -32,9 +32,9 @@ export enum MonitorChartMetrics {
  * Aggregation defines the enumeration of request paramter values to monitor api
  */
 export enum MonitorChartAggregation {
-    Total = "Total",
-    Average = "Average",
-    Count = "Count",
+    Sum = "sum",
+    Avg = "avg",
+    Count = "count",
 }
 
 /**
@@ -59,7 +59,6 @@ const parameterDelimiter = ",";
 
 export interface MonitoringMetric {
     name: string;
-    aggregation: MonitorChartAggregation;
     label?: string;
 }
 

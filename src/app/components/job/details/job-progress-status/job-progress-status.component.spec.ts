@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { PollService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule } from "@batch-flask/ui";
 import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeService, PoolService } from "app/services";
 import { of } from "rxjs";
@@ -66,7 +65,7 @@ describe("JobProgressStatusComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [I18nTestingModule, I18nUIModule],
+            imports: [I18nTestingModule],
             declarations: [
                 JobProgressStatusComponent, GaugeMockComponent, TestComponent,
             ],

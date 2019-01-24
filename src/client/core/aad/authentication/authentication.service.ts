@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { SecureUtils } from "@batch-flask/utils";
+import { SanitizedError, SecureUtils } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { Deferred } from "common";
 import { AADConfig } from "../aad-config";
@@ -31,7 +31,7 @@ export class AuthorizeError extends Error {
     public state?: string;
 
     constructor(error: AuthorizeResponseError) {
-        const description  = error.error_description && error.error_description.replace(/\+/g, " ");
+        const description = error.error_description && error.error_description.replace(/\+/g, " ");
         super(`${error.error}: ${description}`);
         this.error = error.error;
         this.description = description;
@@ -51,8 +51,10 @@ export enum AuthenticationState {
     Authenticated,
 }
 
-export class LogoutError extends Error {
-
+export class LogoutError extends SanitizedError {
+    constructor() {
+        super("User logged out");
+    }
 }
 
 /**
@@ -170,6 +172,9 @@ export class AuthenticationService {
         const authWindow = this.app.authenticationWindow;
         authWindow.onRedirect(newUrl => this._handleCallback(newUrl));
         authWindow.onNavigate(newUrl => this._handleNavigate(newUrl));
+        authWindow.onError((error) => {
+            this._handleError(error);
+        });
     }
 
     private _handleNavigate(url: string) {
@@ -205,6 +210,18 @@ export class AuthenticationService {
             auth.deferred.resolve(params as AuthorizeResult);
         }
         this._authorizeNext();
+    }
+
+    private _handleError({code, description}) {
+        this._closeWindow();
+        this._waitingForAuth = false;
+        const auth = this._currentAuthorization;
+        if (!auth) { return; }
+        this._currentAuthorization = null;
+        auth.deferred.reject(new AuthorizeError({
+            error: "Failed to authenticate",
+            error_description: `Failed to load the AAD login page (${code}:${description})`,
+        }));
     }
 
     /**

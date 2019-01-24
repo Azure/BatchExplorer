@@ -2,15 +2,13 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { List } from "immutable";
-
 import { MaterialModule } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule } from "@batch-flask/ui";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ResourceAccessService } from "app/services";
+import { List } from "immutable";
 import { of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { ResourcePermissionButtonComponent } from "./resource-permission-button.component";
@@ -57,7 +55,7 @@ describe("ResourcePermissionButtonComponent", () => {
             listRoleDefinitions: () => of([contributorRole, readerRole, customRole]),
         };
         TestBed.configureTestingModule({
-            imports: [MaterialModule, NoopAnimationsModule, I18nTestingModule, I18nUIModule],
+            imports: [MaterialModule, NoopAnimationsModule, I18nTestingModule],
             declarations: [ButtonComponent, ResourcePermissionButtonComponent, TestComponent],
             providers: [
                 { provide: PermissionService, useValue: null },

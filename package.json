@@ -2,6 +2,7 @@
   "name": "batch-explorer",
   "sideEffects": [
     "src/@batch-flask/extensions/*",
+    "src/app/environment.ts",
     "*.scss"
   ],
   "productName": "Batch Explorer",
@@ -14,7 +15,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "0.19.1",
+  "version": "0.19.2",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json --files",
@@ -68,7 +69,6 @@
   },
   "devDependencies": {
     "@ngtools/webpack": "^7.1.2",
-    "@types/bunyan": "^1.8.5",
     "@types/chart.js": "^2.7.41",
     "@types/chokidar": "^1.7.5",
     "@types/colors": "^1.2.1",
@@ -162,7 +162,6 @@
     "@types/keytar": "^4.0.1",
     "applicationinsights": "^1.0.7",
     "azure-storage": "^2.10.2",
-    "bunyan": "^1.8.12",
     "chart.js": "^2.7.3",
     "chokidar": "^2.0.4",
     "commander": "^2.19.0",
@@ -185,7 +184,7 @@
     "keytar": "^4.3.0",
     "load-json-file": "^5.1.0",
     "luxon": "^1.9.0",
-    "mkdirp": "^0.5.1",
+    "make-dir": "^1.3.0",
     "monaco-editor": "^0.15.6",
     "mousetrap": "^1.6.2",
     "node-forge": "^0.7.6",
@@ -194,6 +193,8 @@
     "rxjs": "^6.3.3",
     "strip-json-comments": "^2.0.1",
     "tinycolor2": "^1.4.1",
+    "winston": "^3.1.0",
+    "winston-daily-rotate-file": "^3.6.0",
     "write-file-webpack-plugin": "^4.5.0",
     "xml2js": "^0.4.19",
     "zone.js": "0.8.26"

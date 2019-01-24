@@ -1,4 +1,5 @@
-import { FileSystemService, LoadingStatus } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
+import { LoadingStatus } from "@batch-flask/ui";
 import * as path from "path";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { catchError, filter, map, share, switchMap, take, tap } from "rxjs/operators";

@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { BasicListGetter, DataCache, UserConfigurationService } from "@batch-flask/core";
-import { File, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
+import { File, FileLoader, FileNavigator } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
 import * as path from "path";
 import { BehaviorSubject, Observable, from } from "rxjs";

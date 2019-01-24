@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
 import { Locale, LocaleService } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import { app } from "electron";
 import * as path from "path";
-import { FileSystem } from "./fs";
 
 @Injectable()
 export class ClientLocaleService extends LocaleService {
     public locale: Locale = Locale.English;
 
-    constructor(private fs: FileSystem) {
+    constructor(private fs: FileSystemService) {
         super();
     }
 

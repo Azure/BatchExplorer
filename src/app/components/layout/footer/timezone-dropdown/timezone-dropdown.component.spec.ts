@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { TimeZoneService } from "@batch-flask/core";
 import { I18nTestingModule, TestTimeZoneService, TimeZoneTestingModule } from "@batch-flask/core/testing";
-import { ButtonsModule, DropdownModule, I18nUIModule } from "@batch-flask/ui";
+import { ButtonsModule, DropdownModule } from "@batch-flask/ui";
 import { DateTime } from "luxon";
 import { click, dblclick } from "test/utils/helpers";
 import { TimezoneDropdownComponent } from "./timezone-dropdown.component";
@@ -23,7 +23,7 @@ describe("TimezoneDropdownComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [DropdownModule, TimeZoneTestingModule, ButtonsModule, I18nTestingModule, I18nUIModule],
+            imports: [DropdownModule, TimeZoneTestingModule, ButtonsModule, I18nTestingModule],
             declarations: [TimezoneDropdownComponent, TestComponent],
         });
         fixture = TestBed.createComponent(TestComponent);

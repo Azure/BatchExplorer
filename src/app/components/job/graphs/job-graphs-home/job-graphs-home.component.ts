@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { EntityView, FilterBuilder, autobind } from "@batch-flask/core";
-import { ElectronShell } from "@batch-flask/electron";
-import { FileSystemService } from "@batch-flask/ui";
+import { ElectronShell, FileSystemService } from "@batch-flask/electron";
 import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
 import { Job, Task, TaskState } from "app/models";
 import { CacheDataService, JobParams, JobService, TaskService } from "app/services";

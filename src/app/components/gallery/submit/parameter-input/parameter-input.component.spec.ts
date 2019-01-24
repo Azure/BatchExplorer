@@ -10,7 +10,6 @@ import { PermissionService, SelectComponent, SelectModule } from "@batch-flask/u
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { FormModule } from "@batch-flask/ui/form";
-import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Subject, of, throwError } from "rxjs";
 
@@ -129,7 +128,6 @@ describe("ParameterInputComponent", () => {
                 FormModule,
                 FormsModule,
                 I18nTestingModule,
-                I18nUIModule,
                 MaterialModule,
                 NoopAnimationsModule,
                 RouterTestingModule,

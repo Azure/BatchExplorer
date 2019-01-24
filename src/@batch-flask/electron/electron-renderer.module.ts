@@ -1,6 +1,9 @@
 import { NgModule } from "@angular/core";
 import { AutoUpdateRendererService, AutoUpdateService } from "./auto-update";
+import { CurrentBrowserWindow } from "./current-browser-window";
+import { FileSystemService } from "./fs.service";
 import { IpcService } from "./ipc.service";
+import { OSService } from "./os.service";
 import { ElectronRemote } from "./remote.service";
 import { SharedServiceInjector } from "./shared-service-injector";
 import { ElectronShell } from "./shell.service";
@@ -16,6 +19,9 @@ import { ElectronShell } from "./shell.service";
         ElectronShell,
         ElectronRemote,
         IpcService,
+        FileSystemService,
+        OSService,
+        CurrentBrowserWindow,
     ],
 })
 export class ElectronRendererModule {

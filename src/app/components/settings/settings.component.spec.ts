@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule, ToolbarModule } from "@batch-flask/ui";
+import { ToolbarModule } from "@batch-flask/ui";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { EditorComponent } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
@@ -52,7 +52,7 @@ describe("SettingsComponent", () => {
         TestBed.configureTestingModule({
             imports: [
                 ReactiveFormsModule, MaterialModule, NoopAnimationsModule,
-                EditorTestingModule, I18nTestingModule, I18nUIModule, ToolbarModule,
+                EditorTestingModule, I18nTestingModule, ToolbarModule,
             ],
             declarations: [SettingsComponent, TestComponent, ButtonComponent],
             providers: [

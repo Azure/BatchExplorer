@@ -18,7 +18,10 @@ describe("Bundled application is starting correctly", () => {
             startTimeout: 10000,
             waitTimeout: 10000,
         });
+
         await app.start();
+        // tslint:disable-next-line:no-console
+        console.log("User path: ", await app.electron.remote.app.getPath("userData"));
     });
 
     afterEach(() => {

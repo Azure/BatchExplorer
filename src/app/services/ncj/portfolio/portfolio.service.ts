@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { isNotNullOrUndefined } from "@batch-flask/core";
-import { FileSystemService } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
 import { SettingsService } from "app/services/settings.service";
 import { Constants } from "common";
 import { BehaviorSubject, Observable, combineLatest, of } from "rxjs";

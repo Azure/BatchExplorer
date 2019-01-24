@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { ServerError, autobind } from "@batch-flask/core";
-import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/ui";
+import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/electron";
 import * as path from "path";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";

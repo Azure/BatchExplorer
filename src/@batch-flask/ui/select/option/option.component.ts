@@ -33,10 +33,10 @@ let _uniqueIdCounter = 0;
     template: "",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectOptionComponent implements OnChanges, KeyNavigableListItem {
+export class SelectOptionComponent<TOption = any> implements OnChanges, KeyNavigableListItem {
     @Input() public readonly id: string = `bl-option-${_uniqueIdCounter++}`;
 
-    @Input() public value: string;
+    @Input() public value: TOption;
 
     @Input() public item: any;
 

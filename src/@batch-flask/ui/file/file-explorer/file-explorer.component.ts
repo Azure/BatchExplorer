@@ -11,7 +11,7 @@ import * as path from "path";
 import { Subscription, of } from "rxjs";
 import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "./file-explorer-workspace";
 
-import { FileSystemService } from "@batch-flask/ui/electron";
+import { FileSystemService } from "@batch-flask/electron";
 import { FileViewerConfig } from "../file-viewer";
 import "./file-explorer.scss";
 

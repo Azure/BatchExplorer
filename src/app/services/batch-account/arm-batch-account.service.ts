@@ -10,7 +10,7 @@ import { BehaviorSubject, Observable, empty, forkJoin, of } from "rxjs";
 import { expand, filter, flatMap, map, reduce, share, shareReplay, take } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { ArmListResponse } from "../core";
-import { SubscriptionService } from "../subscription.service";
+import { SubscriptionService } from "../subscription";
 
 const batchProvider = "Microsoft.Batch";
 const batchResourceProvider = batchProvider + "/batchAccounts";

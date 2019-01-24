@@ -6,8 +6,8 @@ import { ArmBatchAccount } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { PythonRpcServerProcess } from "client/python-process";
-import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
-import { catchError, first, flatMap, share, tap } from "rxjs/operators";
+import { AsyncSubject, BehaviorSubject, Observable, Subject, forkJoin } from "rxjs";
+import { catchError, first, share, switchMap, tap } from "rxjs/operators";
 import { AdalService } from "../adal";
 import { BatchAccountService } from "../batch-account";
 
@@ -138,12 +138,12 @@ export class PythonRpcService {
                     });
                 }
             }),
-            flatMap((account: ArmBatchAccount) => {
+            switchMap((account: ArmBatchAccount) => {
                 const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
                 const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);
-                return combineLatest(batchToken, armToken).pipe(
+                return forkJoin(batchToken, armToken).pipe(
                     first(),
-                    flatMap(([batchToken, armToken]) => {
+                    switchMap(([batchToken, armToken]) => {
                         const authParam = {
                             batchToken,
                             armToken,

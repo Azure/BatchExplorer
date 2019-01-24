@@ -3,13 +3,11 @@ import { ServerModule } from "@angular/platform-server";
 import { DevTranslationsLoader } from "@batch-flask/compiler";
 import {
     DataStore,
-    I18nModule,
     LocaleService,
     TranslationsLoaderService,
     USER_CONFIGURATION_STORE,
 } from "@batch-flask/core";
 import { ElectronMainModule } from "@batch-flask/electron/electron-main.module";
-import { OSService } from "@batch-flask/ui/electron/os.service";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { MainConfigurationStore } from "client/core/user-configuration";
 import { ClientLocaleService } from "./core";
@@ -18,7 +16,6 @@ import { BatchExplorerApplication } from "./core/batch-explorer-application";
 import { BatchExplorerInitializer } from "./core/batch-explorer-initializer";
 import { BatchExplorerProcess } from "./core/batch-explorer-process";
 import { BlIpcMain } from "./core/bl-ipc-main";
-import { FileSystem } from "./core/fs";
 import { LocalDataStore } from "./core/local-data-store";
 import { LocalFileStorage } from "./core/local-file-storage";
 import { BatchExplorerProperties } from "./core/properties";
@@ -49,7 +46,6 @@ export function initializeServices(injector) {
 @NgModule({
     imports: [
         ServerModule,
-        I18nModule,
         ClientTelemetryModule,
         MenuModule,
         ElectronMainModule,
@@ -68,8 +64,6 @@ export function initializeServices(injector) {
         LocalFileStorage,
         AADService,
         BlIpcMain,
-        FileSystem,
-        OSService,
 
         ...servicesToInitialize,
     ],

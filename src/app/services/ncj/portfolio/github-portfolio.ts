@@ -1,4 +1,5 @@
-import { FileSystemService, LoadingStatus } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
+import { LoadingStatus } from "@batch-flask/ui";
 import { DateUtils, log } from "@batch-flask/utils";
 import * as path from "path";
 import { Observable, from } from "rxjs";
@@ -14,21 +15,28 @@ const CACHE_TIME = 1; // In days
 export class GithubPortfolio extends Portfolio {
     private _user: string;
     private _repo: string;
-    private _branch: string;
+    private _branch: string = "master";
+    /**
+     * Branch name without '/'. They are replaced with '-'
+     */
+    private _sanitizedBranch: string = "master";
 
     constructor(ref: PortfolioReference, fs: FileSystemService) {
         super(ref, fs);
 
         const url = new URL(this.source);
         const segments = url.pathname.slice(1).split("/");
-
         this._user = segments[0];
         this._repo = segments[1];
-        this._branch = segments[3] || "master";
+        if (segments[2] === "tree" && segments.length > 3) {
+            const branchSegements = segments.slice(3);
+            this._branch = branchSegements.join("/");
+            this._sanitizedBranch = branchSegements.join("-");
+        }
     }
 
     public get path() {
-        return path.join(this._repoDownloadRoot, `${this._repo}-${this._branch}`, "ncj");
+        return path.join(this._repoDownloadRoot, `${this._repo}-${this._sanitizedBranch}`, "ncj");
     }
 
     protected isReloadNeeded(): Observable<boolean> {

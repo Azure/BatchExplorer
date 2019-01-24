@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
+import { Subscription } from "rxjs";
 
 /**
  * Internal events used by the ipc promise utility to be able to use promise
@@ -16,18 +17,24 @@ export const IpcPromiseEvent = {
  * Wrapper around electron ipcRenderer
  */
 @Injectable({providedIn: "root"})
-export class IpcService {
+export class IpcService implements OnDestroy {
     private _ipcRenderer: Electron.IpcRenderer;
     constructor() {
         this._ipcRenderer = require("electron").ipcRenderer;
+    }
+
+    public ngOnDestroy() {
+        // Nothing
     }
 
     public async sendEvent(eventName: string, data?: any) {
         this._ipcRenderer.send(eventName, data);
     }
 
-    public async on(eventName: string, callback: (...args) => void) {
+    public on(eventName: string, callback: (...args) => void): Subscription {
         this._ipcRenderer.on(eventName, callback);
+
+        return new Subscription(() => this._ipcRenderer.removeListener(eventName, callback));
     }
 
     /**

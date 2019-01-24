@@ -10,7 +10,6 @@ export * from "./date";
 export * from "./dialogs";
 export * from "./dropdown";
 export * from "./duration-picker";
-export * from "./electron";
 export * from "./entity-commands-list";
 export * from "./entity-commands";
 export * from "./file";

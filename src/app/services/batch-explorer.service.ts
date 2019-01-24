@@ -1,16 +1,17 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { ElectronRemote } from "@batch-flask/electron";
+import { wrapMainObservable } from "@batch-flask/electron/utils";
 import { BatchExplorerApplication, LocalFileStorage } from "client/core";
 import { AADService, AuthenticationWindow } from "client/core/aad";
 import { PythonRpcServerProcess } from "client/python-process";
 import { SplashScreen } from "client/splash-screen";
 import { BatchExplorerLink } from "common";
 import { IpcEvent } from "common/constants";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
-@Injectable({providedIn: "root"})
-export class BatchExplorerService {
+@Injectable({ providedIn: "root" })
+export class BatchExplorerService implements OnDestroy {
     public pythonServer: PythonRpcServerProcess;
     public aadService: AADService;
     /**
@@ -31,23 +32,25 @@ export class BatchExplorerService {
 
     private _app: BatchExplorerApplication;
     private _azureEnvironment: AzureEnvironment;
-    private _isOSHighContrast = new BehaviorSubject(false);
+    private _envSub: Subscription;
 
-    constructor(private remote: ElectronRemote) {
+    constructor(private remote: ElectronRemote, zone: NgZone) {
         this._app = remote.getCurrentWindow().batchExplorerApp;
-        this.isOSHighContrast = this._isOSHighContrast.asObservable();
-        this._app.properties.azureEnvironmentObs.subscribe((x) => {
+        this.isOSHighContrast = wrapMainObservable(this._app.properties.isOSHighContrast, zone);
+
+        this._envSub = this._app.properties.azureEnvironmentObs.subscribe((x) => {
             // Clone the environement to prevent calling the electron ipc sync for every key
             this._azureEnvironment = new AzureEnvironment(x);
-        });
-        this._app.properties.isOSHighContrast.subscribe((x) => {
-            this._isOSHighContrast.next(x);
         });
         this.aadService = this._app.aadService;
         this.pythonServer = this._app.pythonServer;
         this.rootPath = this._app.rootPath;
         this.version = this._app.version;
         this.resourcesFolder = this._app.resourcesFolder;
+    }
+
+    public ngOnDestroy() {
+        this._envSub.unsubscribe();
     }
 
     public get azureEnvironment() {

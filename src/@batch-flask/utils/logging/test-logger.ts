@@ -1,7 +1,7 @@
 import { Logger } from "./base-logger";
 
 export class TestLogger implements Logger {
-    public trace(message: string) {
+    public log(level: string, message: string, ...params: any[]) {
         // Nothing
     }
     public debug(message: string, ...params: any[]) {

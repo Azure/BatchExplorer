@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { ButtonsModule, I18nUIModule, SelectComponent, SelectModule } from "@batch-flask/ui";
+import { ButtonsModule, SelectComponent, SelectModule } from "@batch-flask/ui";
 import { PoolPickerComponent } from "app/components/job/action/add";
 import { CloudServiceOsFamily, Pool } from "app/models";
 import { PoolOsService, PoolService, VmSizeService } from "app/services";
@@ -85,7 +85,7 @@ describe("PoolPickerComponent", () => {
             }),
         };
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, SelectModule, ButtonsModule, I18nTestingModule, I18nUIModule],
+            imports: [FormsModule, ReactiveFormsModule, SelectModule, ButtonsModule, I18nTestingModule],
             declarations: [PoolPickerComponent, TestComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [

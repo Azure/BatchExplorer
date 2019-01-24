@@ -20,6 +20,7 @@ import {
 } from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
+import { SanitizedError } from "@batch-flask/utils";
 import { List } from "immutable";
 import * as inflection from "inflection";
 import { Subscription, of } from "rxjs";
@@ -80,7 +81,12 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     @HostBinding("attr.aria-activedescendant")
     public get ariaActiveDescendent() {
         if (this.focusedItem) {
-            return `${this.id}-row-${this.focusedItem.id}`;
+            const base = `${this.id}-row-${this.focusedItem.id}`;
+            if (this.focusedColumn != null) {
+                return `${base}-col-${this.focusedColumn}`;
+            } else {
+                return base;
+            }
         } else {
             return null;
         }
@@ -119,17 +125,21 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public listFocused: boolean = false;
     public focusedItem: AbstractListItem | null;
+    /**
+     * Which column is focused. For accessibility we need to have column navigation as well
+     */
+    public focusedColumn: number | null = null;
     public showScrollShadow: boolean;
     public sortingStatus: SortingStatus;
     public dataProvider: ListDataProvider;
     public dataPresenter: ListDataPresenter;
 
     protected _config: Required<AbstractListBaseConfig> = abstractListDefaultConfig;
+    protected _keyNavigator: ListKeyNavigator<AbstractListItem>;
 
     @ViewChild(VirtualScrollComponent) private _virtualScroll: VirtualScrollComponent;
     private _subs: Subscription[] = [];
     private _items: any[] = [];
-    private _keyNavigator: ListKeyNavigator<AbstractListItem>;
 
     private _clicking = false;
 
@@ -270,12 +280,12 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     @HostListener("mousedown")
     public handleMousedown() {
-       this._clicking = true;
+        this._clicking = true;
     }
 
     @HostListener("mouseup")
     public handleMouseup() {
-       this._clicking = false;
+        this._clicking = false;
     }
 
     @HostListener("focus", ["$event"])
@@ -295,8 +305,9 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
      * @param item Item displayed in the row
      */
     @HostListener("blur", ["$event"])
-    public handleBlur(event: FocusEvent) {
+    public handleBlur(_: FocusEvent) {
         this.listFocused = false;
+        this._keyNavigator.focusColumn(-1);
         this.changeDetector.markForCheck();
     }
 
@@ -346,7 +357,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         }
     }
 
-    public trackItem(index, item) {
+    public trackItem(_: number, item: AbstractListItem) {
         return item.id;
     }
 
@@ -358,7 +369,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             if (this.config.forceBreadcrumb) {
                 this.breadcrumbService.navigate(link);
             } else {
-                this.router.navigate(link);
+                try {
+                    this.router.navigate(link);
+                } catch (e) {
+                    throw new SanitizedError(e.toString());
+                }
             }
         }
     }
@@ -411,6 +426,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
         this._keyNavigator.change.subscribe(() => {
             this.focusedItem = this._keyNavigator.focusedItem;
+            this.focusedColumn = this._keyNavigator.focusedColumn;
             this._virtualScroll.ensureItemVisible(this.focusedItem);
             this.changeDetector.markForCheck();
         });

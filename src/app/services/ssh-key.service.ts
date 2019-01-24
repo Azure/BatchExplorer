@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { FileSystemService } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
 import { SSHPublicKey } from "app/models";
 import { Constants } from "common";
 import { List } from "immutable";

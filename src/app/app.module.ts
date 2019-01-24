@@ -23,6 +23,7 @@ import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import { LocaleService, MaterialModule, TranslationsLoaderService, USER_CONFIGURATION_STORE } from "@batch-flask/core";
+import { ElectronRendererModule } from "@batch-flask/electron";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
 import {
@@ -57,6 +58,7 @@ const modules = [
         MaterialModule,
         ReactiveFormsModule,
         RendererTelemetryModule,
+        ElectronRendererModule,
         RouterModule.forRoot(routes, {
             useHash: false,
             paramsInheritanceStrategy: "always",

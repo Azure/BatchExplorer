@@ -4,7 +4,8 @@ import {
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { DialogService, FileSystemService } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
+import { DialogService } from "@batch-flask/ui";
 import { CloudPathUtils, DragUtils, SecureUtils, UrlUtils } from "@batch-flask/utils";
 import { ResourceFileAttributes } from "app/models";
 import { SettingsService } from "app/services";

@@ -3,7 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { DialogService, FileSystemService, I18nUIModule, SelectModule } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
+import { DialogService, SelectModule } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { ResourcefilePickerComponent } from "app/components/task/base";
 import { ResourceFileAttributes } from "app/models";
@@ -72,7 +73,7 @@ describe("ResourcefilePickerComponent", () => {
             }),
         };
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, SelectModule, ButtonsModule, I18nTestingModule, I18nUIModule],
+            imports: [FormsModule, ReactiveFormsModule, SelectModule, ButtonsModule, I18nTestingModule],
             declarations: [
                 ResourcefilePickerComponent,
                 TestComponent,

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { ContextMenuService, I18nUIModule } from "@batch-flask/ui";
+import { ContextMenuService } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { Task, TaskState } from "app/models";
@@ -48,7 +48,7 @@ describe("TaskDependenciesComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, TableTestingModule, I18nTestingModule, I18nUIModule],
+            imports: [RouterTestingModule, TableTestingModule, I18nTestingModule],
             declarations: [
                 TestComponent, NoItemMockComponent, TaskDependencyBrowserComponent,
             ],

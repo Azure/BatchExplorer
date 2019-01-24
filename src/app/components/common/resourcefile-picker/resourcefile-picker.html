@@ -1,3 +1,4 @@
+<label>{{label}}</label>
 <div [formGroup]="files">
     <div *ngFor="let control of files.controls;let i = index" class="file-row">
         <bl-resourcefile-picker-row [formControlName]="i" (delete)="removeRow(i)">

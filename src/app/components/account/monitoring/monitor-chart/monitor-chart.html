@@ -3,6 +3,11 @@
         <h2>
             {{ 'account-monitoring.' + metrics | i18n }}
         </h2>
+
+
+        <div class="aggregation" *ngIf="aggregation">
+            {{aggregation}}
+        </div>
     </div>
     <ng-container *ngIf="isChartReady">
         <div class="chart-container">

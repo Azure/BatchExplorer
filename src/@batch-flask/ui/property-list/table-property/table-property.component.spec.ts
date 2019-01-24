@@ -2,9 +2,8 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-
+import { ClipboardService } from "@batch-flask/electron";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
-import { ClipboardService } from "@batch-flask/ui/electron";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { click } from "test/utils/helpers";
 import {

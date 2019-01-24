@@ -4,9 +4,11 @@
     </div>
 </td>
 
-<div *ngFor="let column of columns;trackBy: trackColumn"
+<div *ngFor="let column of columns;let index = index;trackBy: trackColumn"
     class="bl-table-cell"
     role="gridcell"
+    id="{{id}}-col-{{index}}"
+    [class.focused]="focused && index == focusedColumn"
     [class.fixed-size]="columnWidths[column.name]"
     [style.flex-basis.px]="columnWidths[column.name]"
     [style.min-width.px]="column.minWidth"

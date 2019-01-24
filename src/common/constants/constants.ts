@@ -185,6 +185,7 @@ export const IpcEvent = {
     launchApplication: "LAUNCH_APPLICATION",
     logoutAndLogin: "LOGOUT_AND_LOGIN",
     sendTelemetry: "SEND_TELEMETRY",
+    log: "SEND_LOG",
 };
 
 export const ExternalApplication = {

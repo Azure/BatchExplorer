@@ -158,7 +158,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
 
     public scrollToEnd() {
-        this._editor.setScrollTop(this._editor.getScrollHeight());
+        if (this._editor) {
+            this._editor.setScrollTop(this._editor.getScrollHeight());
+        }
     }
 
     @HostListener("keyup.enter", ["$event"])

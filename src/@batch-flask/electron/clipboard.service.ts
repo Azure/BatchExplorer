@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 @Injectable({providedIn: "root"})
 export class ClipboardService {
     private _clipboard: Electron.Clipboard;
+
     constructor() {
         this._clipboard = require("electron").clipboard;
     }

@@ -2,7 +2,7 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { ClickableComponent, I18nUIModule } from "@batch-flask/ui";
+import { ClickableComponent } from "@batch-flask/ui";
 import { Application } from "app/models";
 import { NcjTemplateService } from "app/services";
 import { List } from "immutable";
@@ -58,7 +58,7 @@ describe("GalleryApplicationList", () => {
             applications: new BehaviorSubject<List<Application>>(List(applications)),
         };
         TestBed.configureTestingModule({
-            imports: [I18nTestingModule, I18nUIModule],
+            imports: [I18nTestingModule],
             declarations: [GalleryApplicationListComponent, TestComponent, ClickableComponent],
             providers: [
                 { provide: NcjTemplateService, useValue: templateServiceSpy },

@@ -1,9 +1,9 @@
-import * as path from "path";
-
+import { configureLogging } from "@batch-flask/utils/logging/configuration";
 import { NodeLogger } from "@batch-flask/utils/logging/node-logger";
-import { Constants } from "../client-constants";
+import * as path from "path";
+import { Constants as ClientConstants } from "../client-constants";
 
-const logsFolder = Constants.logsFolder;
+const logsFolder = ClientConstants.logsFolder;
 
 export const logger = new NodeLogger({
     name: "BatchExplorer Main",
@@ -15,11 +15,14 @@ export const pythonLogger = new NodeLogger({
     path: path.join(logsFolder, "python-server.log"),
 });
 
-export const renderLogger = new NodeLogger({
+export const rendererLogger = new NodeLogger({
     name: "BatchExplorer Renderer",
     path: path.join(logsFolder, "app.log"),
 });
 
 export function initLogger() {
-    NodeLogger.mainLogger = logger;
+    configureLogging({
+        main: logger,
+        renderer: rendererLogger,
+    });
 }
