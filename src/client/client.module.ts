@@ -19,7 +19,6 @@ import { BatchExplorerInitializer } from "./core/batch-explorer-initializer";
 import { BatchExplorerProcess } from "./core/batch-explorer-process";
 import { BlIpcMain } from "./core/bl-ipc-main";
 import { LocalDataStore } from "./core/local-data-store";
-import { LocalFileStorage } from "./core/local-file-storage";
 import { BatchExplorerProperties } from "./core/properties";
 import { ClientTelemetryModule } from "./core/telemetry";
 import { TerminalService } from "./core/terminal";
@@ -65,7 +64,6 @@ export function initializeServices(injector) {
         BatchExplorerInitializer,
         ProxySettingsManager,
         BatchExplorerProperties,
-        LocalFileStorage,
         AADService,
         BlIpcMain,
 
