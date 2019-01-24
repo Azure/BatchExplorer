@@ -38,7 +38,6 @@ export const forms = {
 
 export const SavedDataFilename = {
     sshPublicKeys: "data/ssh-pub-keys.json",
-    settings: "data/settings.json",
 };
 
 export const UserSpecificStoreKeys = {
