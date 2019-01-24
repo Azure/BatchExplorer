@@ -64,7 +64,8 @@ export class PoolCommands extends EntityCommands<Pool> {
 
         this.resize = this.simpleCommand({
             name: "resize",
-            ...COMMAND_LABEL_ICON.Resize,
+            label: this.i18n.t("pool-commands.resize"),
+            icon: "fa fa-arrows-v",
             action: (pool) => this._resizePool(pool),
             visible: (pool) => pool.allocationState !== PoolAllocationState.resizing,
             multiple: false,
