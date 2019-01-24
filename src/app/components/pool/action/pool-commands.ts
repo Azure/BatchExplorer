@@ -4,7 +4,7 @@ import {
     COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission, SidebarManager,
 } from "@batch-flask/ui";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
-import { Pool } from "app/models";
+import { Pool, PoolAllocationState } from "app/models";
 import { JobService, PinnedEntityService, PoolService } from "app/services";
 import { from } from "rxjs";
 import { PoolCreateBasicDialogComponent } from "./add/pool-create-basic-dialog.component";
@@ -15,6 +15,7 @@ import { PoolResizeDialogComponent } from "./resize";
 export class PoolCommands extends EntityCommands<Pool> {
     public addJob: EntityCommand<Pool, void>;
     public resize: EntityCommand<Pool, void>;
+    public stopResize: EntityCommand<Pool, void>;
     public clone: EntityCommand<Pool, void>;
     public delete: EntityCommand<Pool, DeletePoolOutput>;
     public exportAsJSON: EntityCommand<Pool, void>;
@@ -63,9 +64,19 @@ export class PoolCommands extends EntityCommands<Pool> {
             name: "resize",
             ...COMMAND_LABEL_ICON.Resize,
             action: (pool) => this._resizePool(pool),
+            visible: (pool) => pool.allocationState !== PoolAllocationState.resizing,
             multiple: false,
             confirm: false,
             notify: false,
+            permission: Permission.Write,
+        });
+
+        this.stopResize = this.simpleCommand({
+            name: "stopResize",
+            label: "Stop resizing",
+            icon: "fa fa-stop",
+            action: (pool) => this._stopResizingPool(pool),
+            visible: (pool) => pool.allocationState === PoolAllocationState.resizing,
             permission: Permission.Write,
         });
 
@@ -114,6 +125,7 @@ export class PoolCommands extends EntityCommands<Pool> {
         this.commands = [
             this.addJob,
             this.resize,
+            this.stopResize,
             this.clone,
             this.delete,
             this.exportAsJSON,
@@ -132,6 +144,10 @@ export class PoolCommands extends EntityCommands<Pool> {
         this.sidebarManager.onClosed.subscribe(() => {
             this.poolService.get(pool.id);
         });
+    }
+
+    private _stopResizingPool(pool: Pool) {
+        return this.poolService.stopResize(pool.id);
     }
 
     private _clonePool(pool: Pool) {
