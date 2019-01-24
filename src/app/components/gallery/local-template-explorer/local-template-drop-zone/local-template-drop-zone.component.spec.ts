@@ -79,6 +79,25 @@ describe("LocalTemplateDropZoneComponent", () => {
         expect(dataTransfer.dropEffect).toEqual("move");
     });
 
+    it("sends an error notification if dropping multiple files", async () => {
+        const event = new FakeDragEvent("drop", {
+            dataTransfer: {
+                types: ["Files"],
+                files: [{ path: "~/foo.template.json" } as any, { path: "~/bar.template.json" } as any],
+            } as any,
+        });
+        sendEvent(de, event);
+        fixture.detectChanges();
+
+        expect(getOverlay()).toBeFalsy();
+        expect(fsSpy.readFile).not.toHaveBeenCalled();
+        expect(notificationServiceSpy.error).toHaveBeenCalledOnce();
+        expect(notificationServiceSpy.error).toHaveBeenCalledWith(
+            "Can't use mutliple files",
+            "Please drop only one file at the time",
+        );
+    });
+
     it("loads the file and open the dialog when dropping", async () => {
         const event = new FakeDragEvent("drop", {
             dataTransfer: {

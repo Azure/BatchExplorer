@@ -62,7 +62,7 @@ export class LocalTemplateDropZoneComponent {
 
         const filesAndFolders = [...event.dataTransfer.files as any];
         if (filesAndFolders.length > 1) {
-            this.notificationService.error("Please drop only one file at the time", "");
+            this.notificationService.error("Can't use mutliple files", "Please drop only one file at the time");
         } else if (filesAndFolders.length === 1) {
             this.submitTemplate(filesAndFolders[0].path);
         }
