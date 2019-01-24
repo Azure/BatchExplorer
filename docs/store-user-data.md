@@ -2,6 +2,12 @@
 
 There is a few options to save user data depending on the use case
 
+
+|                   | User independant | User specific         |
+|-------------------|------------------|-----------------------|
+| Global            | GlobalStorage    | UserSpecificDataStore |
+| Local(Per window) | localStorage     | localStorage          |
+
 ### Global storage
 **For saving large set of data. Prefer one of the DataStore for smaller ones**
 
