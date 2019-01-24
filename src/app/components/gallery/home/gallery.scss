@@ -1,6 +1,7 @@
 @import "app/styles/variables";
 
 bl-gallery {
+    position: relative;
     width: 100%;
     height: $contentview-height;
     $header-height: 40px;
@@ -8,7 +9,7 @@ bl-gallery {
     .header {
         display: flex;
         height: $header-height;
-        margin: 10px;
+        padding: 10px;
         h1 {
             margin-right: 5px;
         }
@@ -32,6 +33,8 @@ bl-gallery {
 
     .gallery-application-recent {
         margin: 0 auto;
+        display: flex;
+        flex-direction: column;
 
         h2 {
             color: $primary-text;

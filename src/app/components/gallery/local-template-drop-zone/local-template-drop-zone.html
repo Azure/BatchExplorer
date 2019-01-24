@@ -1,0 +1,9 @@
+<ng-content></ng-content>
+<div class="drop-overlay" *ngIf="isDraging">
+    <i class="fa fa-upload"></i>
+    <span class="message">Drop JSON template here</span>
+</div>
+<div class="drop-overlay" *ngIf="loading">
+    <i class="fa fa-spinner fa-spin"></i>
+    <span class="message">{{'commmon.loading' | i18n }}</span>
+</div>
