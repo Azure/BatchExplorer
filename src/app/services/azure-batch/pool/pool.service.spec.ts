@@ -153,7 +153,7 @@ describe("PoolService", () => {
         });
 
         const req = httpMock.expectOne({
-            url: "/pools/pool-1/stopresize",
+            url: "/pools/pool-1/stopresize?timeout=43",
             method: "POST",
         });
         expect(req.request.body).toEqual(null);
