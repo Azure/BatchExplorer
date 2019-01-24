@@ -35,8 +35,9 @@ export class LocalDataStore extends InMemoryDataStore implements DataStore {
 
     public async load() {
         this._loadPromise = this.storage.get<any>(LocalDataStore.KEY).then((data) => {
-            this._data = new Map(Object.entries(data));
-            return data;
+            if (data) {
+                this._data = new Map(Object.entries(data));
+            }
         });
         return this._loadPromise;
     }
