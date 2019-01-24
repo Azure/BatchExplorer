@@ -3,6 +3,8 @@
     <div class="header">
         <h1>{{'gallery.title' | i18n }}</h1>
         <bl-refresh-btn [refresh]="refresh" type="round"></bl-refresh-btn>
+        <div class="flex-separator"></div>
+        <bl-local-template-pick-button></bl-local-template-pick-button>
     </div>
     <div class="gallery-content">
         <div class="gallery-applications">
