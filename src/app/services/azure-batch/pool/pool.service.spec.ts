@@ -147,6 +147,21 @@ describe("PoolService", () => {
         httpMock.verify();
     });
 
+    it("stop resizing a pool", (done) => {
+        poolService.stopResize("pool-1", 43).subscribe((res) => {
+            done();
+        });
+
+        const req = httpMock.expectOne({
+            url: "/pools/pool-1/stopresize",
+            method: "POST",
+        });
+        expect(req.request.body).toEqual(null);
+        expect(req.request.params.get("timeout")).toEqual("43");
+        req.flush("");
+        httpMock.verify();
+    });
+
     it("patch pool", (done) => {
         const patchdto = new PoolPatchDto({
             metadata: [
