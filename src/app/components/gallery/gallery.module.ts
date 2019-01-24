@@ -10,7 +10,6 @@ import { GalleryApplicationListComponent } from "./application-list";
 import { GalleryRoutingModule } from "./gallery-routing.module";
 import { GalleryComponent } from "./home";
 import { RecentTemplateListComponent } from "./home/recent-template-list";
-import { LocalTemplateDropZoneComponent } from "./local-template-drop-zone";
 import { LocalTemplateExplorerModule } from "./local-template-explorer";
 import { NcjTemplateViewerComponent } from "./ncj-template-viewer";
 import {
@@ -32,7 +31,6 @@ const components = [
     RecentTemplateListComponent,
     NcjTemplateViewerComponent,
     GalleryApplicationListComponent,
-    LocalTemplateDropZoneComponent,
 ];
 
 const modules = [
