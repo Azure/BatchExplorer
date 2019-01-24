@@ -1,4 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
+import { I18nService } from "@batch-flask/core";
 import { ElectronRemote, FileSystemService } from "@batch-flask/electron";
 import {
     COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission, SidebarManager,
@@ -23,6 +24,7 @@ export class PoolCommands extends EntityCommands<Pool> {
 
     constructor(
         injector: Injector,
+        private i18n: I18nService,
         private dialog: DialogService,
         private fs: FileSystemService,
         private jobService: JobService,
@@ -73,7 +75,7 @@ export class PoolCommands extends EntityCommands<Pool> {
 
         this.stopResize = this.simpleCommand({
             name: "stopResize",
-            label: "Stop resizing",
+            label: this.i18n.t("pool-commands.stopResize"),
             icon: "fa fa-stop",
             action: (pool) => this._stopResizingPool(pool),
             visible: (pool) => pool.allocationState === PoolAllocationState.resizing,
