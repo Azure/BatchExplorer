@@ -81,6 +81,7 @@ export class PinnedEntityService implements OnDestroy {
                 this._favorites.next(map);
                 return this._saveAccountFavorites();
             }),
+            share(),
         );
     }
 
@@ -88,7 +89,6 @@ export class PinnedEntityService implements OnDestroy {
         if (!this.isFavorite(entity)) {
             return of(null);
         }
-
         return this.accountService.currentAccount.pipe(
             take(1),
             switchMap((account) => {

@@ -15,5 +15,6 @@ export class TestLogger implements Logger {
     }
     public error(message: string, error?: any) {
         // Nothing
+        // console.error(message, error);
     }
 }
