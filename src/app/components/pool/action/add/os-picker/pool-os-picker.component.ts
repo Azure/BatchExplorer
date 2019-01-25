@@ -124,7 +124,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
             }
 
             const selection = this._buildSelection(value);
-            console.log("Value", value, selection);
             this._propagateChange(selection);
             this.changeDetector.markForCheck();
         });
