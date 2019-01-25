@@ -25,7 +25,7 @@ export class SettingsService implements OnDestroy {
     private _settingsSubject = new BehaviorSubject<Settings>(null);
     private _keybindings = new BehaviorSubject<KeyBindings[]>(null);
 
-    private _filename = "settings";
+    private _filename = "../settings";
     private _sub: Subscription;
 
     constructor(
