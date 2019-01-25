@@ -97,7 +97,6 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public writeValue(value: any[]) {
-        console.log("Write value down", value);
         this._valueUpdated.next(value || []);
     }
 

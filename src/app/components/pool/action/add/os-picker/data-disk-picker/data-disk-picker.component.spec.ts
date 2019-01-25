@@ -77,12 +77,16 @@ describe("DataDiskPickerComponent", () => {
             diskSizeGB: 2048,
             lun: 4,
         });
-        expect(testComponent.disks.value.map(x => x.toJS())).toEqual([{
+
+        expect(testComponent.disks.value.length).toBe(1);
+        const disk = testComponent.disks.value.first();
+        expect(disk instanceof DataDiskDto).toBe(true);
+        expect(disk.toJS()).toEqual({
             caching: CachingType.Readwrite,
             diskSizeGB: 2048,
             lun: 4,
             storageAccountType: StorageAccountType.StandardLrs,
-        }]);
+        });
     });
 
     it("udpates the editable table with changes", () => {

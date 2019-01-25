@@ -6,6 +6,7 @@ import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
 import { FormModule } from "@batch-flask/ui/form";
 import { ContainerConfigurationAttributes, ContainerType } from "app/models";
+import { ContainerConfigurationDto } from "app/models/dtos";
 import { ContaienrImagesPickerComponent } from "../container-images-picker.component";
 import { ContainerRegistryPickerComponent } from "../container-registry-picker.component";
 import { ContainerConfigurationPickerComponent } from "./container-configuration-picker.component";
@@ -80,11 +81,11 @@ describe("ContainerConfigurationPickerComponent", () => {
             { imageName: "ubuntu:16.04" },
         ]);
         fixture.detectChanges();
-        expect(testComponent.containerConfig.value).toEqual({
+        expect(testComponent.containerConfig.value).toEqual(new ContainerConfigurationDto({
             type: ContainerType.DockerCompatible,
             containerImageNames: ["ubuntu:18.04", "ubuntu:16.04"],
             containerRegistries: [],
-        });
+        }));
     });
 
     it("propagate changes when updating the registries", () => {
@@ -92,12 +93,12 @@ describe("ContainerConfigurationPickerComponent", () => {
             { username: "foo", password: "pass123!", registryServer: "https://bar.com" },
         ]);
         fixture.detectChanges();
-        expect(testComponent.containerConfig.value).toEqual({
+        expect(testComponent.containerConfig.value).toEqual(new ContainerConfigurationDto({
             type: ContainerType.DockerCompatible,
             containerImageNames: [],
             containerRegistries: [
                 { username: "foo", password: "pass123!", registryServer: "https://bar.com" },
             ],
-        });
+        }));
     });
 });
