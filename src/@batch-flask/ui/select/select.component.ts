@@ -170,6 +170,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     }
 
     private _propagateChange: (value: any) => void;
+    private _touchedFn: () => void;
     private _optionsMap: Map<any, SelectOptionComponent> = new Map();
     public get dropdownId() {
         return this.id + "-dropdown";
@@ -235,7 +236,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     }
 
     public registerOnTouched(fn: any): void {
-        // nothing yet
+        this._touchedFn = fn;
     }
 
     public clickSelectButton(event: Event) {
@@ -366,6 +367,9 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     }
 
     public notifyChanges() {
+        if (this._touchedFn) {
+            this._touchedFn();
+        }
         if (this._propagateChange) {
             this._propagateChange(this.value);
         }

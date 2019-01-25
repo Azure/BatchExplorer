@@ -26,6 +26,7 @@ let idCounter = 0;
 export class EditableTableColumnComponent {
     @Input() public id = `bl-editable-table-column-${idCounter++}`;
     @Input() public name: string;
+    @Input() public default: any;
 
     @Input() public type: EditableTableColumnType = EditableTableColumnType.Text;
 

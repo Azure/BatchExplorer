@@ -6,8 +6,6 @@ import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
-
-import { ObjectUtils } from "@batch-flask/utils";
 import { EditableTableColumnComponent, EditableTableColumnType } from "./editable-table-column.component";
 
 import { ENTER } from "@batch-flask/core/keys";
@@ -34,27 +32,22 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
 
     private _propagateChange: (items: any[]) => void;
     private _sub: Subscription;
-    private _writingValue = false;
 
     constructor(private formBuilder: FormBuilder, private changeDetector: ChangeDetectorRef) {
         this.items = formBuilder.array([]);
         this.form = formBuilder.group({ items: this.items });
         this._sub = this.items.valueChanges.subscribe((files) => {
-            if (this._writingValue) { return; }
-            const lastFile = files[files.length - 1];
-            if (lastFile && !this._isEmpty(lastFile)) {
+            const lastFile = this.items.controls[files.length - 1];
+            if (lastFile.dirty) {
                 this.addNewItem();
             }
-            if (this._propagateChange) {
-                this._propagateChange(this.items.value.slice(0, -1));
-            }
+            this._notifyChanges();
         });
     }
 
     public ngAfterContentInit() {
-        this._writingValue = true;
+        console.log("Content init?");
         this.addNewItem();
-        this._writingValue = false;
     }
 
     public ngOnDestroy() {
@@ -69,19 +62,11 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public addNewItem() {
-        const last = this.items.value.last();
-        if (last && this._isEmpty(last)) {
+        const last = this.items.controls.last();
+        if (last && last.pristine) {
             return;
         }
-        if (!this.columns) {
-            return;
-        }
-        const columns = this.columns.toArray();
-        const obj = {};
-        for (const column of columns) {
-            obj[column.name] = "";
-        }
-        this.items.push(this.formBuilder.group(obj));
+        this.items.push(this._createEmptyRow());
         this.changeDetector.markForCheck();
     }
 
@@ -91,18 +76,17 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public writeValue(value: any[]) {
-        this._writingValue = true;
-        this.items.controls = [];
+        console.log("Write value?", value);
+        if (!this.columns) { return; }
+        const controls: FormGroup[] = [];
 
         if (Array.isArray(value) && value.length > 0) {
             for (const val of value) {
-                this.items.push(this.formBuilder.group(val));
+                controls.push(this.formBuilder.group(val));
             }
-        } else {
-            this.items.setValue([]);
         }
-        this._writingValue = false;
-        this.addNewItem();
+        controls.push(this._createEmptyRow());
+        this.items.controls = controls;
     }
 
     public registerOnChange(fn) {
@@ -125,12 +109,34 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         return row;
     }
 
-    private _isEmpty(obj: any) {
-        for (const value of ObjectUtils.values(obj)) {
-            if (value) {
-                return false;
-            }
+    private _createEmptyRow(): FormGroup {
+        const columns = this.columns.toArray();
+        const obj = {};
+        for (const column of columns) {
+            obj[column.name] = column.default;
         }
-        return true;
+        return this.formBuilder.group(obj);
+    }
+
+    private _notifyChanges() {
+        if (this._propagateChange) {
+            this._propagateChange(this._processValues());
+        }
+    }
+    private _processValues() {
+        const values = this.items.value.slice(0, -1);
+        const columns = this.columns.toArray();
+
+        return values.map((row) => {
+            const obj = {};
+            for (const column of columns) {
+                if (column.type === EditableTableColumnType.Number) {
+                    obj[column.name] = parseInt(row[column.name], 10);
+                } else {
+                    obj[column.name] = row[column.name];
+                }
+            }
+            return obj;
+        });
     }
 }

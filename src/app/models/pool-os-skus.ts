@@ -21,7 +21,17 @@ const renderingPublisher = "batch";
 
 // Docker container supported os
 const dockerContainer = {
-    WindowsServer: [ "2016-Datacenter-with-Containers" ],
+    "WindowsServer": [
+        "2016-Datacenter-with-Containers",
+        "2019-Datacenter-with-Containers",
+        "2019-Datacenter-with-Containers-smalldisk",
+        "2019-Datacenter-Core-with-Containers",
+        "2019-Datacenter-Core-with-Containers-smalldisk",
+    ],
+    "centos-container-rdma": true,
+    "centos-container": true,
+    "ubuntu-server-container": true,
+    "ubuntu-server-container-rdma": true,
 };
 
 export interface Sku {
@@ -54,8 +64,9 @@ export class PoolOsSkus {
         skus.forEach((sku: NodeAgentSku) => {
             for (const imageReference of sku.verifiedImageReferences.toArray()) {
                 targetOffers = offers;
-                if (dockerContainer[imageReference.offer] &&
-                    dockerContainer[imageReference.offer].includes(imageReference.sku)) {
+                if (dockerContainer[imageReference.offer]
+                    && (dockerContainer[imageReference.offer] === true
+                        || dockerContainer[imageReference.offer].includes(imageReference.sku))) {
                     targetOffers = dockerOffers;
                 }
                 if (!(imageReference.offer in targetOffers)) {
