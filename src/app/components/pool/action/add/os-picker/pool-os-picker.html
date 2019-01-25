@@ -4,7 +4,7 @@
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
         </bl-os-offer-tile>
         <bl-os-offer-tile name="WindowsServer" [skus]="cloudServiceOsFamilies" (pickOffer)="pickCloudService()" (pickSku)="pickCloudService($event.id)"
-            [active]="value?.source === PoolOsSources.PaaS" [selectedSku]="selectedFamilyName">
+            [active]="selectedFamilyName" [selectedSku]="selectedFamilyName">
             <div>(Cloud Service)</div>
         </bl-os-offer-tile>
     </mat-tab>
