@@ -35,7 +35,7 @@
 
 <ng-container [formGroup]="form">
     <!-- Container configuration -->
-    <bl-form-picker *ngIf="showContainerConfiguration" formControlName="containerConfiguration" (clear)="clearContaienrConfiguration()" #containerConfigurationPicker>
+    <bl-form-picker *ngIf="showContainerConfiguration" formControlName="containerConfiguration" (clear)="clearContainerConfiguration()" #containerConfigurationPicker>
         <div no-value-title>{{'pool-os-picker.containerConfiguration' | i18n}}</div>
         <div value-title>{{form.value.containerConfiguration?.type}}</div>
         <div nested-form>
