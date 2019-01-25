@@ -21,4 +21,20 @@ declare module "@angular/forms/src/model" {
             emitViewToModelChange?: boolean;
         }): void;
     }
+
+    interface FormGroup<T = any> {
+        readonly valueChanges: Observable<T>;
+        readonly value: T;
+
+        new(formState?: T,
+            validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
+            asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null);
+
+        setValue(value: T, options?: {
+            onlySelf?: boolean;
+            emitEvent?: boolean;
+            emitModelToViewChange?: boolean;
+            emitViewToModelChange?: boolean;
+        }): void;
+    }
 }

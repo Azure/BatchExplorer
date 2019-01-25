@@ -7,9 +7,9 @@ import { SelectComponent, SelectModule } from "@batch-flask/ui";
 import { FormModule } from "@batch-flask/ui/form";
 import { ContainerConfigurationAttributes, ContainerType } from "app/models";
 import { ContainerConfigurationDto } from "app/models/dtos";
-import { ContaienrImagesPickerComponent } from "../container-images-picker.component";
-import { ContainerRegistryPickerComponent } from "../container-registry-picker.component";
 import { ContainerConfigurationPickerComponent } from "./container-configuration-picker.component";
+import { ContainerImagesPickerComponent } from "./images-picker/container-images-picker.component";
+import { ContainerRegistryPickerComponent } from "./registry-picker/container-registry-picker.component";
 
 @Component({
     template: `<bl-container-configuration-picker [formControl]="containerConfig"></bl-container-configuration-picker>`,
@@ -23,7 +23,7 @@ describe("ContainerConfigurationPickerComponent", () => {
     let testComponent: TestComponent;
     let de: DebugElement;
     let containerTypeSelect: SelectComponent;
-    let imagePicker: ContaienrImagesPickerComponent;
+    let imagePicker: ContainerImagesPickerComponent;
     let registryPicker: ContainerRegistryPickerComponent;
 
     beforeEach(() => {
@@ -32,7 +32,7 @@ describe("ContainerConfigurationPickerComponent", () => {
             declarations: [
                 ContainerConfigurationPickerComponent,
                 TestComponent,
-                ContaienrImagesPickerComponent,
+                ContainerImagesPickerComponent,
                 ContainerRegistryPickerComponent,
             ],
         });
