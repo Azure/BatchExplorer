@@ -175,7 +175,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     public validate(c: FormControl) {
         const value = this.form.value;
         if (!value || (!value.virtualMachineConfiguration && !value.cloudServiceConfiguration)) {
-            console.log("Invalid");
             return {
                 validateOsPicker: {
                     valid: false,

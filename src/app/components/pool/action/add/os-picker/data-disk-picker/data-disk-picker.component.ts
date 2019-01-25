@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, forwardRef } from "@angular/core";
 import {
     AbstractControl, ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
-import { StorageAccountType, CachingType } from "app/models";
+import { CachingType, StorageAccountType } from "app/models";
 import { DataDiskDto } from "app/models/dtos/virtual-machine-configuration.dto";
 
 @Component({

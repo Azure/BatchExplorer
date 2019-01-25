@@ -94,7 +94,6 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public writeValue(value: any[]) {
-        console.log("edit Value", value);
         this._valueUpdated.next(value || []);
     }
 
@@ -123,7 +122,6 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
 
         if (Array.isArray(value) && value.length > 0) {
             for (const val of value) {
-                console.log("Build control", val);
                 const obj = {};
                 for (const column of columns) {
                     obj[column.name] = [val[column.name] || column.default];
