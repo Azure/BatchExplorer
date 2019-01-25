@@ -58,8 +58,11 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
             const lastRow = this.items.controls[items.length - 1];
             if (lastRow.dirty) {
                 this.addNewItem(columns);
+                // Don't need to notify changes here as it will trigger this callback again when we add the new item.
+                // Doing so actually erase the changes
+            } else {
+                this._notifyChanges(items, columns);
             }
-            this._notifyChanges(items, columns);
         });
     }
 
@@ -94,6 +97,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public writeValue(value: any[]) {
+        console.log("Write value down", value);
         this._valueUpdated.next(value || []);
     }
 
