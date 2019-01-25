@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Offer, PoolOsSkus, Sku } from "app/models";
-import { PoolOsSources } from "app/models/forms";
+import { NodeAgentSku, Offer, PoolOsSkus, Resource, Sku } from "app/models";
 import { PoolOsService } from "app/services";
 import { Subject, Subscription } from "rxjs";
 import { startWith, takeUntil } from "rxjs/operators";
@@ -9,7 +8,7 @@ import { CustomImageSelection } from "../custom-image-picker";
 
 import "./os-image-picker.scss";
 
-interface OSImageSelection {
+export interface OSImageSelection {
     virtualMachineConfiguration?: {
         imageReference?: {
             sku?: string;
@@ -36,6 +35,9 @@ const cloudServiceOsFamilies = [{
 }, {
     id: "5",
     name: "2016",
+}, {
+    id: "6",
+    name: "2019",
 }].reverse(); // Reverse so we have most recent first
 
 /**
@@ -51,7 +53,6 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
     @Input() public formGroup: FormGroup<OSImageSelection>;
 
     // Shared to the view
-    public PoolOsSources = PoolOsSources;
     public cloudServiceOsFamilies = cloudServiceOsFamilies;
 
     // VM
@@ -185,6 +186,18 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
                 nodeAgentSKUId: result.nodeAgentSku,
             },
         });
+    }
+
+    public trackOffer(_, offer: Offer) {
+        return offer.name;
+    }
+
+    public trackResource(_, image: Resource) {
+        return image.id;
+    }
+
+    public trackNodeAgentSku(_, nodeAgent: NodeAgentSku) {
+        return nodeAgent.id;
     }
 
     private _updateCustomImage() {

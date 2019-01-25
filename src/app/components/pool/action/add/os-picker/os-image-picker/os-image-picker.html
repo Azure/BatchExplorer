@@ -1,9 +1,9 @@
 <mat-tab-group class="form-tabs" [@.disabled]="true">
-    <mat-tab [label]="'pool-os-picker.category.distributions' | i18n" title="selectedSource === PoolOsSources.IaaS">
+    <mat-tab [label]="'pool-os-picker.category.distributions' | i18n">
         <bl-os-offer-tile *ngFor="let offer of vmOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
         </bl-os-offer-tile>
-        <bl-os-offer-tile name="WindowsServer" [skus]="cloudServiceOsFamilies" (pickOffer)="pickCloudService()" (pickSku)="pickCloudService($event.id)"
+        <bl-os-offer-tile class="cloudservice" name="WindowsServer" [skus]="cloudServiceOsFamilies" (pickOffer)="pickCloudService()" (pickSku)="pickCloudService($event.id)"
             [active]="selectedFamilyName" [selectedSku]="selectedFamilyName">
             <div>(Cloud Service)</div>
         </bl-os-offer-tile>

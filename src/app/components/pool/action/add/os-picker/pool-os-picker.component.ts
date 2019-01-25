@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwa
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { NodeAgentSku, Offer, Resource } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -114,18 +113,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
 
     public clearContainerConfiguration() {
         this.form.patchValue({ containerConfiguration: null });
-    }
-
-    public trackOffer(_, offer: Offer) {
-        return offer.name;
-    }
-
-    public trackResource(_, image: Resource) {
-        return image.id;
-    }
-
-    public trackNodeAgentSku(_, nodeAgent: NodeAgentSku) {
-        return nodeAgent.id;
     }
 
     private _buildSelection(value): PoolOSPickerModel {
