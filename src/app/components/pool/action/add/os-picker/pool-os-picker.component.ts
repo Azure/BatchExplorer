@@ -105,7 +105,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
             const vmConfig = value.virtualMachineConfiguration;
             this.selectedNodeAgentId = null;
             this.showContainerConfiguration = false;
-            this.showContainerConfiguration = false;
+            this.showDataDiskPicker = false;
 
             if (vmConfig) {
                 this.showContainerConfiguration = true;
@@ -116,8 +116,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
                 this.selectedSku = ref && ref.sku;
                 this.selectedNodeAgentId = vmConfig && vmConfig.nodeAgentSKUId;
             } else if (value.cloudServiceConfiguration) {
-                this.showContainerConfiguration = false;
-                this.showDataDiskPicker = false;
                 const familyId = value.cloudServiceConfiguration.osFamily;
                 const item = cloudServiceOsFamilies.filter(x => x.id === familyId).first();
                 this.selectedFamilyName = item && item.name;
