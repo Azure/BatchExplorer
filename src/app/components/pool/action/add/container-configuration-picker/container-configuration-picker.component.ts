@@ -9,7 +9,10 @@ import {
     Validators,
 } from "@angular/forms";
 import { ContainerConfigurationAttributes, ContainerType } from "app/models";
+import { ContainerConfigurationDto } from "app/models/dtos";
+
 import "./container-configuration-picker.scss";
+
 @Component({
     selector: "bl-container-configuration-picker",
     templateUrl: "container-configuration-picker.html",
@@ -33,17 +36,17 @@ export class ContainerConfigurationPickerComponent implements ControlValueAccess
             containerRegistries: [[]],
         });
         this.form.valueChanges.subscribe((value) => {
-            const attributes: ContainerConfigurationAttributes = {
+            const attributes = new ContainerConfigurationDto({
                 type: value.type,
                 containerRegistries: value.containerRegistries,
                 containerImageNames: value.containerImageNames && value.containerImageNames.map(x => x.imageName),
-            };
+            });
             if (this._propagateChange) {
                 this._propagateChange(attributes);
             }
         });
     }
-     public writeValue(value: ContainerConfigurationAttributes) {
+     public writeValue(value: ContainerConfigurationDto) {
         if (value) {
             this.form.patchValue({
                 type: value.type,

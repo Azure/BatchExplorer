@@ -32,13 +32,17 @@
         <b *i18nParam="'sku'">{{selectedNodeAgentId}}</b>
     </bl-i18n>
 </p>
-<div *ngIf="showContainerConfiguration">
-    <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContaienrConfiguration()" #containerConfigurationPicker>
+
+<ng-container [formGroup]="form">
+    <!-- Container configuration -->
+    <bl-form-picker *ngIf="showContainerConfiguration" formControlName="containerConfiguration" (clear)="clearContaienrConfiguration()" #containerConfigurationPicker>
         <div no-value-title>{{'pool-os-picker.containerConfiguration' | i18n}}</div>
-        <div value-title>{{containerConfiguration?.value?.type}}</div>
+        <div value-title>{{form.value.containerConfiguration?.type}}</div>
         <div nested-form>
             <bl-container-configuration-picker [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration-picker>
         </div>
     </bl-form-picker>
-</div>
-<bl-data-disk-picker></bl-data-disk-picker>
+
+    <!-- Data disk  -->
+    <bl-data-disk-picker formControlName="dataDisks" *ngIf="showDataDiskPicker"></bl-data-disk-picker>
+</ng-container>

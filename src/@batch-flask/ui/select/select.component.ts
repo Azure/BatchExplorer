@@ -339,7 +339,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
 
     public selectOption(option: SelectOptionComponent | null) {
         this._keyNavigator.focusItem(option);
-
+        let changed = false;
         if (this.multiple) {
             if (option) {
                 if (this.selected.has(option.value)) {
@@ -348,15 +348,25 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
                     this.selected.add(option.value);
                 }
             }
+            changed = true;
         } else {
             if (option) {
-                this.selected = new Set([option.value]);
+                if (!this.selected.has(option.value)) {
+                    changed = true;
+                    this.selected = new Set([option.value]);
+                }
             } else {
-                this.selected = new Set([]);
+                if (this.selected.size !== 0) {
+                    changed = true;
+                    this.selected = new Set([]);
+                }
             }
             this.closeDropdown();
         }
-        this.notifyChanges();
+
+        if (changed) {
+            this.notifyChanges();
+        }
         this.changeDetector.markForCheck();
     }
 

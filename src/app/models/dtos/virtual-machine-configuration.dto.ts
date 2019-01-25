@@ -2,7 +2,7 @@ import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
 import { CachingType, StorageAccountType } from "../azure-batch";
 import { ContainerConfigurationDto } from "./container-setup.dto";
 
-export class DataDiskDto extends Dto<ImageReferenceDto> {
+export class DataDiskDto extends Dto<DataDiskDto> {
     @DtoAttr() public caching: CachingType;
     @DtoAttr() public diskSizeGB: number;
     @DtoAttr() public lun: number;

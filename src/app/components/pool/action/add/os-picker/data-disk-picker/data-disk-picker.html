@@ -1,0 +1,6 @@
+<bl-editable-table [formControl]="disks" label="Data disks">
+    <bl-editable-table-column name="caching" type="select" [options]="cachingOptions" default="readwrite">Caching</bl-editable-table-column>
+    <bl-editable-table-column name="diskSizeGB" type="number">Disk size in GB</bl-editable-table-column>
+    <bl-editable-table-column name="lun" type="number">Lun</bl-editable-table-column>
+    <bl-editable-table-column name="storageAccountType" type="select" [options]="storageAccountTypes" default="standard_lrs">Account type</bl-editable-table-column>
+</bl-editable-table>

@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { autobind } from "@batch-flask/core";
 import { NodeAgentSku, Offer, PoolOsSkus, Resource, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { PoolOsService } from "app/services";
-import { Subscription } from "rxjs";
+import { Subject } from "rxjs";
 import { CustomImageSelection } from "./custom-image-picker";
 
+import { takeUntil } from "rxjs/operators";
 import "./pool-os-picker.scss";
 
 const cloudServiceOsFamilies = [{
@@ -53,10 +53,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     }
 
     public get customImage(): CustomImageSelection {
-        if (this.value.source === PoolOsSources.PaaS) {
-            return null;
-        }
-        const config = this.value.virtualMachineConfiguration;
+        const config = this.form.value.virtualMachineConfiguration;
         const ref = config && config.imageReference;
         if (ref && ref.virtualMachineImageId) {
             return {
@@ -67,8 +64,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
             return null;
         }
     }
-
-    public value: PoolOSPickerModel;
+    public form: FormGroup;
 
     // Shared to the view
     public PoolOsSources = PoolOsSources;
@@ -83,26 +79,87 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     public selectedFamilyName: string;
 
     // Container configuration
-    public containerConfiguration: FormControl = new FormControl();
+    public showDataDiskPicker: boolean = false;
     public showContainerConfiguration: boolean = false;
     private _nodeAgentSkuMap: PoolOsSkus = new PoolOsSkus();
-    private _subs: Subscription[] = [];
+    private _destroy = new Subject();
 
     constructor(
+        private formBuilder: FormBuilder,
         private changeDetector: ChangeDetectorRef,
         private poolOsService: PoolOsService) {
-        this._subs.push(this.poolOsService.offers.subscribe((offers) => {
+        this.poolOsService.offers.pipe(takeUntil(this._destroy)).subscribe((offers) => {
             this._nodeAgentSkuMap = offers;
-        }));
-        this._subs.push(this.containerConfiguration.valueChanges.subscribe(this._updateContainerConfiguration));
+        });
+
+        this.form = this.formBuilder.group({
+            virtualMachineConfiguration: [null],
+            cloudServiceConfiguration: [null],
+            containerConfiguration: [null],
+            dataDisks: [[]],
+        });
+
+        this.form.valueChanges.pipe(
+            takeUntil(this._destroy),
+        ).subscribe((value) => {
+            const vmConfig = value.virtualMachineConfiguration;
+
+            if (vmConfig) {
+                this.showContainerConfiguration = true;
+                this.showDataDiskPicker = true;
+
+                const ref = vmConfig.imageReference;
+                this.selectedOffer = ref && ref.offer;
+                this.selectedSku = ref && ref.sku;
+                this.selectedNodeAgentId = vmConfig && vmConfig.nodeAgentSKUId;
+            } else if (value.cloudServiceConfiguration) {
+                this.showContainerConfiguration = false;
+                this.showDataDiskPicker = false;
+                const familyId = value.cloudServiceConfiguration.osFamily;
+                const item = cloudServiceOsFamilies.filter(x => x.id === familyId).first();
+                this.selectedFamilyName = item && item.name;
+            } else {
+                this.showContainerConfiguration = null;
+                this.showContainerConfiguration = null;
+            }
+
+            const selection = this._buildSelection(value);
+            console.log("Value", value, selection);
+            this._propagateChange(selection);
+            this.changeDetector.markForCheck();
+        });
     }
 
-    public writeValue(value: any) {
-        this.value = value;
-        this._updateSelection();
+    public writeValue(value: PoolOSPickerModel) {
+        if (!value) {
+            this.form.setValue({
+                cloudServiceConfiguration: null,
+                virtualMachineConfiguration: null,
+                containerConfiguration: null,
+                dataDisks: null,
+            });
+        } else {
+            const vmConfig = value.virtualMachineConfiguration;
+            const formValue = {
+                cloudServiceConfiguration: value.cloudServiceConfiguration,
+                virtualMachineConfiguration: vmConfig,
+                containerConfiguration: null,
+                dataDisks: null,
+            };
+
+            if (vmConfig && vmConfig.containerConfiguration) {
+                formValue.containerConfiguration = vmConfig.containerConfiguration;
+            }
+
+            if (vmConfig && vmConfig.dataDisks) {
+                formValue.dataDisks = vmConfig.dataDisks;
+            }
+
+            this.form.patchValue(formValue);
+        }
     }
 
-    public registerOnChange(fn) {
+    public registerOnChange(fn: (value: PoolOSPickerModel) => void) {
         this._propagateChange = fn;
     }
 
@@ -111,12 +168,14 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this._subs.forEach(sub => sub.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public validate(c: FormControl) {
-        const valid = this.value;
-        if (!valid || Boolean(valid.source !== PoolOsSources.PaaS && valid.source !== PoolOsSources.IaaS)) {
+        const value = this.form.value;
+        if (!value || (!value.virtualMachineConfiguration && !value.cloudServiceConfiguration)) {
+            console.log("Invalid");
             return {
                 validateOsPicker: {
                     valid: false,
@@ -149,8 +208,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
             this.selectedNodeAgentId === sku.nodeAgentId) {
             return;
         }
-        this.value = {
-            source: PoolOsSources.IaaS,
+        this.form.patchValue({
             virtualMachineConfiguration: {
                 nodeAgentSKUId: sku.nodeAgentId,
                 imageReference: {
@@ -160,37 +218,27 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
                 },
             },
             cloudServiceConfiguration: null,
-        };
+        });
 
-        this._updateSelection();
-        this._propagateChange(this.value);
-        this.showContainerConfiguration = false;
         this.changeDetector.markForCheck();
     }
 
     public pickCloudService(version = null) {
         const osFamily = version || cloudServiceOsFamilies.first().id;
-        this.value = {
-            source: PoolOsSources.PaaS,
+        this.form.patchValue({
             cloudServiceConfiguration: {
                 osFamily,
             },
             virtualMachineConfiguration: null,
-        };
+        });
 
-        this.showContainerConfiguration = false;
-        this._updateSelection();
-        this._propagateChange(this.value);
         this.changeDetector.markForCheck();
     }
 
     public pickCustomImage(result: CustomImageSelection | null) {
-        if (!result) {
-            return;
-        }
+        if (!result) { return; }
 
-        this.value = {
-            source: PoolOsSources.IaaS,
+        this.form.patchValue({
             cloudServiceConfiguration: null,
             virtualMachineConfiguration: {
                 imageReference: {
@@ -198,16 +246,11 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
                 },
                 nodeAgentSKUId: result.nodeAgentSku,
             },
-        };
-
-        this.showContainerConfiguration = true;
-        this._updateSelection();
-        this._propagateChange(this.value);
-        this.changeDetector.markForCheck();
+        });
     }
 
     public clearContainerConfiguration() {
-        this.containerConfiguration.patchValue(null);
+        this.form.patchValue({ containerConfiguration: null });
     }
 
     /**
@@ -233,44 +276,32 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
         return nodeAgent.id;
     }
 
-    private _propagateChange: (value: PoolOSPickerModel) => void = () => null;
-
-    private _updateSelection() {
-        const vmConfig = this.value && this.value.virtualMachineConfiguration;
-        const ref = vmConfig && vmConfig.imageReference;
-        this.selectedOffer = ref && ref.offer;
-        this.selectedSku = ref && ref.sku;
-        this.selectedNodeAgentId = vmConfig && vmConfig.nodeAgentSKUId;
-
-        const csConfig = this.value && this.value.cloudServiceConfiguration;
-        const familyId = csConfig && csConfig.osFamily;
-        const item = cloudServiceOsFamilies.filter(x => x.id === familyId).first();
-        this.selectedFamilyName = item && item.name;
-
-        // Map values to container configuration form
-        const containerConfiguration = vmConfig && vmConfig.containerConfiguration;
-        const mappedContainerConfiguration = containerConfiguration ? {
-            type: containerConfiguration.type,
-            containerImageNames: containerConfiguration.containerImageNames.map(x => {
-                return { imageName: x };
-            }),
-            containerRegistries: containerConfiguration.containerRegistries || [],
-        } : null;
-        this.containerConfiguration.patchValue(mappedContainerConfiguration);
-    }
-
-    /**
-     * Callback function of container configuration form
-     * @param value
-     */
-    @autobind()
-    private _updateContainerConfiguration(value) {
-        const vmConfig = this.value && this.value.virtualMachineConfiguration;
-        if (!vmConfig) { return; }
-        if (value) {
-            vmConfig.containerConfiguration = value;
+    private _buildSelection(value): PoolOSPickerModel {
+        if (value.cloudServiceConfiguration) {
+            return {
+                source: PoolOsSources.PaaS,
+                cloudServiceConfiguration: value,
+                virtualMachineConfiguration: null,
+            };
         } else {
-            vmConfig.containerConfiguration = null;
+            const vmConfig: PoolOSPickerModel = {
+                source: PoolOsSources.IaaS,
+                cloudServiceConfiguration: null,
+                virtualMachineConfiguration: value.virtualMachineConfiguration,
+            };
+
+            if (value.containerConfiguration) {
+                vmConfig.virtualMachineConfiguration.containerConfiguration = value.containerConfiguration;
+            }
+
+            if (value.dataDisks) {
+                vmConfig.virtualMachineConfiguration.dataDisks = value.dataDisks;
+            }
+
+            return vmConfig;
         }
     }
+
+    private _propagateChange: (value: PoolOSPickerModel) => void = () => null;
+
 }
