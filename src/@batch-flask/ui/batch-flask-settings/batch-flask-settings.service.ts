@@ -4,7 +4,7 @@ import { BatchFlaskSettings, EntityConfigurationView } from "./batch-flask-setti
 
 const defaultSettings: BatchFlaskSettings = {
     entityConfiguration: {
-        defaultView: EntityConfigurationView.pretty,
+        defaultView: EntityConfigurationView.Pretty,
     },
     autoUpdateOnQuit: true,
     fileAssociations: {},

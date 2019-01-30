@@ -17,7 +17,7 @@ export class MainConfigurationStore<T extends {}> implements UserConfigurationSt
 
     public save(config: T) {
         this._config.next(config);
-        return this.storage.set(MainConfigurationStore.KEY, config);
+        return this.storage.set(MainConfigurationStore.KEY, config, { pretty: true });
     }
 
     private async _load() {

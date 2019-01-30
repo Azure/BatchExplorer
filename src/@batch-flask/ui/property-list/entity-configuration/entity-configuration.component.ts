@@ -28,7 +28,7 @@ export class EntityConfigurationComponent implements OnInit, OnChanges {
 
     public ngOnInit() {
         const defaultView = this.settingsService.settings["configuration.default-view"];
-        if (this.enableJsonView && defaultView === EntityConfigurationView.json) {
+        if (this.enableJsonView && defaultView === EntityConfigurationView.JSON) {
             this.showJson = true;
         }
     }

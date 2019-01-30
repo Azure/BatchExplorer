@@ -18,9 +18,6 @@
   // If the app should automatically update when quiting
   "auto-update-on-quit": true,
 
-  // Default powershell on windows, terminal.app on darwin, ...
-  "terminal.external": "default",
-
   // Default username to connect to a remote node
   "node-connect.default-username": "batchexplorer-user",
 

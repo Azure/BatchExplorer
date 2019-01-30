@@ -30,24 +30,12 @@ bl-settings {
     }
 
     .settings-editor {
-        display: flex;
         height: $settings-content-height;
-        width: 100%;
+        width: 800px;
+        margin: auto;
 
-        > .default-settings, > .user-settings {
-            flex-grow: 1;
-            margin: 0 10px;
-            min-height: 100px;
-            position: relative;
-            width: 50%;
-
-            .error {
-                color: $danger-color;
-            }
-
-            bl-editor {
-                height: $settings-editor-height !important;
-            }
+        bl-form-field {
+            margin: 10px 0;
         }
     }
 }

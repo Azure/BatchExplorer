@@ -1,6 +1,6 @@
 export enum EntityConfigurationView {
-    json = "json",
-    pretty = "pretty",
+    JSON = "json",
+    Pretty = "pretty",
 }
 
 export interface BatchFlaskSettings {

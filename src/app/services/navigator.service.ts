@@ -1,4 +1,4 @@
-import { Injectable, NgZone, OnDestroy } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { IpcService } from "@batch-flask/electron";
 import { BatchExplorerLink, BatchExplorerLinkAction, Constants } from "common";
@@ -35,7 +35,6 @@ export class NavigatorService implements OnDestroy {
         this.ipc.on(Constants.rendererEvents.batchExplorerLink).pipe(
             takeUntil(this._destroy),
         ).subscribe(([_, link]) => {
-            console.log("Got liunk", link);
             setTimeout(() => {
                 this.openBatchExplorerLink(link);
             });
