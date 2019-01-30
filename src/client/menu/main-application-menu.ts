@@ -6,7 +6,8 @@ import { BatchExplorerProperties } from "client/core/properties";
 import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
 import { HelpMenu } from "client/menu/help-menu";
 import { ProxySettingsManager } from "client/proxy";
-import { BrowserWindow, Menu, MenuItemConstructorOptions, app } from "electron";
+import { Constants } from "common";
+import { BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, app } from "electron";
 
 function setupOSXSpecificMenu(template) {
     if (process.platform === "darwin") {
@@ -85,6 +86,13 @@ export class MainApplicationMenu {
                 { role: "delete" },
                 { role: "selectall" },
                 { type: "separator" },
+                {
+                    label: "Settings",
+                    click: (_: MenuItem, window: BrowserWindow) => {
+                        window.webContents.send(Constants.rendererEvents.navigateTo, "settings");
+                    },
+                    accelerator: "CmdOrCtrl+,",
+                },
                 {
                     label: "Configure Proxy",
                     click: () => {

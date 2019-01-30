@@ -3,7 +3,8 @@ import { Router } from "@angular/router";
 import { IpcService } from "@batch-flask/electron";
 import { BatchExplorerLink, BatchExplorerLinkAction, Constants } from "common";
 import * as decodeUriComponent from "decode-uri-component";
-import { Subscription } from "rxjs";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { URLSearchParams } from "url";
 import { BatchAccountService } from "./batch-account";
 
@@ -17,27 +18,33 @@ export interface GotoOptions {
 
 @Injectable({ providedIn: "root" })
 export class NavigatorService implements OnDestroy {
-    private _sub: Subscription;
+    private _destroy = new Subject();
 
     constructor(
         private accountService: BatchAccountService,
         private router: Router,
-        private zone: NgZone,
         private ipc: IpcService) {
     }
 
     public ngOnDestroy() {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
+        this._destroy.next();
+        this._destroy.unsubscribe();
     }
 
     public init() {
-        this._sub = this.ipc.on(Constants.rendererEvents.batchExplorerLink, (event, link) => {
-            this.zone.run(() => {
-                setTimeout(() => {
-                    this.openBatchExplorerLink(link);
-                });
+        this.ipc.on(Constants.rendererEvents.batchExplorerLink).pipe(
+            takeUntil(this._destroy),
+        ).subscribe(([_, link]) => {
+            console.log("Got liunk", link);
+            setTimeout(() => {
+                this.openBatchExplorerLink(link);
+            });
+        });
+        this.ipc.on(Constants.rendererEvents.navigateTo).pipe(
+            takeUntil(this._destroy),
+        ).subscribe(([_, link]) => {
+            setTimeout(() => {
+                this.goto(link);
             });
         });
     }
