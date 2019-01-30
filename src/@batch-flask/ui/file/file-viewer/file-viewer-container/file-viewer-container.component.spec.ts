@@ -2,10 +2,10 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
+import { UserConfigurationService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { MockElectronRemote, MockElectronShell } from "@batch-flask/electron/testing";
 import { File, FileLoader } from "@batch-flask/ui";
-import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { CardComponent } from "@batch-flask/ui/card";
 import { LoadingComponent } from "@batch-flask/ui/loading";
@@ -62,9 +62,8 @@ describe("FileViewerContainerComponent", () => {
             providers: [
                 FileTypeAssociationService,
                 {
-                    provide: BatchFlaskSettingsService, useValue: {
-                        settings: {},
-                        settingsObs: of({}),
+                    provide: UserConfigurationService, useValue: {
+                        config: of({}),
                     },
                 },
                 remoteSpy.asProvider(),

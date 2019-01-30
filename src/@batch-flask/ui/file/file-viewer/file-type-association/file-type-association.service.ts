@@ -1,7 +1,8 @@
 import { Injectable, OnDestroy, Type } from "@angular/core";
-import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
+import { BatchFlaskUserConfiguration, UserConfigurationService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { Subject, Subscription, merge } from "rxjs";
+import { Subject, Subscription, combineLatest } from "rxjs";
+import { startWith } from "rxjs/operators";
 import { FileViewer } from "../file-viewer";
 import { ImageFileViewerComponent } from "../image-file-viewer";
 import { LogFileViewerComponent } from "../log-file-viewer";
@@ -29,19 +30,19 @@ export class FileTypeAssociationService implements OnDestroy {
     private _viewersFileAssociations: StringMap<string> = {};
     private _viewerChanges = new Subject();
 
-    constructor(settingsService: BatchFlaskSettingsService) {
+    constructor(settingsService: UserConfigurationService<BatchFlaskUserConfiguration>) {
         this.registerViewer({ name: "text", component: TextFileViewerComponent });
         this.registerViewer({ name: "log", component: LogFileViewerComponent });
         this.registerViewer({ name: "image", component: ImageFileViewerComponent });
 
-        this._settingsSub = merge(
-            settingsService.settingsObs,
-            this._viewerChanges,
-        ).subscribe(() => {
+        this._settingsSub = combineLatest(
+            settingsService.watch("fileAssociations"),
+            this._viewerChanges.pipe(startWith(null)),
+        ).subscribe(([fileAssociations, _]) => {
             this._associations = [];
             this._registerAssociations(DEFAULT_FILE_ASSOCIATIONS);
             this._registerAssociations(this._viewersFileAssociations);
-            this._registerAssociations(settingsService.settings.fileAssociations);
+            this._registerAssociations(fileAssociations);
         });
     }
 
@@ -81,9 +82,13 @@ export class FileTypeAssociationService implements OnDestroy {
         this._viewerChanges.next();
     }
 
-    private _registerAssociations(fileAssociations: StringMap<string>) {
+    private _registerAssociations(fileAssociations: StringMap<string> | FileAssociation[]) {
         if (!fileAssociations) { return; }
-        for (const [extension, type] of Object.entries(fileAssociations)) {
+        const array = Array.isArray(fileAssociations)
+            ? fileAssociations
+            : Object.entries(fileAssociations).map(([extension, type]) => ({ extension, type }));
+
+        for (const { extension, type } of array) {
             if (!type || !extension) {
                 log.error(`Trying to register an invalid file association ${extension}, ${type}`);
                 continue;

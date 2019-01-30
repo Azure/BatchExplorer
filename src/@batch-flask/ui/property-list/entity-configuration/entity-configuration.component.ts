@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit } from "@angular/core";
-import { BatchFlaskUserConfiguration, Record, UserConfigurationService } from "@batch-flask/core";
-import { EntityConfigurationView } from "@batch-flask/ui/batch-flask-settings";
+import {
+    BatchFlaskUserConfiguration, EntityConfigurationView, Record, UserConfigurationService,
+} from "@batch-flask/core";
 import { EditorConfig } from "@batch-flask/ui/editor";
 
 import "./entity-configuration.scss";

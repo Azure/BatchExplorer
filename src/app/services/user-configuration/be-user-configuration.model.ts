@@ -1,5 +1,4 @@
-import { BatchFlaskUserConfiguration } from "@batch-flask/core";
-import { EntityConfigurationView } from "@batch-flask/ui";
+import { BatchFlaskUserConfiguration, EntityConfigurationView } from "@batch-flask/core";
 
 /**
  * General configuration used both on browser and desktop
