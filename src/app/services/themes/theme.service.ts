@@ -5,12 +5,13 @@ import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
+import { UserConfigurationService } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
 import { NotificationService } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { filter, takeUntil } from "rxjs/operators";
-import { SettingsService } from "../settings.service";
+import { BEUserConfiguration } from "../user-configuration";
 import { Theme } from "./theme.model";
 
 export class ThemeNotFoundError extends Error {
@@ -35,7 +36,7 @@ export class ThemeService implements OnDestroy {
     constructor(
         private fs: FileSystemService,
         private notificationService: NotificationService,
-        private settingsService: SettingsService,
+        private settingsService: UserConfigurationService<BEUserConfiguration>,
         private zone: NgZone,
         batchExplorer: BatchExplorerService) {
 
@@ -48,7 +49,7 @@ export class ThemeService implements OnDestroy {
             this._applyTheme(theme);
         });
 
-        combineLatest(this.settingsService.settingsObs, batchExplorer.isOSHighContrast)
+        combineLatest(this.settingsService.config, batchExplorer.isOSHighContrast)
             .pipe(takeUntil(this._destroy))
             .subscribe(([settings, isHighContrast]) => {
                 if (isHighContrast) {

@@ -5,21 +5,7 @@ import { EntityConfigurationView } from "@batch-flask/ui";
  * General configuration used both on browser and desktop
  */
 export interface BEUserConfiguration extends BatchFlaskUserConfiguration {
-
-}
-
-/**
- * Configuration specific to the desktop version
- * Note this is the only version yet. Planning for the future.
- */
-export interface BEUserDesktopConfiguration extends BEUserConfiguration {
-    /**
-     * Local templates names and path to show in the template library
-     */
-    localTemplates: {
-        sources: Array<{ name: string, path: string }>,
-    };
-
+    theme: string;
     entityConfiguration: {
         defaultView: EntityConfigurationView,
     };
@@ -40,6 +26,19 @@ export interface BEUserDesktopConfiguration extends BEUserConfiguration {
     nodeConnect: {
         defaultUsername: string,
     };
+}
+
+/**
+ * Configuration specific to the desktop version
+ * Note this is the only version yet. Planning for the future.
+ */
+export interface BEUserDesktopConfiguration extends BEUserConfiguration {
+    /**
+     * Local templates names and path to show in the template library
+     */
+    localTemplates: {
+        sources: Array<{ name: string, path: string }>,
+    };
 
     githubData: {
         repo: string,
@@ -49,8 +48,6 @@ export interface BEUserDesktopConfiguration extends BEUserConfiguration {
     jobTemplate: {
         defaultOutputFileGroup: string | null,
     };
-
-    theme: string;
 }
 
 export const DEFAULT_BE_USER_CONFIGURATION: BEUserDesktopConfiguration = {

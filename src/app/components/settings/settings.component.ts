@@ -11,7 +11,7 @@ export interface SettingsSelection {
     entityConfigurationDefaultView: EntityConfigurationView;
     subscriptionsIgnore: string[];
     defaultUploadContainer: string;
-    nodeConnectDefaultUserName: string;
+    nodeConnectDefaultUsername: string;
     updateChannel: string;
     updateOnQuit: boolean;
     githubDataRepo: string;
@@ -41,7 +41,7 @@ export class SettingsComponent implements OnDestroy {
             entityConfigurationDefaultView: [null],
             subscriptionsIgnore: [[]],
             defaultUploadContainer: [""],
-            nodeConnectDefaultUserName: [""],
+            nodeConnectDefaultUsername: [""],
             updateChannel: [""],
             updateOnQuit: [true],
             githubDataRepo: [""],
@@ -55,7 +55,7 @@ export class SettingsComponent implements OnDestroy {
                 entityConfigurationDefaultView: config.entityConfiguration.defaultView,
                 subscriptionsIgnore: config.subscriptions.ignore,
                 defaultUploadContainer: config.storage.defaultUploadContainer,
-                nodeConnectDefaultUserName: config.nodeConnect.defaultUsername,
+                nodeConnectDefaultUsername: config.nodeConnect.defaultUsername,
                 updateChannel: config.update.channel,
                 updateOnQuit: config.update.updateOnQuit,
                 githubDataRepo: config.githubData.repo,
@@ -100,7 +100,7 @@ export class SettingsComponent implements OnDestroy {
                 defaultUploadContainer: selection.defaultUploadContainer,
             },
             nodeConnect: {
-                defaultUsername: selection.nodeConnectDefaultUserName,
+                defaultUsername: selection.nodeConnectDefaultUsername,
             },
             githubData: {
                 repo: selection.githubDataRepo,
