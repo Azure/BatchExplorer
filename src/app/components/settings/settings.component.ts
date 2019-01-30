@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { EntityConfigurationView, UserConfigurationService } from "@batch-flask/core";
 import { BEUserDesktopConfiguration } from "app/services";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { debounceTime, takeUntil } from "rxjs/operators";
 import "./settings.scss";
 
 export interface SettingsSelection {
     entityConfigurationDefaultView: EntityConfigurationView;
-    subscriptionsIgnore: string[];
+    subscriptionsIgnore: Array<{ pattern: string }>;
     fileAssociations: Array<{ extension: string, type: string }>;
     defaultUploadContainer: string;
     nodeConnectDefaultUsername: string;
@@ -31,11 +31,13 @@ export class SettingsComponent implements OnDestroy {
 
     public form: FormGroup<SettingsSelection>;
     public viewerOptions = ["log", "code", "image"];
+    public saved = false;
     private _destroy = new Subject();
     private _lastValue: string | null = null;
 
     constructor(
         private userConfigurationService: UserConfigurationService<BEUserDesktopConfiguration>,
+        private changeDetector: ChangeDetectorRef,
         formBuilder: FormBuilder) {
         this.form = formBuilder.group({
             theme: [null],
@@ -55,7 +57,7 @@ export class SettingsComponent implements OnDestroy {
             const selection: SettingsSelection = {
                 theme: config.theme,
                 entityConfigurationDefaultView: config.entityConfiguration.defaultView,
-                subscriptionsIgnore: config.subscriptions.ignore,
+                subscriptionsIgnore: config.subscriptions.ignore.map(x => ({ pattern: x })),
                 fileAssociations: config.fileAssociations,
                 defaultUploadContainer: config.storage.defaultUploadContainer,
                 nodeConnectDefaultUsername: config.nodeConnect.defaultUsername,
@@ -69,10 +71,18 @@ export class SettingsComponent implements OnDestroy {
             this.form.patchValue(selection, { emitEvent: false });
         });
 
-        this.form.valueChanges.pipe(takeUntil(this._destroy)).subscribe((selection) => {
+        this.form.valueChanges.pipe(
+            takeUntil(this._destroy),
+            debounceTime(400),
+        ).subscribe(async (selection) => {
             if (JSON.stringify(selection) !== this._lastValue) {
                 const config = this._buildConfig(selection);
                 this.userConfigurationService.patch(config);
+                this.saved = true;
+                this.changeDetector.markForCheck();
+                await new Promise(r => setTimeout(r, 1000));
+                this.saved = false;
+                this.changeDetector.markForCheck();
             }
         });
     }
@@ -94,7 +104,7 @@ export class SettingsComponent implements OnDestroy {
                 defaultView: selection.entityConfigurationDefaultView,
             },
             subscriptions: {
-                ignore: selection.subscriptionsIgnore,
+                ignore: selection.subscriptionsIgnore.map(x => x.pattern),
             },
             update: {
                 channel: selection.updateChannel,

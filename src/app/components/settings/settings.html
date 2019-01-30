@@ -1,6 +1,8 @@
 <div class="settings-header">
     <h1 tabindex="0" autofocus>{{'settings.title' | i18n}}</h1>
-
+    <div class="saved" *ngIf="saved" attr.aria-live="assertive">
+        Saved
+    </div>
     <div class="actions">
         <bl-button title="Reset" (do)="reset()" tooltipPosition="below" [disabled]="!modified">
             <i class="fa fa-undo"></i>
@@ -8,9 +10,9 @@
     </div>
 </div>
 <div class="settings-editor" [formGroup]="form">
-    <h2>General</h2>
+    <h2>{{'settings.general' | i18n}}</h2>
     <bl-form-field>
-        <bl-select placeholder="Entity configuration default view" formControlName="theme">
+        <bl-select placeholder="Theme" formControlName="theme">
             <bl-option value="classic" label="Classic"></bl-option>
             <bl-option value="dark" label="Dark"></bl-option>
             <bl-option value="hc" label="High contrast"></bl-option>
@@ -61,12 +63,13 @@
 
 
     <h2>
-       Gallery settings
+        {{'settings.gallerySettings' | i18n}}
     </h2>
 
     <bl-form-field>
         <input blInput placeholder="Github data source" formControlName="githubDataRepo">
-        <bl-hint>Name of the repository to use to load the data. You can use that to test a fork of the BatchExplorer-data repo</bl-hint>
+        <bl-hint>Name of the repository to use to load the data. You can use that to test a fork of the
+            BatchExplorer-data repo</bl-hint>
     </bl-form-field>
     <bl-form-field>
         <input blInput placeholder="Github data branch" formControlName="githubDataBranch">

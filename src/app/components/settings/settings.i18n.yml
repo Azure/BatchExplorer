@@ -1,4 +1,4 @@
 settings:
   title: Settings
-  defaultSettings: Default settings
-  userSettings: User settings
+  general: General
+  gallerySettings: Gallery settings

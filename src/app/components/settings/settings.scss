@@ -13,6 +13,7 @@ bl-settings {
         height: $settings-header-height;
         padding: 10px 20px;
         display: flex;
+        align-items: center;
 
         > h1 {
             flex: 1;
@@ -20,6 +21,12 @@ bl-settings {
             &:not(.focus-visible) {
                 outline: none;
             }
+        }
+
+        .saved {
+            color: $success-color;
+            margin-right: 20px;
+            font-weight: bold;
         }
 
         .modified {
