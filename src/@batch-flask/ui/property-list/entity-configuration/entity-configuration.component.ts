@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit } from "@angular/core";
-import { Record } from "@batch-flask/core";
-import { BatchFlaskSettingsService, EntityConfigurationView } from "@batch-flask/ui/batch-flask-settings";
+import { BatchFlaskUserConfiguration, Record, UserConfigurationService } from "@batch-flask/core";
+import { EntityConfigurationView } from "@batch-flask/ui/batch-flask-settings";
 import { EditorConfig } from "@batch-flask/ui/editor";
 
 import "./entity-configuration.scss";
@@ -22,12 +22,15 @@ export class EntityConfigurationComponent implements OnInit, OnChanges {
         tabSize: 2,
     } as any;
 
-    constructor(private settingsService: BatchFlaskSettingsService, private changeDetector: ChangeDetectorRef) {
+    constructor(
+        private settingsService: UserConfigurationService<BatchFlaskUserConfiguration>,
+        private changeDetector: ChangeDetectorRef) {
 
     }
 
     public ngOnInit() {
-        const defaultView = this.settingsService.settings["configuration.default-view"];
+        const settings = this.settingsService.current;
+        const defaultView = settings && settings.entityConfiguration && settings.entityConfiguration.defaultView;
         if (this.enableJsonView && defaultView === EntityConfigurationView.JSON) {
             this.showJson = true;
         }

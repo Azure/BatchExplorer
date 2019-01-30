@@ -27,6 +27,11 @@
         <bl-editable-table-column name="pattern">Wildcard pattern (e.g. 'other-subscription*')</bl-editable-table-column>
     </bl-editable-table>
 
+    <bl-editable-table label="File association" formControlName="fileAssociations">
+        <bl-editable-table-column name="extension">Extension(e.g. '.foo')</bl-editable-table-column>
+        <bl-editable-table-column name="viewer" type="select" [options]="viewerOptions">Viewer</bl-editable-table-column>
+    </bl-editable-table>
+
     <bl-form-field>
         <input blInput placeholder="Default upload container" formControlName="defaultUploadContainer">
         <bl-hint>Name of the container BatchExplorer will use to upload resource files when drag and drop</bl-hint>

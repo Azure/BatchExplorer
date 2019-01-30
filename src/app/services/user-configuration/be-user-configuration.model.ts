@@ -6,9 +6,6 @@ import { EntityConfigurationView } from "@batch-flask/ui";
  */
 export interface BEUserConfiguration extends BatchFlaskUserConfiguration {
     theme: string;
-    entityConfiguration: {
-        defaultView: EntityConfigurationView,
-    };
 
     subscriptions: {
         ignore: string[],

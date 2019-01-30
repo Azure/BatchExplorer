@@ -1,7 +1,6 @@
-import { Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { UserConfigurationService } from "@batch-flask/core";
-import { EntityConfigurationView } from "@batch-flask/ui";
+import { EntityConfigurationView, UserConfigurationService } from "@batch-flask/core";
 import { BEUserDesktopConfiguration } from "app/services";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -10,6 +9,7 @@ import "./settings.scss";
 export interface SettingsSelection {
     entityConfigurationDefaultView: EntityConfigurationView;
     subscriptionsIgnore: string[];
+    fileAssociations: Array<{ extension: string, type: string }>;
     defaultUploadContainer: string;
     nodeConnectDefaultUsername: string;
     updateChannel: string;
@@ -22,6 +22,7 @@ export interface SettingsSelection {
 @Component({
     selector: "bl-settings",
     templateUrl: "settings.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnDestroy {
     public static breadcrumb(params, queryParams) {
@@ -29,7 +30,7 @@ export class SettingsComponent implements OnDestroy {
     }
 
     public form: FormGroup<SettingsSelection>;
-
+    public viewerOptions = ["log", "code", "image"];
     private _destroy = new Subject();
     private _lastValue: string | null = null;
 
@@ -40,6 +41,7 @@ export class SettingsComponent implements OnDestroy {
             theme: [null],
             entityConfigurationDefaultView: [null],
             subscriptionsIgnore: [[]],
+            fileAssociations: [[]],
             defaultUploadContainer: [""],
             nodeConnectDefaultUsername: [""],
             updateChannel: [""],
@@ -54,6 +56,7 @@ export class SettingsComponent implements OnDestroy {
                 theme: config.theme,
                 entityConfigurationDefaultView: config.entityConfiguration.defaultView,
                 subscriptionsIgnore: config.subscriptions.ignore,
+                fileAssociations: config.fileAssociations,
                 defaultUploadContainer: config.storage.defaultUploadContainer,
                 nodeConnectDefaultUsername: config.nodeConnect.defaultUsername,
                 updateChannel: config.update.channel,
@@ -86,6 +89,7 @@ export class SettingsComponent implements OnDestroy {
     private _buildConfig(selection: SettingsSelection): Partial<BEUserDesktopConfiguration> {
         return {
             theme: selection.theme,
+            fileAssociations: selection.fileAssociations,
             entityConfiguration: {
                 defaultView: selection.entityConfigurationDefaultView,
             },

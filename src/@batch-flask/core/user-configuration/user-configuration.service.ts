@@ -7,8 +7,19 @@ import { isNotNullOrUndefined } from "../rxjs-operators";
 export const USER_CONFIGURATION_STORE = "USER_CONFIGURATION_STORE";
 export const DEFAULT_USER_CONFIGURATION = "DEFAULT_USER_CONFIGURATION";
 
+export enum EntityConfigurationView {
+    JSON = "json",
+    Pretty = "pretty",
+}
+
 export interface BatchFlaskUserConfiguration {
     timezone?: string;
+
+    entityConfiguration?: {
+        defaultView?: EntityConfigurationView,
+    };
+
+    fileAssociations?: Array<{extension: string, type: string}>;
 }
 
 export interface UserConfigurationStore<T> {

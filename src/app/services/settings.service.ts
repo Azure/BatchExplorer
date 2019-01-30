@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
-import { BehaviorSubject, Observable, Subscription, from } from "rxjs";
+import { BehaviorSubject, Observable, from } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
@@ -26,27 +25,16 @@ export class SettingsService implements OnDestroy {
     private _keybindings = new BehaviorSubject<KeyBindings[]>(null);
 
     private _filename = "../settings";
-    private _sub: Subscription;
 
     constructor(
-        private storage: GlobalStorage,
-        batchFlaskSettings: BatchFlaskSettingsService) {
+        private storage: GlobalStorage) {
         this.settingsObs = this._settingsSubject.pipe(filter(x => Boolean(x)));
         this.keybindings = this._keybindings.pipe(filter(x => Boolean(x)));
         this.hasSettingsLoaded = this._hasSettingsLoaded.asObservable();
-        this._sub = this.settingsObs.subscribe((settings) => {
-            batchFlaskSettings.updateSettings({
-                entityConfiguration: {
-                    defaultView: settings["configuration.default-view"],
-                },
-                autoUpdateOnQuit: settings["auto-update-on-quit"],
-                fileAssociations: settings["file.associations"],
-            });
-        });
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        // Nothing
     }
 
     public init() {
