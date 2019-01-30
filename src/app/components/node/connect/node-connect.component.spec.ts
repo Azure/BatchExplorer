@@ -1,6 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { UserConfigurationService } from "@batch-flask/core";
 import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/electron";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
@@ -14,7 +15,6 @@ import {
     BatchExplorerService,
     NodeConnectService,
     NodeUserService,
-    SettingsService,
 } from "app/services";
 import { PoolUtils } from "app/utils";
 import { of } from "rxjs";
@@ -49,7 +49,7 @@ describe("NodeConnectComponent", () => {
         };
 
         settingsServiceSpy = {
-            settings: {
+            current: {
                 "node-connect.default-username": "foo",
             },
         };
@@ -110,7 +110,7 @@ describe("NodeConnectComponent", () => {
                 { provide: NodeUserService, useValue: nodeUserServiceSpy },
                 { provide: FileSystemService, useValue: fsServiceSpy },
                 { provide: PermissionService, useValue: null },
-                { provide: SettingsService, useValue: settingsServiceSpy },
+                { provide: UserConfigurationService, useValue: settingsServiceSpy },
                 { provide: BatchExplorerService, useValue: batchExplorerServiceSpy },
                 { provide: ClipboardService, useValue: {} },
                 { provide: ElectronShell, useValue: electronShellSpy },

@@ -9,18 +9,18 @@ import {
 } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@batch-flask/core";
+import { UserConfigurationService, autobind } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { exists, log } from "@batch-flask/utils";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
-import { NcjFileGroupService, NcjSubmitService, NcjTemplateService, SettingsService } from "app/services";
+import { BEUserDesktopConfiguration, NcjFileGroupService, NcjSubmitService, NcjTemplateService } from "app/services";
 import { StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
-import { Subscription, of } from "rxjs";
-import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import { Subject, Subscription, of } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from "rxjs/operators";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
 
 import "./submit-ncj-template.scss";
@@ -57,7 +57,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public jobParametersWrapper: NcjParameterWrapper[];
     public poolParametersWrapper: NcjParameterWrapper[];
 
-    private _routeParametersSub: Subscription;
+    private _destroy = new Subject();
     private _controlChanges: Subscription[] = [];
     private _parameterTypeMap = {};
     private _queryParameters: {};
@@ -83,14 +83,16 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private dialogService: DialogService,
         private fileGroupService: NcjFileGroupService,
         private storageService: StorageContainerService,
-        private settingsService: SettingsService) {
+        private settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
 
         this.form = new FormGroup({});
-        this._defaultOutputDataContainer = this.settingsService.settings["job-template.default-output-filegroup"];
+        this.settingsService.watch("jobTemplate").pipe(takeUntil(this._destroy)).subscribe((jobTemplate) => {
+            this._defaultOutputDataContainer = jobTemplate.defaultOutputFileGroup;
+        });
     }
 
     public ngOnInit() {
-        this._routeParametersSub = this.activatedRoute.queryParams.subscribe((params: any) => {
+        this.activatedRoute.queryParams.pipe(takeUntil(this._destroy)).subscribe((params: any) => {
             this._queryParameters = Object.assign({}, params);
             if (!this._loaded) {
                 // subscribe is fired every time a value changes now so don't want to re-apply
@@ -119,7 +121,8 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public ngOnDestroy() {
-        this._routeParametersSub.unsubscribe();
+        this._destroy.next();
+        this._destroy.complete();
         this._controlChanges.forEach(x => x.unsubscribe());
     }
 

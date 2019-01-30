@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { GlobalStorage } from "@batch-flask/core";
+import { GlobalStorage, UserConfigurationService } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
-import { SettingsService } from "app/services/settings.service";
+import { BEUserDesktopConfiguration } from "app/services/user-configuration";
 import { Observable, combineLatest, of } from "rxjs";
 import {
     distinctUntilChanged, map, publishReplay, refCount, switchMap, take,
@@ -28,12 +28,12 @@ export class PortfolioService implements OnDestroy {
     constructor(
         private storage: GlobalStorage,
         private fs: FileSystemService,
-        settingsService: SettingsService) {
+        settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
 
-        this._microsoftPortfolio = settingsService.settingsObs.pipe(
+        this._microsoftPortfolio = settingsService.watch("githubData").pipe(
             map((settings) => {
-                const branch = settings["github-data.source.branch"] || "master";
-                const repo = settings["github-data.source.repo"] || "Azure/BatchExplorer-data";
+                const branch = settings.branch;
+                const repo = settings.repo;
                 return `https://github.com/${repo}/tree/${branch}`;
             }),
             distinctUntilChanged(),

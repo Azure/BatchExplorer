@@ -3,7 +3,7 @@ import { USER_CONFIGURATION_STORE, UserConfigurationStore, isNotNullOrUndefined 
 import { SharedServiceInjector } from "@batch-flask/electron/shared-service-injector";
 import { wrapMainObservable } from "@batch-flask/electron/utils";
 import { Observable, Subscription } from "rxjs";
-import { filter } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 
 @Injectable()
 export class RendererConfigurationStore<T extends {}> implements UserConfigurationStore<T>, OnDestroy {
@@ -13,7 +13,11 @@ export class RendererConfigurationStore<T extends {}> implements UserConfigurati
 
     constructor(injector: SharedServiceInjector, zone: NgZone) {
         this._main = injector.get<any>(USER_CONFIGURATION_STORE);
-        this.config = wrapMainObservable(this._main.config, zone).pipe(filter(isNotNullOrUndefined));
+        this.config = wrapMainObservable(this._main.config, zone).pipe(
+            filter(isNotNullOrUndefined),
+            // Make a deep clone of the config to make sure it doesn't call sendSync to get attributes
+            map(x => JSON.parse(JSON.stringify(x))),
+        );
     }
 
     public ngOnDestroy() {

@@ -24,7 +24,6 @@ import {
     NcjTemplateService,
     PoolOsService,
     PoolService,
-    SettingsService,
     VmSizeService,
 } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
@@ -238,7 +237,6 @@ describe("SubmitNcjTemplateComponent", () => {
                 { provide: StorageBlobService, useValue: storageBlobServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },
                 { provide: PoolOsService, useValue: poolOsServiceSpy },
-                { provide: SettingsService, useValue: settingsServiceSpy },
             ],
 
             schemas: [NO_ERRORS_SCHEMA],

@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { UserConfigurationService } from "@batch-flask/core";
 import { StringUtils, log } from "@batch-flask/utils";
 import {
     Location, LocationAttributes, ResourceGroup, Subscription, SubscriptionAttributes, TenantDetails,
@@ -13,8 +14,8 @@ import {
 import { AdalService } from "../adal";
 import { AzureHttpService } from "../azure-http.service";
 import { ArmListResponse } from "../core";
-import { SettingsService } from "../settings.service";
 import { TenantDetailsService } from "../tenant-details.service";
+import { BEUserConfiguration } from "../user-configuration";
 
 @Injectable({ providedIn: "root" })
 export class SubscriptionService implements OnDestroy {
@@ -29,11 +30,11 @@ export class SubscriptionService implements OnDestroy {
         private tenantDetailsService: TenantDetailsService,
         private azure: AzureHttpService,
         private adal: AdalService,
-        private settingsService: SettingsService) {
+        private settingsService: UserConfigurationService<BEUserConfiguration>) {
 
-        const ignoredPatterns = this.settingsService.settingsObs.pipe(
+        const ignoredPatterns = this.settingsService.watch("subscriptions").pipe(
             takeUntil(this._destroy),
-            map((settings) => settings["subscription.ignore"] || []),
+            map((settings) => settings.ignore || []),
             distinctUntilChanged(),
         );
 
