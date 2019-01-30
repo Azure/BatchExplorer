@@ -42,7 +42,7 @@ export class VersionService implements OnDestroy {
         }
 
         this._sub = settingsService.watch("update").subscribe((settings) => {
-            this._updateAutoUpdateChannel(settings.channel);
+            this._updateAutoUpdateChannel(settings && settings.channel);
         });
     }
 

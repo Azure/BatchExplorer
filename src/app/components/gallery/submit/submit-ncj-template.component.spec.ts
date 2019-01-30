@@ -8,7 +8,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { BehaviorSubject, Subject, of } from "rxjs";
 
-import { MaterialModule } from "@batch-flask/core";
+import { MaterialModule, UserConfigurationService } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -29,7 +29,7 @@ import {
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 
-import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nTestingModule, MockUserConfigurationService } from "@batch-flask/core/testing";
 import { I18nUIModule, SelectModule } from "@batch-flask/ui";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
@@ -115,7 +115,7 @@ describe("SubmitNcjTemplateComponent", () => {
     let storageBlobServiceSpy;
     let fileGroupServiceSpy;
     let poolOsServiceSpy;
-    let settingsServiceSpy;
+    let settingsServiceSpy: MockUserConfigurationService;
 
     const blendFile = "myscene.blend";
     let queryParameters;
@@ -201,11 +201,11 @@ describe("SubmitNcjTemplateComponent", () => {
             }),
         };
 
-        settingsServiceSpy = {
-            settings: {
-                "job-template.default-output-filegroup": "foo",
+        settingsServiceSpy = new MockUserConfigurationService({
+            jobTemplate: {
+                defaultOutputFileGroup: "foo",
             },
-        };
+        });
 
         TestBed.configureTestingModule({
             imports: [
@@ -237,6 +237,7 @@ describe("SubmitNcjTemplateComponent", () => {
                 { provide: StorageBlobService, useValue: storageBlobServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },
                 { provide: PoolOsService, useValue: poolOsServiceSpy },
+                { provide: UserConfigurationService, useValue: settingsServiceSpy },
             ],
 
             schemas: [NO_ERRORS_SCHEMA],

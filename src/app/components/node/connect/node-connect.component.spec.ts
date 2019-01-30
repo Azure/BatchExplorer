@@ -2,6 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { UserConfigurationService } from "@batch-flask/core";
+import { MockUserConfigurationService } from "@batch-flask/core/testing";
 import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/electron";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
@@ -35,7 +36,7 @@ describe("NodeConnectComponent", () => {
     let de: DebugElement;
 
     let nodeUserServiceSpy;
-    let settingsServiceSpy;
+    let settingsServiceSpy: MockUserConfigurationService;
     let batchExplorerServiceSpy;
     let fsServiceSpy;
     let electronShellSpy;
@@ -48,11 +49,9 @@ describe("NodeConnectComponent", () => {
             addOrUpdateUser: jasmine.createSpy("").and.returnValue(of(true)),
         };
 
-        settingsServiceSpy = {
-            current: {
-                "node-connect.default-username": "foo",
-            },
-        };
+        settingsServiceSpy = new MockUserConfigurationService({
+            nodeConnect: {defaultUsername: "foo"},
+        });
 
         batchExplorerServiceSpy = {
             launchApplication: jasmine.createSpy("").and.returnValue(
