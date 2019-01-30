@@ -6,9 +6,10 @@ import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
 import { FormModule } from "@batch-flask/ui/form";
 import { ContainerConfigurationAttributes, ContainerType } from "app/models";
-import { ContaienrImagesPickerComponent } from "../container-images-picker.component";
-import { ContainerRegistryPickerComponent } from "../container-registry-picker.component";
+import { ContainerConfigurationDto } from "app/models/dtos";
 import { ContainerConfigurationPickerComponent } from "./container-configuration-picker.component";
+import { ContainerImagesPickerComponent } from "./images-picker/container-images-picker.component";
+import { ContainerRegistryPickerComponent } from "./registry-picker/container-registry-picker.component";
 
 @Component({
     template: `<bl-container-configuration-picker [formControl]="containerConfig"></bl-container-configuration-picker>`,
@@ -22,7 +23,7 @@ describe("ContainerConfigurationPickerComponent", () => {
     let testComponent: TestComponent;
     let de: DebugElement;
     let containerTypeSelect: SelectComponent;
-    let imagePicker: ContaienrImagesPickerComponent;
+    let imagePicker: ContainerImagesPickerComponent;
     let registryPicker: ContainerRegistryPickerComponent;
 
     beforeEach(() => {
@@ -31,7 +32,7 @@ describe("ContainerConfigurationPickerComponent", () => {
             declarations: [
                 ContainerConfigurationPickerComponent,
                 TestComponent,
-                ContaienrImagesPickerComponent,
+                ContainerImagesPickerComponent,
                 ContainerRegistryPickerComponent,
             ],
         });
@@ -80,11 +81,11 @@ describe("ContainerConfigurationPickerComponent", () => {
             { imageName: "ubuntu:16.04" },
         ]);
         fixture.detectChanges();
-        expect(testComponent.containerConfig.value).toEqual({
+        expect(testComponent.containerConfig.value).toEqual(new ContainerConfigurationDto({
             type: ContainerType.DockerCompatible,
             containerImageNames: ["ubuntu:18.04", "ubuntu:16.04"],
             containerRegistries: [],
-        });
+        }));
     });
 
     it("propagate changes when updating the registries", () => {
@@ -92,12 +93,12 @@ describe("ContainerConfigurationPickerComponent", () => {
             { username: "foo", password: "pass123!", registryServer: "https://bar.com" },
         ]);
         fixture.detectChanges();
-        expect(testComponent.containerConfig.value).toEqual({
+        expect(testComponent.containerConfig.value).toEqual(new ContainerConfigurationDto({
             type: ContainerType.DockerCompatible,
             containerImageNames: [],
             containerRegistries: [
                 { username: "foo", password: "pass123!", registryServer: "https://bar.com" },
             ],
-        });
+        }));
     });
 });

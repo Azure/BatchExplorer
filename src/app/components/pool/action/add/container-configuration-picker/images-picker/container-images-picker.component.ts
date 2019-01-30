@@ -10,12 +10,11 @@ import { ContainerImage } from "app/models/dtos";
     selector: "bl-container-images-picker",
     templateUrl: "container-images-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ContaienrImagesPickerComponent), multi: true },
-        { provide: NG_VALIDATORS, useExisting: forwardRef(() => ContaienrImagesPickerComponent), multi: true },
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ContainerImagesPickerComponent), multi: true },
+        { provide: NG_VALIDATORS, useExisting: forwardRef(() => ContainerImagesPickerComponent), multi: true },
     ],
 })
-export class ContaienrImagesPickerComponent implements ControlValueAccessor, OnDestroy {
+export class ContainerImagesPickerComponent implements ControlValueAccessor, OnDestroy {
     public images: FormControl;
 
     private _propagateChange: (value: ContainerImage[]) => void = null;

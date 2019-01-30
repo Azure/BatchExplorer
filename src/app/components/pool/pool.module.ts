@@ -15,16 +15,11 @@ import { UserAccountsPickerModule } from "./user-accounts-picker";
 import {
     AppLicensePickerComponent,
     AutoScaleFormulaPickerModule,
-    ContaienrImagesPickerComponent,
-    ContainerConfigurationPickerComponent,
-    ContainerRegistryPickerComponent,
-    CustomImagePickerComponent,
     DeallocationOptionPickerComponent,
     DeletePoolDialogComponent,
     LicenseEulaDialogComponent,
-    OsOfferTileComponent,
     PoolCreateBasicDialogComponent,
-    PoolOsPickerComponent,
+    PoolOSPickerModule,
     PoolResizeDialogComponent,
     PoolScalePickerComponent,
     VmSizePickerComponent,
@@ -35,15 +30,22 @@ import { PoolRoutingModule } from "./pool-routing.module";
 
 const components = [
     AppLicensePickerComponent,
-    ContainerConfigurationPickerComponent, ContaienrImagesPickerComponent, ContainerRegistryPickerComponent,
-    DeallocationOptionPickerComponent, DeletePoolDialogComponent, LicenseEulaDialogComponent, OsOfferTileComponent,
-    PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent, PoolHomeComponent, PoolListComponent,
-    PoolOsPickerComponent, PoolScalePickerComponent, VmSizePickerComponent, VmSizePickerFilterComponent,
-    PoolResizeDialogComponent, CustomImagePickerComponent,
+    DeallocationOptionPickerComponent,
+    DeletePoolDialogComponent,
+    LicenseEulaDialogComponent,
+    PoolAdvancedFilterComponent,
+    PoolCreateBasicDialogComponent,
+    PoolHomeComponent,
+    PoolListComponent,
+    PoolScalePickerComponent,
+    VmSizePickerComponent,
+    VmSizePickerFilterComponent,
+    PoolResizeDialogComponent,
 ];
 
 const modules = [
     TaskBaseModule,
+    PoolOSPickerModule,
     ...commonModules,
 ];
 

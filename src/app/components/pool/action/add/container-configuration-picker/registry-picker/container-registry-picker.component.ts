@@ -10,7 +10,6 @@ import { ContainerRegistryDto } from "app/models/dtos";
     selector: "bl-container-registry-picker",
     templateUrl: "container-registry-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ContainerRegistryPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => ContainerRegistryPickerComponent), multi: true },
     ],

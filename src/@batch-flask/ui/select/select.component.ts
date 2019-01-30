@@ -170,6 +170,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     }
 
     private _propagateChange: (value: any) => void;
+    private _touchedFn: () => void;
     private _optionsMap: Map<any, SelectOptionComponent> = new Map();
     public get dropdownId() {
         return this.id + "-dropdown";
@@ -235,7 +236,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     }
 
     public registerOnTouched(fn: any): void {
-        // nothing yet
+        this._touchedFn = fn;
     }
 
     public clickSelectButton(event: Event) {
@@ -338,7 +339,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
 
     public selectOption(option: SelectOptionComponent | null) {
         this._keyNavigator.focusItem(option);
-
+        let changed = false;
         if (this.multiple) {
             if (option) {
                 if (this.selected.has(option.value)) {
@@ -347,15 +348,25 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
                     this.selected.add(option.value);
                 }
             }
+            changed = true;
         } else {
             if (option) {
-                this.selected = new Set([option.value]);
+                if (!this.selected.has(option.value)) {
+                    changed = true;
+                    this.selected = new Set([option.value]);
+                }
             } else {
-                this.selected = new Set([]);
+                if (this.selected.size !== 0) {
+                    changed = true;
+                    this.selected = new Set([]);
+                }
             }
             this.closeDropdown();
         }
-        this.notifyChanges();
+
+        if (changed) {
+            this.notifyChanges();
+        }
         this.changeDetector.markForCheck();
     }
 
@@ -366,6 +377,9 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     }
 
     public notifyChanges() {
+        if (this._touchedFn) {
+            this._touchedFn();
+        }
         if (this._propagateChange) {
             this._propagateChange(this.value);
         }
