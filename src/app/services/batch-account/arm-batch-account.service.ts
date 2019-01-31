@@ -38,7 +38,7 @@ export class ArmBatchAccountSubscriptionError extends SanitizedError {
 
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class ArmBatchAccountService implements OnDestroy {
     public accounts: Observable<List<ArmBatchAccount>>;
     private _accounts = new BehaviorSubject<List<ArmBatchAccount>>(null);
@@ -163,13 +163,13 @@ export class ArmBatchAccountService implements OnDestroy {
     }
 
     public list(subscriptionId: string): Observable<List<ArmBatchAccount>> {
-        const params = new HttpParams().set("$filter", `resourceType eq '${batchResourceProvider}'`);
-        const options = { params };
+        const options = {};
 
         return this.subscriptionService.get(subscriptionId).pipe(
             flatMap((subscription) => {
                 return this.azure.get<ArmListResponse<any>>(
-                    subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
+                    subscription,
+                    `/subscriptions/${subscriptionId}/providers/Microsoft.Batch/batchAccounts`, options).pipe(
                         map(response => {
                             return List<ArmBatchAccount>(response.value.map((data) => {
                                 return new ArmBatchAccount({ ...data, subscription });

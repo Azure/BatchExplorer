@@ -15,7 +15,11 @@
         </ng-container>
     </ng-container>
     <ng-container *blQuickListRowState="let account">
-        <div *ngIf="account.armEnabled" class="account-location">
+        <div *ngIf="account.armEnabled" class="account-info">
+            <span class="auto-storage" *ngIf="account.autoStorage" title="Auto storage account: {{account.autoStorage.storageAccountId}}"><i class="fa fa-hdd-o"></i></span>
+            <span class="auto-storage error" *ngIf="!account.autoStorage" title="This account has no auto storage account specified">
+                <i class="fa fa-hdd-o"></i>
+            </span>
             <bl-location [location]="account.location"></bl-location>
         </div>
         <ng-container *ngIf="!account.armEnabled">

@@ -1,0 +1,3 @@
+storage-error-display:
+  noAutoStorage: No linked storage account configured for this Batch account. This is required for managing file groups.
+  isClassic: Linked storage account is a classic storage account and cannot be used for this feature.
