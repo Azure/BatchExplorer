@@ -979,6 +979,15 @@
       <trans-unit id="settings.title">
         <source>Settings</source>
       </trans-unit>
+      <trans-unit id="storage-error-display">
+        <source/>
+      </trans-unit>
+      <trans-unit id="storage-error-display.isClassic">
+        <source>Linked storage account is a classic storage account and cannot be used for this feature.</source>
+      </trans-unit>
+      <trans-unit id="storage-error-display.noAutoStorage">
+        <source>No linked storage account configured for this Batch account. This is required for managing file groups.</source>
+      </trans-unit>
       <trans-unit id="task-commands">
         <source/>
       </trans-unit>
