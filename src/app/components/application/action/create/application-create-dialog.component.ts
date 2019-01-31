@@ -35,7 +35,7 @@ export class ApplicationCreateDialogComponent {
 
         const validation = Constants.forms.validation;
         this.form = this.formBuilder.group({
-            id: ["", [
+            name: ["", [
                 Validators.required,
                 Validators.maxLength(validation.maxLength.applicationName),
                 Validators.pattern(validation.regex.id),
@@ -53,7 +53,7 @@ export class ApplicationCreateDialogComponent {
     }
 
     public setValue(application: BatchApplication, version?: string) {
-        // TODO: need to disable appId and version fields if they are supplied
+        this.form.controls.name.disable();
         this.form.patchValue(applicationToCreateFormModel(application, version));
         if (version) {
             this.title = "Update selected package";
@@ -87,9 +87,9 @@ export class ApplicationCreateDialogComponent {
     @autobind()
     public submit(): Observable<any> {
         const formData = this.form.value;
-        const applicationId = formData.id;
+        const applicationId = formData.name;
 
-        return this.packageService.put(formData.id, formData.version).pipe(
+        return this.packageService.put(formData.name, formData.version).pipe(
             switchMap((pkg) => {
                 return this._uploadAppPackage(this.file, pkg.properties.storageUrl).pipe(
                     mapTo(pkg),

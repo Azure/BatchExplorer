@@ -51,9 +51,7 @@ export class BatchApplicationPackageCommands
     }
 
     private _delete(pkg: BatchApplicationPackage) {
-        return this.packageService.delete(pkg.id).pipe(
-            switchMap(() => this.packageService.get(pkg.id)),
-        );
+        return this.packageService.delete(pkg.id);
     }
 
     private _activate(pkg: BatchApplicationPackage) {
