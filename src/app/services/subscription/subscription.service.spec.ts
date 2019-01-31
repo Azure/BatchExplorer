@@ -1,6 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { AccessToken } from "@batch-flask/core";
+import { MockUserConfigurationService } from "@batch-flask/core/testing";
 import { Subscription, TenantDetails } from "app/models";
 import { BehaviorSubject, of } from "rxjs";
 import { AdalService } from "../adal";
@@ -56,7 +57,7 @@ describe("SubscriptionService", () => {
 
     let tenantDetailsServiceSpy;
     let adalSpy;
-    let settingsServiceSpy;
+    let settingsServiceSpy: MockUserConfigurationService;
     let httpMock: HttpTestingController;
     let subscriptions: Subscription[] = [];
 
@@ -93,9 +94,7 @@ describe("SubscriptionService", () => {
 
         httpMock = TestBed.get(HttpTestingController);
 
-        settingsServiceSpy = {
-            settingsObs: new BehaviorSubject({}),
-        };
+        settingsServiceSpy = new MockUserConfigurationService({});
         service = new SubscriptionService(
             tenantDetailsServiceSpy, TestBed.get(AzureHttpService), TestBed.get(AdalService), settingsServiceSpy);
         service.subscriptions.subscribe(x => subscriptions = x.toJS());

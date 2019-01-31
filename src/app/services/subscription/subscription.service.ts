@@ -34,7 +34,7 @@ export class SubscriptionService implements OnDestroy {
 
         const ignoredPatterns = this.settingsService.watch("subscriptions").pipe(
             takeUntil(this._destroy),
-            map((settings) => settings.ignore || []),
+            map((settings) => settings && settings.ignore || []),
             distinctUntilChanged(),
         );
 

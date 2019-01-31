@@ -1,8 +1,9 @@
 import { TestBed } from "@angular/core/testing";
 import * as path from "path";
-import { BehaviorSubject, of } from "rxjs";
+import { of } from "rxjs";
 
 import { UserConfigurationService } from "@batch-flask/core";
+import { MockUserConfigurationService } from "@batch-flask/core/testing";
 import { FileSystemService } from "@batch-flask/electron";
 import { OS, Platform } from "@batch-flask/utils";
 import { ConnectionType, IaasNodeConnectionSettings, NodeConnectionSettings, Pool } from "app/models";
@@ -13,7 +14,7 @@ import { NodeConnectService } from "./node-connect.service";
 describe("NodeConnectService", () => {
     let nodeConnectService: NodeConnectService;
 
-    let settingsServiceSpy;
+    let settingsServiceSpy: MockUserConfigurationService;
     let fsServiceSpy;
     let sshKeyServiceSpy;
     let httpSpy;
@@ -51,12 +52,9 @@ describe("NodeConnectService", () => {
             getLocalPublicKey: jasmine.createSpy("getLocalPublicKey").and.returnValue(of("baz")),
         };
 
-        settingsServiceSpy = {
-            config: new BehaviorSubject({
-                nodeConnect: { defaultUsername: "foo" },
-            }),
-        };
-
+        settingsServiceSpy = new MockUserConfigurationService({
+            nodeConnect: { defaultUsername: "foo" },
+        });
         httpSpy = {
             get: jasmine.createSpy("get").and.callFake((str) => {
                 const parts = str.split("/");

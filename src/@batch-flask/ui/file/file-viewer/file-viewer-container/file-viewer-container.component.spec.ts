@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 import { UserConfigurationService } from "@batch-flask/core";
-import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nTestingModule, MockUserConfigurationService } from "@batch-flask/core/testing";
 import { MockElectronRemote, MockElectronShell } from "@batch-flask/electron/testing";
 import { File, FileLoader } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
@@ -36,6 +36,7 @@ describe("FileViewerContainerComponent", () => {
     let shellSpy: MockElectronShell;
     let remoteSpy: MockElectronRemote;
     let notificationServiceSpy: NotificationServiceMock;
+    let configService: MockUserConfigurationService;
 
     let fsSpy;
     let propertyGetterSpy: jasmine.Spy;
@@ -51,6 +52,7 @@ describe("FileViewerContainerComponent", () => {
         shellSpy = new MockElectronShell();
         remoteSpy = new MockElectronRemote();
         notificationServiceSpy = new NotificationServiceMock();
+        configService = new MockUserConfigurationService({});
 
         TestBed.configureTestingModule({
             imports: [I18nTestingModule, ButtonsModule],
@@ -69,6 +71,7 @@ describe("FileViewerContainerComponent", () => {
                 remoteSpy.asProvider(),
                 shellSpy.asProvider(),
                 notificationServiceSpy.asProvider(),
+                configService.asProvider(),
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

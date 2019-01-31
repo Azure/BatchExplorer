@@ -9,4 +9,8 @@ export class MockUserConfigurationService<T = any> extends UserConfigurationServ
         };
         super(store, {} as any);
     }
+
+    public asProvider() {
+        return { provide: UserConfigurationService, useValue: this };
+    }
 }
