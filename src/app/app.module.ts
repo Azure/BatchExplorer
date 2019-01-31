@@ -88,5 +88,3 @@ const modules = [
     ],
 })
 export class AppModule { }
-
-console.log("PG", DEFAULT_BE_USER_CONFIGURATION);
