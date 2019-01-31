@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { EntityConfigurationView, UserConfigurationService } from "@batch-flask/core";
-import { BEUserDesktopConfiguration } from "app/services";
+import { BEUserDesktopConfiguration, DEFAULT_BE_USER_CONFIGURATION } from "app/services";
 import { Subject } from "rxjs";
 import { debounceTime, takeUntil } from "rxjs/operators";
 import "./settings.scss";
@@ -32,6 +32,7 @@ export class SettingsComponent implements OnDestroy {
     public form: FormGroup<SettingsSelection>;
     public viewerOptions = ["log", "code", "image"];
     public saved = false;
+    public modified = false;
     private _destroy = new Subject();
     private _lastValue: string | null = null;
 
@@ -54,6 +55,9 @@ export class SettingsComponent implements OnDestroy {
         });
 
         this.userConfigurationService.config.pipe(takeUntil(this._destroy)).subscribe((config) => {
+            this.modified = JSON.stringify(config) !== JSON.stringify(DEFAULT_BE_USER_CONFIGURATION);
+            this.changeDetector.markForCheck();
+
             const selection: SettingsSelection = {
                 theme: config.theme,
                 entityConfigurationDefaultView: config.entityConfiguration.defaultView,
