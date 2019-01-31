@@ -964,14 +964,20 @@
       <trans-unit id="settings">
         <source/>
       </trans-unit>
-      <trans-unit id="settings.defaultSettings">
-        <source>Default settings</source>
+      <trans-unit id="settings.gallerySettings">
+        <source>Gallery settings</source>
+      </trans-unit>
+      <trans-unit id="settings.general">
+        <source>General</source>
+      </trans-unit>
+      <trans-unit id="settings.reset">
+        <source>Reset to default settings</source>
+      </trans-unit>
+      <trans-unit id="settings.saved">
+        <source>Saved</source>
       </trans-unit>
       <trans-unit id="settings.title">
         <source>Settings</source>
-      </trans-unit>
-      <trans-unit id="settings.userSettings">
-        <source>User settings</source>
       </trans-unit>
       <trans-unit id="task-commands">
         <source/>
