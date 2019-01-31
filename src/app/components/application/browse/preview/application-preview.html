@@ -1,4 +1,4 @@
-<div [ngSwitch]="application.allowUpdates">
+<div [ngSwitch]="application.properties.allowUpdates">
     <div *ngSwitchCase="true" class="success" matTooltip="Application allows updates">
         <i class="fa fa-unlock-alt" aria-hidden="true"></i>
     </div>
