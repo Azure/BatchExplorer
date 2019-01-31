@@ -116,24 +116,29 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         return column.name;
     }
 
-    public trackRows(_: number, row: any) {
-        return row;
+    public trackRows(index: number) {
+        return index;
     }
 
-    private _buildControlsFromValue(value: any[], columns: EditableTableColumnComponent[]) {
-        const controls: FormGroup[] = [];
-
-        if (Array.isArray(value) && value.length > 0) {
-            for (const val of value) {
-                const obj = {};
-                for (const column of columns) {
-                    obj[column.name] = [val[column.name] || column.default];
+    private _buildControlsFromValue(items: any[], columns: EditableTableColumnComponent[]) {
+        if (Array.isArray(items) && items.length > 0) {
+            const controls: FormGroup[] = Object.values(this.items.controls).slice(0, items.length) as any;
+            if (controls.length < items.length) {
+                for (const _ of items.slice(controls.length)) {
+                    controls.push(this._createEmptyRow(columns));
                 }
-                controls.push(this.formBuilder.group(obj));
+                controls.push(this._createEmptyRow(columns));
+            } else if (controls.length === items.length) {
+                controls.push(this._createEmptyRow(columns));
             }
+
+            for (const [index, value] of items.entries()) {
+                controls[index].patchValue(value);
+            }
+            this.form.setControl("items", new FormArray(controls));
+        } else {
+            this.form.setControl("items", new FormArray([this._createEmptyRow(columns)]));
         }
-        controls.push(this._createEmptyRow(columns));
-        this.form.setControl("items", new FormArray(controls));
         this.changeDetector.markForCheck();
     }
 

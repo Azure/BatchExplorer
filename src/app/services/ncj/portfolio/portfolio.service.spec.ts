@@ -1,5 +1,5 @@
-import { MockGlobalStorage } from "@batch-flask/core/testing";
-import { BehaviorSubject, Subject } from "rxjs";
+import { MockGlobalStorage, MockUserConfigurationService } from "@batch-flask/core/testing";
+import { Subject } from "rxjs";
 import { tap } from "rxjs/operators";
 import { Portfolio, PortfolioReference, PortfolioType } from "./portfolio";
 import { MICROSOFT_PORTFOLIO, PortfolioService } from "./portfolio.service";
@@ -20,7 +20,7 @@ describe("Portfolio Service", () => {
     let service: PortfolioService;
     let fsSpy;
     let globalStorageSpy;
-    let settingsServiceSpy;
+    let settingsServiceSpy: MockUserConfigurationService;
     let portfolios: Portfolio[];
     let resolvePortfolio;
 
@@ -36,12 +36,12 @@ describe("Portfolio Service", () => {
 
         spyOnProperty(Portfolio.prototype, "ready").and.returnValue(resolvePortfolio);
 
-        settingsServiceSpy = {
-            settingsObs: new BehaviorSubject({
-                "github-data.source.branch": "master",
-                "github-data.source.repo": "Azure/BatchExplorer-data",
-            }),
-        };
+        settingsServiceSpy = new MockUserConfigurationService({
+            githubData: {
+                branch: "master",
+                repo: "Azure/BatchExplorer-data",
+            },
+        });
         service = new PortfolioService(globalStorageSpy, fsSpy, settingsServiceSpy);
         service.portfolios.subscribe(x => portfolios = x);
     });
@@ -68,9 +68,11 @@ describe("Portfolio Service", () => {
     describe("when settings change", () => {
         it("changes the portfolio list", () => {
             portfolios = null;
-            settingsServiceSpy.settingsObs.next({
-                "github-data.source.branch": "feature/test-1",
-                "github-data.source.repo": "Azure/BatchExplorer-data",
+            settingsServiceSpy.patch({
+                githubData: {
+                    branch: "feature/test-1",
+                    repo: "Azure/BatchExplorer-data",
+                },
             });
 
             expect(portfolios.length).toEqual(3);
@@ -85,7 +87,7 @@ describe("Portfolio Service", () => {
 
         it("doesn't update the list if other settings are updated", () => {
             portfolios = null;
-            settingsServiceSpy.settingsObs.next({
+            settingsServiceSpy.patch({
                 some: "other",
             });
 

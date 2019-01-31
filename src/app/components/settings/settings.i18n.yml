@@ -1,4 +1,6 @@
 settings:
   title: Settings
-  defaultSettings: Default settings
-  userSettings: User settings
+  saved: Saved
+  general: General
+  gallerySettings: Gallery settings
+  reset: Reset to default settings

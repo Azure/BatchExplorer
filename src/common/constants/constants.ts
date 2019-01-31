@@ -201,6 +201,7 @@ export const customProtocolName = "ms-batch-explorer";
  */
 export const rendererEvents = {
     batchExplorerLink: "batchExplorer-link",
+    navigateTo: "navigate-to",
 };
 
 export const isRenderer = (process && process.type === "renderer");

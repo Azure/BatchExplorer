@@ -2,6 +2,9 @@ import { log } from "@batch-flask/utils";
 import { Observable } from "rxjs";
 import { map, publishReplay, refCount, take } from "rxjs/operators";
 
+export interface StorageSetOptions {
+    pretty?: boolean;
+}
 /**
  * Low level storage abstraction.
  * To be implemented differently in browser and in electron
@@ -19,8 +22,8 @@ export abstract class GlobalStorage {
      * @param key Storage key
      * @param value Object to store
      */
-    public set<T extends {}>(key: string, value: T) {
-        const content = JSON.stringify(value);
+    public set<T extends {}>(key: string, value: T, options: StorageSetOptions = {}) {
+        const content = JSON.stringify(value, null, options.pretty ? 2 : undefined);
         return this.save(key, content);
     }
 

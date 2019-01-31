@@ -1,18 +1,18 @@
+import { MockUserConfigurationService } from "@batch-flask/core/testing";
 import { Constants } from "common";
-import { BehaviorSubject } from "rxjs";
 import { VersionService, VersionType } from "./version.service";
 
 describe("VersionService", () => {
     let service: VersionService;
     let autoUpdateServiceSpy;
     let remoteSpy;
-    let settingsServiceSpy;
+    let settingsServiceSpy: MockUserConfigurationService;
     let version: string;
     let updateChannel: VersionType;
 
     function createService() {
         if (service) { service.ngOnDestroy(); }
-        service = new VersionService(autoUpdateServiceSpy, remoteSpy, settingsServiceSpy);
+        service = new VersionService(autoUpdateServiceSpy, remoteSpy, settingsServiceSpy as any);
         service.updateChannel.subscribe(x => updateChannel = x);
     }
 
@@ -25,9 +25,7 @@ describe("VersionService", () => {
         remoteSpy = {
             getCurrentWindow: () => ({ batchExplorerApp: { version } }),
         };
-        settingsServiceSpy = {
-            settingsObs: new BehaviorSubject({}),
-        };
+        settingsServiceSpy = new MockUserConfigurationService({});
     });
 
     afterEach(() => {
@@ -99,8 +97,10 @@ describe("VersionService", () => {
 
             expect(service.versionType).toEqual(VersionType.Insider);
 
-            settingsServiceSpy.settingsObs.next({
-                "update.channel": "some-invalid",
+            settingsServiceSpy.patch({
+                update: {
+                    channel: "some-invalid",
+                },
             });
             expect(updateChannel).toEqual(VersionType.Insider);
         });
@@ -111,8 +111,10 @@ describe("VersionService", () => {
 
             expect(service.versionType).toEqual(VersionType.Insider);
 
-            settingsServiceSpy.settingsObs.next({
-                "update.channel": "testing",
+            settingsServiceSpy.patch({
+                update: {
+                    channel: "testing",
+                },
             });
             expect(updateChannel).toEqual(VersionType.Testing);
         });
@@ -123,8 +125,10 @@ describe("VersionService", () => {
 
             expect(service.versionType).toEqual(VersionType.Stable);
 
-            settingsServiceSpy.settingsObs.next({
-                "update.channel": "insider",
+            settingsServiceSpy.patch({
+                update: {
+                    channel: "insider",
+                },
             });
             expect(autoUpdateServiceSpy.setFeedUrl).toHaveBeenCalledWith(Constants.AutoUpdateUrls.insider);
         });

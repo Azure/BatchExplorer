@@ -4,13 +4,14 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { Subject, combineLatest } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { TelemetryService } from "@batch-flask/core";
+import { TelemetryService, UserConfigurationService } from "@batch-flask/core";
 import { ElectronRemote, IpcService } from "@batch-flask/electron";
 import { Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
+    BEUserConfiguration,
     BatchAccountService,
     CommandService,
     NavigatorService,
@@ -19,7 +20,6 @@ import {
     PredefinedFormulaService,
     PricingService,
     PythonRpcService,
-    SettingsService,
     SubscriptionService,
     ThemeService,
 } from "app/services";
@@ -41,12 +41,12 @@ export class AppComponent implements OnInit, OnDestroy {
     constructor(
         matIconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
-        private settingsService: SettingsService,
         private commandService: CommandService,
         private accountService: BatchAccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
         private poolOsService: PoolOsService,
+        userConfigurationService: UserConfigurationService<BEUserConfiguration>,
         remote: ElectronRemote,
         pythonRpcService: PythonRpcService,
         themeService: ThemeService,
@@ -61,7 +61,6 @@ export class AppComponent implements OnInit, OnDestroy {
         private workspaceService: WorkspaceService,
     ) {
         this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
-        this.settingsService.init();
         this._initWorkspaces();
         this.commandService.init();
         this.pricingService.init();
@@ -73,7 +72,7 @@ export class AppComponent implements OnInit, OnDestroy {
         themeService.init();
 
         combineLatest(
-            settingsService.hasSettingsLoaded,
+            userConfigurationService.config,
             workspaceService.haveWorkspacesLoaded,
         ).pipe(takeUntil(this._destroy)).subscribe((loadedArray) => {
             this.isAppReady = loadedArray[0] && loadedArray[1];

@@ -57,7 +57,6 @@ export * from "./resource-descriptor";
 export * from "./resource-file";
 export * from "./resource-group";
 export * from "./schedule";
-export * from "./settings";
 export * from "./ssh-public-key";
 export * from "./start-task-info";
 export * from "./start-task";
