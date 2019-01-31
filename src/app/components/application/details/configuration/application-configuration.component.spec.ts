@@ -41,9 +41,7 @@ describe("ApplicationConfigurationComponent", () => {
 
     it("application and decorator are set", () => {
         expect(component.application).toBeDefined();
-        expect(component.decorator).toBeDefined();
         expect(component.application.id).toEqual("app-1");
-        expect(component.decorator.id).toEqual("app-1");
     });
 
     it("allow updates is displayed", () => {

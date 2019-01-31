@@ -100,7 +100,6 @@ describe("ApplicationPackagesComponent", () => {
         it("add, edit, and activate disabled on load", () => {
             expect(component.deleteEnabled).toBe(false);
             expect(component.activateEnabled).toBe(false);
-            expect(component.editEnabled).toBe(false);
         });
 
         describe("deleteItemEnabled", () => {
@@ -126,30 +125,6 @@ describe("ApplicationPackagesComponent", () => {
                 fixture.detectChanges();
 
                 expect(component.deleteEnabled).toBe(false);
-            });
-        });
-
-        describe("editItemEnabled", () => {
-            beforeEach(() => {
-                listComponent.activeItem = "1.0";
-            });
-
-            it("enabled if one item selected", () => {
-                listComponent.selection = new ListSelection({ keys: ["1.0"] });
-                expect(component.editEnabled).toBe(true);
-            });
-
-            it("disabled if many items selected", () => {
-                listComponent.selection = new ListSelection({ keys: ["1.0", "2.0", "3.0"] });
-                expect(component.editEnabled).toBe(false);
-            });
-
-            it("disabled if application.allowUpdates set to false", () => {
-                component.application = applicationMap.get(disabledApp);
-                listComponent.activeItem = "2.0";
-                fixture.detectChanges();
-
-                expect(component.editEnabled).toBe(false);
             });
         });
 

@@ -1,27 +1,26 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
-
 import { ListSelection } from "@batch-flask/core/list";
 import { BatchApplication } from "app/models";
 import { ComponentUtils } from "app/utils";
+import { BatchApplicationPackageCommands } from "../action";
 
 @Component({
     selector: "bl-application-packages",
     templateUrl: "application-packages.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [BatchApplicationPackageCommands]
 })
-
 export class ApplicationPackagesComponent implements OnChanges {
 
     @Input() public application: BatchApplication;
 
     public deleteEnabled = false;
-    public editEnabled = false;
     public activateEnabled = false;
 
     private _selection: ListSelection = new ListSelection();
     private _activeItem: string;
 
-    constructor(private changeDetector: ChangeDetectorRef) {
+    constructor(public commands: BatchApplicationPackageCommands, private changeDetector: ChangeDetectorRef) {
 
     }
 
@@ -43,13 +42,16 @@ export class ApplicationPackagesComponent implements OnChanges {
         this._updateEnabled();
     }
 
-    private _activatedItemEditEnabled() {
-        return this.application.allowUpdates && !this._isPackagePending(this._activeItem)
-            && Boolean(this._activeItem) && !this._selection.hasMultiple();
+    public deleteSelection() {
+        this.commands.delete.executeMultipleByIds([...this._selection.keys]);
+    }
+
+    public activateSelection() {
+        this.commands.activate.executeMultipleByIds([...this._selection.keys]);
     }
 
     private _activatedItemDeleteEnabled() {
-        return this.application.allowUpdates && Boolean(this._activeItem);
+        return this.application.properties.allowUpdates && Boolean(this._activeItem);
     }
 
     private _activatedItemActivateEnabled() {
@@ -66,13 +68,11 @@ export class ApplicationPackagesComponent implements OnChanges {
     private _updateEnabled() {
         this.activateEnabled = this._activatedItemActivateEnabled();
         this.deleteEnabled = this._activatedItemDeleteEnabled();
-        this.editEnabled = this._activatedItemEditEnabled();
         this.changeDetector.markForCheck();
     }
 
     private _resetEnabled() {
         this.deleteEnabled = false;
-        this.editEnabled = false;
         this.activateEnabled = false;
     }
 }

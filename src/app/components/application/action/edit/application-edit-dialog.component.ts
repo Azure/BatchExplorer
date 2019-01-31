@@ -1,12 +1,12 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, ChangeDetectorRef } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { ApplicationPackage, BatchApplication } from "app/models";
+import { BatchApplication, BatchApplicationPackage } from "app/models";
 import { applicationToEditFormModel, editApplicationFormToJsonData } from "app/models/forms";
-import { BatchApplicationService } from "app/services";
+import { BatchApplicationService, BatchApplicationPackageService } from "app/services";
 import { Constants } from "common";
 import { List } from "immutable";
 import { Observable } from "rxjs";
@@ -18,14 +18,16 @@ import { Observable } from "rxjs";
 export class ApplicationEditDialogComponent {
     public form: FormGroup;
     public application: BatchApplication;
-    public packages: List<ApplicationPackage>;
+    public packages: List<BatchApplicationPackage>;
     public title: string = "Edit application";
     public description: string = "Update the display name, default version, or locked status of your application";
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<ApplicationEditDialogComponent>,
         private applicationService: BatchApplicationService,
+        private packageService: BatchApplicationPackageService,
         private notificationService: NotificationService) {
 
         const validation = Constants.forms.validation;
@@ -44,11 +46,17 @@ export class ApplicationEditDialogComponent {
     public setValue(application: BatchApplication) {
         this.application = application;
         this.packages = List([]);
+        this.changeDetector.markForCheck();
+
+        this.packageService.listAll(application.id).subscribe((packages) => {
+            this.packages = packages;
+            this.changeDetector.markForCheck();
+        });
         this.form.patchValue(applicationToEditFormModel(application));
     }
 
-    public trackByFn(index, pkg: ApplicationPackage) {
-        return pkg.version;
+    public trackByFn(index, pkg: BatchApplicationPackage) {
+        return pkg.id;
     }
 
     @autobind()

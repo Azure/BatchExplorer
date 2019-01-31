@@ -7,7 +7,6 @@ export * from "./authorization";
 export * from "./application";
 export * from "./application-action";
 export * from "./application-license";
-export * from "./application-package";
 export * from "./application-package-reference";
 export * from "./auto-user";
 export * from "./autoscale-formula";

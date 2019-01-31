@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { PinnedEntityType } from "@batch-flask/core";
 import { File, Workspace } from "@batch-flask/ui";
 import {
-    ApplicationPackage,
+    BatchApplicationPackage,
     ArmBatchAccount,
     BatchApplication,
     BlobContainer,
@@ -240,7 +240,7 @@ export const application = new FixtureFactory<BatchApplication>(BatchApplication
     packages: null,
 });
 
-export const applicationPackage = new FixtureFactory<ApplicationPackage>(ApplicationPackage, {
+export const applicationPackage = new FixtureFactory<BatchApplicationPackage>(BatchApplicationPackage, {
     version: "1",
     state: PackageState.active,
     format: "zip",

@@ -1,18 +1,17 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import * as storage from "azure-storage";
-import { Observable, throwError } from "rxjs";
-import { flatMap, tap } from "rxjs/operators";
-
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { log, prettyBytes } from "@batch-flask/utils";
-import { BatchApplication } from "app/models";
+import { BatchApplication, BatchApplicationPackage } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
-import { BatchApplicationService } from "app/services";
+import { BatchApplicationPackageService, BatchApplicationService } from "app/services";
 import { StorageBlobService } from "app/services/storage";
+import * as storage from "azure-storage";
 import { Constants } from "common";
+import { Observable, throwError } from "rxjs";
+import { mapTo, switchMap, tap } from "rxjs/operators";
 
 @Component({
     selector: "bl-application-create-dialog",
@@ -30,6 +29,7 @@ export class ApplicationCreateDialogComponent {
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<ApplicationCreateDialogComponent>,
         private applicationService: BatchApplicationService,
+        private packageService: BatchApplicationPackageService,
         private storageBlobService: StorageBlobService,
         private notificationService: NotificationService) {
 
@@ -87,17 +87,22 @@ export class ApplicationCreateDialogComponent {
     @autobind()
     public submit(): Observable<any> {
         const formData = this.form.value;
+        const applicationId = formData.id;
 
-        return this.applicationService.put(formData.id, formData.version).pipe(
-            flatMap((packageVersion) => this._uploadAppPackage(this.file, packageVersion.storageUrl)),
-            tap(() => {
-                const obs =  this.applicationService.activatePackage(formData.id, formData.version);
+        return this.packageService.put(formData.id, formData.version).pipe(
+            switchMap((pkg) => {
+                return this._uploadAppPackage(this.file, pkg.properties.storageUrl).pipe(
+                    mapTo(pkg),
+                );
+            }),
+            tap((pkg: BatchApplicationPackage) => {
+                const obs =  this.packageService.activate(pkg.id);
                 obs.subscribe({
                     next: () => {
-                        this.applicationService.onApplicationAdded.next(formData.id);
+                        this.applicationService.onApplicationAdded.next(applicationId);
                         this.notificationService.success(
                             "Application added!",
-                            `Version ${formData.version} for application '${formData.id}' was successfully created!`,
+                            `Version ${pkg.name} for application '${applicationId}' was successfully created!`,
                         );
                     },
                     error: (response: any) => {

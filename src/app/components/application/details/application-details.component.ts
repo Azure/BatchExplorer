@@ -15,10 +15,12 @@ import { BatchApplicationCommands } from "../action";
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
         const label = tab ? `Application - ${tab}` : "Application";
-        return {
-            name: id,
-            label,
-        };
+        let name;
+        if (id) {
+            const split = id.split("/");
+            name = split[split.length - 1];
+        }
+        return { name: name, label };
     }
 
     public application: BatchApplication;

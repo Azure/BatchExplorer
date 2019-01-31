@@ -4,10 +4,9 @@ import {
 } from "@angular/forms";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
-
 import { ListView, ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { ApplicationPackage, BatchApplication } from "app/models";
+import { BatchApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationListParams, BatchApplicationService } from "app/services";
 
 import "./app-package-picker.scss";
@@ -64,12 +63,11 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             return false;
         };
 
+        // TODO-TIM cleanup
         // subscribe to the application data proxy
         this._data.items.subscribe((applications) => {
             this._applicationMap = {};
             if (applications.size > 0) {
-                this._mapApplicationPackages(applications);
-
                 // when this is called the packages will all be loaded from writeValue.
                 let index = 0;
                 (this.items.value as PackageReference[] || []).forEach(item => {
@@ -200,7 +198,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         return application.id;
     }
 
-    public trackPackage(index, pkg: ApplicationPackage) {
+    public trackPackage(index, pkg: BatchApplicationPackage) {
         return pkg.version;
     }
 
@@ -217,38 +215,4 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             && this._applicationMap[application].indexOf(version) !== -1;
     }
 
-    /*
-     * Map application data into [application][packages[]]
-     * _appPackageMap["blender"]["1", "1.34", "2"]
-     * _appPackageMap["image-magic"]["1A", "1B"]
-     * ...
-     */
-    private _mapApplicationPackages(applications: List<BatchApplication>) {
-        this.applications = applications;
-        if (applications && applications.size > 0) {
-            applications.forEach((application) => {
-                // TODO: remove lower case when API bug fixed.
-                const currentAppId = application.id.toLowerCase();
-                if (this._applicationMap[currentAppId] === undefined) {
-                    this._applicationMap[currentAppId] = [];
-                }
-
-                // If there is a default version set allow the user to select "use default"
-                if (application.defaultVersion) {
-                    this._applicationMap[currentAppId].push(this._defaultVersionText);
-                }
-
-                // Add the packages to the application map
-                // TODO-TIM
-                // application.packages.forEach((appPackage: ApplicationPackage) => {
-                //     const currentPackageVersion = appPackage.version;
-                //     if (this._applicationMap[currentAppId][currentPackageVersion] === undefined) {
-                //         this._applicationMap[currentAppId].push(currentPackageVersion);
-                //     }
-                // });
-            });
-
-            this._mapped = true;
-        }
-    }
 }

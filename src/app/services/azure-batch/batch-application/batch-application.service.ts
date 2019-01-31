@@ -7,7 +7,7 @@ import {
     ListView,
     ServerError,
 } from "@batch-flask/core";
-import { ApplicationPackage, BatchApplication } from "app/models";
+import { BatchApplication } from "app/models";
 import { ArmHttpService } from "app/services/arm-http.service";
 import { BatchAccountService } from "app/services/batch-account";
 import {
@@ -16,7 +16,7 @@ import {
 } from "app/services/core";
 import { Constants } from "common";
 import { Observable, Subject } from "rxjs";
-import { map, takeUntil } from "rxjs/operators";
+import { takeUntil } from "rxjs/operators";
 
 export interface ApplicationListParams {
 }
@@ -37,12 +37,6 @@ export class BatchApplicationService implements OnDestroy {
      * Used to notify the list of a new item
      */
     public onApplicationAdded = new Subject<string>();
-
-    /**
-     * Triggered when a new version is added to an application.
-     * Used to notify the list of a new item
-     */
-    public onPackageVersionAdded = new Subject<string>();
 
     private _currentAccountId: string;
     private _basicProperties: string = "id,displayName,allowUpdates,defaultVersion";
@@ -115,20 +109,6 @@ export class BatchApplicationService implements OnDestroy {
     }
 
     /**
-     * Creates an application package record.
-     * @param applicationId: id of the application
-     * @param version: selected package version
-     */
-    public put(applicationId: string, version: string): Observable<ApplicationPackage> {
-
-        return this.arm
-            .put(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
-            .pipe(
-                map(response => new ApplicationPackage(response)),
-            );
-    }
-
-    /**
      * Updates settings for the specified application.
      * @param application: application to patch to the current state
      * @param jsonData: json data containing the application patch data
@@ -150,43 +130,6 @@ export class BatchApplicationService implements OnDestroy {
      */
     public delete(applicationId: string): Observable<any> {
         return this.arm.delete(`${this._currentAccountId}/applications/${applicationId}`);
-    }
-
-    /**
-     * Activates the specified application package.
-     * Note: This is just a backup in case the automatic activation fails for whatever
-     * reason, leaving the package in an inconsistent state.
-     * @param applicationId: id of the application
-     * @param version: selected package version
-     */
-    public activatePackage(applicationId: string, version: string): Observable<any> {
-        return this.arm.post(
-            `${this._currentAccountId}/applications/${applicationId}/versions/${version}/activate`,
-            {
-                format: "zip",
-            },
-        );
-    }
-
-    /**
-     * Gets information about the specified application package.
-     * TODO: Returns an Observable so won't work with delete poller.
-     * @param applicationId: id of the application
-     * @param version: selected package version
-     */
-    public getPackage(applicationId: string, version: string): Observable<ApplicationPackage> {
-        return this.arm.get(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`).pipe(
-            map(response => new ApplicationPackage(response)),
-        );
-    }
-
-    /**
-     * Deletes an application package record and its associated binary file.
-     * @param applicationId: id of the application
-     * @param version: selected package version
-     */
-    public deletePackage(applicationId: string, version: string): Observable<any> {
-        return this.arm.delete(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`);
     }
 
     /**
