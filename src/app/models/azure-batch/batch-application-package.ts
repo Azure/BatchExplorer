@@ -31,6 +31,11 @@ export class BatchApplicationPackage extends ArmRecord<BatchApplicationPackageAt
     @Prop() public id: string;
     @Prop() public name: string;
     @Prop() public properties: BatchApplicationPackageProperties;
+
+    public get applicationId(): string {
+        // Remove the versions/{id}
+        return this.id.split("/").slice(0, -2).join("/");
+    }
 }
 
 export enum PackageState {

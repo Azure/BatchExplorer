@@ -10,7 +10,6 @@
         <bl-quick-list-item-status [status]="appStatus(application)"></bl-quick-list-item-status>
     </ng-container>
     <ng-container *blQuickListRowTitle="let application">{{application.name}}</ng-container>
-    <ng-container *blQuickListRowState="let application">{{application.packages?.size}} packages</ng-container>
 
     <ng-container *blQuickListRowExtra="let application">
         <bl-application-preview [application]="application"></bl-application-preview>

@@ -6,9 +6,10 @@ import { BatchApplication, BatchApplicationPackage } from "app/models";
 import { BatchApplicationPackageListParams, BatchApplicationPackageService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, of } from "rxjs";
+import { Observable, Subject, of } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import {
-     BatchApplicationPackageCommands,
+    BatchApplicationPackageCommands,
 } from "../action";
 
 @Component({
@@ -24,6 +25,7 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
     public displayedPackages: List<BatchApplicationPackage> = List([]);
     public data: ListView<BatchApplicationPackage, BatchApplicationPackageListParams>;
 
+    private _destroy = new Subject();
     constructor(
         public commands: BatchApplicationPackageCommands,
         protected dialog: MatDialog,
@@ -36,6 +38,12 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
         this.data.items.subscribe((packages) => {
             this.packages = packages;
             this._filterPackages();
+        });
+
+        this.packagesService.onPackageAdded.pipe(takeUntil(this._destroy)).subscribe((id) => {
+            if (id.startsWith(this.application.id)) {
+                this.data.loadNewItem(this.packagesService.get(id));
+            }
         });
     }
 
@@ -51,6 +59,8 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
 
     public ngOnDestroy() {
         this.data.dispose();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public handleFilter(filter) {

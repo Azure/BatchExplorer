@@ -11,7 +11,7 @@ import { StorageBlobService } from "app/services/storage";
 import * as storage from "azure-storage";
 import { Constants } from "common";
 import { Observable, throwError } from "rxjs";
-import { mapTo, switchMap, tap } from "rxjs/operators";
+import { catchError, mapTo, share, switchMap, tap } from "rxjs/operators";
 
 @Component({
     selector: "bl-application-create-dialog",
@@ -87,44 +87,43 @@ export class ApplicationCreateDialogComponent {
     @autobind()
     public submit(): Observable<any> {
         const formData = this.form.value;
-        const applicationId = formData.name;
+        const applicationName = this.form.controls.name.value;
 
-        return this.packageService.put(formData.name, formData.version).pipe(
-            switchMap((pkg) => {
+        return this.packageService.put(applicationName, formData.version).pipe(
+            switchMap((pkg: BatchApplicationPackage) => {
                 return this._uploadAppPackage(this.file, pkg.properties.storageUrl).pipe(
+                    switchMap(() => this.packageService.activate(pkg.id)),
                     mapTo(pkg),
                 );
             }),
-            tap((pkg: BatchApplicationPackage) => {
-                const obs =  this.packageService.activate(pkg.id);
-                obs.subscribe({
-                    next: () => {
-                        this.applicationService.onApplicationAdded.next(applicationId);
-                        this.notificationService.success(
-                            "Application added!",
-                            `Version ${pkg.name} for application '${applicationId}' was successfully created!`,
-                        );
-                    },
-                    error: (response: any) => {
-                        /**
-                         * Possible errors
-                         *  - trying to put a package that already exists and has allowUpdates = false
-                         *      409 (The settings for the specified application forbid package updates.)
-                         *      code : "ApplicationDoesntAllowPackageUpdates"
-                         *      message :
-                         *          "The settings for the specified application forbid package updates."
-                         *          RequestId: 0427d452-dbfe-48ff-80f9-680a26bbff27
-                         *          Time:2017-02-13T03:35:27.0685745Z
-                         */
-                        log.error("Failed to activate application package :: ", response);
-                        this.notificationService.error(
-                            "Activation failed",
-                            "The application package was uploaded into storage successfully, "
-                            + "but the activation process failed.",
-                        );
-                    },
-                });
+            tap((pkg) => {
+                this.applicationService.onApplicationAdded.next(pkg.applicationId);
+                this.packageService.onPackageAdded.next(pkg.id);
+                this.notificationService.success(
+                    "Application added!",
+                    `Version ${pkg.name} for application '${applicationName}' was successfully created!`,
+                );
             }),
+            catchError((err) => {
+                /**
+                 * Possible errors
+                 *  - trying to put a package that already exists and has allowUpdates = false
+                 *      409 (The settings for the specified application forbid package updates.)
+                 *      code : "ApplicationDoesntAllowPackageUpdates"
+                 *      message :
+                 *          "The settings for the specified application forbid package updates."
+                 *          RequestId: 0427d452-dbfe-48ff-80f9-680a26bbff27
+                 *          Time:2017-02-13T03:35:27.0685745Z
+                 */
+                log.error("Failed to activate application package :: ", err);
+                this.notificationService.error(
+                    "Activation failed",
+                    "The application package was uploaded into storage successfully, "
+                    + "but the activation process failed.",
+                );
+                return throwError(err);
+            }),
+            share(),
         );
     }
 

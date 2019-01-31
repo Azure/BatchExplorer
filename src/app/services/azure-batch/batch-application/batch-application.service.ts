@@ -129,7 +129,7 @@ export class BatchApplicationService implements OnDestroy {
      * @param applicationId: id of the application
      */
     public delete(applicationId: string): Observable<any> {
-        return this.arm.delete(`${this._currentAccountId}/applications/${applicationId}`);
+        return this.arm.delete(applicationId);
     }
 
     /**
