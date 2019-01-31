@@ -11,7 +11,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { ApplicationPackageTableComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
-import { ApplicationService } from "app/services";
+import { BatchApplicationService } from "app/services";
 import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
@@ -73,7 +73,7 @@ describe("ApplicationPackageTableComponent", () => {
             ],
             providers: [
                 { provide: MatDialog, useValue: null },
-                { provide: ApplicationService, useValue: applicationServiceSpy },
+                { provide: BatchApplicationService, useValue: applicationServiceSpy },
                 { provide: ActivityService, useValue: null },
                 { provide: ContextMenuService, useValue: null },
                 { provide: SidebarManager, useValue: null },

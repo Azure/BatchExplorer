@@ -4,7 +4,7 @@ import { ArmBatchAccount, BatchQuotas, JobState, Pool } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subscription, forkJoin, merge, of } from "rxjs";
 import { filter, flatMap, map, share, shareReplay, switchMap, take } from "rxjs/operators";
-import { ApplicationService } from "./application.service";
+import { BatchApplicationService } from "./azure-batch/batch-application/batch-application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";
 import { BatchAccountService } from "./batch-account";
@@ -26,7 +26,7 @@ export class QuotaService implements OnDestroy {
     constructor(
         private accountService: BatchAccountService,
         private computeService: ComputeService,
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
         private poolService: PoolService,
         private jobService: JobService,
         private vmSizeService: VmSizeService) {

@@ -10,7 +10,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { log, prettyBytes } from "@batch-flask/utils";
 import { BatchApplication } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
-import { ApplicationService } from "app/services";
+import { BatchApplicationService } from "app/services";
 import { StorageBlobService } from "app/services/storage";
 import { Constants } from "common";
 
@@ -29,7 +29,7 @@ export class ApplicationCreateDialogComponent {
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<ApplicationCreateDialogComponent>,
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
         private storageBlobService: StorageBlobService,
         private notificationService: NotificationService) {
 

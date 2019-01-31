@@ -1,7 +1,8 @@
 <bl-property-list>
     <bl-property-group label="General" class="wide">
-        <bl-bool-property label="Allow updates" [value]="decorator.allowUpdates"></bl-bool-property>
-        <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
-        <bl-text-property label="Default version" [value]="decorator.defaultVersion"></bl-text-property>
+        <bl-text-property label="Id" [value]="application.id"></bl-text-property>
+        <bl-text-property label="Name" [value]="application.name"></bl-text-property>
+        <bl-bool-property label="Allow updates" [value]="application.properties.allowUpdates"></bl-bool-property>
+        <bl-text-property label="Default version" [value]="application.properties.defaultVersion"></bl-text-property>
     </bl-property-group>
 </bl-property-list>

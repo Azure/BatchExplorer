@@ -9,7 +9,7 @@ import { ActivityService } from "@batch-flask/ui/activity";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackageTableComponent, ApplicationPackagesComponent } from "app/components/application/details";
 import { BatchApplication, PackageState } from "app/models";
-import { ApplicationService } from "app/services";
+import { BatchApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { EntityDetailsListMockComponent } from "test/utils/mocks/components";
 
@@ -54,7 +54,7 @@ describe("ApplicationPackagesComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 { provide: MatDialog, useValue: null },
-                { provide: ApplicationService, useValue: null },
+                { provide: BatchApplicationService, useValue: null },
                 { provide: ActivityService, useValue: null },
                 { provide: SidebarManager, useValue: null },
             ],

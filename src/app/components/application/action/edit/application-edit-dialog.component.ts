@@ -6,7 +6,7 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { applicationToEditFormModel, editApplicationFormToJsonData } from "app/models/forms";
-import { ApplicationService } from "app/services";
+import { BatchApplicationService } from "app/services";
 import { Constants } from "common";
 import { List } from "immutable";
 import { Observable } from "rxjs";
@@ -25,7 +25,7 @@ export class ApplicationEditDialogComponent {
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<ApplicationEditDialogComponent>,
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
         private notificationService: NotificationService) {
 
         const validation = Constants.forms.validation;
@@ -43,7 +43,7 @@ export class ApplicationEditDialogComponent {
 
     public setValue(application: BatchApplication) {
         this.application = application;
-        this.packages = application.packages || List([]);
+        this.packages = List([]);
         this.form.patchValue(applicationToEditFormModel(application));
     }
 

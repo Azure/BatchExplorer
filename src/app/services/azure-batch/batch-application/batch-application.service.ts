@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import {
     DataCache,
     EntityView,
@@ -8,16 +8,15 @@ import {
     ServerError,
 } from "@batch-flask/core";
 import { ApplicationPackage, BatchApplication } from "app/models";
-import { Constants } from "common";
-import { Observable, Subject } from "rxjs";
-import { map } from "rxjs/operators";
-import { ArmHttpService } from "./arm-http.service";
-import { BatchAccountService } from "./batch-account";
+import { ArmHttpService } from "app/services/arm-http.service";
+import { BatchAccountService } from "app/services/batch-account";
 import {
     ArmEntityGetter,
     ArmListGetter,
-
-} from "./core";
+} from "app/services/core";
+import { Constants } from "common";
+import { Observable, Subject } from "rxjs";
+import { map, takeUntil } from "rxjs/operators";
 
 export interface ApplicationListParams {
 }
@@ -31,8 +30,8 @@ const applicationIgnoredErrors = [
     HttpCode.Conflict,
 ];
 
-@Injectable({providedIn: "root"})
-export class ApplicationService {
+@Injectable({ providedIn: "root" })
+export class BatchApplicationService implements OnDestroy {
     /**
      * Triggered when an application is added through this app.
      * Used to notify the list of a new item
@@ -50,18 +49,19 @@ export class ApplicationService {
     private _cache = new DataCache<BatchApplication>();
     private _getter: ArmEntityGetter<BatchApplication, ApplicationParams>;
     private _listGetter: ArmListGetter<BatchApplication, ApplicationListParams>;
+    private _destroy = new Subject();
 
     constructor(
         private arm: ArmHttpService,
         accountService: BatchAccountService) {
 
-        accountService.currentAccountId.subscribe((accountId) => {
+        accountService.currentAccountId.pipe(takeUntil(this._destroy)).subscribe((accountId) => {
             this._currentAccountId = accountId;
         });
 
         this._getter = new ArmEntityGetter(BatchApplication, this.arm, {
             cache: () => this._cache,
-            uri: ({ id }) => `${this._currentAccountId}/applications/${id}`,
+            uri: ({ id }) => id,
         });
 
         this._listGetter = new ArmListGetter(BatchApplication, this.arm, {
@@ -71,6 +71,10 @@ export class ApplicationService {
         });
     }
 
+    public ngOnDestroy() {
+        this._destroy.next();
+        this._destroy.complete();
+    }
     public get basicProperties(): string {
         return this._basicProperties;
     }

@@ -7,7 +7,7 @@ import { ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationEditDialogComponent } from "app/components/application/action";
-import { ApplicationService } from "app/services";
+import { BatchApplicationService } from "app/services";
 import { of, throwError } from "rxjs";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
@@ -49,7 +49,7 @@ describe("ApplicationEditDialogComponent ", () => {
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },
-                { provide: ApplicationService, useValue: appServiceSpy },
+                { provide: BatchApplicationService, useValue: appServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],

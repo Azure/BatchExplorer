@@ -11,7 +11,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { ApplicationDetailsComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
-import { ApplicationService, PinnedEntityService } from "app/services";
+import { BatchApplicationService, PinnedEntityService } from "app/services";
 import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { ActivatedRouteMock, MockEntityView } from "test/utils/mocks";
@@ -106,7 +106,7 @@ describe("ApplicationDetailsComponent", () => {
                 { provide: PinnedEntityService, useValue: null },
                 { provide: NotificationService, useValue: null },
                 { provide: ActivityService, useValue: null },
-                { provide: ApplicationService, useValue: applicationServiceSpy },
+                { provide: BatchApplicationService, useValue: applicationServiceSpy },
                 { provide: WorkspaceService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
@@ -125,11 +125,6 @@ describe("ApplicationDetailsComponent", () => {
         it("application was fetched", () => {
             expect(component.application).toBeDefined();
             expect(component.application.id).toEqual("app-1");
-        });
-
-        it("decorator is created", () => {
-            expect(component.decorator).toBeDefined();
-            expect(component.decorator.id).toEqual("app-1");
         });
 
         describe("UI shows correct information", () => {

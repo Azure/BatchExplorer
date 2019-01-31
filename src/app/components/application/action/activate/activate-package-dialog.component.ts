@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 
-import { ApplicationService } from "app/services";
+import { BatchApplicationService } from "app/services";
 
 @Component({
     selector: "bl-activate-package-dialog",
@@ -14,7 +14,7 @@ export class ActivatePackageDialogComponent {
 
     constructor(
         public dialogRef: MatDialogRef<ActivatePackageDialogComponent>,
-        private applicationService: ApplicationService) {
+        private applicationService: BatchApplicationService) {
     }
 
     @autobind()

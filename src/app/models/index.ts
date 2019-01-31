@@ -1,7 +1,6 @@
 export * from "./batch-account";
 export * from "./azure-batch";
 export * from "./account-keys";
-export * from "./batch-application";
 export * from "./batch-software-license";
 export * from "./app-insights";
 export * from "./authorization";

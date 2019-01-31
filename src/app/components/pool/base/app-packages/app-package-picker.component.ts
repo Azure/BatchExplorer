@@ -8,7 +8,7 @@ import { Observable, Subscription } from "rxjs";
 import { ListView, ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { ApplicationPackage, BatchApplication } from "app/models";
-import { ApplicationListParams, ApplicationService } from "app/services";
+import { ApplicationListParams, BatchApplicationService } from "app/services";
 
 import "./app-package-picker.scss";
 
@@ -46,7 +46,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     private _defaultVersionValue = "-1";
 
     constructor(
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
         private formBuilder: FormBuilder) {
 
         this.items = formBuilder.array([]);
@@ -239,12 +239,13 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
                 }
 
                 // Add the packages to the application map
-                application.packages.forEach((appPackage: ApplicationPackage) => {
-                    const currentPackageVersion = appPackage.version;
-                    if (this._applicationMap[currentAppId][currentPackageVersion] === undefined) {
-                        this._applicationMap[currentAppId].push(currentPackageVersion);
-                    }
-                });
+                // TODO-TIM
+                // application.packages.forEach((appPackage: ApplicationPackage) => {
+                //     const currentPackageVersion = appPackage.version;
+                //     if (this._applicationMap[currentAppId][currentPackageVersion] === undefined) {
+                //         this._applicationMap[currentAppId].push(currentPackageVersion);
+                //     }
+                // });
             });
 
             this._mapped = true;

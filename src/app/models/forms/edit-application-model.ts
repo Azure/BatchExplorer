@@ -1,16 +1,18 @@
-import { BatchApplication } from "../batch-application";
+import { BatchApplication } from "../azure-batch/batch-application/batch-application";
 
 export interface EditApplicationModel {
-    displayName: string;
+    name: string;
     defaultVersion: string;
     allowUpdates: boolean;
 }
 
 export function editApplicationFormToJsonData(formData: EditApplicationModel): any {
     const data: any = {
-        displayName: formData.displayName,
-        defaultVersion: formData.defaultVersion,
-        allowUpdates: formData.allowUpdates,
+        name: formData.name,
+        properties: {
+            defaultVersion: formData.defaultVersion,
+            allowUpdates: formData.allowUpdates,
+        },
     };
 
     return data;
@@ -18,8 +20,8 @@ export function editApplicationFormToJsonData(formData: EditApplicationModel): a
 
 export function applicationToEditFormModel(application: BatchApplication): EditApplicationModel {
     return {
-        displayName: application.displayName,
-        defaultVersion: application.defaultVersion,
-        allowUpdates: application.allowUpdates,
+        name: application.name,
+        defaultVersion: application.properties.defaultVersion,
+        allowUpdates: application.properties.allowUpdates,
     };
 }

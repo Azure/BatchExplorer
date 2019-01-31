@@ -9,7 +9,7 @@ import { ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationCreateDialogComponent } from "app/components/application/action";
-import { ApplicationService } from "app/services";
+import { BatchApplicationService } from "app/services";
 import { StorageBlobService } from "app/services/storage";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
@@ -73,7 +73,7 @@ describe("ApplicationCreateDialogComponent ", () => {
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },
-                { provide: ApplicationService, useValue: appServiceSpy },
+                { provide: BatchApplicationService, useValue: appServiceSpy },
                 { provide: StorageBlobService, useValue: storageBlobService },
                 { provide: NotificationService, useValue: notificationServiceSpy },
             ],

@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, autobind } from "@batch-flask/core";
-import { ApplicationDecorator } from "app/decorators";
 import { BatchApplication } from "app/models";
-import { ApplicationParams, ApplicationService } from "app/services";
+import { ApplicationParams, BatchApplicationService } from "app/services";
 import { Subscription } from "rxjs";
 import { BatchApplicationCommands } from "../action";
 
@@ -11,6 +10,7 @@ import { BatchApplicationCommands } from "../action";
     selector: "bl-application-details",
     templateUrl: "application-details.html",
     providers: [BatchApplicationCommands],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
@@ -23,7 +23,6 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     public application: BatchApplication;
     public applicationId: string;
-    public decorator: ApplicationDecorator;
     public data: EntityView<BatchApplication, ApplicationParams>;
 
     private _paramsSubscriber: Subscription;
@@ -31,15 +30,14 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     constructor(
         public commands: BatchApplicationCommands,
         private activatedRoute: ActivatedRoute,
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
+        private changeDetector: ChangeDetectorRef,
         private router: Router) {
 
         this.data = this.applicationService.view();
         this.data.item.subscribe((application) => {
             this.application = application;
-            if (application) {
-                this.decorator = new ApplicationDecorator(application);
-            }
+            this.changeDetector.markForCheck();
         });
 
         this.data.deleted.subscribe((key) => {

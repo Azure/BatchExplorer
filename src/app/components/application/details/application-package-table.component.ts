@@ -4,7 +4,7 @@ import { autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackage, BatchApplication } from "app/models";
-import { ApplicationService } from "app/services";
+import { BatchApplicationService } from "app/services";
 import { List } from "immutable";
 import { Observable, forkJoin, of } from "rxjs";
 import { flatMap } from "rxjs/operators";
@@ -22,18 +22,18 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
 
     constructor(
         protected dialog: MatDialog,
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
         private sidebarManager: SidebarManager,
         injector: Injector) {
         super(injector);
     }
 
     public ngOnChanges(inputs) {
-        if (inputs.application) {
-            if (!this.packages.equals(this.application.packages)) {
-                this._updatePackages();
-            }
-        }
+        // if (inputs.application) {
+        //     if (!this.packages.equals(this.application.packages)) {
+        //         this._updatePackages();
+        //     }
+        // }
     }
 
     public handleFilter(filter) {
@@ -88,14 +88,15 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
         return pkg.version;
     }
 
-    private _updatePackages() {
-        if (this.application) {
-            this.packages = this.application.packages;
-        } else {
-            this.packages = List([]);
-        }
-        this._filterPackages();
-    }
+    // TODO-TIM
+    // private _updatePackages() {
+    // if (this.application) {
+    //     this.packages = this.application.packages;
+    // } else {
+    //     this.packages = List([]);
+    // }
+    // this._filterPackages();
+    // }
 
     private _filterPackages() {
         let text: string = null;

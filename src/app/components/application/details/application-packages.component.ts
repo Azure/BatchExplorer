@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 
 import { ListSelection } from "@batch-flask/core/list";
-import { BatchApplication, PackageState } from "app/models";
+import { BatchApplication } from "app/models";
 import { ComponentUtils } from "app/utils";
 
 @Component({
@@ -58,8 +58,9 @@ export class ApplicationPackagesComponent implements OnChanges {
 
     private _isPackagePending(version: string): boolean {
         if (!version) { return false; }
-        const pkg = this.application.packages.filter(x => x.version === version).first();
-        return pkg && pkg.state === PackageState.pending;
+        // const pkg = this.application.packages.filter(x => x.version === version).first();
+        // return pkg && pkg.state === PackageState.pending;
+        return false;
     }
 
     private _updateEnabled() {

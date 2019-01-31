@@ -1,9 +1,9 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="application" class="fit-details-container">
         <bl-summary-card>
-            <div summaryTitle>{{decorator.id}}</div>
+            <div summaryTitle>{{application.name}}</div>
             <div summarySubtitle>
-                <i class="fa" [ngClass]="application.allowUpdates ? 'fa-unlock-alt' : 'fa-lock'"></i> {{decorator.displayName}}
+                <i class="fa" [ngClass]="application.allowUpdates ? 'fa-unlock-alt' : 'fa-lock'"></i>
                 <span *ngIf="application.allowUpdates">
                     <b>(unlocked)</b>
                 </span>

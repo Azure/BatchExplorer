@@ -1,4 +1,4 @@
-import { BatchApplication } from "../batch-application";
+import { BatchApplication } from "../azure-batch/batch-application/batch-application";
 
 export interface CreateApplicationModel {
     id: string;

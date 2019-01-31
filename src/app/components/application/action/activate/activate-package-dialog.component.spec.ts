@@ -6,7 +6,7 @@ import { of, throwError } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { ActivatePackageDialogComponent } from "app/components/application/action";
-import { ApplicationService } from "app/services";
+import { BatchApplicationService } from "app/services";
 import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
 describe("ActivatePackageDialogComponent ", () => {
@@ -35,7 +35,7 @@ describe("ActivatePackageDialogComponent ", () => {
             declarations: [SimpleFormMockComponent, ActivatePackageDialogComponent, ServerErrorMockComponent],
             providers: [
                 { provide: MatDialogRef, useValue: null },
-                { provide: ApplicationService, useValue: appServiceSpy },
+                { provide: BatchApplicationService, useValue: appServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

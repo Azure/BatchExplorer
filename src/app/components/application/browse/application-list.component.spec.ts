@@ -11,7 +11,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { ApplicationListComponent } from "app/components/application/browse";
 import { BatchApplication } from "app/models";
-import { ApplicationService, PinnedEntityService } from "app/services";
+import { BatchApplicationService, PinnedEntityService } from "app/services";
 import { Subject } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
@@ -49,7 +49,7 @@ describe("ApplicationListComponent", () => {
             providers: [
                 { provide: DialogService, useValue: null },
                 { provide: NotificationService, useValue: null },
-                { provide: ApplicationService, useValue: applicationServiceSpy },
+                { provide: BatchApplicationService, useValue: applicationServiceSpy },
                 { provide: PinnedEntityService, useValue: pinServiceSpy },
                 { provide: ActivityService, useValue: null },
                 { provide: SidebarManager, useValue: null },

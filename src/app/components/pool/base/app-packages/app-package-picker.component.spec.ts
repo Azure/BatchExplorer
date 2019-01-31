@@ -9,7 +9,7 @@ import { List } from "immutable";
 
 import { AppPackagePickerComponent } from "app/components/pool/base";
 import { BatchApplication } from "app/models";
-import { ApplicationService } from "app/services";
+import { BatchApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 
@@ -58,7 +58,7 @@ describe("AppPackagePickerComponent", () => {
             imports: [FormsModule, MaterialModule, NoopAnimationsModule, ReactiveFormsModule, SelectModule],
             declarations: [AppPackagePickerComponent, TestComponent],
             providers: [
-                { provide: ApplicationService, useValue: applicationServiceSpy },
+                { provide: BatchApplicationService, useValue: applicationServiceSpy },
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: PermissionService, useValue: {} },
             ],
