@@ -5,7 +5,7 @@ import {
     ListOptionsAttributes,
     ListView,
 } from "@batch-flask/core";
-import { ArmBatchAccount, BatchApplicationPackage, BatchApplicationPackageAttributes } from "app/models";
+import { BatchApplicationPackage, BatchApplicationPackageAttributes } from "app/models";
 import { ArmHttpService } from "app/services/arm-http.service";
 import { BatchAccountService } from "app/services/batch-account";
 import {
@@ -99,12 +99,12 @@ export class BatchApplicationPackageService {
      * @param version: selected package version name
      */
     public put(name: string, version: string): Observable<BatchApplicationPackage> {
-        return this.accountService.currentAccount
+        return this.accountService.currentAccountId
             .pipe(
                 take(1),
-                switchMap((account: ArmBatchAccount) => {
+                switchMap((accountId: string) => {
                     return this.arm.put<BatchApplicationPackageAttributes>(
-                        `${account.id}/applications/${name}/versions/${version}`);
+                        `${accountId}/applications/${name}/versions/${version}`);
                 }),
                 map(response => new BatchApplicationPackage(response)),
             );
@@ -130,14 +130,4 @@ export class BatchApplicationPackageService {
             format: "zip",
         });
     }
-
-    /**
-     * Deletes an application package record and its associated binary file.
-     * @param applicationId: id of the application
-     * @param version: selected package version
-     */
-    public deletePackage(applicationId: string, version: string): Observable<any> {
-        return this.arm.delete(`${applicationId}/versions/${version}`);
-    }
-
 }

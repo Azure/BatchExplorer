@@ -68,4 +68,8 @@ export class EditableTableSelectCellComponent implements OnInit, OnChanges, OnDe
         this._destroy.next();
         this._destroy.complete();
     }
+
+    public trackOptions(_: number, option: string) {
+        return option;
+    }
 }
