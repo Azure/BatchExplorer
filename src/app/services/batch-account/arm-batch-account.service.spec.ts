@@ -52,8 +52,10 @@ describe("ArmBatchAccountService", () => {
 
     it("should have loaded the list of accounts from all subscriptions", () => {
         expect(httpSpy.get).toHaveBeenCalledTimes(2);
-        expect(httpSpy.get).toHaveBeenCalledWith(sub1, "/subscriptions/sub1/resources", jasmine.anything());
-        expect(httpSpy.get).toHaveBeenCalledWith(sub2, "/subscriptions/sub2/resources", jasmine.anything());
+        expect(httpSpy.get).toHaveBeenCalledWith(sub1,
+            "/subscriptions/sub1/providers/Microsoft.Batch/batchAccounts", jasmine.anything());
+        expect(httpSpy.get).toHaveBeenCalledWith(sub2,
+            "/subscriptions/sub2/providers/Microsoft.Batch/batchAccounts", jasmine.anything());
     });
 
     it("when it loads accounts it insert the subscription inside", () => {

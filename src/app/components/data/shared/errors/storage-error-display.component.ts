@@ -4,7 +4,8 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { ArmBatchAccount, BatchAccount } from "app/models";
 import { BatchAccountService } from "app/services";
-import { Subscription } from "rxjs";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
     selector: "bl-storage-error-display",
@@ -14,33 +15,36 @@ import { Subscription } from "rxjs";
 export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
     @Input() public noClassic = false;
 
-    public hasAutoStorage: boolean;
+    public hasAutoStorage: boolean = true;
     public isClassic: boolean;
+    public hasError: boolean = false;
 
     private _batchAccount: BatchAccount;
-    private _currentAccountSub: Subscription;
+    private _destroy = new Subject();
 
-    // TODO: make this the default auto storage error display.
     constructor(
         private accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef,
         private sidebarManager: SidebarManager) {
-
-        this.hasAutoStorage = false;
     }
 
     public ngOnInit() {
-        this._currentAccountSub = this.accountService.currentAccount.subscribe((account) => {
+        this.accountService.currentAccount.pipe(takeUntil(this._destroy)).subscribe((account) => {
             this._batchAccount = account;
-            this.hasAutoStorage = Boolean(this.noClassic ? account.hasArmAutoStorage() : account.autoStorage);
-            this.isClassic = !account.hasArmAutoStorage();
-
+            this.hasAutoStorage = Boolean(account.autoStorage);
+            this.isClassic = this.hasAutoStorage && !account.hasArmAutoStorage();
+            if (this.noClassic) {
+                this.hasError = !this.hasAutoStorage || this.isClassic;
+            } else {
+                this.hasError = !this.hasAutoStorage;
+            }
             this.changeDetector.markForCheck();
         });
     }
 
     public ngOnDestroy() {
-        this._currentAccountSub.unsubscribe();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     @autobind()
