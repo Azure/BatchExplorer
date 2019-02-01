@@ -6,7 +6,7 @@ import { filter, take } from "rxjs/operators";
 import * as Fixtures from "test/fixture";
 import { PinnedEntityService } from "./pinned-entity.service";
 
-fdescribe("PinnedEntityService", () => {
+describe("PinnedEntityService", () => {
     let pinService: PinnedEntityService;
     let favourites: List<PinnableEntity>;
     let subscriptions: Subscription[];
