@@ -26,6 +26,8 @@ import "./parameter-input.scss";
 export class ParameterInputComponent implements ControlValueAccessor, OnChanges, OnDestroy {
     public NcjParameterExtendedType = NcjParameterExtendedType;
 
+    @Input() public poolId: string;
+    @Input() public ncjTemplateMode: string;
     @Input() public parameter: NcjParameterWrapper;
     @Input() public parameterValues: StringMap<any>;
 

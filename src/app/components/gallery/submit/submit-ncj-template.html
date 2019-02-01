@@ -25,7 +25,7 @@
         </bl-form-section>
         <bl-form-section title="Job" formGroupName="job" *ngIf="showJobForm">
             <div *ngFor="let param of jobParametersWrapper;trackBy: trackParameter">
-                <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value"></bl-parameter-input>
+                <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value" [poolId]="showPoolPicker ? pickedPool.value?.poolId : null" [ncjTemplateMode]="modeState"></bl-parameter-input>
             </div>
         </bl-form-section>
     </bl-form-page>

@@ -86,6 +86,14 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private settingsService: SettingsService) {
 
         this.form = new FormGroup({});
+
+        this.pickedPool.valueChanges.subscribe((value) => {
+            if (this.modeState === NcjTemplateMode.NewPoolAndJob ||
+                this.modeState === NcjTemplateMode.ExistingPoolAndJob) {
+                this.jobTemplate.parameters.poolId = value;
+            }
+        });
+
         this._defaultOutputDataContainer = this.settingsService.settings["job-template.default-output-filegroup"];
     }
 

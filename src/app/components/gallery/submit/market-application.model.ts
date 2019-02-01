@@ -12,6 +12,7 @@ export enum NcjParameterExtendedType {
     dropDown = "drop-down",
     jobId = "job-id",
     renderingContainerImage= "rendering-container-image",
+    containerImageOnPool= "container-image-on-pool",
 }
 
 export class NcjParameterWrapper {

@@ -1,4 +1,16 @@
-<div>
+<div [hidden]="hidden" >
+    <div class="grow">
+        <div class="gcol">
+            <bl-form-field>
+                <input blInput [formControl]="appVersionControl" placeholder="{{appDisplay}} Version on selected Pool" readonly />
+            </bl-form-field>
+        </div>
+        <div class="gcol">
+            <bl-form-field>
+                <input blInput [formControl]="rendererVersionControl" placeholder="{{renderEngineDisplay}} Version on selected Pool" readonly />
+            </bl-form-field>
+        </div>
+    </div>
     <p *ngIf="containerImage">
         Selected Container Image:      {{ containerImage }}
     </p>
