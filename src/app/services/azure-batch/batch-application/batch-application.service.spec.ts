@@ -58,6 +58,35 @@ describe("BatchApplicationService", () => {
         httpMock.verify();
     });
 
+    it("get an application by name", (done) => {
+        applicationService.get("app-1").subscribe((app: BatchApplication) => {
+            expect(app instanceof BatchApplication).toBe(true);
+            expect(app.id).toEqual("/subs/sub-1/batchaccounts/acc-1/applications/app-1");
+            expect(app.name).toEqual("app-1");
+            expect(app.properties.allowUpdates).toEqual(true);
+            expect(app.properties.displayName).toEqual("My first app");
+            expect(app.properties.defaultVersion).toEqual("1.0");
+
+            done();
+        });
+
+        const req = httpMock.expectOne({
+            url: "/subs/sub-1/batchaccounts/acc-1/applications/app-1",
+            method: "GET",
+        });
+        expect(req.request.body).toBe(null);
+        req.flush({
+            id: "/subs/sub-1/batchaccounts/acc-1/applications/app-1",
+            name: "app-1",
+            properties: {
+                allowUpdates: true,
+                displayName: "My first app",
+                defaultVersion: "1.0",
+            },
+        });
+        httpMock.verify();
+    });
+
     it("list applications", (done) => {
         applicationService.list().subscribe((response) => {
             const apps = response.items;
