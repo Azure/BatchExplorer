@@ -182,6 +182,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             switchMap(x => this.packageService.listAll(x.id)),
         ).subscribe((packages) => {
             this.packageMap[appName] = packages;
+            this.changeDetector.markForCheck();
         });
         this._propagateTouched();
     }
