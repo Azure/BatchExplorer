@@ -82,7 +82,7 @@ export class BatchApplicationService implements OnDestroy {
         });
     }
 
-    public list(options?: ListOptionsAttributes) {
+    public list(options: ListOptionsAttributes = {}) {
         return this._listGetter.fetch(options);
     }
 
@@ -118,14 +118,10 @@ export class BatchApplicationService implements OnDestroy {
      * @param application: application to patch to the current state
      * @param jsonData: json data containing the application patch data
      */
-    public patch(applicationId: string, jsonData: any): Observable<any> {
+    public patch(applicationName: string, jsonData: any): Observable<any> {
         return this.arm.patch(
-            `${this._currentAccountId}/applications/${applicationId}`,
-            {
-                allowUpdates: jsonData.allowUpdates,
-                defaultVersion: jsonData.defaultVersion,
-                displayName: jsonData.displayName,
-            },
+            `${this._currentAccountId}/applications/${applicationName}`,
+            jsonData,
         );
     }
 

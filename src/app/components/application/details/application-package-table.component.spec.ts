@@ -1,42 +1,42 @@
 import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-import { Property } from "@batch-flask/core";
+import { Property, TelemetryService } from "@batch-flask/core";
+import { DialogService } from "@batch-flask/ui";
 import { ActivityService } from "@batch-flask/ui/activity";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { ApplicationPackageTableComponent } from "app/components/application/details";
-import { BatchApplication } from "app/models";
-import { BatchApplicationService } from "app/services";
-import { of } from "rxjs";
+import { BatchApplication, BatchApplicationPackage, PackageState } from "app/models";
+import { BatchApplicationPackageService, BatchApplicationService } from "app/services";
+import { Subject, of } from "rxjs";
 import * as Fixtures from "test/fixture";
+import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
-const appWithPackagesId: string = "app-2";
-const appWithoutPackagesId: string = "app-1";
-const disabledApp: string = "app-3";
-const applicationMap: Map<string, BatchApplication> = new Map()
-    .set(appWithoutPackagesId, Fixtures.application.create({ id: appWithoutPackagesId }))
-    .set(appWithPackagesId, Fixtures.application.create({
-        id: appWithPackagesId, packages: [
-            Fixtures.applicationPackage.create({ version: "1.0" }),
-            Fixtures.applicationPackage.create({ version: "2.0" }),
-            Fixtures.applicationPackage.create({ version: "3.0" }),
-            Fixtures.applicationPackage.create({ version: "4.0" }),
-            Fixtures.applicationPackage.create({ version: "5.0" }),
-        ],
-    }))
-    .set(disabledApp, Fixtures.application.create({
-        id: disabledApp, allowUpdates: false, packages: [
-            Fixtures.applicationPackage.create({ version: "1.0" }),
-            Fixtures.applicationPackage.create({ version: "2.0" }),
-        ],
-    }));
+const applications = {
+    banana: Fixtures.application.create({ id: "/applications/banana", name: "banana" }),
+    noPackages: Fixtures.application.create({ id: "/applications/noPackages", name: "noPackages" }),
+};
 
+const common = {
+    format: "zip",
+    lastActivationTime: new Date(),
+    storageUrl: "https://foo.blob.storage.azure.com/bar",
+    storageUrlExpiry: new Date(),
+};
+
+const packages = {
+    [applications.banana.id]: [
+        new BatchApplicationPackage({ id: "b1", name: "b1", properties: { state: PackageState.active, ...common } }),
+        new BatchApplicationPackage({ id: "b2", name: "b2", properties: { state: PackageState.pending, ...common } }),
+        new BatchApplicationPackage({ id: "b3", name: "b3", properties: { state: PackageState.active, ...common } }),
+    ],
+    [applications.noPackages.id]: [],
+};
 @Component({
     template: `
         <bl-application-package-table [application]="application" [filter]="filter">
@@ -53,17 +53,22 @@ describe("ApplicationPackageTableComponent", () => {
     let testComponent: TestComponent;
     let component: ApplicationPackageTableComponent;
     let applicationServiceSpy: any;
+    let applicationPackageServiceSpy: any;
 
     beforeEach(() => {
         applicationServiceSpy = {
-            get: jasmine
-                .createSpy("get").and
-                .callFake((applicationId: string) => {
+            getByName: jasmine.createSpy("getByName").and.callFake((appName: string) => {
+                return of(applications[appName]);
+            }),
+        };
 
-                    return of(
-                        applicationMap.get(applicationId) || Fixtures.application.create({ id: applicationId }),
-                    );
-                }),
+        applicationPackageServiceSpy = {
+            listView: () => new MockListView(BatchApplicationPackage, {
+                items: ({ applicationId }) => {
+                    return packages[applicationId] || [];
+                },
+            }),
+            onPackageAdded: new Subject(),
         };
 
         TestBed.configureTestingModule({
@@ -72,12 +77,14 @@ describe("ApplicationPackageTableComponent", () => {
                 ApplicationPackageTableComponent, NoItemMockComponent, TestComponent,
             ],
             providers: [
-                { provide: MatDialog, useValue: null },
+                { provide: DialogService, useValue: null },
                 { provide: BatchApplicationService, useValue: applicationServiceSpy },
+                { provide: BatchApplicationPackageService, useValue: applicationPackageServiceSpy },
                 { provide: ActivityService, useValue: null },
                 { provide: ContextMenuService, useValue: null },
                 { provide: SidebarManager, useValue: null },
                 { provide: BreadcrumbService, useValue: null },
+                { provide: TelemetryService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -85,13 +92,13 @@ describe("ApplicationPackageTableComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         component = fixture.debugElement.query(By.css("bl-application-package-table")).componentInstance;
-        testComponent.application = applicationMap.get(appWithPackagesId);
+        testComponent.application = applications.banana;
         fixture.detectChanges();
     });
 
     describe("when application has no packages", () => {
         beforeEach(() => {
-            testComponent.application = applicationMap.get(appWithoutPackagesId);
+            testComponent.application = applications.noPackages;
             fixture.detectChanges();
         });
 
@@ -108,29 +115,34 @@ describe("ApplicationPackageTableComponent", () => {
     });
 
     describe("when application has packages", () => {
+        beforeEach(() => {
+            testComponent.application = applications.banana;
+            fixture.detectChanges();
+        });
+
         it("should not show no item error", () => {
             expect(fixture.debugElement.query(By.css(".no-item-message"))).toBe(null);
         });
 
-        it("shoud have 5 packages", () => {
-            expect(component.displayedPackages.size).toBe(5);
-            expect(component.packages.size).toBe(5);
+        it("should have 5 packages", () => {
+            expect(component.packages.size).toBe(3);
+            expect(component.displayedPackages.size).toBe(3);
         });
     });
 
-    describe("can filter application packages based on ID", () => {
+    describe("can filter application packages based on name", () => {
         beforeEach(() => {
-            testComponent.filter = Object.assign(new Property("version"), { value: "1.0" });
+            component.filter = Object.assign(new Property("name"), { value: "b2" });
             fixture.detectChanges();
         });
 
         it("shoud show only 1 package", () => {
             expect(component.displayedPackages.size).toBe(1);
-            expect(component.packages.size).toBe(5);
+            expect(component.packages.size).toBe(3);
         });
 
         it("show filter warning if nothing matches", () => {
-            testComponent.filter = Object.assign(new Property("version"), { value: "asdasd" });
+            component.filter = Object.assign(new Property("version"), { value: "asdasd" });
             fixture.detectChanges();
 
             expect(component.displayedPackages.size).toBe(0);
