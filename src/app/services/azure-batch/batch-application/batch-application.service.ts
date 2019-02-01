@@ -118,11 +118,8 @@ export class BatchApplicationService implements OnDestroy {
      * @param application: application to patch to the current state
      * @param jsonData: json data containing the application patch data
      */
-    public patch(applicationName: string, jsonData: any): Observable<any> {
-        return this.arm.patch(
-            `${this._currentAccountId}/applications/${applicationName}`,
-            jsonData,
-        );
+    public patch(applicationId: string, jsonData: any): Observable<any> {
+        return this.arm.patch(applicationId, jsonData);
     }
 
     /**

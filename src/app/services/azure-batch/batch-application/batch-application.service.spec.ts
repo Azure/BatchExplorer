@@ -112,7 +112,7 @@ describe("BatchApplicationService", () => {
                 defaultVersion: "2.0",
             },
         };
-        applicationService.patch("app-1", patchdto).subscribe((res) => {
+        applicationService.patch("/subs/sub-1/batchaccounts/acc-1/applications/app-1", patchdto).subscribe((res) => {
             done();
         });
 

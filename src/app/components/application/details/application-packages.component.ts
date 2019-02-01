@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import { autobind } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
 import { BatchApplication } from "app/models";
 import { ComponentUtils } from "app/utils";
@@ -34,10 +35,12 @@ export class ApplicationPackagesComponent implements OnChanges {
         this._updateEnabled();
     }
 
+    @autobind()
     public deleteSelection() {
         this.commands.delete.executeFromSelection(this._selection);
     }
 
+    @autobind()
     public activateSelection() {
         this.commands.activate.executeFromSelection(this._selection);
     }

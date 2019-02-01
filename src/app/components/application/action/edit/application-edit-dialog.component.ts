@@ -67,7 +67,7 @@ export class ApplicationEditDialogComponent {
             next: (response: any) => {
                 this.notificationService.success(
                     "Application updated!",
-                    `Application ${this.application.id} was successfully updated!`,
+                    `Application ${this.application.name} was successfully updated!`,
                 );
             },
             error: (response: HttpErrorResponse) => {

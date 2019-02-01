@@ -12,8 +12,7 @@ import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { ApplicationDetailsComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
 import { BatchApplicationService, PinnedEntityService } from "app/services";
-import { of } from "rxjs";
-import * as Fixtures from "test/fixture";
+import { BehaviorSubject } from "rxjs";
 import { ActivatedRouteMock, MockEntityView } from "test/utils/mocks";
 import { LoadingMockComponent } from "test/utils/mocks/components";
 
@@ -38,8 +37,7 @@ class ApplicationPropertiesMockComponent {
     template: "",
 })
 class ApplicationPackagesMockComponent {
-    @Input()
-    public application: BatchApplication;
+    @Input() public application: BatchApplication;
 }
 
 // mock application error component
@@ -48,8 +46,7 @@ class ApplicationPackagesMockComponent {
     template: "",
 })
 class ApplicationErrorDisplayMockComponent {
-    @Input()
-    public application: BatchApplication;
+    @Input() public application: BatchApplication;
 }
 
 describe("ApplicationDetailsComponent.breadcrumb()", () => {
@@ -70,11 +67,23 @@ describe("ApplicationDetailsComponent", () => {
 
     beforeEach(() => {
         entityView = new MockEntityView(BatchApplication, {
-            item: Fixtures.application.create({
-                id: "app-1",
-                displayName: "bobs display name",
-                allowUpdates: true,
-            }),
+            item: ({ id }) => {
+                if (id === "/applications/locked-app") {
+                    return new BatchApplication({
+                        id: "/applications/locked-app",
+                        name: "locked-app",
+                        properties: { allowUpdates: false },
+                    });
+                }
+                return new BatchApplication({
+                    id: "/applications/app-1",
+                    name: "app-1",
+                    properties: {
+                        displayName: "bobs display name",
+                        allowUpdates: true,
+                    },
+                });
+            },
         });
 
         applicationServiceSpy = {
@@ -82,7 +91,7 @@ describe("ApplicationDetailsComponent", () => {
         };
 
         activatedRouteSpy = new ActivatedRouteMock({
-            params: of({ id: "app-1" }),
+            params: new BehaviorSubject({ id: "/applications/app-1" }),
         });
 
         matDialogSpy = {
@@ -119,12 +128,12 @@ describe("ApplicationDetailsComponent", () => {
 
     describe("loads application based on initial parameter", () => {
         it("proxy params are set to correct id", () => {
-            expect(entityView.params).toEqual({ id: "app-1" });
+            expect(entityView.params).toEqual({ id: "/applications/app-1" });
         });
 
         it("application was fetched", () => {
             expect(component.application).toBeDefined();
-            expect(component.application.id).toEqual("app-1");
+            expect(component.application.id).toEqual("/applications/app-1");
         });
 
         describe("UI shows correct information", () => {
@@ -146,7 +155,7 @@ describe("ApplicationDetailsComponent", () => {
 
         describe("Locked application shows locked icon and text", () => {
             beforeEach(() => {
-                component.application = Fixtures.application.create({ allowUpdates: false });
+                activatedRouteSpy.params.next({ id: "/applications/locked-app" });
                 fixture.detectChanges();
             });
 
