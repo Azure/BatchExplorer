@@ -4,12 +4,13 @@ export interface EditApplicationModel {
     name: string;
     defaultVersion: string;
     allowUpdates: boolean;
+    displayName: string;
 }
 
 export function editApplicationFormToJsonData(formData: EditApplicationModel): any {
     const data: any = {
-        name: formData.name,
         properties: {
+            displayName: formData.displayName,
             defaultVersion: formData.defaultVersion,
             allowUpdates: formData.allowUpdates,
         },
@@ -23,5 +24,6 @@ export function applicationToEditFormModel(application: BatchApplication): EditA
         name: application.name,
         defaultVersion: application.properties.defaultVersion,
         allowUpdates: application.properties.allowUpdates,
+        displayName: application.properties.displayName,
     };
 }

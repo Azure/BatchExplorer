@@ -7,7 +7,8 @@ import { ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationEditDialogComponent } from "app/components/application/action";
-import { BatchApplicationService } from "app/services";
+import { BatchApplicationPackageService, BatchApplicationService } from "app/services";
+import { List } from "immutable";
 import { of, throwError } from "rxjs";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
@@ -19,6 +20,7 @@ describe("ApplicationEditDialogComponent ", () => {
     let component: ApplicationEditDialogComponent;
     let debugElement: DebugElement;
     let appServiceSpy: any;
+    let appPackageServiceSpy: any;
     let notificationServiceSpy: any;
 
     const validators = TestConstants.validators;
@@ -29,13 +31,19 @@ describe("ApplicationEditDialogComponent ", () => {
                 if (applicationId === "throw-me") {
                     return throwError(ServerError.fromARM(new HttpErrorResponse({
                         status: 400,
-                        error: {  message: "blast, we failed"  },
+                        error: { message: "blast, we failed" },
                         statusText: "Bad request",
                     })));
                 }
 
                 return of({});
             }),
+        };
+        appPackageServiceSpy = {
+            listAll: jasmine.createSpy("listAll").and.returnValue(of(List([
+                Fixtures.applicationPackage.create({ version: "1.0.1" }),
+                Fixtures.applicationPackage.create({ version: "1.0.2" }),
+            ]))),
         };
 
         notificationServiceSpy = {
@@ -50,6 +58,7 @@ describe("ApplicationEditDialogComponent ", () => {
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },
                 { provide: BatchApplicationService, useValue: appServiceSpy },
+                { provide: BatchApplicationPackageService, useValue: appPackageServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
@@ -117,13 +126,12 @@ describe("ApplicationEditDialogComponent ", () => {
         beforeEach(() => {
             component.setValue(Fixtures.application.create({
                 id: "monkeys",
-                displayName: "my monkey",
-                defaultVersion: "1.0.1",
-                allowUpdates: true,
-                packages: [
-                    Fixtures.applicationPackage.create({ version: "1.0.1" }),
-                    Fixtures.applicationPackage.create({ version: "1.0.2" }),
-                ],
+                name: "monkeys",
+                properties: {
+                    displayName: "my monkey",
+                    defaultVersion: "1.0.1",
+                    allowUpdates: true,
+                },
             }));
 
             fixture.detectChanges();
@@ -154,9 +162,12 @@ describe("ApplicationEditDialogComponent ", () => {
         beforeEach(() => {
             component.setValue(Fixtures.application.create({
                 id: "monkeys-2.0",
-                displayName: "monkey magic",
-                defaultVersion: "1.0.1",
-                allowUpdates: true,
+                name: "monkeys-2.0",
+                properties: {
+                    displayName: "monkey magic",
+                    defaultVersion: "1.0.1",
+                    allowUpdates: true,
+                },
             }));
 
             fixture.detectChanges();
@@ -166,9 +177,11 @@ describe("ApplicationEditDialogComponent ", () => {
             component.submit().subscribe(() => {
                 expect(appServiceSpy.patch).toHaveBeenCalledTimes(1);
                 expect(appServiceSpy.patch).toHaveBeenCalledWith("monkeys-2.0", {
-                    displayName: "monkey magic",
-                    defaultVersion: "1.0.1",
-                    allowUpdates: true,
+                    properties: {
+                        displayName: "monkey magic",
+                        defaultVersion: "1.0.1",
+                        allowUpdates: true,
+                    },
                 });
 
                 expect(notificationServiceSpy.error).toHaveBeenCalledTimes(0);
@@ -185,9 +198,12 @@ describe("ApplicationEditDialogComponent ", () => {
         it("If edit application throws we handle the error", (done) => {
             component.application = Fixtures.application.create({
                 id: "throw-me",
-                displayName: "monkey magic",
-                defaultVersion: "1.0.1",
-                allowUpdates: true,
+                name: "throw-me",
+                properties: {
+                    displayName: "monkey magic",
+                    defaultVersion: "1.0.1",
+                    allowUpdates: true,
+                },
             });
 
             fixture.detectChanges();

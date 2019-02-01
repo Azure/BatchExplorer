@@ -1,12 +1,12 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, ChangeDetectorRef } from "@angular/core";
+import { ChangeDetectorRef, Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { BatchApplication, BatchApplicationPackage } from "app/models";
 import { applicationToEditFormModel, editApplicationFormToJsonData } from "app/models/forms";
-import { BatchApplicationService, BatchApplicationPackageService } from "app/services";
+import { BatchApplicationPackageService, BatchApplicationService } from "app/services";
 import { Constants } from "common";
 import { List } from "immutable";
 import { Observable } from "rxjs";
@@ -55,7 +55,7 @@ export class ApplicationEditDialogComponent {
         this.form.patchValue(applicationToEditFormModel(application));
     }
 
-    public trackByFn(index, pkg: BatchApplicationPackage) {
+    public trackByFn(_: number, pkg: BatchApplicationPackage) {
         return pkg.id;
     }
 
