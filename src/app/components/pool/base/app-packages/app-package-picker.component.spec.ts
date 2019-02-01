@@ -41,9 +41,9 @@ describe("AppPackagePickerComponent", () => {
         listProxy = new MockListView(BatchApplication, {
             cacheKey: "id",
             items: [
-                Fixtures.application.create({ id: "apple", packages: List([{ version: "a1" }]) }),
-                Fixtures.application.create({ id: "banana", packages: List([{ version: "b1" }, { version: "b2" }]) }),
-                Fixtures.application.create({ id: "orange", packages: List([{ version: "o1" }, { version: "o2" }]) }),
+                Fixtures.application.create({ name: "apple", packages: List([{ version: "a1" }]) }),
+                Fixtures.application.create({ name: "banana", packages: List([{ version: "b1" }, { version: "b2" }]) }),
+                Fixtures.application.create({ name: "orange", packages: List([{ version: "o1" }, { version: "o2" }]) }),
             ],
         });
 
@@ -111,13 +111,13 @@ describe("AppPackagePickerComponent", () => {
         });
 
         it("picking application sets package version map", () => {
-            component.applicationSelected("banana", 0);
+            component.applicationSelected("banana");
             expect(component.packageMap.length).toEqual(1);
             expect(component.packageMap[0].size).toEqual(2);
 
-            const versions = component.packageMap[0].toArray();
-            expect(versions[0]).toEqual("b1");
-            expect(versions[1]).toEqual("b2");
+            const versions = component.packageMap["banana"].toArray();
+            expect(versions[0].name).toEqual("b1");
+            expect(versions[1].name).toEqual("b2");
         });
     });
 

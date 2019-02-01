@@ -3,7 +3,7 @@ import { ArmRecord, Model, Prop, Record } from "@batch-flask/core";
 export interface BatchApplicationPackageAttributes {
     id: string;
     name: string;
-    version: string;
+    properties: BatchApplicationPackagePropertiesAttributes;
 }
 
 export interface BatchApplicationPackagePropertiesAttributes {

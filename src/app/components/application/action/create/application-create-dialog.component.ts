@@ -10,8 +10,8 @@ import { BatchApplicationPackageService, BatchApplicationService } from "app/ser
 import { StorageBlobService } from "app/services/storage";
 import * as storage from "azure-storage";
 import { Constants } from "common";
-import { Observable, throwError } from "rxjs";
-import { catchError, mapTo, share, switchMap, tap } from "rxjs/operators";
+import { Observable, of, throwError } from "rxjs";
+import { catchError, share, switchMap, tap } from "rxjs/operators";
 
 @Component({
     selector: "bl-application-create-dialog",
@@ -92,13 +92,27 @@ export class ApplicationCreateDialogComponent {
         return this.packageService.put(applicationName, formData.version).pipe(
             switchMap((pkg: BatchApplicationPackage) => {
                 return this._uploadAppPackage(this.file, pkg.properties.storageUrl).pipe(
-                    switchMap(() => this.packageService.activate(pkg.id)),
-                    mapTo(pkg),
+                    tap(() => {
+                        this.applicationService.onApplicationAdded.next(pkg.applicationId);
+                        this.packageService.onPackageAdded.next(pkg.id);
+                    }),
+                    switchMap(() => this._tryActivate(applicationName, pkg)),
                 );
             }),
-            tap((pkg) => {
-                this.applicationService.onApplicationAdded.next(pkg.applicationId);
-                this.packageService.onPackageAdded.next(pkg.id);
+            share(),
+        );
+    }
+
+    private _uploadAppPackage(file: File, sasUrl: string): Observable<storage.BlobService.BlobResult> {
+        if (!this.hasValidFile()) {
+            return throwError("Valid file not selected");
+        }
+        return this.storageBlobService.uploadToSasUrl(sasUrl, file.path);
+    }
+
+    private _tryActivate(applicationName: string, pkg: BatchApplicationPackage): Observable<any> {
+        return this.packageService.activate(pkg.id).pipe(
+            tap(() => {
                 this.notificationService.success(
                     "Application added!",
                     `Version ${pkg.name} for application '${applicationName}' was successfully created!`,
@@ -121,16 +135,8 @@ export class ApplicationCreateDialogComponent {
                     "The application package was uploaded into storage successfully, "
                     + "but the activation process failed.",
                 );
-                return throwError(err);
+                return of(null);
             }),
-            share(),
         );
-    }
-
-    private _uploadAppPackage(file: File, sasUrl: string): Observable<storage.BlobService.BlobResult> {
-        if (!this.hasValidFile()) {
-            return throwError("Valid file not selected");
-        }
-        return this.storageBlobService.uploadToSasUrl(sasUrl, file.path);
     }
 }

@@ -13,7 +13,7 @@ export interface ArmRecordAttributes {
 export class ArmRecord<T extends ArmRecordAttributes> extends Record<T> {
     @Prop() public type: string;
 
-    constructor(data: T) {
+    constructor(data: Partial<T>) {
         super({ ...data as any, id: data.id && data.id.toLowerCase() });
     }
 }
