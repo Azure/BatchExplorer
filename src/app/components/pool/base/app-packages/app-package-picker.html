@@ -12,14 +12,14 @@
                 <td style="width: 45%">
                     <bl-form-field>
                         <bl-select formControlName="applicationId" (change)="applicationSelected($event, i)">
-                            <bl-option *ngFor="let application of applications;trackBy: trackApplication" [value]="application.id.toLowerCase()" [label]="application.id"></bl-option>
+                            <bl-option *ngFor="let application of applications;trackBy: trackApplication" [value]="application.name" [label]="application.name"></bl-option>
                         </bl-select>
                     </bl-form-field>
                 </td>
                 <td style="width: 45%">
                     <bl-form-field>
                         <bl-select formControlName="version">
-                            <bl-option *ngFor="let package of packageMap[i];trackBy: trackPackages" [value]="getPackageValue(package)"  [label]="package"></bl-option>
+                            <bl-option *ngFor="let package of packageMap[item.value.applicationId];trackBy: trackPackages" [value]="package.name"  [label]="package.name"></bl-option>
                         </bl-select>
                     </bl-form-field>
                 </td>

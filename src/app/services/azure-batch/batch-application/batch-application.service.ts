@@ -32,6 +32,7 @@ const applicationIgnoredErrors = [
 
 @Injectable({ providedIn: "root" })
 export class BatchApplicationService implements OnDestroy {
+
     /**
      * Triggered when an application is added through this app.
      * Used to notify the list of a new item
@@ -91,6 +92,10 @@ export class BatchApplicationService implements OnDestroy {
 
     public get(applicationId: string, options: any = {}): Observable<BatchApplication> {
         return this._getter.fetch({ id: applicationId });
+    }
+
+    public getByName(appName: string): Observable<BatchApplication> {
+        return this.get(`${this._currentAccountId}/applications/${appName}`);
     }
 
     public getFromCache(applicationId: string, options: any = {}): Observable<BatchApplication> {

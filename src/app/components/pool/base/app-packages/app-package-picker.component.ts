@@ -1,13 +1,16 @@
-import { Component, EventEmitter, OnDestroy, Output, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output, forwardRef,
+} from "@angular/core";
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
 import { ListView, ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { BatchApplicationPackage, BatchApplication } from "app/models";
-import { ApplicationListParams, BatchApplicationService } from "app/services";
+import { BatchApplication, BatchApplicationPackage } from "app/models";
+import { ApplicationListParams, BatchApplicationPackageService, BatchApplicationService } from "app/services";
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
+import { switchMap } from "rxjs/operators";
 
 import "./app-package-picker.scss";
 
@@ -23,13 +26,14 @@ interface PackageReference {
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AppPackagePickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AppPackagePickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppPackagePickerComponent implements ControlValueAccessor, Validator, OnDestroy {
     @Output() public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
 
     public status: Observable<LoadingStatus>;
     public applications: List<BatchApplication> = List([]);
-    public packageMap: any[] = [];
+    public packageMap: StringMap<List<BatchApplicationPackage>> = {};
     public items: FormArray;
     public form: FormGroup;
 
@@ -37,7 +41,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     private _data: ListView<BatchApplication, ApplicationListParams>;
     private _applicationMap: { [key: string]: string[] } = {};
     private _propagateChange: (items: any[]) => void;
-    private _propagateTouched: (value: boolean) => void;
+    private _propagateTouched: () => void;
     private _writingValue = false;
     private _mapped = false;
 
@@ -46,6 +50,8 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
     constructor(
         private applicationService: BatchApplicationService,
+        private packageService: BatchApplicationPackageService,
+        private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder) {
 
         this.items = formBuilder.array([]);
@@ -63,21 +69,11 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             return false;
         };
 
-        // TODO-TIM cleanup
         // subscribe to the application data proxy
         this._data.items.subscribe((applications) => {
-            this._applicationMap = {};
-            if (applications.size > 0) {
-                // when this is called the packages will all be loaded from writeValue.
-                let index = 0;
-                (this.items.value as PackageReference[] || []).forEach(item => {
-                    if (item && item.applicationId) {
-                        this._setPackageMap(item.applicationId, index);
-                    }
+            this.applications = applications;
 
-                    index++;
-                });
-            }
+            this.changeDetector.markForCheck();
         });
 
         // subscribe to the form change events
@@ -179,40 +175,35 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
     public deleteItem(index: number) {
         this.items.removeAt(index);
-        this.packageMap.splice(index, 1);
     }
 
-    public applicationSelected(appId: string, index: number) {
-        this._setPackageMap(appId, index);
+    public applicationSelected(appName: string) {
+        this.applicationService.getByName(appName).pipe(
+            switchMap(x => this.packageService.listAll(x.id)),
+        ).subscribe((packages) => {
+            this.packageMap[appName] = packages;
+        });
+        this._propagateTouched();
     }
 
     public getPackageValue(version: string) {
         return version.toLowerCase() !== this._defaultVersionText.toLowerCase() ? version : this._defaultVersionValue;
     }
 
-    public trackRow(index) {
+    public trackRow(index: number) {
         return index;
     }
 
-    public trackApplication(index, application: BatchApplication) {
+    public trackApplication(_: number, application: BatchApplication) {
         return application.id;
     }
 
-    public trackPackage(index, pkg: BatchApplicationPackage) {
-        return pkg.version;
-    }
-
-    private _setPackageMap(applicationId: string, index: number) {
-        // each table row needs it's own package list based on the selected application
-        this.packageMap[index] = List(this._applicationMap[applicationId] || []);
-        if (applicationId && this._propagateTouched) {
-            this._propagateTouched(true);
-        }
+    public trackPackage(_: number, pkg: BatchApplicationPackage) {
+        return pkg.id;
     }
 
     private _isValidReference(application: string, version: string) {
         return application in this._applicationMap
             && this._applicationMap[application].indexOf(version) !== -1;
     }
-
 }
