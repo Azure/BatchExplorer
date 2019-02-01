@@ -1,1 +1,1 @@
-export * from "./editable-table-select-cell.component"
+export * from "./editable-table-select-cell.component";

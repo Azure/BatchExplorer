@@ -2,9 +2,9 @@ import { Type } from "@angular/core";
 import { PinnedEntityType } from "@batch-flask/core";
 import { File, Workspace } from "@batch-flask/ui";
 import {
-    BatchApplicationPackage,
     ArmBatchAccount,
     BatchApplication,
+    BatchApplicationPackage,
     BlobContainer,
     Job,
     Node,
