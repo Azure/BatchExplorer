@@ -6,7 +6,7 @@ import { filter, take } from "rxjs/operators";
 import * as Fixtures from "test/fixture";
 import { PinnedEntityService } from "./pinned-entity.service";
 
-describe("PinnedEntityService", () => {
+fdescribe("PinnedEntityService", () => {
     let pinService: PinnedEntityService;
     let favourites: List<PinnableEntity>;
     let subscriptions: Subscription[];
@@ -61,7 +61,7 @@ describe("PinnedEntityService", () => {
                         "https://myaccount.westus.batch.com/jobs/my-job-matt",
                         {
                             id: "my-job-matt",
-                            name: undefined,
+                            name: "my-job-matt",
                             routerLink: ["/jobs", "my-job-matt"],
                             pinnableType: "Job",
                             uid: "https://myaccount.westus.batch.com/jobs/my-job-matt",
@@ -80,7 +80,7 @@ describe("PinnedEntityService", () => {
                         "https://myaccount.westus.batch.com/jobs/my-job-matt",
                         {
                             id: "my-job-matt",
-                            name: undefined,
+                            name: "my-job-matt",
                             routerLink: ["/jobs", "my-job-matt"],
                             pinnableType: "Job",
                             uid: "https://myaccount.westus.batch.com/jobs/my-job-matt",
