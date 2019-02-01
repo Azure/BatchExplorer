@@ -234,10 +234,6 @@ export const account = new FixtureFactory<ArmBatchAccount>(ArmBatchAccount, {
 
 export const application = new FixtureFactory<BatchApplication>(BatchApplication, {
     id: "app-1",
-    displayName: "test application",
-    allowUpdates: true,
-    defaultVersion: null,
-    packages: null,
 });
 
 export const applicationPackage = new FixtureFactory<BatchApplicationPackage>(BatchApplicationPackage, {

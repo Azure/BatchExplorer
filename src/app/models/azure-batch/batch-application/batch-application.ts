@@ -20,7 +20,7 @@ export interface BatchApplicationAttributes {
     id: string;
     eTag: string;
     name: string;
-    properties: BatchApplicationPropertiesAttributes;
+    properties: Partial<BatchApplicationPropertiesAttributes>;
 }
 
 /**

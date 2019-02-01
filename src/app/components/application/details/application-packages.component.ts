@@ -8,7 +8,7 @@ import { BatchApplicationPackageCommands } from "../action";
     selector: "bl-application-packages",
     templateUrl: "application-packages.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [BatchApplicationPackageCommands]
+    providers: [BatchApplicationPackageCommands],
 })
 export class ApplicationPackagesComponent implements OnChanges {
 
@@ -18,7 +18,6 @@ export class ApplicationPackagesComponent implements OnChanges {
     public activateEnabled = false;
 
     private _selection: ListSelection = new ListSelection();
-    private _activeItem: string;
 
     constructor(public commands: BatchApplicationPackageCommands, private changeDetector: ChangeDetectorRef) {
 
@@ -26,15 +25,8 @@ export class ApplicationPackagesComponent implements OnChanges {
 
     public ngOnChanges(changes) {
         if (ComponentUtils.recordChangedId(changes.application)) {
-            setTimeout(() => {
-                this._resetEnabled();
-            });
+            this._resetEnabled();
         }
-    }
-
-    public activeItemChanged(key: string) {
-        this._activeItem = key;
-        this._updateEnabled();
     }
 
     public selectionChanged(selection: ListSelection) {
@@ -43,26 +35,19 @@ export class ApplicationPackagesComponent implements OnChanges {
     }
 
     public deleteSelection() {
-        this.commands.delete.executeMultipleByIds([...this._selection.keys]);
+        this.commands.delete.executeFromSelection(this._selection);
     }
 
     public activateSelection() {
-        this.commands.activate.executeMultipleByIds([...this._selection.keys]);
+        this.commands.activate.executeFromSelection(this._selection);
     }
 
     private _activatedItemDeleteEnabled() {
-        return this.application.properties.allowUpdates && Boolean(this._activeItem);
+        return this.application.properties.allowUpdates && this._selection.hasAny();
     }
 
     private _activatedItemActivateEnabled() {
-        return this._isPackagePending(this._activeItem) && !this._selection.hasMultiple();
-    }
-
-    private _isPackagePending(version: string): boolean {
-        if (!version) { return false; }
-        // const pkg = this.application.packages.filter(x => x.version === version).first();
-        // return pkg && pkg.state === PackageState.pending;
-        return false;
+        return !this._selection.hasMultiple();
     }
 
     private _updateEnabled() {

@@ -31,9 +31,12 @@ describe("ApplicationConfigurationComponent", () => {
         component = fixture.componentInstance;
         component.application = Fixtures.application.create({
             id: "app-1",
-            allowUpdates: true,
-            displayName: "apples and pears",
-            defaultVersion: "1.25",
+            nane: "app-1",
+            properties: {
+                allowUpdates: true,
+                displayName: "apples and pears",
+                defaultVersion: "1.25",
+            },
         });
 
         fixture.detectChanges();
