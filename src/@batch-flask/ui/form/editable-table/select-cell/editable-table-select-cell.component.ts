@@ -18,7 +18,7 @@ export class EditableTableSelectCellComponent implements OnInit, OnChanges, OnDe
     @Input() public options: EditableTableSelectOptions;
     @Input() public rowValue: StringMap<any>;
 
-    public actualOptions: string[];
+    public actualOptions: string[] = [];
     public loadingOptions = true;
 
     private _rowValue = new BehaviorSubject<StringMap<any>>({});

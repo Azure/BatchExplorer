@@ -1,5 +1,7 @@
-<bl-editable-table [formControl]="references">
-    <bl-editable-table-column name="applicationId" type="select" [options]="applicationNames">Application</bl-editable-table-column>
-    <bl-editable-table-column name="version" type="select" [options]="versionOptions">Version</bl-editable-table-column>
-</bl-editable-table>
-<bl-error [control]="references" code="duplicate">{{references.errors?.duplicate?.message}}</bl-error>
+<ng-container *ngIf="hasAutoStorage">
+    <bl-editable-table [formControl]="references">
+        <bl-editable-table-column name="applicationId" type="select" [options]="applicationNames">Application</bl-editable-table-column>
+        <bl-editable-table-column name="version" type="select" [options]="versionOptions">Version</bl-editable-table-column>
+    </bl-editable-table>
+    <bl-error [control]="references" code="duplicate">{{references.errors?.duplicate?.message}}</bl-error>
+</ng-container>
