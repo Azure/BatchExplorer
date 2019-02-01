@@ -10,14 +10,17 @@ import { EntityCommand, EntityCommandAttributes, EntityCommandNotify } from "./e
 
 interface MyModel {
     id: string;
+    name: string;
 }
 
 const entity1: MyModel = {
-    id: "entity-1",
+    id: "/entities/entity-1",
+    name: "entity-1",
 };
 
 const entity2: MyModel = {
-    id: "entity-2",
+    id: "/entities/entity-2",
+    name: "entity-2",
 };
 
 const definition: any = {

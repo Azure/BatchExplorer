@@ -69,6 +69,10 @@ export class Node extends Record<NodeAttributes> {
     public get routerLink() {
         return ["/pools", this.poolId, "nodes", this.id];
     }
+
+    public get name() {
+        return this.id;
+    }
 }
 
 export enum NodeState {

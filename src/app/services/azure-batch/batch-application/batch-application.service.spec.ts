@@ -59,7 +59,7 @@ describe("BatchApplicationService", () => {
     });
 
     it("get an application by name", (done) => {
-        applicationService.get("app-1").subscribe((app: BatchApplication) => {
+        applicationService.getByName("app-1").subscribe((app: BatchApplication) => {
             expect(app instanceof BatchApplication).toBe(true);
             expect(app.id).toEqual("/subs/sub-1/batchaccounts/acc-1/applications/app-1");
             expect(app.name).toEqual("app-1");
