@@ -1,17 +1,16 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output, forwardRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
-import { ListView, ServerError } from "@batch-flask/core";
-import { LoadingStatus } from "@batch-flask/ui/loading";
-import { BatchApplication, BatchApplicationPackage } from "app/models";
+import { ListView, ServerError, autobind } from "@batch-flask/core";
+import { BatchApplication } from "app/models";
 import { ApplicationListParams, BatchApplicationPackageService, BatchApplicationService } from "app/services";
-import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-import { switchMap } from "rxjs/operators";
+import { Subject, pipe } from "rxjs";
+import { distinctUntilChanged, filter, map, publishReplay, refCount, switchMap, takeUntil } from "rxjs/operators";
 
+import { PipeableSelectOptions } from "@batch-flask/ui/form/editable-table";
 import "./app-package-picker.scss";
 
 interface PackageReference {
@@ -28,35 +27,21 @@ interface PackageReference {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppPackagePickerComponent implements ControlValueAccessor, Validator, OnDestroy {
+export class AppPackagePickerComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
+    // TODO-TIM check needed?
     @Output() public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
 
-    public status: Observable<LoadingStatus>;
-    public applications: List<BatchApplication> = List([]);
-    public packageMap: StringMap<List<BatchApplicationPackage>> = {};
-    public items: FormArray;
-    public form: FormGroup;
+    public references = new FormControl<PackageReference[]>([], this._duplicateValidator);
+    public applicationNames: string[] = [];
+    public _propagateChange: (references: PackageReference[]) => void;
 
-    private _subscriptions: Subscription[] = [];
     private _data: ListView<BatchApplication, ApplicationListParams>;
-    private _applicationMap: { [key: string]: string[] } = {};
-    private _propagateChange: (items: any[]) => void;
-    private _propagateTouched: () => void;
-    private _writingValue = false;
-    private _mapped = false;
-
-    private _defaultVersionText = "Use default version";
-    private _defaultVersionValue = "-1";
+    private _destroy = new Subject();
 
     constructor(
         private applicationService: BatchApplicationService,
         private packageService: BatchApplicationPackageService,
-        private changeDetector: ChangeDetectorRef,
-        private formBuilder: FormBuilder) {
-
-        this.items = formBuilder.array([]);
-        this.form = formBuilder.group({ items: this.items });
-        this._mapped = false;
+        private changeDetector: ChangeDetectorRef) {
 
         this._data = this.applicationService.listView();
 
@@ -71,140 +56,86 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         // subscribe to the application data proxy
         this._data.items.subscribe((applications) => {
-            this.applications = applications;
-
+            this.applicationNames = applications.map(x => x.name).toArray();
             this.changeDetector.markForCheck();
         });
 
-        // subscribe to the form change events
-        this._subscriptions.push(this.items.valueChanges.subscribe((references: PackageReference[]) => {
-            if (this._writingValue) {
-                return;
-            }
-
-            const last = references[references.length - 1];
-            if (last && last.applicationId && last.version) {
-                this.addNewItem();
-            }
-
+        this.references.valueChanges.pipe(takeUntil(this._destroy)).subscribe((references: PackageReference[]) => {
+            console.log("refs", references);
             if (this._propagateChange) {
-                const cloned = this.items.value.slice(0, -1).map(item => {
-                    const clone = JSON.parse(JSON.stringify(item));
-                    if (clone.version === this._defaultVersionValue) {
-                        clone.version = null;
-                    }
-
-                    return clone;
-                });
-
-                this._propagateChange(cloned);
+                this._propagateChange(references);
             }
-        }));
+        });
+    }
 
-        this.status = this._data.status;
+    public ngOnInit() {
+        this._data.fetchAll();
     }
 
     public ngOnDestroy() {
         this._data.dispose();
-        this._subscriptions.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public writeValue(references: PackageReference[]) {
-        this._writingValue = true;
-        this.items.controls = [];
-        if (references) {
-            for (const reference of references) {
-                this.addNewItem(reference.applicationId, reference.version || this._defaultVersionValue);
-            }
-        } else {
-            this.items.setValue([]);
-        }
-
-        this._data.fetchNext();
-        this._writingValue = false;
-        this.addNewItem();
+        this.references.setValue(references);
     }
 
-    public registerOnChange(fn) {
+    public registerOnChange(fn: (references: PackageReference[]) => void) {
         this._propagateChange = fn;
     }
 
-    public registerOnTouched(fn) {
-        // need this in order for the bl-error validation control to work
-        this._propagateTouched = fn;
+    public registerOnTouched(fn: () => void) {
+        // Nothing to do
     }
 
-    public validate(control: FormControl) {
-        if (!control.value || this._writingValue || !this._mapped) {
+    public validate(c: FormControl): ValidationErrors | null {
+        if (this.references.valid) {
+            return null;
+        } else {
+            return this.references.errors;
+        }
+    }
+
+    @autobind()
+    public versionOptions(): PipeableSelectOptions {
+        return pipe(
+            map((values: { applicationId: string }) => values.applicationId),
+            distinctUntilChanged(),
+            filter(x => Boolean(x)),
+            switchMap(applicationName => this.applicationService.getByName(applicationName)),
+            switchMap(application => this.packageService.listAll(application.id)),
+            map((packages) => packages.map(x => x.name).toArray()),
+            publishReplay(1),
+            refCount(),
+        );
+    }
+
+    @autobind()
+    private _duplicateValidator(control: FormControl<PackageReference[]>): ValidationErrors | null {
+        const references = control.value;
+        if (references === null) {
             return null;
         }
+        let duplicate: string | null = null;
+        const uniqueIds = new Set<string>();
 
-        const tempMap: any = {};
-        for (const reference of control.value) {
-            // TODO: remove lowerCase when API is fixed.
-            const application = reference.applicationId && reference.applicationId.toLowerCase();
-            const key = `${application}-${reference.version}`;
-            if (!Boolean(key in tempMap)) {
-                const version = !reference.version // this._defaultVersionValue
-                    ? this._defaultVersionText
-                    : reference.version.toLowerCase();
-
-                if (!this._isValidReference(application, version)) {
-                    return {
-                        invalid: true,
-                    };
-                }
-
-                tempMap[key] = key;
-            } else {
+        for (const reference of references) {
+            const uid = `${reference.applicationId}/versions/${reference.version}`;
+            if (uniqueIds.has(uid)) {
+                duplicate = uid;
                 return {
-                    duplicate: true,
+                    duplicate: {
+                        value: duplicate,
+                        message:
+                            `Application ${reference.applicationId} has version ${reference.version} specified twice`,
+                    },
                 };
             }
+            uniqueIds.add(uid);
         }
 
         return null;
-    }
-
-    public addNewItem(applicationId = null, version = null) {
-        this.items.push(this.formBuilder.group({
-            applicationId: [applicationId, []],
-            version: [version, []],
-        }));
-    }
-
-    public deleteItem(index: number) {
-        this.items.removeAt(index);
-    }
-
-    public applicationSelected(appName: string) {
-        this.applicationService.getByName(appName).pipe(
-            switchMap(x => this.packageService.listAll(x.id)),
-        ).subscribe((packages) => {
-            this.packageMap[appName] = packages;
-            this.changeDetector.markForCheck();
-        });
-        this._propagateTouched();
-    }
-
-    public getPackageValue(version: string) {
-        return version.toLowerCase() !== this._defaultVersionText.toLowerCase() ? version : this._defaultVersionValue;
-    }
-
-    public trackRow(index: number) {
-        return index;
-    }
-
-    public trackApplication(_: number, application: BatchApplication) {
-        return application.id;
-    }
-
-    public trackPackage(_: number, pkg: BatchApplicationPackage) {
-        return pkg.id;
-    }
-
-    private _isValidReference(application: string, version: string) {
-        return application in this._applicationMap
-            && this._applicationMap[application].indexOf(version) !== -1;
     }
 }

@@ -1,0 +1,4 @@
+<bl-select [formControl]="control">
+    <bl-option [label]="'common.loading' | i18n" [disabled]="true" *ngIf="loadingOptions"></bl-option>
+    <bl-option *ngFor="let item of actualOptions;trackBy: trackRows" [value]="item" [label]="item"></bl-option>
+</bl-select>
