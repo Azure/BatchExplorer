@@ -5,6 +5,7 @@ import {
     ListView,
     ServerError,
     TargetedDataCache,
+    enterZone,
 } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { BlobContainer } from "app/models";
@@ -12,7 +13,7 @@ import { StorageEntityGetter, StorageListGetter } from "app/services/core";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { Constants } from "common";
 import { Observable, Subject, from, throwError } from "rxjs";
-import { catchError, flatMap, map, share } from "rxjs/operators";
+import { catchError, flatMap, share } from "rxjs/operators";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 import { StorageClientService } from "./storage-client.service";
 
@@ -167,11 +168,11 @@ export class StorageContainerService {
      */
     private _callStorageClient<T>(
         storageAccountId: string,
-        promise: (client: BlobStorageClientProxy) => Promise<any>,
+        promise: (client: BlobStorageClientProxy) => Promise<T>,
         errorCallback?: (error: any) => void): Observable<T> {
 
         return this.storageClient.getFor(storageAccountId).pipe(
-            flatMap((client) => from<T>(promise(client))),
+            flatMap((client) => from<Promise<T>>(promise(client))),
             catchError((err) => {
                 const serverError = ServerError.fromStorage(err);
                 if (errorCallback) {
@@ -180,7 +181,7 @@ export class StorageContainerService {
 
                 return throwError(serverError);
             }),
-            map((x) => this.zone.run(() => x)),
+            enterZone(this.zone),
             share(),
         );
     }

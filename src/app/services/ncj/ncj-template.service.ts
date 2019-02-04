@@ -80,7 +80,7 @@ export class NcjTemplateService {
                     log.error(`File is not valid json: ${error.message}`);
                 });
 
-                return from(promise as any);
+                return from<[Portfolio, any]>(promise as any);
             }),
             share(),
         );

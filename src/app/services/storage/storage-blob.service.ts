@@ -7,6 +7,7 @@ import {
     ListView,
     ServerError,
     TargetedDataCache,
+    enterZone,
 } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
 import { File, FileLoadOptions, FileLoader, FileNavigator } from "@batch-flask/ui";
@@ -228,7 +229,7 @@ export class StorageBlobService {
         : Observable<BlobContentResult> {
 
         return this._callStorageClient(storageAccountId, (client) => {
-            return client.getBlobToLocalFile(container, blobName, fileName, options);
+            return client.getBlobToLocalFile(container, blobName, fileName, options) as any;
         });
     }
 
@@ -378,13 +379,13 @@ export class StorageBlobService {
      */
     private _callStorageClient<T>(
         storageAccountId: string,
-        promise: (client: BlobStorageClientProxy) => Promise<any>,
+        promise: (client: BlobStorageClientProxy) => Promise<T>,
         errorCallback?: (error: any) => void): Observable<T> {
 
         return this.storageClient.getFor(storageAccountId).pipe(
             take(1),
             flatMap((client) => {
-                return from<T>(promise(client));
+                return from<Promise<T>>(promise(client));
             }),
             catchError((err) => {
                 const serverError = ServerError.fromStorage(err);
@@ -394,7 +395,7 @@ export class StorageBlobService {
 
                 return throwError(serverError);
             }),
-            map((x) => this.zone.run(() => x)),
+            enterZone(this.zone),
             share(),
         );
     }
