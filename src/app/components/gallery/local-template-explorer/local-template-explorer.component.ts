@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { DialogService, FileExplorerWorkspace, FileNavigator } from "@batch-flask/ui";
+import { DialogService, FileExplorerConfig, FileExplorerWorkspace, FileNavigator } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
 import { LocalTemplateFolder, LocalTemplateService } from "app/services";
 import { Subscription } from "rxjs";
@@ -14,13 +14,21 @@ import "./local-template-explorer.scss";
 })
 export class LocalTemplateExplorerComponent implements OnDestroy {
     public static breadcrumb(params, queryParams) {
-        return { name: "User template library"};
+        return { name: "User template library" };
     }
 
     public NcjTemplateType = NcjTemplateType;
     public fileNavigator: FileNavigator;
     public workspace: FileExplorerWorkspace;
     public sources: LocalTemplateFolder[] = null;
+
+    public fileExplorerConfig: FileExplorerConfig = {
+        viewer: {
+            fileAssociations: [
+                { extension: ".json", type: "ncj-template" },
+            ],
+        },
+    };
 
     private _subs: Subscription[] = [];
 

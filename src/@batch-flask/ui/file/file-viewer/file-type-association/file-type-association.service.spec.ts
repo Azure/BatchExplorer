@@ -56,4 +56,21 @@ describe("FileTypeAssociationService", () => {
         expect(service.getType("foo.fake2")).toEqual("fake-viewer");
         expect(service.getType("foo.json")).toEqual("fake-viewer");
     });
+
+    fit("It creates a new instance with local overrides", () => {
+        service.registerViewer({
+            name: "fake-viewer",
+            component: "fake" as any,
+            extensions: [".fake1", ".fake2"],
+        });
+
+        expect(service.getType("foo.fake1")).toEqual("fake-viewer");
+        expect(service.getType("foo.fake2")).toEqual("fake-viewer");
+        expect(service.getType("foo.json")).toEqual("text");
+
+        const local = service.withLocalAssociations([{extension: ".json", type: "fake-viewer"}]);
+        expect(local.getType("foo.fake1")).toEqual("fake-viewer");
+        expect(local.getType("foo.fake2")).toEqual("fake-viewer");
+        expect(local.getType("foo.json")).toEqual("fake-viewer");
+    });
 });
