@@ -3,7 +3,7 @@ import { FormBuilder, FormControl } from "@angular/forms";
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { JobCreateBasicDialogComponent } from "../action";
+import { AddJobFormComponent } from "../action";
 
 @Component({
     selector: "bl-job-home",
@@ -33,7 +33,7 @@ export class JobHomeComponent {
 
     @autobind()
     public addJob() {
-        this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
+        this.sidebarManager.open("add-job", AddJobFormComponent);
     }
 
     public advancedFilterChanged(filter: Filter) {

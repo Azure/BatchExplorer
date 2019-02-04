@@ -8,14 +8,14 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { JobState } from "app/models/azure-batch/job/job";
 import { JobCreateDto, JobPatchDto } from "app/models/dtos";
 import { JobService, PoolService } from "app/services";
-import { JobCreateBasicDialogComponent } from "./job-create-basic-dialog.component";
+import { AddJobFormComponent } from "./add-job-form.component";
 
 @Component({
     selector: "bl-patch-job-form",
-    templateUrl: "job-create-basic-dialog.html",
+    templateUrl: "add-job-form.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PatchJobComponent extends JobCreateBasicDialogComponent {
+export class PatchJobComponent extends AddJobFormComponent {
     private _jobId: string;
     public get jobId() {
         return this._jobId;
@@ -28,12 +28,12 @@ export class PatchJobComponent extends JobCreateBasicDialogComponent {
 
     constructor(
         formBuilder: FormBuilder,
-        sidebarRef: SidebarRef<JobCreateBasicDialogComponent>,
+        sidebarRef: SidebarRef<AddJobFormComponent>,
         jobService: JobService,
         poolService: PoolService,
         notificationService: NotificationService,
-        private changeDetector: ChangeDetectorRef) {
-        super(formBuilder, sidebarRef, jobService, poolService, notificationService);
+        changeDetector: ChangeDetectorRef) {
+        super(sidebarRef, formBuilder, jobService, changeDetector, notificationService, poolService);
         this.title = "Edit job";
         this.disable("id");
         this.disable("displayName");

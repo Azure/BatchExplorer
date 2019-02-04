@@ -4,9 +4,10 @@ import { FormBuilder } from "@angular/forms";
 import { Subject, of, throwError } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { JobCreateBasicDialogComponent } from "app/components/job/action";
+import { AddJobFormComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { JobService, PoolService } from "app/services";
 import * as Fixtures from "test/fixture";
@@ -15,9 +16,9 @@ import { validateControl } from "test/utils/helpers";
 import { MockListView } from "test/utils/mocks";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
 
-describe("JobCreateBasicDialogComponent ", () => {
-    let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
-    let component: JobCreateBasicDialogComponent;
+describe("AddJobFormComponent ", () => {
+    let fixture: ComponentFixture<AddJobFormComponent>;
+    let component: AddJobFormComponent;
     let debugElement: DebugElement;
     let poolListProxy: MockListView<Pool, {}>;
     let sidebarRefSpy: any;
@@ -81,7 +82,8 @@ describe("JobCreateBasicDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [...complexFormMockComponents, JobCreateBasicDialogComponent, ServerErrorMockComponent],
+            imports: [I18nTestingModule],
+            declarations: [...complexFormMockComponents, AddJobFormComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: sidebarRefSpy },
@@ -93,7 +95,7 @@ describe("JobCreateBasicDialogComponent ", () => {
             schemas: [NO_ERRORS_SCHEMA],
         });
 
-        fixture = TestBed.createComponent(JobCreateBasicDialogComponent);
+        fixture = TestBed.createComponent(AddJobFormComponent);
         component = fixture.componentInstance;
         debugElement = fixture.debugElement;
         fixture.detectChanges();
