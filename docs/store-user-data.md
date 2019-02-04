@@ -1,47 +1,38 @@
 # Storing user data / Cache data
 
-If you want to store some user data locally or have some server response cached for later use you have multiple options:
-| Option           | Description                                              | When to use                                                                                       |
-|------------------|----------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| localStorage     | Use the browser localStorage                             | The data you want to store is relatively small
-                                                                                (A few tokens, current selected user, etc.). It will be persisted when you close the application. |
-| LocalFileStorage | This will use the user appdata folder to store the file. | You want to use this when caching large data such as server response
-                                                                                you want to be able to access instantly and will not change regularly.                            |
+There is a few options to save user data depending on the use case
 
 
-## Usage
+|                   | User independant | User specific         |
+|-------------------|------------------|-----------------------|
+| Global            | GlobalStorage    | UserSpecificDataStore |
+| Local(Per window) | localStorage     | localStorage          |
 
-### localStorage
-Doc: ttps://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
+### Global storage
+**For saving large set of data. Prefer one of the DataStore for smaller ones**
 
-```ts
-// You need to store a string. (Call JSON.stringify for javascript object)
-localStorage.setItem("myKey", "myItem");
-const myItem = localStorage.getItem("mykey"); // myItem => "myItem"
-```
+This this the lowsest level data storage. It will support synchronzing the content of a key across the app.
+It is implemented differently depending on the environment:
+* Electron main: Save to `$(userdata)/data/` folder
+* Electron renderer: Calls to the Electron main service
+* Browser only: User `localStorage`
 
-### LocalFileStorage
+Use when:
+* To implement a higher level store
+* Having to save large set of data
 
-Local file storage is a Angular service that need to be injected in your component/service.
-All action are async and returns rxjs observable you can subscribe to to.
-```ts
-import { LocalFileStorage } from "app/services";
+Do not use for:
+* Caching data
+* If the data should not be shared between windows(Each process should have its local version)
+* Small values
 
-class MyClass {
-    constructor(storage: LocalFileStorage) {
-        storage.set("my-filename.json", {foo: "bar"}).subscribe({
-            next: () => {
-                console.log("Saved file");
-            },
-            error: (e) => console.error("Error saving file", e),
-        });
+### UserSpecificDataStore
+**When having to save user specific data/state(No for caching)**
 
-        storage.get("my-filename.json").subscribe({
-            next: (data) => {
-                console.log("Got file data", data); // Data is {foo: "bar"};
-            },
-            error: (e) => console.error("Error reading file", e),
-        });
-    }
-}
-```
+Use when:
+* The data saved should not be shared between users
+
+Do not sure for:
+* If the data is not user specific
+* If the data should not be shared between windows(Each process should have its local version)
+

@@ -3,7 +3,7 @@ import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, LoadingStatus } from "@batch-flask/ui";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchApplication } from "app/models";
-import { ApplicationListParams, ApplicationService } from "app/services";
+import { ApplicationListParams, BatchApplicationService } from "app/services";
 import { List } from "immutable";
 import { Observable, Subscription, of } from "rxjs";
 import { BatchApplicationCommands } from "../action";
@@ -31,16 +31,16 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
     constructor(
         injector: Injector,
         public commands: BatchApplicationCommands,
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
     ) {
         super(injector);
 
         this.data = this.applicationService.listView(this._baseOptions);
-        this._subs.push(this.data.items.subscribe((applications) => {
+        this.data.items.subscribe((applications) => {
             this.applications = applications;
             this._filterApplications();
             this.changeDetector.markForCheck();
-        }));
+        });
 
         this.data.status.subscribe((status) => {
             this.status = status;
@@ -56,6 +56,7 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this._subs.forEach(x => x.unsubscribe());
         this.data.dispose();
     }
@@ -71,13 +72,13 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
     }
 
     public appStatus(application: BatchApplication): QuickListItemStatus {
-        return application.allowUpdates
+        return application.properties.allowUpdates
             ? QuickListItemStatus.lightaccent
             : QuickListItemStatus.accent;
     }
 
     public appStatusText(application: BatchApplication): string {
-        return application.allowUpdates
+        return application.properties.allowUpdates
             ? "Application allows updates"
             : "Application is locked";
     }

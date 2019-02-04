@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { UserConfigurationService } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
 import { OS } from "@batch-flask/utils";
 import { ConnectionType, IaasNodeConnectionSettings, Node, NodeConnectionSettings, Pool } from "app/models";
@@ -8,8 +9,8 @@ import * as path from "path";
 import { Observable, Subscription, from, of } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
 import { AddNodeUserAttributes } from "../azure-batch";
-import { SettingsService } from "../settings.service";
 import { SSHKeyService } from "../ssh-key.service";
+import { BEUserConfiguration } from "../user-configuration";
 
 @Injectable({providedIn: "root"})
 export class NodeConnectService implements OnDestroy {
@@ -17,13 +18,13 @@ export class NodeConnectService implements OnDestroy {
     private _settingsSub: Subscription;
 
     constructor(
-        private settingsService: SettingsService,
+        private settingsService: UserConfigurationService<BEUserConfiguration>,
         private fs: FileSystemService,
         private sshKeyService: SSHKeyService,
         private http: AzureBatchHttpService,
     ) {
-        this._settingsSub = this.settingsService.settingsObs.subscribe((settings) => {
-            this._defaultUsername = settings["node-connect.default-username"];
+        this._settingsSub = this.settingsService.watch("nodeConnect").subscribe((settings) => {
+            this._defaultUsername = settings.defaultUsername;
         });
     }
 

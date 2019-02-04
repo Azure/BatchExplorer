@@ -2,7 +2,7 @@ import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { ElectronRemote } from "@batch-flask/electron";
 import { wrapMainObservable } from "@batch-flask/electron/utils";
-import { BatchExplorerApplication, LocalFileStorage } from "client/core";
+import { BatchExplorerApplication } from "client/core";
 import { AADService, AuthenticationWindow } from "client/core/aad";
 import { PythonRpcServerProcess } from "client/python-process";
 import { SplashScreen } from "client/splash-screen";
@@ -82,9 +82,5 @@ export class BatchExplorerService implements OnDestroy {
 
     public getAuthenticationWindow(): AuthenticationWindow {
         return (this.getCurrentWindow() as any).authenticationWindow;
-    }
-
-    public getLocalFileStorage(): LocalFileStorage {
-        return (this.getCurrentWindow() as any).localFileStorage;
     }
 }

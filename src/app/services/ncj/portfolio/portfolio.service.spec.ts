@@ -1,4 +1,5 @@
-import { BehaviorSubject, Subject, of } from "rxjs";
+import { MockGlobalStorage, MockUserConfigurationService } from "@batch-flask/core/testing";
+import { Subject } from "rxjs";
 import { tap } from "rxjs/operators";
 import { Portfolio, PortfolioReference, PortfolioType } from "./portfolio";
 import { MICROSOFT_PORTFOLIO, PortfolioService } from "./portfolio.service";
@@ -18,32 +19,30 @@ const ref2: PortfolioReference = {
 describe("Portfolio Service", () => {
     let service: PortfolioService;
     let fsSpy;
-    let localFileStorageSpy;
-    let settingsServiceSpy;
+    let globalStorageSpy;
+    let settingsServiceSpy: MockUserConfigurationService;
     let portfolios: Portfolio[];
     let resolvePortfolio;
 
     beforeEach(() => {
         resolvePortfolio = new Subject();
-        localFileStorageSpy = {
-            get: jasmine.createSpy("localFileStorage.get").and.returnValue(of({
-                portfolios: [ref1, ref2],
-            })),
-            set: jasmine.createSpy("localFileStorage.set").and.returnValue(of(null)),
-        };
+        globalStorageSpy = new MockGlobalStorage();
+        globalStorageSpy.set("portfolios", {
+            portfolios: [ref1, ref2],
+        });
         fsSpy = {
 
         };
 
         spyOnProperty(Portfolio.prototype, "ready").and.returnValue(resolvePortfolio);
 
-        settingsServiceSpy = {
-            settingsObs: new BehaviorSubject({
-                "github-data.source.branch": "master",
-                "github-data.source.repo": "Azure/BatchExplorer-data",
-            }),
-        };
-        service = new PortfolioService(localFileStorageSpy, fsSpy, settingsServiceSpy);
+        settingsServiceSpy = new MockUserConfigurationService({
+            githubData: {
+                branch: "master",
+                repo: "Azure/BatchExplorer-data",
+            },
+        });
+        service = new PortfolioService(globalStorageSpy, fsSpy, settingsServiceSpy);
         service.portfolios.subscribe(x => portfolios = x);
     });
 
@@ -62,16 +61,18 @@ describe("Portfolio Service", () => {
             type: PortfolioType.Github,
             source: "https://github.com/Azure/BatchExplorer-data/tree/master",
         });
-        expect(portfolios[1].reference).toBe(ref1);
-        expect(portfolios[2].reference).toBe(ref2);
+        expect(portfolios[1].reference).toEqual(ref1);
+        expect(portfolios[2].reference).toEqual(ref2);
     });
 
     describe("when settings change", () => {
         it("changes the portfolio list", () => {
             portfolios = null;
-            settingsServiceSpy.settingsObs.next({
-                "github-data.source.branch": "feature/test-1",
-                "github-data.source.repo": "Azure/BatchExplorer-data",
+            settingsServiceSpy.patch({
+                githubData: {
+                    branch: "feature/test-1",
+                    repo: "Azure/BatchExplorer-data",
+                },
             });
 
             expect(portfolios.length).toEqual(3);
@@ -80,13 +81,13 @@ describe("Portfolio Service", () => {
                 type: PortfolioType.Github,
                 source: "https://github.com/Azure/BatchExplorer-data/tree/feature/test-1",
             });
-            expect(portfolios[1].reference).toBe(ref1);
-            expect(portfolios[2].reference).toBe(ref2);
+            expect(portfolios[1].reference).toEqual(ref1);
+            expect(portfolios[2].reference).toEqual(ref2);
         });
 
         it("doesn't update the list if other settings are updated", () => {
             portfolios = null;
-            settingsServiceSpy.settingsObs.next({
+            settingsServiceSpy.patch({
                 some: "other",
             });
 
@@ -102,7 +103,7 @@ describe("Portfolio Service", () => {
             source: "https://github.com/Azure/BatchExplorer-data/tree/master",
         });
         portfolio = await service.get("my-portfolio-2").toPromise();
-        expect(portfolio.reference).toBe(ref2);
+        expect(portfolio.reference).toEqual(ref2);
     });
 
     it("get a portfolio by id and wait for data to be ready", (done) => {

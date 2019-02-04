@@ -1,56 +1,75 @@
+import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { BatchApplication } from "app/models";
+import { ApplicationPreviewComponent } from "./application-preview.component";
 
-import { ApplicationPreviewComponent } from "app/components/application/browse/preview";
-import * as Fixtures from "test/fixture";
+@Component({
+    template: `<bl-application-preview [application]="application"></bl-application-preview>`,
+})
+class TestComponent {
+    public application = new BatchApplication({
+        id: "/subs/sub-1/acc/acc-1/applications/app-1",
+        name: "app-1",
+        properties: { allowUpdates: true } as any,
+    });
+}
 
 describe("ApplicationPreviewComponent", () => {
-    let fixture: ComponentFixture<ApplicationPreviewComponent>;
-    let component: ApplicationPreviewComponent;
+    let fixture: ComponentFixture<TestComponent>;
+    let testComponent: TestComponent;
+    let de: DebugElement;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [ApplicationPreviewComponent],
-            providers: [],
+            imports: [],
+            declarations: [ApplicationPreviewComponent, TestComponent],
         });
-
-        fixture = TestBed.createComponent(ApplicationPreviewComponent);
-        component = fixture.componentInstance;
-        component.application = Fixtures.application.create();
+        fixture = TestBed.createComponent(TestComponent);
+        testComponent = fixture.componentInstance;
+        de = fixture.debugElement.query(By.css("bl-application-preview"));
         fixture.detectChanges();
     });
 
     describe("application unlocked", () => {
         beforeEach(() => {
-            component.application = Fixtures.application.create({ allowUpdates: true });
+            testComponent.application = new BatchApplication({
+                id: "/subs/sub-1/acc/acc-1/applications/app-1",
+                name: "app-1",
+                properties: { allowUpdates: true } as any,
+            });
             fixture.detectChanges();
         });
 
         it("unlock icon displayed", () => {
-            const element = fixture.debugElement.query(By.css(".success")).nativeElement;
+            const element = de.query(By.css(".success")).nativeElement;
             expect(element).toBeDefined();
             expect(element.attributes["matTooltip"].value).toBe("Application allows updates");
         });
 
         it("lock icon not displayed", () => {
-            const container = fixture.debugElement.query(By.css(".failure"));
+            const container = de.query(By.css(".failure"));
             expect(container).toBeNull();
         });
     });
 
     describe("application locked", () => {
         beforeEach(() => {
-            component.application = Fixtures.application.create({ allowUpdates: false });
+            testComponent.application = new BatchApplication({
+                id: "/subs/sub-1/acc/acc-1/applications/app-1",
+                name: "app-1",
+                properties: { allowUpdates: false } as any,
+            });
             fixture.detectChanges();
         });
 
         it("unlock icon not displayed", () => {
-            const container = fixture.debugElement.query(By.css(".success"));
+            const container = de.query(By.css(".success"));
             expect(container).toBeNull();
         });
 
         it("lock icon displayed", () => {
-            const element = fixture.debugElement.query(By.css(".failure")).nativeElement;
+            const element = de.query(By.css(".failure")).nativeElement;
             expect(element).toBeDefined();
             expect(element.attributes["matTooltip"].value).toBe("Application is locked");
         });

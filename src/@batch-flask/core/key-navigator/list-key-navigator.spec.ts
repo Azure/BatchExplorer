@@ -17,6 +17,8 @@ describe("List key navigator", () => {
     let fakeKeyEvents: {
         downArrow: KeyboardEvent,
         upArrow: KeyboardEvent,
+        leftArrow: KeyboardEvent,
+        rightArrow: KeyboardEvent,
         tab: KeyboardEvent,
         unsupported: KeyboardEvent,
     };
@@ -30,6 +32,8 @@ describe("List key navigator", () => {
         fakeKeyEvents = {
             downArrow: createKeyboardEvent("keydown", KeyCode.ArrowDown),
             upArrow: createKeyboardEvent("keydown", KeyCode.ArrowUp),
+            leftArrow: createKeyboardEvent("keydown", KeyCode.ArrowLeft),
+            rightArrow: createKeyboardEvent("keydown", KeyCode.ArrowRight),
             tab: createKeyboardEvent("keydown", KeyCode.Tab, TAB),
             unsupported: createKeyboardEvent("keydown", null, 192), // ~
         };
@@ -62,6 +66,72 @@ describe("List key navigator", () => {
         expect(keyNavigator.focusedItem!.getLabel()).toBe("one");
     });
 
+    describe("when using columns", () => {
+        beforeEach(() => {
+            keyNavigator.withColumns(2);
+        });
+
+        it("focus no columns by default", () => {
+            expect(keyNavigator.focusedColumn).toEqual(null);
+            keyNavigator.onKeydown(fakeKeyEvents.downArrow);
+            expect(keyNavigator.focusedColumn).toEqual(null);
+        });
+
+        it("focus does nothing when using left arrow", () => {
+            expect(keyNavigator.focusedColumn).toEqual(null);
+            keyNavigator.onKeydown(fakeKeyEvents.leftArrow);
+            expect(keyNavigator.focusedColumn).toEqual(null);
+        });
+
+        it("focus the first column when using the right arrow", () => {
+            expect(keyNavigator.focusedColumn).toEqual(null);
+            keyNavigator.onKeydown(fakeKeyEvents.rightArrow);
+            expect(keyNavigator.focusedColumn).toEqual(0);
+        });
+
+        it("blocks when reaching the last column", () => {
+            expect(keyNavigator.focusedColumn).toEqual(null);
+            keyNavigator.onKeydown(fakeKeyEvents.rightArrow);
+            expect(keyNavigator.focusedColumn).toEqual(0);
+            keyNavigator.onKeydown(fakeKeyEvents.rightArrow);
+            expect(keyNavigator.focusedColumn).toEqual(1);
+            keyNavigator.onKeydown(fakeKeyEvents.rightArrow);
+            expect(keyNavigator.focusedColumn).toEqual(1, "Should stay on the last column");
+        });
+
+        it("stop focusing column when going left on the first one", () => {
+            expect(keyNavigator.focusedColumn).toEqual(null);
+            keyNavigator.onKeydown(fakeKeyEvents.rightArrow);
+            expect(keyNavigator.focusedColumn).toEqual(0);
+            keyNavigator.onKeydown(fakeKeyEvents.leftArrow);
+            expect(keyNavigator.focusedColumn).toEqual(null, "Should now not have a column focused");
+        });
+
+        it("pressing left multiple times doesn't change", () => {
+            expect(keyNavigator.focusedColumn).toEqual(null);
+            keyNavigator.onKeydown(fakeKeyEvents.rightArrow);
+            expect(keyNavigator.focusedColumn).toEqual(0);
+            keyNavigator.onKeydown(fakeKeyEvents.leftArrow);
+            expect(keyNavigator.focusedColumn).toEqual(null);
+            keyNavigator.onKeydown(fakeKeyEvents.leftArrow);
+            expect(keyNavigator.focusedColumn).toEqual(null);
+
+            keyNavigator.onKeydown(fakeKeyEvents.rightArrow);
+            expect(keyNavigator.focusedColumn).toEqual(0);
+        });
+
+        it("focus a specific column", () => {
+            keyNavigator.focusColumn(1);
+            expect(keyNavigator.focusedColumn).toEqual(1);
+            keyNavigator.focusColumn(null);
+            expect(keyNavigator.focusedColumn).toEqual(null);
+        });
+
+        it("block if the focus column ask is more than the column count", () => {
+            keyNavigator.focusColumn(2);
+            expect(keyNavigator.focusedColumn).toEqual(1);
+        });
+    });
     describe("Key events", () => {
         it("should emit an event whenever the active item changes", () => {
             const spy = jasmine.createSpy("change spy");

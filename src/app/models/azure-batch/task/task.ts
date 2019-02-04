@@ -117,6 +117,10 @@ export class Task extends Record<TaskAttributes> {
     public get routerLink() {
         return ["/jobs", this.jobId, "tasks", this.id];
     }
+
+    public get name() {
+        return this.id;
+    }
 }
 
 export enum TaskState {

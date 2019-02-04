@@ -1,4 +1,4 @@
-<bl-banner *ngIf="!hasAutoStorage" fixMessage="Setup linked storage account" [fix]="setupLinkedStorage" type="warning">
-    <div message *ngIf="!isClassic">No linked storage account configured for this Batch account. This is required for managing file groups.</div>
-    <div message *ngIf="isClassic">Linked storage account is a classic storage account and cannot be used for this feature.</div>
+<bl-banner *ngIf="hasError" fixMessage="Setup linked storage account" [fix]="setupLinkedStorage" type="warning">
+    <div message *ngIf="!isClassic">{{'storage-error-display.noAutoStorage' | i18n}}</div>
+    <div message *ngIf="isClassic">{{'storage-error-display.isClassic' | i18n}}</div>
 </bl-banner>

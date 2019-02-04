@@ -11,7 +11,7 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { List } from "immutable";
-import { Subscription, of } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { EditorConfig } from "@batch-flask/ui/editor";
@@ -127,7 +127,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     }
 
     public deleteFormula(formula: AutoscaleFormula) {
-        this.autoscaleFormulaService.deleteFormula(formula);
+        this.autoscaleFormulaService.deleteFormula(formula).subscribe();
     }
 
     public trackFormula(index, formula: AutoscaleFormula) {
@@ -136,10 +136,9 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
 
     private _saveFormula(name: string) {
         const value = this.autoscaleFormulaValue;
-        this.autoscaleFormulaService.saveFormula(new AutoscaleFormula({
+        return this.autoscaleFormulaService.saveFormula(new AutoscaleFormula({
             name,
             value,
         }));
-        return of({});
     }
 }

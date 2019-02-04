@@ -9,9 +9,10 @@
     <ng-container *blQuickListRowStatus="let application">
         <bl-quick-list-item-status [status]="appStatus(application)"></bl-quick-list-item-status>
     </ng-container>
-    <ng-container *blQuickListRowTitle="let application">{{application.id}}</ng-container>
-    <ng-container *blQuickListRowState="let application">{{application.packages?.size}} packages</ng-container>
-
+    <ng-container *blQuickListRowTitle="let application">{{application.name}}</ng-container>
+    <ng-container *blQuickListRowState="let application">
+        <ng-container *ngIf="application.properties.defaultVersion">Version: {{application.properties.defaultVersion}}</ng-container>
+    </ng-container>
     <ng-container *blQuickListRowExtra="let application">
         <bl-application-preview [application]="application"></bl-application-preview>
     </ng-container>
@@ -42,7 +43,7 @@
 
     <bl-column name="allowUpdates">
         <div *blHeadCellDef>Allow updates</div>
-        <div *blCellDef="let application">{{application.allowUpdates}}</div>
+        <div *blCellDef="let application">{{application.properties.allowUpdates}}</div>
     </bl-column>
 </bl-table>
 <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>

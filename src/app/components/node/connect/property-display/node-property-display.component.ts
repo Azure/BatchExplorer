@@ -8,10 +8,10 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { autobind } from "@batch-flask/core";
+import { UserConfigurationService, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
-import { AddNodeUserAttributes, NodeConnectService, SettingsService } from "app/services";
+import { AddNodeUserAttributes, BEUserConfiguration, NodeConnectService } from "app/services";
 
 import "./node-property-display.scss";
 
@@ -55,7 +55,7 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
     constructor(
         private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,
-        private settingsService: SettingsService,
+        private settingsService: UserConfigurationService<BEUserConfiguration>,
         private changeDetector: ChangeDetectorRef,
     ) {}
 
@@ -98,7 +98,7 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
     public setUsername(event) {
         // TODO-Adam reimplement as a FormControl with custom validator
         const newName = event.target.value.replace(/ /g, "");
-        this.credentials.name = newName || this.settingsService.settings["node-connect.default-username"];
+        this.credentials.name = newName || this.settingsService.current.nodeConnect.defaultUsername;
         this.credentialsChange.emit(this.credentials);
     }
 

@@ -1,4 +1,4 @@
-import { BehaviorSubject } from "rxjs";
+import { MockUserConfigurationService } from "@batch-flask/core/testing";
 import { ImageFileViewerComponent } from "../image-file-viewer";
 import { LogFileViewerComponent } from "../log-file-viewer";
 import { TextFileViewerComponent } from "../text-file-viewer";
@@ -6,15 +6,11 @@ import { FileTypeAssociationService } from "./file-type-association.service";
 
 describe("FileTypeAssociationService", () => {
     let service: FileTypeAssociationService;
-    let settingsSpy;
+    let settingsSpy: MockUserConfigurationService;
 
     beforeEach(() => {
-        settingsSpy = {
-            settings: {},
-            settingsObs: new BehaviorSubject({
-            }),
-        };
-        service = new FileTypeAssociationService(settingsSpy);
+        settingsSpy = new MockUserConfigurationService({});
+        service = new FileTypeAssociationService(settingsSpy as any);
     });
 
     it("gets the default types", () => {
@@ -26,25 +22,15 @@ describe("FileTypeAssociationService", () => {
     });
 
     it("includes user types", () => {
-        const settings = {
-            fileAssociations: {
-                ".custTxt": "text",
-                ".custImage": "image",
-                ".custLog": "log",
-                ".custInvalid": "invalid",
-                ".custNull": null,
-            },
-        };
-        settingsSpy.settings = {
-            fileAssociations: {
-                ".custTxt": "text",
-                ".custImage": "image",
-                ".custLog": "log",
-                ".custInvalid": "invalid",
-                ".custNull": null,
-            },
-        };
-        settingsSpy.settingsObs.next(settings);
+        settingsSpy.patch({
+            fileAssociations: [
+                {extension: ".custTxt", type: "text"},
+                {extension: ".custImage", type: "image"},
+                {extension: ".custLog", type: "log"},
+                {extension: ".custInvalid", type: "invalid"},
+                {extension: ".custNull", type: null},
+            ],
+        });
 
         expect(service.getType("foo.custTxt")).toEqual("text");
         expect(service.getType("foo.custImage")).toEqual("image");

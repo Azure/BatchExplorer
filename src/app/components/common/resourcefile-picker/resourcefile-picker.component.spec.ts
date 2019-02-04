@@ -2,13 +2,13 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
+import { UserConfigurationService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { FileSystemService } from "@batch-flask/electron";
 import { DialogService, SelectModule } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { ResourcefilePickerComponent } from "app/components/task/base";
 import { ResourceFileAttributes } from "app/models";
-import { SettingsService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { of } from "rxjs";
 import { click, updateInput } from "test/utils/helpers";
@@ -62,9 +62,9 @@ describe("ResourcefilePickerComponent", () => {
                 .and.returnValue(of(null)),
         };
         settingsServiceSpy = {
-            settings: {
-                "storage.default-upload-container": "test-custom-container",
-            },
+            watch: jasmine.createSpy("watch").and.returnValue(of({
+                defaultUploadContainer: "test-custom-container",
+            })),
         };
 
         dialogServiceSpy = {
@@ -85,7 +85,7 @@ describe("ResourcefilePickerComponent", () => {
                 { provide: StorageBlobService, useValue: storageBlobServiceSpy },
                 { provide: AutoStorageService, useValue: autoStorageServiceSpy },
                 { provide: FileSystemService, useValue: fsSpy },
-                { provide: SettingsService, useValue: settingsServiceSpy },
+                { provide: UserConfigurationService, useValue: settingsServiceSpy },
                 { provide: DialogService, useValue: dialogServiceSpy },
             ],
         });

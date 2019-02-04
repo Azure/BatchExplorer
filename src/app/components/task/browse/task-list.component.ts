@@ -93,6 +93,7 @@ export class TaskListComponent extends ListBaseComponent implements OnChanges, O
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this._onTaskAddedSub.unsubscribe();
         this.data.dispose();
     }

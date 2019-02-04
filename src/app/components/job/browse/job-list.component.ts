@@ -74,6 +74,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this.data.dispose();
         this._onJobAddedSub.unsubscribe();
     }

@@ -61,6 +61,21 @@
                     <bl-tp-cell [value]="registry.username"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
+
+            <bl-table-property *ngIf="pool.virtualMachineConfiguration?.dataDisks;let dataDisks" label="Data disks">
+                <bl-table-property-header>
+                    <div tp-column>Caching</div>
+                    <div tp-column>Size</div>
+                    <div tp-column>Lun</div>
+                    <div tp-column>Storage type</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let disk of dataDisks">
+                    <bl-tp-cell [value]="disk.caching"></bl-tp-cell>
+                    <bl-tp-cell value="{{disk.diskSizeGB}} GB"></bl-tp-cell>
+                    <bl-tp-cell [value]="disk.lun"></bl-tp-cell>
+                    <bl-tp-cell [value]="disk.storageAccountType"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
         </bl-property-group>
 
         <bl-property-group label="Start task settings" [collapsed]="true" class="wide" [edit]="editStartTask">

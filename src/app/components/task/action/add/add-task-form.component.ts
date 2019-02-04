@@ -28,7 +28,6 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
     public complexFormConfig: ComplexFormConfig;
     public constraintsGroup: FormGroup;
     public resourceFiles: FormArray;
-    public hasLinkedStorage: boolean = true;
     public multiUse = true;
     public fileUri = "create.task.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
@@ -49,7 +48,6 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
         this.subtitle = i18n.t("add-task-form.subtitle");
         this.actionName = i18n.t("add-task-form.action");
 
-        this.hasLinkedStorage = true;
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
             maxWallClockTime: null,
@@ -114,10 +112,6 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
         });
 
         return observable;
-    }
-
-    public handleHasLinkedStorage(hasLinkedStorage) {
-        this.hasLinkedStorage = hasLinkedStorage;
     }
 
     public registerFileUpload(event: UploadResourceFileEvent) {

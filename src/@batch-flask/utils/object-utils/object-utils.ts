@@ -76,3 +76,34 @@ export function exists<T>(obj: T | null | undefined): obj is T {
 export function nil<T>(obj: T | null | undefined): obj is (undefined | null) {
     return !exists<T>(obj);
 }
+
+export function deepClone<T>(value: T): T {
+    return deepMerge({}, value);
+}
+
+export function deepMerge<A extends {}, B extends {}>(target: A, source: B): A & B {
+    const destination: any = {};
+    if (isMergable(target)) {
+        Object.keys(target).forEach((key) => {
+            destination[key] = deepClone(target[key]);
+        });
+    }
+    if (isMergable(source)) {
+        target = target || {} as any;
+        Object.keys(source).forEach((key) => {
+            if (isMergable(source[key])) {
+                destination[key] = deepMerge(target[key] || {}, source[key]);
+            } else {
+                destination[key] = source[key];
+            }
+        });
+    } else {
+        return source as any;
+    }
+
+    return destination;
+}
+
+function isMergable(obj: any): boolean {
+    return obj != null && typeof obj === "object" && !Array.isArray(obj);
+}

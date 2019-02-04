@@ -1,18 +1,20 @@
 import { TestBed } from "@angular/core/testing";
 import * as path from "path";
-import { BehaviorSubject, of } from "rxjs";
+import { of } from "rxjs";
 
+import { UserConfigurationService } from "@batch-flask/core";
+import { MockUserConfigurationService } from "@batch-flask/core/testing";
 import { FileSystemService } from "@batch-flask/electron";
 import { OS, Platform } from "@batch-flask/utils";
 import { ConnectionType, IaasNodeConnectionSettings, NodeConnectionSettings, Pool } from "app/models";
-import { AddNodeUserAttributes, SSHKeyService, SettingsService } from "..";
+import { AddNodeUserAttributes, SSHKeyService } from "..";
 import { AzureBatchHttpService } from "../azure-batch/core";
 import { NodeConnectService } from "./node-connect.service";
 
 describe("NodeConnectService", () => {
     let nodeConnectService: NodeConnectService;
 
-    let settingsServiceSpy;
+    let settingsServiceSpy: MockUserConfigurationService;
     let fsServiceSpy;
     let sshKeyServiceSpy;
     let httpSpy;
@@ -50,17 +52,14 @@ describe("NodeConnectService", () => {
             getLocalPublicKey: jasmine.createSpy("getLocalPublicKey").and.returnValue(of("baz")),
         };
 
-        settingsServiceSpy = {
-            settingsObs: new BehaviorSubject({
-                "node-connect.default-username": "foo",
-            }),
-        };
-
+        settingsServiceSpy = new MockUserConfigurationService({
+            nodeConnect: { defaultUsername: "foo" },
+        });
         httpSpy = {
             get: jasmine.createSpy("get").and.callFake((str) => {
                 const parts = str.split("/");
                 if (parts[parts.length - 1] === "rdp") {
-                    return of({body: "full address:s:0.0.0.0"});
+                    return of({ body: "full address:s:0.0.0.0" });
                 } else {
                     return of({
                         remoteLoginIPAddress: "0.0.0.0",
@@ -75,7 +74,7 @@ describe("NodeConnectService", () => {
                 NodeConnectService,
                 { provide: FileSystemService, useValue: fsServiceSpy },
                 { provide: SSHKeyService, useValue: sshKeyServiceSpy },
-                { provide: SettingsService, useValue: settingsServiceSpy },
+                { provide: UserConfigurationService, useValue: settingsServiceSpy },
                 { provide: AzureBatchHttpService, useValue: httpSpy },
             ],
         });

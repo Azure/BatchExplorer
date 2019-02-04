@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Injector, OnDestroy, forwardRef } from "@angular/core";
 import { List } from "immutable";
-import { Observable, Subscription, of } from "rxjs";
+import { Observable, Subject, of } from "rxjs";
 
 import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
@@ -9,7 +9,7 @@ import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchAccountCommands } from "app/components/account/action";
 import { BatchAccount } from "app/models";
 import { BatchAccountService, SubscriptionService } from "app/services";
-import { shareReplay, switchMap } from "rxjs/operators";
+import { shareReplay, switchMap, takeUntil } from "rxjs/operators";
 
 import "./account-list.scss";
 
@@ -31,7 +31,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     public displayedAccounts: List<BatchAccount> = List([]);
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
-    private _accountSub: Subscription;
+    private _destroy = new Subject();
 
     constructor(
         public commands: BatchAccountCommands,
@@ -41,15 +41,21 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
         super(injector);
         this._updateDisplayedAccounts();
 
-        this._accountSub = this.accountService.accounts.subscribe((accounts) => {
+        this.accountService.accounts.pipe(takeUntil(this._destroy)).subscribe((accounts) => {
             this.accounts = accounts;
             this.loadingStatus = LoadingStatus.Ready;
             this._updateDisplayedAccounts();
         });
+
+        this.accountService.accountFavorites.pipe(takeUntil(this._destroy)).subscribe((accounts) => {
+            this.changeDetector.markForCheck();
+        });
     }
 
     public ngOnDestroy() {
-        this._accountSub.unsubscribe();
+        super.ngOnDestroy();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     @autobind()
@@ -71,7 +77,11 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
     public toggleFavorite(accountId: string) {
         if (this.isAccountFavorite(accountId)) {
-            this.accountService.unFavoriteAccount(accountId);
+            this.accountService.unFavoriteAccount(accountId).subscribe({
+                complete: () => {
+                    this.changeDetector.markForCheck();
+                },
+            });
         } else {
             this.accountService.favoriteAccount(accountId).subscribe({
                 complete: () => {

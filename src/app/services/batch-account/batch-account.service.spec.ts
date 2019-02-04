@@ -69,14 +69,14 @@ describe("BatchAccountService", () => {
     let armAccountSpy;
     let localAccountSpy;
     let subscriptionServiceSpy;
-    let storageSpy;
+    let userSpecificStoreSpy;
     let accounts: BatchAccount[];
     let subs: Subscription[];
-    let favoritesIds: any[];
+    let favoritesSavedData: BehaviorSubject<any[]>;
 
     beforeEach(() => {
         subs = [];
-        favoritesIds = [];
+        favoritesSavedData = new BehaviorSubject<any[]>([]);
         armAccountSpy = {
             accounts: new BehaviorSubject(List([armAccount1, armAccount2])),
             get: jasmine.createSpy("armGet").and.callFake((id) => {
@@ -103,12 +103,17 @@ describe("BatchAccountService", () => {
             get: () => of(sub),
         };
 
-        storageSpy = {
-            get: () => of(favoritesIds),
-            set: jasmine.createSpy("storage.set").and.returnValue(of(null)),
+        userSpecificStoreSpy = {
+            watchItem: jasmine.createSpy("storage.watchItem").and.returnValue(favoritesSavedData),
+            setItem: jasmine.createSpy("storage.set").and.callFake((k, v) => {
+                favoritesSavedData.next(v);
+                return of(null);
+            }),
         };
-        service = new BatchAccountService(armAccountSpy, localAccountSpy, storageSpy, null, subscriptionServiceSpy);
+        service = new BatchAccountService(
+            armAccountSpy, localAccountSpy, userSpecificStoreSpy, null, subscriptionServiceSpy);
         subs.push(service.accounts.subscribe(x => accounts = x.toArray()));
+        service.loadInitialData();
     });
 
     afterEach(() => {
@@ -155,77 +160,67 @@ describe("BatchAccountService", () => {
             service.accountFavorites.subscribe(x => favorites = x);
         });
 
-        it("get the accounts from the cache", (done) => {
+        it("get the accounts from the cache", () => {
             expect(favorites).toBe(null, "should be null before data is loaded");
 
-            favoritesIds = [
+            favoritesSavedData.next([
                 { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
                 { id: "local/https://testaccount2.westus2.batch.azure.com" },
-            ];
+            ]);
 
-            service.loadInitialData().subscribe(() => {
-                expect(favorites.toArray()).toEqual([
-                    armAccount1,
-                    localAccount2,
-                ]);
-                done();
-            });
+            expect(favorites.toArray()).toEqual([
+                armAccount1,
+                localAccount2,
+            ]);
         });
 
-        it("ignores invalid ids", (done) => {
+        it("ignores invalid ids", () => {
             expect(favorites).toBe(null, "should be null before data is loaded");
 
-            favoritesIds = [
+            favoritesSavedData.next([
                 { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
                 { id: "/subscriptions/invalid/resoruce/batch-accounts/invalid" },
                 { id: "local/https://testaccount2.westus2.batch.azure.com" },
                 { id: "local/invalid" },
-            ];
-            service.loadInitialData().subscribe(() => {
-                expect(favorites.toArray()).toEqual([
-                    armAccount1,
-                    new ArmBatchAccount({
-                        id: "/subscriptions/invalid/resoruce/batch-accounts/invalid",
-                    } as any),
-                    localAccount2,
-                    new ArmBatchAccount({
-                        id: "local/invalid",
-                    } as any),
-                ]);
-                done();
-            });
+            ]);
+            expect(favorites.toArray()).toEqual([
+                armAccount1,
+                new ArmBatchAccount({
+                    id: "/subscriptions/invalid/resoruce/batch-accounts/invalid",
+                } as any),
+                localAccount2,
+                new ArmBatchAccount({
+                    id: "local/invalid",
+                } as any),
+            ]);
         });
 
         it("favorite an account", async () => {
-            favoritesIds = [
+            favoritesSavedData.next([
                 { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
                 { id: "local/https://testaccount2.westus2.batch.azure.com" },
-            ];
-
-            await service.loadInitialData().toPromise();
+            ]);
 
             await service.favoriteAccount("/subscriptions/sub1/resources/batch-accounts/arm-account-2").toPromise();
+
+            expect(userSpecificStoreSpy.setItem).toHaveBeenCalledWith("account-favorites", [
+                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
+                { id: "local/https://testaccount2.westus2.batch.azure.com" },
+                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-2" },
+            ]);
 
             expect(favorites.toArray()).toEqual([
                 armAccount1,
                 localAccount2,
                 armAccount2,
             ]);
-
-            expect(storageSpy.set).toHaveBeenCalledWith("account-favorites", [
-                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
-                { id: "local/https://testaccount2.westus2.batch.azure.com" },
-                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-2" },
-            ]);
         });
 
         it("unfavorite an account", async () => {
-            favoritesIds = [
+            favoritesSavedData.next([
                 { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
                 { id: "local/https://testaccount2.westus2.batch.azure.com" },
-            ];
-
-            await service.loadInitialData().toPromise();
+            ]);
 
             await service.unFavoriteAccount("local/https://testaccount2.westus2.batch.azure.com").toPromise();
 
@@ -233,7 +228,7 @@ describe("BatchAccountService", () => {
                 armAccount1,
             ]);
 
-            expect(storageSpy.set).toHaveBeenCalledWith("account-favorites", [
+            expect(userSpecificStoreSpy.setItem).toHaveBeenCalledWith("account-favorites", [
                 { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
             ]);
         });

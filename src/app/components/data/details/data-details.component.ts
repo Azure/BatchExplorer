@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, autobind } from "@batch-flask/core";
-import { ApplicationDecorator } from "app/decorators";
 import { BlobContainer } from "app/models";
 import {
     AutoStorageService, GetContainerParams, StorageContainerService,
@@ -26,7 +25,6 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public container: BlobContainer;
     public storageAccountId: string;
     public containerId: string;
-    public decorator: ApplicationDecorator;
     public data: EntityView<BlobContainer, GetContainerParams>;
     public isFileGroup = false;
 

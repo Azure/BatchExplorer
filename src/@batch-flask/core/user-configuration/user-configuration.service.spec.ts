@@ -6,6 +6,11 @@ interface Settings extends BatchFlaskUserConfiguration {
     bar: number;
 }
 
+const defaultSettings: Settings = {
+    foo: "default-value",
+    bar: null,
+};
+
 describe("UserConfigurationService", () => {
     let service: UserConfigurationService<Settings>;
     let store;
@@ -20,7 +25,7 @@ describe("UserConfigurationService", () => {
             }),
             save: jasmine.createSpy("save"),
         };
-        service = new UserConfigurationService(store);
+        service = new UserConfigurationService(store, defaultSettings);
         service.config.subscribe(x => current = x);
     });
 

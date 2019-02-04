@@ -1,4 +1,6 @@
 export * from "./file";
+export * from "./batch-application";
+export * from "./batch-application-package";
 export * from "./certificate";
 export * from "./job";
 export * from "./job-hook-task";

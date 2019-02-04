@@ -211,11 +211,11 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         const label = this.label(entity);
         this.performActionAndRefresh(entity, options).subscribe({
             next: () => {
-                this._notifySuccess(`${label} was successful.`, `${entity.id}`);
+                this._notifySuccess(`${label} was successful.`, `${entity.name}`);
             },
             error: (e: ServerError) => {
-                this._notifyError(`${label} failed.`, `${entity.id} ${e.message}`);
-                log.error(`Failed to execute command ${label} for entity ${entity.id}`, e);
+                this._notifyError(`${label} failed.`, `${entity.name} ${e.message}`);
+                log.error(`Failed to execute command ${label} for entity ${entity.name}`, e);
             },
         });
     }
@@ -241,7 +241,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         const activity = new Activity(`${label} ${type}`, () => {
             // create a subactivity for each enabled entity
             const subActivities = enabledEntities.map((entity) => {
-                return new Activity(`${label} ${entity.id}`, () => {
+                return new Activity(`${label} ${entity.name}`, () => {
                     // each subactivity should perform an action and refresh
                     return this.performActionAndRefresh(entity, options);
                 });

@@ -1,4 +1,4 @@
-import { ObjectUtils, exists, nil } from "./object-utils";
+import { ObjectUtils, deepMerge, exists, nil } from "./object-utils";
 
 describe("Object extensions", () => {
     it("Should slice an object correctly", () => {
@@ -52,5 +52,19 @@ describe("Object extensions", () => {
         expect(s1).not.toEqual(s3);
         expect(ObjectUtils.serialize(null)).toEqual("");
         expect(ObjectUtils.serialize(undefined)).toEqual("");
+    });
+
+    describe("deepMerge", () => {
+        it("merge simple object", () => {
+            const a = { foo: 123, other: "val-1" };
+            const b = { bar: null, other: "some-2" };
+            expect(deepMerge(a, b)).toEqual({ foo: 123, bar: null, other: "some-2" });
+        });
+
+        it("merge complex object", () => {
+            const a = { a: 1, b: { c: 2, d: 3, e: { g: 4 } } };
+            const b = { a: 8, b: { c: 9, e: { g: 12 } } };
+            expect(deepMerge(a, b)).toEqual({ a: 8, b: { c: 9, d: 3, e: { g: 12 } } });
+        });
     });
 });

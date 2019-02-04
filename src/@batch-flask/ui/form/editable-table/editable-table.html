@@ -10,13 +10,12 @@
             </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let item of items.controls;trackBy: trackRows; let i=index; let isLast=last" [formGroupName]="i">
+            <tr *ngFor="let item of items.controls;trackBy: trackRows; let i=index; let isLast=last" [formGroupName]="i">
                 <td *ngFor="let column of columns;trackBy: trackColumn">
                     <ng-container [ngSwitch]="column.type">
                         <ng-container *ngSwitchCase="EditableTableColumnType.Select">
-                            <bl-select [formControlName]="column.name">
-                                <bl-option *ngFor="let item of column.options;trackBy: trackRows" [value]="item" [label]="item"></bl-option>
-                            </bl-select>
+                            <bl-editable-table-select-cell [control]="item.controls[column.name]" [options]="column.options"
+                                [rowValue]="item.value"></bl-editable-table-select-cell>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
                             <input [formControlName]="column.name" [attr.type]="column.type">
@@ -24,8 +23,9 @@
                     </ng-container>
                 </td>
                 <td class="action-column">
-                    <bl-clickable *ngIf="!isLast" class="delete-item-btn" [attr.aria-label]="'editable-table.deleteRow' | i18n" (do)="deleteItem(i)">
-                        <i class="fa fa-times" ></i>
+                    <bl-clickable *ngIf="!isLast" class="delete-item-btn" [attr.aria-label]="'editable-table.deleteRow' | i18n"
+                        (do)="deleteItem(i)">
+                        <i class="fa fa-times"></i>
                     </bl-clickable>
                 </td>
             </tr>
