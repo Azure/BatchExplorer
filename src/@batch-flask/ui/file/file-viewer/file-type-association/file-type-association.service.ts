@@ -64,6 +64,7 @@ export class FileTypeAssociationService implements OnDestroy {
     public withLocalAssociations(associations: FileAssociation[]): FileTypeAssociationService {
         const service = new FileTypeAssociationService(this.settingsService);
         service._viewers = this._viewers;
+        service._viewersFileAssociations = this._viewersFileAssociations;
         service._localAssociations.next(associations);
         return service;
     }

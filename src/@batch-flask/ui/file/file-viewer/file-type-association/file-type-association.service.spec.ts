@@ -57,7 +57,7 @@ describe("FileTypeAssociationService", () => {
         expect(service.getType("foo.json")).toEqual("fake-viewer");
     });
 
-    fit("It creates a new instance with local overrides", () => {
+    it("It creates a new instance with local overrides", () => {
         service.registerViewer({
             name: "fake-viewer",
             component: "fake" as any,
