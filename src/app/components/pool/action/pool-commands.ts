@@ -4,7 +4,7 @@ import { ElectronRemote, FileSystemService } from "@batch-flask/electron";
 import {
     COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission, SidebarManager,
 } from "@batch-flask/ui";
-import { JobCreateBasicDialogComponent } from "app/components/job/action";
+import { AddJobFormComponent } from "app/components/job/action";
 import { Pool, PoolAllocationState } from "app/models";
 import { JobService, PinnedEntityService, PoolService } from "app/services";
 import { from } from "rxjs";
@@ -137,7 +137,7 @@ export class PoolCommands extends EntityCommands<Pool> {
     }
 
     private _addJob(pool: Pool) {
-        const createRef = this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-job", AddJobFormComponent);
         createRef.component.preSelectPool(pool.id);
     }
 
