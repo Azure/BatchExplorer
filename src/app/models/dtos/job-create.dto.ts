@@ -70,7 +70,7 @@ export class JobCreateDto extends Dto<JobCreateDto> {
 
     @DtoAttr() public jobReleaseTask?: JobReleaseTaskDto;
 
-    @ListDtoAttr(EnvironmentSetting) public commonEnvironmentSettings?: EnvironmentSetting[];
+    @ListDtoAttr(EnvironmentSettingDto) public commonEnvironmentSettings?: EnvironmentSettingDto[];
 
     @DtoAttr() public poolInfo: {
         poolId?: string;

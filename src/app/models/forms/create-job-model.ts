@@ -1,5 +1,6 @@
 import { JobCreateDto, MetaDataDto } from "app/models/dtos";
 import { Duration } from "luxon";
+import { EnvironmentSettingDto } from "../dtos/environment-setting.dto";
 
 export interface JobConstraintsModel {
     maxWallClockTime: Duration;
@@ -18,7 +19,7 @@ export interface CreateJobModel {
     jobManagerTask: any;
     jobPreparationTask: any;
     jobReleaseTask: any;
-    commonEnvironmentSettings: any;
+    commonEnvironmentSettings: EnvironmentSettingDto[];
     poolInfo?: PoolInfoModel;
     onAllTasksComplete: string;
     onTaskFailure: string;
@@ -43,6 +44,8 @@ export function createJobFormToJsonData(formData: CreateJobModel): JobCreateDto 
         jobReleaseTask: formData.jobReleaseTask,
         onAllTasksComplete: formData.onAllTasksComplete,
         onTaskFailure: formData.onTaskFailure,
+        usesTaskDependencies: formData.usesTaskDependencies,
+        commonEnvironmentSettings: formData.commonEnvironmentSettings,
         metadata: formData.metadata,
     };
     return new JobCreateDto(data);
