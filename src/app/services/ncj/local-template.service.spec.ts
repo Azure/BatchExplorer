@@ -73,7 +73,7 @@ describe("LocalTemplateService", () => {
         const navigator = service.navigate(source1);
         const files = await navigator.listAllFiles().toPromise();
         expect(fsSpy.glob).toHaveBeenCalledOnce();
-        expect(fsSpy.glob).toHaveBeenCalledWith(path.join(source1.path, "**/*.template.json"));
+        expect(fsSpy.glob).toHaveBeenCalledWith(path.join(source1.path, "**/*.json"));
         expect(files.toJS()).toEqual([
             {
                 name: "job1.job.template.json",

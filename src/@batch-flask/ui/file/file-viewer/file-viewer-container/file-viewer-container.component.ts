@@ -89,6 +89,12 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
                 },
             });
         }
+
+        if (inputs.config) {
+            this.fileAssociationService = this.fileAssociationService.withLocalAssociations(
+                this.config.fileAssociations || []);
+            this._findFileType();
+        }
     }
 
     public ngOnDestroy() {
