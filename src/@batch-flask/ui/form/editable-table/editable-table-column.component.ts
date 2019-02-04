@@ -1,4 +1,6 @@
 import { Component, Input, TemplateRef, ViewChild } from "@angular/core";
+import { List } from "immutable";
+import { OperatorFunction } from "rxjs";
 
 export enum EditableTableColumnType {
     /**
@@ -19,6 +21,9 @@ export enum EditableTableColumnType {
 
 let idCounter = 0;
 
+export type PipeableSelectOptions = OperatorFunction<StringMap<any>, string[]>;
+export type EditableTableSelectOptions = string[] | List<string> |  (() => PipeableSelectOptions);
+
 @Component({
     selector: "bl-editable-table-column",
     template: `<ng-template><ng-content></ng-content></ng-template>`,
@@ -31,7 +36,7 @@ export class EditableTableColumnComponent {
     @Input() public type: EditableTableColumnType = EditableTableColumnType.Text;
 
     /** Select options when type is EditableTableColumnType.Select */
-    @Input() public options: string[];
+    @Input() public options: EditableTableSelectOptions;
 
     @ViewChild(TemplateRef) public content: TemplateRef<any>;
 }

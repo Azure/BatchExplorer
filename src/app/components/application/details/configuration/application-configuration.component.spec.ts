@@ -31,9 +31,12 @@ describe("ApplicationConfigurationComponent", () => {
         component = fixture.componentInstance;
         component.application = Fixtures.application.create({
             id: "app-1",
-            allowUpdates: true,
-            displayName: "apples and pears",
-            defaultVersion: "1.25",
+            nane: "app-1",
+            properties: {
+                allowUpdates: true,
+                displayName: "apples and pears",
+                defaultVersion: "1.25",
+            },
         });
 
         fixture.detectChanges();
@@ -41,9 +44,7 @@ describe("ApplicationConfigurationComponent", () => {
 
     it("application and decorator are set", () => {
         expect(component.application).toBeDefined();
-        expect(component.decorator).toBeDefined();
         expect(component.application.id).toEqual("app-1");
-        expect(component.decorator.id).toEqual("app-1");
     });
 
     it("allow updates is displayed", () => {

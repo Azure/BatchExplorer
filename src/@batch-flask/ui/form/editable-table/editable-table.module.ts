@@ -6,12 +6,15 @@ import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { SelectModule } from "@batch-flask/ui/select";
 import { EditableTableColumnComponent } from "./editable-table-column.component";
 import { EditableTableComponent } from "./editable-table.component";
+import { EditableTableSelectCellComponent } from "./select-cell";
 
 const publicComponents = [
     EditableTableComponent,
     EditableTableColumnComponent,
 ];
-const privateComponents = [];
+const privateComponents = [
+    EditableTableSelectCellComponent,
+];
 
 @NgModule({
     imports: [CommonModule, I18nUIModule, FormsModule, ReactiveFormsModule, ButtonsModule, SelectModule],

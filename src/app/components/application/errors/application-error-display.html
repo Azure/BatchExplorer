@@ -1,6 +1,6 @@
 <bl-banner *ngIf="hasLinkedStorageAccountIssue" fixMessage="Setup linked storage account" [fix]="setupLinkedStorage" type="warning">
     <div message>No linked storage account configured for this Batch account. This is required for uploading application packages.</div>
 </bl-banner>
-<bl-banner *ngIf="application && !application?.allowUpdates" fixMessage="" type="warning">
+<bl-banner *ngIf="application && !application?.properties.allowUpdates" fixMessage="" type="warning">
     <div message>Package update and delete has been disabled. Turn on 'Allow updates' to enable for this application.</div>
 </bl-banner>

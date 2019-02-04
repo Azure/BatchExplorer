@@ -12,7 +12,7 @@
                 <bl-form-field>
                     <bl-select formControlName="defaultVersion" placeholder="Default version">
                         <bl-option value="" label="No default version"></bl-option>
-                        <bl-option *ngFor="let package of packages;trackBy: trackByFn" value="{{package.version}}" [label]="package.version"></bl-option>
+                        <bl-option *ngFor="let package of packages;trackBy: trackByFn" value="{{package.name}}" [label]="package.name"></bl-option>
                     </bl-select>
                 </bl-form-field>
             </div>

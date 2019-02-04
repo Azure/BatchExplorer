@@ -2,9 +2,9 @@ import { Type } from "@angular/core";
 import { PinnedEntityType } from "@batch-flask/core";
 import { File, Workspace } from "@batch-flask/ui";
 import {
-    ApplicationPackage,
     ArmBatchAccount,
     BatchApplication,
+    BatchApplicationPackage,
     BlobContainer,
     Job,
     Node,
@@ -234,13 +234,9 @@ export const account = new FixtureFactory<ArmBatchAccount>(ArmBatchAccount, {
 
 export const application = new FixtureFactory<BatchApplication>(BatchApplication, {
     id: "app-1",
-    displayName: "test application",
-    allowUpdates: true,
-    defaultVersion: null,
-    packages: null,
 });
 
-export const applicationPackage = new FixtureFactory<ApplicationPackage>(ApplicationPackage, {
+export const applicationPackage = new FixtureFactory<BatchApplicationPackage>(BatchApplicationPackage, {
     version: "1",
     state: PackageState.active,
     format: "zip",

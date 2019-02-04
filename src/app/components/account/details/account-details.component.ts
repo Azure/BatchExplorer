@@ -4,7 +4,7 @@ import { EntityView, ListView, ServerError } from "@batch-flask/core";
 import { TableConfig } from "@batch-flask/ui";
 import { BatchAccount, BatchApplication, Job, Pool } from "app/models";
 import {
-    ApplicationListParams, ApplicationService, BatchAccountService,
+    ApplicationListParams, BatchAccountService, BatchApplicationService,
     JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
 import { Subscription } from "rxjs";
@@ -48,7 +48,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef,
         private activatedRoute: ActivatedRoute,
         private accountService: BatchAccountService,
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
         private jobService: JobService,
         private poolService: PoolService) {
         this.data = this.accountService.view();

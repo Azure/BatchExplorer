@@ -61,7 +61,7 @@ describe("PinnedEntityService", () => {
                         "https://myaccount.westus.batch.com/jobs/my-job-matt",
                         {
                             id: "my-job-matt",
-                            name: undefined,
+                            name: "my-job-matt",
                             routerLink: ["/jobs", "my-job-matt"],
                             pinnableType: "Job",
                             uid: "https://myaccount.westus.batch.com/jobs/my-job-matt",
@@ -80,7 +80,7 @@ describe("PinnedEntityService", () => {
                         "https://myaccount.westus.batch.com/jobs/my-job-matt",
                         {
                             id: "my-job-matt",
-                            name: undefined,
+                            name: "my-job-matt",
                             routerLink: ["/jobs", "my-job-matt"],
                             pinnableType: "Job",
                             uid: "https://myaccount.westus.batch.com/jobs/my-job-matt",

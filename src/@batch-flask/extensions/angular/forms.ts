@@ -33,14 +33,10 @@ declare module "@angular/forms/src/model" {
         setValue(value: T, options?: {
             onlySelf?: boolean;
             emitEvent?: boolean;
-            emitModelToViewChange?: boolean;
-            emitViewToModelChange?: boolean;
         }): void;
         patchValue(value: Partial<T>, options?: {
             onlySelf?: boolean;
             emitEvent?: boolean;
-            emitModelToViewChange?: boolean;
-            emitViewToModelChange?: boolean;
         }): void;
     }
 }

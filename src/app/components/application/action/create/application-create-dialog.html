@@ -3,11 +3,11 @@
         <bl-form-section title="General info" subtitle="Basic information about the application">
             <div class="form-element">
                 <bl-form-field>
-                    <input blInput formControlName="id" placeholder="Application identifier">
+                    <input blInput formControlName="name" placeholder="Application name">
                 </bl-form-field>
-                <bl-error controlName="id" code="required">The application identifier is a required field</bl-error>
-                <bl-error controlName="id" code="maxlength">Application identifier has a maximum length of 64 characters</bl-error>
-                <bl-error controlName="id" code="pattern">Application can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
+                <bl-error controlName="name" code="required">{{'common.required' | i18n }}</bl-error>
+                <bl-error controlName="name" code="maxlength">Application name has a maximum length of 64 characters</bl-error>
+                <bl-error controlName="name" code="pattern">Application can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
             </div>
 
             <div class="form-element">

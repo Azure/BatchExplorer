@@ -169,6 +169,10 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
     public get uid() {
         return this.url;
     }
+
+    public get name() {
+        return this.id;
+    }
 }
 
 export enum PoolState {

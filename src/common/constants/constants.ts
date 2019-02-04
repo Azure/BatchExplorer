@@ -100,7 +100,7 @@ export const ApiVersion = {
     arm: "2016-09-01",
     armClassicStorage: "2016-11-01",
     armStorage: "2016-12-01",
-    armBatch: "2017-05-01",
+    armBatch: "2018-12-01",
     compute: "2017-03-30",
     commerce: "2016-08-31-preview",
     authorization: "2017-05-01",

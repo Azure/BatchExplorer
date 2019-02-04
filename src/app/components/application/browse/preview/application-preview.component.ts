@@ -1,14 +1,11 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { BatchApplication } from "app/models";
 
 @Component({
     selector: "bl-application-preview",
     templateUrl: "application-preview.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-/**
- * Display preview information about an application.
- */
 export class ApplicationPreviewComponent {
-    @Input()
-    public application: any;
+    @Input() public application: BatchApplication;
 }

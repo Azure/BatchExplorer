@@ -28,6 +28,11 @@ export interface NavigableRecord {
      */
     uid: string;
 
-    name?: string;
+    /**
+     * Friendlier id.
+     * For ARM resources this is the resource name without the full URL.
+     * For batch resource it is the same as the id
+     */
+    name: string;
     routerLink: string[];
 }
