@@ -16,19 +16,19 @@ steps:
     parameters:
       folder: darwintmp
 
-  - template: ./sign.yml
-  - script: |
-      unzip ./release/BatchExplorer*.zip -d ./release/mac
-      echo 'LS RELEASE'
-      ls ./release/mac
-      rm -f ./release/mac/*.pkg
-      # rm -rf ./release/*.zip
-      mv ./release/*.zip ./release/code-sign-results.zip
-      npm run -s package darwin-dmg
-      rm -rf ./release/mac/*
-    displayName: Build dmg
-  - script: npm run package darwin-manifest
-    displayName: Create manifest
-  - template: ../common/publish-artifacts.yml
-    parameters:
-      folder: darwin
+  # - template: ./sign.yml
+  # - script: |
+  #     unzip ./release/BatchExplorer*.zip -d ./release/mac
+  #     echo 'LS RELEASE'
+  #     ls ./release/mac
+  #     rm -f ./release/mac/*.pkg
+  #     # rm -rf ./release/*.zip
+  #     mv ./release/*.zip ./release/code-sign-results.zip
+  #     npm run -s package darwin-dmg
+  #     rm -rf ./release/mac/*
+  #   displayName: Build dmg
+  # - script: npm run package darwin-manifest
+  #   displayName: Create manifest
+  # - template: ../common/publish-artifacts.yml
+  #   parameters:
+  #     folder: darwin
