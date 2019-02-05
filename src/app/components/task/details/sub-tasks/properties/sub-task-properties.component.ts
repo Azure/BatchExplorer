@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { SubtaskInformation } from "app/models";
+import { SubtaskInformation, Task } from "app/models";
 
 @Component({
     selector: "bl-sub-task-properties",
