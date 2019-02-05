@@ -9,4 +9,4 @@
     (activeItemChange)="selectedTaskChanged($event)"
     (scrollBottom)="onScrollToBottom()">
 </bl-sub-task-list>
-<bl-sub-task-properties [task]="selectedTask" *ngIf="selectedTask"></bl-sub-task-properties>
+<bl-sub-task-properties [task]="selectedTask" [parentTask]="task" *ngIf="selectedTask"></bl-sub-task-properties>

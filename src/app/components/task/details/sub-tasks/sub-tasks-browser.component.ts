@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, SimpleChanges,
 } from "@angular/core";
 import { ListView, autobind } from "@batch-flask/core";
-import { SubtaskInformation } from "app/models";
+import { SubtaskInformation, Task } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
 import { List } from "immutable";
 import { Observable } from "rxjs";
@@ -16,7 +16,7 @@ import "./sub-tasks-browser.scss";
 })
 export class TaskSubTasksBrowserComponent implements OnChanges, OnDestroy {
     @Input() public  jobId: string;
-    @Input() public  taskId: string;
+    @Input() public  task: Task;
 
     public data: ListView<SubtaskInformation, SubtaskListParams>;
 
@@ -46,7 +46,7 @@ export class TaskSubTasksBrowserComponent implements OnChanges, OnDestroy {
 
     @autobind()
     public refresh(): Observable<any> {
-        this.data.params = { jobId: this.jobId, taskId: this.taskId };
+        this.data.params = { jobId: this.jobId, taskId: this.task.id };
         this.selectedTask = null;
         this.selectedTaskId = null;
         this.changeDetector.markForCheck();
