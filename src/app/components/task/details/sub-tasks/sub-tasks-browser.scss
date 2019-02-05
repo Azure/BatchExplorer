@@ -1,5 +1,13 @@
 @import "app/styles/variables";
 
 bl-sub-tasks-browser {
+    display: flex;
 
+    bl-sub-tasks-list {
+        flex: 1 1 40%;
+    }
+
+    bl-sub-task-properties {
+
+    }
 }
