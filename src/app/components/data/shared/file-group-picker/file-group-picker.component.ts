@@ -1,18 +1,20 @@
-import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, forwardRef,
+} from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { MatOptionSelectionChange } from "@angular/material";
 import { FilterBuilder, ListView } from "@batch-flask/core";
-import { DialogService } from "@batch-flask/ui";
+import { Activity, DialogService } from "@batch-flask/ui";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { NcjFileGroupService } from "app/services";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { BehaviorSubject, Subject, of } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from "rxjs/operators";
 
 import "./file-group-picker.scss";
 
@@ -23,6 +25,7 @@ import "./file-group-picker.scss";
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileGroupPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => FileGroupPickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @Input() public label: string;
@@ -32,25 +35,31 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     public value = new FormControl();
     public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
+    public fileGroupUploading: number | null;
 
     private _propagateChange: (value: any) => void = null;
-    private _subscriptions: Subscription[] = [];
+    private _destroy = new Subject();
     private _loading: boolean = true;
+    private _uploadActivity = new BehaviorSubject<Activity | null>(null);
 
     constructor(
         private fileGroupService: NcjFileGroupService,
         private autoStorageService: AutoStorageService,
         private storageContainerService: StorageContainerService,
+        private changeDetector: ChangeDetectorRef,
         private dialogService: DialogService) {
 
         this.fileGroupsData = this.storageContainerService.listView();
 
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
+            this.changeDetector.markForCheck();
         });
 
         // listen to file group add events
-        this._subscriptions.push(this.storageContainerService.onContainerAdded.subscribe((fileGroupId: string) => {
+        this.storageContainerService.onContainerAdded.pipe(
+            takeUntil(this._destroy),
+        ).subscribe((fileGroupId: string) => {
             this.autoStorageService.get().subscribe((storageAccountId) => {
                 const container = storageContainerService.get(storageAccountId, fileGroupId);
                 this.fileGroupsData.loadNewItem(container);
@@ -58,9 +67,10 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
                     this._checkValid(blobContainer.name);
                 });
             });
-        }));
+        });
 
-        this._subscriptions.push(this.value.valueChanges.pipe(
+        this.value.valueChanges.pipe(
+            takeUntil(this._destroy),
             debounceTime(400),
             distinctUntilChanged(),
         ).subscribe((value) => {
@@ -68,7 +78,28 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
             if (this._propagateChange) {
                 this._propagateChange(value && this.fileGroupService.removeFileGroupPrefix(value));
             }
-        }));
+        });
+
+        this._uploadActivity.pipe(
+            takeUntil(this._destroy),
+            switchMap((activity) => {
+                if (!activity) { return of(null); }
+                return activity.progress;
+            }),
+        ).subscribe((progress) => {
+            this.fileGroupUploading = progress;
+            this.changeDetector.markForCheck();
+        });
+        this._uploadActivity.pipe(
+            takeUntil(this._destroy),
+            switchMap((activity) => {
+                if (!activity) { return of(null); }
+                return activity.done;
+            }),
+        ).subscribe(() => {
+            this.fileGroupUploading = null;
+            this.changeDetector.markForCheck();
+        });
     }
 
     public ngOnInit() {
@@ -89,7 +120,8 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     public ngOnDestroy() {
-        this._subscriptions.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
         this.fileGroupsData.dispose();
     }
 
@@ -113,19 +145,22 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         // isUserInput true when selected, false when not
         if (!event.source.value && event.isUserInput) {
             const dialog = this.dialogService.open(FileGroupCreateFormComponent);
-            dialog.afterClosed().subscribe(() => {
+            dialog.afterClosed().subscribe((activity?: Activity) => {
                 const newFileGroupName = dialog.componentInstance.getCurrentValue().name;
                 this.value.setValue(this.fileGroupService.addFileGroupPrefix(newFileGroupName));
+                this.changeDetector.markForCheck();
+                this._uploadActivity.next(activity);
             });
         }
     }
 
-    public trackFileGroup(index, fileGroup: BlobContainer) {
+    public trackFileGroup(_: number, fileGroup: BlobContainer) {
         return fileGroup.id;
     }
 
     private _checkValid(value: string) {
         const valid = this._loading || !value || this.fileGroups.map(x => x.name).includes(value);
         this.warning = !valid;
+        this.changeDetector.markForCheck();
     }
 }

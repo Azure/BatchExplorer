@@ -18,8 +18,8 @@ import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormMod
 import { NcjFileGroupService } from "app/services";
 import { StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
-import { Observable, Subscription, from } from "rxjs";
-import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
+import { Observable, Subscription, from, BehaviorSubject, Subject, of } from "rxjs";
+import { debounceTime, distinctUntilChanged, map, takeUntil, switchMap } from "rxjs/operators";
 
 import "./file-group-create-form.scss";
 
@@ -37,7 +37,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     public showCreateEmptyChk: boolean = true;
     public modifyExisting: boolean = false;
 
-    private _subscription: Subscription;
+    private _destroy = new Subject();
     private _pathsControl: FormControl;
 
     constructor(
@@ -64,18 +64,22 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
             accessPolicy: ["private"],
         });
 
-        this._subscription = this.form.controls.name.valueChanges.pipe(distinctUntilChanged(), debounceTime(400))
-            .subscribe((groupName) => {
-                if (!groupName) { return; }
-                this.fileGroupService.get(groupName).subscribe({
-                    next: (container: BlobContainer) => this.groupExists = true,
-                    error: () => this.groupExists = false,
-                });
+        this.form.controls.name.valueChanges.pipe(
+            takeUntil(this._destroy),
+            distinctUntilChanged(),
+            debounceTime(400),
+        ).subscribe((groupName) => {
+            if (!groupName) { return; }
+            this.fileGroupService.get(groupName).subscribe({
+                next: (container: BlobContainer) => this.groupExists = true,
+                error: () => this.groupExists = false,
             });
+        });
     }
 
     public ngOnDestroy() {
-        this._subscription.unsubscribe();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     @autobind()
@@ -171,6 +175,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
             }
         });
         activity.setUncancellable();
+        activity.progress
+        this.dialogRef.close(activity);
         return activity.done;
     }
 

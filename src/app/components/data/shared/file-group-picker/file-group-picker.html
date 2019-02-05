@@ -3,6 +3,9 @@
     <bl-hint class="warning" *ngIf="warning">
             {{'file-group-picker.warning' | i18n}}
     </bl-hint>
+    <bl-hint *ngIf="fileGroupUploading">
+        <i class="fa fa-spinner fa-spin"></i> Uploading ({{fileGroupUploading}} %)
+    </bl-hint>
     <bl-hint *ngIf="hint" align="end">
         {{hint}}
     </bl-hint>
