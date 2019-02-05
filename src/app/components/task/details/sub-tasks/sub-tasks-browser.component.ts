@@ -7,6 +7,8 @@ import { SubtaskListParams, TaskService } from "app/services";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
+import "./sub-tasks-browser.scss";
+
 @Component({
     selector: "bl-sub-tasks-browser",
     templateUrl: "sub-tasks-browser.html",

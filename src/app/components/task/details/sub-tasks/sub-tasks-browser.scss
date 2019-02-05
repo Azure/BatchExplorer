@@ -2,12 +2,17 @@
 
 bl-sub-tasks-browser {
     display: flex;
+    height: 100%;
+    width: 100%;
 
-    bl-sub-tasks-list {
-        flex: 1 1 40%;
+    bl-sub-task-list {
+        flex: 0 0 200px;
+        min-width: 0;
+        border-right: 1px solid $border-color
     }
 
     bl-sub-task-properties {
-
+        min-width: 0;
+        flex: 0;
     }
 }
