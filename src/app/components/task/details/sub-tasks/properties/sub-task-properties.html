@@ -1,5 +1,5 @@
 <bl-property-list>
-    <bl-property-group label="General">
+    <bl-property-group label="General" class="normal">
         <bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
         <bl-date-property label="Start time" [value]="task.startTime"></bl-date-property>
         <bl-date-property label="End time" [value]="task.endTime"></bl-date-property>
@@ -10,7 +10,7 @@
         <bl-date-property label="Previous state transition time" [value]="task.previousStateTransitionTime"></bl-date-property>
     </bl-property-group>
 
-    <bl-property-group label="Compute node">
+    <bl-property-group label="Compute node" class="normal" *ngIf="task.nodeInfo; let nodeInfo">
         <bl-link-property label="Pool ID" [value]="nodeInfo.poolId" [link]="['/pools/', nodeInfo.poolId]"></bl-link-property>
         <bl-link-property label="Node ID" [value]="nodeInfo.nodeId" [link]="['/pools/', nodeInfo.poolId, 'nodes', nodeInfo.nodeId]"></bl-link-property>
         <bl-text-property label="Node URL" [value]="nodeInfo.nodeUrl"></bl-text-property>
@@ -19,7 +19,7 @@
         <bl-text-property label="Task root directory URL" [value]="nodeInfo.taskRootDirectoryUrl"></bl-text-property>
     </bl-property-group>
 
-    <bl-property-group label="Scheduling Error" *ngIf="failureInfo.exists">
+    <bl-property-group label="Scheduling Error"  class="normal" *ngIf="task.failureInfo; let failureInfo">
         <bl-text-property label="Category" [value]="failureInfo.category"></bl-text-property>
         <bl-text-property label="Code" [value]="failureInfo.code"></bl-text-property>
         <bl-text-property label="Message" [value]="failureInfo.message"></bl-text-property>
