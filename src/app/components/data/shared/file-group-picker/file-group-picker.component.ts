@@ -35,7 +35,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     public value = new FormControl();
     public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
-    public fileGroupUploading: number | null;
+    public uploadProgress: number | null;
 
     private _propagateChange: (value: any) => void = null;
     private _destroy = new Subject();
@@ -87,7 +87,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
                 return activity.progress;
             }),
         ).subscribe((progress) => {
-            this.fileGroupUploading = progress;
+            this.uploadProgress = progress && Math.floor(progress);
             this.changeDetector.markForCheck();
         });
         this._uploadActivity.pipe(
@@ -97,7 +97,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
                 return activity.done;
             }),
         ).subscribe(() => {
-            this.fileGroupUploading = null;
+            this.uploadProgress = null;
             this.changeDetector.markForCheck();
         });
     }
