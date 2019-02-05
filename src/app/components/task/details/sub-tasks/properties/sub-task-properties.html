@@ -1,6 +1,6 @@
 <bl-property-list>
     <bl-property-group label="General" class="normal">
-        <bl-text-property label="Id" [value]="task.id"></bl-text-property>
+        <bl-text-property label="ID" [value]="task.id"></bl-text-property>
         <bl-date-property label="Start time" [value]="task.startTime"></bl-date-property>
         <bl-date-property label="End time" [value]="task.endTime"></bl-date-property>
         <bl-text-property label="Exit code" [value]="task.exitCode"></bl-text-property>
@@ -11,8 +11,9 @@
     </bl-property-group>
 
     <bl-property-group label="Task common settings" class="normal" *ngIf="parentTask.multiInstanceSettings;let multiInstanceSettings">
+        <bl-text-property label="Primary command line" [value]="parentTask.commandLine" [wrap]="true"></bl-text-property>
         <bl-text-property label="Coordination command line" [value]="multiInstanceSettings.coordinationCommandLine" [wrap]="true"></bl-text-property>
-        <bl-text-property label="Number of instance" [value]="multiInstanceSettings.numberOfInstances"></bl-text-property>
+        <bl-text-property label="Number of instances" [value]="multiInstanceSettings.numberOfInstances"></bl-text-property>
     </bl-property-group>
 
     <bl-property-group label="Compute node" class="normal" *ngIf="task.nodeInfo; let nodeInfo">
