@@ -1,6 +1,7 @@
 import {
-    ChangeDetectionStrategy, Component, EventEmitter, Input, Output,
+    ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, Output,
 } from "@angular/core";
+import { ListBaseComponent } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { FailureInfoDecorator } from "app/decorators";
@@ -12,12 +13,16 @@ import { List } from "immutable";
     templateUrl: "sub-task-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SubTaskListComponent {
+export class SubTaskListComponent extends ListBaseComponent {
     @Input() public subTasks: List<SubtaskInformation>;
 
     @Input() public status: LoadingStatus;
 
     @Output() public scrollBottom = new EventEmitter();
+
+    constructor(injector: Injector) {
+        super(injector);
+    }
 
     public taskStatus(task: SubtaskInformation): QuickListItemStatus {
         if (task.state === TaskState.completed && task.exitCode !== 0) {

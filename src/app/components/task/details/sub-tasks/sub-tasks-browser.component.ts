@@ -7,6 +7,7 @@ import { SubtaskListParams, TaskService } from "app/services";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
+import { ComponentUtils } from "app/utils";
 import "./sub-tasks-browser.scss";
 
 @Component({
@@ -25,7 +26,6 @@ export class TaskSubTasksBrowserComponent implements OnChanges, OnDestroy {
     public subTasks: List<SubtaskInformation>;
 
     constructor(private taskService: TaskService, private changeDetector: ChangeDetectorRef) {
-
         this.data = this.taskService.listSubTasksView({});
         this.data.items.subscribe((subTasks) => {
             this.subTasks = subTasks;
@@ -35,7 +35,7 @@ export class TaskSubTasksBrowserComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.jobId || changes.taskId) {
+        if (changes.jobId || ComponentUtils.recordChangedId(changes.task)) {
             this.refresh();
         }
     }
