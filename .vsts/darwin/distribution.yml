@@ -4,6 +4,7 @@ steps:
       npm run -s build:prod
       npm run -s build-python
       npm run -s package darwin-app
+      zip -r ./release/BatchExplorer-mac.zip ./release/mac/BatchExplorer.app
       rm -rf ./release/mac/*.app
       mkdir ./release/keep
       cp ./release/*.zip ./release/keep/before-code-sign.zip
