@@ -1,2 +1,3 @@
-export * from "./sub-task-display-list.component";
-export * from "./sub-task-properties.component";
+export * from "./sub-tasks-browser.component";
+export * from "./properties";
+export * from "./list";

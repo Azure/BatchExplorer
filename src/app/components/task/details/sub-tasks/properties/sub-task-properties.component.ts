@@ -7,7 +7,6 @@ import { SubtaskInformation } from "app/models";
     selector: "bl-sub-task-properties",
     templateUrl: "sub-task-properties.html",
 })
-
 export class SubTaskPropertiesComponent {
     @Input()
     public set task(value: SubtaskInformation) {

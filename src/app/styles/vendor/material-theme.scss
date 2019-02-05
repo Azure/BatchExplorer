@@ -61,30 +61,6 @@ mat-tab-group:not(.form-tabs) {
     .mat-tab-body-content {
         // set to same height as a tab with the .no-item-message
         min-height: 443px;
-
-        bl-sub-task-display-list {
-            &.item-selected {
-                bl-quick-list {
-                    width: 270px !important;
-                }
-            }
-
-            bl-quick-list {
-                float: left;
-                margin-top: 10px;
-                margin-bottom: 20px;
-            }
-        }
-
-        bl-sub-task-properties {
-            float: right;
-            border-left: 1px solid #ddd;
-            margin-bottom: 10px;
-
-            bl-property-group {
-                // todo: override property group css
-            }
-        }
     }
 }
 

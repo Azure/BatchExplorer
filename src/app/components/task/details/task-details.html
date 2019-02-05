@@ -33,7 +33,7 @@
                 <bl-tab key="sub-tasks" [disabled]="!hasMultiInstanceSettings">
                     <bl-tab-label>Sub Tasks</bl-tab-label>
                     <div class="tab-padding">
-                        <bl-task-sub-tasks-tab [jobId]="job.id" [taskId]="task.id"></bl-task-sub-tasks-tab>
+                        <bl-sub-tasks-browser [jobId]="job.id" [taskId]="task.id"></bl-sub-tasks-brows>
                     </div>
                 </bl-tab>
                 <bl-tab key="dependencies" [disabled]="!hasDependencies">

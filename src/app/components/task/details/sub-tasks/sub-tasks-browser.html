@@ -1,12 +1,12 @@
-<bl-sub-task-display-list
+<bl-sub-task-list
     [class.item-selected]="selectedTask"
     [jobId]="jobId"
     [taskId]="taskId"
     [subTasks]="subTasks"
-    [status]="status"
+    [status]="data.status | async"
     [quicklist]="true"
     [activeItem]="selectedTaskId"
     (activeItemChange)="selectedTaskChanged($event)"
     (scrollBottom)="onScrollToBottom()">
-</bl-sub-task-display-list>
+</bl-sub-task-list>
 <bl-sub-task-properties [task]="selectedTask" *ngIf="selectedTask"></bl-sub-task-properties>

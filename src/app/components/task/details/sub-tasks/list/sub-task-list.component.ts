@@ -9,12 +9,11 @@ import { SubtaskInformation, TaskState } from "app/models";
 import { List } from "immutable";
 
 @Component({
-    selector: "bl-sub-task-display-list",
-    templateUrl: "sub-task-display-list.html",
+    selector: "bl-sub-task-list",
+    templateUrl: "sub-task-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-export class SubTaskDisplayListComponent extends ListBaseComponent {
+export class SubTaskListComponent extends ListBaseComponent {
     @Input() public jobId: string;
 
     @Input() public taskId: string;

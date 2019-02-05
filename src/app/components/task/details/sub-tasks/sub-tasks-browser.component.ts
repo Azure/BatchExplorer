@@ -1,32 +1,20 @@
 import {
-    ChangeDetectionStrategy, Component, Injector, Input, OnChanges, OnDestroy, ViewChild,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, SimpleChanges,
 } from "@angular/core";
 import { ListView, autobind } from "@batch-flask/core";
-import { ListBaseComponent } from "@batch-flask/ui";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
 import { List } from "immutable";
 import { Observable } from "rxjs";
-import { SubTaskDisplayListComponent } from "./sub-tasks";
 
 @Component({
-    selector: "bl-task-sub-tasks-tab",
-    templateUrl: "task-sub-tasks-tab.html",
+    selector: "bl-sub-tasks-browser",
+    templateUrl: "sub-tasks-browser.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskSubTasksTabComponent extends ListBaseComponent implements OnChanges, OnDestroy {
-    @Input() public set jobId(value: string) {
-        this._jobId = (value && value.trim());
-    }
-    public get jobId() { return this._jobId; }
-
-    @Input() public set taskId(value: string) {
-        this._taskId = (value && value.trim());
-    }
-    public get taskId() { return this._jobId; }
-
-    @ViewChild(SubTaskDisplayListComponent)
-    public list: any;
+export class TaskSubTasksBrowserComponent implements OnChanges, OnDestroy {
+    @Input() public  jobId: string;
+    @Input() public  taskId: string;
 
     public data: ListView<SubtaskInformation, SubtaskListParams>;
 
@@ -34,11 +22,7 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
     public selectedTaskId: number;
     public subTasks: List<SubtaskInformation>;
 
-    private _jobId: string;
-    private _taskId: string;
-
-    constructor(private taskService: TaskService, injector: Injector) {
-        super(injector);
+    constructor(private taskService: TaskService, private changeDetector: ChangeDetectorRef) {
 
         this.data = this.taskService.listSubTasksView({});
         this.data.items.subscribe((subTasks) => {
@@ -46,25 +30,21 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
             this._updateSelectedTask();
             this.changeDetector.markForCheck();
         });
-
-        this.data.status.subscribe((status) => {
-            this.status = status;
-        });
     }
 
-    public ngOnChanges(changes) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes.jobId || changes.taskId) {
             this.refresh();
         }
     }
+
     public ngOnDestroy() {
-        super.ngOnDestroy();
         this.data.dispose();
     }
 
     @autobind()
     public refresh(): Observable<any> {
-        this.data.params = { jobId: this._jobId, taskId: this._taskId };
+        this.data.params = { jobId: this.jobId, taskId: this.taskId };
         this.selectedTask = null;
         this.selectedTaskId = null;
         this.changeDetector.markForCheck();
