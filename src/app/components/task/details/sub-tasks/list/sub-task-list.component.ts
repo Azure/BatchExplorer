@@ -13,10 +13,6 @@ import { List } from "immutable";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubTaskListComponent {
-    @Input() public jobId: string;
-
-    @Input() public taskId: string;
-
     @Input() public subTasks: List<SubtaskInformation>;
 
     @Input() public status: LoadingStatus;

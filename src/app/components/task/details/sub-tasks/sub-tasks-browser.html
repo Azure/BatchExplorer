@@ -1,10 +1,7 @@
 <bl-sub-task-list
     [class.item-selected]="selectedTask"
-    [jobId]="jobId"
-    [taskId]="taskId"
     [subTasks]="subTasks"
     [status]="data.status | async"
-    [quicklist]="true"
     [activeItem]="selectedTaskId"
     (activeItemChange)="selectedTaskChanged($event)"
     (scrollBottom)="onScrollToBottom()">
