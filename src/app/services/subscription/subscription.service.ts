@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { UserConfigurationService } from "@batch-flask/core";
 import { StringUtils, log } from "@batch-flask/utils";
 import {
-    Location, LocationAttributes, ResourceGroup, Subscription, SubscriptionAttributes, TenantDetails,
+    ResourceGroup, Subscription, SubscriptionAttributes, TenantDetails,
 } from "app/models";
 import { Constants } from "common";
 import { List, Set } from "immutable";
@@ -116,17 +116,6 @@ export class SubscriptionService implements OnDestroy {
             reduce((resourceGroups, response: ArmListResponse<any>) => {
                 return [...resourceGroups, ...response.value];
             }, []),
-        );
-    }
-
-    /**
-     * List all available geo-locations for given subscription id
-     * @param subscriptionId
-     */
-    public listLocations(subscription: Subscription): Observable<Location[]> {
-        const uri = `subscriptions/${subscription.subscriptionId}/locations`;
-        return this.azure.get<ArmListResponse<LocationAttributes>>(subscription, uri).pipe(
-            map(response => response.value.map(x => new Location(x))),
         );
     }
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Location, LocationAttributes, Subscription } from "app/models";
-import { Observable } from "rxjs";
+import { Observable, forkJoin } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { ArmProviderService } from "../arm-provider";
 import { AzureHttpService } from "../azure-http.service";
@@ -25,25 +25,44 @@ export class ArmLocationService {
     }
 
     public listForResourceType(subscription: Subscription, provider: string, resource: string): Observable<Location[]> {
-        return this.armProviderService.getResourceType(subscription, provider, resource).pipe(
-            map((resourceType) => {
+        return forkJoin(
+            this.list(subscription),
+            this.armProviderService.getResourceType(subscription, provider, resource),
+        ).pipe(
+            map(([baseLocations, resourceType]) => {
                 if (!resourceType) {
-                    return [];
+                    return baseLocations;
                 }
+                const locationMap = this._createLocationMap(baseLocations);
+
                 return resourceType.locations.map((displayName) => {
-                    return this._createLocationFromDisplayName(subscription.subscriptionId, displayName);
+                    return this._createLocationFromDisplayName(subscription.subscriptionId, displayName, locationMap);
                 }).toArray();
             }),
             share(),
         );
     }
 
-    private _createLocationFromDisplayName(subscriptionId: string, displayName: string): Location {
+    private _createLocationFromDisplayName(
+        subscriptionId: string,
+        displayName: string,
+        locationMap: Map<string, Location>,
+    ): Location {
         const name = displayName.toLowerCase().replace(/ /g, ""); // Name is all lowercase without spaces
+        const location = locationMap.get(name);
+        if (location) { return location; }
         return new Location({
             id: `/subscriptions/${subscriptionId}/locations/${name}`,
             name,
             displayName,
         });
+    }
+
+    private _createLocationMap(locations: Location[]): Map<string, Location> {
+        const map = new Map<string, Location>();
+        for (const location of locations) {
+            map.set(location.name, location);
+        }
+        return map;
     }
 }
