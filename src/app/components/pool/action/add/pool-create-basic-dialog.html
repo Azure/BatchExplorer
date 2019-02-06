@@ -24,7 +24,7 @@
             </bl-form-field>
             <div class="form-element">
                 <mat-checkbox formControlName="enableInterNodeCommunication" color="primary">
-                    Enable MPI
+                    Enable inter-node communication
                 </mat-checkbox>
             </div>
             <div class="form-element">
@@ -71,7 +71,6 @@
             <div class="form-element">
                 <bl-app-package-picker formControlName="appPackages"></bl-app-package-picker>
                 <bl-error controlName="appPackages" code="invalid">Please select valid combinations of application package versions</bl-error>
-                <bl-error controlName="appPackages" code="duplicate">There is a duplicate package version selected</bl-error>
             </div>
         </bl-form-section>
 

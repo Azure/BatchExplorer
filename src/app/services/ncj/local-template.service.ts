@@ -151,6 +151,6 @@ export class LocalTemplateService implements OnDestroy {
     }
 
     private async _findTemplatesInFolder(folder: string): Promise<string[]> {
-        return this.fs.glob(path.join(folder, "**/*.template.json"));
+        return this.fs.glob(path.join(folder, "**/*.json"));
     }
 }

@@ -328,7 +328,7 @@ export class BatchExplorerApplication {
 
             // Rate card api does some weird redirect which require removing the authorization header
             if (details.url.includes("ratecard.blob.core.windows.net")) {
-                delete details.requestHeaders.Authorization;
+                delete details.requestHeaders["Authorization"];
             }
 
             details.requestHeaders["User-Agent"] = userAgent;

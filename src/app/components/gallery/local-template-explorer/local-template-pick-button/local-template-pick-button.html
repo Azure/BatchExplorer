@@ -1,0 +1,8 @@
+<bl-button (do)="pickALocalTemplate()" type="wide">
+    <ng-container *ngIf="loading">
+        {{'common.loading' | i18n}}
+    </ng-container>
+    <ng-container *ngIf="!loading">
+        Pick a local template
+    </ng-container>
+</bl-button>

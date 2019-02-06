@@ -1,20 +1,20 @@
 <ng-container *ngIf="displayedPackages.size > 0">
-    <bl-table [(activeItem)]="activeItem" [(selection)]="selection" [data]="displayedPackages">
+    <bl-table [(activeItem)]="activeItem" [(selection)]="selection" [data]="displayedPackages" [commands]="commands">
         <bl-column name="version">
             <div *blHeadCellDef>Version</div>
-            <div *blCellDef="let package">{{package.version}}</div>
+            <div *blCellDef="let package">{{package.name}}</div>
         </bl-column>
         <bl-column name="state">
             <div *blHeadCellDef>State</div>
-            <div *blCellDef="let package">{{package.state}}</div>
+            <div *blCellDef="let package">{{package.properties.state}}</div>
         </bl-column>
         <bl-column name="format">
             <div *blHeadCellDef>Format</div>
-            <div *blCellDef="let package">{{package.format}}</div>
+            <div *blCellDef="let package">{{package.properties.format}}</div>
         </bl-column>
         <bl-column name="lastActivationTime">
             <div *blHeadCellDef>Last activation time</div>
-            <div *blCellDef="let package"><bl-date [date]="package.lastActivationTime"></bl-date></div>
+            <div *blCellDef="let package"><bl-date [date]="package.properties.lastActivationTime"></bl-date></div>
         </bl-column>
     </bl-table>
 </ng-container>

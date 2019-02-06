@@ -10,12 +10,13 @@ import { PermissionService } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
 import { click, createKeyboardEvent, updateInput } from "test/utils/helpers";
+import { EditableTableSelectCellComponent } from "./select-cell";
 
 @Component({
     template: `
         <bl-editable-table [formControl]="items">
             <bl-editable-table-column name="key">Key</bl-editable-table-column>
-            <bl-editable-table-column name="value">Value</bl-editable-table-column>
+            <bl-editable-table-column name="value" default="default-value">Value</bl-editable-table-column>
         </bl-editable-table>
     `,
 })
@@ -31,7 +32,9 @@ describe("EditableTableComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ReactiveFormsModule, SelectModule, ButtonsModule, I18nTestingModule],
-            declarations: [EditableTableComponent, EditableTableColumnComponent, TestComponent],
+            declarations: [
+                EditableTableComponent, EditableTableColumnComponent, EditableTableSelectCellComponent, TestComponent,
+            ],
             providers: [
                 { provide: PermissionService, useValue: null },
             ],
@@ -56,7 +59,7 @@ describe("EditableTableComponent", () => {
     }
 
     function expectRowEmpty(row: DebugElement) {
-        return expectRowValues(row, "", "");
+        return expectRowValues(row, "", "default-value");
     }
 
     it("should show all the columns", () => {
@@ -81,10 +84,10 @@ describe("EditableTableComponent", () => {
 
         const newRows = de.queryAll(By.css("tbody tr"));
         expect(newRows.length).toBe(2);
-        expectRowValues(newRows[0], "foo", "");
+        expectRowValues(newRows[0], "foo", "default-value");
         expectRowEmpty(newRows[1]);
 
-        expect(testComponent.items.value).toEqual([{ key: "foo", value: "" }]);
+        expect(testComponent.items.value).toEqual([{ key: "foo", value: "default-value" }]);
     });
 
     it("should set rows from formControl", () => {

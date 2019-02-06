@@ -1,6 +1,7 @@
 import { PoolScaleSelection } from "app/components/pool/action";
 import { ContainerRegistryDto, InboundNATPoolDto, MetaDataDto, PoolCreateDto, UserAccountDto } from "app/models/dtos";
 import { CertificateReferenceDto } from "../dtos/certificate-reference.dto";
+import { DataDiskDto } from "../dtos/virtual-machine-configuration.dto";
 import { NodeFillType } from "../task-scheduling-policy";
 
 export enum PoolOsSources {
@@ -26,6 +27,7 @@ export interface PoolOSPickerModel {
             containerImageNames: string[],
             containerRegistries: ContainerRegistryDto[],
         },
+        dataDisks?: DataDiskDto[],
     };
 }
 

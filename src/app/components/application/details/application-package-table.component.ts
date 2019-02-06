@@ -1,39 +1,66 @@
-import { Component, Injector, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Injector, Input, OnChanges, OnDestroy } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { autobind } from "@batch-flask/core";
+import { ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { ApplicationPackage, BatchApplication } from "app/models";
-import { ApplicationService } from "app/services";
+import { BatchApplication, BatchApplicationPackage } from "app/models";
+import { BatchApplicationPackageListParams, BatchApplicationPackageService } from "app/services";
+import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, forkJoin, of } from "rxjs";
-import { flatMap } from "rxjs/operators";
-import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent } from "../action";
+import { Observable, Subject, of } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import {
+    BatchApplicationPackageCommands,
+} from "../action";
 
 @Component({
     selector: "bl-application-package-table",
     templateUrl: "application-package-table.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [BatchApplicationPackageCommands],
 })
-export class ApplicationPackageTableComponent extends ListBaseComponent implements OnChanges {
+export class ApplicationPackageTableComponent extends ListBaseComponent implements OnChanges, OnDestroy {
     @Input() public application: BatchApplication;
 
-    public packages: List<ApplicationPackage> = List([]);
-    public displayedPackages: List<ApplicationPackage> = List([]);
+    public packages: List<BatchApplicationPackage> = List([]);
+    public displayedPackages: List<BatchApplicationPackage> = List([]);
+    public data: ListView<BatchApplicationPackage, BatchApplicationPackageListParams>;
 
+    private _destroy = new Subject();
     constructor(
+        public commands: BatchApplicationPackageCommands,
         protected dialog: MatDialog,
-        private applicationService: ApplicationService,
-        private sidebarManager: SidebarManager,
+        private packagesService: BatchApplicationPackageService,
         injector: Injector) {
         super(injector);
+
+        this.data = this.packagesService.listView();
+
+        this.data.items.subscribe((packages) => {
+            this.packages = packages;
+            this._filterPackages();
+        });
+
+        this.packagesService.onPackageAdded.pipe(takeUntil(this._destroy)).subscribe((id) => {
+            if (id.startsWith(this.application.id)) {
+                this.data.loadNewItem(this.packagesService.get(id));
+            }
+        });
     }
 
-    public ngOnChanges(inputs) {
-        if (inputs.application) {
-            if (!this.packages.equals(this.application.packages)) {
-                this._updatePackages();
+    public ngOnChanges(changes) {
+        if (changes.application) {
+            if (ComponentUtils.recordChangedId(changes.application)) {
+                this.commands.params = { applicationId: this.application.id };
+                this.data.params = { applicationId: this.application.id };
+                this.data.refresh();
             }
         }
+    }
+
+    public ngOnDestroy() {
+        this.data.dispose();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public handleFilter(filter) {
@@ -41,60 +68,13 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
         return of(this.displayedPackages.size);
     }
 
-    public addPackage(event: any) {
-        const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
-        sidebarRef.component.setValue(this.application);
-        sidebarRef.afterCompletion.subscribe(() => {
-            this.refresh();
-        });
-    }
-
-    @autobind()
-    public deleteSelection(): Observable<any[]> {
-        const observables = Array.from(this.selection.keys).map((version) => {
-            return this.applicationService.deletePackage(this.application.id, version).pipe(
-                flatMap(() => this.refresh()),
-            );
-        });
-
-        return forkJoin(observables);
-    }
-
     @autobind()
     public refresh(): Observable<any> {
-        return this.applicationService.get(this.application.id);
+        return this.data.refresh();
     }
 
-    @autobind()
-    public activateActiveItem() {
-        const dialogRef = this.dialog.open(ActivatePackageDialogComponent);
-        dialogRef.componentInstance.applicationId = this.application.id;
-        dialogRef.componentInstance.packageVersion = this.activeItem;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.refresh();
-        });
-    }
-
-    @autobind()
-    public updatePackageVersion() {
-        const sidebarRef = this.sidebarManager.open("update-package", ApplicationCreateDialogComponent);
-        sidebarRef.component.setValue(this.application, this.activeItem);
-        sidebarRef.afterCompletion.subscribe(() => {
-            this.refresh();
-        });
-    }
-
-    public trackByFn(index, pkg: ApplicationPackage) {
-        return pkg.version;
-    }
-
-    private _updatePackages() {
-        if (this.application) {
-            this.packages = this.application.packages;
-        } else {
-            this.packages = List([]);
-        }
-        this._filterPackages();
+    public trackByFn(_: number, pkg: BatchApplicationPackage) {
+        return pkg.id;
     }
 
     private _filterPackages() {
@@ -104,8 +84,9 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
             text = text && text.toLowerCase();
         }
 
-        this.displayedPackages = List<ApplicationPackage>(this.packages.filter((app) => {
-            return !text || app.version.toLowerCase().indexOf(text) !== -1;
+        this.displayedPackages = List<BatchApplicationPackage>(this.packages.filter((app) => {
+            return !text || app.name.toLowerCase().indexOf(text) !== -1;
         }));
+        this.changeDetector.markForCheck();
     }
 }

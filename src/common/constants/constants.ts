@@ -10,7 +10,7 @@ export const FileSourceTypes = {
 
 export const forms = {
     validation: {
-        minLength:  {
+        minLength: {
             container: 3,
         },
         maxLength: {
@@ -38,9 +38,10 @@ export const forms = {
 
 export const SavedDataFilename = {
     sshPublicKeys: "data/ssh-pub-keys.json",
-    autosacleFormula: "data/autoscale-formula.json",
-    portfolios: "data/portfolios",
-    settings: "data/settings.json",
+};
+
+export const UserSpecificStoreKeys = {
+    accountFavorites: "account-favorites",
 };
 
 export const localStorageKey = {
@@ -99,7 +100,7 @@ export const ApiVersion = {
     arm: "2016-09-01",
     armClassicStorage: "2016-11-01",
     armStorage: "2016-12-01",
-    armBatch: "2017-05-01",
+    armBatch: "2018-12-01",
     compute: "2017-03-30",
     commerce: "2016-08-31-preview",
     authorization: "2017-05-01",
@@ -117,7 +118,7 @@ export const ExternalLinks = {
     license: "https://azure.github.io/BatchExplorer/EULA.html",
     privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
     submitIssue: "https://github.com/Azure/BatchExplorer/issues",
-    subscriptionUrl:  "https://portal.azure.com/#resource/subscriptions/{0}/overview",
+    subscriptionUrl: "https://portal.azure.com/#resource/subscriptions/{0}/overview",
     resourceGroupUrl: "https://portal.azure.com/#resource/subscriptions/{0}/resourceGroups/{1}/overview",
 };
 
@@ -200,6 +201,7 @@ export const customProtocolName = "ms-batch-explorer";
  */
 export const rendererEvents = {
     batchExplorerLink: "batchExplorer-link",
+    navigateTo: "navigate-to",
 };
 
 export const isRenderer = (process && process.type === "renderer");

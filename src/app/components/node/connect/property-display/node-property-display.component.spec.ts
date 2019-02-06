@@ -4,11 +4,12 @@ import { By } from "@angular/platform-browser";
 import { ClipboardService, ElectronShell } from "@batch-flask/electron";
 import { BehaviorSubject, of } from "rxjs";
 
+import { UserConfigurationService } from "@batch-flask/core";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
-import { AddNodeUserAttributes, SettingsService } from "app/services";
+import { AddNodeUserAttributes } from "app/services";
 import {
     NodeConnectService,
 } from "app/services/node-connect";
@@ -58,8 +59,8 @@ describe("NodePropertyDisplay", () => {
         };
 
         settingsServiceSpy = {
-            settings: {
-                "node-connect.default-username": "foo",
+            current: {
+                nodeConnect: { defaultUsername: "foo" },
             },
         };
 
@@ -74,7 +75,7 @@ describe("NodePropertyDisplay", () => {
                 { provide: NodeConnectService, useValue: nodeConnectServiceSpy },
                 ChangeDetectorRef,
                 { provide: ClipboardService, useValue: {} },
-                { provide: SettingsService, useValue: settingsServiceSpy },
+                { provide: UserConfigurationService, useValue: settingsServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

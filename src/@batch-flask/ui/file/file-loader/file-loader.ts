@@ -5,13 +5,13 @@ import * as path from "path";
 import { BehaviorSubject, Observable, from, of } from "rxjs";
 import {
     catchError, concatMap, distinctUntilChanged, filter,
-    map, publishReplay, refCount, share, skip, switchMap, take, tap,
+    mapTo, publishReplay, refCount, share, skip, switchMap, take, tap,
 } from "rxjs/operators";
 import { File } from "../file.model";
 
 export type PropertiesFunc = () => Observable<File>;
 export type ContentFunc = (options: FileLoadOptions) => Observable<FileLoadResult>;
-export type DownloadFunc = (destination: string) => Observable<boolean>;
+export type DownloadFunc = (destination: string) => Observable<any>;
 
 export interface FileLoaderConfig {
     filename: string;
@@ -127,7 +127,7 @@ export class FileLoader {
             const checkDirObs = from(this._fs.ensureDir(path.dirname(dest)));
             return checkDirObs.pipe(
                 switchMap(() => this._download!(dest)),
-                map(_ => dest),
+                mapTo(dest),
                 share(),
             );
         }

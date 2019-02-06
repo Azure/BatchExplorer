@@ -3,6 +3,7 @@ export * from "./clipboard.service";
 export * from "./current-browser-window";
 export * from "./electron-app.service";
 export * from "./electron-renderer.module";
+export * from "./global-storage";
 export * from "./fs.service";
 export * from "./ipc.service";
 export * from "./os.service";

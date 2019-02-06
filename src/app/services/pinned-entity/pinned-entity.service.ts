@@ -1,14 +1,13 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
+import { BehaviorSubject, Observable, Subject, combineLatest, from, of } from "rxjs";
 
-import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
+import { NavigableRecord, PinnableEntity, PinnedEntityType, UserSpecificDataStore } from "@batch-flask/core";
 import {
     BatchAccount, BatchApplication, BlobContainer, Certificate, Job, JobSchedule, Pool,
 } from "app/models";
 import { map, share, switchMap, take, takeUntil } from "rxjs/operators";
 import { BatchAccountService } from "../batch-account";
-import { LocalFileStorage } from "../local-file-storage.service";
 
 const pinnedTypeMap = new Map();
 pinnedTypeMap.set(PinnedEntityType.Application, BatchApplication);
@@ -18,9 +17,9 @@ pinnedTypeMap.set(PinnedEntityType.JobSchedule, JobSchedule);
 pinnedTypeMap.set(PinnedEntityType.Certificate, Certificate);
 pinnedTypeMap.set(PinnedEntityType.StorageContainer, BlobContainer);
 
-const filename = "data/pinned-entities";
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class PinnedEntityService implements OnDestroy {
+    public static readonly KEY = "pinned-entities";
     public loaded: Observable<boolean>;
 
     /**
@@ -34,7 +33,7 @@ export class PinnedEntityService implements OnDestroy {
     private _destroy = new Subject();
 
     constructor(
-        private localFileStorage: LocalFileStorage,
+        private userSpecificDataStore: UserSpecificDataStore,
         private accountService: BatchAccountService) {
 
         this.loaded = this._loaded.asObservable();
@@ -82,6 +81,7 @@ export class PinnedEntityService implements OnDestroy {
                 this._favorites.next(map);
                 return this._saveAccountFavorites();
             }),
+            share(),
         );
     }
 
@@ -89,7 +89,6 @@ export class PinnedEntityService implements OnDestroy {
         if (!this.isFavorite(entity)) {
             return of(null);
         }
-
         return this.accountService.currentAccount.pipe(
             take(1),
             switchMap((account) => {
@@ -133,12 +132,12 @@ export class PinnedEntityService implements OnDestroy {
     }
 
     private _loadFavorites(): Observable<Map<string, Map<string, PinnableEntity>>> {
-        return this.localFileStorage.get(filename).pipe(
+        return from(this.userSpecificDataStore.getItem<any>(PinnedEntityService.KEY)).pipe(
             map((data) => {
                 const map = new Map<string, Map<string, PinnableEntity>>();
                 if (!data || typeof data !== "object") { return map; }
                 for (const [accountId, perAccountObj] of Object.entries(data)) {
-                    const perAccountMap = new Map<string, PinnableEntity>(perAccountObj);
+                    const perAccountMap = new Map<string, PinnableEntity>(perAccountObj as any);
                     map.set(accountId, perAccountMap);
 
                 }
@@ -154,6 +153,6 @@ export class PinnedEntityService implements OnDestroy {
             const perAccountObj = [...perAccountMap.entries()];
             map[accountId] = perAccountObj;
         }
-        return this.localFileStorage.set(filename, map);
+        return from(this.userSpecificDataStore.setItem(PinnedEntityService.KEY, map));
     }
 }

@@ -1,9 +1,11 @@
+import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import {
     ContinuationToken,
     DataCache,
     EntityView,
     HttpCode,
+    HttpRequestOptions,
     ListOptionsAttributes,
     ListResponse,
     ListView,
@@ -24,7 +26,7 @@ export interface PoolParams {
     id?: string;
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class PoolService {
     /**
      * Triggered only when a pool is added through this app.
@@ -138,6 +140,19 @@ export class PoolService {
 
     public resize(poolId: string, target: PoolResizeDto, options: any = {}) {
         return this.http.post(`/pools/${poolId}/resize`, target.toJS());
+    }
+
+    /**
+     * Stops an ongoing resize operation on the pool.
+     * @oaram poolId Id of the pool
+     * @param [timeout] Optional timeout for batch to stop the resize in seconds.
+     */
+    public stopResize(poolId: string, timeout?: number) {
+        const options: HttpRequestOptions = {};
+        if (timeout) {
+            options.params = new HttpParams().set("timeout", timeout.toString());
+        }
+        return this.http.post(`/pools/${poolId}/stopresize`, null, options);
     }
 
     public patch(poolId: string, attributes: PoolPatchDto, options: any = {}) {

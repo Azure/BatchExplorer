@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
-import { ServerError, autobind } from "@batch-flask/core";
+import { ServerError, UserConfigurationService, autobind } from "@batch-flask/core";
 import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/electron";
 import * as path from "path";
 
@@ -8,10 +8,10 @@ import { SecureUtils } from "@batch-flask/utils";
 import { Node, NodeConnectionSettings, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
+    BEUserConfiguration,
     BatchExplorerService,
     NodeConnectService,
     NodeUserService,
-    SettingsService,
 } from "app/services";
 import { PoolUtils } from "app/utils";
 import { ExternalApplication } from "common/constants";
@@ -68,7 +68,7 @@ export class NodeConnectComponent implements OnInit {
 
     constructor(
         public sidebarRef: SidebarRef<any>,
-        public settingsService: SettingsService,
+        public settingsService: UserConfigurationService<BEUserConfiguration>,
         private nodeUserService: NodeUserService,
         private batchExplorer: BatchExplorerService,
         private nodeConnectService: NodeConnectService,
@@ -80,7 +80,7 @@ export class NodeConnectComponent implements OnInit {
 
     public ngOnInit() {
         this.credentials = {
-            name: this.settingsService.settings["node-connect.default-username"],
+            name: this.settingsService.current.nodeConnect.defaultUsername,
             expiryTime: null,
             isAdmin: true,
             sshPublicKey: "",

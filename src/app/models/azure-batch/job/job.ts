@@ -104,6 +104,10 @@ export class Job extends Record<JobAttributes> implements NavigableRecord {
     public get uid() {
         return this.url;
     }
+
+    public get name() {
+        return this.id;
+    }
 }
 
 export enum JobState {

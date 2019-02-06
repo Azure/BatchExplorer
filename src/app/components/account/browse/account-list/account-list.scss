@@ -33,11 +33,20 @@ bl-account-list {
         padding: 2px 5px;
     }
 
-    .account-location {
+    .account-info {
         display: flex;
+        width: 100%;
 
-        .fa-globe {
-            margin-right: 3px;
+        bl-location {
+        }
+
+        .auto-storage {
+            margin-right: 7px;
+
+            &.error {
+                color: $danger-color;
+                font-weight: bold;
+            }
         }
     }
 }

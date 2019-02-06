@@ -1,43 +1,16 @@
-<mat-tab-group class="form-tabs" [@.disabled]="true">
-    <mat-tab [label]="'pool-os-picker.category.distributions' | i18n" title="selectedSource === PoolOsSources.IaaS" class="banana">
-        <bl-os-offer-tile *ngFor="let offer of vmOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
-            [active]="isOsActive(offer)" [selectedSku]="selectedSku">
-        </bl-os-offer-tile>
-        <bl-os-offer-tile name="WindowsServer" [skus]="cloudServiceOsFamilies" (pickOffer)="pickCloudService()" (pickSku)="pickCloudService($event.id)"
-            [active]="value?.source === PoolOsSources.PaaS" [selectedSku]="selectedFamilyName">
-            <div>(Cloud Service)</div>
-        </bl-os-offer-tile>
-    </mat-tab>
-    <mat-tab [label]="'pool-os-picker.category.dataScience' | i18n">
-        <bl-os-offer-tile *ngFor="let offer of dataScienceOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
-            [active]="isOsActive(offer)" [selectedSku]="selectedSku">
-        </bl-os-offer-tile>
-    </mat-tab>
-    <mat-tab [label]="'pool-os-picker.category.rendering' | i18n">
-        <bl-os-offer-tile *ngFor="let offer of renderingOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
-            [active]="isOsActive(offer)" [selectedSku]="selectedSku">
-        </bl-os-offer-tile>
-    </mat-tab>
-    <mat-tab [label]="'pool-os-picker.category.container' | i18n">
-        <bl-os-offer-tile *ngFor="let offer of dockerOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickContainerOffer(offer)" (pickSku)="pickContainerSku(offer, $event)"
-            [active]="isOsActive(offer)" [selectedSku]="selectedSku">
-        </bl-os-offer-tile>
-    </mat-tab>
-    <mat-tab label="Custom image">
-        <bl-custom-image-picker [ngModel]="customImage" (ngModelChange)="pickCustomImage($event)"></bl-custom-image-picker>
-    </mat-tab>
-</mat-tab-group>
-<p *ngIf="selectedSku" style="padding-top: 10px;">
-    <bl-i18n key="pool-os-picker.nodeAgentSelection">
-        <b *i18nParam="'sku'">{{selectedNodeAgentId}}</b>
-    </bl-i18n>
-</p>
-<div *ngIf="showContainerConfiguration">
-    <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContaienrConfiguration()" #containerConfigurationPicker>
+<!-- Image selection cloudservice vs virtual machine vs custom image -->
+<bl-os-image-picker [formGroup]="form"></bl-os-image-picker>
+
+<ng-container [formGroup]="form">
+    <!-- Container configuration -->
+    <bl-form-picker *ngIf="showContainerConfiguration" formControlName="containerConfiguration" (clear)="clearContainerConfiguration()" #containerConfigurationPicker>
         <div no-value-title>{{'pool-os-picker.containerConfiguration' | i18n}}</div>
-        <div value-title>{{containerConfiguration?.value?.type}}</div>
+        <div value-title>{{form.value.containerConfiguration?.type}}</div>
         <div nested-form>
             <bl-container-configuration-picker [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration-picker>
         </div>
     </bl-form-picker>
-</div>
+
+    <!-- Data disk  -->
+    <bl-data-disk-picker formControlName="dataDisks" *ngIf="showDataDiskPicker"></bl-data-disk-picker>
+</ng-container>

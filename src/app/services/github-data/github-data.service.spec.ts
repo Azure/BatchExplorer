@@ -1,21 +1,21 @@
 import { HttpClient } from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { BehaviorSubject } from "rxjs";
+import { MockUserConfigurationService } from "@batch-flask/core/testing";
 import { GithubDataService } from "./github-data.service";
 
 describe("GithubDataService", () => {
     let githubDataService: GithubDataService;
     let httpMock: HttpTestingController;
-    let settingsSpy;
+    let settingsSpy: MockUserConfigurationService;
 
     beforeEach(() => {
-        settingsSpy = {
-            settingsObs: new BehaviorSubject({
-                "github-data.source.branch": "master",
-                "github-data.source.repo": "Azure/BatchExplorer-data",
-            }),
-        };
+        settingsSpy = new MockUserConfigurationService({
+            githubData: {
+                branch: "master",
+                repo: "Azure/BatchExplorer-data",
+            },
+        });
 
         TestBed.configureTestingModule({
             imports: [

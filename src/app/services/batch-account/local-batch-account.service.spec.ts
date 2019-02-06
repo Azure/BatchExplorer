@@ -1,6 +1,6 @@
 import { ServerError } from "@batch-flask/core";
+import { MockGlobalStorage } from "@batch-flask/core/testing";
 import { LocalBatchAccount } from "app/models";
-import { of } from "rxjs";
 import { LOCAL_BATCH_ACCOUNT_KEY, LocalBatchAccountService } from "./local-batch-account.service";
 
 const account1 = {
@@ -17,26 +17,13 @@ const account2 = {
     url: "https://testaccount2.westus2.batch.azure.com",
 };
 
-class MockLocalFileStorage {
-    private _map = new Map();
-
-    public set(key, value) {
-        this._map.set(key, value);
-        return of();
-    }
-
-    public get(key) {
-        return of(this._map.get(key));
-    }
-}
-
 describe("LocalBatchAccountService", () => {
     let service: LocalBatchAccountService;
-    let storageSpy: MockLocalFileStorage;
+    let storageSpy: MockGlobalStorage;
     let accounts: LocalBatchAccount[];
 
     beforeEach(async () => {
-        storageSpy = new MockLocalFileStorage();
+        storageSpy = new MockGlobalStorage();
         storageSpy.set(LOCAL_BATCH_ACCOUNT_KEY, [
             account1,
             account2,
@@ -63,7 +50,7 @@ describe("LocalBatchAccountService", () => {
         await service.delete("local/https://testaccount1.westus2.batch.azure.com").toPromise();
         expect(accounts.length).toBe(1);
         expect(accounts[0].toJS()).toEqual(account2);
-        const data = await storageSpy.get(LOCAL_BATCH_ACCOUNT_KEY).toPromise();
+        const data = await storageSpy.get(LOCAL_BATCH_ACCOUNT_KEY);
         expect(data).toEqual([account2]);
     });
 
@@ -79,7 +66,7 @@ describe("LocalBatchAccountService", () => {
         expect(accounts[0].toJS()).toEqual(account1);
         expect(accounts[1].toJS()).toEqual(account2);
         expect(accounts[2].toJS()).toEqual(account3);
-        const data = await storageSpy.get(LOCAL_BATCH_ACCOUNT_KEY).toPromise();
+        const data = await storageSpy.get(LOCAL_BATCH_ACCOUNT_KEY);
         expect(data).toEqual([account1, account2, account3]);
     });
 

@@ -8,7 +8,7 @@
         <bl-clickable *ngFor="let timezone of timezones; trackBy: trackTimezone"
             class="dropdown-item timezone"
             (do)="selectTimezone(timezone.value)"
-            [class.selected]="timezone.value === current.value">
+            [class.selected]="timezone.value === current?.value">
 
             <div class="main">
                 {{timezone.label}}

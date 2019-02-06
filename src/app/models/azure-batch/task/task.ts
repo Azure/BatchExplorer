@@ -4,7 +4,7 @@ import {
 } from "app/models/application-package-reference";
 import { ComputeNodeInformation } from "app/models/azure-batch/compute-node-information";
 import { TaskContainerSettings } from "app/models/container-setup";
-import { MultiInstanceSettings } from "app/models/multi-instance-settings";
+import { MultiInstanceSettings, MultiInstanceSettingsAttributes } from "app/models/multi-instance-settings";
 import { NameValuePair, NameValuePairAttributes } from "app/models/name-value-pair";
 import { ResourceFile, ResourceFileAttributes } from "app/models/resource-file";
 import { TaskConstraints } from "app/models/task-constraints";
@@ -41,7 +41,7 @@ export interface TaskAttributes {
     constraints: TaskConstraints;
     executionInfo: TaskExecutionInformation;
     nodeInfo: ComputeNodeInformation;
-    multiInstanceSettings: MultiInstanceSettings;
+    multiInstanceSettings: MultiInstanceSettingsAttributes;
     stats: TaskStatisticsAttributes;
     dependsOn: TaskDependencies;
     applicationPackageReferences: ApplicationPackageReferenceAttributes[];
@@ -116,6 +116,10 @@ export class Task extends Record<TaskAttributes> {
 
     public get routerLink() {
         return ["/jobs", this.jobId, "tasks", this.id];
+    }
+
+    public get name() {
+        return this.id;
     }
 }
 

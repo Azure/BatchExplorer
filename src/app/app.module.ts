@@ -22,13 +22,22 @@ import { SettingsModule } from "app/components/settings";
 import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
-import { LocaleService, MaterialModule, TranslationsLoaderService, USER_CONFIGURATION_STORE } from "@batch-flask/core";
+import {
+    DEFAULT_USER_CONFIGURATION,
+    LocaleService,
+    MaterialModule,
+    TranslationsLoaderService,
+    USER_CONFIGURATION_STORE,
+    USER_SERVICE,
+} from "@batch-flask/core";
 import { ElectronRendererModule } from "@batch-flask/electron";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
 import {
+    AdalService,
     AppLocaleService,
     AppTranslationsLoaderService,
+    DEFAULT_BE_USER_CONFIGURATION,
     RendererConfigurationStore,
 } from "./services";
 import { RendererTelemetryModule } from "./services/telemetry";
@@ -73,7 +82,9 @@ const modules = [
         { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
         { provide: LocaleService, useClass: AppLocaleService },
         { provide: USER_CONFIGURATION_STORE, useClass: RendererConfigurationStore },
+        { provide: DEFAULT_USER_CONFIGURATION, useValue: DEFAULT_BE_USER_CONFIGURATION },
         { provide: ErrorHandler, useClass: BatchExplorerErrorHandler },
+        { provide: USER_SERVICE, useExisting: AdalService },
     ],
 })
 export class AppModule { }

@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Input, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { FileLoader } from "../../file-loader";
 import { File } from "../../file.model";
+import { FileAssociation } from "../file-type-association";
 
 export interface FileViewerCommand {
     label: string;
@@ -17,6 +18,8 @@ export interface FileViewerConfig {
      * If files can be downloaded(Default: true)
      */
     downloadEnabled?: boolean;
+
+    fileAssociations?: FileAssociation[];
 }
 
 /**

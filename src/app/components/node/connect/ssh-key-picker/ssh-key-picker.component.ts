@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, ViewChild, forwardRef } from "@angula
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
-import { Subscription, of } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { SSHPublicKey } from "app/models";
@@ -93,7 +93,7 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
     }
 
     public deleteKey(key: SSHPublicKey) {
-        this.sshKeyService.deleteKey(key);
+        this.sshKeyService.deleteKey(key).subscribe();
     }
 
     public trackSavedKey(index, key: SSHPublicKey) {
@@ -103,10 +103,9 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
     private _saveKey(name: string) {
         const value = this.sshKeyValue.value;
 
-        this.sshKeyService.saveKey(new SSHPublicKey({
+        return this.sshKeyService.saveKey(new SSHPublicKey({
             name,
             value,
         }));
-        return of({});
     }
 }

@@ -1,8 +1,10 @@
 <bl-storage-error-display [noClassic]="true"></bl-storage-error-display>
-<ng-container *ngIf="autoStorageService.hasArmAutoStorage | async">
+<bl-local-template-drop-zone *ngIf="autoStorageService.hasArmAutoStorage | async">
     <div class="header">
         <h1>{{'gallery.title' | i18n }}</h1>
         <bl-refresh-btn [refresh]="refresh" type="round"></bl-refresh-btn>
+        <div class="flex-separator"></div>
+        <bl-local-template-pick-button></bl-local-template-pick-button>
     </div>
     <div class="gallery-content">
         <div class="gallery-applications">
@@ -26,4 +28,4 @@
             <bl-recent-template-list></bl-recent-template-list>
         </div>
     </div>
-</ng-container>
+</bl-local-template-drop-zone>

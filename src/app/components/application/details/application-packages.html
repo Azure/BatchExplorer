@@ -8,19 +8,15 @@
                 - update: enabled if allow updates is true and package is active
                 - activate: enabled if package is pending
         -->
-        <bl-button color="danger" type="plain" title="Delete selected" [action]="list?.deleteSelection" [disabled]="!deleteEnabled"
+        <bl-button color="danger" type="plain" title="Delete selected" [action]="deleteSelection" [disabled]="!deleteEnabled"
             tooltipPosition="left">
             <i class="fa fa-trash spin-hover"></i>
         </bl-button>
-        <bl-button color="light" type="plain" title="Update package" [action]="list?.updatePackageVersion" [disabled]="!editEnabled"
-            tooltipPosition="left">
-            <i class="fa fa-pencil-square-o spin-hover"></i>
-        </bl-button>
-        <bl-button color="light" type="plain" title="Activate pending package" [action]="list?.activateActiveItem" [disabled]="!activateEnabled"
+        <bl-button color="light" type="plain" title="Activate pending package" [action]="activateSelection" [disabled]="!activateEnabled"
             tooltipPosition="left">
             <i class="fa fa-toggle-on spin-hover"></i>
         </bl-button>
     </div>
 
-    <bl-application-package-table [application]="application" [filter]="listWrapper.filter" #list (selectionChange)="selectionChanged($event)" (activeItemChange)="activeItemChanged($event)"></bl-application-package-table>
+    <bl-application-package-table [application]="application" [filter]="listWrapper.filter" #list (selectionChange)="selectionChanged($event)"></bl-application-package-table>
 </bl-entity-details-list>

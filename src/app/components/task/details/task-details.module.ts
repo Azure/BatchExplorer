@@ -8,17 +8,16 @@ import { TaskBaseModule } from "../base";
 import { TaskConfigurationComponent } from "./configuration";
 import { TaskOutputsComponent } from "./output";
 import { TaskResourceFilesComponent } from "./resource-files";
-import { SubTaskDisplayListComponent, SubTaskPropertiesComponent } from "./sub-tasks";
+import { SubTaskListComponent, SubTaskPropertiesComponent, TaskSubTasksBrowserComponent } from "./sub-tasks";
 import { TaskDefaultComponent } from "./task-default.component";
 import { TaskDependencyBrowserComponent } from "./task-dependency-browser";
 import { TaskDetailsComponent } from "./task-details.component";
 import { TaskErrorDisplayComponent } from "./task-error-display.component";
 import { TaskNodeInfoComponent } from "./task-node-info";
-import { TaskSubTasksTabComponent } from "./task-sub-tasks-tab.component";
 import { TaskTimelineComponent, TaskTimelineStateComponent } from "./task-timeline";
 
 const components = [
-    SubTaskDisplayListComponent,
+    SubTaskListComponent,
     SubTaskPropertiesComponent,
     TaskConfigurationComponent,
     TaskDefaultComponent,
@@ -26,7 +25,7 @@ const components = [
     TaskDetailsComponent,
     TaskOutputsComponent,
     TaskResourceFilesComponent,
-    TaskSubTasksTabComponent,
+    TaskSubTasksBrowserComponent,
     TaskTimelineComponent,
     TaskTimelineStateComponent,
     TaskErrorDisplayComponent,

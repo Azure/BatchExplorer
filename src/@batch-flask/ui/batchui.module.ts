@@ -5,7 +5,6 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
 // components
-import { WorkspaceModule } from "@batch-flask/ui/workspace";
 import { AbstractListModule } from "./abstract-list";
 import { ActivityModule } from "./activity";
 import { AdvancedFilterModule } from "./advanced-filter";
@@ -52,6 +51,7 @@ import { TimespanComponent } from "./timespan";
 import { ToolbarModule } from "./toolbar";
 import { VirtualScrollModule } from "./virtual-scroll";
 import { VTabsModule } from "./vtabs";
+import { WorkspaceModule } from "./workspace";
 
 // Add submodules there
 const modules = [

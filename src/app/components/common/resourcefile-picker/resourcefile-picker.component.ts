@@ -4,18 +4,19 @@ import {
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { UserConfigurationService } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
 import { DialogService } from "@batch-flask/ui";
 import { CloudPathUtils, DragUtils, SecureUtils, UrlUtils } from "@batch-flask/utils";
 import { ResourceFileAttributes } from "app/models";
-import { SettingsService } from "app/services";
+import { BEUserConfiguration } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { BlobUtilities } from "azure-storage";
 import { DateTime } from "luxon";
 import * as path from "path";
-import { Observable, Subscription } from "rxjs";
-import { flatMap, share, tap } from "rxjs/operators";
+import { Observable, Subject } from "rxjs";
+import { flatMap, share, takeUntil, tap } from "rxjs/operators";
 import { ResourceFileCloudFileDialogComponent } from "./resourcefile-cloud-file-dialog";
 import "./resourcefile-picker.scss";
 
@@ -44,7 +45,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     public uploadingFiles: string[] = [];
 
     private _propagateChange: ((value: ResourceFileAttributes[]) => void) | null = null;
-    private _sub: Subscription;
+    private _destroy = new Subject();
     private _containerId: string;
 
     /**
@@ -59,23 +60,26 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         private storageContainerService: StorageContainerService,
         private fs: FileSystemService,
         private dialogService: DialogService,
-        private settingsService: SettingsService,
+        private settingsService: UserConfigurationService<BEUserConfiguration>,
         private changeDetector: ChangeDetectorRef) {
         this._folderId = SecureUtils.uuid();
 
         this.files = this.formBuilder.array([]);
 
-        this._sub = this.files.valueChanges.subscribe((files) => {
+        this.files.valueChanges.pipe(takeUntil(this._destroy)).subscribe((files) => {
             if (this._propagateChange) {
                 this._propagateChange(files);
             }
         });
 
-        this._containerId = this.settingsService.settings["storage.default-upload-container"];
+        this.settingsService.watch("storage").pipe(takeUntil(this._destroy)).subscribe((storage) => {
+            this._containerId = storage.defaultUploadContainer;
+        });
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public writeValue(value: ResourceFileAttributes[]) {

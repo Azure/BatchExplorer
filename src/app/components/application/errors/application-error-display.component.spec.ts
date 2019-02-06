@@ -54,7 +54,7 @@ describe("ApplicationErrorDisplayComponent", () => {
 
         fixture = TestBed.createComponent(TestApplicationErrorDisplayComponent);
         testComponent = fixture.componentInstance;
-        testComponent.application = Fixtures.application.create({ id: "app-1", allowUpdates: true });
+        testComponent.application = Fixtures.application.create({ id: "app-1", properties: { allowUpdates: true } });
         component = fixture.debugElement.query(By.css("bl-application-error-display")).componentInstance;
         fixture.detectChanges();
     });
@@ -98,7 +98,7 @@ describe("ApplicationErrorDisplayComponent", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent)
                 .toContain("No linked storage account configured for this Batch account. "
-                + "This is required for uploading application packages.");
+                    + "This is required for uploading application packages.");
         });
 
         it("should link to portal storage config as quickfix", () => {
@@ -109,7 +109,10 @@ describe("ApplicationErrorDisplayComponent", () => {
 
     describe("when application allow updates is disabled", () => {
         beforeEach(() => {
-            testComponent.application = Fixtures.application.create({ id: "app-1", allowUpdates: false });
+            testComponent.application = Fixtures.application.create({
+                id: "app-1",
+                properties: { allowUpdates: false },
+            });
             fixture.detectChanges();
         });
 
@@ -121,7 +124,7 @@ describe("ApplicationErrorDisplayComponent", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent)
                 .toContain("Package update and delete has been disabled. "
-                + "Turn on 'Allow updates' to enable for this application.");
+                    + "Turn on 'Allow updates' to enable for this application.");
         });
 
         it("there is no proposed quickfix", () => {

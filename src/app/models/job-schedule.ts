@@ -72,6 +72,10 @@ export class JobSchedule extends Record<JobScheduleAttributes> implements Naviga
     public get uid() {
         return this.url;
     }
+
+    public get name() {
+        return this.id;
+    }
 }
 
 export enum JobScheduleState {
