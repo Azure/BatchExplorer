@@ -406,6 +406,9 @@
       <trans-unit id="file-group-picker.create">
         <source>Create a new file group</source>
       </trans-unit>
+      <trans-unit id="file-group-picker.uploading">
+        <source>Uploading file group</source>
+      </trans-unit>
       <trans-unit id="file-group-picker.warning">
         <source>This file group doesn't seem to exist. It will be created for you when the job is submitted.</source>
       </trans-unit>
