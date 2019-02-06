@@ -3,18 +3,18 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ChartsModule } from "@batch-flask/ui";
-import { ArmBatchAccount, LocalBatchAccount, Subscription } from "app/models";
+import { ArmBatchAccount, LocalBatchAccount, ArmSubscription } from "app/models";
 import { BatchAccountService, Theme, ThemeService } from "app/services";
 import { UsageDetail, UsageDetailsService, UsageDetailsUnsupportedSubscription } from "app/services/azure-consumption";
 import { BehaviorSubject, of, throwError } from "rxjs";
 import { AccountCostCardComponent } from "./account-cost-card.component";
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     id: "/subscriptions/sub1",
     subscriptionId: "sub1",
 });
 
-const internalSub = new Subscription({
+const internalSub = new ArmSubscription({
     id: "/subscriptions/internal-1",
     subscriptionId: "internal-1",
 });

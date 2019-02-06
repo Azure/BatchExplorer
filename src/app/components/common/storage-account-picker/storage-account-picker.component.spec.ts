@@ -4,7 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
-import { ArmBatchAccount, StorageAccount, Subscription } from "app/models";
+import { ArmBatchAccount, StorageAccount, ArmSubscription } from "app/models";
 import { BatchAccountService, StorageAccountService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { List } from "immutable";
@@ -18,12 +18,12 @@ class TestComponent {
     public control = new FormControl<string>(null);
 }
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     id: "/subscriptions/sub1",
     subscriptionId: "sub1",
 });
 
-const sub2 = new Subscription({
+const sub2 = new ArmSubscription({
     id: "/subscriptions/sub2",
     subscriptionId: "sub2",
 });

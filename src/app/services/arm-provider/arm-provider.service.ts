@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Subscription } from "app/models";
+import { ArmSubscription } from "app/models";
 import { ArmProvider, ArmProviderAttributes, ArmProviderResourceType } from "app/models/arm-provider";
 import { Observable } from "rxjs";
 import { map, share } from "rxjs/operators";
@@ -17,7 +17,7 @@ export class ArmProviderService {
      * List all available providers
      * @param subscriptionId
      */
-    public list(subscription: Subscription): Observable<ArmProvider[]> {
+    public list(subscription: ArmSubscription): Observable<ArmProvider[]> {
         const uri = `subscriptions/${subscription.subscriptionId}/providers`;
         return this.azure.get<ArmListResponse<ArmProviderAttributes>>(subscription, uri).pipe(
             map(response => response.value.map(x => new ArmProvider(x))),
@@ -28,7 +28,7 @@ export class ArmProviderService {
      * Get a given provider
      * @param subscriptionId
      */
-    public get(subscription: Subscription, provider: string): Observable<ArmProvider> {
+    public get(subscription: ArmSubscription, provider: string): Observable<ArmProvider> {
         const uri = `subscriptions/${subscription.subscriptionId}/providers/${provider}`;
         return this.azure.get<ArmProviderAttributes>(subscription, uri).pipe(
             map(response => new ArmProvider(response)),
@@ -40,7 +40,7 @@ export class ArmProviderService {
      * @param subscriptionId
      */
     public getResourceType(
-        subscription: Subscription,
+        subscription: ArmSubscription,
         provider: string,
         resource: string,
     ): Observable<ArmProviderResourceType | null> {

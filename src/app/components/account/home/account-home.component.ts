@@ -4,7 +4,7 @@ import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui";
 import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { Subscription } from "app/models";
+import { ArmSubscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import { Set } from "immutable";
 import { distinctUntilChanged } from "rxjs/operators";
@@ -52,7 +52,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    public trackByFn(index, subscription: Subscription) {
+    public trackByFn(index, subscription: ArmSubscription) {
         return subscription.id;
     }
 

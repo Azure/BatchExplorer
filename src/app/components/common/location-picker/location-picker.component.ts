@@ -7,7 +7,7 @@ import {
 } from "@angular/forms";
 import { isNotNullOrUndefined } from "@batch-flask/core";
 import { I18N_NAMESPACE, LoadingStatus } from "@batch-flask/ui";
-import { Location, Subscription } from "app/models";
+import { ArmLocation, ArmSubscription } from "app/models";
 import { ArmLocationService } from "app/services";
 import { BehaviorSubject, Subject, combineLatest } from "rxjs";
 import { filter, switchMap, tap } from "rxjs/operators";
@@ -27,16 +27,16 @@ import "./location-picker.scss";
 export class LocationPickerComponent implements OnChanges, OnDestroy, ControlValueAccessor, Validator {
     public LoadingStatus = LoadingStatus;
 
-    @Input() public subscription: Subscription;
+    @Input() public subscription: ArmSubscription;
     /**
      * Show location only for the given resources
      */
     @Input() public resourceType?: string;
     public location = new FormControl<string>();
-    public locations: Location[] = [];
+    public locations: ArmLocation[] = [];
     public loadingStatus = LoadingStatus.Loading;
 
-    private _subscription = new BehaviorSubject<Subscription | null>(null);
+    private _subscription = new BehaviorSubject<ArmSubscription | null>(null);
     private _resourceType = new BehaviorSubject<string | null>(null);
     private _destroy = new Subject();
     private _propagateChange: (value: string) => void;
@@ -54,7 +54,7 @@ export class LocationPickerComponent implements OnChanges, OnDestroy, ControlVal
                 this.changeDetector.markForCheck();
             }),
             switchMap(([subscription, resourceType]) => this._fetchLocations(subscription, resourceType)),
-        ).subscribe((locations: Location[]) => {
+        ).subscribe((locations: ArmLocation[]) => {
             this.locations = locations;
             this.loadingStatus = LoadingStatus.Ready;
             this.changeDetector.markForCheck();
@@ -94,11 +94,11 @@ export class LocationPickerComponent implements OnChanges, OnDestroy, ControlVal
         // Nothing
     }
 
-    public trackLocation(_: number, location: Location) {
+    public trackLocation(_: number, location: ArmLocation) {
         return location.id;
     }
 
-    private _fetchLocations(subscription: Subscription, resourceType?: string) {
+    private _fetchLocations(subscription: ArmSubscription, resourceType?: string) {
         if (resourceType) {
             const [provider, resource] = resourceType.split("/");
             return this.locationService.listForResourceType(subscription, provider, resource);

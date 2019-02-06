@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AccessToken, HttpRequestOptions, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { SanitizedError } from "@batch-flask/utils";
-import { Subscription } from "app/models";
+import { ArmSubscription } from "app/models";
 import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
 import { catchError, mergeMap, retryWhen, share, switchMap } from "rxjs/operators";
@@ -34,7 +34,7 @@ const providersApiVersion = {
     "microsoft.consumption": Constants.ApiVersion.consumption,
 };
 
-type SubscriptionOrTenant = Subscription | string;
+type SubscriptionOrTenant = ArmSubscription | string;
 
 export class InvalidSubscriptionOrTenant extends Error {
     constructor(message: string) {
@@ -96,7 +96,7 @@ export class AzureHttpService {
         return this.request("PATCH", subscription, uri, mergeOptions(options, body));
     }
 
-    public delete<T>(subscription: Subscription, uri: string, options?: HttpRequestOptions): Observable<T> {
+    public delete<T>(subscription: ArmSubscription, uri: string, options?: HttpRequestOptions): Observable<T> {
         return this.request("DELETE", subscription, uri, options);
     }
 
@@ -115,7 +115,7 @@ export class AzureHttpService {
     }
 
     private _getTenantId(subscriptionOrTenant: SubscriptionOrTenant, uri: string): string {
-        if (subscriptionOrTenant instanceof Subscription) {
+        if (subscriptionOrTenant instanceof ArmSubscription) {
             return subscriptionOrTenant.tenantId;
         } else if (typeof subscriptionOrTenant === "string") {
             return subscriptionOrTenant;

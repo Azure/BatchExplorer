@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectModule } from "@batch-flask/ui";
 import { FormFieldComponent } from "@batch-flask/ui/form/form-field";
-import { Subscription as ArmSubscription } from "app/models";
+import { ArmSubscription } from "app/models";
 import { ArmLocationService } from "app/services";
 import { of } from "rxjs";
 import { LocationModule } from "../location";

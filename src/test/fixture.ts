@@ -10,7 +10,7 @@ import {
     Node,
     PackageState,
     Pool,
-    Subscription,
+    ArmSubscription,
     SubtaskInformation,
     Task,
 } from "app/models";
@@ -210,7 +210,7 @@ export const node = new FixtureFactory<Node>(Node, {
     isDedicated: true,
 });
 
-export const subscription = new FixtureFactory<Subscription>(Subscription, {
+export const subscription = new FixtureFactory<ArmSubscription>(ArmSubscription, {
     id: "/subscriptions/sub-id-xyz",
     subscriptionId: "sub-id-xyz",
     tenantId: "tenant-id",

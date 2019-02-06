@@ -1,7 +1,7 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 import { TenantDetails, TenantDetailsAttributes } from "./tenant-details";
 
-export interface SubscriptionAttributes {
+export interface ArmSubscriptionAttributes {
     id: string;
     subscriptionId: string;
     tenantId: string;
@@ -14,7 +14,7 @@ export interface SubscriptionAttributes {
  * Class for subscription information
  */
 @Model()
-export class Subscription extends Record<SubscriptionAttributes> {
+export class ArmSubscription extends Record<ArmSubscriptionAttributes> {
     @Prop() public id: string;
     @Prop() public subscriptionId: string;
     @Prop() public tenantId: string;

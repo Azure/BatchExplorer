@@ -1,7 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { AccessToken } from "@batch-flask/core";
-import { Location, Subscription, TenantDetails } from "app/models";
+import { ArmLocation, ArmSubscription, TenantDetails } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, of } from "rxjs";
 import { AdalService } from "../adal";
@@ -19,14 +19,14 @@ const tokens: StringMap<AccessToken> = {
     "tenant-2": new AccessToken({ access_token: "tenant-2-token", token_type: "Bearer" } as any),
 };
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     id: "/subscriptions/sub1",
     subscriptionId: "sub1",
     tenantId: "tenant-2",
     tenant: tenantDetails["tenant-2"],
 });
 
-const loc1 = new Location({
+const loc1 = new ArmLocation({
     id: "/subscriptions/sub1/locations/eastus",
     name: "eastus",
     displayName: "East US",
@@ -34,7 +34,7 @@ const loc1 = new Location({
     longitude: "666",
 });
 
-const loc2 = new Location({
+const loc2 = new ArmLocation({
     id: "/subscriptions/sub1/locations/centralus",
     name: "centralus",
     displayName: "Central US",
@@ -42,7 +42,7 @@ const loc2 = new Location({
     longitude: "444",
 });
 
-const loc3 = new Location({
+const loc3 = new ArmLocation({
     id: "/subscriptions/sub1/locations/westus",
     name: "westus",
     displayName: "West US",
@@ -50,13 +50,13 @@ const loc3 = new Location({
     longitude: "222",
 });
 
-const batchLoc1 = new Location({
+const batchLoc1 = new ArmLocation({
     id: "/subscriptions/sub1/locations/eastasia",
     name: "eastasia",
     displayName: "East Asia",
 });
 
-const batchLoc2 = new Location({
+const batchLoc2 = new ArmLocation({
     id: "/subscriptions/sub1/locations/brazilsouth",
     name: "brazilsouth",
     displayName: "Brazil South",
