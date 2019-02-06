@@ -6,17 +6,22 @@ import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectModule } from "@batch-flask/ui";
 import { FormFieldComponent } from "@batch-flask/ui/form/form-field";
 import { Subscription as ArmSubscription } from "app/models";
-import { SubscriptionService } from "app/services";
+import { ArmLocationService } from "app/services";
 import { of } from "rxjs";
 import { LocationModule } from "../location";
 import { LocationPickerComponent } from "./location-picker.component";
 
 @Component({
-    template: `<bl-location-picker [subscription]="subscription" [formControl]="location"></bl-location-picker>`,
+    template: `<bl-location-picker
+        [subscription]="subscription"
+        [formControl]="location"
+        [resourceType]="resourceType"
+    ></bl-location-picker>`,
 })
 class TestComponent {
     public location = new FormControl();
     public subscription = new ArmSubscription({ subscriptionId: "dummy-1", displayName: "Dummy one" });
+    public resourceType?: string;
 }
 
 describe("LocationPickerComponent", () => {
@@ -27,7 +32,7 @@ describe("LocationPickerComponent", () => {
 
     beforeEach(() => {
         locationServiceSpy = {
-            listLocations: jasmine.createSpy("listLocations").and.callFake((sub) => {
+            list: jasmine.createSpy("list").and.callFake((sub) => {
                 if (sub.subscriptionId === "dummy-1") {
                     return of([
                         { id: "dummy-1-loc-1", name: "eastus1", displayName: "East US", subscriptionId: "dummy-1" },
@@ -44,12 +49,13 @@ describe("LocationPickerComponent", () => {
                 }
                 return of([]);
             }),
+            listForResourceType: jasmine.createSpy("listForResourceType").and.returnValue(of([])),
         };
         TestBed.configureTestingModule({
             imports: [FormsModule, ReactiveFormsModule, SelectModule, LocationModule, I18nTestingModule],
             declarations: [LocationPickerComponent, TestComponent, FormFieldComponent],
             providers: [
-                { provide: SubscriptionService, useValue: locationServiceSpy },
+                { provide: ArmLocationService, useValue: locationServiceSpy },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
@@ -70,6 +76,11 @@ describe("LocationPickerComponent", () => {
         expect(getSelectEl()).not.toBeFalsy();
     });
 
+    it("called the basic list api", () => {
+        expect(locationServiceSpy.list).toHaveBeenCalledOnce();
+        expect(locationServiceSpy.listForResourceType).not.toHaveBeenCalled();
+    });
+
     it("applies the changes to the inputs", () => {
         testComponent.location.setValue("eastus2");
         fixture.detectChanges();
@@ -87,5 +98,18 @@ describe("LocationPickerComponent", () => {
 
         expect(de.query(By.css("bl-select"))).toBeFalsy();
         expect(de.nativeElement.textContent).toContain("noLocationInSubscription(name:Invalid sub)");
+    });
+
+    it("show calls different API when resourceType is provided", () => {
+        expect(locationServiceSpy.list).toHaveBeenCalledTimes(1);
+        testComponent.resourceType = "Microsoft.Batch/batchAccounts";
+        fixture.detectChanges();
+
+        expect(locationServiceSpy.list).toHaveBeenCalledTimes(1);
+
+        expect(locationServiceSpy.listForResourceType).toHaveBeenCalledOnce();
+        expect(locationServiceSpy.listForResourceType).toHaveBeenCalledWith(testComponent.subscription,
+            "Microsoft.Batch",
+            "batchAccounts");
     });
 });
