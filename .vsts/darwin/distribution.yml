@@ -15,7 +15,6 @@ steps:
   - template: ./sign.yml
   - script: |
       unzip ./release/BatchExplorer*.zip -d ./release/mac
-      echo 'LS RELEASE'
       ls ./release/mac
       rm -f ./release/mac/*.pkg
       # rm -rf ./release/*.zip
