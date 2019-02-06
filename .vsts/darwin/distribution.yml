@@ -12,10 +12,6 @@ steps:
       cp ./release/*.zip ./release/keep/before-code-sign.zip
     displayName: Build .app
 
-  - template: ../common/publish-artifacts.yml
-    parameters:
-      folder: darwintmp
-
   - template: ./sign.yml
   - script: |
       unzip ./release/BatchExplorer*.zip -d ./release/mac
