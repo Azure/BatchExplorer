@@ -9,6 +9,7 @@ import { I18nTestingModule } from "@batch-flask/core/testing";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
+import { LocationPickerModule } from "app/components/common/location-picker";
 import {
     ArmBatchAccountService, ArmLocationService, AuthorizationHttpService, SubscriptionService,
 } from "app/services";
@@ -16,7 +17,6 @@ import { of, throwError } from "rxjs";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
-import { LocationPickerModule } from "../../../common/location-picker";
 import { BatchAccountCreateComponent } from "./batch-account-create.component";
 
 describe("BatchAccountCreateComponent ", () => {
@@ -143,7 +143,7 @@ describe("BatchAccountCreateComponent ", () => {
         };
 
         locationServiceSpy = {
-            list: jasmine.createSpy("listLocations").and.callFake((sub) => {
+            listForResourceType: jasmine.createSpy("listLocations").and.callFake((sub) => {
                 if (sub.subscriptionId === "dummy-1") {
                     return of([
                         { id: "dummy-1-loc-1", name: "eastus1", displayName: "East US", subscriptionId: "dummy-1" },
