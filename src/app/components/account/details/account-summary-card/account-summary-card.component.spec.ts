@@ -12,11 +12,11 @@ import {
 } from "@batch-flask/ui";
 import {
     ArmBatchAccount,
+    ArmSubscription,
     BatchAccount,
     BatchAccountProvisingState,
     LocalBatchAccount,
     PoolAllocationMode,
-    ArmSubscription,
 } from "app/models";
 import { BatchAccountService } from "app/services";
 import { click } from "test/utils/helpers";

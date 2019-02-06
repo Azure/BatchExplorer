@@ -107,7 +107,11 @@ export class ArmBatchAccountService implements OnDestroy {
      * Call nameAvailability api to get account conflict info per location
      * @param subscriptionId
      */
-    public nameAvailable(name: string, subscription: ArmSubscription, location: string): Observable<AvailabilityResult> {
+    public nameAvailable(
+        name: string,
+        subscription: ArmSubscription,
+        location: string,
+    ): Observable<AvailabilityResult> {
         if (!name || !subscription || !location) {
             return of(null);
         }

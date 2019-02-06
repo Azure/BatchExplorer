@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { UserConfigurationService } from "@batch-flask/core";
 import { StringUtils, log } from "@batch-flask/utils";
 import {
-    ResourceGroup, ArmSubscription, ArmSubscriptionAttributes, TenantDetails,
+    ArmSubscription, ArmSubscriptionAttributes, ResourceGroup, TenantDetails,
 } from "app/models";
 import { Constants } from "common";
 import { List, Set } from "immutable";
@@ -189,7 +189,10 @@ export class SubscriptionService implements OnDestroy {
         this._subscriptionsLoaded.complete();
     }
 
-    private _ignoreSubscriptions(subscriptions: List<ArmSubscription>, ignoredPatterns: string[]): List<ArmSubscription> {
+    private _ignoreSubscriptions(
+        subscriptions: List<ArmSubscription>,
+        ignoredPatterns: string[],
+    ): List<ArmSubscription> {
         if (ignoredPatterns.length === 0) {
             return subscriptions;
         }

@@ -4,7 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
-import { ArmBatchAccount, StorageAccount, ArmSubscription } from "app/models";
+import { ArmBatchAccount, ArmSubscription, StorageAccount } from "app/models";
 import { BatchAccountService, StorageAccountService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { List } from "immutable";

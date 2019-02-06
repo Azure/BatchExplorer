@@ -4,7 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
-import { ArmBatchAccount, LocalBatchAccount, ArmSubscription } from "app/models";
+import { ArmBatchAccount, ArmSubscription, LocalBatchAccount } from "app/models";
 import { BatchAccountService, NetworkConfigurationService, VirtualNetwork } from "app/services";
 import { BehaviorSubject, of } from "rxjs";
 import { VirtualNetworkPickerComponent } from "./virtual-network-picker.component";
