@@ -112,12 +112,12 @@
             <bl-text-property *ngIf="exitConditionData.default" [label]="'exitConditions.default' | i18n" [value]="exitConditionData.default"></bl-text-property>
         </bl-property-group>
 
-        <bl-property-group [label]="'multiInstanceSettings.label' | i18n" *ngIf="task.multiInstanceSettings" [collapsed]="true">
+        <bl-property-group [label]="'multiInstanceSettings.label' | i18n" *ngIf="task.multiInstanceSettings; let multiInstanceSettings" [collapsed]="true">
             <div collapsed-preview>
-                {{task.multiInstanceSettings.numberOfInstances}} subtasks. Running: <i>{{task.multiInstanceSettings.coordinationCommandLine}}</i>
+                {{multiInstanceSettings.numberOfInstances}} subtasks. Running: <i>{{multiInstanceSettings.coordinationCommandLine}}</i>
             </div>
-            <bl-text-property [label]="'multiInstanceSettings.coordinationCommandLine.label' | i18n" [value]="task.multiInstanceSettings.coordinationCommandLine" [wrap]="true"></bl-text-property>
-            <bl-text-property [label]="'multiInstanceSettings.numberOfInstances.label' | i18n" [value]="task.multiInstanceSettings.numberOfInstances"></bl-text-property>
+            <bl-text-property [label]="'multiInstanceSettings.coordinationCommandLine.label' | i18n" [value]="multiInstanceSettings.coordinationCommandLine" [wrap]="true"></bl-text-property>
+            <bl-text-property [label]="'multiInstanceSettings.numberOfInstances.label' | i18n" [value]="multiInstanceSettings.numberOfInstances"></bl-text-property>
         </bl-property-group>
     </bl-property-list>
 </bl-entity-configuration>
