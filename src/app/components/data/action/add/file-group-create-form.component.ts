@@ -18,8 +18,8 @@ import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormMod
 import { NcjFileGroupService } from "app/services";
 import { StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
-import { Observable, Subscription, from, BehaviorSubject, Subject, of } from "rxjs";
-import { debounceTime, distinctUntilChanged, map, takeUntil, switchMap } from "rxjs/operators";
+import { Observable, Subject, from } from "rxjs";
+import { debounceTime, distinctUntilChanged, map, takeUntil } from "rxjs/operators";
 
 import "./file-group-create-form.scss";
 
@@ -175,7 +175,6 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
             }
         });
         activity.setUncancellable();
-        activity.progress
         this.dialogRef.close(activity);
         return activity.done;
     }
