@@ -4,7 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
 import { FormModule } from "@batch-flask/ui/form";
-import { Subscription } from "app/models";
+import { ArmSubscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
@@ -17,9 +17,9 @@ class TestComponent {
     public subscription = new FormControl(null);
 }
 
-const sub1 = new Subscription({ id: "subs/sub-1", subscriptionId: "sub-1", displayName: "Sub 1" });
-const sub2 = new Subscription({ id: "subs/sub-2", subscriptionId: "sub-2", displayName: "Sub 2" });
-const sub3 = new Subscription({ id: "subs/sub-3", subscriptionId: "sub-3", displayName: "Sub 3" });
+const sub1 = new ArmSubscription({ id: "subs/sub-1", subscriptionId: "sub-1", displayName: "Sub 1" });
+const sub2 = new ArmSubscription({ id: "subs/sub-2", subscriptionId: "sub-2", displayName: "Sub 2" });
+const sub3 = new ArmSubscription({ id: "subs/sub-3", subscriptionId: "sub-3", displayName: "Sub 3" });
 const subscriptions = [sub1, sub2, sub3];
 
 describe("SubscriptionPickerComponent", () => {

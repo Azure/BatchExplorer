@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwa
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { Subscription as ArmSubscription } from "app/models";
+import { ArmSubscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import "./subscription-picker.scss";
 

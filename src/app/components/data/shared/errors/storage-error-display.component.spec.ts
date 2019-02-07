@@ -5,7 +5,7 @@ import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ButtonsModule, SidebarManager } from "@batch-flask/ui";
 import { BannerComponent } from "@batch-flask/ui/banner";
 import { CardComponent } from "@batch-flask/ui/card";
-import { ArmBatchAccount, Subscription } from "app/models";
+import { ArmBatchAccount, ArmSubscription } from "app/models";
 import { BatchAccountService } from "app/services";
 import { BehaviorSubject } from "rxjs";
 import { StorageErrorDisplayComponent } from "./storage-error-display.component";
@@ -17,7 +17,7 @@ class TestComponent {
     public noClassic = false;
 }
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     id: "/subscriptions/sub1",
     subscriptionId: "sub1",
 });

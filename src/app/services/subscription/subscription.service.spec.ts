@@ -2,7 +2,7 @@ import { HttpClientTestingModule, HttpTestingController } from "@angular/common/
 import { TestBed } from "@angular/core/testing";
 import { AccessToken } from "@batch-flask/core";
 import { MockUserConfigurationService } from "@batch-flask/core/testing";
-import { Subscription, TenantDetails } from "app/models";
+import { ArmSubscription, TenantDetails } from "app/models";
 import { BehaviorSubject, of } from "rxjs";
 import { AdalService } from "../adal";
 import { AzureHttpService } from "../azure-http.service";
@@ -24,7 +24,7 @@ const sub1Res = {
     subscriptionId: "sub1",
 };
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     ...sub1Res,
     tenantId: "tenant-2",
     tenant: tenantDetails["tenant-2"],
@@ -35,7 +35,7 @@ const sub2Res = {
     subscriptionId: "sub2",
 };
 
-const sub2 = new Subscription({
+const sub2 = new ArmSubscription({
     ...sub2Res,
     tenantId: "tenant-1",
     tenant: tenantDetails["tenant-1"],
@@ -46,7 +46,7 @@ const sub3Res = {
     subscriptionId: "sub3",
 };
 
-const sub3 = new Subscription({
+const sub3 = new ArmSubscription({
     ...sub3Res,
     tenantId: "tenant-2",
     tenant: tenantDetails["tenant-2"],
@@ -59,7 +59,7 @@ describe("SubscriptionService", () => {
     let adalSpy;
     let settingsServiceSpy: MockUserConfigurationService;
     let httpMock: HttpTestingController;
-    let subscriptions: Subscription[] = [];
+    let subscriptions: ArmSubscription[] = [];
 
     beforeEach(() => {
         adalSpy = {

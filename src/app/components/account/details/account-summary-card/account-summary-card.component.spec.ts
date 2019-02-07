@@ -12,17 +12,17 @@ import {
 } from "@batch-flask/ui";
 import {
     ArmBatchAccount,
+    ArmSubscription,
     BatchAccount,
     BatchAccountProvisingState,
     LocalBatchAccount,
     PoolAllocationMode,
-    Subscription,
 } from "app/models";
 import { BatchAccountService } from "app/services";
 import { click } from "test/utils/helpers";
 import { AccountSummaryCardComponent } from "./account-summary-card.component";
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     id: "/subscriptions/sub-1",
     subscriptionId: "sub-1",
     displayName: "My sub 1",
