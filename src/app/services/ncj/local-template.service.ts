@@ -3,11 +3,11 @@ import { BasicListGetter, DataCache, UserConfigurationService } from "@batch-fla
 import { FileSystemService } from "@batch-flask/electron";
 import { File, FileLoader, FileNavigator } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
+import { BEUserDesktopConfiguration } from "common";
 import * as path from "path";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { filter } from "rxjs/operators";
 import stripBom from "strip-bom";
-import { BEUserDesktopConfiguration } from "../user-configuration/be-user-configuration.model";
 
 export interface LocalTemplateFolder {
     path: string;

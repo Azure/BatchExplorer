@@ -4,7 +4,7 @@ import { StringUtils, log } from "@batch-flask/utils";
 import {
     ArmSubscription, ArmSubscriptionAttributes, ResourceGroup, TenantDetails,
 } from "app/models";
-import { Constants } from "common";
+import { BEUserConfiguration, Constants } from "common";
 import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest, empty, forkJoin } from "rxjs";
 import {
@@ -15,7 +15,6 @@ import { AdalService } from "../adal";
 import { AzureHttpService } from "../azure-http.service";
 import { ArmListResponse } from "../core";
 import { TenantDetailsService } from "../tenant-details.service";
-import { BEUserConfiguration } from "../user-configuration";
 
 @Injectable({ providedIn: "root" })
 export class SubscriptionService implements OnDestroy {
