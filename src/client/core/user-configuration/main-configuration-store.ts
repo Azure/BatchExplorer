@@ -29,6 +29,6 @@ export class MainConfigurationStore<T extends {}> implements UserConfigurationSt
 
     private async _load() {
         const value = await this.storage.get<T>(MainConfigurationStore.KEY);
-        this._config.next(value);
+        this._config.next(value || {} as any);
     }
 }

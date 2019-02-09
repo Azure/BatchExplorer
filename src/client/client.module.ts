@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 import { ServerModule } from "@angular/platform-server";
 import { DevTranslationsLoader } from "@batch-flask/compiler";
 import {
-    DEFAULT_USER_CONFIGURATION,
     DataStore,
     GlobalStorage,
     LocaleService,
@@ -13,7 +12,6 @@ import { GLOBAL_STORAGE, MainGlobalStorage } from "@batch-flask/electron";
 import { ElectronMainModule } from "@batch-flask/electron/electron-main.module";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { MainConfigurationStore } from "client/core/user-configuration";
-import { DEFAULT_BE_USER_CONFIGURATION } from "common";
 import { ClientLocaleService } from "./core";
 import { AADService } from "./core/aad";
 import { BatchExplorerApplication } from "./core/batch-explorer-application";
@@ -58,7 +56,6 @@ export function initializeServices(injector) {
         { provide: TranslationsLoaderService, useClass: ClientTranslationsLoaderService },
         { provide: DataStore, useClass: LocalDataStore },
         { provide: USER_CONFIGURATION_STORE, useClass: MainConfigurationStore },
-        { provide: DEFAULT_USER_CONFIGURATION, useValue: DEFAULT_BE_USER_CONFIGURATION },
         { provide: GlobalStorage, useClass: MainGlobalStorage },
         { provide: GLOBAL_STORAGE, useExisting: GlobalStorage },
         DevTranslationsLoader,

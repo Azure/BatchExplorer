@@ -31,7 +31,7 @@ export class UserConfigurationService<T extends BatchFlaskUserConfiguration> imp
     public config: Observable<T>;
     public current: T | null;
 
-    private _config = new BehaviorSubject<T | null>({} as any);
+    private _config = new BehaviorSubject<T | null>(null);
     private _destroy = new Subject<T>();
 
     constructor(
@@ -76,7 +76,7 @@ export class UserConfigurationService<T extends BatchFlaskUserConfiguration> imp
     }
 
     public patch(config: Partial<T>) {
-        this._config.next({ ...this._config.value, ...config });
+        this._config.next({ ...this._config.value, ...config } as any);
         return this._save();
     }
 
