@@ -80,9 +80,9 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
             this.changeDetector.markForCheck();
         });
 
-        combineLatest(this._renderEngine, this._app, this._imageReferenceId, this.appVersionControl.valueChanges).pipe(
+        combineLatest( this._app, this._renderEngine, this._imageReferenceId, this.appVersionControl.valueChanges).pipe(
             takeUntil(this._destroy),
-            switchMap(([renderEngine, app, imageReferenceId, value]) => {
+            switchMap(([app, renderEngine, imageReferenceId, value]) => {
                 return this.renderingContainerImageService.getContainerImagesForAppVersion(
                     app, renderEngine, imageReferenceId, value);
             }),
