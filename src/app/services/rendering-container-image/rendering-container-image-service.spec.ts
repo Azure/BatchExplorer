@@ -127,7 +127,7 @@ fdescribe("RenderingContainerImageService", () => {
         renderingContainerImageService.getAppVersionDisplayList(
             RenderApplication.Maya, RenderEngine.VRay, "ubuntu-1604lts-container").subscribe((result) => {
             expect(result.length).toEqual(1);
-            expect(result.last()).toEqual("2017-Update5");
+            expect(result.pop()).toEqual("2017-Update5");
             done();
         });
     });
@@ -136,7 +136,7 @@ fdescribe("RenderingContainerImageService", () => {
         renderingContainerImageService.getAppVersionDisplayList(
             RenderApplication.Maya, RenderEngine.Arnold, "ubuntu-1604lts-container").subscribe((result) => {
             expect(result.length).toEqual(1);
-            expect(result.last()).toEqual("2017-Update5");
+            expect(result.pop()).toEqual("2017-Update5");
             done();
         });
     });
@@ -147,7 +147,7 @@ fdescribe("RenderingContainerImageService", () => {
             RenderApplication.Maya, RenderEngine.VRay, "ubuntu-1604lts-container", "2017-Update5")
             .subscribe((result) => {
             expect(result.length).toEqual(1);
-            expect(result.last().containerImage).toEqual("ubuntu_maya_vray");
+            expect(result.pop().containerImage).toEqual("ubuntu_maya_vray");
             done();
         });
     });
