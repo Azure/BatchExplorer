@@ -1,3 +1,6 @@
+<p *ngIf="containerImageFilter">
+        Showing pools with a container image matching {{ appDisplay }}, {{ renderEngineDisplay}}, {{ imageReferenceIdDisplay}}
+</p>
 <div class="pool-filters" [formGroup]="filters">
     <bl-select [placeholder]="'pool-picker.filterByOS' | i18n" formControlName="offer">
         <bl-option [value]="null" label="No filter"></bl-option>

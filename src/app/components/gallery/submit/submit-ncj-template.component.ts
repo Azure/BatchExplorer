@@ -145,6 +145,12 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             && this.jobTemplate.job.properties.poolInfo.autoPoolSpecification);
     }
 
+    public get poolPickerNeedsContainerImageFilter(): boolean {
+        return Boolean(this.jobTemplate.parameters.containerImage.additionalProperties.app
+        && this.jobTemplate.parameters.containerImage.additionalProperties.renderEngine
+        && this.jobTemplate.parameters.containerImage.additionalProperties.imageReferenceId);
+    }
+
     public pickMode(mode: NcjTemplateMode) {
         this.modeState = mode;
 

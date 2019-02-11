@@ -10,7 +10,7 @@ import { GithubDataService } from "../github-data";
 
 const dataFile = "data/rendering-container-images.json";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class RenderingContainerImageService {
 
     public imageReferences: Observable<RenderingImageReference[]>;
@@ -35,7 +35,8 @@ export class RenderingContainerImageService {
         this.containerImages = data.pipe(map(x => x.containerImages));
     }
 
-    public findContainerImageById(containerImageId: string): Observable<RenderingContainerImage> {
+    public findContainerImageById(containerImageId: string):
+        Observable<RenderingContainerImage> {
         return this.containerImages.pipe(
             map(images => images.find(image => image.containerImage === containerImageId)), share());
     }
@@ -71,6 +72,19 @@ export class RenderingContainerImageService {
                     x.imageReferenceId === imageReferenceId);
 
                 return Array.from(new Set(images.map(image => image.appVersion)));
+            }),
+            share(),
+        );
+    }
+
+    public doesContainerImageMatch(
+        containerImageId: string, app: RenderApplication,  renderer: RenderEngine, imageReferenceId: string):
+        Observable<boolean> {
+        return this.findContainerImageById(containerImageId).pipe(
+            map(image => {
+                return image.app === app &&
+                        image.renderer === renderer &&
+                        image.imageReferenceId === imageReferenceId;
             }),
             share(),
         );
