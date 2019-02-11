@@ -162,4 +162,31 @@ fdescribe("RenderingContainerImageService", () => {
             done();
         });
     });
+
+    // doesContainerImageMatch
+    it("#doesContainerImageMatch correctly returns true when containerImage matches", (done) => {
+        renderingContainerImageService.doesContainerImageMatch("ubuntu_maya_arnold_2023",
+            RenderApplication.Maya, RenderEngine.Arnold, "ubuntu-1604lts-container")
+            .subscribe((result) => {
+            expect(result).toEqual(true);
+            done();
+        });
+    });
+    it("#doesContainerImageMatch correctly returns false when containerImage doesn't match on renderEngine", (done) => {
+        renderingContainerImageService.doesContainerImageMatch("ubuntu_maya_arnold_2023",
+            RenderApplication.Maya, RenderEngine.VRay, "ubuntu-1604lts-container")
+            .subscribe((result) => {
+            expect(result).toEqual(true);
+            done();
+        });
+    });
+    it("#doesContainerImageMatch correctly returns false when containerImage doesn't match on imageReferenceId",
+        (done) => {
+        renderingContainerImageService.doesContainerImageMatch("ubuntu_maya_arnold_2023",
+            RenderApplication.Maya, RenderEngine.Arnold, "windowsserver-2016-container")
+            .subscribe((result) => {
+            expect(result).toEqual(true);
+            done();
+        });
+    });
 });
