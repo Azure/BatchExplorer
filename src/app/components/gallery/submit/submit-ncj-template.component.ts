@@ -87,13 +87,6 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
         this.form = new FormGroup({});
 
-        this.pickedPool.valueChanges.subscribe((value) => {
-            if (this.modeState === NcjTemplateMode.NewPoolAndJob ||
-                this.modeState === NcjTemplateMode.ExistingPoolAndJob) {
-                this.jobTemplate.parameters.poolId = value;
-            }
-        });
-
         this.settingsService.watch("jobTemplate").pipe(takeUntil(this._destroy)).subscribe((jobTemplate) => {
             this._defaultOutputDataContainer = jobTemplate.defaultOutputFileGroup;
         });
