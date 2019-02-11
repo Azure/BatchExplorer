@@ -1,14 +1,14 @@
 import { ServerError } from "@batch-flask/core";
-import { ArmBatchAccount, Subscription } from "app/models";
+import { ArmBatchAccount, ArmSubscription } from "app/models";
 import { BehaviorSubject, of, throwError } from "rxjs";
 import { UsageDetail, UsageDetailsService, UsageDetailsUnsupportedSubscription } from "./usage-details.service";
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     id: "/subscriptions/sub1",
     subscriptionId: "sub1",
 });
 
-const internalSub = new Subscription({
+const internalSub = new ArmSubscription({
     id: "/subscriptions/internal-1",
     subscriptionId: "internal-1",
 });

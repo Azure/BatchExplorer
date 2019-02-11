@@ -3,6 +3,7 @@ import { PinnedEntityType } from "@batch-flask/core";
 import { File, Workspace } from "@batch-flask/ui";
 import {
     ArmBatchAccount,
+    ArmSubscription,
     BatchApplication,
     BatchApplicationPackage,
     BlobContainer,
@@ -10,7 +11,6 @@ import {
     Node,
     PackageState,
     Pool,
-    Subscription,
     SubtaskInformation,
     Task,
 } from "app/models";
@@ -210,7 +210,7 @@ export const node = new FixtureFactory<Node>(Node, {
     isDedicated: true,
 });
 
-export const subscription = new FixtureFactory<Subscription>(Subscription, {
+export const subscription = new FixtureFactory<ArmSubscription>(ArmSubscription, {
     id: "/subscriptions/sub-id-xyz",
     subscriptionId: "sub-id-xyz",
     tenantId: "tenant-id",

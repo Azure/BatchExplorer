@@ -1,8 +1,7 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 
-export interface LocationAttributes {
+export interface ArmLocationAttributes {
     id: string;
-    subscriptionId: string;
     displayName: string;
     name: string;
     latitude: string;
@@ -13,9 +12,8 @@ export interface LocationAttributes {
  * Class for location information
  */
 @Model()
-export class Location extends Record<LocationAttributes> {
+export class ArmLocation extends Record<ArmLocationAttributes> {
     @Prop() public id: string;
-    @Prop() public subscriptionId: string;
     @Prop() public displayName: string;
     @Prop() public name: string;
     @Prop() public latitude: string;

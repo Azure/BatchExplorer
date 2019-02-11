@@ -1,10 +1,10 @@
 import { ServerError } from "@batch-flask/core";
 import {
     ArmBatchAccount,
+    ArmSubscription,
     BatchAccount,
     BatchAccountProvisingState,
     LocalBatchAccount,
-    Subscription as ArmSubscription,
 } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Subscription, of, throwError } from "rxjs";

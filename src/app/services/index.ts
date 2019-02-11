@@ -1,4 +1,6 @@
 export * from "./azure-batch";
+export * from "./arm-location";
+export * from "./arm-provider";
 export * from "./batch-account";
 export * from "./app-translation-loader.service";
 export * from "./app-locale.service";

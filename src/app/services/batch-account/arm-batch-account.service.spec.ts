@@ -1,13 +1,13 @@
-import { ArmBatchAccount, Subscription } from "app/models";
+import { ArmBatchAccount, ArmSubscription } from "app/models";
 import { List } from "immutable";
 import { of } from "rxjs";
 import { ArmBatchAccountService } from "./arm-batch-account.service";
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     id: "/subscriptions/sub1",
     subscriptionId: "sub1",
 });
-const sub2 = new Subscription({
+const sub2 = new ArmSubscription({
     id: "/subscriptions/sub2",
     subscriptionId: "sub2",
 });
