@@ -146,6 +146,11 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public get poolPickerNeedsContainerImageFilter(): boolean {
+        if (!this.jobTemplate.parameters.containerImage ||
+            !this.jobTemplate.parameters.containerImage.additionalProperties) {
+            return false;
+        }
+
         return Boolean(this.jobTemplate.parameters.containerImage.additionalProperties.app
         && this.jobTemplate.parameters.containerImage.additionalProperties.renderEngine
         && this.jobTemplate.parameters.containerImage.additionalProperties.imageReferenceId);
