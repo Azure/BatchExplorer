@@ -51,7 +51,7 @@
                                     <a href="#" routerLink="/pools">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard" [data]="poolData.items | async" [config]="tableConfig">
+                            <bl-table class="dashboard" [data]="pools" [config]="tableConfig">
                                 <bl-column name="id">
                                     <div *blCellDef="let pool">{{pool.id}}</div>
                                 </bl-column>

@@ -1,5 +1,5 @@
 import { HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import {
     ContinuationToken,
     DataCache,
@@ -17,7 +17,7 @@ import { ModelUtils } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
 import { Observable, Subject, of, throwError } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { catchError, map, publishReplay, refCount, switchMap } from "rxjs/operators";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 
 export interface PoolListParams { }
@@ -27,12 +27,19 @@ export interface PoolParams {
 }
 
 @Injectable({ providedIn: "root" })
-export class PoolService {
+export class PoolService implements OnDestroy {
+
+    public get basicProperties(): string {
+        return this._basicProperties;
+    }
     /**
      * Triggered only when a pool is added through this app.
      * Used to notify the list of a new item
      */
     public onPoolAdded = new Subject<string>();
+
+    public pools: Observable<List<Pool>>;
+    public listView: ListView<Pool, PoolListParams>;
 
     private _basicProperties: string = "id,displayName,state,allocationState";
     private _cache = new DataCache<Pool>();
@@ -50,10 +57,25 @@ export class PoolService {
             cache: () => this._cache,
             uri: () => `/pools`,
         });
+
+        this.listView = this._createListView();
+
+        this.onPoolAdded.subscribe((poolId) => {
+            this.listView.loadNewItem(this.get(poolId));
+        });
+
+        this.pools = new Observable((observer) => {
+            const sub = this.listView.fetchAll().subscribe(observer);
+            return sub;
+        }).pipe(
+            switchMap(() => this.listView.items),
+            publishReplay(1),
+            refCount(),
+        );
     }
 
-    public get basicProperties(): string {
-        return this._basicProperties;
+    public ngOnDestroy() {
+        this.listView.dispose();
     }
 
     public exist(params: PoolParams): Observable<boolean> {
@@ -83,16 +105,8 @@ export class PoolService {
         }
     }
 
-    public listAll(options?: ListOptionsAttributes) {
-        return this._listGetter.fetchAll(options);
-    }
-
-    public listView(options: ListOptionsAttributes = {}): ListView<Pool, PoolListParams> {
-        return new ListView({
-            cache: () => this._cache,
-            getter: this._listGetter,
-            initialOptions: options,
-        });
+    public refresh() {
+        return this.listView.fetchAll();
     }
 
     /**
@@ -190,6 +204,14 @@ export class PoolService {
 
     public disableAutoScale(poolId: string) {
         return this.http.post(`/pools/${poolId}/disableautoscale`, null);
+    }
+
+    private _createListView(options: ListOptionsAttributes = {}): ListView<Pool, PoolListParams> {
+        return new ListView({
+            cache: () => this._cache,
+            getter: this._listGetter,
+            initialOptions: options,
+        });
     }
 
     private _parseAutoScaleResults(results: string): NameValuePair[] {

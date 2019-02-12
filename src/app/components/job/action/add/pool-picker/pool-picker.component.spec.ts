@@ -68,10 +68,12 @@ describe("PoolPickerComponent", () => {
 
     beforeEach(() => {
         poolServiceSpy = {
-            listView: () => new MockListView(Pool, {
+            listView: new MockListView(Pool, {
                 items: [centosPool1, centosPool2, ubuntuPool, windowsPool, cloudServicePool],
             }),
         };
+        poolServiceSpy.listView.fetchAll();
+
         vmSizeServiceSpy = {
             sizes: of(List([])),
         };
