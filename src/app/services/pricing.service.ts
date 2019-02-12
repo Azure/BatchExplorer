@@ -11,7 +11,7 @@ import { ArmHttpService } from "./arm-http.service";
 import { BatchAccountService } from "./batch-account";
 import { VmSizeService } from "./compute";
 
-const pricingFilename = "pricing.json";
+const pricingFilename = "pricing";
 
 export function commerceUrl(subscriptionId: string) {
     return `subscriptions/${subscriptionId}/providers/Microsoft.Commerce`;
@@ -176,7 +176,7 @@ export class PricingService {
         for (const meter of meters) {
             if (meter.MeterId in softwareMeterId) {
                 const software = softwareMeterId[meter.MeterId];
-                const perCore = meter.MeterSubCategory.includes("core)");
+                const perCore = meter.MeterName.toLowerCase().includes("1 vcpu");
                 pricing.softwares.add(software, meter.MeterRates["0"], perCore);
             }
         }

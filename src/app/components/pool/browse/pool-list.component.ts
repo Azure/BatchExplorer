@@ -11,7 +11,7 @@ import { Pool } from "app/models";
 import { PoolListParams, PoolNodeCountService, PoolService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subject, Subscription, forkJoin } from "rxjs";
+import { Observable, Subject, forkJoin } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
 import { PoolCommands } from "../action";
 
