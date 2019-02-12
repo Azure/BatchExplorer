@@ -1,53 +1,726 @@
 <?xml version="1.0" encoding="utf-8"?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="Batch" datatype="plaintext" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="duration-picker.unit.unlimited">
-        <source>Unlimited</source>
-        <target state="translated">Sınırsız</target>
+      <trans-unit id="aad-app-secret-picker">
+        <source />
       </trans-unit>
-      <trans-unit id="duration-picker.unit.days">
-        <source>Days</source>
-        <target state="translated">Gün</target>
+      <trans-unit id="aad-app-secret-picker.description">
+        <source />
       </trans-unit>
-      <trans-unit id="duration-picker.unit.minutes">
-        <source>Minutes</source>
-        <target state="translated">Dakika</target>
+      <trans-unit id="aad-app-secret-picker.description.label">
+        <source>Description (Optional)</source>
+        <target state="new">Description (Optional)</target>
       </trans-unit>
-      <trans-unit id="duration-picker.unit.hours">
-        <source>Hours</source>
-        <target state="translated">Saat</target>
+      <trans-unit id="aad-app-secret-picker.expireIn">
+        <source />
       </trans-unit>
-      <trans-unit id="duration-picker.unit.seconds">
-        <source>Seconds</source>
-        <target state="translated">Saniye</target>
+      <trans-unit id="aad-app-secret-picker.expireIn.label">
+        <source>Exipre in</source>
+        <target state="new">Exipre in</target>
+      </trans-unit>
+      <trans-unit id="aad-app-secret-picker.secret">
+        <source />
+      </trans-unit>
+      <trans-unit id="aad-app-secret-picker.secret.label">
+        <source>Secret. One will be generated automatically if not provided</source>
+        <target state="new">Secret. One will be generated automatically if not provided</target>
+      </trans-unit>
+      <trans-unit id="account-cost-card">
+        <source />
+      </trans-unit>
+      <trans-unit id="account-cost-card.subtitle">
+        <source>This is showing the pre-tax cost reported. Please note that cost might be partial.</source>
+        <target state="new">This is showing the pre-tax cost reported. Please note that cost might be partial.</target>
+      </trans-unit>
+      <trans-unit id="account-cost-card.title">
+        <source>Daily cost</source>
+        <target state="new">Daily cost</target>
+      </trans-unit>
+      <trans-unit id="account-cost-card.total">
+        <source>Total for billing period</source>
+        <target state="new">Total for billing period</target>
+      </trans-unit>
+      <trans-unit id="account-cost-card.unsupportedSubscription">
+        <source>Cannot view cost for this subscription(Unsupported)</source>
+        <target state="new">Cannot view cost for this subscription(Unsupported)</target>
+      </trans-unit>
+      <trans-unit id="account-cost-card.usingLocalAccount">
+        <source>Cannot get cost with local batch account</source>
+        <target state="new">Cannot get cost with local batch account</target>
+      </trans-unit>
+      <trans-unit id="account-details">
+        <source />
+      </trans-unit>
+      <trans-unit id="account-details.monitoring">
+        <source>Monitoring</source>
+        <target state="new">Monitoring</target>
+      </trans-unit>
+      <trans-unit id="account-details.resources">
+        <source>Resources</source>
+        <target state="translated">Kaynaklar</target>
+      </trans-unit>
+      <trans-unit id="account-monitoring">
+        <source />
+      </trans-unit>
+      <trans-unit id="account-monitoring.aggregatedOver">
+        <source>Aggregated over {interval} interval</source>
+        <target state="new">Aggregated over {interval} interval</target>
+      </trans-unit>
+      <trans-unit id="account-monitoring.coreCount">
+        <source>Core minutes</source>
+        <target state="new">Core minutes</target>
+      </trans-unit>
+      <trans-unit id="account-monitoring.currentNodeStates">
+        <source>Current node states</source>
+        <target state="new">Current node states</target>
+      </trans-unit>
+      <trans-unit id="account-monitoring.failedTask">
+        <source>Failed task</source>
+        <target state="new">Failed task</target>
+      </trans-unit>
+      <trans-unit id="account-monitoring.nodeStates">
+        <source>Node states</source>
+        <target state="new">Node states</target>
+      </trans-unit>
+      <trans-unit id="account-monitoring.notARM">
+        <source>Account monitoring is only enabled for ARM batch accounts</source>
+        <target state="new">Account monitoring is only enabled for ARM batch accounts</target>
+      </trans-unit>
+      <trans-unit id="account-monitoring.taskStates">
+        <source>Task states</source>
+        <target state="new">Task states</target>
+      </trans-unit>
+      <trans-unit id="account-summary-card">
+        <source />
+      </trans-unit>
+      <trans-unit id="account-summary-card.resourceGroup">
+        <source>Resource group</source>
+        <target state="new">Resource group</target>
+      </trans-unit>
+      <trans-unit id="account-summary-card.subscription">
+        <source>Subscription</source>
+        <target state="new">Subscription</target>
+      </trans-unit>
+      <trans-unit id="account-summary-card.url">
+        <source>Url</source>
+        <target state="translated">URL</target>
+      </trans-unit>
+      <trans-unit id="add-certificate-form">
+        <source />
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate">
+        <source />
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate.description">
+        <source>Select a certificate (pfx or cer) to upload</source>
+        <target state="new">Select a certificate (pfx or cer) to upload</target>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate.invalid">
+        <source>Certificate need to be valid CER or PFX files only</source>
+        <target state="new">Certificate need to be valid CER or PFX files only</target>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate.label">
+        <source>Certificate</source>
+        <target state="new">Certificate</target>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate.required">
+        <source>Please select a valid certificate file</source>
+        <target state="translated">Lütfen geçerli bir sertifika dosyası seçin</target>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate.select">
+        <source>Select a certificate</source>
+        <target state="translated">Sertifika seçin</target>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.password">
+        <source />
+      </trans-unit>
+      <trans-unit id="add-certificate-form.password.label">
+        <source>Certificate password</source>
+        <target state="new">Certificate password</target>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.password.required">
+        <source>Password is required if the certificate format is '.pfx'</source>
+        <target state="new">Password is required if the certificate format is '.pfx'</target>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.title">
+        <source>Create certificate</source>
+        <target state="new">Create certificate</target>
+      </trans-unit>
+      <trans-unit id="add-task-form">
+        <source />
+      </trans-unit>
+      <trans-unit id="add-task-form.action">
+        <source>Add</source>
+        <target state="translated">Ekle</target>
+      </trans-unit>
+      <trans-unit id="add-task-form.subtitle">
+        <source>Add a task to the selected job</source>
+        <target state="new">Add a task to the selected job</target>
+      </trans-unit>
+      <trans-unit id="add-task-form.title">
+        <source>Add task</source>
+        <target state="translated">Görev Ekle</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create">
+        <source />
+      </trans-unit>
+      <trans-unit id="batch-account-create.accountName">
+        <source />
+      </trans-unit>
+      <trans-unit id="batch-account-create.accountName.maxlength">
+        <source>Account name has a maximum length of 64 characters</source>
+        <target state="new">Account name has a maximum length of 64 characters</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.accountName.minLength">
+        <source>Account name has a minimum length of 3 characters</source>
+        <target state="new">Account name has a minimum length of 3 characters</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.accountName.pattern">
+        <source>Account name can only contain lower case letters and numbers</source>
+        <target state="new">Account name can only contain lower case letters and numbers</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.accountName.required">
+        <source>Account name is a required field</source>
+        <target state="new">Account name is a required field</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.location">
+        <source />
+      </trans-unit>
+      <trans-unit id="batch-account-create.location.reachedQuota">
+        <source>You've already reached your quota {used} out of {quota} accounts for subscription '{subscription}' in this location. You can request a an account quota increase, create the account in another location, or create the account in another subscription.</source>
+        <target state="new">You've already reached your quota {used} out of {quota} accounts for subscription '{subscription}' in this location. You can request a an account quota increase, create the account in another location, or create the account in another subscription.</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.location.required">
+        <source>Location is a required field</source>
+        <target state="new">Location is a required field</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.resourceGroup">
+        <source />
+      </trans-unit>
+      <trans-unit id="batch-account-create.resourceGroup.noneAvailable">
+        <source>No resources groups available in subscription '{subscription}'</source>
+        <target state="new">No resources groups available in subscription '{subscription}'</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.resourceGroup.notAllowed">
+        <source>You don't have permission to create a batch account under this resource group</source>
+        <target state="new">You don't have permission to create a batch account under this resource group</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.resourceGroup.required">
+        <source>Resource group is a required field</source>
+        <target state="new">Resource group is a required field</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.resourceGroup.willCreate">
+        <source>This resource group doesn't exist yet, and it will be created before batch account.</source>
+        <target state="new">This resource group doesn't exist yet, and it will be created before batch account.</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.storageAccount">
+        <source />
+      </trans-unit>
+      <trans-unit id="batch-account-create.storageAccount.missingSubscription">
+        <source>Please specify subscription and location before picking a storage account.</source>
+        <target state="new">Please specify subscription and location before picking a storage account.</target>
+      </trans-unit>
+      <trans-unit id="batch-account-create.subscription">
+        <source />
+      </trans-unit>
+      <trans-unit id="batch-account-create.subscription.required">
+        <source>Subscription is a required field</source>
+        <target state="new">Subscription is a required field</target>
+      </trans-unit>
+      <trans-unit id="blob-container-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="blob-container-picker.loading">
+        <source>Loading containers</source>
+        <target state="new">Loading containers</target>
+      </trans-unit>
+      <trans-unit id="browse-layout">
+        <source />
+      </trans-unit>
+      <trans-unit id="browse-layout.openedAdvancedFilter">
+        <source>Opened advanced filter blade</source>
+        <target state="new">Opened advanced filter blade</target>
+      </trans-unit>
+      <trans-unit id="certificate-references-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="certificate-references-picker.addOne">
+        <source>Add a certificate</source>
+        <target state="new">Add a certificate</target>
+      </trans-unit>
+      <trans-unit id="certificate-references-picker.duplicate">
+        <source>Cannot reference the same certificate twice {thumbprint}</source>
+        <target state="new">Cannot reference the same certificate twice {thumbprint}</target>
+      </trans-unit>
+      <trans-unit id="certificate-references-picker.noCertificates">
+        <source>No certificate(s) found for this batch account, please upload your certificate(s) first.</source>
+        <target state="new">No certificate(s) found for this batch account, please upload your certificate(s) first.</target>
+      </trans-unit>
+      <trans-unit id="common">
+        <source />
+      </trans-unit>
+      <trans-unit id="common.apply">
+        <source>Apply</source>
+        <target state="translated">Uygula</target>
+      </trans-unit>
+      <trans-unit id="common.back">
+        <source>Back</source>
+        <target state="new">Back</target>
+      </trans-unit>
+      <trans-unit id="common.configuration">
+        <source>Configuration</source>
+        <target state="translated">YAPILANDIRMA</target>
+      </trans-unit>
+      <trans-unit id="common.confirm">
+        <source>Confirm</source>
+        <target state="new">Confirm</target>
+      </trans-unit>
+      <trans-unit id="common.loading">
+        <source>Loading</source>
+        <target state="translated">Yükleniyor</target>
+      </trans-unit>
+      <trans-unit id="common.no">
+        <source>No</source>
+        <target state="translated">Hayır</target>
+      </trans-unit>
+      <trans-unit id="common.none">
+        <source>None</source>
+        <target state="translated">yok</target>
+      </trans-unit>
+      <trans-unit id="common.rebootAll">
+        <source>Reboot all</source>
+        <target state="new">Reboot all</target>
+      </trans-unit>
+      <trans-unit id="common.refresh">
+        <source>Refresh</source>
+        <target state="new">Refresh</target>
+      </trans-unit>
+      <trans-unit id="common.refreshing">
+        <source>Refreshing</source>
+        <target state="new">Refreshing</target>
+      </trans-unit>
+      <trans-unit id="common.required">
+        <source>Required</source>
+        <target state="new">Required</target>
+      </trans-unit>
+      <trans-unit id="common.updated">
+        <source>Updated</source>
+        <target state="new">Updated</target>
+      </trans-unit>
+      <trans-unit id="common.yes">
+        <source>Yes</source>
+        <target state="translated">Evet</target>
+      </trans-unit>
+      <trans-unit id="create-new-aad-app">
+        <source />
+      </trans-unit>
+      <trans-unit id="create-new-aad-app.create">
+        <source>Create</source>
+        <target state="new">Create</target>
+      </trans-unit>
+      <trans-unit id="create-new-aad-app.secret">
+        <source />
+      </trans-unit>
+      <trans-unit id="create-new-aad-app.secret.label">
+        <source>Secret</source>
+        <target state="new">Secret</target>
+      </trans-unit>
+      <trans-unit id="create-new-aad-app.title">
+        <source>Create a new application</source>
+        <target state="new">Create a new application</target>
+      </trans-unit>
+      <trans-unit id="custom-image-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="custom-image-picker.customImage">
+        <source />
+      </trans-unit>
+      <trans-unit id="custom-image-picker.customImage.label">
+        <source>Image</source>
+        <target state="new">Image</target>
+      </trans-unit>
+      <trans-unit id="custom-image-picker.errorLoading">
+        <source>Server encountered an error loading custom images, please try again later.</source>
+        <target state="new">Server encountered an error loading custom images, please try again later.</target>
+      </trans-unit>
+      <trans-unit id="custom-image-picker.noCustomImageAvailable">
+        <source>No custom images in the region for this account</source>
+        <target state="new">No custom images in the region for this account</target>
+      </trans-unit>
+      <trans-unit id="custom-image-picker.nodeAgentSku">
+        <source />
+      </trans-unit>
+      <trans-unit id="custom-image-picker.nodeAgentSku.label">
+        <source>Node agent</source>
+        <target state="new">Node agent</target>
+      </trans-unit>
+      <trans-unit id="datetime-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="datetime-picker.currentTimeZone">
+        <source>Current timezone</source>
+        <target state="new">Current timezone</target>
+      </trans-unit>
+      <trans-unit id="datetime-picker.date">
+        <source>date</source>
+        <target state="new">date</target>
+      </trans-unit>
+      <trans-unit id="datetime-picker.pickDate">
+        <source>Pick a date</source>
+        <target state="new">Pick a date</target>
+      </trans-unit>
+      <trans-unit id="datetime-picker.time">
+        <source>time</source>
+        <target state="new">time</target>
+      </trans-unit>
+      <trans-unit id="duration-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="duration-picker.unit">
+        <source />
       </trans-unit>
       <trans-unit id="duration-picker.unit.custom">
         <source>Custom (ISO format)</source>
         <target state="translated">Custom (ISO biçimi)</target>
       </trans-unit>
-      <trans-unit id="main-navigation.dashboard">
-        <source>Dash</source>
-        <target state="translated">Çizgi</target>
+      <trans-unit id="duration-picker.unit.days">
+        <source>Days</source>
+        <target state="translated">Gün</target>
       </trans-unit>
-      <trans-unit id="main-navigation.jobs">
-        <source>Jobs</source>
-        <target state="translated">Toplu İşlem işleri</target>
+      <trans-unit id="duration-picker.unit.hours">
+        <source>Hours</source>
+        <target state="translated">Saat</target>
       </trans-unit>
-      <trans-unit id="main-navigation.jobschedules">
-        <source>Job schedules</source>
-        <target state="translated">İş zamanlamaları</target>
+      <trans-unit id="duration-picker.unit.label">
+        <source>Unit</source>
+        <target state="translated">Birim</target>
       </trans-unit>
-      <trans-unit id="main-navigation.pools">
-        <source>Pools</source>
-        <target state="translated">Havuzlar</target>
+      <trans-unit id="duration-picker.unit.minutes">
+        <source>Minutes</source>
+        <target state="translated">Dakika</target>
       </trans-unit>
-      <trans-unit id="main-navigation.packages">
-        <source>Packages</source>
-        <target state="translated">Paketler</target>
+      <trans-unit id="duration-picker.unit.seconds">
+        <source>Seconds</source>
+        <target state="translated">Saniye</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.unlimited">
+        <source>Unlimited</source>
+        <target state="translated">Sınırsız</target>
+      </trans-unit>
+      <trans-unit id="edit-app-package-form">
+        <source />
+      </trans-unit>
+      <trans-unit id="edit-app-package-form.title">
+        <source>Edit application package references for pool {poolId}</source>
+        <target state="new">Edit application package references for pool {poolId}</target>
+      </trans-unit>
+      <trans-unit id="edit-app-package-form.updated">
+        <source>Application packages for {poolId} were updated</source>
+        <target state="new">Application packages for {poolId} were updated</target>
+      </trans-unit>
+      <trans-unit id="edit-certificate-references-form">
+        <source />
+      </trans-unit>
+      <trans-unit id="edit-certificate-references-form.title">
+        <source>Edit certificate references for pool {poolId}</source>
+        <target state="new">Edit certificate references for pool {poolId}</target>
+      </trans-unit>
+      <trans-unit id="edit-certificate-references-form.updated">
+        <source>Certificates for {poolId} were updated</source>
+        <target state="new">Certificates for {poolId} were updated</target>
+      </trans-unit>
+      <trans-unit id="editable-table">
+        <source />
+      </trans-unit>
+      <trans-unit id="editable-table.deleteRow">
+        <source>Delete row</source>
+        <target state="new">Delete row</target>
+      </trans-unit>
+      <trans-unit id="entity-command">
+        <source />
+      </trans-unit>
+      <trans-unit id="entity-command.confirm">
+        <source />
+      </trans-unit>
+      <trans-unit id="entity-command.confirm.multiple">
+        <source />
+      </trans-unit>
+      <trans-unit id="entity-command.confirm.multiple.title">
+        <source>Are you sure you want to {action} these {count} {type}</source>
+        <target state="new">Are you sure you want to {action} these {count} {type}</target>
+      </trans-unit>
+      <trans-unit id="entity-command.confirm.single">
+        <source />
+      </trans-unit>
+      <trans-unit id="entity-command.confirm.single.description">
+        <source>You are about to {action} {entityId}</source>
+        <target state="new">You are about to {action} {entityId}</target>
+      </trans-unit>
+      <trans-unit id="entity-command.confirm.single.title">
+        <source>Are you sure you want to {action} this {type}</source>
+        <target state="new">Are you sure you want to {action} this {type}</target>
+      </trans-unit>
+      <trans-unit id="entity-configuration">
+        <source />
+      </trans-unit>
+      <trans-unit id="entity-configuration.viewAsJSON">
+        <source>View as JSON</source>
+        <target state="new">View as JSON</target>
+      </trans-unit>
+      <trans-unit id="entity-configuration.viewClassic">
+        <source>Classic view</source>
+        <target state="new">Classic view</target>
+      </trans-unit>
+      <trans-unit id="file-explorer">
+        <source />
+      </trans-unit>
+      <trans-unit id="file-explorer.collapseAll">
+        <source>Collapse all</source>
+        <target state="translated">Tümünü Daralt</target>
+      </trans-unit>
+      <trans-unit id="file-explorer.noFiles">
+        <source>No files</source>
+        <target state="new">No files</target>
+      </trans-unit>
+      <trans-unit id="file-explorer.noPathMatch">
+        <source>No files found for "{path}"</source>
+        <target state="new">No files found for "{path}"</target>
+      </trans-unit>
+      <trans-unit id="file-explorer.path">
+        <source>Path</source>
+        <target state="translated">PATH</target>
+      </trans-unit>
+      <trans-unit id="file-explorer.unknownFile">
+        <source>Cannot find this file. Check the path.</source>
+        <target state="new">Cannot find this file. Check the path.</target>
+      </trans-unit>
+      <trans-unit id="file-group-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="file-group-picker.create">
+        <source>Create a new file group</source>
+        <target state="new">Create a new file group</target>
+      </trans-unit>
+      <trans-unit id="file-group-picker.uploading">
+        <source>Uploading file group</source>
+        <target state="new">Uploading file group</target>
+      </trans-unit>
+      <trans-unit id="file-group-picker.warning">
+        <source>This file group doesn't seem to exist. It will be created for you when the job is submitted.</source>
+        <target state="new">This file group doesn't seem to exist. It will be created for you when the job is submitted.</target>
+      </trans-unit>
+      <trans-unit id="file-viewer-container">
+        <source />
+      </trans-unit>
+      <trans-unit id="file-viewer-container.notAllowed">
+        <source>File {filename} cannot be accessed. Server returned forbidden error</source>
+        <target state="new">File {filename} cannot be accessed. Server returned forbidden error</target>
+      </trans-unit>
+      <trans-unit id="file-viewer-container.notFound">
+        <source>File {filename} doesn't exist.</source>
+        <target state="new">File {filename} doesn't exist.</target>
+      </trans-unit>
+      <trans-unit id="file-viewer-container.unkownFileType">
+        <source>This file is not a known extension. Do you still want to open it?</source>
+        <target state="new">This file is not a known extension. Do you still want to open it?</target>
+      </trans-unit>
+      <trans-unit id="form-footer">
+        <source />
+      </trans-unit>
+      <trans-unit id="form-footer.buttons">
+        <source />
+      </trans-unit>
+      <trans-unit id="form-footer.buttons.andClose">
+        <source>{action} and Close</source>
+        <target state="new">{action} and Close</target>
+      </trans-unit>
+      <trans-unit id="form-footer.buttons.cancel">
+        <source>Cancel</source>
+        <target state="translated">İptal</target>
+      </trans-unit>
+      <trans-unit id="form-footer.buttons.jsonEditor">
+        <source>Switch to JSON editor</source>
+        <target state="new">Switch to JSON editor</target>
+      </trans-unit>
+      <trans-unit id="form-footer.buttons.normalForm">
+        <source>Switch to classic form</source>
+        <target state="new">Switch to classic form</target>
+      </trans-unit>
+      <trans-unit id="form-footer.buttons.save">
+        <source>Save</source>
+        <target state="translated">Kaydet</target>
+      </trans-unit>
+      <trans-unit id="form-footer.buttons.select">
+        <source>Select</source>
+        <target state="new">Select</target>
+      </trans-unit>
+      <trans-unit id="gallery">
+        <source />
+      </trans-unit>
+      <trans-unit id="gallery.actions">
+        <source>Actions</source>
+        <target state="new">Actions</target>
+      </trans-unit>
+      <trans-unit id="gallery.myLibrary">
+        <source>My library</source>
+        <target state="new">My library</target>
+      </trans-unit>
+      <trans-unit id="gallery.recentTemplates">
+        <source>Recent templates</source>
+        <target state="new">Recent templates</target>
+      </trans-unit>
+      <trans-unit id="gallery.title">
+        <source>Gallery applications</source>
+        <target state="new">Gallery applications</target>
+      </trans-unit>
+      <trans-unit id="gallery.viewReadme">
+        <source>View readme</source>
+        <target state="new">View readme</target>
+      </trans-unit>
+      <trans-unit id="job-progress-status">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-progress-status.inaccurate">
+        <source>Task count might not be accurate in real time</source>
+        <target state="new">Task count might not be accurate in real time</target>
+      </trans-unit>
+      <trans-unit id="job-state">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.active">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.active.message">
+        <source>Job is currently running. Task can be scheduled.</source>
+        <target state="new">Job is currently running. Task can be scheduled.</target>
+      </trans-unit>
+      <trans-unit id="job-state.completed">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.completed.allTasksCompleted">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.completed.allTasksCompleted.message">
+        <source>Job completed successfully when all task completed</source>
+        <target state="translated">Tüm görevler tamamlandığında iş başarıyla tamamlandı</target>
+      </trans-unit>
+      <trans-unit id="job-state.completed.jmcomplete">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.completed.jmcomplete.message">
+        <source>Job completed successfully when the job manager task completed</source>
+        <target state="new">Job completed successfully when the job manager task completed</target>
+      </trans-unit>
+      <trans-unit id="job-state.completed.message">
+        <source>Job is completed. No more task will be accepted.</source>
+        <target state="new">Job is completed. No more task will be accepted.</target>
+      </trans-unit>
+      <trans-unit id="job-state.completed.taskfailed">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.completed.taskfailed.message">
+        <source>Job completed with a failure as one of the task failed.</source>
+        <target state="translated">Görevlerden biri başarısız olduğundan, iş bir hata ile sona erdi.</target>
+      </trans-unit>
+      <trans-unit id="job-state.completed.timeout">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.completed.timeout.message">
+        <source>Job timed out. Job has been running for longer than the provided limit.</source>
+        <target state="translated">İş zaman aşımına uğradı. İş belirlenen sınırdan daha uzun süredir yürütülüyor.</target>
+      </trans-unit>
+      <trans-unit id="job-state.completed.userTerminated">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.completed.userTerminated.message">
+        <source>Job was completed by the user</source>
+        <target state="new">Job was completed by the user</target>
+      </trans-unit>
+      <trans-unit id="job-state.deleting">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.deleting.message">
+        <source>Job is in the process of being deleted</source>
+        <target state="new">Job is in the process of being deleted</target>
+      </trans-unit>
+      <trans-unit id="job-state.disabled">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.disabled.message">
+        <source>Job is disabled. No task will run.</source>
+        <target state="new">Job is disabled. No task will run.</target>
+      </trans-unit>
+      <trans-unit id="job-state.disabling">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.disabling.message">
+        <source>Job is in the process of being disabled</source>
+        <target state="new">Job is in the process of being disabled</target>
+      </trans-unit>
+      <trans-unit id="job-state.enabling">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.enabling.message">
+        <source>Job is returning from disabled stated</source>
+        <target state="new">Job is returning from disabled stated</target>
+      </trans-unit>
+      <trans-unit id="job-state.terminating">
+        <source />
+      </trans-unit>
+      <trans-unit id="job-state.terminating.message">
+        <source>Job is terminating</source>
+        <target state="new">Job is terminating</target>
+      </trans-unit>
+      <trans-unit id="list-base">
+        <source />
+      </trans-unit>
+      <trans-unit id="list-base.filterApplied">
+        <source>New filter applied, {count} results</source>
+        <target state="new">New filter applied, {count} results</target>
+      </trans-unit>
+      <trans-unit id="list-base.filterCleared">
+        <source>Filter cleared, {count} results</source>
+        <target state="new">Filter cleared, {count} results</target>
+      </trans-unit>
+      <trans-unit id="location-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="location-picker.noLocationInSubscription">
+        <source>No locations available in subscription '{name}'</source>
+        <target state="new">No locations available in subscription '{name}'</target>
+      </trans-unit>
+      <trans-unit id="main-menu">
+        <source />
+      </trans-unit>
+      <trans-unit id="main-menu.help">
+        <source />
+      </trans-unit>
+      <trans-unit id="main-menu.help.label">
+        <source>Help</source>
+        <target state="translated">Yardım</target>
+      </trans-unit>
+      <trans-unit id="main-menu.help.privacyStatement">
+        <source>Privacy statement</source>
+        <target state="new">Privacy statement</target>
+      </trans-unit>
+      <trans-unit id="main-menu.help.reportIssue">
+        <source>Report issue</source>
+        <target state="new">Report issue</target>
+      </trans-unit>
+      <trans-unit id="main-menu.help.viewLicense">
+        <source>View license</source>
+        <target state="new">View license</target>
+      </trans-unit>
+      <trans-unit id="main-navigation">
+        <source />
       </trans-unit>
       <trans-unit id="main-navigation.certificates">
         <source>Certificates</source>
         <target state="translated">Sertifikalar</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.dashboard">
+        <source>Dash</source>
+        <target state="translated">Çizgi</target>
       </trans-unit>
       <trans-unit id="main-navigation.data">
         <source>Data</source>
@@ -57,9 +730,883 @@
         <source>Gallery</source>
         <target state="translated">Galeri</target>
       </trans-unit>
+      <trans-unit id="main-navigation.jobs">
+        <source>Jobs</source>
+        <target state="translated">Toplu İşlem işleri</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.jobschedules">
+        <source>Job schedules</source>
+        <target state="translated">İş zamanlamaları</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.label">
+        <source>Main navigation</source>
+        <target state="new">Main navigation</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.packages">
+        <source>Packages</source>
+        <target state="translated">Paketler</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.pools">
+        <source>Pools</source>
+        <target state="translated">Havuzlar</target>
+      </trans-unit>
       <trans-unit id="main-navigation.profile">
         <source>Profile</source>
         <target state="translated">Profil</target>
+      </trans-unit>
+      <trans-unit id="models">
+        <source />
+      </trans-unit>
+      <trans-unit id="models.container">
+        <source>Container</source>
+        <target state="new">Container</target>
+      </trans-unit>
+      <trans-unit id="models.node">
+        <source>Node</source>
+        <target state="new">Node</target>
+      </trans-unit>
+      <trans-unit id="models.nodes">
+        <source>Nodes</source>
+        <target state="new">Nodes</target>
+      </trans-unit>
+      <trans-unit id="models.pool">
+        <source>Pool</source>
+        <target state="new">Pool</target>
+      </trans-unit>
+      <trans-unit id="models.pools">
+        <source>Pools</source>
+        <target state="translated">Havuzlar</target>
+      </trans-unit>
+      <trans-unit id="models.storageAccount">
+        <source>Storage account</source>
+        <target state="translated">Depolama hesabı</target>
+      </trans-unit>
+      <trans-unit id="node-configuration">
+        <source />
+      </trans-unit>
+      <trans-unit id="node-configuration.allocation-time">
+        <source>Allocation time</source>
+        <target state="new">Allocation time</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.end-time">
+        <source>End time</source>
+        <target state="new">End time</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.exit-code">
+        <source>Exit code</source>
+        <target state="new">Exit code</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.external-ip">
+        <source>External ip</source>
+        <target state="new">External ip</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.id">
+        <source>ID</source>
+        <target state="translated">Kimlik</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.internal-ip">
+        <source>Internal ip</source>
+        <target state="new">Internal ip</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.is-dedicated">
+        <source>Is dedicated</source>
+        <target state="new">Is dedicated</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.last-boot-time">
+        <source>Last boot time</source>
+        <target state="translated">Son önyükleme zamanı</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.node-agent-version">
+        <source>Node agent version</source>
+        <target state="new">Node agent version</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.node-size">
+        <source>Node size</source>
+        <target state="new">Node size</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.retry-count">
+        <source>Retry count</source>
+        <target state="new">Retry count</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.run-time">
+        <source>Execution time</source>
+        <target state="new">Execution time</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.running-tasks-count">
+        <source>Running tasks</source>
+        <target state="new">Running tasks</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.scheduling-state">
+        <source>Scheduling state</source>
+        <target state="new">Scheduling state</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.start-task-completed">
+        <source>Completed in</source>
+        <target state="new">Completed in</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.start-task-execution">
+        <source>Start task execution</source>
+        <target state="new">Start task execution</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.start-task-not-started">
+        <source>Start task execution</source>
+        <target state="new">Start task execution</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.start-task-running">
+        <source>Running for</source>
+        <target state="new">Running for</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.start-time">
+        <source>Start time</source>
+        <target state="new">Start time</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.state">
+        <source>State</source>
+        <target state="new">State</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.state-transition-time">
+        <source>State transition time</source>
+        <target state="new">State transition time</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.total-tasks-run">
+        <source>Total task run</source>
+        <target state="new">Total task run</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.total-tasks-succeeded">
+        <source>Total succeessful tasks</source>
+        <target state="new">Total succeessful tasks</target>
+      </trans-unit>
+      <trans-unit id="node-configuration.url">
+        <source>URL</source>
+        <target state="translated">URL</target>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning">
+        <source />
+      </trans-unit>
+      <trans-unit id="partial-sort-warning.load-all">
+        <source>Load all (This might take a long time)</source>
+        <target state="new">Load all (This might take a long time)</target>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning.loading-all">
+        <source>Loading all entities. Please wait.</source>
+        <target state="new">Loading all entities. Please wait.</target>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning.manual-update">
+        <source>List won't be update automatically while sorting(Performance reason)</source>
+        <target state="new">List won't be update automatically while sorting(Performance reason)</target>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning.message">
+        <source>All entities have not been loaded, this is showing a partial sorting.</source>
+        <target state="new">All entities have not been loaded, this is showing a partial sorting.</target>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning.update">
+        <source>Update</source>
+        <target state="translated">Güncelleştir</target>
+      </trans-unit>
+      <trans-unit id="pool-commands">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-commands.resize">
+        <source>Resize</source>
+        <target state="new">Resize</target>
+      </trans-unit>
+      <trans-unit id="pool-commands.stopResize">
+        <source>Stop resize</source>
+        <target state="new">Stop resize</target>
+      </trans-unit>
+      <trans-unit id="pool-details">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-details.estimatedCost">
+        <source>Estimated cost of this pool at this current state</source>
+        <target state="new">Estimated cost of this pool at this current state</target>
+      </trans-unit>
+      <trans-unit id="pool-details.graphs">
+        <source>Graphs</source>
+        <target state="new">Graphs</target>
+      </trans-unit>
+      <trans-unit id="pool-details.openInNewWindow">
+        <source>Open in a new window</source>
+        <target state="new">Open in a new window</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-graphs.cpu">
+        <source>CPU</source>
+        <target state="new">CPU</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.diskIO">
+        <source>Disk IO</source>
+        <target state="new">Disk IO</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.diskUsage">
+        <source>Disk usage</source>
+        <target state="new">Disk usage</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.last">
+        <source>Last</source>
+        <target state="new">Last</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.memory">
+        <source>Memory</source>
+        <target state="new">Memory</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.network">
+        <source>Network</source>
+        <target state="new">Network</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.notEnabled">
+        <source>Cpu, memory, disk, etc.</source>
+        <target state="new">Cpu, memory, disk, etc.</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.timespan">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-graphs.timespan.10min">
+        <source>10 minutes</source>
+        <target state="new">10 minutes</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.timespan.1h">
+        <source>1 hour</source>
+        <target state="new">1 hour</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.timespan.24h">
+        <source>24 hours</source>
+        <target state="new">24 hours</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.timespan.7d">
+        <source>7 days</source>
+        <target state="new">7 days</target>
+      </trans-unit>
+      <trans-unit id="pool-graphs.timespan.label">
+        <source>Graphs timespan</source>
+        <target state="new">Graphs timespan</target>
+      </trans-unit>
+      <trans-unit id="pool-os-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-os-picker.category">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-os-picker.category.container">
+        <source>Container</source>
+        <target state="new">Container</target>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.category.dataScience">
+        <source>Data science</source>
+        <target state="new">Data science</target>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.category.distributions">
+        <source>Distributions</source>
+        <target state="new">Distributions</target>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.category.rendering">
+        <source>Graphics and rendering</source>
+        <target state="new">Graphics and rendering</target>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.containerConfiguration">
+        <source>Container configuration</source>
+        <target state="new">Container configuration</target>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.nodeAgentSelection">
+        <source>Based on your selection, node agent '{sku}' will be used</source>
+        <target state="new">Based on your selection, node agent '{sku}' will be used</target>
+      </trans-unit>
+      <trans-unit id="pool-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-picker.filterByID">
+        <source>Search by id</source>
+        <target state="new">Search by id</target>
+      </trans-unit>
+      <trans-unit id="pool-picker.filterByOS">
+        <source>Filter by OS</source>
+        <target state="translated">İşletim sistemine göre filtrele</target>
+      </trans-unit>
+      <trans-unit id="pool-picker.noneMatching">
+        <source>You don't have any pools matching the current filters.</source>
+        <target state="new">You don't have any pools matching the current filters.</target>
+      </trans-unit>
+      <trans-unit id="pool-picker.reset">
+        <source>Reset</source>
+        <target state="translated">Sıfırla</target>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.evaluationInterval">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.evaluationInterval.label">
+        <source>Formula evaluation interval</source>
+        <target state="new">Formula evaluation interval</target>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.resizeTimeout">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.resizeTimeout.label">
+        <source>Resize timeout</source>
+        <target state="new">Resize timeout</target>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.targetDedicatedNodes">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.targetDedicatedNodes.label">
+        <source>Dedicated nodes</source>
+        <target state="new">Dedicated nodes</target>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.targetLowPriorityNodes">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.targetLowPriorityNodes.label">
+        <source>Low priority nodes</source>
+        <target state="new">Low priority nodes</target>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.type">
+        <source />
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.type.autoscale">
+        <source>Autoscale</source>
+        <target state="new">Autoscale</target>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.type.fixed">
+        <source>Fixed size</source>
+        <target state="new">Fixed size</target>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.type.label">
+        <source>Scale type</source>
+        <target state="new">Scale type</target>
+      </trans-unit>
+      <trans-unit id="profile-button">
+        <source />
+      </trans-unit>
+      <trans-unit id="profile-button.about">
+        <source>About</source>
+        <target state="new">About</target>
+      </trans-unit>
+      <trans-unit id="profile-button.logout">
+        <source>Logout</source>
+        <target state="new">Logout</target>
+      </trans-unit>
+      <trans-unit id="profile-button.profile">
+        <source>Profile</source>
+        <target state="translated">Profil</target>
+      </trans-unit>
+      <trans-unit id="profile-button.report">
+        <source>Report a bug or feature request</source>
+        <target state="new">Report a bug or feature request</target>
+      </trans-unit>
+      <trans-unit id="profile-button.settings">
+        <source>Settings</source>
+        <target state="translated">Ayarlar</target>
+      </trans-unit>
+      <trans-unit id="profile-button.thirdPartyNotices">
+        <source>Third party notices</source>
+        <target state="new">Third party notices</target>
+      </trans-unit>
+      <trans-unit id="profile-button.viewLogs">
+        <source>View logs</source>
+        <target state="new">View logs</target>
+      </trans-unit>
+      <trans-unit id="profile-button.viewTheme">
+        <source>View theme colors</source>
+        <target state="new">View theme colors</target>
+      </trans-unit>
+      <trans-unit id="programatic-usage">
+        <source />
+      </trans-unit>
+      <trans-unit id="programatic-usage.authenticationType">
+        <source>Authentication type</source>
+        <target state="new">Authentication type</target>
+      </trans-unit>
+      <trans-unit id="programatic-usage.credentials">
+        <source>Credentials</source>
+        <target state="new">Credentials</target>
+      </trans-unit>
+      <trans-unit id="programatic-usage.setup">
+        <source>setup</source>
+        <target state="new">setup</target>
+      </trans-unit>
+      <trans-unit id="programatic-usage.title">
+        <source>Credentials and code samples for this Batch account</source>
+        <target state="new">Credentials and code samples for this Batch account</target>
+      </trans-unit>
+      <trans-unit id="rerun-task-form">
+        <source />
+      </trans-unit>
+      <trans-unit id="rerun-task-form.action">
+        <source>Rerun</source>
+        <target state="new">Rerun</target>
+      </trans-unit>
+      <trans-unit id="rerun-task-form.subtitle">
+        <source>This will delete the task and create a new one with the same id.</source>
+        <target state="new">This will delete the task and create a new one with the same id.</target>
+      </trans-unit>
+      <trans-unit id="rerun-task-form.title">
+        <source>Rerun task</source>
+        <target state="new">Rerun task</target>
+      </trans-unit>
+      <trans-unit id="resource-permission-button">
+        <source />
+      </trans-unit>
+      <trans-unit id="resource-permission-button.giveRole">
+        <source>Give {role} role</source>
+        <target state="new">Give {role} role</target>
+      </trans-unit>
+      <trans-unit id="resource-permission-button.none">
+        <source>None</source>
+        <target state="translated">yok</target>
+      </trans-unit>
+      <trans-unit id="resource-permission-button.permission">
+        <source>permission</source>
+        <target state="translated">İzin</target>
+      </trans-unit>
+      <trans-unit id="resource-permission-button.removeAccess">
+        <source>Remove access</source>
+        <target state="new">Remove access</target>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.add">
+        <source />
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.add.dragAndDrop">
+        <source>You can drag and drop files here to be uploaded automatically</source>
+        <target state="new">You can drag and drop files here to be uploaded automatically</target>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.add.fromStorage">
+        <source>Add from Azure Storage</source>
+        <target state="new">Add from Azure Storage</target>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.add.fromURL">
+        <source>Add from URL</source>
+        <target state="new">Add from URL</target>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.add.uploadFile">
+        <source>Upload file</source>
+        <target state="new">Upload file</target>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.blobPrefix">
+        <source>Blob prefix</source>
+        <target state="new">Blob prefix</target>
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.cloudFileDialog">
+        <source />
+      </trans-unit>
+      <trans-unit id="resourcefile-picker.cloudFileDialog.title">
+        <source>Pick file(s) from storage account</source>
+        <target state="new">Pick file(s) from storage account</target>
+      </trans-unit>
+      <trans-unit id="settings">
+        <source />
+      </trans-unit>
+      <trans-unit id="settings.gallerySettings">
+        <source>Gallery settings</source>
+        <target state="new">Gallery settings</target>
+      </trans-unit>
+      <trans-unit id="settings.general">
+        <source>General</source>
+        <target state="translated">Genel</target>
+      </trans-unit>
+      <trans-unit id="settings.reset">
+        <source>Reset to default settings</source>
+        <target state="new">Reset to default settings</target>
+      </trans-unit>
+      <trans-unit id="settings.saved">
+        <source>Saved</source>
+        <target state="translated">Kaydedildi</target>
+      </trans-unit>
+      <trans-unit id="settings.title">
+        <source>Settings</source>
+        <target state="translated">Ayarlar</target>
+      </trans-unit>
+      <trans-unit id="storage-error-display">
+        <source />
+      </trans-unit>
+      <trans-unit id="storage-error-display.isClassic">
+        <source>Linked storage account is a classic storage account and cannot be used for this feature.</source>
+        <target state="new">Linked storage account is a classic storage account and cannot be used for this feature.</target>
+      </trans-unit>
+      <trans-unit id="storage-error-display.noAutoStorage">
+        <source>No linked storage account configured for this Batch account. This is required for managing file groups.</source>
+        <target state="new">No linked storage account configured for this Batch account. This is required for managing file groups.</target>
+      </trans-unit>
+      <trans-unit id="task-commands">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-commands.delete">
+        <source>Delete</source>
+        <target state="translated">Sil</target>
+      </trans-unit>
+      <trans-unit id="task-commands.rerun">
+        <source>Re-run</source>
+        <target state="new">Re-run</target>
+      </trans-unit>
+      <trans-unit id="task-commands.terminate">
+        <source>Terminate</source>
+        <target state="new">Terminate</target>
+      </trans-unit>
+      <trans-unit id="task-configuration">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.affinityId">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.affinityId.label">
+        <source>Affinity id</source>
+        <target state="new">Affinity id</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages.application">
+        <source>Application</source>
+        <target state="translated">Uygulama</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages.label">
+        <source>Application packages</source>
+        <target state="new">Application packages</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages.none">
+        <source>This task contains no application package references</source>
+        <target state="new">This task contains no application package references</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages.summary">
+        <source>{count} application package reference</source>
+        <target state="new">{count} application package reference</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages.version">
+        <source>Version</source>
+        <target state="translated">SÜRÜM</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.commandLine">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.commandLine.label">
+        <source>Command line</source>
+        <target state="new">Command line</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.computeNode">
+        <source>Compute node</source>
+        <target state="new">Compute node</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.creationTime">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.creationTime.label">
+        <source>Creation time</source>
+        <target state="new">Creation time</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.displayName">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.displayName.label">
+        <source>Display name</source>
+        <target state="translated">Görünen Ad</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.default">
+        <source>Default</source>
+        <target state="translated">Varsayılan</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.fileUploadError">
+        <source>On file upload error</source>
+        <target state="new">On file upload error</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.label">
+        <source>Exit conditions</source>
+        <target state="new">Exit conditions</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.noOpExitCodes">
+        <source>Exit codes that do nothing</source>
+        <target state="new">Exit codes that do nothing</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.onSchedulingError">
+        <source>On scheduling error</source>
+        <target state="new">On scheduling error</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.terminateJobExitCodes">
+        <source>Exit codes that terminate the job</source>
+        <target state="new">Exit codes that terminate the job</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.general">
+        <source>General</source>
+        <target state="translated">Genel</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.id">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.id.label">
+        <source>ID</source>
+        <target state="translated">Kimlik</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.lastModified">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.lastModified.label">
+        <source>Last modified</source>
+        <target state="new">Last modified</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings.coordinationCommandLine">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings.coordinationCommandLine.label">
+        <source>Coordination command line</source>
+        <target state="new">Coordination command line</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings.label">
+        <source>Multi instance settings</source>
+        <target state="new">Multi instance settings</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings.numberOfInstances">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings.numberOfInstances.label">
+        <source>Number of instances</source>
+        <target state="new">Number of instances</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.nodeId">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.nodeId.label">
+        <source>Node ID</source>
+        <target state="new">Node ID</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.nodeUrl">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.nodeUrl.label">
+        <source>Node URL</source>
+        <target state="new">Node URL</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.outputFiles">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.outputFiles.destination">
+        <source>Destination</source>
+        <target state="new">Destination</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.outputFiles.label">
+        <source>Output files</source>
+        <target state="new">Output files</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.outputFiles.pattern">
+        <source>Pattern</source>
+        <target state="new">Pattern</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.outputFiles.uploadWhen">
+        <source>Upload when</source>
+        <target state="new">Upload when</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.pool">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.pool.label">
+        <source>Pool</source>
+        <target state="new">Pool</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.previousState">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.previousState.label">
+        <source>Previous state</source>
+        <target state="new">Previous state</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.previousStateTransitionTime">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.previousStateTransitionTime.label">
+        <source>Previous state transition time</source>
+        <target state="new">Previous state transition time</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.state">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.state.label">
+        <source>State</source>
+        <target state="new">State</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.stateTransitionTime">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.stateTransitionTime.label">
+        <source>State transition time</source>
+        <target state="new">State transition time</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.taskRootDir">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.taskRootDir.label">
+        <source>Task root directory</source>
+        <target state="translated">Görev kök dizini</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.taskRootDirUrl">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.taskRootDirUrl.label">
+        <source>Task root directory URL</source>
+        <target state="new">Task root directory URL</target>
+      </trans-unit>
+      <trans-unit id="task-configuration.userIdentity">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-configuration.userIdentity.label">
+        <source>User identity</source>
+        <target state="new">User identity</target>
+      </trans-unit>
+      <trans-unit id="task-dependency-browser">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-dependency-browser.no-dependency">
+        <source>This task doesn't depend on any other tasks</source>
+        <target state="new">This task doesn't depend on any other tasks</target>
+      </trans-unit>
+      <trans-unit id="task-node-info">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-node-info.navigateToNode">
+        <source>Navigate to compute node</source>
+        <target state="new">Navigate to compute node</target>
+      </trans-unit>
+      <trans-unit id="task-node-info.navigateToPool">
+        <source>Navigate to pool</source>
+        <target state="new">Navigate to pool</target>
+      </trans-unit>
+      <trans-unit id="task-node-info.nodeNotFound">
+        <source>Compute node doesn't exist anymore</source>
+        <target state="new">Compute node doesn't exist anymore</target>
+      </trans-unit>
+      <trans-unit id="task-node-info.poolNotFound">
+        <source>Pool doesn't exist anymore</source>
+        <target state="new">Pool doesn't exist anymore</target>
+      </trans-unit>
+      <trans-unit id="task-resource-files">
+        <source />
+      </trans-unit>
+      <trans-unit id="task-resource-files.fileMode">
+        <source>File mode</source>
+        <target state="new">File mode</target>
+      </trans-unit>
+      <trans-unit id="task-resource-files.filePath">
+        <source>Node file path</source>
+        <target state="new">Node file path</target>
+      </trans-unit>
+      <trans-unit id="task-resource-files.httpUrl">
+        <source>Http url</source>
+        <target state="new">Http url</target>
+      </trans-unit>
+      <trans-unit id="task-resource-files.none">
+        <source>This task contains no resource files</source>
+        <target state="new">This task contains no resource files</target>
+      </trans-unit>
+      <trans-unit id="time-range-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="time-range-picker.customRange">
+        <source>Custom range</source>
+        <target state="new">Custom range</target>
+      </trans-unit>
+      <trans-unit id="time-range-picker.errors">
+        <source />
+      </trans-unit>
+      <trans-unit id="time-range-picker.errors.invalidRange">
+        <source>Start time must be less than end time</source>
+        <target state="new">Start time must be less than end time</target>
+      </trans-unit>
+      <trans-unit id="time-range-picker.errors.required">
+        <source>At least start time or end time must be provided</source>
+        <target state="new">At least start time or end time must be provided</target>
+      </trans-unit>
+      <trans-unit id="time-range-picker.quickRange">
+        <source>Quick range</source>
+        <target state="new">Quick range</target>
+      </trans-unit>
+      <trans-unit id="time-range-picker.timeRange">
+        <source>Time range</source>
+        <target state="new">Time range</target>
+      </trans-unit>
+      <trans-unit id="timezone-dropdown">
+        <source />
+      </trans-unit>
+      <trans-unit id="timezone-dropdown.tooltip">
+        <source>Select the timezone for dates</source>
+        <target state="new">Select the timezone for dates</target>
+      </trans-unit>
+      <trans-unit id="user-account-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="user-account-picker.gid">
+        <source>User group id</source>
+        <target state="new">User group id</target>
+      </trans-unit>
+      <trans-unit id="user-account-picker.linuxConfiguration">
+        <source>Linux specific configuration</source>
+        <target state="new">Linux specific configuration</target>
+      </trans-unit>
+      <trans-unit id="user-account-picker.loginMode">
+        <source>Login mode</source>
+        <target state="new">Login mode</target>
+      </trans-unit>
+      <trans-unit id="user-account-picker.password">
+        <source>Password</source>
+        <target state="translated">Parola</target>
+      </trans-unit>
+      <trans-unit id="user-account-picker.runAsAdmin">
+        <source>Run as admin</source>
+        <target state="new">Run as admin</target>
+      </trans-unit>
+      <trans-unit id="user-account-picker.sshPrivateKey">
+        <source>SSH private key</source>
+        <target state="new">SSH private key</target>
+      </trans-unit>
+      <trans-unit id="user-account-picker.uid">
+        <source>User id</source>
+        <target state="new">User id</target>
+      </trans-unit>
+      <trans-unit id="user-account-picker.username">
+        <source>Username</source>
+        <target state="translated">Kullanıcı Adı</target>
+      </trans-unit>
+      <trans-unit id="user-account-picker.windowsConfiguration">
+        <source>Windows specific configuration</source>
+        <target state="new">Windows specific configuration</target>
+      </trans-unit>
+      <trans-unit id="user-accounts-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="user-accounts-picker.addOne">
+        <source>Add a user account</source>
+        <target state="new">Add a user account</target>
+      </trans-unit>
+      <trans-unit id="user-accounts-picker.duplicate">
+        <source>Cannot have 2 users with the same name '{username}'</source>
+        <target state="new">Cannot have 2 users with the same name '{username}'</target>
+      </trans-unit>
+      <trans-unit id="virtual-network-picker">
+        <source />
+      </trans-unit>
+      <trans-unit id="virtual-network-picker.noneAvailable">
+        <source>There are no virtual networks available under subscription '{subscriptionId}' and location '{location}'.</source>
+        <target state="new">There are no virtual networks available under subscription '{subscriptionId}' and location '{location}'.</target>
+      </trans-unit>
+      <trans-unit id="virtual-network-picker.notArm">
+        <source>Can't use VNET when using a local batch account</source>
+        <target state="new">Can't use VNET when using a local batch account</target>
+      </trans-unit>
+      <trans-unit id="virtual-network-picker.subnet">
+        <source>Subnet</source>
+        <target state="new">Subnet</target>
+      </trans-unit>
+      <trans-unit id="virtual-network-picker.virtualNetwork">
+        <source>Virtual network</source>
+        <target state="new">Virtual network</target>
       </trans-unit>
     </body>
   </file>
