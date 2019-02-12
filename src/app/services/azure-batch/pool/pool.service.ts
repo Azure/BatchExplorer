@@ -99,14 +99,6 @@ export class PoolService implements OnDestroy {
         }
     }
 
-    public _createListView(options: ListOptionsAttributes = {}): ListView<Pool, PoolListParams> {
-        return new ListView({
-            cache: () => this._cache,
-            getter: this._listGetter,
-            initialOptions: options,
-        });
-    }
-
     public refresh() {
         return this.listView.fetchAll();
     }
@@ -206,6 +198,14 @@ export class PoolService implements OnDestroy {
 
     public disableAutoScale(poolId: string) {
         return this.http.post(`/pools/${poolId}/disableautoscale`, null);
+    }
+
+    private _createListView(options: ListOptionsAttributes = {}): ListView<Pool, PoolListParams> {
+        return new ListView({
+            cache: () => this._cache,
+            getter: this._listGetter,
+            initialOptions: options,
+        });
     }
 
     private _parseAutoScaleResults(results: string): NameValuePair[] {

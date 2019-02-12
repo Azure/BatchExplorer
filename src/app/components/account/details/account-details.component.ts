@@ -60,7 +60,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.poolData = this.poolService._createListView();
+        this.poolData = this.poolService.listView;
         this.jobData = this.jobService.listView();
         this.applicationData = this.applicationService.listView();
     }
@@ -83,7 +83,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
-        this.poolData.dispose();
         this.jobData.dispose();
         this.applicationData.dispose();
     }
