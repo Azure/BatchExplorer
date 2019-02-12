@@ -5,6 +5,7 @@ import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { MainApplicationMenu } from "client/menu";
 import { app, protocol, session, shell } from "electron";
 import { autoUpdater } from "electron-updater";
+import * as path from "path";
 import { Constants } from "./client-constants";
 import { BatchExplorerClientModule, initializeServices } from "./client.module";
 import { ClientLocaleService, listenToSelectCertifcateEvent } from "./core";
@@ -15,6 +16,9 @@ function initAutoUpdate() {
     autoUpdater.autoDownload = true;
     autoUpdater.allowDowngrade = true;
     autoUpdater.logger = log;
+    if (Constants.isDev) {
+        autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
+    }
 }
 
 function setupSingleInstance(batchExplorerApp: BatchExplorerApplication) {
