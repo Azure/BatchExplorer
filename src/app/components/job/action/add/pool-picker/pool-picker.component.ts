@@ -55,7 +55,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         private poolOsService: PoolOsService,
         private vmSizeService: VmSizeService,
         private changeDetector: ChangeDetectorRef) {
-        this.poolsData = this.poolService.listView();
+        this.poolsData = this.poolService._createListView();
         this.filters = formBuilder.group({
             id: "",
             offer: null,

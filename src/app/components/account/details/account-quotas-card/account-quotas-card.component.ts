@@ -2,13 +2,12 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnDestroy, OnInit,
 } from "@angular/core";
 import { ElectronShell } from "@batch-flask/electron";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { BatchAccount } from "app/models";
+import { BatchQuotas, EMPTY_QUOTAS, QuotaService } from "app/services";
+import { Constants } from "common";
 import { Subscription } from "rxjs";
 
-import { BatchAccount, BatchQuotas } from "app/models";
-import { QuotaService } from "app/services";
-
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
-import { Constants } from "common";
 import "./account-quotas-card.scss";
 
 @Component({
@@ -21,8 +20,8 @@ export class AccountQuotasCardComponent implements OnDestroy, OnInit {
 
     public bufferValue = 100;
 
-    public quotas: BatchQuotas = new BatchQuotas();
-    public use: BatchQuotas = new BatchQuotas();
+    public quotas: BatchQuotas = EMPTY_QUOTAS;
+    public use: BatchQuotas = EMPTY_QUOTAS;
     public loadingUse = true;
 
     private _quotaSub: Subscription;

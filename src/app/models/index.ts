@@ -13,7 +13,6 @@ export * from "./auto-user";
 export * from "./autoscale-formula";
 export * from "./azure-batch";
 export * from "./batch-account";
-export * from "./batch-quotas";
 export * from "./batch-software-license";
 export * from "./blob-container";
 export * from "./certificate-reference";

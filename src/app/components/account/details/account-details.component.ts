@@ -60,7 +60,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.poolData = this.poolService.listView();
+        this.poolData = this.poolService._createListView();
         this.jobData = this.jobService.listView();
         this.applicationData = this.applicationService.listView();
     }
