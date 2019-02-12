@@ -17,7 +17,7 @@ import { ModelUtils } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
 import { Observable, Subject, of, throwError } from "rxjs";
-import { catchError, map, switchMap } from "rxjs/operators";
+import { catchError, map, publishReplay, refCount, switchMap } from "rxjs/operators";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 
 export interface PoolListParams { }
@@ -60,11 +60,17 @@ export class PoolService implements OnDestroy {
 
         this.listView = this._createListView();
 
+        this.onPoolAdded.subscribe((poolId) => {
+            this.listView.loadNewItem(this.get(poolId));
+        });
+
         this.pools = new Observable((observer) => {
             const sub = this.listView.fetchAll().subscribe(observer);
             return sub;
         }).pipe(
             switchMap(() => this.listView.items),
+            publishReplay(1),
+            refCount(),
         );
     }
 

@@ -111,8 +111,5 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
         this.jobData.setOptions(this.initialOptions);
         this.jobData.fetchNext();
-
-        this.poolData.setOptions(this.initialOptions);
-        this.poolData.fetchNext();
     }
 }

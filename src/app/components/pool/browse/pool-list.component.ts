@@ -66,9 +66,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
             this.status = status;
         });
 
-        poolService.onPoolAdded.pipe(takeUntil(this._destroy)).subscribe((poolId) => {
-            this.data.loadNewItem(poolService.get(poolId));
-        });
         this.data.items.pipe(takeUntil(this._destroy)).subscribe((pools) => {
             this.pools = pools;
             this.changeDetector.markForCheck();
