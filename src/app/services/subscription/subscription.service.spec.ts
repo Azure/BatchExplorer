@@ -84,7 +84,7 @@ describe("SubscriptionService", () => {
                 {
                     provide: BatchExplorerService, useValue: {
                         azureEnvironment: {
-                            armUrl: "https://management.azure.com/",
+                            arm: "https://management.azure.com/",
                         },
                     },
                 },
