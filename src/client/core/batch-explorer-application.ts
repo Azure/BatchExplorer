@@ -21,7 +21,7 @@ import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
-import { AADService, AuthenticationState, AuthenticationWindow, AuthorizeResponseError } from "./aad";
+import { AADService, AuthenticationState, AuthenticationWindow, LogoutError } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
 
@@ -92,8 +92,12 @@ export class BatchExplorerApplication {
         this._initializer.init();
 
         this._setCommonHeaders();
-        this.aadService.login().catch((e: AuthorizeResponseError) => {
+        this.aadService.login().catch((e) => {
+            if (e instanceof LogoutError) {
+                return;
+            }
             dialog.showMessageBox({
+                title: "Error during login",
                 type: "error",
                 message: e.toString(),
             });

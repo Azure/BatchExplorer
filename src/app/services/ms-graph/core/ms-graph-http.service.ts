@@ -39,7 +39,7 @@ export class MsGraphHttpService extends HttpService {
                 }
             }),
             flatMap((account: ArmBatchAccount) => {
-                return this.adal.accessTokenData(account.subscription.tenantId, this.serviceUrl);
+                return this.adal.accessTokenData(account.subscription.tenantId, "msGraph");
             }),
             flatMap((accessToken) => {
                 options = this.addAuthorizationHeader(options, accessToken);

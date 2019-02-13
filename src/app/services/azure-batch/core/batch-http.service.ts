@@ -18,7 +18,7 @@ export class InvalidAccountError extends Error {
 @Injectable({providedIn: "root"})
 export class AzureBatchHttpService extends HttpService {
     public get serviceUrl() {
-        return this.batchExplorer.azureEnvironment.batchUrl;
+        return this.batchExplorer.azureEnvironment.batch;
     }
 
     constructor(
@@ -72,7 +72,7 @@ export class AzureBatchHttpService extends HttpService {
 
     private _setupRequestForArm(account: ArmBatchAccount, options) {
         const tenantId = account.subscription.tenantId;
-        return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
+        return this.adal.accessTokenData(tenantId, "batch").pipe(
             map((accessToken) => this.addAuthorizationHeader(options, accessToken)),
         );
     }
