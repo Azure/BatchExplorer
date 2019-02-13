@@ -56,29 +56,31 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
         this.updateReady = this._status.pipe(map(x => x === UpdateStatus.Ready));
 
         autoUpdater.on("checking-for-update", (info) => {
-            console.log("Checking for dem update", info);
             this._status.next(UpdateStatus.Checking);
         });
 
         autoUpdater.on("update-available", (info) => {
-            console.log("update-available", info);
+            this._downloadProgress.next({
+                bytesPerSecond: 0,
+                delta: 0,
+                total: 0,
+                transferred: 0,
+                percent: 0,
+            });
             this._status.next(UpdateStatus.Downloading);
             this.updateInfo = info;
         });
 
         autoUpdater.on("download-progress", (progress) => {
-            console.log("download-progress", progress);
             this._downloadProgress.next(progress);
             this._status.next(UpdateStatus.Downloading);
         });
 
         autoUpdater.on("update-downloaded", (info) => {
-            console.log("update-downloaded", info);
             this._status.next(UpdateStatus.Ready);
         });
 
         autoUpdater.on("update-not-available", (info) => {
-            console.log("update-not-available", info);
             this._downloadProgress.next(null);
             this._status.next(UpdateStatus.NotAvailable);
         });

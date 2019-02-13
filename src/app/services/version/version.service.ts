@@ -38,7 +38,7 @@ export class VersionService implements OnDestroy {
         this.updateChannel = this._updateChannel.asObservable();
 
         if (this.versionType === VersionType.Dev) {
-            // this.autoUpdateService.disable();
+            this.autoUpdateService.disable();
         }
 
         this._sub = settingsService.watch("update").subscribe((settings) => {

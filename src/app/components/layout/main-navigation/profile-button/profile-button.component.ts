@@ -34,6 +34,8 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     public currentUserName: string = "";
     public updateStatus: UpdateStatus;
 
+    public downloadProgress: number;
+
     private _destroy = new Subject();
 
     constructor(
@@ -62,6 +64,10 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
         this.autoUpdateService.status.pipe(takeUntil(this._destroy)).subscribe((status) => {
             this.updateStatus = status;
+            this.changeDetector.markForCheck();
+        });
+        this.autoUpdateService.downloadProgress.pipe(takeUntil(this._destroy)).subscribe((progress) => {
+            this.downloadProgress = progress.percent;
             this.changeDetector.markForCheck();
         });
     }
