@@ -7,7 +7,7 @@ export class MockUserConfigurationService<T = any> extends UserConfigurationServ
             config: new BehaviorSubject<T>(config as any),
             save: () => Promise.resolve(),
         };
-        super(store, {} as any);
+        super(store);
     }
 
     public asProvider() {
