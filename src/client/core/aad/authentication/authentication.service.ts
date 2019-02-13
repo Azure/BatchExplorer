@@ -156,7 +156,7 @@ export class AuthenticationService {
             scope: "user_impersonation+openid",
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
-            resource: this.app.properties.azureEnvironment.armUrl,
+            resource: this.app.properties.azureEnvironment.arm,
         };
 
         if (silent) {

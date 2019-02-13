@@ -74,7 +74,7 @@ export class AzureHttpService {
     }
 
     public get baseUrl() {
-        return this.batchExplorer.azureEnvironment.armUrl;
+        return this.batchExplorer.azureEnvironment.arm;
     }
 
     public get<T>(subscription: SubscriptionOrTenant, uri: string, options?: HttpRequestOptions): Observable<T> {

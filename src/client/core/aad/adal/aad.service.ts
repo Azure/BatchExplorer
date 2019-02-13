@@ -1,6 +1,7 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { AccessToken, AccessTokenCache, DataStore, ServerError } from "@batch-flask/core";
+import { AADResourceName } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BlIpcMain } from "client/core/bl-ipc-main";
@@ -13,7 +14,7 @@ import { Deferred } from "common/deferred";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
-   AccessTokenService,
+    AccessTokenService,
 } from "../access-token";
 import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError } from "../authentication";
 import { AADUser } from "./aad-user";
@@ -114,7 +115,7 @@ export class AADService {
         await this.userAuthorization.logout();
     }
 
-    public async accessTokenFor(tenantId: string, resource?: string) {
+    public async accessTokenFor(tenantId: string, resource?: AADResourceName) {
         return this.accessTokenData(tenantId, resource).then(x => x.access_token);
     }
 
@@ -123,8 +124,8 @@ export class AADService {
      * @param tenantId
      * @param resource
      */
-    public async accessTokenData(tenantId: string, resource?: string): Promise<AccessToken> {
-        resource = resource || this._getDefaultResource();
+    public async accessTokenData(tenantId: string, resource?: AADResourceName): Promise<AccessToken> {
+        resource = resource || "arm";
         if (this._tokenCache.hasToken(tenantId, resource)) {
             const token = this._tokenCache.getToken(tenantId, resource);
             if (!token.expireInLess(Constants.AAD.refreshMargin)) {
@@ -132,10 +133,6 @@ export class AADService {
             }
         }
         return this._retrieveNewAccessToken(tenantId, resource);
-    }
-
-    private _getDefaultResource() {
-        return this.properties.azureEnvironment.armUrl;
     }
 
     /**
@@ -158,7 +155,7 @@ export class AADService {
      * Will set the currentAccesToken.
      * @return Observable with access token object
      */
-    private async _retrieveNewAccessToken(tenantId: string, resource: string): Promise<AccessToken> {
+    private async _retrieveNewAccessToken(tenantId: string, resource: AADResourceName): Promise<AccessToken> {
         const token = this._tokenCache.getToken(tenantId, resource);
         if (token && token.refresh_token) {
             return this._useRefreshToken(tenantId, resource, token.refresh_token);
@@ -181,7 +178,7 @@ export class AADService {
     /**
      * Load a new access token from the authorization code given at login
      */
-    private async _redeemNewAccessToken(tenantId: string, resource: string, forceReLogin = false) {
+    private async _redeemNewAccessToken(tenantId: string, resource: AADResourceName, forceReLogin = false) {
         const defer = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
 
         try {
@@ -215,7 +212,10 @@ export class AADService {
      * @param resource Resource to access
      * @param refreshToken Refresh token
      */
-    private async _useRefreshToken(tenantId: string, resource: string, refreshToken: string): Promise<AccessToken> {
+    private async _useRefreshToken(
+        tenantId: string,
+        resource: AADResourceName,
+        refreshToken: string): Promise<AccessToken> {
         try {
             const token = await this._accessTokenService.refresh(resource, tenantId, refreshToken);
             this._processAccessToken(tenantId, resource, token);
@@ -251,7 +251,7 @@ export class AADService {
             Authorization: `${token.token_type} ${token.access_token}`,
         };
         const options = { headers };
-        const url = `${this.properties.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
+        const url = `${this.properties.azureEnvironment.arm}tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
         log.info("Listing tenants response", response.status, response.statusText);
         const { value } = await response.json();
@@ -273,11 +273,10 @@ export class AADService {
         }
     }
 
-    private _resources() {
-        const env = this.properties.azureEnvironment;
+    private _resources(): AADResourceName[] {
         return [
-            env.armUrl,
-            env.batchUrl,
+            "arm",
+            "batch",
         ];
     }
 }
