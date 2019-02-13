@@ -67,7 +67,11 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
             this.changeDetector.markForCheck();
         });
         this.autoUpdateService.downloadProgress.pipe(takeUntil(this._destroy)).subscribe((progress) => {
-            this.downloadProgress = progress.percent;
+            if (progress) {
+                this.downloadProgress = progress.percent;
+            } else {
+                this.downloadProgress = 0;
+            }
             this.changeDetector.markForCheck();
         });
     }
