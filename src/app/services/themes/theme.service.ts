@@ -10,8 +10,8 @@ import { FileSystemService } from "@batch-flask/electron";
 import { NotificationService } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
+import { BEUserConfiguration } from "common";
 import { filter, takeUntil } from "rxjs/operators";
-import { BEUserConfiguration } from "../user-configuration";
 import { Theme } from "./theme.model";
 
 export class ThemeNotFoundError extends Error {

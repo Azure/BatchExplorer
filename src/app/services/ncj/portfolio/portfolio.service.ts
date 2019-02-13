@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { GlobalStorage, UserConfigurationService } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
-import { BEUserDesktopConfiguration } from "app/services/user-configuration";
+import { BEUserDesktopConfiguration } from "common";
 import { Observable, combineLatest, of } from "rxjs";
 import {
     distinctUntilChanged, map, publishReplay, refCount, switchMap, take,
