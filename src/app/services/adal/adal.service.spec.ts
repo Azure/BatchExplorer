@@ -5,7 +5,7 @@ import { BehaviorSubject } from "rxjs";
 import { F } from "test/utils";
 
 const tenant1 = "tenant-1";
-const resource1 = "http://example.com";
+const resource1 = "batch";
 const token1 = new AccessToken({
     access_token: "sometoken",
     expires_on: DateTime.local().plus({hours: 1}).toJSDate(),
