@@ -1,7 +1,7 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { AccessToken, AccessTokenCache, DataStore, ServerError } from "@batch-flask/core";
-import { AADResourceType } from "@batch-flask/core/azure-environment";
+import { AADResourceName } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BlIpcMain } from "client/core/bl-ipc-main";
@@ -115,7 +115,7 @@ export class AADService {
         await this.userAuthorization.logout();
     }
 
-    public async accessTokenFor(tenantId: string, resource?: AADResourceType) {
+    public async accessTokenFor(tenantId: string, resource?: AADResourceName) {
         return this.accessTokenData(tenantId, resource).then(x => x.access_token);
     }
 
@@ -124,7 +124,7 @@ export class AADService {
      * @param tenantId
      * @param resource
      */
-    public async accessTokenData(tenantId: string, resource?: AADResourceType): Promise<AccessToken> {
+    public async accessTokenData(tenantId: string, resource?: AADResourceName): Promise<AccessToken> {
         resource = resource || "arm";
         if (this._tokenCache.hasToken(tenantId, resource)) {
             const token = this._tokenCache.getToken(tenantId, resource);
@@ -155,7 +155,7 @@ export class AADService {
      * Will set the currentAccesToken.
      * @return Observable with access token object
      */
-    private async _retrieveNewAccessToken(tenantId: string, resource: AADResourceType): Promise<AccessToken> {
+    private async _retrieveNewAccessToken(tenantId: string, resource: AADResourceName): Promise<AccessToken> {
         const token = this._tokenCache.getToken(tenantId, resource);
         if (token && token.refresh_token) {
             return this._useRefreshToken(tenantId, resource, token.refresh_token);
@@ -178,7 +178,7 @@ export class AADService {
     /**
      * Load a new access token from the authorization code given at login
      */
-    private async _redeemNewAccessToken(tenantId: string, resource: AADResourceType, forceReLogin = false) {
+    private async _redeemNewAccessToken(tenantId: string, resource: AADResourceName, forceReLogin = false) {
         console.log("_redeemNewAccessToken", resource);
 
         const defer = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
@@ -217,7 +217,7 @@ export class AADService {
      */
     private async _useRefreshToken(
         tenantId: string,
-        resource: AADResourceType,
+        resource: AADResourceName,
         refreshToken: string): Promise<AccessToken> {
         try {
             const token = await this._accessTokenService.refresh(resource, tenantId, refreshToken);
@@ -276,7 +276,7 @@ export class AADService {
         }
     }
 
-    private _resources(): AADResourceType[] {
+    private _resources(): AADResourceName[] {
         return [
             "arm",
             "batch",

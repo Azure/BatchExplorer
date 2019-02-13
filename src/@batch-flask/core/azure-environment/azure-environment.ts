@@ -1,10 +1,5 @@
 export interface AADResources {
     /**
-     * Url used for authentication
-     */
-    aad: string;
-
-    /**
      * Arm endpoint
      */
     arm: string;
@@ -30,11 +25,16 @@ export interface AADResources {
     appInsights: string;
 }
 
-export type AADResourceType = keyof AADResources;
+export type AADResourceName = keyof AADResources;
 
 export interface AzureEnvironmentAttributes extends AADResources {
     id: string;
     name: string;
+
+    /**
+     * Url used for authentication
+     */
+    aadUrl: string;
 
     /**
      * Azure storage endpoint
@@ -47,7 +47,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
     public static Azure = new AzureEnvironment({
         id: "Azure",
         name: "Azure Public(Default)",
-        aad: "https://login.microsoftonline.com/",
+        aadUrl: "https://login.microsoftonline.com/",
         arm: "https://management.azure.com/",
         batch: "https://batch.core.windows.net/",
         msGraph: "https://graph.microsoft.com/",
@@ -59,7 +59,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
     public static AzureChina = new AzureEnvironment({
         id: "AzureChina",
         name: "Azure China",
-        aad: "https://login.chinacloudapi.cn/",
+        aadUrl: "https://login.chinacloudapi.cn/",
         arm: "https://management.chinacloudapi.cn/",
         batch: "https://batch.chinacloudapi.cn/",
         msGraph: "https://graph.microsoft.com/",
@@ -71,7 +71,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
     public static AzureGermany = new AzureEnvironment({
         id: "AzureGermany",
         name: "Azure Germany",
-        aad: "https://login.microsoftonline.de/",
+        aadUrl: "https://login.microsoftonline.de/",
         arm: "https://management.microsoftazure.de/",
         batch: "https://batch.microsoftazure.de/",
         msGraph: "https://graph.microsoft.com/",
@@ -83,7 +83,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
     public static AzureUSGov = new AzureEnvironment({
         id: "AzureUSGov",
         name: "Azure US Goverment",
-        aad: "https://login.microsoftonline.us/",
+        aadUrl: "https://login.microsoftonline.us/",
         arm: "https://management.usgovcloudapi.net/",
         batch: "https://batch.core.usgovcloudapi.net/",
         msGraph: "https://graph.microsoft.com/",
@@ -94,7 +94,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
 
     public id: string;
     public name: string;
-    public aad: string;
+    public aadUrl: string;
     public arm: string;
     public batch: string;
     public msGraph: string;

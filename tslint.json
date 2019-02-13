@@ -42,6 +42,7 @@
         true,
         ["batchExplorerApp", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
         ["this","debugTelemetry"], // Show a warning if the main window is being shown on start for debug purposes
+        {"name": ["log","debug"], "message": "Log.debug is for debug only don't leave in the code."}, // Show a warning if the main window is being shown on start for debug purposes
         {"name": "fdescribe", "message": "Don't keep jasmine fit methods in the code."},
         {"name": "fit", "message": "Don't keep jasmine fit methods in the code."},
         {"name": "allowInsecureRequest", "message": "This is only for development with proxy don't leave in the code"}

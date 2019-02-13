@@ -1,5 +1,5 @@
 import { AccessToken } from "@batch-flask/core";
-import { AADResourceType } from "@batch-flask/core/azure-environment";
+import { AADResourceName } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { RequestInit, fetch } from "client/core/fetch";
 import { BatchExplorerProperties } from "client/core/properties";
@@ -32,7 +32,7 @@ export class AccessTokenService {
     /**
      * Retrieve the access token using the given authorization code
      */
-    public async redeem(resource: AADResourceType, tenantId: string, authorizationCode: string): Promise<AccessToken> {
+    public async redeem(resource: AADResourceName, tenantId: string, authorizationCode: string): Promise<AccessToken> {
         try {
             const response = await fetch(this._buildUrl(tenantId), {
                 method: "post",
@@ -49,7 +49,7 @@ export class AccessTokenService {
         }
     }
 
-    public async refresh(resource: AADResourceType, tenantId: string, refreshToken: string): Promise<AccessToken> {
+    public async refresh(resource: AADResourceName, tenantId: string, refreshToken: string): Promise<AccessToken> {
         try {
             const response = await fetch(this._buildUrl(tenantId), {
                 method: "post",
@@ -65,10 +65,10 @@ export class AccessTokenService {
     }
 
     private _buildUrl(tenantId: string) {
-        return `${this.properties.azureEnvironment.aad}/${tenantId}/oauth2/token`;
+        return `${this.properties.azureEnvironment.aadUrl}/${tenantId}/oauth2/token`;
     }
 
-    private _redeemBody(resource: AADResourceType, authorizationCode: string) {
+    private _redeemBody(resource: AADResourceName, authorizationCode: string) {
         const params = {
             grant_type: "authorization_code",
             client_id: this.config.clientId,
@@ -79,7 +79,7 @@ export class AccessTokenService {
         return objectToParams(params);
     }
 
-    private _refreshBody(resource: AADResourceType, refreshToken: string) {
+    private _refreshBody(resource: AADResourceName, refreshToken: string) {
         const params = {
             grant_type: "refresh_token",
             client_id: this.config.clientId,
@@ -95,7 +95,7 @@ export class AccessTokenService {
         return { headers };
     }
 
-    private _getResourceUrl(resource: AADResourceType) {
+    private _getResourceUrl(resource: AADResourceName) {
         return this.properties.azureEnvironment[resource];
     }
 

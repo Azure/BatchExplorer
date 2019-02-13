@@ -18,7 +18,7 @@ export class TenantDetailsService {
     }
 
     public get(tenantId: string): Observable<TenantDetails> {
-        return this.adal.accessTokenData(tenantId, "aad").pipe(
+        return this.adal.accessTokenData(tenantId, "aadGraph").pipe(
             flatMap((accessToken) => {
                 const options = {
                     headers: new HttpHeaders({

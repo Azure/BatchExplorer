@@ -66,8 +66,8 @@ export class BatchExplorerApplication {
     }
 
     public async init() {
-
         await this.telemetryManager.init();
+        await this.properties.init();
 
         this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.applicationStart });
 

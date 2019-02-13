@@ -1,6 +1,6 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
-import { AADResourceType } from "@batch-flask/core/azure-environment";
+import { AADResourceName } from "@batch-flask/core/azure-environment";
 import { ElectronRemote } from "@batch-flask/electron";
 import { wrapMainObservable } from "@batch-flask/electron/utils";
 import { NotificationService } from "@batch-flask/ui";
@@ -50,7 +50,7 @@ export class AdalService implements OnDestroy {
         this._waitingPromises = {};
     }
 
-    public accessTokenFor(tenantId: string, resource: AADResourceType = null) {
+    public accessTokenFor(tenantId: string, resource: AADResourceName = null) {
         return from(this.accessTokenDataAsync(tenantId, resource).then(x => x.access_token));
     }
 
@@ -59,7 +59,7 @@ export class AdalService implements OnDestroy {
      * @param tenantId
      * @param resource
      */
-    public accessTokenData(tenantId: string, resource: AADResourceType = null): Observable<AccessToken> {
+    public accessTokenData(tenantId: string, resource: AADResourceName = null): Observable<AccessToken> {
         return from(this.accessTokenDataAsync(tenantId, resource));
     }
 
@@ -68,7 +68,7 @@ export class AdalService implements OnDestroy {
      * @param tenantId
      * @param resource
      */
-    public async accessTokenDataAsync(tenantId: string, resource: AADResourceType = null): Promise<AccessToken> {
+    public async accessTokenDataAsync(tenantId: string, resource: AADResourceName = null): Promise<AccessToken> {
         const key = `${tenantId}/${resource}`;
         if (key in this._waitingPromises) {
             return this._waitingPromises[key];
