@@ -11,8 +11,9 @@ import {
 import { UserConfigurationService, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
-import { AddNodeUserAttributes, BEUserConfiguration, NodeConnectService } from "app/services";
+import { AddNodeUserAttributes, NodeConnectService } from "app/services";
 
+import { BEUserConfiguration } from "common";
 import "./node-property-display.scss";
 
 enum AuthStrategies {

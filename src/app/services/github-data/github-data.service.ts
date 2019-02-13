@@ -2,10 +2,9 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, OnDestroy } from "@angular/core";
 import { UserConfigurationService } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
-import { Constants } from "common";
+import { BEUserDesktopConfiguration, Constants } from "common";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { flatMap, map, publishReplay, refCount, share, takeUntil } from "rxjs/operators";
-import { BEUserDesktopConfiguration } from "../user-configuration";
 
 @Injectable({ providedIn: "root" })
 export class GithubDataService implements OnDestroy {

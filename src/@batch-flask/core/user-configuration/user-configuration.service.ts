@@ -1,11 +1,9 @@
 import { Inject, Injectable, OnDestroy } from "@angular/core";
-import { deepMerge } from "@batch-flask/utils";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { distinctUntilChanged, filter, map, take, takeUntil } from "rxjs/operators";
 import { isNotNullOrUndefined } from "../rxjs-operators";
 
 export const USER_CONFIGURATION_STORE = "USER_CONFIGURATION_STORE";
-export const DEFAULT_USER_CONFIGURATION = "DEFAULT_USER_CONFIGURATION";
 
 export enum EntityConfigurationView {
     JSON = "json",
@@ -33,19 +31,15 @@ export class UserConfigurationService<T extends BatchFlaskUserConfiguration> imp
     public config: Observable<T>;
     public current: T | null;
 
-    private _config = new BehaviorSubject<Partial<T> | null>({} as any);
+    private _config = new BehaviorSubject<T | null>(null);
     private _destroy = new Subject<T>();
 
     constructor(
-        @Inject(USER_CONFIGURATION_STORE) private store: UserConfigurationStore<T>,
-        @Inject(DEFAULT_USER_CONFIGURATION) defaultConfig: T) {
+        @Inject(USER_CONFIGURATION_STORE) private store: UserConfigurationStore<T>) {
 
         this.config = this._config.pipe(
             filter(isNotNullOrUndefined),
             distinctUntilChanged((a, b) => a === b || JSON.stringify(a) === JSON.stringify(b)),
-            map((userConfig) => {
-                return deepMerge(defaultConfig, userConfig);
-            }),
         );
 
         this.config.pipe(takeUntil(this._destroy)).subscribe(x => this.current = x);
@@ -82,7 +76,7 @@ export class UserConfigurationService<T extends BatchFlaskUserConfiguration> imp
     }
 
     public patch(config: Partial<T>) {
-        this._config.next({ ...this._config.value, ...config });
+        this._config.next({ ...this._config.value, ...config } as any);
         return this._save();
     }
 

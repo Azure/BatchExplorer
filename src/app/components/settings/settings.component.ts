@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { EntityConfigurationView, UserConfigurationService } from "@batch-flask/core";
-import { BEUserDesktopConfiguration, DEFAULT_BE_USER_CONFIGURATION } from "app/services";
+import { BEUserDesktopConfiguration, DEFAULT_BE_USER_CONFIGURATION } from "common";
 import { Subject } from "rxjs";
 import { debounceTime, takeUntil } from "rxjs/operators";
 import "./settings.scss";

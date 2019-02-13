@@ -23,7 +23,6 @@ import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import {
-    DEFAULT_USER_CONFIGURATION,
     LocaleService,
     MaterialModule,
     TranslationsLoaderService,
@@ -37,7 +36,6 @@ import {
     AdalService,
     AppLocaleService,
     AppTranslationsLoaderService,
-    DEFAULT_BE_USER_CONFIGURATION,
     RendererConfigurationStore,
 } from "./services";
 import { RendererTelemetryModule } from "./services/telemetry";
@@ -82,7 +80,6 @@ const modules = [
         { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
         { provide: LocaleService, useClass: AppLocaleService },
         { provide: USER_CONFIGURATION_STORE, useClass: RendererConfigurationStore },
-        { provide: DEFAULT_USER_CONFIGURATION, useValue: DEFAULT_BE_USER_CONFIGURATION },
         { provide: ErrorHandler, useClass: BatchExplorerErrorHandler },
         { provide: USER_SERVICE, useExisting: AdalService },
     ],
