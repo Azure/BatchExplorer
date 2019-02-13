@@ -179,8 +179,6 @@ export class AADService {
      * Load a new access token from the authorization code given at login
      */
     private async _redeemNewAccessToken(tenantId: string, resource: AADResourceName, forceReLogin = false) {
-        console.log("_redeemNewAccessToken", resource);
-
         const defer = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
 
         try {
@@ -188,7 +186,6 @@ export class AADService {
             const result = await this._authorizeUser(tenantId, forceReLogin);
             this._processUserToken(result.id_token);
             const tid = tenantId === "common" ? this._currentUser.value!.tid : tenantId;
-            console.log("About to redeem", resource);
             const token = await this._accessTokenService.redeem(resource, tid!, result.code);
             this._processAccessToken(tenantId, resource, token);
             delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];

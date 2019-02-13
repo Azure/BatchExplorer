@@ -1,5 +1,4 @@
 import { NgZone } from "@angular/core";
-import { log } from "@batch-flask/utils";
 import { Observable, Subscriber, fromEvent } from "rxjs";
 import { share, takeUntil } from "rxjs/operators";
 
@@ -32,25 +31,20 @@ export function wrapMainObservable<T>(obs: Observable<T>, zone: NgZone): Observa
     return new Observable((observer: Subscriber<T>) => {
         // This needs to be this way because of how electron IPC works.
         // Get issues if you use `.subscribe(observer)` directly
-        log.debug("Here", obs);
+
         const sub = obs.subscribe({
             next: (value) => {
-                log.debug("Update dis", value);
                 zone.run(() => observer.next(value));
             },
             error: (error) => {
-                log.debug("Error dis", error);
                 zone.run(() => observer.error(error));
             },
             complete: () => {
-                log.debug("Compelte dis");
                 zone.run(() => observer.complete());
-
             },
         });
 
         return () => {
-            log.debug("Destroy dis");
             sub.unsubscribe();
             observer.complete();
         };

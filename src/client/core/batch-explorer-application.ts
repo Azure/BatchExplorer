@@ -104,7 +104,6 @@ export class BatchExplorerApplication {
             this.logoutAndLogin();
         });
         this._initializer.setTaskStatus("window", "Loading application");
-        log.debug("process.argv", process.argv);
         const window = this.openFromArguments(process.argv, false);
         if (!window) { return; }
         const windowSub = window.state.subscribe((state) => {

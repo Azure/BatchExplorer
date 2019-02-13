@@ -75,7 +75,7 @@ export class ProxySettingsManager {
                 http: http && new ProxySetting(http),
                 https: https && new ProxySetting(https),
             };
-            log.debug("Loaded proxy settings", {
+            log.info("Loaded proxy settings", {
                 http: settings.http && this._safePrintProxySetting(settings.http),
                 https: settings.http && this._safePrintProxySetting(settings.https),
             });

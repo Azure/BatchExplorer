@@ -20,9 +20,7 @@
   "python.autoComplete.extraPaths": [
     "${workspaceRoot}/python"
   ],
-  "tslint.jsEnable": true,
   "vsicons.presets.angular": true,
-  "tslint.alwaysShowRuleFailuresAsWarnings": true,
   "css.validate": false,
   "scss.validate": false,
   "python.formatting.provider": "yapf",
