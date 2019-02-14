@@ -7,8 +7,6 @@
 Batch Explorer is a tool to manage your Azure Batch accounts. The goal is to implement a great user experience that will help you debug, monitor and manage your pools, jobs and tasks.
 It will also include experimental features such as `Batch Templates` in the aim to improve your Batch experience. We are open to any feedback, ideas and contributions you might have.
 
-BatchExplorer is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on [Batch Explorer website](https://azure.github.io/BatchExplorer/).
-
 ![Account view](docs/images/account-home.png)
 ![Job view](docs/images/job-home.png)
 
