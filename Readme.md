@@ -9,7 +9,8 @@ It will also include experimental features such as `Batch Templates` in the aim 
 
 BatchExplorer is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on [Batch Explorer website](https://azure.github.io/BatchExplorer/).
 
-![](docs/images/job-home.png)
+![Account view](docs/images/account-home.png)
+![Job view](docs/images/job-home.png)
 
 ## Downloads
 
@@ -23,7 +24,7 @@ To build Batch Explorer yourself see this [wiki](https://github.com/Azure/BatchE
 * File a bug on [GitHub](https://github.com/Azure/BatchExplorer/issues)
 
 ## Developers
-[Dev docs](docs/readme.md)
+[Dev docs](docs/readdme.md)
 
 ## Data/Telemetry.
 
