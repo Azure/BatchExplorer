@@ -7,6 +7,7 @@
 * [Components](components.md)
 * [Models](models.md)
 * [Testing](testing.md)
+* [Spectron E2E tests](spectron.md)
 * [Controls](core/Readme.md)
 
 ## How to
@@ -15,7 +16,6 @@
 * [Store user data/Cache data](store-user-data.md)
 * [Use virtual scroll](virtual-scroll.md)
 * [Localize](Localization.md)
-
 
 # Repo management
 * [Make a new release](new-release.md)
