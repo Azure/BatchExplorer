@@ -25,3 +25,6 @@ npm run spectron:keep
 
 ### Write tests
 Spectron tests are in the `test/spectron` directory
+
+### Issues with spectron
+- Doesn't support using menus [#21](https://github.com/electron/spectron/issues/21)
