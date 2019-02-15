@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
-import { SelectAccountDialogModule } from "./select-acccount-dialog";
 import { HiddenIfNoAccountDirective } from "./hidden-navigation.directive";
-import { RequireActiveBatchAccountGuard } from "./navigation-guard.component";
+import { RequireActiveBatchAccountGuard } from "./require-active-batch-account.guard";
+import { SelectAccountDialogModule } from "./select-acccount-dialog";
 
 const components = [
     HiddenIfNoAccountDirective,
