@@ -32,7 +32,7 @@ class AADAuth:
         self.client = batch.BatchExtensionsClient(
             credentials=self.batchCreds,
             batch_account=self.account.name,
-            base_url='https://{0}'.format(account.account_endpoint),
+            batch_url='https://{0}'.format(account.account_endpoint),
             subscription_id=account.subscription_id,
             mgmt_credentials=self.armCreds,
             mgmt_base_url=self.armUrl,

@@ -1,10 +1,10 @@
 import inspect
 import traceback
-from jsonrpc.error import JsonRpcMethodNotFoundError, JsonRpcInvalidParamsError, JsonRpcError
 import azext.batch.errors as batch_ext_error
-import azure.batch.models.batch_error as batch_error
+import azure.batch.models as batch_models
 import azure.common
 import logging
+from jsonrpc.error import JsonRpcMethodNotFoundError, JsonRpcInvalidParamsError, JsonRpcError
 
 class BatchExplorerApp:
     """
@@ -56,7 +56,7 @@ class BatchExplorerApp:
             except azure.common.AzureMissingResourceHttpError as e:
                 # pylint: disable=E1101
                 raise JsonRpcError(e.status_code, str(e), {})
-            except batch_error.BatchErrorException as e:
+            except batch_models.BatchErrorException as e:
                 # pylint: disable=E1101
                 raise JsonRpcError(e.response.status_code, e.message.value, e.response.json())
             except batch_ext_error.MissingParameterValue as e:
