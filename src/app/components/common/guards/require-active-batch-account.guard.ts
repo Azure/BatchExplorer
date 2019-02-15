@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, CanLoad, Router, RouterStateSnapsh
 import { DialogService } from "@batch-flask/ui";
 import { BatchAccountService } from "app/services";
 import { of } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
+import { map, switchMap, take } from "rxjs/operators";
 import { SelectAccountDialogComponent } from "./select-acccount-dialog";
 
 @Injectable()
@@ -17,6 +17,7 @@ export class RequireActiveBatchAccountGuard implements CanActivate, CanLoad {
 
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         return this.accountService.currentAccountId.pipe(
+            take(1),
             switchMap((accountId) => {
                 if (accountId) { return of(true); }
                 const ref = this.dialogService.open(SelectAccountDialogComponent);
