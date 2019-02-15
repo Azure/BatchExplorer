@@ -10,7 +10,6 @@
     <div bl-dropdown-content>
         <bl-clickable *ngFor="let account of accountService.accountFavorites | async; trackBy: trackByFn"
              class="dropdown-item"
-             [routerLink]="['/accounts', account.id]"
              (do)="selectAccount(account)"
              (contextmenu)="openContextMenu(account)"
              [class.selected]="account.id === selectedId"

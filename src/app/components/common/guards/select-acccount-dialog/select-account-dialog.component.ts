@@ -39,7 +39,7 @@ export class SelectAccountDialogComponent implements OnDestroy {
     }
 
     public pickAccount(accountId: string) {
-        this.accountService.selectAccount(accountId);
         this.dialogRef.close(accountId);
+        this.accountService.selectAccount(accountId);
     }
 }
