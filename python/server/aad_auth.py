@@ -1,4 +1,4 @@
-import azext.batch as batch
+import azext.batch
 from msrestazure.azure_active_directory import AdalAuthentication
 
 
@@ -29,7 +29,7 @@ class AADAuth:
         self.storage_endpoint = storage_endpoint
         self.account = account
 
-        self.client = batch.BatchExtensionsClient(
+        self.client = azext.batch.BatchExtensionsClient(
             credentials=self.batchCreds,
             batch_account=self.account.name,
             batch_url='https://{0}'.format(account.account_endpoint),

@@ -1,6 +1,9 @@
-"""
-    Main module
-"""
+# """
+#     Main module
+# """
+import core.batch_ext
+core.batch_ext.init()
+
 
 import logging
 import signal
