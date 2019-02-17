@@ -176,7 +176,7 @@ fdescribe("RenderingContainerImageService", () => {
         renderingContainerImageService.doesContainerImageMatch("ubuntu_maya_arnold_2023",
             RenderApplication.Maya, RenderEngine.VRay, "ubuntu-1604lts-container")
             .subscribe((result) => {
-            expect(result).toEqual(true);
+            expect(result).toEqual(false);
             done();
         });
     });
@@ -185,7 +185,7 @@ fdescribe("RenderingContainerImageService", () => {
         renderingContainerImageService.doesContainerImageMatch("ubuntu_maya_arnold_2023",
             RenderApplication.Maya, RenderEngine.Arnold, "windowsserver-2016-container")
             .subscribe((result) => {
-            expect(result).toEqual(true);
+            expect(result).toEqual(false);
             done();
         });
     });
