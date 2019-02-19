@@ -13,6 +13,7 @@ stream.pipe(process.stderr);
 export interface NodeLoggerConfig {
     name: string;
     path?: string;
+    json?: boolean;
 }
 
 /**
@@ -29,7 +30,7 @@ export class NodeLogger implements Logger {
         const transports: Transport[] = [
             new winston.transports.Console({
                 format: winston.format.combine(
-                    winston.format.label({label: config.name, message: true}),
+                    winston.format.label({ label: config.name, message: true }),
                     winston.format.colorize(),
                     winston.format.simple(),
                 ),
@@ -37,13 +38,21 @@ export class NodeLogger implements Logger {
         ];
 
         if (config.path) {
+
+            let format;
+            if (config.json) {
+                format = winston.format.combine(
+                    winston.format.timestamp(),
+                    winston.format.json(),
+                );
+            } else {
+                format = winston.format.simple();
+            }
+
             transports.push(new DailyRotateFile({
                 maxFiles: 3,
                 filename: config.path,
-                format: winston.format.combine(
-                    winston.format.timestamp(),
-                    winston.format.json(),
-                ),
+                format,
             }));
         }
         this._logger = winston.createLogger({

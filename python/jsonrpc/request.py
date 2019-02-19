@@ -5,7 +5,6 @@ from server.aad_auth import AADAuth
 from .error import JsonRpcParseError
 stream_loop = asyncio.new_event_loop()
 
-
 def worker():
     stream_loop.run_forever()
     return

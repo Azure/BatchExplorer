@@ -10,7 +10,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
 def setup_logging():
-    logging.basicConfig(format='%(message)s')
+    logging.basicConfig(format='%(message)s', level="INFO")
 
 
 def run():

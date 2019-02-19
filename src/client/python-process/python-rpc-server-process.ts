@@ -27,7 +27,9 @@ export class PythonRpcServerProcess {
             return;
         }
         log.info(`Python path is: '${data.cmd}', Args: ${data.args}`);
-        const child = this._spawedProcess = spawn(data.cmd, [...data.args]);
+        const child = this._spawedProcess = spawn(data.cmd, ["-u", ...data.args], {
+
+        });
         pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
 
         child.stdout.on("data", (data) => {
@@ -35,7 +37,7 @@ export class PythonRpcServerProcess {
         });
 
         child.stderr.on("data", (data) => {
-            pythonLogger.error(data.toString());
+            pythonLogger.info(data.toString());
         });
 
         child.on("exit", (code) => {
