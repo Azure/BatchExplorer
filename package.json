@@ -60,7 +60,7 @@
     "webpack": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
     "webpack:stats": "cross-env NODE_ENV=production npm run -s webpack -- --profile --json > coverage/webpack-stats.json",
     "webpack-dev-server": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "rebuild:keytar": "electron-rebuild -w keytar -p -f",
+    "rebuild:keytar": "electron-rebuild -w keytar -f",
     "postinstall": "npm run -s rebuild:keytar"
   },
   "license": "MIT",

@@ -22,7 +22,7 @@ To build Batch Explorer yourself see this [wiki](https://github.com/Azure/BatchE
 * File a bug on [GitHub](https://github.com/Azure/BatchExplorer/issues)
 `
 ## Developers
-[Dev docs](docs/readdme.md)
+[Dev docs](docs/readme.md)
 
 ## Data/Telemetry.
 
