@@ -4,7 +4,7 @@
 import core.batch_ext
 core.batch_ext.init()
 
-
+#pylint: disable=wrong-import-position,wrong-import-order
 import logging
 import signal
 import sys
@@ -12,8 +12,10 @@ import server.websocket_server
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+
 def setup_logging():
     logging.basicConfig(format='%(message)s')
+
 
 def run():
     """
@@ -27,6 +29,7 @@ def run():
 
     ws_server = server.websocket_server.WebsocketServer(port)
     ws_server.run_forever()
+
 
 if __name__ == "__main__":
     run()
