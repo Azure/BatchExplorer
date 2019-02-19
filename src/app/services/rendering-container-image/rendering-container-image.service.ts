@@ -77,16 +77,16 @@ export class RenderingContainerImageService {
         );
     }
 
-    public doesContainerImageMatch(
-        containerImageId: string, app: RenderApplication,  renderer: RenderEngine, imageReferenceId: string):
-        Observable<boolean> {
-        return this.findContainerImageById(containerImageId).pipe(
-            map(image => {
-                return image.app === app &&
-                        image.renderer === renderer &&
-                        image.imageReferenceId === imageReferenceId;
-            }),
-            share(),
-        );
+    public containerImagesAsMap(): Observable<Map<any, any>> {
+        return this.containerImages.pipe(
+        map((images) => {
+            const imageMap = new Map();
+            for (const image of images) {
+                imageMap.set(image.containerImage, image);
+            }
+            return imageMap;
+        }),
+        publishReplay(1),
+        refCount());
     }
 }

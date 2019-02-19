@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
-    OnDestroy, OnInit, forwardRef } from "@angular/core";
+    OnChanges, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor,
     FormBuilder,
@@ -8,23 +8,29 @@ import {
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { BehaviorSubject, Subject, combineLatest } from "rxjs";
 
-import { ListView } from "@batch-flask/core";
+import { ListView, isNotNullOrUndefined } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
 import { Offer, Pool, PoolOsSkus } from "app/models";
 import { PoolListParams, PoolOsService, PoolService, RenderingContainerImageService,
     VmSizeService } from "app/services";
 import { PoolUtils } from "app/utils";
-import { distinctUntilChanged } from "rxjs/operators";
+import { distinctUntilChanged, filter, map, startWith, takeUntil } from "rxjs/operators";
 
-import { RenderApplication, RenderEngine } from "app/models/rendering-container-image";
+import { RenderApplication, RenderEngine, RenderingContainerImage } from "app/models/rendering-container-image";
 import "./pool-picker.scss";
 
 interface PoolFilters {
     id: string;
     offer: string;
     containerImage: boolean;
+}
+
+interface Inputs {
+    app: RenderApplication;
+    renderEngine: RenderEngine;
+    imageReferenceId: string;
 }
 
 const CLOUD_SERVICE_OFFER = "cloudservice-windows";
@@ -38,7 +44,7 @@ const CLOUD_SERVICE_OFFER = "cloudservice-windows";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolPickerComponent), multi: true },
     ],
 })
-export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     @Input() public app: RenderApplication;
@@ -55,7 +61,8 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     private _pools: List<Pool> = List([]);
     private _offers: Offer[] = [];
     private _propagateChange: (value: any) => void = null;
-    private _subs: Subscription[] = [];
+    private _destroy = new Subject();
+    private _inputs = new BehaviorSubject<Inputs>(null);
 
     constructor(
         formBuilder: FormBuilder,
@@ -68,24 +75,33 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         this.filters = formBuilder.group({
             id: "",
             offer: null,
-            containerImage: false,
         });
-        this._subs.push(this.filters.valueChanges.pipe(distinctUntilChanged()).subscribe((query: PoolFilters) => {
-            this._updateDisplayedPools();
-        }));
 
-        this._subs.push(this.poolOsService.offers.subscribe((offers: PoolOsSkus) => {
+        const containerImageMap = this.renderingContainerImageService.containerImagesAsMap();
+
+        combineLatest(
+            this.poolsData.items,
+            this.filters.valueChanges.pipe(startWith(this.filters.value), distinctUntilChanged()),
+            this._inputs.pipe(filter(isNotNullOrUndefined)),
+            containerImageMap,
+        ).pipe(
+            takeUntil(this._destroy),
+            map(([pools, filters, inputs, containerImages]) => {
+                return pools.filter((pool) => {
+                    return this._filterPool(pool, filters, inputs, containerImages);
+                });
+            }),
+            ).subscribe((pools) => {
+                this.displayedPools = List<Pool>(pools);
+                this.changeDetector.markForCheck();
+        });
+
+        this.poolOsService.offers.pipe(takeUntil(this._destroy)).subscribe((offers: PoolOsSkus) => {
             this._offers = offers.allOffers;
             this._updateOffers();
-        }));
+        });
 
-        this._subs.push(this.poolsData.items.subscribe((pools) => {
-            this._pools = pools;
-            this._updateOffers();
-            this._updateDisplayedPools();
-        }));
-
-        this._subs.push(this.vmSizeService.sizes.subscribe((sizes) => {
+        this.vmSizeService.sizes.pipe(takeUntil(this._destroy)).subscribe((sizes) => {
             if (!sizes) {return; }
             const vmSizeCoresMap = new Map<string, number>();
             sizes.forEach((size) => {
@@ -94,15 +110,23 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
             this._vmSizeCoresMap = vmSizeCoresMap;
             this.changeDetector.markForCheck();
-        }));
+        });
     }
 
     public ngOnInit() {
         this.poolsData.fetchAll();
     }
 
+    public ngOnChanges(changes) {
+        if (changes.app && changes.renderEngine && changes.imageReferenceId) {
+            this._inputs.next(
+                {app: this.app, renderEngine: this.renderEngine, imageReferenceId: this.imageReferenceId});
+        }
+    }
+
     public ngOnDestroy() {
-        this._subs.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
         this.poolsData.dispose();
     }
 
@@ -113,10 +137,6 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
     public validate() {
         return null;
-    }
-
-    public containerImageFilter(): boolean {
-        return this.app != null && this.renderEngine != null && this.imageReferenceId != null;
     }
 
     public registerOnChange(fn) {
@@ -170,17 +190,8 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         return this._upperCaseFirstChar(this.imageReferenceId.substring(0, 6));
     }
 
-    private _updateDisplayedPools() {
-        this.filters.value.containerImage = this.containerImageFilter();
-        const pools = this._pools.filter((pool) => {
-            return this._filterPool(pool);
-        });
-        this.displayedPools = List(pools);
-        this.changeDetector.markForCheck();
-    }
-
-    private _filterPool(pool: Pool): boolean {
-        const filters: PoolFilters = this.filters.value;
+    private _filterPool(pool: Pool, filters: PoolFilters, inputs: Inputs,
+                        containerImages: Map <string, RenderingContainerImage>): boolean {
         if (filters.id !== "" && !pool.id.toLowerCase().contains(filters.id.toLowerCase())) {
             return false;
         }
@@ -191,11 +202,13 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
             }
         }
 
-        if (filters.containerImage) {
-            if (!this._filterByContainerImage(pool)) {
+
+        if (inputs.app && inputs.renderEngine && inputs.imageReferenceId) { // TODO can we use filters.containerImage instead? Wired up through the html / onChanges?
+            if (!this._filterByContainerImage(pool, inputs, containerImages)) {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -209,21 +222,6 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
             if (!filterByPaaS) { return false; }
         }
         return true;
-    }
-
-    private _filterByContainerImage(pool: Pool): boolean {
-        if (pool.virtualMachineConfiguration == null ||
-            pool.virtualMachineConfiguration.containerConfiguration == null) {
-            return false;
-        }
-        return pool.virtualMachineConfiguration.containerConfiguration
-            .containerImageNames.find((containerImage) => {
-            if (this.renderingContainerImageService.doesContainerImageMatch(
-                containerImage, this.app, this.renderEngine, this.imageReferenceId).subscribe(val => val)) {
-                    return true;
-                }
-            return false;
-        }) != null;
     }
 
     private _updateOffers() {
@@ -243,6 +241,24 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
         this.offers = offers;
         this.changeDetector.markForCheck();
+    }
+
+    private _filterByContainerImage(pool: Pool, inputs: Inputs,
+                                    containerImages: Map <string, RenderingContainerImage>) {
+        if (!pool.virtualMachineConfiguration ||
+            !pool.virtualMachineConfiguration.containerConfiguration) {
+            return false;
+        }
+        return pool.virtualMachineConfiguration.containerConfiguration.containerImageNames
+            .find(imageId => {
+                const image = containerImages.get(imageId);
+                if (image === null) {
+                    return false;
+                }
+                return image.app === inputs.app &&
+                        image.renderer === inputs.renderEngine &&
+                        image.imageReferenceId === inputs.imageReferenceId;
+            }) != null;
     }
 
     private _upperCaseFirstChar(lower: string) {

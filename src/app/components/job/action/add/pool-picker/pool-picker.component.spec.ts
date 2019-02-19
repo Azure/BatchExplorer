@@ -5,18 +5,74 @@ import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ButtonsModule, SelectComponent, SelectModule } from "@batch-flask/ui";
 import { PoolPickerComponent } from "app/components/job/action/add";
-import { CloudServiceOsFamily, Pool } from "app/models";
-import { PoolOsService, PoolService, VmSizeService } from "app/services";
+import { CloudServiceOsFamily, ContainerType, Pool } from "app/models";
+import { RenderApplication, RenderEngine } from "app/models/rendering-container-image";
+import { PoolOsService, PoolService, RenderingContainerImageService, VmSizeService } from "app/services";
 import { List } from "immutable";
 import { BehaviorSubject, of } from "rxjs";
 import { click, updateInput } from "test/utils/helpers";
-import { MockListView } from "test/utils/mocks";
+import { GithubDataServiceMock, MockListView } from "test/utils/mocks";
 
 @Component({
-    template: `<bl-pool-picker [formControl]="poolInfo"></bl-pool-picker>`,
+    template: `<bl-pool-picker [formControl]="poolInfo"
+        [app]="app" [renderEngine]="renderEngine" [imageReferenceId]="imageReferenceId">
+    </bl-pool-picker>`,
 })
 class TestComponent {
     public poolInfo = new FormControl({});
+
+    public app: RenderApplication;
+    public renderEngine: RenderEngine;
+    public imageReferenceId: string;
+}
+
+function ubuntuContainerVM(containerImage: string) {
+    return {
+        containerConfiguration:
+        {
+            containerImageNames: [containerImage],
+            type: ContainerType.DockerCompatible,
+        },
+        imageReference:
+        {
+            publisher: "microsoft-azure-batch", offer: "ubuntu-1604lts-container", sku: "16-04-lts", version: "*",
+        },
+        nodeAgentId: "batch.node.ubuntu 16.04",
+    };
+}
+
+function ubuntuContainerPool(containerImage: string) {
+    return new Pool({
+        id: "ubuntu-container-pool-" + containerImage,
+        vmSize: "standard_a2",
+        targetDedicatedNodes: 1,
+        virtualMachineConfiguration: ubuntuContainerVM(containerImage),
+    });
+}
+
+function windowsContainerVM(containerImage: string) {
+    return {
+        containerConfiguration:
+        {
+            containerImageNames: [containerImage],
+            type: ContainerType.DockerCompatible,
+        },
+        imageReference:
+        {
+            publisher: "MicrosoftWindowsServer", offer: "WindowsServer",
+            sku: "2016-DataCenter-With-Containers", version: "*",
+        },
+        nodeAgentId: "batch.node.windows amd64",
+    };
+}
+
+function windowsContainerPool(containerImage: string) {
+    return new Pool({
+        id: "windows-container-pool-" + containerImage,
+        vmSize: "standard_a2",
+        targetDedicatedNodes: 1,
+        virtualMachineConfiguration: windowsContainerVM(containerImage),
+    });
 }
 
 const centosVM = {
@@ -65,12 +121,15 @@ describe("PoolPickerComponent", () => {
     let poolServiceSpy;
     let vmSizeServiceSpy;
     let poolOsServiceSpy;
+    let githubDataServiceSpy;
+    let renderingContainerImageService: RenderingContainerImageService;
+    const poolServiceItems = [centosPool1, centosPool2, ubuntuPool, windowsPool, cloudServicePool];
+    let poolView: MockListView<Pool, Pool[]>;
 
     beforeEach(() => {
+        poolView = new MockListView(Pool, { items: poolServiceItems});
         poolServiceSpy = {
-            listView: () => new MockListView(Pool, {
-                items: [centosPool1, centosPool2, ubuntuPool, windowsPool, cloudServicePool],
-            }),
+            listView: () => poolView,
         };
         vmSizeServiceSpy = {
             sizes: of(List([])),
@@ -84,6 +143,10 @@ describe("PoolPickerComponent", () => {
                 ],
             }),
         };
+        githubDataServiceSpy = new GithubDataServiceMock();
+
+        renderingContainerImageService = new RenderingContainerImageService(githubDataServiceSpy);
+
         TestBed.configureTestingModule({
             imports: [FormsModule, ReactiveFormsModule, SelectModule, ButtonsModule, I18nTestingModule],
             declarations: [PoolPickerComponent, TestComponent],
@@ -92,6 +155,7 @@ describe("PoolPickerComponent", () => {
                 { provide: PoolService, useValue: poolServiceSpy },
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
                 { provide: PoolOsService, useValue: poolOsServiceSpy },
+                { provide: RenderingContainerImageService, useValue: renderingContainerImageService },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
@@ -181,5 +245,39 @@ describe("PoolPickerComponent", () => {
         expect(pools.length).toBe(1);
 
         expect(pools[0].nativeElement.textContent).toContain("windows-cloudservice-pool-1");
+    });
+
+    it("filter by containerImage", () => {
+        // the below id's need to match github-data.service.mock
+        const ubuntuContainerImages =
+        [
+            "ubuntu_maya_vray",
+            "ubuntu_maya_arnold_2011",
+            "ubuntu_maya_arnold_2023",
+            "ubuntu_3dsmax_vray",
+        ];
+
+        const windowsContainerImages =
+        [
+            "win_maya_arnold",
+            "win_maya_vray",
+        ];
+
+        const containerImagePools = ubuntuContainerImages.map(image => ubuntuContainerPool(image)).concat(
+                                    windowsContainerImages.map(image => windowsContainerPool(image)));
+
+        poolView.updateItems(containerImagePools);
+        poolView.refresh();
+
+        testComponent.app = RenderApplication.Maya;
+        testComponent.renderEngine = RenderEngine.Arnold;
+        testComponent.imageReferenceId = "ubuntu-1604lts-container";
+        fixture.detectChanges();
+
+        const pools = de.queryAll(By.css(".pool-list .pool"));
+        expect(pools.length).toBe(2);
+
+        expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya_arnold_2011");
+        expect(pools[1].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya_arnold_2023");
     });
 });
