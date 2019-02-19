@@ -1,7 +1,6 @@
 import azext.batch
 from msrestazure.azure_active_directory import AdalAuthentication
 
-
 class BatchAccount:
     def __init__(self, account_id: str, name: str, account_endpoint: str, subscription_id: str):
         self.id = account_id

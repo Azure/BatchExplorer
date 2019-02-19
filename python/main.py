@@ -1,10 +1,6 @@
 # """
 #     Main module
 # """
-import core.batch_ext
-core.batch_ext.init()
-
-#pylint: disable=wrong-import-position,wrong-import-order
 import logging
 import signal
 import sys
@@ -29,6 +25,7 @@ def run():
 
     ws_server = server.websocket_server.WebsocketServer(port)
     ws_server.run_forever()
+
 
 
 if __name__ == "__main__":
