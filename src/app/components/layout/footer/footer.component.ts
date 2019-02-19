@@ -7,5 +7,4 @@ import "./footer.scss";
     templateUrl: "footer.html",
 })
 export class FooterComponent {
-
 }

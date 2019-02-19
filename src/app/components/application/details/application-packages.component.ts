@@ -37,12 +37,12 @@ export class ApplicationPackagesComponent implements OnChanges {
 
     @autobind()
     public deleteSelection() {
-        this.commands.delete.executeFromSelection(this._selection);
+        return this.commands.delete.executeFromSelection(this._selection);
     }
 
     @autobind()
     public activateSelection() {
-        this.commands.activate.executeFromSelection(this._selection);
+        return this.commands.activate.executeFromSelection(this._selection);
     }
 
     private _activatedItemDeleteEnabled() {

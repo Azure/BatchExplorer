@@ -1,9 +1,8 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { UserConfigurationService } from "@batch-flask/core";
 import { AutoUpdateService, ElectronRemote } from "@batch-flask/electron";
-import { Constants } from "common";
+import { BEUserDesktopConfiguration, Constants } from "common";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
-import { BEUserDesktopConfiguration } from "../user-configuration";
 
 export enum VersionType {
     Stable = "stable",

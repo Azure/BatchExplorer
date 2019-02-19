@@ -131,6 +131,8 @@ describe("PoolPickerComponent", () => {
         poolServiceSpy = {
             listView: () => poolView,
         };
+        poolServiceSpy.listView.fetchAll();
+
         vmSizeServiceSpy = {
             sizes: of(List([])),
         };

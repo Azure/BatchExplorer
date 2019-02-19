@@ -31,10 +31,16 @@ import { ListSortConfig, SortDirection, SortingStatus } from "./list-data-sorter
 
 export interface AbstractListBaseConfig<TEntity = any> {
     /**
-     * If it should allow the user to activate an item(And the routerlink if applicable)
+     * If it should allow the user to activate an item
      * @default true
      */
     activable?: boolean;
+
+    /**
+     * If it should allow the user to navigate. Need activable true
+     * @default true
+     */
+    navigable?: boolean;
 
     /**
      * What is the buffer for trigerring scroll to the bottom event
@@ -55,6 +61,7 @@ export interface AbstractListBaseConfig<TEntity = any> {
 
 export const abstractListDefaultConfig: Required<AbstractListBaseConfig> = {
     activable: true,
+    navigable: true,
     scrollBottomBuffer: 0,
     forceBreadcrumb: false,
     sorting: null,
@@ -365,7 +372,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.activeItem = item && item.id;
         if (!item) { return; }
         const link = item.routerLink;
-        if (link) {
+        if (this.config.navigable && link) {
             if (this.config.forceBreadcrumb) {
                 this.breadcrumbService.navigate(link);
             } else {

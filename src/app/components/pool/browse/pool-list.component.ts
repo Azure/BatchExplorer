@@ -11,8 +11,8 @@ import { Pool } from "app/models";
 import { PoolListParams, PoolNodeCountService, PoolService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subscription, forkJoin } from "rxjs";
-import { map } from "rxjs/operators";
+import { Observable, Subject, forkJoin } from "rxjs";
+import { map, takeUntil } from "rxjs/operators";
 import { PoolCommands } from "../action";
 
 import "./pool-list.scss";
@@ -50,7 +50,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     };
 
     public pools: List<Pool> = List([]);
-    private _subs: Subscription[] = [];
+    private _destroy = new Subject();
 
     constructor(
         private poolService: PoolService,
@@ -59,20 +59,17 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         injector: Injector,
         public commands: PoolCommands) {
         super(injector);
-        this.data = this.poolService.listView();
+        this.data = this.poolService.listView;
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
-        this.data.status.subscribe((status) => {
+        this.data.status.pipe(takeUntil(this._destroy)).subscribe((status) => {
             this.status = status;
         });
 
-        this._subs.push(poolService.onPoolAdded.subscribe((poolId) => {
-            this.data.loadNewItem(poolService.get(poolId));
-        }));
-        this._subs.push(this.data.items.subscribe((pools) => {
+        this.data.items.pipe(takeUntil(this._destroy)).subscribe((pools) => {
             this.pools = pools;
             this.changeDetector.markForCheck();
-        }));
+        });
     }
 
     public ngOnInit() {
@@ -81,8 +78,8 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
 
     public ngOnDestroy() {
         super.ngOnDestroy();
-        this._subs.forEach(x => x.unsubscribe());
-        this.data.dispose();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     @autobind()

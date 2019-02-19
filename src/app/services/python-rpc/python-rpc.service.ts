@@ -11,7 +11,7 @@ import { catchError, first, share, switchMap, tap } from "rxjs/operators";
 import { AdalService } from "../adal";
 import { BatchAccountService } from "../batch-account";
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class PythonRpcService {
     public connected: Observable<boolean>;
     private _socket: WebSocket;
@@ -139,15 +139,15 @@ export class PythonRpcService {
                 }
             }),
             switchMap((account: ArmBatchAccount) => {
-                const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
-                const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);
+                const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, "batch");
+                const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, "arm");
                 return forkJoin(batchToken, armToken).pipe(
                     first(),
                     switchMap(([batchToken, armToken]) => {
                         const authParam = {
                             batchToken,
                             armToken,
-                            armUrl: resourceUrl.armUrl,
+                            armUrl: resourceUrl.arm,
                             storageEndpoint: resourceUrl.storageEndpoint,
                             account: account.toJS(),
                         };

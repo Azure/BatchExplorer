@@ -31,6 +31,7 @@ export function wrapMainObservable<T>(obs: Observable<T>, zone: NgZone): Observa
     return new Observable((observer: Subscriber<T>) => {
         // This needs to be this way because of how electron IPC works.
         // Get issues if you use `.subscribe(observer)` directly
+
         const sub = obs.subscribe({
             next: (value) => {
                 zone.run(() => observer.next(value));
@@ -40,7 +41,6 @@ export function wrapMainObservable<T>(obs: Observable<T>, zone: NgZone): Observa
             },
             complete: () => {
                 zone.run(() => observer.complete());
-
             },
         });
 

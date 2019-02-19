@@ -22,6 +22,10 @@ describe("PoolService", () => {
         httpMock = TestBed.get(HttpTestingController);
     });
 
+    afterEach(() => {
+        poolService.ngOnDestroy();
+    });
+
     it("get a pool", (done) => {
         poolService.get("pool-1").subscribe((pool: Pool) => {
             expect(pool instanceof Pool).toBe(true);

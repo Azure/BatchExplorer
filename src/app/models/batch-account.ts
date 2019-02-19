@@ -3,8 +3,8 @@ import { ArmResourceUtils, StorageUtils } from "app/utils";
 import { ArmSubscription } from "./arm-subscription";
 
 export enum PoolAllocationMode {
-    BatchService = "batchservice",
-    UserSubscription = "usersubscription",
+    BatchService = "BatchService",
+    UserSubscription = "UserSubscription",
 }
 
 export enum BatchAccountProvisingState {

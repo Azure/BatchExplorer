@@ -7,7 +7,7 @@ import { AADUser } from "./aad-user";
 import { AADService } from "./aad.service";
 
 const tenant1 = "tenant1";
-const resource1 = "http://example.com";
+const resource1 = "batch";
 
 const sampleUser: AADUser = {
     aud: "94ef904d-c21a-4972-9244-b4d6a12b8e13",
@@ -137,9 +137,9 @@ describe("AADService", () => {
                 access_token: "initialtoken",
                 expires_on: DateTime.local().plus({ hours: 1 }),
             } as any));
-            token = await service.accessTokenData(tenant1, "http://other-resource.com");
+            token = await service.accessTokenData(tenant1, "appInsights");
             expect(redeemSpy).toHaveBeenCalled();
-            expect(redeemSpy).toHaveBeenCalledWith("http://other-resource.com", tenant1, "somecode");
+            expect(redeemSpy).toHaveBeenCalledWith("appInsights", tenant1, "somecode");
             expect(refreshSpy).not.toHaveBeenCalled();
 
             expect(token).not.toBeNull();

@@ -7,8 +7,10 @@ import {
     ApplicationListParams, BatchAccountService, BatchApplicationService,
     JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
-import { Subscription } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 
+import { List } from "immutable";
+import { takeUntil } from "rxjs/operators";
 import "./account-details.scss";
 
 @Component({
@@ -24,6 +26,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         }
         return { name: name, label: "Account" };
     }
+    public pools: List<Pool>;
 
     public tableConfig: TableConfig = {
         resizableColumn: false,
@@ -40,6 +43,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     public applicationData: ListView<BatchApplication, ApplicationListParams>;
     public jobData: ListView<Job, JobListParams>;
     public poolData: ListView<Pool, PoolListParams>;
+    private _destroy = new Subject();
 
     private _paramsSubscriber: Subscription;
     private initialOptions = { maxItems: 10 };
@@ -60,7 +64,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.poolData = this.poolService.listView();
+        this.poolData = this.poolService.listView;
+        this.poolData.items.pipe(takeUntil(this._destroy)).subscribe((pools) => {
+            this.pools = List(pools.slice(0, 10));
+            this.changeDetector.markForCheck();
+        });
         this.jobData = this.jobService.listView();
         this.applicationData = this.applicationService.listView();
     }
@@ -83,9 +91,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
-        this.poolData.dispose();
         this.jobData.dispose();
         this.applicationData.dispose();
+        this._destroy.unsubscribe();
     }
 
     public selectAccount(accountId: string): void {
@@ -112,8 +120,5 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
         this.jobData.setOptions(this.initialOptions);
         this.jobData.fetchNext();
-
-        this.poolData.setOptions(this.initialOptions);
-        this.poolData.fetchNext();
     }
 }

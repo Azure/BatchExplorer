@@ -8,12 +8,12 @@ import { SecureUtils } from "@batch-flask/utils";
 import { Node, NodeConnectionSettings, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
-    BEUserConfiguration,
     BatchExplorerService,
     NodeConnectService,
     NodeUserService,
 } from "app/services";
 import { PoolUtils } from "app/utils";
+import { BEUserConfiguration } from "common";
 import { ExternalApplication } from "common/constants";
 import { DateTime, Duration } from "luxon";
 import { Observable, from } from "rxjs";
@@ -119,9 +119,9 @@ export class NodeConnectComponent implements OnInit {
             this.generatePassword();
         }
 
-        const credentials = {...this.credentials};
+        const credentials = { ...this.credentials };
         if (!credentials.expiryTime) {
-            credentials.expiryTime = DateTime.local().plus(Duration.fromObject({days: 1})).toJSDate();
+            credentials.expiryTime = DateTime.local().plus(Duration.fromObject({ days: 1 })).toJSDate();
         }
 
         if (this.linux) {
@@ -182,7 +182,7 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public storeCredentialsFromForm(credentials: AddNodeUserAttributes) {
         // update the main template
-        this.credentials = {...credentials};
+        this.credentials = { ...credentials };
 
         // if the user entered a password in the form, use it to connect
         if (credentials.password) {
@@ -243,7 +243,7 @@ export class NodeConnectComponent implements OnInit {
      */
     private _initSSH(credentials: AddNodeUserAttributes): Observable<number> {
         // set the user that will be used for authentication
-        const obs =  this._addOrUpdateUser(credentials).pipe(
+        const obs = this._addOrUpdateUser(credentials).pipe(
             flatMap(() => {
                 // launch a terminal subprocess with the command to access the node
                 const args = {

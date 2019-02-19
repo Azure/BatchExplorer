@@ -9,7 +9,7 @@ import { FormModule, SelectComponent, SelectModule, ToolbarModule } from "@batch
 import { ButtonComponent, ButtonsModule } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { SettingsComponent } from "app/components/settings";
-import { DEFAULT_BE_USER_CONFIGURATION } from "app/services";
+import { DEFAULT_BE_USER_CONFIGURATION } from "common";
 
 @Component({
     template: `<bl-settings></bl-settings>`,

@@ -138,7 +138,7 @@ describe("SubmitNcjTemplateComponent", () => {
         };
 
         poolServiceSpy = {
-            listView: () => listProxy,
+            listView: listProxy,
         };
 
         vmSizeServiceSpy = {

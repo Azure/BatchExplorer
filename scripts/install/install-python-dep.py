@@ -1,2 +1,2 @@
-import pip
-pip.main(['install', '-r', './python/requirements.txt'])
+from pip import _internal
+_internal.main(['install', '-r', './python/requirements.txt'])

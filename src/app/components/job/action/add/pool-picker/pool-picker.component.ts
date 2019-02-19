@@ -71,7 +71,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnChan
         private vmSizeService: VmSizeService,
         private renderingContainerImageService: RenderingContainerImageService,
         private changeDetector: ChangeDetectorRef) {
-        this.poolsData = this.poolService.listView();
+        this.poolsData = this.poolService.listView;
         this.filters = formBuilder.group({
             id: "",
             offer: null,
@@ -113,10 +113,6 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnChan
         });
     }
 
-    public ngOnInit() {
-        this.poolsData.fetchAll();
-    }
-
     public ngOnChanges(changes) {
         if (changes.app && changes.renderEngine && changes.imageReferenceId) {
             this._inputs.next(
@@ -127,7 +123,6 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnChan
     public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();
-        this.poolsData.dispose();
     }
 
     public writeValue(poolInfo: any) {

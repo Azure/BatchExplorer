@@ -5,12 +5,12 @@ import { OS } from "@batch-flask/utils";
 import { ConnectionType, IaasNodeConnectionSettings, Node, NodeConnectionSettings, Pool } from "app/models";
 import { AzureBatchHttpService } from "app/services/azure-batch/core";
 import { PoolUtils } from "app/utils";
+import { BEUserConfiguration } from "common";
 import * as path from "path";
 import { Observable, Subscription, from, of } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
 import { AddNodeUserAttributes } from "../azure-batch";
 import { SSHKeyService } from "../ssh-key.service";
-import { BEUserConfiguration } from "../user-configuration";
 
 @Injectable({providedIn: "root"})
 export class NodeConnectService implements OnDestroy {

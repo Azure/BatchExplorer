@@ -11,7 +11,6 @@ import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
-    BEUserConfiguration,
     BatchAccountService,
     CommandService,
     NavigatorService,
@@ -23,6 +22,7 @@ import {
     SubscriptionService,
     ThemeService,
 } from "app/services";
+import { BEUserConfiguration } from "common";
 import { filter, first, takeUntil } from "rxjs/operators";
 
 @Component({

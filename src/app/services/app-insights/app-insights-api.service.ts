@@ -54,7 +54,7 @@ export class AppInsightsApiService implements HttpInterface {
                 }
             }),
             switchMap((account: ArmBatchAccount) => {
-                return this.adal.accessTokenData(account.subscription.tenantId, this.resourceUrl);
+                return this.adal.accessTokenData(account.subscription.tenantId, "appInsights");
             }),
             switchMap((accessToken) => {
                 options = this._setupRequestOptions(options, accessToken);
