@@ -1,7 +1,7 @@
 import { Routes } from "@angular/router";
 
 import { ActivityMonitorComponent } from "@batch-flask/ui/activity/activity-monitor";
-import { NavigationGuard } from "app/components/common/guards";
+import { RequireActiveBatchAccountGuard } from "app/components/common/guards";
 import { ThemeColorsComponent } from "app/components/misc";
 import { PoolStandaloneGraphsComponent } from "app/components/pool/graphs/standalone";
 import { SettingsComponent } from "app/components/settings";
@@ -35,22 +35,22 @@ export const routes: Routes = [
     },
     {
         path: "jobs",
-        canActivate: [NavigationGuard],
+        canActivate: [RequireActiveBatchAccountGuard],
         loadChildren: "./components/job/job.module#JobModule",
     },
     {
         path: "jobschedules",
-        canActivate: [NavigationGuard],
+        canActivate: [RequireActiveBatchAccountGuard],
         loadChildren: "./components/job-schedule/job-schedule.module#JobScheduleModule",
     },
     {
         path: "pools",
-        canActivate: [NavigationGuard],
+        canActivate: [RequireActiveBatchAccountGuard],
         loadChildren: "./components/pool/pool.module#PoolModule",
     },
     {
         path: "certificates",
-        canActivate: [NavigationGuard],
+        canActivate: [RequireActiveBatchAccountGuard],
         loadChildren: "./components/certificate/certificate.module#CertificateModule",
     },
     // Redirect for old Gallery URL not to break plugins using it
@@ -70,17 +70,17 @@ export const routes: Routes = [
     },
     {
         path: "gallery",
-        canActivate: [NavigationGuard],
+        canActivate: [RequireActiveBatchAccountGuard],
         loadChildren: "./components/gallery/gallery.module#GalleryModule",
     },
     {
         path: "applications",
-        canActivate: [NavigationGuard],
+        canActivate: [RequireActiveBatchAccountGuard],
         loadChildren: "./components/application/application.module#ApplicationModule",
     },
     {
         path: "data",
-        canActivate: [NavigationGuard],
+        canActivate: [RequireActiveBatchAccountGuard],
         loadChildren: "./components/data/data.module#DataModule",
     },
     {

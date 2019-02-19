@@ -1,0 +1,28 @@
+<bl-toolbar class="header">
+    <div toolbarLabel>Please select a batch account</div>
+</bl-toolbar>
+<bl-quick-list
+    class="content"
+    [data]="accounts"
+    [config]="listConfig"
+    (activeItemChange)="pickAccount($event)">
+
+    <ng-container *blQuickListRowTitle="let account">
+        {{account.displayName}}
+        <ng-container *ngIf="account.name !== account.displayName">
+            ({{account.name}})
+        </ng-container>
+    </ng-container>
+    <ng-container *blQuickListRowState="let account">
+        <div *ngIf="account.armEnabled" class="account-info">
+            <span class="auto-storage" *ngIf="account.autoStorage" title="Auto storage account: {{account.autoStorage.storageAccountId}}"><i class="fa fa-hdd-o"></i></span>
+            <span class="auto-storage error" *ngIf="!account.autoStorage" title="This account has no auto storage account specified">
+                <i class="fa fa-hdd-o"></i>
+            </span>
+            <bl-location [location]="account.location"></bl-location>
+        </div>
+        <ng-container *ngIf="!account.armEnabled">
+            <span class="account-type">Local</span>
+        </ng-container>
+    </ng-container>
+</bl-quick-list>
