@@ -7,12 +7,15 @@ def init():
         "BATCH_EXLORER_AZ_BATCH_EXT_PATH"] = "D:/dev/BatchExplorer/azure-batch-cli-extensions"
 
     if "BATCH_EXLORER_AZ_BATCH_EXT_PATH" in os.environ:
-        print(sys.modules)
         del sys.modules["azext"]
-        os.environ["PYTHONPATH"] = os.path.join(
-            os.environ["BATCH_EXLORER_AZ_BATCH_EXT_PATH"])
-        sys.path.insert(
-            0, os.path.join(os.environ["BATCH_EXLORER_AZ_BATCH_EXT_PATH"]))
+        path = os.environ["BATCH_EXLORER_AZ_BATCH_EXT_PATH"]
 
-        print("SYS", sys.path)
-        print("Az", __import__("azext").__path__)
+        if os.path.isdir(path) and os.path.isdir(os.path.join(path, "azext")):
+            print(
+                "BATCH_EXLORER_AZ_BATCH_EXT_PATH provided stub path for the azure batch extension. It will load from {}".
+                format(path))
+            sys.path.insert(0, os.path.join(path))
+        else:
+            print(
+                "BATCH_EXLORER_AZ_BATCH_EXT_PATH is not a valid path for azext {0}".
+                format(path))
