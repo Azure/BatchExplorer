@@ -6,7 +6,6 @@ asar: true
 
 files:
   - "build/"
-  - "node_modules/"
   - "package.json"
   - "dev-app-update.yml"
   - "!node_modules/jschardet/"

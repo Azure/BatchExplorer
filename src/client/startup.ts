@@ -16,7 +16,7 @@ function initAutoUpdate() {
     autoUpdater.autoDownload = true;
     autoUpdater.allowDowngrade = true;
     autoUpdater.logger = log;
-    autoUpdater.updateConfigPath = path.join(Constants.resourcesFolder, "dev-app-update.yml");
+    autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
 }
 
 function setupSingleInstance(batchExplorerApp: BatchExplorerApplication) {
