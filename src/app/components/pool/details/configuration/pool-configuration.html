@@ -85,16 +85,7 @@
                 <bl-text-property label="User identity" [value]="decorator.startTask?.userIdentitySummary"></bl-text-property>
                 <bl-bool-property label="Wait for success" [value]="startTask.waitForSuccess" yesNo="true"></bl-bool-property>
             </ng-container>
-            <bl-table-property label="Resource files" *ngIf="startTask.resourceFiles?.size > 0">
-                <bl-table-property-header>
-                    <div tp-column>Http url</div>
-                    <div tp-column>File path</div>
-                </bl-table-property-header>
-                <bl-table-property-row *ngFor="let file of startTask.resourceFiles">
-                    <bl-tp-cell [value]="file.httpUrl"></bl-tp-cell>
-                    <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
-                </bl-table-property-row>
-            </bl-table-property>
+            <bl-resource-files-properties [files]="startTask.resourceFiles"></bl-resource-files-properties>
             <bl-table-property label="Environment settings" *ngIf="startTask.environmentSettings?.size > 0">
                 <bl-table-property-header>
                     <div tp-column>Key</div>
