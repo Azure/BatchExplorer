@@ -8,12 +8,13 @@ const { promisify } = require("util");
 
 const copyFile = promisify(fs.copyFile);
 
-const stagingDir = process.env.BUILD_ARTIFACTSTAGINGDIRECTORY;
+const stagingDir = path.join(process.env.AGENT_TEMPDIRECTORY, "batchexplorer-github");
 console.log("Env", process.env);
 const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT;
 const storageAccountKey = process.argv[2];
 
 console.log("Artifact staging directory is", stagingDir);
+console.log(`##vso[task.setvariable variable=BE_GITHUB_ARTIFACTS_DIR]${stagingDir}`)
 
 if (!storageAccountKey) {
     console.error("No storage account key passed");
