@@ -11,7 +11,7 @@ import "./resource-files-properties.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceFilesPropertiesComponent {
-    @Input() public files: ResourceFile[] | List<ResourceFile>;
+    @Input() public files: List<ResourceFile>;
 
     constructor(private cloudFileService: CloudFileService) {
 
