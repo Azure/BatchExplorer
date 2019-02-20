@@ -86,6 +86,9 @@ export class AdalService implements OnDestroy {
             this.tokenCache.storeToken(tenantId, resource, token);
             delete this._waitingPromises[key];
             return token;
+        }).catch((e) =>  {
+            delete this._waitingPromises[key];
+            return Promise.reject(e);
         });
         this._waitingPromises[key] = promise;
         return promise;
