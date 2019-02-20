@@ -8,7 +8,8 @@ const { promisify } = require("util");
 
 const copyFile = promisify(fs.copyFile);
 
-const stagingDir = process.env.Build_ArtifactStagingDirectory;
+const stagingDir = process.env.BUILD_ARTIFACTSTAGINGDIRECTORY;
+console.log("Env", process.env);
 const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT;
 const storageAccountKey = process.argv[2];
 
