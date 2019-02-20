@@ -922,6 +922,21 @@
       <trans-unit id="rerun-task-form.title">
         <source>Rerun task</source>
       </trans-unit>
+      <trans-unit id="resource-files-properties">
+        <source/>
+      </trans-unit>
+      <trans-unit id="resource-files-properties.fileMode">
+        <source>File mode</source>
+      </trans-unit>
+      <trans-unit id="resource-files-properties.filePath">
+        <source>Node file path</source>
+      </trans-unit>
+      <trans-unit id="resource-files-properties.httpUrl">
+        <source>Http url</source>
+      </trans-unit>
+      <trans-unit id="resource-files-properties.none">
+        <source>No resource files</source>
+      </trans-unit>
       <trans-unit id="resource-permission-button">
         <source/>
       </trans-unit>
@@ -1200,21 +1215,6 @@
       </trans-unit>
       <trans-unit id="task-node-info.poolNotFound">
         <source>Pool doesn't exist anymore</source>
-      </trans-unit>
-      <trans-unit id="task-resource-files">
-        <source/>
-      </trans-unit>
-      <trans-unit id="task-resource-files.fileMode">
-        <source>File mode</source>
-      </trans-unit>
-      <trans-unit id="task-resource-files.filePath">
-        <source>Node file path</source>
-      </trans-unit>
-      <trans-unit id="task-resource-files.httpUrl">
-        <source>Http url</source>
-      </trans-unit>
-      <trans-unit id="task-resource-files.none">
-        <source>This task contains no resource files</source>
       </trans-unit>
       <trans-unit id="time-range-picker">
         <source/>
