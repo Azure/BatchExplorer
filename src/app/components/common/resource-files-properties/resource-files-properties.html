@@ -1,4 +1,4 @@
-<bl-table-property label="Resource files" *ngIf="files.size > 0">
+<bl-table-property [label]="label" *ngIf="files.size > 0">
     <bl-table-property-header>
         <div tp-column>Source</div>
         <div tp-column>Node file path</div>
@@ -29,5 +29,5 @@
     </bl-table-property-row>
 </bl-table-property>
 <div *ngIf="files.size === 0">
-    {{'resource-files-properties.none' | i18n}}
+    <bl-text-property [label]="label" [value]="'resource-files-properties.none' | i18n"></bl-text-property>
 </div>
