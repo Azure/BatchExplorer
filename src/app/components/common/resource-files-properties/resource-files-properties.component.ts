@@ -24,7 +24,7 @@ export class ResourceFilesPropertiesComponent {
         }
     }
 
-    public trackFile(_: number, file: ResourceFile) {
-        return file.id;
+    public trackFile(index:  number) {
+        return index;
     }
 }
