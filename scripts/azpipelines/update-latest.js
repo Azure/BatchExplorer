@@ -1,6 +1,7 @@
 // tslint:disable:no-console
 // @ts-check
 const azureStorage = require("azure-storage");
+const makeDir = require("make-dir");
 const path = require("path");
 const fs = require("fs");
 const { getManifest, getContainerName } = require("./utils");
@@ -85,12 +86,13 @@ async function copyFilesToArtifactStaging(os) {
     const manifest = getManifest(os);
     console.log(`Copy ${manifest.files.length} files for os: ${os}`);
     for (const file of manifest.files) {
-        copyFile(path.join(os, file.path), path.join(stagingDir, file.path))
+        await copyFile(path.join(os, file.path), path.join(stagingDir, file.path))
     }
 }
 
 async function copyAllFilesToArtifactStaging() {
     console.log(`Starting copying artifacts for github release`);
+    await makeDir(stagingDir);
     await copyFilesToArtifactStaging("windows");
     await copyFilesToArtifactStaging("linux");
     await copyFilesToArtifactStaging("darwin");
