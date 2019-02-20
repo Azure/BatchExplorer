@@ -28,6 +28,6 @@
         </bl-tp-plain-cell>
     </bl-table-property-row>
 </bl-table-property>
-<div>
+<div *ngIf="files.size === 0">
     {{'resource-files-properties.none' | i18n}}
 </div>
