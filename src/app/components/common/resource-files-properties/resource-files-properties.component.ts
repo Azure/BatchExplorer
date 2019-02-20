@@ -24,7 +24,7 @@ export class ResourceFilesPropertiesComponent {
         }
     }
 
-    public trackFile(index:  number) {
+    public trackFile(index: number) {
         return index;
     }
 }
