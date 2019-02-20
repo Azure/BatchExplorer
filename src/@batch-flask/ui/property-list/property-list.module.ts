@@ -15,7 +15,11 @@ import { PropertyFieldComponent } from "./property-field";
 import { PropertyGroupComponent } from "./property-group";
 import { PropertyListComponent } from "./property-list.component";
 import {
-    TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
+    TablePropertyCellComponent,
+    TablePropertyCellPlainComponent,
+    TablePropertyComponent,
+    TablePropertyHeaderComponent,
+    TablePropertyRowComponent,
 } from "./table-property";
 import { TextPropertyComponent } from "./text-property";
 
@@ -29,6 +33,7 @@ const publicComponents = [
     TablePropertyComponent,
     TablePropertyHeaderComponent,
     TablePropertyRowComponent,
+    TablePropertyCellPlainComponent,
     EntityConfigurationComponent,
     DatePropertyComponent,
 ];

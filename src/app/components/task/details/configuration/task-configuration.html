@@ -28,6 +28,10 @@
             </bl-table-property>
         </bl-property-group>
 
+        <bl-property-group label="Resource files">
+            <bl-resource-files-properties [files]="task.resourceFiles"></bl-resource-files-properties>
+        </bl-property-group>
+
         <bl-property-group [label]="'applicationPackages.label' | i18n" class="wide" [collapsed]="true">
             <div collapsed-preview>
                 <span>{{'applicationPackages.summary' | i18n: {count: appPackages?.size} }}</span>
@@ -57,7 +61,7 @@
         </bl-property-group>
 
         <bl-property-group label="Container settings" class="wide" [collapsed]="true">
-            <ng-container *ngIf="containerSettings.propertyCount">
+            <ng-container *ngIf="task.containerSettings;let containerSettings">
                 <bl-text-property label="Image name" [value]="containerSettings.imageName"></bl-text-property>
                 <bl-text-property label="Container run option" [value]="containerSettings.containerRunOptions"></bl-text-property>
                 <bl-text-property label="Registry server" [value]="containerSettings.registryServer"></bl-text-property>
@@ -118,6 +122,7 @@
             </div>
             <bl-text-property [label]="'multiInstanceSettings.coordinationCommandLine.label' | i18n" [value]="multiInstanceSettings.coordinationCommandLine" [wrap]="true"></bl-text-property>
             <bl-text-property [label]="'multiInstanceSettings.numberOfInstances.label' | i18n" [value]="multiInstanceSettings.numberOfInstances"></bl-text-property>
+            <bl-resource-files-properties label="Common resource files" [files]="multiInstanceSettings.commonResourceFiles"></bl-resource-files-properties>
         </bl-property-group>
     </bl-property-list>
 </bl-entity-configuration>
