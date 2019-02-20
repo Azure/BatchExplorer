@@ -44,7 +44,7 @@ const CLOUD_SERVICE_OFFER = "cloudservice-windows";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolPickerComponent), multi: true },
     ],
 })
-export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
+export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     @Input() public app: RenderApplication;
