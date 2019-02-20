@@ -73,6 +73,7 @@ function getLatestFile(os) {
 
 async function updateLatest(os) {
     const manifest = getManifest(os);
+    console.log(`##vso[task.setvariable variable=BE_RELEASE_VERSION]${manifest.version}`)
     console.log(`Updating latest for os: ${os}`);
     const container = getContainerName(manifest.buildType);
     const latestFile = getLatestFile(os);

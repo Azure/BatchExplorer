@@ -23,4 +23,8 @@ export class ResourceFilesPropertiesComponent {
             this.cloudFileService.openFile(file.httpUrl);
         }
     }
+
+    public trackFile(_: number, file: ResourceFile) {
+        return file.id;
+    }
 }

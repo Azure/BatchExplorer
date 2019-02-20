@@ -4,7 +4,7 @@
         <div tp-column>Node file path</div>
         <div tp-column class="open-file-cell"></div>
     </bl-table-property-header>
-    <bl-table-property-row *ngFor="let file of files">
+    <bl-table-property-row *ngFor="let file of files;trackBy: trackFile">
         <bl-tp-cell [value]="file.httpUrl || file.storageContainerUrl || file.autoStorageContainerName"
             [useContent]="true">
             <ng-container *ngIf="file.httpUrl">
