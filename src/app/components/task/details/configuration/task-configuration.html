@@ -28,6 +28,10 @@
             </bl-table-property>
         </bl-property-group>
 
+        <bl-property-group label="Resource files">
+            <bl-resource-files-properties [files]="task.resourceFiles"></bl-resource-files-properties>
+        </bl-property-group>
+
         <bl-property-group [label]="'applicationPackages.label' | i18n" class="wide" [collapsed]="true">
             <div collapsed-preview>
                 <span>{{'applicationPackages.summary' | i18n: {count: appPackages?.size} }}</span>

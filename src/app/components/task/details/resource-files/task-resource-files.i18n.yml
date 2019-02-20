@@ -1,5 +1,0 @@
-task-resource-files:
-  httpUrl: Http url
-  filePath: Node file path
-  fileMode: File mode
-  none: This task contains no resource files

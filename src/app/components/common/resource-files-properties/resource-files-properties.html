@@ -1,0 +1,30 @@
+<bl-table-property label="Resource files">
+    <bl-table-property-header>
+        <div tp-column>Source</div>
+        <div tp-column>Node file path</div>
+        <div tp-column class="open-file-cell"></div>
+    </bl-table-property-header>
+    <bl-table-property-row *ngFor="let file of files">
+        <bl-tp-cell [value]="file.httpUrl || file.storageContainerUrl || file.autoStorageContainerName"
+            [useContent]="true">
+            <ng-container *ngIf="file.httpUrl">
+                <i class="fa fa-file"></i>
+                {{file.httpUrl}}
+            </ng-container>
+            <div *ngIf="file.autoStorageContainerName" title="Auto storage container">
+                <i class="fa fa-folder"></i>
+                {{file.storageContainerUrl || file.autoStorageContainerName}}
+                <ng-container *ngIf="file.blobPrefix">({{file.blobPrefix}}/**/*)</ng-container>
+            </div>
+            <div *ngIf="file.storageContainerUrl" title="Storage container url">
+                <i class="fa fa-folder"></i>
+                {{file.storageContainerUrl || file.autoStorageContainerName}}
+                <ng-container *ngIf="file.blobPrefix">({{file.blobPrefix}}/**/*)</ng-container>
+            </div>
+        </bl-tp-cell>
+        <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
+        <bl-tp-plain-cell class="open-file-cell" (do)="openResourceFile(file)" *ngIf="file.httpUrl">
+            <i class="fa fa-external-link"></i>
+        </bl-tp-plain-cell>
+    </bl-table-property-row>
+</bl-table-property>

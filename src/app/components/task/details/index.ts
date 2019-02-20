@@ -4,4 +4,3 @@ export * from "./task-details.component";
 export * from "./task-dependency-browser";
 export * from "./task-error-display.component";
 export * from "./task-details.module";
-export * from "./resource-files";
