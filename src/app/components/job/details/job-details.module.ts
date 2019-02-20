@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 
 import { BaseModule, FileModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
+import { ResourceFilesPropertiesModule } from "app/components/common";
 import { FileBrowseModule } from "app/components/file/browse";
 import { JobScheduleActionModule } from "app/components/job-schedule/action";
 import { TaskBrowseModule } from "app/components/task/browse";
@@ -34,6 +35,7 @@ const modules = [
     exports: components,
     imports: [
         JobBaseModule,
+        ResourceFilesPropertiesModule,
         ...commonModules,
         ...modules,
     ],

@@ -61,7 +61,7 @@
         </bl-property-group>
 
         <bl-property-group label="Container settings" class="wide" [collapsed]="true">
-            <ng-container *ngIf="containerSettings.propertyCount">
+            <ng-container *ngIf="task.containerSettings;let containerSettings">
                 <bl-text-property label="Image name" [value]="containerSettings.imageName"></bl-text-property>
                 <bl-text-property label="Container run option" [value]="containerSettings.containerRunOptions"></bl-text-property>
                 <bl-text-property label="Registry server" [value]="containerSettings.registryServer"></bl-text-property>
