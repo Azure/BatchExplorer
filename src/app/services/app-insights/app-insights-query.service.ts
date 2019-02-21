@@ -14,11 +14,11 @@ import { AppInsightQueryResultProcessor } from "./query-result-processor";
 
 const metrics: StringMap<MetricDefinition> = {
     cpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "cloud/roleInstance" },
-    individualCpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "customDimensions/[Cpu #]" },
+    individualCpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "customDimensions/[CPU #]" },
     gpuUsage: { appInsightsMetricId: "customMetrics/Gpu usage", segment: "cloud/roleInstance" },
-    individualGpuUsage: { appInsightsMetricId: "customMetrics/Gpu usage", segment: "customDimensions/[Gpu #]" },
+    individualGpuUsage: { appInsightsMetricId: "customMetrics/Gpu usage", segment: "customDimensions/[GPU #]" },
     gpuMemory: { appInsightsMetricId: "customMetrics/Gpu memory usage", segment: "cloud/roleInstance" },
-    individualGpuMemory: { appInsightsMetricId: "customMetrics/Gpu memory usage", segment: "customDimensions/[Gpu #]" },
+    individualGpuMemory: { appInsightsMetricId: "customMetrics/Gpu memory usage", segment: "customDimensions/[GPU #]" },
     memoryAvailable: { appInsightsMetricId: "customMetrics/Memory available", segment: "cloud/roleInstance" },
     memoryUsed: { appInsightsMetricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
     diskRead: { appInsightsMetricId: "customMetrics/Disk read", segment: "cloud/roleInstance" },

@@ -44,6 +44,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
             }));
             this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.individualCpuUsage)
                 .subscribe((data) => {
+                    console.log("Invidivial cpu usage", data);
                     this.individualCpuUsages = data as any;
                     if (data) {
                         this.cpuCount = this.individualCpuUsages.length;
