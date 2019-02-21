@@ -28,7 +28,6 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
         super.ngOnChanges(changes);
 
         if (changes.data) {
-            this._clearMetricSubs();
             this._memoryAvailable = this.data.memoryAvailable || {};
             this.memUsages = this.data.memoryUsed  || {};
             this._updateStatus();

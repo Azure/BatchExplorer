@@ -33,7 +33,6 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
         super.ngOnChanges(changes);
 
         if (changes.data) {
-            this._clearMetricSubs();
             this.diskUsages = this.data.diskUsed || {};
             this.diskFree = this.data.diskFree || {};
 

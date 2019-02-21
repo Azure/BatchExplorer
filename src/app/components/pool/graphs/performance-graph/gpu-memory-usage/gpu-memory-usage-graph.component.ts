@@ -32,7 +32,6 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
     public ngOnChanges(changes) {
         super.ngOnChanges(changes);
         if (changes.data) {
-            this._clearMetricSubs();
             this.gpuUsages = this.data.gpuMemory || {};
             this.individualGpuUsages = this.data.individualGpuMemory || [];
             if (this.individualGpuUsages) {
