@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component, HostBinding, Input, OnChanges } from "@angular/core";
+import { Router } from "@angular/router";
+import {
+    BatchPerformanceMetrics, NodesPerformanceMetric, PerformanceMetric,
+} from "app/models/app-insights/metrics-result";
+import { NumberUtils } from "app/utils";
 import { BehaviorSubject, Subscription } from "rxjs";
 
-import { Router } from "@angular/router";
-import { NodesPerformanceMetric, PerformanceMetric } from "app/models/app-insights/metrics-result";
-import { NumberUtils } from "app/utils";
-import { PerformanceData } from "./performance-data";
+import { Pool } from "app/models";
 import "./performance-graph.scss";
 
 export enum BatchUsageMetrics {
@@ -26,7 +28,8 @@ export enum Aggregation {
 })
 export class PerformanceGraphComponent implements OnChanges {
     @Input() @HostBinding("class.interactive") public interactive: boolean = true;
-    @Input() public data: PerformanceData;
+    @Input() public pool: Pool; // TODO-TIM pass
+    @Input() public data: BatchPerformanceMetrics;
 
     @HostBinding("class.bl-performance-graph") public baseCssCls = true;
 
@@ -107,7 +110,7 @@ export class PerformanceGraphComponent implements OnChanges {
 
         const dataset: any = this.datasets[element._datasetIndex];
         if (dataset && dataset.nodeId) {
-            this.router.navigate(["/pools", this.data.pool.id, "nodes", dataset.nodeId]);
+            this.router.navigate(["/pools", this.pool.id, "nodes", dataset.nodeId]);
         }
     }
 

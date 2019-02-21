@@ -3,7 +3,6 @@ import { FilterBuilder } from "@batch-flask/core";
 import {
     AppInsightsMetricBody,
     AppInsightsMetricsResult,
-    BatchPerformanceMetricType,
     BatchPerformanceMetrics,
 } from "app/models/app-insights";
 import { Observable } from "rxjs";
@@ -108,9 +107,9 @@ export class AppInsightsQueryService {
             const data = metricResult.body.value;
             const segments = metricResult.body.value.segments;
             switch (id) {
-                case BatchPerformanceMetricType.individualCpuUsage:
-                case BatchPerformanceMetricType.individualGpuUsage:
-                case BatchPerformanceMetricType.individualGpuMemory:
+                case "individualCpuUsage":
+                case "individualGpuUsage":
+                case "individualGpuMemory":
                     performances[id] = this._processIndividualDeviceUsage(id, segments);
                     break;
                 default:

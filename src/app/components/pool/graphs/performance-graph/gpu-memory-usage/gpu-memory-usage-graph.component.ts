@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
 import {
-    BatchPerformanceMetricType,
     NodesPerformanceMetric,
     PerformanceMetric,
 } from "app/models/app-insights/metrics-result";
@@ -12,6 +11,7 @@ import "./gpu-memory-usage-graph.scss";
 @Component({
     selector: "bl-gpu-memory-usage-graph",
     templateUrl: "gpu-memory-usage-graph.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     @Input() public showIndividualGpu = false;
@@ -33,21 +33,14 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
         super.ngOnChanges(changes);
         if (changes.data) {
             this._clearMetricSubs();
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.gpuMemory).subscribe((data) => {
-                this.gpuUsages = data;
-                this._updateStatus();
-                this.updateData();
-            }));
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.individualGpuMemory)
-                .subscribe((data) => {
-                    this.individualGpuUsages = data as any;
-                    if (data) {
-                        this.gpuCount = this.individualGpuUsages.length;
-                    }
-                    this.lastIndividualGpuUsage = this.individualGpuUsages.map(x => x.last());
-                    this._updateStatus();
-                    this.updateData();
-                }));
+            this.gpuUsages = this.data.gpuMemory || {};
+            this.individualGpuUsages = this.data.individualGpuMemory || [];
+            if (this.individualGpuUsages) {
+                this.gpuCount = this.individualGpuUsages.length;
+            }
+            this.lastIndividualGpuUsage = this.individualGpuUsages.map(x => x.last());
+            this._updateStatus();
+            this.updateData();
         }
     }
 
@@ -57,6 +50,7 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
         } else {
             this._showIndiviualGpuUsage();
         }
+        this.changeDetector.markForCheck();
     }
 
     public changeShowOverallUsage(newValue) {

@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
 
 import {
-    BatchPerformanceMetricType,
     NodesPerformanceMetric,
     PerformanceMetric,
 } from "app/models/app-insights/metrics-result";
@@ -13,6 +12,7 @@ import "./cpu-usage-graph.scss";
 @Component({
     selector: "bl-cpu-usage-graph",
     templateUrl: "cpu-usage-graph.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CpuUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     @Input() public showIndividualCpu = false;
@@ -35,24 +35,15 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
         super.ngOnChanges(changes);
 
         if (changes.data) {
-            this._clearMetricSubs();
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.cpuUsage).subscribe((data) => {
-                this.cpuUsages = data;
-                this._updateStatus();
-                this.updateData();
-                // this.lastCpuUsage = this.cpuUsages.last();
-            }));
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.individualCpuUsage)
-                .subscribe((data) => {
-                    console.log("Invidivial cpu usage", data);
-                    this.individualCpuUsages = data as any;
-                    if (data) {
-                        this.cpuCount = this.individualCpuUsages.length;
-                    }
-                    this.lastIndividualCpuUsage = this.individualCpuUsages.map(x => x.last());
-                    this._updateStatus();
-                    this.updateData();
-                }));
+            this.cpuUsages = this.data.cpuUsage || {};
+            this.individualCpuUsages = this.data.individualCpuUsage || [];
+            if (this.individualCpuUsages) {
+                this.cpuCount = this.individualCpuUsages.length;
+                this.lastIndividualCpuUsage = this.individualCpuUsages.map(x => x.last());
+            }
+            this._updateStatus();
+            this.updateData();
+
         }
     }
 
@@ -62,6 +53,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
         } else {
             this._showIndiviualCpuUsage();
         }
+        this.changeDetector.markForCheck();
     }
 
     public changeShowOverallUsage(newValue) {
@@ -74,7 +66,11 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
     }
 
     private _showOverallCpuUsage() {
-        this.datasets = this._getDatasetsGroupedByNode(this.cpuUsages, "rgb(9, 94, 168)");
+        if (this.cpuUsages) {
+            this.datasets = this._getDatasetsGroupedByNode(this.cpuUsages, "rgb(9, 94, 168)");
+        } else {
+            this.datasets = [];
+        }
     }
 
     private _showIndiviualCpuUsage() {

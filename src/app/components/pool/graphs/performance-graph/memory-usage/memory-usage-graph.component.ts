@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
 import {
-    BatchPerformanceMetricType,
     NodesPerformanceMetric,
 } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
@@ -10,6 +9,7 @@ import { Aggregation, PerformanceGraphComponent } from "../performance-graph.com
 @Component({
     selector: "bl-memory-usage-graph",
     templateUrl: "memory-usage-graph.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MemoryUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public max = null;
@@ -29,20 +29,12 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
 
         if (changes.data) {
             this._clearMetricSubs();
+            this._memoryAvailable = this.data.memoryAvailable || {};
+            this.memUsages = this.data.memoryUsed  || {};
+            this._updateStatus();
+            this._updateMax();
+            this.updateData();
 
-            this._metricSubs.push(this.data.observeMetric<NodesPerformanceMetric>(BatchPerformanceMetricType.memoryUsed)
-                .subscribe((data) => {
-                    this.memUsages = data;
-                    this._updateStatus();
-                    this.updateData();
-                }));
-            this._metricSubs.push(this.data.observeMetric<NodesPerformanceMetric>(
-                BatchPerformanceMetricType.memoryAvailable)
-                .subscribe((data) => {
-                    this._memoryAvailable = data;
-                    this._updateMax();
-                    this._updateStatus();
-                }));
         }
     }
 
@@ -50,6 +42,7 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
         if (this.aggregation === Aggregation.Each) {
             this.datasets = this._getDatasetsGroupedByNode(this.memUsages, "rgb(137, 11, 170)");
         }
+        this.changeDetector.markForCheck();
     }
 
     public changeShowOverallUsage(newValue) {
