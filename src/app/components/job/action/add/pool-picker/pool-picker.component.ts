@@ -8,12 +8,12 @@ import {
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { List } from "immutable";
-import { BehaviorSubject, Subject, combineLatest } from "rxjs";
+import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 
-import { ListView, isNotNullOrUndefined } from "@batch-flask/core";
+import { isNotNullOrUndefined } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
-import { Offer, Pool, PoolOsSkus } from "app/models";
-import { PoolListParams, PoolOsService, PoolService, RenderingContainerImageService,
+import { Offer, Pool } from "app/models";
+import { PoolOsService, PoolService, RenderingContainerImageService,
     VmSizeService } from "app/services";
 import { PoolUtils } from "app/utils";
 import { distinctUntilChanged, filter, map, startWith, takeUntil } from "rxjs/operators";
@@ -52,14 +52,11 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
     @Input() public renderEngine: RenderEngine;
 
     public pickedPool: string;
-    public poolsData: ListView<Pool, PoolListParams>;
     public displayedPools: List<Pool> = List([]);
     public filters: FormGroup;
     public offers: any[] = [];
 
     private _vmSizeCoresMap = new Map<string, number>();
-    private _pools: List<Pool> = List([]);
-    private _offers: Offer[] = [];
     private _propagateChange: (value: any) => void = null;
     private _destroy = new Subject();
     private _inputs = new BehaviorSubject<Inputs>(null);
@@ -71,7 +68,6 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
         private vmSizeService: VmSizeService,
         private renderingContainerImageService: RenderingContainerImageService,
         private changeDetector: ChangeDetectorRef) {
-        this.poolsData = this.poolService.listView;
         this.filters = formBuilder.group({
             id: "",
             offer: null,
@@ -79,8 +75,9 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
 
         const containerImageMap = this.renderingContainerImageService.containerImagesAsMap();
 
-        combineLatest(
-            this.poolsData.items,
+        let ciFilteredPools: Observable<List<Pool>>;
+        ciFilteredPools = combineLatest(
+            this.poolService.listView.items,
             this.filters.valueChanges.pipe(startWith(this.filters.value), distinctUntilChanged()),
             this._inputs.pipe(filter(isNotNullOrUndefined)),
             containerImageMap,
@@ -89,16 +86,22 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
             map(([pools, filters, inputs, containerImages]) => {
                 return pools.filter((pool) => {
                     return this._filterPool(pool, filters, inputs, containerImages);
-                });
-            }),
-            ).subscribe((pools) => {
+                }).toList();
+            }));
+
+        ciFilteredPools.subscribe((pools) => {
                 this.displayedPools = List<Pool>(pools);
                 this.changeDetector.markForCheck();
         });
 
-        this.poolOsService.offers.pipe(takeUntil(this._destroy)).subscribe((offers: PoolOsSkus) => {
-            this._offers = offers.allOffers;
-            this._updateOffers();
+        combineLatest(
+            this.poolOsService.offers,
+            ciFilteredPools,
+        ).pipe(
+            takeUntil(this._destroy),
+        ).subscribe(([offers, pools]) => {
+            this._updateOffers(offers.allOffers, pools);
+            this.changeDetector.markForCheck();
         });
 
         this.vmSizeService.sizes.pipe(takeUntil(this._destroy)).subscribe((sizes) => {
@@ -197,8 +200,9 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
             }
         }
 
+        // TODO can we use filters.containerImage instead? Wired up through the html / onChanges?
+        if (inputs.app && inputs.renderEngine && inputs.imageReferenceId) {
 
-        if (inputs.app && inputs.renderEngine && inputs.imageReferenceId) { // TODO can we use filters.containerImage instead? Wired up through the html / onChanges?
             if (!this._filterByContainerImage(pool, inputs, containerImages)) {
                 return false;
             }
@@ -219,23 +223,22 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
         return true;
     }
 
-    private _updateOffers() {
-        const offers = this._offers.map((offer) => {
-            const count = this._pools.count(x => this._filterByOffer(x, offer.name));
+    private _updateOffers(offers: Offer[], pools: List<Pool>) {
+        const offersMap = offers.map((offer) => {
+            const count = pools.count(x => this._filterByOffer(x, offer.name));
             return {
                 name: offer.name,
                 label: `${offer.name} (${count})`,
             };
         });
 
-        const cloudServiceCount = this._pools.count(x => this._filterByOffer(x, CLOUD_SERVICE_OFFER));
-        offers.push({
+        const cloudServiceCount = pools.count(x => this._filterByOffer(x, CLOUD_SERVICE_OFFER));
+        offersMap.push({
             name: CLOUD_SERVICE_OFFER,
             label: `Windows (Cloud service) (${cloudServiceCount})`,
         });
 
-        this.offers = offers;
-        this.changeDetector.markForCheck();
+        this.offers = offersMap;
     }
 
     private _filterByContainerImage(pool: Pool, inputs: Inputs,

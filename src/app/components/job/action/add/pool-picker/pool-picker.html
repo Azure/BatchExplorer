@@ -8,39 +8,37 @@
     </bl-select>
     <input blInput class="search-input" [placeholder]="'pool-picker.filterByID' | i18n" formControlName="id" />
 </div>
-<bl-loading [status]="poolsData.status | async">
-    <div class="pool-list" role="listbox">
-        <bl-clickable
-            role="option"
-            class="pool"
-            *ngFor="let pool of displayedPools; trackBy: trackPool"
-            [class.active]="pool.id === pickedPool"
-            [attr.aria-selected]="pool.id === pickedPool"
-            (do)="pickPool(pool)">
+<div class="pool-list" role="listbox">
+    <bl-clickable
+        role="option"
+        class="pool"
+        *ngFor="let pool of displayedPools; trackBy: trackPool"
+        [class.active]="pool.id === pickedPool"
+        [attr.aria-selected]="pool.id === pickedPool"
+        (do)="pickPool(pool)">
 
-            <div class="icon">
-                <bl-icon [icon]="iconForPool(pool)"></bl-icon>
-            </div>
-            <div class="info">
-                <div class="title" [title]="pool.id">{{pool.id}}</div>
-                <div class="details">
-                    <div title="Pool has {{pool.targetNodes}} nodes" class="metric">
-                        <i class="fa fa-tv"></i>
-                        <span attr.aria-label="{{pool.targetNodes}} nodes">{{pool.targetNodes}}</span>
-                    </div>
-                    <div title="Pool has {{poolCoreCount(pool)}} cores" class="metric">
-                        <i class="fa fa-microchip"></i>
-                        <span attr.aria-label="{{pool.targetNodes}} cores">{{poolCoreCount(pool)}}</span>
-                    </div>
-                    <div class="pool-tags">
-                        <bl-tags [tags]="pool.tags" [maxTags]="3"></bl-tags>
-                    </div>
+        <div class="icon">
+            <bl-icon [icon]="iconForPool(pool)"></bl-icon>
+        </div>
+        <div class="info">
+            <div class="title" [title]="pool.id">{{pool.id}}</div >
+            <div class="details">
+                <div title="Pool has {{pool.targetNodes}} nodes" class="metric">
+                    <i class="fa fa-tv"></i>
+                    <span attr.aria-label="{{pool.targetNodes}} nodes">{{pool.targetNodes}}</span>
+                </div>
+                <div title="Pool has {{poolCoreCount(pool)}} cores" class="metric">
+                    <i class="fa fa-microchip"></i>
+                    <span attr.aria-label="{{pool.targetNodes}} cores">{{poolCoreCount(pool)}}</span>
+                </div>
+                <div class="pool-tags">
+                    <bl-tags [tags]="pool.tags" [maxTags]="3"></bl-tags>
                 </div>
             </div>
-        </bl-clickable>
-
-        <div *ngIf="displayedPools.size === 0 && (poolsData.status | async) === LoadingStatus.Ready">
-            {{'pool-picker.noneMatching' | i18n}} <bl-clickable class="reset-filters" (do)="resetFilters()">{{'pool-picker.reset' | i18n}}</bl-clickable>
         </div>
+    </bl-clickable>
+
+    <div *ngIf="displayedPools.size === 0">
+        {{'pool-picker.noneMatching' | i18n}} <bl-clickable class="reset-filters" (do)="resetFilters()">{{'pool-picker.reset' | i18n}}</bl-clickable>
     </div>
-</bl-loading>
+</div>
