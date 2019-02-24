@@ -129,7 +129,7 @@ describe("PoolPickerComponent", () => {
     beforeEach(() => {
         poolView = new MockListView(Pool, { items: poolServiceItems});
         poolServiceSpy = {
-            listView: () => poolView,
+            listView: poolView,
         };
         poolServiceSpy.listView.fetchAll();
 
