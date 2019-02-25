@@ -23,4 +23,11 @@ export class StringUtils {
             return name;
         }
     }
+
+    /**
+     * Escape a string to be used inside a regex.
+     */
+    public static escapeRegex(str: string) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+    }
 }
