@@ -253,9 +253,9 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
                 if (image === null) {
                     return false;
                 }
-                return image.app === inputs.app &&
-                        image.renderer === inputs.renderEngine &&
-                        image.imageReferenceId === inputs.imageReferenceId;
+                return (image.app === inputs.app
+                        && image.renderer === inputs.renderEngine
+                        && image.imageReferenceId === inputs.imageReferenceId);
             }) != null;
     }
 
