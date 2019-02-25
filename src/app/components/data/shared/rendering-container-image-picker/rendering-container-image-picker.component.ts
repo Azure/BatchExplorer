@@ -23,7 +23,6 @@ import "./rendering-container-image-picker.scss";
             provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() =>
                 RenderingContainerImagePickerComponent), multi: true,
         },
-        RenderingContainerImageService,
     ],
 })
 
