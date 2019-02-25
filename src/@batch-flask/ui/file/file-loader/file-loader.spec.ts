@@ -1,10 +1,14 @@
 import { ServerError } from "@batch-flask/core";
+import { StringUtils } from "@batch-flask/utils";
+import * as path from "path";
 import { of } from "rxjs";
 import { File } from "../file.model";
 import { FileLoader } from "./file-loader";
 
-const file1 = new File({ name: "foo.ts", properties: { contentLength: 45 } } as any);
-const file2 = new File({ name: "foo.ts", properties: { contentLength: 124 } } as any);
+const date1 = new Date();
+
+const file1 = new File({ name: "wd%2Ffoo.ts", properties: { contentLength: 45, lastModified: date1 } } as any);
+const file2 = new File({ name: "wd%bar.ts", properties: { contentLength: 124, lastModified: date1 } } as any);
 
 describe("FileLoader", () => {
     let fileLoader: FileLoader;
@@ -17,12 +21,16 @@ describe("FileLoader", () => {
         file = file1;
         fsSpy = {
             ensureDir: jasmine.createSpy("ensureDir").and.returnValue(Promise.resolve(true)),
-            saveFile: jasmine.createSpy("saveFile").and.returnValue(Promise.resolve(true)),
+            saveFile: jasmine.createSpy("saveFile").and.callFake(x => Promise.resolve(x)),
+            commonFolders: {
+                temp: "/temp",
+            },
+            exists: jasmine.createSpy("exists").and.returnValue(Promise.resolve(false)),
         };
         propertyGetterSpy = jasmine.createSpy("propertiesGetter").and.callFake(() => of(file));
         contentSpy = jasmine.createSpy("content").and.returnValue(of({ content: "export const foo = 123;" }));
         fileLoader = new FileLoader({
-            filename: "foo.ts",
+            filename: "wd%2Ffoo.ts",
             source: "fake-source",
             groupId: "fake-group",
             fs: fsSpy,
@@ -104,5 +112,13 @@ describe("FileLoader", () => {
 
         expect(fsSpy.saveFile).toHaveBeenCalledOnce();
         expect(fsSpy.saveFile).toHaveBeenCalledWith("/some/local/path/foo.ts", "export const foo = 123;");
+    });
+
+    it("cache a file", async () => {
+        const localPath = await fileLoader.cache().toPromise();
+        const folder = StringUtils.escapeRegex(path.join("/temp/fake-source/fake-group/wd/"));
+        expect(localPath).toMatch(new RegExp(`^${folder}[a-z0-9]+\\.foo\\.ts$`));
+        expect(fsSpy.exists).toHaveBeenCalledOnce();
+        expect(fsSpy.exists).toHaveBeenCalledWith(localPath);
     });
 });
