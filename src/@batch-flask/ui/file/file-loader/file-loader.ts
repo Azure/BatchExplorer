@@ -176,7 +176,7 @@ export class FileLoader {
     private _hashFilename(file: File) {
         const hash = file.properties.lastModified.getTime().toString(36);
         // clean any unwanted : characters from the file path
-        const cleaned = file.name.replace(":", "");
+        const cleaned = decodeURIComponent(file.name).replace(":", "");
         const segements = cleaned.split(/[\\\/]/);
         const filename = segements.pop();
         segements.push(`${hash}.${filename}`);
