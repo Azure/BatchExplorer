@@ -11,7 +11,7 @@ import { PoolOsService, PoolService, RenderingContainerImageService, VmSizeServi
 import { List } from "immutable";
 import { BehaviorSubject, of } from "rxjs";
 import { click, updateInput } from "test/utils/helpers";
-import { GithubDataServiceMock, MockListView } from "test/utils/mocks";
+import { GithubDataServiceMock } from "test/utils/mocks";
 
 @Component({
     template: `<bl-pool-picker [formControl]="poolInfo"
@@ -124,14 +124,11 @@ describe("PoolPickerComponent", () => {
     let githubDataServiceSpy;
     let renderingContainerImageService: RenderingContainerImageService;
     const poolServiceItems = [centosPool1, centosPool2, ubuntuPool, windowsPool, cloudServicePool];
-    let poolView: MockListView<Pool, Pool[]>;
 
     beforeEach(() => {
-        poolView = new MockListView(Pool, { items: poolServiceItems});
         poolServiceSpy = {
-            listView: poolView,
+            pools: new BehaviorSubject(List(poolServiceItems)),
         };
-        poolServiceSpy.listView.fetchAll();
 
         vmSizeServiceSpy = {
             sizes: of(List([])),
@@ -268,8 +265,7 @@ describe("PoolPickerComponent", () => {
         const containerImagePools = ubuntuContainerImages.map(image => ubuntuContainerPool(image)).concat(
                                     windowsContainerImages.map(image => windowsContainerPool(image)));
 
-        poolView.updateItems(containerImagePools);
-        poolView.refresh();
+        poolServiceSpy.pools.next(List(containerImagePools));
 
         testComponent.app = RenderApplication.Maya;
         testComponent.renderEngine = RenderEngine.Arnold;

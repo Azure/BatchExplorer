@@ -8,7 +8,7 @@ import {
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
+import { BehaviorSubject, Subject, combineLatest } from "rxjs";
 
 import { isNotNullOrUndefined } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
@@ -75,9 +75,8 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
 
         const containerImageMap = this.renderingContainerImageService.containerImagesAsMap();
 
-        let ciFilteredPools: Observable<List<Pool>>;
-        ciFilteredPools = combineLatest(
-            this.poolService.listView.items,
+        const ciFilteredPools = combineLatest(
+            this.poolService.pools,
             this.filters.valueChanges.pipe(startWith(this.filters.value), distinctUntilChanged()),
             this._inputs.pipe(filter(isNotNullOrUndefined)),
             containerImageMap,
@@ -90,7 +89,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
             }));
 
         ciFilteredPools.subscribe((pools) => {
-                this.displayedPools = List<Pool>(pools);
+                this.displayedPools = pools;
                 this.changeDetector.markForCheck();
         });
 
