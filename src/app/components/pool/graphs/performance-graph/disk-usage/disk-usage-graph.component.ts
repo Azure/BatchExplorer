@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
-
-import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
+import { PerformanceMetric } from "app/models/app-insights/metrics-result";
 import { PoolUtils } from "app/utils";
 import { Aggregation, PerformanceGraphComponent } from "../performance-graph.component";
 
@@ -34,26 +33,19 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
         super.ngOnChanges(changes);
 
         if (changes.data) {
-            this._clearMetricSubs();
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskUsed).subscribe((data) => {
-                this.diskUsages = data as any;
-                this._updateMax();
-                this.updateData();
-            }));
+            this.diskUsages = this.data.diskUsed || {};
+            this.diskFree = this.data.diskFree || {};
 
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskFree).subscribe((data) => {
-                this._computeDisks(Object.keys(data));
-                const disk = Object.keys(data).first();
-                if (!disk) { return; }
-                this.diskFree = data;
-                if (this.availableDisks.length > 0) {
-                    if (!this.currentDisk || !this.availableDisks.find(x => x.name === this.currentDisk)) {
-                        this.currentDisk = this._getDefaultDisk();
-                    }
+            this._computeDisks(Object.keys(this.diskFree));
+            const disk = Object.keys(this.diskFree).first();
+            if (!disk) { return; }
+            if (this.availableDisks.length > 0) {
+                if (!this.currentDisk || !this.availableDisks.find(x => x.name === this.currentDisk)) {
+                    this.currentDisk = this._getDefaultDisk();
                 }
-                this._updateMax();
-                this.updateData();
-            }));
+            }
+            this._updateMax();
+            this.updateData();
         }
     }
 
@@ -105,7 +97,7 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
     }
 
     private _labelForDisk(disk: string) {
-        const isCloudService = this.data.pool.cloudServiceConfiguration;
+        const isCloudService = this.pool.cloudServiceConfiguration;
         let type = "";
 
         if (isCloudService) {
@@ -136,8 +128,8 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
 
     // Show the user disk if possible
     private _getDefaultDisk() {
-        const isCloudService = this.data.pool.cloudServiceConfiguration;
-        const isWindows = PoolUtils.isWindows(this.data.pool);
+        const isCloudService = this.pool.cloudServiceConfiguration;
+        const isWindows = PoolUtils.isWindows(this.pool);
         if (isCloudService) {
             return "C:/";
         } else if (isWindows) {

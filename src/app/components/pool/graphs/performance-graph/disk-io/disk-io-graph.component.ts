@@ -1,13 +1,14 @@
-import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { BatchPerformanceMetricType, NodesPerformanceMetric } from "app/models/app-insights/metrics-result";
+import { NodesPerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
 import { PerformanceGraphComponent } from "../performance-graph.component";
 
 @Component({
     selector: "bl-disk-io-graph",
     templateUrl: "disk-io-graph.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DiskIOGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public unit = "Bps";
@@ -24,18 +25,12 @@ export class DiskIOGraphComponent extends PerformanceGraphComponent implements O
         super.ngOnChanges(changes);
 
         if (changes.data) {
-            this._clearMetricSubs();
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskRead).subscribe((data) => {
-                this.diskReadUsages = data;
-                this._updateStatus();
-                this.updateData();
-            }));
-
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskWrite).subscribe((data) => {
-                this.diskWriteUsages = data;
-                this._updateStatus();
-                this.updateData();
-            }));
+            this.diskReadUsages = this.data.diskRead || {};
+            this._updateStatus();
+            this.updateData();
+            this.diskWriteUsages = this.data.diskWrite || {};
+            this._updateStatus();
+            this.updateData();
         }
     }
 
@@ -44,6 +39,7 @@ export class DiskIOGraphComponent extends PerformanceGraphComponent implements O
             ...this._getDatasetsGroupedByNode(this.diskReadUsages, "rgb(26, 130, 31)", "Disk read speed"),
             ...this._getDatasetsGroupedByNode(this.diskWriteUsages, "rgba(26, 130, 31, 0.3)", "Disk write speed"),
         ];
+        this.changeDetector.markForCheck();
     }
 
     public changeShowOverallUsage(newValue) {

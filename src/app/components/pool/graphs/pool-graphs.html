@@ -35,51 +35,51 @@
     <ng-container  *blFeatureOn="'pool.graphs.insights'">
         <ng-container *ngIf="appInsightsEnabled">
             <bl-metrics-monitor-metric [label]="'pool-graphs.cpu' | i18n">
-                <bl-cpu-usage-graph blMonitorGraphPreview #cpuUsage [data]="performanceData" [interactive]="false"></bl-cpu-usage-graph>
+                <bl-cpu-usage-graph blMonitorGraphPreview #cpuUsage [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-cpu-usage-graph>
                 <div blMetricsStatus>{{cpuUsage.status | async}}</div>
 
-                <bl-cpu-usage-graph blMonitorGraphChart [data]="performanceData" [showIndividualCpu]="node" class="full-display"></bl-cpu-usage-graph>
+                <bl-cpu-usage-graph blMonitorGraphChart [data]="performanceMetrics" [pool]="pool" [showIndividualCpu]="node" class="full-display"></bl-cpu-usage-graph>
             </bl-metrics-monitor-metric>
             <bl-metrics-monitor-metric [label]="'pool-graphs.memory' | i18n">
-                <bl-memory-usage-graph blMonitorGraphPreview #memUsage [data]="performanceData" [interactive]="false"></bl-memory-usage-graph>
+                <bl-memory-usage-graph blMonitorGraphPreview #memUsage [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-memory-usage-graph>
                 <div blMetricsStatus>{{memUsage.status | async}}</div>
 
-                <bl-memory-usage-graph blMonitorGraphChart [data]="performanceData" class="full-display"></bl-memory-usage-graph>
+                <bl-memory-usage-graph blMonitorGraphChart [data]="performanceMetrics" [pool]="pool" class="full-display"></bl-memory-usage-graph>
             </bl-metrics-monitor-metric>
             <bl-metrics-monitor-metric [label]="'pool-graphs.diskIO' | i18n">
-                <bl-disk-io-graph blMonitorGraphPreview #diskUsage [data]="performanceData" [interactive]="false"></bl-disk-io-graph>
-                <div blMetricsStatus>{{diskUsage.status | async}}</div>
+                <bl-disk-io-graph blMonitorGraphPreview #diskIO [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-disk-io-graph>
+                <div blMetricsStatus>{{diskIO.status | async}}</div>
 
-                <bl-disk-io-graph blMonitorGraphChart [data]="performanceData" class="full-display"></bl-disk-io-graph>
+                <bl-disk-io-graph blMonitorGraphChart [data]="performanceMetrics" [pool]="pool" class="full-display"></bl-disk-io-graph>
             </bl-metrics-monitor-metric>
             <bl-metrics-monitor-metric [label]="'pool-graphs.diskUsage' | i18n">
-                <bl-disk-usage-graph blMonitorGraphPreview #diskUsage [data]="performanceData" [interactive]="false"></bl-disk-usage-graph>
+                <bl-disk-usage-graph blMonitorGraphPreview #diskUsage [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-disk-usage-graph>
                 <div blMetricsStatus>{{diskUsage.status | async}}</div>
 
-                <bl-disk-usage-graph blMonitorGraphChart [data]="performanceData" class="full-display"></bl-disk-usage-graph>
+                <bl-disk-usage-graph blMonitorGraphChart [data]="performanceMetrics" [pool]="pool" class="full-display"></bl-disk-usage-graph>
             </bl-metrics-monitor-metric>
             <bl-metrics-monitor-metric [label]="'pool-graphs.network' | i18n">
-                <bl-network-usage-graph blMonitorGraphPreview #netUsage [data]="performanceData" [interactive]="false"></bl-network-usage-graph>
+                <bl-network-usage-graph blMonitorGraphPreview #netUsage [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-network-usage-graph>
                 <div blMetricsStatus>{{netUsage.status | async}}</div>
 
-                <bl-network-usage-graph blMonitorGraphChart metric="network" [data]="performanceData" class="full-display"></bl-network-usage-graph>
+                <bl-network-usage-graph blMonitorGraphChart metric="network" [data]="performanceMetrics" [pool]="pool" class="full-display"></bl-network-usage-graph>
             </bl-metrics-monitor-metric>
             <bl-metrics-monitor-metric label="Gpu usage" *ngIf="hasGPU">
-                <bl-gpu-usage-graph blMonitorGraphPreview #gpuUsage [data]="performanceData" [interactive]="false"></bl-gpu-usage-graph>
+                <bl-gpu-usage-graph blMonitorGraphPreview #gpuUsage [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-gpu-usage-graph>
                 <div blMetricsStatus>{{gpuUsage.status | async}}</div>
-                <bl-gpu-usage-graph blMonitorGraphChart [data]="performanceData" [showIndividualGpu]="node" class="full-display"></bl-gpu-usage-graph>
+                <bl-gpu-usage-graph blMonitorGraphChart [data]="performanceMetrics" [pool]="pool" [showIndividualGpu]="node" class="full-display"></bl-gpu-usage-graph>
             </bl-metrics-monitor-metric>
             <bl-metrics-monitor-metric label="Gpu memory" *ngIf="hasGPU">
-                <bl-gpu-memory-usage-graph blMonitorGraphPreview #gpuUsage [data]="performanceData" [interactive]="false"></bl-gpu-memory-usage-graph>
+                <bl-gpu-memory-usage-graph blMonitorGraphPreview #gpuUsage [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-gpu-memory-usage-graph>
                 <div blMetricsStatus>{{gpuUsage.status | async}}</div>
-                <bl-gpu-memory-usage-graph blMonitorGraphChart [data]="performanceData" [showIndividualGpu]="node"
+                <bl-gpu-memory-usage-graph blMonitorGraphChart [data]="performanceMetrics" [pool]="pool" [showIndividualGpu]="node"
                     class="full-display"></bl-gpu-memory-usage-graph>
             </bl-metrics-monitor-metric>
         </ng-container>
     </ng-container>
     <ng-container *ngIf="!appInsightsEnabled">
         <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Application Insights">
-            <bl-cpu-usage-graph blMonitorGraphPreview [data]="performanceData" [interactive]="false"></bl-cpu-usage-graph>
+            <bl-cpu-usage-graph blMonitorGraphPreview [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-cpu-usage-graph>
             <div blMetricsStatus>{{'pool-graphs.notEnabled' | i18n}}</div>
 
             <bl-enable-app-insights-doc blMonitorGraphChart></bl-enable-app-insights-doc>

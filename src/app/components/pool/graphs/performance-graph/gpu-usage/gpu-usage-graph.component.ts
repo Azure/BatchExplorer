@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
 import {
-    BatchPerformanceMetricType,
     NodesPerformanceMetric,
     PerformanceMetric,
 } from "app/models/app-insights/metrics-result";
@@ -12,6 +11,7 @@ import "./gpu-usage-graph.scss";
 @Component({
     selector: "bl-gpu-usage-graph",
     templateUrl: "gpu-usage-graph.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GpuUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     @Input() public showIndividualGpu = false;
@@ -32,22 +32,14 @@ export class GpuUsageGraphComponent extends PerformanceGraphComponent implements
     public ngOnChanges(changes) {
         super.ngOnChanges(changes);
         if (changes.data) {
-            this._clearMetricSubs();
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.gpuUsage).subscribe((data) => {
-                this.gpuUsages = data;
-                this._updateStatus();
-                this.updateData();
-            }));
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.individualGpuUsage)
-                .subscribe((data) => {
-                    this.individualGpuUsages = data as any;
-                    if (data) {
-                        this.gpuCount = this.individualGpuUsages.length;
-                    }
-                    this.lastIndividualGpuUsage = this.individualGpuUsages.map(x => x.last());
-                    this._updateStatus();
-                    this.updateData();
-                }));
+            this.gpuUsages = this.data.gpuUsage || {};
+
+            this.individualGpuUsages = this.data.individualGpuUsage || [];
+            if (this.individualGpuUsages) {
+                this.gpuCount = this.individualGpuUsages.length;
+            }
+            this._updateStatus();
+            this.updateData();
         }
     }
 
@@ -57,6 +49,7 @@ export class GpuUsageGraphComponent extends PerformanceGraphComponent implements
         } else {
             this._showIndiviualGpuUsage();
         }
+        this.changeDetector.markForCheck();
     }
 
     public changeShowOverallUsage(newValue) {
