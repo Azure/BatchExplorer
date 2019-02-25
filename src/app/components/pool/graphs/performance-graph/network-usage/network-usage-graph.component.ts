@@ -1,13 +1,13 @@
-import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
-import { PerformanceGraphComponent } from "../performance-graph.component";
-
-import { BatchPerformanceMetricType, NodesPerformanceMetric } from "app/models/app-insights/metrics-result";
+import { NodesPerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
+import { PerformanceGraphComponent } from "../performance-graph.component";
 
 @Component({
     selector: "bl-network-usage-graph",
     templateUrl: "network-usage-graph.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NetworkUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public unit = "Bps";
@@ -24,20 +24,10 @@ export class NetworkUsageGraphComponent extends PerformanceGraphComponent implem
         super.ngOnChanges(changes);
 
         if (changes.data) {
-            this._clearMetricSubs();
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.networkRead)
-                .subscribe((data) => {
-                    this.netReadUsages = data;
-                    this._updateStatus();
-                    this.updateData();
-                }));
-
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.networkWrite)
-                .subscribe((data) => {
-                    this.netWriteUsages = data;
-                    this._updateStatus();
-                    this.updateData();
-                }));
+            this.netReadUsages = this.data.networkRead || {};
+            this.netWriteUsages = this.data.networkWrite || {};
+            this._updateStatus();
+            this.updateData();
         }
     }
 
@@ -46,6 +36,7 @@ export class NetworkUsageGraphComponent extends PerformanceGraphComponent implem
             ...this._getDatasetsGroupedByNode(this.netReadUsages, "rgb(178, 95, 7)", "Network download speed"),
             ...this._getDatasetsGroupedByNode(this.netWriteUsages, "rgba(178, 95, 7, 0.3)", "Network upload speed"),
         ];
+        this.changeDetector.markForCheck();
     }
 
     public changeShowOverallUsage(newValue) {

@@ -2,17 +2,16 @@ import { AccessToken, ServerError } from "@batch-flask/core";
 import { AdalService } from "app/services/adal";
 import { DateTime } from "luxon";
 import { BehaviorSubject } from "rxjs";
-import { F } from "test/utils";
 
 const tenant1 = "tenant-1";
 const resource1 = "batch";
 const token1 = new AccessToken({
     access_token: "sometoken",
-    expires_on: DateTime.local().plus({hours: 1}).toJSDate(),
+    expires_on: DateTime.local().plus({ hours: 1 }).toJSDate(),
     expires_in: 3600,
     token_type: "Bearer",
     ext_expires_in: 3600,
-    not_before: DateTime.local().plus({hours: 1}).toJSDate(),
+    not_before: DateTime.local().plus({ hours: 1 }).toJSDate(),
     refresh_token: "foorefresh",
 });
 
@@ -102,14 +101,32 @@ describe("AdalService spec", () => {
             expect(tokenB).toEqual(token1);
         });
 
-        it("cache the promise so it doesn't call the main process twice", F(async () => {
+        it("cache the promise so it doesn't call the main process twice", async () => {
             const promiseA = service.accessTokenDataAsync(tenant1, resource1);
             const promiseB = service.accessTokenDataAsync(tenant1, resource1);
             const [tokenA, tokenB] = await Promise.all([promiseA, promiseB]);
             expect(remoteSpy.send).toHaveBeenCalledOnce();
             expect(tokenA).toEqual(token1);
             expect(tokenB).toEqual(token1);
-        }));
+        });
+
+        it("it calls again the main process if previous call returned an error", async () => {
+            remoteSpy.send = jasmine.createSpy("send").and.returnValues(
+                Promise.reject("some-error"),
+                Promise.resolve(token1),
+            );
+            try {
+                await service.accessTokenDataAsync(tenant1, resource1);
+                fail("Shouldn't have succeeded");
+            } catch (e) {
+                expect(remoteSpy.send).toHaveBeenCalledTimes(1);
+                expect(e).toEqual("some-error");
+            }
+            const token = await service.accessTokenDataAsync(tenant1, resource1);
+            expect(remoteSpy.send).toHaveBeenCalledTimes(2);
+            expect(token).toEqual(token1);
+
+        });
     });
 
     it("updates the tenants ids when updated by the adal service", () => {

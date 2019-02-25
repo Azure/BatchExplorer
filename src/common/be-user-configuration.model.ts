@@ -11,7 +11,7 @@ export interface BEUserConfiguration extends BatchFlaskUserConfiguration {
     };
 
     update: {
-        channel: string,
+        channel: string | null,
         updateOnQuit: boolean,
     };
 
@@ -57,7 +57,7 @@ export const DEFAULT_BE_USER_CONFIGURATION: BEUserDesktopConfiguration = {
         ignore: [],
     },
     update: {
-        channel: "stable",
+        channel: null,
         updateOnQuit: true,
     },
     storage: {

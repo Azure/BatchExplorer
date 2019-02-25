@@ -1,8 +1,7 @@
 import { Deferred } from "common";
-import { F } from "test/utils";
 
 describe("Deferred", () => {
-    it("succeed", F(() => {
+    it("succeed", () => {
         const deferred = new Deferred();
 
         const promise = deferred.promise.then((value) => {
@@ -11,9 +10,9 @@ describe("Deferred", () => {
 
         deferred.resolve("resolved-value");
         return promise;
-    }));
+    });
 
-    it("pass error", F(() => {
+    it("pass error", () => {
         const deferred = new Deferred();
 
         const promise = deferred.promise.then(() => {
@@ -24,5 +23,5 @@ describe("Deferred", () => {
 
         deferred.reject("rejected-error");
         return promise;
-    }));
+    });
 });

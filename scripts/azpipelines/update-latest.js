@@ -1,10 +1,21 @@
 // tslint:disable:no-console
 // @ts-check
 const azureStorage = require("azure-storage");
+const makeDir = require("make-dir");
+const path = require("path");
+const fs = require("fs");
 const { getManifest, getContainerName } = require("./utils");
+const { promisify } = require("util");
 
+const copyFile = promisify(fs.copyFile);
+
+const stagingDir = path.join(process.env.AGENT_TEMPDIRECTORY, "batchexplorer-github");
+console.log("Env", process.env);
 const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT;
 const storageAccountKey = process.argv[2];
+
+console.log("Artifact staging directory is", stagingDir);
+console.log(`##vso[task.setvariable variable=BE_GITHUB_ARTIFACTS_DIR]${stagingDir}`)
 
 if (!storageAccountKey) {
     console.error("No storage account key passed");
@@ -71,8 +82,25 @@ function getLatestFile(os) {
     }
 }
 
+async function copyFilesToArtifactStaging(os) {
+    const manifest = getManifest(os);
+    console.log(`Copy ${manifest.files.length} files for os: ${os}`);
+    for (const file of manifest.files) {
+        await copyFile(path.join(os, file.path), path.join(stagingDir, file.path))
+    }
+}
+
+async function copyAllFilesToArtifactStaging() {
+    console.log(`Starting copying artifacts for github release`);
+    await makeDir(stagingDir);
+    await copyFilesToArtifactStaging("windows");
+    await copyFilesToArtifactStaging("linux");
+    await copyFilesToArtifactStaging("darwin");
+}
+
 async function updateLatest(os) {
     const manifest = getManifest(os);
+    console.log(`##vso[task.setvariable variable=BE_RELEASE_VERSION]${manifest.version}`)
     console.log(`Updating latest for os: ${os}`);
     const container = getContainerName(manifest.buildType);
     const latestFile = getLatestFile(os);
@@ -83,6 +111,7 @@ async function updateLatest(os) {
 }
 
 async function run() {
+    await copyAllFilesToArtifactStaging();
     await updateLatest("windows");
     await updateLatest("linux");
     await updateLatest("darwin");
