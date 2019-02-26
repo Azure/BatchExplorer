@@ -6,7 +6,7 @@ import { ListSelection } from "@batch-flask/core/list";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ListBaseComponent } from "@batch-flask/ui";
 import { ApplicationPackageTableComponent, ApplicationPackagesComponent } from "app/components/application/details";
-import { BatchApplication } from "app/models";
+import { BatchApplication, BatchApplicationPackage, PackageState } from "app/models";
 import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { EntityDetailsListMockComponent } from "test/utils/mocks/components";
@@ -47,11 +47,28 @@ class MockApplicationPackageTableComponent extends ListBaseComponent {
     }
 }
 
+const pkg1 = new BatchApplicationPackage({
+    id: "1.0",
+    name: "1.0",
+    properties: {
+        state: PackageState.pending,
+    } as any,
+});
+
 describe("ApplicationPackagesComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let component: ApplicationPackagesComponent;
     let listComponent: ApplicationPackageTableComponent;
+    let commandsSpy;
+
     beforeEach(() => {
+
+        commandsSpy = {
+            getFromCache: () => of(pkg1),
+            activate: {
+                enabled: () => true,
+            },
+        };
         TestBed.configureTestingModule({
             imports: [I18nTestingModule],
             declarations: [
@@ -69,7 +86,7 @@ describe("ApplicationPackagesComponent", () => {
             ApplicationPackagesComponent,
             {
                 set: {
-                    providers: [{ provide: BatchApplicationPackageCommands, useValue: null }],
+                    providers: [{ provide: BatchApplicationPackageCommands, useValue: commandsSpy }],
                 },
             },
         );

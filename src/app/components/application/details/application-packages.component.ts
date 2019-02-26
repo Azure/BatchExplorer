@@ -45,22 +45,31 @@ export class ApplicationPackagesComponent implements OnChanges {
         return this.commands.activate.executeFromSelection(this._selection);
     }
 
-    private _activatedItemDeleteEnabled() {
+    private _isDeleteButtonEnabled() {
         return this.application.properties.allowUpdates && this._selection.hasAny();
     }
 
-    private _activatedItemActivateEnabled() {
-        return !this._selection.hasMultiple();
+    private _checkActivateButtonEnabled() {
+        if (this._selection.isEmpty() || this._selection.hasMultiple()) {
+            this.activateEnabled = false;
+        } else {
+            const packageId = this._selection.first();
+            this.commands.getFromCache(packageId).subscribe((pkg) => {
+                this.activateEnabled = this.commands.activate.enabled(pkg);
+                this.changeDetector.markForCheck();
+            });
+        }
     }
 
     private _updateEnabled() {
-        this.activateEnabled = this._activatedItemActivateEnabled();
-        this.deleteEnabled = this._activatedItemDeleteEnabled();
+        this.deleteEnabled = this._isDeleteButtonEnabled();
+        this._checkActivateButtonEnabled();
         this.changeDetector.markForCheck();
     }
 
     private _resetEnabled() {
         this.deleteEnabled = false;
         this.activateEnabled = false;
+        this.changeDetector.markForCheck();
     }
 }
