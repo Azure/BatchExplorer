@@ -21,7 +21,7 @@ export function prettyBytes(bytes: number, decimals = 2) {
     }
 
     const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1000)), UNITS.length - 1);
-    const numStr = Number((bytes / Math.pow(1000, exponent)).toPrecision(decimals + 1));
+    const numStr = Number((bytes / Math.pow(1000, exponent)).toFixed(decimals));
     const unit = UNITS[exponent];
 
     return (neg ? "-" : "") + numStr + " " + unit;
