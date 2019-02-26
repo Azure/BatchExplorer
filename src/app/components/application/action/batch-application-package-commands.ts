@@ -1,6 +1,6 @@
 import { Injectable, Injector } from "@angular/core";
 import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
-import { BatchApplicationPackage } from "app/models";
+import { BatchApplicationPackage, PackageState } from "app/models";
 import { BatchApplicationPackageListParams, BatchApplicationPackageService } from "app/services";
 import { switchMap } from "rxjs/operators";
 
@@ -42,6 +42,7 @@ export class BatchApplicationPackageCommands
             icon: "fa fa-toggle-on",
             action: (pkg: BatchApplicationPackage) => this._activate(pkg),
             permission: Permission.Write,
+            enabled: (pkg: BatchApplicationPackage) => pkg.properties.state === PackageState.pending,
         });
 
         this.commands = [
