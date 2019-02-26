@@ -184,6 +184,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
                 this.dialogService.confirm(
                     message,
                     {
+                        description: entities.map(x => x.id).join("\n"),
                         yes: () => {
                             this._executeMultiple(entities);
                         },
