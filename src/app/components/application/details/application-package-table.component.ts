@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, OnChanges, OnDestroy } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { ListView, autobind } from "@batch-flask/core";
+import { ListSelection, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
 import { BatchApplication, BatchApplicationPackage } from "app/models";
 import { BatchApplicationPackageListParams, BatchApplicationPackageService } from "app/services";
@@ -52,6 +52,7 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
             if (ComponentUtils.recordChangedId(changes.application)) {
                 this.commands.params = { applicationId: this.application.id };
                 this.data.params = { applicationId: this.application.id };
+                this.selection = new ListSelection();
                 this.data.refresh();
             }
         }
