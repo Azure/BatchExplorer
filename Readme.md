@@ -20,9 +20,9 @@ To build Batch Explorer yourself see this [wiki](https://github.com/Azure/BatchE
 * Request a new feature on [GitHub](https://github.com/Azure/BatchExplorer/issues)
 * Vote for popular [feature requests](https://github.com/Azure/BatchExplorer/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3Afeature+sort%3Areactions-%2B1-desc+)
 * File a bug on [GitHub](https://github.com/Azure/BatchExplorer/issues)
-`
+
 ## Developers
-[Dev docs](docs/readdme.md)
+[Dev docs](docs/readme.md)
 
 ## Data/Telemetry.
 
@@ -35,4 +35,5 @@ Please go see [How to disable crash reporting and telemetry](https://github.com/
 Copyright (c) Microsoft Corporation. All rights reserved.
 
 Batch Explorer is licensed under MIT [See license](LICENSE)
+
 Some icons are under Creative Commons Attribution-ShareAlike 3.0 Unported [See license](app/assets/images/logos/LICENSE)
