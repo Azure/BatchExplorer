@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { log } from "@batch-flask/utils";
+import { ArmBatchAccount } from "app/models";
 import { BatchAccountService, Theme, ThemeService } from "app/services";
 import {
-    ConsumptionMeterDetails, UsageDetail, UsageDetailsService, UsageDetailsUnsupportedSubscription,
+    UsageDetailsUnsupportedSubscription,
 } from "app/services/azure-consumption";
+import { AzureCostEntry, AzureCostManagementService } from "app/services/azure-cost-management";
 import { Subject, combineLatest, of } from "rxjs";
 import { catchError, filter, switchMap, takeUntil } from "rxjs/operators";
 
-import { log } from "@batch-flask/utils";
-import { ArmBatchAccount } from "app/models";
 import "./account-cost-card.scss";
 
 @Component({
@@ -28,7 +29,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     private _destroy = new Subject();
 
     constructor(
-        private usageService: UsageDetailsService,
+        private costService: AzureCostManagementService,
         private accountService: BatchAccountService,
         private themeService: ThemeService,
         private changeDetector: ChangeDetectorRef) {
@@ -47,7 +48,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                 return this.isArmBatchAccount;
             }),
             switchMap(() => {
-                return this.usageService.getUsage().pipe(
+                return this.costService.getCost().pipe(
                     catchError((error) => {
                         if (error instanceof UsageDetailsUnsupportedSubscription) {
                             this.unsupportedSubscription = true;
@@ -84,38 +85,38 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    private _computeDataSets(usages: UsageDetail[], theme: Theme) {
-        const groups: StringMap<{ meterDetails: ConsumptionMeterDetails, usages: any }> = {
+    private _computeDataSets(usages: AzureCostEntry[], theme: Theme) {
+        const groups: StringMap<{ meter: string, usages: any }> = {
 
         };
 
         if (usages.length > 0) {
-            this.currency = usages.first().properties.currency;
+            this.currency = usages.first().currency;
         }
 
         let total = 0;
 
         for (const usage of usages) {
-            const meterId = usage.properties.meterId;
+            const meterId = usage.meter;
 
             if (!(meterId in groups)) {
                 groups[meterId] = {
-                    meterDetails: usage.properties.meterDetails,
+                    meter: usage.meter,
                     usages: [],
                 };
             }
 
             groups[meterId].usages.push({
-                x: usage.properties.usageStart,
-                y: usage.properties.pretaxCost,
+                x: usage.date,
+                y: usage.preTaxCost,
             });
-            total += usage.properties.pretaxCost;
+            total += usage.preTaxCost;
         }
         this.total = total.toFixed(2);
         this.datasets = Object.values(groups).map((data, i) => {
             const color = theme.chartColors.get(i);
             return {
-                label: data.meterDetails.meterName,
+                label: data.meter,
                 backgroundColor: color,
                 borderColor: color,
                 data: data.usages,

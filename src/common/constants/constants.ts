@@ -110,6 +110,7 @@ export const ApiVersion = {
     classicNetwork: "2015-12-01",
     consumption: "2018-10-01",
     batchService: "2018-12-01.8.0",
+    costManagement: "2019-01-01",
 };
 
 export const ExternalLinks = {
