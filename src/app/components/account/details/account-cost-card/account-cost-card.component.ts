@@ -18,7 +18,7 @@ import "./account-cost-card.scss";
 })
 export class AccountCostCardComponent implements OnInit, OnDestroy {
 
-    public chartType = "line";
+    public chartType = "bar";
     public datasets: Chart.ChartDataSets[] = [];
     public options: Chart.ChartOptions = {};
     public currency: string;
@@ -86,9 +86,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     }
 
     private _computeDataSets(usages: AzureCostEntry[], theme: Theme) {
-        const groups: StringMap<{ meter: string, usages: any }> = {
-
-        };
+        const groups: StringMap<{ meter: string, usages: StringMap<{ x: Date, y: number }> }> = {};
 
         if (usages.length > 0) {
             this.currency = usages.first().currency;
@@ -96,21 +94,34 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
 
         let total = 0;
 
+        const days = new Set<string>();
         for (const usage of usages) {
             const meterId = usage.meter;
 
             if (!(meterId in groups)) {
                 groups[meterId] = {
                     meter: usage.meter,
-                    usages: [],
+                    usages: {},
                 };
             }
-
-            groups[meterId].usages.push({
+            const isoDate = usage.date.toISOString();
+            days.add(isoDate);
+            groups[meterId].usages[isoDate] = {
                 x: usage.date,
                 y: usage.preTaxCost,
-            });
+            };
             total += usage.preTaxCost;
+        }
+
+        for (const { usages } of Object.values(groups)) {
+            for (const day of days) {
+                if (!(day in usages)) {
+                    usages[day] = {
+                        x: new Date(day),
+                        y: 0,
+                    };
+                }
+            }
         }
         this.total = total.toFixed(2);
         this.datasets = Object.values(groups).map((data, i) => {
@@ -119,7 +130,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                 label: data.meter,
                 backgroundColor: color,
                 borderColor: color,
-                data: data.usages,
+                data: Object.values(data.usages).sortBy(x => x.x),
             };
         });
         this._setChartOptions();
@@ -155,6 +166,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                 xAxes: [{
                     stacked: true,
                     type: "time",
+                    distribution: "linear",
                     position: "bottom",
                     time: {
                         unit: "day",

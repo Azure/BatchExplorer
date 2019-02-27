@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, ArmSubscription } from "app/models";
+import { DateTime } from "luxon";
 import { Observable } from "rxjs";
 import { map, share, switchMap, take, tap } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
@@ -25,7 +26,7 @@ interface AzureCostQuerySortConfiguration {
 
 interface AzureCostQueryGrouping {
     type: "Dimension" | "Tag";
-    name: string;
+    name: CostManagementDimensions;
 }
 
 interface QueryFilter {
@@ -59,6 +60,14 @@ interface QueryResult {
         rows: any[][],
     };
 
+}
+
+export enum CostManagementDimensions {
+    MeterSubCategory = "MeterSubCategory",
+    MeterCategory = "MeterCategory",
+    Meter = "Meter",
+    ServiceName = "ServiceName",
+    ServiceTier = "ServiceTier",
 }
 
 function costManagementUrl(subscriptionId: string) {
@@ -96,11 +105,11 @@ export class AzureCostManagementService {
     }
 
     private _processQueryResponse(response: QueryResult): AzureCostEntry[] {
-        console.log("Response", response);
         const columnIndexes = {
             cost: null,
             date: null,
-            meter: null,
+            meterCategory: null,
+            meterSubCategory: null,
             currency: null,
         };
 
@@ -112,8 +121,11 @@ export class AzureCostManagementService {
                 case "UsageDate":
                     columnIndexes.date = index;
                     break;
-                case "Meter":
-                    columnIndexes.meter = index;
+                case CostManagementDimensions.MeterSubCategory:
+                    columnIndexes.meterSubCategory = index;
+                    break;
+                case CostManagementDimensions.MeterCategory:
+                    columnIndexes.meterCategory = index;
                     break;
                 case "Currency":
                     columnIndexes.currency = index;
@@ -128,14 +140,23 @@ export class AzureCostManagementService {
             }
         }
 
-        return response.properties.rows.map((row) => {
+        return response.properties.rows.filter((row) => {
+            // Filter empty meters
+            return row[columnIndexes.meterCategory] !== ""
+                || row[columnIndexes.meterSubCategory] !== ""
+                || row[columnIndexes.cost] !== 0;
+        }).map((row) => {
             return {
                 preTaxCost: row[columnIndexes.cost],
-                date: row[columnIndexes.date],
-                meter: row[columnIndexes.meter],
+                date: this._parseDate(row[columnIndexes.date]),
+                meter: `${row[columnIndexes.meterCategory]} (${row[columnIndexes.meterSubCategory]})`,
                 currency: row[columnIndexes.currency],
             };
         });
+    }
+
+    private _parseDate(date: number) {
+        return DateTime.fromFormat(date.toString(), "yyyyLLdd").toJSDate();
     }
 
     private _buildQuery(accountId: string): AzureCostQuery {
@@ -158,23 +179,11 @@ export class AzureCostManagementService {
                 grouping: [
                     {
                         type: "Dimension",
-                        name: "Meter",
+                        name: CostManagementDimensions.MeterSubCategory,
                     },
                     {
                         type: "Dimension",
-                        name: "ServiceTier",
-                    },
-                    {
-                        type: "Dimension",
-                        name: "ServiceName",
-                    },
-                    {
-                        type: "Dimension",
-                        name: "MeterSubCategory",
-                    },
-                    {
-                        type: "Dimension",
-                        name: "MeterCategory",
+                        name: CostManagementDimensions.MeterCategory,
                     },
                 ],
                 filter: {
