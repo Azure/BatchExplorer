@@ -14,11 +14,6 @@ const sub1 = new ArmSubscription({
     subscriptionId: "sub1",
 });
 
-const internalSub = new ArmSubscription({
-    id: "/subscriptions/internal-1",
-    subscriptionId: "internal-1",
-});
-
 const day1 = new Date(2019, 1, 1);
 const day2 = new Date(2019, 1, 2);
 const day3 = new Date(2019, 1, 3);
@@ -39,7 +34,7 @@ const costs = [
 class TestComponent {
 }
 
-fdescribe("AccountCostCardComponent", () => {
+describe("AccountCostCardComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let component: AccountCostCardComponent;
     let de: DebugElement;
