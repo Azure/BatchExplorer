@@ -7,7 +7,7 @@ const sub1 = new ArmSubscription({
     subscriptionId: "sub1",
 });
 
-fdescribe("UsageDetailsService", () => {
+describe("UsageDetailsService", () => {
     let service: AzureCostManagementService;
     let accountServiceSpy;
     let azureHttpSpy;
