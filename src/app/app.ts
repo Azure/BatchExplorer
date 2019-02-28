@@ -1,15 +1,20 @@
+// tslint:disable: ordered-imports
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
-import "@batch-flask/extensions";
-import { log } from "@batch-flask/utils";
-import "chart.js";
 import { ipcRenderer, remote } from "electron";
-import "focus-visible/dist/focus-visible.min.js";
-import "font-awesome/css/font-awesome.min.css";
-import "hammerjs";
+
+import "@batch-flask/extensions";
+
+import { log } from "@batch-flask/utils";
 import { AppModule } from "./app.module";
-import "./environment";
 import { handleCoreError } from "./error-handler";
 
+// Setup extension methods
+import "chart.js";
+import "focus-visible/dist/focus-visible.min.js";
+import "hammerjs";
+
+import "font-awesome/css/font-awesome.min.css";
+import "./environment";
 import "./styles/main.scss";
 
 interface LoadingTimeResults {

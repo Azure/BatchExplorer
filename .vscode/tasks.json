@@ -4,24 +4,24 @@
   "version": "2.0.0",
   "tasks": [
     {
-        "label": "build-client",
-        "type": "npm",
-        "script": "build-client:dev",
-        "problemMatcher": [
-            "$tsc"
-        ],
-        "group": {
-            "kind": "build",
-            "isDefault": true
-        }
+      "label": "build-client",
+      "type": "npm",
+      "script": "build-client:dev",
+      "problemMatcher": [
+        "$tsc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     },
     {
-        "type": "npm",
-        "script": "stylelint"
+      "type": "npm",
+      "script": "stylelint"
     },
     {
-        "type": "npm",
-        "script": "tslint"
+      "type": "npm",
+      "script": "tslint"
     }
-]
+  ]
 }

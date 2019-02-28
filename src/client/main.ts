@@ -9,16 +9,35 @@
  *   5. Call startBatchExplorer from startup.ts
  */
 
+// tslint:disable: ordered-imports
 // 1. Add the src/ folder to the NODE_PATH to be able to do absolute import(Relative to src folder)
-import "@batch-flask/extensions";
-import { log } from "@batch-flask/utils";
-import { initLogger } from "client/logger";
-import { app } from "electron";
 import * as path from "path";
+import "./init";
+
+// 2. Update electron user data folder
+import { parseArguments } from "./cli";
+const program = parseArguments(process.argv);
+import { app } from "electron";
+
+if (program.userDataDir) {
+    app.setPath("userData", program.userDataDir);
+} else {
+    app.setPath("userData", path.join(app.getPath("appData"), "BatchExplorer"));
+
+}
+
+// 3. Initialize the logger
+import { initLogger } from "client/logger";
+initLogger();
+
+// 4. Setup extension functions
 import "reflect-metadata";
 import "zone.js";
-import { parseArguments } from "./cli";
-import "./init";
+
+import "@batch-flask/extensions";
+
+// 5. Call startBatchExplorer from startup.ts
+import { log } from "@batch-flask/utils";
 import { startBatchExplorer } from "./startup";
 
 startBatchExplorer().catch((e) => {
