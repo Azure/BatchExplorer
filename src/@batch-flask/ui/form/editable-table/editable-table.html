@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of items.controls;trackBy: trackRows; let i=index; let isLast=last" [formGroupName]="i">
+            <tr *ngFor="let item of items.controls;trackBy: trackRows; let i=index; let isLast=last">
                 <td *ngFor="let column of columns;trackBy: trackColumn">
                     <ng-container [ngSwitch]="column.type">
                         <ng-container *ngSwitchCase="EditableTableColumnType.Select">
@@ -18,7 +18,7 @@
                                 [rowValue]="item.value"></bl-editable-table-select-cell>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
-                            <input [formControlName]="column.name" [attr.type]="column.type">
+                            <input [formControl]="item.controls[column.name]" [attr.type]="column.type">
                         </ng-container>
                     </ng-container>
                 </td>

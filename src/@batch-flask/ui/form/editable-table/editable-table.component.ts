@@ -54,6 +54,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         combineLatest(this.form.valueChanges, columnObs).pipe(
             takeUntil(this._destroy),
         ).subscribe(([formValue, columns]) => {
+            console.log("Form Value", formValue, this.form.controls);
             const items = formValue.items;
             const lastRow = this.items.controls[items.length - 1];
             if (lastRow.dirty) {
@@ -92,7 +93,9 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public deleteItem(index: number) {
+        console.log("This", this.items.controls);
         this.items.removeAt(index);
+        console.log("This2", this.items.controls);
         this.changeDetector.markForCheck();
     }
 
