@@ -7,6 +7,8 @@ import { List } from "immutable";
 
 import "./job-progress-status.scss";
 
+const refreshRate = 5000;
+
 @Component({
     selector: "bl-job-progress-status",
     templateUrl: "job-progress-status.html",
