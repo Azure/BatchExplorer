@@ -1,11 +1,10 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
-import { List } from "immutable";
-import { Observable } from "rxjs";
-
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Metadata } from "app/models";
+import { List } from "immutable";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "bl-edit-metadata-form",

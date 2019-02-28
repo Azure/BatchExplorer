@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { Observable } from "rxjs";
-
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { JobScheduleCreateDto, JobSchedulePatchDto } from "app/models/dtos";
 import { JobScheduleService } from "app/services";
+import { Observable } from "rxjs";
 import { JobScheduleCreateBasicDialogComponent } from "./job-schedule-create-basic-dialog.component";
 
 @Component({

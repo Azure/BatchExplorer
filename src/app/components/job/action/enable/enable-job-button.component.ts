@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BaseButton } from "@batch-flask/ui/buttons";
-
 import { Job, JobState } from "app/models";
 
 @Component({

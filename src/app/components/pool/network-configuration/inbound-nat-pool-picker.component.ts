@@ -2,11 +2,11 @@ import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-
 import { InboundEndpointProtocol, InboundNATPoolAttributes } from "app/models";
-import "./inbound-nat-pool-picker.scss";
+import { Subscription } from "rxjs";
 import * as EndpointHelper from "./pool-endpoint-helper";
+
+import "./inbound-nat-pool-picker.scss";
 
 @Component({
     selector: "bl-inbound-nat-pool-picker",

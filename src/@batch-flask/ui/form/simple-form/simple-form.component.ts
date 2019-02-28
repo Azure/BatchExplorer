@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Observable } from "rxjs";
-
 import { FormSize } from "../complex-form";
 import { ContainerRef } from "../form-base";
+
 import "./simple-form.scss";
 
 /**

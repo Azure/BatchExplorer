@@ -6,9 +6,9 @@ import { I18nService, TimeZoneService } from "@batch-flask/core";
 import { DateUtils } from "@batch-flask/utils";
 import { DateTime, Duration } from "luxon";
 import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { QuickRange, QuickRanges, TimeRange, TimeRangeAttributes } from "./time-range.model";
 
-import { takeUntil } from "rxjs/operators";
 import "./time-range-picker.scss";
 
 let idCounter = 0;

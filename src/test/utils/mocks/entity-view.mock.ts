@@ -1,8 +1,7 @@
 import { Type } from "@angular/core";
+import { BasicEntityGetter, DataCache, EntityView } from "@batch-flask/core";
 import { Record } from "@batch-flask/core/record";
 import { of } from "rxjs";
-
-import { BasicEntityGetter, DataCache, EntityView } from "@batch-flask/core";
 
 export interface MockEntityViewConfig<TEntity, TParams> {
     cacheKey?: string;

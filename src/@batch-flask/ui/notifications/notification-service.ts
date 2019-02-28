@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
-
 import { Notification, NotificationConfig, NotificationLevel, NotificationTimer } from "./notification";
 
 function mergeConfig(defaultConfig: NotificationConfig, userConfig: NotificationConfig) {

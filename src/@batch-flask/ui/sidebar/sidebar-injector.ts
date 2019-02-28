@@ -1,5 +1,4 @@
 import { Injector } from "@angular/core";
-
 import { SidebarRef } from "./sidebar-ref";
 
 /** Custom injector type specifically for instantiating components with a dialog. */

@@ -2,14 +2,13 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Router } from "@angular/router";
-import * as d3 from "d3";
-import { List } from "immutable";
-
 import { I18nTestingModule, TelemetryTestingModule } from "@batch-flask/core/testing";
 import { ActivityService, ClickableComponent, DialogService, WorkspaceService } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Node, NodeState, Pool } from "app/models";
 import { NodeService, PoolService } from "app/services";
+import * as d3 from "d3";
+import { List } from "immutable";
 import * as Fixture from "test/fixture";
 import { click, dblclick, rightClick } from "test/utils/helpers";
 import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";

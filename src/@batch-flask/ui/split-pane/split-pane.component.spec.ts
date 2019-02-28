@@ -1,7 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-
 import { mousedown } from "test/utils/helpers";
 import { SplitPaneComponent, SplitPaneConfig } from "./split-pane.component";
 import { SplitSeparatorComponent } from "./split-separator";

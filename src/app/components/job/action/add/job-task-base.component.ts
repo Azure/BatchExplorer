@@ -6,7 +6,6 @@ import {
     FormGroup,
     Validators,
 } from "@angular/forms";
-
 import { RangeValidator } from "@batch-flask/ui/validation";
 import { UserAccount, VirtualMachineConfiguration } from "app/models";
 import { Constants } from "common";

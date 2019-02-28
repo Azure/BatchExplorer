@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
 import { ButtonGroupComponent } from "./button-group.component";
 import { ButtonComponent } from "./button.component";
 import {

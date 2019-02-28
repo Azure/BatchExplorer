@@ -1,6 +1,5 @@
 import { ListProp, Prop, Record } from "@batch-flask/core";
 import { List } from "immutable";
-
 import { PasswordCredential, PasswordCredentialAttributes } from "./password-credential";
 
 export interface AADApplicationAttributes {

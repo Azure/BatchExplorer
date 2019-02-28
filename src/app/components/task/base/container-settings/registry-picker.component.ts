@@ -2,7 +2,6 @@ import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-
 import { ContainerRegistryDto } from "app/models/dtos";
 import { Subscription } from "rxjs";
 

@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
-import { Pool } from "app/models";
-
 import { FormControl } from "@angular/forms";
 import { I18nService, autobind } from "@batch-flask/core";
 import { NotificationService, SidebarRef } from "@batch-flask/ui";
+import { Pool } from "app/models";
 import { PoolPatchDto } from "app/models/dtos";
 import { NodeService, PoolService } from "app/services";
 import { share, switchMap } from "rxjs/operators";

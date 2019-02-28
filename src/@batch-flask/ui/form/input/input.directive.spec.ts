@@ -2,7 +2,6 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-
 import { InputDirective } from "./input.directive";
 
 // tslint:disable:component-class-suffix

@@ -18,6 +18,7 @@ import * as path from "path";
 import { Observable, Subject } from "rxjs";
 import { flatMap, share, takeUntil, tap } from "rxjs/operators";
 import { ResourceFileCloudFileDialogComponent } from "./resourcefile-cloud-file-dialog";
+
 import "./resourcefile-picker.scss";
 
 export interface UploadResourceFileEvent {

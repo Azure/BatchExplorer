@@ -7,6 +7,7 @@ import { NcjTemplateService } from "app/services";
 import { List } from "immutable";
 import { BehaviorSubject, Subject, combineLatest } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
+
 import "./gallery-application-list.scss";
 
 export interface ApplicationSelection {

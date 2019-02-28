@@ -5,14 +5,12 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
-import { List } from "immutable";
-import { BehaviorSubject, Subject, of } from "rxjs";
-
 import { MaterialModule, UserConfigurationService } from "@batch-flask/core";
+import { I18nTestingModule, MockUserConfigurationService } from "@batch-flask/core/testing";
+import { I18nUIModule, SelectModule } from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-
 import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
 import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas";
@@ -28,9 +26,8 @@ import {
 } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
-
-import { I18nTestingModule, MockUserConfigurationService } from "@batch-flask/core/testing";
-import { I18nUIModule, SelectModule } from "@batch-flask/ui";
+import { List } from "immutable";
+import { BehaviorSubject, Subject, of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";

@@ -9,8 +9,8 @@ import {
 import { TimeZone, TimeZoneService } from "@batch-flask/core";
 import { DateTime } from "luxon";
 import { Subject } from "rxjs";
-
 import { takeUntil } from "rxjs/operators";
+
 import "./datetime-picker.scss";
 
 let idCounter = 0;

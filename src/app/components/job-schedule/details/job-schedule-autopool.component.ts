@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
-
 import { PoolConfigurationComponent } from "app/components/pool/details";
 import { Pool } from "app/models";
 

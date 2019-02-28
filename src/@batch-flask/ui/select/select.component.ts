@@ -31,6 +31,7 @@ import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown/
 import { Subject, Subscription } from "rxjs";
 import { OptionTemplateDirective } from "./option-template.directive";
 import { BL_OPTION_PARENT, OptionParent, SelectOptionComponent } from "./option/option.component";
+
 import "./select.scss";
 
 /** Custom injector type specifically for instantiating components with a dialog. */

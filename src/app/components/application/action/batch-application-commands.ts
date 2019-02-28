@@ -1,6 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
 import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { BatchApplicationService, PinnedEntityService } from "app/services";

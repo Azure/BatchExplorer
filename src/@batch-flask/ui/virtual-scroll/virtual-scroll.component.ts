@@ -20,9 +20,9 @@ import {
 } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import * as elementResizeDetectorMaker from "element-resize-detector";
+import { VirtualScrollRowDirective } from "./virtual-scroll-row.directive";
 import { VirtualScrollTailComponent } from "./virtual-scroll-tail";
 
-import { VirtualScrollRowDirective } from "./virtual-scroll-row.directive";
 import "./virtual-scroll.scss";
 
 export interface ChangeEvent {

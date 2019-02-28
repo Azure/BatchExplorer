@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
+import { Subscription } from "rxjs";
 import { FileViewer } from "../file-viewer";
 
-import { Subscription } from "rxjs";
 import "./text-file-viewer.scss";
 
 @Component({

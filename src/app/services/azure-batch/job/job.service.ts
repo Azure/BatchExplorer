@@ -1,6 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-
 import {
     ContinuationToken,
     DataCache,
@@ -14,6 +12,7 @@ import { JobCreateDto, JobPatchDto } from "app/models/dtos";
 import { ModelUtils } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
+import { Observable, Subject } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 

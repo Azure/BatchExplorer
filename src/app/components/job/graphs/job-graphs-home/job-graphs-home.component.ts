@@ -9,6 +9,7 @@ import { List } from "immutable";
 import * as path from "path";
 import { Observable, Subscription, from, of } from "rxjs";
 import { flatMap, share, tap } from "rxjs/operators";
+
 import "./job-graphs-home.scss";
 
 enum AvailableGraph {

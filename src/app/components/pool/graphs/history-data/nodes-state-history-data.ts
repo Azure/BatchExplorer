@@ -1,8 +1,6 @@
-import { List } from "immutable";
-
-import { HistoryDataBase } from "./history-data-base";
-
 import { Node } from "app/models";
+import { List } from "immutable";
+import { HistoryDataBase } from "./history-data-base";
 
 export class NodesStateHistoryData extends HistoryDataBase {
     public states: Set<string>;

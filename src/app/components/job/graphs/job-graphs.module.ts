@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
 import { BaseModule } from "@batch-flask/ui";
 import { AllJobGraphsComponent } from "./all-job-graphs-home";
 import { JobsBarChartComponent } from "./all-job-graphs-home/jobs-bar-chart";

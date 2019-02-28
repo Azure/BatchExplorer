@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
-
 import { Notification } from "../notification";
 import { NotificationService } from "../notification-service";
 

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from "@angular/core";
-
 import { TaskState } from "app/models";
 import * as inflection from "inflection";
 

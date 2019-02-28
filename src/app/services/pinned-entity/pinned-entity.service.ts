@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { List } from "immutable";
-import { BehaviorSubject, Observable, Subject, combineLatest, from, of } from "rxjs";
-
 import { NavigableRecord, PinnableEntity, PinnedEntityType, UserSpecificDataStore } from "@batch-flask/core";
 import {
     BatchAccount, BatchApplication, BlobContainer, Certificate, Job, JobSchedule, Pool,
 } from "app/models";
+import { List } from "immutable";
+import { BehaviorSubject, Observable, Subject, combineLatest, from, of } from "rxjs";
 import { map, share, switchMap, take, takeUntil } from "rxjs/operators";
 import { BatchAccountService } from "../batch-account";
 

@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
-
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { SimpleFormComponent } from "@batch-flask/ui/form/simple-form";
 import { ServerErrorComponent } from "@batch-flask/ui/server-error";

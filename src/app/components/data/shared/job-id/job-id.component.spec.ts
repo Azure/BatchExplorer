@@ -3,12 +3,10 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testin
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { ServerError } from "@batch-flask/core";
-import { of, throwError } from "rxjs";
-
 import { JobService } from "app/services";
-import { JobIdComponent } from "./job-id.component";
-
+import { of, throwError } from "rxjs";
 import * as Fixtures from "test/fixture";
+import { JobIdComponent } from "./job-id.component";
 
 @Component({
     template: `<bl-job-id [formControl]="jobId"></bl-job-id>`,

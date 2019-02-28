@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { BaseModule, FileModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { ResourceFilesPropertiesModule } from "app/components/common";

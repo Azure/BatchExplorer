@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
 import { AccountBrowseModule } from "app/components/account/browse";
 import { WorkspaceModule } from "app/components/workspace";

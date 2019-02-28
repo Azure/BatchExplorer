@@ -2,13 +2,12 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { SelectModule } from "@batch-flask/ui/select";
-
 import { ENTER, KeyCode } from "@batch-flask/core/keys";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { PermissionService } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
+import { SelectModule } from "@batch-flask/ui/select";
 import { click, createKeyboardEvent, updateInput } from "test/utils/helpers";
 import { EditableTableSelectCellComponent } from "./select-cell";
 

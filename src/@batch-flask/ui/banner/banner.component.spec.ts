@@ -1,9 +1,8 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { AsyncSubject } from "rxjs";
-
 import { BannerComponent, BannerOtherFixDirective } from "@batch-flask/ui/banner";
+import { AsyncSubject } from "rxjs";
 import { mouseenter } from "test/utils/helpers";
 import { ClickableComponent } from "../buttons";
 

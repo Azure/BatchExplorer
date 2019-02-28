@@ -1,8 +1,7 @@
-import { BehaviorSubject, Observable } from "rxjs";
-
 import { SanitizedError, SecureUtils } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { Deferred } from "common";
+import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import * as AdalConstants from "../adal-constants";
 

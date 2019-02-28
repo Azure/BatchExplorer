@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PoolCreateBasicDialogComponent } from "app/components/pool/action";
 import { CommandBase } from "./core";

@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
 import { EditorModule } from "@batch-flask/ui/editor";
 import { ButtonsModule } from "../buttons";
 import { I18nUIModule } from "../i18n";

@@ -1,24 +1,7 @@
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { List } from "immutable";
 import { FailureInfoAttributes } from "./failure-info";
 import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
-
-/**
- * Job terminate reason.
- * Can be either of the value listen below or some string specified by the user.
- */
-export enum JobTerminateReason {
-    JMComplete = "JMComplete",
-    MaxWallClockTimeExpiry = "MaxWallClockTimeExpiry",
-    TerminateJobSchedule = "TerminateJobSchedule",
-    AllTasksCompleted = "AllTasksCompleted",
-    TaskFailed = "TaskFailed",
-    /**
-     * Default user terminated value
-     */
-    UserTerminate = "UserTerminate",
-}
-
-import { List } from "immutable";
 
 export interface JobSchedulingErrorAttributes {
     code: string;

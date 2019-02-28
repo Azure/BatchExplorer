@@ -2,9 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { FormBuilder, FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { Subscription } from "rxjs";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { Subscription } from "rxjs";
 import { AddTaskFormComponent } from "../action";
 
 @Component({

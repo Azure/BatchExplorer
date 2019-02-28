@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
 import { DataSharedModule } from "app/components/data/shared";
 import { PoolBaseModule } from "app/components/pool/base";

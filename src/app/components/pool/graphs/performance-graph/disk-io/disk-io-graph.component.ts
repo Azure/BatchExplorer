@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
-
 import { NodesPerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
 import { PerformanceGraphComponent } from "../performance-graph.component";

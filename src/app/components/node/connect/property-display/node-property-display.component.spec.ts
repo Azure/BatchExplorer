@@ -1,10 +1,8 @@
 import { ChangeDetectorRef, Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { ClipboardService, ElectronShell } from "@batch-flask/electron";
-import { BehaviorSubject, of } from "rxjs";
-
 import { UserConfigurationService } from "@batch-flask/core";
+import { ClipboardService, ElectronShell } from "@batch-flask/electron";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -13,6 +11,7 @@ import { AddNodeUserAttributes } from "app/services";
 import {
     NodeConnectService,
 } from "app/services/node-connect";
+import { BehaviorSubject, of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { NodePropertyDisplayComponent } from ".";
 

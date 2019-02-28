@@ -1,8 +1,7 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
-
 import { MatTooltip, MatTooltipModule } from "@angular/material";
+import { By } from "@angular/platform-browser";
 import { NavigatorService } from "app/services";
 import { OnlineStatusComponent } from "./online-status.component";
 

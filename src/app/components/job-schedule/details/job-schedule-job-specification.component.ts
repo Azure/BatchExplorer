@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-
 import { WorkspaceService } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobConfigurationComponent } from "app/components/job/details";

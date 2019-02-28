@@ -10,14 +10,14 @@ import {
     forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
-
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { AutoscaleFormula, Pool } from "app/models";
 import { AutoscaleFormulaService } from "app/services";
 import { PredefinedFormulaService } from "app/services/predefined-formula.service";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
+
 import "./autoscale-formula-picker.scss";
 
 @Component({

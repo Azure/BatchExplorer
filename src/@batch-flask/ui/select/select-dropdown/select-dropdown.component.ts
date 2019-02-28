@@ -3,8 +3,8 @@ import {
     HostBinding, Inject, forwardRef,
 } from "@angular/core";
 import { SelectOptionComponent } from "@batch-flask/ui/select/option";
-
 import { SelectComponent } from "../select.component";
+
 import "./select-dropdown.scss";
 
 const unselectAllOptionId = "_bl-select-option-unselect-all";

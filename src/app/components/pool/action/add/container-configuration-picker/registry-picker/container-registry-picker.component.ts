@@ -2,9 +2,8 @@ import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-
 import { ContainerRegistryDto } from "app/models/dtos";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: "bl-container-registry-picker",

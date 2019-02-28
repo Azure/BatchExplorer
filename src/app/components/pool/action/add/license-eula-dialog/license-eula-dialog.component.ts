@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
 import { ElectronShell } from "@batch-flask/electron";
-
 import { ApplicationLicense } from "app/models";
 
 @Component({

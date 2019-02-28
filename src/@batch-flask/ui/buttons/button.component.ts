@@ -12,11 +12,11 @@ import {
     ViewChild,
 } from "@angular/core";
 import { MatTooltip } from "@angular/material";
+import { RouterLink } from "@angular/router";
 import { log } from "@batch-flask/utils";
 import { Observable, isObservable } from "rxjs";
 import { ClickableComponent } from "./clickable";
 
-import { RouterLink } from "@angular/router";
 import "./button.scss";
 
 export type ButtonType = "square" | "round" | "wide" | "plain";

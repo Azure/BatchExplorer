@@ -2,13 +2,12 @@ import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-
 import { ListView } from "@batch-flask/core";
 import { BlobContainer } from "app/models";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
 
 // tslint:disable:no-forward-ref
 @Component({

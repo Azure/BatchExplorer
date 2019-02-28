@@ -1,7 +1,6 @@
+import { log } from "@batch-flask/utils";
 import { ChildProcess, spawn } from "child_process";
 import * as path from "path";
-
-import { log } from "@batch-flask/utils";
 import { Constants } from "../client-constants";
 import { pythonLogger } from "../logger";
 import { getPythonPath } from "./python-executable";

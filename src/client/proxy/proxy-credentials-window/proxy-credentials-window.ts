@@ -1,9 +1,8 @@
-import { BrowserWindow, app, ipcMain } from "electron";
-import { ProxyCredentials } from "get-proxy-settings";
-
 import { Constants } from "client/client-constants";
 import { BatchExplorerApplication, ClosedWindowError, UniqueWindow } from "client/core";
 import { Deferred } from "common";
+import { BrowserWindow, app, ipcMain } from "electron";
+import { ProxyCredentials } from "get-proxy-settings";
 const urls = Constants.urls.proxyCredentials;
 const url = process.env.HOT ? urls.dev : urls.prod;
 
