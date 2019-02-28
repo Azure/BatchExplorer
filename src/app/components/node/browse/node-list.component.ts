@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Injector, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
@@ -6,6 +6,7 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ComponentUtils } from "app/utils";
+import { List } from "immutable";
 import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
 import { NodeCommands } from "../action";
@@ -17,6 +18,7 @@ import { NodeCommands } from "../action";
         provide: ListBaseComponent,
         useExisting: forwardRef(() => NodeListComponent),
     }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodeListComponent extends ListBaseComponent implements OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
@@ -24,6 +26,7 @@ export class NodeListComponent extends ListBaseComponent implements OnChanges, O
     @Input() public poolId: string;
 
     public data: ListView<Node, NodeListParams>;
+    public nodes: List<Node>;
 
     constructor(
         public commands: NodeCommands,
@@ -33,8 +36,13 @@ export class NodeListComponent extends ListBaseComponent implements OnChanges, O
         super(injector);
         this.data = this.nodeService.listView();
 
+        this.data.items.subscribe((items) => {
+            this.nodes = items;
+            this.changeDetector.markForCheck();
+        });
         this.data.status.subscribe((status) => {
             this.status = status;
+            this.changeDetector.markForCheck();
         });
         ComponentUtils.setActiveItem(activatedRoute, this.data);
     }
