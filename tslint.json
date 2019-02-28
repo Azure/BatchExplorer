@@ -34,7 +34,12 @@
     ],
     "ordered-imports": [true, {
         "import-sources-order": "case-insensitive",
-        "named-imports-order": "lowercase-last"
+        "named-imports-order": "lowercase-last",
+        "grouped-imports": true,
+        "groups": [
+          {"match": "^\\.\/.*\\.scss$", "order": 20}, // Have .scsss files after ts imports
+          {"match": ".*", "order": 10}
+        ]
     }],
     "object-literal-sort-keys": false,
     "arrow-return-shorthand": [true],
