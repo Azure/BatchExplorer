@@ -54,7 +54,6 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         combineLatest(this.form.valueChanges, columnObs).pipe(
             takeUntil(this._destroy),
         ).subscribe(([formValue, columns]) => {
-            console.log("Form Value", formValue, this.form.controls);
             const items = formValue.items;
             const lastRow = this.items.controls[items.length - 1];
             if (lastRow.dirty) {
