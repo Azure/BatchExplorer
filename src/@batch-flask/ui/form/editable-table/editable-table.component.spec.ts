@@ -119,6 +119,9 @@ describe("EditableTableComponent", () => {
 
         const newRows = de.queryAll(By.css("tbody tr"));
         expect(newRows.length).toBe(3);
+        expectRowValues(rows[0], "foo1", "bar1");
+        expectRowValues(rows[1], "foo3", "bar3");
+        expectRowEmpty(rows[2]);
     });
 
     it("it should edit a exisiting row", () => {
