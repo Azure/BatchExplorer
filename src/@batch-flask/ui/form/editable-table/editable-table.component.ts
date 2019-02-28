@@ -93,9 +93,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public deleteItem(index: number) {
-        console.log("This", this.items.controls);
         this.items.removeAt(index);
-        console.log("This2", this.items.controls);
         this.changeDetector.markForCheck();
     }
 
