@@ -32,6 +32,7 @@ const providersApiVersion = {
     "microsoft.network": Constants.ApiVersion.network,
     "microsoft.classicnetwork": Constants.ApiVersion.classicNetwork,
     "microsoft.consumption": Constants.ApiVersion.consumption,
+    "microsoft.costmanagement": Constants.ApiVersion.costManagement,
 };
 
 type SubscriptionOrTenant = ArmSubscription | string;
@@ -46,7 +47,7 @@ export class InvalidSubscriptionOrTenant extends Error {
  * Wrapper around the http service so call the azure ARM api.
  * Set the Authorization header and the api version
  */
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class AzureHttpService {
     constructor(private http: HttpClient, private adal: AdalService, private batchExplorer: BatchExplorerService) {
     }
@@ -56,7 +57,6 @@ export class AzureHttpService {
         subscriptionOrTenant: SubscriptionOrTenant,
         uri: string,
         options: HttpRequestOptions): Observable<any> {
-
         return this.adal.accessTokenData(this._getTenantId(subscriptionOrTenant, uri)).pipe(
             switchMap((accessToken) => {
                 options = this._setupRequestOptions(uri, options, accessToken);

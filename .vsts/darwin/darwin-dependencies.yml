@@ -10,5 +10,6 @@ steps:
       npm install -g npm@latest
       npm --version
       npm install
+      pip install --upgrade pip
       pip install -r python/requirements.txt
     displayName: Install dependencies
