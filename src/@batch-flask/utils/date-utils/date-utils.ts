@@ -38,7 +38,7 @@ export class DateUtils {
             date = DateTime.fromJSDate(date);
         }
         if (DateUtils.withinRange(date, prettyDateRelativeRange, "days")) {
-            return date.toRelative();
+            return date.toRelative() || "-";
         } else {
             return date.toFormat("MMM d, yyyy");
         }
