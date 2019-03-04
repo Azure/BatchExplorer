@@ -11,7 +11,6 @@ import { PoolListParams, PoolService, RenderingContainerImageService } from "app
 import { BehaviorSubject, Subject, empty } from "rxjs";
 
 import { ListView } from "@batch-flask/core";
-import { log } from "@batch-flask/utils";
 import { NcjTemplateMode, Pool } from "app/models";
 import { RenderApplication, RenderEngine } from "app/models/rendering-container-image";
 import { switchMap, takeUntil } from "rxjs/operators";
@@ -77,18 +76,28 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
             }),
         ).subscribe((pool) => {
             if (pool) {
-                const containerImageId = this.containerImageFromPool(pool);
-                this.containerImage = containerImageId;
-
-                this.renderingContainerImageService.findContainerImageById(containerImageId)
-                    .subscribe(image => {
-                    this.appVersionControl.setValue(image.appVersion);
-                    this.rendererVersionControl.setValue(image.rendererVersion);
+                const ciOnPool = pool.virtualMachineConfiguration.containerConfiguration.containerImageNames;
+                this.renderingContainerImageService.containerImagesAsMap()
+                .subscribe(images => {
+                    const matchedImage = ciOnPool.find(imageOnPool => {
+                        const image = images.get(imageOnPool);
+                        if (image === null) {
+                            return false;
+                        }
+                        if (image.app === this.app
+                            && image.renderer === this.renderEngine
+                            && image.imageReferenceId === this.imageReferenceId) {
+                                this.appVersionControl.setValue(image.appVersion);
+                                this.rendererVersionControl.setValue(image.rendererVersion);
+                                return true;
+                            }
+                        return false;
+                    });
+                    if (matchedImage && this._propagateChange) {
+                        this._propagateChange(matchedImage);
+                    }
                 });
 
-                if (this._propagateChange) {
-                    this._propagateChange(containerImageId);
-                }
                 this.changeDetector.markForCheck();
             }
         });
@@ -150,15 +159,6 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
         this._destroy.complete();
         this._poolId.complete();
         this._ncjTemplateMode.complete();
-    }
-
-    private containerImageFromPool(pool: Pool) {
-        try {
-            return pool.virtualMachineConfiguration.containerConfiguration.containerImageNames.first();
-        } catch (e) {
-            log.warn("Tried to load containerImage for invalid pool:", e);
-            return "";
-        }
     }
 
     private _upperCaseFirstChar(lower: string) {

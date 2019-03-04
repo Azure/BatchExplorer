@@ -16,7 +16,7 @@ describe("RenderingContainerImageService", () => {
 
     // findContainerImageById
     it("#findContainerImageById finds and returns expected containerImage", (done) => {
-        renderingContainerImageService.findContainerImageById("ubuntu_maya_arnold_2011").subscribe((result) => {
+        renderingContainerImageService.findContainerImageById("ubuntu_maya2017u5_arnold2011").subscribe((result) => {
             expect(result.appVersion).toEqual("2017-Update5");
             expect(result.imageReferenceId).toEqual("ubuntu-1604lts-container");
             expect(result.rendererVersion).toEqual("2.0.1.1");
@@ -38,9 +38,9 @@ describe("RenderingContainerImageService", () => {
 
     it("#getAppVersionDisplayList returns only one of a duplicate result", (done) => {
         renderingContainerImageService.getAppVersionDisplayList(
-            RenderApplication.Maya, RenderEngine.Arnold, "ubuntu-1604lts-container").subscribe((result) => {
+            RenderApplication._3dsMax, RenderEngine.VRay, "ubuntu-1604lts-container").subscribe((result) => {
             expect(result.length).toEqual(1);
-            expect(result.pop()).toEqual("2017-Update5");
+            expect(result.pop()).toEqual("2018-Update1");
             done();
         });
     });
@@ -58,11 +58,11 @@ describe("RenderingContainerImageService", () => {
 
     it("#getContainerImagesForAppVersion filters to select correct multiple containerImage", (done) => {
         renderingContainerImageService.getContainerImagesForAppVersion(
-            RenderApplication.Maya, RenderEngine.Arnold, "ubuntu-1604lts-container", "2017-Update5")
+            RenderApplication._3dsMax, RenderEngine.VRay, "ubuntu-1604lts-container", "2018-Update1")
             .subscribe((result) => {
             expect(result.length).toEqual(2);
-            expect(result.find(x => x.containerImage === "ubuntu_maya_arnold_2011")).toBeDefined();
-            expect(result.find(x => x.containerImage === "ubuntu_maya_arnold_2023")).toBeDefined();
+            expect(result.find(x => x.containerImage === "ubuntu_3dsmax_vray25001")).toBeDefined();
+            expect(result.find(x => x.containerImage === "ubuntu_3dsmax_vray36004")).toBeDefined();
             done();
         });
     });

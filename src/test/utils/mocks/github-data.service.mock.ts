@@ -68,7 +68,7 @@ export class GithubDataServiceMock {
                 imageReferenceId : "ubuntu-1604lts-container",
             },
             {
-                containerImage: "ubuntu_maya_arnold_2011",
+                containerImage: "ubuntu_maya2017u5_arnold2011",
                 os: "Ubuntu 16.04",
                 app: "maya",
                 appVersion: "2017-Update5",
@@ -77,7 +77,7 @@ export class GithubDataServiceMock {
                 imageReferenceId : "ubuntu-1604lts-container",
             },
             {
-                containerImage: "ubuntu_maya_arnold_2023",
+                containerImage: "ubuntu_maya2017u5_arnold2023",
                 os: "Ubuntu 16.04",
                 app: "maya",
                 appVersion: "2017-Update5",
@@ -86,18 +86,71 @@ export class GithubDataServiceMock {
                 imageReferenceId : "ubuntu-1604lts-container",
             },
             {
-                containerImage: "ubuntu_3dsmax_vray",
+                containerImage: "ubuntu_maya2018u2_arnold2011",
+                os: "Ubuntu 16.04",
+                app: "maya",
+                appVersion: "2018-Update2",
+                renderer: "arnold",
+                rendererVersion: "2.0.1.1",
+                imageReferenceId : "ubuntu-1604lts-container",
+            },
+            {
+                containerImage: "ubuntu_maya2018u2_arnold2023",
+                os: "Ubuntu 16.04",
+                app: "maya",
+                appVersion: "2018-Update2",
+                renderer: "arnold",
+                rendererVersion: "2.0.2.3",
+                imageReferenceId : "ubuntu-1604lts-container",
+            },
+            {
+                containerImage: "ubuntu_maya2018u3_arnold3101",
+                os: "Ubuntu 16.04",
+                app: "maya",
+                appVersion: "2018-Update3",
+                renderer: "arnold",
+                rendererVersion: "3.1.0.1",
+                imageReferenceId : "ubuntu-1604lts-container",
+            },
+            {
+                containerImage: "ubuntu_maya2018u4_arnold3101",
+                os: "Ubuntu 16.04",
+                app: "maya",
+                appVersion: "2018-Update4",
+                renderer: "arnold",
+                rendererVersion: "3.1.0.1",
+                imageReferenceId : "ubuntu-1604lts-container",
+            },
+            {
+                containerImage: "ubuntu_3dsmax_vray25001",
                 os: "Ubuntu 16.04",
                 app: "3dsmax",
                 appVersion: "2018-Update1",
                 renderer: "vray",
-                rendererVersion: "2.0.2.3",
+                rendererVersion: "25001",
+                imageReferenceId : "ubuntu-1604lts-container",
+            },
+            {
+                containerImage: "ubuntu_3dsmax_vray36004",
+                os: "Ubuntu 16.04",
+                app: "3dsmax",
+                appVersion: "2018-Update1",
+                renderer: "vray",
+                rendererVersion: "36004",
                 imageReferenceId : "ubuntu-1604lts-container",
             },
         ],
     };
 
     public get = jasmine.createSpy("githubData.get").and.returnValue(of(JSON.stringify(this.githubDataResponse)));
+
+    public asContainerImageMap() {
+        const imageMap = new Map();
+        for (const image of this.githubDataResponse.containerImages) {
+            imageMap.set(image.containerImage, image);
+        }
+        return imageMap;
+    }
 
     public asProvider() {
         return { provide: GithubDataService, useValue: this };

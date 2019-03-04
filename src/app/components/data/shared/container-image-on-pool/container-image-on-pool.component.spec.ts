@@ -8,6 +8,7 @@ import { NcjTemplateMode } from "app/models";
 import { RenderApplication, RenderEngine } from "app/models/rendering-container-image";
 import { PoolService, RenderingContainerImageService } from "app/services";
 import { BehaviorSubject, of } from "rxjs";
+import { GithubDataServiceMock } from "test/utils/mocks";
 import { ContainerImageOnPoolComponent } from "./container-image-on-pool.component";
 
 @Component({
@@ -30,42 +31,71 @@ class TestComponent {
     public ncjTemplateMode: NcjTemplateMode;
 }
 
-const pool1 = {
-    id: "pool1",
+const poolSingleValid = {
+    id: "poolSingleValid",
     virtualMachineConfiguration: {
         containerConfiguration: {
             containerImageNames: [
-                "renderingContainerImage1",
+                "ubuntu_maya2017u5_arnold2011",
             ],
         },
     },
 };
 
-const renderingContainerImage1 = {
-    appVersion: "2017Update5",
-    rendererVersion: "2.0.1.1",
-    containerImage: "renderingContainerImage1",
+const poolMultipleValid = {
+    id: "poolMultipleValid",
+    virtualMachineConfiguration: {
+        containerConfiguration: {
+            containerImageNames: [
+                "ubuntu_maya2018u2_arnold2011",
+                "ubuntu_maya2018u2_arnold2023",
+            ],
+        },
+    },
 };
 
-fdescribe("ContainerImageOnPoolComponent", () => {
+const poolSecondValid = {
+    id: "poolSecondValid",
+    virtualMachineConfiguration: {
+        containerConfiguration: {
+            containerImageNames: [
+                "win_maya_vray",
+                "ubuntu_maya2018u3_arnold3101",
+            ],
+        },
+    },
+};
+
+const poolMultipleInvalid = {
+    id: "poolMultipleInvalid",
+    virtualMachineConfiguration: {
+        containerConfiguration: {
+            containerImageNames: [
+                "win_maya_vray",
+                "ubuntu_3dsmax_vray",
+            ],
+        },
+    },
+};
+
+describe("ContainerImageOnPoolComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
 
-    let appVersionInput: any;
-    let rendererVersionInput: any;
-
     let renderingContainerImageServiceSpy;
     let poolServiceSpy;
-    const containerImageReturned = new BehaviorSubject(renderingContainerImage1);
+
+    const poolServiceReturned = new BehaviorSubject(poolSingleValid);
 
     beforeEach(() => {
         poolServiceSpy = {
-            get: jasmine.createSpy("get").and.returnValue(of(pool1)),
+            get: jasmine.createSpy("get").and.returnValue(poolServiceReturned),
         };
 
         renderingContainerImageServiceSpy = {
-            findContainerImageById: jasmine.createSpy("findContainerImageById").and.returnValue(containerImageReturned),
+            containerImagesAsMap: jasmine.createSpy("containerImagesAsMap").and.returnValue(of(
+                new GithubDataServiceMock().asContainerImageMap())),
         };
 
         TestBed.configureTestingModule({
@@ -80,17 +110,51 @@ fdescribe("ContainerImageOnPoolComponent", () => {
         testComponent = fixture.componentInstance;
         testComponent.app = RenderApplication.Maya;
         testComponent.renderEngine = RenderEngine.Arnold;
-        testComponent.imageReferenceId = "centos-container-75";
+        testComponent.imageReferenceId = "ubuntu-1604lts-container";
         testComponent.ncjTemplateMode = NcjTemplateMode.ExistingPoolAndJob;
-        testComponent.poolId = pool1.id;
         de = fixture.debugElement.query(By.css("bl-container-image-on-pool"));
-        fixture.detectChanges();
-        appVersionInput = de.query(By.css("input")).nativeElement;
-        rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
     });
 
-    fit("Shows the app and renderer version present on the pool", () => {
-        expect(appVersionInput.value).toEqual("2017Update5");
+    it("for a pool with a single containerImage, shows the app and renderer version present on the pool", () => {
+        const appVersionInput = de.query(By.css("input")).nativeElement;
+        const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
+        testComponent.poolId = poolSingleValid.id;
+        fixture.detectChanges();
+
+        expect(appVersionInput.value).toEqual("2017-Update5");
         expect(rendererVersionInput.value).toEqual("2.0.1.1");
+    });
+
+    it("if there are multiple valid containerImages, the first is used", () => {
+        const appVersionInput = de.query(By.css("input")).nativeElement;
+        const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
+        testComponent.poolId = poolMultipleValid.id;
+        poolServiceReturned.next(poolMultipleValid);
+        fixture.detectChanges();
+
+        expect(appVersionInput.value).toEqual("2018-Update2");
+        expect(rendererVersionInput.value).toEqual("2.0.1.1");
+    });
+
+    it("if there are valid and invalid containerImages, the valid one is used", () => {
+        const appVersionInput = de.query(By.css("input")).nativeElement;
+        const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
+        testComponent.poolId = poolSecondValid.id;
+        poolServiceReturned.next(poolSecondValid);
+        fixture.detectChanges();
+
+        expect(appVersionInput.value).toEqual("2018-Update3");
+        expect(rendererVersionInput.value).toEqual("3.1.0.1");
+    });
+
+    it("if there are no valid containerImages, app and render version are left empty", () => {
+        const appVersionInput = de.query(By.css("input")).nativeElement;
+        const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
+        testComponent.poolId = poolMultipleInvalid.id;
+        poolServiceReturned.next(poolMultipleInvalid);
+        fixture.detectChanges();
+
+        expect(appVersionInput.value).toEqual("");
+        expect(rendererVersionInput.value).toEqual("");
     });
 });

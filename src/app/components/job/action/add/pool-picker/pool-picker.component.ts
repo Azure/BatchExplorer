@@ -199,14 +199,12 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
             }
         }
 
-        // TODO can we use filters.containerImage instead? Wired up through the html / onChanges?
         if (inputs.app && inputs.renderEngine && inputs.imageReferenceId) {
 
             if (!this._filterByContainerImage(pool, inputs, containerImages)) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -249,12 +247,13 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
         return pool.virtualMachineConfiguration.containerConfiguration.containerImageNames
             .find(imageId => {
                 const image = containerImages.get(imageId);
-                if (image === null) {
+                if (!image) {
                     return false;
                 }
-                return (image.app === inputs.app
+                const isMatch = (image.app === inputs.app
                         && image.renderer === inputs.renderEngine
                         && image.imageReferenceId === inputs.imageReferenceId);
+                return isMatch;
             }) != null;
     }
 

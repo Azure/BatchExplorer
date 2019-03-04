@@ -121,8 +121,7 @@ describe("PoolPickerComponent", () => {
     let poolServiceSpy;
     let vmSizeServiceSpy;
     let poolOsServiceSpy;
-    let githubDataServiceSpy;
-    let renderingContainerImageService: RenderingContainerImageService;
+    let renderingContainerImageServiceSpy;
     const poolServiceItems = [centosPool1, centosPool2, ubuntuPool, windowsPool, cloudServicePool];
 
     beforeEach(() => {
@@ -142,9 +141,11 @@ describe("PoolPickerComponent", () => {
                 ],
             }),
         };
-        githubDataServiceSpy = new GithubDataServiceMock();
 
-        renderingContainerImageService = new RenderingContainerImageService(githubDataServiceSpy);
+        renderingContainerImageServiceSpy = {
+            containerImagesAsMap: jasmine.createSpy("containerImagesAsMap").and.returnValue(of(
+                new GithubDataServiceMock().asContainerImageMap())),
+        };
 
         TestBed.configureTestingModule({
             imports: [FormsModule, ReactiveFormsModule, SelectModule, ButtonsModule, I18nTestingModule],
@@ -154,7 +155,7 @@ describe("PoolPickerComponent", () => {
                 { provide: PoolService, useValue: poolServiceSpy },
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
                 { provide: PoolOsService, useValue: poolOsServiceSpy },
-                { provide: RenderingContainerImageService, useValue: renderingContainerImageService },
+                { provide: RenderingContainerImageService, useValue: renderingContainerImageServiceSpy },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
@@ -249,9 +250,9 @@ describe("PoolPickerComponent", () => {
         const ubuntuContainerImages =
         [
             "ubuntu_maya_vray",
-            "ubuntu_maya_arnold_2011",
-            "ubuntu_maya_arnold_2023",
-            "ubuntu_3dsmax_vray",
+            "ubuntu_maya2017u5_arnold2011",
+            "ubuntu_maya2017u5_arnold2023",
+            "ubuntu_3dsmax_vray25001",
         ];
 
         const windowsContainerImages =
@@ -260,32 +261,41 @@ describe("PoolPickerComponent", () => {
             "win_maya_vray",
         ];
 
+        let containerImagePools: Pool[];
+
         beforeEach(() => {
             // the below id's need to match github-data.service.mock
-
-            const containerImagePools = ubuntuContainerImages.map(image => ubuntuContainerPool(image)).concat(
-                windowsContainerImages.map(image => windowsContainerPool(image)));
-
-            poolServiceSpy.pools.next(List(containerImagePools));
-
             testComponent.app = RenderApplication.Maya;
             testComponent.renderEngine = RenderEngine.Arnold;
             testComponent.imageReferenceId = "ubuntu-1604lts-container";
+
+            containerImagePools = ubuntuContainerImages.map(image => ubuntuContainerPool(image)).concat(
+                windowsContainerImages.map(image => windowsContainerPool(image)));
         });
 
         it("correctly filters pools with single container images", () => {
+            // containerImagePools.forEach(pool => {
+            //     console.log("pool", pool.id);
+            //     console.log("pooImages", pool.virtualMachineConfiguration.containerConfiguration.containerImageNames
+            //         .toArray());
+            // });
+
+            poolServiceSpy.pools.next(List(containerImagePools));
             fixture.detectChanges();
 
             const pools = de.queryAll(By.css(".pool-list .pool"));
+            // pools.forEach(pool => {
+            //     console.log("pool textContent", pool.nativeElement.textContent);
+            // });
             expect(pools.length).toBe(2);
 
-            expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya_arnold_2011");
-            expect(pools[1].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya_arnold_2023");
+            expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya2017u5_arnold2011");
+            expect(pools[1].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya2017u5_arnold2023");
         });
 
         describe("when a pool has multiple containerImages", () => {
             it("it correctly includes a pool when the valid container image is first", () => {
-                const cImages = ["ubuntu_maya_arnold_2011", "ubuntu_maya_vray"];
+                const cImages = ["ubuntu_maya2017u5_arnold2011", "ubuntu_maya_vray"];
 
                 const poolWithMultipleContainerImages = new Pool({
                     id: "ubuntu-container-pool-multiple-1",
@@ -302,7 +312,7 @@ describe("PoolPickerComponent", () => {
                 expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-multiple-1");
             });
             it("it correctly includes a pool when the valid container image is not first", () => {
-                const cImages = ["ubuntu_maya_vray", "win_maya_arnold", "ubuntu_maya_arnold_2011"];
+                const cImages = ["ubuntu_maya_vray", "win_maya_arnold", "ubuntu_maya2017u5_arnold2011"];
 
                 const poolWithMultipleContainerImages = new Pool({
                     id: "ubuntu-container-pool-multiple-2",
@@ -320,7 +330,7 @@ describe("PoolPickerComponent", () => {
             });
 
             it("it correctly includes a pool when there are multiple valid container images", () => {
-                const cImages = ["ubuntu_maya_arnold_2011", "win_maya_arnold", "ubuntu_maya_arnold_2023"];
+                const cImages = ["ubuntu_maya2017u5_arnold2011", "win_maya_arnold", "ubuntu_maya2017u5_arnold2023"];
 
                 const poolWithMultipleContainerImages = new Pool({
                     id: "ubuntu-container-pool-multiple-3",
@@ -338,7 +348,7 @@ describe("PoolPickerComponent", () => {
                 expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-multiple-3");
             });
 
-            it("it correctly excludes a pool when there are multiple invalid container images", () => {
+            it("it correctly excludes a pool when there are no valid container images", () => {
                 const cImages = ["ubuntu_maya_vray", "win_maya_arnold"];
 
                 const poolWithMultipleContainerImages = new Pool({
@@ -353,6 +363,39 @@ describe("PoolPickerComponent", () => {
 
                 const pools = de.queryAll(By.css(".pool-list .pool"));
                 expect(pools.length).toBe(0);
+            });
+            it("it correctly excludes a pool when there are no recognized container images", () => {
+                const cImages = ["some_random_container_image", "some_other_random_container_image"];
+
+                const poolWithMultipleContainerImages = new Pool({
+                    id: "ubuntu-container-pool-multiple-5",
+                    vmSize: "standard_a2",
+                    targetDedicatedNodes: 1,
+                    virtualMachineConfiguration: ubuntuContainerVM(cImages),
+                });
+
+                poolServiceSpy.pools.next(List([poolWithMultipleContainerImages]));
+                fixture.detectChanges();
+
+                const pools = de.queryAll(By.css(".pool-list .pool"));
+                expect(pools.length).toBe(0);
+            });
+            it("it correctly includes a pool when there are some unrecognized container images", () => {
+                const cImages = ["some_random_container_image", "ubuntu_maya2017u5_arnold2011"];
+
+                const poolWithMultipleContainerImages = new Pool({
+                    id: "ubuntu-container-pool-multiple-6",
+                    vmSize: "standard_a2",
+                    targetDedicatedNodes: 1,
+                    virtualMachineConfiguration: ubuntuContainerVM(cImages),
+                });
+
+                poolServiceSpy.pools.next(List([poolWithMultipleContainerImages]));
+                fixture.detectChanges();
+
+                const pools = de.queryAll(By.css(".pool-list .pool"));
+                expect(pools.length).toBe(1);
+                expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-multiple-6");
             });
         });
     });
