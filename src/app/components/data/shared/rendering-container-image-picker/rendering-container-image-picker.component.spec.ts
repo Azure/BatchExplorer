@@ -136,7 +136,7 @@ describe("RenderingContainerImagePickerComponent", () => {
         testComponent = fixture.componentInstance;
         testComponent.app = RenderApplication.Maya;
         testComponent.renderEngine = RenderEngine.Arnold;
-        testComponent.imageReferenceId = "centos-container-75";
+        testComponent.imageReferenceId = "ubuntu-1604lts-container";
         de = fixture.debugElement.query(By.css("bl-rendering-container-image-picker"));
         fixture.detectChanges();
         appVersionSelect = de.query(By.css(".app-version-picker")).componentInstance;
@@ -144,27 +144,15 @@ describe("RenderingContainerImagePickerComponent", () => {
     });
 
     it("Shows all options for the designated app", () => {
-        testComponent.app = RenderApplication.Maya;
-        testComponent.renderEngine = RenderEngine.Arnold;
-        testComponent.imageReferenceId = "ubuntu-1604lts-container";
-
         const appVersionOptions = appVersionSelect.options.toArray();
         expect(appVersionOptions.length).toEqual(2);
     });
 
     it("appVersion default to none", () => {
-        testComponent.app = RenderApplication.Maya;
-        testComponent.renderEngine = RenderEngine.Arnold;
-        testComponent.imageReferenceId = "ubuntu-1604lts-container";
-
         expect(appVersionSelect.value).toEqual(null);
     });
 
     it("Shows all rendererVersion options across all appVersions", () => {
-        testComponent.app = RenderApplication.Maya;
-        testComponent.renderEngine = RenderEngine.Arnold;
-        testComponent.imageReferenceId = "ubuntu-1604lts-container";
-
         const rendererVersionOptions = rendererVersionSelect.options.toArray();
         expect(rendererVersionOptions.length).toEqual(8);
     });
