@@ -26,11 +26,11 @@ class TestComponent {
     public imageReferenceId: string;
 }
 
-function ubuntuContainerVM(containerImage: string) {
+function ubuntuContainerVM(containerImages: string[]) {
     return {
         containerConfiguration:
         {
-            containerImageNames: [containerImage],
+            containerImageNames: containerImages,
             type: ContainerType.DockerCompatible,
         },
         imageReference:
@@ -46,7 +46,7 @@ function ubuntuContainerPool(containerImage: string) {
         id: "ubuntu-container-pool-" + containerImage,
         vmSize: "standard_a2",
         targetDedicatedNodes: 1,
-        virtualMachineConfiguration: ubuntuContainerVM(containerImage),
+        virtualMachineConfiguration: ubuntuContainerVM([containerImage]),
     });
 }
 
@@ -245,9 +245,7 @@ describe("PoolPickerComponent", () => {
 
         expect(pools[0].nativeElement.textContent).toContain("windows-cloudservice-pool-1");
     });
-
-    it("filter by containerImage", () => {
-        // the below id's need to match github-data.service.mock
+    fdescribe("filter by containerImage", () => {
         const ubuntuContainerImages =
         [
             "ubuntu_maya_vray",
@@ -262,20 +260,100 @@ describe("PoolPickerComponent", () => {
             "win_maya_vray",
         ];
 
-        const containerImagePools = ubuntuContainerImages.map(image => ubuntuContainerPool(image)).concat(
-                                    windowsContainerImages.map(image => windowsContainerPool(image)));
+        beforeEach(() => {
+            // the below id's need to match github-data.service.mock
 
-        poolServiceSpy.pools.next(List(containerImagePools));
+            const containerImagePools = ubuntuContainerImages.map(image => ubuntuContainerPool(image)).concat(
+                windowsContainerImages.map(image => windowsContainerPool(image)));
 
-        testComponent.app = RenderApplication.Maya;
-        testComponent.renderEngine = RenderEngine.Arnold;
-        testComponent.imageReferenceId = "ubuntu-1604lts-container";
-        fixture.detectChanges();
+            poolServiceSpy.pools.next(List(containerImagePools));
 
-        const pools = de.queryAll(By.css(".pool-list .pool"));
-        expect(pools.length).toBe(2);
+            testComponent.app = RenderApplication.Maya;
+            testComponent.renderEngine = RenderEngine.Arnold;
+            testComponent.imageReferenceId = "ubuntu-1604lts-container";
+        });
 
-        expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya_arnold_2011");
-        expect(pools[1].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya_arnold_2023");
+        it("correctly filters pools with single container images", () => {
+            fixture.detectChanges();
+
+            const pools = de.queryAll(By.css(".pool-list .pool"));
+            expect(pools.length).toBe(2);
+
+            expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya_arnold_2011");
+            expect(pools[1].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya_arnold_2023");
+        });
+
+        fdescribe("when a pool has multiple containerImages", () => {
+            it("it correctly includes a pool when the valid container image is first", () => {
+                const cImages = ["ubuntu_maya_arnold_2011", "ubuntu_maya_vray"];
+
+                const poolWithMultipleContainerImages = new Pool({
+                    id: "ubuntu-container-pool-multiple-1",
+                    vmSize: "standard_a2",
+                    targetDedicatedNodes: 1,
+                    virtualMachineConfiguration: ubuntuContainerVM(cImages),
+                });
+
+                poolServiceSpy.pools.next(List([poolWithMultipleContainerImages]));
+                fixture.detectChanges();
+
+                const pools = de.queryAll(By.css(".pool-list .pool"));
+                expect(pools.length).toBe(1);
+                expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-multiple-1");
+            });
+            it("it correctly includes a pool when the valid container image is not first", () => {
+                const cImages = ["ubuntu_maya_vray", "win_maya_arnold", "ubuntu_maya_arnold_2011"];
+
+                const poolWithMultipleContainerImages = new Pool({
+                    id: "ubuntu-container-pool-multiple-2",
+                    vmSize: "standard_a2",
+                    targetDedicatedNodes: 1,
+                    virtualMachineConfiguration: ubuntuContainerVM(cImages),
+                });
+
+                poolServiceSpy.pools.next(List([poolWithMultipleContainerImages]));
+                fixture.detectChanges();
+
+                const pools = de.queryAll(By.css(".pool-list .pool"));
+                expect(pools.length).toBe(1);
+                expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-multiple-2");
+            });
+
+            it("it correctly includes a pool when there are multiple valid container images", () => {
+                const cImages = ["ubuntu_maya_arnold_2011", "win_maya_arnold", "ubuntu_maya_arnold_2023"];
+
+                const poolWithMultipleContainerImages = new Pool({
+                    id: "ubuntu-container-pool-multiple-3",
+                    vmSize: "standard_a2",
+                    targetDedicatedNodes: 1,
+                    virtualMachineConfiguration: ubuntuContainerVM(cImages),
+                });
+
+                poolServiceSpy.pools.next(List([poolWithMultipleContainerImages]));
+
+                fixture.detectChanges();
+
+                const pools = de.queryAll(By.css(".pool-list .pool"));
+                expect(pools.length).toBe(1);
+                expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-multiple-3");
+            });
+
+            it("it correctly excludes a pool when there are multiple invalid container images", () => {
+                const cImages = ["ubuntu_maya_vray", "win_maya_arnold"];
+
+                const poolWithMultipleContainerImages = new Pool({
+                    id: "ubuntu-container-pool-multiple-4",
+                    vmSize: "standard_a2",
+                    targetDedicatedNodes: 1,
+                    virtualMachineConfiguration: ubuntuContainerVM(cImages),
+                });
+
+                poolServiceSpy.pools.next(List([poolWithMultipleContainerImages]));
+                fixture.detectChanges();
+
+                const pools = de.queryAll(By.css(".pool-list .pool"));
+                expect(pools.length).toBe(0);
+            });
+        });
     });
 });
