@@ -245,7 +245,7 @@ describe("PoolPickerComponent", () => {
 
         expect(pools[0].nativeElement.textContent).toContain("windows-cloudservice-pool-1");
     });
-    fdescribe("filter by containerImage", () => {
+    describe("filter by containerImage", () => {
         const ubuntuContainerImages =
         [
             "ubuntu_maya_vray",
@@ -283,7 +283,7 @@ describe("PoolPickerComponent", () => {
             expect(pools[1].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya_arnold_2023");
         });
 
-        fdescribe("when a pool has multiple containerImages", () => {
+        describe("when a pool has multiple containerImages", () => {
             it("it correctly includes a pool when the valid container image is first", () => {
                 const cImages = ["ubuntu_maya_arnold_2011", "ubuntu_maya_vray"];
 
