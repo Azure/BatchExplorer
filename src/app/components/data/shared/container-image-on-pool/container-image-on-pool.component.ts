@@ -26,7 +26,6 @@ import "./container-image-on-pool.component.scss";
             provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() =>
             ContainerImageOnPoolComponent), multi: true,
         },
-        RenderingContainerImageService,
     ],
 })
 
@@ -122,9 +121,6 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
                         this.containerImage = image.containerImage;
                     }
                 });
-        } else {
-            this.appVersionControl.setValue(null);
-            this.rendererVersionControl.setValue(null);
         }
     }
 
