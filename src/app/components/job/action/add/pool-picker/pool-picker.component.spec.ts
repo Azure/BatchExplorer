@@ -247,6 +247,7 @@ describe("PoolPickerComponent", () => {
         expect(pools[0].nativeElement.textContent).toContain("windows-cloudservice-pool-1");
     });
     describe("filter by containerImage", () => {
+        // the below id's need to match github-data.service.mock
         const ubuntuContainerImages =
         [
             "ubuntu_maya_vray",
@@ -264,7 +265,6 @@ describe("PoolPickerComponent", () => {
         let containerImagePools: Pool[];
 
         beforeEach(() => {
-            // the below id's need to match github-data.service.mock
             testComponent.app = RenderApplication.Maya;
             testComponent.renderEngine = RenderEngine.Arnold;
             testComponent.imageReferenceId = "ubuntu-1604lts-container";
@@ -274,19 +274,11 @@ describe("PoolPickerComponent", () => {
         });
 
         it("correctly filters pools with single container images", () => {
-            // containerImagePools.forEach(pool => {
-            //     console.log("pool", pool.id);
-            //     console.log("pooImages", pool.virtualMachineConfiguration.containerConfiguration.containerImageNames
-            //         .toArray());
-            // });
 
             poolServiceSpy.pools.next(List(containerImagePools));
             fixture.detectChanges();
 
             const pools = de.queryAll(By.css(".pool-list .pool"));
-            // pools.forEach(pool => {
-            //     console.log("pool textContent", pool.nativeElement.textContent);
-            // });
             expect(pools.length).toBe(2);
 
             expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya2017u5_arnold2011");
