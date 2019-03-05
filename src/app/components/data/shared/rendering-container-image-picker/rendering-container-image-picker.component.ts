@@ -101,11 +101,16 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
             } else if (value) {
                 this.rendererVersions = this.allRendererVersions.filter(rendererVersion =>
                     this.containerImagesMap.get(value  + ", " +  rendererVersion) != null);
-                this.appVersions = this.appVersions.concat([this.removeSelectionOption]);
+
+                if (!this.appVersions.includes(this.removeSelectionOption)) {
+                    this.appVersions = this.appVersions.concat([this.removeSelectionOption]);
+                }
                 if (this.rendererVersionControl.value) {
                     containerImage = this.containerImagesMap.get(
                         value + ", " +  this.rendererVersionControl.value).containerImage;
-                    this.rendererVersions = this.rendererVersions.concat([this.removeSelectionOption]);
+                    if (!this.rendererVersions.includes(this.removeSelectionOption)) {
+                        this.rendererVersions = this.rendererVersions.concat([this.removeSelectionOption]);
+                    }
                 }
             }
 
@@ -130,12 +135,16 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
             } else if (value) {
                 this.appVersions = this.allAppVersions.filter(appVersion =>
                     this.containerImagesMap.get(appVersion  + ", " + value) != null);
-                this.rendererVersions = this.rendererVersions.concat([this.removeSelectionOption]);
+                if (!this.rendererVersions.includes(this.removeSelectionOption)) {
+                    this.rendererVersions = this.rendererVersions.concat([this.removeSelectionOption]);
+                }
 
                 if (this.appVersionControl.value) {
                     containerImage = this.containerImagesMap.get(
                         this.appVersionControl.value + ", " + value).containerImage;
-                    this.appVersions = this.appVersions.concat([this.removeSelectionOption]);
+                    if (!this.appVersions.includes(this.removeSelectionOption)) {
+                        this.appVersions = this.appVersions.concat([this.removeSelectionOption]);
+                    }
                 }
             }
 
