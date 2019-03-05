@@ -113,7 +113,7 @@ export class AutoscaleLanguage {
 
         // Register a completion item provider for the new language
         monaco.languages.registerCompletionItemProvider("batch-autoscale", {
-            provideCompletionItems: (editor, position) => {
+            provideCompletionItems: (model, position) => {
                 const list: monaco.languages.CompletionList =  {
                     suggestions: [
                         ...[...variables, ...timeInterval].map((x) => {
@@ -121,6 +121,7 @@ export class AutoscaleLanguage {
                                 label: x,
                                 insertText: x,
                                 kind: monaco.languages.CompletionItemKind.Variable,
+                                range: model.getWordUntilPosition(position) as any,
                             };
                         }),
                         ...[...mathFunc, ...systemFunc].map((x) => {
@@ -128,6 +129,7 @@ export class AutoscaleLanguage {
                                 label: x,
                                 insertText: x,
                                 kind: monaco.languages.CompletionItemKind.Function,
+                                range: model.getWordUntilPosition(position),
                             };
                         }),
                         ...types.map((x) => {
@@ -135,6 +137,7 @@ export class AutoscaleLanguage {
                                 label: x,
                                 insertText: x,
                                 kind: monaco.languages.CompletionItemKind.Keyword,
+                                range: model.getWordUntilPosition(position),
                             };
                         }),
                     ],
