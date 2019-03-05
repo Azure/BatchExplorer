@@ -87,74 +87,85 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
             this.changeDetector.markForCheck();
         });
 
-        this.appVersionControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe((value: string) => {
-            let containerImage;
-            if (value === this.removeSelectionOption) {
-                value = "";
-                containerImage = "";
+        this.appVersionControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe((appVersion: string) => {
+            const rendererVersion = this.rendererVersionControl.value;
+            if (appVersion === this.removeSelectionOption) {
+                this.containerImage = "";
                 this.appVersionControl.setValue("");
-                this.rendererVersions = this.allRendererVersions.concat([this.removeSelectionOption]);
-                if (this.rendererVersionControl.value) {
+                this.rendererVersions = this.ensureArrayIncludesRemoveOption(this.allRendererVersions);
+                if (rendererVersion) {
                     this.appVersions = this.allAppVersions.filter(appVersion =>
-                        this.containerImagesMap.get(appVersion  + ", " + this.rendererVersionControl.value) != null);
+                        this.containerImagesMapContains(appVersion, rendererVersion));
                 }
-            } else if (value) {
+            } else if (appVersion) {
                 this.rendererVersions = this.allRendererVersions.filter(rendererVersion =>
-                    this.containerImagesMap.get(value  + ", " +  rendererVersion) != null);
+                    this.containerImagesMapContains(appVersion, rendererVersion));
 
-                if (!this.appVersions.includes(this.removeSelectionOption)) {
-                    this.appVersions = this.appVersions.concat([this.removeSelectionOption]);
-                }
-                if (this.rendererVersionControl.value) {
-                    containerImage = this.containerImagesMap.get(
-                        value + ", " +  this.rendererVersionControl.value).containerImage;
-                    if (!this.rendererVersions.includes(this.removeSelectionOption)) {
-                        this.rendererVersions = this.rendererVersions.concat([this.removeSelectionOption]);
-                    }
+                this.appVersions = this.ensureArrayIncludesRemoveOption(this.appVersions);
+
+                if (rendererVersion) {
+                    this.containerImage = this.getFromContainerImagesMap(appVersion, rendererVersion)
+                        .containerImage;
+                    this.rendererVersions = this.ensureArrayIncludesRemoveOption(this.rendererVersions);
                 }
             }
 
             if (this._propagateChange) {
-                this._propagateChange(containerImage);
+                this._propagateChange(this.containerImage);
             }
-            this.containerImage = containerImage;
             this.changeDetector.markForCheck();
         });
 
-        this.rendererVersionControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe((value: string) => {
-            let containerImage;
-            if (value === this.removeSelectionOption) {
-                value = "";
-                containerImage = "";
+        this.rendererVersionControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe((rendererVersion: string) => {
+            const appVersion = this.appVersionControl.value;
+            if (rendererVersion === this.removeSelectionOption) {
+                this.containerImage = "";
                 this.rendererVersionControl.setValue("");
-                this.appVersions = this.allAppVersions.concat([this.removeSelectionOption]);
-                if (this.appVersionControl.value) {
+                this.appVersions = this.ensureArrayIncludesRemoveOption(this.allAppVersions);
+                if (appVersion) {
                     this.rendererVersions = this.allRendererVersions.filter(rendererVersion =>
-                        this.containerImagesMap.get(this.appVersionControl.value  + ", " + rendererVersion) != null);
+                        this.containerImagesMapContains(appVersion, rendererVersion));
                 }
-            } else if (value) {
+            } else if (rendererVersion) {
                 this.appVersions = this.allAppVersions.filter(appVersion =>
-                    this.containerImagesMap.get(appVersion  + ", " + value) != null);
-                if (!this.rendererVersions.includes(this.removeSelectionOption)) {
-                    this.rendererVersions = this.rendererVersions.concat([this.removeSelectionOption]);
-                }
+                    this.containerImagesMapContains(appVersion, rendererVersion));
+                this.rendererVersions = this.ensureArrayIncludesRemoveOption(this.rendererVersions);
 
-                if (this.appVersionControl.value) {
-                    containerImage = this.containerImagesMap.get(
-                        this.appVersionControl.value + ", " + value).containerImage;
-                    if (!this.appVersions.includes(this.removeSelectionOption)) {
-                        this.appVersions = this.appVersions.concat([this.removeSelectionOption]);
-                    }
+                if (appVersion) {
+
+                    this.containerImage = this.getFromContainerImagesMap(appVersion, rendererVersion)
+                        .containerImage;
+                    this.appVersions = this.ensureArrayIncludesRemoveOption(this.appVersions);
                 }
             }
 
             if (this._propagateChange) {
-                this._propagateChange(containerImage);
+                this._propagateChange(this.containerImage);
             }
-            this.containerImage = containerImage;
             this.changeDetector.markForCheck();
         });
     }
+
+    public ensureArrayIncludesRemoveOption(options: string[]): string[] {
+        if (!options.includes(this.removeSelectionOption)) {
+            options = options.concat([this.removeSelectionOption]);
+        }
+        return options;
+    }
+
+    public getFromContainerImagesMap(appVersion: string, rendererVersion: string): RenderingContainerImage {
+        return this.containerImagesMap.get(this.buildImagesMapKey(appVersion, rendererVersion));
+    }
+
+    public containerImagesMapContains(appVersion: string, rendererVersion: string): boolean {
+        const found = this.getFromContainerImagesMap(appVersion, rendererVersion) != null;
+        return found;
+    }
+
+    public buildImagesMapKey(appVersion: string, rendererVersion: string): string {
+        return appVersion  + ", " + rendererVersion;
+    }
+
     public trackContainerImage(_, rendererVersion: string) {
         return rendererVersion;
     }
