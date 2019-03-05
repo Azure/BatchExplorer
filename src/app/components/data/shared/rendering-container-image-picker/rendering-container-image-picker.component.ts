@@ -93,18 +93,20 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
                 value = "";
                 containerImage = "";
                 this.appVersionControl.setValue("");
-                this.rendererVersions = this.allRendererVersions;
+                this.rendererVersions = this.allRendererVersions.concat([this.removeSelectionOption]);
                 if (this.rendererVersionControl.value) {
                     this.appVersions = this.allAppVersions.filter(appVersion =>
                         this.containerImagesMap.get(appVersion  + ", " + this.rendererVersionControl.value) != null);
                 }
             } else if (value) {
+                this.rendererVersions = this.allRendererVersions.filter(rendererVersion =>
+                    this.containerImagesMap.get(value  + ", " +  rendererVersion) != null);
+                this.appVersions = this.appVersions.concat([this.removeSelectionOption]);
                 if (this.rendererVersionControl.value) {
                     containerImage = this.containerImagesMap.get(
                         value + ", " +  this.rendererVersionControl.value).containerImage;
+                    this.rendererVersions = this.rendererVersions.concat([this.removeSelectionOption]);
                 }
-                this.rendererVersions = this.allRendererVersions.filter(rendererVersion =>
-                    this.containerImagesMap.get(value  + ", " +  rendererVersion) != null);
             }
 
             if (this._propagateChange) {
@@ -120,18 +122,21 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
                 value = "";
                 containerImage = "";
                 this.rendererVersionControl.setValue("");
-                this.appVersions = this.allAppVersions;
+                this.appVersions = this.allAppVersions.concat([this.removeSelectionOption]);
                 if (this.appVersionControl.value) {
                     this.rendererVersions = this.allRendererVersions.filter(rendererVersion =>
                         this.containerImagesMap.get(this.appVersionControl.value  + ", " + rendererVersion) != null);
                 }
             } else if (value) {
+                this.appVersions = this.allAppVersions.filter(appVersion =>
+                    this.containerImagesMap.get(appVersion  + ", " + value) != null);
+                this.rendererVersions = this.rendererVersions.concat([this.removeSelectionOption]);
+
                 if (this.appVersionControl.value) {
                     containerImage = this.containerImagesMap.get(
                         this.appVersionControl.value + ", " + value).containerImage;
+                    this.appVersions = this.appVersions.concat([this.removeSelectionOption]);
                 }
-                this.appVersions = this.allAppVersions.filter(appVersion =>
-                    this.containerImagesMap.get(appVersion  + ", " + value) != null);
             }
 
             if (this._propagateChange) {

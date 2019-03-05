@@ -3,14 +3,14 @@
         <div class="gcol">
             <bl-form-field *ngIf="appVersions">
                 <bl-select class="app-version-picker" [formControl]="appVersionControl"  placeholder="{{appDisplay}} Version">
-                    <bl-option *ngFor="let version of appVersions.concat([removeSelectionOption]);trackBy: trackAppVersion" [value]=version [label]="version"></bl-option>
+                    <bl-option *ngFor="let version of appVersions;trackBy: trackAppVersion" [value]=version [label]="version"></bl-option>
                 </bl-select>
             </bl-form-field>
         </div>
         <div class="gcol">
             <bl-form-field *ngIf="rendererVersions">
                 <bl-select class="renderer-version-picker" [formControl]="rendererVersionControl" placeholder="{{renderEngineDisplay}} Version">
-                    <bl-option *ngFor="let version of rendererVersions.concat([removeSelectionOption]);trackBy: trackRendererVersion" [value]="version" [label]="version"></bl-option>
+                    <bl-option *ngFor="let version of rendererVersions;trackBy: trackRendererVersion" [value]="version" [label]="version"></bl-option>
                 </bl-select>
             </bl-form-field>
         </div>
