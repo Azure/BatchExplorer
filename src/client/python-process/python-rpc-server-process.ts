@@ -55,7 +55,7 @@ export class PythonRpcServerProcess {
             if (this._askForKill) {
                 log.info("Python rpc server has stopped!");
             } else {
-                log.error("Python Rpc server has exited unexpectedly with code!", code);
+                log.error(`Python Rpc server has exited unexpectedly with code! ${code}`);
             }
         });
 
