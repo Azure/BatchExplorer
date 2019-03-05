@@ -43,12 +43,15 @@ export class PythonRpcServerProcess {
         child.stderr.on("data", (data) => {
             pythonLogger.info(data.toString());
         });
+
         child.on("message", (message) => {
             log.info("Message from python", message);
         });
+
         child.on("disconnect", (...args) => {
             log.error("Disconnected python backend", args);
         });
+
         child.on("exit", (code) => {
             if (this._askForKill) {
                 log.info("Python rpc server has stopped!");
