@@ -36,10 +36,12 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
         return this._upperCaseFirstChar(this.renderEngine);
     }
 
+    public removeSelectionOption = "---- Remove Selection ----";
     public appVersionControl = new FormControl();
     public rendererVersionControl = new FormControl();
 
     public appVersions: string[];
+    public rendererVersions: string[];
     public containerImages: RenderingContainerImage[];
 
     public containerImage: string;
@@ -56,6 +58,10 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
 
     private _destroy = new Subject();
 
+    private containerImagesMap: Map<string, RenderingContainerImage>;
+    private allAppVersions: string[];
+    private allRendererVersions: string[];
+
     constructor(
         private changeDetector: ChangeDetectorRef,
         private renderingContainerImageService: RenderingContainerImageService) {
@@ -63,15 +69,44 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
         combineLatest(this._app, this._renderEngine, this._imageReferenceId).pipe(
             takeUntil(this._destroy),
             switchMap(([app, renderEngine, imageReferenceId]) => {
-                return this.renderingContainerImageService.getAppVersionDisplayList(
+                return this.renderingContainerImageService.getFilteredcontainerImages(
                     app, renderEngine, imageReferenceId);
             }),
-        ).subscribe((appVersions) => {
-            this.appVersions = appVersions;
+        ).subscribe((containerImages) => {
+            const imageMap = new Map();
+            for (const image of containerImages) {
+                imageMap.set(image.appVersion + ", " + image.rendererVersion, image);
+            }
+            this.containerImagesMap = imageMap;
+            this.allAppVersions = Array.from(new Set(containerImages.map(image => image.appVersion)))
+                .sort((a, b) => a.localeCompare(b));
+            this.allRendererVersions = Array.from(new Set(containerImages.map(image => image.rendererVersion)))
+                .sort((a, b) => a.localeCompare(b));
+            this.appVersions = this.allAppVersions;
+            this.rendererVersions = this.allRendererVersions;
             this.changeDetector.markForCheck();
         });
 
-        this.rendererVersionControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe((containerImage: string) => {
+        this.appVersionControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe((value: string) => {
+            let containerImage;
+            if (value === this.removeSelectionOption) {
+                value = "";
+                containerImage = "";
+                this.appVersionControl.setValue("");
+                this.rendererVersions = this.allRendererVersions;
+                if (this.rendererVersionControl.value) {
+                    this.appVersions = this.allAppVersions.filter(appVersion =>
+                        this.containerImagesMap.get(appVersion  + ", " + this.rendererVersionControl.value) != null);
+                }
+            } else if (value) {
+                if (this.rendererVersionControl.value) {
+                    containerImage = this.containerImagesMap.get(
+                        value + ", " +  this.rendererVersionControl.value).containerImage;
+                }
+                this.rendererVersions = this.allRendererVersions.filter(rendererVersion =>
+                    this.containerImagesMap.get(value  + ", " +  rendererVersion) != null);
+            }
+
             if (this._propagateChange) {
                 this._propagateChange(containerImage);
             }
@@ -79,20 +114,35 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
             this.changeDetector.markForCheck();
         });
 
-        combineLatest( this._app, this._renderEngine, this._imageReferenceId, this.appVersionControl.valueChanges).pipe(
-            takeUntil(this._destroy),
-            switchMap(([app, renderEngine, imageReferenceId, value]) => {
-                return this.renderingContainerImageService.getContainerImagesForAppVersion(
-                    app, renderEngine, imageReferenceId, value);
-            }),
-        ).subscribe((containerImages: RenderingContainerImage[]) => {
-            this.containerImages = containerImages;
+        this.rendererVersionControl.valueChanges.pipe(takeUntil(this._destroy)).subscribe((value: string) => {
+            let containerImage;
+            if (value === this.removeSelectionOption) {
+                value = "";
+                containerImage = "";
+                this.rendererVersionControl.setValue("");
+                this.appVersions = this.allAppVersions;
+                if (this.appVersionControl.value) {
+                    this.rendererVersions = this.allRendererVersions.filter(rendererVersion =>
+                        this.containerImagesMap.get(this.appVersionControl.value  + ", " + rendererVersion) != null);
+                }
+            } else if (value) {
+                if (this.appVersionControl.value) {
+                    containerImage = this.containerImagesMap.get(
+                        this.appVersionControl.value + ", " + value).containerImage;
+                }
+                this.appVersions = this.allAppVersions.filter(appVersion =>
+                    this.containerImagesMap.get(appVersion  + ", " + value) != null);
+            }
+
+            if (this._propagateChange) {
+                this._propagateChange(containerImage);
+            }
+            this.containerImage = containerImage;
             this.changeDetector.markForCheck();
         });
     }
-
-    public trackContainerImage(_, image: RenderingContainerImage) {
-        return image.containerImage;
+    public trackContainerImage(_, rendererVersion: string) {
+        return rendererVersion;
     }
 
     public trackAppVersion(_, appVersion: string) {
@@ -105,7 +155,7 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
                 .subscribe(image => {
                     if (image) {
                         this.appVersionControl.setValue(image.appVersion);
-                        this.rendererVersionControl.setValue(image);
+                        this.rendererVersionControl.setValue(image.rendererVersion);
                         this.containerImage = image.containerImage;
                     }
                 });

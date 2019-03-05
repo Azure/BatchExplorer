@@ -89,4 +89,18 @@ export class RenderingContainerImageService {
         publishReplay(1),
         refCount());
     }
+
+    public getFilteredcontainerImages(app: RenderApplication, renderer: RenderEngine, imageReferenceId: string):
+    Observable<RenderingContainerImage[]> {
+        return this.containerImages.pipe(
+            map(images => {
+                images = images.filter(x =>
+                    x.app === app &&
+                    x.renderer === renderer &&
+                    x.imageReferenceId === imageReferenceId);
+                return images;
+                }),
+                share(),
+            );
+        }
 }
