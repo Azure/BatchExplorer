@@ -132,7 +132,6 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
                 this.rendererVersions = this.ensureArrayIncludesRemoveOption(this.rendererVersions);
 
                 if (appVersion) {
-
                     this.containerImage = this.getFromContainerImagesMap(appVersion, rendererVersion)
                         .containerImage;
                     this.appVersions = this.ensureArrayIncludesRemoveOption(this.appVersions);
@@ -144,26 +143,6 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
             }
             this.changeDetector.markForCheck();
         });
-    }
-
-    public ensureArrayIncludesRemoveOption(options: string[]): string[] {
-        if (!options.includes(this.removeSelectionOption)) {
-            options = options.concat([this.removeSelectionOption]);
-        }
-        return options;
-    }
-
-    public getFromContainerImagesMap(appVersion: string, rendererVersion: string): RenderingContainerImage {
-        return this.containerImagesMap.get(this.buildImagesMapKey(appVersion, rendererVersion));
-    }
-
-    public containerImagesMapContains(appVersion: string, rendererVersion: string): boolean {
-        const found = this.getFromContainerImagesMap(appVersion, rendererVersion) != null;
-        return found;
-    }
-
-    public buildImagesMapKey(appVersion: string, rendererVersion: string): string {
-        return appVersion  + ", " + rendererVersion;
     }
 
     public trackContainerImage(_, rendererVersion: string) {
@@ -224,5 +203,25 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
 
     private _upperCaseFirstChar(lower: string) {
         return lower.charAt(0).toUpperCase() + lower.substr(1);
+    }
+
+    private getFromContainerImagesMap(appVersion: string, rendererVersion: string): RenderingContainerImage {
+        return this.containerImagesMap.get(this.buildImagesMapKey(appVersion, rendererVersion));
+    }
+
+    private containerImagesMapContains(appVersion: string, rendererVersion: string): boolean {
+        const found = this.getFromContainerImagesMap(appVersion, rendererVersion) != null;
+        return found;
+    }
+
+    private buildImagesMapKey(appVersion: string, rendererVersion: string): string {
+        return appVersion  + ", " + rendererVersion;
+    }
+
+    private ensureArrayIncludesRemoveOption(options: string[]): string[] {
+        if (!options.includes(this.removeSelectionOption)) {
+            options = options.concat([this.removeSelectionOption]);
+        }
+        return options;
     }
 }
