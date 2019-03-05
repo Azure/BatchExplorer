@@ -27,8 +27,12 @@ export class PythonRpcServerProcess {
             return;
         }
         log.info(`Python path is: '${data.cmd}', Args: ${data.args}`);
-        const child = this._spawedProcess = spawn(data.cmd, ["-u", ...data.args], {
-
+        const child = this._spawedProcess = spawn(data.cmd, [...data.args], {
+            shell: true,
+            env: {
+                ...process.env,
+                PYTHONUNBUFFERED: "1",
+            },
         });
         pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
 
@@ -38,6 +42,14 @@ export class PythonRpcServerProcess {
 
         child.stderr.on("data", (data) => {
             pythonLogger.info(data.toString());
+        });
+
+        child.on("message", (message) => {
+            log.info("Message from python", message);
+        });
+
+        child.on("disconnect", (...args) => {
+            log.error("Disconnected python backend", args);
         });
 
         child.on("exit", (code) => {
