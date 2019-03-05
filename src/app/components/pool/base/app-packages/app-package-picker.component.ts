@@ -35,7 +35,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     public _propagateChange: (references: PackageReference[]) => void;
     public hasAutoStorage: boolean;
 
-    private _data: ListView<BatchApplication, ApplicationListParams>;
+    private data: ListView<BatchApplication, ApplicationListParams>;
     private _destroy = new Subject();
 
     constructor(
@@ -44,7 +44,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         private packageService: BatchApplicationPackageService,
         private changeDetector: ChangeDetectorRef) {
 
-        this._data = this.applicationService.listView();
+        this.data = this.applicationService.listView();
 
         this.autoStorageService.hasAutoStorage.pipe(takeUntil(this._destroy)).subscribe((hasAutoStorage) => {
             this.hasAutoStorage = hasAutoStorage;
@@ -52,7 +52,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         });
 
         // subscribe to the application data proxy
-        this._data.items.subscribe((applications) => {
+        this.data.items.subscribe((applications) => {
             this.applicationNames = applications.map(x => x.name).toArray();
             this.changeDetector.markForCheck();
         });
@@ -65,11 +65,11 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public ngOnInit() {
-        this._data.fetchAll();
+        this.data.fetchAll();
     }
 
     public ngOnDestroy() {
-        this._data.dispose();
+        this.data.dispose();
         this._destroy.next();
         this._destroy.complete();
     }
