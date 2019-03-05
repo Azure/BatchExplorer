@@ -28,7 +28,6 @@ export class PythonRpcServerProcess {
         }
         log.info(`Python path is: '${data.cmd}', Args: ${data.args}`);
         const child = this._spawedProcess = spawn(data.cmd, [...data.args], {
-            shell: true,
             env: {
                 ...process.env,
                 PYTHONUNBUFFERED: "1",
