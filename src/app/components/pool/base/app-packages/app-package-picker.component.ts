@@ -102,7 +102,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             filter(x => Boolean(x)),
             switchMap(applicationName => this.applicationService.getByName(applicationName)),
             switchMap(application => application ? this.packageService.listAll(application.id) : of(List([]))),
-            map((packages) => packages.map(x => x.name).toArray()),
+            map((packages) => packages.map(x => x.name.toLowerCase()).toArray()),
             publishReplay(1),
             refCount(),
         );
