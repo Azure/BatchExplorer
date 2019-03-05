@@ -44,10 +44,10 @@ export class PythonRpcServerProcess {
             pythonLogger.info(data.toString());
         });
         child.on("message", (message) => {
-            log.debug("Message from python", message);
+            log.info("Message from python", message);
         });
         child.on("disconnect", (...args) => {
-            log.debug("Disconnected", args);
+            log.error("Disconnected python backend", args);
         });
         child.on("exit", (code) => {
             if (this._askForKill) {
