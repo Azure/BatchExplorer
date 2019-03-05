@@ -93,7 +93,8 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
                             }
                         return false;
                     });
-                    if (matchedImage && this._propagateChange) {
+                    this.containerImage = matchedImage;
+                    if (this._propagateChange) {
                         this._propagateChange(matchedImage);
                     }
                 });
