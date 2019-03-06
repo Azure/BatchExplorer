@@ -1,6 +1,4 @@
-import {
-    RenderApplication, RenderEngine,
-} from "app/models/rendering-container-image";
+import { RenderApplication, RenderEngine } from "app/models/rendering-container-image";
 import { GithubDataServiceMock } from "test/utils/mocks";
 import { RenderingContainerImageService } from "./rendering-container-image.service";
 
@@ -10,7 +8,6 @@ describe("RenderingContainerImageService", () => {
 
     beforeEach(() => {
         githubDataServiceSpy = new GithubDataServiceMock();
-
         renderingContainerImageService = new RenderingContainerImageService(githubDataServiceSpy);
     });
 
@@ -26,43 +23,28 @@ describe("RenderingContainerImageService", () => {
         });
     });
 
-    // getAppVersionDisplayList
-    it("#getAppVersionDisplayList filters to select single value correctly", (done) => {
-        renderingContainerImageService.getAppVersionDisplayList(
-            RenderApplication.Maya, RenderEngine.VRay, "ubuntu-1604lts-container").subscribe((result) => {
-            expect(result.length).toEqual(1);
-            expect(result.pop()).toEqual("2017-Update5");
+    // getFilteredContainerImages
+    it("#getFilteredContainerImages correctly filters expected images", (done) => {
+        renderingContainerImageService.getFilteredContainerImages(
+            RenderApplication.Maya, RenderEngine.Arnold, "ubuntu-1604lts-container").subscribe((result) => {
+            expect(result.length).toEqual(6);
+            expect(result.find(image => image.containerImage === "ubuntu_maya2017u5_arnold2011")).toBeDefined();
+            expect(result.find(image => image.containerImage === "ubuntu_maya2017u5_arnold2023")).toBeDefined();
+            expect(result.find(image => image.containerImage === "ubuntu_maya2018u2_arnold2011")).toBeDefined();
+            expect(result.find(image => image.containerImage === "ubuntu_maya2018u2_arnold2023")).toBeDefined();
+            expect(result.find(image => image.containerImage === "ubuntu_maya2018u3_arnold3101")).toBeDefined();
+            expect(result.find(image => image.containerImage === "ubuntu_maya2018u4_arnold3101")).toBeDefined();
             done();
         });
     });
 
-    it("#getAppVersionDisplayList returns only one of a duplicate result", (done) => {
-        renderingContainerImageService.getAppVersionDisplayList(
-            RenderApplication._3dsMax, RenderEngine.VRay, "ubuntu-1604lts-container").subscribe((result) => {
-            expect(result.length).toEqual(1);
-            expect(result.pop()).toEqual("2018-Update1");
-            done();
-        });
-    });
-
-    // getContainerImagesForAppVersion
-    it("#getContainerImagesForAppVersion filters to select correct containerImage", (done) => {
-        renderingContainerImageService.getContainerImagesForAppVersion(
-            RenderApplication.Maya, RenderEngine.VRay, "ubuntu-1604lts-container", "2017-Update5")
-            .subscribe((result) => {
-            expect(result.length).toEqual(1);
-            expect(result.pop().containerImage).toEqual("ubuntu_maya_vray");
-            done();
-        });
-    });
-
-    it("#getContainerImagesForAppVersion filters to select correct multiple containerImage", (done) => {
-        renderingContainerImageService.getContainerImagesForAppVersion(
-            RenderApplication._3dsMax, RenderEngine.VRay, "ubuntu-1604lts-container", "2018-Update1")
-            .subscribe((result) => {
-            expect(result.length).toEqual(2);
-            expect(result.find(x => x.containerImage === "ubuntu_3dsmax_vray25001")).toBeDefined();
-            expect(result.find(x => x.containerImage === "ubuntu_3dsmax_vray36004")).toBeDefined();
+    // containerImagesAsMap
+    it("#containerImagesAsMap returns all images, keyed by containerImageId", (done) => {
+        renderingContainerImageService.containerImagesAsMap().subscribe((result) => {
+            expect(result.size).toEqual(12);
+            new GithubDataServiceMock().githubDataResponse.containerImages.forEach(containerImage => {
+                expect(result.get(containerImage.containerImage)).toBeDefined();
+            });
             done();
         });
     });

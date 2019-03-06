@@ -41,42 +41,6 @@ export class RenderingContainerImageService {
             map(images => images.find(image => image.containerImage === containerImageId)), share());
     }
 
-    public getContainerImagesForAppVersion(
-        app: RenderApplication, renderer: RenderEngine, imageReferenceId?: string, selectedAppVersion?: string):
-        Observable<RenderingContainerImage[]> {
-        return this.containerImages.pipe(
-            map(images => {
-                images = images.filter(image => image.app === app && image.renderer === renderer);
-
-                if (imageReferenceId) {
-                    images = images.filter(image => image.imageReferenceId === imageReferenceId);
-                }
-                if (selectedAppVersion) {
-                    images = images.filter(image => image.appVersion === selectedAppVersion);
-                }
-                return images;
-            }),
-            share(),
-        );
-    }
-
-    public getAppVersionDisplayList(
-        app: RenderApplication,  renderer: RenderEngine, imageReferenceId: string):
-        Observable<string[]> {
-
-        return this.containerImages.pipe(
-            map(images => {
-                images = images.filter(x =>
-                    x.app === app &&
-                    x.renderer === renderer &&
-                    x.imageReferenceId === imageReferenceId);
-
-                return Array.from(new Set(images.map(image => image.appVersion)));
-            }),
-            share(),
-        );
-    }
-
     public containerImagesAsMap(): Observable<Map<any, any>> {
         return this.containerImages.pipe(
             map((images) => {

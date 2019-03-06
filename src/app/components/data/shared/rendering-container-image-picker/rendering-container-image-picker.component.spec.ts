@@ -116,13 +116,10 @@ describe("RenderingContainerImagePickerComponent", () => {
 
     beforeEach(() => {
         renderingContainerImageServiceSpy = {
-            getAppVersionDisplayList: jasmine.createSpy("getAppVersionDisplayList").and.returnValue(of([
-                "2017Update5",
-                "2018Update2",
-            ])),
-            getContainerImagesForAppVersion: jasmine.createSpy("getContainerImagesForAppVersion").and.returnValue(
-                containerImagesReturned,
-            ),
+            getFilteredContainerImages: jasmine.createSpy("getFilteredContainerImages")
+                .and.returnValue(of([allContainerImages])),
+            getContainerImagesForAppVersion: jasmine.createSpy("getContainerImagesForAppVersion")
+                .and.returnValue(containerImagesReturned),
         };
 
         TestBed.configureTestingModule({
