@@ -175,7 +175,9 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
             }
         });
         activity.setUncancellable();
-        this.dialogRef.close(activity);
+        if (this.dialogRef) {
+            this.dialogRef.close(activity);
+        }
         return activity.done;
     }
 
