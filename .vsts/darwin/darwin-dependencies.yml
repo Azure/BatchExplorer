@@ -11,6 +11,7 @@ steps:
       npm --version
       npm install -g node-gyp node-pre-gyp
       npm ci
+      npm i --save-dev node@8.15.0
       pip install --upgrade pip
       pip install -r python/requirements.txt
     displayName: Install dependencies
