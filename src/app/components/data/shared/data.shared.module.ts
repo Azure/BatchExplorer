@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
 import { BlobFilesBrowserModule } from "app/components/file/browse";
 import { CloudFilePickerComponent, CloudFilePickerDialogComponent } from "./cloud-file-picker";

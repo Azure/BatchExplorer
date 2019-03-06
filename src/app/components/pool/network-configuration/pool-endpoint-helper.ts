@@ -1,5 +1,4 @@
 import { FormControl, FormGroup } from "@angular/forms";
-
 import { InboundNATPoolAttributes } from "app/models";
 
 export const MININUM_PORT = 1;

@@ -14,9 +14,9 @@ import {
 import { FormControl, FormGroupDirective, NgControl, NgForm } from "@angular/forms";
 import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
+import { SanitizedError } from "@batch-flask/utils";
 import { Subject } from "rxjs";
 
-import { SanitizedError } from "@batch-flask/utils";
 import "./input.scss";
 
 // Invalid input type. You should use the corresponding component for those

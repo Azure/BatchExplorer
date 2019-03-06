@@ -1,5 +1,5 @@
 websockets==7.0
-pylint==2.2.2
+pylint==2.3.0
 azure-batch-extensions==5.0.3
 pyinstaller==3.4
 azure-batch==6.0.0

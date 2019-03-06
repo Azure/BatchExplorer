@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Observable, throwError } from "rxjs";
-
 import { ServerError } from "@batch-flask/core";
+import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { AzureBatchHttpService } from "../core";
 

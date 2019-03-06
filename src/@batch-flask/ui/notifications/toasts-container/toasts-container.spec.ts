@@ -1,8 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { List } from "immutable";
-
 import {
     Notification,
     NotificationLevel,
@@ -10,6 +8,7 @@ import {
     NotificationService,
 } from "@batch-flask/ui/notifications";
 import { PermissionService } from "@batch-flask/ui/permission";
+import { List } from "immutable";
 
 @Component({
     template: `<bl-toasts-container></bl-toasts-container>`,

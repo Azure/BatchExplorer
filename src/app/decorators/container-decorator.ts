@@ -1,7 +1,6 @@
-import { List } from "immutable";
-
 import { BlobContainer, Metadata } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
+import { List } from "immutable";
 import { ContainerLeaseDecorator } from "./container-lease-decorator";
 
 export class ContainerDecorator extends DecoratorBase<BlobContainer> {

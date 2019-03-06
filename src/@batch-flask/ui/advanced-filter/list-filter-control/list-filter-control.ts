@@ -1,6 +1,5 @@
 import { Component, Input } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-
 import { Filter, and, none, or, prop } from "@batch-flask/core";
 import { AdvancedFilter } from "../advanced-filter";
 import { AdvancedFilterControlBase } from "../control-base";

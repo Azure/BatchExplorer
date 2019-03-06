@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
-import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-
 import { MouseButton, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService, DropdownComponent } from "@batch-flask/ui";
 import { BatchAccountService, PinnedEntityService } from "app/services";
-
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
+
 import "./pinned-dropdown.scss";
 
 @Component({

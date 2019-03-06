@@ -2,9 +2,6 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, SimpleChanges,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { List } from "immutable";
-import { Subject, from } from "rxjs";
-
 import { ListView, PollObservable, PollService, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
@@ -14,9 +11,12 @@ import {
     AppInsightsQueryService, BatchExplorerService, NodeListParams, NodeService,
 } from "app/services";
 import { ComponentUtils, PoolUtils } from "app/utils";
+import { List } from "immutable";
+import { Subject, from } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
+
 import "./pool-graphs.scss";
 
 const historyLength = {

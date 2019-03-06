@@ -1,8 +1,7 @@
-import { List } from "immutable";
-
 import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { NetworkConfiguration } from "app/models/network-configuration";
 import { ModelUtils } from "app/utils";
+import { List } from "immutable";
 import { AllTasksCompleteAction, TaskFailureAction } from "../../job-action";
 import { JobConstraints } from "../../job-constraints";
 import { JobExecutionInformation, JobExecutionInformationAttributes } from "../../job-execution-information";

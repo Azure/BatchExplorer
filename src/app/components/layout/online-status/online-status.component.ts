@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { Subscription, from, timer } from "rxjs";
-
 import { NavigatorService } from "app/services";
+import { Subscription, from, timer } from "rxjs";
 import { concatMap } from "rxjs/operators";
+
 import "./online-status.scss";
 
 @Component({

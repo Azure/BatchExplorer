@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatTooltip } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonComponent } from "@batch-flask/ui/buttons/button.component";
 import { PermissionService } from "@batch-flask/ui/permission";

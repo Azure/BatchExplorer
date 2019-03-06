@@ -12,8 +12,8 @@ import {
     TemplateRef,
     ViewChild,
 } from "@angular/core";
-
 import { KeyNavigableListItem } from "@batch-flask/core";
+
 import "./option.scss";
 
 export const BL_OPTION_PARENT = new InjectionToken("BL_OPTION_PARENT");

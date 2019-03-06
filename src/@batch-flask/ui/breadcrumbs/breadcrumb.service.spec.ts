@@ -1,7 +1,6 @@
-import { Subject } from "rxjs";
-
 import { Breadcrumb, BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { log } from "@batch-flask/utils";
+import { Subject } from "rxjs";
 import { jobsCrumb, node1Crumb, pool1Crumb, pool1PropertiesCrumb, poolsCrumb } from "./crumbs-data.spec";
 
 describe("Breadcrumb service", () => {

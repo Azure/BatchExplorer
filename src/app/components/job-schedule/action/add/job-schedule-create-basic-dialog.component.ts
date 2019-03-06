@@ -1,7 +1,5 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Observable } from "rxjs";
-
 import { DynamicForm, autobind } from "@batch-flask/core";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -11,6 +9,7 @@ import { JobScheduleCreateDto } from "app/models/dtos";
 import { createJobScheduleFormToJsonData, jobScheduleToFormModel } from "app/models/forms";
 import { JobScheduleService } from "app/services";
 import { Constants } from "common";
+import { Observable } from "rxjs";
 
 import "./job-schedule-create-basic-dialog.scss";
 

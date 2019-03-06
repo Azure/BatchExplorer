@@ -1,7 +1,6 @@
-import { List } from "immutable";
-
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { NameValuePair, NameValuePairAttributes } from "app/models/name-value-pair";
+import { List } from "immutable";
 
 export interface ComputeNodeErrorAttributes {
     code: string;

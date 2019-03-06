@@ -1,7 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-
 import { MouseButton } from "@batch-flask/core";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { Notification, NotificationLevel, NotificationService } from "@batch-flask/ui/notifications";

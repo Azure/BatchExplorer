@@ -5,23 +5,6 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { PreloadAllModules, RouterModule } from "@angular/router";
-
-// application router
-import { routes } from "./app.routes";
-
-// components
-import { AppComponent } from "app/app.component";
-
-// extenal modules
-import { BaseModule } from "@batch-flask/ui";
-import { AccountModule } from "app/components/account/account.module";
-import { FileModule } from "app/components/file/file.module";
-import { SettingsModule } from "app/components/settings";
-
-// unhandled application error handler
-import { BatchExplorerErrorHandler } from "app/error-handler";
-
-// services
 import {
     LocaleService,
     MaterialModule,
@@ -30,8 +13,15 @@ import {
     USER_SERVICE,
 } from "@batch-flask/core";
 import { ElectronRendererModule } from "@batch-flask/electron";
+import { BaseModule } from "@batch-flask/ui";
+import { AppComponent } from "app/app.component";
+import { AccountModule } from "app/components/account/account.module";
+import { FileModule } from "app/components/file/file.module";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
+import { SettingsModule } from "app/components/settings";
+import { BatchExplorerErrorHandler } from "app/error-handler";
+import { routes } from "./app.routes";
 import {
     AdalService,
     AppLocaleService,

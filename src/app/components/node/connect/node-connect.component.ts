@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { ServerError, UserConfigurationService, autobind } from "@batch-flask/core";
 import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/electron";
-import * as path from "path";
-
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { SecureUtils } from "@batch-flask/utils";
 import { Node, NodeConnectionSettings, Pool } from "app/models";
@@ -16,8 +14,10 @@ import { PoolUtils } from "app/utils";
 import { BEUserConfiguration } from "common";
 import { ExternalApplication } from "common/constants";
 import { DateTime, Duration } from "luxon";
+import * as path from "path";
 import { Observable, from } from "rxjs";
 import { flatMap, share } from "rxjs/operators";
+
 import "./node-connect.scss";
 
 @Component({

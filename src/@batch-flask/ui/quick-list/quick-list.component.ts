@@ -9,7 +9,8 @@ import {
     TemplateRef,
     forwardRef,
 } from "@angular/core";
-
+import { Router } from "@angular/router";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { AbstractListBase } from "../abstract-list";
 import {
@@ -18,9 +19,6 @@ import {
     QuickListRowStatusDirective,
     QuickListRowTitleDirective,
 } from "./quick-list-row-def";
-
-import { Router } from "@angular/router";
-import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 
 import "./quick-list.scss";
 

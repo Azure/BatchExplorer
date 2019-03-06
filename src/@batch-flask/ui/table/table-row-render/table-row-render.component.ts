@@ -13,7 +13,6 @@ import {
     forwardRef,
 } from "@angular/core";
 import { Subscription } from "rxjs";
-
 import { TableColumnRef } from "../table-column-manager";
 import { TableComponent, TableConfig } from "../table.component";
 

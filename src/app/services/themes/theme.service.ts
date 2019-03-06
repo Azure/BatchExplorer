@@ -1,18 +1,18 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
-import { FSWatcher } from "chokidar";
-import * as path from "path";
-import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
-// tslint:disable-next-line:no-var-requires
-const stripJsonComments = require("strip-json-comments");
-
 import { UserConfigurationService } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
 import { NotificationService } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
+import { FSWatcher } from "chokidar";
 import { BEUserConfiguration } from "common";
+import * as path from "path";
+import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 import { filter, takeUntil } from "rxjs/operators";
 import { Theme } from "./theme.model";
+
+// tslint:disable-next-line:no-var-requires
+const stripJsonComments = require("strip-json-comments");
 
 export class ThemeNotFoundError extends Error {
 

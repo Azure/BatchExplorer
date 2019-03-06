@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
-
 import {
     NodesPerformanceMetric,
     PerformanceMetric,

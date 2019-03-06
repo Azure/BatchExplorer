@@ -2,11 +2,11 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-
 import { autobind } from "@batch-flask/core";
 import { BatchAccount } from "app/models";
 import { AADApplication } from "app/models/ms-graph";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
+
 import "./generate-aad-app-secret.scss";
 
 @Component({

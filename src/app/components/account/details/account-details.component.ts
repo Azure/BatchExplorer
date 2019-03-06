@@ -7,10 +7,10 @@ import {
     ApplicationListParams, BatchAccountService, BatchApplicationService,
     JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
-import { Subject, Subscription } from "rxjs";
-
 import { List } from "immutable";
+import { Subject, Subscription } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+
 import "./account-details.scss";
 
 @Component({

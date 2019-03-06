@@ -2,7 +2,6 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChildren, Input, OnInit, QueryList,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-
 import { TabComponent } from "./tab.component";
 
 @Component({

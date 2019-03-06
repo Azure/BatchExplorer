@@ -1,5 +1,4 @@
 import * as storage from "azure-storage";
-
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 
 export interface StorageAccountSharedKeyOptions {

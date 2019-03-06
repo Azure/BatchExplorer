@@ -1,7 +1,6 @@
-import { BehaviorSubject, Subscription } from "rxjs";
-
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { SplashScreen } from "client/splash-screen";
+import { BehaviorSubject, Subscription } from "rxjs";
 import { BatchExplorerApplication } from "./batch-explorer-application";
 
 interface InitializerTask {

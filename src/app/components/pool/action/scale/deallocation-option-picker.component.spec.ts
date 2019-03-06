@@ -2,7 +2,6 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-
 import { MaterialModule } from "@batch-flask/core";
 import { DeallocationOptionPickerComponent } from "app/components/pool/action/scale";
 import { BannerMockComponent } from "test/utils/mocks/components";

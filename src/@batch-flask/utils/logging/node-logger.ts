@@ -1,8 +1,6 @@
 import * as winston from "winston";
 import * as DailyRotateFile from "winston-daily-rotate-file";
 import * as Transport from "winston-transport";
-
-// import { Constants } from "../client-constants";
 import { SanitizedError } from "../error";
 import { Logger } from "./base-logger";
 import { PrettyStream } from "./pretty-stream";

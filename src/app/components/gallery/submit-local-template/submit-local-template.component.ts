@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy,  Component, Input } from "@angular/core";
-
 import { MatDialogRef } from "@angular/material";
 import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateType } from "app/models";
 import { LocalTemplateService } from "app/services";
+
 import "./submit-local-template.scss";
 
 @Component({

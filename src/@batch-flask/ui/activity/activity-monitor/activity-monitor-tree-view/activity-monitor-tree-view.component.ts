@@ -2,11 +2,11 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component,
     EventEmitter, HostListener, Input, OnChanges, Output, QueryList, ViewChild, ViewChildren,
 } from "@angular/core";
+import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { ChangeEvent } from "@batch-flask/ui/virtual-scroll";
 import { Activity } from "../../activity-types";
 import { ActivityMonitorItemComponent } from "../activity-monitor-item";
 
-import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import "./activity-monitor-tree-view.scss";
 
 interface TreeRow {

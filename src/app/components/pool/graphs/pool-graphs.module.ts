@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
 import { BaseModule } from "@batch-flask/ui";
 import { NodeConnectModule } from "app/components/node/connect";
 import { NodesHeatmapComponent, NodesHeatmapLegendComponent } from "./heatmap";

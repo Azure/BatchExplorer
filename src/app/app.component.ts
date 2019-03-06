@@ -1,8 +1,6 @@
 import { Component, HostBinding, OnDestroy, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Subject, combineLatest } from "rxjs";
-
 import { ActivatedRoute } from "@angular/router";
 import { TelemetryService, UserConfigurationService } from "@batch-flask/core";
 import { ElectronRemote, IpcService } from "@batch-flask/electron";
@@ -23,6 +21,7 @@ import {
     ThemeService,
 } from "app/services";
 import { BEUserConfiguration } from "common";
+import { Subject, combineLatest } from "rxjs";
 import { filter, first, takeUntil } from "rxjs/operators";
 
 @Component({

@@ -7,7 +7,6 @@ import { PropertyListModule } from "@batch-flask/ui/property-list";
 import { EditorMockComponent, EditorTestingModule } from "@batch-flask/ui/testing";
 import { BatchExplorerService } from "app/services";
 import * as Fixtures from "test/fixture";
-
 import { ProgramingSampleComponent } from "./programing-sample.component";
 
 const account1 = Fixtures.account.create();

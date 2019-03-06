@@ -5,6 +5,7 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { LoadingStatus } from "@batch-flask/ui";
+import { TableConfig } from "@batch-flask/ui/table";
 import { exists, prettyBytes } from "@batch-flask/utils";
 import { VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
@@ -12,10 +13,9 @@ import { PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { List } from "immutable";
 import { Subject, Subscription } from "rxjs";
-
-import { TableConfig } from "@batch-flask/ui/table";
 import { distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { VmSizeFilterValue } from "./vm-size-picker-filter.component";
+
 import "./vm-size-picker.scss";
 
 const categoriesDisplayName = {

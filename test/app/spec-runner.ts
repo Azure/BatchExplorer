@@ -1,4 +1,5 @@
 // tslint:disable:no-console
+// tslint:disable: ordered-imports
 import "./spec-imports";
 
 import { TestBed } from "@angular/core/testing";

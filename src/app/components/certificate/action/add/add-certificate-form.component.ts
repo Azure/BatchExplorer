@@ -1,13 +1,12 @@
 import { Component, Input } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { Observable } from "rxjs";
-
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { FileUrlUtils } from "@batch-flask/utils";
 import { CertificateFormat, CertificateService } from "app/services";
 import { Constants } from "common";
+import { Observable } from "rxjs";
 
 import "./add-certificate-form.scss";
 

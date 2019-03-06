@@ -1,3 +1,2 @@
-import "reflect-metadata";
-
 import "@batch-flask/extensions";
+import "reflect-metadata";

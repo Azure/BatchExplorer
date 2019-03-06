@@ -2,13 +2,12 @@ import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-import { List } from "immutable";
-import { BehaviorSubject, of } from "rxjs";
-
 import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { ContextMenuService } from "@batch-flask/ui";
 import { DropdownModule } from "@batch-flask/ui/dropdown";
 import { BatchAccountService, PinnedEntityService } from "app/services";
+import { List } from "immutable";
+import { BehaviorSubject, of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { PinnedDropDownComponent } from "./pinned-dropdown.component";
 

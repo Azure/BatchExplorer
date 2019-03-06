@@ -1,6 +1,5 @@
 import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
 import { NodeFillType } from "app/models/task-scheduling-policy";
-
 import { Duration } from "luxon";
 import { AppPackageReferenceDto } from "../application-package-reference.dto";
 import { CertificateReferenceDto } from "../certificate-reference.dto";

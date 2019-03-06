@@ -9,7 +9,6 @@ import {
     ViewChildren,
     forwardRef,
 } from "@angular/core";
-
 import { BehaviorSubject, Observable } from "rxjs";
 import { TableColumnRef } from "../table-column-manager";
 import { TableComponent } from "../table.component";

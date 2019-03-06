@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-
 import { Filter } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 

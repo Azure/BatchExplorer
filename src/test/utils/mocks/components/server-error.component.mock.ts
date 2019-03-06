@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-
 import { ServerError } from "@batch-flask/core";
 
 @Component({

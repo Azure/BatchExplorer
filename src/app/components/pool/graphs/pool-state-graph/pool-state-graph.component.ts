@@ -7,12 +7,12 @@ import {
     OnChanges,
     OnDestroy,
 } from "@angular/core";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui";
 import { Pool } from "app/models";
 import { NodeCounts, NodeCountsAttributes, PoolNodeCountService, PoolNodeCounts } from "app/services";
 import * as pattern from "patternomaly";
 import { Subscription } from "rxjs";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui";
 import "./pool-state-graph.scss";
 
 const idleColor = "#edeef2";

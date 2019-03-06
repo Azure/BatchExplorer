@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
 import { ResourceFilesPropertiesModule } from "app/components/common";
 import { FileBrowseModule } from "app/components/file/browse";

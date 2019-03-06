@@ -7,10 +7,10 @@ import {
     SkipSelf,
     ViewChild,
 } from "@angular/core";
-import { BehaviorSubject, Subscription } from "rxjs";
-
 import { ServerError } from "@batch-flask/core";
+import { BehaviorSubject, Subscription } from "rxjs";
 import { DisplayStatus, LoadingStatus } from "./loading-status";
+
 import "./loading.scss";
 
 @Component({

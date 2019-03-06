@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-
 import { InfoBoxComponent } from "./info-box.component";
 
 const components = [

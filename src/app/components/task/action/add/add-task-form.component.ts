@@ -1,8 +1,6 @@
 import { Component } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Observable } from "rxjs";
-
 import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DynamicForm, I18nService, autobind } from "@batch-flask/core";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -14,6 +12,7 @@ import { TaskCreateDto } from "app/models/dtos";
 import { createTaskFormToJsonData, taskToFormModel } from "app/models/forms";
 import { JobService, PoolService, TaskService } from "app/services";
 import { Constants } from "common";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "bl-add-task-form",

@@ -1,6 +1,5 @@
 import { Model, Prop, TransformDuration } from "@batch-flask/core";
 import { Duration } from "luxon";
-
 import { Constraints } from "./constraints";
 
 /**

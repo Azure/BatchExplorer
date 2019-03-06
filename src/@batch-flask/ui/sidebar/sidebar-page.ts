@@ -9,7 +9,6 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from "@angular/core";
-
 import { log } from "@batch-flask/utils";
 import { SidebarInjector } from "./sidebar-injector";
 import { SidebarRef } from "./sidebar-ref";

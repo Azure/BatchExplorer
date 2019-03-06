@@ -7,7 +7,6 @@ import {
     OnDestroy,
 } from "@angular/core";
 import { Subscription } from "rxjs";
-
 import { Breadcrumb } from "..//breadcrumbs.model";
 import { BreadcrumbService } from "../breadcrumb.service";
 

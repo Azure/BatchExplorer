@@ -1,7 +1,6 @@
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
-import { Duration } from "luxon";
-
 import { List } from "immutable";
+import { Duration } from "luxon";
 import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./container-setup";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";

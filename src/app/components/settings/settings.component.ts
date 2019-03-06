@@ -4,6 +4,7 @@ import { EntityConfigurationView, UserConfigurationService } from "@batch-flask/
 import { BEUserDesktopConfiguration, DEFAULT_BE_USER_CONFIGURATION } from "common";
 import { Subject } from "rxjs";
 import { debounceTime, takeUntil } from "rxjs/operators";
+
 import "./settings.scss";
 
 export interface SettingsSelection {

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { DialogService } from "@batch-flask/ui/dialogs";
-
 import { CredentialType, ProgramaticUsageComponent } from "../programatic-usage";
+
 import "./getting-started-card.scss";
 
 @Component({

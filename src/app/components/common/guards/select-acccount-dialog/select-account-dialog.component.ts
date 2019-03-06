@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
+import { AbstractListBaseConfig } from "@batch-flask/ui";
+import { BatchAccount } from "app/models";
 import { BatchAccountService } from "app/services";
+import { List } from "immutable";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
-import { AbstractListBaseConfig } from "@batch-flask/ui";
-import { BatchAccount } from "app/models";
-import { List } from "immutable";
 import "./select-account-dialog.scss";
 
 @Component({

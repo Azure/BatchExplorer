@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output } from "@angular/core";
-
 import { Filter } from "@batch-flask/core";
 import { AdvancedFilter, StatePickerControl } from "@batch-flask/ui/advanced-filter";
 import { PoolAllocationState, PoolState } from "app/models";

@@ -1,7 +1,6 @@
 // tslint:disable:no-unused-variable
 import { Component } from "@angular/core";
 import { TestBed, async } from "@angular/core/testing";
-
 import { TaskDetailsModule } from "app/components/task/details";
 
 export function main() {

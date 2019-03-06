@@ -1,3 +1,4 @@
+// tslint:disable: ordered-imports
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { ipcRenderer, remote } from "electron";
 

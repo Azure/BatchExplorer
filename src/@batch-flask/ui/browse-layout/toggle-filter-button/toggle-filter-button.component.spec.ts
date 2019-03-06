@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { FilterBuilder } from "@batch-flask/core";
 import { ClickableComponent } from "@batch-flask/ui/buttons/clickable";
-
 import { click } from "test/utils/helpers";
 import { ToggleFilterButtonComponent } from "./toggle-filter-button.component";
 

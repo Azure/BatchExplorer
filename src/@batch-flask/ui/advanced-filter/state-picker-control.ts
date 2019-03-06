@@ -1,6 +1,5 @@
 import { Component, HostBinding, Input } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-
 import * as FilterBuilder from "@batch-flask/core/filter-builder";
 import { AdvancedFilter } from "./advanced-filter";
 import { AdvancedFilterControlBase } from "./control-base";
