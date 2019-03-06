@@ -90,7 +90,7 @@ export class RenderingContainerImageService {
         refCount());
     }
 
-    public getFilteredcontainerImages(app: RenderApplication, renderer: RenderEngine, imageReferenceId: string):
+    public getFilteredContainerImages(app: RenderApplication, renderer: RenderEngine, imageReferenceId: string):
     Observable<RenderingContainerImage[]> {
         return this.containerImages.pipe(
             map(images => {

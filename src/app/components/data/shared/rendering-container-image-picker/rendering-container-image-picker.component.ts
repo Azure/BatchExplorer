@@ -69,7 +69,7 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
         combineLatest(this._app, this._renderEngine, this._imageReferenceId).pipe(
             takeUntil(this._destroy),
             switchMap(([app, renderEngine, imageReferenceId]) => {
-                return this.renderingContainerImageService.getFilteredcontainerImages(
+                return this.renderingContainerImageService.getFilteredContainerImages(
                     app, renderEngine, imageReferenceId);
             }),
         ).subscribe((containerImages) => {
