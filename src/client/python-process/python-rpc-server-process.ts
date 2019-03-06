@@ -27,7 +27,6 @@ export class PythonRpcServerProcess {
         }
         log.info(`Python path is: '${data.cmd}', Args: ${data.args}`);
         const child = this._spawedProcess = spawn(data.cmd, [...data.args], {
-            shell: true,
             env: {
                 ...process.env,
                 PYTHONUNBUFFERED: "1",
@@ -55,7 +54,7 @@ export class PythonRpcServerProcess {
             if (this._askForKill) {
                 log.info("Python rpc server has stopped!");
             } else {
-                log.error("Python Rpc server has exited unexpectedly with code!", code);
+                log.error(`Python Rpc server has exited unexpectedly with code! ${code}`);
             }
         });
 

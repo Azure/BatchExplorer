@@ -4,6 +4,8 @@ import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from "@ang
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "@batch-flask/core";
+import { FormModule, LoadingModule, PermissionService } from "@batch-flask/ui";
+import { List } from "immutable";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { FormModule, PermissionService } from "@batch-flask/ui";
 import { EditableTableComponent, EditableTableModule } from "@batch-flask/ui/form/editable-table";
@@ -87,6 +89,7 @@ describe("AppPackagePickerComponent", () => {
                 ReactiveFormsModule,
                 EditableTableModule,
                 I18nTestingModule,
+                LoadingModule,
                 FormModule,
             ],
             declarations: [AppPackagePickerComponent, TestComponent],
