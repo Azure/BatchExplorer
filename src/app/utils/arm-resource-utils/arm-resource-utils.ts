@@ -16,7 +16,7 @@ export class ArmResourceUtils {
      * This could also be used for any arm url depending on subscriptions
      * @param id Arm resource id
      */
-    public static getSubscriptionIdFromResourceId(id: string): string {
+    public static getSubscriptionIdFromResourceId(id: string): string | null {
         if (!id) { return null; }
 
         const regex = /subscriptions\/(.*)\/resourcegroups/;
