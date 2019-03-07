@@ -151,13 +151,20 @@ export class FileLoader {
     }
 
     /**
-     * This will download the file at a prefix location in the temp folder unless file loader config handles it
-     * @returns observable that resolve the path of the cached file when done caching
+     * Will either use the provided local path or download and cache a local version of the file and return its location
      */
-    public cache(): Observable<string> {
+    public getLocalVersionPath(): Observable<string> {
         if (this._localPath) {
             return this._localPath();
         }
+        return this._cache();
+    }
+
+    /**
+     * This will download the file at a prefix location in the temp folder
+     * @returns observable that resolve the path of the cached file when done caching
+     */
+    private _cache() {
         return this.getProperties().pipe(
             switchMap((file: File) => {
                 const destination = this._getCacheDestination(file);

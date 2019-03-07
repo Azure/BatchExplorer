@@ -115,7 +115,7 @@ describe("FileLoader", () => {
     });
 
     it("cache a file", async () => {
-        const localPath = await fileLoader.cache().toPromise();
+        const localPath = await fileLoader.getLocalVersionPath().toPromise();
         const folder = StringUtils.escapeRegex(path.join("/temp/fake-source/fake-group/wd/"));
         expect(localPath).toMatch(new RegExp(`^${folder}[a-z0-9]+\\.foo\\.ts$`));
         expect(fsSpy.exists).toHaveBeenCalledOnce();
