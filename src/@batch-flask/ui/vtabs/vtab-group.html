@@ -1,5 +1,13 @@
-<div class="tab-navigation">
-    <bl-clickable class="tab-navigation-item" *ngFor="let tab of tabs;trackBy: trackTab" (do)="selectTab(tab)" [class.active]="tab === currentTab">
+<div class="tab-navigation" role="tablist">
+    <bl-clickable *ngFor="let tab of tabs;trackBy: trackTab"
+        id="{{tab.id}}_button"
+        class="tab-navigation-item"
+        role="tab"
+        attr.aria-controls="{{tab.id}}_panel"
+        [attr.aria-selected]="tab === currentTab"
+        [class.active]="tab === currentTab"
+        (do)="selectTab(tab)">
+
         <ng-template [ngTemplateOutlet]="tab.label"></ng-template>
     </bl-clickable>
 
@@ -7,6 +15,11 @@
         <ng-content select="[blVtabFooter]"></ng-content>
     </div>
 </div>
-<div class="tab-content">
+<div
+    id="{{currentTab.id}}_panel"
+    role="tabpanel"
+    class="tab-content"
+    attr.aria-labelledby="{{currentTab.id}}_button">
+
     <ng-template [ngTemplateOutlet]="currentTab.content" *ngIf="currentTab"></ng-template>
 </div>
