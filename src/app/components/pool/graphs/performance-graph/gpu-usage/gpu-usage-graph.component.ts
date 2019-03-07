@@ -19,7 +19,7 @@ export class GpuUsageGraphComponent extends PerformanceGraphComponent implements
     public max = 100;
     public unit = "%";
     public gpuUsages: NodesPerformanceMetric = {};
-    public individualGpuUsages: PerformanceMetric[][] = [];
+    public individualGpuUsages: StringMap<PerformanceMetric[]> = {};
     public gpuCount = 1;
     public showOverallUsage = true;
     public lastGpuUsage: PerformanceMetric;
@@ -34,9 +34,9 @@ export class GpuUsageGraphComponent extends PerformanceGraphComponent implements
         if (changes.data) {
             this.gpuUsages = this.data.gpuUsage || {};
 
-            this.individualGpuUsages = this.data.individualGpuUsage || [];
+            this.individualGpuUsages = this.data.individualGpuUsage || {};
             if (this.individualGpuUsages) {
-                this.gpuCount = this.individualGpuUsages.length;
+                this.gpuCount = Object.keys(this.individualGpuUsages).length;
             }
             this._updateStatus();
             this.updateData();
@@ -66,7 +66,7 @@ export class GpuUsageGraphComponent extends PerformanceGraphComponent implements
     }
 
     private _showIndiviualGpuUsage() {
-        this.datasets = this.individualGpuUsages.map((usages, gpuN) => {
+        this.datasets = Object.entries(this.individualGpuUsages).map(([gpuN, usages]) => {
             return {
                 data: usages.map(x => {
                     return {
@@ -74,6 +74,7 @@ export class GpuUsageGraphComponent extends PerformanceGraphComponent implements
                         y: x.value,
                     };
                 }),
+                label: `GPU #${gpuN}`,
                 fill: false,
                 borderWidth: 1,
             };

@@ -4,6 +4,7 @@ import {
     AppInsightsMetricBody,
     AppInsightsMetricsResult,
     BatchPerformanceMetrics,
+    PerformanceMetric,
 } from "app/models/app-insights";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -28,7 +29,7 @@ const metrics: StringMap<MetricDefinition> = {
     networkWrite: { appInsightsMetricId: "customMetrics/Network write", segment: "cloud/roleInstance" },
 };
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class AppInsightsQueryService {
     constructor(private appInsightsApi: AppInsightsApiService) { }
 
@@ -108,9 +109,11 @@ export class AppInsightsQueryService {
             const segments = metricResult.body.value.segments;
             switch (id) {
                 case "individualCpuUsage":
+                    performances[id] = this._processIndividualDeviceUsage(id, "customDimensions/CPU #", segments);
+                    break;
                 case "individualGpuUsage":
                 case "individualGpuMemory":
-                    performances[id] = this._processIndividualDeviceUsage(id, segments);
+                    performances[id] = this._processIndividualDeviceUsage(id, "customDimensions/GPU #", segments);
                     break;
                 default:
                     performances[id] = this._processSegmentedMetric(id, data);
@@ -119,18 +122,18 @@ export class AppInsightsQueryService {
         return performances as BatchPerformanceMetrics;
     }
 
-    private _processIndividualDeviceUsage(id: string, segments) {
-        let usages: any[] = null;
+    private _processIndividualDeviceUsage(id: string, deviceKey: string, segments): StringMap<PerformanceMetric[]> {
+        const usages: StringMap<PerformanceMetric[]> = {};
         for (const segment of segments) {
             const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
-            const individualSegments = segment.segments;
-            if (usages === null) {
-                usages = individualSegments.map(() => []);
-            }
-            for (let i = 0; i < individualSegments.length; i++) {
-                const individualSegment = individualSegments[i];
+
+            for (const individualSegment of segment.segments) {
                 const value = individualSegment[this._getAppInsightsMetricId(id)].avg;
-                usages[i].push({
+                const deviceId = individualSegment[deviceKey];
+                if (!(deviceId in usages)) {
+                    usages[deviceId] = [];
+                }
+                usages[deviceId].push({
                     time,
                     value,
                 });
