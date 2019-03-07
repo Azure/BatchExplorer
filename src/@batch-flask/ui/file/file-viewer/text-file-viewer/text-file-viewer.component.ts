@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { FileViewer } from "../file-viewer";
 
 import "./text-file-viewer.scss";
@@ -34,6 +34,10 @@ export class TextFileViewerComponent extends FileViewer {
         this._loadContent();
     }
 
+    public save(): Observable<any> {
+        return this.fileLoader.write(this.value);
+    }
+
     private _loadContent() {
         if (!this.fileLoader) { return; }
         this._cleanupSub();
@@ -48,7 +52,7 @@ export class TextFileViewerComponent extends FileViewer {
         const { Uri } = await import("monaco-editor");
 
         this.editorConfig = {
-            readOnly: true,
+            readOnly: this.fileLoader.isReadonly,
             minimap: {
                 enabled: false,
             },

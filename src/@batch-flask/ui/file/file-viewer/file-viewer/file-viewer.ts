@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Input, OnDestroy } from "@angular/core";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { FileLoader } from "../../file-loader";
 import { File } from "../../file.model";
 import { FileAssociation } from "../file-type-association";
@@ -63,6 +63,7 @@ export abstract class FileViewer implements OnDestroy {
     public abstract onFileLoaderChanges();
     public onConfigChanges?(currentConfig: FileViewerConfig, oldConfig: FileViewerConfig);
     public onFileChanges?(currentFile: File, oldFile: File);
+    public save?(): Observable<any>;
 
     public ngOnDestroy() {
         this._clearFileChangesSub();

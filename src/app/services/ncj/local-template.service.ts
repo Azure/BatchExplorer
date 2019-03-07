@@ -103,6 +103,9 @@ export class LocalTemplateService implements OnDestroy {
             content: () => {
                 return from(this.fs.readFile(localPath).then(x => ({ content: x })));
             },
+            write: (content: string) => {
+                return from(this.fs.saveFile(localPath, content));
+            },
         });
     }
 

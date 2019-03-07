@@ -25,6 +25,7 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
 
     public fileExplorerConfig: FileExplorerConfig = {
         viewer: {
+            downloadEnabled: false,
             fileAssociations: [
                 { extension: ".json", type: "ncj-template" },
             ],

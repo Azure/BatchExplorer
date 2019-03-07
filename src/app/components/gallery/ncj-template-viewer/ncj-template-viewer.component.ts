@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/
 import { DialogService, FileViewer } from "@batch-flask/ui";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { SubmitLocalTemplateComponent } from "../submit-local-template";
 
 import "./ncj-template-viewer.scss";
@@ -44,6 +44,10 @@ export class NcjTemplateViewerComponent extends FileViewer {
         this._loadContent();
     }
 
+    public save(): Observable<any> {
+        return this.fileLoader.write(this.value);
+    }
+
     private _loadContent() {
         if (!this.fileLoader) { return; }
         this._cleanupSub();
@@ -57,7 +61,7 @@ export class NcjTemplateViewerComponent extends FileViewer {
     private async _computeEditorOptions() {
         const {Uri} = await import("monaco-editor");
         this.editorConfig = {
-            readOnly: true,
+            readOnly: this.fileLoader.isReadonly,
             minimap: {
                 enabled: false,
             },
