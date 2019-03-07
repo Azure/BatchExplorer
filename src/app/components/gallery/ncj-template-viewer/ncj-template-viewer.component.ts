@@ -33,15 +33,8 @@ export class NcjTemplateViewerComponent extends TextFileViewerComponent {
     }
 
     protected async _computeEditorOptions() {
-        const { Uri } = await import("monaco-editor");
-        this.editorConfig = {
-            readOnly: this.fileLoader.isReadonly,
-            minimap: {
-                enabled: false,
-            },
-            language: "json",
-            uri: this.fileLoader && Uri.file(this.fileLoader.filename),
-        };
+        await super._computeEditorOptions();
+        this.editorConfig.language = "json";
     }
 
     private _executeTemplate() {

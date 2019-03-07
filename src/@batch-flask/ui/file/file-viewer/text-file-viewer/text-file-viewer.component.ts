@@ -42,12 +42,13 @@ export class TextFileViewerComponent extends FileViewer {
     }
 
     public save(): Observable<any> {
+        console.log("Save");
         this._modified.next(false);
         return this.fileLoader.write(this.value);
     }
 
     protected async _computeEditorOptions() {
-        const { Uri } = await import("monaco-editor");
+        const { Uri, KeyMod, KeyCode } = await import("monaco-editor");
 
         this.editorConfig = {
             readOnly: this.fileLoader.isReadonly,
@@ -55,6 +56,9 @@ export class TextFileViewerComponent extends FileViewer {
                 enabled: false,
             },
             uri: this.fileLoader && Uri.file(this.fileLoader.filename),
+            keybindings: [
+                { key: KeyMod.CtrlCmd | KeyCode.KEY_S, action: () => this.save() },
+            ],
         };
         this.changeDetector.markForCheck();
     }

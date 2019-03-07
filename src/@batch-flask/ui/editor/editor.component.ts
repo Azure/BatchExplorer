@@ -10,8 +10,8 @@ import { AutoscaleLanguage } from "./monaco-languages";
 import "./editor.scss";
 
 export interface EditorKeyBinding {
-    key: any;
-    action: any;
+    key: number; // monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S
+    action: () => void;
 }
 
 export interface EditorConfig extends editor.IEditorConstructionOptions {
