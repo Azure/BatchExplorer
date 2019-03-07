@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { DialogService, FileViewer } from "@batch-flask/ui";
+import { DialogService } from "@batch-flask/ui";
 import { EditorConfig } from "@batch-flask/ui/editor";
+import { TextFileViewerComponent } from "@batch-flask/ui/file/file-viewer/text-file-viewer";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { Observable, Subscription } from "rxjs";
 import { SubmitLocalTemplateComponent } from "../submit-local-template";
 
 import "./ncj-template-viewer.scss";
@@ -12,7 +12,7 @@ import "./ncj-template-viewer.scss";
     templateUrl: "ncj-template-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NcjTemplateViewerComponent extends FileViewer {
+export class NcjTemplateViewerComponent extends TextFileViewerComponent {
     public static readonly MAX_FILE_SIZE = 1000000; // 1MB
 
     public value: string = "";
@@ -28,38 +28,12 @@ export class NcjTemplateViewerComponent extends FileViewer {
         },
     ];
 
-    private _contentSub: Subscription;
-
     constructor(private dialogService: DialogService, changeDetector: ChangeDetectorRef) {
         super(changeDetector);
     }
 
-    public onFileLoaderChanges() {
-        this.loadingStatus = LoadingStatus.Loading;
-        this._loadContent();
-        this._computeEditorOptions();
-    }
-
-    public onFileChanges() {
-        this._loadContent();
-    }
-
-    public save(): Observable<any> {
-        return this.fileLoader.write(this.value);
-    }
-
-    private _loadContent() {
-        if (!this.fileLoader) { return; }
-        this._cleanupSub();
-        this._contentSub = this.fileLoader.content().subscribe((result) => {
-            this.value = result.content.toString();
-            this.loadingStatus = LoadingStatus.Ready;
-            this.changeDetector.markForCheck();
-        });
-    }
-
-    private async _computeEditorOptions() {
-        const {Uri} = await import("monaco-editor");
+    protected async _computeEditorOptions() {
+        const { Uri } = await import("monaco-editor");
         this.editorConfig = {
             readOnly: this.fileLoader.isReadonly,
             minimap: {
@@ -74,11 +48,5 @@ export class NcjTemplateViewerComponent extends FileViewer {
         const ref = this.dialogService.open(SubmitLocalTemplateComponent);
         ref.componentInstance.filename = this.fileLoader.filename;
         ref.componentInstance.template = this.value;
-    }
-
-    private _cleanupSub() {
-        if (this._contentSub) {
-            this._contentSub.unsubscribe();
-        }
     }
 }

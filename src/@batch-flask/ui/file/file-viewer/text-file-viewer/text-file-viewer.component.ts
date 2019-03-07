@@ -18,6 +18,7 @@ export class TextFileViewerComponent extends FileViewer {
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
     public editorConfig: EditorConfig;
 
+    private _diskValue: string = "";
     private _contentSub: Subscription;
 
     constructor(changeDetector: ChangeDetectorRef) {
@@ -34,21 +35,18 @@ export class TextFileViewerComponent extends FileViewer {
         this._loadContent();
     }
 
+    public updateValue(value: string) {
+        this.value = value;
+        this._modified.next(this._diskValue !== value);
+        this.changeDetector.markForCheck();
+    }
+
     public save(): Observable<any> {
+        this._modified.next(false);
         return this.fileLoader.write(this.value);
     }
 
-    private _loadContent() {
-        if (!this.fileLoader) { return; }
-        this._cleanupSub();
-        this._contentSub = this.fileLoader.content().subscribe((result) => {
-            this.value = result.content.toString();
-            this.loadingStatus = LoadingStatus.Ready;
-            this.changeDetector.markForCheck();
-        });
-    }
-
-    private async _computeEditorOptions() {
+    protected async _computeEditorOptions() {
         const { Uri } = await import("monaco-editor");
 
         this.editorConfig = {
@@ -59,6 +57,17 @@ export class TextFileViewerComponent extends FileViewer {
             uri: this.fileLoader && Uri.file(this.fileLoader.filename),
         };
         this.changeDetector.markForCheck();
+    }
+
+    private _loadContent() {
+        if (!this.fileLoader) { return; }
+        this._cleanupSub();
+        this._contentSub = this.fileLoader.content().subscribe((result) => {
+            this.value = result.content.toString();
+            this._diskValue = this.value;
+            this.loadingStatus = LoadingStatus.Ready;
+            this.changeDetector.markForCheck();
+        });
     }
 
     private _cleanupSub() {
