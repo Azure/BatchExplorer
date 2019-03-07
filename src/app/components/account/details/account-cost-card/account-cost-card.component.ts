@@ -92,8 +92,6 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
             this.currency = usages.first().currency;
         }
 
-        usages = [...usages, ...usages];
-
         let total = 0;
 
         const days = new Set<string>();
