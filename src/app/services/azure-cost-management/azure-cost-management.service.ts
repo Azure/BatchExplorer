@@ -14,6 +14,7 @@ export interface AzureCostEntry {
     meter: string;
     date: Date;
     currency: string;
+    resourceId: string;
 }
 
 interface AzureCostAggregation {
@@ -141,6 +142,7 @@ export class AzureCostManagementService {
                     break;
             }
         }
+
         // Check we found all the columns
         for (const [key, index] of Object.entries(columnIndexes)) {
             if (index === null) {
@@ -163,7 +165,7 @@ export class AzureCostManagementService {
                 currency: row[columnIndexes.currency],
                 resourceId: row[columnIndexes.resourceId],
             };
-        }).filter(entry => entry.resourceId.startsWith(accountId));
+        }).filter(entry => entry.resourceId.toLowerCase().startsWith(accountId.toLowerCase()));
     }
 
     private _parseDate(date: number) {
