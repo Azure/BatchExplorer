@@ -19,7 +19,7 @@ export class ArmResourceUtils {
     public static getSubscriptionIdFromResourceId(id: string): string | null {
         if (!id) { return null; }
 
-        const regex = /subscriptions\/(.*)\/resourcegroups/;
+        const regex = /subscriptions\/(.*)\/resourcegroups/i;
         const out = regex.exec(id.toLowerCase());
 
         if (!out || out.length < 2) {
