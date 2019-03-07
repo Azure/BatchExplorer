@@ -19,7 +19,7 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
     public max = 100;
     public unit = "%";
     public gpuUsages: NodesPerformanceMetric = {};
-    public individualGpuUsages: PerformanceMetric[][] = [];
+    public individualGpuUsages: StringMap<PerformanceMetric[]> = {};
     public gpuCount = 1;
     public showOverallUsage = true;
     public lastGpuUsage: PerformanceMetric;
@@ -33,11 +33,11 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
         super.ngOnChanges(changes);
         if (changes.data) {
             this.gpuUsages = this.data.gpuMemory || {};
-            this.individualGpuUsages = this.data.individualGpuMemory || [];
+            this.individualGpuUsages = this.data.individualGpuMemory || {};
             if (this.individualGpuUsages) {
-                this.gpuCount = this.individualGpuUsages.length;
+                this.gpuCount = Object.keys(this.individualGpuUsages).length;
             }
-            this.lastIndividualGpuUsage = this.individualGpuUsages.map(x => x.last());
+            this.lastIndividualGpuUsage = Object.values( this.individualGpuUsages).map(x => x.last());
             this._updateStatus();
             this.updateData();
         }
@@ -57,7 +57,7 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
         this.updateData();
     }
 
-    public trackGpu(index) {
+    public trackGpu(index: number) {
         return index;
     }
 
@@ -66,7 +66,7 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
     }
 
     private _showIndiviualGpuUsage() {
-        this.datasets = this.individualGpuUsages.map((usages, gpuN) => {
+        this.datasets = Object.entries(this.individualGpuUsages).map(([gpuN, usages]) => {
             return {
                 data: usages.map(x => {
                     return {
@@ -74,6 +74,7 @@ export class GpuMemoryUsageGraphComponent extends PerformanceGraphComponent impl
                         y: x.value,
                     };
                 }),
+                label: `GPU #${gpuN}`,
                 fill: false,
                 borderWidth: 1,
             };

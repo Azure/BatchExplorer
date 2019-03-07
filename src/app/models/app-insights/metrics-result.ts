@@ -40,7 +40,7 @@ export type NodesCpusPerformanceMetric = StringMap<NodesPerformanceMetric>;
 export interface BatchPerformanceMetrics {
     // CPU
     cpuUsage?: NodesPerformanceMetric;
-    individualCpuUsage?: PerformanceMetric[][];
+    individualCpuUsage?: StringMap<PerformanceMetric[]>;
 
     // Memory
     memoryAvailable?: NodesPerformanceMetric;
@@ -60,11 +60,11 @@ export interface BatchPerformanceMetrics {
 
     // GPU
     gpuUsage?: NodesPerformanceMetric;
-    individualGpuUsage?: PerformanceMetric[][];
+    individualGpuUsage?: StringMap<PerformanceMetric[]>;
 
     // GPU memory
     gpuMemory?: NodesPerformanceMetric;
-    individualGpuMemory?: PerformanceMetric[][];
+    individualGpuMemory?: StringMap<PerformanceMetric[]>;
 }
 
 export type BatchPerformanceMetricType = keyof BatchPerformanceMetrics;
