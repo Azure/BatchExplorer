@@ -106,10 +106,15 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
             }
             const isoDate = usage.date.toISOString();
             days.add(isoDate);
-            groups[meterId].usages[isoDate] = {
-                x: usage.date,
-                y: usage.preTaxCost,
-            };
+            if (isoDate in groups[meterId].usages) {
+                groups[meterId].usages[isoDate].y += usage.preTaxCost;
+            } else {
+                groups[meterId].usages[isoDate] = {
+                    x: usage.date,
+                    y: usage.preTaxCost,
+                };
+            }
+
             total += usage.preTaxCost;
         }
 
