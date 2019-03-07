@@ -114,11 +114,27 @@ describe("FileLoader", () => {
         expect(fsSpy.saveFile).toHaveBeenCalledWith("/some/local/path/foo.ts", "export const foo = 123;");
     });
 
-    it("cache a file", async () => {
-        const localPath = await fileLoader.cache().toPromise();
+    it("getLocalVersionPath cache the file", async () => {
+        const localPath = await fileLoader.getLocalVersionPath().toPromise();
         const folder = StringUtils.escapeRegex(path.join("/temp/fake-source/fake-group/wd/"));
         expect(localPath).toMatch(new RegExp(`^${folder}[a-z0-9]+\\.foo\\.ts$`));
         expect(fsSpy.exists).toHaveBeenCalledOnce();
         expect(fsSpy.exists).toHaveBeenCalledWith(localPath);
+    });
+
+    it("getLocalVersionPath returns provided local path ", async () => {
+        const fileLoader = new FileLoader({
+            filename: "wd%2Ffoo.ts",
+            source: "fake-source",
+            groupId: "fake-group",
+            localPath: () => of("/this/is/a/local/file/wd/foo.ts"),
+            fs: fsSpy,
+            properties: propertyGetterSpy,
+            content: contentSpy,
+        });
+        const localPath = await fileLoader.getLocalVersionPath().toPromise();
+        expect(localPath).toEqual("/this/is/a/local/file/wd/foo.ts");
+        expect(fsSpy.exists).not.toHaveBeenCalled();
+        expect(contentSpy).not.toHaveBeenCalled();
     });
 });
