@@ -107,7 +107,7 @@ export class ButtonComponent extends ClickableComponent {
 
     @HostListener("focus")
     public showTooltip() {
-        this._tooltip.show(100);
+        this._tooltip.show();
     }
 
     @HostListener("blur")
