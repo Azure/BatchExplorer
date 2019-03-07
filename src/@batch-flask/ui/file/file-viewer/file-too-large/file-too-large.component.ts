@@ -51,7 +51,7 @@ export class FileTooLargeComponent {
         this.downloading = true;
         this.changeDetector.markForCheck();
 
-        this.fileLoader.cache().subscribe((pathToFile) => {
+        this.fileLoader.getLocalVersionPath().subscribe((pathToFile) => {
             this.downloading = false;
             this.changeDetector.markForCheck();
 
