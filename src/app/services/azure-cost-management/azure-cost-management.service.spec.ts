@@ -15,7 +15,7 @@ describe("AzureCostManagementService", () => {
     beforeEach(() => {
         accountServiceSpy = {
             currentAccount: new BehaviorSubject(new ArmBatchAccount({
-                id: "/subscriptions/sub-1/resourceGroups/rg1/batchaccounts/acc-1",
+                id: "/subscriptions/sub-1/resourcegroups/rg1/providers/Microsoft.Batch/batchaccounts/acc-1",
                 name: "acc-1",
                 location: "westus",
                 properties: {} as any,
