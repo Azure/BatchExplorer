@@ -20,7 +20,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
     public unit = "%";
 
     public cpuUsages: NodesPerformanceMetric = {};
-    public individualCpuUsages: PerformanceMetric[][] = [];
+    public individualCpuUsages: StringMap<PerformanceMetric[]> = {};
     public cpuCount = 1;
     public showOverallUsage = true;
     public lastCpuUsage: PerformanceMetric;
@@ -35,10 +35,10 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
 
         if (changes.data) {
             this.cpuUsages = this.data.cpuUsage || {};
-            this.individualCpuUsages = this.data.individualCpuUsage || [];
+            this.individualCpuUsages = this.data.individualCpuUsage || {};
             if (this.individualCpuUsages) {
-                this.cpuCount = this.individualCpuUsages.length;
-                this.lastIndividualCpuUsage = this.individualCpuUsages.map(x => x.last());
+                this.cpuCount = Object.keys(this.individualCpuUsages).length;
+                this.lastIndividualCpuUsage = Object.values(this.individualCpuUsages).map(x => x.last());
             }
             this._updateStatus();
             this.updateData();
@@ -78,7 +78,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
         //     return;
         // }
 
-        this.datasets = this.individualCpuUsages.map((usages, cpuN) => {
+        this.datasets = Object.entries(this.individualCpuUsages).map(([cpuN, usages]) => {
             return {
                 data: usages.map(x => {
                     return {
@@ -86,6 +86,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
                         y: x.value,
                     };
                 }),
+                label: `CPU #${cpuN}`,
                 fill: false,
                 borderWidth: 1,
             };
