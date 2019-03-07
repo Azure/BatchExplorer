@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { EditorConfig } from "@batch-flask/ui/editor";
+import { EditorConfig, EditorKeyBinding } from "@batch-flask/ui/editor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Observable, Subscription } from "rxjs";
 import { FileViewer } from "../file-viewer";
@@ -42,7 +42,6 @@ export class TextFileViewerComponent extends FileViewer {
     }
 
     public save(): Observable<any> {
-        console.log("Save");
         this._modified.next(false);
         return this.fileLoader.write(this.value);
     }
@@ -50,15 +49,18 @@ export class TextFileViewerComponent extends FileViewer {
     protected async _computeEditorOptions() {
         const { Uri, KeyMod, KeyCode } = await import("monaco-editor");
 
+        const keybindings: EditorKeyBinding[] = [];
+
+        if (this.fileLoader && !this.fileLoader.isReadonly) {
+            keybindings.push({ key: KeyMod.CtrlCmd | KeyCode.KEY_S, action: () => this.save() });
+        }
         this.editorConfig = {
             readOnly: this.fileLoader.isReadonly,
             minimap: {
                 enabled: false,
             },
             uri: this.fileLoader && Uri.file(this.fileLoader.filename),
-            keybindings: [
-                { key: KeyMod.CtrlCmd | KeyCode.KEY_S, action: () => this.save() },
-            ],
+            keybindings,
         };
         this.changeDetector.markForCheck();
     }
