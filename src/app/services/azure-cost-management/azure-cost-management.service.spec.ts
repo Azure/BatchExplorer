@@ -7,7 +7,7 @@ const sub1 = new ArmSubscription({
     subscriptionId: "sub1",
 });
 
-describe("UsageDetailsService", () => {
+describe("AzureCostManagementService", () => {
     let service: AzureCostManagementService;
     let accountServiceSpy;
     let azureHttpSpy;
@@ -15,7 +15,7 @@ describe("UsageDetailsService", () => {
     beforeEach(() => {
         accountServiceSpy = {
             currentAccount: new BehaviorSubject(new ArmBatchAccount({
-                id: "/subs/sub-1/batchaccounts/acc-1",
+                id: "/subscriptions/sub-1/resourceGroups/rg-1/batchaccounts/acc-1",
                 name: "acc-1",
                 location: "westus",
                 properties: {} as any,
@@ -57,7 +57,7 @@ describe("UsageDetailsService", () => {
         const usages = await service.getCost().toPromise();
         expect(azureHttpSpy.post).toHaveBeenCalledTimes(1);
         expect(azureHttpSpy.post).toHaveBeenCalledWith(sub1,
-            "subscriptions/sub1/providers/Microsoft.CostManagement/query",
+            "/subscriptions/sub-1/resourceGroups/rg-1/providers/Microsoft.CostManagement/query",
             jasmine.anything());
         expect(usages).toEqual([
             { preTaxCost: 1, date: new Date(2019, 1, 1), meter: "virtual machines (a series)", currency: "USD" },
