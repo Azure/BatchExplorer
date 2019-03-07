@@ -27,6 +27,11 @@ export interface FileLoaderConfig {
     download?: DownloadFunc;
 
     /**
+     * If provided will use that instead of downloading the file to cache.
+     */
+    localPath?: () => Observable<string>;
+
+    /**
      * Optional list of error codes to not log in the console.
      */
     logIgnoreError?: number[];
@@ -60,7 +65,8 @@ export class FileLoader {
     private _properties = new BehaviorSubject<File | ServerError | null>(null);
     private _propertiesGetter: PropertiesFunc;
     private _content: ContentFunc;
-    private _download: DownloadFunc | undefined;
+    private _localPath?: () => Observable<string>;
+    private _download?: DownloadFunc;
     private _logIgnoreError: number[];
 
     constructor(config: FileLoaderConfig) {
@@ -70,6 +76,7 @@ export class FileLoader {
         this.groupId = config.groupId || "";
         this.source = config.source;
         this._fs = config.fs;
+        this._localPath = config.localPath;
         this._download = config.download;
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [];
 
@@ -144,10 +151,13 @@ export class FileLoader {
     }
 
     /**
-     * This will download the file at a prefix location in the temp folder
+     * This will download the file at a prefix location in the temp folder unless file loader config handles it
      * @returns observable that resolve the path of the cached file when done caching
      */
     public cache(): Observable<string> {
+        if (this._localPath) {
+            return this._localPath();
+        }
         return this.getProperties().pipe(
             switchMap((file: File) => {
                 const destination = this._getCacheDestination(file);
