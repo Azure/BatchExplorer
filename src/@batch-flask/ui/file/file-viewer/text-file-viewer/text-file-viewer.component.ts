@@ -55,7 +55,7 @@ export class TextFileViewerComponent extends FileViewer {
             keybindings.push({ key: KeyMod.CtrlCmd | KeyCode.KEY_S, action: () => this.save() });
         }
         this.editorConfig = {
-            readOnly: this.fileLoader.isReadonly,
+            readOnly: Boolean(this.fileLoader && this.fileLoader.isReadonly),
             minimap: {
                 enabled: false,
             },

@@ -52,6 +52,7 @@ describe("TextFileViewer", () => {
             filename: "foo.ts",
             content: () => of({ content: "export const FOO=1" }),
             properties: new Subject(),
+            isReadonly: true,
         };
         fixture.detectChanges();
         await new Promise((resolve) => setTimeout(resolve));
@@ -62,14 +63,17 @@ describe("TextFileViewer", () => {
             minimap: {
                 enabled: false,
             },
+            keybindings: [],
             uri: Uri.file("foo.ts"),
         });
     });
-    it("set ctrl+s keybindings to save when file loader allows it", async () => {
+
+    it("set editor config for editing when file loader allows it", async () => {
         testComponent.fileLoader = {
             filename: "foo.ts",
             content: () => of({ content: "export const FOO=1" }),
             properties: new Subject(),
+            isReadonly: false,
             write: () => of(null),
         };
         fixture.detectChanges();
@@ -77,7 +81,7 @@ describe("TextFileViewer", () => {
         fixture.detectChanges();
 
         expect(editorComponent.config).toEqual({
-            readOnly: true,
+            readOnly: false,
             minimap: {
                 enabled: false,
             },
