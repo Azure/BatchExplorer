@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, ArmSubscription } from "app/models";
+import { ArmResourceUtils } from "app/utils";
 import { DateTime } from "luxon";
 import { Observable } from "rxjs";
 import { map, share, switchMap, take, tap } from "rxjs/operators";
@@ -63,6 +64,7 @@ interface QueryResult {
 }
 
 export enum CostManagementDimensions {
+    ResourceId = "ResourceId",
     MeterSubCategory = "MeterSubCategory",
     MeterCategory = "MeterCategory",
     Meter = "Meter",
@@ -70,8 +72,8 @@ export enum CostManagementDimensions {
     ServiceTier = "ServiceTier",
 }
 
-function costManagementUrl(subscriptionId: string) {
-    return `subscriptions/${subscriptionId}/providers/Microsoft.CostManagement`;
+function costManagementUrl(scope: string) {
+    return `${scope}/providers/Microsoft.CostManagement`;
 }
 
 @Injectable({ providedIn: "root" })
@@ -95,19 +97,23 @@ export class AzureCostManagementService {
     }
 
     public getCostFor(subscription: ArmSubscription, accountId: string): Observable<AzureCostEntry[]> {
-        const url = `${costManagementUrl(subscription.subscriptionId)}/query`;
+        const subId = ArmResourceUtils.getSubscriptionIdFromResourceId(accountId);
+        const resourceGroup = ArmResourceUtils.getResourceGroupFromResourceId(accountId);
+        const scope = `/subscriptions/${subId}/resourceGroups/${resourceGroup}`;
+        const url = `${costManagementUrl(scope)}/query`;
         const payload = this._buildQuery(accountId);
 
         return this.azure.post<QueryResult>(subscription, url, payload).pipe(
-            map(x => this._processQueryResponse(x)),
+            map(x => this._processQueryResponse(accountId, x)),
             share(),
         );
     }
 
-    private _processQueryResponse(response: QueryResult): AzureCostEntry[] {
+    private _processQueryResponse(accountId: string, response: QueryResult): AzureCostEntry[] {
         const columnIndexes = {
             cost: null,
             date: null,
+            resourceId: null,
             meterCategory: null,
             meterSubCategory: null,
             currency: null,
@@ -120,6 +126,9 @@ export class AzureCostManagementService {
                     break;
                 case "UsageDate":
                     columnIndexes.date = index;
+                    break;
+                case CostManagementDimensions.ResourceId:
+                    columnIndexes.resourceId = index;
                     break;
                 case CostManagementDimensions.MeterSubCategory:
                     columnIndexes.meterSubCategory = index;
@@ -144,6 +153,7 @@ export class AzureCostManagementService {
             // Filter empty meters
             return row[columnIndexes.meterCategory] !== ""
                 || row[columnIndexes.meterSubCategory] !== ""
+                || row[columnIndexes.resourceId]
                 || row[columnIndexes.cost] !== 0;
         }).map((row) => {
             return {
@@ -151,8 +161,9 @@ export class AzureCostManagementService {
                 date: this._parseDate(row[columnIndexes.date]),
                 meter: `${row[columnIndexes.meterCategory]} (${row[columnIndexes.meterSubCategory]})`,
                 currency: row[columnIndexes.currency],
+                resourceId: row[columnIndexes.resourceId],
             };
-        });
+        }).filter(entry => entry.resourceId.startsWith(accountId));
     }
 
     private _parseDate(date: number) {
@@ -179,6 +190,10 @@ export class AzureCostManagementService {
                 grouping: [
                     {
                         type: "Dimension",
+                        name: CostManagementDimensions.ResourceId,
+                    },
+                    {
+                        type: "Dimension",
                         name: CostManagementDimensions.MeterSubCategory,
                     },
                     {
@@ -186,13 +201,13 @@ export class AzureCostManagementService {
                         name: CostManagementDimensions.MeterCategory,
                     },
                 ],
-                filter: {
-                    Dimensions: {
-                        Name: "ResourceId",
-                        Operator: "In",
-                        Values: [accountId],
-                    },
-                },
+                // filter: {
+                //     Dimensions: {
+                //         Name: "ResourceId",
+                //         Operator: "In",
+                //         Values: [accountId],
+                //     },
+                // },
             },
         };
     }
