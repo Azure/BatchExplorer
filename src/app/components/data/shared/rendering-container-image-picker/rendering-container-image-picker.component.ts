@@ -73,11 +73,7 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
                     app, renderEngine, imageReferenceId);
             }),
         ).subscribe((containerImages) => {
-            const imageMap = new Map();
-            for (const image of containerImages) {
-                imageMap.set(image.appVersion + ", " + image.rendererVersion, image);
-            }
-            this.containerImagesMap = imageMap;
+            this.containerImagesMap = this.buildContainerImagesMap(containerImages);
             this.allAppVersions = Array.from(new Set(containerImages.map(image => image.appVersion)))
                 .sort((a, b) => a.localeCompare(b));
             this.allRendererVersions = Array.from(new Set(containerImages.map(image => image.rendererVersion)))
@@ -92,10 +88,13 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
             if (appVersion === this.removeSelectionOption) {
                 this.containerImage = "";
                 this.appVersionControl.setValue("");
-                this.rendererVersions = this.ensureArrayIncludesRemoveOption(this.allRendererVersions);
                 if (rendererVersion) {
                     this.appVersions = this.allAppVersions.filter(appVersion =>
                         this.containerImagesMapContains(appVersion, rendererVersion));
+                    this.rendererVersions = this.ensureArrayIncludesRemoveOption(this.allRendererVersions);
+                } else {
+                    this.appVersions = this.allAppVersions;
+                    this.rendererVersions = this.allRendererVersions;
                 }
             } else if (appVersion) {
                 this.rendererVersions = this.allRendererVersions.filter(rendererVersion =>
@@ -121,10 +120,13 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
             if (rendererVersion === this.removeSelectionOption) {
                 this.containerImage = "";
                 this.rendererVersionControl.setValue("");
-                this.appVersions = this.ensureArrayIncludesRemoveOption(this.allAppVersions);
                 if (appVersion) {
                     this.rendererVersions = this.allRendererVersions.filter(rendererVersion =>
                         this.containerImagesMapContains(appVersion, rendererVersion));
+                    this.appVersions = this.ensureArrayIncludesRemoveOption(this.allAppVersions);
+                } else {
+                    this.rendererVersions = this.allRendererVersions;
+                    this.appVersions = this.allAppVersions;
                 }
             } else if (rendererVersion) {
                 this.appVersions = this.allAppVersions.filter(appVersion =>
@@ -223,5 +225,13 @@ export class RenderingContainerImagePickerComponent implements ControlValueAcces
             options = options.concat([this.removeSelectionOption]);
         }
         return options;
+    }
+
+    private buildContainerImagesMap(containerImages: RenderingContainerImage[]) {
+        const imageMap = new Map();
+        for (const image of containerImages) {
+            imageMap.set(this.buildImagesMapKey(image.appVersion, image.rendererVersion), image);
+        }
+        return imageMap;
     }
 }
