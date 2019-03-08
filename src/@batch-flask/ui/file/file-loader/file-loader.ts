@@ -1,8 +1,8 @@
 import { ServerError, isNotNullOrUndefined } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
-import { CloudPathUtils, exists, log } from "@batch-flask/utils";
+import { CloudPathUtils, SanitizedError, exists, log } from "@batch-flask/utils";
 import * as path from "path";
-import { BehaviorSubject, Observable, from, of } from "rxjs";
+import { BehaviorSubject, Observable, from, of, throwError } from "rxjs";
 import {
     catchError, concatMap, distinctUntilChanged, filter,
     mapTo, publishReplay, refCount, share, skip, switchMap, take, tap,
@@ -12,6 +12,7 @@ import { File } from "../file.model";
 export type PropertiesFunc = () => Observable<File>;
 export type ContentFunc = (options: FileLoadOptions) => Observable<FileLoadResult>;
 export type DownloadFunc = (destination: string) => Observable<any>;
+export type WriteFunc = (content: string) => Observable<any>;
 
 export interface FileLoaderConfig {
     filename: string;
@@ -20,6 +21,12 @@ export interface FileLoaderConfig {
     fs: FileSystemService;
     properties: PropertiesFunc;
     content: ContentFunc;
+
+    /**
+     * Optional defintion to allow updating the content of the file
+     */
+    write?: WriteFunc;
+
     /**
      * Optional specify another function for downloading the file.
      * If not provided it will read the content and write it to file.
@@ -65,6 +72,7 @@ export class FileLoader {
     private _properties = new BehaviorSubject<File | ServerError | null>(null);
     private _propertiesGetter: PropertiesFunc;
     private _content: ContentFunc;
+    private _write: WriteFunc;
     private _localPath?: () => Observable<string>;
     private _download?: DownloadFunc;
     private _logIgnoreError: number[];
@@ -78,6 +86,7 @@ export class FileLoader {
         this._fs = config.fs;
         this._localPath = config.localPath;
         this._download = config.download;
+        this._write = config.write;
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [];
 
         this.properties = of(null).pipe(
@@ -107,6 +116,10 @@ export class FileLoader {
 
     public getProperties() {
         return this.properties.pipe(take(1));
+    }
+
+    public get isReadonly(): boolean {
+        return this._write == null;
     }
 
     public refreshProperties() {
@@ -160,6 +173,13 @@ export class FileLoader {
         return this._cache();
     }
 
+    public write(content: string): Observable<any> {
+        if (this._write) {
+            return this._write(content);
+        }
+        return throwError(new SanitizedError(`Cannot save this file from ${this.source} has  its readonly`));
+    }
+
     /**
      * This will download the file at a prefix location in the temp folder
      * @returns observable that resolve the path of the cached file when done caching
@@ -209,5 +229,4 @@ export class FileLoader {
         const filename = this._hashFilename(file);
         return path.join(this._fs.commonFolders.temp, this.source, this.groupId, filename);
     }
-
 }

@@ -10,8 +10,8 @@ import { AutoscaleLanguage } from "./monaco-languages";
 import "./editor.scss";
 
 export interface EditorKeyBinding {
-    key: any;
-    action: any;
+    key: number; // monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S
+    action: () => void;
 }
 
 export interface EditorConfig extends editor.IEditorConstructionOptions {
@@ -48,7 +48,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
 
     @Input() public label: string;
 
-    @Output() public change = new EventEmitter();
+    @Output() public valueChange = new EventEmitter<string>();
     @Output() public focus = new EventEmitter();
     @Output() public blur = new EventEmitter();
 
@@ -147,7 +147,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
 
     public updateValue(value) {
         this._value = value;
-        this.change.emit(value);
+        this.valueChange.emit(value);
         this.onChange(value);
     }
 
