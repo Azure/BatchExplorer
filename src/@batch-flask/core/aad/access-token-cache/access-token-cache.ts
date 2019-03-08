@@ -39,10 +39,10 @@ export class AccessTokenCache {
         }
     }
 
-    public clear() {
+    public async clear() {
         this._tokens = {};
         if (this.storage) {
-            this.storage.removeItem(dataStoreKey);
+            await this.storage.removeItem(dataStoreKey);
         }
     }
 

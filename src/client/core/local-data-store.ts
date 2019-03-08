@@ -29,7 +29,7 @@ export class LocalDataStore extends InMemoryDataStore implements DataStore {
 
     public async removeItem(key: string) {
         await this._loadPromise;
-        super.removeItem(key);
+        await super.removeItem(key);
         return this._save();
     }
 

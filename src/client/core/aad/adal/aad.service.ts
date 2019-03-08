@@ -111,7 +111,7 @@ export class AADService {
         await this.localStorage.removeItem(Constants.localStorageKey.currentUser);
         this._tokenCache.clear();
         this._tenantsIds.next([]);
-        this._clearUserSpecificCache();
+        await this._clearUserSpecificCache();
         for (const [, window] of this.app.windows) {
             window.webContents.session.clearStorageData({ storages: ["localStorage"] });
         }
@@ -262,10 +262,10 @@ export class AADService {
         return value.map(x => x.tenantId);
     }
 
-    private _clearUserSpecificCache() {
+    private async _clearUserSpecificCache() {
         this.localStorage.removeItem(Constants.localStorageKey.subscriptions);
         this.localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
-        this._tokenCache.clear();
+        await this._tokenCache.clear();
     }
 
     private async _refreshAllAccessTokens() {
