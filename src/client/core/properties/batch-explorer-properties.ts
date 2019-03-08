@@ -5,7 +5,7 @@ import { Constants } from "common";
 import { systemPreferences } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class BatchExplorerProperties implements OnDestroy {
     public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
     public azureEnvironmentObs: Observable<AzureEnvironment>;

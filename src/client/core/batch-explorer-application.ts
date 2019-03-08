@@ -151,7 +151,7 @@ export class BatchExplorerApplication {
     public async updateAzureEnvironment(env: AzureEnvironment) {
         await this.aadService.logout();
         this.windows.closeAll();
-        this.properties.updateAzureEnvironment(env);
+        await this.properties.updateAzureEnvironment(env);
         await this.aadService.login();
         this.windows.openNewWindow();
     }

@@ -35,6 +35,7 @@ describe("AADService", () => {
     let localStorage: InMemoryDataStore;
     let ipcMainMock;
     let propertiesSpy;
+    let telemetryManagerSpy;
 
     beforeEach(() => {
         localStorage = new InMemoryDataStore();
@@ -50,13 +51,18 @@ describe("AADService", () => {
         propertiesSpy = {
 
         };
-        service = new AADService(appSpy, localStorage, propertiesSpy, localStorage as any, ipcMainMock);
+        telemetryManagerSpy = {
+
+        };
+        service = new AADService(
+            appSpy, localStorage, propertiesSpy, telemetryManagerSpy, localStorage as any, ipcMainMock);
         service.init();
     });
 
     it("when there is no item in the localstorage it should not set the id_token", () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
-        const tmpService = new AADService(appSpy, localStorage, propertiesSpy, localStorage as any, ipcMainMock);
+        const tmpService = new AADService(
+            appSpy, localStorage, propertiesSpy, telemetryManagerSpy, localStorage as any, ipcMainMock);
         tmpService.init();
         let user: AADUser | null = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -65,7 +71,8 @@ describe("AADService", () => {
 
     it("when localstorage has currentUser it should load it", async (done) => {
         await localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(sampleUser));
-        const tmpService = new AADService(appSpy, localStorage, propertiesSpy, localStorage as any, ipcMainMock);
+        const tmpService = new AADService(
+            appSpy, localStorage, propertiesSpy, telemetryManagerSpy, localStorage as any, ipcMainMock);
         await tmpService.init();
         let user: AADUser | null = null;
         tmpService.currentUser.subscribe(x => user = x);
