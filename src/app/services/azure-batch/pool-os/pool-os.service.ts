@@ -1,47 +1,42 @@
 import { Injectable } from "@angular/core";
-import { exists } from "@batch-flask/utils";
+import { log } from "@batch-flask/utils";
 import { NodeAgentSku, NodeAgentSkuAttributes, PoolOsSkus } from "app/models";
+import { BatchAccountService } from "app/services/batch-account";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, empty } from "rxjs";
-import { expand, filter, map, reduce, share, shareReplay } from "rxjs/operators";
+import { Observable, empty, of } from "rxjs";
+import {
+    catchError, distinctUntilChanged, expand, map, publishReplay, reduce, refCount, share, switchMap,
+} from "rxjs/operators";
 import { AzureBatchHttpService, BatchListResponse } from "../core";
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class PoolOsService {
     public offers: Observable<PoolOsSkus>;
     public nodeAgentSkus: Observable<List<NodeAgentSku>>;
-    private _nodeAgentSkus = new BehaviorSubject<List<NodeAgentSku>>(null);
 
-    constructor(private http: AzureBatchHttpService) {
-        this.nodeAgentSkus = this._nodeAgentSkus.pipe(
-            filter(x => exists(x)),
-            shareReplay(1),
+    constructor(private http: AzureBatchHttpService, private accountService: BatchAccountService) {
+        this.nodeAgentSkus = this.accountService.currentAccountId.pipe(
+            distinctUntilChanged(),
+            switchMap(() => {
+                return this._loadNodeAgentSkus().pipe(
+                    catchError((error) => {
+                        log.error("Failed to load node agent skus", error);
+                        return of(List<NodeAgentSku>([]));
+                    }),
+                );
+            }),
+            publishReplay(1),
+            refCount(),
         );
 
         this.offers = this.nodeAgentSkus.pipe(
             map(x => new PoolOsSkus(x)),
-            shareReplay(1),
+            publishReplay(1),
+            refCount(),
         );
     }
 
-    public init() {
-        this.refresh();
-    }
-
-    public refresh(): Observable<any> {
-        const obs = this._loadNodeAgentSkus();
-        obs.subscribe({
-            next: (value) => {
-                this._nodeAgentSkus.next(List(value));
-            },
-            error: (error) => {
-                this._nodeAgentSkus.error(error);
-            },
-        });
-        return obs;
-    }
-
-    private _loadNodeAgentSkus() {
+    private _loadNodeAgentSkus(): Observable<List<NodeAgentSku>> {
         return this.http.get<BatchListResponse<NodeAgentSkuAttributes>>("/nodeagentskus").pipe(
             expand(response => {
                 return response["odata.nextLink"] ? this.http.get(response["odata.nextLink"]) : empty();
@@ -49,7 +44,7 @@ export class PoolOsService {
             reduce((resourceGroups, response: BatchListResponse<NodeAgentSkuAttributes>) => {
                 return [...resourceGroups, ...response.value];
             }, []),
-            map(x => x.map(v => new NodeAgentSku(v))),
+            map(x => List(x.map(v => new NodeAgentSku(v)))),
             share(),
         );
     }
