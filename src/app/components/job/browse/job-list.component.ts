@@ -38,6 +38,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         sorting: {
             id: true,
             state: true,
+            creationTime: true,
             pool: job => job.executionInfo && job.executionInfo.poolId,
         },
     };
