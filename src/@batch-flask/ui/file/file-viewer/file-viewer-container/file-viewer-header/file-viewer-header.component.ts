@@ -78,6 +78,17 @@ export class FileViewerHeaderComponent implements OnChanges {
         });
     }
 
+    @autobind()
+    public save() {
+        if (this.fileViewer.save) {
+            return this.fileViewer.save();
+        }
+    }
+
+    public get canSave(): boolean {
+        return Boolean(this.fileLoader && this.fileViewer && !this.fileLoader.isReadonly && this.fileViewer.save);
+    }
+
     public trackCommand(index: number, _: FileViewerCommand) {
         return index;
     }
