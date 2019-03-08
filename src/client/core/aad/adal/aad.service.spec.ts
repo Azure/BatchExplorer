@@ -1,9 +1,14 @@
 import { AccessToken, InMemoryDataStore } from "@batch-flask/core";
+import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { Constants } from "common";
 import { DateTime } from "luxon";
+import * as proxyquire from "proxyquire";
+import { of } from "rxjs";
 import { MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import { AADUser } from "./aad-user";
 import { AADService } from "./aad.service";
+
+const mock = proxyquire.noCallThru();
 
 const tenant1 = "tenant1";
 const resource1 = "batch";
@@ -36,6 +41,7 @@ describe("AADService", () => {
     let ipcMainMock;
     let propertiesSpy;
     let telemetryManagerSpy;
+    let dialogSpy;
 
     beforeEach(() => {
         localStorage = new InMemoryDataStore();
@@ -49,12 +55,24 @@ describe("AADService", () => {
         };
 
         propertiesSpy = {
-
+            azureEnvironment: AzureEnvironment.Azure,
         };
         telemetryManagerSpy = {
-
+            enableTelemetry: jasmine.createSpy("enableTelemetry"),
+            disableTelemetry: jasmine.createSpy("disableTelemetry"),
         };
-        service = new AADService(
+
+        dialogSpy = {
+            showMessageBox: jasmine.createSpy("showMessageBox").and.returnValue(0),
+        };
+
+        const mockAADService = mock("./aad.service", {
+            electron: {
+                dialog: dialogSpy,
+            },
+        });
+
+        service = new mockAADService.AADService(
             appSpy, localStorage, propertiesSpy, telemetryManagerSpy, localStorage as any, ipcMainMock);
         service.init();
     });
@@ -193,6 +211,23 @@ describe("AADService", () => {
                 expect(token.access_token).toEqual("newToken");
             });
         });
+    });
 
+    describe("Login", () => {
+        beforeEach(() => {
+            spyOn(service, "accessTokenData").and.returnValue(of({}));
+        });
+
+        it("login to public cloud", async () => {
+            await service.login();
+            expect(dialogSpy.showMessageBox).not.toHaveBeenCalled();
+        });
+
+        it("login to national cloud", async () => {
+            propertiesSpy.azureEnvironment = AzureEnvironment.AzureChina;
+            await service.login();
+            expect(dialogSpy.showMessageBox).toHaveBeenCalledTimes(1);
+            expect(dialogSpy.showMessageBox).toHaveBeenCalled();
+        });
     });
 });
