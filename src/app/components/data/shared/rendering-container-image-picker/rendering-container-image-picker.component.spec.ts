@@ -26,7 +26,7 @@ class TestComponent {
     public imageReferenceId: string;
 }
 
-fdescribe("RenderingContainerImagePickerComponent", () => {
+describe("RenderingContainerImagePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
