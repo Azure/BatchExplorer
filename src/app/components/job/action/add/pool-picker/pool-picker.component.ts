@@ -117,7 +117,11 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
     public ngOnChanges(changes) {
         if (changes.app && changes.renderEngine && changes.imageReferenceId) {
             this._inputs.next(
-                {app: this.app, renderEngine: this.renderEngine, imageReferenceId: this.imageReferenceId});
+                {
+                    app: this.app,
+                    renderEngine: this.renderEngine,
+                    imageReferenceId: this.imageReferenceId,
+                });
         }
     }
 
