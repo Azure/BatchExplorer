@@ -285,6 +285,19 @@ describe("PoolPickerComponent", () => {
             expect(pools[1].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya2017u5_arnold2023");
         });
 
+        it("filter by id can still be used", () => {
+            poolServiceSpy.pools.next(List(containerImagePools));
+
+            const inputEl = de.query(By.css("input.search-input"));
+            updateInput(inputEl, "2023");
+            fixture.detectChanges();
+
+            const pools = de.queryAll(By.css(".pool-list .pool"));
+            expect(pools.length).toBe(1);
+
+            expect(pools[0].nativeElement.textContent).toContain("ubuntu-container-pool-ubuntu_maya2017u5_arnold2023");
+        });
+
         describe("when a pool has multiple containerImages", () => {
             it("it correctly includes a pool when the valid container image is first", () => {
                 const cImages = ["ubuntu_maya2017u5_arnold2011", "ubuntu_maya_vray"];
