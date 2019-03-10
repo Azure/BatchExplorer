@@ -3,9 +3,9 @@ import {
     AbstractControl, ControlValueAccessor, FormControl,
     FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
-
 import { exists } from "@batch-flask/utils";
 import { ResourceFileAttributes } from "app/models";
+
 import "./resourcefile-picker-row.scss";
 
 enum ResourceFileType {

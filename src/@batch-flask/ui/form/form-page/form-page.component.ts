@@ -16,10 +16,10 @@ import {
 } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { startWith } from "rxjs/operators";
 import { ComplexFormComponent } from "../complex-form";
 import { FormSectionComponent } from "../form-section";
 
-import { startWith } from "rxjs/operators";
 import "./form-page.scss";
 
 export interface FocusableElement {

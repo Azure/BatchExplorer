@@ -8,7 +8,6 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobSchedule, JobState } from "app/models";
 import { JobService, PinnedEntityService } from "app/services";
 import { from } from "rxjs";
-
 import { JobScheduleCreateBasicDialogComponent } from "../../job-schedule/action";
 import { AddTaskFormComponent } from "../../task/action";
 import { AddJobFormComponent, PatchJobComponent } from "./add";

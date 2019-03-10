@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
 import { NodeBrowseModule } from "app/components/node/browse";
 import { PoolGraphsModule } from "app/components/pool/graphs";

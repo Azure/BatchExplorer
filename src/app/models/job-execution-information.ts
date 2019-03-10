@@ -1,4 +1,5 @@
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { List } from "immutable";
 import { FailureInfoAttributes } from "./failure-info";
 import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
 
@@ -17,8 +18,6 @@ export enum JobTerminateReason {
      */
     UserTerminate = "UserTerminate",
 }
-
-import { List } from "immutable";
 
 export interface JobSchedulingErrorAttributes {
     code: string;

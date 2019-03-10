@@ -1,13 +1,12 @@
 import { Injectable, NgZone } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import { ElectronRemote } from "@batch-flask/electron";
 import { SecureUtils, log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { PythonRpcServerProcess } from "client/python-process";
-import { AsyncSubject, BehaviorSubject, Observable, Subject, forkJoin } from "rxjs";
-import { catchError, first, share, switchMap, tap } from "rxjs/operators";
+import { AsyncSubject, BehaviorSubject, Observable, Subject, forkJoin, of } from "rxjs";
+import { catchError, delay, first, retryWhen, share, switchMap, take, tap } from "rxjs/operators";
 import { AdalService } from "../adal";
 import { BatchAccountService } from "../batch-account";
 
@@ -22,7 +21,6 @@ export class PythonRpcService {
     private _serverProcess: PythonRpcServerProcess;
 
     constructor(
-        remote: ElectronRemote,
         private accountService: BatchAccountService,
         private adalService: AdalService,
         private _zone: NgZone,
@@ -40,7 +38,7 @@ export class PythonRpcService {
 
     public async startServer() {
         await this._serverProcess.start();
-        this.resetConnection();
+        return this.resetConnection();
     }
 
     public stopServer() {
@@ -49,14 +47,21 @@ export class PythonRpcService {
 
     public async restartServer() {
         await this._serverProcess.restart();
-        this.resetConnection();
+        return this.resetConnection();
+    }
+
+    public resetConnection() {
+        return of(null).pipe(
+            switchMap(() => this.connect()),
+            retryWhen(errors => errors.pipe(delay(1000), take(10))),
+        ).toPromise();
     }
 
     /**
      * Connect to the rpc server using websocket.
      * Call this if the connection got cut to try again.
      */
-    public resetConnection(): Observable<any> {
+    public connect(): Observable<any> {
         this._serverProcess.port.then((port) => {
             this._ready = new AsyncSubject<any>();
             const socket = this._socket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
@@ -85,7 +90,7 @@ export class PythonRpcService {
                 this._retryCount++;
                 log.info(`Websocket connection closed. Retrying to connect in ${waitingTime}s`);
                 setTimeout(() => {
-                    this.resetConnection();
+                    this.connect();
                 }, waitingTime * 1000);
             };
 

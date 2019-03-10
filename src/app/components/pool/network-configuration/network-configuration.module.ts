@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
 import { BaseModule } from "@batch-flask/ui";
 import { TaskBaseModule } from "app/components/task/base";
 import { InboundNATPoolPickerComponent } from "./inbound-nat-pool-picker.component";

@@ -1,7 +1,5 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
-
 import { NodeConnectComponent } from "./node-connect.component";
 import { NodeUserCredentialsFormComponent } from "./node-user-credentials-form.component";
 import { NodePropertyDisplayComponent } from "./property-display";

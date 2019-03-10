@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-
 import { autobind } from "@batch-flask/core";
 import { Activity, ActivityService } from "@batch-flask/ui";
 import { JobScheduleService } from "app/services";

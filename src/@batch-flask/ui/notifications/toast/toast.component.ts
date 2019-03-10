@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Injector, Input } from "@angular/core";
-
 import { MouseButton } from "@batch-flask/core";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { Notification, NotificationAction } from "../notification";
 import { NotificationService } from "../notification-service";
+
 import "./toast.scss";
 
 @Component({

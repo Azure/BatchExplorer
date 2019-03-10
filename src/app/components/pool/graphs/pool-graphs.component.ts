@@ -1,19 +1,22 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, SimpleChanges,
+} from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { List } from "immutable";
-import { Subscription, from } from "rxjs";
-
 import { ListView, PollObservable, PollService, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
-import { Job, Node, NodeState, Pool, Task } from "app/models";
+import { BatchPerformanceMetrics, Job, Node, NodeState, Pool, Task } from "app/models";
 import {
     AppInsightsQueryService, BatchExplorerService, NodeListParams, NodeService,
 } from "app/services";
 import { ComponentUtils, PoolUtils } from "app/utils";
+import { List } from "immutable";
+import { Subject, from } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
+
 import "./pool-graphs.scss";
 
 const historyLength = {
@@ -29,8 +32,13 @@ const appInsightsRefreshRate = 60 * 1000; // Every minute(Aggregation is minimum
 @Component({
     selector: "bl-pool-graphs",
     templateUrl: "pool-graphs.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolGraphsComponent implements OnChanges, OnDestroy {
+
+    public get appInsightsEnabled() {
+        return Boolean(this.performanceData.appId);
+    }
     public historyLength = historyLength;
 
     @Input() public pool: Pool;
@@ -55,15 +63,17 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     public selectedHistoryLength = new FormControl(historyLength.TenMinute);
     public performanceData: PerformanceData;
+    public performanceMetrics: BatchPerformanceMetrics;
 
     private _stateCounter = new StateCounter();
 
     private _polls: PollObservable[] = [];
-    private _nodesSub: Subscription;
+    private _destroy = new Subject();
     private _appInsightsPoll: PollObservable;
 
     constructor(
         appInsightsQueryService: AppInsightsQueryService,
+        private changeDetector: ChangeDetectorRef,
         private pollService: PollService,
         private nodeService: NodeService,
         private batchExplorer: BatchExplorerService,
@@ -74,8 +84,9 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             pageSize: 1000,
             select: "id,state,runningTasksCount,isDedicated",
         });
-        this._nodesSub = this.data.items.subscribe((nodes) => {
+        this.data.items.pipe(takeUntil(this._destroy)).subscribe((nodes) => {
             this.nodes = nodes;
+            this.changeDetector.markForCheck();
 
             if (nodes.size !== 0) {
                 this._stateCounter.updateCount(nodes);
@@ -85,7 +96,12 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this._scanForProblems();
         });
 
-        this.selectedHistoryLength.valueChanges.subscribe((value) => {
+        this.performanceData.metrics.pipe(takeUntil(this._destroy)).subscribe((value) => {
+            this.performanceMetrics = value;
+            this.changeDetector.markForCheck();
+        });
+
+        this.selectedHistoryLength.valueChanges.pipe(takeUntil(this._destroy)).subscribe((value) => {
             this.runningNodesHistory.setHistorySize(value);
             this.runningTaskHistory.setHistorySize(value);
             this.performanceData.historySize = value;
@@ -132,8 +148,9 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public ngOnDestroy() {
         this._stopListNodePoll();
         this._appInsightsPoll.destroy();
-        this._nodesSub.unsubscribe();
         this.data.dispose();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     @autobind()
@@ -158,10 +175,6 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         const window = this.batchExplorer.openNewWindow(link);
 
         return from(window.domReady);
-    }
-
-    public get appInsightsEnabled() {
-        return Boolean(this.performanceData.appId);
     }
     private _scanForProblems() {
         const failedNodes = this._stateCounter.get(NodeState.startTaskFailed).getValue();

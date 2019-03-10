@@ -4,7 +4,6 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
-
 import { VmSizePickerFilterComponent } from "app/components/pool/action/add";
 import { updateInput } from "test/utils/helpers";
 

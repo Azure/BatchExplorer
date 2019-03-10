@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnD
 import { I18nService } from "@batch-flask/core";
 import { BatchAccountService } from "app/services";
 import { Subscription } from "rxjs";
+
 import "./main-navigation.scss";
 
 @Component({

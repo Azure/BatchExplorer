@@ -1,8 +1,7 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
-
 import { MatDialogRef } from "@angular/material";
+import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { ToolbarModule } from "@batch-flask/ui";

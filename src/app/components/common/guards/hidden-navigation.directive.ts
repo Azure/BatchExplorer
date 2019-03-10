@@ -1,7 +1,6 @@
 import { Directive, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from "@angular/core";
-import { Subscription } from "rxjs";
-
 import { BatchAccountService } from "app/services";
+import { Subscription } from "rxjs";
 
 @Directive({
     selector: "[blHiddenIfNoAccount]",

@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, autobind } from "@batch-flask/core";
-import { Subscription } from "rxjs";
-
 import { TaskDecorator } from "app/decorators";
 import { Job, Task } from "app/models";
 import { JobParams, JobService, TaskParams, TaskService } from "app/services";
+import { Subscription } from "rxjs";
 import { TaskCommands } from "../action";
 
 @Component({

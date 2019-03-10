@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-
 import { NcjJobTemplate, NcjPoolTemplate } from "app/models";
+import { Observable } from "rxjs";
 import { PythonRpcService } from "./python-rpc";
 
 @Injectable({providedIn: "root"})

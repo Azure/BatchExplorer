@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-
 import { ActivityMonitorComponent } from "@batch-flask/ui/activity/activity-monitor";
 import { RequireActiveBatchAccountGuard } from "app/components/common/guards";
 import { ThemeColorsComponent } from "app/components/misc";

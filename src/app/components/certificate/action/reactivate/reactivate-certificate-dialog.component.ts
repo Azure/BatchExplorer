@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-
 import { autobind } from "@batch-flask/core";
 import { CertificateService } from "app/services";
 

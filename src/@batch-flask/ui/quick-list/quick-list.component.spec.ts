@@ -2,7 +2,6 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-
 import { ListSelection } from "@batch-flask/core/list";
 import { AbstractListBaseConfig } from "@batch-flask/ui/abstract-list";
 import { BreadcrumbModule } from "@batch-flask/ui/breadcrumbs";

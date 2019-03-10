@@ -5,6 +5,7 @@ export const DEFAULT_FILE_ASSOCIATIONS = {
 
     // Images
     ".png": "image",
+    ".jpeg": "image",
     ".jpg": "image",
     ".gif": "image",
 

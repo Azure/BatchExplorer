@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { BaseModule } from "@batch-flask/ui";
 import { DatetimePickerModule } from "@batch-flask/ui/datetime-picker";
 import { commonModules } from "app/common";

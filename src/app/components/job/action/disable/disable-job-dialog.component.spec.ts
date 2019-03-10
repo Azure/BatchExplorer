@@ -2,12 +2,11 @@ import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
-import { of, throwError } from "rxjs";
-
 import { ServerError } from "@batch-flask/core";
 import { DisableJobDialogComponent } from "app/components/job/action";
 import { Job } from "app/models";
 import { JobService } from "app/services";
+import { of, throwError } from "rxjs";
 import { InfoBoxMockComponent, ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
 describe("DisableJobDialogComponent ", () => {

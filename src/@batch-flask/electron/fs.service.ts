@@ -18,9 +18,9 @@ export interface CommonFolders {
  */
 @Injectable()
 export class FileSystemService {
-    public commonFolders: any;
+    public commonFolders: CommonFolders;
     private _fs: typeof import("fs");
-    private _makeDir: typeof import("make-dir");
+    private _makeDir: typeof import("make-dir").default;
     private _glob: typeof import("glob");
     private _chokidar: typeof import("chokidar");
     private _download: typeof import("download");
@@ -59,7 +59,7 @@ export class FileSystemService {
      * This make sure the given dir exists. Will recusrivelly create any missing directory.
      * @param directory: Path that we expect to exists
      */
-    public ensureDir(directory: string): Promise<void> {
+    public ensureDir(directory: string): Promise<string> {
         return this._makeDir(directory);
     }
 

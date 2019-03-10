@@ -1,7 +1,6 @@
-"""
-    Main module
-"""
-
+# """
+#     Main module
+# """
 import logging
 import signal
 import sys
@@ -9,8 +8,10 @@ import server.websocket_server
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+
 def setup_logging():
-    logging.basicConfig(format='%(message)s')
+    logging.basicConfig(format='%(message)s', level="INFO")
+
 
 def run():
     """
@@ -24,6 +25,8 @@ def run():
 
     ws_server = server.websocket_server.WebsocketServer(port)
     ws_server.run_forever()
+
+
 
 if __name__ == "__main__":
     run()

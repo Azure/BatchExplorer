@@ -79,41 +79,32 @@
         </bl-property-group>
 
         <bl-property-group label="Start task settings" [collapsed]="true" class="wide" [edit]="editStartTask">
-            <ng-container *ngIf="startTaskItemCount">
+            <ng-container *ngIf="pool.startTask;let startTask">
                 <bl-text-property label="Command line" [value]="startTask.commandLine" [wrap]="true"></bl-text-property>
                 <bl-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bl-text-property>
                 <bl-text-property label="User identity" [value]="decorator.startTask?.userIdentitySummary"></bl-text-property>
                 <bl-bool-property label="Wait for success" [value]="startTask.waitForSuccess" yesNo="true"></bl-bool-property>
+                <bl-resource-files-properties [files]="startTask.resourceFiles"></bl-resource-files-properties>
+                <bl-table-property label="Environment settings" *ngIf="startTask.environmentSettings?.size > 0">
+                    <bl-table-property-header>
+                        <div tp-column>Key</div>
+                        <div tp-column>Value</div>
+                    </bl-table-property-header>
+                    <bl-table-property-row *ngFor="let setting of startTask.environmentSettings">
+                        <bl-tp-cell [value]="setting.name"></bl-tp-cell>
+                        <bl-tp-cell [value]="setting.value"></bl-tp-cell>
+                    </bl-table-property-row>
+                </bl-table-property>
+                <bl-text-property *ngIf="startTask.containerSettings" label="Container image" [value]="startTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property *ngIf="startTask.containerSettings?.containerRunOptions" label="Container run option" [value]="startTask.containerSettings.containerRunOptions" [wrap]="true"></bl-text-property>
+                <ng-container *ngIf="startTask.containerSettings?.registry">
+                    <bl-text-property label="Registry server" [value]="startTask.containerSettings.registry.registryServer" [wrap]="true"></bl-text-property>
+                    <bl-text-property label="Registry username" [value]="startTask.containerSettings.registry.username"></bl-text-property>
+                </ng-container>
             </ng-container>
-            <bl-table-property label="Resource files" *ngIf="startTask.resourceFiles?.size > 0">
-                <bl-table-property-header>
-                    <div tp-column>Http url</div>
-                    <div tp-column>File path</div>
-                </bl-table-property-header>
-                <bl-table-property-row *ngFor="let file of startTask.resourceFiles">
-                    <bl-tp-cell [value]="file.httpUrl"></bl-tp-cell>
-                    <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
-                </bl-table-property-row>
-            </bl-table-property>
-            <bl-table-property label="Environment settings" *ngIf="startTask.environmentSettings?.size > 0">
-                <bl-table-property-header>
-                    <div tp-column>Key</div>
-                    <div tp-column>Value</div>
-                </bl-table-property-header>
-                <bl-table-property-row *ngFor="let setting of startTask.environmentSettings">
-                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
-                    <bl-tp-cell [value]="setting.value"></bl-tp-cell>
-                </bl-table-property-row>
-            </bl-table-property>
-            <bl-text-property *ngIf="startTask.containerSettings" label="Container image" [value]="startTask.containerSettings.imageName"></bl-text-property>
-            <bl-text-property *ngIf="startTask.containerSettings?.containerRunOptions" label="Container run option" [value]="startTask.containerSettings.containerRunOptions" [wrap]="true"></bl-text-property>
-            <ng-container *ngIf="startTask.containerSettings?.registry">
-                <bl-text-property label="Registry server" [value]="startTask.containerSettings.registry.registryServer" [wrap]="true"></bl-text-property>
-                <bl-text-property label="Registry username" [value]="startTask.containerSettings.registry.username"></bl-text-property>
-            </ng-container>
-            <bl-no-item [itemCount]="startTaskItemCount" [slimline]="true">
+            <div *ngIf="!pool.startTask">
                 <span no-filter>Start task is not specified for current pool.</span>
-            </bl-no-item>
+            </div>
         </bl-property-group>
 
         <bl-property-group label="Application packages" class="wide" [collapsed]="true"  [edit]="editApplicationPackages">

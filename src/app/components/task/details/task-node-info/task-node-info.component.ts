@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { I18nService, isNotNullOrUndefined } from "@batch-flask/core";
 import { ComputeNodeInformation } from "app/models";
 import { NodeService, PoolService } from "app/services";
 import { BehaviorSubject, Subject } from "rxjs";
 import { distinctUntilChanged, filter, switchMap, takeUntil } from "rxjs/operators";
 
-import { I18nService, isNotNullOrUndefined } from "@batch-flask/core";
 import "./task-node-info.scss";
 
 enum EntityStatus {

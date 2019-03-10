@@ -6,6 +6,7 @@ import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/u
 import { BatchQuotas, EMPTY_QUOTAS, QuotaService } from "app/services";
 import { Constants } from "common";
 import { Subscription } from "rxjs";
+
 import "./inline-quota.scss";
 
 const labels = {

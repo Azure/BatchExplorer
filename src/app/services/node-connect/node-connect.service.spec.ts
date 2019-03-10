@@ -1,12 +1,11 @@
 import { TestBed } from "@angular/core/testing";
-import * as path from "path";
-import { of } from "rxjs";
-
 import { UserConfigurationService } from "@batch-flask/core";
 import { MockUserConfigurationService } from "@batch-flask/core/testing";
 import { FileSystemService } from "@batch-flask/electron";
 import { OS, Platform } from "@batch-flask/utils";
 import { ConnectionType, IaasNodeConnectionSettings, NodeConnectionSettings, Pool } from "app/models";
+import * as path from "path";
+import { of } from "rxjs";
 import { AddNodeUserAttributes, SSHKeyService } from "..";
 import { AzureBatchHttpService } from "../azure-batch/core";
 import { NodeConnectService } from "./node-connect.service";

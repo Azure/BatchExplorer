@@ -1,8 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { of, throwError } from "rxjs";
-
 import { ServerError } from "@batch-flask/core";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
@@ -10,6 +8,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StorageAccountCardComponent } from "app/components/account/details";
 import { ArmBatchAccount, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
+import { of, throwError } from "rxjs";
 
 const accountNoStorage = new ArmBatchAccount({ id: "acc-1", location: "westus", properties: {} } as any);
 const accountWithStorage = new ArmBatchAccount({

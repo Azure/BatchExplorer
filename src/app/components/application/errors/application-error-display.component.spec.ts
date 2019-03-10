@@ -1,12 +1,11 @@
 import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BehaviorSubject } from "rxjs";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationErrorDisplayComponent } from "app/components/application/errors";
 import { BatchAccount, BatchApplication } from "app/models";
 import { BatchAccountService } from "app/services";
+import { BehaviorSubject } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
 

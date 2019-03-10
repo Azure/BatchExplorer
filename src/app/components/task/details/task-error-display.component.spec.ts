@@ -1,7 +1,6 @@
 import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { TaskErrorDisplayComponent } from "app/components/task/details";
 import { Task, TaskState } from "app/models";

@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DropdownModule } from "../dropdown";
 import { PersistedNotificationDropdownComponent } from "./persisted-dropdown";

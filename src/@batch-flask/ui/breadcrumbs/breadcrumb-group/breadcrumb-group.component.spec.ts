@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BehaviorSubject } from "rxjs";
-
 import { ENTER } from "@batch-flask/core/keys";
 import { BreadcrumbGroupComponent, BreadcrumbModule, BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+import { BehaviorSubject } from "rxjs";
 import { click, keydown } from "test/utils/helpers";
 import { pool1Crumb, pool1PropertiesCrumb, poolsCrumb } from "../crumbs-data.spec";
 

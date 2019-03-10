@@ -4,10 +4,10 @@ import {
 import { ListView, autobind } from "@batch-flask/core";
 import { SubtaskInformation, Task } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
+import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { ComponentUtils } from "app/utils";
 import "./sub-tasks-browser.scss";
 
 @Component({

@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { DialogService, FileExplorerConfig, FileExplorerWorkspace, FileNavigator } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
 import { LocalTemplateFolder, LocalTemplateService } from "app/services";
-import { Subscription } from "rxjs";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { LocalTemplateSourceFormComponent } from "./local-template-source-form";
 
 import "./local-template-explorer.scss";
@@ -24,20 +25,21 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
 
     public fileExplorerConfig: FileExplorerConfig = {
         viewer: {
+            downloadEnabled: false,
             fileAssociations: [
                 { extension: ".json", type: "ncj-template" },
             ],
         },
     };
 
-    private _subs: Subscription[] = [];
+    private _destroy = new Subject();
 
     constructor(
         private changeDetector: ChangeDetectorRef,
         private localTemplateService: LocalTemplateService,
         private dialogService: DialogService) {
 
-        localTemplateService.sources.subscribe((sources) => {
+        localTemplateService.sources.pipe(takeUntil(this._destroy)).subscribe((sources) => {
             this.sources = sources;
             this._updateWorkspace();
             this.changeDetector.markForCheck();
@@ -46,15 +48,12 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this._subs.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public manageSources() {
         this.dialogService.open(LocalTemplateSourceFormComponent);
-    }
-
-    public trackTemplate(index) {
-        return index;
     }
 
     private _updateWorkspace() {

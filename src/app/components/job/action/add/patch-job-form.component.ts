@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { Observable } from "rxjs";
-
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { JobState } from "app/models/azure-batch/job/job";
 import { JobCreateDto, JobPatchDto } from "app/models/dtos";
 import { JobService, PoolService } from "app/services";
+import { Observable } from "rxjs";
 import { AddJobFormComponent } from "./add-job-form.component";
 
 @Component({

@@ -2,7 +2,6 @@ import {
     AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild,
 } from "@angular/core";
 import * as d3 from "d3";
-
 import { GaugeConfig, GaugeLabel, defaultOptions } from "./gauge-config";
 import { degToRad, getLabelFor, invalidSizeMessage, percToRad, presetSizes } from "./gauge-utils";
 

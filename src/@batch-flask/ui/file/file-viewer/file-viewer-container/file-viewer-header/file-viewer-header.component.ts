@@ -73,12 +73,23 @@ export class FileViewerHeaderComponent implements OnChanges {
 
     @autobind()
     public openDefaultEditor() {
-        return this.fileLoader.cache().subscribe((pathToFile) => {
+        return this.fileLoader.getLocalVersionPath().subscribe((pathToFile) => {
             this.shell.openItem(pathToFile);
         });
     }
 
-    public trackCommand(index, _: FileViewerCommand) {
+    @autobind()
+    public save() {
+        if (this.fileViewer.save) {
+            return this.fileViewer.save();
+        }
+    }
+
+    public get canSave(): boolean {
+        return Boolean(this.fileLoader && this.fileViewer && !this.fileLoader.isReadonly && this.fileViewer.save);
+    }
+
+    public trackCommand(index: number, _: FileViewerCommand) {
         return index;
     }
 

@@ -1,11 +1,11 @@
 import { animate, style, transition, trigger } from "@angular/animations";
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy,
 } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { Observable, Subscription } from "rxjs";
 
-import { LiveAnnouncer } from "@angular/cdk/a11y";
 import "./refresh-btn.scss";
 
 export enum RefreshStatus {

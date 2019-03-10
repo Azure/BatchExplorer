@@ -1,7 +1,6 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, QueryList,
 } from "@angular/core";
-
 import { log } from "@batch-flask/utils";
 import { VTabComponent } from "./vtab.component";
 

@@ -1,5 +1,4 @@
 import { FormGroup } from "@angular/forms";
-
 import { Filter } from "@batch-flask/core";
 import { AdvancedFilter } from "./advanced-filter";
 

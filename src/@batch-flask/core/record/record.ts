@@ -1,6 +1,5 @@
-import { List, Map } from "immutable";
-
 import { exists, nil } from "@batch-flask/utils/object-utils";
+import { List, Map } from "immutable";
 import { Duration } from "luxon";
 import { metadataForRecord, primitives } from "./helpers";
 

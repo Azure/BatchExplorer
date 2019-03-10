@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { MaterialModule } from "@batch-flask/core";
-
 import { SummaryCardComponent } from "./summary-card.component";
 
 @NgModule({

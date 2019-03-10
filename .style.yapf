@@ -1,0 +1,8 @@
+[style]
+based_on_style=google
+spaces_before_comment=4
+split_before_logical_operator=True
+indent_width=4
+column_limit=120
+split_arguments_when_comma_terminated=True
+blank_line_before_nested_class_or_def=False

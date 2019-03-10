@@ -1,8 +1,7 @@
-import { List } from "immutable";
-
 import { Metadata } from "app/models";
 import { ModelUtils } from "app/utils";
 import { MetadataInternalKey } from "common/constants";
+import { List } from "immutable";
 
 describe("ModelUtils", () => {
     describe("tagsFromMetadata", () => {

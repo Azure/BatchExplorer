@@ -2,13 +2,12 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { SelectModule } from "@batch-flask/ui/select";
-
 import { ENTER, KeyCode } from "@batch-flask/core/keys";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { PermissionService } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
+import { SelectModule } from "@batch-flask/ui/select";
 import { click, createKeyboardEvent, updateInput } from "test/utils/helpers";
 import { EditableTableSelectCellComponent } from "./select-cell";
 
@@ -120,6 +119,9 @@ describe("EditableTableComponent", () => {
 
         const newRows = de.queryAll(By.css("tbody tr"));
         expect(newRows.length).toBe(3);
+        expectRowValues(rows[0], "foo1", "bar1");
+        expectRowValues(rows[1], "foo3", "bar3");
+        expectRowEmpty(rows[2]);
     });
 
     it("it should edit a exisiting row", () => {

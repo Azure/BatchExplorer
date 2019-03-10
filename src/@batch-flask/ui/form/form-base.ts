@@ -1,7 +1,6 @@
 import { EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
-
 import { ServerError, autobind } from "@batch-flask/core";
 import { SidebarRef } from "../sidebar";
 

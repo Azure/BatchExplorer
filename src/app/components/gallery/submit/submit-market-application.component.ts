@@ -5,6 +5,7 @@ import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { NcjTemplateService } from "app/services";
 import { forkJoin, of } from "rxjs";
 import { catchError } from "rxjs/operators";
+
 import "./submit-market-application.scss";
 
 export interface GallerySubmissionConfig {

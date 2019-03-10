@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-
 import { ClickableComponent } from "@batch-flask/ui";
 import { NodeService } from "app/services";
 import * as Fixtures from "test/fixture";

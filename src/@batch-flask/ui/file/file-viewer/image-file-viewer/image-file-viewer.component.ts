@@ -30,7 +30,7 @@ export class ImageFileViewerComponent extends FileViewer implements OnDestroy {
     private _loadImage() {
         this.loadingStatus = LoadingStatus.Loading;
         this.changeDetector.markForCheck();
-        this.fileLoader.cache().subscribe((destination) => {
+        this.fileLoader.getLocalVersionPath().subscribe((destination) => {
             this.src = `file://${destination}`;
             this.loadingStatus = LoadingStatus.Ready;
             this.changeDetector.markForCheck();

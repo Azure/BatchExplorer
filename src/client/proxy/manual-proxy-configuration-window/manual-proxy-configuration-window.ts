@@ -1,10 +1,9 @@
-import { BrowserWindow, app, ipcMain } from "electron";
-import { ProxySetting, ProxySettings } from "get-proxy-settings";
-
 import { autobind } from "@batch-flask/core";
 import { Constants } from "client/client-constants";
 import { BatchExplorerApplication, ClosedWindowError, GenericWindow } from "client/core";
 import { Deferred } from "common";
+import { BrowserWindow, app, ipcMain } from "electron";
+import { ProxySetting, ProxySettings } from "get-proxy-settings";
 const urls = Constants.urls.manualProxyConfiguration;
 const url = process.env.HOT ? urls.dev : urls.prod;
 

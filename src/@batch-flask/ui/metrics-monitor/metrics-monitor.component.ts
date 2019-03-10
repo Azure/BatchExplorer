@@ -1,7 +1,6 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, QueryList,
 } from "@angular/core";
-
 import { MetricsMonitorGraphComponent } from "./metrics-monitor-metric";
 
 import "./metrics-monitor.scss";

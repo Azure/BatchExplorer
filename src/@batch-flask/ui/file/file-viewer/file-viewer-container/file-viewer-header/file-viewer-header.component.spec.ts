@@ -125,7 +125,8 @@ describe("FileViewerHeaderComponent", () => {
     });
 
     it("open the file in the default editor", () => {
-        const cacheSpy = spyOn(testComponent.fileLoader, "cache").and.returnValue(of("/some/local/path/foo.ts"));
+        const cacheSpy = spyOn(testComponent.fileLoader, "getLocalVersionPath")
+            .and.returnValue(of("/some/local/path/foo.ts"));
         click(de.query(By.css("bl-button.open-in-default-app")));
         expect(cacheSpy).toHaveBeenCalledOnce();
 

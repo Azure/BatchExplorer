@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Subscription } from "rxjs";
-
 import { EntityView, autobind } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { Node, Pool } from "app/models";
 import { NodeParams, NodeService, PoolParams, PoolService } from "app/services";
+import { Subscription } from "rxjs";
 import { NodeCommands, UploadNodeLogsDialogComponent } from "../action";
 
 import "./node-details.scss";

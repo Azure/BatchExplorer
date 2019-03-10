@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { BaseModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { CertificateConfigurationComponent } from "./certificate-configuration.component";

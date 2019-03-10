@@ -5,7 +5,7 @@ import { File, FileLoader, FileNavigator } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
 import { BEUserDesktopConfiguration } from "common";
 import * as path from "path";
-import { BehaviorSubject, Observable, from } from "rxjs";
+import { BehaviorSubject, Observable, from, of } from "rxjs";
 import { filter } from "rxjs/operators";
 import stripBom from "strip-bom";
 
@@ -93,13 +93,18 @@ export class LocalTemplateService implements OnDestroy {
     }
 
     public getFileLoader(source: LocalTemplateFolder, filename: string) {
+        const localPath = path.join(source.path, filename);
         return new FileLoader({
-            filename,
+            filename: localPath,
             source: "local",
             fs: this.fs,
+            localPath: () => of(localPath),
             properties: () => from(this._getFileProperties(source, filename)),
             content: () => {
-                return from(this.fs.readFile(path.join(source.path, filename)).then(x => ({ content: x })));
+                return from(this.fs.readFile(localPath).then(x => ({ content: x })));
+            },
+            write: (content: string) => {
+                return from(this.fs.saveFile(localPath, content));
             },
         });
     }

@@ -14,6 +14,7 @@
         <bl-text-property label="Primary command line" [value]="parentTask.commandLine" [wrap]="true"></bl-text-property>
         <bl-text-property label="Coordination command line" [value]="multiInstanceSettings.coordinationCommandLine" [wrap]="true"></bl-text-property>
         <bl-text-property label="Number of instances" [value]="multiInstanceSettings.numberOfInstances"></bl-text-property>
+        <bl-resource-files-properties label="Common resource files" [files]="multiInstanceSettings.commonResourceFiles"></bl-resource-files-properties>
     </bl-property-group>
 
     <bl-property-group label="Compute node" class="normal" *ngIf="task.nodeInfo; let nodeInfo">

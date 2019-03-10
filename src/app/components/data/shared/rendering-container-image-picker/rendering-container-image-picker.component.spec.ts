@@ -8,6 +8,7 @@ import { RenderApplication, RenderEngine } from "app/models/rendering-container-
 import { RenderingContainerImageService } from "app/services";
 import { BehaviorSubject } from "rxjs";
 import { GithubDataServiceMock } from "test/utils/mocks";
+
 import { RenderingContainerImagePickerComponent } from "./rendering-container-image-picker.component";
 
 @Component({

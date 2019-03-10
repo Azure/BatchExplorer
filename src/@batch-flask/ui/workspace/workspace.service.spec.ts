@@ -1,6 +1,5 @@
 import { List } from "immutable";
 import { Subscription } from "rxjs";
-
 import * as Fixtures from "test/fixture";
 import { Workspace } from "./workspace.model";
 import { WorkspaceService } from "./workspace.service";

@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { List } from "immutable";
-
 import { EntityView, ListView, PollObservable, PollService } from "@batch-flask/core";
 import { GaugeConfig } from "@batch-flask/ui/graphs/gauge";
 import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
+import { List } from "immutable";
+
+import "./job-progress-status.scss";
 
 const refreshRate = 5000;
-import "./job-progress-status.scss";
 
 @Component({
     selector: "bl-job-progress-status",

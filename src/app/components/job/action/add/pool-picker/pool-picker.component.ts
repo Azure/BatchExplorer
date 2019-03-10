@@ -7,18 +7,17 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { List } from "immutable";
-import { BehaviorSubject, Subject, combineLatest } from "rxjs";
-
 import { isNotNullOrUndefined } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
 import { Offer, Pool } from "app/models";
+import { RenderApplication, RenderEngine, RenderingContainerImage } from "app/models/rendering-container-image";
 import { PoolOsService, PoolService, RenderingContainerImageService,
     VmSizeService } from "app/services";
 import { PoolUtils } from "app/utils";
+import { List } from "immutable";
+import { BehaviorSubject, Subject, combineLatest } from "rxjs";
 import { distinctUntilChanged, filter, map, startWith, takeUntil } from "rxjs/operators";
 
-import { RenderApplication, RenderEngine, RenderingContainerImage } from "app/models/rendering-container-image";
 import "./pool-picker.scss";
 
 interface PoolFilters {

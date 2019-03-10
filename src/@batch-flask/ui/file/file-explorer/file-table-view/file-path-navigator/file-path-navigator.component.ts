@@ -3,14 +3,14 @@ import {
     HostListener, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from "@angular/material";
+import { KeyCode } from "@batch-flask/core/keys";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { File } from "@batch-flask/ui/file/file.model";
 import { List } from "immutable";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, startWith, switchMap, takeUntil } from "rxjs/operators";
 
-import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from "@angular/material";
-import { KeyCode } from "@batch-flask/core/keys";
 import "./file-path-navigator.scss";
 
 const AUTOCOMPLETE_LIMIT = 5;

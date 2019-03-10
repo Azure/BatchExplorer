@@ -329,7 +329,26 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             this.activateItem(this.focusedItem);
             event.preventDefault();
         } else {
+            let previousFocussedId = null;
+            if (event.shiftKey) {
+                const focusedItem = this._keyNavigator.focusedItem;
+                previousFocussedId = focusedItem && focusedItem.id;
+            } else {
+                this.clearSelection();
+            }
+            // Handle the navigation
             this._keyNavigator.onKeydown(event);
+
+            const focusedItem = this._keyNavigator.focusedItem;
+            const focussedId = focusedItem && focusedItem.id;
+            if (previousFocussedId && previousFocussedId !== focussedId) {
+                if (!focussedId) { return; }
+                if (this.selection.has(focussedId)) {
+                    this.selection.delete(previousFocussedId);
+                } else {
+                    this.selection.add(focussedId);
+                }
+            }
         }
     }
 

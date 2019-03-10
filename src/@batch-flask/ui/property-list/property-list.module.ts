@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
 import { EditorModule } from "@batch-flask/ui/editor";
 import { ButtonsModule } from "../buttons";
 import { I18nUIModule } from "../i18n";
@@ -15,7 +14,11 @@ import { PropertyFieldComponent } from "./property-field";
 import { PropertyGroupComponent } from "./property-group";
 import { PropertyListComponent } from "./property-list.component";
 import {
-    TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
+    TablePropertyCellComponent,
+    TablePropertyCellPlainComponent,
+    TablePropertyComponent,
+    TablePropertyHeaderComponent,
+    TablePropertyRowComponent,
 } from "./table-property";
 import { TextPropertyComponent } from "./text-property";
 
@@ -29,6 +32,7 @@ const publicComponents = [
     TablePropertyComponent,
     TablePropertyHeaderComponent,
     TablePropertyRowComponent,
+    TablePropertyCellPlainComponent,
     EntityConfigurationComponent,
     DatePropertyComponent,
 ];

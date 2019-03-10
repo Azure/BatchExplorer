@@ -30,7 +30,7 @@ describe("ImageFileViewerComponent", () => {
         testComponent.fileLoader = {
             filename: "foo.png",
             properties: new Subject(),
-            cache: jasmine.createSpy("fileLoader.cache").and.returnValue(of("/local/path/to/file.txt")),
+            getLocalVersionPath: jasmine.createSpy("fileLoader.cache").and.returnValue(of("/local/path/to/file.txt")),
         };
         de = fixture.debugElement.query(By.css("bl-image-file-viewer"));
         fixture.detectChanges();
@@ -38,7 +38,7 @@ describe("ImageFileViewerComponent", () => {
     });
 
     it("chache the image", () => {
-        expect(testComponent.fileLoader.cache).toHaveBeenCalledOnce();
+        expect(testComponent.fileLoader.getLocalVersionPath).toHaveBeenCalledOnce();
     });
 
     it("point to the cached file locally", () => {
@@ -53,6 +53,6 @@ describe("ImageFileViewerComponent", () => {
 
     it("refresh again when file has changed", () => {
         testComponent.fileLoader.properties.next(new File({ name: "foo.png", properties: {} }));
-        expect(testComponent.fileLoader.cache).toHaveBeenCalledTimes(2);
+        expect(testComponent.fileLoader.getLocalVersionPath).toHaveBeenCalledTimes(2);
     });
 });

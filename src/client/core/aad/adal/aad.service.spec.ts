@@ -1,7 +1,6 @@
 import { AccessToken, InMemoryDataStore } from "@batch-flask/core";
 import { Constants } from "common";
 import { DateTime } from "luxon";
-import { F } from "test/utils";
 import { MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import { AADUser } from "./aad-user";
 import { AADService } from "./aad.service";
@@ -107,7 +106,7 @@ describe("AADService", () => {
             (service as any)._userDecoder.decode = decodeSpy;
         });
 
-        it("should use the cached token if not expired", F(async () => {
+        it("should use the cached token if not expired", async () => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
                 expires_on: DateTime.local().plus({ hours: 1 }),
@@ -115,9 +114,9 @@ describe("AADService", () => {
             token = await service.accessTokenData(tenant1, resource1);
             expect(token).not.toBeNull();
             expect(token.access_token).toEqual("initialtoken");
-        }));
+        });
 
-        it("should reload a new token if the token is expiring before the safe margin", F(async () => {
+        it("should reload a new token if the token is expiring before the safe margin", async () => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
                 expires_on: DateTime.local().plus({ minutes: 1 }).toJSDate(),
@@ -130,7 +129,7 @@ describe("AADService", () => {
 
             expect(token).not.toBeNull();
             expect(token.access_token).toEqual("refreshedToken");
-        }));
+        });
 
         it("should load a new token if getting a token for another resource", async (done) => {
             (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({

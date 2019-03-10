@@ -6,9 +6,9 @@ import { Job } from "app/models";
 import { JobParams, JobService } from "app/services";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
+import { flatMap } from "rxjs/operators";
 import { JobCommands } from "../action";
 
-import { flatMap } from "rxjs/operators";
 import "./job-details.scss";
 
 @Component({

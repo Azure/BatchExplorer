@@ -1,9 +1,7 @@
 import { Injectable, NgZone } from "@angular/core";
-import * as MouseTrap from "mousetrap";
-
-// import * as CommandMap from "app/commands";
 import { CommandBase } from "app/commands/core";
 import { KeyBindings } from "app/models";
+import * as MouseTrap from "mousetrap";
 
 // export const commands: any[] = ObjectUtils.values(CommandMap as any).filter((x: any) => x.id !== undefined);
 

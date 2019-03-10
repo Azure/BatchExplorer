@@ -1,7 +1,6 @@
-import { List } from "immutable";
-
 import { Metadata, MetadataAttributes } from "app/models";
 import { MetadataInternalKey } from "common/constants";
+import { List } from "immutable";
 
 export class ModelUtils {
     public static tagsFromMetadata(metadata: List<Metadata>): List<string> {

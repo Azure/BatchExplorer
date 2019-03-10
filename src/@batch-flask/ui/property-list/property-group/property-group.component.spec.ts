@@ -1,7 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-
 import { ButtonComponent, ClickableComponent } from "@batch-flask/ui/buttons";
 import { PropertyGroupComponent } from "@batch-flask/ui/property-list";
 import { click } from "test/utils/helpers";

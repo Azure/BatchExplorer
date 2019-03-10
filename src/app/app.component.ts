@@ -1,8 +1,6 @@
 import { Component, HostBinding, OnDestroy, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Subject, combineLatest } from "rxjs";
-
 import { ActivatedRoute } from "@angular/router";
 import { TelemetryService, UserConfigurationService } from "@batch-flask/core";
 import { ElectronRemote, IpcService } from "@batch-flask/electron";
@@ -15,7 +13,6 @@ import {
     CommandService,
     NavigatorService,
     NcjTemplateService,
-    PoolOsService,
     PredefinedFormulaService,
     PricingService,
     PythonRpcService,
@@ -23,7 +20,8 @@ import {
     ThemeService,
 } from "app/services";
 import { BEUserConfiguration } from "common";
-import { filter, first, takeUntil } from "rxjs/operators";
+import { Subject, combineLatest } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
     selector: "bl-app",
@@ -45,7 +43,6 @@ export class AppComponent implements OnInit, OnDestroy {
         private accountService: BatchAccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
-        private poolOsService: PoolOsService,
         userConfigurationService: UserConfigurationService<BEUserConfiguration>,
         remote: ElectronRemote,
         pythonRpcService: PythonRpcService,
@@ -78,15 +75,6 @@ export class AppComponent implements OnInit, OnDestroy {
             this.isAppReady = loadedArray[0] && loadedArray[1];
         });
 
-        // Wait for the first account to be loaded.
-        accountService.currentAccount.pipe(
-            takeUntil(this._destroy),
-            filter(x => Boolean(x)),
-            first(),
-        ).subscribe((x) => {
-            this._preloadData();
-        });
-
         registerIcons(matIconRegistry, sanitizer);
 
         this.route.queryParams.pipe(takeUntil(this._destroy)).subscribe(({ fullscreen }) => {
@@ -112,13 +100,6 @@ export class AppComponent implements OnInit, OnDestroy {
     public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();
-    }
-
-    /**
-     * Preload some data needed.
-     */
-    private _preloadData() {
-        this.poolOsService.refresh();
     }
 
     private async _initWorkspaces() {

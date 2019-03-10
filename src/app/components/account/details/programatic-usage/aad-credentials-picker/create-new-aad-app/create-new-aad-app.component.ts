@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { BatchAccount, RoleDefinition } from "app/models";
@@ -17,6 +16,7 @@ import {
     shareReplay,
     tap,
 } from "rxjs/operators";
+
 import "./create-new-aad-app.scss";
 
 export interface AppCreatedEvent {

@@ -1,8 +1,8 @@
 import {
     ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output,
 } from "@angular/core";
-
 import { TreeRow } from "..";
+
 import "./file-tree-view-row.scss";
 
 @Component({
