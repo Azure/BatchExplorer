@@ -1,9 +1,14 @@
 import { AccessToken, InMemoryDataStore } from "@batch-flask/core";
+import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { Constants } from "common";
 import { DateTime } from "luxon";
+import * as proxyquire from "proxyquire";
+import { of } from "rxjs";
 import { MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import { AADUser } from "./aad-user";
 import { AADService } from "./aad.service";
+
+const mock = proxyquire.noCallThru();
 
 const tenant1 = "tenant1";
 const resource1 = "batch";
@@ -35,6 +40,8 @@ describe("AADService", () => {
     let localStorage: InMemoryDataStore;
     let ipcMainMock;
     let propertiesSpy;
+    let telemetryManagerSpy;
+    let dialogSpy;
 
     beforeEach(() => {
         localStorage = new InMemoryDataStore();
@@ -48,15 +55,32 @@ describe("AADService", () => {
         };
 
         propertiesSpy = {
-
+            azureEnvironment: AzureEnvironment.Azure,
         };
-        service = new AADService(appSpy, localStorage, propertiesSpy, localStorage as any, ipcMainMock);
+        telemetryManagerSpy = {
+            enableTelemetry: jasmine.createSpy("enableTelemetry"),
+            disableTelemetry: jasmine.createSpy("disableTelemetry"),
+        };
+
+        dialogSpy = {
+            showMessageBox: jasmine.createSpy("showMessageBox").and.returnValue(0),
+        };
+
+        const mockAADService = mock("./aad.service", {
+            electron: {
+                dialog: dialogSpy,
+            },
+        });
+
+        service = new mockAADService.AADService(
+            appSpy, localStorage, propertiesSpy, telemetryManagerSpy, localStorage as any, ipcMainMock);
         service.init();
     });
 
     it("when there is no item in the localstorage it should not set the id_token", () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
-        const tmpService = new AADService(appSpy, localStorage, propertiesSpy, localStorage as any, ipcMainMock);
+        const tmpService = new AADService(
+            appSpy, localStorage, propertiesSpy, telemetryManagerSpy, localStorage as any, ipcMainMock);
         tmpService.init();
         let user: AADUser | null = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -65,7 +89,8 @@ describe("AADService", () => {
 
     it("when localstorage has currentUser it should load it", async (done) => {
         await localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(sampleUser));
-        const tmpService = new AADService(appSpy, localStorage, propertiesSpy, localStorage as any, ipcMainMock);
+        const tmpService = new AADService(
+            appSpy, localStorage, propertiesSpy, telemetryManagerSpy, localStorage as any, ipcMainMock);
         await tmpService.init();
         let user: AADUser | null = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -186,6 +211,23 @@ describe("AADService", () => {
                 expect(token.access_token).toEqual("newToken");
             });
         });
+    });
 
+    describe("Login", () => {
+        beforeEach(() => {
+            spyOn(service, "accessTokenData").and.returnValue(of({}));
+        });
+
+        it("login to public cloud", async () => {
+            await service.login().done;
+            expect(dialogSpy.showMessageBox).not.toHaveBeenCalled();
+        });
+
+        it("login to national cloud", async () => {
+            propertiesSpy.azureEnvironment = AzureEnvironment.AzureChina;
+            await service.login().done;
+            expect(dialogSpy.showMessageBox).toHaveBeenCalledTimes(1);
+            expect(dialogSpy.showMessageBox).toHaveBeenCalled();
+        });
     });
 });

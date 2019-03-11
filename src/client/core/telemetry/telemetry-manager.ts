@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { DataStore, TelemetryService } from "@batch-flask/core";
-import { SanitizedError, exists } from "@batch-flask/utils";
+import { SanitizedError } from "@batch-flask/utils";
 import { TelemetryType } from "applicationinsights/out/Declarations/Contracts";
 import { ClientConstants } from "client/client-constants";
 import { BatchExplorerProcess } from "client/core/batch-explorer-process";
@@ -13,7 +13,7 @@ export class TelemetryManager implements OnDestroy {
     /**
      * Value for the user setting
      */
-    public userTelemetryEnabled: boolean;
+    public userTelemetryEnabled?: boolean | null;
     public _subs: Subscription[] = [];
 
     /**
@@ -22,7 +22,7 @@ export class TelemetryManager implements OnDestroy {
     public get telemetryEnabled() {
         const dev = ClientConstants.isDev;
         // const dev = false;
-        return this.userTelemetryEnabled && !dev;
+        return (this.userTelemetryEnabled == null || this.userTelemetryEnabled === true) && !dev;
     }
 
     constructor(
@@ -62,10 +62,12 @@ export class TelemetryManager implements OnDestroy {
         await this.telemetryService.init(this.telemetryEnabled);
     }
 
-    public async enableTelemetry() {
+    public async enableTelemetry({restart}: {restart: boolean} = {restart: true}) {
         this.userTelemetryEnabled = true;
         await this.dataStore.setItem(Constants.localStorageKey.telemetryEnabled, true);
-        this.batchExplorerProcess.restart();
+        if (restart) {
+            this.batchExplorerProcess.restart();
+        }
     }
 
     /**
@@ -81,6 +83,6 @@ export class TelemetryManager implements OnDestroy {
 
     private async _loadUserSettings() {
         const userSetting = await this.dataStore.getItem<boolean>(Constants.localStorageKey.telemetryEnabled);
-        this.userTelemetryEnabled = exists(userSetting) ? userSetting : true;
+        this.userTelemetryEnabled = userSetting;
     }
 }
