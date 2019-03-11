@@ -73,40 +73,40 @@ bl-dropdown {
         .no-items {
             padding: 10px 5px;
         }
+    }
 
-        .dropdown-item {
-            position: relative;
-            min-width: 100px;
-            cursor: pointer;
-            padding: 5px 10px;
-            display: flex;
-            align-items: center;
+    .dropdown-item {
+        position: relative;
+        min-width: 100px;
+        cursor: pointer;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
 
-            &:not(:first-child) {
-                border-top: 1px solid $border-color;
+        &:not(:first-child) {
+            border-top: 1px solid $border-color;
+        }
+
+        &:hover, &.active {
+            background-color: $dropdown-content-hover-color;
+
+            .fa {
+                color: $dropdown-content-color;
             }
+        }
 
-            &:hover, &.active {
-                background-color: $dropdown-content-hover-color;
+        .main {
+            flex: 1 0 auto;
 
-                .fa {
-                    color: $dropdown-content-color;
-                }
+            .alias, .url {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
             }
+        }
 
-            .main {
-                flex: 1 0 auto;
-
-                .alias, .url {
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
-                }
-            }
-
-            .extra {
-                flex: 0 0 auto;
-            }
+        .extra {
+            flex: 0 0 auto;
         }
     }
 }
