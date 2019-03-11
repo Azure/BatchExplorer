@@ -219,13 +219,13 @@ describe("AADService", () => {
         });
 
         it("login to public cloud", async () => {
-            await service.login();
+            await service.login().done;
             expect(dialogSpy.showMessageBox).not.toHaveBeenCalled();
         });
 
         it("login to national cloud", async () => {
             propertiesSpy.azureEnvironment = AzureEnvironment.AzureChina;
-            await service.login();
+            await service.login().done;
             expect(dialogSpy.showMessageBox).toHaveBeenCalledTimes(1);
             expect(dialogSpy.showMessageBox).toHaveBeenCalled();
         });

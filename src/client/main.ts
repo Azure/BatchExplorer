@@ -23,7 +23,6 @@ if (program.userDataDir) {
     app.setPath("userData", program.userDataDir);
 } else {
     app.setPath("userData", path.join(app.getPath("appData"), "BatchExplorer"));
-
 }
 
 // 3. Initialize the logger

@@ -9,6 +9,7 @@ import { fetch } from "client/core/fetch";
 import { BatchExplorerProperties } from "client/core/properties";
 import { SecureDataStore } from "client/core/secure-data-store";
 import { TelemetryManager } from "client/core/telemetry";
+// import { TelemetryManager } from "client/core/telemetry";
 import { Constants } from "common";
 import { IpcEvent } from "common/constants";
 import { Deferred } from "common/deferred";
@@ -83,28 +84,12 @@ export class AADService {
      * This will retrieve fresh tokens for all tenant and resources needed by BatchExplorer.
      * It will try to use the refresh token cached to prevent a new prompt window if possible.
      */
-    public async login(): Promise<any> {
-        await this._ensureTelemetryOptInNationalClouds();
-        try {
-            await this.accessTokenData("common");
-            this._authenticationState.next(AuthenticationState.Authenticated);
-        } catch (error) {
-            if (error instanceof LogoutError) {
-                throw error;
-            } else {
-                log.error("Error login in ", error);
-                throw error;
-            }
-        }
-        try {
-            const tenantIds = await this._loadTenantIds();
-
-            this._tenantsIds.next(tenantIds);
-            this._refreshAllAccessTokens();
-        } catch (error) {
-            log.error("Error retrieving tenants", error);
-            this._tenantsIds.error(ServerError.fromARM(error));
-        }
+    public login(): { started: Promise<any>, done: Promise<any> } {
+        const started = this._ensureTelemetryOptInNationalClouds();
+        return {
+            started,
+            done: started.then(() => this._loginInCurrentCloud()),
+        };
     }
 
     public async logout() {
@@ -137,6 +122,29 @@ export class AADService {
             }
         }
         return this._retrieveNewAccessToken(tenantId, resource);
+    }
+
+    private async _loginInCurrentCloud() {
+        try {
+            await this.accessTokenData("common");
+            this._authenticationState.next(AuthenticationState.Authenticated);
+        } catch (error) {
+            if (error instanceof LogoutError) {
+                throw error;
+            } else {
+                log.error("Error login in ", error);
+                throw error;
+            }
+        }
+        try {
+            const tenantIds = await this._loadTenantIds();
+
+            this._tenantsIds.next(tenantIds);
+            this._refreshAllAccessTokens();
+        } catch (error) {
+            log.error("Error retrieving tenants", error);
+            this._tenantsIds.error(ServerError.fromARM(error));
+        }
     }
 
     /**
