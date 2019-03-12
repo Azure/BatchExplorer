@@ -39,7 +39,8 @@ describe("Portfolio Service", () => {
         settingsServiceSpy = new MockUserConfigurationService({
             githubData: {
                 branch: "master",
-                repo: "Azure/BatchExplorer-data",
+                repo: "Azure/batch-extension-templates",
+                path: "templates",
             },
         });
         service = new PortfolioService(globalStorageSpy, fsSpy, settingsServiceSpy);

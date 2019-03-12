@@ -6,7 +6,8 @@ import { Observable, combineLatest, of } from "rxjs";
 import {
     distinctUntilChanged, map, publishReplay, refCount, switchMap, take,
 } from "rxjs/operators";
-import { GithubPortfolio, Portfolio, PortfolioReference, PortfolioType } from ".";
+import { GithubPortfolio } from "./github-portfolio";
+import { Portfolio, PortfolioReference, PortfolioType } from "./portfolio";
 
 export const MICROSOFT_PORTFOLIO = {
     id: "microsoft-offical",
@@ -32,13 +33,13 @@ export class PortfolioService implements OnDestroy {
 
         this._microsoftPortfolio = settingsService.watch("microsoftPortfolio").pipe(
             distinctUntilChanged((a, b) => {
-                return a === b || (a.repo === b.repo && a.branch === b.branch &&  a.path === b.path);
+                return a === b || (a.repo === b.repo && a.branch === b.branch && a.path === b.path);
             }),
             map((settings) => {
                 const branch = settings.branch;
                 const repo = settings.repo;
                 const source = `https://github.com/${repo}/tree/${branch}`;
-                return new GithubPortfolio({ ...MICROSOFT_PORTFOLIO, source, path: settings.path }, this.fs)
+                return new GithubPortfolio({ ...MICROSOFT_PORTFOLIO, source, path: settings.path }, this.fs);
             }),
             publishReplay(1),
             refCount(),
