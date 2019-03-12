@@ -982,6 +982,9 @@
       <trans-unit id="settings">
         <source/>
       </trans-unit>
+      <trans-unit id="settings.advancedSettings">
+        <source>Advanced settings</source>
+      </trans-unit>
       <trans-unit id="settings.gallerySettings">
         <source>Gallery settings</source>
       </trans-unit>
