@@ -92,7 +92,7 @@
                             </bl-no-item>
                             <bl-table class="dashboard" [data]="applicationData.items | async" [config]="tableConfig">
                                 <bl-column name="id">
-                                    <div *blCellDef="let app">{{app.id}}</div>
+                                    <div *blCellDef="let app">{{app.name}}</div>
                                 </bl-column>
                             </bl-table>
                         </bl-loading>
