@@ -22,6 +22,16 @@ export interface BEUserConfiguration extends BatchFlaskUserConfiguration {
     nodeConnect: {
         defaultUsername: string,
     };
+
+    /**
+     * Data from the BatchExplorer-data repository.
+     * This is general configuration that can be updated for every user of Batch Explorer.
+     */
+    githubData: {
+        repo: string,
+        branch: string,
+    };
+
 }
 
 /**
@@ -36,13 +46,17 @@ export interface BEUserDesktopConfiguration extends BEUserConfiguration {
         sources: Array<{ name: string, path: string }>,
     };
 
-    githubData: {
-        repo: string,
-        branch: string,
-    };
-
     jobTemplate: {
         defaultOutputFileGroup: string | null,
+    };
+
+    /**
+     * Change the Microsoft portfolio source
+     */
+    microsoftPortfolio: {
+        repo: string,
+        branch: string,
+        path: string,
     };
 }
 
@@ -69,6 +83,11 @@ export const DEFAULT_BE_USER_CONFIGURATION: BEUserDesktopConfiguration = {
     githubData: {
         repo: "Azure/BatchExplorer-data",
         branch: "master",
+    },
+    microsoftPortfolio: {
+        repo: "Azure/batch-extension-templates",
+        branch: "master",
+        path: "templates",
     },
     jobTemplate: {
         defaultOutputFileGroup: null,
