@@ -1,6 +1,7 @@
 import { MockGlobalStorage, MockUserConfigurationService } from "@batch-flask/core/testing";
 import { Subject } from "rxjs";
 import { tap } from "rxjs/operators";
+import { GithubPortfolioReference } from "./github-portfolio";
 import { Portfolio, PortfolioReference, PortfolioType } from "./portfolio";
 import { MICROSOFT_PORTFOLIO, PortfolioService } from "./portfolio.service";
 
@@ -37,9 +38,10 @@ describe("Portfolio Service", () => {
         spyOnProperty(Portfolio.prototype, "ready").and.returnValue(resolvePortfolio);
 
         settingsServiceSpy = new MockUserConfigurationService({
-            githubData: {
+            microsoftPortfolio: {
                 branch: "master",
-                repo: "Azure/BatchExplorer-data",
+                repo: "Azure/batch-extension-templates",
+                path: "templates",
             },
         });
         service = new PortfolioService(globalStorageSpy, fsSpy, settingsServiceSpy);
@@ -56,10 +58,11 @@ describe("Portfolio Service", () => {
         expect(portfolios[1] instanceof Portfolio).toBe(true);
         expect(portfolios[2] instanceof Portfolio).toBe(true);
 
-        expect(portfolios[0].reference).toEqual({
+        expect(portfolios[0].reference as GithubPortfolioReference).toEqual({
             id: MICROSOFT_PORTFOLIO.id,
             type: PortfolioType.Github,
-            source: "https://github.com/Azure/BatchExplorer-data/tree/master",
+            source: "https://github.com/Azure/batch-extension-templates/tree/master",
+            path: "templates",
         });
         expect(portfolios[1].reference).toEqual(ref1);
         expect(portfolios[2].reference).toEqual(ref2);
@@ -69,17 +72,19 @@ describe("Portfolio Service", () => {
         it("changes the portfolio list", () => {
             portfolios = null;
             settingsServiceSpy.patch({
-                githubData: {
+                microsoftPortfolio: {
                     branch: "feature/test-1",
-                    repo: "Azure/BatchExplorer-data",
+                    repo: "Azure/batch-extension-templates",
+                    path: "templates-custom",
                 },
             });
 
             expect(portfolios.length).toEqual(3);
-            expect(portfolios[0].reference).toEqual({
+            expect(portfolios[0].reference as GithubPortfolioReference).toEqual({
                 id: MICROSOFT_PORTFOLIO.id,
                 type: PortfolioType.Github,
-                source: "https://github.com/Azure/BatchExplorer-data/tree/feature/test-1",
+                source: "https://github.com/Azure/batch-extension-templates/tree/feature/test-1",
+                path: "templates-custom",
             });
             expect(portfolios[1].reference).toEqual(ref1);
             expect(portfolios[2].reference).toEqual(ref2);
@@ -97,10 +102,11 @@ describe("Portfolio Service", () => {
 
     it("get a portfolio by id", async () => {
         let portfolio = await service.get(MICROSOFT_PORTFOLIO.id).toPromise();
-        expect(portfolio.reference).toEqual({
+        expect(portfolio.reference as GithubPortfolioReference).toEqual({
             id: MICROSOFT_PORTFOLIO.id,
             type: PortfolioType.Github,
-            source: "https://github.com/Azure/BatchExplorer-data/tree/master",
+            source: "https://github.com/Azure/batch-extension-templates/tree/master",
+            path: "templates",
         });
         portfolio = await service.get("my-portfolio-2").toPromise();
         expect(portfolio.reference).toEqual(ref2);
@@ -112,7 +118,8 @@ describe("Portfolio Service", () => {
             expect(portfolio.reference).toEqual({
                 id: MICROSOFT_PORTFOLIO.id,
                 type: PortfolioType.Github,
-                source: "https://github.com/Azure/BatchExplorer-data/tree/master",
+                source: "https://github.com/Azure/batch-extension-templates/tree/master",
+                path: "templates",
             });
             done();
         });

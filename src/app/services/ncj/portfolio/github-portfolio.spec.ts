@@ -30,7 +30,8 @@ describe("GithubPortfolio", () => {
     function setup() {
         portfolio = new GithubPortfolio({
             id: "my-portfolio-1",
-            source: "https://gitub/my/portfolio/tree/master",
+            source: "https://github/my/portfolio/tree/master",
+            path: "templates",
             type: PortfolioType.Github,
         }, fsSpy);
         return portfolio.ready.toPromise();
@@ -39,7 +40,8 @@ describe("GithubPortfolio", () => {
     it("parse when branch contains / (e.g. feature/foo)", async () => {
         portfolio = new GithubPortfolio({
             id: "my-portfolio-1",
-            source: "https://gitub/my/portfolio/tree/feature/foo",
+            source: "https://github/my/portfolio/tree/feature/foo",
+            path: "templates",
             type: PortfolioType.Github,
         }, fsSpy);
         await portfolio.ready.toPromise();
@@ -51,7 +53,7 @@ describe("GithubPortfolio", () => {
             zipPath,
         );
 
-        expect(portfolio.path).toEqual(path.join("~/temp/portfolios/my-portfolio-1/portfolio-feature-foo/ncj"));
+        expect(portfolio.path).toEqual(path.join("~/temp/portfolios/my-portfolio-1/portfolio-feature-foo/templates"));
     });
 
     it("cache the data when no data exists", async () => {

@@ -2,5 +2,6 @@ settings:
   title: Settings
   saved: Saved
   general: General
+  advancedSettings: Advanced settings
   gallerySettings: Gallery settings
   reset: Reset to default settings

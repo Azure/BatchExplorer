@@ -26,7 +26,7 @@ describe("DateUtils", () => {
         });
 
         it("return a absolute time when more than 20 days", () => {
-            const date1 = DateTime.local().minus({ days: 20 });
+            const date1 = DateTime.local().minus({ days: 21 });
             const date2 = DateTime.local().minus({ years: 1 });
             expect(DateUtils.prettyDate(date1)).toEqual(date1.toFormat("MMM d, yyyy"));
             expect(DateUtils.prettyDate(date2)).toEqual(date2.toFormat("MMM d, yyyy"));
