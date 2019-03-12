@@ -1,6 +1,7 @@
 import { MockGlobalStorage, MockUserConfigurationService } from "@batch-flask/core/testing";
 import { Subject } from "rxjs";
 import { tap } from "rxjs/operators";
+import { GithubPortfolioReference } from "./github-portfolio";
 import { Portfolio, PortfolioReference, PortfolioType } from "./portfolio";
 import { MICROSOFT_PORTFOLIO, PortfolioService } from "./portfolio.service";
 
@@ -57,10 +58,11 @@ describe("Portfolio Service", () => {
         expect(portfolios[1] instanceof Portfolio).toBe(true);
         expect(portfolios[2] instanceof Portfolio).toBe(true);
 
-        expect(portfolios[0].reference).toEqual({
+        expect(portfolios[0].reference as GithubPortfolioReference).toEqual({
             id: MICROSOFT_PORTFOLIO.id,
             type: PortfolioType.Github,
-            source: "https://github.com/Azure/BatchExplorer-data/tree/master",
+            source: "https://github.com/Azure/batch-extension-templates/tree/master",
+            path: "templates",
         });
         expect(portfolios[1].reference).toEqual(ref1);
         expect(portfolios[2].reference).toEqual(ref2);
