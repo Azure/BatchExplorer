@@ -34,7 +34,7 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
     public rendererVersionControl = new FormControl();
 
     public containerImage: string;
-    public hidden: Boolean = false;
+    public showControls: Boolean = false;
 
     public poolsData: ListView<Pool, PoolListParams>;
 
@@ -119,13 +119,13 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
             .subscribe((ncjTemplateMode: NcjTemplateMode) => {
                 this.ncjTemplateMode = ncjTemplateMode;
                 if (ncjTemplateMode === NcjTemplateMode.ExistingPoolAndJob) {
-                    this.hidden = false;
+                    this.showControls = true;
                 }
                 if (ncjTemplateMode === NcjTemplateMode.NewPool) {
-                    this.hidden = true;
+                    this.showControls = false;
                 }
                 if (ncjTemplateMode === NcjTemplateMode.NewPoolAndJob) {
-                    this.hidden = true;
+                    this.showControls = false;
                 }
 
                 this.changeDetector.markForCheck();

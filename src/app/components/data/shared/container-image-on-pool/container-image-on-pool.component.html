@@ -1,4 +1,4 @@
-<div [hidden]="hidden" >
+<div *ngIf="showControls" >
     <div class="grow">
         <div class="gcol">
             <bl-form-field>
@@ -11,7 +11,7 @@
             </bl-form-field>
         </div>
     </div>
-    <p *ngIf="containerImage">
+    <p *ngIf="containerImage" class="container-image-display">
         Job will execute with container image:      {{ containerImage }}
     </p>
 </div>

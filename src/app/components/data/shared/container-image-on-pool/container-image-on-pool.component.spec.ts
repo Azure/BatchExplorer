@@ -13,9 +13,12 @@ import { ContainerImageOnPoolComponent } from "./container-image-on-pool.compone
 
 @Component({
     template: `
-        <bl-container-image-on-pool [formControl]="appVersionControl" [formControl]="rendererVersionControl"
+        <bl-container-image-on-pool
+            [formControl]="control"
+            [formControl]="appVersionControl" [formControl]="rendererVersionControl"
             [app]="app" [renderEngine]="renderEngine" [imageReferenceId]="imageReferenceId"
-            [poolId]="poolId" [ncjTemplateMode]="ncjTemplateMode">
+            [poolId]="poolId" [poolContainerImage]="poolContainerImage"
+            [ncjTemplateMode]="ncjTemplateMode">
         </bl-container-image-on-pool>
     `,
 })
@@ -28,7 +31,9 @@ class TestComponent {
     public renderEngine: RenderEngine;
     public imageReferenceId: string;
     public poolId: string;
+    public poolContainerImage: string;
     public ncjTemplateMode: NcjTemplateMode;
+    public control = new FormControl(null);
 }
 
 const poolSingleValid = {
@@ -78,7 +83,7 @@ const poolMultipleInvalid = {
     },
 };
 
-describe("ContainerImageOnPoolComponent", () => {
+fdescribe("ContainerImageOnPoolComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -111,50 +116,108 @@ describe("ContainerImageOnPoolComponent", () => {
         testComponent.app = RenderApplication.Maya;
         testComponent.renderEngine = RenderEngine.Arnold;
         testComponent.imageReferenceId = "ubuntu-1604lts-container";
-        testComponent.ncjTemplateMode = NcjTemplateMode.ExistingPoolAndJob;
+        testComponent.poolContainerImage = null;
+        fixture.detectChanges();
+
         de = fixture.debugElement.query(By.css("bl-container-image-on-pool"));
     });
 
-    it("for a pool with a single containerImage, shows the app and renderer version present on the pool", () => {
-        const appVersionInput = de.query(By.css("input")).nativeElement;
-        const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
-        testComponent.poolId = poolSingleValid.id;
-        fixture.detectChanges();
+    fdescribe("If ncjTemplateMode is ExistingPoolAndJob", () => {
+        beforeEach(() => {
+            testComponent.ncjTemplateMode = NcjTemplateMode.ExistingPoolAndJob;
+        });
 
-        expect(appVersionInput.value).toEqual("2017-Update5");
-        expect(rendererVersionInput.value).toEqual("2.0.1.1");
+        it("no containerImage is displayed", () => {
+            fixture.detectChanges();
+            expect(de.query(By.css(".container-image-display"))).toEqual(null);
+        });
+
+        it("controls and form value are set correctly for a pool with a single containerImage", () => {
+            testComponent.poolId = poolSingleValid.id;
+            fixture.detectChanges();
+
+            const appVersionInput = de.query(By.css("input")).nativeElement;
+            const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
+
+            expect(appVersionInput.value).toEqual("2017-Update5");
+            expect(rendererVersionInput.value).toEqual("2.0.1.1");
+
+            expect(de.query(By.css(".container-image-display"))
+                .nativeElement.textContent).toContain("ubuntu_maya2017u5_arnold2011");
+
+            expect(testComponent.control.value).toEqual("ubuntu_maya2017u5_arnold2011");
+        });
+
+        it("if there are multiple valid containerImages, the first is used", () => {
+            poolServiceReturned.next(poolMultipleValid);
+            testComponent.poolId = poolMultipleValid.id;
+            fixture.detectChanges();
+
+            const appVersionInput = de.query(By.css("input")).nativeElement;
+            const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
+
+            expect(appVersionInput.value).toEqual("2018-Update2");
+            expect(rendererVersionInput.value).toEqual("2.0.1.1");
+
+            expect(de.query(By.css(".container-image-display"))
+                .nativeElement.textContent).toContain("ubuntu_maya2018u2_arnold2011");
+
+            expect(testComponent.control.value).toEqual("ubuntu_maya2018u2_arnold2011");
+        });
+
+        it("if there are valid and invalid containerImages, the valid one is used", () => {
+            poolServiceReturned.next(poolSecondValid);
+            testComponent.poolId = poolSecondValid.id;
+            fixture.detectChanges();
+
+            const appVersionInput = de.query(By.css("input")).nativeElement;
+            const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
+
+            expect(appVersionInput.value).toEqual("2018-Update3");
+            expect(rendererVersionInput.value).toEqual("3.1.0.1");
+
+            expect(de.query(By.css(".container-image-display"))
+                .nativeElement.textContent).toContain("ubuntu_maya2018u3_arnold3101");
+
+            expect(testComponent.control.value).toEqual("ubuntu_maya2018u3_arnold3101");
+        });
+
+        it("if there are no valid containerImages, app and render version are left empty", () => {
+            testComponent.poolId = poolMultipleInvalid.id;
+            poolServiceReturned.next(poolMultipleInvalid);
+            fixture.detectChanges();
+
+            const appVersionInput = de.query(By.css("input")).nativeElement;
+            const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
+
+            expect(appVersionInput.value).toEqual("");
+            expect(rendererVersionInput.value).toEqual("");
+
+            expect(de.query(By.css(".container-image-display"))).toEqual(null);
+
+            expect(testComponent.control.value).toEqual(null);
+        });
     });
 
-    it("if there are multiple valid containerImages, the first is used", () => {
-        const appVersionInput = de.query(By.css("input")).nativeElement;
-        const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
-        testComponent.poolId = poolMultipleValid.id;
-        poolServiceReturned.next(poolMultipleValid);
-        fixture.detectChanges();
+    fdescribe("If ncjTemplateMode is NewPoolAndJob", () => {
+        beforeEach(() => {
+            testComponent.ncjTemplateMode = NcjTemplateMode.NewPoolAndJob;
+        });
 
-        expect(appVersionInput.value).toEqual("2018-Update2");
-        expect(rendererVersionInput.value).toEqual("2.0.1.1");
-    });
+        it("no containerImage is displayed", () => {
+            expect(de.query(By.css(".container-image-display"))).toEqual(null);
+        });
 
-    it("if there are valid and invalid containerImages, the valid one is used", () => {
-        const appVersionInput = de.query(By.css("input")).nativeElement;
-        const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
-        testComponent.poolId = poolSecondValid.id;
-        poolServiceReturned.next(poolSecondValid);
-        fixture.detectChanges();
+        it("if poolContainerImage is set, containerImage is set, and version controls aren't displayed", () => {
+            testComponent.poolContainerImage = "poolContainerImageValue";
+            fixture.detectChanges();
 
-        expect(appVersionInput.value).toEqual("2018-Update3");
-        expect(rendererVersionInput.value).toEqual("3.1.0.1");
-    });
+            expect(de.query(By.css("input"))).toEqual(null);
+            expect(de.queryAll(By.css("input"))[1]).toBeUndefined();
 
-    it("if there are no valid containerImages, app and render version are left empty", () => {
-        const appVersionInput = de.query(By.css("input")).nativeElement;
-        const rendererVersionInput = de.queryAll(By.css("input"))[1].nativeElement;
-        testComponent.poolId = poolMultipleInvalid.id;
-        poolServiceReturned.next(poolMultipleInvalid);
-        fixture.detectChanges();
+            expect(de.query(By.css(".container-image-display"))).toEqual(null);
 
-        expect(appVersionInput.value).toEqual("");
-        expect(rendererVersionInput.value).toEqual("");
+            expect(testComponent.control.value).toEqual("poolContainerImageValue");
+        });
     });
 });
