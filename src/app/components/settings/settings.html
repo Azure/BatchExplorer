@@ -4,7 +4,8 @@
         {{'settings.saved' | i18n}}
     </div>
     <div class="actions">
-        <bl-button class="reset" [title]="'settings.reset' | i18n" (do)="reset()" tooltipPosition="below" [disabled]="!modified">
+        <bl-button class="reset" [title]="'settings.reset' | i18n" (do)="reset()" tooltipPosition="below"
+            [disabled]="!modified">
             <i class="fa fa-undo"></i>
         </bl-button>
     </div>
@@ -26,12 +27,14 @@
     </bl-form-field>
 
     <bl-editable-table label="Subscriptions to ignore" formControlName="subscriptionsIgnore">
-        <bl-editable-table-column name="pattern">Wildcard pattern (e.g. 'other-subscription*')</bl-editable-table-column>
+        <bl-editable-table-column name="pattern">Wildcard pattern (e.g. 'other-subscription*')
+        </bl-editable-table-column>
     </bl-editable-table>
 
     <bl-editable-table label="File associations" formControlName="fileAssociations">
         <bl-editable-table-column name="extension">Extension(e.g. '.foo')</bl-editable-table-column>
-        <bl-editable-table-column name="viewer" type="select" [options]="viewerOptions">Viewer</bl-editable-table-column>
+        <bl-editable-table-column name="viewer" type="select" [options]="viewerOptions">Viewer
+        </bl-editable-table-column>
     </bl-editable-table>
 
     <bl-form-field>
@@ -66,6 +69,29 @@
         {{'settings.gallerySettings' | i18n}}
     </h2>
 
+    <fieldset>
+        <legend>Microsoft portfolio</legend>
+        <div class="grow">
+            <bl-form-field class="gcol">
+                <input blInput placeholder="Repository" formControlName="microsoftPortfolioRepo">
+            </bl-form-field>
+            <bl-form-field class="gcol">
+                <input blInput placeholder="Branch" formControlName="microsoftPortfolioBranch">
+            </bl-form-field>
+            <bl-form-field class="gcol">
+                <input blInput placeholder="Path" formControlName="microsoftPortfolioPath">
+            </bl-form-field>
+        </div>
+    </fieldset>
+
+    <bl-form-field>
+        <input blInput placeholder="Default output filegroup" formControlName="defaultOutputFileGroup">
+    </bl-form-field>
+
+    <h2>
+        {{'settings.advancedSettings' | i18n}}
+    </h2>
+
     <bl-form-field>
         <input blInput placeholder="Github data source" formControlName="githubDataRepo">
         <bl-hint>Name of the repository to use to load the data. You can use that to test a fork of the
@@ -73,9 +99,5 @@
     </bl-form-field>
     <bl-form-field>
         <input blInput placeholder="Github data branch" formControlName="githubDataBranch">
-    </bl-form-field>
-
-    <bl-form-field>
-        <input blInput placeholder="Default output filegroup" formControlName="defaultOutputFileGroup">
     </bl-form-field>
 </div>
