@@ -37,7 +37,7 @@ describe("Portfolio Service", () => {
         spyOnProperty(Portfolio.prototype, "ready").and.returnValue(resolvePortfolio);
 
         settingsServiceSpy = new MockUserConfigurationService({
-            githubData: {
+            microsoftPortfolio: {
                 branch: "master",
                 repo: "Azure/batch-extension-templates",
                 path: "templates",
