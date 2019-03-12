@@ -35,7 +35,7 @@
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.containerImageOnPool">
         <bl-container-image-on-pool  [app]="parameter.additionalProperties.app" [imageReferenceId]="parameter.additionalProperties.imageReferenceId"
-            [renderEngine]="parameter.additionalProperties.renderEngine" [poolId]="poolId" [ncjTemplateMode]="ncjTemplateMode"
+            [renderEngine]="parameter.additionalProperties.renderEngine" [poolId]="poolId" [poolContainerImage]="poolContainerImage" [ncjTemplateMode]="ncjTemplateMode"
             [formControl]="parameterValue" class="form-element" >
         </bl-container-image-on-pool>
     </div>

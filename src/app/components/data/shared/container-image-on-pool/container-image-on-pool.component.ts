@@ -7,13 +7,13 @@ import {
     FormControl,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { PoolListParams, PoolService, RenderingContainerImageService } from "app/services";
-import { BehaviorSubject, Subject, empty } from "rxjs";
-
 import { ListView } from "@batch-flask/core";
 import { NcjTemplateMode, Pool } from "app/models";
 import { RenderApplication, RenderEngine } from "app/models/rendering-container-image";
+import { PoolListParams, PoolService, RenderingContainerImageService } from "app/services";
+import { BehaviorSubject, Subject, empty } from "rxjs";
 import { switchMap, takeUntil } from "rxjs/operators";
+
 import "./container-image-on-pool.component.scss";
 
 @Component({
@@ -39,6 +39,7 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
     public poolsData: ListView<Pool, PoolListParams>;
 
     @Input() public ncjTemplateMode: NcjTemplateMode;
+    @Input() public poolContainerImage: string;
     @Input() public poolId: string;
     @Input() public app: RenderApplication;
     @Input() public imageReferenceId: string;
@@ -52,6 +53,7 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
         return this._upperCaseFirstChar(this.renderEngine);
     }
 
+    private _poolContainerImage = new BehaviorSubject(null);
     private _poolId = new BehaviorSubject(null);
     private _ncjTemplateMode = new BehaviorSubject(null);
 
@@ -63,6 +65,16 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
         private changeDetector: ChangeDetectorRef,
         private poolService: PoolService,
         private renderingContainerImageService: RenderingContainerImageService) {
+
+        this._poolContainerImage.pipe(
+            takeUntil(this._destroy),
+        ).subscribe(containerImage => {
+            this.containerImage = containerImage;
+            if (this._propagateChange) {
+                this._propagateChange(containerImage);
+            }
+            this.changeDetector.markForCheck();
+        });
 
         this._poolId.pipe(
             takeUntil(this._destroy),
@@ -153,12 +165,16 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
         if (changes.ncjTemplateMode) {
             this._ncjTemplateMode.next(this.ncjTemplateMode);
         }
+        if (changes.poolContainerImage) {
+            this._poolContainerImage.next(this.poolContainerImage);
+        }
     }
 
     public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();
         this._poolId.complete();
+        this._poolContainerImage.complete();
         this._ncjTemplateMode.complete();
     }
 

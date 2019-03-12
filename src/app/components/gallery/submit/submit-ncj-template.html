@@ -22,14 +22,17 @@
         </bl-form-section>
         <bl-form-section title="Pool" *ngIf="showPoolPicker">
             <bl-pool-picker [formControl]="pickedPool"
-                [app]="poolPickerNeedsContainerImageFilter ? jobTemplate.parameters.containerImage.additionalProperties.app : null"
-                [imageReferenceId]="poolPickerNeedsContainerImageFilter ? jobTemplate.parameters.containerImage.additionalProperties.imageReferenceId : null"
-                [renderEngine]="poolPickerNeedsContainerImageFilter ? jobTemplate.parameters.containerImage.additionalProperties.renderEngine : null">
+                [app]="jobTemplateNeedsContainerImage ? jobTemplate.parameters.containerImage.additionalProperties.app : null"
+                [imageReferenceId]="jobTemplateNeedsContainerImage ? jobTemplate.parameters.containerImage.additionalProperties.imageReferenceId : null"
+                [renderEngine]="jobTemplateNeedsContainerImage ? jobTemplate.parameters.containerImage.additionalProperties.renderEngine : null">
         </bl-pool-picker>
         </bl-form-section>
         <bl-form-section title="Job" formGroupName="job" *ngIf="showJobForm">
             <div *ngFor="let param of jobParametersWrapper;trackBy: trackParameter">
-                <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value" [poolId]="showPoolPicker ? pickedPool.value?.poolId : null" [ncjTemplateMode]="modeState"></bl-parameter-input>
+                <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value"
+                [poolContainerImage]="showPoolForm && jobTemplateNeedsContainerImage ? poolContainerImage: null"
+                [poolId]="showPoolPicker ? pickedPool.value?.poolId : null"
+                [ncjTemplateMode]="modeState"></bl-parameter-input>
             </div>
         </bl-form-section>
     </bl-form-page>
