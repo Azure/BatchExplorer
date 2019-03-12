@@ -33,7 +33,7 @@ export class PortfolioService implements OnDestroy {
 
         this._microsoftPortfolio = settingsService.watch("microsoftPortfolio").pipe(
             distinctUntilChanged((a, b) => {
-                return a === b || (a.repo === b.repo && a.branch === b.branch && a.path === b.path);
+                return a === b || (a && b && a.repo === b.repo && a.branch === b.branch && a.path === b.path);
             }),
             map((settings) => {
                 const branch = settings.branch;
