@@ -1,3 +1,4 @@
+import { TimeRange } from "@batch-flask/ui";
 import { ArmBatchAccount, ArmSubscription } from "app/models";
 import { BehaviorSubject, of } from "rxjs";
 import { AzureCostManagementService } from "./azure-cost-management.service";
@@ -8,6 +9,9 @@ const sub1 = new ArmSubscription({
 });
 
 const accountId = "/subscriptions/sub-1/resourcegroups/rg1/providers/Microsoft.Batch/batchaccounts/acc-1";
+
+const date1 = new Date(2019, 1);
+const date2 = new Date(2019, 2);
 
 describe("AzureCostManagementService", () => {
     let service: AzureCostManagementService;
@@ -57,7 +61,7 @@ describe("AzureCostManagementService", () => {
     });
 
     it("get the usage for the current account", async () => {
-        const usages = await service.getCost().toPromise();
+        const usages = await service.getCost(new TimeRange({start: date1, end: date2})).toPromise();
         const resourceId = accountId;
         const currency = "USD";
         expect(azureHttpSpy.post).toHaveBeenCalledTimes(1);

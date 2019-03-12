@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy, forwardRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ValidationErrors } from "@angular/forms";
 import { I18nService, TimeZoneService } from "@batch-flask/core";
@@ -24,7 +24,7 @@ let idCounter = 0;
 export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy {
     @HostBinding("attr.id") public id = `bl-timerange-picker-${idCounter++}`;
 
-    public quickRanges: QuickRange[] = [
+    @Input() public quickRanges: QuickRange[] = [
         QuickRanges.lastHour,
         QuickRanges.last24h,
         QuickRanges.lastWeek,
