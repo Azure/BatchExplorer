@@ -64,7 +64,7 @@ const poolSecondValid = {
     virtualMachineConfiguration: {
         containerConfiguration: {
             containerImageNames: [
-                "win_maya_vray",
+                "win_maya2017_vray",
                 "ubuntu_maya2018u3_arnold3101",
             ],
         },
@@ -76,14 +76,14 @@ const poolMultipleInvalid = {
     virtualMachineConfiguration: {
         containerConfiguration: {
             containerImageNames: [
-                "win_maya_vray",
+                "win_maya2017_vray",
                 "ubuntu_3dsmax_vray",
             ],
         },
     },
 };
 
-fdescribe("ContainerImageOnPoolComponent", () => {
+describe("ContainerImageOnPoolComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -122,7 +122,7 @@ fdescribe("ContainerImageOnPoolComponent", () => {
         de = fixture.debugElement.query(By.css("bl-container-image-on-pool"));
     });
 
-    fdescribe("If ncjTemplateMode is ExistingPoolAndJob", () => {
+    describe("If ncjTemplateMode is ExistingPoolAndJob", () => {
         beforeEach(() => {
             testComponent.ncjTemplateMode = NcjTemplateMode.ExistingPoolAndJob;
         });
@@ -199,7 +199,7 @@ fdescribe("ContainerImageOnPoolComponent", () => {
         });
     });
 
-    fdescribe("If ncjTemplateMode is NewPoolAndJob", () => {
+    describe("If ncjTemplateMode is NewPoolAndJob", () => {
         beforeEach(() => {
             testComponent.ncjTemplateMode = NcjTemplateMode.NewPoolAndJob;
         });

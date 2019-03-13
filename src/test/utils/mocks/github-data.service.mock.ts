@@ -32,7 +32,7 @@ export class GithubDataServiceMock {
             ],
             containerImages: [
             {
-                containerImage: "win_maya_vray",
+                containerImage: "win_maya2017_vray",
                 os: "Windows Server 2016",
                 app: "maya",
                 appVersion: "2017-Update5",
@@ -50,7 +50,7 @@ export class GithubDataServiceMock {
                 imageReferenceId : "windowsserver-2016-container",
             },
             {
-                containerImage: "win_maya_vray",
+                containerImage: "win_maya2018_vray",
                 os: "Windows Server 2016",
                 app: "maya",
                 appVersion: "2018-Update1",

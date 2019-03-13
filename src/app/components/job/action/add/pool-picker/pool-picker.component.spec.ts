@@ -259,7 +259,7 @@ describe("PoolPickerComponent", () => {
         const windowsContainerImages =
         [
             "win_maya_arnold",
-            "win_maya_vray",
+            "win_maya2017_vray",
         ];
 
         let containerImagePools: Pool[];
