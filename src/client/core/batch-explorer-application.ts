@@ -92,10 +92,12 @@ export class BatchExplorerApplication {
         this._initializer.init();
 
         this._setCommonHeaders();
-        this.aadService.login().catch((e) => {
+        const loginResponse = this.aadService.login();
+        loginResponse.done.catch((e) => {
             if (e instanceof LogoutError) {
                 return;
             }
+            log.error("Error while login", e);
             dialog.showMessageBox({
                 title: "Error during login",
                 type: "error",
@@ -103,6 +105,8 @@ export class BatchExplorerApplication {
             });
             this.logoutAndLogin();
         });
+        await loginResponse.started;
+
         this._initializer.setTaskStatus("window", "Loading application");
         const window = this.openFromArguments(process.argv, false);
         if (!window) { return; }
@@ -151,14 +155,14 @@ export class BatchExplorerApplication {
     public async updateAzureEnvironment(env: AzureEnvironment) {
         await this.aadService.logout();
         this.windows.closeAll();
-        this.properties.updateAzureEnvironment(env);
-        await this.aadService.login();
+        await this.properties.updateAzureEnvironment(env);
+        await this.aadService.login().done;
         this.windows.openNewWindow();
     }
 
     public async logoutAndLogin() {
         await this.aadService.logout();
-        await this.aadService.login();
+        await this.aadService.login().done;
         this.windows.openNewWindow();
     }
 

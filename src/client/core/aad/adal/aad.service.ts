@@ -1,16 +1,19 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { AccessToken, AccessTokenCache, DataStore, ServerError } from "@batch-flask/core";
-import { AADResourceName } from "@batch-flask/core/azure-environment";
+import { AADResourceName, AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { fetch } from "client/core/fetch";
 import { BatchExplorerProperties } from "client/core/properties";
 import { SecureDataStore } from "client/core/secure-data-store";
+import { TelemetryManager } from "client/core/telemetry";
+// import { TelemetryManager } from "client/core/telemetry";
 import { Constants } from "common";
 import { IpcEvent } from "common/constants";
 import { Deferred } from "common/deferred";
+import { dialog } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
@@ -49,6 +52,7 @@ export class AADService {
         @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
         private localStorage: DataStore,
         private properties: BatchExplorerProperties,
+        private telemetryManager: TelemetryManager,
         secureStore: SecureDataStore,
         ipcMain: BlIpcMain) {
         this._tokenCache = new AccessTokenCache(secureStore);
@@ -80,34 +84,19 @@ export class AADService {
      * This will retrieve fresh tokens for all tenant and resources needed by BatchExplorer.
      * It will try to use the refresh token cached to prevent a new prompt window if possible.
      */
-    public async login(): Promise<any> {
-        try {
-            await this.accessTokenData("common");
-            this._authenticationState.next(AuthenticationState.Authenticated);
-        } catch (error) {
-            if (error instanceof LogoutError) {
-                throw error;
-            } else {
-                log.error("Error login in ", error);
-                throw error;
-            }
-        }
-        try {
-            const tenantIds = await this._loadTenantIds();
-
-            this._tenantsIds.next(tenantIds);
-            this._refreshAllAccessTokens();
-        } catch (error) {
-            log.error("Error retrieving tenants", error);
-            this._tenantsIds.error(ServerError.fromARM(error));
-        }
+    public login(): { started: Promise<any>, done: Promise<any> } {
+        const started = this._ensureTelemetryOptInNationalClouds();
+        return {
+            started,
+            done: started.then(() => this._loginInCurrentCloud()),
+        };
     }
 
     public async logout() {
-        this.localStorage.removeItem(Constants.localStorageKey.currentUser);
+        await this.localStorage.removeItem(Constants.localStorageKey.currentUser);
         this._tokenCache.clear();
         this._tenantsIds.next([]);
-        this._clearUserSpecificCache();
+        await this._clearUserSpecificCache();
         for (const [, window] of this.app.windows) {
             window.webContents.session.clearStorageData({ storages: ["localStorage"] });
         }
@@ -133,6 +122,29 @@ export class AADService {
             }
         }
         return this._retrieveNewAccessToken(tenantId, resource);
+    }
+
+    private async _loginInCurrentCloud() {
+        try {
+            await this.accessTokenData("common");
+            this._authenticationState.next(AuthenticationState.Authenticated);
+        } catch (error) {
+            if (error instanceof LogoutError) {
+                throw error;
+            } else {
+                log.error("Error login in ", error);
+                throw error;
+            }
+        }
+        try {
+            const tenantIds = await this._loadTenantIds();
+
+            this._tenantsIds.next(tenantIds);
+            this._refreshAllAccessTokens();
+        } catch (error) {
+            log.error("Error retrieving tenants", error);
+            this._tenantsIds.error(ServerError.fromARM(error));
+        }
     }
 
     /**
@@ -258,10 +270,10 @@ export class AADService {
         return value.map(x => x.tenantId);
     }
 
-    private _clearUserSpecificCache() {
+    private async _clearUserSpecificCache() {
         this.localStorage.removeItem(Constants.localStorageKey.subscriptions);
         this.localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
-        this._tokenCache.clear();
+        await this._tokenCache.clear();
     }
 
     private async _refreshAllAccessTokens() {
@@ -278,5 +290,32 @@ export class AADService {
             "arm",
             "batch",
         ];
+    }
+
+    private async _ensureTelemetryOptInNationalClouds() {
+        if (this.properties.azureEnvironment.id === AzureEnvironment.Azure.id) {
+            return;
+        }
+        // If user hasn't picked a telemetry setting ask to opt in or out
+        if (this.telemetryManager.userTelemetryEnabled == null) {
+            const wikiLink = "https://github.com/Azure/BatchExplorer/wiki/Crash-reporting-and-telemetry";
+            const response = dialog.showMessageBox({
+                type: "question",
+                buttons: ["Enable", "Disable"],
+                title: "Telemetry settings",
+                message: "Batch Explorer collects anonymous usage data and sends it "
+                    + "to Microsoft to help improve our products and services. "
+                    + `You can learn more about what data is being sent and what it is used for at ${wikiLink}. `
+                    + `You are login into a national cloud, do you wish to keep sending telemetry? `
+                    + "Disabling will restart the application.",
+                noLink: true,
+            });
+
+            if (response === 0) {
+                return this.telemetryManager.enableTelemetry({ restart: false });
+            } else if (response === 1) {
+                return this.telemetryManager.disableTelemetry();
+            }
+        }
     }
 }

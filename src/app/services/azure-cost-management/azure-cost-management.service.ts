@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
+import { TimeRange } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, ArmSubscription } from "app/models";
 import { ArmResourceUtils } from "app/utils";
@@ -44,6 +45,11 @@ interface QueryFilter {
 
 interface AzureCostQuery {
     type: string;
+    timeframe?: "Custom" | "MonthToDate" | "TheLastMonth" | "TheLastWeek";
+    timePeriod?: {
+        from: string;
+        to: string;
+    };
     dataSet: {
         granularity: string;
         aggregation: StringMap<AzureCostAggregation>;
@@ -81,7 +87,7 @@ function costManagementUrl(scope: string) {
 export class AzureCostManagementService {
     constructor(private accountService: BatchAccountService, private azure: AzureHttpService) { }
 
-    public getCost(): Observable<AzureCostEntry[]> {
+    public getCost(timeRange: TimeRange): Observable<AzureCostEntry[]> {
         return this.accountService.currentAccount.pipe(
             take(1),
             tap((account) => {
@@ -93,16 +99,19 @@ export class AzureCostManagementService {
                     });
                 }
             }),
-            switchMap((account: ArmBatchAccount) => this.getCostFor(account.subscription, account.id)),
+            switchMap((account: ArmBatchAccount) => this.getCostFor(account.subscription, account.id, timeRange)),
         );
     }
 
-    public getCostFor(subscription: ArmSubscription, accountId: string): Observable<AzureCostEntry[]> {
+    public getCostFor(
+        subscription: ArmSubscription, accountId: string, timeRange: TimeRange,
+    ): Observable<AzureCostEntry[]> {
+
         const subId = ArmResourceUtils.getSubscriptionIdFromResourceId(accountId);
         const resourceGroup = ArmResourceUtils.getResourceGroupFromResourceId(accountId);
         const scope = `/subscriptions/${subId}/resourceGroups/${resourceGroup}`;
         const url = `${costManagementUrl(scope)}/query`;
-        const payload = this._buildQuery(accountId);
+        const payload = this._buildQuery(timeRange);
 
         return this.azure.post<QueryResult>(subscription, url, payload).pipe(
             map(x => this._processQueryResponse(accountId, x)),
@@ -172,9 +181,14 @@ export class AzureCostManagementService {
         return DateTime.fromFormat(date.toString(), "yyyyLLdd").toJSDate();
     }
 
-    private _buildQuery(accountId: string): AzureCostQuery {
+    private _buildQuery(timeRange: TimeRange): AzureCostQuery {
         return {
             type: "Usage",
+            timeframe: "Custom",
+            timePeriod: {
+                from: timeRange.start.toISOString(),
+                to: timeRange.end.toISOString(),
+            },
             dataSet: {
                 granularity: "Daily",
                 aggregation: {
@@ -203,13 +217,18 @@ export class AzureCostManagementService {
                         name: CostManagementDimensions.MeterCategory,
                     },
                 ],
-                // filter: {
-                //     Dimensions: {
-                //         Name: "ResourceId",
-                //         Operator: "In",
-                //         Values: [accountId],
-                //     },
-                // },
+                filter: {
+                    Dimensions: {
+                        Name: "ResourceType",
+                        Operator: "In",
+                        Values: ["Microsoft.Batch/batchaccounts", "Microsoft.Batch/batchaccounts/batchpools"],
+                    },
+                    // Dimensions: {
+                    //     Name: "ResourceId",
+                    //     Operator: "In",
+                    //     Values: [accountId],
+                    // },
+                },
             },
         };
     }

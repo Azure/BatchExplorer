@@ -32,7 +32,7 @@ export class SecureDataStore extends InMemoryDataStore implements DataStore {
 
     public async removeItem(key: string) {
         await this._loadPromise;
-        delete this._data[key];
+        await super.removeItem(key);
         return this._save();
     }
 

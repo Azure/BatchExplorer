@@ -17,9 +17,13 @@ export interface SettingsSelection {
     updateOnQuit: boolean;
     githubDataRepo: string;
     githubDataBranch: string;
+    microsoftPortfolioRepo: string;
+    microsoftPortfolioBranch: string;
+    microsoftPortfolioPath: string;
     defaultOutputFileGroup: string;
     theme: string;
 }
+
 @Component({
     selector: "bl-settings",
     templateUrl: "settings.html",
@@ -52,6 +56,9 @@ export class SettingsComponent implements OnDestroy {
             updateOnQuit: [true],
             githubDataRepo: [""],
             githubDataBranch: [""],
+            microsoftPortfolioRepo: [""],
+            microsoftPortfolioBranch: [""],
+            microsoftPortfolioPath: [""],
             defaultOutputFileGroup: [""],
         });
 
@@ -70,6 +77,9 @@ export class SettingsComponent implements OnDestroy {
                 updateOnQuit: config.update.updateOnQuit,
                 githubDataRepo: config.githubData.repo,
                 githubDataBranch: config.githubData.branch,
+                microsoftPortfolioRepo: config.microsoftPortfolio.repo,
+                microsoftPortfolioBranch: config.microsoftPortfolio.branch,
+                microsoftPortfolioPath: config.microsoftPortfolio.path,
                 defaultOutputFileGroup: config.jobTemplate.defaultOutputFileGroup,
             };
             this._lastValue = JSON.stringify(selection);

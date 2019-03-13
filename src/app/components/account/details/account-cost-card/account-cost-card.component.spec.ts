@@ -1,8 +1,11 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { I18nTestingModule } from "@batch-flask/core/testing";
-import { ChartsModule } from "@batch-flask/ui";
+import {
+    I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,
+} from "@batch-flask/core/testing";
+import { ChartsModule, QuickRange, TimeRange } from "@batch-flask/ui";
 import { ArmBatchAccount, ArmSubscription, LocalBatchAccount } from "app/models";
 import { BatchAccountService, Theme, ThemeService } from "app/services";
 import { AzureCostManagementService } from "app/services/azure-cost-management";
@@ -27,6 +30,14 @@ const costs = [
     { preTaxCost: 3.8, date: day4, meter: "virtual machines (a series)", currency: "USD" },
     { preTaxCost: 27, date: day4, meter: "virtual machines (d series)", currency: "USD" },
 ];
+
+@Component({
+    selector: "bl-time-range-picker", template: "",
+    providers: [controlValueAccessorProvider(() => FakeTimeRangePickerComponent)],
+})
+class FakeTimeRangePickerComponent extends MockControlValueAccessorComponent<TimeRange | null> {
+    @Input() public quickRanges: QuickRange[];
+}
 
 @Component({
     template: `<bl-account-cost-card></bl-account-cost-card>`,
@@ -72,8 +83,8 @@ describe("AccountCostCardComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [I18nTestingModule, ChartsModule],
-            declarations: [AccountCostCardComponent, TestComponent],
+            imports: [I18nTestingModule, ChartsModule, FormsModule, ReactiveFormsModule],
+            declarations: [AccountCostCardComponent, FakeTimeRangePickerComponent, TestComponent],
             providers: [
                 { provide: AzureCostManagementService, useValue: costServiceSpy },
                 { provide: ThemeService, useValue: themeServiceSpy },

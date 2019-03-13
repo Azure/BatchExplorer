@@ -1,6 +1,9 @@
 <header>
     <h2>{{'account-cost-card.title' | i18n}}</h2>
+    <div class="flex-separator"></div>
     <span class="subtitle">{{'account-cost-card.subtitle' | i18n}}</span>
+    <div class="flex-separator"></div>
+    <bl-time-range-picker [formControl]="timeRange" [quickRanges]="quickRanges"></bl-time-range-picker>
 </header>
 <ng-container *ngIf="isArmBatchAccount && !unsupportedSubscription">
     <div class="graph">
