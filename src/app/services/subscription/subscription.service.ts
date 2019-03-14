@@ -43,6 +43,9 @@ export class SubscriptionService implements OnDestroy {
             map(([subscriptions, ignoredPatterns]) => {
                 return this._ignoreSubscriptions(subscriptions, ignoredPatterns);
             }),
+            map((subscriptions) => {
+                return subscriptions.sortBy(x => x.displayName.toLowerCase()).toList();
+            }),
             shareReplay(1),
         );
 
