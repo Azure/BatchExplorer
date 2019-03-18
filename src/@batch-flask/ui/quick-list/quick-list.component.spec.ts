@@ -114,8 +114,8 @@ describe("QuickListComponent", () => {
         expect(items[0].nativeElement.id).toEqual("quick-1-row-item-1");
         expect(items[1].nativeElement.id).toEqual("quick-1-row-item-2");
         expect(items[2].nativeElement.id).toEqual("quick-1-row-item-3");
-        expect(items[3].nativeElement.id).toEqual("quick-1-row-item-4");
-        expect(items[4].nativeElement.id).toEqual("quick-1-row-item-5");
+        expect(items[3].nativeElement.id).toEqual("quick-1-row-item-5");
+        expect(items[4].nativeElement.id).toEqual("quick-1-row-item-4");
     });
 
     it("should display all the content", () => {
@@ -123,8 +123,8 @@ describe("QuickListComponent", () => {
         expect(items[0].nativeElement.textContent).toContain("Item 1");
         expect(items[1].nativeElement.textContent).toContain("AItem 2");
         expect(items[2].nativeElement.textContent).toContain("Item 3");
-        expect(items[4].nativeElement.textContent).toContain("Item 5");
-        expect(items[3].nativeElement.textContent).toContain("BItem 4");
+        expect(items[3].nativeElement.textContent).toContain("Item 5");
+        expect(items[4].nativeElement.textContent).toContain("BItem 4");
     });
 
     it("click on an item should make the item active", () => {
@@ -217,8 +217,8 @@ describe("QuickListComponent", () => {
             expect(rows[4].textContent).toEqual("Item 5");
 
         });
-
     });
+
     describe("When an item is active", () => {
         beforeEach(() => {
             quicklist.activeItem = "item-2";
@@ -236,7 +236,7 @@ describe("QuickListComponent", () => {
             expect(selection.keys.size).toBe(3);
             expect(selection.keys.has("item-2")).toBe(true);
             expect(selection.keys.has("item-3")).toBe(true);
-            expect(selection.keys.has("item-4")).toBe(true);
+            expect(selection.keys.has("item-5")).toBe(true);
         });
 
         it("Ctrl click should select on item + the active item", () => {
@@ -246,7 +246,7 @@ describe("QuickListComponent", () => {
 
             expect(selection.keys.size).toBe(2);
             expect(selection.keys.has("item-2")).toBe(true, "has item-2");
-            expect(selection.keys.has("item-4")).toBe(true, "has item-4");
+            expect(selection.keys.has("item-5")).toBe(true, "has item-4");
 
             sendEvent(items[4], ButtonClickEvents.leftCtrl);
             expect(selection.keys.size).toBe(3);
@@ -264,7 +264,7 @@ describe("QuickListComponent", () => {
             sendEvent(items[3], ButtonClickEvents.leftCtrl);
             expect(selection.keys.size).toBe(2);
             expect(selection.keys.has("item-2")).toBe(true);
-            expect(selection.keys.has("item-5")).toBe(true);
+            expect(selection.keys.has("item-4")).toBe(true);
 
             sendEvent(items[4], ButtonClickEvents.leftCtrl);
 
