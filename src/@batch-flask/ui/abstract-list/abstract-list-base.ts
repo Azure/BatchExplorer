@@ -59,6 +59,9 @@ export interface AbstractListBaseConfig<TEntity = any> {
      */
     sorting?: ListSortConfig<TEntity> | null | false;
 
+    /**
+     * Id used to preserve settings for the list(Last sort)
+     */
     id?: string;
 }
 
@@ -510,6 +513,14 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         return new MultiContextMenuItem({
             label: "Sort by",
             subitems: [
+                new ContextMenuItem({
+                    label: "Default",
+                    click: () => {
+                        this.dataPresenter.sortBy(null);
+                    },
+                    checked: this.dataPresenter.sortingBy.key === null,
+                    type: "checkbox",
+                }),
                 ...sortOptions,
                 new ContextMenuSeparator(),
                 ...sortDirections,
