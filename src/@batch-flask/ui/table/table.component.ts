@@ -72,8 +72,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     @Input() public id = `bl-table-${idCounter++}`;
 
     @Input() public set config(config: TableConfig) {
-        this._config = { ...tableDefaultConfig, ...config };
-        this.dataPresenter.config = this._config.sorting;
+        super.config = { ...tableDefaultConfig, ...config };
     }
     public get config() { return this._config; }
 
