@@ -40,6 +40,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
             state: true,
             creationTime: true,
             pool: job => job.executionInfo && job.executionInfo.poolId,
+            endTime: job => job.executionInfo && job.executionInfo.endTime,
         },
     };
 
