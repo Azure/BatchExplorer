@@ -354,7 +354,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             if (event.shiftKey) {
                 const focusedItem = this._keyNavigator.focusedItem;
                 previousFocussedId = focusedItem && focusedItem.id;
-            } else {
+            } else if (event.code === KeyCode.ArrowDown || event.code === KeyCode.ArrowUp) {
                 this.clearSelection();
             }
             // Handle the navigation
@@ -362,6 +362,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
             const focusedItem = this._keyNavigator.focusedItem;
             const focussedId = focusedItem && focusedItem.id;
+
             if (previousFocussedId && previousFocussedId !== focussedId) {
                 if (!focussedId) { return; }
                 if (this.selection.has(focussedId)) {
@@ -386,7 +387,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             if (shiftKey) {
                 this.selectTo(item.id);
             } else if (ctrlKey) {
-                this.onSelectedChange(item.id, !this.selection.has(item.id));
+                this.toggleSelected(item.id);
             }
             event.stopPropagation();
             event.stopImmediatePropagation();
