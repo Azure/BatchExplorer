@@ -78,7 +78,7 @@ describe("PartialSortWarningComponent", () => {
             expect(de.query(By.css(".auto-update-warning"))).toBeFalsy();
         });
 
-        fit("it start loading all items when clicking on it", () => {
+        it("it start loading all items when clicking on it", () => {
             const btn = de.query(By.css(".partial-sort-warning .action"));
             expect(btn).not.toBeFalsy();
             click(btn);
