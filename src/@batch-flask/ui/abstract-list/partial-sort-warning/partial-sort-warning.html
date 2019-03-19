@@ -1,4 +1,4 @@
-<div class="partial-sort-warning" *ngIf="sortingStatus === SortingStatus.Partial">
+<div class="partial-sort-warning" *ngIf="showWarning">
     <span class="message">{{'partial-sort-warning.message' | i18n}}</span>
     <bl-clickable class="action" (do)="loadAll()" *ngIf="!loadingAll">
         {{'partial-sort-warning.load-all' | i18n}}
