@@ -1,7 +1,7 @@
 import {
     ChangeDetectorRef, Component, ContentChildren, Directive, Input, OnChanges, QueryList,
 } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, isObservable } from "rxjs";
 
 export enum ErrorState {
     Error,
@@ -87,7 +87,7 @@ export class BannerComponent implements OnChanges {
 
         const fixMethod = otherFix ? otherFix.fix : this.fix;
         const fixObs = fixMethod();
-        if (fixObs) {
+        if (fixObs && isObservable(fixObs)) {
             this._fixingSub = fixObs.subscribe(() => {
                 this._markFixed();
             });
