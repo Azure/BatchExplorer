@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor,
     FormBuilder,
@@ -6,14 +6,13 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
-
 import { ListView } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
 import { Offer, Pool, PoolOsSkus } from "app/models";
 import { PoolListParams, PoolOsService, PoolService, VmSizeService } from "app/services";
 import { PoolUtils } from "app/utils";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
 
 import "./pool-picker.scss";
@@ -34,7 +33,7 @@ const CLOUD_SERVICE_OFFER = "cloudservice-windows";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolPickerComponent), multi: true },
     ],
 })
-export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class PoolPickerComponent implements ControlValueAccessor, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     public pickedPool: string;
@@ -55,7 +54,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         private poolOsService: PoolOsService,
         private vmSizeService: VmSizeService,
         private changeDetector: ChangeDetectorRef) {
-        this.poolsData = this.poolService.listView();
+        this.poolsData = this.poolService.listView;
         this.filters = formBuilder.group({
             id: "",
             offer: null,
@@ -87,13 +86,8 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         }));
     }
 
-    public ngOnInit() {
-        this.poolsData.fetchAll();
-    }
-
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
-        this.poolsData.dispose();
     }
 
     public writeValue(poolInfo: any) {

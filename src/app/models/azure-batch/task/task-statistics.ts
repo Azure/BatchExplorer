@@ -1,5 +1,5 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-import { Duration, duration } from "moment";
+import { Duration } from "luxon";
 
 export interface TaskStatisticsAttributes {
     url: string;
@@ -20,10 +20,10 @@ export class TaskStatistics extends Record<TaskStatisticsAttributes> {
     @Prop() public url: string;
     @Prop() public startTime: Date;
     @Prop() public lastUpdateTime: Date;
-    @Prop(duration) public userCPUTime: Duration;
-    @Prop(duration) public kernelCPUTime: Duration;
-    @Prop(duration) public wallClockTime: Duration;
-    @Prop(duration) public waitTime: Duration;
+    @Prop() public userCPUTime: Duration;
+    @Prop() public kernelCPUTime: Duration;
+    @Prop() public wallClockTime: Duration;
+    @Prop() public waitTime: Duration;
     @Prop() public readIOps: number;
     @Prop() public writeIOps: number;
     @Prop() public readIOGiB: number;

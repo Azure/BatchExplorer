@@ -1,16 +1,6 @@
 import { HttpParams } from "@angular/common/http";
 import { HttpRequestOptions } from "@batch-flask/core";
-import * as moment from "moment";
-
-/**
- * TimeFrame defines the enumeration for monitor chart timeframe picker
- */
-export enum MonitorChartTimeFrame {
-    Hour = "1h",
-    Day = "1d",
-    Week = "1w",
-    Month = "1M",
-}
+import { TimeRange } from "@batch-flask/ui";
 
 /**
  * MonitorChartType defines the enumeration of the monitor chart type
@@ -42,9 +32,9 @@ export enum MonitorChartMetrics {
  * Aggregation defines the enumeration of request paramter values to monitor api
  */
 export enum MonitorChartAggregation {
-    Total = "Total",
-    Average = "Average",
-    Count = "Count",
+    Sum = "sum",
+    Avg = "avg",
+    Count = "count",
 }
 
 /**
@@ -65,42 +55,28 @@ export interface MonitorChartColorPair {
     color: string;
 }
 
-/**
- * Timespan and interval constants used for rendering the charts
- */
-const hourTimeSpan = moment.duration({ hours: 1 });
-const dayTimeSpan = moment.duration({ days: 1 });
-const weekTimeSpan = moment.duration({ weeks: 1 });
-const monthTimeSpan = moment.duration({ month: 1 });
-const minInterval = moment.duration({ minutes: 1 });
-const quarterHourInterval = moment.duration({ minutes: 15 });
-const oneHoursInterval = moment.duration({ hours: 1 });
 const parameterDelimiter = ",";
 
 export interface MonitoringMetric {
     name: string;
-    aggregation: MonitorChartAggregation;
     label?: string;
 }
 
 export interface MonitoringMetricDefinitionAttributes {
     name: string;
-    timespan: MonitorChartTimeFrame;
+    timespan: TimeRange;
     metrics: MonitoringMetric[];
 }
 
 export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAttributes {
     public name: string;
-    public timespan: MonitorChartTimeFrame;
+    public timespan: TimeRange;
     public metrics: MonitoringMetric[];
-    public interval: moment.Duration;
-    private _timeSpanEnd: string;
-    private _timeSpanStart: string;
+    public interval: string;
 
     constructor(attrs: MonitoringMetricDefinitionAttributes) {
         Object.assign(this, attrs);
-        this._computeTimeInterval();
-        this._computeTimeSpan();
+        this.interval = this._computeTimeInterval();
     }
 
     /**
@@ -109,9 +85,9 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
     public getRequestOptions(): HttpRequestOptions {
         const params = new HttpParams()
             .set(MonitorChartMetricsParams.Timespan, this._timeSpanParam)
-            .set(MonitorChartMetricsParams.Interval, this._intervalParam)
+            .set(MonitorChartMetricsParams.Interval, this.interval)
             .set(MonitorChartMetricsParams.Metric, this._metricsParam)
-            .set(MonitorChartMetricsParams.Aggregation, this._aggregationParam);
+            .set(MonitorChartMetricsParams.Aggregation, "average,total");
         return { params };
     }
 
@@ -126,14 +102,7 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
      * Get timespan parameter value which is used for constructing request url
      */
     private get _timeSpanParam(): string {
-        return `${this._timeSpanStart}/${this._timeSpanEnd}`;
-    }
-
-    /**
-     * Get interval parameter value which is used for constructing request url
-     */
-    private get _intervalParam(): string {
-        return `${this.interval.toISOString()}`;
+        return `${this.timespan.start.toISOString()}/${this.timespan.end.toISOString()}`;
     }
 
     /**
@@ -143,51 +112,21 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
         return `${this.metrics.map(x => x.name).join(parameterDelimiter)}`;
     }
 
-    /**
-     * Get aggregation parameter value which is used for constructing request url
-     */
-    private get _aggregationParam(): string {
-        return `${this.metrics.map(x => x.aggregation).join(parameterDelimiter)}`;
-    }
-
-    private _computeTimeInterval(): void {
-        switch (this.timespan) {
-            case MonitorChartTimeFrame.Hour:
-                this.interval = minInterval;
-                break;
-            case MonitorChartTimeFrame.Day:
-                this.interval = quarterHourInterval;
-                break;
-            case MonitorChartTimeFrame.Week:
-                this.interval = oneHoursInterval;
-                break;
-            case MonitorChartTimeFrame.Month:
-                this.interval = oneHoursInterval;
-                break;
+    private _computeTimeInterval(): string {
+        const duration = this.timespan.duration;
+        const days = duration.as("days");
+        const hours = duration.as("hours");
+        if (days >= 30) {
+            return "PT6H";
+        } else if (days >= 7) {
+            return "PT30M";
+        } else if (hours >= 48) {
+            return "PT15M";
+        } else if (hours >= 12) {
+            return "PT5M";
+        } else {
+            return "PT1M";
         }
     }
 
-    /**
-     * Set timespan start and end, these variables are used to construct request url
-     * Timespan start and timespan end are two ISO format string
-     */
-    private _computeTimeSpan(): void {
-        const timespan = moment();
-        this._timeSpanEnd = timespan.toISOString();
-        switch (this.timespan) {
-            case MonitorChartTimeFrame.Hour:
-                timespan.subtract(hourTimeSpan);
-                break;
-            case MonitorChartTimeFrame.Day:
-                timespan.subtract(dayTimeSpan);
-                break;
-            case MonitorChartTimeFrame.Week:
-                timespan.subtract(weekTimeSpan);
-                break;
-            case MonitorChartTimeFrame.Month:
-                timespan.subtract(monthTimeSpan);
-                break;
-        }
-        this._timeSpanStart = timespan.toISOString();
-    }
 }

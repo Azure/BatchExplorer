@@ -13,9 +13,8 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from "@angular/core";
-import * as elementResizeDetectorMaker from "element-resize-detector";
-
 import { SecureUtils } from "@batch-flask/utils";
+import * as elementResizeDetectorMaker from "element-resize-detector";
 import { ScrollableService } from "./scrollable.service";
 
 enum Orientation {

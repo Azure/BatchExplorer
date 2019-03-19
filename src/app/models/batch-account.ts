@@ -1,10 +1,10 @@
 import { ArmRecord, Model, Prop, Record } from "@batch-flask/core";
 import { ArmResourceUtils, StorageUtils } from "app/utils";
-import { Subscription } from "./subscription";
+import { ArmSubscription } from "./arm-subscription";
 
 export enum PoolAllocationMode {
-    BatchService = "batchservice",
-    UserSubscription = "usersubscription",
+    BatchService = "BatchService",
+    UserSubscription = "UserSubscription",
 }
 
 export enum BatchAccountProvisingState {
@@ -58,7 +58,7 @@ export interface BatchAccountAttributes {
     location: string;
     type?: string;
     properties: BatchAccountPropertiesAttributes;
-    subscription: Subscription;
+    subscription: ArmSubscription;
 }
 
 export interface BatchAccount extends Record<any> {
@@ -81,7 +81,7 @@ export class ArmBatchAccount extends ArmRecord<BatchAccountAttributes> implement
     @Prop() public name: string;
     @Prop() public location: string;
     @Prop() public properties: BatchAccountProperties;
-    @Prop() public subscription: Subscription;
+    @Prop() public subscription: ArmSubscription;
     public readonly resourceGroup: string | null;
 
     constructor(data: BatchAccountAttributes) {

@@ -183,6 +183,29 @@ describe("TableComponent", () => {
             keydown(de, KeyCode.Enter, KeyCode.Enter);
             fixture.detectChanges();
             expect(testComponent.pickedSize).toEqual("size_b");
+
+            keydown(de, KeyCode.ArrowRight, KeyCode.ArrowRight);
+            fixture.detectChanges();
+            expect(rows[0].classList).not.toContain("focused");
+            expect(rows[1].classList).not.toContain("focused");
+            const cells = rows[1].querySelectorAll(".bl-table-cell");
+            expect(cells[0].classList).toContain("focused");
+            expect(cells[1].classList).not.toContain("focused");
+
+            keydown(de, KeyCode.ArrowRight, KeyCode.ArrowRight);
+            fixture.detectChanges();
+
+            expect(cells[0].classList).not.toContain("focused");
+            expect(cells[1].classList).toContain("focused");
+
+            keydown(de, KeyCode.ArrowLeft, KeyCode.ArrowLeft);
+            keydown(de, KeyCode.ArrowLeft, KeyCode.ArrowLeft);
+            fixture.detectChanges();
+
+            expect(rows[0].classList).not.toContain("focused");
+            expect(rows[1].classList).toContain("focused");
+            expect(cells[0].classList).not.toContain("focused");
+            expect(cells[1].classList).not.toContain("focused");
         });
     });
 

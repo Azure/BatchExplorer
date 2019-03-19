@@ -2,7 +2,6 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { DataStoreKeys } from "@batch-flask/core/constants";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
-
 import { Workspace } from "./workspace.model";
 
 @Injectable({providedIn: "root"})

@@ -13,11 +13,11 @@ import {
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
+import { SanitizedError } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 import { FileTypeAssociationService, FileViewerType } from "../file-type-association";
 import { FileViewer, FileViewerConfig } from "../file-viewer";
 
-import { SanitizedError } from "@batch-flask/utils";
 import "./file-viewer-container.scss";
 
 const defaultConfig = Object.freeze({
@@ -88,6 +88,12 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
                     }
                 },
             });
+        }
+
+        if (inputs.config) {
+            this.fileAssociationService = this.fileAssociationService.withLocalAssociations(
+                this.config.fileAssociations || []);
+            this._findFileType();
         }
     }
 

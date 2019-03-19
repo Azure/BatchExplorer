@@ -38,30 +38,33 @@ export type NodesDisksPerformanceMetric = StringMap<NodesPerformanceMetric>;
 export type NodesCpusPerformanceMetric = StringMap<NodesPerformanceMetric>;
 
 export interface BatchPerformanceMetrics {
-    cpuUsage: NodesCpusPerformanceMetric;
-    individualCpuUsage: PerformanceMetric[][];
-    memory: NodesPerformanceMetric;
-    networkRead: PerformanceMetric[];
-    networkWrite: PerformanceMetric[];
-    diskRead: PerformanceMetric[];
-    diskWrite: PerformanceMetric[];
-    diskUsed: NodesDisksPerformanceMetric;
-    diskFree: NodesDisksPerformanceMetric;
+    // CPU
+    cpuUsage?: NodesPerformanceMetric;
+    individualCpuUsage?: StringMap<PerformanceMetric[]>;
+
+    // Memory
+    memoryAvailable?: NodesPerformanceMetric;
+    memoryUsed?: NodesPerformanceMetric;
+
+    // Network
+    networkRead?: NodesPerformanceMetric;
+    networkWrite?: NodesPerformanceMetric;
+
+    // Disk IO
+    diskRead?: NodesPerformanceMetric;
+    diskWrite?: NodesPerformanceMetric;
+
+    // Disk usage
+    diskUsed?: NodesDisksPerformanceMetric;
+    diskFree?: NodesDisksPerformanceMetric;
+
+    // GPU
+    gpuUsage?: NodesPerformanceMetric;
+    individualGpuUsage?: StringMap<PerformanceMetric[]>;
+
+    // GPU memory
+    gpuMemory?: NodesPerformanceMetric;
+    individualGpuMemory?: StringMap<PerformanceMetric[]>;
 }
 
-export enum BatchPerformanceMetricType {
-    cpuUsage = "cpuUsage",
-    individualCpuUsage = "individualCpuUsage",
-    gpuUsage = "gpuUsage",
-    individualGpuUsage = "individualGpuUsage",
-    gpuMemory = "gpuMemory",
-    individualGpuMemory = "individualGpuMemory",
-    memoryAvailable = "memoryAvailable",
-    memoryUsed = "memoryUsed",
-    diskRead = "diskRead",
-    diskWrite = "diskWrite",
-    networkRead = "networkRead",
-    networkWrite = "networkWrite",
-    diskUsed = "diskUsed",
-    diskFree = "diskFree",
-}
+export type BatchPerformanceMetricType = keyof BatchPerformanceMetrics;

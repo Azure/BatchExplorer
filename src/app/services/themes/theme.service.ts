@@ -1,16 +1,18 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
-import { FSWatcher } from "chokidar";
-import * as path from "path";
-import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
-// tslint:disable-next-line:no-var-requires
-const stripJsonComments = require("strip-json-comments");
-
-import { FileSystemService, NotificationService } from "@batch-flask/ui";
+import { UserConfigurationService } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/electron";
+import { NotificationService } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
+import { FSWatcher } from "chokidar";
+import { BEUserConfiguration } from "common";
+import * as path from "path";
+import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 import { filter, takeUntil } from "rxjs/operators";
-import { SettingsService } from "../settings.service";
 import { Theme } from "./theme.model";
+
+// tslint:disable-next-line:no-var-requires
+const stripJsonComments = require("strip-json-comments");
 
 export class ThemeNotFoundError extends Error {
 
@@ -28,13 +30,13 @@ export class ThemeService implements OnDestroy {
     private _currentThemeName = null;
     private _watcher: FSWatcher;
     private _themesLoadPath: string[];
-    private _baseThemeDefinition;
+    private _baseThemeDefinition: Promise<Theme>;
     private _destroy = new Subject();
 
     constructor(
         private fs: FileSystemService,
         private notificationService: NotificationService,
-        private settingsService: SettingsService,
+        private settingsService: UserConfigurationService<BEUserConfiguration>,
         private zone: NgZone,
         batchExplorer: BatchExplorerService) {
 
@@ -47,7 +49,7 @@ export class ThemeService implements OnDestroy {
             this._applyTheme(theme);
         });
 
-        combineLatest(this.settingsService.settingsObs, batchExplorer.isOSHighContrast)
+        combineLatest(this.settingsService.config, batchExplorer.isOSHighContrast)
             .pipe(takeUntil(this._destroy))
             .subscribe(([settings, isHighContrast]) => {
                 if (isHighContrast) {
@@ -65,7 +67,7 @@ export class ThemeService implements OnDestroy {
     }
 
     public async init() {
-        this._baseThemeDefinition = await this._loadTheme(this.baseTheme);
+        this._baseThemeDefinition = this._loadTheme(this.baseTheme);
     }
 
     public ngOnDestroy() {
@@ -77,7 +79,7 @@ export class ThemeService implements OnDestroy {
         if (this._currentThemeName === name) { return; }
         this._currentThemeName = name;
         const theme = await this._loadTheme(name);
-        this._setTheme(theme);
+        await this._setTheme(theme);
     }
 
     public async findThemeLocation(name: string): Promise<string> {
@@ -116,8 +118,8 @@ export class ThemeService implements OnDestroy {
         }
     }
 
-    private _setTheme(theme: Theme) {
-        const computedTheme = new Theme({} as any).merge(this._baseThemeDefinition).merge(theme);
+    private async _setTheme(theme: Theme) {
+        const computedTheme = new Theme({} as any).merge(await this._baseThemeDefinition).merge(theme);
         computedTheme.isHighContrast = theme.isHighContrast;
         this._currentTheme.next(computedTheme);
     }

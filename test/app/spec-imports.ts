@@ -4,6 +4,7 @@ jasmine.MAX_PRETTY_PRINT_DEPTH = 3;
 
 import "reflect-metadata";
 
+// tslint:disable: ordered-imports
 import "core-js/es6";
 // tslint:disable:no-var-requires
 require("zone.js/dist/zone");
@@ -16,7 +17,6 @@ require("zone.js/dist/fake-async-test");
 
 import "@batch-flask/extensions";
 import "hammerjs";
-import "moment-duration-format";
 import "test/utils/matchers";
 
 import "app/styles/main.scss";

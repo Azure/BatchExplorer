@@ -39,7 +39,7 @@ export class AADGraphHttpService extends HttpService {
             }),
             flatMap((account: ArmBatchAccount) => {
                 const tenantId = account.subscription.tenantId;
-                return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
+                return this.adal.accessTokenData(tenantId, "aadGraph").pipe(
                     flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
                         options = this._addApiVersion(options);

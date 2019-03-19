@@ -3,8 +3,8 @@ import { FilterBuilder } from "@batch-flask/core";
 import {
     AppInsightsMetricBody,
     AppInsightsMetricsResult,
-    BatchPerformanceMetricType,
     BatchPerformanceMetrics,
+    PerformanceMetric,
 } from "app/models/app-insights";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -14,11 +14,11 @@ import { AppInsightQueryResultProcessor } from "./query-result-processor";
 
 const metrics: StringMap<MetricDefinition> = {
     cpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "cloud/roleInstance" },
-    individualCpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "customDimensions/[Cpu #]" },
+    individualCpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "customDimensions/[CPU #]" },
     gpuUsage: { appInsightsMetricId: "customMetrics/Gpu usage", segment: "cloud/roleInstance" },
-    individualGpuUsage: { appInsightsMetricId: "customMetrics/Gpu usage", segment: "customDimensions/[Gpu #]" },
+    individualGpuUsage: { appInsightsMetricId: "customMetrics/Gpu usage", segment: "customDimensions/[GPU #]" },
     gpuMemory: { appInsightsMetricId: "customMetrics/Gpu memory usage", segment: "cloud/roleInstance" },
-    individualGpuMemory: { appInsightsMetricId: "customMetrics/Gpu memory usage", segment: "customDimensions/[Gpu #]" },
+    individualGpuMemory: { appInsightsMetricId: "customMetrics/Gpu memory usage", segment: "customDimensions/[GPU #]" },
     memoryAvailable: { appInsightsMetricId: "customMetrics/Memory available", segment: "cloud/roleInstance" },
     memoryUsed: { appInsightsMetricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
     diskRead: { appInsightsMetricId: "customMetrics/Disk read", segment: "cloud/roleInstance" },
@@ -29,7 +29,7 @@ const metrics: StringMap<MetricDefinition> = {
     networkWrite: { appInsightsMetricId: "customMetrics/Network write", segment: "cloud/roleInstance" },
 };
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class AppInsightsQueryService {
     constructor(private appInsightsApi: AppInsightsApiService) { }
 
@@ -108,10 +108,12 @@ export class AppInsightsQueryService {
             const data = metricResult.body.value;
             const segments = metricResult.body.value.segments;
             switch (id) {
-                case BatchPerformanceMetricType.individualCpuUsage:
-                case BatchPerformanceMetricType.individualGpuUsage:
-                case BatchPerformanceMetricType.individualGpuMemory:
-                    performances[id] = this._processIndividualDeviceUsage(id, segments);
+                case "individualCpuUsage":
+                    performances[id] = this._processIndividualDeviceUsage(id, "customDimensions/CPU #", segments);
+                    break;
+                case "individualGpuUsage":
+                case "individualGpuMemory":
+                    performances[id] = this._processIndividualDeviceUsage(id, "customDimensions/GPU #", segments);
                     break;
                 default:
                     performances[id] = this._processSegmentedMetric(id, data);
@@ -120,18 +122,18 @@ export class AppInsightsQueryService {
         return performances as BatchPerformanceMetrics;
     }
 
-    private _processIndividualDeviceUsage(id: string, segments) {
-        let usages: any[] = null;
+    private _processIndividualDeviceUsage(id: string, deviceKey: string, segments): StringMap<PerformanceMetric[]> {
+        const usages: StringMap<PerformanceMetric[]> = {};
         for (const segment of segments) {
             const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
-            const individualSegments = segment.segments;
-            if (usages === null) {
-                usages = individualSegments.map(() => []);
-            }
-            for (let i = 0; i < individualSegments.length; i++) {
-                const individualSegment = individualSegments[i];
+
+            for (const individualSegment of segment.segments) {
                 const value = individualSegment[this._getAppInsightsMetricId(id)].avg;
-                usages[i].push({
+                const deviceId = individualSegment[deviceKey];
+                if (!(deviceId in usages)) {
+                    usages[deviceId] = [];
+                }
+                usages[deviceId].push({
                     time,
                     value,
                 });

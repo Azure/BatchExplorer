@@ -1,6 +1,5 @@
-import { List } from "immutable";
-
 import { Node } from "app/models";
+import { List } from "immutable";
 import { HistoryDataBase } from "./history-data-base";
 
 export class RunningTasksHistoryData extends HistoryDataBase {

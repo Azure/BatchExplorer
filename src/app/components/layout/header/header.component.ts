@@ -6,7 +6,7 @@ import {
     HostBinding,
     OnDestroy,
 } from "@angular/core";
-import { CurrentBrowserWindow, OSService } from "@batch-flask/ui";
+import { CurrentBrowserWindow, OSService } from "@batch-flask/electron";
 import { Subscription } from "rxjs";
 
 import "./header.scss";

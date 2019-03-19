@@ -1,0 +1,15 @@
+@import "app/styles/variables";
+
+bl-resource-files-properties {
+
+    [tp-column].open-file-cell {
+        width: 26px;
+        background: transparent;
+    }
+    .open-file-cell {
+        width: 26px;
+        .fa-external-link {
+            margin-left: 6px;
+        }
+    }
+}

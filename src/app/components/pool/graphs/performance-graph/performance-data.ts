@@ -1,12 +1,9 @@
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
-
 import { Node, Pool } from "app/models";
 import {
-    BatchPerformanceMetricType,
     BatchPerformanceMetrics,
 } from "app/models/app-insights/metrics-result";
 import { AppInsightsQueryService } from "app/services";
-import { map, shareReplay } from "rxjs/operators";
+import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 export class PerformanceData {
     public set pool(pool: Pool) {
@@ -20,13 +17,16 @@ export class PerformanceData {
     public historySize: number = 10;
     public appId: string = null;
     public loading: Observable<any>;
-    private _metrics = new BehaviorSubject<BatchPerformanceMetrics>({} as any);
+    public metrics: Observable<BatchPerformanceMetrics>;
+
+    private _metrics = new BehaviorSubject<BatchPerformanceMetrics>({});
     private _loading = new AsyncSubject();
     private _pool: Pool;
     private _firstLoad = false;
 
     constructor(private appInsightsQueryService: AppInsightsQueryService) {
         this.loading = this._loading.asObservable();
+        this.metrics = this._metrics.asObservable();
     }
 
     public update() {
@@ -51,13 +51,6 @@ export class PerformanceData {
                 this._loading.complete();
             }
         });
-    }
-
-    public observeMetric<T = any>(name: BatchPerformanceMetricType): Observable<T> {
-        return this._metrics.pipe(
-            map((metrics) => metrics[name] || []),
-            shareReplay(1),
-        );
     }
 
     public retrieveAppId() {

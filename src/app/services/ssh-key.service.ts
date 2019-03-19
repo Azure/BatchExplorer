@@ -1,51 +1,45 @@
 import { Injectable } from "@angular/core";
-import { FileSystemService } from "@batch-flask/ui";
+import { GlobalStorage } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/electron";
 import { SSHPublicKey } from "app/models";
-import { Constants } from "common";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, from } from "rxjs";
-import { map } from "rxjs/operators";
-import { LocalFileStorage } from "./local-file-storage.service";
+import { Observable, from } from "rxjs";
+import { map, publishReplay, refCount, share, switchMap, take } from "rxjs/operators";
 
-const filename = Constants.SavedDataFilename.sshPublicKeys;
-
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class SSHKeyService {
+    public static readonly KEY = "ssh-pub-keys";
+
     public keys: Observable<List<SSHPublicKey>>;
 
-    private _keys = new BehaviorSubject<List<SSHPublicKey>>(List([]));
-
-    constructor(private storage: LocalFileStorage, private fs: FileSystemService) {
-        this.keys = this._keys.asObservable();
-    }
-
-    public init() {
-        return this.loadInitialData().subscribe((keys) => {
-            this._keys.next(keys);
-        });
+    constructor(private storage: GlobalStorage, private fs: FileSystemService) {
+        this.keys = this.storage.watch(SSHKeyService.KEY).pipe(
+            map(data => Array.isArray(data) ? List(data) : List([])),
+            publishReplay(1),
+            refCount(),
+        );
     }
 
     public saveKey(key: SSHPublicKey) {
-        const keys = List<SSHPublicKey>(this._keys.value.filter(x => {
-            return x.value !== key.value && x.id !== key.id;
-        }));
-        this._keys.next(keys.push(key));
-        this._saveSSHPublicKeys();
+        return this.keys.pipe(
+            take(1),
+            switchMap((formulas) => {
+                return this._saveSSHPublicKeys(List<SSHPublicKey>(formulas.filter(x => {
+                    return x.value !== key.value && x.id !== key.id;
+                })).push(key));
+            }),
+            share(),
+        );
     }
 
     public deleteKey(key: SSHPublicKey) {
-        this._keys.next(List<SSHPublicKey>(this._keys.value.filter(x => x.id !== key.id)));
-        this._saveSSHPublicKeys();
-    }
-
-    public loadInitialData(): Observable<List<SSHPublicKey>> {
-        return this.storage.get(filename).pipe(map((data) => {
-            if (Array.isArray(data)) {
-                return List(data);
-            } else {
-                return List([]);
-            }
-        }));
+        return this.keys.pipe(
+            take(1),
+            switchMap((formulas) => {
+                return this._saveSSHPublicKeys(List(formulas.filter(x => x.id !== key.id)));
+            }),
+            share(),
+        );
     }
 
     public hasLocalPublicKey(path: string): Observable<boolean> {
@@ -57,7 +51,6 @@ export class SSHKeyService {
     }
 
     private _saveSSHPublicKeys(keys: List<SSHPublicKey> = null): Observable<any> {
-        keys = keys === null ? this._keys.value : keys;
-        return this.storage.set(filename, keys.toJS());
+        return from(this.storage.set(SSHKeyService.KEY, keys.toJS()));
     }
 }

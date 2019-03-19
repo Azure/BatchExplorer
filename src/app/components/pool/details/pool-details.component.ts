@@ -7,9 +7,9 @@ import { BatchExplorerService, PoolParams, PoolService, PricingService } from "a
 import { NumberUtils } from "app/utils";
 import { List } from "immutable";
 import { Subscription, from } from "rxjs";
+import { flatMap } from "rxjs/operators";
 import { PoolCommands } from "../action";
 
-import { flatMap } from "rxjs/operators";
 import "./pool-details.scss";
 
 @Component({

@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
-
 import { BaseModule } from "@batch-flask/ui";
+import { DatetimePickerModule } from "@batch-flask/ui/datetime-picker";
 import { commonModules } from "app/common";
 import { JobActionModule } from "app/components/job/action";
 import { JobScheduleCreateBasicDialogComponent } from "./add/job-schedule-create-basic-dialog.component";
@@ -24,7 +24,7 @@ const components = [
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [...commonModules, JobActionModule, BaseModule],
+    imports: [...commonModules, JobActionModule, BaseModule, DatetimePickerModule],
     entryComponents: [
         JobScheduleCreateBasicDialogComponent, DeleteJobScheduleDialogComponent, DisableJobScheduleDialogComponent,
         EnableJobScheduleDialogComponent, TerminateJobScheduleDialogComponent, PatchJobScheduleComponent,

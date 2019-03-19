@@ -5,7 +5,6 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { PermissionService, Workspace, WorkspaceService } from "@batch-flask/ui";
 import { ButtonComponent, ButtonsModule } from "@batch-flask/ui/buttons";
 import { BehaviorSubject, of } from "rxjs";
-
 import * as Fixtures from "test/fixture";
 import { click } from "test/utils/helpers";
 import { EntityCommandButtonComponent } from "./entity-command-button.component";

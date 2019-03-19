@@ -2,6 +2,7 @@ node_modules/
 build/
 dll/
 typings/
+logs/
 *.log*
 *.mem.csv
 release/

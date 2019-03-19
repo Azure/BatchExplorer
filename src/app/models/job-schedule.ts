@@ -1,7 +1,6 @@
-import { List } from "immutable";
-
 import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { ModelUtils } from "app/utils";
+import { List } from "immutable";
 import { Job, JobAttributes } from "./azure-batch/job/job";
 import {
     JobScheduleExecutionInformation, JobScheduleExecutionInformationAttributes,
@@ -71,6 +70,10 @@ export class JobSchedule extends Record<JobScheduleAttributes> implements Naviga
 
     public get uid() {
         return this.url;
+    }
+
+    public get name() {
+        return this.id;
     }
 }
 

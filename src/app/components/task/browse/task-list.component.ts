@@ -19,9 +19,9 @@ import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, Subscription, of } from "rxjs";
+import { map } from "rxjs/operators";
 import { TaskCommands } from "../action";
 
-import { map } from "rxjs/operators";
 import "./task-list.scss";
 
 @Component({
@@ -93,6 +93,7 @@ export class TaskListComponent extends ListBaseComponent implements OnChanges, O
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this._onTaskAddedSub.unsubscribe();
         this.data.dispose();
     }

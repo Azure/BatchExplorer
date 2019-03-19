@@ -2,27 +2,16 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import {
     ControlValueAccessor,
     FormBuilder,
-    FormControl,
     FormGroup,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import * as moment from "moment";
-import { Subscription } from "rxjs";
+import { TimeZone, TimeZoneService } from "@batch-flask/core";
+import { DateTime } from "luxon";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 import "./datetime-picker.scss";
-
-// Currently building a custom dropdown for time, gap is 30 minutes
-// Use material datetime picker once time picker is fully supported with timezone
-const startHour = 0;
-const endHour = 24;
-const minutes = ["00", "30"];
-const getTimezoneRegex = /\(([^)]+)\)/;
-
-export interface TimeSelectionOption {
-    label: string;
-    value: string;
-}
 
 let idCounter = 0;
 
@@ -43,46 +32,54 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     @Input() public label: string;
     @Input() public timePicker: boolean = true;
 
-    public timeOptions: TimeSelectionOption[];
-    public selectedDate = new FormControl();
-    public selectedTime = new FormControl();
     public datetime: FormGroup;
-    public currentTimeZone: string;
+    public currentTimeZone: TimeZone;
 
+    private _datetime = null;
     private _propagateChange: (value: Date) => void = null;
-    private _date: moment.Moment;
-    private _subs: Subscription[] = [];
+    private _destroy = new Subject();
 
-    constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
-        this.timeOptions = this._buildTimeOptions();
-        const zoneMatch = getTimezoneRegex.exec(new Date().toString());
-        const timeZoneName = Array.isArray(zoneMatch) ? zoneMatch[0] : "";
-        this.currentTimeZone = `${moment().format("Z")} ${timeZoneName}`;
-
-        this.datetime = formBuilder.group({
-            date: this.selectedDate,
-            time: this.selectedTime,
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private timezoneService: TimeZoneService,
+        formBuilder: FormBuilder,
+    ) {
+        this.timezoneService.current.pipe(takeUntil(this._destroy)).subscribe((current) => {
+            this.currentTimeZone = current;
+            this.changeDetector.markForCheck();
         });
 
-        this._subs.push(this.selectedDate.valueChanges.subscribe((value: any) => {
-            this._date = moment(value);
-            this._setDateTime();
-        }));
+        this.datetime = formBuilder.group({
+            date: [null],
+            time: [null],
+        });
 
-        this._subs.push(this.selectedTime.valueChanges.subscribe((value: any) => {
-            this._setDateTime();
-        }));
-    }
+        this.datetime.valueChanges.pipe(takeUntil(this._destroy)).subscribe((value) => {
+            const time = value.time ? DateTime.fromISO(value.time) : null;
+            const date = DateTime.fromJSDate(value.date, {
+                zone: this.currentTimeZone.name,
+            }).set({
+                hour: time ? time.hour : 0,
+                minute: time ? time.minute : 0,
+            });
 
-    public onTimeChange(event) {
-        this._setDateTime();
+            if (this._propagateChange && date.isValid) {
+                const jsDate = date.toJSDate();
+                if (!this._datetime || jsDate.getTime() !== this._datetime.getTime()) {
+                    this._datetime = jsDate;
+                    this._propagateChange(jsDate);
+                }
+            }
+            this.changeDetector.markForCheck();
+        });
     }
 
     public ngOnDestroy(): void {
-        this._subs.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
     }
 
-    public writeValue(value: Date|string|null): void {
+    public writeValue(value: Date | string | null): void {
         this._parseDateTime(value);
     }
 
@@ -102,50 +99,23 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         return index;
     }
 
-    public get isDatePicked() {
-        return Boolean(this._date);
-    }
-
-    private _setDateTime() {
-        this._setTime();
-        if (this._propagateChange) {
-            this._propagateChange(this._date.toDate());
-        }
-        this.changeDetector.markForCheck();
-    }
-
-    private _setTime() {
-        const time = moment(this.selectedTime.value, "hh:mm");
-        this._date.set({
-            hour: time.hour(),
-            minute: time.minute(),
-        });
-    }
-
     private _parseDateTime(value: Date | string | null) {
         if (!value) {
             return;
         }
-        const datetime = moment(value);
-        this.selectedDate.setValue(datetime.toDate());
-        this.selectedTime.patchValue(`${datetime.hour()}:${datetime.minute()}`);
+        const datetime = this._getDate(value).setZone(this.currentTimeZone.name);
+        this.datetime.patchValue({
+            date: datetime.toJSDate(),
+            time: `${datetime.hour}:${datetime.minute}`,
+        });
         this.changeDetector.markForCheck();
     }
 
-    private _buildTimeOptions(): TimeSelectionOption[] {
-        const timeArray: TimeSelectionOption[] = [];
-        for (let i = startHour; i < endHour; i++) {
-            minutes.forEach(minute => {
-                const hour = i > 9 ? "" + i : "0" + i;
-                const ampm = i >= 12 ? "PM" : "AM";
-                const time = `${hour}:${minute}`;
-                const label = `${time} ${ampm}`;
-                timeArray.push({
-                    value: time,
-                    label: label,
-                } as TimeSelectionOption);
-            });
+    private _getDate(value: Date | string): DateTime {
+        if (typeof value === "string") {
+            return DateTime.fromISO(value);
+        } else {
+            return DateTime.fromJSDate(value);
         }
-        return timeArray;
     }
 }

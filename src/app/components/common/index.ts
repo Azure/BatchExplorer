@@ -8,4 +8,8 @@
  * Common module -> Batch/BatchExplorer specific components
  */
 export * from "./location";
+export * from "./resourcefile-picker";
 export * from "./common.module";
+export * from "./blob-container-picker";
+export * from "./storage-account-picker";
+export * from "./resource-files-properties";

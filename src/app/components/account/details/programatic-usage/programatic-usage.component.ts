@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from
 import { VTabGroupComponent } from "@batch-flask/ui";
 import { BatchAccount } from "app/models";
 import { BatchAccountService, StorageAccountService } from "app/services";
+import { StorageAccountKeysService } from "app/services/storage";
 import { SharedKeyCredentials } from "./shared-key-credentials.model";
 
-import { StorageAccountKeysService } from "app/services/storage";
 import "./programatic-usage.scss";
 
 export enum CredentialType {

@@ -6,6 +6,5 @@ export class AutoStoragePatchDto extends Dto<AutoStoragePatchDto> {
 }
 
 export class AccountPatchDto extends Dto<AccountPatchDto> {
-    @DtoAttr()
-    public autoStorage: AutoStoragePatchDto;
+    @DtoAttr() public autoStorage: AutoStoragePatchDto;
 }

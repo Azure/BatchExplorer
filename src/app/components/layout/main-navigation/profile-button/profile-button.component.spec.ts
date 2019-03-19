@@ -1,21 +1,18 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { MatTooltip, MatTooltipModule } from "@angular/material";
+import { MatProgressSpinnerModule, MatTooltip, MatTooltipModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { LocaleService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import {
-    AutoUpdateService,
+    AutoUpdateService, ElectronRemote, ElectronShell, FileSystemService, UpdateStatus,
+} from "@batch-flask/electron";
+import {
     ClickableComponent,
     ContextMenuItem,
     ContextMenuSeparator,
-    ElectronRemote,
-    ElectronShell,
-    FileSystemService,
-    I18nUIModule,
     MultiContextMenuItem,
-    UpdateStatus,
 } from "@batch-flask/ui";
 import { AdalService, BatchExplorerService } from "app/services";
 import { ProgressInfo } from "builder-util-runtime";
@@ -57,7 +54,7 @@ describe("ProfileButtonComponent", () => {
 
         batchExplorerServiceSpy = {};
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, RouterTestingModule, I18nTestingModule, I18nUIModule],
+            imports: [MatTooltipModule, RouterTestingModule, I18nTestingModule, MatProgressSpinnerModule],
             declarations: [ProfileButtonComponent, ClickableComponent, TestComponent],
             providers: [
                 { provide: AdalService, useValue: adalServiceSpy },

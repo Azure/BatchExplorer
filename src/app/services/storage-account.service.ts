@@ -8,6 +8,10 @@ import { AzureHttpService } from "./azure-http.service";
 import { ArmListResponse } from "./core";
 import { SubscriptionService } from "./subscription";
 
+const STORAGE_ACCOUNT_TYPE_FILTER =
+    "resourceType eq 'Microsoft.Storage/storageAccounts'" +
+    "or resourceType eq 'Microsoft.ClassicStorage/storageAccounts'";
+
 function getSubscriptionIdFromAccountId(accountId: string) {
     const regex = /subscriptions\/(.*)\/resourceGroups/;
     const out = regex.exec(accountId);
@@ -19,7 +23,7 @@ function getSubscriptionIdFromAccountId(accountId: string) {
     }
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class StorageAccountService {
     constructor(private azure: AzureHttpService, private subscriptionService: SubscriptionService) { }
 
@@ -34,10 +38,28 @@ export class StorageAccountService {
         );
     }
 
+    public findByName(subscriptionId: string, accountName: string): Observable<StorageAccount | null> {
+        const params = new HttpParams().set("$filter", `name eq '${accountName}' and (${STORAGE_ACCOUNT_TYPE_FILTER})`);
+        const options = { params };
+
+        return this.subscriptionService.get(subscriptionId).pipe(
+            flatMap((subscription) => {
+                return this.azure.get<ArmListResponse<StorageAccountAttributes>>(
+                    subscription, `/subscriptions/${subscriptionId}/resources`, options);
+            }),
+            map(response => {
+                if (response.value.length === 1) {
+                    return new StorageAccount(response.value[0]);
+                } else {
+                    return null;
+                }
+            }),
+            share(),
+        );
+    }
+
     public list(subscriptionId: string): Observable<List<StorageAccount>> {
-        const params = new HttpParams().set("$filter",
-            "resourceType eq 'Microsoft.Storage/storageAccounts'" +
-            "or resourceType eq 'Microsoft.ClassicStorage/storageAccounts'");
+        const params = new HttpParams().set("$filter", STORAGE_ACCOUNT_TYPE_FILTER);
         const options = { params };
 
         return this.subscriptionService.get(subscriptionId).pipe(

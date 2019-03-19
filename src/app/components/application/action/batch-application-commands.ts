@@ -1,9 +1,8 @@
 import { Injectable, Injector } from "@angular/core";
 import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
-import { ApplicationService, PinnedEntityService } from "app/services";
+import { BatchApplicationService, PinnedEntityService } from "app/services";
 import { ApplicationCreateDialogComponent } from "./create";
 import { ApplicationEditDialogComponent } from "./edit";
 
@@ -16,7 +15,7 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
 
     constructor(
         injector: Injector,
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
         private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
         super(

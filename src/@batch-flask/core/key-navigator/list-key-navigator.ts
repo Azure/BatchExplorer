@@ -17,9 +17,14 @@ export interface KeyNavigableListItem {
     getLabel: () => string;
 }
 
+export interface FocusItemChange<T> {
+    item: T | null;
+    column: number | null;
+}
+
 export class ListKeyNavigator<T extends KeyNavigableListItem> {
     /** Stream that emits whenever the focused item of the list manager changes. */
-    public change = new Subject<T | null>();
+    public change = new Subject<FocusItemChange<T>>();
 
     public set items(items: T[]) {
         this._items = items;
@@ -39,8 +44,11 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
     private _pressedLetters: string[] = [];
     private _focusedItemIndex = -1;
     private _focusedItem: T | null = null;
+    private _focusedColumnIndex = -1;
+
     private _wrap = false;
     private _typeaheadSubscription = Subscription.EMPTY;
+    private _columnCount = 0;
 
     public get focusedItemIndex(): number {
         return this._focusedItemIndex;
@@ -49,9 +57,17 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
     public get focusedItem(): T | null {
         return this._focusedItem;
     }
+    public get focusedColumn(): number | null {
+        return this._focusedColumnIndex < 0 ? null : this._focusedColumnIndex;
+    }
 
     public dispose() {
         this.change.complete();
+    }
+
+    public withColumns(count: number) {
+        this._columnCount = count;
+        return this;
     }
 
     /**
@@ -113,7 +129,19 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
         const previous = this._focusedItem;
         this.updateFocusedItem(item);
         if (this._focusedItem !== previous) {
-            this.change.next(this._focusedItem);
+            this.change.next({ item: this._focusedItem, column:  this.focusedColumn });
+        }
+    }
+
+    public focusColumn(index: number) {
+        if (index >= this._columnCount) {
+            index = this._columnCount - 1;
+        } else if (index < -1) {
+            index = -1;
+        }
+        if (this._focusedColumnIndex !== index) {
+            this._focusedColumnIndex = index;
+            this.change.next({ item: this._focusedItem, column: this.focusedColumn });
         }
     }
 
@@ -137,6 +165,12 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
                 break;
             case KeyCode.ArrowUp:
                 this.focusPreviousItem();
+                break;
+            case KeyCode.ArrowRight:
+                this.focusNextColumn();
+                break;
+            case KeyCode.ArrowLeft:
+                this.focusPreviousColumn();
                 break;
             default:
                 // Attempt to use the `event.key` which also maps it to the user's keyboard language,
@@ -165,6 +199,14 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
         this._focusedItemIndex < 0 && this._wrap ? this.focusLastItem() : this._moveFocus(-1);
     }
 
+    public focusNextColumn(): void {
+        this._moveColumnFocus(1);
+    }
+
+    public focusPreviousColumn(): void {
+       this._moveColumnFocus(-1);
+    }
+
     public focusFirstItem() {
         this._focusByIndex(0, 1);
     }
@@ -180,6 +222,10 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
      */
     private _moveFocus(delta: -1 | 1): void {
         this._focusByIndex(this._focusedItemIndex + delta, delta);
+    }
+
+    private _moveColumnFocus(delta: -1 | 1): void {
+        this.focusColumn(this._focusedColumnIndex + delta);
     }
 
     /**

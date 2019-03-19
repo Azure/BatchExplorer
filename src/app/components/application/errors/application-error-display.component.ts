@@ -12,8 +12,7 @@ import { Subscription } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApplicationErrorDisplayComponent implements OnInit, OnDestroy {
-    @Input()
-    public application: BatchApplication;
+    @Input() public application: BatchApplication;
 
     public get batchAccount() {
         return this._batchAccount;

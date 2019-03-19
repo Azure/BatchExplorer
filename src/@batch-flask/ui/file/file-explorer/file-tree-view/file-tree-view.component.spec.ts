@@ -10,7 +10,6 @@ import {
     ToolbarModule,
 } from "@batch-flask/ui";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
-import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { click, rightClick } from "test/utils/helpers";
 import {
     ContextMenuServiceMock,
@@ -103,7 +102,7 @@ describe("FileTreeViewComponent", () => {
         TestBed.configureTestingModule({
             imports: [
                 ButtonsModule, FocusSectionModule, ElectronTestingModule,
-                ToolbarModule, I18nTestingModule, I18nUIModule,
+                ToolbarModule, I18nTestingModule,
             ],
             declarations: [FileTreeViewComponent, FileTreeViewRowComponent, TestComponent],
             providers: [

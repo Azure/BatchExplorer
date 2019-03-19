@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Subscription } from "rxjs";
-
 import { log } from "@batch-flask/utils";
+import { Subscription } from "rxjs";
 import { AdvancedFilter } from "./advanced-filter";
 
 @Component({

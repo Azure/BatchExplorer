@@ -1,11 +1,10 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { FileModule } from "@batch-flask/ui";
-import { commonModules } from "app/common";
-import { BlobFilesBrowserComponent } from "./blob-files-browser";
+import { FileExplorerModule, FileModule } from "@batch-flask/ui";
 import { NodeFileBrowseComponent } from "./node-file-browse.component";
 
 const components = [
-    NodeFileBrowseComponent, BlobFilesBrowserComponent,
+    NodeFileBrowseComponent,
 ];
 
 const publicModules = [
@@ -13,7 +12,12 @@ const publicModules = [
 @NgModule({
     declarations: components,
     exports: [...components, ...publicModules],
-    imports: [FileModule, ...publicModules, ...commonModules],
+    imports: [
+        CommonModule,
+        FileModule,
+        FileExplorerModule,
+        ...publicModules,
+    ],
 })
 export class FileBrowseModule {
 

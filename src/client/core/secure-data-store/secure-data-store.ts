@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { DataStore, InMemoryDataStore } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import * as path from "path";
-import { FileSystem } from "../fs";
 import { CryptoService } from "./crypto-service";
 
 const SECRET_DATA_FILE = "data/secure.enc";
@@ -14,7 +14,7 @@ const SECRET_DATA_FILE = "data/secure.enc";
 export class SecureDataStore extends InMemoryDataStore implements DataStore {
     private _loadPromise: Promise<void>;
 
-    constructor(private fs: FileSystem, private crypto: CryptoService) {
+    constructor(private fs: FileSystemService, private crypto: CryptoService) {
         super();
         this._loadPromise = this._load();
     }
@@ -32,7 +32,7 @@ export class SecureDataStore extends InMemoryDataStore implements DataStore {
 
     public async removeItem(key: string) {
         await this._loadPromise;
-        delete this._data[key];
+        await super.removeItem(key);
         return this._save();
     }
 

@@ -11,9 +11,9 @@ import { ComponentUtils } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
 import { Observable, Subscription, of } from "rxjs";
+import { map } from "rxjs/operators";
 import { BlobContainerCommands } from "../action";
 
-import { map } from "rxjs/operators";
 import "./data-container-list.scss";
 
 const defaultListOptions = {
@@ -81,6 +81,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this.data.dispose();
         this._onGroupAddedSub.unsubscribe();
     }

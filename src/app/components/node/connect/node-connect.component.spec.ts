@@ -1,7 +1,9 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/ui";
+import { UserConfigurationService } from "@batch-flask/core";
+import { MockUserConfigurationService } from "@batch-flask/core/testing";
+import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/electron";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
@@ -14,7 +16,6 @@ import {
     BatchExplorerService,
     NodeConnectService,
     NodeUserService,
-    SettingsService,
 } from "app/services";
 import { PoolUtils } from "app/utils";
 import { of } from "rxjs";
@@ -35,7 +36,7 @@ describe("NodeConnectComponent", () => {
     let de: DebugElement;
 
     let nodeUserServiceSpy;
-    let settingsServiceSpy;
+    let settingsServiceSpy: MockUserConfigurationService;
     let batchExplorerServiceSpy;
     let fsServiceSpy;
     let electronShellSpy;
@@ -48,11 +49,9 @@ describe("NodeConnectComponent", () => {
             addOrUpdateUser: jasmine.createSpy("").and.returnValue(of(true)),
         };
 
-        settingsServiceSpy = {
-            settings: {
-                "node-connect.default-username": "foo",
-            },
-        };
+        settingsServiceSpy = new MockUserConfigurationService({
+            nodeConnect: {defaultUsername: "foo"},
+        });
 
         batchExplorerServiceSpy = {
             launchApplication: jasmine.createSpy("").and.returnValue(
@@ -110,7 +109,7 @@ describe("NodeConnectComponent", () => {
                 { provide: NodeUserService, useValue: nodeUserServiceSpy },
                 { provide: FileSystemService, useValue: fsServiceSpy },
                 { provide: PermissionService, useValue: null },
-                { provide: SettingsService, useValue: settingsServiceSpy },
+                { provide: UserConfigurationService, useValue: settingsServiceSpy },
                 { provide: BatchExplorerService, useValue: batchExplorerServiceSpy },
                 { provide: ClipboardService, useValue: {} },
                 { provide: ElectronShell, useValue: electronShellSpy },
@@ -235,9 +234,8 @@ describe("NodeConnectComponent", () => {
                 testComponent.pool = new Pool({
                     id: "a",
                     cloudServiceConfiguration: {
-                        currentOSVersion: "*",
+                        osVersion: "*",
                         osFamily: "4",
-                        targetOSVersion: "*",
                     },
                 } as any);
                 fixture.detectChanges();

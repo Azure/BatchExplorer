@@ -1,62 +1,94 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
-import { ArmBatchAccount, BatchQuotas, JobState, Pool } from "app/models";
+import { ArmBatchAccount, JobState, Pool } from "app/models";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, Subscription, forkJoin, merge, of } from "rxjs";
-import { filter, flatMap, map, share, shareReplay, switchMap, take } from "rxjs/operators";
-import { ApplicationService } from "./application.service";
+import { BehaviorSubject, Observable, Subject, combineLatest, forkJoin, of } from "rxjs";
+import { filter, map, publishReplay, refCount, switchMap, takeUntil } from "rxjs/operators";
+import { BatchApplicationService } from "./azure-batch/batch-application/batch-application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";
 import { BatchAccountService } from "./batch-account";
 import { VmSizeService } from "./compute";
 import { ComputeService } from "./compute.service";
 
+export interface PoolQuotas {
+    pools: number;
+    dedicatedCores: number;
+    lowpriCores: number;
+}
+
+export interface ApplicationQuotas {
+    applications: number;
+}
+
+export interface JobQuotas {
+    jobs: number;
+}
+
+export interface BatchQuotas extends PoolQuotas, ApplicationQuotas, JobQuotas {
+
+}
+
+export const EMPTY_QUOTAS: Readonly<BatchQuotas> = Object.freeze({
+    pools: 0,
+    dedicatedCores: 0,
+    lowpriCores: 0,
+    applications: 0,
+    jobs: 0,
+});
+
 /**
  * Service grouping all quotas needed
  */
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class QuotaService implements OnDestroy {
     public quotas: Observable<BatchQuotas>;
     public usage: Observable<BatchQuotas>;
-    private readonly _usage = new BehaviorSubject(new BatchQuotas());
+    private readonly _applicationUsage = new BehaviorSubject<ApplicationQuotas>({ applications: 0 });
+    private readonly _jobUsage = new BehaviorSubject<JobQuotas>({ jobs: 0 });
 
-    private vmSizeCores: StringMap<number>;
-    private _subs: Subscription[] = [];
+    private _destroy = new Subject();
 
     constructor(
         private accountService: BatchAccountService,
         private computeService: ComputeService,
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
         private poolService: PoolService,
         private jobService: JobService,
         private vmSizeService: VmSizeService) {
 
-        this.vmSizeCores = { ...vmSizeService.additionalVmSizeCores };
-        const vmSizeObs = merge(
-            this.vmSizeService.virtualMachineSizes, this.vmSizeService.cloudServiceSizes);
-        this._subs.push(vmSizeObs.subscribe(vmSizes => {
-            if (vmSizes) {
-                vmSizes.forEach(vmSize => this.vmSizeCores[vmSize.id] = vmSize.numberOfCores);
-            }
-        }));
-        this._subs.push(accountService.currentAccount.pipe(
+        accountService.currentAccount.pipe(
+            takeUntil(this._destroy),
             switchMap(() => this.updateUsages()),
-        ).subscribe());
+        ).subscribe();
 
         this.quotas = this.accountService.currentAccount.pipe(
             filter(x => x instanceof ArmBatchAccount),
-            flatMap((account: ArmBatchAccount) => {
+            switchMap((account: ArmBatchAccount) => {
                 return this._computeQuotas(account);
             }),
-            shareReplay(1),
+            publishReplay(1),
+            refCount(),
         );
-        this.usage = this._usage.asObservable();
+
+        this.usage = combineLatest(
+            this._getPoolUsage(),
+            this._jobUsage,
+            this._applicationUsage,
+        ).pipe(
+            map(([poolUsage, jobUsage, applicationUsage]): BatchQuotas => {
+                return { ...poolUsage, ...jobUsage, ...applicationUsage };
+            }),
+            publishReplay(1),
+            refCount(),
+        );
 
         this.updateUsages().subscribe();
     }
 
     public ngOnDestroy() {
-        this._subs.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public refresh() {
@@ -64,39 +96,10 @@ export class QuotaService implements OnDestroy {
     }
 
     public updateUsages() {
-        const obs = this.accountService.currentAccount.pipe(
-            take(1),
-            switchMap((account) => {
-                if (account instanceof ArmBatchAccount) {
-                    return forkJoin(
-                        this.updatePoolUsage(),
-                        this.updateJobUsage(),
-                        this.updateApplicationUsage());
-                } else {
-                    this._usage.next(new BatchQuotas({}));
-                    return of(null);
-                }
-            }),
-            share(),
-        );
-        obs.subscribe();
-        return obs;
-    }
-
-    public updatePoolUsage() {
-        const obs = this.poolService.listAll({
-            select: "id,vmSize,currentDedicatedNodes,currentLowPriorityNodes",
-        });
-        obs.subscribe((pools) => {
-            const { dedicatedCores, lowpriCores } = this._getCoreUsages(pools);
-            this._usage.next(new BatchQuotas({
-                ...this._getExistingQuota().toJS(),
-                pools: pools.size,
-                dedicatedCores,
-                lowpriCores,
-            }));
-        });
-        return obs;
+        return forkJoin(
+            this.poolService.refresh(),
+            this.updateJobUsage(),
+            this.updateApplicationUsage());
     }
 
     public updateJobUsage() {
@@ -105,10 +108,9 @@ export class QuotaService implements OnDestroy {
             select: "id",
         });
         obs.subscribe((jobs) => {
-            this._usage.next(new BatchQuotas({
-                ...this._getExistingQuota().toJS(),
+            this._jobUsage.next({
                 jobs: jobs.size,
-            }));
+            });
         });
         return obs;
     }
@@ -118,45 +120,72 @@ export class QuotaService implements OnDestroy {
             select: "id",
         });
         obs.subscribe((applications) => {
-            this._usage.next(new BatchQuotas({
-                ...this._getExistingQuota().toJS(),
+            this._applicationUsage.next({
                 applications: applications.size,
-            }));
+            });
         });
         return obs;
     }
 
-    public resetUsage() {
-        this._usage.next(new BatchQuotas());
-    }
+    private _getPoolUsage(): Observable<PoolQuotas> {
 
-    private _getExistingQuota() {
-        return this._usage.value || new BatchQuotas();
+        const vmSizeObs = combineLatest(
+            this.vmSizeService.virtualMachineSizes,
+            this.vmSizeService.cloudServiceSizes,
+        ).pipe(
+            takeUntil(this._destroy),
+            map(([vmSizes, csSizes]) => {
+                const cores = { ...this.vmSizeService.additionalVmSizeCores };
+
+                if (csSizes) {
+                    csSizes.forEach(vmSize => cores[vmSize.id] = vmSize.numberOfCores);
+                }
+
+                if (vmSizes) {
+                    vmSizes.forEach(vmSize => cores[vmSize.id] = vmSize.numberOfCores);
+                }
+                return cores;
+            }),
+        );
+
+        return combineLatest(
+            this.poolService.pools,
+            vmSizeObs,
+        ).pipe(
+            map(([pools, cores]) => {
+                const { dedicatedCores, lowpriCores } = this._getCoreUsages(pools, cores);
+                return {
+                    pools: pools.size,
+                    dedicatedCores,
+                    lowpriCores,
+                };
+            }),
+        );
     }
 
     private _computeQuotas(account: ArmBatchAccount): Observable<BatchQuotas> {
         if (account.isBatchManaged) {
-            return of(new BatchQuotas({
+            return of({
                 dedicatedCores: account.properties.dedicatedCoreQuota,
                 lowpriCores: account.properties.lowPriorityCoreQuota,
                 pools: account.properties.poolQuota,
                 jobs: account.properties.activeJobAndJobScheduleQuota,
                 applications: 20,
-            }));
+            });
         } else {
             return this.computeService.getCoreQuota().pipe(map((dedicatedCoreQuota) => {
-                return new BatchQuotas({
+                return {
                     dedicatedCores: dedicatedCoreQuota,
                     lowpriCores: null,
                     pools: account.properties.poolQuota,
                     jobs: account.properties.activeJobAndJobScheduleQuota,
                     applications: 20,
-                });
+                };
             }));
         }
     }
 
-    private _getCoreUsages(pools: List<Pool>) {
+    private _getCoreUsages(pools: List<Pool>, cores: StringMap<number>) {
         let dedicatedCores = 0;
         let lowpriCores = 0;
         if (!pools || pools.size === 0) {
@@ -165,9 +194,9 @@ export class QuotaService implements OnDestroy {
         pools.forEach(pool => {
             if (pool && pool.vmSize) {
                 const key = pool.vmSize.toLowerCase();
-                if (this.vmSizeCores[key]) {
-                    dedicatedCores += (this.vmSizeCores[key] * pool.currentDedicatedNodes);
-                    lowpriCores += (this.vmSizeCores[key] * pool.currentLowPriorityNodes);
+                if (cores[key]) {
+                    dedicatedCores += (cores[key] * pool.currentDedicatedNodes);
+                    lowpriCores += (cores[key] * pool.currentLowPriorityNodes);
                 }
             }
         });

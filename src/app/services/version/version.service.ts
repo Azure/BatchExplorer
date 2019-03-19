@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { UserConfigurationService } from "@batch-flask/core";
 import { AutoUpdateService, ElectronRemote } from "@batch-flask/electron";
-import { SettingsService } from "app/services/settings.service";
-import { Constants } from "common";
+import { BEUserDesktopConfiguration, Constants } from "common";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 export enum VersionType {
@@ -30,7 +30,7 @@ export class VersionService implements OnDestroy {
     constructor(
         private autoUpdateService: AutoUpdateService,
         remote: ElectronRemote,
-        settingsService: SettingsService) {
+        settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
         const app = remote.getCurrentWindow().batchExplorerApp;
         this.version = app.version;
         this.versionType = this._resolveVersionChannel();
@@ -40,8 +40,8 @@ export class VersionService implements OnDestroy {
             this.autoUpdateService.disable();
         }
 
-        this._sub = settingsService.settingsObs.subscribe((settings) => {
-            this._updateAutoUpdateChannel(settings["update.channel"]);
+        this._sub = settingsService.watch("update").subscribe((settings) => {
+            this._updateAutoUpdateChannel(settings && settings.channel);
         });
     }
 

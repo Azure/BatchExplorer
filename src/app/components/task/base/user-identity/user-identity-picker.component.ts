@@ -2,11 +2,10 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef,
 } from "@angular/core";
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
-
 import { AutoUserScope, UserAccount, UserAccountElevationLevel, UserIdentityAttributes } from "app/models";
 import { UserIdentityDto } from "app/models/dtos";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
 
 interface UserOption {
     label: string;
@@ -150,7 +149,7 @@ export class UserIdentityPickerComponent implements OnChanges, OnDestroy {
             }
             return {
                 label,
-                identity: { username: x.name },
+                identity: { username: x.name } as any,
             };
         });
         this.options = options.concat(defaultUsers);

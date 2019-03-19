@@ -4,7 +4,6 @@ import { FileNavigator, FileTreeNode } from "@batch-flask/ui/file/file-navigator
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { DropEvent, TableConfig } from "@batch-flask/ui/table";
 import { DragUtils, prettyBytes } from "@batch-flask/utils";
-import * as moment from "moment";
 import { FileDropEvent } from "../file-explorer.component";
 
 import "./file-table-view.scss";
@@ -43,10 +42,6 @@ export class FileTableViewComponent implements OnChanges {
     public prettyFileSize(size: string) {
         // having falsy issues with contentLength = 0
         return prettyBytes(parseInt(size || "0", 10));
-    }
-
-    public prettyDate(date: Date) {
-        return moment(date).format("MMM Do, YYYY, HH:mm:ss");
     }
 
     public isErrorState(file: any) {

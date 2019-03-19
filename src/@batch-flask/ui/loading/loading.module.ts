@@ -1,6 +1,5 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-
 import { ButtonsModule } from "../buttons/buttons.module";
 import { LoadingComponent } from "./loading.component";
 import { SimpleLoadingComponent } from "./simple-loading.component";

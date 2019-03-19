@@ -1,19 +1,23 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { AccessToken, AccessTokenCache, DataStore, ServerError } from "@batch-flask/core";
+import { AADResourceName, AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { fetch } from "client/core/fetch";
 import { BatchExplorerProperties } from "client/core/properties";
 import { SecureDataStore } from "client/core/secure-data-store";
+import { TelemetryManager } from "client/core/telemetry";
+// import { TelemetryManager } from "client/core/telemetry";
 import { Constants } from "common";
 import { IpcEvent } from "common/constants";
 import { Deferred } from "common/deferred";
+import { dialog } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
-   AccessTokenService,
+    AccessTokenService,
 } from "../access-token";
 import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError } from "../authentication";
 import { AADUser } from "./aad-user";
@@ -48,6 +52,7 @@ export class AADService {
         @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
         private localStorage: DataStore,
         private properties: BatchExplorerProperties,
+        private telemetryManager: TelemetryManager,
         secureStore: SecureDataStore,
         ipcMain: BlIpcMain) {
         this._tokenCache = new AccessTokenCache(secureStore);
@@ -79,7 +84,47 @@ export class AADService {
      * This will retrieve fresh tokens for all tenant and resources needed by BatchExplorer.
      * It will try to use the refresh token cached to prevent a new prompt window if possible.
      */
-    public async login(): Promise<any> {
+    public login(): { started: Promise<any>, done: Promise<any> } {
+        const started = this._ensureTelemetryOptInNationalClouds();
+        return {
+            started,
+            done: started.then(() => this._loginInCurrentCloud()),
+        };
+    }
+
+    public async logout() {
+        await this.localStorage.removeItem(Constants.localStorageKey.currentUser);
+        this._tokenCache.clear();
+        this._tenantsIds.next([]);
+        await this._clearUserSpecificCache();
+        for (const [, window] of this.app.windows) {
+            window.webContents.session.clearStorageData({ storages: ["localStorage"] });
+        }
+        this.app.windows.closeAll();
+        await this.userAuthorization.logout();
+    }
+
+    public async accessTokenFor(tenantId: string, resource?: AADResourceName) {
+        return this.accessTokenData(tenantId, resource).then(x => x.access_token);
+    }
+
+    /**
+     *
+     * @param tenantId
+     * @param resource
+     */
+    public async accessTokenData(tenantId: string, resource?: AADResourceName): Promise<AccessToken> {
+        resource = resource || "arm";
+        if (this._tokenCache.hasToken(tenantId, resource)) {
+            const token = this._tokenCache.getToken(tenantId, resource);
+            if (!token.expireInLess(Constants.AAD.refreshMargin)) {
+                return token;
+            }
+        }
+        return this._retrieveNewAccessToken(tenantId, resource);
+    }
+
+    private async _loginInCurrentCloud() {
         try {
             await this.accessTokenData("common");
             this._authenticationState.next(AuthenticationState.Authenticated);
@@ -102,43 +147,6 @@ export class AADService {
         }
     }
 
-    public async logout() {
-        this.localStorage.removeItem(Constants.localStorageKey.currentUser);
-        this._tokenCache.clear();
-        this._tenantsIds.next([]);
-        this._clearUserSpecificCache();
-        for (const [, window] of this.app.windows) {
-            window.webContents.session.clearStorageData({ storages: ["localStorage"] });
-        }
-        this.app.windows.closeAll();
-        await this.userAuthorization.logout();
-    }
-
-    public async accessTokenFor(tenantId: string, resource?: string) {
-        return this.accessTokenData(tenantId, resource).then(x => x.access_token);
-    }
-
-    /**
-     *
-     * @param tenantId
-     * @param resource
-     */
-    public async accessTokenData(tenantId: string, resource?: string): Promise<AccessToken> {
-        resource = resource || this._getDefaultResource();
-        if (this._tokenCache.hasToken(tenantId, resource)) {
-            const token = this._tokenCache.getToken(tenantId, resource);
-            if (!token.expireInLess(Constants.AAD.refreshMargin)) {
-                return token;
-            }
-        }
-
-        return this._retrieveNewAccessToken(tenantId, resource);
-    }
-
-    private _getDefaultResource() {
-        return this.properties.azureEnvironment.armUrl;
-    }
-
     /**
      * Look into the localStorage to see if there is a user to be loaded
      */
@@ -159,7 +167,7 @@ export class AADService {
      * Will set the currentAccesToken.
      * @return Observable with access token object
      */
-    private async _retrieveNewAccessToken(tenantId: string, resource: string): Promise<AccessToken> {
+    private async _retrieveNewAccessToken(tenantId: string, resource: AADResourceName): Promise<AccessToken> {
         const token = this._tokenCache.getToken(tenantId, resource);
         if (token && token.refresh_token) {
             return this._useRefreshToken(tenantId, resource, token.refresh_token);
@@ -182,7 +190,7 @@ export class AADService {
     /**
      * Load a new access token from the authorization code given at login
      */
-    private async _redeemNewAccessToken(tenantId: string, resource: string, forceReLogin = false) {
+    private async _redeemNewAccessToken(tenantId: string, resource: AADResourceName, forceReLogin = false) {
         const defer = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
 
         try {
@@ -216,7 +224,10 @@ export class AADService {
      * @param resource Resource to access
      * @param refreshToken Refresh token
      */
-    private async _useRefreshToken(tenantId: string, resource: string, refreshToken: string): Promise<AccessToken> {
+    private async _useRefreshToken(
+        tenantId: string,
+        resource: AADResourceName,
+        refreshToken: string): Promise<AccessToken> {
         try {
             const token = await this._accessTokenService.refresh(resource, tenantId, refreshToken);
             this._processAccessToken(tenantId, resource, token);
@@ -252,17 +263,17 @@ export class AADService {
             Authorization: `${token.token_type} ${token.access_token}`,
         };
         const options = { headers };
-        const url = `${this.properties.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
+        const url = `${this.properties.azureEnvironment.arm}tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
         log.info("Listing tenants response", response.status, response.statusText);
         const { value } = await response.json();
         return value.map(x => x.tenantId);
     }
 
-    private _clearUserSpecificCache() {
+    private async _clearUserSpecificCache() {
         this.localStorage.removeItem(Constants.localStorageKey.subscriptions);
         this.localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
-        this._tokenCache.clear();
+        await this._tokenCache.clear();
     }
 
     private async _refreshAllAccessTokens() {
@@ -274,11 +285,37 @@ export class AADService {
         }
     }
 
-    private _resources() {
-        const env = this.properties.azureEnvironment;
+    private _resources(): AADResourceName[] {
         return [
-            env.armUrl,
-            env.batchUrl,
+            "arm",
+            "batch",
         ];
+    }
+
+    private async _ensureTelemetryOptInNationalClouds() {
+        if (this.properties.azureEnvironment.id === AzureEnvironment.Azure.id) {
+            return;
+        }
+        // If user hasn't picked a telemetry setting ask to opt in or out
+        if (this.telemetryManager.userTelemetryEnabled == null) {
+            const wikiLink = "https://github.com/Azure/BatchExplorer/wiki/Crash-reporting-and-telemetry";
+            const response = dialog.showMessageBox({
+                type: "question",
+                buttons: ["Enable", "Disable"],
+                title: "Telemetry settings",
+                message: "Batch Explorer collects anonymous usage data and sends it "
+                    + "to Microsoft to help improve our products and services. "
+                    + `You can learn more about what data is being sent and what it is used for at ${wikiLink}. `
+                    + `You are login into a national cloud, do you wish to keep sending telemetry? `
+                    + "Disabling will restart the application.",
+                noLink: true,
+            });
+
+            if (response === 0) {
+                return this.telemetryManager.enableTelemetry({ restart: false });
+            } else if (response === 1) {
+                return this.telemetryManager.disableTelemetry();
+            }
+        }
     }
 }

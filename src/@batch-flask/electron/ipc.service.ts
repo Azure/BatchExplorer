@@ -1,4 +1,9 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone, OnDestroy } from "@angular/core";
+import { enterZone } from "@batch-flask/core";
+import { EventEmitter } from "electron";
+import { Observable, Subject, fromEvent } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { willUnload } from "./utils";
 
 /**
  * Internal events used by the ipc promise utility to be able to use promise
@@ -15,19 +20,31 @@ export const IpcPromiseEvent = {
 /**
  * Wrapper around electron ipcRenderer
  */
-@Injectable({providedIn: "root"})
-export class IpcService {
+@Injectable({ providedIn: "root" })
+export class IpcService implements OnDestroy {
     private _ipcRenderer: Electron.IpcRenderer;
-    constructor() {
+    private _destroy = new Subject();
+
+    constructor(private zone: NgZone) {
         this._ipcRenderer = require("electron").ipcRenderer;
+    }
+
+    public ngOnDestroy() {
+        this._destroy.next();
+        this._destroy.unsubscribe();
     }
 
     public async sendEvent(eventName: string, data?: any) {
         this._ipcRenderer.send(eventName, data);
     }
 
-    public async on(eventName: string, callback: (...args) => void) {
-        this._ipcRenderer.on(eventName, callback);
+    public on<T = any>(eventName: string): Observable<[EventEmitter, T]> {
+        return fromEvent(this._ipcRenderer, eventName).pipe(
+            takeUntil(this._destroy),
+            takeUntil(willUnload),
+            enterZone(this.zone),
+        ) as any;
+
     }
 
     /**

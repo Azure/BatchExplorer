@@ -7,10 +7,9 @@ import {
     Input,
     ViewChild,
 } from "@angular/core";
+import { log } from "@batch-flask/utils";
 import { List } from "immutable";
 import { Observable } from "rxjs";
-
-import { log } from "@batch-flask/utils";
 
 import "./tags.scss";
 

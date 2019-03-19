@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { DateUtils } from "@batch-flask/utils";
 import { Job, Task, TaskState } from "app/models";
-import * as moment from "moment";
+import { DateTime } from "luxon";
 
 import "./task-timeline.scss";
 
@@ -50,20 +50,6 @@ export class TaskTimelineComponent {
         return this.task.preparationTaskFailed;
     }
 
-    public get creationTime() {
-        return DateUtils.prettyDate(this.task.creationTime);
-    }
-
-    public get startTime() {
-        const info = this.task.executionInfo;
-        return DateUtils.prettyDate(info && info.startTime);
-    }
-
-    public get endTime() {
-        const info = this.task.executionInfo;
-        return DateUtils.prettyDate(info && info.endTime);
-    }
-
     public get retryCount() {
         const info = this.task.executionInfo;
         return info && info.retryCount;
@@ -78,8 +64,10 @@ export class TaskTimelineComponent {
         if (!(info && constraints && constraints.maxWallClockTime)) {
             return false;
         }
-        const maxTime = constraints.maxWallClockTime.asMilliseconds();
-        const runningTime = moment(info.endTime).diff(moment(info.startTime));
+        const maxTime = constraints.maxWallClockTime.as("milliseconds");
+        const runningTime = DateTime.fromJSDate(info.endTime)
+            .diff(DateTime.fromJSDate(info.startTime))
+            .as("milliseconds");
         const diff = maxTime - runningTime;
         // If less than 10%
         return diff / maxTime < 0.1;

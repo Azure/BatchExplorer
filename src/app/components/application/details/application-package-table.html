@@ -1,25 +1,27 @@
-<ng-container *ngIf="displayedPackages.size > 0">
-    <bl-table [(activeItem)]="activeItem" [(selection)]="selection" [data]="displayedPackages">
-        <bl-column name="version">
-            <div *blHeadCellDef>Version</div>
-            <div *blCellDef="let package">{{package.version}}</div>
-        </bl-column>
-        <bl-column name="state">
-            <div *blHeadCellDef>State</div>
-            <div *blCellDef="let package">{{package.state}}</div>
-        </bl-column>
-        <bl-column name="format">
-            <div *blHeadCellDef>Format</div>
-            <div *blCellDef="let package">{{package.format}}</div>
-        </bl-column>
-        <bl-column name="lastActivationTime">
-            <div *blHeadCellDef>Last activation time</div>
-            <div *blCellDef="let package">{{formatDate(package.lastActivationTime)}}</div>
-        </bl-column>
-    </bl-table>
-</ng-container>
+<bl-loading [status]="data.status | async">
+    <ng-container *ngIf="displayedPackages.size > 0">
+        <bl-table [(activeItem)]="activeItem" [(selection)]="selection" [data]="displayedPackages" [commands]="commands">
+            <bl-column name="version">
+                <div *blHeadCellDef>Version</div>
+                <div *blCellDef="let package">{{package.name}}</div>
+            </bl-column>
+            <bl-column name="state">
+                <div *blHeadCellDef>State</div>
+                <div *blCellDef="let package">{{package.properties.state}}</div>
+            </bl-column>
+            <bl-column name="format">
+                <div *blHeadCellDef>Format</div>
+                <div *blCellDef="let package">{{package.properties.format}}</div>
+            </bl-column>
+            <bl-column name="lastActivationTime">
+                <div *blHeadCellDef>Last activation time</div>
+                <div *blCellDef="let package"><bl-date [date]="package.properties.lastActivationTime"></bl-date></div>
+            </bl-column>
+        </bl-table>
+    </ng-container>
+</bl-loading>
 
-<bl-no-item [itemCount]="displayedPackages.size" [filter]="filter">
+<bl-no-item [itemCount]="displayedPackages.size" [filter]="filter" [status]="data.status | async">
     <i icon class="fa fa-file-archive-o"></i>
     <span no-filter>This application contains no package versions</span>
     <span with-filter>Current filter returned no matches</span>

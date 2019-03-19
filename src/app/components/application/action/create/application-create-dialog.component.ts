@@ -1,18 +1,17 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import * as storage from "azure-storage";
-import { Observable, throwError } from "rxjs";
-import { flatMap, tap } from "rxjs/operators";
-
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { log, prettyBytes } from "@batch-flask/utils";
-import { BatchApplication } from "app/models";
+import { BatchApplication, BatchApplicationPackage } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
-import { ApplicationService } from "app/services";
+import { BatchApplicationPackageService, BatchApplicationService } from "app/services";
 import { StorageBlobService } from "app/services/storage";
+import * as storage from "azure-storage";
 import { Constants } from "common";
+import { Observable, of, throwError } from "rxjs";
+import { catchError, share, switchMap, tap } from "rxjs/operators";
 
 @Component({
     selector: "bl-application-create-dialog",
@@ -29,13 +28,14 @@ export class ApplicationCreateDialogComponent {
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<ApplicationCreateDialogComponent>,
-        private applicationService: ApplicationService,
+        private applicationService: BatchApplicationService,
+        private packageService: BatchApplicationPackageService,
         private storageBlobService: StorageBlobService,
         private notificationService: NotificationService) {
 
         const validation = Constants.forms.validation;
         this.form = this.formBuilder.group({
-            id: ["", [
+            name: ["", [
                 Validators.required,
                 Validators.maxLength(validation.maxLength.applicationName),
                 Validators.pattern(validation.regex.id),
@@ -53,7 +53,7 @@ export class ApplicationCreateDialogComponent {
     }
 
     public setValue(application: BatchApplication, version?: string) {
-        // TODO: need to disable appId and version fields if they are supplied
+        this.form.controls.name.disable();
         this.form.patchValue(applicationToCreateFormModel(application, version));
         if (version) {
             this.title = "Update selected package";
@@ -87,39 +87,19 @@ export class ApplicationCreateDialogComponent {
     @autobind()
     public submit(): Observable<any> {
         const formData = this.form.value;
+        const applicationName = this.form.controls.name.value;
 
-        return this.applicationService.put(formData.id, formData.version).pipe(
-            flatMap((packageVersion) => this._uploadAppPackage(this.file, packageVersion.storageUrl)),
-            tap(() => {
-                const obs =  this.applicationService.activatePackage(formData.id, formData.version);
-                obs.subscribe({
-                    next: () => {
-                        this.applicationService.onApplicationAdded.next(formData.id);
-                        this.notificationService.success(
-                            "Application added!",
-                            `Version ${formData.version} for application '${formData.id}' was successfully created!`,
-                        );
-                    },
-                    error: (response: any) => {
-                        /**
-                         * Possible errors
-                         *  - trying to put a package that already exists and has allowUpdates = false
-                         *      409 (The settings for the specified application forbid package updates.)
-                         *      code : "ApplicationDoesntAllowPackageUpdates"
-                         *      message :
-                         *          "The settings for the specified application forbid package updates."
-                         *          RequestId: 0427d452-dbfe-48ff-80f9-680a26bbff27
-                         *          Time:2017-02-13T03:35:27.0685745Z
-                         */
-                        log.error("Failed to activate application package :: ", response);
-                        this.notificationService.error(
-                            "Activation failed",
-                            "The application package was uploaded into storage successfully, "
-                            + "but the activation process failed.",
-                        );
-                    },
-                });
+        return this.packageService.put(applicationName, formData.version).pipe(
+            switchMap((pkg: BatchApplicationPackage) => {
+                return this._uploadAppPackage(this.file, pkg.properties.storageUrl).pipe(
+                    tap(() => {
+                        this.applicationService.onApplicationAdded.next(pkg.applicationId);
+                        this.packageService.onPackageAdded.next(pkg.id);
+                    }),
+                    switchMap(() => this._tryActivate(applicationName, pkg)),
+                );
             }),
+            share(),
         );
     }
 
@@ -128,5 +108,35 @@ export class ApplicationCreateDialogComponent {
             return throwError("Valid file not selected");
         }
         return this.storageBlobService.uploadToSasUrl(sasUrl, file.path);
+    }
+
+    private _tryActivate(applicationName: string, pkg: BatchApplicationPackage): Observable<any> {
+        return this.packageService.activate(pkg.id).pipe(
+            tap(() => {
+                this.notificationService.success(
+                    "Application added!",
+                    `Version ${pkg.name} for application '${applicationName}' was successfully created!`,
+                );
+            }),
+            catchError((err) => {
+                /**
+                 * Possible errors
+                 *  - trying to put a package that already exists and has allowUpdates = false
+                 *      409 (The settings for the specified application forbid package updates.)
+                 *      code : "ApplicationDoesntAllowPackageUpdates"
+                 *      message :
+                 *          "The settings for the specified application forbid package updates."
+                 *          RequestId: 0427d452-dbfe-48ff-80f9-680a26bbff27
+                 *          Time:2017-02-13T03:35:27.0685745Z
+                 */
+                log.error("Failed to activate application package :: ", err);
+                this.notificationService.error(
+                    "Activation failed",
+                    "The application package was uploaded into storage successfully, "
+                    + "but the activation process failed.",
+                );
+                return of(null);
+            }),
+        );
     }
 }

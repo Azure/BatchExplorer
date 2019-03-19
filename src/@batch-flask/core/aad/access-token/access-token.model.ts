@@ -1,6 +1,5 @@
-import * as moment from "moment";
-
 import { exists } from "@batch-flask/utils";
+import { DateTime } from "luxon";
 
 // tslint:disable:variable-name
 
@@ -56,20 +55,24 @@ export class AccessToken {
         this.refresh_token = data.refresh_token;
         this.token_type = data.token_type;
         this.expires_in = data.expires_in;
-        this.expires_on = data.expires_on;
+        this.expires_on = new Date(data.expires_on);
         this.ext_expires_in = data.ext_expires_in;
-        this.not_before = data.not_before;
+        this.not_before = new Date(data.not_before);
     }
 
     /**
      * @return true if the token is going to expire in less than the specified number of milliseconds
      */
     public expireInLess(milliseconds: number): boolean {
-        const expireIn = moment(this.expires_on).diff(moment());
+        const expireIn = DateTime.fromJSDate(this.expires_on).diff(DateTime.utc()).as("milliseconds");
         return expireIn < milliseconds;
     }
 
     public hasExpired(): boolean {
         return this.expireInLess(0);
+    }
+
+    public toHeader() {
+        return `${this.token_type} ${this.access_token}`;
     }
 }

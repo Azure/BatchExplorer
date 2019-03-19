@@ -1,13 +1,10 @@
-import { List } from "immutable";
-import * as moment from "moment";
-
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import {
     ApplicationPackageReference, ApplicationPackageReferenceAttributes,
 } from "app/models/application-package-reference";
 import { ComputeNodeInformation } from "app/models/azure-batch/compute-node-information";
 import { TaskContainerSettings } from "app/models/container-setup";
-import { MultiInstanceSettings } from "app/models/multi-instance-settings";
+import { MultiInstanceSettings, MultiInstanceSettingsAttributes } from "app/models/multi-instance-settings";
 import { NameValuePair, NameValuePairAttributes } from "app/models/name-value-pair";
 import { ResourceFile, ResourceFileAttributes } from "app/models/resource-file";
 import { TaskConstraints } from "app/models/task-constraints";
@@ -16,6 +13,8 @@ import { TaskExecutionInformation } from "app/models/task-execution-information"
 import { TaskExitConditions } from "app/models/task-exit-conditions";
 import { TaskOutputFile } from "app/models/task-output-file";
 import { UserIdentity } from "app/models/user-identity";
+import { List } from "immutable";
+import { DateTime } from "luxon";
 import { AuthenticationTokenSettings, AuthenticationTokenSettingsAttributes } from "../authentication-token-settings";
 import { AffinityInformation } from "./affinity-information";
 import { TaskStatistics, TaskStatisticsAttributes } from "./task-statistics";
@@ -42,7 +41,7 @@ export interface TaskAttributes {
     constraints: TaskConstraints;
     executionInfo: TaskExecutionInformation;
     nodeInfo: ComputeNodeInformation;
-    multiInstanceSettings: MultiInstanceSettings;
+    multiInstanceSettings: MultiInstanceSettingsAttributes;
     stats: TaskStatisticsAttributes;
     dependsOn: TaskDependencies;
     applicationPackageReferences: ApplicationPackageReferenceAttributes[];
@@ -96,8 +95,9 @@ export class Task extends Record<TaskAttributes> {
         if (info.exitCode === 0) {
             return false;
         }
-        const maxTime = constraints.maxWallClockTime.asMilliseconds();
-        const runningTime = moment(info.endTime).diff(moment(info.startTime));
+        const maxTime = constraints.maxWallClockTime.as("milliseconds");
+        const runningTime = DateTime.fromJSDate(info.endTime).diff(DateTime.fromJSDate(info.startTime))
+            .as("milliseconds");
         return maxTime - runningTime < 0;
     }
 
@@ -116,6 +116,10 @@ export class Task extends Record<TaskAttributes> {
 
     public get routerLink() {
         return ["/jobs", this.jobId, "tasks", this.id];
+    }
+
+    public get name() {
+        return this.id;
     }
 }
 

@@ -12,9 +12,17 @@ bl-monitor-chart {
     > .header {
         padding: 5px 10px;
         flex-basis: $header-height;
-        .timeframe-picker {
-            float: right;
-            cursor: pointer;
+        display: flex;
+        align-items: center;
+
+        h2 {
+            flex: 1;
+        }
+
+        .aggregation {
+            color: $primary-color;
+            background: $secondary-background;
+            padding: 2px 4px;
         }
     }
 

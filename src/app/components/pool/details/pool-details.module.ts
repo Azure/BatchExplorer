@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
+import { ResourceFilesPropertiesModule } from "app/components/common";
 import { JobActionModule } from "app/components/job/action";
 import { NodeBrowseModule } from "app/components/node/browse";
 import { PoolBaseModule } from "app/components/pool/base";
@@ -26,6 +26,7 @@ const components = [
         JobActionModule,
         NodeBrowseModule,
         StartTaskModule,
+        ResourceFilesPropertiesModule,
     ],
 })
 export class PoolDetailsModule {

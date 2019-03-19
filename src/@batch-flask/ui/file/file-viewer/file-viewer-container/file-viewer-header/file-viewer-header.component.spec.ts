@@ -2,9 +2,11 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ServerError } from "@batch-flask/core";
+import { TimeZoneTestingModule } from "@batch-flask/core/testing";
 import { ElectronRemote, ElectronShell } from "@batch-flask/electron";
 import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
+import { DateModule } from "@batch-flask/ui/date";
 import { File, FileLoader } from "@batch-flask/ui/file";
 import { DateUtils } from "@batch-flask/utils";
 import { of, throwError } from "rxjs";
@@ -48,7 +50,7 @@ describe("FileViewerHeaderComponent", () => {
 
         notificationSpy = new NotificationServiceMock();
         TestBed.configureTestingModule({
-            imports: [ButtonsModule, ElectronTestingModule],
+            imports: [ButtonsModule, ElectronTestingModule, DateModule, TimeZoneTestingModule],
             declarations: [FileViewerHeaderComponent, TestComponent],
             providers: [
                 notificationSpy.asProvider(),
@@ -123,7 +125,8 @@ describe("FileViewerHeaderComponent", () => {
     });
 
     it("open the file in the default editor", () => {
-        const cacheSpy = spyOn(testComponent.fileLoader, "cache").and.returnValue(of("/some/local/path/foo.ts"));
+        const cacheSpy = spyOn(testComponent.fileLoader, "getLocalVersionPath")
+            .and.returnValue(of("/some/local/path/foo.ts"));
         click(de.query(By.css("bl-button.open-in-default-app")));
         expect(cacheSpy).toHaveBeenCalledOnce();
 

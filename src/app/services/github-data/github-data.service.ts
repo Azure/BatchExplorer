@@ -1,10 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, OnDestroy } from "@angular/core";
+import { UserConfigurationService } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
-import { Constants } from "common";
+import { BEUserConfiguration, Constants } from "common";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { flatMap, map, publishReplay, refCount, share, takeUntil } from "rxjs/operators";
-import { SettingsService } from "../settings.service";
 
 @Injectable({ providedIn: "root" })
 export class GithubDataService implements OnDestroy {
@@ -14,13 +14,13 @@ export class GithubDataService implements OnDestroy {
 
     constructor(
         private http: HttpClient,
-        private settingsService: SettingsService) {
+        private settingsService: UserConfigurationService<BEUserConfiguration>) {
 
-        this._baseUrl = this.settingsService.settingsObs.pipe(
+        this._baseUrl = this.settingsService.watch("githubData").pipe(
             takeUntil(this._destroy),
             map((settings) => {
-                const branch = settings["github-data.source.branch"];
-                const repo = settings["github-data.source.repo"];
+                const branch = settings.branch;
+                const repo = settings.repo;
                 return {
                     branch: branch || "master",
                     repo: repo || "Azure/BatchExplorer-data",

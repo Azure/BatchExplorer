@@ -2,12 +2,11 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnDestroy,
 } from "@angular/core";
 import { ElectronShell } from "@batch-flask/electron";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { BatchQuotas, EMPTY_QUOTAS, QuotaService } from "app/services";
+import { Constants } from "common";
 import { Subscription } from "rxjs";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
-import { BatchQuotas, BatchQuotasAttributes } from "app/models";
-import { QuotaService } from "app/services";
-import { Constants } from "common";
 import "./inline-quota.scss";
 
 const labels = {
@@ -30,13 +29,13 @@ export class InlineQuotaComponent implements OnChanges, OnDestroy {
 
     public bufferValue = 100;
 
-    public quotas: BatchQuotas = new BatchQuotas();
-    public use: BatchQuotas = new BatchQuotas();
+    public quotas: BatchQuotas = EMPTY_QUOTAS;
+    public use: BatchQuotas = EMPTY_QUOTAS;
     public loadingUse = true;
     public statuses = [];
     public expanded: boolean = false;
 
-    private _include: Array<keyof (BatchQuotasAttributes)> = [];
+    private _include: Array<keyof BatchQuotas> = [];
     private _quotaSub: Subscription;
     private _usageSub: Subscription;
 

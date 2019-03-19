@@ -5,14 +5,14 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule, SelectModule } from "@batch-flask/ui";
+import { SelectModule } from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { DurationPickerComponent } from "@batch-flask/ui/duration-picker";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { NodeUserCredentialsFormComponent } from "app/components/node/connect";
 import { SSHKeyPickerComponent } from "app/components/node/connect/ssh-key-picker";
 import { SSHKeyService } from "app/services";
-import * as moment from "moment";
+import { Duration } from "luxon";
 import { of } from "rxjs";
 import { click, updateInput } from "test/utils/helpers";
 import { SimpleFormMockComponent } from "test/utils/mocks/components";
@@ -48,7 +48,7 @@ describe("NodeUserCredentialsForm", () => {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule, ReactiveFormsModule, MaterialModule,
-                NoopAnimationsModule, SelectModule, I18nTestingModule, I18nUIModule,
+                NoopAnimationsModule, SelectModule, I18nTestingModule,
             ],
             declarations: [
                 NodeUserCredentialsFormComponent, TestComponent, SimpleFormMockComponent,
@@ -107,7 +107,7 @@ describe("NodeUserCredentialsForm", () => {
                 username: "myusername",
                 password: "mypassword123",
                 isAdmin: false,
-                expireIn: moment.duration({ days: 1 }),
+                expireIn: Duration.fromObject({ days: 1 }),
             });
         });
 

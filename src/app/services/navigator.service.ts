@@ -1,8 +1,10 @@
-import { Injectable, NgZone } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
-import { IpcService } from "@batch-flask/ui";
+import { IpcService } from "@batch-flask/electron";
 import { BatchExplorerLink, BatchExplorerLinkAction, Constants } from "common";
 import * as decodeUriComponent from "decode-uri-component";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { URLSearchParams } from "url";
 import { BatchAccountService } from "./batch-account";
 
@@ -14,21 +16,34 @@ export interface GotoOptions {
     accountId?: string;
 }
 
-@Injectable({providedIn: "root"})
-export class NavigatorService {
+@Injectable({ providedIn: "root" })
+export class NavigatorService implements OnDestroy {
+    private _destroy = new Subject();
+
     constructor(
         private accountService: BatchAccountService,
         private router: Router,
-        private zone: NgZone,
         private ipc: IpcService) {
     }
 
+    public ngOnDestroy() {
+        this._destroy.next();
+        this._destroy.unsubscribe();
+    }
+
     public init() {
-        this.ipc.on(Constants.rendererEvents.batchExplorerLink, (event, link) => {
-            this.zone.run(() => {
-                setTimeout(() => {
-                    this.openBatchExplorerLink(link);
-                });
+        this.ipc.on(Constants.rendererEvents.batchExplorerLink).pipe(
+            takeUntil(this._destroy),
+        ).subscribe(([_, link]) => {
+            setTimeout(() => {
+                this.openBatchExplorerLink(link);
+            });
+        });
+        this.ipc.on(Constants.rendererEvents.navigateTo).pipe(
+            takeUntil(this._destroy),
+        ).subscribe(([_, link]) => {
+            setTimeout(() => {
+                this.goto(link);
             });
         });
     }

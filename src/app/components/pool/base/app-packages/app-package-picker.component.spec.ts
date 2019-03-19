@@ -1,181 +1,186 @@
-import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
+import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { MaterialModule, ServerError } from "@batch-flask/core";
-import { PermissionService, SelectModule } from "@batch-flask/ui";
-import { List } from "immutable";
-
+import { MaterialModule } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { FormModule, LoadingModule, PermissionService } from "@batch-flask/ui";
+import { EditableTableComponent, EditableTableModule } from "@batch-flask/ui/form/editable-table";
+import { EditableTableSelectCellComponent } from "@batch-flask/ui/form/editable-table/select-cell";
 import { AppPackagePickerComponent } from "app/components/pool/base";
-import { BatchApplication } from "app/models";
-import { ApplicationService } from "app/services";
+import { ApplicationPackageReferenceAttributes, BatchApplication } from "app/models";
+import { BatchApplicationPackageService, BatchApplicationService } from "app/services";
+import { AutoStorageService } from "app/services/storage";
+import { List } from "immutable";
+import { BehaviorSubject, of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 
 @Component({
     template: `
-        <bl-app-package-picker [(ngModel)]="appPackages" (hasLinkedStorage)="handleHasLinkedStorage($event)">
+        <bl-app-package-picker [formControl]="references" >
         </bl-app-package-picker>
     `,
 })
 class TestComponent {
-    public appPackages: string[] = [];
-    public hasLinkedStorage: boolean = true;
-
-    public handleHasLinkedStorage(hasLinkedStorage) {
-        this.hasLinkedStorage = hasLinkedStorage;
-    }
+    public references = new FormControl<ApplicationPackageReferenceAttributes[]>([]);
 }
+
+const applications = {
+    apple: Fixtures.application.create({ id: "/applications/apple", name: "apple" }),
+    banana: Fixtures.application.create({ id: "/applications/banana", name: "banana" }),
+    orange: Fixtures.application.create({ id: "/applications/orange", name: "orange" }),
+};
+
+const packages = {
+    [applications.apple.id]: List([{ name: "a1" }]),
+    [applications.banana.id]: List([{ name: "b1" }, { name: "b2" }]),
+    [applications.orange.id]: List([{ name: "o1" }, { name: "o2" }]),
+};
 
 describe("AppPackagePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: AppPackagePickerComponent;
-    let debugElement: DebugElement;
+    let de: DebugElement;
 
     let listProxy: MockListView<BatchApplication, any>;
     let applicationServiceSpy;
+    let applicationPackageServiceSpy;
+    let autoStorageServiceSpy;
+    let editableTableEl: DebugElement;
+    let editableTable: EditableTableComponent;
 
     beforeEach(() => {
         listProxy = new MockListView(BatchApplication, {
             cacheKey: "id",
             items: [
-                Fixtures.application.create({ id: "apple", packages: List([{ version: "a1" }]) }),
-                Fixtures.application.create({ id: "banana", packages: List([{ version: "b1" }, { version: "b2" }]) }),
-                Fixtures.application.create({ id: "orange", packages: List([{ version: "o1" }, { version: "o2" }]) }),
+                applications.apple,
+                applications.banana,
+                applications.orange,
             ],
         });
 
         applicationServiceSpy = {
             listView: () => listProxy,
-            isAutoStorageError: (error: ServerError) => {
-                return error && (error.code === "AccountNotEnabledForAutoStorage");
-            },
+            getByName: jasmine.createSpy("getByName").and.callFake((appName: string) => {
+                return of(applications[appName]);
+            }),
+        };
+
+        applicationPackageServiceSpy = {
+            listAll: jasmine.createSpy("listAll").and.callFake((appId: string) => {
+                return of(packages[appId] || List([]));
+            }),
+        };
+
+        autoStorageServiceSpy = {
+            hasAutoStorage: new BehaviorSubject(true),
         };
 
         TestBed.configureTestingModule({
-            imports: [FormsModule, MaterialModule, NoopAnimationsModule, ReactiveFormsModule, SelectModule],
+            imports: [
+                FormsModule,
+                MaterialModule,
+                NoopAnimationsModule,
+                ReactiveFormsModule,
+                EditableTableModule,
+                I18nTestingModule,
+                LoadingModule,
+                FormModule,
+            ],
             declarations: [AppPackagePickerComponent, TestComponent],
             providers: [
-                { provide: ApplicationService, useValue: applicationServiceSpy },
+                { provide: BatchApplicationService, useValue: applicationServiceSpy },
+                { provide: BatchApplicationPackageService, useValue: applicationPackageServiceSpy },
+                { provide: AutoStorageService, useValue: autoStorageServiceSpy },
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: PermissionService, useValue: {} },
             ],
-            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        debugElement = fixture.debugElement.query(By.css("bl-app-package-picker"));
-        component = debugElement.componentInstance;
+        de = fixture.debugElement.query(By.css("bl-app-package-picker"));
+        component = de.componentInstance;
         fixture.detectChanges();
+
+        editableTableEl = fixture.debugElement.query(By.css("bl-editable-table"));
+        editableTable = editableTableEl.componentInstance;
     });
 
-    it("has linked storage", () => {
-        expect(testComponent.hasLinkedStorage).toBe(true);
-    });
+    function getCells(rowIndex: number): EditableTableSelectCellComponent[] {
+        const rows = editableTableEl.queryAll(By.css("tbody tr"));
+        const cellEls = rows[rowIndex].queryAll(By.css("bl-editable-table-select-cell"));
+        return cellEls.map(x => x.componentInstance);
+    }
 
     it("should have the correct column labels", () => {
-        const columns = debugElement.queryAll(By.css("thead th"));
+        const columns = de.queryAll(By.css("thead th"));
 
         expect(columns.length).toBe(3); // include delete button column
         expect(columns[0].nativeElement.textContent).toContain("Application");
-        expect(columns[1].nativeElement.textContent).toContain("Package Version");
+        expect(columns[1].nativeElement.textContent).toContain("Version");
     });
 
-    describe("check setup", () => {
-        let applicationMap: any;
+    it("should have loaded the applications", () => {
+        expect(component.applicationNames.length).toEqual(3);
+        expect(component.applicationNames).toEqual([
+            "apple",
+            "banana",
+            "orange",
+        ]);
 
-        beforeEach(() => {
-            applicationMap = (component as any)._applicationMap;
-        });
-
-        it("should have 3 applications", () => {
-            expect(component.applications.size).toEqual(3);
-        });
-
-        it("package map should be populated", () => {
-            expect(Object.keys(applicationMap).length).toEqual(3);
-
-            expect("apple" in applicationMap).toBeTruthy();
-            expect(applicationMap["apple"].length).toEqual(1);
-
-            expect("banana" in applicationMap).toBeTruthy();
-            expect(applicationMap["banana"].length).toEqual(2);
-
-            expect("orange" in applicationMap).toBeTruthy();
-            expect(applicationMap["orange"].length).toEqual(2);
-
-            expect("bob" in applicationMap).toBeFalsy();
-        });
-
-        it("picking application sets package version map", () => {
-            component.applicationSelected("banana", 0);
-            expect(component.packageMap.length).toEqual(1);
-            expect(component.packageMap[0].size).toEqual(2);
-
-            const versions = component.packageMap[0].toArray();
-            expect(versions[0]).toEqual("b1");
-            expect(versions[1]).toEqual("b2");
-        });
+        const cells = getCells(0);
+        expect(cells[0].actualOptions).toEqual(["apple", "banana", "orange"]);
     });
 
-    describe("check dom items", () => {
-        let applcationInput: DebugElement;
-        let versionInput: DebugElement;
+    it("picking application load versions and update select", () => {
+        editableTable.items.at(0).patchValue({ applicationId: "banana" });
+        fixture.detectChanges();
 
-        beforeEach(() => {
-            component.addNewItem();
-            fixture.detectChanges();
+        expect(applicationServiceSpy.getByName).toHaveBeenCalledOnce();
+        expect(applicationServiceSpy.getByName).toHaveBeenCalledWith("banana");
 
-            applcationInput = debugElement.query(By.css("bl-select[formControlName=applicationId]"));
-            versionInput = debugElement.query(By.css("bl-select[formControlName=version]"));
-        });
+        expect(applicationPackageServiceSpy.listAll).toHaveBeenCalledOnce();
+        expect(applicationPackageServiceSpy.listAll).toHaveBeenCalledWith("/applications/banana");
+        fixture.detectChanges();
 
-        it("application and version inputs are visible", () => {
-            expect(applcationInput).not.toBeFalsy();
-            expect(versionInput).not.toBeFalsy();
-        });
-
-        it("Should have the right default values", () => {
-            expect(applcationInput.nativeElement.value).toBeFalsy();
-            expect(versionInput.nativeElement.value).toBeFalsy();
-        });
+        const cells = getCells(0);
+        expect(cells[1].actualOptions).toEqual(["b1", "b2"]);
     });
 
+    it("propagates the changes", () => {
+        editableTable.writeValue([
+            { applicationId: "orange", version: "o1" },
+            { applicationId: "banana", version: "b1" },
+        ]);
+        fixture.detectChanges();
+
+        expect(testComponent.references.value).toEqual([
+            { applicationId: "orange", version: "o1" },
+            { applicationId: "banana", version: "b1" },
+        ]);
+    });
     describe("validation", () => {
         it("validates ok with correct values", () => {
-            const values = {
-                value: [
-                    { applicationId: "orange", version: "o1" },
-                    { applicationId: "banana", version: "b1" },
-                ],
-            } as any;
-
-            const result = component.validate(values);
-            expect(result).toBeNull();
+            editableTable.writeValue([
+                { applicationId: "orange", version: "o1" },
+                { applicationId: "banana", version: "b1" },
+            ]);
+            fixture.detectChanges();
+            expect(de.nativeElement.textContent).not.toContain("specified twice");
         });
 
         it("validation fails with duplicates", () => {
-            const values = new FormControl([
+            editableTable.writeValue([
                 { applicationId: "orange", version: "o1" },
                 { applicationId: "banana", version: "b1" },
                 { applicationId: "orange", version: "o1" },
             ]);
-
-            const result = component.validate(values);
-            expect(result.duplicate).toBe(true);
-        });
-
-        it("validation fails with invalid selection", () => {
-            const values = new FormControl([
-                { applicationId: "orange", version: "o1" },
-                { applicationId: "banana", version: "invalid" },
-            ]);
-
-            const result = component.validate(values);
-            expect(result.invalid).toBe(true);
+            fixture.detectChanges();
+            expect(de.nativeElement.textContent).toContain("Application orange has version o1 specified twice");
         });
     });
 });

@@ -1,41 +1,33 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
-
+import { autobind } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
-import { BatchApplication, PackageState } from "app/models";
+import { BatchApplication } from "app/models";
 import { ComponentUtils } from "app/utils";
+import { BatchApplicationPackageCommands } from "../action";
 
 @Component({
     selector: "bl-application-packages",
     templateUrl: "application-packages.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [BatchApplicationPackageCommands],
 })
-
 export class ApplicationPackagesComponent implements OnChanges {
 
     @Input() public application: BatchApplication;
 
     public deleteEnabled = false;
-    public editEnabled = false;
     public activateEnabled = false;
 
     private _selection: ListSelection = new ListSelection();
-    private _activeItem: string;
 
-    constructor(private changeDetector: ChangeDetectorRef) {
+    constructor(public commands: BatchApplicationPackageCommands, private changeDetector: ChangeDetectorRef) {
 
     }
 
     public ngOnChanges(changes) {
         if (ComponentUtils.recordChangedId(changes.application)) {
-            setTimeout(() => {
-                this._resetEnabled();
-            });
+            this._resetEnabled();
         }
-    }
-
-    public activeItemChanged(key: string) {
-        this._activeItem = key;
-        this._updateEnabled();
     }
 
     public selectionChanged(selection: ListSelection) {
@@ -43,35 +35,41 @@ export class ApplicationPackagesComponent implements OnChanges {
         this._updateEnabled();
     }
 
-    private _activatedItemEditEnabled() {
-        return this.application.allowUpdates && !this._isPackagePending(this._activeItem)
-            && Boolean(this._activeItem) && !this._selection.hasMultiple();
+    @autobind()
+    public deleteSelection() {
+        return this.commands.delete.executeFromSelection(this._selection);
     }
 
-    private _activatedItemDeleteEnabled() {
-        return this.application.allowUpdates && Boolean(this._activeItem);
+    @autobind()
+    public activateSelection() {
+        return this.commands.activate.executeFromSelection(this._selection);
     }
 
-    private _activatedItemActivateEnabled() {
-        return this._isPackagePending(this._activeItem) && !this._selection.hasMultiple();
+    private _isDeleteButtonEnabled() {
+        return this.application.properties.allowUpdates && this._selection.hasAny();
     }
 
-    private _isPackagePending(version: string): boolean {
-        if (!version) { return false; }
-        const pkg = this.application.packages.filter(x => x.version === version).first();
-        return pkg && pkg.state === PackageState.pending;
+    private _checkActivateButtonEnabled() {
+        if (this._selection.isEmpty() || this._selection.hasMultiple()) {
+            this.activateEnabled = false;
+        } else {
+            const packageId = this._selection.first();
+            this.commands.getFromCache(packageId).subscribe((pkg) => {
+                this.activateEnabled = this.commands.activate.enabled(pkg);
+                this.changeDetector.markForCheck();
+            });
+        }
     }
 
     private _updateEnabled() {
-        this.activateEnabled = this._activatedItemActivateEnabled();
-        this.deleteEnabled = this._activatedItemDeleteEnabled();
-        this.editEnabled = this._activatedItemEditEnabled();
+        this.deleteEnabled = this._isDeleteButtonEnabled();
+        this._checkActivateButtonEnabled();
         this.changeDetector.markForCheck();
     }
 
     private _resetEnabled() {
         this.deleteEnabled = false;
-        this.editEnabled = false;
         this.activateEnabled = false;
+        this.changeDetector.markForCheck();
     }
 }

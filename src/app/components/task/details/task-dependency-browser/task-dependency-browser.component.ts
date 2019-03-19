@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
-import { List } from "immutable";
-
 import { Task, TaskDependencies, TaskDependency } from "app/models";
 import { TaskService } from "app/services";
 import { ComponentUtils } from "app/utils";
+import { List } from "immutable";
 
 @Component({
     selector: "bl-task-dependency-browser",

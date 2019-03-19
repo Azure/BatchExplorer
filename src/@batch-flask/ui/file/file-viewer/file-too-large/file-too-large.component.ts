@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
-import { ElectronRemote, ElectronShell } from "@batch-flask/ui/electron";
+import { ElectronRemote, ElectronShell } from "@batch-flask/electron";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -51,7 +51,7 @@ export class FileTooLargeComponent {
         this.downloading = true;
         this.changeDetector.markForCheck();
 
-        this.fileLoader.cache().subscribe((pathToFile) => {
+        this.fileLoader.getLocalVersionPath().subscribe((pathToFile) => {
             this.downloading = false;
             this.changeDetector.markForCheck();
 

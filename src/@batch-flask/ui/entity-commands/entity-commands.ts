@@ -10,6 +10,7 @@ import { EntityCommand, EntityCommandAttributes } from "./entity-command";
 
 export interface ActionableEntity {
     id: string;
+    name: string;
 }
 
 export interface EntityCommandsConfig {

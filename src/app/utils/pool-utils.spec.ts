@@ -7,28 +7,24 @@ describe("PoolUtils", () => {
         it("check os friendly name mappings", () => {
             const cs2Pool = new Pool({
                 cloudServiceConfiguration: {
-                    currentOSVersion: "*",
                     osFamily: CloudServiceOsFamily.windowsServer2008R2,
                 },
             });
 
             const cs3Pool = new Pool({
                 cloudServiceConfiguration: {
-                    currentOSVersion: "*",
                     osFamily: CloudServiceOsFamily.windowsServer2012,
                 },
             });
 
             const cs4Pool = new Pool({
                 cloudServiceConfiguration: {
-                    currentOSVersion: "*",
                     osFamily: CloudServiceOsFamily.windowsServer2012R2,
                 },
             });
 
             const cs5Pool = new Pool({
                 cloudServiceConfiguration: {
-                    currentOSVersion: "*",
                     osFamily: CloudServiceOsFamily.windowsServer2016,
                 },
             });
@@ -70,28 +66,24 @@ describe("PoolUtils", () => {
         it("check icon selection based on pool name", () => {
             const cs2Pool = new Pool({
                 cloudServiceConfiguration: {
-                    currentOSVersion: "*",
                     osFamily: CloudServiceOsFamily.windowsServer2008R2,
                 },
             });
 
             const cs3Pool = new Pool({
                 cloudServiceConfiguration: {
-                    currentOSVersion: "*",
                     osFamily: CloudServiceOsFamily.windowsServer2012,
                 },
             });
 
             const cs4Pool = new Pool({
                 cloudServiceConfiguration: {
-                    currentOSVersion: "*",
                     osFamily: CloudServiceOsFamily.windowsServer2012R2,
                 },
             });
 
             const cs5Pool = new Pool({
                 cloudServiceConfiguration: {
-                    currentOSVersion: "*",
                     osFamily: CloudServiceOsFamily.windowsServer2016,
                 },
             });

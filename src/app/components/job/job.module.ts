@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
 import { JobActionModule } from "app/components/job/action";
 import { JobAdvancedFilterComponent } from "app/components/job/browse/filter/job-advanced-filter.component";

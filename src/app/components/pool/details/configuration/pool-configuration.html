@@ -8,10 +8,10 @@
             <bl-text-property label="Current low priority" [value]="decorator.currentLowPriorityNodes"></bl-text-property>
             <bl-text-property label="Target low priority" [value]="decorator.targetLowPriorityNodes"></bl-text-property>
             <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
-            <bl-text-property label="State transistion Time" [value]="decorator.stateTransitionTime"></bl-text-property>
+            <bl-date-property label="State transistion Time" [value]="pool.stateTransitionTime"></bl-date-property>
             <bl-text-property label="Allocation state" [value]="decorator.allocationState"></bl-text-property>
-            <bl-text-property label="Allocation state transition time" [value]="decorator.allocationStateTransitionTime"></bl-text-property>
-            <bl-text-property label="Creation time" [value]="decorator.creationTime"></bl-text-property>
+            <bl-date-property label="Allocation state transition time" [value]="pool.allocationStateTransitionTime"></bl-date-property>
+            <bl-date-property label="Creation time" [value]="pool.creationTime"></bl-date-property>
             <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
             <bl-text-property label="Enable autoscale" [value]="decorator.enableAutoScale"></bl-text-property>
             <bl-text-property label="Autoscale evaluation interval" [value]="decorator.autoScaleEvaluationInterval"></bl-text-property>
@@ -33,8 +33,7 @@
             </div>
 
             <bl-text-property label="OS family" [value]="decorator.cloudServiceConfiguration.osFamily"></bl-text-property>
-            <bl-text-property label="Curent OS version" [value]="decorator.cloudServiceConfiguration.currentOSVersion"></bl-text-property>
-            <bl-text-property label="Target OS version" [value]="decorator.cloudServiceConfiguration.targetOSVersion"></bl-text-property>
+            <bl-text-property label="OS version" [value]="decorator.cloudServiceConfiguration.osVersion"></bl-text-property>
         </bl-property-group>
 
         <bl-property-group label="Virtual machine configuration" class="wide" [collapsed]="true" *ngIf="pool.virtualMachineConfiguration">
@@ -62,44 +61,50 @@
                     <bl-tp-cell [value]="registry.username"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
+
+            <bl-table-property *ngIf="pool.virtualMachineConfiguration?.dataDisks;let dataDisks" label="Data disks">
+                <bl-table-property-header>
+                    <div tp-column>Caching</div>
+                    <div tp-column>Size</div>
+                    <div tp-column>Lun</div>
+                    <div tp-column>Storage type</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let disk of dataDisks">
+                    <bl-tp-cell [value]="disk.caching"></bl-tp-cell>
+                    <bl-tp-cell value="{{disk.diskSizeGB}} GB"></bl-tp-cell>
+                    <bl-tp-cell [value]="disk.lun"></bl-tp-cell>
+                    <bl-tp-cell [value]="disk.storageAccountType"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
         </bl-property-group>
 
         <bl-property-group label="Start task settings" [collapsed]="true" class="wide" [edit]="editStartTask">
-            <ng-container *ngIf="startTaskItemCount">
+            <ng-container *ngIf="pool.startTask;let startTask">
                 <bl-text-property label="Command line" [value]="startTask.commandLine" [wrap]="true"></bl-text-property>
                 <bl-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bl-text-property>
                 <bl-text-property label="User identity" [value]="decorator.startTask?.userIdentitySummary"></bl-text-property>
                 <bl-bool-property label="Wait for success" [value]="startTask.waitForSuccess" yesNo="true"></bl-bool-property>
+                <bl-resource-files-properties [files]="startTask.resourceFiles"></bl-resource-files-properties>
+                <bl-table-property label="Environment settings" *ngIf="startTask.environmentSettings?.size > 0">
+                    <bl-table-property-header>
+                        <div tp-column>Key</div>
+                        <div tp-column>Value</div>
+                    </bl-table-property-header>
+                    <bl-table-property-row *ngFor="let setting of startTask.environmentSettings">
+                        <bl-tp-cell [value]="setting.name"></bl-tp-cell>
+                        <bl-tp-cell [value]="setting.value"></bl-tp-cell>
+                    </bl-table-property-row>
+                </bl-table-property>
+                <bl-text-property *ngIf="startTask.containerSettings" label="Container image" [value]="startTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property *ngIf="startTask.containerSettings?.containerRunOptions" label="Container run option" [value]="startTask.containerSettings.containerRunOptions" [wrap]="true"></bl-text-property>
+                <ng-container *ngIf="startTask.containerSettings?.registry">
+                    <bl-text-property label="Registry server" [value]="startTask.containerSettings.registry.registryServer" [wrap]="true"></bl-text-property>
+                    <bl-text-property label="Registry username" [value]="startTask.containerSettings.registry.username"></bl-text-property>
+                </ng-container>
             </ng-container>
-            <bl-table-property label="Resource files" *ngIf="startTask.resourceFiles?.size > 0">
-                <bl-table-property-header>
-                    <div tp-column>Blob source</div>
-                    <div tp-column>File path</div>
-                </bl-table-property-header>
-                <bl-table-property-row *ngFor="let file of startTask.resourceFiles">
-                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
-                    <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
-                </bl-table-property-row>
-            </bl-table-property>
-            <bl-table-property label="Environment settings" *ngIf="startTask.environmentSettings?.size > 0">
-                <bl-table-property-header>
-                    <div tp-column>Key</div>
-                    <div tp-column>Value</div>
-                </bl-table-property-header>
-                <bl-table-property-row *ngFor="let setting of startTask.environmentSettings">
-                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
-                    <bl-tp-cell [value]="setting.value"></bl-tp-cell>
-                </bl-table-property-row>
-            </bl-table-property>
-            <bl-text-property *ngIf="startTask.containerSettings" label="Container image" [value]="startTask.containerSettings.imageName"></bl-text-property>
-            <bl-text-property *ngIf="startTask.containerSettings?.containerRunOptions" label="Container run option" [value]="startTask.containerSettings.containerRunOptions" [wrap]="true"></bl-text-property>
-            <ng-container *ngIf="startTask.containerSettings?.registry">
-                <bl-text-property label="Registry server" [value]="startTask.containerSettings.registry.registryServer" [wrap]="true"></bl-text-property>
-                <bl-text-property label="Registry username" [value]="startTask.containerSettings.registry.username"></bl-text-property>
-            </ng-container>
-            <bl-no-item [itemCount]="startTaskItemCount" [slimline]="true">
+            <div *ngIf="!pool.startTask">
                 <span no-filter>Start task is not specified for current pool.</span>
-            </bl-no-item>
+            </div>
         </bl-property-group>
 
         <bl-property-group label="Application packages" class="wide" [collapsed]="true"  [edit]="editApplicationPackages">

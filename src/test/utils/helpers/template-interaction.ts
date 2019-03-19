@@ -2,6 +2,25 @@ import { DebugElement } from "@angular/core";
 import { MouseButton } from "@batch-flask/core";
 import { KeyCode } from "@batch-flask/core/keys";
 
+export interface FakeDataTransfer {
+    files?: Array<{ path: string }>;
+    types?: string[];
+    dropEffect?: string;
+}
+
+export interface FakeDragEventInit {
+    dataTransfer: FakeDataTransfer;
+}
+
+export class FakeDragEvent extends Event {
+    public dataTransfer: FakeDataTransfer;
+    constructor(type: string, init: FakeDragEventInit) {
+        super(type);
+        this.dataTransfer = init.dataTransfer;
+
+    }
+}
+
 export class FakeMouseEvent {
     public stopImmediatePropagation: jasmine.Spy;
     public stopPropagation: jasmine.Spy;

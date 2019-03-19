@@ -31,7 +31,12 @@ class WebsocketServer:
             Websocket handler
         """
         connection = WebsocketConnection(websocket)
-        await connection.listen()
+        try:
+            await connection.listen()
+        except websockets.exceptions.ConnectionClosed:
+            logging.info("Websocket connection closed.")
+
+
 
 
 class WebsocketConnection:

@@ -2,14 +2,13 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { List } from "immutable";
-import { BehaviorSubject } from "rxjs";
-
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { SSHKeyPickerComponent } from "app/components/node/connect/ssh-key-picker";
 import { SSHPublicKey } from "app/models";
 import { SSHKeyService } from "app/services";
+import { List } from "immutable";
+import { BehaviorSubject, of } from "rxjs";
 import { click } from "test/utils/helpers";
 
 @Component({
@@ -29,8 +28,8 @@ describe("SSHKeyPickerComponent", () => {
     beforeEach(() => {
         sshKeyServiceSpy = {
             keys: new BehaviorSubject<List<SSHPublicKey>>(List([])),
-            saveKey: jasmine.createSpy("saveKey"),
-            deleteKey: jasmine.createSpy("deleteKey"),
+            saveKey: jasmine.createSpy("saveKey").and.returnValue(of()),
+            deleteKey: jasmine.createSpy("deleteKey").and.returnValue(of()),
         };
         dialogServiceSpy = {prompt: jasmine.createSpy("dialog.prompt")};
         TestBed.configureTestingModule({

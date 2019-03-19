@@ -72,8 +72,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     @Input() public id = `bl-table-${idCounter++}`;
 
     @Input() public set config(config: TableConfig) {
-        this._config = { ...tableDefaultConfig, ...config };
-        this.dataPresenter.config = this._config.sorting;
+        super.config = { ...tableDefaultConfig, ...config };
     }
     public get config() { return this._config; }
 
@@ -124,9 +123,10 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.columnManager.columns = this.columnComponents.map(x => x.getRef());
         this.columnComponents.changes.subscribe((columns) => {
             this.columnManager.columns = this.columnComponents.map(x => x.getRef());
+            this._keyNavigator.withColumns(this.columnManager.columns.length);
             this.changeDetector.markForCheck();
         });
-
+        this._keyNavigator.withColumns(this.columnManager.columns.length);
         this.changeDetector.markForCheck();
     }
 

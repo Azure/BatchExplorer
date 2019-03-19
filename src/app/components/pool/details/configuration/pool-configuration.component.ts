@@ -4,7 +4,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { PoolDecorator } from "app/decorators";
-import { ApplicationPackageReference, CertificateReference, Metadata, Pool, StartTask } from "app/models";
+import { ApplicationPackageReference, CertificateReference, Metadata, Pool } from "app/models";
 import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 import { List } from "immutable";
@@ -25,7 +25,6 @@ export class PoolConfigurationComponent {
     public get pool() { return this._pool; }
 
     public decorator: PoolDecorator;
-    public startTask: StartTask;
     public certificates: List<CertificateReference>;
     public appPackages: List<ApplicationPackageReference>;
     public metadata: List<Metadata> = List([]);
@@ -42,7 +41,7 @@ export class PoolConfigurationComponent {
         const ref = this.sidebarManager.open(`edit-pool-metadata-${id}`, EditMetadataFormComponent);
         ref.component.metadata = this.pool.metadata;
         ref.component.save = (metadata) => {
-            const data = new PoolPatchDto({ metadata });
+            const data = new PoolPatchDto({ metadata } as any);
             return this.poolService.patch(id, data).pipe(
                 flatMap(() => this.poolService.get(id)),
             );
@@ -67,10 +66,6 @@ export class PoolConfigurationComponent {
         ref.component.pool = this.pool;
     }
 
-    public get startTaskItemCount() {
-        return Object.keys(this.startTask).length;
-    }
-
     public get containerConfiguration() {
         const vmConfig = this.decorator.virtualMachineConfiguration;
         return  vmConfig && vmConfig.containerConfiguration;
@@ -88,8 +83,6 @@ export class PoolConfigurationComponent {
             this.certificates = this.decorator.certificateReferences;
             this.metadata = pool.metadata;
             // Quick fix to make sure it stops crashing the UI
-            this.startTask = pool.startTask || {} as any;
         }
     }
-
 }

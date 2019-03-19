@@ -7,8 +7,8 @@ import {
     Output,
     SimpleChanges,
 } from "@angular/core";
-
 import { Filter, FilterBuilder } from "@batch-flask/core";
+
 import "./toggle-filter-button.scss";
 
 @Component({

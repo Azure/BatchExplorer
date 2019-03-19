@@ -1,21 +1,20 @@
 import { Type } from "@angular/core";
-import * as moment from "moment";
-
 import { PinnedEntityType } from "@batch-flask/core";
 import { File, Workspace } from "@batch-flask/ui";
 import {
-    ApplicationPackage,
     ArmBatchAccount,
+    ArmSubscription,
     BatchApplication,
+    BatchApplicationPackage,
     BlobContainer,
     Job,
     Node,
     PackageState,
     Pool,
-    Subscription,
     SubtaskInformation,
     Task,
 } from "app/models";
+import { Duration } from "luxon";
 
 export class FixtureFactory<TEntity> {
     constructor(private type: Type<TEntity>, private defaultData: any) {
@@ -41,7 +40,7 @@ export const job = new FixtureFactory<Job>(Job, {
     previousStateTransitionTime: new Date(2015, 5, 1, 10, 4, 31),
     priority: 1,
     constraints: {
-        maxWallClockTime: moment.duration("PT2H"),
+        maxWallClockTime: Duration.fromISO("PT2H"),
         maxTaskRetryCount: 3,
     },
     jobManagerTask: {
@@ -118,9 +117,9 @@ export const task = new FixtureFactory<Task>(Task, {
         },
     },
     constraints: {
-        maxWallClockTime: moment.duration("PT2H"),
+        maxWallClockTime: Duration.fromISO("PT2H"),
         maxTaskRetryCount: 3,
-        retentionTime: moment.duration("PT6H"),
+        retentionTime: Duration.fromISO("PT6H"),
     },
     nodeInfo: {
         affinityId: "affinityId",
@@ -143,10 +142,9 @@ export const pool = new FixtureFactory<Pool>(Pool, {
     vmSize: "standard_a1",
     cloudServiceConfiguration: {
         osFamily: "4",
-        targetOSVersion: "WA-GUEST-OS-2.28_201409-01",
-        currentOSVersion: "WA-GUEST-OS-2.28_201409-01",
+        osVersion: "WA-GUEST-OS-2.28_201409-01",
     },
-    resizeTimeout: moment.duration("PT15M"),
+    resizeTimeout: Duration.fromISO("PT15M"),
     currentDedicated: 5,
     targetDedicated: 5,
     enableAutoScale: false,
@@ -212,7 +210,7 @@ export const node = new FixtureFactory<Node>(Node, {
     isDedicated: true,
 });
 
-export const subscription = new FixtureFactory<Subscription>(Subscription, {
+export const subscription = new FixtureFactory<ArmSubscription>(ArmSubscription, {
     id: "/subscriptions/sub-id-xyz",
     subscriptionId: "sub-id-xyz",
     tenantId: "tenant-id",
@@ -236,13 +234,9 @@ export const account = new FixtureFactory<ArmBatchAccount>(ArmBatchAccount, {
 
 export const application = new FixtureFactory<BatchApplication>(BatchApplication, {
     id: "app-1",
-    displayName: "test application",
-    allowUpdates: true,
-    defaultVersion: null,
-    packages: null,
 });
 
-export const applicationPackage = new FixtureFactory<ApplicationPackage>(ApplicationPackage, {
+export const applicationPackage = new FixtureFactory<BatchApplicationPackage>(BatchApplicationPackage, {
     version: "1",
     state: PackageState.active,
     format: "zip",

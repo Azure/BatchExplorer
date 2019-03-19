@@ -7,3 +7,5 @@ export * from "./task";
 export * from "./data-disk";
 export * from "./job";
 export * from "./authentication-token-settings";
+export * from "./batch-application";
+export * from "./batch-application-package";

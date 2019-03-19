@@ -1,0 +1,22 @@
+<label>{{label}}</label>
+<div [formGroup]="files">
+    <div *ngFor="let control of files.controls;let i = index" class="file-row">
+        <bl-resourcefile-picker-row [formControlName]="i" (delete)="removeRow(i)">
+        </bl-resourcefile-picker-row>
+    </div>
+</div>
+
+<bl-button class="add-by-url" type="wide" (do)="addUrlResourceFile()">{{'resourcefile-picker.add.fromURL' | i18n}}</bl-button>
+<bl-button class="add-from-storage" type="wide" (do)="pickFromAzureStorage()">{{'resourcefile-picker.add.fromStorage' | i18n}}</bl-button>
+
+<span class="help">{{'resourcefile-picker.add.dragAndDrop' | i18n}}</span>
+<div class="uploading-files" *ngIf="uploadingFiles.length > 0">
+    <div class="file" *ngFor="let file of uploadingFiles;trackBy: trackUploadingFile">
+        <i class="fa fa-spinner fa-spin"></i>
+        {{file}}
+    </div>
+</div>
+<div *ngIf="isDraging" class="drop-overlay">
+    <i class="fa fa-upload"></i>
+    <span class="message">{{'resourcefile-picker.add.uploadFile' | i18n}}</span>
+</div>

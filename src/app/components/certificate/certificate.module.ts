@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
 import { CertificateActionModule } from "./action";
 import { CertificateListComponent } from "./browse/certificate-list.component";

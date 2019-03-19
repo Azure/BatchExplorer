@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Input, OnDestroy } from "@angular/core";
-import { Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { FileLoader } from "../../file-loader";
 import { File } from "../../file.model";
+import { FileAssociation } from "../file-type-association";
 
 export interface FileViewerCommand {
     label: string;
@@ -17,6 +18,8 @@ export interface FileViewerConfig {
      * If files can be downloaded(Default: true)
      */
     downloadEnabled?: boolean;
+
+    fileAssociations?: FileAssociation[];
 }
 
 /**
@@ -50,16 +53,22 @@ export abstract class FileViewer implements OnDestroy {
     public get config() { return this._config; }
 
     public file: File;
+    public modified: Observable<boolean>;
+
+    protected _modified = new BehaviorSubject(false);
 
     private _fileLoader: FileLoader;
     private _config: FileViewerConfig;
     private _fileChangeSub: Subscription;
 
-    constructor(protected changeDetector: ChangeDetectorRef) { }
+    constructor(protected changeDetector: ChangeDetectorRef) {
+        this.modified = this._modified.asObservable();
+    }
 
     public abstract onFileLoaderChanges();
     public onConfigChanges?(currentConfig: FileViewerConfig, oldConfig: FileViewerConfig);
     public onFileChanges?(currentFile: File, oldFile: File);
+    public save?(): Observable<any>;
 
     public ngOnDestroy() {
         this._clearFileChangesSub();

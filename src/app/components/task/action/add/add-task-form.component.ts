@@ -1,8 +1,6 @@
 import { Component } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Observable } from "rxjs";
-
 import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DynamicForm, I18nService, autobind } from "@batch-flask/core";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -14,6 +12,7 @@ import { TaskCreateDto } from "app/models/dtos";
 import { createTaskFormToJsonData, taskToFormModel } from "app/models/forms";
 import { JobService, PoolService, TaskService } from "app/services";
 import { Constants } from "common";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "bl-add-task-form",
@@ -28,7 +27,6 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
     public complexFormConfig: ComplexFormConfig;
     public constraintsGroup: FormGroup;
     public resourceFiles: FormArray;
-    public hasLinkedStorage: boolean = true;
     public multiUse = true;
     public fileUri = "create.task.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
@@ -49,7 +47,6 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
         this.subtitle = i18n.t("add-task-form.subtitle");
         this.actionName = i18n.t("add-task-form.action");
 
-        this.hasLinkedStorage = true;
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
             maxWallClockTime: null,
@@ -114,10 +111,6 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
         });
 
         return observable;
-    }
-
-    public handleHasLinkedStorage(hasLinkedStorage) {
-        this.hasLinkedStorage = hasLinkedStorage;
     }
 
     public registerFileUpload(event: UploadResourceFileEvent) {

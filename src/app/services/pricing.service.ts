@@ -1,17 +1,17 @@
 import { Injectable } from "@angular/core";
+import { GlobalStorage } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils } from "app/utils";
-import * as moment from "moment";
-import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
+import { DateTime } from "luxon";
+import { BehaviorSubject, Observable, forkJoin, from, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { BatchAccountService } from "./batch-account";
 import { VmSizeService } from "./compute";
-import { LocalFileStorage } from "./local-file-storage.service";
 
-const pricingFilename = "pricing.json";
+const pricingFilename = "pricing";
 
 export function commerceUrl(subscriptionId: string) {
     return `subscriptions/${subscriptionId}/providers/Microsoft.Commerce`;
@@ -61,7 +61,7 @@ const softwareMeterId = {
     "e2d2d63e-8741-499a-8989-f5f7ec5c3b3f": BatchSoftwareLicense.vray,
 };
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class PricingService {
     public pricing: Observable<BatchPricing>;
     private _pricingMap = new BehaviorSubject<BatchPricing>(null);
@@ -69,7 +69,7 @@ export class PricingService {
     constructor(
         private arm: ArmHttpService,
         private vmSizeService: VmSizeService,
-        private localFileStorage: LocalFileStorage,
+        private gobalStorage: GlobalStorage,
         private accountService: BatchAccountService) {
 
         this.pricing = this._pricingMap.pipe(filter(x => x !== null));
@@ -158,7 +158,8 @@ export class PricingService {
                     && meter.MeterRegion !== ""
                     && meter.MeterRegion !== "Azure Stack"
                     && meter.MeterRegion in regionMapping
-                    && !meter.MeterSubCategory.includes("VM_Promo")) {
+                    && !meter.MeterSubCategory.includes("Promo")) {
+
                     pricing.nodes.add(
                         regionMapping[meter.MeterRegion],
                         meter.MeterSubCategory,
@@ -176,7 +177,7 @@ export class PricingService {
         for (const meter of meters) {
             if (meter.MeterId in softwareMeterId) {
                 const software = softwareMeterId[meter.MeterId];
-                const perCore = meter.MeterSubCategory.includes("core)");
+                const perCore = meter.MeterName.toLowerCase().includes("1 vcpu");
                 pricing.softwares.add(software, meter.MeterRates["0"], perCore);
             }
         }
@@ -194,16 +195,16 @@ export class PricingService {
     }
 
     private _loadPricingFromStorage(): Observable<BatchPricing> {
-        return this.localFileStorage.get(pricingFilename).pipe(
-            map((data: { lastSync: string, map: any }) => {
+        return from(this.gobalStorage.get(pricingFilename)).pipe(
+            map((data: { lastSync: string, map: any } | null) => {
                 // If wrong format
-                if (!data.lastSync || !data.map) {
+                if (!data || !data.lastSync || !data.map) {
                     return null;
                 }
 
-                const lastSync = moment(data.lastSync);
-                const weekOld = moment().subtract(7, "days");
-                if (lastSync.isBefore(weekOld)) {
+                const lastSync = DateTime.fromISO(data.lastSync);
+                const weekOld = DateTime.local().minus({ days: 7 });
+                if (lastSync < weekOld) {
                     return null;
                 }
                 return BatchPricing.fromJS(data.map);
@@ -220,10 +221,8 @@ export class PricingService {
             lastSync: new Date().toISOString(),
             map: map.toJS(),
         };
-        this.localFileStorage.set(pricingFilename, data).subscribe({
-            error: (error) => {
-                log.error("Error saving harwaremap", error);
-            },
+        this.gobalStorage.set(pricingFilename, data).catch((error) => {
+            log.error("Error saving harwaremap", error);
         });
     }
 

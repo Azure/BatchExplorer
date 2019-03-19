@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { FormModule, I18nUIModule, SelectComponent, SelectModule } from "@batch-flask/ui";
-import { ArmBatchAccount, NodeAgentSku, Resource, Subscription } from "app/models";
+import { FormModule, SelectComponent, SelectModule } from "@batch-flask/ui";
+import { ArmBatchAccount, ArmSubscription, NodeAgentSku, Resource } from "app/models";
 import { BatchAccountService, ComputeService, PoolOsService } from "app/services";
 import { List } from "immutable";
 import { of } from "rxjs";
@@ -17,7 +17,7 @@ class TestComponent {
     public control = new FormControl();
 }
 
-const sub1 = new Subscription({ id: "/subs/sub-1", subscriptionId: "sub-1" });
+const sub1 = new ArmSubscription({ id: "/subs/sub-1", subscriptionId: "sub-1" });
 
 const images: Resource[] = [
     {
@@ -71,7 +71,7 @@ describe("CustomImagePickerComponent", () => {
             } as any)),
         };
         TestBed.configureTestingModule({
-            imports: [SelectModule, ReactiveFormsModule, FormsModule, FormModule, I18nTestingModule, I18nUIModule],
+            imports: [SelectModule, ReactiveFormsModule, FormsModule, FormModule, I18nTestingModule],
             declarations: [CustomImagePickerComponent, TestComponent],
             providers: [
                 { provide: ComputeService, useValue: computeServiceSpy },

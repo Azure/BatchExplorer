@@ -1,9 +1,10 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { UserConfigurationService } from "@batch-flask/core";
 import { StringUtils, log } from "@batch-flask/utils";
 import {
-    Location, LocationAttributes, ResourceGroup, Subscription, SubscriptionAttributes, TenantDetails,
+    ArmSubscription, ArmSubscriptionAttributes, ResourceGroup, TenantDetails,
 } from "app/models";
-import { Constants } from "common";
+import { BEUserConfiguration, Constants } from "common";
 import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest, empty, forkJoin } from "rxjs";
 import {
@@ -13,14 +14,13 @@ import {
 import { AdalService } from "../adal";
 import { AzureHttpService } from "../azure-http.service";
 import { ArmListResponse } from "../core";
-import { SettingsService } from "../settings.service";
 import { TenantDetailsService } from "../tenant-details.service";
 
 @Injectable({ providedIn: "root" })
 export class SubscriptionService implements OnDestroy {
-    public subscriptions: Observable<List<Subscription>>;
+    public subscriptions: Observable<List<ArmSubscription>>;
     public accountSubscriptionFilter: Observable<Set<string>>;
-    private _subscriptions = new BehaviorSubject<List<Subscription>>(List([]));
+    private _subscriptions = new BehaviorSubject<List<ArmSubscription>>(List([]));
     private _accountSubscriptionFilter = new BehaviorSubject<Set<string>>(Set([]));
     private _subscriptionsLoaded = new AsyncSubject();
     private _destroy = new Subject();
@@ -29,11 +29,11 @@ export class SubscriptionService implements OnDestroy {
         private tenantDetailsService: TenantDetailsService,
         private azure: AzureHttpService,
         private adal: AdalService,
-        private settingsService: SettingsService) {
+        private settingsService: UserConfigurationService<BEUserConfiguration>) {
 
-        const ignoredPatterns = this.settingsService.settingsObs.pipe(
+        const ignoredPatterns = this.settingsService.watch("subscriptions").pipe(
             takeUntil(this._destroy),
-            map((settings) => settings["subscription.ignore"] || []),
+            map((settings) => settings && settings.ignore || []),
             distinctUntilChanged(),
         );
 
@@ -42,6 +42,9 @@ export class SubscriptionService implements OnDestroy {
             takeUntil(this._destroy),
             map(([subscriptions, ignoredPatterns]) => {
                 return this._ignoreSubscriptions(subscriptions, ignoredPatterns);
+            }),
+            map((subscriptions) => {
+                return subscriptions.sortBy(x => x.displayName && x.displayName.toLowerCase()).toList();
             }),
             shareReplay(1),
         );
@@ -93,7 +96,7 @@ export class SubscriptionService implements OnDestroy {
      * Get the subscription with the given object.
      * @param subscriptionId Id of the subscription(UUID)
      */
-    public get(subscriptionId: string): Observable<Subscription> {
+    public get(subscriptionId: string): Observable<ArmSubscription> {
         return this.subscriptions.pipe(
             first(),
             map(subscriptions => {
@@ -106,7 +109,7 @@ export class SubscriptionService implements OnDestroy {
      * Recursively list the resource groups for given subscription id
      * @param subscriptionId
      */
-    public listResourceGroups(subscription: Subscription): Observable<ResourceGroup[]> {
+    public listResourceGroups(subscription: ArmSubscription): Observable<ResourceGroup[]> {
         const uri = `subscriptions/${subscription.subscriptionId}/resourcegroups`;
         return this.azure.get<ArmListResponse>(subscription, uri).pipe(
             expand(obs => {
@@ -118,21 +121,10 @@ export class SubscriptionService implements OnDestroy {
         );
     }
 
-    /**
-     * List all available geo-locations for given subscription id
-     * @param subscriptionId
-     */
-    public listLocations(subscription: Subscription): Observable<Location[]> {
-        const uri = `subscriptions/${subscription.subscriptionId}/locations`;
-        return this.azure.get<ArmListResponse<LocationAttributes>>(subscription, uri).pipe(
-            map(response => response.value.map(x => new Location(x))),
-        );
-    }
-
-    private _loadSubscriptionsForTenant(tenantId: string): Observable<Subscription[]> {
+    private _loadSubscriptionsForTenant(tenantId: string): Observable<ArmSubscription[]> {
         return this.tenantDetailsService.get(tenantId).pipe(
             switchMap((tenantDetails) => {
-                return this.azure.get<ArmListResponse<SubscriptionAttributes>>(tenantId, "subscriptions").pipe(
+                return this.azure.get<ArmListResponse<ArmSubscriptionAttributes>>(tenantId, "subscriptions").pipe(
                     expand((response) => {
                         if (response.nextLink) {
                             return this.azure.get(tenantId, response.nextLink);
@@ -149,8 +141,8 @@ export class SubscriptionService implements OnDestroy {
         );
     }
 
-    private _createSubscription(tenant: TenantDetails, data: any): Subscription {
-        return new Subscription({ ...data, tenant, tenantId: tenant.id });
+    private _createSubscription(tenant: TenantDetails, data: any): ArmSubscription {
+        return new ArmSubscription({ ...data, tenant, tenantId: tenant.id });
     }
 
     private _cacheSubscriptions() {
@@ -162,12 +154,12 @@ export class SubscriptionService implements OnDestroy {
 
         try {
             const data = JSON.parse(str);
-            const subscriptions = data.map(x => new Subscription(x));
+            const subscriptions = data.map(x => new ArmSubscription(x));
 
             if (Object.keys(subscriptions).length === 0) {
                 localStorage.removeItem(Constants.localStorageKey.subscriptions);
             } else {
-                this._subscriptions.next(List<Subscription>(subscriptions));
+                this._subscriptions.next(List<ArmSubscription>(subscriptions));
                 this._markSubscriptionsAsLoaded();
             }
         } catch (e) {
@@ -199,7 +191,10 @@ export class SubscriptionService implements OnDestroy {
         this._subscriptionsLoaded.complete();
     }
 
-    private _ignoreSubscriptions(subscriptions: List<Subscription>, ignoredPatterns: string[]): List<Subscription> {
+    private _ignoreSubscriptions(
+        subscriptions: List<ArmSubscription>,
+        ignoredPatterns: string[],
+    ): List<ArmSubscription> {
         if (ignoredPatterns.length === 0) {
             return subscriptions;
         }

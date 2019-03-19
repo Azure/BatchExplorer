@@ -27,8 +27,7 @@
                 <span>{{decorator.poolOs}}</span>
             </div>
             <bl-text-property label="OS family" [value]="decorator.cloudServiceConfiguration.osFamily"></bl-text-property>
-            <bl-text-property label="Curent OS version" [value]="decorator.cloudServiceConfiguration.currentOSVersion"></bl-text-property>
-            <bl-text-property label="Target OS version" [value]="decorator.cloudServiceConfiguration.targetOSVersion"></bl-text-property>
+            <bl-text-property label="OS version" [value]="decorator.cloudServiceConfiguration.osVersion"></bl-text-property>
         </bl-property-group>
 
         <bl-property-group label="Virtual machine configuration" class="wide" [collapsed]="true" *ngIf="pool.virtualMachineConfiguration">
@@ -64,11 +63,11 @@
             </ng-container>
             <bl-table-property label="Resource files" *ngIf="startTask.resourceFiles?.size > 0">
                 <bl-table-property-header>
-                    <div tp-column>Blob source</div>
+                    <div tp-column>Http url</div>
                     <div tp-column>File path</div>
                 </bl-table-property-header>
                 <bl-table-property-row *ngFor="let file of startTask.resourceFiles">
-                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.httpUrl"></bl-tp-cell>
                     <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>

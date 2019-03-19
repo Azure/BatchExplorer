@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-
 import { FilterBuilder, TargetedDataCache } from "@batch-flask/core";
 import { SecureUtils } from "@batch-flask/utils";
 import { RoleAssignment, RoleDefinition, RoleDefinitionAttributes } from "app/models";

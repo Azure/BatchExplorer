@@ -12,11 +12,11 @@ import {
     ViewChild,
 } from "@angular/core";
 import { MatTooltip } from "@angular/material";
+import { RouterLink } from "@angular/router";
 import { log } from "@batch-flask/utils";
 import { Observable, isObservable } from "rxjs";
 import { ClickableComponent } from "./clickable";
 
-import { RouterLink } from "@angular/router";
 import "./button.scss";
 
 export type ButtonType = "square" | "round" | "wide" | "plain";
@@ -107,7 +107,7 @@ export class ButtonComponent extends ClickableComponent {
 
     @HostListener("focus")
     public showTooltip() {
-        this._tooltip.show();
+        this._tooltip.show(100);
     }
 
     @HostListener("blur")

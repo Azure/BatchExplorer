@@ -9,6 +9,7 @@ import { List } from "immutable";
 import { BehaviorSubject, Subject } from "rxjs";
 import { distinctUntilChanged, filter, switchMap, takeUntil } from "rxjs/operators";
 import { ApplicationSelection } from "../application-list";
+
 import "./choose-action.scss";
 
 @Component({

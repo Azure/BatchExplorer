@@ -1,9 +1,8 @@
 import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
-
 import { ApplicationPackageReference } from "../application-package-reference";
 import { EnvironmentSettingDto } from "./environment-setting.dto";
 import { JobConstraintDto } from "./job-constraints.dto";
-import { EnvironmentSetting, MetaDataDto } from "./metadata.dto";
+import { MetaDataDto } from "./metadata.dto";
 import { OutputFileDto } from "./output-file.dto";
 import { PoolCreateDto } from "./pool-create";
 import { ResourceFileDto } from "./resource-file.dto";
@@ -70,7 +69,7 @@ export class JobCreateDto extends Dto<JobCreateDto> {
 
     @DtoAttr() public jobReleaseTask?: JobReleaseTaskDto;
 
-    @ListDtoAttr(EnvironmentSetting) public commonEnvironmentSettings?: EnvironmentSetting[];
+    @ListDtoAttr(EnvironmentSettingDto) public commonEnvironmentSettings?: EnvironmentSettingDto[];
 
     @DtoAttr() public poolInfo: {
         poolId?: string;

@@ -2,8 +2,8 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild,
     ContentChildren, HostBinding, HostListener, Injector, Input, QueryList, TemplateRef, ViewChild,
 } from "@angular/core";
+import { ClipboardService } from "@batch-flask/electron";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
-import { ClipboardService } from "@batch-flask/ui/electron";
 
 import "./table-property.scss";
 
@@ -38,7 +38,10 @@ let idCounter = 0;
 @Component({
     selector: "bl-tp-cell",
     template: `
-        <div class="cell-value">{{value}}</div>
+        <div class="cell-value">
+            <ng-container *ngIf="!useContent">{{value}}</ng-container>
+            <ng-content *ngIf="useContent"></ng-content>
+        </div>
         <div *ngIf="!copyNotificationHidden"
             role="alert"
             class="copied-notification"
@@ -50,10 +53,11 @@ let idCounter = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TablePropertyCellComponent extends ClickableComponent {
-    @Input() public id = `bl-table-property-cell-${idCounter++}`;
+    @Input() public id = `bl-tp-cell-${idCounter++}`;
+    @Input() public useContent = false;
 
-    @Input() @HostBinding("attr.title")
-    public value;
+    @Input() @HostBinding("attr.title") public value: string;
+
     @HostBinding("class.property-content-box")
     public box = true;
 
@@ -72,7 +76,9 @@ export class TablePropertyCellComponent extends ClickableComponent {
         super.handleAction(event);
         this.changeDetector.markForCheck();
         this.copyNotificationHidden = false;
-        this.clipboard.writeText(this.value);
+        if (this.value) {
+            this.clipboard.writeText(this.value);
+        }
         setTimeout(() => {
             this.copyNotificationHidden = true;
             this.changeDetector.markForCheck();
@@ -82,6 +88,22 @@ export class TablePropertyCellComponent extends ClickableComponent {
     @HostListener("(focus)")
     public focusContent(event: FocusEvent) {
         window.getSelection().selectAllChildren(event.target as any);
+    }
+}
+
+@Component({
+    selector: "bl-tp-plain-cell",
+    template: `
+        <ng-content></ng-content>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TablePropertyCellPlainComponent extends ClickableComponent {
+    @Input() public id = `bl-tp-cell-plain-${idCounter++}`;
+
+    @HostBinding("attr.role") public role = "gridcell";
+    constructor(injector: Injector) {
+        super(injector, null);
     }
 }
 

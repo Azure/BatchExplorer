@@ -1,0 +1,39 @@
+@import "app/styles/variables";
+
+bl-select-account-dialog {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 60vh;
+
+    > .header {
+        flex: 0 0 auto;
+    }
+
+    > .content {
+        flex: 1;
+        min-height: 0;
+    }
+    .account-type {
+        background: $primary-color;
+        color: $primary-contrast-color;
+        padding: 2px 5px;
+    }
+
+    .account-info {
+        display: flex;
+        width: 100%;
+
+        bl-location {
+        }
+
+        .auto-storage {
+            margin-right: 7px;
+
+            &.error {
+                color: $danger-color;
+                font-weight: bold;
+            }
+        }
+    }
+}

@@ -1,7 +1,6 @@
 import { Injector } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { COMMAND_LABEL_ICON, DialogService, EntityCommand, Permission } from "@batch-flask/ui";
-
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
 import { DisableJobDialogComponent } from "./disable-job-dialog.component";

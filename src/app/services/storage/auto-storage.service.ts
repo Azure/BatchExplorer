@@ -5,7 +5,7 @@ import { BatchAccountService } from "../batch-account";
 
 export type StorageDataSource = string | "file-groups";
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class AutoStorageService {
     public storageAccountId: Observable<string>;
     public hasArmAutoStorage: Observable<boolean>;
@@ -13,7 +13,9 @@ export class AutoStorageService {
 
     constructor(private accountService: BatchAccountService) {
         this.storageAccountId = this.accountService.currentAccount.pipe(map((account) => {
-            return account.autoStorage && account.autoStorage.storageAccountId;
+            return account.autoStorage
+                && account.autoStorage.storageAccountId
+                && account.autoStorage.storageAccountId.toLowerCase();
         }));
 
         this.hasAutoStorage = this.accountService.currentAccount.pipe(map((account) => {

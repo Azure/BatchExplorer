@@ -1,14 +1,15 @@
+import { TimeRange } from "@batch-flask/ui";
 import {
-    MonitorChartAggregation, MonitorChartMetrics, MonitorChartTimeFrame, MonitoringMetricDefinition,
+    MonitorChartMetrics, MonitoringMetricDefinition,
 } from "./monitor-metrics-base";
 
 export class FailedTaskMetrics extends MonitoringMetricDefinition {
-    constructor(timespan: MonitorChartTimeFrame) {
+    constructor(timespan: TimeRange) {
         super({
             name: "Task failed events",
             timespan,
             metrics: [
-                { name: MonitorChartMetrics.TaskFailEvent, aggregation: MonitorChartAggregation.Total },
+                { name: MonitorChartMetrics.TaskFailEvent },
             ],
         });
     }

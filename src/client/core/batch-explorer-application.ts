@@ -21,7 +21,7 @@ import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
-import { AADService, AuthenticationState, AuthenticationWindow, AuthorizeResponseError } from "./aad";
+import { AADService, AuthenticationState, AuthenticationWindow, LogoutError } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
 
@@ -66,8 +66,8 @@ export class BatchExplorerApplication {
     }
 
     public async init() {
-
         await this.telemetryManager.init();
+        await this.properties.init();
 
         this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.applicationStart });
 
@@ -92,15 +92,22 @@ export class BatchExplorerApplication {
         this._initializer.init();
 
         this._setCommonHeaders();
-        this.aadService.login().catch((e: AuthorizeResponseError) => {
+        const loginResponse = this.aadService.login();
+        loginResponse.done.catch((e) => {
+            if (e instanceof LogoutError) {
+                return;
+            }
+            log.error("Error while login", e);
             dialog.showMessageBox({
+                title: "Error during login",
                 type: "error",
                 message: e.toString(),
             });
             this.logoutAndLogin();
         });
+        await loginResponse.started;
+
         this._initializer.setTaskStatus("window", "Loading application");
-        log.debug("process.argv", process.argv);
         const window = this.openFromArguments(process.argv, false);
         if (!window) { return; }
         const windowSub = window.state.subscribe((state) => {
@@ -148,14 +155,14 @@ export class BatchExplorerApplication {
     public async updateAzureEnvironment(env: AzureEnvironment) {
         await this.aadService.logout();
         this.windows.closeAll();
-        this.properties.updateAzureEnvironment(env);
-        await this.aadService.login();
+        await this.properties.updateAzureEnvironment(env);
+        await this.aadService.login().done;
         this.windows.openNewWindow();
     }
 
     public async logoutAndLogin() {
         await this.aadService.logout();
-        await this.aadService.login();
+        await this.aadService.login().done;
         this.windows.openNewWindow();
     }
 
@@ -328,7 +335,7 @@ export class BatchExplorerApplication {
 
             // Rate card api does some weird redirect which require removing the authorization header
             if (details.url.includes("ratecard.blob.core.windows.net")) {
-                delete details.requestHeaders.Authorization;
+                delete details.requestHeaders["Authorization"];
             }
 
             details.requestHeaders["User-Agent"] = userAgent;

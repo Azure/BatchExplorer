@@ -21,8 +21,23 @@ bl-profile-button {
 
         &.downloading {
             background-color: $primary-color;
+
+            mat-progress-spinner {
+                width: 100%;
+                height: 100%;
+                margin-top: -2px;
+                margin-left: -1px;
+
+                svg {
+                    circle {
+                        stroke: $primary-contrast-color;
+                    }
+                }
+            }
             > .fa {
-                margin-top: 3px;
+                position: absolute;
+                top: 4px;
+                left: 5px;
                 animation: flashOpacity 1.5s ease-in-out infinite;
             }
         }

@@ -6,16 +6,17 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule, ServerError } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule } from "@batch-flask/ui";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { ArmBatchAccountService, AuthorizationHttpService, SubscriptionService } from "app/services";
+import { LocationPickerModule } from "app/components/common/location-picker";
+import {
+    ArmBatchAccountService, ArmLocationService, AuthorizationHttpService, SubscriptionService,
+} from "app/services";
 import { of, throwError } from "rxjs";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
-import { LocationPickerModule } from "../../../common/location-picker";
 import { BatchAccountCreateComponent } from "./batch-account-create.component";
 
 describe("BatchAccountCreateComponent ", () => {
@@ -26,6 +27,7 @@ describe("BatchAccountCreateComponent ", () => {
     let authServiceSpy: any;
     let subscriptionServiceSpy: any;
     let notificationServiceSpy: any;
+    let locationServiceSpy: any;
 
     const validators = TestConstants.validators;
     const serverErrorMsg = "Encounter a server error during request";
@@ -133,7 +135,15 @@ describe("BatchAccountCreateComponent ", () => {
                 }
                 return of([]);
             }),
-            listLocations: jasmine.createSpy("listLocations").and.callFake((sub) => {
+        };
+
+        notificationServiceSpy = {
+            success: jasmine.createSpy("success"),
+            error: jasmine.createSpy("error"),
+        };
+
+        locationServiceSpy = {
+            listForResourceType: jasmine.createSpy("listLocations").and.callFake((sub) => {
                 if (sub.subscriptionId === "dummy-1") {
                     return of([
                         { id: "dummy-1-loc-1", name: "eastus1", displayName: "East US", subscriptionId: "dummy-1" },
@@ -152,13 +162,8 @@ describe("BatchAccountCreateComponent ", () => {
             }),
         };
 
-        notificationServiceSpy = {
-            success: jasmine.createSpy("success"),
-            error: jasmine.createSpy("error"),
-        };
-
         TestBed.configureTestingModule({
-            imports: [MaterialModule, NoopAnimationsModule, LocationPickerModule, I18nTestingModule, I18nUIModule],
+            imports: [MaterialModule, NoopAnimationsModule, LocationPickerModule, I18nTestingModule],
             declarations: [...complexFormMockComponents, BatchAccountCreateComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
@@ -166,6 +171,7 @@ describe("BatchAccountCreateComponent ", () => {
                 { provide: ArmBatchAccountService, useValue: accountServiceSpy },
                 { provide: AuthorizationHttpService, useValue: authServiceSpy },
                 { provide: SubscriptionService, useValue: subscriptionServiceSpy },
+                { provide: ArmLocationService, useValue: locationServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],

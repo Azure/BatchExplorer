@@ -5,9 +5,6 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
 import {
     JobDecorator,
-    JobManagerTaskDecorator,
-    JobPreparationTaskDecorator,
-    JobReleaseTaskDecorator,
 } from "app/decorators";
 import { Job, Metadata, NameValuePair } from "app/models";
 import { JobPatchDto } from "app/models/dtos";
@@ -33,9 +30,6 @@ export class JobConfigurationComponent implements OnDestroy {
     public decorator: JobDecorator = { usesTaskDependencies: false } as any;
     public constraints: any = {};
     public executionInfo: any = {};
-    public managerTask: JobManagerTaskDecorator;
-    public prepTask: JobPreparationTaskDecorator;
-    public releaseTask: JobReleaseTaskDecorator;
     public environmentSettings: List<NameValuePair> = List([]);
     public jobMetadata: List<Metadata> = List([]);
     public poolInfo: any = {};
@@ -68,7 +62,7 @@ export class JobConfigurationComponent implements OnDestroy {
         const ref = this.sidebarManager.open(`edit-job-metadata-${id}`, EditMetadataFormComponent);
         ref.component.metadata = this.job.metadata;
         ref.component.save = (metadata) => {
-            return this.jobService.patch(id, new JobPatchDto({ metadata })).pipe(
+            return this.jobService.patch(id, new JobPatchDto({ metadata } as any)).pipe(
                 flatMap(() => this.jobService.get(id)),
             );
         };
@@ -79,9 +73,6 @@ export class JobConfigurationComponent implements OnDestroy {
             this.decorator = new JobDecorator(this.job);
             this.constraints = this.decorator.constraints || {};
             this.executionInfo = this.decorator.executionInfo || {};
-            this.managerTask = this.decorator.jobManagerTask;
-            this.prepTask = this.decorator.jobPreparationTask;
-            this.releaseTask = this.decorator.jobReleaseTask;
             this.poolInfo = this.decorator.poolInfo || {};
             this.environmentSettings = this.job.commonEnvironmentSettings;
             this.jobMetadata = this.job.metadata;

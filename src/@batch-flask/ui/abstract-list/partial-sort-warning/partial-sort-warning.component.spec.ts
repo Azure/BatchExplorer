@@ -1,11 +1,11 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { LoadingStatus } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SortingStatus } from "@batch-flask/ui/abstract-list/list-data-sorter";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
-import { I18nUIModule } from "@batch-flask/ui/i18n";
-import { BehaviorSubject, of } from "rxjs";
+import { BehaviorSubject, Subject, of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { PartialSortWarningComponent } from "./partial-sort-warning.component";
 
@@ -15,6 +15,7 @@ import { PartialSortWarningComponent } from "./partial-sort-warning.component";
 class TestComponent {
     public data: {
         fetchAll: jasmine.Spy;
+        status: BehaviorSubject<LoadingStatus>,
     };
     public presenter: {
         autoUpdating: BehaviorSubject<boolean>,
@@ -22,9 +23,12 @@ class TestComponent {
         update: jasmine.Spy;
     };
 
+    public fetchAllSubject = new Subject();
+
     constructor() {
         this.data = {
-            fetchAll: jasmine.createSpy("fetchAll").and.returnValue(of(null)),
+            fetchAll: jasmine.createSpy("fetchAll").and.returnValue(this.fetchAllSubject),
+            status: new BehaviorSubject(LoadingStatus.Ready),
         };
         this.presenter = {
             autoUpdating: new BehaviorSubject(true),
@@ -41,7 +45,7 @@ describe("PartialSortWarningComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [I18nTestingModule, I18nUIModule],
+            imports: [I18nTestingModule],
             declarations: [PartialSortWarningComponent, TestComponent, ClickableComponent],
         });
         fixture = TestBed.createComponent(TestComponent);
@@ -61,6 +65,14 @@ describe("PartialSortWarningComponent", () => {
             fixture.detectChanges();
         });
 
+        it("it does NOT show partial sort warnning when data is still loading", () => {
+            testComponent.data.status.next(LoadingStatus.Loading);
+            fixture.detectChanges();
+
+            expect(de.query(By.css(".partial-sort-warning"))).toBeFalsy();
+            expect(de.query(By.css(".auto-update-warning"))).toBeFalsy();
+        });
+
         it("it show partial sort warnning when sorting is partial", () => {
             expect(de.query(By.css(".partial-sort-warning"))).not.toBeFalsy();
             expect(de.query(By.css(".auto-update-warning"))).toBeFalsy();
@@ -72,6 +84,19 @@ describe("PartialSortWarningComponent", () => {
             click(btn);
 
             expect(testComponent.data.fetchAll).toHaveBeenCalledOnce();
+            testComponent.data.status.next(LoadingStatus.Loading);
+            fixture.detectChanges();
+
+            expect(de.query(By.css(".partial-sort-warning"))).not.toBeFalsy();
+            expect(de.query(By.css(".auto-update-warning"))).toBeFalsy();
+
+            testComponent.fetchAllSubject.next(null);
+            testComponent.data.status.next(LoadingStatus.Ready);
+            testComponent.presenter.sortingStatus.next(SortingStatus.Valid);
+            fixture.detectChanges();
+
+            expect(de.query(By.css(".partial-sort-warning"))).toBeFalsy();
+            expect(de.query(By.css(".auto-update-warning"))).toBeFalsy();
         });
     });
 

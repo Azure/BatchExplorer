@@ -1,6 +1,6 @@
-import { List, Map } from "immutable";
-
 import { exists, nil } from "@batch-flask/utils/object-utils";
+import { List, Map } from "immutable";
+import { Duration } from "luxon";
 import { metadataForRecord, primitives } from "./helpers";
 
 /**
@@ -87,15 +87,10 @@ export class Record<TInput> {
 
             const value = (data as any)[key];
             if (exists(value) && typeMetadata) {
-                const isPrimitive = primitives.has(typeMetadata.type.name);
                 if (typeMetadata.list) {
-                    obj[key] = List(value && value.map(x => isPrimitive ? x : new typeMetadata.type(x)));
+                    obj[key] = List(value && value.map(x => this._createType(typeMetadata.type, x)));
                 } else {
-                    if (isPrimitive) {
-                        obj[key] = value;
-                    } else {
-                        obj[key] = new typeMetadata.type(value);
-                    }
+                    obj[key] = this._createType(typeMetadata.type, value);
 
                     if (typeMetadata.transform) {
                         obj[key] = typeMetadata.transform(obj[key]);
@@ -107,5 +102,22 @@ export class Record<TInput> {
         }
 
         this._map = Map(obj);
+    }
+
+    private _createType(type: any, value: any) {
+        const isPrimitive = primitives.has(type.name);
+        if (isPrimitive) {
+            return value;
+        }
+        if (type === Duration) {
+            if (value instanceof Duration) {
+                return value;
+            } else if (typeof value === "string") {
+                return Duration.fromISO(value);
+            } else {
+                return Duration.fromObject(value);
+            }
+        }
+        return new type(value);
     }
 }

@@ -2,9 +2,8 @@ import { Component, Input, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
-import { List } from "immutable";
-
 import { UserAccount, VirtualMachineConfiguration } from "app/models";
+import { List } from "immutable";
 
 @Component({
     selector: "bl-start-task-picker",

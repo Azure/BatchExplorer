@@ -20,13 +20,9 @@ export class JobScheduleDecorator extends DecoratorBase<JobSchedule> {
         super(jobSchedule);
 
         this.state = this.stateField(jobSchedule.state);
-        this.stateTransitionTime = this.dateField(jobSchedule.stateTransitionTime);
         this.stateIcon = this._getStateIcon(jobSchedule.state);
-        this.creationTime = this.dateField(jobSchedule.creationTime);
-        this.lastModified = this.dateField(jobSchedule.lastModified);
         this.displayName = this.stringField(jobSchedule.displayName);
         this.previousState = this.stateField(jobSchedule.previousState);
-        this.previousStateTransitionTime = this.dateField(jobSchedule.previousStateTransitionTime);
 
         this.executionInfo = new JobScheduleExecutionInfoDecorator(jobSchedule.executionInfo || {} as any);
         this.schedule = new JobScheduleScheduleDecorator(jobSchedule.schedule || {} as any);

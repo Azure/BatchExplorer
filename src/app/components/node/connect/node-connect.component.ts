@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
-import { ServerError, autobind } from "@batch-flask/core";
-import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/ui";
-import * as moment from "moment";
-import * as path from "path";
-
+import { ServerError, UserConfigurationService, autobind } from "@batch-flask/core";
+import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/electron";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { SecureUtils } from "@batch-flask/utils";
 import { Node, NodeConnectionSettings, Pool } from "app/models";
@@ -12,12 +9,15 @@ import {
     BatchExplorerService,
     NodeConnectService,
     NodeUserService,
-    SettingsService,
 } from "app/services";
 import { PoolUtils } from "app/utils";
+import { BEUserConfiguration } from "common";
 import { ExternalApplication } from "common/constants";
+import { DateTime, Duration } from "luxon";
+import * as path from "path";
 import { Observable, from } from "rxjs";
 import { flatMap, share } from "rxjs/operators";
+
 import "./node-connect.scss";
 
 @Component({
@@ -68,7 +68,7 @@ export class NodeConnectComponent implements OnInit {
 
     constructor(
         public sidebarRef: SidebarRef<any>,
-        public settingsService: SettingsService,
+        public settingsService: UserConfigurationService<BEUserConfiguration>,
         private nodeUserService: NodeUserService,
         private batchExplorer: BatchExplorerService,
         private nodeConnectService: NodeConnectService,
@@ -80,7 +80,7 @@ export class NodeConnectComponent implements OnInit {
 
     public ngOnInit() {
         this.credentials = {
-            name: this.settingsService.settings["node-connect.default-username"],
+            name: this.settingsService.current.nodeConnect.defaultUsername,
             expiryTime: null,
             isAdmin: true,
             sshPublicKey: "",
@@ -119,9 +119,9 @@ export class NodeConnectComponent implements OnInit {
             this.generatePassword();
         }
 
-        const credentials = {...this.credentials};
+        const credentials = { ...this.credentials };
         if (!credentials.expiryTime) {
-            credentials.expiryTime = moment().add(moment.duration({days: 1})).toDate();
+            credentials.expiryTime = DateTime.local().plus(Duration.fromObject({ days: 1 })).toJSDate();
         }
 
         if (this.linux) {
@@ -182,7 +182,7 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public storeCredentialsFromForm(credentials: AddNodeUserAttributes) {
         // update the main template
-        this.credentials = {...credentials};
+        this.credentials = { ...credentials };
 
         // if the user entered a password in the form, use it to connect
         if (credentials.password) {
@@ -243,7 +243,7 @@ export class NodeConnectComponent implements OnInit {
      */
     private _initSSH(credentials: AddNodeUserAttributes): Observable<number> {
         // set the user that will be used for authentication
-        const obs =  this._addOrUpdateUser(credentials).pipe(
+        const obs = this._addOrUpdateUser(credentials).pipe(
             flatMap(() => {
                 // launch a terminal subprocess with the command to access the node
                 const args = {

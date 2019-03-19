@@ -1,6 +1,6 @@
-import * as bunyan from "bunyan";
-
-// import { Constants } from "../client-constants";
+import * as winston from "winston";
+import * as DailyRotateFile from "winston-daily-rotate-file";
+import * as Transport from "winston-transport";
 import { SanitizedError } from "../error";
 import { Logger } from "./base-logger";
 import { PrettyStream } from "./pretty-stream";
@@ -11,62 +11,57 @@ stream.pipe(process.stderr);
 export interface NodeLoggerConfig {
     name: string;
     path?: string;
+    json?: boolean;
 }
 
 /**
  * Logger helper class that will log
  */
 export class NodeLogger implements Logger {
-    private static _mainLogger: NodeLogger;
-    public static set mainLogger(logger: NodeLogger) {
-        this._mainLogger = logger;
-    }
-
-    public static get mainLogger() {
-        if (!this._mainLogger) {
-            this._mainLogger = new NodeLogger({
-                name: "BatchExplorer TMP",
-            });
-        }
-        return this._mainLogger;
-    }
-
-    private _logger: bunyan;
+    private _logger: winston.Logger;
 
     constructor(config: NodeLoggerConfig) {
         if (!config) {
             throw new SanitizedError("Missing configuration for Logger");
         }
 
-        const streams: any[] = [
-            {
-                stream: stream as any,
-            },
+        const transports: Transport[] = [
+            new winston.transports.Console({
+                format: winston.format.combine(
+                    winston.format.label({ label: config.name, message: true }),
+                    winston.format.colorize(),
+                    winston.format.simple(),
+                ),
+            }),
         ];
 
         if (config.path) {
-            streams.push({
-                type: "rotating-file",
-                path: config.path,
-                period: "1d",       // daily rotation
-                count: 3,           // keep 3 back copies
-            });
+
+            let format;
+            if (config.json) {
+                format = winston.format.combine(
+                    winston.format.timestamp(),
+                    winston.format.json(),
+                );
+            } else {
+                format = winston.format.simple();
+            }
+
+            transports.push(new DailyRotateFile({
+                maxFiles: 3,
+                filename: config.path,
+                format,
+            }));
         }
-        this._logger = bunyan.createLogger({
-            name: config.name,
+        this._logger = winston.createLogger({
             level: "debug",
-            serializers: bunyan.stdSerializers,
-            streams,
+            transports,
         });
     }
 
-    /**
-     * Doesn't not log to the console
-     */
-    public trace(message: string) {
-        this._logger.trace(message);
+    public log(level: string, message: string, ...params: any[]) {
+        this._logger.log(level, message, params);
     }
-
     public debug(message: string, ...params: any[]) {
         this._logger.debug(message, ...params);
     }
@@ -80,10 +75,6 @@ export class NodeLogger implements Logger {
     }
 
     public error(message: string, error?: any) {
-        if (error instanceof Error) {
-            this._logger.error({ err: error }, message);
-        } else {
-            this._logger.error({ error }, message);
-        }
+        this._logger.error(message, error);
     }
 }

@@ -1,31 +1,103 @@
 <div class="settings-header">
     <h1 tabindex="0" autofocus>{{'settings.title' | i18n}}</h1>
-
+    <div class="saved" *ngIf="saved" attr.aria-live="assertive">
+        {{'settings.saved' | i18n}}
+    </div>
     <div class="actions">
-        <bl-button title="Save" [action]="save" tooltipPosition="below" [disabled]="!modified || !userSettings.valid">
-            <i class="fa fa-floppy-o"></i>
-            <span class="modified" *ngIf="modified">*</span>
-        </bl-button>
-        <bl-button title="Reset" (do)="reset()" tooltipPosition="below" [disabled]="!modified">
+        <bl-button class="reset" [title]="'settings.reset' | i18n" (do)="reset()" tooltipPosition="below"
+            [disabled]="!modified">
             <i class="fa fa-undo"></i>
         </bl-button>
     </div>
 </div>
-<div class="settings-editor">
-    <div class="default-settings">
-        <bl-toolbar>
-            <div toolbarLabel>{{'settings.defaultSettings' | i18n}}</div>
-        </bl-toolbar>
-        <bl-editor [value]="defaultSettings" [config]="defaultSettingsEditorConfig"></bl-editor>
-    </div>
+<div class="settings-editor" [formGroup]="form">
+    <h2>{{'settings.general' | i18n}}</h2>
+    <bl-form-field>
+        <bl-select placeholder="Theme" formControlName="theme">
+            <bl-option value="classic" label="Classic"></bl-option>
+            <bl-option value="dark" label="Dark"></bl-option>
+            <bl-option value="high-contrast" label="High contrast"></bl-option>
+        </bl-select>
+    </bl-form-field>
+    <bl-form-field>
+        <bl-select placeholder="Entity configuration default view" formControlName="entityConfigurationDefaultView">
+            <bl-option value="pretty" label="Pretty"></bl-option>
+            <bl-option value="json" label="JSON"></bl-option>
+        </bl-select>
+    </bl-form-field>
 
-    <div class="user-settings">
-        <bl-toolbar>
-            <div toolbarLabel>{{'settings.userSettings' | i18n}}</div>
-            <div toolbarError *ngIf="!userSettings.valid">{{userSettings.errors?.validJson?.message}}</div>
-        </bl-toolbar>
+    <bl-editable-table label="Subscriptions to ignore" formControlName="subscriptionsIgnore">
+        <bl-editable-table-column name="pattern">Wildcard pattern (e.g. 'other-subscription*')
+        </bl-editable-table-column>
+    </bl-editable-table>
+
+    <bl-editable-table label="File associations" formControlName="fileAssociations">
+        <bl-editable-table-column name="extension">Extension(e.g. '.foo')</bl-editable-table-column>
+        <bl-editable-table-column name="viewer" type="select" [options]="viewerOptions">Viewer
+        </bl-editable-table-column>
+    </bl-editable-table>
+
+    <bl-form-field>
+        <input blInput placeholder="Default upload container" formControlName="defaultUploadContainer">
+        <bl-hint>Name of the container BatchExplorer will use to upload resource files when drag and drop</bl-hint>
+    </bl-form-field>
 
 
-        <bl-editor [formControl]="userSettings" [config]="userSettingsEditorConfig"></bl-editor>
-    </div>
+    <bl-form-field>
+        <input blInput placeholder="Default username for node connection" formControlName="nodeConnectDefaultUsername">
+        <bl-hint>When using the quick connect functionality to access a node this username will be used for the created
+            user</bl-hint>
+    </bl-form-field>
+
+    <bl-form-field>
+        <bl-select placeholder="Update channel" formControlName="updateChannel">
+            <bl-option value="stable" label="Stable"></bl-option>
+            <bl-option value="insider" label="Insider"></bl-option>
+        </bl-select>
+    </bl-form-field>
+
+    <bl-form-field>
+        <bl-select placeholder="Automatically update when quiting the application" formControlName="updateOnQuit">
+            <bl-option [value]="true" label="Yes"></bl-option>
+            <bl-option [value]="false" label="No"></bl-option>
+        </bl-select>
+    </bl-form-field>
+
+
+
+    <h2>
+        {{'settings.gallerySettings' | i18n}}
+    </h2>
+
+    <fieldset>
+        <legend>Microsoft portfolio</legend>
+        <div class="grow">
+            <bl-form-field class="gcol">
+                <input blInput placeholder="Repository" formControlName="microsoftPortfolioRepo">
+            </bl-form-field>
+            <bl-form-field class="gcol">
+                <input blInput placeholder="Branch" formControlName="microsoftPortfolioBranch">
+            </bl-form-field>
+            <bl-form-field class="gcol">
+                <input blInput placeholder="Path" formControlName="microsoftPortfolioPath">
+            </bl-form-field>
+        </div>
+    </fieldset>
+
+    <bl-form-field>
+        <input blInput placeholder="Default output filegroup" formControlName="defaultOutputFileGroup">
+    </bl-form-field>
+
+    <h2>
+        {{'settings.advancedSettings' | i18n}}
+    </h2>
+
+    <bl-form-field>
+        <input blInput placeholder="Github data source" formControlName="githubDataRepo">
+        <bl-hint>Name of the repository to use to load the data. You can use that to test a fork of the
+            BatchExplorer-data repo</bl-hint>
+    </bl-form-field>
+    <bl-form-field>
+        <input blInput placeholder="Github data branch" formControlName="githubDataBranch">
+    </bl-form-field>
 </div>

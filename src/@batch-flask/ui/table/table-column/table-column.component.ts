@@ -6,7 +6,6 @@ import {
     OnInit, SimpleChanges, TemplateRef,
     forwardRef,
 } from "@angular/core";
-
 import { SanitizedError } from "@batch-flask/utils";
 import { TableCellDefDirective } from "../table-cell-def";
 import { TableColumnRef } from "../table-column-manager";

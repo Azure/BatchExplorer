@@ -1,10 +1,11 @@
 import { Injectable, Injector } from "@angular/core";
+import { I18nService } from "@batch-flask/core";
+import { ElectronRemote, FileSystemService } from "@batch-flask/electron";
 import {
-    COMMAND_LABEL_ICON, DialogService, ElectronRemote,
-    EntityCommand, EntityCommands, FileSystemService, Permission, SidebarManager,
+    COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission, SidebarManager,
 } from "@batch-flask/ui";
-import { JobCreateBasicDialogComponent } from "app/components/job/action";
-import { Pool } from "app/models";
+import { AddJobFormComponent } from "app/components/job/action";
+import { Pool, PoolAllocationState } from "app/models";
 import { JobService, PinnedEntityService, PoolService } from "app/services";
 import { from } from "rxjs";
 import { PoolCreateBasicDialogComponent } from "./add/pool-create-basic-dialog.component";
@@ -15,6 +16,7 @@ import { PoolResizeDialogComponent } from "./resize";
 export class PoolCommands extends EntityCommands<Pool> {
     public addJob: EntityCommand<Pool, void>;
     public resize: EntityCommand<Pool, void>;
+    public stopResize: EntityCommand<Pool, void>;
     public clone: EntityCommand<Pool, void>;
     public delete: EntityCommand<Pool, DeletePoolOutput>;
     public exportAsJSON: EntityCommand<Pool, void>;
@@ -22,6 +24,7 @@ export class PoolCommands extends EntityCommands<Pool> {
 
     constructor(
         injector: Injector,
+        private i18n: I18nService,
         private dialog: DialogService,
         private fs: FileSystemService,
         private jobService: JobService,
@@ -61,11 +64,22 @@ export class PoolCommands extends EntityCommands<Pool> {
 
         this.resize = this.simpleCommand({
             name: "resize",
-            ...COMMAND_LABEL_ICON.Resize,
+            label: this.i18n.t("pool-commands.resize"),
+            icon: "fa fa-arrows-v",
             action: (pool) => this._resizePool(pool),
+            visible: (pool) => pool.allocationState !== PoolAllocationState.resizing,
             multiple: false,
             confirm: false,
             notify: false,
+            permission: Permission.Write,
+        });
+
+        this.stopResize = this.simpleCommand({
+            name: "stopResize",
+            label: this.i18n.t("pool-commands.stopResize"),
+            icon: "fa fa-stop",
+            action: (pool) => this._stopResizingPool(pool),
+            visible: (pool) => pool.allocationState === PoolAllocationState.resizing,
             permission: Permission.Write,
         });
 
@@ -114,6 +128,7 @@ export class PoolCommands extends EntityCommands<Pool> {
         this.commands = [
             this.addJob,
             this.resize,
+            this.stopResize,
             this.clone,
             this.delete,
             this.exportAsJSON,
@@ -122,7 +137,7 @@ export class PoolCommands extends EntityCommands<Pool> {
     }
 
     private _addJob(pool: Pool) {
-        const createRef = this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-job", AddJobFormComponent);
         createRef.component.preSelectPool(pool.id);
     }
 
@@ -132,6 +147,10 @@ export class PoolCommands extends EntityCommands<Pool> {
         this.sidebarManager.onClosed.subscribe(() => {
             this.poolService.get(pool.id);
         });
+    }
+
+    private _stopResizingPool(pool: Pool) {
+        return this.poolService.stopResize(pool.id);
     }
 
     private _clonePool(pool: Pool) {

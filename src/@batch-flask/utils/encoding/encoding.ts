@@ -129,9 +129,7 @@ export class EncodingUtils {
     }
 
     public static async guessEncodingByBuffer(buffer): Promise<Encoding | null> {
-        jschardet.Constants.MINIMUM_THRESHOLD = MINIMUM_THRESHOLD;
-
-        const guessed = jschardet.detect(buffer);
+        const guessed = jschardet.detect(buffer, { minimumThreshold: MINIMUM_THRESHOLD });
         if (!guessed || !guessed.encoding) {
             return null;
         }

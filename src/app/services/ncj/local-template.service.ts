@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { BasicListGetter, DataCache } from "@batch-flask/core";
-import { File, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
+import { BasicListGetter, DataCache, UserConfigurationService } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/electron";
+import { File, FileLoader, FileNavigator } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
-import { Constants } from "common";
+import { BEUserDesktopConfiguration } from "common";
 import * as path from "path";
-import { BehaviorSubject, Observable, from } from "rxjs";
-import { filter, tap } from "rxjs/operators";
+import { BehaviorSubject, Observable, from, of } from "rxjs";
+import { filter } from "rxjs/operators";
 import stripBom from "strip-bom";
-import { LocalFileStorage } from "../local-file-storage.service";
 
 export interface LocalTemplateFolder {
     path: string;
@@ -26,7 +26,7 @@ export interface LocalTemplateSettings {
     sources: LocalTemplateFolder[];
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class LocalTemplateService implements OnDestroy {
     public sources: Observable<LocalTemplateFolder[]>;
 
@@ -34,9 +34,11 @@ export class LocalTemplateService implements OnDestroy {
     private _localTemplatesGetter: BasicListGetter<File, any>;
     private _cache = new DataCache<File>("url");
 
-    constructor(private localFileStorage: LocalFileStorage, private fs: FileSystemService) {
+    constructor(
+        private userConfiguration: UserConfigurationService<BEUserDesktopConfiguration>,
+        private fs: FileSystemService) {
         this.sources = this._sources.pipe(filter(x => x !== null));
-        this.init();
+        this._loadSources();
 
         this._localTemplatesGetter = new BasicListGetter<File, any>(File, {
             cache: () => this._cache,
@@ -54,12 +56,6 @@ export class LocalTemplateService implements OnDestroy {
                 }));
             },
         });
-    }
-
-    public init() {
-        const obs = this._loadSources();
-        obs.subscribe();
-        return obs;
     }
 
     public ngOnDestroy() {
@@ -97,13 +93,18 @@ export class LocalTemplateService implements OnDestroy {
     }
 
     public getFileLoader(source: LocalTemplateFolder, filename: string) {
+        const localPath = path.join(source.path, filename);
         return new FileLoader({
-            filename,
+            filename: localPath,
             source: "local",
             fs: this.fs,
+            localPath: () => of(localPath),
             properties: () => from(this._getFileProperties(source, filename)),
             content: () => {
-                return from(this.fs.readFile(path.join(source.path, filename)).then(x => ({ content: x })));
+                return from(this.fs.readFile(localPath).then(x => ({ content: x })));
+            },
+            write: (content: string) => {
+                return from(this.fs.saveFile(localPath, content));
             },
         });
     }
@@ -140,24 +141,21 @@ export class LocalTemplateService implements OnDestroy {
     }
 
     private _saveSources(): Observable<any> {
-        return this.localFileStorage.set<LocalTemplateSettings>(Constants.SavedDataFilename.localTemplates, {
+        return from(this.userConfiguration.set("localTemplates", {
             sources: this._sources.value,
-        });
+        }));
     }
 
-    private _loadSources(): Observable<any> {
-        return this.localFileStorage.get<LocalTemplateSettings>(Constants.SavedDataFilename.localTemplates).pipe(
-            tap((data) => {
-                if (data && data.sources) {
-                    this._sources.next(data.sources);
-                } else {
-                    this._sources.next([]);
-                }
-            }),
-        );
+    private async _loadSources() {
+        const data = await this.userConfiguration.get("localTemplates");
+        if (data && data.sources) {
+            this._sources.next(data.sources);
+        } else {
+            this._sources.next([]);
+        }
     }
 
     private async _findTemplatesInFolder(folder: string): Promise<string[]> {
-        return this.fs.glob(path.join(folder, "**/*.template.json"));
+        return this.fs.glob(path.join(folder, "**/*.json"));
     }
 }

@@ -1,10 +1,7 @@
 import { Injectable, NgZone } from "@angular/core";
-import * as MouseTrap from "mousetrap";
-
-// import * as CommandMap from "app/commands";
 import { CommandBase } from "app/commands/core";
 import { KeyBindings } from "app/models";
-import { SettingsService } from "./settings.service";
+import * as MouseTrap from "mousetrap";
 
 // export const commands: any[] = ObjectUtils.values(CommandMap as any).filter((x: any) => x.id !== undefined);
 
@@ -13,7 +10,7 @@ export class CommandService {
     private _commandMap: { [key: string]: CommandBase } = {};
     private _setOnce = false;
 
-    constructor(private zone: NgZone, private settingsService: SettingsService) {
+    constructor(private zone: NgZone) {
 
     }
 
@@ -24,12 +21,6 @@ export class CommandService {
         //         this._commandMap[command.id] = this.injector.get(command);
         //     }
         // }
-
-        this.settingsService.keybindings.subscribe((keybindings) => {
-            if (keybindings) {
-                this.registerShortcuts(keybindings);
-            }
-        });
     }
 
     public perform(action: string) {

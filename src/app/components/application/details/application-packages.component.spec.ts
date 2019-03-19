@@ -1,74 +1,98 @@
-import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
+import { Component, Injector, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
-
 import { MatDialog } from "@angular/material";
+import { By } from "@angular/platform-browser";
 import { ListSelection } from "@batch-flask/core/list";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { ActivityService } from "@batch-flask/ui/activity";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { ListBaseComponent } from "@batch-flask/ui";
 import { ApplicationPackageTableComponent, ApplicationPackagesComponent } from "app/components/application/details";
-import { BatchApplication, PackageState } from "app/models";
-import { ApplicationService } from "app/services";
+import { BatchApplication, BatchApplicationPackage, PackageState } from "app/models";
+import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { EntityDetailsListMockComponent } from "test/utils/mocks/components";
+import { BatchApplicationPackageCommands } from "../action";
 
-const appWithPackagesId: string = "app-2";
-const appWithoutPackagesId: string = "app-1";
-const disabledApp: string = "app-3";
-const applicationMap: Map<string, BatchApplication> = new Map()
-    .set(appWithoutPackagesId, Fixtures.application.create({ id: appWithoutPackagesId }))
-    .set(appWithPackagesId, Fixtures.application.create({
-        id: appWithPackagesId, packages: [
-            Fixtures.applicationPackage.create({ version: "1.0" }),
-            Fixtures.applicationPackage.create({ version: "2.0" }),
-            Fixtures.applicationPackage.create({ version: "3.0" }),
-            Fixtures.applicationPackage.create({ version: "4.0" }),
-            Fixtures.applicationPackage.create({ version: "5.0" }),
-        ],
-    }))
-    .set(disabledApp, Fixtures.application.create({
-        id: disabledApp, allowUpdates: false, packages: [
-            Fixtures.applicationPackage.create({ version: "1.0" }),
-            Fixtures.applicationPackage.create({ version: "2.0" }),
-        ],
-    }));
+const disabledApp = new BatchApplication({
+    id: "locked-app",
+    name: "locked-app",
+    properties: {
+        allowUpdates: false,
+        defaultVersion: "1.0",
+        displayName: "Foo bar",
+    },
+});
 
 @Component({
     template: `<bl-application-packages [application]="application"></bl-application-packages>`,
 })
 class TestComponent {
-    public application: BatchApplication;
+    public application: BatchApplication = Fixtures.application.create({
+        id: "app-1",
+        name: "app-1",
+        properties: {
+            allowUpdates: true,
+        },
+    });
 }
+
+@Component({
+    selector: "bl-application-package-table",
+    template: "",
+})
+class MockApplicationPackageTableComponent extends ListBaseComponent {
+    public handleFilter = jasmine.createSpy("handleFilter").and.returnValue(of(null));
+
+    constructor(injector: Injector) {
+        super(injector);
+    }
+}
+
+const pkg1 = new BatchApplicationPackage({
+    id: "1.0",
+    name: "1.0",
+    properties: {
+        state: PackageState.pending,
+    } as any,
+});
 
 describe("ApplicationPackagesComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
-    let testComponent: TestComponent;
     let component: ApplicationPackagesComponent;
     let listComponent: ApplicationPackageTableComponent;
+    let commandsSpy;
+
     beforeEach(() => {
+
+        commandsSpy = {
+            getFromCache: () => of(pkg1),
+            activate: {
+                enabled: () => true,
+            },
+        };
         TestBed.configureTestingModule({
             imports: [I18nTestingModule],
-            declarations: [TestComponent, ApplicationPackagesComponent,
-                ApplicationPackageTableComponent, EntityDetailsListMockComponent],
+            declarations: [
+                TestComponent,
+                ApplicationPackagesComponent,
+                EntityDetailsListMockComponent,
+                MockApplicationPackageTableComponent,
+            ],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 { provide: MatDialog, useValue: null },
-                { provide: ApplicationService, useValue: null },
-                { provide: ActivityService, useValue: null },
-                { provide: SidebarManager, useValue: null },
             ],
         });
+        TestBed.overrideComponent(
+            ApplicationPackagesComponent,
+            {
+                set: {
+                    providers: [{ provide: BatchApplicationPackageCommands, useValue: commandsSpy }],
+                },
+            },
+        );
 
         fixture = TestBed.createComponent(TestComponent);
-        testComponent = fixture.componentInstance;
         component = fixture.debugElement.query(By.css("bl-application-packages")).componentInstance;
-        testComponent.application = Fixtures.application.create({
-            id: "app-1", packages: [
-                Fixtures.applicationPackage.create({ version: "1.0" }),
-                Fixtures.applicationPackage.create({ version: "2.0" }),
-            ],
-        });
         listComponent = fixture.debugElement.query(By.css("bl-application-package-table")).componentInstance;
 
         fixture.detectChanges();
@@ -85,11 +109,6 @@ describe("ApplicationPackagesComponent", () => {
             expect(container.nativeElement).toBeDefined();
         });
 
-        it("edit button displayed", () => {
-            const container = fixture.debugElement.query(By.css("bl-button[title=\"Update package\"]"));
-            expect(container.nativeElement).toBeDefined();
-        });
-
         it("activate button displayed", () => {
             const container = fixture.debugElement.query(By.css("bl-button[title=\"Activate pending package\"]"));
             expect(container.nativeElement).toBeDefined();
@@ -100,12 +119,11 @@ describe("ApplicationPackagesComponent", () => {
         it("add, edit, and activate disabled on load", () => {
             expect(component.deleteEnabled).toBe(false);
             expect(component.activateEnabled).toBe(false);
-            expect(component.editEnabled).toBe(false);
         });
 
         describe("deleteItemEnabled", () => {
             beforeEach(() => {
-                listComponent.activeItem = "1.0";
+                listComponent.selection = new ListSelection({ keys: ["1.0"] });
                 fixture.detectChanges();
             });
 
@@ -121,66 +139,23 @@ describe("ApplicationPackagesComponent", () => {
             });
 
             it("disabled if application.allowUpdates set to false", () => {
-                component.application = applicationMap.get(disabledApp);
-                listComponent.activeItem = "2.0";
+                component.application = disabledApp;
+                listComponent.selection = new ListSelection({ keys: ["2.0"] });
                 fixture.detectChanges();
 
                 expect(component.deleteEnabled).toBe(false);
             });
         });
 
-        describe("editItemEnabled", () => {
-            beforeEach(() => {
-                listComponent.activeItem = "1.0";
-            });
-
-            it("enabled if one item selected", () => {
-                listComponent.selection = new ListSelection({ keys: ["1.0"] });
-                expect(component.editEnabled).toBe(true);
-            });
-
-            it("disabled if many items selected", () => {
-                listComponent.selection = new ListSelection({ keys: ["1.0", "2.0", "3.0"] });
-                expect(component.editEnabled).toBe(false);
-            });
-
-            it("disabled if application.allowUpdates set to false", () => {
-                component.application = applicationMap.get(disabledApp);
-                listComponent.activeItem = "2.0";
-                fixture.detectChanges();
-
-                expect(component.editEnabled).toBe(false);
-            });
-        });
-
         describe("activateItemEnabled", () => {
-            beforeEach(() => {
-                testComponent.application = Fixtures.application.create({
-                    id: "app-4", packages: [
-                        Fixtures.applicationPackage.create({ version: "active", state: PackageState.active }),
-                        Fixtures.applicationPackage.create({ version: "pending1", state: PackageState.pending }),
-                        Fixtures.applicationPackage.create({ version: "pending2", state: PackageState.pending }),
-                    ],
-                });
-
-                fixture.detectChanges();
-            });
-
             it("enabled if one pending item selected", () => {
-                listComponent.activeItem = "pending1";
+                listComponent.selection = new ListSelection({ keys: ["1.0"] });
                 fixture.detectChanges();
                 expect(component.activateEnabled).toBe(true);
             });
 
-            it("disabled if one active item selected", () => {
-                listComponent.activeItem = "active";
-                fixture.detectChanges();
-                expect(component.activateEnabled).toBe(false);
-            });
-
             it("disabled if many items selected", () => {
-                listComponent.activeItem = "pending1";
-                listComponent.selection = new ListSelection({ keys: ["pending1", "pending2"] });
+                listComponent.selection = new ListSelection({ keys: ["1.0", "2.0"] });
                 fixture.detectChanges();
                 expect(component.activateEnabled).toBe(false);
             });

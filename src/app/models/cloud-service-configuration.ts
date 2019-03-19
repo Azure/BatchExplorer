@@ -2,8 +2,7 @@ import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface CloudServiceConfigurationAttributes {
     osFamily: CloudServiceOsFamily;
-    targetOSVersion: string;
-    currentOSVersion: string;
+    osVersion: string;
 }
 /**
  * Class for displaying Batch CloudServiceConfiguration information.
@@ -11,8 +10,7 @@ export interface CloudServiceConfigurationAttributes {
 @Model()
 export class CloudServiceConfiguration extends Record<CloudServiceConfigurationAttributes> {
     @Prop() public osFamily: CloudServiceOsFamily;
-    @Prop() public targetOSVersion: string;
-    @Prop() public currentOSVersion: string;
+    @Prop() public osVersion: string;
 }
 
 export enum CloudServiceOsFamily {

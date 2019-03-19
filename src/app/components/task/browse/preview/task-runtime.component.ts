@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-
 import { TaskState } from "app/models";
 
 import "./task-runtime.scss";

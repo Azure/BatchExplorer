@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
-import { DataSharedModule } from "app/components/data/shared";
+import { BlobContainerPickerModule } from "app/components/common";
 import { UploadNodeLogsDialogComponent } from "./upload-node-logs";
 
 const privateComponents = [];
@@ -10,7 +9,7 @@ const publicComponents = [
 ];
 
 @NgModule({
-    imports: [...commonModules, DataSharedModule],
+    imports: [...commonModules, BlobContainerPickerModule],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,
     entryComponents: [

@@ -8,12 +8,11 @@ import {
     NG_VALUE_ACCESSOR,
     Validators,
 } from "@angular/forms";
-import { Subscription, of } from "rxjs";
-
 import { RangeValidator } from "@batch-flask/ui/validation";
 import { AllTasksCompleteAction, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
 import { PoolService } from "app/services";
 import { Constants } from "common";
+import { Subscription, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
 
 @Component({

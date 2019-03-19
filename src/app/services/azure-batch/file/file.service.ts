@@ -14,7 +14,8 @@ import {
     ServerError,
     TargetedDataCache,
 } from "@batch-flask/core";
-import { File, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
+import { FileSystemService } from "@batch-flask/electron";
+import { File, FileLoader, FileNavigator } from "@batch-flask/ui";
 import { EncodingUtils, exists } from "@batch-flask/utils";
 import * as fs from "fs";
 import * as path from "path";

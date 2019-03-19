@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy, Component,
     HostBinding, Input, OnChanges, SimpleChanges,
 } from "@angular/core";
-
 import { Task, TaskState } from "app/models";
 
 import "./task-state.scss";

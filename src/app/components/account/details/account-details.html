@@ -5,26 +5,7 @@
 <bl-loading [status]="data.status">
     <div *ngIf="account">
         <bl-account-summary-card [account]="account"></bl-account-summary-card>
-        <h1 class="section-title">{{'account-details.monitoring' | i18n }}</h1>
-        <div class="monitor-charts">
-            <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
-                <bl-monitor-chart chartType="coreCount"></bl-monitor-chart>
-            </a>
-            <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
-                <bl-monitor-chart chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
-            </a>
-            <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
-                <bl-monitor-chart chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
-            </a>
-            <a class="monitor-chart node-states" [routerLink]="['/accounts', account.id, 'monitor']">
-                <bl-monitor-chart chartType="nodeStates" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
-            </a>
-            <div class="monitor-chart current-node-counts">
-                <h2>Current node counts</h2>
-                <bl-pool-state-graph></bl-pool-state-graph>
-            </div>
-        </div>
-
+        <bl-account-monitoring-section [account]="account"></bl-account-monitoring-section>
         <bl-account-cost-card></bl-account-cost-card>
         <h1 class="section-title">{{'account-details.resources' | i18n }}</h1>
         <div class="account-cards">
@@ -70,7 +51,7 @@
                                     <a href="#" routerLink="/pools">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard" [data]="poolData.items | async" [config]="tableConfig">
+                            <bl-table class="dashboard" [data]="pools" [config]="tableConfig">
                                 <bl-column name="id">
                                     <div *blCellDef="let pool">{{pool.id}}</div>
                                 </bl-column>
@@ -111,7 +92,7 @@
                             </bl-no-item>
                             <bl-table class="dashboard" [data]="applicationData.items | async" [config]="tableConfig">
                                 <bl-column name="id">
-                                    <div *blCellDef="let app">{{app.id}}</div>
+                                    <div *blCellDef="let app">{{app.name}}</div>
                                 </bl-column>
                             </bl-table>
                         </bl-loading>

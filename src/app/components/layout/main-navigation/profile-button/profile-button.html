@@ -5,6 +5,8 @@
             <i class="fa fa-circle-o-notch fa-spin"></i>
         </div>
         <div *ngSwitchCase="UpdateStatus.Downloading" class="notification-overlay downloading">
+            <mat-progress-spinner [value]="downloadProgress" [diameter]="24">
+            </mat-progress-spinner>
             <i class="fa fa-arrow-circle-o-down"></i>
         </div>
         <div *ngSwitchCase="UpdateStatus.Ready" class="notification-overlay ready">1</div>

@@ -1,5 +1,4 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-
 import { TaskState } from "app/models/azure-batch/task";
 
 export interface NodeRecentTaskAttributes {

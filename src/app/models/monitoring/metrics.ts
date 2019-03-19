@@ -1,9 +1,10 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-import * as moment from "moment";
+import { Duration } from "luxon";
 
 export interface MetricValue {
     timeStamp: string;
     total: number;
+    average: number;
 }
 
 export interface Metric {
@@ -21,7 +22,7 @@ export interface MonitoringMetricListAttributes {
 
 @Model()
 export class MonitoringMetricList extends Record<MonitoringMetricListAttributes> {
-    @Prop(moment.duration) public interval: moment.Duration;
+    @Prop() public interval: Duration;
 
     @Prop(Object) public metrics: Metric[];
 }

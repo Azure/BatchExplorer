@@ -1,8 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { I18nService, Locale, LocaleService, TranslatedLocales } from "@batch-flask/core";
-import { AutoUpdateService, UpdateStatus } from "@batch-flask/electron";
-import { ElectronRemote, ElectronShell, FileSystemService } from "@batch-flask/ui";
+import {
+    AutoUpdateService,
+    ElectronRemote,
+    ElectronShell,
+    FileSystemService,
+    UpdateStatus,
+} from "@batch-flask/electron";
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem,
 } from "@batch-flask/ui/context-menu";
@@ -28,6 +33,8 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
     public currentUserName: string = "";
     public updateStatus: UpdateStatus;
+
+    public downloadProgress: number;
 
     private _destroy = new Subject();
 
@@ -57,6 +64,14 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
         this.autoUpdateService.status.pipe(takeUntil(this._destroy)).subscribe((status) => {
             this.updateStatus = status;
+            this.changeDetector.markForCheck();
+        });
+        this.autoUpdateService.downloadProgress.pipe(takeUntil(this._destroy)).subscribe((progress) => {
+            if (progress) {
+                this.downloadProgress = progress.percent;
+            } else {
+                this.downloadProgress = 0;
+            }
             this.changeDetector.markForCheck();
         });
     }

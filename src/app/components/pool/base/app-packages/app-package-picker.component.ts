@@ -1,14 +1,17 @@
-import { Component, EventEmitter, OnDestroy, Output, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
+} from "@angular/core";
+import {
+    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
+import { ListView, autobind } from "@batch-flask/core";
+import { PipeableSelectOptions } from "@batch-flask/ui/form/editable-table";
+import { BatchApplication } from "app/models";
+import { ApplicationListParams, BatchApplicationPackageService, BatchApplicationService } from "app/services";
+import { AutoStorageService } from "app/services/storage";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-
-import { ListView, ServerError } from "@batch-flask/core";
-import { LoadingStatus } from "@batch-flask/ui/loading";
-import { ApplicationPackage, BatchApplication } from "app/models";
-import { ApplicationListParams, ApplicationService } from "app/services";
+import { Subject, of, pipe } from "rxjs";
+import { distinctUntilChanged, filter, map, publishReplay, refCount, switchMap, takeUntil } from "rxjs/operators";
 
 import "./app-package-picker.scss";
 
@@ -24,230 +27,111 @@ interface PackageReference {
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AppPackagePickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AppPackagePickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppPackagePickerComponent implements ControlValueAccessor, Validator, OnDestroy {
-    @Output() public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
+export class AppPackagePickerComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
+    public references = new FormControl<PackageReference[]>([], this._duplicateValidator);
+    public applicationNames: string[] = [];
+    public _propagateChange: (references: PackageReference[]) => void;
+    public hasAutoStorage: boolean;
 
-    public status: Observable<LoadingStatus>;
-    public applications: List<BatchApplication> = List([]);
-    public packageMap: any[] = [];
-    public items: FormArray;
-    public form: FormGroup;
-
-    private _subscriptions: Subscription[] = [];
-    private _data: ListView<BatchApplication, ApplicationListParams>;
-    private _applicationMap: { [key: string]: string[] } = {};
-    private _propagateChange: (items: any[]) => void;
-    private _propagateTouched: (value: boolean) => void;
-    private _writingValue = false;
-    private _mapped = false;
-
-    private _defaultVersionText = "Use default version";
-    private _defaultVersionValue = "-1";
+    private data: ListView<BatchApplication, ApplicationListParams>;
+    private _destroy = new Subject();
 
     constructor(
-        private applicationService: ApplicationService,
-        private formBuilder: FormBuilder) {
+        private applicationService: BatchApplicationService,
+        private autoStorageService: AutoStorageService,
+        private packageService: BatchApplicationPackageService,
+        private changeDetector: ChangeDetectorRef) {
 
-        this.items = formBuilder.array([]);
-        this.form = formBuilder.group({ items: this.items });
-        this._mapped = false;
+        this.data = this.applicationService.listView();
 
-        this._data = this.applicationService.listView();
-
-        this._data.onError = (error: ServerError) => {
-            if (this.applicationService.isAutoStorageError(error)) {
-                this.hasLinkedStorage.emit(false);
-                return true;
-            }
-
-            return false;
-        };
-
-        // subscribe to the application data proxy
-        this._data.items.subscribe((applications) => {
-            this._applicationMap = {};
-            if (applications.size > 0) {
-                this._mapApplicationPackages(applications);
-
-                // when this is called the packages will all be loaded from writeValue.
-                let index = 0;
-                (this.items.value as PackageReference[] || []).forEach(item => {
-                    if (item && item.applicationId) {
-                        this._setPackageMap(item.applicationId, index);
-                    }
-
-                    index++;
-                });
-            }
+        this.autoStorageService.hasAutoStorage.pipe(takeUntil(this._destroy)).subscribe((hasAutoStorage) => {
+            this.hasAutoStorage = hasAutoStorage;
+            this.changeDetector.markForCheck();
         });
 
-        // subscribe to the form change events
-        this._subscriptions.push(this.items.valueChanges.subscribe((references: PackageReference[]) => {
-            if (this._writingValue) {
-                return;
-            }
+        // subscribe to the application data proxy
+        this.data.items.subscribe((applications) => {
+            this.applicationNames = applications.map(x => x.name).toArray();
+            this.changeDetector.markForCheck();
+        });
 
-            const last = references[references.length - 1];
-            if (last && last.applicationId && last.version) {
-                this.addNewItem();
-            }
-
+        this.references.valueChanges.pipe(takeUntil(this._destroy)).subscribe((references: PackageReference[]) => {
             if (this._propagateChange) {
-                const cloned = this.items.value.slice(0, -1).map(item => {
-                    const clone = JSON.parse(JSON.stringify(item));
-                    if (clone.version === this._defaultVersionValue) {
-                        clone.version = null;
-                    }
-
-                    return clone;
-                });
-
-                this._propagateChange(cloned);
+                this._propagateChange(references);
             }
-        }));
+        });
+    }
 
-        this.status = this._data.status;
+    public ngOnInit() {
+        this.data.fetchAll();
     }
 
     public ngOnDestroy() {
-        this._data.dispose();
-        this._subscriptions.forEach(x => x.unsubscribe());
+        this.data.dispose();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public writeValue(references: PackageReference[]) {
-        this._writingValue = true;
-        this.items.controls = [];
-        if (references) {
-            for (const reference of references) {
-                this.addNewItem(reference.applicationId, reference.version || this._defaultVersionValue);
-            }
-        } else {
-            this.items.setValue([]);
-        }
-
-        this._data.fetchNext();
-        this._writingValue = false;
-        this.addNewItem();
+        this.references.setValue(references);
     }
 
-    public registerOnChange(fn) {
+    public registerOnChange(fn: (references: PackageReference[]) => void) {
         this._propagateChange = fn;
     }
 
-    public registerOnTouched(fn) {
-        // need this in order for the bl-error validation control to work
-        this._propagateTouched = fn;
+    public registerOnTouched(fn: () => void) {
+        // Nothing to do
     }
 
-    public validate(control: FormControl) {
-        if (!control.value || this._writingValue || !this._mapped) {
+    public validate(c: FormControl): ValidationErrors | null {
+        if (this.references.valid) {
+            return null;
+        } else {
+            return this.references.errors;
+        }
+    }
+
+    @autobind()
+    public versionOptions(): PipeableSelectOptions {
+        return pipe(
+            map((values: { applicationId: string }) => values.applicationId),
+            distinctUntilChanged(),
+            filter(x => Boolean(x)),
+            switchMap(applicationName => this.applicationService.getByName(applicationName)),
+            switchMap(application => application ? this.packageService.listAll(application.id) : of(List([]))),
+            map((packages) => packages.map(x => x.name.toLowerCase()).toArray()),
+            publishReplay(1),
+            refCount(),
+        );
+    }
+
+    @autobind()
+    private _duplicateValidator(control: FormControl<PackageReference[]>): ValidationErrors | null {
+        const references = control.value;
+        if (references === null) {
             return null;
         }
+        let duplicate: string | null = null;
+        const uniqueIds = new Set<string>();
 
-        const tempMap: any = {};
-        for (const reference of control.value) {
-            // TODO: remove lowerCase when API is fixed.
-            const application = reference.applicationId && reference.applicationId.toLowerCase();
-            const key = `${application}-${reference.version}`;
-            if (!Boolean(key in tempMap)) {
-                const version = !reference.version // this._defaultVersionValue
-                    ? this._defaultVersionText
-                    : reference.version.toLowerCase();
-
-                if (!this._isValidReference(application, version)) {
-                    return {
-                        invalid: true,
-                    };
-                }
-
-                tempMap[key] = key;
-            } else {
+        for (const reference of references) {
+            const uid = `${reference.applicationId}/versions/${reference.version}`;
+            if (uniqueIds.has(uid)) {
+                duplicate = uid;
                 return {
-                    duplicate: true,
+                    duplicate: {
+                        value: duplicate,
+                        message:
+                            `Application ${reference.applicationId} has version ${reference.version} specified twice`,
+                    },
                 };
             }
+            uniqueIds.add(uid);
         }
 
         return null;
-    }
-
-    public addNewItem(applicationId = null, version = null) {
-        this.items.push(this.formBuilder.group({
-            applicationId: [applicationId, []],
-            version: [version, []],
-        }));
-    }
-
-    public deleteItem(index: number) {
-        this.items.removeAt(index);
-        this.packageMap.splice(index, 1);
-    }
-
-    public applicationSelected(appId: string, index: number) {
-        this._setPackageMap(appId, index);
-    }
-
-    public getPackageValue(version: string) {
-        return version.toLowerCase() !== this._defaultVersionText.toLowerCase() ? version : this._defaultVersionValue;
-    }
-
-    public trackRow(index) {
-        return index;
-    }
-
-    public trackApplication(index, application: BatchApplication) {
-        return application.id;
-    }
-
-    public trackPackage(index, pkg: ApplicationPackage) {
-        return pkg.version;
-    }
-
-    private _setPackageMap(applicationId: string, index: number) {
-        // each table row needs it's own package list based on the selected application
-        this.packageMap[index] = List(this._applicationMap[applicationId] || []);
-        if (applicationId && this._propagateTouched) {
-            this._propagateTouched(true);
-        }
-    }
-
-    private _isValidReference(application: string, version: string) {
-        return application in this._applicationMap
-            && this._applicationMap[application].indexOf(version) !== -1;
-    }
-
-    /*
-     * Map application data into [application][packages[]]
-     * _appPackageMap["blender"]["1", "1.34", "2"]
-     * _appPackageMap["image-magic"]["1A", "1B"]
-     * ...
-     */
-    private _mapApplicationPackages(applications: List<BatchApplication>) {
-        this.applications = applications;
-        if (applications && applications.size > 0) {
-            applications.forEach((application) => {
-                // TODO: remove lower case when API bug fixed.
-                const currentAppId = application.id.toLowerCase();
-                if (this._applicationMap[currentAppId] === undefined) {
-                    this._applicationMap[currentAppId] = [];
-                }
-
-                // If there is a default version set allow the user to select "use default"
-                if (application.defaultVersion) {
-                    this._applicationMap[currentAppId].push(this._defaultVersionText);
-                }
-
-                // Add the packages to the application map
-                application.packages.forEach((appPackage: ApplicationPackage) => {
-                    const currentPackageVersion = appPackage.version;
-                    if (this._applicationMap[currentAppId][currentPackageVersion] === undefined) {
-                        this._applicationMap[currentAppId].push(currentPackageVersion);
-                    }
-                });
-            });
-
-            this._mapped = true;
-        }
     }
 }

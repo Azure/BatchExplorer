@@ -16,9 +16,9 @@ import { MatMenuTrigger } from "@angular/material";
 import { RouterLink } from "@angular/router";
 import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { Permission, PermissionService } from "@batch-flask/ui/permission";
+import { exists } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 
-import { exists } from "@batch-flask/utils";
 import "./clickable.scss";
 
 @Component({

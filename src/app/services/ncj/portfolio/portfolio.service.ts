@@ -1,14 +1,13 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { isNotNullOrUndefined } from "@batch-flask/core";
-import { FileSystemService } from "@batch-flask/ui";
-import { SettingsService } from "app/services/settings.service";
-import { Constants } from "common";
-import { BehaviorSubject, Observable, combineLatest, of } from "rxjs";
+import { GlobalStorage, UserConfigurationService } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/electron";
+import { BEUserDesktopConfiguration } from "common";
+import { Observable, combineLatest, of } from "rxjs";
 import {
-    distinctUntilChanged, filter, map, publishReplay, refCount, share, switchMap, take, tap,
+    distinctUntilChanged, map, publishReplay, refCount, switchMap, take,
 } from "rxjs/operators";
-import { GithubPortfolio, Portfolio, PortfolioReference, PortfolioType } from ".";
-import { LocalFileStorage } from "../../local-file-storage.service";
+import { GithubPortfolio } from "./github-portfolio";
+import { Portfolio, PortfolioReference, PortfolioType } from "./portfolio";
 
 export const MICROSOFT_PORTFOLIO = {
     id: "microsoft-offical",
@@ -19,42 +18,54 @@ interface PortfolioData {
     portfolios: PortfolioReference[];
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class PortfolioService implements OnDestroy {
+    public static readonly KEY = "portfolios";
+
     public portfolios: Observable<Portfolio[]>;
-    private _portfolios = new BehaviorSubject<Map<string, Portfolio> | null>(null);
+    private _portfolios: Observable<Map<string, Portfolio>>;
     private _microsoftPortfolio: Observable<Portfolio>;
 
     constructor(
-        private localFileStorage: LocalFileStorage,
+        private storage: GlobalStorage,
         private fs: FileSystemService,
-        settingsService: SettingsService) {
+        settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
 
-        this._microsoftPortfolio = settingsService.settingsObs.pipe(
-            map((settings) => {
-                const branch = settings["github-data.source.branch"] || "master";
-                const repo = settings["github-data.source.repo"] || "Azure/BatchExplorer-data";
-                return `https://github.com/${repo}/tree/${branch}`;
+        this._microsoftPortfolio = settingsService.watch("microsoftPortfolio").pipe(
+            distinctUntilChanged((a, b) => {
+                return a === b || (a.repo === b.repo && a.branch === b.branch && a.path === b.path);
             }),
-            distinctUntilChanged(),
-            map((source) => new GithubPortfolio({ ...MICROSOFT_PORTFOLIO, source }, this.fs)),
+            map((settings) => {
+                const branch = settings.branch;
+                const repo = settings.repo;
+                const source = `https://github.com/${repo}/tree/${branch}`;
+                return new GithubPortfolio({ ...MICROSOFT_PORTFOLIO, source, path: settings.path }, this.fs);
+            }),
             publishReplay(1),
             refCount(),
         );
 
-        const portfolios = this._portfolios.pipe(filter(isNotNullOrUndefined));
+        this._portfolios = this.storage.watch<PortfolioData>(PortfolioService.KEY).pipe(
+            map((data) => {
+                if (data && Array.isArray(data.portfolios)) {
+                    return data.portfolios;
+                } else {
+                    return [];
+                }
+            }),
+            map(x => this._processPortfolios(x)),
+        );
 
-        this.portfolios = combineLatest(this._microsoftPortfolio, portfolios).pipe(
+        this.portfolios = combineLatest(this._microsoftPortfolio, this._portfolios).pipe(
             map(([microsoft, others]) => {
                 return [microsoft, ...others.values()];
             }),
         );
 
-        this._loadPortfolios().subscribe();
     }
 
     public ngOnDestroy() {
-        this._portfolios.complete();
+        // Nothing
     }
 
     public get(id: string): Observable<Portfolio | undefined> {
@@ -79,35 +90,17 @@ export class PortfolioService implements OnDestroy {
         );
     }
 
-    public setPortfolios(portfolios: PortfolioReference[], save = true) {
-        const map = new Map();
-        for (const portfolio of portfolios) {
-            map.set(portfolio.id, new GithubPortfolio(portfolio, this.fs));
-        }
-        this._portfolios.next(map);
-        if (save) {
-            this._savePortfolios();
-        }
-    }
-
-    private _savePortfolios(): Observable<any> {
-        return this.localFileStorage.set<PortfolioData>(Constants.SavedDataFilename.portfolios, {
-            portfolios: [...this._portfolios.value.values()]
-                .filter(x => x.id !== MICROSOFT_PORTFOLIO.id)
-                .map(x => x.reference),
+    public setPortfolios(portfolios: PortfolioReference[]) {
+        return this.storage.set<PortfolioData>(PortfolioService.KEY, {
+            portfolios,
         });
     }
 
-    private _loadPortfolios(): Observable<any> {
-        return this.localFileStorage.get<PortfolioData>(Constants.SavedDataFilename.portfolios).pipe(
-            tap((data) => {
-                if (data && data.portfolios) {
-                    this.setPortfolios(data.portfolios, false);
-                } else {
-                    this.setPortfolios([], false);
-                }
-            }),
-            share(),
-        );
+    private _processPortfolios(portfolios: PortfolioReference[]) {
+        const map = new Map();
+        for (const portfolio of portfolios) {
+            map.set(portfolio.id, new GithubPortfolio(portfolio as any, this.fs));
+        }
+        return map;
     }
 }

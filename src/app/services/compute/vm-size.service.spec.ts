@@ -1,9 +1,9 @@
-import { ArmBatchAccount, LocalBatchAccount, Subscription } from "app/models";
+import { ArmBatchAccount, ArmSubscription, LocalBatchAccount } from "app/models";
 import { BehaviorSubject, of } from "rxjs";
 import { take } from "rxjs/operators";
 import { VmSizeService } from "./vm-size.service";
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     id: "/subscriptions/sub1",
     subscriptionId: "sub1",
 });

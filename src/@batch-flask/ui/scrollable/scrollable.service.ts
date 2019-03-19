@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-
 import { ScrollableComponent } from "./scrollable.component";
 
 @Injectable({providedIn: "root"})

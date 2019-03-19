@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
-import { commonModules } from "app/common";
-
 import { BaseModule, SidebarModule } from "@batch-flask/ui";
+import { commonModules } from "app/common";
+import { ResourceFilePickerModule } from "app/components/common";
 import { TaskBaseModule } from "app/components/task/base";
 import {
-    JobCreateBasicDialogComponent,
+    AddJobFormComponent,
     JobManagerTaskPickerComponent,
     JobPreparationTaskPickerComponent,
     JobReleaseTaskPickerComponent,
@@ -15,7 +15,7 @@ import { DisableJobButtonComponent, DisableJobDialogComponent } from "./disable"
 import { EnableJobButtonComponent } from "./enable";
 
 const components = [
-    JobCreateBasicDialogComponent, JobManagerTaskPickerComponent, PoolPickerComponent,
+    AddJobFormComponent, JobManagerTaskPickerComponent, PoolPickerComponent,
     PatchJobComponent, JobPreparationTaskPickerComponent, JobReleaseTaskPickerComponent,
     DisableJobDialogComponent, DisableJobButtonComponent, EnableJobButtonComponent,
 ];
@@ -23,9 +23,9 @@ const components = [
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [...commonModules, TaskBaseModule, BaseModule, SidebarModule],
+    imports: [...commonModules, TaskBaseModule, BaseModule, SidebarModule, ResourceFilePickerModule],
     entryComponents: [
-        JobCreateBasicDialogComponent, DisableJobDialogComponent, PatchJobComponent,
+        AddJobFormComponent, DisableJobDialogComponent, PatchJobComponent,
     ],
 })
 export class JobActionModule {

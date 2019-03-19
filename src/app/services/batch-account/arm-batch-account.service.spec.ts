@@ -1,13 +1,13 @@
-import { ArmBatchAccount, Subscription } from "app/models";
+import { ArmBatchAccount, ArmSubscription } from "app/models";
 import { List } from "immutable";
 import { of } from "rxjs";
 import { ArmBatchAccountService } from "./arm-batch-account.service";
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     id: "/subscriptions/sub1",
     subscriptionId: "sub1",
 });
-const sub2 = new Subscription({
+const sub2 = new ArmSubscription({
     id: "/subscriptions/sub2",
     subscriptionId: "sub2",
 });
@@ -52,8 +52,10 @@ describe("ArmBatchAccountService", () => {
 
     it("should have loaded the list of accounts from all subscriptions", () => {
         expect(httpSpy.get).toHaveBeenCalledTimes(2);
-        expect(httpSpy.get).toHaveBeenCalledWith(sub1, "/subscriptions/sub1/resources", jasmine.anything());
-        expect(httpSpy.get).toHaveBeenCalledWith(sub2, "/subscriptions/sub2/resources", jasmine.anything());
+        expect(httpSpy.get).toHaveBeenCalledWith(sub1,
+            "/subscriptions/sub1/providers/Microsoft.Batch/batchAccounts", jasmine.anything());
+        expect(httpSpy.get).toHaveBeenCalledWith(sub2,
+            "/subscriptions/sub2/providers/Microsoft.Batch/batchAccounts", jasmine.anything());
     });
 
     it("when it loads accounts it insert the subscription inside", () => {

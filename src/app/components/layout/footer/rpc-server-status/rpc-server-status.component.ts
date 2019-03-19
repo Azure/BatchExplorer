@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy } from "@angular/core";
-import { ElectronShell, FileSystemService } from "@batch-flask/ui";
+import { ElectronShell, FileSystemService } from "@batch-flask/electron";
 import {
     ContextMenu,
     ContextMenuItem,
@@ -18,8 +18,7 @@ import "./rpc-server-status.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RpcServerStatusComponent implements OnDestroy {
-    @HostBinding("class.connected")
-    public connected = false;
+    @HostBinding("class.connected") public connected = false;
 
     public get title() {
         if (this.connected) {
@@ -46,6 +45,7 @@ export class RpcServerStatusComponent implements OnDestroy {
     public ngOnDestroy() {
         this._sub.unsubscribe();
     }
+
     public showContextMenu() {
         const items: any[] = [
             new ContextMenuItem("Restart service", () => this._restartServer()),

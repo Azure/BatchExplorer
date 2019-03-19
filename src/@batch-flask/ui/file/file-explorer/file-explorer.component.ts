@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
+import { FileSystemService } from "@batch-flask/electron";
 import { Activity, ActivityService } from "@batch-flask/ui/activity";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { FileNavigator, FileTreeNode } from "@batch-flask/ui/file/file-navigator";
@@ -9,10 +10,9 @@ import { SplitPaneConfig } from "@batch-flask/ui/split-pane";
 import { CloudPathUtils, FileUrlUtils } from "@batch-flask/utils";
 import * as path from "path";
 import { Subscription, of } from "rxjs";
+import { FileViewerConfig } from "../file-viewer";
 import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "./file-explorer-workspace";
 
-import { FileSystemService } from "@batch-flask/ui/electron";
-import { FileViewerConfig } from "../file-viewer";
 import "./file-explorer.scss";
 
 export interface FileNavigatorEntry {
@@ -84,12 +84,12 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
         }
         this._updateWorkspaceEvents();
     }
-    @Input() public autoExpand = false;
-    @Input() public activeFile: string;
     @Input() public set config(config: FileExplorerConfig) {
         this._config = { ...fileExplorerDefaultConfig, ...config };
     }
     public get config() { return this._config; }
+    @Input() public autoExpand = false;
+    @Input() public activeFile: string;
     @Output() public activeFileChange = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
@@ -128,19 +128,16 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
      * @param node Tree node that got selected
      */
     public nodeSelected(node: FileTreeNode) {
-        // tslint:disable-next-line:no-bitwise
-        if (node.isDirectory && (this.config.selectable & FileExplorerSelectable.folder)) {
-            this.activeFileChange.emit(node.path);
-            // tslint:disable-next-line:no-bitwise
-        } else if (!node.isDirectory && (this.config.selectable & FileExplorerSelectable.file)) {
-            this.activeFileChange.emit(node.path);
-        } else {
+        if (!this._updateActiveItem(node)) {
             this.navigateTo(node.path, this.currentSource);
         }
     }
 
     public navigateTo(path: string, source: FileSource) {
         this.workspace.navigateTo(path, source);
+        source.navigator.getNode(path).subscribe((node) => {
+            this._updateActiveItem(node);
+        });
     }
 
     public goBack() {
@@ -199,6 +196,20 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
                 }
             },
         });
+    }
+
+    private _updateActiveItem(node: FileTreeNode): boolean {
+        // tslint:disable-next-line:no-bitwise
+        if (node.isDirectory && (this.config.selectable & FileExplorerSelectable.folder)) {
+            this.activeFileChange.emit(node.path);
+            return true;
+            // tslint:disable-next-line:no-bitwise
+        } else if (!node.isDirectory && (this.config.selectable & FileExplorerSelectable.file)) {
+            this.activeFileChange.emit(node.path);
+            return true;
+
+        }
+        return false;
     }
 
     private _updateWorkspaceEvents() {

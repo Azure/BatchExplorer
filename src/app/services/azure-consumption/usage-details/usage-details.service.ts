@@ -1,7 +1,7 @@
 import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { ArmBatchAccount, Subscription } from "app/models";
+import { ArmBatchAccount, ArmSubscription } from "app/models";
 import { AzureHttpService } from "app/services/azure-http.service";
 import { BatchAccountService } from "app/services/batch-account";
 import { ArmListResponse } from "app/services/core";
@@ -93,7 +93,7 @@ export class UsageDetailsService {
      *
      * @throws {UsageDetailsUnsupportedSubscription}
      */
-    public getUsageFor(subscription: Subscription, accountId: string): Observable<UsageDetail[]> {
+    public getUsageFor(subscription: ArmSubscription, accountId: string): Observable<UsageDetail[]> {
         const url = `${consumptionUrl(subscription.subscriptionId)}/usageDetails`;
         const filter = `properties/instanceId eq '${accountId}'`;
         const options = {

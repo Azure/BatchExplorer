@@ -1,12 +1,12 @@
 import { AccountCreateDto } from "app/models/dtos";
-import { Location } from "../location";
+import { ArmLocation } from "../arm-location";
+import { ArmSubscription } from "../arm-subscription";
 import { ResourceGroup } from "../resource-group";
-import { Subscription } from "../subscription";
 
 export interface CreateAccountModel {
     name: string;
-    subscription: Subscription;
-    location: Location;
+    subscription: ArmSubscription;
+    location: ArmLocation;
     resourceGroup: ResourceGroup | string;
     storageAccountId: string;
 }

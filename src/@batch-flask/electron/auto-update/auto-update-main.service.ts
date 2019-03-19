@@ -17,6 +17,10 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
         autoUpdater.autoInstallOnAppQuit = value;
     }
 
+    public set updateConfigPath(path: string) {
+        autoUpdater.updateConfigPath = path;
+    }
+
     /**
      * Will be set to true when there is an update available and it is ready to be installed(Downloaded)
      */
@@ -56,6 +60,13 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
         });
 
         autoUpdater.on("update-available", (info) => {
+            this._downloadProgress.next({
+                bytesPerSecond: 0,
+                delta: 0,
+                total: 0,
+                transferred: 0,
+                percent: 0,
+            });
             this._status.next(UpdateStatus.Downloading);
             this.updateInfo = info;
         });

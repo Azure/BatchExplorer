@@ -1,5 +1,4 @@
 import { Type } from "@angular/core";
-
 import { exists } from "@batch-flask/utils/object-utils";
 import { RecordSetAttributeError } from "./errors";
 import { Record } from "./record";

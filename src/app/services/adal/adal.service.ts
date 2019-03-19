@@ -1,7 +1,9 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
+import { AADResourceName } from "@batch-flask/core/azure-environment";
+import { ElectronRemote } from "@batch-flask/electron";
 import { wrapMainObservable } from "@batch-flask/electron/utils";
-import { ElectronRemote, NotificationService } from "@batch-flask/ui";
+import { NotificationService } from "@batch-flask/ui";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { AADService } from "client/core/aad";
 import { AADUser } from "client/core/aad/adal/aad-user";
@@ -48,7 +50,7 @@ export class AdalService implements OnDestroy {
         this._waitingPromises = {};
     }
 
-    public accessTokenFor(tenantId: string, resource: string = null) {
+    public accessTokenFor(tenantId: string, resource: AADResourceName = null) {
         return from(this.accessTokenDataAsync(tenantId, resource).then(x => x.access_token));
     }
 
@@ -57,7 +59,7 @@ export class AdalService implements OnDestroy {
      * @param tenantId
      * @param resource
      */
-    public accessTokenData(tenantId: string, resource: string = null): Observable<AccessToken> {
+    public accessTokenData(tenantId: string, resource: AADResourceName = null): Observable<AccessToken> {
         return from(this.accessTokenDataAsync(tenantId, resource));
     }
 
@@ -66,13 +68,14 @@ export class AdalService implements OnDestroy {
      * @param tenantId
      * @param resource
      */
-    public async accessTokenDataAsync(tenantId: string, resource: string = null): Promise<AccessToken> {
+    public async accessTokenDataAsync(tenantId: string, resource: AADResourceName = null): Promise<AccessToken> {
         const key = `${tenantId}/${resource}`;
         if (key in this._waitingPromises) {
             return this._waitingPromises[key];
         }
         if (this.tokenCache.hasToken(tenantId, resource)) {
             const token = this.tokenCache.getToken(tenantId, resource);
+
             if (!token.expireInLess(Constants.AAD.refreshMargin)) {
                 return token;
             }
@@ -83,6 +86,9 @@ export class AdalService implements OnDestroy {
             this.tokenCache.storeToken(tenantId, resource, token);
             delete this._waitingPromises[key];
             return token;
+        }).catch((e) =>  {
+            delete this._waitingPromises[key];
+            return Promise.reject(e);
         });
         this._waitingPromises[key] = promise;
         return promise;

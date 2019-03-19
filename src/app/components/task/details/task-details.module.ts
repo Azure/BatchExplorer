@@ -1,32 +1,29 @@
 import { NgModule } from "@angular/core";
-
 import { commonModules } from "app/common";
+import { ResourceFilesPropertiesModule } from "app/components/common";
 import { FileBrowseModule } from "app/components/file/browse";
 import { TaskBrowseModule } from "app/components/task/browse";
 import { JobActionModule } from "../../job/action";
 import { TaskBaseModule } from "../base";
 import { TaskConfigurationComponent } from "./configuration";
 import { TaskOutputsComponent } from "./output";
-import { TaskResourceFilesComponent } from "./resource-files";
-import { SubTaskDisplayListComponent, SubTaskPropertiesComponent } from "./sub-tasks";
+import { SubTaskListComponent, SubTaskPropertiesComponent, TaskSubTasksBrowserComponent } from "./sub-tasks";
 import { TaskDefaultComponent } from "./task-default.component";
 import { TaskDependencyBrowserComponent } from "./task-dependency-browser";
 import { TaskDetailsComponent } from "./task-details.component";
 import { TaskErrorDisplayComponent } from "./task-error-display.component";
 import { TaskNodeInfoComponent } from "./task-node-info";
-import { TaskSubTasksTabComponent } from "./task-sub-tasks-tab.component";
 import { TaskTimelineComponent, TaskTimelineStateComponent } from "./task-timeline";
 
 const components = [
-    SubTaskDisplayListComponent,
+    SubTaskListComponent,
     SubTaskPropertiesComponent,
     TaskConfigurationComponent,
     TaskDefaultComponent,
     TaskDependencyBrowserComponent,
     TaskDetailsComponent,
     TaskOutputsComponent,
-    TaskResourceFilesComponent,
-    TaskSubTasksTabComponent,
+    TaskSubTasksBrowserComponent,
     TaskTimelineComponent,
     TaskTimelineStateComponent,
     TaskErrorDisplayComponent,
@@ -37,7 +34,7 @@ const components = [
     declarations: components,
     exports: components,
     imports: [...commonModules,
-        FileBrowseModule, TaskBrowseModule, JobActionModule, TaskBaseModule,
+        FileBrowseModule, TaskBrowseModule, JobActionModule, TaskBaseModule, ResourceFilesPropertiesModule,
     ],
 })
 export class TaskDetailsModule {

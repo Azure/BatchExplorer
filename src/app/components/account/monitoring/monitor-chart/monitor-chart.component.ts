@@ -1,49 +1,63 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import * as moment from "moment";
-import { BehaviorSubject, Observable, Subscription, combineLatest } from "rxjs";
-
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, SimpleChanges,
+} from "@angular/core";
+import { ServerError, isNotNullOrUndefined } from "@batch-flask/core";
+import { ChartType, TimeRange } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { log } from "@batch-flask/utils";
 import { Metric, MonitoringMetricList } from "app/models/monitoring";
 import {
-    BatchAccountService, InsightsMetricsService,
-    MonitorChartMetrics, MonitorChartTimeFrame, MonitorChartType, ThemeService,
+    BatchAccountService,
+    InsightsMetricsService,
+    MonitorChartAggregation,
+    MonitorChartMetrics,
+    MonitorChartType,
+    ThemeService,
 } from "app/services";
-import { map } from "rxjs/operators";
+import { DateTime, Duration } from "luxon";
+import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
+import { catchError, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
 
 import "./monitor-chart.scss";
 
+const aggregationAttributes = {
+    [MonitorChartAggregation.Avg]: "average",
+    [MonitorChartAggregation.Sum]: "total",
+};
 @Component({
     selector: "bl-monitor-chart",
     templateUrl: "monitor-chart.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
-    @Input() public chartType: MonitorChartType;
+    @Input() public chartType: ChartType = ChartType.Line;
+    @Input() public metrics: MonitorChartType;
     @Input() public preview: boolean = false;
+    @Input() public timeRange: TimeRange;
 
-    public type: string = "bar";
     public title = "";
     public datasets: Chart.ChartDataSets[];
     public total: any[] = [];
-    public interval: moment.Duration;
-    public timeFrame: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
+    public interval: Duration;
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
     public options: Chart.ChartOptions = {};
+    public chartError: ServerError | null = null;
+    public aggregation: MonitorChartAggregation;
 
-    private _accountSub: Subscription;
-    private _sub: Subscription;
-    private _metricList: MonitoringMetricList;
-    private _metrics = new BehaviorSubject<Metric[]>(null);
+    public get isChartReady() {
+        return this.loadingStatus === LoadingStatus.Ready && this.datasets;
+    }
+
+    private _destroy = new Subject();
+    private _metrics = new BehaviorSubject<MonitorChartType | null>(null);
+    private _timeRange = new BehaviorSubject<TimeRange | null>(null);
 
     constructor(
         themeService: ThemeService,
         private accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef,
-        private monitor: InsightsMetricsService,
-        private contextMenuService: ContextMenuService) {
+        private metricsService: InsightsMetricsService) {
         this._setChartOptions();
 
         const chartTheme = themeService.currentTheme.pipe(
@@ -63,46 +77,57 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             }),
         );
 
-        combineLatest(this._metrics, chartTheme).subscribe(([metrics, theme]) => {
-            this.colors = [];
-            this.total = [];
-
-            if (!metrics) {
-                this.datasets = [];
-                return;
-            }
-            this.colors = this._computeColors(metrics, theme);
-            this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
-
-                const total = metric.data.map(x => x.total || 0).reduce((a, b) => {
-                    return a + b;
-                }, 0);
-                this.total.push(total);
-
-                return {
-                    label: metric.label,
-                    data: metric.data.map(data => {
-                        return {
-                            x: data.timeStamp,
-                            y: data.total || 0,
-                        } as Chart.ChartPoint;
+        const metrics = combineLatest(
+            this._metrics.pipe(filter(isNotNullOrUndefined)),
+            this._timeRange.pipe(filter(isNotNullOrUndefined)),
+            this.accountService.currentAccountId,
+        ).pipe(
+            takeUntil(this._destroy),
+            tap(() => {
+                this.chartError = null;
+                this._updateLoadingStatus(LoadingStatus.Loading);
+            }),
+            switchMap(([metrics, timeRange]) => {
+                return this._loadMetrics(metrics, timeRange).pipe(
+                    catchError((error) => {
+                        this.chartError = error;
+                        if (error.code !== "LocalBatchAccount") {
+                            log.error(`Error loading metrics for account metrics type: ${this.metrics}`, error);
+                        }
+                        this._updateLoadingStatus(LoadingStatus.Error);
+                        return of(null);
                     }),
-                    borderWidth: 1,
-                    fill: false,
-                } as Chart.ChartDataSets;
-            });
-            this.changeDetector.markForCheck();
+                );
+            }),
+            filter(isNotNullOrUndefined),
+            tap((response) => {
+                this.interval = response.interval;
+                this._updateLoadingStatus(LoadingStatus.Ready);
+            }),
+            map(x => x.metrics),
+        );
+
+        const aggregation = this._metrics.pipe(
+            filter(isNotNullOrUndefined),
+            takeUntil(this._destroy),
+        ).pipe(
+            map((metric) => this._getAggregateType(metric)),
+        );
+
+        combineLatest(metrics, aggregation, chartTheme).pipe(
+            takeUntil(this._destroy),
+        ).subscribe(([metrics, aggregation, theme]) => {
+            this._buildDataSets(metrics, aggregation, theme);
         });
 
-        this._accountSub = this.accountService.currentAccountId.subscribe(() => {
-            this.refreshMetrics();
-        });
     }
 
-    public ngOnChanges(changes): void {
-        if (changes.chartType) {
-            this.refreshMetrics();
-            this._updateTitle();
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.metrics) {
+            this._metrics.next(this.metrics);
+        }
+        if (changes.timeRange) {
+            this._timeRange.next(this.timeRange);
         }
         if (changes.preview) {
             this._setChartOptions();
@@ -110,103 +135,43 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this._destroySub();
         this._metrics.complete();
-        this._accountSub.unsubscribe();
+        this._timeRange.complete();
+        this._destroy.next();
+        this._destroy.complete();
     }
 
-    public refreshMetrics() {
-        const obs = this._loadMetrics();
-        if (!obs) { return; }
-
-        this._destroySub();
-        this._updateLoadingStatus(LoadingStatus.Loading);
-        this._sub = obs.subscribe(response => {
-            this._metricList = response;
-            this.interval = response.interval;
-            this._metrics.next(response.metrics);
-            this._updateLoadingStatus(LoadingStatus.Ready);
-        }, (error) => {
-            log.error(`Error loading metrics for account metrics type: ${this.chartType}`, error);
-            this._updateLoadingStatus(LoadingStatus.Error);
-        });
-    }
-
-    public openTimeFramePicker(event: Event) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        event.stopPropagation();
-        const items = [
-            new ContextMenuItem({
-                label: "Past hour", click: () => {
-                    this.timeFrame = MonitorChartTimeFrame.Hour;
-                    this.refreshMetrics();
-                },
-            }),
-            new ContextMenuItem({
-                label: "Past day", click: () => {
-                    this.timeFrame = MonitorChartTimeFrame.Day;
-                    this.refreshMetrics();
-                },
-            }),
-            new ContextMenuItem({
-                label: "Past week", click: () => {
-                    this.timeFrame = MonitorChartTimeFrame.Week;
-                    this.refreshMetrics();
-                },
-            }),
-            new ContextMenuItem({
-                label: "Past month", click: () => {
-                    this.timeFrame = MonitorChartTimeFrame.Month;
-                    this.refreshMetrics();
-                },
-            }),
-        ];
-        this.contextMenuService.openMenu(new ContextMenu(items));
-        this.changeDetector.markForCheck();
-    }
-
-    public get isChartReady() {
-        return this.loadingStatus === LoadingStatus.Ready && this.datasets;
-    }
-
-    public get chartError() {
-        return this.loadingStatus === LoadingStatus.Error;
-    }
-
-    public trackDataSet(index, dataset) {
+    public trackDataSet(_: number, dataset: Chart.ChartDataSets) {
         return dataset.label;
     }
 
-    private _loadMetrics(): Observable<MonitoringMetricList> {
-        switch (this.chartType) {
+    private _loadMetrics(metrics: MonitorChartType, timeRange: TimeRange): Observable<MonitoringMetricList> {
+        switch (metrics) {
             case MonitorChartType.CoreCount:
-                return this.monitor.getCoreMinutes(this.timeFrame);
+                return this.metricsService.getCoreMinutes(timeRange);
             case MonitorChartType.FailedTask:
-                return this.monitor.getFailedTask(this.timeFrame);
+                return this.metricsService.getFailedTask(timeRange);
             case MonitorChartType.NodeStates:
-                return this.monitor.getNodeStates(this.timeFrame);
+                return this.metricsService.getNodeStates(timeRange);
             case MonitorChartType.TaskStates:
-                return this.monitor.getTaskStates(this.timeFrame);
+                return this.metricsService.getTaskStates(timeRange);
         }
     }
 
-    private _updateTitle() {
-        switch (this.chartType) {
+    private _getAggregateType(metrics: MonitorChartType): MonitorChartAggregation {
+        switch (metrics) {
             case MonitorChartType.CoreCount:
-                this.title = "Core minutes";
-                break;
+                return MonitorChartAggregation.Avg;
             case MonitorChartType.FailedTask:
-                this.title = "Failed task";
-                break;
+                return MonitorChartAggregation.Sum;
             case MonitorChartType.NodeStates:
-                this.title = "Node states";
-                break;
+                return MonitorChartAggregation.Avg;
             case MonitorChartType.TaskStates:
-                this.title = "Task states";
-                break;
+                return MonitorChartAggregation.Sum;
+            default:
+                return MonitorChartAggregation.Avg;
+
         }
-        this.changeDetector.markForCheck();
     }
 
     private _setChartOptions() {
@@ -265,17 +230,11 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    private _destroySub() {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
-    }
-
     private _computeTooltipTitle(item: Chart.ChartTooltipItem, data) {
-        const interval = this._metricList.interval;
-        const start = moment(item.xLabel);
-        const end = moment(start).add(interval);
-        return `Data between ${start.format("hh:mm A")} and ${end.format("hh:mm A")} on ${start.format("LL")}`;
+        const interval = this.interval;
+        const start = DateTime.fromISO(item.xLabel);
+        const end = start.plus(interval);
+        return `Data between ${start.toFormat("hh:mm A")} and ${end.toFormat("hh:mm A")} on ${start.toFormat("LL")}`;
     }
 
     /**
@@ -294,5 +253,42 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                 };
             });
         }
+    }
+
+    private _buildDataSets(metrics: Metric[], aggregation: MonitorChartAggregation, theme: StringMap<string>) {
+        this.colors = [];
+        this.total = [];
+        this.aggregation = aggregation;
+
+        if (!metrics) {
+            this.datasets = [];
+            return;
+        }
+
+        this.colors = this._computeColors(metrics, theme);
+        const aggregationAttribute = aggregationAttributes[aggregation] || "average";
+        this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
+            const total = metric.data.map(x => x[aggregationAttribute] || 0).reduce((a, b) => {
+                return a + b;
+            }, 0);
+
+            const summary = aggregation === MonitorChartAggregation.Avg
+                ? (total / metric.data.length).toFixed(1)
+                : total;
+            this.total.push(summary);
+
+            return {
+                label: metric.label,
+                data: metric.data.map(data => {
+                    return {
+                        x: data.timeStamp,
+                        y: data[aggregationAttribute] || 0,
+                    } as Chart.ChartPoint;
+                }),
+                borderWidth: 1,
+                fill: false,
+            } as Chart.ChartDataSets;
+        });
+        this.changeDetector.markForCheck();
     }
 }

@@ -1,6 +1,5 @@
-import { BlobService } from "azure-storage";
-
 import { EncodingUtils } from "@batch-flask/utils";
+import { BlobService } from "azure-storage";
 import { BlobStorageResult, SharedAccessPolicy, StorageRequestOptions } from "./models";
 
 export interface ListBlobOptions {

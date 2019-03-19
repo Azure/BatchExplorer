@@ -1,6 +1,5 @@
-import { List } from "immutable";
-
 import { Node, NodeState } from "app/models";
+import { List } from "immutable";
 import * as Fixtures from "test/fixture";
 import { StateCounter } from "./state-counter";
 

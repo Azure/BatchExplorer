@@ -1,7 +1,6 @@
-import { OrderedSet } from "immutable";
-import * as moment from "moment";
-
 import { ObjectUtils } from "@batch-flask/utils";
+import { OrderedSet } from "immutable";
+import { DateTime } from "luxon";
 import { ContinuationToken } from "../list-options";
 
 const noQueryKey = "no-query";
@@ -48,7 +47,8 @@ export class QueryCache {
 
         // Sort the key from oldest to youngest
         const sortedKeys = keys.filter(x => x !== this._cacheKey(null, null)).sort((a, b) => {
-            return moment.utc(this._cache[a].createdAt).diff(moment.utc(this._cache[b].createdAt));
+            return DateTime.fromJSDate(this._cache[a].createdAt)
+                .diff(DateTime.fromJSDate(this._cache[b].createdAt)).as("milliseconds");
         });
 
         for (let i = 0; i < sortedKeys.length - maxQuery; i++) {

@@ -3,9 +3,9 @@ import { ArmBatchAccount } from "app/models";
 import { AADApplication, PasswordCredential } from "app/models/ms-graph";
 import { ServicePrincipalService } from "app/services/ms-graph";
 import { AADCredential } from "../programatic-usage.component";
+import { AppCreatedEvent } from "./create-new-aad-app";
 
 import "./aad-credentials-picker.scss";
-import { AppCreatedEvent } from "./create-new-aad-app";
 
 enum Step {
     pickApplication,

@@ -1,7 +1,7 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18N_NAMESPACE, I18nPipe } from "./i18n.pipe";
+import { I18N_NAMESPACE } from "./i18n.pipe";
 
 @Component({
     template: `{{'my-key.label' | i18n}}`,
@@ -34,7 +34,7 @@ describe("i18n.pipe", () => {
     function setup(component, providers?) {
         TestBed.configureTestingModule({
             imports: [I18nTestingModule.withTranslations(translations)],
-            declarations: [I18nPipe, component],
+            declarations: [component],
             providers,
         });
         fixture = TestBed.createComponent(component);

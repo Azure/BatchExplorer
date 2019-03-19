@@ -1,111 +1,43 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { I18nTestingModule } from "@batch-flask/core/testing";
-import { ChartsModule, I18nUIModule } from "@batch-flask/ui";
-import { ArmBatchAccount, LocalBatchAccount, Subscription } from "app/models";
+import {
+    I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,
+} from "@batch-flask/core/testing";
+import { ChartsModule, QuickRange, TimeRange } from "@batch-flask/ui";
+import { ArmBatchAccount, ArmSubscription, LocalBatchAccount } from "app/models";
 import { BatchAccountService, Theme, ThemeService } from "app/services";
-import { UsageDetail, UsageDetailsService, UsageDetailsUnsupportedSubscription } from "app/services/azure-consumption";
-import { BehaviorSubject, of, throwError } from "rxjs";
+import { AzureCostManagementService } from "app/services/azure-cost-management";
+import { BehaviorSubject, of } from "rxjs";
 import { AccountCostCardComponent } from "./account-cost-card.component";
 
-const sub1 = new Subscription({
+const sub1 = new ArmSubscription({
     id: "/subscriptions/sub1",
     subscriptionId: "sub1",
 });
 
-const internalSub = new Subscription({
-    id: "/subscriptions/internal-1",
-    subscriptionId: "internal-1",
-});
+const day1 = new Date(2019, 1, 1);
+const day2 = new Date(2019, 1, 2);
+const day3 = new Date(2019, 1, 3);
+const day4 = new Date(2019, 1, 4);
 
-const day1 = new Date(2018, 11, 5);
-const day2 = new Date(2018, 11, 6);
-const day3 = new Date(2018, 11, 7);
+const costs = [
+    { preTaxCost: 1, date: day1, meter: "virtual machines (a series)", currency: "USD" },
+    { preTaxCost: 1.5, date: day2, meter: "virtual machines (a series)", currency: "USD" },
+    { preTaxCost: 8, date: day3, meter: "virtual machines (a series)", currency: "USD" },
+    { preTaxCost: 39, date: day3, meter: "virtual machines (d series)", currency: "USD" },
+    { preTaxCost: 3.8, date: day4, meter: "virtual machines (a series)", currency: "USD" },
+    { preTaxCost: 27, date: day4, meter: "virtual machines (d series)", currency: "USD" },
+];
 
-const usage1: UsageDetail = {
-    id: "usages/use-1",
-    name: "use-1",
-    properties: {
-        instanceId: "/subs/sub-1/batchaccounts/acc-1",
-        pretaxCost: 0.5,
-        usageStart: day1,
-        meterId: "meter-1",
-        meterDetails: {
-            meterName: "VM",
-        },
-    } as any,
-};
-
-const usage2: UsageDetail = {
-    id: "usages/use-2",
-    name: "use-1",
-    properties: {
-        instanceId: "/subs/sub-1/batchaccounts/acc-1",
-        pretaxCost: 3.8,
-        usageStart: new Date(2018, 11, 6),
-        meterId: "meter-1",
-        meterDetails: {
-            meterName: "VM",
-        },
-    } as any,
-};
-
-const usage3: UsageDetail = {
-    id: "usages/use-3",
-    name: "use-1",
-    properties: {
-        instanceId: "/subs/sub-1/batchaccounts/acc-1",
-        pretaxCost: 9.1,
-        usageStart: new Date(2018, 11, 7),
-        meterId: "meter-1",
-        meterDetails: {
-            meterName: "VM",
-        },
-    } as any,
-};
-
-const usage4: UsageDetail = {
-    id: "usages/use-1",
-    name: "use-1",
-    properties: {
-        instanceId: "/subs/sub-1/batchaccounts/acc-1",
-        pretaxCost: 1.5,
-        usageStart: day1,
-        meterId: "meter-2",
-        meterDetails: {
-            meterName: "Data",
-        },
-    } as any,
-};
-
-const usage5: UsageDetail = {
-    id: "usages/use-2",
-    name: "use-1",
-    properties: {
-        instanceId: "/subs/sub-1/batchaccounts/acc-1",
-        pretaxCost: 5.8,
-        usageStart: new Date(2018, 11, 6),
-        meterId: "meter-2",
-        meterDetails: {
-            meterName: "Data",
-        },
-    } as any,
-};
-
-const usage6: UsageDetail = {
-    id: "usages/use-3",
-    name: "use-1",
-    properties: {
-        instanceId: "/subs/sub-1/batchaccounts/acc-1",
-        pretaxCost: 11.3,
-        usageStart: new Date(2018, 11, 7),
-        meterId: "meter-2",
-        meterDetails: {
-            meterName: "Data",
-        },
-    } as any,
-};
+@Component({
+    selector: "bl-time-range-picker", template: "",
+    providers: [controlValueAccessorProvider(() => FakeTimeRangePickerComponent)],
+})
+class FakeTimeRangePickerComponent extends MockControlValueAccessorComponent<TimeRange | null> {
+    @Input() public quickRanges: QuickRange[];
+}
 
 @Component({
     template: `<bl-account-cost-card></bl-account-cost-card>`,
@@ -118,19 +50,14 @@ describe("AccountCostCardComponent", () => {
     let component: AccountCostCardComponent;
     let de: DebugElement;
 
-    let usageServiceSpy;
+    let costServiceSpy;
     let accountServiceSpy;
     let themeServiceSpy;
 
     beforeEach(() => {
-        usageServiceSpy = {
-            getUsage: jasmine.createSpy("getUsage").and.callFake(() => {
-                const sub = accountServiceSpy.currentAccount.value.subscription;
-                if (sub === internalSub) {
-                    return throwError(new UsageDetailsUnsupportedSubscription(sub.subscriptionId));
-                } else {
-                    return of([usage1, usage2, usage3, usage4, usage5, usage6]);
-                }
+        costServiceSpy = {
+            getCost: jasmine.createSpy("getCost").and.callFake(() => {
+                return of(costs);
             }),
         };
 
@@ -156,10 +83,10 @@ describe("AccountCostCardComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [I18nTestingModule, I18nUIModule, ChartsModule],
-            declarations: [AccountCostCardComponent, TestComponent],
+            imports: [I18nTestingModule, ChartsModule, FormsModule, ReactiveFormsModule],
+            declarations: [AccountCostCardComponent, FakeTimeRangePickerComponent, TestComponent],
             providers: [
-                { provide: UsageDetailsService, useValue: usageServiceSpy },
+                { provide: AzureCostManagementService, useValue: costServiceSpy },
                 { provide: ThemeService, useValue: themeServiceSpy },
                 { provide: BatchAccountService, useValue: accountServiceSpy },
             ],
@@ -179,40 +106,27 @@ describe("AccountCostCardComponent", () => {
         expect(info.nativeElement.textContent).not.toContain("account-cost-card.unsupportedSubscription");
     });
 
-    it("shows unsupported message when subscription is internal", () => {
-        accountServiceSpy.currentAccount.next(new ArmBatchAccount({
-            id: "/subs/sub-1/batchaccounts/acc-2",
-            name: "acc-2",
-            location: "westus",
-            properties: {} as any,
-            subscription: internalSub,
-        }));
-        fixture.detectChanges();
-        const info = de.query(By.css(".unavailable-info"));
-        expect(info).not.toBeFalsy();
-        expect(info.nativeElement.textContent).toContain("account-cost-card.unsupportedSubscription");
-        expect(info.nativeElement.textContent).not.toContain("account-cost-card.usingLocalAccount");
-    });
-
     it("builds the datasets", () => {
         const dataset1 = {
-            label: "VM",
+            label: "virtual machines (a series)",
             backgroundColor: "#003f5c",
             borderColor: "#003f5c",
             data: [
-                { x: day1, y: 0.5 },
-                { x: day2, y: 3.8 },
-                { x: day3, y: 9.1 },
+                { x: day1, y: 1 },
+                { x: day2, y: 1.5 },
+                { x: day3, y: 8 },
+                { x: day4, y: 3.8 },
             ],
         };
         const dataset2 = {
-            label: "Data",
+            label: "virtual machines (d series)",
             backgroundColor: "#aa3939",
             borderColor: "#aa3939",
             data: [
-                { x: day1, y: 1.5 },
-                { x: day2, y: 5.8 },
-                { x: day3, y: 11.3 },
+                { x: day1, y: 0 },
+                { x: day2, y: 0 },
+                { x: day3, y: 39 },
+                { x: day4, y: 27 },
             ],
         };
         expect(component.datasets).toEqual([

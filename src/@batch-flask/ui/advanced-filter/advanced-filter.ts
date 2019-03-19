@@ -1,9 +1,8 @@
 import { FormGroup } from "@angular/forms";
-import { Map } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
-
 import * as FilterBuilder from "@batch-flask/core/filter-builder";
 import { log } from "@batch-flask/utils";
+import { Map } from "immutable";
+import { BehaviorSubject, Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { AdvancedFilterControlBase } from "./control-base";
 

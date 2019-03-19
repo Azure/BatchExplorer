@@ -61,6 +61,8 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
+        this.data.dispose();
         if (this._onCertificateAddedSub) {
             this._onCertificateAddedSub.unsubscribe();
         }

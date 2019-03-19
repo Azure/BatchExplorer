@@ -13,7 +13,6 @@ import {
     forwardRef,
 } from "@angular/core";
 import { Subscription } from "rxjs";
-
 import { TableColumnRef } from "../table-column-manager";
 import { TableComponent, TableConfig } from "../table.component";
 
@@ -23,11 +22,17 @@ import { TableComponent, TableConfig } from "../table.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowRenderComponent implements OnInit, OnChanges, OnDestroy {
+    // tslint:disable-next-line:no-input-rename
+    @Input("id") @HostBinding("attr.id") public idAttr: string;
     @Input() public item: any;
     @Input() public columns: TableColumnRef[];
     @Input() public tableConfig: TableConfig;
-    @Input() @HostBinding("class.focused") public focused: boolean;
+    @Input() public focused: boolean;
+    @Input() public focusedColumn: number | null;
     @Input() @HostBinding("class.selected") public selected: boolean;
+    @HostBinding("class.focused") public get focusedClass() {
+        return this.focused && this.focusedColumn == null;
+    }
 
     // Aria
     @HostBinding("attr.role") public readonly role = "row";

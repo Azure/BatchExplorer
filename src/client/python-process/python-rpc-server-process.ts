@@ -1,7 +1,6 @@
+import { log } from "@batch-flask/utils";
 import { ChildProcess, spawn } from "child_process";
 import * as path from "path";
-
-import { log } from "@batch-flask/utils";
 import { Constants } from "../client-constants";
 import { pythonLogger } from "../logger";
 import { getPythonPath } from "./python-executable";
@@ -27,7 +26,12 @@ export class PythonRpcServerProcess {
             return;
         }
         log.info(`Python path is: '${data.cmd}', Args: ${data.args}`);
-        const child = this._spawedProcess = spawn(data.cmd, [...data.args]);
+        const child = this._spawedProcess = spawn(data.cmd, [...data.args], {
+            env: {
+                ...process.env,
+                PYTHONUNBUFFERED: "1",
+            },
+        });
         pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
 
         child.stdout.on("data", (data) => {
@@ -35,14 +39,22 @@ export class PythonRpcServerProcess {
         });
 
         child.stderr.on("data", (data) => {
-            pythonLogger.error(data.toString());
+            pythonLogger.info(data.toString());
+        });
+
+        child.on("message", (message) => {
+            log.info("Message from python", message);
+        });
+
+        child.on("disconnect", (...args) => {
+            log.error("Disconnected python backend", args);
         });
 
         child.on("exit", (code) => {
             if (this._askForKill) {
                 log.info("Python rpc server has stopped!");
             } else {
-                log.error("Python Rpc server has exited unexpectedly with code!", code);
+                log.error(`Python Rpc server has exited unexpectedly with code! ${code}`);
             }
         });
 

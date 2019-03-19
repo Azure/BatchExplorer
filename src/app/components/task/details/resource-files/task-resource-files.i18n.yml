@@ -1,5 +1,0 @@
-task-resource-files:
-  blobSource: Blob source
-  filePath: Node file path
-  fileMode: File mode
-  none: This task contains no resource files

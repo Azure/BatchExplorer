@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AccessToken, HttpRequestOptions, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { SanitizedError } from "@batch-flask/utils";
-import { Subscription } from "app/models";
+import { ArmSubscription } from "app/models";
 import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
 import { catchError, mergeMap, retryWhen, share, switchMap } from "rxjs/operators";
@@ -32,9 +32,10 @@ const providersApiVersion = {
     "microsoft.network": Constants.ApiVersion.network,
     "microsoft.classicnetwork": Constants.ApiVersion.classicNetwork,
     "microsoft.consumption": Constants.ApiVersion.consumption,
+    "microsoft.costmanagement": Constants.ApiVersion.costManagement,
 };
 
-type SubscriptionOrTenant = Subscription | string;
+type SubscriptionOrTenant = ArmSubscription | string;
 
 export class InvalidSubscriptionOrTenant extends Error {
     constructor(message: string) {
@@ -46,7 +47,7 @@ export class InvalidSubscriptionOrTenant extends Error {
  * Wrapper around the http service so call the azure ARM api.
  * Set the Authorization header and the api version
  */
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class AzureHttpService {
     constructor(private http: HttpClient, private adal: AdalService, private batchExplorer: BatchExplorerService) {
     }
@@ -56,7 +57,6 @@ export class AzureHttpService {
         subscriptionOrTenant: SubscriptionOrTenant,
         uri: string,
         options: HttpRequestOptions): Observable<any> {
-
         return this.adal.accessTokenData(this._getTenantId(subscriptionOrTenant, uri)).pipe(
             switchMap((accessToken) => {
                 options = this._setupRequestOptions(uri, options, accessToken);
@@ -74,7 +74,7 @@ export class AzureHttpService {
     }
 
     public get baseUrl() {
-        return this.batchExplorer.azureEnvironment.armUrl;
+        return this.batchExplorer.azureEnvironment.arm;
     }
 
     public get<T>(subscription: SubscriptionOrTenant, uri: string, options?: HttpRequestOptions): Observable<T> {
@@ -96,7 +96,7 @@ export class AzureHttpService {
         return this.request("PATCH", subscription, uri, mergeOptions(options, body));
     }
 
-    public delete<T>(subscription: Subscription, uri: string, options?: HttpRequestOptions): Observable<T> {
+    public delete<T>(subscription: ArmSubscription, uri: string, options?: HttpRequestOptions): Observable<T> {
         return this.request("DELETE", subscription, uri, options);
     }
 
@@ -115,7 +115,7 @@ export class AzureHttpService {
     }
 
     private _getTenantId(subscriptionOrTenant: SubscriptionOrTenant, uri: string): string {
-        if (subscriptionOrTenant instanceof Subscription) {
+        if (subscriptionOrTenant instanceof ArmSubscription) {
             return subscriptionOrTenant.tenantId;
         } else if (typeof subscriptionOrTenant === "string") {
             return subscriptionOrTenant;

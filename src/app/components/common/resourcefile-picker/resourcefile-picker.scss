@@ -1,0 +1,43 @@
+@import "app/styles/variables";
+
+bl-resourcefile-picker {
+    display: block;
+    position: relative;
+
+    .file-row {
+        margin-bottom: 2px;
+    }
+
+    .uploading-files {
+
+    }
+
+    .help {
+        font-style: italic;
+        color: $secondary-text;
+    }
+
+    .drop-overlay {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: $secondary-background;
+        border: 2px dashed $border-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $primary-text;
+
+        > .fa-upload {
+            font-size: 36px;
+            margin-right: 15px;
+        }
+
+        > .message {
+            font-size: 20px;
+        }
+
+    }
+}

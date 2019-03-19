@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { FileSystemService } from "@batch-flask/ui";
+import { GlobalStorage } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/electron";
 import { SecureUtils, log } from "@batch-flask/utils";
 import {
     Application,
@@ -8,7 +9,6 @@ import {
     NcjPoolTemplate,
     NcjTemplateMode,
 } from "app/models";
-import { LocalFileStorage } from "app/services/local-file-storage.service";
 import { List } from "immutable";
 import loadJsonFile from "load-json-file";
 import { BehaviorSubject, Observable, Subject, forkJoin, from, of } from "rxjs";
@@ -32,7 +32,7 @@ export interface RecentSubmission extends RecentSubmissionParams {
     id: string;
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class NcjTemplateService {
     public applications: Observable<List<Application>>;
 
@@ -44,7 +44,7 @@ export class NcjTemplateService {
     constructor(
         private portfolioService: PortfolioService,
         private fs: FileSystemService,
-        private localFileStorage: LocalFileStorage) {
+        private globalStorage: GlobalStorage) {
         this.recentSubmission = this._recentSubmission.asObservable();
         this.applications = this._updates.pipe(
             startWith(null),
@@ -80,7 +80,7 @@ export class NcjTemplateService {
                     log.error(`File is not valid json: ${error.message}`);
                 });
 
-                return from(promise as any);
+                return from<[Portfolio, any]>(promise as any);
             }),
             share(),
         );
@@ -198,15 +198,15 @@ export class NcjTemplateService {
     }
 
     private _saveRecentSubmission() {
-        return this.localFileStorage.set(recentSubmitKey, this._recentSubmission.value);
+        return this.globalStorage.set(recentSubmitKey, this._recentSubmission.value);
     }
 
-    private _loadRecentSubmission() {
-        this.localFileStorage.get(recentSubmitKey).subscribe((data: RecentSubmission[]) => {
-            if (!Array.isArray(data)) {
-                data = [];
-            }
-            this._recentSubmission.next(data);
-        });
+    private async _loadRecentSubmission() {
+        let data: RecentSubmission[] = await this.globalStorage.get(recentSubmitKey);
+
+        if (!Array.isArray(data)) {
+            data = [];
+        }
+        this._recentSubmission.next(data);
     }
 }

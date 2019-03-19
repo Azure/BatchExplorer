@@ -4,7 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { FormModule, I18nUIModule, SelectModule } from "@batch-flask/ui";
+import { FormModule, SelectModule } from "@batch-flask/ui";
 import { Certificate, CertificateReferenceAttributes } from "app/models";
 import { CertificateService } from "app/services";
 import { List } from "immutable";
@@ -49,7 +49,7 @@ describe("CertificateReferencesPickerComponent", () => {
         TestBed.configureTestingModule({
             imports: [
                 BrowserModule, FormModule, ReactiveFormsModule, FormsModule,
-                I18nTestingModule, I18nUIModule, SelectModule, MatAutocompleteModule,
+                I18nTestingModule, SelectModule, MatAutocompleteModule,
             ],
             declarations: [
                 CertificateReferencesPickerComponent, CertificatePickerComponent, TestComponent, TrimThumbprintPipe,

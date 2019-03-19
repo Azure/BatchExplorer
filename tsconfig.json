@@ -44,12 +44,16 @@
       {
         "name": "typescript-tslint-plugin",
         "configFile": "./tslint.json",
-        "alwaysShowRuleFailuresAsWarnings": true
+        "alwaysShowRuleFailuresAsWarnings": true,
+        "ignoreDefinitionFiles": true,
+        "suppressWhileTypeErrorsPresent": false,
+        "mockTypeScriptVersion": false
       }
     ]
   },
   "files": [
     "definitions/index.d.ts",
+    "definitions/missing-defs.d.ts",
     "node_modules/monaco-editor/monaco.d.ts"
   ],
   // This is not actually used for building but to let the editor know what files use this config

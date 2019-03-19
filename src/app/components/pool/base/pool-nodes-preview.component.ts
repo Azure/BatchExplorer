@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input, OnChanges } from "@angular/core";
-
 import { Pool, PoolAllocationState } from "app/models";
-
 import { PoolUtils } from "app/utils";
+
 import "./pool-nodes-preview.scss";
 
 @Component({

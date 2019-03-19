@@ -16,7 +16,7 @@ import {
 } from "app/models/virtual-machine-configuration";
 import { ModelUtils, PoolUtils } from "app/utils";
 import { List } from "immutable";
-import { Duration, duration } from "moment";
+import { Duration } from "luxon";
 import { AutoScaleRun, AutoScaleRunAttributes } from "./auto-scale-run";
 import { PoolStatistics, PoolStatisticsAttributes } from "./pool-statistics";
 
@@ -99,7 +99,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @ListProp(ResizeError) public resizeErrors: List<ResizeError> = List([]);
 
-    @Prop(duration) public resizeTimeout: Duration;
+    @Prop() public resizeTimeout: Duration;
 
     @Prop() public state: string;
 
@@ -111,7 +111,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop() public autoScaleFormula: string;
 
-    @Prop(duration) public autoScaleEvaluationInterval: Duration;
+    @Prop() public autoScaleEvaluationInterval: Duration;
 
     @Prop() public taskSchedulingPolicy: TaskSchedulingPolicy;
 
@@ -169,11 +169,14 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
     public get uid() {
         return this.url;
     }
+
+    public get name() {
+        return this.id;
+    }
 }
 
 export enum PoolState {
     active = "active",
-    upgrading = "upgrading",
     deleting = "deleting",
 }
 

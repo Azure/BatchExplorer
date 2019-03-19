@@ -21,7 +21,7 @@ export const version = computeVersion();
 export const artifactsNames = {
     windowsInstaller: `BatchExplorer Setup ${version}.exe`,
     windowsZip: `BatchExplorer-${version}-win.zip`,
-    linuxAppImage: `batch-explorer-${version}-x86_64.AppImage`,
+    linuxAppImage: `BatchExplorer ${version}.AppImage`,
     darwinZip: `BatchExplorer-${version}-mac.zip`,
     darwinDmg: `BatchExplorer-${version}.dmg`,
     linuxRpm: `batch-explorer-${version}.x86_64.rpm`,

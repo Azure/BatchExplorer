@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
-
 import { ErrorDetail, ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 

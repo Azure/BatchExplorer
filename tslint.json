@@ -34,7 +34,12 @@
     ],
     "ordered-imports": [true, {
         "import-sources-order": "case-insensitive",
-        "named-imports-order": "lowercase-last"
+        "named-imports-order": "lowercase-last",
+        "grouped-imports": true,
+        "groups": [
+          {"match": "^\\.\/.*\\.scss$", "order": 20}, // Have .scsss files after ts imports
+          {"match": ".*", "order": 10}
+        ]
     }],
     "object-literal-sort-keys": false,
     "arrow-return-shorthand": [true],
@@ -42,6 +47,7 @@
         true,
         ["batchExplorerApp", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
         ["this","debugTelemetry"], // Show a warning if the main window is being shown on start for debug purposes
+        {"name": ["log","debug"], "message": "Log.debug is for debug only don't leave in the code."}, // Show a warning if the main window is being shown on start for debug purposes
         {"name": "fdescribe", "message": "Don't keep jasmine fit methods in the code."},
         {"name": "fit", "message": "Don't keep jasmine fit methods in the code."},
         {"name": "allowInsecureRequest", "message": "This is only for development with proxy don't leave in the code"}

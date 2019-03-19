@@ -1,5 +1,5 @@
 import { DateUtils, exists } from "@batch-flask/utils";
-import { Duration } from "moment";
+import { Duration } from "luxon";
 
 export class DecoratorBase<TEntity> {
     public original: TEntity;
@@ -10,12 +10,6 @@ export class DecoratorBase<TEntity> {
     constructor(entity: TEntity) {
         this.original = entity;
         this.id = entity ? (entity as any).id : "";
-    }
-
-    protected dateField(value: Date, returnEmptyStringForNullOrUndefined = false): string {
-        return value
-            ? DateUtils.fullDateAndTime(value)
-            : returnEmptyStringForNullOrUndefined ? "" : "n/a";
     }
 
     protected numberField(value: number | any, returnEmptyStringForNullOrUndefined = false): string {
