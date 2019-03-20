@@ -24,6 +24,7 @@ import {
     PoolService,
     VmSizeService,
 } from "app/services";
+import { RenderingContainerImageService } from "app/services/rendering-container-image";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { List } from "immutable";
@@ -91,7 +92,7 @@ class TestComponent {
     };
 }
 
-describe("SubmitNcjTemplateComponent", () => {
+fdescribe("SubmitNcjTemplateComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: SubmitNcjTemplateComponent;
@@ -113,6 +114,7 @@ describe("SubmitNcjTemplateComponent", () => {
     let fileGroupServiceSpy;
     let poolOsServiceSpy;
     let settingsServiceSpy: MockUserConfigurationService;
+    let renderContainerImageSpy;
 
     const blendFile = "myscene.blend";
     let queryParameters;
@@ -204,6 +206,10 @@ describe("SubmitNcjTemplateComponent", () => {
             },
         });
 
+        renderContainerImageSpy = {
+
+        };
+
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
@@ -235,6 +241,7 @@ describe("SubmitNcjTemplateComponent", () => {
                 { provide: NotificationService, useValue: notificationServiceSpy },
                 { provide: PoolOsService, useValue: poolOsServiceSpy },
                 { provide: UserConfigurationService, useValue: settingsServiceSpy },
+                { provide: RenderingContainerImageService, useValue: renderContainerImageSpy },
             ],
 
             schemas: [NO_ERRORS_SCHEMA],
