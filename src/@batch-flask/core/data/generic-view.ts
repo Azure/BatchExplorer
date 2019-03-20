@@ -60,7 +60,7 @@ export abstract class GenericView<TEntity extends Record<any>, TParams, TOptions
     protected _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _error = new BehaviorSubject<ServerError | null>(null);
     protected _cacheCleared = new Subject<void>();
-    protected _params: TParams;
+    protected _params = new BehaviorSubject<TParams>({} as TParams);
     protected _options: TOptions;
 
     private _pollObservable: PollObservable;
@@ -77,7 +77,6 @@ export abstract class GenericView<TEntity extends Record<any>, TParams, TOptions
         this.newDataStatus = this._newDataStatus.asObservable();
         this.error = this._error.asObservable();
         this.isDisposed = new AsyncSubject();
-        this._params = {} as any;
         this._onParamsChanged();
         this.status.subscribe((status) => {
             if (status === LoadingStatus.Loading) {
@@ -99,12 +98,12 @@ export abstract class GenericView<TEntity extends Record<any>, TParams, TOptions
     }
 
     public set params(params: TParams) {
-        this._params = params;
+        this._params.next(params);
         this._onParamsChanged();
     }
 
-    public get params() {
-        return this._params;
+    public get params(): TParams {
+        return this._params.value;
     }
 
     public setOptions(options: TOptions, clearItems = true) {

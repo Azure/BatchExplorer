@@ -20,7 +20,7 @@ import {
 } from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { SanitizedError } from "@batch-flask/utils";
+import { SanitizedError, log } from "@batch-flask/utils";
 import { List } from "immutable";
 import * as inflection from "inflection";
 import { Subscription, of } from "rxjs";
@@ -420,7 +420,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
                 try {
                     this.router.navigate(link);
                 } catch (e) {
-                    throw new SanitizedError(e.toString());
+                    log.error(`Failed to navigate to link ${link}`, e.toString());
                 }
             }
         }

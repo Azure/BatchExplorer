@@ -4,7 +4,7 @@ import { Record } from "@batch-flask/core/record";
 import { log } from "@batch-flask/utils";
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable, combineLatest, of } from "rxjs";
-import { distinctUntilChanged, map, switchAll, takeUntil } from "rxjs/operators";
+import { distinctUntilChanged, map,  switchMap, takeUntil } from "rxjs/operators";
 import { GenericView, GenericViewConfig } from "../generic-view";
 import { ListGetter, ListResponse } from "../list-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "../list-options";
@@ -37,40 +37,42 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
         this._options = new ListOptions(config.initialOptions || {});
 
         this.items = combineLatest(
+            // this.cache.items,
             this._itemKeys.pipe(distinctUntilChanged()),
-            this._prepend.pipe(distinctUntilChanged())).pipe(
-                map(([itemKeys, prependKeys]) => {
-                    prependKeys = prependKeys.filter((x: string) => !itemKeys.has(x)) as any;
+            this._prepend.pipe(distinctUntilChanged()),
+            this._params,
+        ).pipe(
+            switchMap(([itemKeys, prependKeys, params]) => {
+                prependKeys = prependKeys.filter((x: string) => !itemKeys.has(x)) as any;
 
-                    const allKeys = prependKeys.concat(itemKeys.toJS());
+                const allKeys = prependKeys.concat(itemKeys.toJS());
 
-                    return this.cache.items.pipe(map((items) => {
-                        let keys = allKeys;
-                        if (this._options.maxItems) {
-                            keys = allKeys.slice(0, this._options.maxItems);
+                return this.cache.items.pipe(map((items) => {
+                    let keys = allKeys;
+                    if (this._options.maxItems) {
+                        keys = allKeys.slice(0, this._options.maxItems);
+                    }
+                    return List<TEntity>(keys.map((x: string) => {
+                        const item = items.get(x);
+                        if (!item && prependKeys.has(x)) {
+                            return new this._getter.type({ ...params, [this.cache.uniqueField]: x });
                         }
-                        return List<TEntity>(keys.map((x: string) => {
-                            const item = items.get(x);
-                            if (!item && prependKeys.has(x)) {
-                                return new this._getter.type({ [this.cache.uniqueField]: x });
-                            }
-                            return item;
-                        }).filter((item) => {
-                            if (!item) {
-                                return false;
-                            }
-                            const matcher = new FilterMatcher<TEntity>();
-                            if (this._options.filter && prependKeys.has(item[this.cache.uniqueField])) {
-                                return matcher.test(this._options.filter, item);
-                            }
-                            return true;
-                        }));
+                        return item;
+                    }).filter((item) => {
+                        if (!item) {
+                            return false;
+                        }
+                        const matcher = new FilterMatcher<TEntity>();
+                        if (this._options.filter && prependKeys.has(item[this.cache.uniqueField])) {
+                            return matcher.test(this._options.filter, item);
+                        }
+                        return true;
                     }));
-                }),
-                switchAll(),
-                distinctUntilChanged((a, b) => a.equals(b)),
-                takeUntil(this.isDisposed),
-            );
+                }));
+            }),
+            distinctUntilChanged((a, b) => a.equals(b)),
+            takeUntil(this.isDisposed),
+        );
         this.hasMore = this._hasMore.asObservable();
 
         this.deleted.subscribe((deletedKey) => {
@@ -92,6 +94,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
 
     public set params(params: TParams) {
         super.params = params;
+        console.log("Params", params);
         this._handleChanges();
         this._hasMore.next(true);
     }
@@ -122,7 +125,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
         let fetchObs;
         if (this._nextLink === null) {
             this._tryToLoadFromCache(forceNew);
-            fetchObs = () => this._getter.fetch(this._params, this._options, true);
+            fetchObs = () => this._getter.fetch(this.params, this._options, true);
         } else {
             fetchObs = () => this._getter.fetch(this._nextLink!);
         }
@@ -141,7 +144,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
     }
 
     public fetchAll(): Observable<any> {
-        const fetchObs = () => this._getter.fetchAll(this._params, this._options);
+        const fetchObs = () => this._getter.fetchAll(this.params, this._options);
         return this.fetchData({
             getData: fetchObs,
             next: (items: List<TEntity>) => {
@@ -227,13 +230,13 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
         const currentKeys = this._itemKeys.value;
 
         const last = this._lastRequest;
-        if (last && (last.params !== this._params || last.options !== this._options)) {
+        if (last && (last.params !== this.params || last.options !== this._options)) {
             this._itemKeys.next(newKeys);
         } else {
             this._itemKeys.next(OrderedSet<string>(currentKeys.concat(newKeys)));
         }
 
-        this._lastRequest = { params: this._params, options: this._options };
+        this._lastRequest = { params: this.params, options: this._options };
     }
 
     /**
@@ -244,7 +247,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
         if (forceNew) {
             return false;
         }
-        const response = this._getter.fetchFromCache(this._params, this._options);
+        const response = this._getter.fetchFromCache(this.params, this._options);
         if (!response) { return false; }
         this._itemKeys.next(this._retrieveKeys(response.items));
         // this._lastRequest = { params: this._params, options: this._options };
