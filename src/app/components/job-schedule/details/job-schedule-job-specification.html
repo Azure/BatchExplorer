@@ -95,7 +95,7 @@
             </ng-container>
         </bl-property-group>
 
-        <bl-property-group *ngIf="job.jobReleaseTask;let releasetask" label="Job release task" class="wide" [collapsed]="true">
+        <bl-property-group *ngIf="job.jobReleaseTask;let releaseTask" label="Job release task" class="wide" [collapsed]="true">
             <div collapsed-preview></div>
             <bl-text-property label="ID" [value]="releaseTask.id"></bl-text-property>
             <bl-text-property label="Command line" [value]="releaseTask.commandLine" [wrap]="true"></bl-text-property>
