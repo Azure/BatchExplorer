@@ -166,7 +166,7 @@ export class FileLoader {
     /**
      * Will either use the provided local path or download and cache a local version of the file and return its location
      */
-    public getLocalVersionPath(): Observable<string> {
+    public getLocalVersionPath(): Observable<string | null> {
         if (this._localPath) {
             return this._localPath();
         }
@@ -186,7 +186,8 @@ export class FileLoader {
      */
     private _cache() {
         return this.getProperties().pipe(
-            switchMap((file: File) => {
+            switchMap((file: File | ServerError) => {
+                if (!file || file instanceof ServerError) { return of(null); }
                 const destination = this._getCacheDestination(file);
                 return from(this._fs.exists(destination)).pipe(
                     switchMap((exists) => {

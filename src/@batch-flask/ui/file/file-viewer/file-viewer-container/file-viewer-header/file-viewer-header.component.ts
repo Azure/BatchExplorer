@@ -16,6 +16,10 @@ import "./file-viewer-header.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileViewerHeaderComponent implements OnChanges {
+
+    public get canSave(): boolean {
+        return Boolean(this.fileLoader && this.fileViewer && !this.fileLoader.isReadonly && this.fileViewer.save);
+    }
     @Input() public fileLoader: FileLoader;
     @Input() public config: FileViewerConfig;
     @Input() public fileViewer: FileViewer | null;
@@ -24,6 +28,7 @@ export class FileViewerHeaderComponent implements OnChanges {
     public contentSize: string = "-";
     public lastModified: Date;
     public file: File;
+    public actionDisabled: boolean;
     private _propertiesSub: Subscription;
 
     constructor(
@@ -45,8 +50,10 @@ export class FileViewerHeaderComponent implements OnChanges {
                         this.file = file;
                         this.contentSize = prettyBytes(file.properties.contentLength);
                         this.lastModified = file.properties.lastModified;
-                        this.changeDetector.markForCheck();
+                    } else {
+                        this.actionDisabled = true;
                     }
+                    this.changeDetector.markForCheck();
                 },
                 error: () => null,
             });
@@ -83,10 +90,6 @@ export class FileViewerHeaderComponent implements OnChanges {
         if (this.fileViewer.save) {
             return this.fileViewer.save();
         }
-    }
-
-    public get canSave(): boolean {
-        return Boolean(this.fileLoader && this.fileViewer && !this.fileLoader.isReadonly && this.fileViewer.save);
     }
 
     public trackCommand(index: number, _: FileViewerCommand) {
