@@ -40,7 +40,7 @@ export class LocalTemplatePickButtonComponent {
             properties: ["openFile"],
         });
 
-        if (files.length > 0) {
+        if (files && files.length > 0) {
             this.submitTemplate(files[0]);
         }
     }
