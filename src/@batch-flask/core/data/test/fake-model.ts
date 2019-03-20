@@ -2,6 +2,7 @@ import { Model, Prop, Record } from "@batch-flask/core/record";
 
 export interface FakeModelAttributes {
     id: string;
+    parentId: string;
     state: string;
     name: string;
 }
@@ -16,4 +17,5 @@ export class FakeModel extends Record<FakeModelAttributes> {
 
 export interface FakeParams {
     id: string;
+    parentId: string;
 }
