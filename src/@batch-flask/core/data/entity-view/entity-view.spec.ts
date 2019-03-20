@@ -3,10 +3,14 @@ import { BasicEntityGetter, DataCache, EntityGetter, EntityView, ServerError } f
 import { from, throwError } from "rxjs";
 import { FakeModel, FakeParams } from "../test/fake-model";
 
+const fake1 = { id: "1", parentId: "parent-1", state: "active", name: "Fake1" };
+const fake2 = { id: "1", parentId: "parent-1", state: "running", name: "Fake1" };
+const fake3 = { id: "1", parentId: "parent-1", state: "completed", name: "Fake1" };
+
 const data = [
     { id: "1", state: "active", name: "Fake1" },
     { id: "1", state: "running", name: "Fake1" },
-    { id: "1", state: "complated", name: "Fake1" },
+    { id: "1", state: "completed", name: "Fake1" },
 ];
 
 describe("EntityView", () => {
@@ -30,7 +34,7 @@ describe("EntityView", () => {
             cache: () => cache,
             getter: getter,
         });
-        view.params = { id: "1" };
+        view.params = { parentId: "parent-1", id: "1" };
     });
 
     afterEach(() => {
@@ -43,68 +47,67 @@ describe("EntityView", () => {
         view.fetch();
         tick();
         expect(dataSpy).toHaveBeenCalledTimes(1);
-        expect(item!.toJS()).toEqual(data[0]);
-        expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
+        expect(item!.toJS()).toEqual(fake1);
+        expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "1" });
     }));
 
     it("should use the cached value", fakeAsync(() => {
-        cache.addItem(new FakeModel({ id: "1", state: "creating", name: "Fake1" }));
+        cache.addItem(new FakeModel({ id: "1", parentId: "parent-1", state: "creating", name: "Fake1" }));
 
         view.item.subscribe(x => item = x);
         view.fetch();
         expect(item).not.toBeFalsy();
-        expect(item!.toJS()).toEqual({ id: "1", state: "creating", name: "Fake1" });
+        expect(item!.toJS()).toEqual({ id: "1", parentId: "parent-1", state: "creating", name: "Fake1" });
 
         tick(); // This should be the return from the fetched data
-        expect(item!.toJS()).toEqual(data[0]);
+        expect(item!.toJS()).toEqual(fake1);
     }));
 
     it("Update the data when refreshing", fakeAsync(() => {
         view.item.subscribe(x => item = x);
         view.fetch();
         tick();
-        expect(item!.toJS()).toEqual(data[0]);
+        expect(item!.toJS()).toEqual(fake1);
 
         view.refresh();
         tick();
-        expect(item!.toJS()).toEqual(data[1]);
+        expect(item!.toJS()).toEqual(fake2);
 
         view.refresh();
         tick();
-        expect(item!.toJS()).toEqual(data[2]);
+        expect(item!.toJS()).toEqual(fake3);
         expect(dataSpy).toHaveBeenCalledTimes(3);
     }));
 
     it("Update the params", fakeAsync(() => {
         view.item.subscribe(x => item = x);
-        view.params = { id: "2" };
+        view.params = { parentId: "parent-1", id: "2" };
         view.fetch();
         tick();
-        expect(item!.toJS()).toEqual(data[0]);
-        expect(dataSpy).toHaveBeenCalledWith({ id: "2" });
+        expect(item!.toJS()).toEqual(fake1);
+        expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "2" });
     }));
 
     it("Update the params", fakeAsync(() => {
         view.item.subscribe(x => item = x);
-        view.params = { id: "2" };
+        view.params = { parentId: "parent-1", id: "2" };
         view.fetch();
         tick();
-        expect(item!.toJS()).toEqual(data[0]);
-        expect(dataSpy).toHaveBeenCalledWith({ id: "2" });
+        expect(item!.toJS()).toEqual(fake1);
+        expect(dataSpy).toHaveBeenCalledWith({parentId: "parent-1",  id: "2" });
     }));
 
     it("Update the cache should update the item", fakeAsync(() => {
         view.item.subscribe(x => item = x);
         view.fetch();
         tick();
-        expect(item!.toJS()).toEqual(data[0]);
-        expect(item).toEqualImmutable(new FakeModel(data[0]));
+        expect(item!.toJS()).toEqual(fake1);
         expect(dataSpy).toHaveBeenCalledTimes(1);
-        expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
+        expect(dataSpy).toHaveBeenCalledWith({parentId: "parent-1",  id: "1" });
 
-        cache.addItem(new FakeModel(data[2]));
+        cache.addItem(new FakeModel({...data[2], parentId: "parent-1"}));
         tick();
-        expect(item!.toJS()).toEqual(data[2]);
+        expect(item!.toJS()).toEqual(fake3);
     }));
 
     describe("When it return a 404 error", () => {
@@ -115,7 +118,7 @@ describe("EntityView", () => {
             item = null;
             deleted = null;
             const responses = [
-                from(Promise.resolve(data[0])),
+                from(Promise.resolve(fake1)),
                 throwError(new ServerError({ status: 404, message: "404 not found" } as any)),
             ];
             dataSpy = jasmine.createSpy("supplyDataSpy")
@@ -130,7 +133,7 @@ describe("EntityView", () => {
                 cache: () => cache,
                 getter: getter,
             });
-            view.params = { id: "1" };
+            view.params = { parentId: "parent-1", id: "1" };
         });
 
         it("should not send to delete if loading for the first time and I get a 404", fakeAsync(() => {
@@ -143,7 +146,7 @@ describe("EntityView", () => {
                 cache: () => cache,
                 getter: getter,
             });
-            view.params = { id: "1" };
+            view.params = { parentId: "parent-1", id: "1" };
 
             view.item.subscribe(x => item = x);
             view.deleted.subscribe((x) => deleted = x);
@@ -158,7 +161,7 @@ describe("EntityView", () => {
                 cache: () => cache,
                 getter: getter,
             });
-            otherView.params = { id: "1" };
+            otherView.params = { parentId: "parent-1", id: "1" };
 
             view.item.subscribe(x => item = x);
             cache.deleted.subscribe(x => deleted = x);
@@ -184,7 +187,7 @@ describe("EntityView", () => {
             // expect(deleted).toBe(null);
 
             // This fetch should return an 404 error
-            view.params = { id: "2" };
+            view.params = { parentId: "parent-1", id: "2" };
             view.fetch();
             tick();
 

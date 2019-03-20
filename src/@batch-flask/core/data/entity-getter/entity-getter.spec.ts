@@ -3,6 +3,9 @@ import { of } from "rxjs";
 import { FakeModel, FakeParams } from "../test/fake-model";
 import { EntityGetter } from "./entity-getter";
 
+const fake1 = { id: "1", parentId: "parent-1", state: "active", name: "Fake1" };
+const fake2 = { id: "1", parentId: "parent-1", state: "running", name: "Fake1" };
+
 const data = [
     { id: "1", state: "active", name: "Fake1" },
     { id: "1", state: "running", name: "Fake1" },
@@ -25,39 +28,39 @@ describe("EntityGetter", () => {
     });
 
     it("It retrieve the item", (done) => {
-        getter.fetch({ id: "1" }).subscribe((item) => {
-            expect(item).toEqualImmutable(new FakeModel(data[0]));
+        getter.fetch({ parentId: "parent-1", id: "1" }).subscribe((item) => {
+            expect(item.toJS()).toEqual(fake1);
             expect(dataSpy).toHaveBeenCalledTimes(1);
-            expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
+            expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "1" });
             done();
         });
     });
 
     it("It retrieve the new item if not asked from cache", (done) => {
-        getter.fetch({ id: "1" }).subscribe((item) => {
-            expect(item).toEqualImmutable(new FakeModel(data[0]));
+        getter.fetch({ parentId: "parent-1", id: "1" }).subscribe((item) => {
+            expect(item.toJS()).toEqual(fake1);
             expect(dataSpy).toHaveBeenCalledTimes(1);
-            expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
+            expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "1" });
 
-            getter.fetch({ id: "1" }).subscribe((item) => {
-                expect(item).toEqualImmutable(new FakeModel(data[1]));
+            getter.fetch({ parentId: "parent-1", id: "1" }).subscribe((item) => {
+                expect(item.toJS()).toEqual(fake2);
                 expect(dataSpy).toHaveBeenCalledTimes(2);
-                expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
+                expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "1" });
                 done();
             });
         });
     });
 
     it("It retrieve the item from cache if asked too", (done) => {
-        getter.fetch({ id: "1" }).subscribe((item) => {
-            expect(item).toEqualImmutable(new FakeModel(data[0]));
+        getter.fetch({ parentId: "parent-1", id: "1" }).subscribe((item) => {
+            expect(item.toJS()).toEqual(fake1);
             expect(dataSpy).toHaveBeenCalledTimes(1);
-            expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
+            expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "1" });
 
-            getter.fetch({ id: "1" }, { cached: true }).subscribe((item) => {
-                expect(item).toEqualImmutable(new FakeModel(data[0]));
+            getter.fetch({ parentId: "parent-1", id: "1" }, { cached: true }).subscribe((item) => {
+                expect(item.toJS()).toEqual(fake1);
                 expect(dataSpy).toHaveBeenCalledTimes(1); // Should not have been called again as its loading from cache
-                expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
+                expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "1" });
                 done();
             });
         });

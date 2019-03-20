@@ -1,27 +1,19 @@
+
+# 2.0.1
+
+### Bug fixes
+* Null route when clicking on node or task that isn't loaded yet [\#1983](https://github.com/Azure/BatchExplorer/issues/1983)
+* Open a local template file null expection [\#1980](https://github.com/Azure/BatchExplorer/issues/1980)
+* Null pointer exception in job schedule details [\#1978](https://github.com/Azure/BatchExplorer/issues/1978)
+* Null currentTab in VTab Component  [\#1976](https://github.com/Azure/BatchExplorer/issues/1976)
+
 # 2.0.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/32?closed=1)
 
-### feature:
-
-
-### bug:
-
-
-### other:
-
-* CTRL+Click not selecting quick-list items [\#1970](https://github.com/Azure/BatchExplorer/issues/1970)
-* In the "Jobs" view, the default job sorting should be by creation date, not name [\#1966](https://github.com/Azure/BatchExplorer/issues/1966)
-* Subscription list should be sorted [\#1963](https://github.com/Azure/BatchExplorer/issues/1963)
-* Dashboard app package table has URL not name [\#1957](https://github.com/Azure/BatchExplorer/issues/1957)
-* Local template open in default editor should not open a copy [\#1944](https://github.com/Azure/BatchExplorer/issues/1944)
+### Features:
+* Sort jobs by end time and keep last sort order [\#1966](https://github.com/Azure/BatchExplorer/issues/1966)
+* Subscription list sorted alphabetically [\#1963](https://github.com/Azure/BatchExplorer/issues/1963)
 * Local Template library show full path to file [\#1943](https://github.com/Azure/BatchExplorer/issues/1943)
-* Daily cost graph showing corrupt data [\#1933](https://github.com/Azure/BatchExplorer/issues/1933)
-* Cant view images from task outputs [\#1928](https://github.com/Azure/BatchExplorer/issues/1928)
-* Bugs in Application Packages [\#1926](https://github.com/Azure/BatchExplorer/issues/1926)
-* Insider build unable to download (stable) update [\#1919](https://github.com/Azure/BatchExplorer/issues/1919)
-* CSS for favorite picker is broken [\#1914](https://github.com/Azure/BatchExplorer/issues/1914)
-* Issue with switching azure environment(National cloud) [\#1909](https://github.com/Azure/BatchExplorer/issues/1909)
-* Pool quota out of sync with pool list [\#1906](https://github.com/Azure/BatchExplorer/issues/1906)
 * Create batch account location picker use provider specific locations [\#1902](https://github.com/Azure/BatchExplorer/issues/1902)
 * Add common environment settings support for job [\#1896](https://github.com/Azure/BatchExplorer/issues/1896)
 * Local template library only shows .template.json files [\#1894](https://github.com/Azure/BatchExplorer/issues/1894)
@@ -33,8 +25,6 @@
 * Add column keyboard navigation for tables for accessibility [\#1878](https://github.com/Azure/BatchExplorer/issues/1878)
 * Windows user account interactive mode [\#1868](https://github.com/Azure/BatchExplorer/issues/1868)
 * Unify filesystem interfaces [\#1866](https://github.com/Azure/BatchExplorer/issues/1866)
-* Switch from bunyan to winston for logging [\#1865](https://github.com/Azure/BatchExplorer/issues/1865)
-* New user configuration/settings system [\#1841](https://github.com/Azure/BatchExplorer/issues/1841)
 * Support the new type of resource files(Storage container) [\#1839](https://github.com/Azure/BatchExplorer/issues/1839)
 * Update Batch api to latest version 2018-12-01.8.0 [\#1838](https://github.com/Azure/BatchExplorer/issues/1838)
 * Global app utc vs local time selector [\#1837](https://github.com/Azure/BatchExplorer/issues/1837)
@@ -42,8 +32,25 @@
 * Migrate from momentjs to luxon [\#1833](https://github.com/Azure/BatchExplorer/issues/1833)
 * File group creation disabled if no batch account selected [\#1750](https://github.com/Azure/BatchExplorer/issues/1750)
 * Display multi instance settings on the sub task [\#1554](https://github.com/Azure/BatchExplorer/issues/1554)
-* Stale pool statistics / graphs [\#1505](https://github.com/Azure/BatchExplorer/issues/1505)
 * Batch account favourites should be user specific. [\#250](https://github.com/Azure/BatchExplorer/issues/250)
+
+### Bug fixes:
+* CTRL+Click not selecting quick-list items [\#1970](https://github.com/Azure/BatchExplorer/issues/1970)
+* Dashboard app package table has URL not name [\#1957](https://github.com/Azure/BatchExplorer/issues/1957)
+* Local template open in default editor should not open a copy [\#1944](https://github.com/Azure/BatchExplorer/issues/1944)
+* Daily cost graph showing corrupt data [\#1933](https://github.com/Azure/BatchExplorer/issues/1933)
+* Cant view images from task outputs [\#1928](https://github.com/Azure/BatchExplorer/issues/1928)
+* Bugs in Application Packages [\#1926](https://github.com/Azure/BatchExplorer/issues/1926)
+* Insider build unable to download (stable) update [\#1919](https://github.com/Azure/BatchExplorer/issues/1919)
+* CSS for favorite picker is broken [\#1914](https://github.com/Azure/BatchExplorer/issues/1914)
+* Issue with switching azure environment(National cloud) [\#1909](https://github.com/Azure/BatchExplorer/issues/1909)
+* Pool quota out of sync with pool list [\#1906](https://github.com/Azure/BatchExplorer/issues/1906)
+* Stale pool statistics / graphs [\#1505](https://github.com/Azure/BatchExplorer/issues/1505)
+
+### Others:
+* Switch from bunyan to winston for logging [\#1865](https://github.com/Azure/BatchExplorer/issues/1865)
+* New user configuration/settings system [\#1841](https://github.com/Azure/BatchExplorer/issues/1841)
+
 
 
 # 0.19.2
