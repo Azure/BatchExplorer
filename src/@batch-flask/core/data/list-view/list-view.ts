@@ -4,7 +4,7 @@ import { Record } from "@batch-flask/core/record";
 import { log } from "@batch-flask/utils";
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable, combineLatest, of } from "rxjs";
-import { distinctUntilChanged, map,  switchMap, takeUntil } from "rxjs/operators";
+import { distinctUntilChanged, map, publishReplay, refCount, switchMap, takeUntil } from "rxjs/operators";
 import { GenericView, GenericViewConfig } from "../generic-view";
 import { ListGetter, ListResponse } from "../list-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "../list-options";
@@ -37,41 +37,41 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
         this._options = new ListOptions(config.initialOptions || {});
 
         this.items = combineLatest(
-            // this.cache.items,
+            this._params.pipe(switchMap(params => this.getCache(params).items)),
             this._itemKeys.pipe(distinctUntilChanged()),
             this._prepend.pipe(distinctUntilChanged()),
             this._params,
         ).pipe(
-            switchMap(([itemKeys, prependKeys, params]) => {
+            map(([items, itemKeys, prependKeys, params]) => {
                 prependKeys = prependKeys.filter((x: string) => !itemKeys.has(x)) as any;
 
                 const allKeys = prependKeys.concat(itemKeys.toJS());
 
-                return this.cache.items.pipe(map((items) => {
-                    let keys = allKeys;
-                    if (this._options.maxItems) {
-                        keys = allKeys.slice(0, this._options.maxItems);
+                let keys = allKeys;
+                if (this._options.maxItems) {
+                    keys = allKeys.slice(0, this._options.maxItems);
+                }
+                return List<TEntity>(keys.map((x: string) => {
+                    const item = items.get(x);
+                    if (!item && prependKeys.has(x)) {
+                        return new this._getter.type({ ...params, [this.cache.uniqueField]: x });
                     }
-                    return List<TEntity>(keys.map((x: string) => {
-                        const item = items.get(x);
-                        if (!item && prependKeys.has(x)) {
-                            return new this._getter.type({ ...params, [this.cache.uniqueField]: x });
-                        }
-                        return item;
-                    }).filter((item) => {
-                        if (!item) {
-                            return false;
-                        }
-                        const matcher = new FilterMatcher<TEntity>();
-                        if (this._options.filter && prependKeys.has(item[this.cache.uniqueField])) {
-                            return matcher.test(this._options.filter, item);
-                        }
-                        return true;
-                    }));
+                    return item;
+                }).filter((item) => {
+                    if (!item) {
+                        return false;
+                    }
+                    const matcher = new FilterMatcher<TEntity>();
+                    if (this._options.filter && prependKeys.has(item[this.cache.uniqueField])) {
+                        return matcher.test(this._options.filter, item);
+                    }
+                    return true;
                 }));
             }),
             distinctUntilChanged((a, b) => a.equals(b)),
             takeUntil(this.isDisposed),
+            publishReplay(1),
+            refCount(),
         );
         this.hasMore = this._hasMore.asObservable();
 
@@ -94,7 +94,6 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
 
     public set params(params: TParams) {
         super.params = params;
-        console.log("Params", params);
         this._handleChanges();
         this._hasMore.next(true);
     }

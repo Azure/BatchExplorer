@@ -64,11 +64,6 @@ export class Node extends Record<NodeAttributes> {
     @ListProp(CertificateReference) public certificateReferences: List<CertificateReference> = List([]);
     @ListProp(ComputeNodeError) public errors: List<ComputeNodeError> = List([]);
 
-    constructor(data) {
-        super(data);
-        console.log("this", this.poolId, data);
-    }
-
     public get routerLink() {
         return ["/pools", this.poolId, "nodes", this.id];
     }
