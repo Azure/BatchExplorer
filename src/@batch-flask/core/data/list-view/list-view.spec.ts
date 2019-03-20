@@ -5,6 +5,12 @@ import { from, of } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { FakeModel } from "../test/fake-model";
 
+const fake1 = { id: "1", parentId: "parent-1", state: "active", name: "Fake1" };
+const fake2 = { id: "2", parentId: "parent-1", state: "active", name: "Fake2" };
+const fake3 = { id: "3", parentId: "parent-1", state: "running", name: "Fake3" };
+const fake4 = { id: "4", parentId: "parent-1", state: "running", name: "Fake4" };
+const fake5 = { id: "5", parentId: "parent-1", state: "completed", name: "Fake5" };
+
 const firstPage = [
     { id: "1", state: "active", name: "Fake1" },
     { id: "2", state: "active", name: "Fake2" },
@@ -17,9 +23,9 @@ const secondPage = [
 ];
 
 const filteredData = [
-    { id: "1", state: "running", name: "Fake1" },
+    { id: "1", state: "active", name: "Fake1" },
     { id: "3", state: "running", name: "Fake3" },
-    { id: "4", state: "completed", name: "Fake4" },
+    { id: "4", state: "running", name: "Fake4" },
 ];
 
 const filters = {
@@ -79,7 +85,9 @@ describe("ListView", () => {
             cache: () => cache,
             getter: getter,
         });
-        view.params = {};
+        view.params = {
+            parentId: "parent-1",
+        };
         view.items.subscribe(x => items = x);
         view.hasMore.subscribe(x => hasMore = x);
         view.status.subscribe(x => status = x);
@@ -97,7 +105,7 @@ describe("ListView", () => {
 
     it("It retrieve the first batch of items", (done) => {
         view.fetchNext().subscribe(() => {
-            expect(items.toJS()).toEqual(firstPage);
+            expect(items.toJS()).toEqual([fake1, fake2, fake3]);
             expect(dataSpy).toHaveBeenCalledTimes(1);
             expect(hasMore).toBe(true);
             done();
@@ -109,7 +117,7 @@ describe("ListView", () => {
             flatMap(() => view.fetchNext()),
         ).subscribe(() => {
             expect(dataSpy).toHaveBeenCalledTimes(2);
-            expect(items.toJS()).toEqual(firstPage.concat(secondPage));
+            expect(items.toJS()).toEqual([fake1, fake2, fake3, fake4, fake5]);
             expect(hasMore).toBe(false);
             done();
         });
@@ -117,7 +125,7 @@ describe("ListView", () => {
 
     it("It fetch all", (done) => {
         view.fetchAll().subscribe(() => {
-            expect(items.toJS()).toEqual(firstPage.concat(secondPage));
+            expect(items.toJS()).toEqual([fake1, fake2, fake3, fake4, fake5]);
             expect(dataSpy).toHaveBeenCalledTimes(2);
             expect(hasMore).toBe(false);
             done();
@@ -133,7 +141,7 @@ describe("ListView", () => {
             obs.subscribe(() => {
                 expect(dataSpy).toHaveBeenCalledTimes(2);
 
-                expect(items.toJS()).toEqual(firstPage);
+                expect(items.toJS()).toEqual([fake1, fake2, fake3]);
                 done();
             });
         });
@@ -149,7 +157,7 @@ describe("ListView", () => {
             obs.subscribe(() => {
                 view.items.subscribe(x => items = x);
                 expect(dataSpy).toHaveBeenCalledTimes(2);
-                expect(items.toJS()).toEqual(firstPage);
+                expect(items.toJS()).toEqual([fake1, fake2, fake3]);
                 done();
             });
         });
@@ -158,20 +166,20 @@ describe("ListView", () => {
     it("#refreshAll() should get all the items", (done) => {
         items = List([]); // Reset the items to make sure it loads all of them again
         view.refreshAll().subscribe(() => {
-            expect(items.toJS()).toEqual(firstPage.concat(secondPage));
+            expect(items.toJS()).toEqual([fake1, fake2, fake3, fake4, fake5]);
             done();
         });
     });
 
     it("it should apply the options", (done) => {
         view.fetchNext().subscribe(() => {
-            expect(items.toJS()).toEqual(firstPage);
+            expect(items.toJS()).toEqual([fake1, fake2, fake3]);
             expect(dataSpy).toHaveBeenCalledTimes(1);
 
             view.setOptions({ filter: filters.filter2 });
             view.fetchNext().subscribe(() => {
                 expect(dataSpy).toHaveBeenCalledTimes(2);
-                expect(items.toJS()).toEqual(filteredData, "Should have updated to the new data");
+                expect(items.toJS()).toEqual([fake1, fake3, fake4], "Should have updated to the new data");
                 expect(hasMore).toBe(false);
                 done();
             });
@@ -181,7 +189,7 @@ describe("ListView", () => {
     it("should return hasMore false if there is only 1 page of data after first fetch", (done) => {
         view.setOptions({ filter: filters.filter2 });
         view.fetchNext().subscribe(() => {
-            expect(items.toJS()).toEqual(filteredData);
+            expect(items.toJS()).toEqual([fake1, fake3, fake4]);
             expect(hasMore).toBe(false);
             done();
         });
@@ -195,10 +203,7 @@ describe("ListView", () => {
             cache.deleteItemByKey("2");
             expect(subSpy).toHaveBeenCalledTimes(2); // Should not have been called more than once
 
-            const newList = [
-                { id: "1", state: "active", name: "Fake1" },
-                { id: "3", state: "running", name: "Fake3" },
-            ];
+            const newList = [fake1, fake3];
             expect(items.toJS()).toEqual(newList);
             done();
         });
@@ -212,15 +217,15 @@ describe("ListView", () => {
         it("should NOT add the item if already present and update exiting one", (done) => {
             const getter = new BasicEntityGetter(FakeModel, {
                 cache: () => cache,
-                supplyData: () => of(new FakeModel({ id: "2", state: "running", name: "Fake2" })),
+                supplyData: () => of({ id: "2", state: "running", name: "Fake2" }),
             });
             const expected = [
-                { id: "1", state: "active", name: "Fake1" },
-                { id: "2", state: "running", name: "Fake2" },
-                { id: "3", state: "running", name: "Fake3" },
+                fake1,
+                { id: "2", parentId: "parent-1", state: "running", name: "Fake2" },
+                fake3,
             ];
 
-            view.loadNewItem(getter.fetch({ id: "2" })).subscribe(() => {
+            view.loadNewItem(getter.fetch({ parentId: "parent-1", id: "2" })).subscribe(() => {
                 expect(items.toJS()).toEqual(expected);
                 done();
             });
@@ -229,13 +234,13 @@ describe("ListView", () => {
         it("should add the item if NOT already present", (done) => {
             const getter = new BasicEntityGetter(FakeModel, {
                 cache: () => cache,
-                supplyData: () => of(new FakeModel({ id: "4", state: "running", name: "Fake4" })),
+                supplyData: () => of({ id: "4", state: "running", name: "Fake4" }),
             });
             const expected = [
-                { id: "4", state: "running", name: "Fake4" },
-            ].concat(firstPage);
+                { id: "4", parentId: "parent-1", state: "running", name: "Fake4" },
+            ].concat([fake1, fake2, fake3]);
 
-            view.loadNewItem(getter.fetch({ id: "2" })).subscribe(() => {
+            view.loadNewItem(getter.fetch({ parentId: "parent-1", id: "4" })).subscribe(() => {
                 expect(items.toJS()).toEqual(expected);
                 done();
             });

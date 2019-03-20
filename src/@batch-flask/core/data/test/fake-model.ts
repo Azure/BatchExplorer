@@ -9,6 +9,7 @@ export interface FakeModelAttributes {
 @Model()
 export class FakeModel extends Record<FakeModelAttributes> {
     @Prop() public id: string;
+    @Prop() public parentId: string;
     @Prop() public state: string;
     @Prop() public name: string;
 }
