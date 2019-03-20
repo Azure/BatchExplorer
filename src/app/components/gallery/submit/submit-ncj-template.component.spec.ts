@@ -114,7 +114,7 @@ fdescribe("SubmitNcjTemplateComponent", () => {
     let fileGroupServiceSpy;
     let poolOsServiceSpy;
     let settingsServiceSpy: MockUserConfigurationService;
-    let renderContainerImageSpy;
+    let renderingContainerImageServiceSpy;
 
     const blendFile = "myscene.blend";
     let queryParameters;
@@ -206,8 +206,9 @@ fdescribe("SubmitNcjTemplateComponent", () => {
             },
         });
 
-        renderContainerImageSpy = {
-
+        renderingContainerImageServiceSpy = {
+            containerImagesAsMap: jasmine.createSpy("containerImagesAsMap").and.returnValue(of(
+               new Map())),
         };
 
         TestBed.configureTestingModule({
@@ -241,7 +242,7 @@ fdescribe("SubmitNcjTemplateComponent", () => {
                 { provide: NotificationService, useValue: notificationServiceSpy },
                 { provide: PoolOsService, useValue: poolOsServiceSpy },
                 { provide: UserConfigurationService, useValue: settingsServiceSpy },
-                { provide: RenderingContainerImageService, useValue: renderContainerImageSpy },
+                { provide: RenderingContainerImageService, useValue: renderingContainerImageServiceSpy },
             ],
 
             schemas: [NO_ERRORS_SCHEMA],
