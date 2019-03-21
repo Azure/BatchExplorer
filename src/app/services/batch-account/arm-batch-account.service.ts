@@ -1,5 +1,6 @@
 import { HttpParams } from "@angular/common/http";
 import { Injectable, OnDestroy } from "@angular/core";
+import { ServerError } from "@batch-flask/core";
 import { SanitizedError, log } from "@batch-flask/utils";
 import { ArmBatchAccount, ArmSubscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
@@ -60,6 +61,13 @@ export class ArmBatchAccountService implements OnDestroy {
         }
         return this.subscriptionService.get(subscriptionId).pipe(
             flatMap((subscription) => {
+                if (!subscription) {
+                    throw new ServerError({
+                        status: 404,
+                        code: "SubscriptionNotFound",
+                        message: `Subscription ${subscriptionId} is not found. You might not have permission anymore.`,
+                    });
+                }
                 return this.azure.get(subscription, id).pipe(
                     map(response => this._createAccount(subscription, response)),
                 );

@@ -73,7 +73,7 @@ export class BatchAccountService implements OnDestroy {
 
         this.currentAccount = this._currentAccountId.pipe(
             filter(x => Boolean(x)),
-            flatMap((id) => this.getFromCache(id)),
+            switchMap((id) => this.getFromCache(id)),
             filter(x => Boolean(x)),
             shareReplay(1),
         );
