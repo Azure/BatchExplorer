@@ -1,5 +1,5 @@
 import { fakeAsync, tick } from "@angular/core/testing";
-import { BehaviorSubject, of } from "rxjs";
+import { BehaviorSubject, of, throwError } from "rxjs";
 import { PoolNodeCountService } from "./pool-node-count.service";
 
 const mockResponse = [
@@ -114,12 +114,21 @@ describe("PoolNodeCountService", () => {
     let service: PoolNodeCountService;
     let accountServiceSpy;
     let httpSpy;
+    let fakeOffline: boolean;
+
     beforeEach(() => {
+        fakeOffline = false;
+
         accountServiceSpy = {
             currentAccountId: new BehaviorSubject("acc-1"),
         };
         httpSpy = {
-            get: jasmine.createSpy("http.get").and.returnValue(of({ value: mockResponse })),
+            get: jasmine.createSpy("http.get").and.callFake(() => {
+                if (fakeOffline) {
+                    return throwError("offline");
+                }
+                return of({ value: mockResponse });
+            }),
         };
         service = new PoolNodeCountService(accountServiceSpy, httpSpy);
     });
@@ -161,6 +170,37 @@ describe("PoolNodeCountService", () => {
         sub.unsubscribe();
         tick(30000);
         expect(httpSpy.get).toHaveBeenCalledTimes(3); // Not called anymore as no more subs
+    }));
+
+    it("recover from error when auto polling", fakeAsync(() => {
+        service.ngOnDestroy();
+        service = new PoolNodeCountService(accountServiceSpy, httpSpy);
+
+        expect(httpSpy.get).toHaveBeenCalledTimes(0);
+        let counts;
+        const sub = service.counts.subscribe(x => counts = x);
+        tick();
+        expect(httpSpy.get).toHaveBeenCalledTimes(1);
+        expect(counts).not.toBeNull();
+        expect(counts.size).toBe(3);
+
+        // -------------------------- Fake offline while fetching --------------------
+        fakeOffline = true;
+        tick(30000);
+        expect(httpSpy.get).toHaveBeenCalledTimes(2);
+        // Keep the last results
+        expect(counts).not.toBeNull();
+        expect(counts.size).toBe(3);
+
+        // -------------------------- Back online ------------------------------------
+        fakeOffline = false;
+        counts = null;
+        tick(30000);
+        expect(httpSpy.get).toHaveBeenCalledTimes(3);
+
+        expect(counts).not.toBeNull();
+        expect(counts.size).toBe(3);
+        sub.unsubscribe();
     }));
 
     it("Don't double refresh when subscribing multiple times to count", fakeAsync(() => {
