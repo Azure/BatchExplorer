@@ -3,6 +3,7 @@
 ### Bug fixes
 * Node counts graphs don't recover from errors(e.g. Connection died). [\#1989](https://github.com/Azure/BatchExplorer/issues/1989)
 * Null exception in resource files properties [\#1984](https://github.com/Azure/BatchExplorer/issues/1984)
+* Only loads permissions for first selected batch account [\#1987](https://github.com/Azure/BatchExplorer/issues/1987)
 
 # 2.0.1
 
