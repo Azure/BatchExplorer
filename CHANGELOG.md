@@ -1,3 +1,7 @@
+# 2.0.2
+
+### Bug fixes
+* Null exception in resource files properties [\#1984](https://github.com/Azure/BatchExplorer/issues/1984)
 
 # 2.0.1
 
