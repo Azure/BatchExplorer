@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpRequestOptions } from "@batch-flask/core";
 import { Permission } from "@batch-flask/ui/permission";
 import { Observable, empty, of } from "rxjs";
-import { expand, flatMap, map, reduce, shareReplay, switchMap, take } from "rxjs/operators";
+import { expand, flatMap, map, reduce, shareReplay, switchMap } from "rxjs/operators";
 import { ArmBatchAccount } from "../../models";
 import { ArmHttpService } from "../arm-http.service";
 import { BatchAccountService } from "../batch-account";
