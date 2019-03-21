@@ -110,6 +110,7 @@ export class TablePropertyCellPlainComponent extends ClickableComponent {
 @Component({
     selector: "bl-table-property",
     templateUrl: "table-property.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TablePropertyComponent {
     public readonly defaultDisplay = 2;
@@ -152,8 +153,11 @@ export class TablePropertyComponent {
         return this.expandable && this.expanded && this.rows.length > this.defaultDisplay;
     }
 
+    constructor(private changeDetector: ChangeDetectorRef) { }
+
     public expand() {
         this.expanded = true;
+        this.changeDetector.markForCheck();
     }
 
     public trackRow(index, row: TablePropertyRowComponent) {
