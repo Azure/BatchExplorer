@@ -1,6 +1,6 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild,
-    ContentChildren, HostBinding, HostListener, Injector, Input, QueryList, TemplateRef, ViewChild,
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    ContentChild, ContentChildren, HostBinding, HostListener, Injector, Input, QueryList, TemplateRef, ViewChild,
 } from "@angular/core";
 import { ClipboardService } from "@batch-flask/electron";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
@@ -112,7 +112,7 @@ export class TablePropertyCellPlainComponent extends ClickableComponent {
     templateUrl: "table-property.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TablePropertyComponent {
+export class TablePropertyComponent implements AfterContentInit {
     public readonly defaultDisplay = 2;
 
     @Input() public label: string;
@@ -154,6 +154,10 @@ export class TablePropertyComponent {
     }
 
     constructor(private changeDetector: ChangeDetectorRef) { }
+
+    public ngAfterContentInit() {
+        this.rows.changes.subscribe(() => this.changeDetector.markForCheck());
+    }
 
     public expand() {
         this.expanded = true;
