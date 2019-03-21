@@ -13,7 +13,7 @@ import { Router } from "@angular/router";
 import { ListKeyNavigator, ListView } from "@batch-flask/core";
 import { KeyCode } from "@batch-flask/core/keys";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
-import { ListDataPresenter } from "@batch-flask/ui/abstract-list/list-data-presenter";
+import { ListDataPresenter, SortingInfo } from "@batch-flask/ui/abstract-list/list-data-presenter";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem,
@@ -24,6 +24,7 @@ import { SanitizedError } from "@batch-flask/utils";
 import { List } from "immutable";
 import * as inflection from "inflection";
 import { Subscription, of } from "rxjs";
+import { skip } from "rxjs/operators";
 import { VirtualScrollComponent } from "../virtual-scroll";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
@@ -57,6 +58,11 @@ export interface AbstractListBaseConfig<TEntity = any> {
      * Sorting definition. Specify here what column can be sorted and how
      */
     sorting?: ListSortConfig<TEntity> | null | false;
+
+    /**
+     * Id used to preserve settings for the list(Last sort)
+     */
+    id?: string;
 }
 
 export const abstractListDefaultConfig: Required<AbstractListBaseConfig> = {
@@ -65,7 +71,10 @@ export const abstractListDefaultConfig: Required<AbstractListBaseConfig> = {
     scrollBottomBuffer: 0,
     forceBreadcrumb: false,
     sorting: null,
+    id: undefined,
 };
+
+const lastSorting: StringMap<SortingInfo> = {};
 
 /**
  * Base class for quick-list and table component
@@ -109,6 +118,13 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     @Input() public set config(config: AbstractListBaseConfig) {
         this._config = { ...abstractListDefaultConfig, ...config };
         this.dataPresenter.config = this._config.sorting;
+
+        if (this._config.id) {
+            const lastSortingKey = lastSorting[this._config.id];
+            if (lastSortingKey) {
+                this.dataPresenter.sortBy(lastSortingKey.key, lastSortingKey.direction);
+            }
+        }
     }
     public get config() { return this._config; }
 
@@ -175,6 +191,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.dataPresenter.sortingStatus.subscribe((sortingStatus) => {
             this.sortingStatus = sortingStatus;
             this.changeDetector.markForCheck();
+        });
+        this.dataPresenter.sortingByObs.pipe(skip(1)).subscribe((sortBy) => {
+            if (this._config.id) {
+                lastSorting[this._config.id] = sortBy;
+            }
         });
 
     }
@@ -333,7 +354,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             if (event.shiftKey) {
                 const focusedItem = this._keyNavigator.focusedItem;
                 previousFocussedId = focusedItem && focusedItem.id;
-            } else {
+            } else if (event.code === KeyCode.ArrowDown || event.code === KeyCode.ArrowUp) {
                 this.clearSelection();
             }
             // Handle the navigation
@@ -341,6 +362,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
             const focusedItem = this._keyNavigator.focusedItem;
             const focussedId = focusedItem && focusedItem.id;
+
             if (previousFocussedId && previousFocussedId !== focussedId) {
                 if (!focussedId) { return; }
                 if (this.selection.has(focussedId)) {
@@ -365,7 +387,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             if (shiftKey) {
                 this.selectTo(item.id);
             } else if (ctrlKey) {
-                this.onSelectedChange(item.id, !this.selection.has(item.id));
+                this.toggleSelected(item.id);
             }
             event.stopPropagation();
             event.stopImmediatePropagation();
@@ -492,6 +514,14 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         return new MultiContextMenuItem({
             label: "Sort by",
             subitems: [
+                new ContextMenuItem({
+                    label: "Default",
+                    click: () => {
+                        this.dataPresenter.sortBy(null);
+                    },
+                    checked: this.dataPresenter.sortingBy.key === null,
+                    type: "checkbox",
+                }),
                 ...sortOptions,
                 new ContextMenuSeparator(),
                 ...sortDirections,

@@ -35,11 +35,13 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     public searchQuery = new FormControl();
 
     public listConfig: AbstractListBaseConfig<Job> = {
+        id: "job-list",
         sorting: {
             id: true,
             state: true,
             creationTime: true,
             pool: job => job.executionInfo && job.executionInfo.poolId,
+            endTime: job => job.executionInfo && job.executionInfo.endTime,
         },
     };
 

@@ -32,6 +32,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     public data: ListView<Pool, PoolListParams>;
 
     public listConfig: AbstractListBaseConfig = {
+        id: "pool-list",
         sorting: {
             id: true,
             state: true,

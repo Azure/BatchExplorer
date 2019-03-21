@@ -24,54 +24,55 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 14. @types/keytar(https://github.com/DefinitelyTyped/DefinitelyTyped#readme) - MIT
 15. applicationinsights(https://github.com/Microsoft/ApplicationInsights-node.js#readme) - MIT
 16. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
-17. bunyan(https://github.com/trentm/node-bunyan#readme) - MIT
-18. chart.js(http://www.chartjs.org) - MIT
-19. chokidar(https://github.com/paulmillr/chokidar) - MIT
-20. commander(https://github.com/tj/commander.js#readme) - MIT
-21. d3(https://d3js.org) - BSD-3-Clause
-22. decode-uri-component(https://github.com/SamVerschueren/decode-uri-component#readme) - MIT
-23. download(https://github.com/kevva/download#readme) - MIT
-24. electron-updater(https://github.com/electron-userland/electron-builder) - MIT
-25. element-resize-detector(https://github.com/wnr/element-resize-detector) - MIT
-26. extract-zip(https://github.com/maxogden/extract-zip#readme) - BSD-2-Clause
-27. focus-visible(https://github.com/WICG/focus-visible) - W3C
-28. font-awesome(http://fontawesome.io/) - (OFL-1.1 AND MIT)
-29. get-proxy-settings(https://github.com/Azure/get-proxy-settings) - MIT
-30. glob(https://github.com/isaacs/node-glob#readme) - ISC
-31. hammerjs(http://hammerjs.github.io/) - MIT
-32. https-proxy-agent(https://github.com/TooTallNate/node-https-proxy-agent#readme) - MIT
-33. immutable(https://facebook.github.com/immutable-js) - MIT
-34. inflection(https://github.com/dreamerslab/node.inflection#readme) - MIT
-35. js-yaml(https://github.com/nodeca/js-yaml) - MIT
-36. jschardet(https://github.com/aadsm/jschardet#readme) - LGPL-2.1+
-37. keytar(http://atom.github.io/node-keytar) - MIT
-38. load-json-file(https://github.com/sindresorhus/load-json-file#readme) - MIT
-39. mkdirp(https://github.com/substack/node-mkdirp#readme) - MIT
-40. moment(http://momentjs.com) - MIT
-41. moment-duration-format(https://github.com/jsmreese/moment-duration-format) - MIT
-42. monaco-editor(https://github.com/Microsoft/monaco-editor#readme) - MIT
-43. mousetrap(https://github.com/ccampbell/mousetrap#readme) - Apache-2.0 WITH LLVM-exception
-44. node-forge(https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
-45. patternomaly(https://github.com/ashiguruma/patternomaly#readme) - MIT
-46. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
-47. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
-48. strip-json-comments(https://github.com/sindresorhus/strip-json-comments#readme) - MIT
-49. tinycolor2(https://github.com/TinyColor) - MIT
-50. write-file-webpack-plugin(https://github.com/gajus/write-file-webpack-plugin#readme) - BSD-3-Clause
-51. xml2js(https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
-52. zone.js(https://github.com/angular/zone.js#readme) - MIT
-53. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
-54. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
-55. node.js(https://nodejs.org/en/) - MIT
-56. python(https://www.python.org/) - PSF
-57. Electron(https://electronjs.org/) - electron
+17. chart.js(http://www.chartjs.org) - MIT
+18. chokidar(https://github.com/paulmillr/chokidar) - MIT
+19. commander(https://github.com/tj/commander.js#readme) - MIT
+20. d3(https://d3js.org) - BSD-3-Clause
+21. decode-uri-component(https://github.com/SamVerschueren/decode-uri-component#readme) - MIT
+22. download(https://github.com/kevva/download#readme) - MIT
+23. electron-updater(https://github.com/electron-userland/electron-builder) - MIT
+24. element-resize-detector(https://github.com/wnr/element-resize-detector) - MIT
+25. extract-zip(https://github.com/maxogden/extract-zip#readme) - BSD-2-Clause
+26. focus-visible(https://github.com/WICG/focus-visible) - W3C
+27. font-awesome(http://fontawesome.io/) - (OFL-1.1 AND MIT)
+28. get-proxy-settings(https://github.com/Azure/get-proxy-settings) - MIT
+29. glob(https://github.com/isaacs/node-glob#readme) - ISC
+30. hammerjs(http://hammerjs.github.io/) - MIT
+31. https-proxy-agent(https://github.com/TooTallNate/node-https-proxy-agent#readme) - MIT
+32. immutable(https://facebook.github.com/immutable-js) - MIT
+33. inflection(https://github.com/dreamerslab/node.inflection#readme) - MIT
+34. js-yaml(https://github.com/nodeca/js-yaml) - MIT
+35. jschardet(https://github.com/aadsm/jschardet#readme) - LGPL-2.1+
+36. keytar(http://atom.github.io/node-keytar) - MIT
+37. load-json-file(https://github.com/sindresorhus/load-json-file#readme) - MIT
+38. luxon(https://github.com/moment/luxon#readme) - MIT
+39. make-dir(https://github.com/sindresorhus/make-dir#readme) - MIT
+40. monaco-editor(https://github.com/Microsoft/monaco-editor#readme) - MIT
+41. mousetrap(https://github.com/ccampbell/mousetrap#readme) - Apache-2.0 WITH LLVM-exception
+42. node-abi(https://github.com/lgeiger/node-abi#readme) - MIT
+43. node-forge(https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
+44. patternomaly(https://github.com/ashiguruma/patternomaly#readme) - MIT
+45. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
+46. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
+47. strip-json-comments(https://github.com/sindresorhus/strip-json-comments#readme) - MIT
+48. tinycolor2(https://github.com/TinyColor) - MIT
+49. winston(https://github.com/winstonjs/winston#readme) - MIT
+50. winston-daily-rotate-file(https://github.com/winstonjs/winston-daily-rotate-file#readme) - MIT
+51. write-file-webpack-plugin(https://github.com/gajus/write-file-webpack-plugin#readme) - BSD-3-Clause
+52. xml2js(https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
+53. zone.js(https://github.com/angular/zone.js#readme) - MIT
+54. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
+55. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
+56. node.js(https://nodejs.org/en/) - MIT
+57. python(https://www.python.org/) - PSF
+58. Electron(https://electronjs.org/) - electron
 
 ============================================================
     Start license for @angular/animations
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -129,7 +130,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -158,7 +159,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -187,7 +188,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -216,7 +217,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -245,7 +246,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -274,7 +275,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -332,7 +333,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -361,7 +362,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -390,7 +391,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -419,7 +420,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2014-2018 Google, Inc. http://angular.io
+Copyright (c) 2010-2019 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -711,38 +712,6 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 ------------------------------------------------------------
     End license for azure-storage
-============================================================
-
-============================================================
-    Start license for bunyan
-------------------------------------------------------------
-# This is the MIT license
-
-Copyright 2016 Trent Mick
-Copyright 2016 Joyent Inc.
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-------------------------------------------------------------
-    End license for bunyan
 ============================================================
 
 ============================================================
@@ -1724,90 +1693,35 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ============================================================
 
 ============================================================
-    Start license for mkdirp
+    Start license for luxon
 ------------------------------------------------------------
-Copyright 2010 James Halliday (mail@substack.net)
+Copyright 2017 JS Foundation and other contributors
 
-This project is free software released under the MIT/X11 license:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ------------------------------------------------------------
-    End license for mkdirp
+    End license for luxon
 ============================================================
 
 ============================================================
-    Start license for moment
+    Start license for make-dir
 ------------------------------------------------------------
-Copyright (c) JS Foundation and other contributors
+MIT License
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ------------------------------------------------------------
-    End license for moment
-============================================================
-
-============================================================
-    Start license for moment-duration-format
-------------------------------------------------------------
-The MIT License (MIT)
-
-Copyright (c) 2018 John Madhavan-Reese
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-------------------------------------------------------------
-    End license for moment-duration-format
+    End license for make-dir
 ============================================================
 
 ============================================================
@@ -1815,7 +1729,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2018 Microsoft Corporation
+Copyright (c) 2019 Microsoft Corporation
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -2038,6 +1952,35 @@ Software.
 
 ------------------------------------------------------------
     End license for mousetrap
+============================================================
+
+============================================================
+    Start license for node-abi
+------------------------------------------------------------
+MIT License
+
+Copyright (c) 2016 Lukas Geiger
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------
+    End license for node-abi
 ============================================================
 
 ============================================================
@@ -2699,6 +2642,35 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ============================================================
     Start license for tinycolor2
+------------------------------------------------------------
+============================================================
+    Start license for winston
+------------------------------------------------------------
+Copyright (c) 2010 Charlie Robbins
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+------------------------------------------------------------
+    End license for winston
+============================================================
+
+============================================================
+    Start license for winston-daily-rotate-file
 ------------------------------------------------------------
 ============================================================
     Start license for write-file-webpack-plugin
@@ -3481,7 +3453,7 @@ The externally maintained libraries used by Node.js are:
 
 - OpenSSL, located at deps/openssl, is licensed as follows:
   """
-    Copyright (c) 1998-2018 The OpenSSL Project.  All rights reserved.
+    Copyright (c) 1998-2019 The OpenSSL Project.  All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions
@@ -3619,6 +3591,17 @@ The externally maintained libraries used by Node.js are:
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  """
+
+- SipHash, located at deps/v8/src/third_party/siphash, is licensed as follows:
+  """
+    SipHash reference C implementation
+
+    Copyright (c) 2016 Jean-Philippe Aumasson <jeanphilippe.aumasson@gmail.com>
+
+    To the extent possible under law, the author(s) have dedicated all
+    copyright and related and neighboring rights to this software to the public
+    domain worldwide. This software is distributed without any warranty.
   """
 
 - zlib, located at deps/zlib, is licensed as follows:
@@ -4196,6 +4179,129 @@ The externally maintained libraries used by Node.js are:
      OR OTHER DEALINGS IN THE SOFTWARE.
   """
 
+- caja, located at lib/internal/freeze_intrinsics.js, is licensed as follows:
+  """
+     Adapted from SES/Caja - Copyright (C) 2011 Google Inc.
+     Copyright (C) 2018 Agoric
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+  """
+
+- brotli, located at deps/brotli, is licensed as follows:
+  """
+    Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+  """
+
+- HdrHistogram, located at deps/histogram, is licensed as follows:
+  """
+    The code in this repository code was Written by Gil Tene, Michael Barker,
+    and Matt Warren, and released to the public domain, as explained at
+    http://creativecommons.org/publicdomain/zero/1.0/
+
+    For users of this code who wish to consume it under the "BSD" license
+    rather than under the public domain or CC0 contribution text mentioned
+    above, the code found under this directory is *also* provided under the
+    following license (commonly referred to as the BSD 2-Clause License). This
+    license does not detract from the above stated release of the code into
+    the public domain, and simply represents an additional license granted by
+    the Author.
+
+    -----------------------------------------------------------------------------
+    ** Beginning of "BSD 2-Clause License" text. **
+
+     Copyright (c) 2012, 2013, 2014 Gil Tene
+     Copyright (c) 2014 Michael Barker
+     Copyright (c) 2014 Matt Warren
+     All rights reserved.
+
+     Redistribution and use in source and binary forms, with or without
+     modification, are permitted provided that the following conditions are met:
+
+     1. Redistributions of source code must retain the above copyright notice,
+        this list of conditions and the following disclaimer.
+
+     2. Redistributions in binary form must reproduce the above copyright notice,
+        this list of conditions and the following disclaimer in the documentation
+        and/or other materials provided with the distribution.
+
+     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+     AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+     IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+     ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+     LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+     CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+     SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+     INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+     ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+     THE POSSIBILITY OF SUCH DAMAGE.
+  """
+
+- node-heapdump, located at src/heap_utils.cc, is licensed as follows:
+  """
+    ISC License
+
+    Copyright (c) 2012, Ben Noordhuis <info@bnoordhuis.nl>
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted, provided that the above
+    copyright notice and this permission notice appear in all copies.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+    === src/compat.h src/compat-inl.h ===
+
+    ISC License
+
+    Copyright (c) 2014, StrongLoop Inc.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted, provided that the above
+    copyright notice and this permission notice appear in all copies.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  """
+
 ------------------------------------------------------------
     End license for node.js
 ============================================================
@@ -4465,7 +4571,7 @@ OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ============================================================
     Start license for Electron
 ------------------------------------------------------------
-Copyright (c) 2013-2018 GitHub Inc.
+Copyright (c) 2013-2019 GitHub Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

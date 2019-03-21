@@ -44,10 +44,10 @@ class TestComponent {
     };
     public items: Iterable<TestItem> = [
         { id: "item-1", name: "Item 1" },
-        { id: "item-2", name: "Item 2" },
+        { id: "item-2", name: "AItem 2" },
         { id: "item-3", name: "Item 3" },
-        { id: "item-4", name: "Item 4" },
         { id: "item-5", name: "Item 5" },
+        { id: "item-4", name: "BItem 4" },
     ];
 }
 
@@ -114,17 +114,17 @@ describe("QuickListComponent", () => {
         expect(items[0].nativeElement.id).toEqual("quick-1-row-item-1");
         expect(items[1].nativeElement.id).toEqual("quick-1-row-item-2");
         expect(items[2].nativeElement.id).toEqual("quick-1-row-item-3");
-        expect(items[3].nativeElement.id).toEqual("quick-1-row-item-4");
-        expect(items[4].nativeElement.id).toEqual("quick-1-row-item-5");
+        expect(items[3].nativeElement.id).toEqual("quick-1-row-item-5");
+        expect(items[4].nativeElement.id).toEqual("quick-1-row-item-4");
     });
 
     it("should display all the content", () => {
         expect(items.length).toBe(5);
         expect(items[0].nativeElement.textContent).toContain("Item 1");
-        expect(items[1].nativeElement.textContent).toContain("Item 2");
+        expect(items[1].nativeElement.textContent).toContain("AItem 2");
         expect(items[2].nativeElement.textContent).toContain("Item 3");
-        expect(items[3].nativeElement.textContent).toContain("Item 4");
-        expect(items[4].nativeElement.textContent).toContain("Item 5");
+        expect(items[3].nativeElement.textContent).toContain("Item 5");
+        expect(items[4].nativeElement.textContent).toContain("BItem 4");
     });
 
     it("click on an item should make the item active", () => {
@@ -190,18 +190,35 @@ describe("QuickListComponent", () => {
             expect(menu.items.length).toBe(1);
             const sortByMenu = menu.items[0] as MultiContextMenuItem;
             expect(sortByMenu instanceof MultiContextMenuItem).toBe(true);
-            expect(sortByMenu.subitems.length).toBe(5);
-            expect((sortByMenu.subitems[0] as ContextMenuItem).label).toEqual("Id");
-            expect((sortByMenu.subitems[1] as ContextMenuItem).label).toEqual("Name");
-            expect(sortByMenu.subitems[2] instanceof ContextMenuSeparator).toBe(true);
-            expect((sortByMenu.subitems[3] as ContextMenuItem).label).toEqual("Ascending");
-            expect((sortByMenu.subitems[3] as ContextMenuItem).checked).toBe(true);
-            expect((sortByMenu.subitems[4] as ContextMenuItem).label).toEqual("Descending");
-            expect((sortByMenu.subitems[4] as ContextMenuItem).checked).toBe(false);
-
+            expect(sortByMenu.subitems.length).toBe(6);
+            expect((sortByMenu.subitems[0] as ContextMenuItem).label).toEqual("Default");
+            expect((sortByMenu.subitems[1] as ContextMenuItem).label).toEqual("Id");
+            expect((sortByMenu.subitems[2] as ContextMenuItem).label).toEqual("Name");
+            expect(sortByMenu.subitems[3] instanceof ContextMenuSeparator).toBe(true);
+            expect((sortByMenu.subitems[4] as ContextMenuItem).label).toEqual("Ascending");
+            expect((sortByMenu.subitems[4] as ContextMenuItem).checked).toBe(true);
+            expect((sortByMenu.subitems[5] as ContextMenuItem).label).toEqual("Descending");
+            expect((sortByMenu.subitems[5] as ContextMenuItem).checked).toBe(false);
         });
 
+        it("sort", () => {
+            rightClick(items[2]);
+            const menu = contextMenuServiceSpy.lastMenu;
+            const sortByMenu = menu.items[0] as MultiContextMenuItem;
+            (sortByMenu.subitems[2] as ContextMenuItem).click();
+            fixture.detectChanges();
+
+            const rows = de.nativeElement.querySelectorAll("bl-quick-list-row-render");
+
+            expect(rows[0].textContent).toEqual("AItem 2");
+            expect(rows[1].textContent).toEqual("BItem 4");
+            expect(rows[2].textContent).toEqual("Item 1");
+            expect(rows[3].textContent).toEqual("Item 3");
+            expect(rows[4].textContent).toEqual("Item 5");
+
+        });
     });
+
     describe("When an item is active", () => {
         beforeEach(() => {
             quicklist.activeItem = "item-2";
@@ -219,7 +236,7 @@ describe("QuickListComponent", () => {
             expect(selection.keys.size).toBe(3);
             expect(selection.keys.has("item-2")).toBe(true);
             expect(selection.keys.has("item-3")).toBe(true);
-            expect(selection.keys.has("item-4")).toBe(true);
+            expect(selection.keys.has("item-5")).toBe(true);
         });
 
         it("Ctrl click should select on item + the active item", () => {
@@ -229,7 +246,7 @@ describe("QuickListComponent", () => {
 
             expect(selection.keys.size).toBe(2);
             expect(selection.keys.has("item-2")).toBe(true, "has item-2");
-            expect(selection.keys.has("item-4")).toBe(true, "has item-4");
+            expect(selection.keys.has("item-5")).toBe(true, "has item-4");
 
             sendEvent(items[4], ButtonClickEvents.leftCtrl);
             expect(selection.keys.size).toBe(3);
@@ -247,7 +264,7 @@ describe("QuickListComponent", () => {
             sendEvent(items[3], ButtonClickEvents.leftCtrl);
             expect(selection.keys.size).toBe(2);
             expect(selection.keys.has("item-2")).toBe(true);
-            expect(selection.keys.has("item-5")).toBe(true);
+            expect(selection.keys.has("item-4")).toBe(true);
 
             sendEvent(items[4], ButtonClickEvents.leftCtrl);
 
