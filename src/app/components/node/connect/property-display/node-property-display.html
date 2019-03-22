@@ -26,7 +26,10 @@
 
     <!-- SSH key -->
     <bl-property-field *ngIf="userConfig.usingSSHKey">
-        <span propertyLabel>SSH Key File</span>
+        <span propertyLabel>
+            <div>SSH Key File</div>
+            <bl-clickable *ngIf="isLinux" class="switch-strategy" (click)="switchAuthStrategy()">Use {{otherStrategy}}</bl-clickable>
+        </span>
         <bl-property-content>
             <bl-clickable (do)="pickSSHPublicKey()" class="ssh-key-pick">
                 <span class="value">
@@ -49,7 +52,10 @@
 
     <!-- Passowrd -->
     <bl-property-field *ngIf="!userConfig.usingSSHKey">
-        <span propertyLabel>Password</span>
+        <span propertyLabel>
+            <div>Password</div>
+            <bl-clickable *ngIf="isLinux" class="switch-strategy" (click)="switchAuthStrategy()">Use {{otherStrategy}}</bl-clickable>
+        </span>
         <div propertyContent>
             <div class="input-container">
                 <div class="input">
@@ -69,7 +75,7 @@
             <span class="clipboard-info" [class.flash]="passwordCopied">{{passwordCopyText}}</span>
         </div>
     </bl-property-field>
-    <bl-clickable *ngIf="isLinux" class="switch-strategy" (click)="switchAuthStrategy()">Use {{otherStrategy}}</bl-clickable>
+
 
     <!-- Expire in -->
     <bl-property-field>

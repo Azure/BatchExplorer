@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild, forwardRef, ChangeDetectionStrategy } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild, forwardRef,
+} from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
