@@ -35,11 +35,11 @@ const publicComponents = [
     TablePropertyCellPlainComponent,
     EntityConfigurationComponent,
     DatePropertyComponent,
+    PropertyFieldComponent,
+    PropertyContentComponent,
 ];
 
 const privateComponents = [
-    PropertyFieldComponent,
-    PropertyContentComponent,
 ];
 
 @NgModule({

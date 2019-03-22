@@ -17,6 +17,7 @@ import { DateTime, Duration } from "luxon";
 import * as path from "path";
 import { Observable, from } from "rxjs";
 import { catchError, share, switchMap, tap } from "rxjs/operators";
+import { UserConfiguration } from "./property-display";
 
 import "./node-connect.scss";
 
@@ -59,13 +60,12 @@ export class NodeConnectComponent implements OnInit {
 
     public error: ServerError = null;
     public loading: boolean = false;
-    public userConfig: AddNodeUserAttributes;
+    public userConfig: UserConfiguration;
     public publicKeyFile: string;
     public passwordCopied: boolean = false;
 
     // NOTE: using linux does not necessarily mean using SSH! (user can still use password)
     public linux = false;
-    public usingSSHKeys = false;
 
     /**
      * Base content for the rdp file(IP Address).
@@ -90,7 +90,7 @@ export class NodeConnectComponent implements OnInit {
     public ngOnInit() {
         this.userConfig = {
             name: this.settingsService.current.nodeConnect.defaultUsername,
-            expiryTime: null,
+            expireIn: Duration.fromObject({ hours: 24 }),
             isAdmin: true,
             sshPublicKey: "",
         };
@@ -104,11 +104,11 @@ export class NodeConnectComponent implements OnInit {
             this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
                 next: (key) => {
                     this.userConfig.sshPublicKey = key;
-                    this.usingSSHKeys = true;
+                    this.userConfig.usingSSHKey = true;
                     this.changeDetector.markForCheck();
                 },
                 error: (err) => {
-                    this.usingSSHKeys = false;
+                    this.userConfig.usingSSHKey = false;
                     this.changeDetector.markForCheck();
                 },
             });
@@ -136,7 +136,7 @@ export class NodeConnectComponent implements OnInit {
                 }
             }),
             tap(() => {
-                if (!this.linux || !this.usingSSHKeys) {
+                if (!this.linux || credentials.password) {
                     this.clipboardService.writeText(credentials.password);
                     this.passwordCopied = true;
                     this.changeDetector.markForCheck();
@@ -163,25 +163,22 @@ export class NodeConnectComponent implements OnInit {
         this.sidebarRef.destroy();
     }
 
-    private _buildConfiguration() {
+    private _buildConfiguration(): AddNodeUserAttributes {
         if (!this.userConfig.password) {
             this.generatePassword();
         }
+        const userConfig = this.userConfig;
 
-        const credentials = { ...this.userConfig };
-        if (!credentials.expiryTime) {
-            credentials.expiryTime = DateTime.local().plus(Duration.fromObject({ days: 1 })).toJSDate();
-        }
+        const credentials: AddNodeUserAttributes = {
+            name: this.userConfig.name,
+            expiryTime: DateTime.local().plus(this.userConfig.expireIn).toJSDate(),
+        };
 
-        if (this.linux) {
+        if (this.linux && userConfig.usingSSHKey) {
             // we are going to use ssh keys, so we don't need a password
-            if (this.usingSSHKeys) {
-                delete credentials.password;
-            } else {
-                delete credentials.sshPublicKey;
-            }
+            credentials.sshPublicKey = userConfig.sshPublicKey;
         } else {
-            delete credentials.sshPublicKey;
+            credentials.password = userConfig.password;
         }
 
         return credentials;

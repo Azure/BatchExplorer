@@ -11,8 +11,9 @@ import {
 import { UserConfigurationService, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
-import { AddNodeUserAttributes, NodeConnectService } from "app/services";
+import { NodeConnectService } from "app/services";
 import { BEUserConfiguration } from "common";
+import { Duration } from "luxon";
 
 import "./node-property-display.scss";
 
@@ -26,6 +27,15 @@ enum CopyText {
     AfterCopy = "Password copied to clipboard!",
 }
 
+export interface UserConfiguration {
+    name: string;
+    isAdmin: boolean;
+    expireIn: Duration;
+    password?: string;
+    sshPublicKey?: string;
+    usingSSHKey?: boolean;
+}
+
 @Component({
     selector: "bl-node-property-display",
     templateUrl: "node-property-display.html",
@@ -35,13 +45,11 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
     // inherited input properties
     @Input() public connectionSettings: NodeConnectionSettings;
     @Input() public node: Node;
-    @Input() public userConfig: AddNodeUserAttributes;
+    @Input() public userConfig: UserConfiguration;
     @Input() public publicKeyFile: string;
-    @Input() public usingSSHKeys: boolean;
     @Input() public passwordCopied: boolean;
     @Input() public generatePassword: () => void;
-    @Output() public userConfigChange = new EventEmitter<AddNodeUserAttributes>();
-    @Output() public usingSSHKeysChange = new EventEmitter<boolean>();
+    @Output() public userConfigChange = new EventEmitter<UserConfiguration>();
     @Output() public passwordCopiedChange = new EventEmitter<boolean>();
 
     public isLinux: boolean;
@@ -66,7 +74,7 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
         this.regeneratingPassword = false;
 
         this.isLinux = this.connectionSettings.type === ConnectionType.SSH;
-        this.otherStrategy = this.usingSSHKeys ? AuthStrategies.Password : AuthStrategies.Keys;
+        this.otherStrategy = this.userConfig.usingSSHKey ? AuthStrategies.Password : AuthStrategies.Keys;
 
         this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
             next: (key) => {
@@ -114,6 +122,18 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
         this.userConfigChange.emit(this.userConfig);
     }
 
+    public updateIsAdmin(value: boolean) {
+        this.userConfig.isAdmin = value;
+        this.changeDetector.markForCheck();
+        this.userConfigChange.emit(this.userConfig);
+    }
+    
+    public updateExpireIn(value: Duration) {
+        this.userConfig.expireIn = value;
+        this.changeDetector.markForCheck();
+        this.userConfigChange.emit(this.userConfig);
+    }
+
     @autobind()
     public regeneratePassword() {
         if (this.regeneratingPassword) { return; }
@@ -141,8 +161,8 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
 
     @autobind()
     public switchAuthStrategy() {
-        this.usingSSHKeys = !this.usingSSHKeys;
-        this.usingSSHKeysChange.emit(this.usingSSHKeys);
+        this.userConfig.usingSSHKey = !this.userConfig.usingSSHKey;
+        this.userConfigChange.emit( this.userConfig);
         if (this.otherStrategy === AuthStrategies.Keys) {
             this.otherStrategy = AuthStrategies.Password;
          } else {
