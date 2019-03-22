@@ -8,6 +8,7 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
+import { FormControl } from "@angular/forms";
 import { UserConfigurationService, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
@@ -42,6 +43,15 @@ export interface UserConfiguration {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodePropertyDisplayComponent implements OnInit, OnChanges {
+
+    public get sshCommand() {
+        if (!this.connectionSettings) {
+            return "N/A";
+        }
+        const { ip, port } = this.connectionSettings;
+
+        return `ssh ${this.userConfig.name}@${ip} -p ${port}`;
+    }
     // inherited input properties
     @Input() public connectionSettings: NodeConnectionSettings;
     @Input() public node: Node;
@@ -66,7 +76,7 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
         private shell: ElectronShell,
         private settingsService: UserConfigurationService<BEUserConfiguration>,
         private changeDetector: ChangeDetectorRef,
-    ) {}
+    ) { }
 
     public ngOnInit() {
         this.passwordVisible = false;
@@ -94,21 +104,12 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
         }
     }
 
-    public get sshCommand() {
-        if (!this.connectionSettings) {
-            return "N/A";
-        }
-        const { ip, port } = this.connectionSettings;
-
-        return `ssh ${this.userConfig.name}@${ip} -p ${port}`;
-    }
-
     @autobind()
     public setUsername(event) {
-        // TODO-Adam reimplement as a FormControl with custom validator
         const newName = event.target.value.replace(/ /g, "");
         this.userConfig.name = newName || this.settingsService.current.nodeConnect.defaultUsername;
-        this.userConfigChange.emit(this.userConfig);
+        this._emitChanges();
+
     }
 
     @autobind()
@@ -119,19 +120,18 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
 
         // set the password itself in the credentials binding
         this.userConfig.password = event.target.value;
-        this.userConfigChange.emit(this.userConfig);
+        this._emitChanges();
     }
 
     public updateIsAdmin(value: boolean) {
         this.userConfig.isAdmin = value;
-        this.changeDetector.markForCheck();
-        this.userConfigChange.emit(this.userConfig);
+        this._emitChanges();
+
     }
-    
+
     public updateExpireIn(value: Duration) {
         this.userConfig.expireIn = value;
-        this.changeDetector.markForCheck();
-        this.userConfigChange.emit(this.userConfig);
+        this._emitChanges();
     }
 
     @autobind()
@@ -162,17 +162,26 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
     @autobind()
     public switchAuthStrategy() {
         this.userConfig.usingSSHKey = !this.userConfig.usingSSHKey;
-        this.userConfigChange.emit( this.userConfig);
+        this._emitChanges();
         if (this.otherStrategy === AuthStrategies.Keys) {
             this.otherStrategy = AuthStrategies.Password;
-         } else {
+        } else {
             this.otherStrategy = AuthStrategies.Keys;
-         }
-        this.changeDetector.markForCheck();
+        }
     }
 
     @autobind()
     public togglePasswordVisible() {
         this.passwordVisible = !this.passwordVisible;
+        this.changeDetector.markForCheck();
+    }
+
+    public pickSSHPublicKey() {
+        console.log("Pick ssh key");
+    }
+
+    private _emitChanges() {
+        this.changeDetector.markForCheck();
+        this.userConfigChange.emit(this.userConfig);
     }
 }

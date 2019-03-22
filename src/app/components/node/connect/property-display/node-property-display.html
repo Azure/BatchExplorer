@@ -25,17 +25,24 @@
     </bl-property-field>
 
     <!-- SSH key -->
-    <div *ngIf="usingSSHKeys">
+    <bl-property-field *ngIf="userConfig.usingSSHKey">
         <span propertyLabel>SSH Key File</span>
-        <bl-property-content>{{publicKeyFile}}</bl-property-content>
-    </div>
-    <bl-property-field *ngIf="!usingSSHKeys">
+        <bl-property-content>
+            <bl-clickable (do)="pickSSHPublicKey()" class="ssh-key-pick">
+                <span class="value">{{publicKeyFile}}</span>
+                <i class="fa fa-wrench"></i>
+            </bl-clickable>
+        </bl-property-content>
+    </bl-property-field>
+
+    <!-- Passowrd -->
+    <bl-property-field *ngIf="!userConfig.usingSSHKey">
         <span propertyLabel>Password</span>
         <div propertyContent>
             <div class="input-container">
                 <div class="input">
                     <input blInput
-                        (change)="setPassword($event)"
+                        (input)="setPassword($event)"
                         [value]="userConfig.password"
                         id="password-input"
                         [type]="passwordVisible ? 'text' : 'password'"
@@ -50,17 +57,16 @@
             <span class="clipboard-info" [class.flash]="passwordCopied">{{passwordCopyText}}</span>
         </div>
     </bl-property-field>
-    <!-- <bl-clickable *ngIf="isLinux && hasPublicKey" class="switch-strategy" (click)="switchAuthStrategy()">Use {{otherStrategy}}</bl-clickable> -->
+    <bl-clickable *ngIf="isLinux && hasPublicKey" class="switch-strategy" (click)="switchAuthStrategy()">Use {{otherStrategy}}</bl-clickable>
+
+    <!-- Expire in -->
     <bl-property-field>
-        <div propertyLabel>
-            Expire in
-        </div>
-        <bl-duration-picker propertyContent [allowUnlimited]="false" [ngModel]="userConfig.expireIn" (ngModelChange)="updateExpireIn($event)"></bl-duration-picker>
+        <div propertyLabel>Expire in</div>
+        <bl-duration-picker propertyContent [allowUnlimited]="false" [ngModel]="userConfig.expireIn" (input)="updateExpireIn($event)"></bl-duration-picker>
     </bl-property-field>
+    <!-- Is admin -->
     <bl-property-field>
-        <div propertyLabel>
-            Is admin
-        </div>
-        <mat-checkbox propertyContent color="primary" [value]="userConfig.isAdmin" (change)="updateIsAdmin($event)"></mat-checkbox>
+        <div propertyLabel>Is admin</div>
+        <mat-checkbox propertyContent color="primary" [ngModel]="userConfig.isAdmin" (ngModelChange)="updateIsAdmin($event)"></mat-checkbox>
     </bl-property-field>
 </bl-property-group>

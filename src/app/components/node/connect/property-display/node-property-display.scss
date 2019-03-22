@@ -50,73 +50,36 @@ bl-node-property-display {
         }
     }
 
-    .custom-property {
+    .switch-strategy {
+        color: $link-color;
+    }
+
+    .password-failure-hint {
+        position: absolute;
+        top: 27px;
+        left: 205px;
+        color: red;
+    }
+
+    .clipboard-info {
+        position: absolute;
+        top: 28px;
+        left: 210px;
+        color: $secondary-text;
+    }
+
+    .ssh-key-pick {
+        cursor: pointer;
         display: flex;
-        padding: 0;
-        margin: 0 0 5px;
-        position: relative;
-        width: 100%;
-        overflow: visible;
-
-        .label-small {
-            color: $secondary-text;
-            font-size: 13px;
-            flex-basis: 200px;
-            font-weight: bold;
-            line-height: 25px;
-            margin-right: 5px;
-        }
-
-        > input {
+        .value {
             flex: 1;
-            max-width: 350px;
         }
-
-        > .display-field {
-            flex: 1;
-            max-width: 350px;
-            background-color: $main-background;
-            padding: 3px 8px;
-            margin: 0;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            display: block;
-            width: 100%;
-            min-height: 24px;
-        }
-
-        bl-duration-picker {
-            flex: 1;
-            max-width: 350px;
-            input {flex: 1;}
-        }
-
-        bl-clickable {
-            color: $link-color;
-        }
-
-        .password-failure-hint {
-            position: absolute;
-            top: 27px;
-            left: 205px;
-            color: red;
-        }
-
-        .clipboard-info {
-            position: absolute;
-            top: 28px;
-            left: 210px;
-            color: $secondary-text;
-        }
-
-        .flash {
-            animation: flash 1s 1;
+        .fa-wrench {
+            margin: 0 5px;
         }
     }
 
-    .switch-strategy {
-        color: $link-color;
-        position: absolute;
-        top: 144px;
+    .flash {
+        animation: flash 1s 1;
     }
 }
