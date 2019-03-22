@@ -9,6 +9,7 @@ import {
     BatchExplorerService,
     NodeConnectService,
     NodeUserService,
+    SSHKeyService,
 } from "app/services";
 import { PoolUtils } from "app/utils";
 import { BEUserConfiguration } from "common";
@@ -80,6 +81,7 @@ export class NodeConnectComponent implements OnInit {
         public settingsService: UserConfigurationService<BEUserConfiguration>,
         private nodeUserService: NodeUserService,
         private batchExplorer: BatchExplorerService,
+        private sshKeyService: SSHKeyService,
         private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,
         private changeDetector: ChangeDetectorRef,
@@ -101,7 +103,7 @@ export class NodeConnectComponent implements OnInit {
 
         // skip the public key thing if we are on windows
         if (this.linux) {
-            this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
+            this.nodeConnectService.getPublicKey(this.sshKeyService.homePublicKeyPath).subscribe({
                 next: (key) => {
                     this.userConfig.sshPublicKey = key;
                     this.userConfig.usingSSHKey = true;

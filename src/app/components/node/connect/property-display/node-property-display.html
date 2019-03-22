@@ -29,7 +29,19 @@
         <span propertyLabel>SSH Key File</span>
         <bl-property-content>
             <bl-clickable (do)="pickSSHPublicKey()" class="ssh-key-pick">
-                <span class="value">{{publicKeyFile}}</span>
+                <span class="value">
+                    <ng-container *ngIf="userConfig.sshPublicKey">
+                        <ng-container *ngIf="userConfig.sshPublicKey === homeKey">
+                            {{sshKeyService.homePublicKeyPath}}
+                        </ng-container>
+                        <ng-container *ngIf="userConfig.sshPublicKey !== homeKey">
+                            {{userConfig.sshPublicKey}}
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="!userConfig.sshPublicKey">
+                        Pick a ssh public key or switch to password auth
+                    </ng-container>
+                </span>
                 <i class="fa fa-wrench"></i>
             </bl-clickable>
         </bl-property-content>
@@ -57,7 +69,7 @@
             <span class="clipboard-info" [class.flash]="passwordCopied">{{passwordCopyText}}</span>
         </div>
     </bl-property-field>
-    <bl-clickable *ngIf="isLinux && hasPublicKey" class="switch-strategy" (click)="switchAuthStrategy()">Use {{otherStrategy}}</bl-clickable>
+    <bl-clickable *ngIf="isLinux" class="switch-strategy" (click)="switchAuthStrategy()">Use {{otherStrategy}}</bl-clickable>
 
     <!-- Expire in -->
     <bl-property-field>

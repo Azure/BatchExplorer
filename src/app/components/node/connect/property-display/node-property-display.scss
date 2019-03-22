@@ -71,9 +71,14 @@ bl-node-property-display {
     .ssh-key-pick {
         cursor: pointer;
         display: flex;
+
         .value {
             flex: 1;
+            min-width: 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
+
         .fa-wrench {
             margin: 0 5px;
         }

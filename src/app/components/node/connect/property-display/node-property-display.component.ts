@@ -8,13 +8,14 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
 import { UserConfigurationService, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
+import { DialogService } from "@batch-flask/ui";
 import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
-import { NodeConnectService } from "app/services";
+import { NodeConnectService, SSHKeyService } from "app/services";
 import { BEUserConfiguration } from "common";
 import { Duration } from "luxon";
+import { SSHKeyPickerDialogComponent } from "../ssh-key-picker-dialog";
 
 import "./node-property-display.scss";
 
@@ -56,7 +57,6 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
     @Input() public connectionSettings: NodeConnectionSettings;
     @Input() public node: Node;
     @Input() public userConfig: UserConfiguration;
-    @Input() public publicKeyFile: string;
     @Input() public passwordCopied: boolean;
     @Input() public generatePassword: () => void;
     @Output() public userConfigChange = new EventEmitter<UserConfiguration>();
@@ -64,7 +64,7 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
 
     public isLinux: boolean;
     public otherStrategy: string;
-    public hasPublicKey: boolean;
+    public homeKey: string | null = null;
     public passwordVisible: boolean;
     public passwordCopyText: string;
     public regeneratingPassword: boolean;
@@ -73,8 +73,10 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
 
     constructor(
         private nodeConnectService: NodeConnectService,
+        private sshKeyService: SSHKeyService,
         private shell: ElectronShell,
         private settingsService: UserConfigurationService<BEUserConfiguration>,
+        private dialogService: DialogService,
         private changeDetector: ChangeDetectorRef,
     ) { }
 
@@ -86,13 +88,13 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
         this.isLinux = this.connectionSettings.type === ConnectionType.SSH;
         this.otherStrategy = this.userConfig.usingSSHKey ? AuthStrategies.Password : AuthStrategies.Keys;
 
-        this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
+        this.nodeConnectService.getPublicKey(this.sshKeyService.homePublicKeyPath).subscribe({
             next: (key) => {
-                this.hasPublicKey = Boolean(key);
+                this.homeKey = key;
                 this.changeDetector.markForCheck();
             },
-            error: (err) => {
-                this.hasPublicKey = false;
+            error: () => {
+                this.homeKey = null;
                 this.changeDetector.markForCheck();
             },
         });
@@ -177,7 +179,12 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
     }
 
     public pickSSHPublicKey() {
-        console.log("Pick ssh key");
+        const ref = this.dialogService.open(SSHKeyPickerDialogComponent);
+        ref.componentInstance.sshPublicKey.setValue(this.userConfig.sshPublicKey);
+        ref.afterClosed().subscribe((key) => {
+            this.userConfig.sshPublicKey = key;
+            this._emitChanges();
+        });
     }
 
     private _emitChanges() {
