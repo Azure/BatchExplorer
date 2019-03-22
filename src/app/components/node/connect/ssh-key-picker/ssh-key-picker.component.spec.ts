@@ -30,6 +30,8 @@ describe("SSHKeyPickerComponent", () => {
             keys: new BehaviorSubject<List<SSHPublicKey>>(List([])),
             saveKey: jasmine.createSpy("saveKey").and.returnValue(of()),
             deleteKey: jasmine.createSpy("deleteKey").and.returnValue(of()),
+            getLocalPublicKey: jasmine.createSpy("getLocalPublicKey").and.returnValue(of("rsa some-home-key")),
+            homePublicKeyPath: "~/.ssh/id_rsa.pub",
         };
         dialogServiceSpy = {prompt: jasmine.createSpy("dialog.prompt")};
         TestBed.configureTestingModule({
@@ -51,6 +53,11 @@ describe("SSHKeyPickerComponent", () => {
         expect(de.nativeElement.textContent).toContain("No saved public keys");
     });
 
+    it("get the home public key ", () => {
+        expect(sshKeyServiceSpy.getLocalPublicKey).toHaveBeenCalledOnce();
+        expect(sshKeyServiceSpy.getLocalPublicKey).toHaveBeenCalledWith("~/.ssh/id_rsa.pub");
+    });
+
     describe("when there is some saved keys", () => {
         beforeEach(() => {
             sshKeyServiceSpy.keys.next(List([
@@ -66,23 +73,30 @@ describe("SSHKeyPickerComponent", () => {
 
         it("it should show all key labels", () => {
             const keys = de.queryAll(By.css(".saved-key"));
-            expect(keys.length).toBe(2);
-            expect(keys[0].nativeElement.textContent).toContain("Key 1");
-            expect(keys[1].nativeElement.textContent).toContain("Key 2");
+            expect(keys.length).toBe(3);
+            expect(keys[0].nativeElement.textContent).toContain("~/.ssh/id_rsa.pub");
+            expect(keys[1].nativeElement.textContent).toContain("Key 1");
+            expect(keys[2].nativeElement.textContent).toContain("Key 2");
         });
 
         it("click on the delete button should removed the saved key", () => {
             const keys = de.queryAll(By.css(".saved-key"));
-            click(keys[0].query(By.css(".fa-times")));
+            click(keys[1].query(By.css(".fa-times")));
             fixture.detectChanges();
             expect(sshKeyServiceSpy.deleteKey).toHaveBeenCalledOnce();
         });
 
         it("click on key should update the ssh value", () => {
             const keys = de.queryAll(By.css(".saved-key"));
-            click(keys[0]);
+            click(keys[1]);
             fixture.detectChanges();
             expect(component.sshKeyValue.value).toEqual("some-key-1");
+        });
+        it("click on home key should update the ssh value", () => {
+            const keys = de.queryAll(By.css(".saved-key"));
+            click(keys[0]);
+            fixture.detectChanges();
+            expect(component.sshKeyValue.value).toEqual("rsa some-home-key");
         });
     });
 });
