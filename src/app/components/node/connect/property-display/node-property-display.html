@@ -80,7 +80,7 @@
     <!-- Expire in -->
     <bl-property-field>
         <div propertyLabel>Expire in</div>
-        <bl-duration-picker propertyContent [allowUnlimited]="false" [ngModel]="userConfig.expireIn" (input)="updateExpireIn($event)"></bl-duration-picker>
+        <bl-duration-picker propertyContent [allowUnlimited]="false" [ngModel]="userConfig.expireIn" (ngModelChange)="updateExpireIn($event)"></bl-duration-picker>
     </bl-property-field>
     <!-- Is admin -->
     <bl-property-field>
