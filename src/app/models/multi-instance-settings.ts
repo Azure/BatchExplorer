@@ -15,5 +15,5 @@ export interface MultiInstanceSettingsAttributes {
 export class MultiInstanceSettings extends Record<MultiInstanceSettingsAttributes> {
     @Prop() public numberOfInstances: number;
     @Prop() public coordinationCommandLine: string;
-    @ListProp(ResourceFile) public commonResourceFiles: List<ResourceFile>;
+    @ListProp(ResourceFile) public commonResourceFiles: List<ResourceFile> = List([]);
 }

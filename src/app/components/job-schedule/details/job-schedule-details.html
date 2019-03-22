@@ -1,9 +1,9 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="jobSchedule" class="fit-details-container">
         <bl-summary-card>
-            <div summaryTitle>{{decorator.id}}</div>
+            <div summaryTitle>{{jobSchedule.id}}</div>
             <div summarySubtitle>
-                <i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}
+                <i class="fa" [ngClass]="decorator.stateIcon"></i> {{jobSchedule.state}}
             </div>
             <bl-tags summaryTags [tags]="jobSchedule.tags" [editable]="jobSchedule.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>

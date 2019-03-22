@@ -316,7 +316,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         if (combine) {
             return [{ node, index: 0, taskHeight, position: taskHeight }];
         }
-        const count = node.runningTasksCount;
+        const count = Math.max(node.runningTasksCount, 0);
         let extra = remaining;
         let position = 0;
         const array = new Array(count).fill(0).map((task, index) => {

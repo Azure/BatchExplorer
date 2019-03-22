@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, autobind } from "@batch-flask/core";
 import { JobScheduleDecorator } from "app/decorators";
@@ -39,11 +39,13 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
         public commands: JobScheduleCommands,
         private activatedRoute: ActivatedRoute,
         private jobScheduleService: JobScheduleService,
+        private changeDetector: ChangeDetectorRef,
         private router: Router) {
 
         this.data = this.jobScheduleService.view();
         this.data.item.subscribe((jobSchedule) => {
             this.jobSchedule = jobSchedule;
+            this.changeDetector.markForCheck();
             if (jobSchedule) {
                 this.decorator = new JobScheduleDecorator(jobSchedule);
             }

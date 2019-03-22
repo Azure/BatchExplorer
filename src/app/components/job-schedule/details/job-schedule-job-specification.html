@@ -9,7 +9,7 @@
             <bl-text-property label="When a task fails" [value]="decorator.onTaskFailure"></bl-text-property>
         </bl-property-group>
 
-        <bl-property-group label="Constraints" class="wide" [collapsed]="true">
+        <bl-property-group label="Constraints" class="wide" [collapsed]="true" *ngIf="constraints">
             <bl-text-property label="Max task retry count" [value]="constraints.maxTaskRetryCount"></bl-text-property>
             <bl-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bl-text-property>
         </bl-property-group>
@@ -69,9 +69,9 @@
             <div collapsed-preview></div>
             <bl-text-property label="ID" [value]="prepTask.id"></bl-text-property>
             <bl-text-property label="Command line" [value]="prepTask.commandLine" [wrap]="true"></bl-text-property>
-            <bl-text-property label="Max task retry count" [value]="prepTask.constraints.maxTaskRetryCount"></bl-text-property>
-            <bl-text-property label="Max wall-clock time" [value]="prepTask.constraints.maxWallClockTime"></bl-text-property>
-            <bl-text-property label="Retention time" [value]="prepTask.constraints.retentionTime"></bl-text-property>
+            <bl-text-property label="Max task retry count" [value]="prepTask.constraints?.maxTaskRetryCount"></bl-text-property>
+            <bl-text-property label="Max wall-clock time" [value]="prepTask.constraints?.maxWallClockTime"></bl-text-property>
+            <bl-text-property label="Retention time" [value]="prepTask.constraints?.retentionTime"></bl-text-property>
             <bl-bool-property label="Wait for success" [value]="prepTask.waitForSuccess" yesNo="true"></bl-bool-property>
             <bl-bool-property label="Run elevated" [value]="prepTask.runElevated" yesNo="true"></bl-bool-property>
             <bl-bool-property label="Re-run on node reboot" [value]="prepTask.rerunOnNodeRebootAfterSuccess" yesNo="true"></bl-bool-property>
@@ -95,7 +95,7 @@
             </ng-container>
         </bl-property-group>
 
-        <bl-property-group *ngIf="job.jobReleaseTask;let releasetask" label="Job release task" class="wide" [collapsed]="true">
+        <bl-property-group *ngIf="job.jobReleaseTask;let releaseTask" label="Job release task" class="wide" [collapsed]="true">
             <div collapsed-preview></div>
             <bl-text-property label="ID" [value]="releaseTask.id"></bl-text-property>
             <bl-text-property label="Command line" [value]="releaseTask.commandLine" [wrap]="true"></bl-text-property>
@@ -103,7 +103,7 @@
             <bl-text-property label="Retention time" [value]="releaseTask.retentionTime"></bl-text-property>
             <bl-bool-property label="Run elevated" [value]="releaseTask.runElevated" yesNo="true"></bl-bool-property>
 
-            <bl-resource-files-properties [files]="managerTask.resourceFiles"></bl-resource-files-properties>
+            <bl-resource-files-properties [files]="releaseTask.resourceFiles"></bl-resource-files-properties>
 
             <bl-table-property *ngIf="releaseTask.environmentSettings.length > 0" label="Environment settings">
                 <bl-table-property-header>

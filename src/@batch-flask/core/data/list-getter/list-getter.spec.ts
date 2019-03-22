@@ -4,6 +4,12 @@ import { of, timer } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
 import { FakeModel } from "../test/fake-model";
 
+const fake1 = { id: "1", parentId: "parent-1", state: "active", name: "Fake1" };
+const fake2 = { id: "2", parentId: "parent-1", state: "active", name: "Fake2" };
+const fake3 = { id: "3", parentId: "parent-1", state: "running", name: "Fake3" };
+const fake4 = { id: "4", parentId: "parent-1", state: "running", name: "Fake4" };
+const fake5 = { id: "5", parentId: "parent-1", state: "completed", name: "Fake5" };
+
 const firstPage = [
     { id: "1", state: "active", name: "Fake1" },
     { id: "2", state: "active", name: "Fake2" },
@@ -41,8 +47,8 @@ describe("ListGetter", () => {
     });
 
     it("It retrieve the first batch of items", (done) => {
-        getter.fetch({}).subscribe(({ items, nextLink }) => {
-            expect(items.toJS()).toEqual(firstPage);
+        getter.fetch({ parentId: "parent-1" }).subscribe(({ items, nextLink }) => {
+            expect(items.toJS()).toEqual([fake1, fake2, fake3]);
             expect(items.get(0) instanceof FakeModel).toBe(true);
             expect(items.get(1) instanceof FakeModel).toBe(true);
             expect(items.get(2) instanceof FakeModel).toBe(true);
@@ -53,10 +59,10 @@ describe("ListGetter", () => {
     });
 
     it("It retrieve the next batch of items", (done) => {
-        getter.fetch({}).pipe(flatMap(({ nextLink }) => {
+        getter.fetch({ parentId: "parent-1" }).pipe(flatMap(({ nextLink }) => {
             return getter.fetch(nextLink);
         })).subscribe(({ items, nextLink }) => {
-            expect(items.toJS()).toEqual(secondPage);
+            expect(items.toJS()).toEqual([fake4, fake5]);
             expect(dataSpy).toHaveBeenCalledTimes(2);
             expect(nextLink).toBeFalsy();
             done();
@@ -64,8 +70,8 @@ describe("ListGetter", () => {
     });
 
     it("#fetchAll() should get all the items", (done) => {
-        getter.fetchAll({}).subscribe((items) => {
-            expect(items.toJS()).toEqual(firstPage.concat(secondPage));
+        getter.fetchAll({ parentId: "parent-1" }).subscribe((items) => {
+            expect(items.toJS()).toEqual([fake1, fake2, fake3, fake4, fake5]);
             expect(items.get(0) instanceof FakeModel).toBe(true);
             expect(items.get(1) instanceof FakeModel).toBe(true);
             expect(items.get(2) instanceof FakeModel).toBe(true);
@@ -77,13 +83,13 @@ describe("ListGetter", () => {
     });
 
     it("It retrieve items from the cache unless specified", (done) => {
-        getter.fetch({}).subscribe(({ items, nextLink }) => {
-            expect(items.toJS()).toEqual(firstPage);
+        getter.fetch({ parentId: "parent-1" }).subscribe(({ items, nextLink }) => {
+            expect(items.toJS()).toEqual([fake1, fake2, fake3]);
             expect(dataSpy).toHaveBeenCalledTimes(1);
             expect(nextLink).toBeTruthy();
 
             getter.fetch({}).subscribe((newResponse) => {
-                expect(newResponse.items.toJS()).toEqual(firstPage);
+                expect(newResponse.items.toJS()).toEqual([fake1, fake2, fake3]);
                 expect(newResponse.nextLink).toEqual(nextLink);
                 expect(dataSpy).toHaveBeenCalledTimes(1); // Should not have been called again
                 done();
@@ -92,11 +98,13 @@ describe("ListGetter", () => {
     });
 
     it("It retrieve fresh items from the cache when setting forceNew", (done) => {
-        getter.fetch({}).subscribe(({ items, nextLink }) => {
-            expect(items.toJS()).toEqual(firstPage);
+        getter.fetch({ parentId: "parent-1" }).subscribe(({ items, nextLink }) => {
+            expect(items.toJS()).toEqual([fake1, fake2, fake3]);
             expect(dataSpy).toHaveBeenCalledTimes(1);
             expect(nextLink).toBeTruthy();
-            expect(dataSpy).toHaveBeenCalledWith({}, jasmine.anything()); // Should have been called again
+            expect(dataSpy).toHaveBeenCalledWith(
+                { parentId: "parent-1" },
+                jasmine.anything());
 
             getter.fetch({}, {}, true).subscribe((newResponse) => {
                 expect(dataSpy).toHaveBeenCalledTimes(2); // Should have been called again

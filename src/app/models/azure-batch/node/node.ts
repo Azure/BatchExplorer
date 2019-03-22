@@ -33,7 +33,6 @@ export interface NodeAttributes {
     errors: ComputeNodeErrorAttributes[];
     nodeAgentInfo: NodeAgentInformationAttributes;
     endpointConfiguration: ComputeNodeEndpointConfigurationAttributes;
-
 }
 
 /**

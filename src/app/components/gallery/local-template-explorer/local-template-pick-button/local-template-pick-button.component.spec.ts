@@ -21,11 +21,12 @@ describe("LocalTemplatePickButtonComponent", () => {
     let dialogComponent;
     let de: DebugElement;
     let buttonEl: DebugElement;
+    let pickFileResponse: string[] | undefined = ["~/foo.template.json"];
 
     beforeEach(() => {
         electronRemoteSpy = {
             dialog: {
-                showOpenDialog: jasmine.createSpy("showOpenDialog").and.returnValue(["~/foo.template.json"]),
+                showOpenDialog: jasmine.createSpy("showOpenDialog").and.callFake(() => pickFileResponse),
             },
         };
         fsSpy = {
@@ -75,5 +76,25 @@ describe("LocalTemplatePickButtonComponent", () => {
             filename: "~/foo.template.json",
             template: `{"foo": 123}`,
         });
+    });
+
+    it("does nothing if user cancel file picker", async () => {
+        pickFileResponse = undefined;
+        click(buttonEl);
+        fixture.detectChanges();
+
+        expect(buttonEl.nativeElement.textContent).not.toContain("common.loading");
+        expect(fsSpy.readFile).not.toHaveBeenCalled();
+        expect(dialogServiceSpy.open).not.toHaveBeenCalled();
+    });
+
+    it("does nothing if no files got selected", async () => {
+        pickFileResponse = [];
+        click(buttonEl);
+        fixture.detectChanges();
+
+        expect(buttonEl.nativeElement.textContent).not.toContain("common.loading");
+        expect(fsSpy.readFile).not.toHaveBeenCalled();
+        expect(dialogServiceSpy.open).not.toHaveBeenCalled();
     });
 });

@@ -15,11 +15,11 @@
         <ng-content select="[blVtabFooter]"></ng-content>
     </div>
 </div>
-<div
+<div *ngIf="currentTab"
     id="{{currentTab.id}}_panel"
     role="tabpanel"
     class="tab-content"
     attr.aria-labelledby="{{currentTab.id}}_button">
 
-    <ng-template [ngTemplateOutlet]="currentTab.content" *ngIf="currentTab"></ng-template>
+    <ng-template [ngTemplateOutlet]="currentTab.content"></ng-template>
 </div>
