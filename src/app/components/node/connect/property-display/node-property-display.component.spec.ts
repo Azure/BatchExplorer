@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatCheckbox, MatCheckboxModule } from "@angular/material";
+import { MatCheckboxModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { UserConfigurationService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ClipboardService, ElectronShell } from "@batch-flask/electron";
 import { DialogService, DurationPickerModule } from "@batch-flask/ui";
-import { ButtonsModule, ClickableComponent } from "@batch-flask/ui/buttons";
+import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
@@ -38,7 +38,7 @@ class TestComponent {
     public userConfig: UserConfiguration;
 }
 
-fdescribe("NodePropertyDisplay", () => {
+describe("NodePropertyDisplay", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: NodePropertyDisplayComponent;
