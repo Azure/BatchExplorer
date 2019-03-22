@@ -15,6 +15,7 @@ import {
     BatchExplorerService,
     NodeConnectService,
     NodeUserService,
+    SSHKeyService,
 } from "app/services";
 import { PoolUtils } from "app/utils";
 import { of } from "rxjs";
@@ -42,6 +43,7 @@ describe("NodeConnectComponent", () => {
     let secureUtilsSpy;
     let nodeConnectServiceSpy;
     let clipboardServiceSpy;
+    let sshKeyServiceSpy;
 
     beforeEach(() => {
         nodeUserServiceSpy = {
@@ -98,6 +100,11 @@ describe("NodeConnectComponent", () => {
             writeText: jasmine.createSpy("writeText"),
         };
 
+        sshKeyServiceSpy = {
+            homePublicKeyPath: "~/.ssh/id_rsa.pub",
+
+        };
+
         TestBed.configureTestingModule({
             declarations: [
                 NodeConnectComponent, ButtonComponent,
@@ -114,6 +121,7 @@ describe("NodeConnectComponent", () => {
                 { provide: ElectronShell, useValue: electronShellSpy },
                 { provide: SecureUtils, useValue: secureUtilsSpy },
                 { provide: NodeConnectService, useValue: nodeConnectServiceSpy },
+                { provide: SSHKeyService, useValue: sshKeyServiceSpy },
                 { provide: ClipboardService, useValue: clipboardServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
@@ -127,11 +135,11 @@ describe("NodeConnectComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should propose to connect or configure credentials", () => {
+    it("should propose to connect or add/update the user", () => {
         const buttons = de.queryAll(By.css(".credentials-source bl-button"));
         expect(buttons.length).toBe(2);
         expect(buttons[0].nativeElement.textContent).toContain("Connect");
-        expect(buttons[1].nativeElement.textContent).toContain("Configure");
+        expect(buttons[1].nativeElement.textContent).toContain("Add/update user");
     });
 
     it("should not show the node user credentials form", () => {
@@ -268,13 +276,34 @@ describe("NodeConnectComponent", () => {
 
     describe("clicking on add and update", () => {
         beforeEach(() => {
+            testComponent.pool = new Pool({
+                id: "iaas-linux-pool",
+                virtualMachineConfiguration: {
+                    nodeAgentSKUId: "batch.node.ubuntu 14.04",
+                    imageReference: {
+                        publisher: "Canonical",
+                        offer: "UbuntuServer",
+                        sku: "14.04.5-LTS",
+                    },
+                },
+            } as any);
+            fixture.detectChanges();
+
+            component.ngOnInit();
+
             const button = de.queryAll(By.css("bl-button"))[1].componentInstance;
             button.action();
             fixture.detectChanges();
         });
 
         it("should add the user but not connect", () => {
-            fail();
+            expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
+            const updateUserArgs = nodeUserServiceSpy.addOrUpdateUser.calls.mostRecent().args;
+            expect(updateUserArgs.length).toBe(3);
+            expect(updateUserArgs[0]).toBe("iaas-linux-pool");
+            expect(updateUserArgs[1]).toBe("node-1");
+            expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ name: "foo" }));
+            expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ sshPublicKey: "baz" }));
         });
     });
 });
