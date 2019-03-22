@@ -267,30 +267,15 @@ describe("NodeConnectComponent", () => {
         });
     });
 
-    describe("clicking on configure", () => {
+    describe("clicking on add and update", () => {
         beforeEach(() => {
             const button = de.queryAll(By.css("bl-button"))[1].componentInstance;
             button.action();
             fixture.detectChanges();
         });
 
-        it("should show the form", () => {
-            expect(component.formVisible).toBeTruthy();
-        });
-
-        it("should change service variables when the form is submitted", () => {
-            const now = new Date();
-
-            const formCredentials: AddNodeUserAttributes = {
-                name: "foo",
-                password: "bar",
-                isAdmin: false,
-                expiryTime: now,
-            };
-            component.storeCredentialsFromForm(formCredentials);
-            fixture.detectChanges();
-
-            expect(component.credentials).toEqual(formCredentials);
+        it("should add the user but not connect", () => {
+            fail();
         });
     });
 });

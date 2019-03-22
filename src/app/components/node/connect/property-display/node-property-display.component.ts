@@ -35,12 +35,12 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
     // inherited input properties
     @Input() public connectionSettings: NodeConnectionSettings;
     @Input() public node: Node;
-    @Input() public credentials: AddNodeUserAttributes;
+    @Input() public userConfig: AddNodeUserAttributes;
     @Input() public publicKeyFile: string;
     @Input() public usingSSHKeys: boolean;
     @Input() public passwordCopied: boolean;
     @Input() public generatePassword: () => void;
-    @Output() public credentialsChange = new EventEmitter<AddNodeUserAttributes>();
+    @Output() public userConfigChange = new EventEmitter<AddNodeUserAttributes>();
     @Output() public usingSSHKeysChange = new EventEmitter<boolean>();
     @Output() public passwordCopiedChange = new EventEmitter<boolean>();
 
@@ -92,15 +92,15 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
         }
         const { ip, port } = this.connectionSettings;
 
-        return `ssh ${this.credentials.name}@${ip} -p ${port}`;
+        return `ssh ${this.userConfig.name}@${ip} -p ${port}`;
     }
 
     @autobind()
     public setUsername(event) {
         // TODO-Adam reimplement as a FormControl with custom validator
         const newName = event.target.value.replace(/ /g, "");
-        this.credentials.name = newName || this.settingsService.current.nodeConnect.defaultUsername;
-        this.credentialsChange.emit(this.credentials);
+        this.userConfig.name = newName || this.settingsService.current.nodeConnect.defaultUsername;
+        this.userConfigChange.emit(this.userConfig);
     }
 
     @autobind()
@@ -110,8 +110,8 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
         this.passwordCopiedChange.emit(this.passwordCopied);
 
         // set the password itself in the credentials binding
-        this.credentials.password = event.target.value;
-        this.credentialsChange.emit(this.credentials);
+        this.userConfig.password = event.target.value;
+        this.userConfigChange.emit(this.userConfig);
     }
 
     @autobind()
@@ -130,7 +130,7 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
 
     @autobind()
     public downloadRdp() {
-        const obs = this.nodeConnectService.saveRdpFile(this.connectionSettings, this.credentials, this.node.id);
+        const obs = this.nodeConnectService.saveRdpFile(this.connectionSettings, this.userConfig, this.node.id);
         obs.subscribe({
             next: (filename) => {
                 this.shell.showItemInFolder(filename);

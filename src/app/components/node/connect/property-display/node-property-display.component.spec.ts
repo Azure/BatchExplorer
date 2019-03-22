@@ -21,8 +21,8 @@ import { NodePropertyDisplayComponent } from ".";
         [node]="node"
         [publicKeyFile]="publicKeyFile"
         [(usingSSHKeys)]="usingSSHKeys"
-        [credentials]="credentials"
-        (credentialsChange)="updateCredentials($event)"
+        [userConfig]="userConfig"
+        (userConfigChange)="updateCredentials($event)"
     ></bl-node-property-display>`,
 })
 class TestComponent {
@@ -153,7 +153,7 @@ describe("NodePropertyDisplay", () => {
                 expect(nodeConnectServiceSpy.saveRdpFile).toHaveBeenCalledOnce();
                 expect(nodeConnectServiceSpy.saveRdpFile).toHaveBeenCalledWith(
                     component.connectionSettings,
-                    component.credentials,
+                    component.userConfig,
                     component.node.id,
                 );
 
@@ -185,7 +185,7 @@ describe("NodePropertyDisplay", () => {
                 expect(nodeConnectServiceSpy.saveRdpFile).toHaveBeenCalledOnce();
                 expect(nodeConnectServiceSpy.saveRdpFile).toHaveBeenCalledWith(
                     component.connectionSettings,
-                    component.credentials,
+                    component.userConfig,
                     component.node.id,
                 );
 
