@@ -78,12 +78,12 @@
 
 
     <!-- Expire in -->
-    <bl-property-field>
+    <bl-property-field class="expire-in">
         <div propertyLabel>Expire in</div>
         <bl-duration-picker propertyContent [allowUnlimited]="false" [ngModel]="userConfig.expireIn" (ngModelChange)="updateExpireIn($event)"></bl-duration-picker>
     </bl-property-field>
     <!-- Is admin -->
-    <bl-property-field>
+    <bl-property-field class="isAdmin">
         <div propertyLabel>Is admin</div>
         <mat-checkbox propertyContent color="primary" [ngModel]="userConfig.isAdmin" (ngModelChange)="updateIsAdmin($event)"></mat-checkbox>
     </bl-property-field>

@@ -12,7 +12,6 @@ import { SecureUtils } from "@batch-flask/utils";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { ConnectionType, Node, Pool } from "app/models";
 import {
-    AddNodeUserAttributes,
     BatchExplorerService,
     NodeConnectService,
     NodeUserService,

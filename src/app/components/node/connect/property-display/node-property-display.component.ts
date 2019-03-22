@@ -140,14 +140,14 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
     public regeneratePassword() {
         if (this.regeneratingPassword) { return; }
 
+        this.regeneratingPassword = true;
+        this.changeDetector.markForCheck();
+
         setTimeout(() => {
             this.generatePassword();
             this.regeneratingPassword = false;
             this.changeDetector.markForCheck();
         }, 500);
-
-        this.regeneratingPassword = true;
-        this.changeDetector.markForCheck();
     }
 
     @autobind()

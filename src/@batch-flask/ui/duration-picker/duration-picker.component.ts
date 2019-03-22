@@ -150,7 +150,9 @@ export class DurationPickerComponent implements FormFieldControl<any>,
 
     public ngOnDestroy() {
         this.stateChanges.complete();
-        this._controlSub.unsubscribe();
+        if (this._controlSub) {
+            this._controlSub.unsubscribe();
+        }
     }
 
     public writeValue(value: Duration | string): void {
