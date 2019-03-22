@@ -28,6 +28,17 @@
         <bl-job-id [formControl]="parameterValue" [label]="parameter.name" class="form-element" [hint]="parameter.description">
         </bl-job-id>
     </div>
+    <div *ngSwitchCase="NcjParameterExtendedType.renderingContainerImage">
+        <bl-rendering-container-image-picker [app]="parameter.additionalProperties.app" [imageReferenceId]="parameter.additionalProperties.imageReferenceId"
+            [renderEngine]="parameter.additionalProperties.renderEngine" [formControl]="parameterValue" class="form-element" >
+        </bl-rendering-container-image-picker>
+    </div>
+    <div *ngSwitchCase="NcjParameterExtendedType.containerImageOnPool">
+        <bl-container-image-on-pool  [app]="parameter.additionalProperties.app" [imageReferenceId]="parameter.additionalProperties.imageReferenceId"
+            [renderEngine]="parameter.additionalProperties.renderEngine" [poolId]="poolId" [poolContainerImage]="poolContainerImage" [ncjTemplateMode]="ncjTemplateMode"
+            [formControl]="parameterValue" class="form-element" >
+        </bl-container-image-on-pool>
+    </div>
     <div *ngSwitchCase="NcjParameterExtendedType.dropDown">
         <bl-form-field>
             <bl-select [formControl]="parameterValue" [placeholder]="parameter.name">

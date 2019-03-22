@@ -23,6 +23,7 @@ export * from "./ncj-submit.service";
 export * from "./ncj/ncj-template.service";
 export * from "./pricing.service";
 export * from "./quota.service";
+export * from "./rendering-container-image";
 export * from "./resource-access";
 export * from "./ssh-key.service";
 export * from "./subscription";

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
+    OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor,
     FormBuilder,
@@ -6,20 +7,29 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { ListView } from "@batch-flask/core";
+import { isNotNullOrUndefined } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
-import { Offer, Pool, PoolOsSkus } from "app/models";
-import { PoolListParams, PoolOsService, PoolService, VmSizeService } from "app/services";
+import { Offer, Pool } from "app/models";
+import { RenderApplication, RenderEngine, RenderingContainerImage } from "app/models/rendering-container-image";
+import { PoolOsService, PoolService, RenderingContainerImageService,
+    VmSizeService } from "app/services";
 import { PoolUtils } from "app/utils";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
-import { distinctUntilChanged } from "rxjs/operators";
+import { BehaviorSubject, Subject, combineLatest } from "rxjs";
+import { distinctUntilChanged, filter, map, startWith, takeUntil } from "rxjs/operators";
 
 import "./pool-picker.scss";
 
 interface PoolFilters {
     id: string;
     offer: string;
+    containerImage: boolean;
+}
+
+interface Inputs {
+    app: RenderApplication;
+    renderEngine: RenderEngine;
+    imageReferenceId: string;
 }
 
 const CLOUD_SERVICE_OFFER = "cloudservice-windows";
@@ -33,48 +43,66 @@ const CLOUD_SERVICE_OFFER = "cloudservice-windows";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolPickerComponent), multi: true },
     ],
 })
-export class PoolPickerComponent implements ControlValueAccessor, OnDestroy {
+export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
+    @Input() public app: RenderApplication;
+    @Input() public imageReferenceId: string;
+    @Input() public renderEngine: RenderEngine;
+
     public pickedPool: string;
-    public poolsData: ListView<Pool, PoolListParams>;
     public displayedPools: List<Pool> = List([]);
     public filters: FormGroup;
     public offers: any[] = [];
 
     private _vmSizeCoresMap = new Map<string, number>();
-    private _pools: List<Pool> = List([]);
-    private _offers: Offer[] = [];
     private _propagateChange: (value: any) => void = null;
-    private _subs: Subscription[] = [];
+    private _destroy = new Subject();
+    private _inputs = new BehaviorSubject<Inputs>(null);
 
     constructor(
         formBuilder: FormBuilder,
         private poolService: PoolService,
         private poolOsService: PoolOsService,
         private vmSizeService: VmSizeService,
+        private renderingContainerImageService: RenderingContainerImageService,
         private changeDetector: ChangeDetectorRef) {
-        this.poolsData = this.poolService.listView;
         this.filters = formBuilder.group({
             id: "",
             offer: null,
         });
-        this._subs.push(this.filters.valueChanges.pipe(distinctUntilChanged()).subscribe((query: PoolFilters) => {
-            this._updateDisplayedPools();
-        }));
 
-        this._subs.push(this.poolOsService.offers.subscribe((offers: PoolOsSkus) => {
-            this._offers = offers.allOffers;
-            this._updateOffers();
-        }));
+        const containerImageMap = this.renderingContainerImageService.containerImagesAsMap();
 
-        this._subs.push(this.poolsData.items.subscribe((pools) => {
-            this._pools = pools;
-            this._updateOffers();
-            this._updateDisplayedPools();
-        }));
+        const ciFilteredPools = combineLatest(
+            this.poolService.pools,
+            this.filters.valueChanges.pipe(startWith(this.filters.value), distinctUntilChanged()),
+            this._inputs.pipe(filter(isNotNullOrUndefined)),
+            containerImageMap,
+        ).pipe(
+            takeUntil(this._destroy),
+            map(([pools, filters, inputs, containerImages]) => {
+                return pools.filter((pool) => {
+                    return this._filterPool(pool, filters, inputs, containerImages);
+                }).toList();
+            }));
 
-        this._subs.push(this.vmSizeService.sizes.subscribe((sizes) => {
+        ciFilteredPools.subscribe((pools) => {
+                this.displayedPools = pools;
+                this.changeDetector.markForCheck();
+        });
+
+        combineLatest(
+            this.poolOsService.offers,
+            ciFilteredPools,
+        ).pipe(
+            takeUntil(this._destroy),
+        ).subscribe(([offers, pools]) => {
+            this._updateOffers(offers.allOffers, pools);
+            this.changeDetector.markForCheck();
+        });
+
+        this.vmSizeService.sizes.pipe(takeUntil(this._destroy)).subscribe((sizes) => {
             if (!sizes) {return; }
             const vmSizeCoresMap = new Map<string, number>();
             sizes.forEach((size) => {
@@ -83,11 +111,23 @@ export class PoolPickerComponent implements ControlValueAccessor, OnDestroy {
 
             this._vmSizeCoresMap = vmSizeCoresMap;
             this.changeDetector.markForCheck();
-        }));
+        });
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.app && changes.renderEngine && changes.imageReferenceId) {
+            this._inputs.next(
+                {
+                    app: this.app,
+                    renderEngine: this.renderEngine,
+                    imageReferenceId: this.imageReferenceId,
+                });
+        }
     }
 
     public ngOnDestroy() {
-        this._subs.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public writeValue(poolInfo: any) {
@@ -138,22 +178,33 @@ export class PoolPickerComponent implements ControlValueAccessor, OnDestroy {
         });
     }
 
-    private _updateDisplayedPools() {
-        const pools = this._pools.filter((pool) => {
-            return this._filterPool(pool);
-        });
-        this.displayedPools = List(pools);
-        this.changeDetector.markForCheck();
+    public get appDisplay() {
+        return this._upperCaseFirstChar(this.app);
     }
 
-    private _filterPool(pool: Pool): boolean {
-        const filters: PoolFilters = this.filters.value;
+    public get renderEngineDisplay() {
+        return this._upperCaseFirstChar(this.renderEngine);
+    }
+
+    public get imageReferenceIdDisplay() {
+        return this._upperCaseFirstChar(this.imageReferenceId.substring(0, 6));
+    }
+
+    private _filterPool(pool: Pool, filters: PoolFilters, inputs: Inputs,
+                        containerImages: Map <string, RenderingContainerImage>): boolean {
         if (filters.id !== "" && !pool.id.toLowerCase().contains(filters.id.toLowerCase())) {
             return false;
         }
 
         if (filters.offer) {
             if (!this._filterByOffer(pool, filters.offer)) {
+                return false;
+            }
+        }
+
+        if (inputs.app && inputs.renderEngine && inputs.imageReferenceId) {
+
+            if (!this._filterByContainerImage(pool, inputs, containerImages)) {
                 return false;
             }
         }
@@ -172,22 +223,44 @@ export class PoolPickerComponent implements ControlValueAccessor, OnDestroy {
         return true;
     }
 
-    private _updateOffers() {
-        const offers = this._offers.map((offer) => {
-            const count = this._pools.count(x => this._filterByOffer(x, offer.name));
+    private _updateOffers(offers: Offer[], pools: List<Pool>) {
+        const offersMap = offers.map((offer) => {
+            const count = pools.count(x => this._filterByOffer(x, offer.name));
             return {
                 name: offer.name,
                 label: `${offer.name} (${count})`,
             };
         });
 
-        const cloudServiceCount = this._pools.count(x => this._filterByOffer(x, CLOUD_SERVICE_OFFER));
-        offers.push({
+        const cloudServiceCount = pools.count(x => this._filterByOffer(x, CLOUD_SERVICE_OFFER));
+        offersMap.push({
             name: CLOUD_SERVICE_OFFER,
             label: `Windows (Cloud service) (${cloudServiceCount})`,
         });
 
-        this.offers = offers;
-        this.changeDetector.markForCheck();
+        this.offers = offersMap;
+    }
+
+    private _filterByContainerImage(pool: Pool, inputs: Inputs,
+                                    containerImages: Map <string, RenderingContainerImage>) {
+        if (!pool.virtualMachineConfiguration ||
+            !pool.virtualMachineConfiguration.containerConfiguration) {
+            return false;
+        }
+        return pool.virtualMachineConfiguration.containerConfiguration.containerImageNames
+            .find(imageId => {
+                const image = containerImages.get(imageId);
+                if (!image) {
+                    return false;
+                }
+                const isMatch = (image.app === inputs.app
+                        && image.renderer === inputs.renderEngine
+                        && image.imageReferenceId === inputs.imageReferenceId);
+                return isMatch;
+            }) != null;
+    }
+
+    private _upperCaseFirstChar(lower: string) {
+        return lower.charAt(0).toUpperCase() + lower.substr(1);
     }
 }

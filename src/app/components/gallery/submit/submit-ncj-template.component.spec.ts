@@ -24,6 +24,7 @@ import {
     PoolService,
     VmSizeService,
 } from "app/services";
+import { RenderingContainerImageService } from "app/services/rendering-container-image";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { List } from "immutable";
@@ -113,6 +114,7 @@ describe("SubmitNcjTemplateComponent", () => {
     let fileGroupServiceSpy;
     let poolOsServiceSpy;
     let settingsServiceSpy: MockUserConfigurationService;
+    let renderingContainerImageServiceSpy;
 
     const blendFile = "myscene.blend";
     let queryParameters;
@@ -204,6 +206,11 @@ describe("SubmitNcjTemplateComponent", () => {
             },
         });
 
+        renderingContainerImageServiceSpy = {
+            containerImagesAsMap: jasmine.createSpy("containerImagesAsMap").and.returnValue(of(
+               new Map())),
+        };
+
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
@@ -235,6 +242,7 @@ describe("SubmitNcjTemplateComponent", () => {
                 { provide: NotificationService, useValue: notificationServiceSpy },
                 { provide: PoolOsService, useValue: poolOsServiceSpy },
                 { provide: UserConfigurationService, useValue: settingsServiceSpy },
+                { provide: RenderingContainerImageService, useValue: renderingContainerImageServiceSpy },
             ],
 
             schemas: [NO_ERRORS_SCHEMA],
