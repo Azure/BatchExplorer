@@ -55,7 +55,7 @@
         </bl-property-group>
 
         <bl-property-group label="Start task settings" [collapsed]="true" class="wide">
-            <ng-container *ngIf="startTaskItemCount">
+            <ng-container *ngIf="pool?.startTask; let startTask">
                 <bl-text-property label="Command line" [value]="startTask.commandLine" [wrap]="true"></bl-text-property>
                 <bl-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bl-text-property>
                 <bl-text-property label="User identity" [value]="decorator.startTask?.userIdentitySummary"></bl-text-property>
@@ -87,7 +87,7 @@
                 <bl-text-property label="Registry server" [value]="startTask.containerSettings.registry.registryServer" [wrap]="true"></bl-text-property>
                 <bl-text-property label="Registry username" [value]="startTask.containerSettings.registry.username"></bl-text-property>
             </ng-container>
-            <bl-no-item [itemCount]="startTaskItemCount" [slimline]="true">
+            <bl-no-item *ngIf="!pool?.startTask" [slimline]="true">
                 <span no-filter>Start task is not specified for current pool.</span>
             </bl-no-item>
         </bl-property-group>
