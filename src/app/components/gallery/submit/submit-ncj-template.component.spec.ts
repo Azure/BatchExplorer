@@ -137,6 +137,7 @@ describe("SubmitNcjTemplateComponent", () => {
         };
 
         poolServiceSpy = {
+            pools: of(List([])),
             listView: listProxy,
         };
 
