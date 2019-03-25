@@ -1,3 +1,8 @@
+# 2.0.3
+
+### Bug fixes
+* Job schedule with autopool fail to display [\#1995](https://github.com/Azure/BatchExplorer/issues/1995)
+
 # 2.0.2
 
 ### Bug fixes

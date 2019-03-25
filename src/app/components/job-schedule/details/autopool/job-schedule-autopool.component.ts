@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
 import { PoolConfigurationComponent } from "app/components/pool/details";
-import { Pool } from "app/models";
+import { AutoPoolSpecification, Pool } from "app/models";
 
 // tslint:disable:trackBy-function
 @Component({
@@ -9,11 +9,11 @@ import { Pool } from "app/models";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobScheduleAutoPoolComponent extends PoolConfigurationComponent implements OnChanges {
-    @Input() public properties: any;
+    @Input() public properties: AutoPoolSpecification;
 
     public ngOnChanges(changes) {
         if (changes.properties) {
-            this.pool = new Pool(this.properties.pool);
+            this.pool = this.properties.pool && new Pool(this.properties.pool.toJS());
         }
     }
 }
