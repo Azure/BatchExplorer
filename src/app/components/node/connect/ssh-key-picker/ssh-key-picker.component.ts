@@ -43,8 +43,8 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
     private _propagateChange: (value: string) => void = null;
 
     constructor(
+        public dialogService: DialogService,
         private sshKeyService: SSHKeyService,
-        private dialogService: DialogService,
         private changeDetector: ChangeDetectorRef) {
 
         sshKeyService.getLocalPublicKey(sshKeyService.homePublicKeyPath).subscribe((value: string | null) => {
