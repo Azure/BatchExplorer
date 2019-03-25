@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { UserConfigurationService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ClipboardService, ElectronShell } from "@batch-flask/electron";
-import { DialogService, DurationPickerModule } from "@batch-flask/ui";
+import { DialogService, DurationPickerComponent, DurationPickerModule } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -18,8 +18,9 @@ import {
 import { Duration } from "luxon";
 import { BehaviorSubject, of } from "rxjs";
 import * as Fixtures from "test/fixture";
-import { NodePropertyDisplayComponent } from ".";
-import { UserConfiguration } from "./node-property-display.component";
+import { click } from "test/utils/helpers";
+import { SSHKeyPickerDialogComponent } from "../ssh-key-picker-dialog";
+import { NodePropertyDisplayComponent, UserConfiguration } from "./node-property-display.component";
 
 @Component({
     template: `<bl-node-property-display
@@ -27,8 +28,7 @@ import { UserConfiguration } from "./node-property-display.component";
         [node]="node"
         [publicKeyFile]="publicKeyFile"
         [(usingSSHKeys)]="usingSSHKeys"
-        [userConfig]="userConfig"
-        (userConfigChange)="updateCredentials($event)"
+        [(userConfig)]="userConfig"
     ></bl-node-property-display>`,
 })
 class TestComponent {
@@ -75,7 +75,12 @@ describe("NodePropertyDisplay", () => {
         };
 
         dialogServiceSpy = {
-            open: jasmine.createSpy("openDialog").and.returnValue({ afterClose: () => of("rsa picked-key") }),
+            open: jasmine.createSpy("openDialog").and.returnValue({
+                componentInstance: {
+                    sshPublicKey: new FormControl(),
+                },
+                afterClosed: () => of("rsa picked-key"),
+            }),
         };
 
         TestBed.configureTestingModule({
@@ -117,13 +122,16 @@ describe("NodePropertyDisplay", () => {
             isAdmin: true,
             expireIn: Duration.fromObject({ days: 2 }),
         };
+
         testComponent.connectionSettings = {
             ip: "0.0.0.0",
             port: 50000,
             type: ConnectionType.SSH,
         } as NodeConnectionSettings;
+
         testComponent.node = Fixtures.node.create();
         testComponent.publicKeyFile = "beep";
+
         fixture.detectChanges();
 
         await fixture.whenStable();
@@ -146,11 +154,38 @@ describe("NodePropertyDisplay", () => {
             expect(display.value).toEqual("ssh foo@0.0.0.0 -p 50000");
         });
 
-        it("if ssh key detected, should display button with prompt to switch to password", () => {
+        it("should display ssh public key option by default", () => {
             const button = de.query(By.css(".switch-strategy"));
             expect(button).toBeTruthy();
 
             expect(button.nativeElement.textContent).toEqual("Use Password");
+        });
+
+        it("shows the path to the home public ssh key if that's the one picked", () => {
+            const button = de.query(By.css(".ssh-key-pick"));
+            expect(button).not.toBeFalsy();
+            expect(button.nativeElement.textContent).toContain("~/.ssh/id_rsa.pub");
+        });
+
+        it("shows the content of the picked ssh key", () => {
+            testComponent.userConfig = { ...testComponent.userConfig, sshPublicKey: "ssh-rsa thisisasuperkey" };
+            fixture.detectChanges();
+            const button = de.query(By.css(".ssh-key-pick"));
+            expect(button).not.toBeFalsy();
+            expect(button.nativeElement.textContent).toContain("ssh-rsa thisisasuperkey");
+            expect(button.nativeElement.textContent).not.toContain("~/.ssh/id_rsa.pub");
+        });
+
+        it("opens a dialog to pick the ssh public key", () => {
+            const button = de.query(By.css(".ssh-key-pick"));
+            expect(button).not.toBeFalsy();
+
+            click(button);
+            expect(dialogServiceSpy.open).toHaveBeenCalledOnce();
+            expect(dialogServiceSpy.open).toHaveBeenCalledWith(SSHKeyPickerDialogComponent);
+            fixture.detectChanges();
+
+            expect(button.nativeElement.textContent).toContain("rsa picked-key");
         });
 
         it("should not display a password input", () => {
@@ -223,15 +258,36 @@ describe("NodePropertyDisplay", () => {
         });
     });
 
-    it("should display the exiry time picker", async () => {
-        const durationPickerEl = de.query(By.css(".expire-in bl-duration-picker"));
-        expect(durationPickerEl).toBeTruthy();
-        expect(durationPickerEl.componentInstance.value.toISO()).toBe("P2D");
+    describe("expiry time", () => {
+        it("should display the exiry time picker", async () => {
+            const durationPickerEl = de.query(By.css(".expire-in bl-duration-picker"));
+            expect(durationPickerEl).toBeTruthy();
+            expect(durationPickerEl.componentInstance.value.toISO()).toBe("P2D");
+        });
+
+        it("should update the config when updating the expiry time", () => {
+            const durationPickerEl = de.query(By.css(".expire-in bl-duration-picker"));
+            const durationPicker: DurationPickerComponent = durationPickerEl.componentInstance;
+            durationPicker.updateTime("15");
+
+            expect(testComponent.userConfig.expireIn.toISO()).toEqual("P15D");
+        });
     });
 
-    it("should display the isAdmin checkbox", async () => {
-        const checkboxEl = de.query(By.css(".isAdmin mat-checkbox"));
-        expect(checkboxEl).toBeTruthy();
-        expect(checkboxEl.componentInstance.checked).toBe(true);
+    describe("is Admin", () => {
+        it("should display the isAdmin checkbox", async () => {
+            const checkboxEl = de.query(By.css(".isAdmin mat-checkbox"));
+            expect(checkboxEl).toBeTruthy();
+            expect(checkboxEl.componentInstance.checked).toBe(true);
+        });
+
+        it("should update the config when updating the expiry time", async () => {
+            const checkboxEl = de.query(By.css(".isAdmin mat-checkbox"));
+            click(checkboxEl.query(By.css("input")));
+
+            expect(checkboxEl.componentInstance.checked).toBe(false);
+            await new Promise(r => setTimeout(() => r(), 1000));
+            expect(component.userConfig.isAdmin).toEqual(false);
+        });
     });
 });

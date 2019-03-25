@@ -128,7 +128,6 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
     public updateIsAdmin(value: boolean) {
         this.userConfig.isAdmin = value;
         this._emitChanges();
-
     }
 
     public updateExpireIn(value: Duration) {

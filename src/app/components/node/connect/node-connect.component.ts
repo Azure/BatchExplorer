@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
-import { ServerError, UserConfigurationService, autobind } from "@batch-flask/core";
+import { GlobalStorage, ServerError, UserConfigurationService, autobind } from "@batch-flask/core";
 import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/electron";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { SecureUtils } from "@batch-flask/utils";
@@ -13,9 +13,8 @@ import {
 } from "app/services";
 import { PoolUtils } from "app/utils";
 import { BEUserConfiguration } from "common";
-import { ExternalApplication } from "common/constants";
+import { Constants, ExternalApplication } from "common/constants";
 import { DateTime, Duration } from "luxon";
-import * as path from "path";
 import { Observable, from } from "rxjs";
 import { catchError, share, switchMap, tap } from "rxjs/operators";
 import { UserConfiguration } from "./property-display";
@@ -85,36 +84,13 @@ export class NodeConnectComponent implements OnInit {
         private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,
         private changeDetector: ChangeDetectorRef,
-        private fs: FileSystemService,
         private clipboardService: ClipboardService,
+        private dataStore: GlobalStorage,
     ) { }
 
     public ngOnInit() {
-        this.userConfig = {
-            name: this.settingsService.current.nodeConnect.defaultUsername,
-            expireIn: Duration.fromObject({ hours: 24 }),
-            isAdmin: true,
-            sshPublicKey: "",
-        };
-        this.generatePassword();
-        this.publicKeyFile = path.join(this.fs.commonFolders.home, ".ssh", "id_rsa.pub");
-
         this.linux = PoolUtils.isLinux(this.pool);
-
-        // skip the public key thing if we are on windows
-        if (this.linux) {
-            this.nodeConnectService.getPublicKey(this.sshKeyService.homePublicKeyPath).subscribe({
-                next: (key) => {
-                    this.userConfig.sshPublicKey = key;
-                    this.userConfig.usingSSHKey = true;
-                    this.changeDetector.markForCheck();
-                },
-                error: (err) => {
-                    this.userConfig.usingSSHKey = false;
-                    this.changeDetector.markForCheck();
-                },
-            });
-        }
+        this._loadInitialUserConfig();
     }
 
     @autobind()
@@ -187,6 +163,9 @@ export class NodeConnectComponent implements OnInit {
     }
 
     private _addOrUpdateUser(credentials: AddNodeUserAttributes) {
+        if (credentials.sshPublicKey) {
+            this.dataStore.set<string>(Constants.localStorageKey.nodeConnectLastSSHPublicKey, credentials.sshPublicKey);
+        }
         return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, credentials);
     }
 
@@ -222,5 +201,32 @@ export class NodeConnectComponent implements OnInit {
             tap((filename) => this.shell.openItem(filename)),
             share(),
         );
+    }
+
+    private async _loadInitialUserConfig() {
+        const sshPublicKey = await this._loadInitialSSHPublicKey();
+
+        this.userConfig = {
+            name: this.settingsService.current.nodeConnect.defaultUsername,
+            expireIn: Duration.fromObject({ hours: 24 }),
+            isAdmin: true,
+            sshPublicKey: sshPublicKey || "",
+            usingSSHKey: Boolean(sshPublicKey),
+        };
+        this.generatePassword();
+    }
+
+    private async _loadInitialSSHPublicKey(): Promise<string | null> {
+        if (!this.linux) { return null; }
+
+        const lastKey = await this.dataStore.get<string>(Constants.localStorageKey.nodeConnectLastSSHPublicKey);
+        if (lastKey && typeof lastKey === "string") {
+            return lastKey;
+        }
+        try {
+            return this.nodeConnectService.getPublicKey(this.sshKeyService.homePublicKeyPath).toPromise();
+        } catch {
+            return null;
+        }
     }
 }

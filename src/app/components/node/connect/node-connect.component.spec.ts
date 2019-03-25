@@ -1,8 +1,8 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { UserConfigurationService } from "@batch-flask/core";
-import { MockUserConfigurationService } from "@batch-flask/core/testing";
+import { GlobalStorage, UserConfigurationService } from "@batch-flask/core";
+import { MockGlobalStorage, MockUserConfigurationService } from "@batch-flask/core/testing";
 import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/electron";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
@@ -44,8 +44,11 @@ describe("NodeConnectComponent", () => {
     let nodeConnectServiceSpy;
     let clipboardServiceSpy;
     let sshKeyServiceSpy;
+    let globalStorageSpy: MockGlobalStorage;
 
     beforeEach(() => {
+        globalStorageSpy = new MockGlobalStorage();
+
         nodeUserServiceSpy = {
             addOrUpdateUser: jasmine.createSpy("").and.returnValue(of(true)),
         };
@@ -102,7 +105,6 @@ describe("NodeConnectComponent", () => {
 
         sshKeyServiceSpy = {
             homePublicKeyPath: "~/.ssh/id_rsa.pub",
-
         };
 
         TestBed.configureTestingModule({
@@ -123,6 +125,7 @@ describe("NodeConnectComponent", () => {
                 { provide: NodeConnectService, useValue: nodeConnectServiceSpy },
                 { provide: SSHKeyService, useValue: sshKeyServiceSpy },
                 { provide: ClipboardService, useValue: clipboardServiceSpy },
+                { provide: GlobalStorage, useValue: globalStorageSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
