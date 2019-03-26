@@ -32,6 +32,7 @@ export class KeyBindingsService {
     }
 
     public dispatch(binding: KeyBinding, context: CommandContext): boolean {
+        console.log("Bindin", binding.hash);
         if (this._keyBindings.has(binding.hash)) {
             const commands = this._keyBindings.get(binding.hash);
             const matchingCommands = commands.filter(x => x.when(context));

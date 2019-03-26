@@ -1,1 +1,1 @@
-import "./delete-item.command";
+import "./list.appcmd";
