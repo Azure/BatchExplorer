@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { GlobalStorage, ServerError, UserConfigurationService, autobind } from "@batch-flask/core";
-import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/electron";
+import { ClipboardService, ElectronShell } from "@batch-flask/electron";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { SecureUtils } from "@batch-flask/utils";
 import { Node, NodeConnectionSettings, Pool } from "app/models";
