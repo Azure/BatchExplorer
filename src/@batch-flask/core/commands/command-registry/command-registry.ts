@@ -12,9 +12,10 @@ export interface Command {
 export class CommandRegistry {
     public static register(command: Command) {
         if (this._commands.has(command.id)) {
+            const existingCommand = this._commands.get(command.id);
             throw new SanitizedError(`Command with id '${command.id}' was already defined. `
                 + `Make sure to have a unique id (Shortcut: ${command.binding}, `
-                + `Existing: ${this._commands.get(command.id).binding})`);
+                + `Existing: ${existingCommand && existingCommand.binding})`);
         }
         this._commands.set(command.id, command);
     }
