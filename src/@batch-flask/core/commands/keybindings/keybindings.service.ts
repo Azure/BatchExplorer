@@ -1,7 +1,7 @@
 import { Injectable, Injector } from "@angular/core";
 import { KeyModifier } from "@batch-flask/core/keys";
 import { log } from "@batch-flask/utils";
-import { fromEvent } from "rxjs";
+import { Subscription, fromEvent, merge } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { Command, CommandRegistry } from "../command-registry";
 import { CommandContext, ContextService } from "../context";
@@ -11,31 +11,34 @@ export class KeyBindingsService {
     private _keyBindings = new Map<string, Command[]>();
     constructor(private contextService: ContextService, private injector: Injector) { }
 
-    public listen() {
+    public listen(): Subscription {
         this._loadCommands();
         const keys = new Set();
 
-        fromEvent(document, "keydown").pipe(
-            tap((event: KeyboardEvent) => keys.add(event.key.toLowerCase())),
-            map(() => {
-                return { binding: new KeyBinding([...keys]), event };
-            }),
-        ).subscribe(({ binding, event }) => {
-            if (this.dispatch(binding, this.contextService.context)) {
-                event.preventDefault();
-            }
-        });
-
-        fromEvent(document, "keyup").subscribe((event: KeyboardEvent) => {
-            keys.delete(event.key.toLowerCase());
-        });
+        return merge(
+            fromEvent(document, "keydown").pipe(
+                tap((event: KeyboardEvent) => keys.add(event.key.toLowerCase())),
+                map(() => {
+                    return { binding: new KeyBinding([...keys]), event };
+                }),
+                tap(({ binding, event }) => {
+                    if (this.dispatch(binding, this.contextService.context)) {
+                        event.preventDefault();
+                    }
+                }),
+            ),
+            fromEvent(document, "keyup").pipe(
+                tap((event: KeyboardEvent) => {
+                    keys.delete(event.key.toLowerCase());
+                }),
+            ),
+        ).subscribe();
     }
 
     public dispatch(binding: KeyBinding, context: CommandContext): boolean {
-        console.log("Bindin", binding.hash);
         if (this._keyBindings.has(binding.hash)) {
             const commands = this._keyBindings.get(binding.hash);
-            const matchingCommands = commands.filter(x => x.when(context));
+            const matchingCommands = commands.filter(x => x.when == null || x.when(context));
             if (matchingCommands.length === 0) {
                 return false;
             }
