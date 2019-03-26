@@ -13,7 +13,7 @@ import "./ssh-key-picker-dialog.scss";
 export class SSHKeyPickerDialogComponent {
     public sshPublicKey = new FormControl();
 
-    constructor(private dialogRef: MatDialogRef<string>) {
+    constructor(public dialogRef: MatDialogRef<string>) {
 
     }
 
