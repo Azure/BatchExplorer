@@ -18,7 +18,7 @@ export class KeyBindingsService {
         return merge(
             fromEvent(document, "keydown").pipe(
                 tap((event: KeyboardEvent) => keys.add(event.key.toLowerCase())),
-                map(() => {
+                map((event: KeyboardEvent) => {
                     return { binding: new KeyBinding([...keys]), event };
                 }),
                 tap(({ binding, event }) => {
@@ -37,7 +37,7 @@ export class KeyBindingsService {
 
     public dispatch(binding: KeyBinding, context: CommandContext): boolean {
         if (this._keyBindings.has(binding.hash)) {
-            const commands = this._keyBindings.get(binding.hash);
+            const commands = this._keyBindings.get(binding.hash)!;
             const matchingCommands = commands.filter(x => x.when == null || x.when(context));
             if (matchingCommands.length === 0) {
                 return false;
@@ -57,7 +57,7 @@ export class KeyBindingsService {
         for (const command of commands) {
             const binding = parseKeyBinding(command.binding);
             if (this._keyBindings.has(binding.hash)) {
-                this._keyBindings.get(binding.hash).push(command);
+                this._keyBindings.get(binding.hash)!.push(command);
             } else {
                 this._keyBindings.set(binding.hash, [command]);
             }
@@ -88,8 +88,8 @@ export class KeyBinding {
     }
 
     private _extractModifiers(keys: string[]) {
-        const otherKeys = [];
-        const mods = [];
+        const otherKeys: string[] = [];
+        const mods: KeyModifier[] = [];
         for (const key of keys) {
             switch (key) {
                 case "shift":
