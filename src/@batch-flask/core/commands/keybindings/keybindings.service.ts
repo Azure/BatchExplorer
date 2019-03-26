@@ -2,7 +2,7 @@ import { Injectable, Injector } from "@angular/core";
 import { KeyModifier } from "@batch-flask/core/keys";
 import { log } from "@batch-flask/utils";
 import { fromEvent } from "rxjs";
-import { distinctUntilChanged, map, tap } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 import { Command, CommandRegistry } from "../command-registry";
 import { CommandContext, ContextService } from "../context";
 
@@ -17,10 +17,13 @@ export class KeyBindingsService {
 
         fromEvent(document, "keydown").pipe(
             tap((event: KeyboardEvent) => keys.add(event.key.toLowerCase())),
-            map(() => new KeyBinding([...keys])),
-            // distinctUntilChanged((a, b) => a.hash === b.hash),
-        ).subscribe((binding: KeyBinding) => {
-            this.dispatch(binding, this.contextService.context);
+            map(() => {
+                return { binding: new KeyBinding([...keys]), event };
+            }),
+        ).subscribe(({ binding, event }) => {
+            if (this.dispatch(binding, this.contextService.context)) {
+                event.preventDefault();
+            }
         });
 
         fromEvent(document, "keyup").subscribe((event: KeyboardEvent) => {
@@ -28,20 +31,21 @@ export class KeyBindingsService {
         });
     }
 
-    public dispatch(binding: KeyBinding, context: CommandContext) {
+    public dispatch(binding: KeyBinding, context: CommandContext): boolean {
         if (this._keyBindings.has(binding.hash)) {
             const commands = this._keyBindings.get(binding.hash);
             const matchingCommands = commands.filter(x => x.when(context));
             if (matchingCommands.length === 0) {
-                return;
+                return false;
             }
 
             if (matchingCommands.length > 1) {
                 log.warn("Multiple commands founds matching the same shortcut. Picking the first one.", commands);
             }
-            console.log("Commands found?", context, commands, matchingCommands);
             matchingCommands[0].execute(this.injector, context);
+            return true;
         }
+        return false;
     }
 
     private _loadCommands() {
@@ -87,6 +91,7 @@ export class KeyBinding {
                 case "shift":
                     mods.push(KeyModifier.Shift);
                     break;
+                case "control":
                 case "ctrl":
                     mods.push(KeyModifier.Ctrl);
                     break;

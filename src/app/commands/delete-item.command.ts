@@ -23,3 +23,19 @@ CommandRegistry.register({
         }
     },
 });
+
+CommandRegistry.register({
+    id: "list.selectAll",
+    binding: "ctrl+a",
+    when: (context: CommandContext) => {
+        return context.has("list.focused");
+    },
+    execute: (_: Injector, context: CommandContext) => {
+        const list = context.get("list.focused");
+        if (!(list instanceof AbstractListBase)) {
+            log.error("Cannot delete item command context is not of enitty command type");
+            return;
+        }
+        list.selectAll();
+    },
+});

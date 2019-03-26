@@ -433,7 +433,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public openContextMenu(target?: any) {
         if (!this.commands && !this.config.sorting) { return; }
-        console.log("OPen context menu", target, this.selection.keys);
         let selection = this.selection;
 
         // If we right clicked on an non selected item it will just make this the context menu selection
@@ -459,6 +458,10 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
             this.contextmenuService.openMenu(menu);
         });
+    }
+
+    public selectAll() {
+        this.selection = new ListSelection({ keys: this.items.map(x => x.id) });
     }
 
     private _pickFocusedItem() {
