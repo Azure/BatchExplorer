@@ -1,5 +1,6 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import { KeyModifier } from "@batch-flask/core/keys";
+import { log } from "@batch-flask/utils";
 import { fromEvent } from "rxjs";
 import { distinctUntilChanged, map, tap } from "rxjs/operators";
 import { Command, CommandRegistry } from "../command-registry";
@@ -8,7 +9,7 @@ import { CommandContext, ContextService } from "../context";
 @Injectable({ providedIn: "root" })
 export class KeyBindingsService {
     private _keyBindings = new Map<string, Command[]>();
-    constructor(private contextService: ContextService) { }
+    constructor(private contextService: ContextService, private injector: Injector) { }
 
     public listen() {
         this._loadCommands();
@@ -17,9 +18,8 @@ export class KeyBindingsService {
         fromEvent(document, "keydown").pipe(
             tap((event: KeyboardEvent) => keys.add(event.key.toLowerCase())),
             map(() => new KeyBinding([...keys])),
-            distinctUntilChanged((a, b) => a.hash === b.hash),
+            // distinctUntilChanged((a, b) => a.hash === b.hash),
         ).subscribe((binding: KeyBinding) => {
-            console.log("Keyboard down", binding.hash, [...keys]);
             this.dispatch(binding, this.contextService.context);
         });
 
@@ -29,11 +29,18 @@ export class KeyBindingsService {
     }
 
     public dispatch(binding: KeyBinding, context: CommandContext) {
-        console.log("Commands", [...this._keyBindings.keys()]);
         if (this._keyBindings.has(binding.hash)) {
             const commands = this._keyBindings.get(binding.hash);
             const matchingCommands = commands.filter(x => x.when(context));
-            console.log("Commands found?", commands);
+            if (matchingCommands.length === 0) {
+                return;
+            }
+
+            if (matchingCommands.length > 1) {
+                log.warn("Multiple commands founds matching the same shortcut. Picking the first one.", commands);
+            }
+            console.log("Commands found?", context, commands, matchingCommands);
+            matchingCommands[0].execute(this.injector, context);
         }
     }
 

@@ -1,1 +1,1 @@
-export * from "./delete-item.command";
+import "./delete-item.command";

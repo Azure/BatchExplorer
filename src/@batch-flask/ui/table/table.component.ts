@@ -14,6 +14,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { Router } from "@angular/router";
+import { ContextService } from "@batch-flask/core";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { DragUtils } from "@batch-flask/utils";
@@ -113,8 +114,9 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         router: Router,
         elementRef: ElementRef,
         liveAnnouncer: LiveAnnouncer,
+        contextService: ContextService,
         breadcrumbService: BreadcrumbService) {
-        super(contextmenuService, router, breadcrumbService, elementRef, changeDetection);
+        super(contextmenuService, router, breadcrumbService, elementRef, contextService, changeDetection);
 
         this.columnManager = new TableColumnManager(this.dataPresenter, liveAnnouncer);
     }
