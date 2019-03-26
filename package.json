@@ -3,6 +3,7 @@
   "sideEffects": [
     "src/@batch-flask/extensions/*",
     "src/app/environment.ts",
+    "src/app/commands/**/*",
     "*.scss"
   ],
   "productName": "Batch Explorer",
