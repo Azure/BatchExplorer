@@ -1,19 +1,19 @@
 
-interface AzureCostAggregation {
+export interface AzureCostAggregation {
 
 }
 
-interface AzureCostQuerySortConfiguration {
+export interface AzureCostQuerySortConfiguration {
     direction: "ascending" | "descending";
     name: string;
 }
 
-interface AzureCostQueryGrouping {
+export interface AzureCostQueryGrouping {
     type: "Dimension" | "Tag";
     name: CostManagementDimensions;
 }
 
-interface QueryFilter {
+export interface QueryFilter {
     And?: QueryFilter[];
     Or?: QueryFilter[];
     Not?: QueryFilter;
@@ -24,7 +24,7 @@ interface QueryFilter {
     };
 }
 
-interface AzureCostQuery {
+export interface AzureCostQuery {
     type: string;
     timeframe?: "Custom" | "MonthToDate" | "TheLastMonth" | "TheLastWeek";
     timePeriod?: {
@@ -40,7 +40,7 @@ interface AzureCostQuery {
     };
 }
 
-interface QueryResult {
+export interface QueryResult {
     id: string;
     name: string;
     properties: {
@@ -51,7 +51,7 @@ interface QueryResult {
 
 }
 
-enum CostManagementDimensions {
+export enum CostManagementDimensions {
     ResourceId = "ResourceId",
     MeterSubCategory = "MeterSubCategory",
     MeterCategory = "MeterCategory",

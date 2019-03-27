@@ -9,6 +9,7 @@ import { Observable } from "rxjs";
 import { map, share, switchMap, take, tap } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { BatchAccountService } from "../batch-account";
+import { AzureCostQuery, CostManagementDimensions, QueryResult } from "./azure-cost-mangement-api.model";
 
 export interface AzureCostEntry {
     preTaxCost: number;
