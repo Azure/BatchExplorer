@@ -128,30 +128,22 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    private _computeDataSets(usages: BatchAccountCost, theme: Theme) {
-        if (Object.keys(usages).length > 0) {
-            const arr = Object.values(usages).first();
+    private _computeDataSets(accountCost: BatchAccountCost, theme: Theme) {
+        if (Object.keys(accountCost).length > 0) {
+            const arr = Object.values(accountCost).first();
             if (arr.length > 0) {
                 this.currency = arr.first().currency;
             }
         }
 
-        let total = 0;
-
-        for (const usagesPerPool of Object.values(usages)) {
-            for (const usage of usagesPerPool) {
-                total += usage.preTaxCost;
-            }
-        }
-
-        this.total = total.toFixed(2);
-        this.datasets = Object.entries(usages).map(([poolId, usagesPerPool], i) => {
+        this.total = accountCost.totalForPeriod.toFixed(2);
+        this.datasets = Object.entries(accountCost).map(([poolId, poolCost], i) => {
             const color = theme.chartColors.get(i);
             return {
                 label: poolId,
                 backgroundColor: color,
                 borderColor: color,
-                data: Object.values(usagesPerPool).map((x) => {
+                data: poolCost.costs.map((x) => {
                     return { x: x.date, y: x.preTaxCost };
                 }),
             };

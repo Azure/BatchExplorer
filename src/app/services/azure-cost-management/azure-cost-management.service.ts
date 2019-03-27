@@ -13,70 +13,25 @@ import { BatchAccountService } from "../batch-account";
 export interface AzureCostEntry {
     preTaxCost: number;
     date: Date;
+}
+
+export interface BatchAccountCost {
+    // Sum of all the prices for the given period
+    totalForPeriod: number;
+
+    // Currency
     currency: string;
+
+    // Costs per pool
+    pools: StringMap<BatchPoolCost>;
 }
 
-export type BatchAccountCost = StringMap<AzureCostEntry[]>;
+export interface BatchPoolCost {
+    // Sum of all the prices for the given period
+    totalForPeriod: number;
 
-interface AzureCostAggregation {
-
-}
-
-interface AzureCostQuerySortConfiguration {
-    direction: "ascending" | "descending";
-    name: string;
-}
-
-interface AzureCostQueryGrouping {
-    type: "Dimension" | "Tag";
-    name: CostManagementDimensions;
-}
-
-interface QueryFilter {
-    And?: QueryFilter[];
-    Or?: QueryFilter[];
-    Not?: QueryFilter;
-    Dimensions?: {
-        Name: string,
-        Operator: "In" | "Eq",
-        Values: string[],
-    };
-}
-
-interface AzureCostQuery {
-    type: string;
-    timeframe?: "Custom" | "MonthToDate" | "TheLastMonth" | "TheLastWeek";
-    timePeriod?: {
-        from: string;
-        to: string;
-    };
-    dataSet: {
-        granularity: string;
-        aggregation: StringMap<AzureCostAggregation>;
-        sorting: AzureCostQuerySortConfiguration[]
-        grouping: AzureCostQueryGrouping[];
-        filter?: QueryFilter;
-    };
-}
-
-interface QueryResult {
-    id: string;
-    name: string;
-    properties: {
-        nextLink: string | null,
-        columns: Array<{ name: string, type: string }>,
-        rows: any[][],
-    };
-
-}
-
-export enum CostManagementDimensions {
-    ResourceId = "ResourceId",
-    MeterSubCategory = "MeterSubCategory",
-    MeterCategory = "MeterCategory",
-    Meter = "Meter",
-    ServiceName = "ServiceName",
-    ServiceTier = "ServiceTier",
+    // Costs per pool
+    costs: AzureCostEntry[];
 }
 
 function costManagementUrl(scope: string) {
@@ -148,7 +103,11 @@ export class AzureCostManagementService {
         for (const [key, index] of Object.entries(columnIndexes)) {
             if (index === null) {
                 log.error(`Failed to retrieve column index for ${key}`, response.properties.columns);
-                return {};
+                return {
+                    totalForPeriod: 0,
+                    currency: "n/a",
+                    pools: {},
+                };
             }
         }
 
@@ -170,7 +129,9 @@ export class AzureCostManagementService {
 
     private _buildResponseFromRows(rows: Array<{
         date: number, preTaxCost: number, currency: string, resourceId: string,
-    }>) {
+    }>): BatchAccountCost {
+        let currency: string | null = null;
+        let total = 0;
         const poolMap: StringMap<{ [key: number]: AzureCostEntry }> = {};
         const days = new Set<number>();
         for (const row of rows) {
@@ -184,8 +145,11 @@ export class AzureCostManagementService {
             poolMap[poolId][row.date] = {
                 preTaxCost: row.preTaxCost,
                 date: this._parseDate(row.date),
-                currency: row.currency,
             };
+            total += row.preTaxCost;
+            if (currency == null && row.currency) {
+                currency = row.currency;
+            }
         }
         for (const map of Object.values(poolMap)) {
             for (const day of days) {
@@ -193,17 +157,24 @@ export class AzureCostManagementService {
                     map[day] = {
                         preTaxCost: 0,
                         date: this._parseDate(day),
-                        currency: "",
                     };
                 }
             }
         }
 
-        const result: StringMap<AzureCostEntry[]> = {};
+        const result: StringMap<BatchPoolCost> = {};
         for (const [poolId, map] of Object.entries(poolMap)) {
-            result[poolId] = Object.values(map).sortBy(x => x.date);
+            const costs = Object.values(map);
+            result[poolId] = {
+                totalForPeriod: costs.reduce((t, c) => t + c.preTaxCost, 0),
+                costs: costs.sortBy(x => x.date),
+            };
         }
-        return result;
+        return {
+            totalForPeriod: total,
+            currency: currency || "?",
+            pools: result,
+        };
     }
 
     private _parseDate(date: number) {
