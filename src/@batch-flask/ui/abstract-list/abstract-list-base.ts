@@ -10,7 +10,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { ListKeyNavigator, ListView } from "@batch-flask/core";
+import { ContextService, ListKeyNavigator, ListView } from "@batch-flask/core";
 import { KeyCode } from "@batch-flask/core/keys";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
 import { ListDataPresenter, SortingInfo } from "@batch-flask/ui/abstract-list/list-data-presenter";
@@ -171,6 +171,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         private router: Router,
         private breadcrumbService: BreadcrumbService,
         private elementRef: ElementRef,
+        private contextService: ContextService,
         changeDetection: ChangeDetectorRef) {
         super(changeDetection);
         this._initKeyNavigator();
@@ -322,6 +323,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         if (!this._clicking) {
             this._pickFocusedItem();
         }
+        this.contextService.setContext("list.focused", this);
         this.changeDetector.markForCheck();
     }
 
@@ -335,6 +337,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     @HostListener("blur", ["$event"])
     public handleBlur(_: FocusEvent) {
         this.listFocused = false;
+        this.contextService.removeContext("list.focused");
         this._keyNavigator.focusColumn(-1);
         this.changeDetector.markForCheck();
     }
@@ -354,8 +357,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             if (event.shiftKey) {
                 const focusedItem = this._keyNavigator.focusedItem;
                 previousFocussedId = focusedItem && focusedItem.id;
-            } else if (event.code === KeyCode.ArrowDown || event.code === KeyCode.ArrowUp) {
-                this.clearSelection();
             }
             // Handle the navigation
             this._keyNavigator.onKeydown(event);
@@ -370,8 +371,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
                 } else {
                     this.selection.add(focussedId);
                 }
+            } else if (event.code === KeyCode.ArrowDown || event.code === KeyCode.ArrowUp) {
+                this.selection = new ListSelection({ keys: [focussedId] });
             }
         }
+        this.changeDetector.markForCheck();
     }
 
     public handleClick(event: MouseEvent, item, activate = true) {
@@ -411,6 +415,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public activateItem(item: AbstractListItem | null) {
         this.activeItem = item && item.id;
+
         if (!item) { return; }
         const link = item.routerLink;
         if (this.config.navigable && link) {
@@ -428,7 +433,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public openContextMenu(target?: any) {
         if (!this.commands && !this.config.sorting) { return; }
-
         let selection = this.selection;
 
         // If we right clicked on an non selected item it will just make this the context menu selection
@@ -454,6 +458,10 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
             this.contextmenuService.openMenu(menu);
         });
+    }
+
+    public selectAll() {
+        this.selection = new ListSelection({ keys: this.items.map(x => x.id) });
     }
 
     private _pickFocusedItem() {
