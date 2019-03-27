@@ -10,9 +10,12 @@ import {
 } from "@angular/core";
 import { UserConfigurationService, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
+import { DialogService } from "@batch-flask/ui";
 import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
-import { AddNodeUserAttributes, NodeConnectService } from "app/services";
+import { NodeConnectService, SSHKeyService } from "app/services";
 import { BEUserConfiguration } from "common";
+import { Duration } from "luxon";
+import { SSHKeyPickerDialogComponent } from "../ssh-key-picker-dialog";
 
 import "./node-property-display.scss";
 
@@ -26,27 +29,42 @@ enum CopyText {
     AfterCopy = "Password copied to clipboard!",
 }
 
+export interface UserConfiguration {
+    name: string;
+    isAdmin: boolean;
+    expireIn: Duration;
+    password?: string;
+    sshPublicKey?: string;
+    usingSSHKey?: boolean;
+}
+
 @Component({
     selector: "bl-node-property-display",
     templateUrl: "node-property-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodePropertyDisplayComponent implements OnInit, OnChanges {
+
+    public get sshCommand() {
+        if (!this.connectionSettings) {
+            return "N/A";
+        }
+        const { ip, port } = this.connectionSettings;
+
+        return `ssh ${this.userConfig.name}@${ip} -p ${port}`;
+    }
     // inherited input properties
     @Input() public connectionSettings: NodeConnectionSettings;
     @Input() public node: Node;
-    @Input() public credentials: AddNodeUserAttributes;
-    @Input() public publicKeyFile: string;
-    @Input() public usingSSHKeys: boolean;
+    @Input() public userConfig: UserConfiguration;
     @Input() public passwordCopied: boolean;
     @Input() public generatePassword: () => void;
-    @Output() public credentialsChange = new EventEmitter<AddNodeUserAttributes>();
-    @Output() public usingSSHKeysChange = new EventEmitter<boolean>();
+    @Output() public userConfigChange = new EventEmitter<UserConfiguration>();
     @Output() public passwordCopiedChange = new EventEmitter<boolean>();
 
     public isLinux: boolean;
     public otherStrategy: string;
-    public hasPublicKey: boolean;
+    public homeKey: string | null = null;
     public passwordVisible: boolean;
     public passwordCopyText: string;
     public regeneratingPassword: boolean;
@@ -55,10 +73,12 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
 
     constructor(
         private nodeConnectService: NodeConnectService,
+        private sshKeyService: SSHKeyService,
         private shell: ElectronShell,
         private settingsService: UserConfigurationService<BEUserConfiguration>,
+        private dialogService: DialogService,
         private changeDetector: ChangeDetectorRef,
-    ) {}
+    ) { }
 
     public ngOnInit() {
         this.passwordVisible = false;
@@ -66,15 +86,15 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
         this.regeneratingPassword = false;
 
         this.isLinux = this.connectionSettings.type === ConnectionType.SSH;
-        this.otherStrategy = this.usingSSHKeys ? AuthStrategies.Password : AuthStrategies.Keys;
+        this.otherStrategy = this.userConfig.usingSSHKey ? AuthStrategies.Password : AuthStrategies.Keys;
 
-        this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
+        this.nodeConnectService.getPublicKey(this.sshKeyService.homePublicKeyPath).subscribe({
             next: (key) => {
-                this.hasPublicKey = Boolean(key);
+                this.homeKey = key;
                 this.changeDetector.markForCheck();
             },
-            error: (err) => {
-                this.hasPublicKey = false;
+            error: () => {
+                this.homeKey = null;
                 this.changeDetector.markForCheck();
             },
         });
@@ -86,21 +106,12 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
         }
     }
 
-    public get sshCommand() {
-        if (!this.connectionSettings) {
-            return "N/A";
-        }
-        const { ip, port } = this.connectionSettings;
-
-        return `ssh ${this.credentials.name}@${ip} -p ${port}`;
-    }
-
     @autobind()
     public setUsername(event) {
-        // TODO-Adam reimplement as a FormControl with custom validator
         const newName = event.target.value.replace(/ /g, "");
-        this.credentials.name = newName || this.settingsService.current.nodeConnect.defaultUsername;
-        this.credentialsChange.emit(this.credentials);
+        this.userConfig.name = newName || this.settingsService.current.nodeConnect.defaultUsername;
+        this._emitChanges();
+
     }
 
     @autobind()
@@ -110,27 +121,37 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
         this.passwordCopiedChange.emit(this.passwordCopied);
 
         // set the password itself in the credentials binding
-        this.credentials.password = event.target.value;
-        this.credentialsChange.emit(this.credentials);
+        this.userConfig.password = event.target.value;
+        this._emitChanges();
+    }
+
+    public updateIsAdmin(value: boolean) {
+        this.userConfig.isAdmin = value;
+        this._emitChanges();
+    }
+
+    public updateExpireIn(value: Duration) {
+        this.userConfig.expireIn = value;
+        this._emitChanges();
     }
 
     @autobind()
     public regeneratePassword() {
         if (this.regeneratingPassword) { return; }
 
+        this.regeneratingPassword = true;
+        this.changeDetector.markForCheck();
+
         setTimeout(() => {
             this.generatePassword();
             this.regeneratingPassword = false;
             this.changeDetector.markForCheck();
         }, 500);
-
-        this.regeneratingPassword = true;
-        this.changeDetector.markForCheck();
     }
 
     @autobind()
     public downloadRdp() {
-        const obs = this.nodeConnectService.saveRdpFile(this.connectionSettings, this.credentials, this.node.id);
+        const obs = this.nodeConnectService.saveRdpFile(this.connectionSettings, this.userConfig, this.node.id);
         obs.subscribe({
             next: (filename) => {
                 this.shell.showItemInFolder(filename);
@@ -141,18 +162,32 @@ export class NodePropertyDisplayComponent implements OnInit, OnChanges {
 
     @autobind()
     public switchAuthStrategy() {
-        this.usingSSHKeys = !this.usingSSHKeys;
-        this.usingSSHKeysChange.emit(this.usingSSHKeys);
+        this.userConfig.usingSSHKey = !this.userConfig.usingSSHKey;
+        this._emitChanges();
         if (this.otherStrategy === AuthStrategies.Keys) {
             this.otherStrategy = AuthStrategies.Password;
-         } else {
+        } else {
             this.otherStrategy = AuthStrategies.Keys;
-         }
-        this.changeDetector.markForCheck();
+        }
     }
 
     @autobind()
     public togglePasswordVisible() {
         this.passwordVisible = !this.passwordVisible;
+        this.changeDetector.markForCheck();
+    }
+
+    public pickSSHPublicKey() {
+        const ref = this.dialogService.open(SSHKeyPickerDialogComponent);
+        ref.componentInstance.sshPublicKey.setValue(this.userConfig.sshPublicKey);
+        ref.afterClosed().subscribe((key) => {
+            this.userConfig.sshPublicKey = key;
+            this._emitChanges();
+        });
+    }
+
+    private _emitChanges() {
+        this.changeDetector.markForCheck();
+        this.userConfigChange.emit(this.userConfig);
     }
 }

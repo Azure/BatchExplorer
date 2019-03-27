@@ -94,6 +94,8 @@ export const localStorageKey = {
      * Save a randomly generated machine id
      */
     machineId: "machine_id",
+
+    nodeConnectLastSSHPublicKey: "node-connect.last-ssh-public-key",
 };
 
 export const ApiVersion = {

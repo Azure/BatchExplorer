@@ -13,95 +13,76 @@ bl-node-property-display {
 
     bl-property-group {
         margin: 15px 0;
+    }
 
-        .custom-property {
-            display: flex;
-            padding: 0;
-            margin: 0 0 5px;
-            position: relative;
+    .property-content {
+        input {
             width: 100%;
-            overflow: visible;
+        }
 
-            .label-small {
-                color: $secondary-text;
-                font-size: 13px;
-                flex-basis: 200px;
-                font-weight: bold;
+        .input-container {
+            width: 100%;
+            display: flex;
+
+            .set-visible {
+                position: absolute;
                 line-height: 25px;
-                margin-right: 5px;
-
-                .regenerate-password {
-                    font-weight: normal;
-                    position: absolute;
-                    top: 20px;
-                    left: 0;
-
-                    i {
-                        margin-left: 5px;
-                    }
-                }
+                right: 5px;
+                font-size: 12pt;
+                cursor: pointer;
             }
 
-            > input {
+            > .input {
+                position: relative;
                 flex: 1;
-                max-width: 350px;
             }
 
-            > .password-input-container {
-                input {
-                    flex: 1;
-                    width: 350px;
-                }
-
-                .set-visible {
-                    position: absolute;
-                    line-height: 25px;
-                    right: 38px;
-                    font-size: 12pt;
-                    cursor: pointer;
-                }
-            }
-
-            > .display-field {
-                flex: 1;
-                max-width: 350px;
-                background-color: $main-background;
-                padding: 3px 8px;
-                margin: 0;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                display: block;
-                width: 100%;
-                min-height: 24px;
-            }
-
-            bl-clickable {
-                color: $link-color;
-            }
-
-            .password-failure-hint {
-                position: absolute;
-                top: 27px;
-                left: 205px;
-                color: red;
-            }
-
-            .clipboard-info {
-                position: absolute;
-                top: 28px;
-                left: 210px;
+            > .input-suffix {
+                background: $input-border-color;
+                border: 1px solid $input-border-color;
+                height: 26px;
+                min-width: 26px;
+                padding: 0 5px;
+                line-height: 26px;
+                vertical-align: middle;
                 color: $secondary-text;
-            }
-
-            .flash {
-                animation: flash 1s 1;
             }
         }
     }
 
     .switch-strategy {
         color: $link-color;
+        font-weight: normal;
+    }
+
+    .password-failure-hint {
         position: absolute;
-        top: 144px;
+        top: 27px;
+        left: 205px;
+        color: red;
+    }
+
+    .clipboard-info {
+        color: $secondary-text;
+    }
+
+    .ssh-key-pick {
+        cursor: pointer;
+        display: flex;
+
+        .value {
+            flex: 1;
+            min-width: 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .fa-wrench {
+            margin: 0 5px;
+        }
+    }
+
+    .flash {
+        animation: flash 1s 1;
     }
 }

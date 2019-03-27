@@ -10,6 +10,9 @@
             </bl-clickable>
         </bl-toolbar>
         <div class="saved-key-list">
+            <div class="saved-key" *ngIf="homePublicKey" (click)="selectHomeKey()">
+                <span class="label">~/.ssh/id_rsa.pub</span>
+            </div>
             <div class="saved-key" *ngFor="let key of savedSSHKeys;trackBy: trackSavedKey" (click)="selectKey(key)">
                 <span class="label">{{key.name}}</span>
                 <i class="fa fa-times" title="Delete" (click)="deleteKey(key)"></i>
