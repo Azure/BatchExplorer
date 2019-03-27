@@ -2,7 +2,7 @@ import { Component, HostBinding, OnDestroy, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
-import { TelemetryService, UserConfigurationService } from "@batch-flask/core";
+import { KeyBindingsService, TelemetryService, UserConfigurationService } from "@batch-flask/core";
 import { ElectronRemote, IpcService } from "@batch-flask/electron";
 import { Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
@@ -10,7 +10,6 @@ import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
     BatchAccountService,
-    CommandService,
     NavigatorService,
     NcjTemplateService,
     PredefinedFormulaService,
@@ -39,7 +38,6 @@ export class AppComponent implements OnInit, OnDestroy {
     constructor(
         matIconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
-        private commandService: CommandService,
         private accountService: BatchAccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
@@ -51,6 +49,7 @@ export class AppComponent implements OnInit, OnDestroy {
         permissionService: PermissionService,
         authHttpService: AuthorizationHttpService,
         ipc: IpcService,
+        keybindingService: KeyBindingsService,
         private telemetryService: TelemetryService,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
@@ -59,8 +58,8 @@ export class AppComponent implements OnInit, OnDestroy {
     ) {
         this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
         this._initWorkspaces();
-        this.commandService.init();
         this.pricingService.init();
+        keybindingService.listen();
         this.navigatorService.init();
         this.accountService.loadInitialData();
         this.ncjTemplateService.init();
