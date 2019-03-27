@@ -1,5 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
@@ -12,16 +13,18 @@ import { BehaviorSubject, of } from "rxjs";
 import { click } from "test/utils/helpers";
 
 @Component({
-    template: `<bl-ssh-key-picker [(ngModel)]="sshValue"></bl-ssh-key-picker>`,
+    template: `<bl-ssh-key-picker [formControl]="sshValue"></bl-ssh-key-picker>`,
 })
 class TestComponent {
-    public sshValue: string;
+    public sshValue = new FormControl("");
 }
 
 describe("SSHKeyPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
+    let testComponent: TestComponent;
     let component: SSHKeyPickerComponent;
     let de: DebugElement;
+    let editor: DebugElement;
     let sshKeyServiceSpy;
     let dialogServiceSpy;
 
@@ -33,9 +36,9 @@ describe("SSHKeyPickerComponent", () => {
             getLocalPublicKey: jasmine.createSpy("getLocalPublicKey").and.returnValue(of("rsa some-home-key")),
             homePublicKeyPath: "~/.ssh/id_rsa.pub",
         };
-        dialogServiceSpy = {prompt: jasmine.createSpy("dialog.prompt")};
+        dialogServiceSpy = { prompt: jasmine.createSpy("dialog.prompt") };
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule],
+            imports: [NoopAnimationsModule, FormsModule, ReactiveFormsModule],
             declarations: [SSHKeyPickerComponent, TestComponent, ButtonComponent],
             providers: [
                 { provide: SSHKeyService, useValue: sshKeyServiceSpy },
@@ -44,9 +47,11 @@ describe("SSHKeyPickerComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
+        testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-ssh-key-picker"));
         component = de.componentInstance;
         fixture.detectChanges();
+        editor = de.query(By.css("textarea"));
     });
 
     it("it should show no key message when no saved keys", () => {
@@ -56,6 +61,12 @@ describe("SSHKeyPickerComponent", () => {
     it("get the home public key ", () => {
         expect(sshKeyServiceSpy.getLocalPublicKey).toHaveBeenCalledOnce();
         expect(sshKeyServiceSpy.getLocalPublicKey).toHaveBeenCalledWith("~/.ssh/id_rsa.pub");
+    });
+
+    it("pass the value from the parent", async () => {
+        testComponent.sshValue.setValue("ssh-rsa foobar some@example.com");
+        fixture.detectChanges();
+        expect(editor.nativeElement.value).toEqual("ssh-rsa foobar some@example.com");
     });
 
     describe("when there is some saved keys", () => {

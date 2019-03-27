@@ -67,8 +67,8 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
         this._destroy.complete();
     }
 
-    public writeValue(value: any) {
-        this.sshKeyValue.patchValue(value);
+    public writeValue(value: string) {
+        this.sshKeyValue.setValue(value);
     }
 
     public registerOnChange(fn) {
