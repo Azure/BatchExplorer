@@ -7,8 +7,7 @@ import { BatchAccountService, Theme, ThemeService } from "app/services";
 import {
     UsageDetailsUnsupportedSubscription,
 } from "app/services/azure-consumption";
-import { AzureCostEntry, AzureCostManagementService } from "app/services/azure-cost-management";
-import { ArmResourceUtils } from "app/utils";
+import { AzureCostManagementService, BatchAccountCost } from "app/services/azure-cost-management";
 import { DateTime } from "luxon";
 import { Subject, combineLatest, of } from "rxjs";
 import { catchError, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
@@ -25,8 +24,8 @@ const thisMonthRange = new QuickRange({
 
 const lastMonthRange = new QuickRange({
     label: "Last month",
-    start: today.minus({month: 1}).startOf("month").toJSDate(),
-    end: today.minus({month: 1}).endOf("month").toJSDate(),
+    start: today.minus({ month: 1 }).startOf("month").toJSDate(),
+    end: today.minus({ month: 1 }).endOf("month").toJSDate(),
 });
 
 const thisQuarterRange = new QuickRange({
@@ -129,57 +128,32 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    private _computeDataSets(usages: AzureCostEntry[], theme: Theme) {
-        const groups: StringMap<{ poolId: string, usages: StringMap<{ x: Date, y: number }> }> = {};
-
-        if (usages.length > 0) {
-            this.currency = usages.first().currency;
+    private _computeDataSets(usages: BatchAccountCost, theme: Theme) {
+        if (Object.keys(usages).length > 0) {
+            const arr = Object.values(usages).first();
+            if (arr.length > 0) {
+                this.currency = arr.first().currency;
+            }
         }
 
         let total = 0;
 
-        const days = new Set<string>();
-        for (const usage of usages) {
-            const poolId = usage.resourceId;
-            console.log("PPOl", poolId);
-            if (!(poolId in groups)) {
-                groups[poolId] = {
-                    poolId: ArmResourceUtils.getAccountNameFromResourceId(usage.resourceId),
-                    usages: {},
-                };
-            }
-            const isoDate = usage.date.toISOString();
-            days.add(isoDate);
-            if (isoDate in groups[poolId].usages) {
-                groups[poolId].usages[isoDate].y += usage.preTaxCost;
-            } else {
-                groups[poolId].usages[isoDate] = {
-                    x: usage.date,
-                    y: usage.preTaxCost,
-                };
-            }
-
-            total += usage.preTaxCost;
-        }
-
-        for (const { usages } of Object.values(groups)) {
-            for (const day of days) {
-                if (!(day in usages)) {
-                    usages[day] = {
-                        x: new Date(day),
-                        y: 0,
-                    };
-                }
+        for (const usagesPerPool of Object.values(usages)) {
+            for (const usage of usagesPerPool) {
+                total += usage.preTaxCost;
             }
         }
+
         this.total = total.toFixed(2);
-        this.datasets = Object.values(groups).map((data, i) => {
+        this.datasets = Object.entries(usages).map(([poolId, usagesPerPool], i) => {
             const color = theme.chartColors.get(i);
             return {
-                label: data.poolId,
+                label: poolId,
                 backgroundColor: color,
                 borderColor: color,
-                data: Object.values(data.usages).sortBy(x => x.x),
+                data: Object.values(usagesPerPool).map((x) => {
+                    return { x: x.date, y: x.preTaxCost };
+                }),
             };
         });
         this._setChartOptions();

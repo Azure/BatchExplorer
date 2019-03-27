@@ -14,8 +14,9 @@ export interface AzureCostEntry {
     preTaxCost: number;
     date: Date;
     currency: string;
-    resourceId: string;
 }
+
+export type BatchAccountCost = StringMap<AzureCostEntry[]>;
 
 interface AzureCostAggregation {
 
@@ -86,7 +87,7 @@ function costManagementUrl(scope: string) {
 export class AzureCostManagementService {
     constructor(private accountService: BatchAccountService, private azure: AzureHttpService) { }
 
-    public getCost(timeRange: TimeRange): Observable<AzureCostEntry[]> {
+    public getCost(timeRange: TimeRange): Observable<BatchAccountCost> {
         return this.accountService.currentAccount.pipe(
             take(1),
             tap((account) => {
@@ -104,7 +105,7 @@ export class AzureCostManagementService {
 
     public getCostFor(
         subscription: ArmSubscription, accountId: string, timeRange: TimeRange,
-    ): Observable<AzureCostEntry[]> {
+    ): Observable<BatchAccountCost> {
 
         const subId = ArmResourceUtils.getSubscriptionIdFromResourceId(accountId);
         const resourceGroup = ArmResourceUtils.getResourceGroupFromResourceId(accountId);
@@ -118,7 +119,7 @@ export class AzureCostManagementService {
         );
     }
 
-    private _processQueryResponse(accountId: string, response: QueryResult): AzureCostEntry[] {
+    private _processQueryResponse(accountId: string, response: QueryResult): BatchAccountCost {
         const columnIndexes = {
             cost: null,
             date: null,
@@ -147,22 +148,62 @@ export class AzureCostManagementService {
         for (const [key, index] of Object.entries(columnIndexes)) {
             if (index === null) {
                 log.error(`Failed to retrieve column index for ${key}`, response.properties.columns);
-                return [];
+                return {};
             }
         }
 
-        return response.properties.rows.filter((row) => {
+        const rows = response.properties.rows.filter((row) => {
             // Filter empty meters
             return row[columnIndexes.resourceId]
                 || row[columnIndexes.cost] !== 0;
         }).map((row) => {
             return {
                 preTaxCost: row[columnIndexes.cost],
-                date: this._parseDate(row[columnIndexes.date]),
+                date: row[columnIndexes.date],
                 currency: row[columnIndexes.currency],
                 resourceId: row[columnIndexes.resourceId],
             };
         }).filter(entry => entry.resourceId.toLowerCase().startsWith(accountId.toLowerCase()));
+
+        return this._buildResponseFromRows(rows);
+    }
+
+    private _buildResponseFromRows(rows: Array<{
+        date: number, preTaxCost: number, currency: string, resourceId: string,
+    }>) {
+        const poolMap: StringMap<{ [key: number]: AzureCostEntry }> = {};
+        const days = new Set<number>();
+        for (const row of rows) {
+            const poolId = ArmResourceUtils.getAccountNameFromResourceId(row.resourceId);
+            if (!(poolId in poolMap)) {
+                poolMap[poolId] = {};
+            }
+            if (!days.has(row.date)) {
+                days.add(row.date);
+            }
+            poolMap[poolId][row.date] = {
+                preTaxCost: row.preTaxCost,
+                date: this._parseDate(row.date),
+                currency: row.currency,
+            };
+        }
+        for (const map of Object.values(poolMap)) {
+            for (const day of days) {
+                if (!(day in map)) {
+                    map[day] = {
+                        preTaxCost: 0,
+                        date: this._parseDate(day),
+                        currency: "",
+                    };
+                }
+            }
+        }
+
+        const result: StringMap<AzureCostEntry[]> = {};
+        for (const [poolId, map] of Object.entries(poolMap)) {
+            result[poolId] = Object.values(map).sortBy(x => x.date);
+        }
+        return result;
     }
 
     private _parseDate(date: number) {
