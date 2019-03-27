@@ -29,7 +29,18 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
     public notificationService: NotificationService;
     public params: TParams = {} as TParams;
 
-    public commands: Array<EntityCommand<TEntity, any>>;
+    public set commands(commands: Array<EntityCommand<TEntity, any>>) {
+        this._commands = commands;
+        const map = {};
+        for (const command of commands) {
+            map[command.name] = command;
+        }
+        this._commandMap = map;
+    }
+    public get commands() { return this._commands; }
+
+    private _commands: Array<EntityCommand<TEntity, any>>;
+    private _commandMap: StringMap<EntityCommand<TEntity, any>>;
 
     constructor(private injector: Injector, public typeName: string, public config: EntityCommandsConfig = {}) {
         this.notificationService = injector.get(NotificationService);
@@ -97,6 +108,10 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
                 });
             });
         return new ContextMenu(menuItems);
+    }
+
+    public getCommandById(id: string): EntityCommand<TEntity, any> | null {
+        return this._commandMap[id] || null;
     }
 
     protected command<T extends EntityCommand<TEntity, any>>(type: Type<T>): T {

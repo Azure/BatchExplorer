@@ -56,7 +56,7 @@ export class SidebarBookmarksComponent implements OnDestroy {
     }
 
     public referenceTitle(reference: SidebarRef<any>) {
-        const title = reference.component.title;
+        const title = reference.component && reference.component.title;
         if (title) {
             return title;
         } else {
