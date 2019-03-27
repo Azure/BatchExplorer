@@ -173,7 +173,7 @@ export class AzureCostManagementService {
         }
         return {
             totalForPeriod: total,
-            currency: currency || "?",
+            currency: currency || "",
             pools: result,
         };
     }
@@ -182,7 +182,7 @@ export class AzureCostManagementService {
         return DateTime.fromFormat(date.toString(), "yyyyLLdd").toJSDate();
     }
 
-    private _buildQuery(timeRange: TimeRange): AzureCostQuery {
+    private _buildQuery(timeRange: TimeRange, resourceIds: string[] = []): AzureCostQuery {
         return {
             type: "Usage",
             timeframe: "Custom",
@@ -216,11 +216,6 @@ export class AzureCostManagementService {
                         Operator: "In",
                         Values: ["Microsoft.Batch/batchaccounts", "Microsoft.Batch/batchaccounts/batchpools"],
                     },
-                    // Dimensions: {
-                    //     Name: "ResourceId",
-                    //     Operator: "In",
-                    //     Values: [accountId],
-                    // },
                 },
             },
         };
