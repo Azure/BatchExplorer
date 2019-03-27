@@ -8,6 +8,7 @@ import {
     UsageDetailsUnsupportedSubscription,
 } from "app/services/azure-consumption";
 import { AzureCostEntry, AzureCostManagementService } from "app/services/azure-cost-management";
+import { ArmResourceUtils } from "app/utils";
 import { DateTime } from "luxon";
 import { Subject, combineLatest, of } from "rxjs";
 import { catchError, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
@@ -129,7 +130,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     }
 
     private _computeDataSets(usages: AzureCostEntry[], theme: Theme) {
-        const groups: StringMap<{ meter: string, usages: StringMap<{ x: Date, y: number }> }> = {};
+        const groups: StringMap<{ poolId: string, usages: StringMap<{ x: Date, y: number }> }> = {};
 
         if (usages.length > 0) {
             this.currency = usages.first().currency;
@@ -139,20 +140,20 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
 
         const days = new Set<string>();
         for (const usage of usages) {
-            const meterId = usage.meter;
-
-            if (!(meterId in groups)) {
-                groups[meterId] = {
-                    meter: usage.meter,
+            const poolId = usage.resourceId;
+            console.log("PPOl", poolId);
+            if (!(poolId in groups)) {
+                groups[poolId] = {
+                    poolId: ArmResourceUtils.getAccountNameFromResourceId(usage.resourceId),
                     usages: {},
                 };
             }
             const isoDate = usage.date.toISOString();
             days.add(isoDate);
-            if (isoDate in groups[meterId].usages) {
-                groups[meterId].usages[isoDate].y += usage.preTaxCost;
+            if (isoDate in groups[poolId].usages) {
+                groups[poolId].usages[isoDate].y += usage.preTaxCost;
             } else {
-                groups[meterId].usages[isoDate] = {
+                groups[poolId].usages[isoDate] = {
                     x: usage.date,
                     y: usage.preTaxCost,
                 };
@@ -175,7 +176,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         this.datasets = Object.values(groups).map((data, i) => {
             const color = theme.chartColors.get(i);
             return {
-                label: data.meter,
+                label: data.poolId,
                 backgroundColor: color,
                 borderColor: color,
                 data: Object.values(data.usages).sortBy(x => x.x),

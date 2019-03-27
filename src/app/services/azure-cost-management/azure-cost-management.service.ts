@@ -12,7 +12,6 @@ import { BatchAccountService } from "../batch-account";
 
 export interface AzureCostEntry {
     preTaxCost: number;
-    meter: string;
     date: Date;
     currency: string;
     resourceId: string;
@@ -124,8 +123,6 @@ export class AzureCostManagementService {
             cost: null,
             date: null,
             resourceId: null,
-            meterCategory: null,
-            meterSubCategory: null,
             currency: null,
         };
 
@@ -139,12 +136,6 @@ export class AzureCostManagementService {
                     break;
                 case CostManagementDimensions.ResourceId:
                     columnIndexes.resourceId = index;
-                    break;
-                case CostManagementDimensions.MeterSubCategory:
-                    columnIndexes.meterSubCategory = index;
-                    break;
-                case CostManagementDimensions.MeterCategory:
-                    columnIndexes.meterCategory = index;
                     break;
                 case "Currency":
                     columnIndexes.currency = index;
@@ -162,15 +153,12 @@ export class AzureCostManagementService {
 
         return response.properties.rows.filter((row) => {
             // Filter empty meters
-            return row[columnIndexes.meterCategory] !== ""
-                || row[columnIndexes.meterSubCategory] !== ""
-                || row[columnIndexes.resourceId]
+            return row[columnIndexes.resourceId]
                 || row[columnIndexes.cost] !== 0;
         }).map((row) => {
             return {
                 preTaxCost: row[columnIndexes.cost],
                 date: this._parseDate(row[columnIndexes.date]),
-                meter: `${row[columnIndexes.meterCategory]} (${row[columnIndexes.meterSubCategory]})`,
                 currency: row[columnIndexes.currency],
                 resourceId: row[columnIndexes.resourceId],
             };
@@ -207,14 +195,6 @@ export class AzureCostManagementService {
                     {
                         type: "Dimension",
                         name: CostManagementDimensions.ResourceId,
-                    },
-                    {
-                        type: "Dimension",
-                        name: CostManagementDimensions.MeterSubCategory,
-                    },
-                    {
-                        type: "Dimension",
-                        name: CostManagementDimensions.MeterCategory,
                     },
                 ],
                 filter: {
