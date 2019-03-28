@@ -11,9 +11,12 @@ import {
 } from "app/services/azure-consumption";
 import { AzureCostManagementService, BatchPoolCost } from "app/services/azure-cost-management";
 import { BehaviorSubject, Subject, combineLatest, of } from "rxjs";
-import { catchError, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
+import { catchError, filter, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 
 import "./pool-cost-card.scss";
+
+// Date before when pool cost might be missing: April 1st 2019
+const partialDataDate = new Date(2019, 3, 1).getTime();
 
 @Component({
     selector: "bl-pool-cost-card",
@@ -39,6 +42,9 @@ export class PoolCostCardComponent implements OnInit, OnChanges, OnDestroy {
     ];
 
     public timeRange = new FormControl<TimeRange>(QuickRanges.thisMonthRange);
+    public loading: boolean = false;
+    // If the start time is less than april 1st 2019 billing was done per account not per pool
+    public showPartialDataWarning: boolean = false;
 
     private _poolId = new BehaviorSubject<string | null>(null);
     private _destroy = new Subject();
@@ -64,10 +70,18 @@ export class PoolCostCardComponent implements OnInit, OnChanges, OnDestroy {
             }),
         );
         const obs = combineLatest(
-            this.timeRange.valueChanges.pipe(startWith(this.timeRange.value)),
+            this.timeRange.valueChanges.pipe(
+                startWith(this.timeRange.value),
+                tap((range) => {
+                    this.showPartialDataWarning = range.start.getTime() < partialDataDate;
+                    this.changeDetector.markForCheck();
+                }),
+            ),
             currentAccountObs,
         ).pipe(
             switchMap(([timeRange, _]: [TimeRange, ArmBatchAccount]) => {
+                this.loading = true;
+                this.changeDetector.markForCheck();
                 return this.costService.getCost(timeRange).pipe(
                     catchError((error) => {
                         if (error instanceof UsageDetailsUnsupportedSubscription) {
@@ -79,6 +93,10 @@ export class PoolCostCardComponent implements OnInit, OnChanges, OnDestroy {
                         return of(null);
                     }),
                 );
+            }),
+            tap(() => {
+                this.loading = false;
+                this.changeDetector.markForCheck();
             }),
         );
 
@@ -114,6 +132,9 @@ export class PoolCostCardComponent implements OnInit, OnChanges, OnDestroy {
         if (!poolCost) {
             this.total = "0";
             this.datasets = [];
+            if (!this.currency) {
+                this.currency = "USD";
+            }
             return;
         }
         this.currency = currency;
