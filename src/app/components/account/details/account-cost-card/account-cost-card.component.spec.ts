@@ -45,7 +45,6 @@ const costs: BatchAccountCost = {
             ],
         },
     },
-
 };
 
 @Component({
@@ -54,6 +53,7 @@ const costs: BatchAccountCost = {
 })
 class FakeTimeRangePickerComponent extends MockControlValueAccessorComponent<TimeRange | null> {
     @Input() public quickRanges: QuickRange[];
+    @Input() public showLabel = true;
 }
 
 @Component({

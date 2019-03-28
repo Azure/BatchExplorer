@@ -8,7 +8,7 @@ import {
 import { ChartsModule, QuickRange, TimeRange } from "@batch-flask/ui";
 import { ArmBatchAccount, ArmSubscription, LocalBatchAccount } from "app/models";
 import { BatchAccountService, Theme, ThemeService } from "app/services";
-import { AzureCostManagementService } from "app/services/azure-cost-management";
+import { AzureCostManagementService, BatchAccountCost } from "app/services/azure-cost-management";
 import { BehaviorSubject, of } from "rxjs";
 import { PoolCostCardComponent } from "./pool-cost-card.component";
 
@@ -22,14 +22,30 @@ const day2 = new Date(2019, 1, 2);
 const day3 = new Date(2019, 1, 3);
 const day4 = new Date(2019, 1, 4);
 
-const costs = [
-    { preTaxCost: 1, date: day1, meter: "virtual machines (a series)", currency: "USD" },
-    { preTaxCost: 1.5, date: day2, meter: "virtual machines (a series)", currency: "USD" },
-    { preTaxCost: 8, date: day3, meter: "virtual machines (a series)", currency: "USD" },
-    { preTaxCost: 39, date: day3, meter: "virtual machines (d series)", currency: "USD" },
-    { preTaxCost: 3.8, date: day4, meter: "virtual machines (a series)", currency: "USD" },
-    { preTaxCost: 27, date: day4, meter: "virtual machines (d series)", currency: "USD" },
-];
+const costs: BatchAccountCost = {
+    currency: "USD",
+    totalForPeriod: 54.3,
+    pools: {
+        pool1: {
+            totalForPeriod: 34,
+            costs: [
+                { preTaxCost: 1, date: day1 },
+                { preTaxCost: 1.5, date: day2 },
+                { preTaxCost: 8, date: day3 },
+                { preTaxCost: 3.8, date: day4 },
+            ],
+        },
+        pool2: {
+            totalForPeriod: 66,
+            costs: [
+                { preTaxCost: 0, date: day1 },
+                { preTaxCost: 0, date: day2 },
+                { preTaxCost: 39, date: day3 },
+                { preTaxCost: 27, date: day4 },
+            ],
+        },
+    },
+};
 
 @Component({
     selector: "bl-time-range-picker", template: "",
@@ -37,16 +53,19 @@ const costs = [
 })
 class FakeTimeRangePickerComponent extends MockControlValueAccessorComponent<TimeRange | null> {
     @Input() public quickRanges: QuickRange[];
+    @Input() public showLabel = true;
 }
 
 @Component({
-    template: `<bl-pool-cost-card></bl-pool-cost-card>`,
+    template: `<bl-pool-cost-card [poolId]="poolId"></bl-pool-cost-card>`,
 })
 class TestComponent {
+    public poolId = "pool1";
 }
 
 describe("AccountCostCardComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
+    let testComponent: TestComponent;
     let component: PoolCostCardComponent;
     let de: DebugElement;
 
@@ -92,12 +111,13 @@ describe("AccountCostCardComponent", () => {
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
-        de = fixture.debugElement.query(By.css("bl-account-cost-card"));
+        testComponent = fixture.componentInstance;
+        de = fixture.debugElement.query(By.css("bl-pool-cost-card"));
         component = de.componentInstance;
         fixture.detectChanges();
     });
 
-    it("shows unsupported message when using local batch account", () => {
+    xit("shows unsupported message when using local batch account", () => {
         accountServiceSpy.currentAccount.next(new LocalBatchAccount({ name: "foo" }));
         fixture.detectChanges();
         const info = de.query(By.css(".unavailable-info"));
@@ -107,31 +127,35 @@ describe("AccountCostCardComponent", () => {
     });
 
     it("builds the datasets", () => {
-        const dataset1 = {
-            label: "virtual machines (a series)",
-            backgroundColor: "#003f5c",
-            borderColor: "#003f5c",
-            data: [
-                { x: day1, y: 1 },
-                { x: day2, y: 1.5 },
-                { x: day3, y: 8 },
-                { x: day4, y: 3.8 },
-            ],
-        };
-        const dataset2 = {
-            label: "virtual machines (d series)",
-            backgroundColor: "#aa3939",
-            borderColor: "#aa3939",
-            data: [
-                { x: day1, y: 0 },
-                { x: day2, y: 0 },
-                { x: day3, y: 39 },
-                { x: day4, y: 27 },
-            ],
-        };
         expect(component.datasets).toEqual([
-            dataset1,
-            dataset2,
+            {
+                label: "pool1",
+                backgroundColor: "#4caf50",
+                borderColor: "#4caf50",
+                data: [
+                    { x: day1, y: 1 },
+                    { x: day2, y: 1.5 },
+                    { x: day3, y: 8 },
+                    { x: day4, y: 3.8 },
+                ],
+            },
+        ]);
+    });
+
+    it("builds the datasets for another pool", () => {
+        testComponent.poolId = "pool1";
+        expect(component.datasets).toEqual([
+            {
+                label: "pool1",
+                backgroundColor: "#4caf50",
+                borderColor: "#4caf50",
+                data: [
+                    { x: day1, y: 1 },
+                    { x: day2, y: 1.5 },
+                    { x: day3, y: 8 },
+                    { x: day4, y: 3.8 },
+                ],
+            },
         ]);
     });
 });
