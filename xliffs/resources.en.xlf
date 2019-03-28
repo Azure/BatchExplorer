@@ -32,7 +32,7 @@
         <source>Daily cost</source>
       </trans-unit>
       <trans-unit id="account-cost-card.total">
-        <source>Total for billing period</source>
+        <source>Total for period</source>
       </trans-unit>
       <trans-unit id="account-cost-card.unsupportedSubscription">
         <source>Cannot view cost for this subscription(Unsupported)</source>
