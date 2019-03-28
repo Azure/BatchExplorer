@@ -2,6 +2,7 @@
 
 ### Bug fixes
 * Job schedule with autopool fail to display [\#1995](https://github.com/Azure/BatchExplorer/issues/1995)
+* Pool graphs One Day and One Week option both have value of 1 day [\#1999](https://github.com/Azure/BatchExplorer/issues/1999)
 
 # 2.0.2
 
