@@ -135,6 +135,11 @@ export class SettingsComponent implements OnDestroy {
                 repo: selection.githubDataRepo,
                 branch: selection.githubDataBranch,
             },
+            microsoftPortfolio: {
+                repo: selection.microsoftPortfolioRepo,
+                branch: selection.microsoftPortfolioBranch,
+                path: selection.microsoftPortfolioPath,
+            },
             jobTemplate: {
                 defaultOutputFileGroup: selection.defaultOutputFileGroup,
             },
