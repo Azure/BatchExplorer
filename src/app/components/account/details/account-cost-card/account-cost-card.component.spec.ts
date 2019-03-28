@@ -8,7 +8,7 @@ import {
 import { ChartsModule, QuickRange, TimeRange } from "@batch-flask/ui";
 import { ArmBatchAccount, ArmSubscription, LocalBatchAccount } from "app/models";
 import { BatchAccountService, Theme, ThemeService } from "app/services";
-import { AzureCostManagementService } from "app/services/azure-cost-management";
+import { AzureCostManagementService, BatchAccountCost } from "app/services/azure-cost-management";
 import { BehaviorSubject, of } from "rxjs";
 import { AccountCostCardComponent } from "./account-cost-card.component";
 
@@ -22,14 +22,31 @@ const day2 = new Date(2019, 1, 2);
 const day3 = new Date(2019, 1, 3);
 const day4 = new Date(2019, 1, 4);
 
-const costs = [
-    { preTaxCost: 1, date: day1, meter: "virtual machines (a series)", currency: "USD" },
-    { preTaxCost: 1.5, date: day2, meter: "virtual machines (a series)", currency: "USD" },
-    { preTaxCost: 8, date: day3, meter: "virtual machines (a series)", currency: "USD" },
-    { preTaxCost: 39, date: day3, meter: "virtual machines (d series)", currency: "USD" },
-    { preTaxCost: 3.8, date: day4, meter: "virtual machines (a series)", currency: "USD" },
-    { preTaxCost: 27, date: day4, meter: "virtual machines (d series)", currency: "USD" },
-];
+const costs: BatchAccountCost = {
+    currency: "USD",
+    totalForPeriod: 54.3,
+    pools: {
+        pool1: {
+            totalForPeriod: 34,
+            costs: [
+                { preTaxCost: 1, date: day1 },
+                { preTaxCost: 1.5, date: day2 },
+                { preTaxCost: 8, date: day3 },
+                { preTaxCost: 3.8, date: day4 },
+            ],
+        },
+        pool2: {
+            totalForPeriod: 66,
+            costs: [
+                { preTaxCost: 0, date: day1 },
+                { preTaxCost: 0, date: day2 },
+                { preTaxCost: 39, date: day3 },
+                { preTaxCost: 27, date: day4 },
+            ],
+        },
+    },
+
+};
 
 @Component({
     selector: "bl-time-range-picker", template: "",
@@ -108,7 +125,7 @@ describe("AccountCostCardComponent", () => {
 
     it("builds the datasets", () => {
         const dataset1 = {
-            label: "virtual machines (a series)",
+            label: "pool1",
             backgroundColor: "#003f5c",
             borderColor: "#003f5c",
             data: [
@@ -119,7 +136,7 @@ describe("AccountCostCardComponent", () => {
             ],
         };
         const dataset2 = {
-            label: "virtual machines (d series)",
+            label: "pool2",
             backgroundColor: "#aa3939",
             borderColor: "#aa3939",
             data: [
