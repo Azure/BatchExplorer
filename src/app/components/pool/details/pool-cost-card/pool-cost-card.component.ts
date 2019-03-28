@@ -113,17 +113,22 @@ export class PoolCostCardComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _computeDataSets(currency: string, poolId: string, poolCost: BatchPoolCost | null, theme: Theme) {
+        if (!poolCost) {
+            this.total = "0";
+            this.datasets = [];
+            return;
+        }
         this.currency = currency;
         this.total = poolCost.totalForPeriod.toFixed(2);
 
         const color = theme.chartColors.get(2);
         this.datasets = [{
-                label: poolId,
-                backgroundColor: color,
-                borderColor: color,
-                data: poolCost ? poolCost.costs.map((x) => {
-                    return { x: x.date, y: x.preTaxCost };
-                }) : [],
+            label: poolId,
+            backgroundColor: color,
+            borderColor: color,
+            data: poolCost ? poolCost.costs.map((x) => {
+                return { x: x.date, y: x.preTaxCost };
+            }) : [],
         }];
         this._setChartOptions();
         this.changeDetector.markForCheck();
@@ -163,6 +168,8 @@ export class PoolCostCardComponent implements OnInit, OnChanges, OnDestroy {
                     time: {
                         unit: "day",
                         unitStepSize: 1,
+                        min: this.timeRange.value.start.toISOString(),
+                        max: this.timeRange.value.end.toISOString(),
                     },
                 }],
             },
