@@ -9,9 +9,14 @@ const sub1 = new ArmSubscription({
 });
 
 const accountId = "/subscriptions/sub-1/resourcegroups/rg1/providers/Microsoft.Batch/batchaccounts/acc-1";
+const pool1Id = `${accountId}/batchpools/pool1`;
+const pool2Id = `${accountId}/batchpools/pool2`;
 
-const date1 = new Date(2019, 1);
-const date2 = new Date(2019, 2);
+const day1 = new Date(2019, 1, 1);
+const day2 = new Date(2019, 1, 2);
+const day3 = new Date(2019, 1, 3);
+const day4 = new Date(2019, 1, 4);
+const day5 = new Date(2019, 1, 5);
 
 describe("AzureCostManagementService", () => {
     let service: AzureCostManagementService;
@@ -38,19 +43,16 @@ describe("AzureCostManagementService", () => {
                             { name: "PreTaxCost" },
                             { name: "UsageDate" },
                             { name: "ResourceId" },
-                            { name: "MeterCategory" },
-                            { name: "MeterSubCategory" },
                             { name: "Currency" },
                         ],
                         rows: [
-                            [1, 20190201, accountId, "virtual machines", "a series", "USD"],
-                            [79, 20190201, accountId, "virtual machines", "d series", "USD"],
-                            [1.5, 20190202, accountId, "virtual machines", "a series", "USD"],
-                            [12, 20190202, accountId, "virtual machines", "d series", "USD"],
-                            [8, 20190203, accountId, "virtual machines", "a series", "USD"],
-                            [39, 20190203, accountId, "virtual machines", "d series", "USD"],
-                            [3.8, 20190204, accountId, "virtual machines", "a series", "USD"],
-                            [27, 20190204, accountId, "virtual machines", "d series", "USD"],
+                            [1, 20190201, pool1Id, "USD"],
+                            [1.5, 20190202, pool1Id, "USD"],
+                            [8, 20190203, pool1Id, "USD"],
+                            [39, 20190203, pool2Id, "USD"],
+                            [3.8, 20190204, pool1Id, "USD"],
+                            [27, 20190204, pool2Id, "USD"],
+                            [42, 20190205, pool2Id, "USD"],
                         ],
                     },
                 });
@@ -61,22 +63,36 @@ describe("AzureCostManagementService", () => {
     });
 
     it("get the usage for the current account", async () => {
-        const usages = await service.getCost(new TimeRange({start: date1, end: date2})).toPromise();
-        const resourceId = accountId;
-        const currency = "USD";
+        const usages = await service.getCost(new TimeRange({ start: day1, end: day4 })).toPromise();
         expect(azureHttpSpy.post).toHaveBeenCalledTimes(1);
         expect(azureHttpSpy.post).toHaveBeenCalledWith(sub1,
             "/subscriptions/sub-1/resourceGroups/rg1/providers/Microsoft.CostManagement/query",
             jasmine.anything());
-        expect(usages).toEqual([
-            { preTaxCost: 1, date: new Date(2019, 1, 1), meter: "virtual machines (a series)", currency, resourceId },
-            { preTaxCost: 79, date: new Date(2019, 1, 1), meter: "virtual machines (d series)", currency, resourceId },
-            { preTaxCost: 1.5, date: new Date(2019, 1, 2), meter: "virtual machines (a series)", currency, resourceId },
-            { preTaxCost: 12, date: new Date(2019, 1, 2), meter: "virtual machines (d series)", currency, resourceId },
-            { preTaxCost: 8, date: new Date(2019, 1, 3), meter: "virtual machines (a series)", currency, resourceId },
-            { preTaxCost: 39, date: new Date(2019, 1, 3), meter: "virtual machines (d series)", currency, resourceId },
-            { preTaxCost: 3.8, date: new Date(2019, 1, 4), meter: "virtual machines (a series)", currency, resourceId },
-            { preTaxCost: 27, date: new Date(2019, 1, 4), meter: "virtual machines (d series)", currency, resourceId },
-        ]);
+        expect(usages).toEqual({
+            currency: "USD",
+            totalForPeriod: 122.3,
+            pools: {
+                pool1: {
+                    totalForPeriod: 14.3,
+                    costs: [
+                        { preTaxCost: 1, date: day1 },
+                        { preTaxCost: 1.5, date: day2 },
+                        { preTaxCost: 8, date: day3 },
+                        { preTaxCost: 3.8, date: day4 },
+                        { preTaxCost: 0, date: day5 },
+                    ],
+                },
+                pool2: {
+                    totalForPeriod: 108,
+                    costs: [
+                        { preTaxCost: 0, date: day1 },
+                        { preTaxCost: 0, date: day2 },
+                        { preTaxCost: 39, date: day3 },
+                        { preTaxCost: 27, date: day4 },
+                        { preTaxCost: 42, date: day5 },
+                    ],
+                },
+            },
+        });
     });
 });

@@ -122,6 +122,7 @@ export const ExternalLinks = {
     privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
     submitIssue: "https://github.com/Azure/BatchExplorer/issues",
     subscriptionUrl: "https://portal.azure.com/#resource/subscriptions/{0}/overview",
+    costManagementUrl: "https://ms.portal.azure.com/#resource/subscriptions/{0}/costByResource",
     resourceGroupUrl: "https://portal.azure.com/#resource/subscriptions/{0}/resourceGroups/{1}/overview",
 };
 

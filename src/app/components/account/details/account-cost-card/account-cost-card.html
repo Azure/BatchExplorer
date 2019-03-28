@@ -22,3 +22,6 @@
 <div *ngIf="unsupportedSubscription" class="unavailable-info">
     {{'account-cost-card.unsupportedSubscription' | i18n}}
 </div>
+<a class="more-on-portal" [href]="costMangementUrl" target="_blank" *ngIf="costMangementUrl">
+    View more
+</a>

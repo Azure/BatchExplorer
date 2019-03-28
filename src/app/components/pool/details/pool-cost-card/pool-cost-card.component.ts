@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit,
+} from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { QuickRange, QuickRanges, TimeRange } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
@@ -7,19 +9,22 @@ import { BatchAccountService, Theme, ThemeService } from "app/services";
 import {
     UsageDetailsUnsupportedSubscription,
 } from "app/services/azure-consumption";
-import { AzureCostManagementService, BatchAccountCost } from "app/services/azure-cost-management";
-import { Constants } from "common";
-import { Subject, combineLatest, of } from "rxjs";
-import { catchError, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
+import { AzureCostManagementService, BatchPoolCost } from "app/services/azure-cost-management";
+import { BehaviorSubject, Subject, combineLatest, of } from "rxjs";
+import { catchError, filter, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 
-import "./account-cost-card.scss";
+import "./pool-cost-card.scss";
+
+// Date before when pool cost might be missing: April 1st 2019
+const partialDataDate = new Date(2019, 3, 1).getTime();
 
 @Component({
-    selector: "bl-account-cost-card",
-    templateUrl: "account-cost-card.html",
+    selector: "bl-pool-cost-card",
+    templateUrl: "pool-cost-card.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountCostCardComponent implements OnInit, OnDestroy {
+export class PoolCostCardComponent implements OnInit, OnChanges, OnDestroy {
+    @Input() public poolId: string;
 
     public chartType = "bar";
     public datasets: Chart.ChartDataSets[] = [];
@@ -37,9 +42,11 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     ];
 
     public timeRange = new FormControl<TimeRange>(QuickRanges.thisMonthRange);
+    public loading: boolean = false;
+    // If the start time is less than april 1st 2019 billing was done per account not per pool
+    public showPartialDataWarning: boolean = false;
 
-    public costMangementUrl: string | null = null;
-
+    private _poolId = new BehaviorSubject<string | null>(null);
     private _destroy = new Subject();
 
     constructor(
@@ -53,11 +60,9 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         const currentAccountObs = this.accountService.currentAccount.pipe(
             filter((account) => {
                 this.isArmBatchAccount = account instanceof ArmBatchAccount;
-                if (account instanceof ArmBatchAccount) {
-                    this.costMangementUrl = Constants.ExternalLinks.costManagementUrl.format(account.subscriptionId);
+                if (this.isArmBatchAccount) {
                     this._updateUsages();
                 } else {
-                    this.costMangementUrl = null;
                     this.unsupportedSubscription = false;
                 }
                 this.changeDetector.markForCheck();
@@ -65,10 +70,18 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
             }),
         );
         const obs = combineLatest(
-            this.timeRange.valueChanges.pipe(startWith(this.timeRange.value)),
+            this.timeRange.valueChanges.pipe(
+                startWith(this.timeRange.value),
+                tap((range) => {
+                    this.showPartialDataWarning = range.start.getTime() < partialDataDate;
+                    this.changeDetector.markForCheck();
+                }),
+            ),
             currentAccountObs,
         ).pipe(
-            switchMap(([timeRange, _]) => {
+            switchMap(([timeRange, _]: [TimeRange, ArmBatchAccount]) => {
+                this.loading = true;
+                this.changeDetector.markForCheck();
                 return this.costService.getCost(timeRange).pipe(
                     catchError((error) => {
                         if (error instanceof UsageDetailsUnsupportedSubscription) {
@@ -81,21 +94,30 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                     }),
                 );
             }),
+            tap(() => {
+                this.loading = false;
+                this.changeDetector.markForCheck();
+            }),
         );
 
-        combineLatest(obs, this.themeService.currentTheme).pipe(
+        combineLatest(obs, this._poolId, this.themeService.currentTheme).pipe(
             takeUntil(this._destroy),
         ).subscribe({
-            next: ([usages, theme]) => {
-                if (usages) {
+            next: ([accountCost, poolId, theme]) => {
+                if (accountCost) {
                     this.unsupportedSubscription = false;
-                    this._computeDataSets(usages, theme);
+                    this._computeDataSets(accountCost.currency, poolId, accountCost.pools[poolId], theme);
                 }
             },
         });
         this._setChartOptions();
     }
 
+    public ngOnChanges(changes) {
+        if (changes.poolId) {
+            this._poolId.next(this.poolId);
+        }
+    }
     public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();
@@ -106,21 +128,27 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    private _computeDataSets(accountCost: BatchAccountCost, theme: Theme) {
-        this.currency = accountCost.currency;
-        this.total = accountCost.totalForPeriod.toFixed(2);
+    private _computeDataSets(currency: string, poolId: string, poolCost: BatchPoolCost | null, theme: Theme) {
+        if (!poolCost) {
+            this.total = "0";
+            this.datasets = [];
+            if (!this.currency) {
+                this.currency = "USD";
+            }
+            return;
+        }
+        this.currency = currency;
+        this.total = poolCost.totalForPeriod.toFixed(2);
 
-        this.datasets = Object.entries(accountCost.pools).map(([poolId, poolCost], i) => {
-            const color = theme.chartColors.get(i);
-            return {
-                label: poolId,
-                backgroundColor: color,
-                borderColor: color,
-                data: poolCost.costs.map((x) => {
-                    return { x: x.date, y: x.preTaxCost };
-                }),
-            };
-        });
+        const color = theme.chartColors.get(2);
+        this.datasets = [{
+            label: poolId,
+            backgroundColor: color,
+            borderColor: color,
+            data: poolCost ? poolCost.costs.map((x) => {
+                return { x: x.date, y: x.preTaxCost };
+            }) : [],
+        }];
         this._setChartOptions();
         this.changeDetector.markForCheck();
     }
@@ -129,6 +157,9 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         this.options = {
             responsive: true,
             maintainAspectRatio: false,
+            legend: {
+                display: false,
+            },
             elements: {
                 point: {
                     radius: 0,
@@ -142,10 +173,6 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
             },
             scales: {
                 yAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: this.currency,
-                    },
                     stacked: true,
                     ticks: {
                         beginAtZero: true,
@@ -154,6 +181,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                 xAxes: [{
                     stacked: true,
                     type: "time",
+                    display: false,
                     distribution: "linear",
                     position: "bottom",
                     time: {
@@ -161,9 +189,6 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                         unitStepSize: 1,
                         min: this.timeRange.value.start.toISOString(),
                         max: this.timeRange.value.end.toISOString(),
-                        displayFormats: {
-                            day: "MMM DD",
-                        },
                     },
                 }],
             },
