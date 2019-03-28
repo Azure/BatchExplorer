@@ -32,6 +32,7 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
         QuickRanges.last90Days,
     ];
 
+    @Input() public showLabel = true;
     public customRange: FormGroup;
     public current: QuickRange | TimeRangeAttributes | null = null;
     public currentLabel: string;
@@ -139,11 +140,14 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
         return `${startStr} - ${endStr}`;
     }
 
-    private _prettyPoint(date: Date | Duration | undefined | null) {
+    private _prettyPoint(date: Date | Duration | (() => Date) | undefined | null) {
         if (!date) { return "Now"; }
 
         if (date instanceof Duration) {
             return DateTime.local().plus(date).toRelative();
+        }
+        if (date instanceof Function) {
+            date = date();
         }
 
         return DateUtils.prettyDate(DateTime.fromJSDate(date).setZone(this._currentTimezone));

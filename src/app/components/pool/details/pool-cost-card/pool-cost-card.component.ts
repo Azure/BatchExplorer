@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { QuickRange, TimeRange } from "@batch-flask/ui";
+import { QuickRange, QuickRanges, TimeRange } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
 import { BatchAccountService, Theme, ThemeService } from "app/services";
@@ -10,19 +10,10 @@ import {
     UsageDetailsUnsupportedSubscription,
 } from "app/services/azure-consumption";
 import { AzureCostManagementService, BatchPoolCost } from "app/services/azure-cost-management";
-import { DateTime } from "luxon";
 import { BehaviorSubject, Subject, combineLatest, of } from "rxjs";
 import { catchError, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
 
 import "./pool-cost-card.scss";
-
-const today = DateTime.local();
-
-const thisMonthRange = new QuickRange({
-    label: "This month",
-    start: today.startOf("month").toJSDate(),
-    end: today.endOf("month").toJSDate(),
-});
 
 @Component({
     selector: "bl-pool-cost-card",
@@ -40,7 +31,14 @@ export class PoolCostCardComponent implements OnInit, OnChanges, OnDestroy {
     public unsupportedSubscription: boolean;
     public total: string;
 
-    public timeRange = new FormControl<TimeRange>(thisMonthRange);
+    public quickRanges: QuickRange[] = [
+        QuickRanges.thisMonthRange,
+        QuickRanges.lastMonthRange,
+        QuickRanges.thisQuarterRange,
+        QuickRanges.thisYearRange,
+    ];
+
+    public timeRange = new FormControl<TimeRange>(QuickRanges.thisMonthRange);
 
     private _poolId = new BehaviorSubject<string | null>(null);
     private _destroy = new Subject();

@@ -11,4 +11,8 @@ bl-pool-cost-card {
     .total {
         text-align: center;
     }
+
+    .fa-warning {
+        color: $warn-color;
+    }
 }

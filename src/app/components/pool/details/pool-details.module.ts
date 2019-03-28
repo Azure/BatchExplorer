@@ -1,4 +1,5 @@
 import { NgModule } from "@angular/core";
+import { TimeRangePickerModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { ResourceFilesPropertiesModule } from "app/components/common";
 import { JobActionModule } from "app/components/job/action";
@@ -28,6 +29,7 @@ const components = [
         NodeBrowseModule,
         StartTaskModule,
         ResourceFilesPropertiesModule,
+        TimeRangePickerModule,
     ],
 })
 export class PoolDetailsModule {

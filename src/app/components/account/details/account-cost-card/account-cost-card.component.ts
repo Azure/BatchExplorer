@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { QuickRange, TimeRange } from "@batch-flask/ui";
+import { QuickRange, QuickRanges, TimeRange } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
 import { BatchAccountService, Theme, ThemeService } from "app/services";
@@ -8,37 +8,10 @@ import {
     UsageDetailsUnsupportedSubscription,
 } from "app/services/azure-consumption";
 import { AzureCostManagementService, BatchAccountCost } from "app/services/azure-cost-management";
-import { DateTime } from "luxon";
 import { Subject, combineLatest, of } from "rxjs";
 import { catchError, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
 
 import "./account-cost-card.scss";
-
-const today = DateTime.local();
-
-const thisMonthRange = new QuickRange({
-    label: "This month",
-    start: today.startOf("month").toJSDate(),
-    end: today.endOf("month").toJSDate(),
-});
-
-const lastMonthRange = new QuickRange({
-    label: "Last month",
-    start: today.minus({ month: 1 }).startOf("month").toJSDate(),
-    end: today.minus({ month: 1 }).endOf("month").toJSDate(),
-});
-
-const thisQuarterRange = new QuickRange({
-    label: "This quarter",
-    start: today.startOf("quarter").toJSDate(),
-    end: today.endOf("quarter").toJSDate(),
-});
-
-const thisYearRange = new QuickRange({
-    label: "This year",
-    start: today.startOf("year").toJSDate(),
-    end: today.endOf("year").toJSDate(),
-});
 
 @Component({
     selector: "bl-account-cost-card",
@@ -56,13 +29,13 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     public total: string;
 
     public quickRanges: QuickRange[] = [
-        thisMonthRange,
-        lastMonthRange,
-        thisQuarterRange,
-        thisYearRange,
+        QuickRanges.thisMonthRange,
+        QuickRanges.lastMonthRange,
+        QuickRanges.thisQuarterRange,
+        QuickRanges.thisYearRange,
     ];
 
-    public timeRange = new FormControl<TimeRange>(thisMonthRange);
+    public timeRange = new FormControl<TimeRange>(QuickRanges.thisMonthRange);
 
     private _destroy = new Subject();
 
@@ -181,6 +154,8 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                     time: {
                         unit: "day",
                         unitStepSize: 1,
+                        min: this.timeRange.value.start.toISOString(),
+                        max: this.timeRange.value.end.toISOString(),
                         displayFormats: {
                             day: "MMM DD",
                         },
