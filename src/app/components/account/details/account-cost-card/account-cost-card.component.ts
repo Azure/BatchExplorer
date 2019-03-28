@@ -8,6 +8,7 @@ import {
     UsageDetailsUnsupportedSubscription,
 } from "app/services/azure-consumption";
 import { AzureCostManagementService, BatchAccountCost } from "app/services/azure-cost-management";
+import { Constants } from "common";
 import { Subject, combineLatest, of } from "rxjs";
 import { catchError, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
 
@@ -37,6 +38,8 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
 
     public timeRange = new FormControl<TimeRange>(QuickRanges.thisMonthRange);
 
+    public costMangementUrl: string | null = null;
+
     private _destroy = new Subject();
 
     constructor(
@@ -50,9 +53,11 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         const currentAccountObs = this.accountService.currentAccount.pipe(
             filter((account) => {
                 this.isArmBatchAccount = account instanceof ArmBatchAccount;
-                if (this.isArmBatchAccount) {
+                if (account instanceof ArmBatchAccount) {
+                    this.costMangementUrl = Constants.ExternalLinks.costManagementUrl.format(account.subscriptionId);
                     this._updateUsages();
                 } else {
+                    this.costMangementUrl = null;
                     this.unsupportedSubscription = false;
                 }
                 this.changeDetector.markForCheck();

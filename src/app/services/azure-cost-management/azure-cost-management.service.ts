@@ -214,7 +214,11 @@ export class AzureCostManagementService {
                     Dimensions: {
                         Name: "ResourceType",
                         Operator: "In",
-                        Values: ["Microsoft.Batch/batchaccounts", "Microsoft.Batch/batchaccounts/batchpools"],
+                        Values: [
+                            "Microsoft.Batch/batchaccounts",
+                            "Microsoft.Batch/batchaccounts/batchpools",
+                            "Microsoft.Batch/batchaccounts/pools",
+                        ],
                     },
                 },
             },
