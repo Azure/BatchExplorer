@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { Command, CommandRegistry, KeyBindingsService } from "@batch-flask/core";
+import { Command, CommandRegistry, KeyBinding, KeyBindingsService } from "@batch-flask/core";
 import { Subject, combineLatest } from "rxjs";
-import { filter, map, startWith, takeUntil } from "rxjs/operators";
+import { map, startWith, takeUntil } from "rxjs/operators";
+import { TableConfig } from "../table";
 
 import "./keybindings.scss";
 
@@ -36,6 +37,11 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
 
     public displayedCommands: DisplayedCommand[] = [];
     public search = new FormControl("");
+
+    public tableConfig: TableConfig = {
+        activable: false,
+    };
+
     private _destroy = new Subject();
     constructor(private keybindingService: KeyBindingsService, private changeDetector: ChangeDetectorRef) {
 
@@ -89,10 +95,9 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
     private _processSearch(query: string): KeyBindingFilter {
         const trimed = query.trim();
         const match = SEARCH_BY_BINDING_REGEX.exec(trimed);
-        console.log("MAtch", match);
         if (match) {
             return {
-                binding: match[1],
+                binding: KeyBinding.parse(match[1]).hash,
             };
         }
         return {

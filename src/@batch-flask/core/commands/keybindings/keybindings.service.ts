@@ -59,7 +59,7 @@ export class KeyBindingsService {
         const map = new Map<string, Command[]>();
         const commands = CommandRegistry.getCommands();
         for (const command of commands) {
-            const binding = parseKeyBinding(command.binding);
+            const binding = KeyBinding.parse(command.binding);
             if (map.has(binding.hash)) {
                 map.get(binding.hash)!.push(command);
             } else {
@@ -71,16 +71,15 @@ export class KeyBindingsService {
     }
 }
 
-export function parseKeyBinding(value: string): KeyBinding {
-    const keys = value.replace(/ /g, "").toLowerCase().split("+");
-    return new KeyBinding(keys);
-}
-
 export class KeyBinding {
+    public static parse(value: string): KeyBinding {
+        const keys = value.replace(/ /g, "").toLowerCase().split("+");
+        return new KeyBinding(keys);
+    }
+
     public readonly mods: KeyModifier[] = [];
     public readonly keys: string[] = [];
     public readonly hash: string;
-
     constructor(keys: string[]) {
         const result = this._extractModifiers(keys);
         this.keys = result.keys;
