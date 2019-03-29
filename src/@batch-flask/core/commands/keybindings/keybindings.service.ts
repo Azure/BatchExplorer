@@ -1,15 +1,18 @@
 import { Injectable, Injector } from "@angular/core";
 import { KeyModifier } from "@batch-flask/core/keys";
 import { log } from "@batch-flask/utils";
-import { Subscription, fromEvent, merge } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, fromEvent, merge } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { Command, CommandRegistry } from "../command-registry";
 import { CommandContext, ContextService } from "../context";
 
 @Injectable({ providedIn: "root" })
 export class KeyBindingsService {
-    private _keyBindings = new Map<string, Command[]>();
-    constructor(private contextService: ContextService, private injector: Injector) { }
+    public keyBindings: Observable<Map<string, Command[]>>;
+    private _keyBindings = new BehaviorSubject(new Map<string, Command[]>());
+    constructor(private contextService: ContextService, private injector: Injector) {
+        this.keyBindings = this._keyBindings.asObservable();
+    }
 
     public listen(): Subscription {
         this._loadCommands();
@@ -36,8 +39,8 @@ export class KeyBindingsService {
     }
 
     public dispatch(binding: KeyBinding, context: CommandContext): boolean {
-        if (this._keyBindings.has(binding.hash)) {
-            const commands = this._keyBindings.get(binding.hash)!;
+        if (this._keyBindings.value.has(binding.hash)) {
+            const commands = this._keyBindings.value.get(binding.hash)!;
             const matchingCommands = commands.filter(x => x.when == null || x.when(context));
             if (matchingCommands.length === 0) {
                 return false;
@@ -53,15 +56,18 @@ export class KeyBindingsService {
     }
 
     private _loadCommands() {
+        const map = new Map<string, Command[]>();
         const commands = CommandRegistry.getCommands();
         for (const command of commands) {
             const binding = parseKeyBinding(command.binding);
-            if (this._keyBindings.has(binding.hash)) {
-                this._keyBindings.get(binding.hash)!.push(command);
+            if (map.has(binding.hash)) {
+                map.get(binding.hash)!.push(command);
             } else {
-                this._keyBindings.set(binding.hash, [command]);
+                map.set(binding.hash, [command]);
             }
         }
+
+        this._keyBindings.next(map);
     }
 }
 

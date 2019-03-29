@@ -1,0 +1,28 @@
+<div class="header">
+    <bl-form-field>
+        <input blInput class="search" placeholder="Filter" [formControl]="search">
+    </bl-form-field>
+</div>
+
+<div class="content">
+    <bl-table [data]="displayedCommands">
+        <bl-column name="description">
+            <div *blHeadCellDef>Command</div>
+            <div *blCellDef="let command">{{command.description}}</div>
+        </bl-column>
+
+        <bl-column name="state">
+            <div *blHeadCellDef>Shortcut</div>
+            <div *blCellDef="let command">{{command.binding}}</div>
+        </bl-column>
+
+        <bl-column name="isDefault">
+            <div *blHeadCellDef>Source</div>
+            <div *blCellDef="let command">{{command.isDefault ? "Default" : "User"}}</div>
+        </bl-column>
+    </bl-table>
+
+    <div *ngIf="displayedCommands.length === 0" class="no-commands-with-filter">
+        No commands match the filter
+    </div>
+</div>

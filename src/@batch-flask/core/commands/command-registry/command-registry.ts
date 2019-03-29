@@ -4,6 +4,7 @@ import { CommandContext } from "../context";
 
 export interface Command {
     id: string;
+    description: string;
     binding: string;
     when?: (context: CommandContext) => boolean;
     execute: (injector: Injector, context: CommandContext) => Promise<any> | void;

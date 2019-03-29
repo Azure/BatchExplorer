@@ -21,17 +21,20 @@ describe("Keybinding service", () => {
 
         CommandRegistry.register({
             id: "foo",
+            description: "My foo command",
             binding: "ctrl+f",
             execute: cmd1Spy,
         });
         CommandRegistry.register({
             id: "bar",
+            description: "My bar command",
             binding: "ctrl+b",
             when: (context) => context.has("barAllowed"),
             execute: cmd2Spy,
         });
         CommandRegistry.register({
             id: "barAlt",
+            description: "My other command",
             binding: "ctrl+b",
             when: (context) => !context.has("barAllowed"),
             execute: cmd3Spy,

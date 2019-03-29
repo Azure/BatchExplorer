@@ -5,6 +5,7 @@ import { log } from "@batch-flask/utils";
 
 CommandRegistry.register({
     id: "list.deleteItem",
+    description: "Delete item in list",
     binding: "delete",
     when: (context: CommandContext) => {
         return context.has("list.focused");
@@ -26,6 +27,7 @@ CommandRegistry.register({
 
 CommandRegistry.register({
     id: "list.selectAll",
+    description: "Select all items in list",
     binding: "ctrl+a",
     when: (context: CommandContext) => {
         return context.has("list.focused");

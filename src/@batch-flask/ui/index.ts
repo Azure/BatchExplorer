@@ -14,6 +14,7 @@ export * from "./entity-commands";
 export * from "./file";
 export * from "./form";
 export * from "./i18n";
+export * from "./keybindings";
 export * from "./loading";
 export * from "./metrics-monitor";
 export * from "./notifications";
