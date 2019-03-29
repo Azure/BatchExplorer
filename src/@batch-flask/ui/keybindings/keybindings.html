@@ -1,6 +1,12 @@
 <div class="header">
     <bl-form-field>
-        <input blInput class="search" placeholder="Filter" [formControl]="search">
+        <input *ngIf="!searchByKeyBinding" blInput #searchInput class="search" placeholder="Filter" [formControl]="search">
+        <input *ngIf="searchByKeyBinding" blInput #searchInput class="search" placeholder="Filter" [formControl]="search" (blKeyBindingListener)="updateFilterWithKeyBinding($event)">
+        <div blFormFieldSuffix>
+            <bl-clickable (do)="toggleKeybindingSearch()" class="keybinding-listener-btn" [class.active]="searchByKeyBinding" title="Record keys">
+                <i class="fa fa-keyboard-o"></i>
+            </bl-clickable>
+        </div>
     </bl-form-field>
 </div>
 

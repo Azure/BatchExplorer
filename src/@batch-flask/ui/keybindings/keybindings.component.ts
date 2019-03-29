@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Command, CommandRegistry, KeyBinding, KeyBindingsService } from "@batch-flask/core";
 import { Subject, combineLatest } from "rxjs";
@@ -37,12 +37,16 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
 
     public displayedCommands: DisplayedCommand[] = [];
     public search = new FormControl("");
+    public searchByKeyBinding = false;
 
     public tableConfig: TableConfig = {
         activable: false,
     };
 
     private _destroy = new Subject();
+
+    @ViewChild("searchInput") private _searchEl: ElementRef;
+
     constructor(private keybindingService: KeyBindingsService, private changeDetector: ChangeDetectorRef) {
 
     }
@@ -71,6 +75,28 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
     public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();
+    }
+
+    public toggleKeybindingSearch() {
+        this.searchByKeyBinding = !this.searchByKeyBinding;
+        this.changeDetector.markForCheck();
+
+        if (this.searchByKeyBinding) {
+            this._searchEl.nativeElement.focus();
+        }
+    }
+
+    public updateFilterWithKeyBinding(binding: KeyBinding | null) {
+        if (binding == null) {
+            this.searchByKeyBinding = false;
+            this.changeDetector.markForCheck();
+        } else {
+            if (binding.hash === "") {
+                this.search.setValue("");
+            } else {
+                this.search.setValue(`"${binding.hash}"`);
+            }
+        }
     }
 
     private _buildCommandList(keybindings: Map<string, Command[]>): DisplayedCommand[] {

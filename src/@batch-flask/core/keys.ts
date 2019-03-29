@@ -22,6 +22,7 @@ export enum KeyCode {
     Space = "Space",
     Enter = "Enter",
     Tab = "Tab",
+    Escape = "Escape",
 }
 
 export enum KeyModifier {
