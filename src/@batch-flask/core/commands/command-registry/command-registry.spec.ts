@@ -2,6 +2,7 @@ import { CommandRegistry } from "./command-registry";
 
 const cmd1 = {
     id: "foo",
+    description: "My foo command",
     binding: "ctrl+f",
     execute: () => null,
 };
@@ -24,6 +25,7 @@ describe("CommandRegistry", () => {
         const cmd2 = {
             id: "bar",
             binding: "ctrl+b",
+            description: "My bar command",
             when: (context) => context.has("isFocused"),
             execute: () => null,
         };
@@ -38,6 +40,7 @@ describe("CommandRegistry", () => {
 
         const cmd2 = {
             id: "foo",
+            description: "My bar command",
             binding: "ctrl+b",
             when: (context) => context.has("isFocused"),
             execute: () => null,
