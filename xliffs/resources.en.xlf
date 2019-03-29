@@ -874,6 +874,9 @@
       <trans-unit id="profile-button.about">
         <source>About</source>
       </trans-unit>
+      <trans-unit id="profile-button.keybindings">
+        <source>Keybindings</source>
+      </trans-unit>
       <trans-unit id="profile-button.logout">
         <source>Logout</source>
       </trans-unit>
