@@ -129,7 +129,7 @@ describe("ProfileButtonComponent", () => {
         fixture.detectChanges();
         expect(contextMenuServiceSpy.openMenu).toHaveBeenCalledOnce();
         const items = contextMenuServiceSpy.lastMenu.items;
-        expect(items.length).toBe(12);
+        expect(items.length).toBe(13);
     });
 
     describe("Clicking on the profile", () => {
@@ -137,7 +137,7 @@ describe("ProfileButtonComponent", () => {
             click(clickableEl);
             expect(contextMenuServiceSpy.openMenu).toHaveBeenCalled();
             const items = contextMenuServiceSpy.lastMenu.items;
-            expect(items.length).toEqual(12);
+            expect(items.length).toEqual(13);
 
             expect(items[0] instanceof ContextMenuItem).toBe(true);
             expect((items[0] as ContextMenuItem).label).toEqual("Check for updates");
@@ -147,30 +147,33 @@ describe("ProfileButtonComponent", () => {
             expect(items[2] instanceof ContextMenuItem).toBe(true);
             expect((items[2] as ContextMenuItem).label).toEqual("profile-button.settings");
 
-            expect(items[3] instanceof MultiContextMenuItem).toBe(true);
-            expect((items[3] as MultiContextMenuItem).label).toEqual("Language (Preview)");
+            expect(items[3] instanceof ContextMenuItem).toBe(true);
+            expect((items[3] as ContextMenuItem).label).toEqual("profile-button.keybindings");
 
-            expect(items[4] instanceof ContextMenuItem).toBe(true);
-            expect((items[4] as ContextMenuItem).label).toEqual("profile-button.thirdPartyNotices");
+            expect(items[4] instanceof MultiContextMenuItem).toBe(true);
+            expect((items[4] as MultiContextMenuItem).label).toEqual("Language (Preview)");
 
             expect(items[5] instanceof ContextMenuItem).toBe(true);
-            expect((items[5] as ContextMenuItem).label).toEqual("profile-button.viewLogs");
+            expect((items[5] as ContextMenuItem).label).toEqual("profile-button.thirdPartyNotices");
 
             expect(items[6] instanceof ContextMenuItem).toBe(true);
-            expect((items[6] as ContextMenuItem).label).toEqual("profile-button.report");
+            expect((items[6] as ContextMenuItem).label).toEqual("profile-button.viewLogs");
 
             expect(items[7] instanceof ContextMenuItem).toBe(true);
-            expect((items[7] as ContextMenuItem).label).toEqual("profile-button.about");
+            expect((items[7] as ContextMenuItem).label).toEqual("profile-button.report");
 
-            expect(items[8] instanceof ContextMenuSeparator).toBe(true);
+            expect(items[8] instanceof ContextMenuItem).toBe(true);
+            expect((items[8] as ContextMenuItem).label).toEqual("profile-button.about");
 
-            expect(items[9] instanceof ContextMenuItem).toBe(true);
-            expect((items[9] as ContextMenuItem).label).toEqual("profile-button.viewTheme");
+            expect(items[9] instanceof ContextMenuSeparator).toBe(true);
 
-            expect(items[10] instanceof ContextMenuSeparator).toBe(true);
+            expect(items[10] instanceof ContextMenuItem).toBe(true);
+            expect((items[10] as ContextMenuItem).label).toEqual("profile-button.viewTheme");
 
-            expect(items[11] instanceof ContextMenuItem).toBe(true);
-            expect((items[11] as ContextMenuItem).label).toEqual("profile-button.logout");
+            expect(items[11] instanceof ContextMenuSeparator).toBe(true);
+
+            expect(items[12] instanceof ContextMenuItem).toBe(true);
+            expect((items[12] as ContextMenuItem).label).toEqual("profile-button.logout");
         });
 
         it("check for updates and show update notification when there is one", fakeAsync(() => {
