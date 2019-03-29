@@ -112,7 +112,7 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
                     return false;
                 }
             }
-            if (filter.binding && command.binding !== filter.binding) {
+            if (filter.binding && !command.binding.includes(filter.binding)) {
                 return false;
 
             }
