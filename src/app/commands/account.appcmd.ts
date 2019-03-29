@@ -4,6 +4,7 @@ import { CommandRegistry } from "@batch-flask/core";
 
 CommandRegistry.register({
     id: "account.gotoHome",
+    description: "Navigate to account dashboard",
     binding: "ctrl+alt+h",
     execute: (injector: Injector) => {
         injector.get(Router).navigate(["/accounts"]);

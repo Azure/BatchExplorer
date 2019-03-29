@@ -13,7 +13,7 @@ import {
     USER_SERVICE,
 } from "@batch-flask/core";
 import { ElectronRendererModule } from "@batch-flask/electron";
-import { BaseModule } from "@batch-flask/ui";
+import { BaseModule, KeyBindingsModule } from "@batch-flask/ui";
 import { AppComponent } from "app/app.component";
 import { AccountModule } from "app/components/account/account.module";
 import { FileModule } from "app/components/file/file.module";
@@ -62,6 +62,7 @@ const modules = [
             preloadingStrategy: PreloadAllModules,
         }),
         BaseModule,
+        KeyBindingsModule,
         HttpClientModule,
         ...modules,
     ],

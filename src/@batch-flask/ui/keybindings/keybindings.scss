@@ -1,0 +1,22 @@
+@import "app/styles/variables";
+
+bl-keybindings {
+    height: $contentview-height;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        padding: 10px;
+        .search {
+            width: 100%;
+        }
+    }
+
+    .content {
+        flex: 1;
+    }
+
+    .no-commands-with-filter {
+        text-align: center;
+    }
+}

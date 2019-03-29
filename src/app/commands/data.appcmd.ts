@@ -4,6 +4,7 @@ import { CommandRegistry } from "@batch-flask/core";
 
 CommandRegistry.register({
     id: "data.gotoHome",
+    description: "Navigate to data",
     binding: "ctrl+alt+d",
     execute: (injector: Injector) => {
         injector.get(Router).navigate(["/data"]);
