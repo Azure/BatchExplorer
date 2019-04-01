@@ -136,7 +136,6 @@ export class KeyBindingsService implements OnDestroy {
                 map.set(binding.hash, [command]);
             }
         }
-        console.log("Bindings, ", bindings, map);
         return map;
     }
 }
