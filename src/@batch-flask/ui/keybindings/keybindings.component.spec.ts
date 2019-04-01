@@ -268,7 +268,5 @@ describe("KeyBindingsComponent", () => {
             closeSubject.complete();
             expect(keyBindingServiceSpy.updateKeyBinding).not.toHaveBeenCalled();
         });
-
     });
-
 });
