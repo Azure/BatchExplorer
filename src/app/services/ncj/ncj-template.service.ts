@@ -20,7 +20,6 @@ const maxRecentSubmissions = 10;
 
 export interface RecentSubmissionParams {
     name: string;
-    displayName?: string;
     jobTemplate?: NcjJobTemplate;
     poolTemplate?: NcjPoolTemplate;
     mode: NcjTemplateMode;
