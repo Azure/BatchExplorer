@@ -1,13 +1,14 @@
-import { Subscription } from "rxjs";
+import { BehaviorSubject, Subscription } from "rxjs";
 import { keydown } from "test/utils/helpers";
 import { CommandRegistry } from "../command-registry";
 import { ContextService } from "../context";
-import { KeyBindingsService } from "./keybindings.service";
+import { KeyBinding, KeyBindingsService } from "./keybindings.service";
 
 describe("Keybinding service", () => {
     let injectorSpy;
     let contextService: ContextService;
     let service: KeyBindingsService;
+    let userKeyBindingServiceSpy;
 
     let cmd1Spy: jasmine.Spy;
     let cmd2Spy: jasmine.Spy;
@@ -44,8 +45,12 @@ describe("Keybinding service", () => {
             get: () => "foo",
         };
 
+        userKeyBindingServiceSpy = {
+            bindings: new BehaviorSubject([]),
+        };
+
         contextService = new ContextService();
-        service = new KeyBindingsService(contextService, injectorSpy);
+        service = new KeyBindingsService(contextService, userKeyBindingServiceSpy, injectorSpy);
         sub = service.listen();
     });
 
@@ -56,7 +61,7 @@ describe("Keybinding service", () => {
 
     it("runs no shortcut if it doesn't match ", () => {
         keydown(document, "ctrl");
-        keydown(document, "o");
+        keydown(document, "k");
 
         expect(cmd1Spy).not.toHaveBeenCalled();
         expect(cmd2Spy).not.toHaveBeenCalled();
@@ -91,4 +96,31 @@ describe("Keybinding service", () => {
         expect(cmd2Spy).toHaveBeenCalledOnce();
         expect(cmd3Spy).not.toHaveBeenCalled();
     });
+
+    describe("when user change the key bindings", () => {
+        beforeEach(() => {
+            userKeyBindingServiceSpy.bindings.next([
+                { commandId: "foo", binding: KeyBinding.parse("ctrl+t") },
+            ]);
+        });
+
+        it("calls with the new shortcut", () => {
+            keydown(document, "ctrl");
+            keydown(document, "t");
+
+            expect(cmd1Spy).toHaveBeenCalled();
+            expect(cmd2Spy).not.toHaveBeenCalledOnce();
+            expect(cmd3Spy).not.toHaveBeenCalled();
+        });
+
+        it("doest NOT call with the old shortcut", () => {
+            keydown(document, "ctrl");
+            keydown(document, "f");
+
+            expect(cmd1Spy).not.toHaveBeenCalled();
+            expect(cmd2Spy).not.toHaveBeenCalledOnce();
+            expect(cmd3Spy).not.toHaveBeenCalled();
+        });
+    });
+
 });

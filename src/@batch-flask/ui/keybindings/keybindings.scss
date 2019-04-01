@@ -19,4 +19,10 @@ bl-keybindings {
     .no-commands-with-filter {
         text-align: center;
     }
+
+    .keybinding-listener-btn {
+        &.active {
+            color: $primary-color;
+        }
+    }
 }

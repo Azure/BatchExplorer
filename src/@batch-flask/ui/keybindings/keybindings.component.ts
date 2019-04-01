@@ -1,9 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild,
+} from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Command, CommandRegistry, KeyBinding, KeyBindingsService } from "@batch-flask/core";
+import { SanitizedError } from "@batch-flask/utils";
 import { Subject, combineLatest } from "rxjs";
 import { map, startWith, takeUntil } from "rxjs/operators";
+import { DialogService } from "../dialogs";
 import { TableConfig } from "../table";
+import { KeyBindingPickerDialogComponent } from "./keybinding-picker";
 
 import "./keybindings.scss";
 
@@ -37,13 +42,22 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
 
     public displayedCommands: DisplayedCommand[] = [];
     public search = new FormControl("");
+    public searchByKeyBinding = false;
 
     public tableConfig: TableConfig = {
-        activable: false,
+        activable: true,
     };
 
+    public activeItem = null;
+
     private _destroy = new Subject();
-    constructor(private keybindingService: KeyBindingsService, private changeDetector: ChangeDetectorRef) {
+
+    @ViewChild("searchInput") private _searchEl: ElementRef;
+
+    constructor(
+        private keybindingService: KeyBindingsService,
+        private dialogService: DialogService,
+        private changeDetector: ChangeDetectorRef) {
 
     }
 
@@ -73,7 +87,57 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
         this._destroy.complete();
     }
 
-    private _buildCommandList(keybindings: Map<string, Command[]>): DisplayedCommand[] {
+    public editKeyBinding(commandId: string | null) {
+        this.activeItem = commandId;
+        this.changeDetector.markForCheck();
+        if (!commandId) { return; }
+
+        const command = CommandRegistry.getCommand(commandId);
+        if (!command) {
+            throw new SanitizedError(`Unkown command "${commandId}". This should not have happened`);
+        }
+        const ref = this.dialogService.open(KeyBindingPickerDialogComponent);
+        ref.componentInstance.command = command;
+        ref.afterClosed().subscribe((binding: KeyBinding | null) => {
+            if (binding) {
+                this.keybindingService.updateKeyBinding(commandId, binding).subscribe();
+            }
+
+            this.activeItem = null;
+            this.changeDetector.markForCheck();
+        });
+    }
+
+    public removeUserBinding(commandId: string) {
+        this.keybindingService.resetKeyBinding(commandId).subscribe();
+    }
+
+    public toggleKeybindingSearch() {
+        this.searchByKeyBinding = !this.searchByKeyBinding;
+        this.changeDetector.markForCheck();
+
+        setTimeout(() => {
+            if (this.searchByKeyBinding) {
+                this._searchEl.nativeElement.focus();
+            }
+        });
+    }
+
+    public updateFilterWithKeyBinding(binding: KeyBinding | null) {
+        if (binding == null) {
+            this.searchByKeyBinding = false;
+            this.search.setValue("");
+            this.changeDetector.markForCheck();
+        } else {
+            if (binding.hash === "") {
+                this.search.setValue("");
+            } else {
+                this.search.setValue(`"${binding.hash}"`);
+            }
+        }
+    }
+
+    private _buildCommandList(keybindings: Readonly<Map<string, Command[]>>): DisplayedCommand[] {
         const commands = CommandRegistry.getCommands();
         const commandBindings = new Map<string, string>();
         for (const [key, commands] of keybindings.entries()) {
