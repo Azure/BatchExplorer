@@ -5,9 +5,10 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { CommandRegistry, KeyBindingsService } from "@batch-flask/core";
 import { ElectronTestingModule } from "@batch-flask/electron/testing";
-import { of } from "rxjs";
+import { Subject, of } from "rxjs";
 import { updateInput } from "test/utils/helpers";
-import { FormModule } from "..";
+import { DialogService, FormModule } from "..";
+import { ButtonsModule } from "../buttons";
 import { TableTestingModule } from "../testing";
 import { KeyBindingsComponent } from "./keybindings.component";
 
@@ -57,8 +58,19 @@ describe("KeyBindingsComponent", () => {
     let de: DebugElement;
     let keyBindingServiceSpy;
     let searchEl: DebugElement;
+    let dialogServiceSpy;
+    let ref;
 
     beforeEach(() => {
+        ref = {
+            componentInstance: {
+                command: null,
+            },
+            afterClosed: new Subject(),
+        };
+        dialogServiceSpy = {
+            open: jasmine.createSpy("dialog.open").and.returnValue(ref),
+        };
 
         keyBindingServiceSpy = {
             keyBindings: of(keybindingsMap),
@@ -76,9 +88,11 @@ describe("KeyBindingsComponent", () => {
                 TableTestingModule,
                 ElectronTestingModule,
                 RouterTestingModule,
+                ButtonsModule,
             ],
             declarations: [KeyBindingsComponent, TestComponent],
             providers: [
+                { provide: DialogService, useValue: dialogServiceSpy },
                 { provide: KeyBindingsService, useValue: keyBindingServiceSpy },
             ],
         });
