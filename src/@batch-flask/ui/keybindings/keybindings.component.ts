@@ -3,14 +3,14 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Command, CommandRegistry, KeyBinding, KeyBindingsService } from "@batch-flask/core";
+import { SanitizedError } from "@batch-flask/utils";
 import { Subject, combineLatest } from "rxjs";
 import { map, startWith, takeUntil } from "rxjs/operators";
+import { DialogService } from "../dialogs";
 import { TableConfig } from "../table";
+import { KeyBindingPickerDialogComponent } from "./keybinding-picker";
 
 import "./keybindings.scss";
-import { KeyBindingPickerDialogComponent } from "./keybinding-picker";
-import { DialogService } from "../dialogs";
-import { SanitizedError } from "@batch-flask/utils";
 
 interface DisplayedCommand {
     id: string;
@@ -88,6 +88,8 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
     }
 
     public editKeyBinding(commandId: string | null) {
+        this.activeItem = commandId;
+        this.changeDetector.markForCheck();
         if (!commandId) { return; }
 
         const command = CommandRegistry.getCommand(commandId);
@@ -97,14 +99,13 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
         const ref = this.dialogService.open(KeyBindingPickerDialogComponent);
         ref.componentInstance.command = command;
         ref.afterClosed().subscribe((binding: KeyBinding | null) => {
-            console.log("Picked binding", binding);
             if (binding) {
                 this.keybindingService.updateKeyBinding(commandId, binding).subscribe();
             }
 
             this.activeItem = null;
             this.changeDetector.markForCheck();
-        })
+        });
     }
 
     public removeUserBinding(commandId: string) {

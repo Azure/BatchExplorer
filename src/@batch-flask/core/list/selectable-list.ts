@@ -3,6 +3,7 @@ import { ListSelection } from "./list-selection";
 
 export class SelectableList {
     @Input() public set activeItem(activeItem: string | null) {
+        console.log("Set active", activeItem);
         this.selection = new ListSelection({
             keys: activeItem ? [activeItem] : [],
         });
