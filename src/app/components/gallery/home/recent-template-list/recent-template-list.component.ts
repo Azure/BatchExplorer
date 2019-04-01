@@ -29,7 +29,7 @@ export class RecentTemplateListComponent implements OnDestroy {
 
     @HostListener("window:resize", ["$event"])
     public onResizeEvent(event) {
-        // adjust displayed tempalte name based on window width to keep it in one row
+        // adjust displayed template name based on window width to keep it in one row
         const charcount = window.innerWidth / 4 / 5;
         this.recentSubmissions.forEach(submission => {
             if (submission.name.length - charcount > 0) {
