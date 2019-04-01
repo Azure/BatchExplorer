@@ -1,17 +1,59 @@
-import { Injectable, Injector } from "@angular/core";
+import { Injectable, Injector, OnDestroy } from "@angular/core";
 import { KeyModifier } from "@batch-flask/core/keys";
 import { log } from "@batch-flask/utils";
-import { BehaviorSubject, Observable, Subscription, fromEvent, merge } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subject, Subscription, combineLatest, fromEvent, merge } from "rxjs";
+import { map, publishReplay, refCount, takeUntil, tap } from "rxjs/operators";
 import { Command, CommandRegistry } from "../command-registry";
 import { CommandContext, ContextService } from "../context";
+import { UserBinding, UserKeybindingsService } from "./user-keybindings.service";
 
 @Injectable({ providedIn: "root" })
-export class KeyBindingsService {
-    public keyBindings: Observable<Map<string, Command[]>>;
-    private _keyBindings = new BehaviorSubject(new Map<string, Command[]>());
-    constructor(private contextService: ContextService, private injector: Injector) {
-        this.keyBindings = this._keyBindings.asObservable();
+export class KeyBindingsService implements OnDestroy {
+    public keyBindings: Observable<Readonly<Map<string, Command[]>>>;
+    private _defaultKeyBindings = new BehaviorSubject(Object.freeze(new Map<string, KeyBinding>()));
+    private _current: Readonly<Map<string, Command[]>> = Object.freeze(new Map<string, Command[]>());
+
+    private _destroy = new Subject();
+
+    constructor(
+        private contextService: ContextService,
+        private userKeybindingsService: UserKeybindingsService,
+        private injector: Injector,
+    ) {
+        this.keyBindings = combineLatest(this._defaultKeyBindings, userKeybindingsService.bindings).pipe(
+            map(([defaultBindings, userBindings]) => {
+                const mergedBindings = this._mergeBindings(defaultBindings, userBindings);
+                return Object.freeze(this._processBindings(mergedBindings));
+            }),
+            publishReplay(1),
+            refCount(),
+        );
+
+        this.keyBindings.pipe(
+            takeUntil(this._destroy),
+        ).subscribe((bindings) => {
+            this._current = bindings;
+        });
+    }
+
+    public ngOnDestroy() {
+        this._defaultKeyBindings.complete();
+        this._destroy.next();
+        this._destroy.complete();
+    }
+
+    /**
+     * Update the key binding
+     */
+    public updateKeyBinding(commandId: string, binding: KeyBinding | null) {
+        return this.userKeybindingsService.update(commandId, binding);
+    }
+
+    /**
+     * Update the key binding
+     */
+    public resetKeyBinding(commandId: string) {
+        return this.userKeybindingsService.delete(commandId);
     }
 
     public listen(): Subscription {
@@ -39,8 +81,8 @@ export class KeyBindingsService {
     }
 
     public dispatch(binding: KeyBinding, context: CommandContext): boolean {
-        if (this._keyBindings.value.has(binding.hash)) {
-            const commands = this._keyBindings.value.get(binding.hash)!;
+        if (this._current.has(binding.hash)) {
+            const commands = this._current.get(binding.hash)!;
             const matchingCommands = commands.filter(x => x.when == null || x.when(context));
             if (matchingCommands.length === 0) {
                 return false;
@@ -55,19 +97,47 @@ export class KeyBindingsService {
         return false;
     }
 
+    private _mergeBindings(
+        defaultBindings: Readonly<Map<string, KeyBinding>>,
+        userBindings: UserBinding[]): Map<string, KeyBinding> {
+        const bindings: Map<string, KeyBinding> = new Map(defaultBindings as any);
+        for (const userBinding of userBindings) {
+            if (userBinding.binding) {
+                bindings.set(userBinding.commandId, userBinding.binding);
+            } else {
+                bindings.delete(userBinding.commandId);
+            }
+        }
+
+        return bindings;
+    }
+
     private _loadCommands() {
-        const map = new Map<string, Command[]>();
+        const map = new Map<string, KeyBinding>();
         const commands = CommandRegistry.getCommands();
         for (const command of commands) {
-            const binding = KeyBinding.parse(command.binding);
+            map.set(command.id, KeyBinding.parse(command.binding));
+        }
+
+        this._defaultKeyBindings.next(Object.freeze(map));
+    }
+
+    private _processBindings(bindings: Map<string, KeyBinding>): Map<string, Command[]> {
+        const map = new Map<string, Command[]>();
+        for (const [commandId, binding] of bindings.entries()) {
+            const command = CommandRegistry.getCommand(commandId);
+            if (!command) {
+                log.error(`Command "${commandId}" is not found. This should not happend`);
+                continue;
+            }
             if (map.has(binding.hash)) {
                 map.get(binding.hash)!.push(command);
             } else {
                 map.set(binding.hash, [command]);
             }
         }
-
-        this._keyBindings.next(map);
+        console.log("Bindings, ", bindings, map);
+        return map;
     }
 }
 

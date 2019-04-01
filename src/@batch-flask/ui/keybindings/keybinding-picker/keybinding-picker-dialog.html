@@ -1,0 +1,7 @@
+<bl-form-field>
+    <input blInput
+        placeholder="Press the desired combination of keys and then press ENTER"
+        [formControl]="keybinding"
+        (blKeyBindingListener)="updateKeyBinding($event)"
+    >
+</bl-form-field>

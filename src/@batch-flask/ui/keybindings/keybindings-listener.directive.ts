@@ -15,7 +15,7 @@ export class KeyBindingListenerDirective {
     @HostListener("keydown", ["$event"])
     public handleKeydown(event: KeyboardEvent) {
         if (event.code === KeyCode.Escape) {
-            if (this.binding.hash === "escape") {
+            if (this.binding && this.binding.hash === "escape") {
                 this.output.emit(null);
                 return;
             }

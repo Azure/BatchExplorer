@@ -8,6 +8,9 @@ import { map, startWith, takeUntil } from "rxjs/operators";
 import { TableConfig } from "../table";
 
 import "./keybindings.scss";
+import { KeyBindingPickerDialogComponent } from "./keybinding-picker";
+import { DialogService } from "../dialogs";
+import { SanitizedError } from "@batch-flask/utils";
 
 interface DisplayedCommand {
     id: string;
@@ -42,14 +45,17 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
     public searchByKeyBinding = false;
 
     public tableConfig: TableConfig = {
-        activable: false,
+        activable: true,
     };
 
     private _destroy = new Subject();
 
     @ViewChild("searchInput") private _searchEl: ElementRef;
 
-    constructor(private keybindingService: KeyBindingsService, private changeDetector: ChangeDetectorRef) {
+    constructor(
+        private keybindingService: KeyBindingsService,
+        private dialogService: DialogService,
+        private changeDetector: ChangeDetectorRef) {
 
     }
 
@@ -79,6 +85,25 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
         this._destroy.complete();
     }
 
+    public editKeyBinding(commandId: string) {
+        const command = CommandRegistry.getCommand(commandId);
+        if (!command) {
+            throw new SanitizedError(`Unkown command "${commandId}". This should not have happened`);
+        }
+        const ref = this.dialogService.open(KeyBindingPickerDialogComponent);
+        ref.componentInstance.command = command;
+        ref.afterClosed().subscribe((binding: KeyBinding | null) => {
+            console.log("Picked binding", binding);
+            if (binding) {
+                this.keybindingService.updateKeyBinding(commandId, binding).subscribe();
+            }
+        })
+    }
+
+    public removeUserBinding(commandId: string) {
+        this.keybindingService.resetKeyBinding(commandId).subscribe();
+    }
+
     public toggleKeybindingSearch() {
         this.searchByKeyBinding = !this.searchByKeyBinding;
         this.changeDetector.markForCheck();
@@ -104,7 +129,7 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
         }
     }
 
-    private _buildCommandList(keybindings: Map<string, Command[]>): DisplayedCommand[] {
+    private _buildCommandList(keybindings: Readonly<Map<string, Command[]>>): DisplayedCommand[] {
         const commands = CommandRegistry.getCommands();
         const commandBindings = new Map<string, string>();
         for (const [key, commands] of keybindings.entries()) {
