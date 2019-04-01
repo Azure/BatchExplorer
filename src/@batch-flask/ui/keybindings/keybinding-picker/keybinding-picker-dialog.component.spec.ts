@@ -38,7 +38,7 @@ const keybindingsMap = new Map()
     .set("ctrl+f", [fooCmd])
     .set("ctrl+b", [barCmd, barAltCmd]);
 
-fdescribe("KeyBindingPickerDialogComponent", () => {
+describe("KeyBindingPickerDialogComponent", () => {
     let fixture: ComponentFixture<KeyBindingPickerDialogComponent>;
     let component: KeyBindingPickerDialogComponent;
     let keyBindingServiceSpy;
