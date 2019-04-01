@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild,
+} from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Command, CommandRegistry, KeyBinding, KeyBindingsService } from "@batch-flask/core";
 import { Subject, combineLatest } from "rxjs";
@@ -81,14 +83,17 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
         this.searchByKeyBinding = !this.searchByKeyBinding;
         this.changeDetector.markForCheck();
 
-        if (this.searchByKeyBinding) {
-            this._searchEl.nativeElement.focus();
-        }
+        setTimeout(() => {
+            if (this.searchByKeyBinding) {
+                this._searchEl.nativeElement.focus();
+            }
+        });
     }
 
     public updateFilterWithKeyBinding(binding: KeyBinding | null) {
         if (binding == null) {
             this.searchByKeyBinding = false;
+            this.search.setValue("");
             this.changeDetector.markForCheck();
         } else {
             if (binding.hash === "") {

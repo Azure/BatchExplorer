@@ -14,15 +14,11 @@ export class KeyBindingListenerDirective {
 
     @HostListener("keydown", ["$event"])
     public handleKeydown(event: KeyboardEvent) {
-        if (event.code === KeyCode.Escape && this._keys.size === 0) {
-            if (this.binding.hash === "") {
+        if (event.code === KeyCode.Escape) {
+            if (this.binding.hash === "escape") {
                 this.output.emit(null);
-            } else {
-                this._keys.clear();
-                this._computeAndEmitBinding();
-
+                return;
             }
-            return;
         }
         this._keys.add(event.key.toLowerCase());
         this._computeAndEmitBinding();
