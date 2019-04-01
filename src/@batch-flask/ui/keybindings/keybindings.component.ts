@@ -48,6 +48,8 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
         activable: true,
     };
 
+    public activeItem = null;
+
     private _destroy = new Subject();
 
     @ViewChild("searchInput") private _searchEl: ElementRef;
@@ -85,7 +87,9 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
         this._destroy.complete();
     }
 
-    public editKeyBinding(commandId: string) {
+    public editKeyBinding(commandId: string | null) {
+        if (!commandId) { return; }
+
         const command = CommandRegistry.getCommand(commandId);
         if (!command) {
             throw new SanitizedError(`Unkown command "${commandId}". This should not have happened`);
@@ -97,6 +101,9 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
             if (binding) {
                 this.keybindingService.updateKeyBinding(commandId, binding).subscribe();
             }
+
+            this.activeItem = null;
+            this.changeDetector.markForCheck();
         })
     }
 

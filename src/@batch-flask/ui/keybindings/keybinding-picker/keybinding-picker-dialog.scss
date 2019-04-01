@@ -3,4 +3,10 @@
 bl-keybinding-picker-dialog {
     display: block;
     padding: 10px;
+
+
+    .found-duplicates {
+        color: $secondary-text;
+        margin-top: 10px;
+    }
 }

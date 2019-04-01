@@ -1,7 +1,13 @@
 <bl-form-field>
-    <input blInput
-        placeholder="Press the desired combination of keys and then press ENTER"
-        [formControl]="keybinding"
-        (blKeyBindingListener)="updateKeyBinding($event)"
-    >
+    <input blInput placeholder="Press the desired combination of keys and then press ENTER" [formControl]="keybinding"
+        (blKeyBindingListener)="updateKeyBinding($event)">
 </bl-form-field>
+
+<div class="found-duplicates" *ngIf="commandAlreadyUsed">
+    <div>{{otherCommands.length}} existing command has this binding</div>
+    <ul class="list-point">
+        <li *ngFor="let command of otherCommands">
+            {{command.description}}
+        </li>
+    </ul>
+</div>

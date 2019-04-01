@@ -14,7 +14,7 @@
 </div>
 
 <div class="content">
-    <bl-table [data]="displayedCommands" [config]="tableConfig" (activeItemChange)="editKeyBinding($event)">
+    <bl-table [data]="displayedCommands" [config]="tableConfig" [activeItem]="activeItem" (activeItemChange)="editKeyBinding($event)">
         <bl-column name="description">
             <div *blHeadCellDef>Command</div>
             <div *blCellDef="let command">{{command.description}}</div>
