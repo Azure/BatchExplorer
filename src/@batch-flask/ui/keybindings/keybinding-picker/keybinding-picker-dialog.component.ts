@@ -56,6 +56,7 @@ export class KeyBindingPickerDialogComponent implements OnDestroy {
         this._destroy.next();
         this._destroy.complete();
     }
+
     public updateKeyBinding(binding: KeyBinding | null) {
         if (binding) {
             if (binding.hash === "enter" && this.binding && this.binding.hash !== "") {
@@ -66,5 +67,9 @@ export class KeyBindingPickerDialogComponent implements OnDestroy {
         } else {
             this.dialogRef.close(null);
         }
+    }
+
+    public trackCommand(_: number, command: Command) {
+        return command.id;
     }
 }

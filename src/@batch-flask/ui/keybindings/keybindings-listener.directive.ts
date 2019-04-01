@@ -38,7 +38,6 @@ export class KeyBindingListenerDirective {
 
     @HostListener("blur") public handleBlur() {
         this._keys.clear();
-        console.log("Blur");
     }
 
     private _computeAndEmitBinding() {

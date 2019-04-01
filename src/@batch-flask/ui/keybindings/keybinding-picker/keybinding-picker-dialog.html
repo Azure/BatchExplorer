@@ -6,7 +6,7 @@
 <div class="found-duplicates" *ngIf="commandAlreadyUsed">
     <div>{{otherCommands.length}} existing command has this binding</div>
     <ul class="list-point">
-        <li *ngFor="let command of otherCommands">
+        <li *ngFor="let command of otherCommands;trackBy: trackCommand">
             {{command.description}}
         </li>
     </ul>
