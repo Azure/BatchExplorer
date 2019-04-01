@@ -6,11 +6,12 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { CommandRegistry, KeyBinding, KeyBindingsService } from "@batch-flask/core";
 import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { Subject, of } from "rxjs";
-import { click, updateInput } from "test/utils/helpers";
+import { click, keydown, keyup, updateInput } from "test/utils/helpers";
 import { DialogService, FormModule } from "..";
 import { ButtonsModule } from "../buttons";
 import { TableTestingModule } from "../testing";
 import { KeyBindingPickerDialogComponent } from "./keybinding-picker";
+import { KeyBindingListenerDirective } from "./keybindings-listener.directive";
 import { KeyBindingsComponent } from "./keybindings.component";
 
 @Component({
@@ -45,20 +46,21 @@ const barAltCmd = {
 const overrideCmd = {
     id: "override",
     description: "My command override",
-    binding: "ctrl+d",
+    binding: "alt+d",
     execute: () => null,
 };
 
 const keybindingsMap = new Map()
     .set("ctrl+f", [fooCmd])
     .set("ctrl+b", [barCmd, barAltCmd])
-    .set("ctrl+o", [overrideCmd]);
+    .set("alt+o", [overrideCmd]);
 
 describe("KeyBindingsComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let de: DebugElement;
     let keyBindingServiceSpy;
     let searchEl: DebugElement;
+    let recordKeyBtn: DebugElement;
     let dialogServiceSpy;
     let ref;
     let closeSubject: Subject<KeyBinding | null>;
@@ -95,7 +97,7 @@ describe("KeyBindingsComponent", () => {
                 RouterTestingModule,
                 ButtonsModule,
             ],
-            declarations: [KeyBindingsComponent, TestComponent],
+            declarations: [KeyBindingsComponent, KeyBindingListenerDirective, TestComponent],
             providers: [
                 { provide: DialogService, useValue: dialogServiceSpy },
                 { provide: KeyBindingsService, useValue: keyBindingServiceSpy },
@@ -106,6 +108,7 @@ describe("KeyBindingsComponent", () => {
         fixture.detectChanges();
 
         searchEl = de.query(By.css("input.search"));
+        recordKeyBtn = de.query(By.css("bl-clickable.keybinding-listener-btn"));
     });
 
     afterEach(() => {
@@ -146,7 +149,7 @@ describe("KeyBindingsComponent", () => {
 
         const row3Cells = getCells(rows[3]);
         expect(row3Cells[0].nativeElement.textContent).toContain("My command override");
-        expect(row3Cells[1].nativeElement.textContent).toContain("ctrl+o");
+        expect(row3Cells[1].nativeElement.textContent).toContain("alt+o");
         expect(row3Cells[2].nativeElement.textContent).toContain("User");
         expect(row3Cells[2].nativeElement.textContent).not.toContain("Default");
         expect(row3Cells[2].query(By.css("bl-clickable .fa-undo"))).not.toBeFalsy();
@@ -170,7 +173,7 @@ describe("KeyBindingsComponent", () => {
     });
 
     it("filter the rows by shortcut", () => {
-        updateInput(searchEl, `"ctrl+o"`);
+        updateInput(searchEl, `"alt+o"`);
         fixture.detectChanges();
 
         let rows = getRows();
@@ -197,6 +200,45 @@ describe("KeyBindingsComponent", () => {
 
         expect(keyBindingServiceSpy.resetKeyBinding).toHaveBeenCalledOnce();
         expect(keyBindingServiceSpy.resetKeyBinding).toHaveBeenCalledWith("override");
+    });
+
+    describe("when clicking the record key button", () => {
+        beforeEach(async () => {
+            click(recordKeyBtn);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            searchEl = de.query(By.css("input.search"));
+        });
+
+        it("highlight the button", () => {
+            expect(recordKeyBtn.nativeElement.classList).toContain("active");
+        });
+
+        it("focus the search box", () => {
+            expect(document.activeElement).toEqual(searchEl.nativeElement);
+        });
+
+        it("update the search box with the key presseed", () => {
+            keydown(searchEl, "ctrl");
+            fixture.detectChanges();
+            expect(searchEl.nativeElement.value).toEqual(`"ctrl"`);
+            expect(getRows().length).toEqual(3);
+
+            keydown(searchEl, "f");
+            fixture.detectChanges();
+            expect(searchEl.nativeElement.value).toEqual(`"ctrl+f"`);
+            expect(getRows().length).toEqual(1);
+
+            keyup(searchEl, "f");
+            fixture.detectChanges();
+            expect(searchEl.nativeElement.value).toEqual(`"ctrl+f"`);
+            expect(getRows().length).toEqual(1);
+
+            keydown(searchEl, "b");
+            fixture.detectChanges();
+            expect(searchEl.nativeElement.value).toEqual(`"ctrl+b"`);
+            expect(getRows().length).toEqual(2);
+        });
     });
 
     describe("when clicking on a row", () => {
