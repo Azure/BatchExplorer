@@ -1,7 +1,7 @@
 <div class="recent-submission">
     <div *ngFor="let recent of recentSubmissions;trackBy: trackTemplate">
         <bl-clickable (do)="run(recent)" class="submission">
-            <span class="label">{{recent.name}}</span>
+            <span class="label">{{recent.displayName}}</span>
             <span class="mode">({{formatMode(recent.mode)}})</span>
         </bl-clickable>
         <bl-clickable class="download">

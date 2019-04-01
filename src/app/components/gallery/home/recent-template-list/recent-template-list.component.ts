@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, HostListener, OnDestroy } from "@angular/core";
 import { ElectronRemote } from "@batch-flask/electron";
 import { DialogService } from "@batch-flask/ui";
 import { NcjTemplateMode } from "app/models";
@@ -23,7 +23,23 @@ export class RecentTemplateListComponent implements OnDestroy {
         private dialogService: DialogService) {
         this._subs.push(this.templateService.recentSubmission.subscribe((value) => {
             this.recentSubmissions = value;
+            this.onResizeEvent(null);
         }));
+    }
+
+    @HostListener("window:resize", ["$event"])
+    public onResizeEvent(event) {
+        // adjust displayed tempalte name based on window width to keep it in one row
+        const charcount = window.innerWidth / 4 / 5;
+        this.recentSubmissions.forEach(submission => {
+            if (submission.name.length - charcount > 0) {
+                submission.displayName = "Run template ..." +
+                    submission.name.replace("Run template ", "").
+                    substr(submission.name.length - charcount + 1, charcount);
+            } else {
+                submission.displayName = submission.name;
+            }
+        });
     }
 
     public ngOnDestroy() {
