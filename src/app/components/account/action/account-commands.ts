@@ -1,5 +1,7 @@
 import { Injectable, Injector } from "@angular/core";
-import { COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission, SidebarManager } from "@batch-flask/ui";
+import {
+    COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission, SidebarManager,
+} from "@batch-flask/ui";
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
 import { BatchAccount, BatchAccountProvisingState, LocalBatchAccount } from "app/models";
 import { BatchAccountService } from "app/services";
