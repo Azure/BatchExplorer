@@ -1,16 +1,19 @@
 import { Injectable, Injector } from "@angular/core";
-import { COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import { COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission, SidebarManager } from "@batch-flask/ui";
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
-import { BatchAccount, BatchAccountProvisingState } from "app/models";
+import { BatchAccount, BatchAccountProvisingState, LocalBatchAccount } from "app/models";
 import { BatchAccountService } from "app/services";
+import { EditLocalBatchAccountComponent } from "./add";
 import { DeleteAccountDialogComponent } from "./delete";
 
 @Injectable()
 export class BatchAccountCommands extends EntityCommands<BatchAccount> {
     public showKeys: EntityCommand<BatchAccount, void>;
     public delete: EntityCommand<BatchAccount, void>;
+    public edit: EntityCommand<BatchAccount, void>;
 
     private _dialog: DialogService;
+    private _sidebarManager: SidebarManager;
 
     constructor(
         injector: Injector,
@@ -19,6 +22,7 @@ export class BatchAccountCommands extends EntityCommands<BatchAccount> {
             injector,
             "BatchAccount",
         );
+        this._sidebarManager = injector.get(SidebarManager);
         this._dialog = injector.get(DialogService);
         this._buildCommands();
     }
@@ -56,15 +60,34 @@ export class BatchAccountCommands extends EntityCommands<BatchAccount> {
             permission: Permission.Write,
         });
 
+        this.edit = this.simpleCommand({
+            name: "edit",
+            label: "Edit",
+            icon: "fa fa-pencil",
+            confirm: false,
+            multiple: false,
+            action: (account: LocalBatchAccount) => {
+                this._editLocalBatchAccount(account);
+            },
+            visible: (account: BatchAccount) => account instanceof LocalBatchAccount,
+            notify: false,
+        });
+
         this.commands = [
             this.showKeys,
             this.delete,
+            this.edit,
         ];
     }
 
     private _showKeys(account: BatchAccount) {
         const ref = this.dialogService.open(ProgramaticUsageComponent);
         ref.componentInstance.accountId = account.id;
+    }
+
+    private _editLocalBatchAccount(account: LocalBatchAccount) {
+        const ref = this._sidebarManager.open(`edit-account-${account.id}`, EditLocalBatchAccountComponent);
+        ref.component.existingAccount = account;
     }
 
     private _confirmDeletion(entities: BatchAccount[]) {
