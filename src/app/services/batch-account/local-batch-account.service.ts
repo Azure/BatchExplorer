@@ -3,14 +3,14 @@ import { GlobalStorage, ServerError } from "@batch-flask/core";
 import { LOCAL_BATCH_ACCOUNT_PREFIX, LocalBatchAccount } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, from, throwError } from "rxjs";
-import { filter, flatMap, map, take } from "rxjs/operators";
+import { filter, flatMap, map, share, take } from "rxjs/operators";
 
 export const LOCAL_BATCH_ACCOUNT_KEY = "local-batch-accounts";
 
 /**
  * Service that handle loading, adding and updating local back accounts
  */
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class LocalBatchAccountService implements OnDestroy {
     public accounts: Observable<List<LocalBatchAccount>>;
     private _accounts = new BehaviorSubject<List<LocalBatchAccount>>(null);
@@ -77,8 +77,15 @@ export class LocalBatchAccountService implements OnDestroy {
                 this._accounts.next(List(newAccounts));
                 return this._save();
             }),
+            share(),
         );
+    }
 
+    public update(account: LocalBatchAccount): Observable<any> {
+        const accounts = this._accounts.value.filter(x => x.id !== account.id).toList();
+        const newAccounts = accounts.push(account);
+        this._accounts.next(List(newAccounts));
+        return this._save();
     }
 
     public delete(id: string): Observable<any> {
