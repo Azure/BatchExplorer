@@ -77,6 +77,9 @@ export class KeyBindingsService implements OnDestroy {
                     keys.delete(event.key.toLowerCase());
                 }),
             ),
+            fromEvent(window, "blur").pipe(
+                tap(() => keys.clear()),
+            ),
         ).subscribe();
     }
 
