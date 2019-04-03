@@ -73,7 +73,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     }
 
     public ngOnInit() {
-        this.data.fetchNext();
+        this.data.fetchNext(true);
     }
 
     public ngOnDestroy() {
