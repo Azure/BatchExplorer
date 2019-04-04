@@ -2,11 +2,12 @@
     <div *ngFor="let recent of recentSubmissions;trackBy: trackTemplate">
         <bl-clickable (do)="run(recent)" class="submission">
             <span class="label">{{recent.name}}</span>
-            <span class="mode">({{formatMode(recent.mode)}})</span>
-        </bl-clickable>
-        <bl-clickable class="download">
-            <span (click)="createParameterFile(recent)" title="Export template parameter file">
-                <i class="fa fa-download"></i>
+            <span class="mode">({{formatMode(recent.mode)}})
+                <bl-clickable class="download">
+                    <span (click)="createParameterFile(recent)" title="Export template parameter file">
+                        <i class="fa fa-download"></i>
+                    </span>
+                </bl-clickable>
             </span>
         </bl-clickable>
     </div>
