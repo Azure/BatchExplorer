@@ -71,7 +71,7 @@ export class NcjTemplateService {
      * Get a file from the batch data repo relative to the ncj folder.
      * @param path: path to the file
      */
-    public get(portfolioId: string, uri: string): Observable<[Portfolio, any]> {
+    public get(portfolioId: string, uri: string): Observable<[Portfolio, any] | null> {
         return this.portfolioService.getReady(portfolioId).pipe(
             switchMap((portfolio: Portfolio) => {
                 const promise = loadJsonFile<any>(portfolio.getPath(uri)).then((json: any) => {
@@ -88,7 +88,9 @@ export class NcjTemplateService {
 
     public listApplications(portfolioId: string): Observable<List<Application>> {
         return this.get(portfolioId, "index.json").pipe(
-            map(([portfolio, apps]) => {
+            map((response) => {
+                if (!response) { return List([]); }
+                const [portfolio, apps] = response;
                 return List<Application>(apps.map(data => {
                     return new Application({
                         ...data,

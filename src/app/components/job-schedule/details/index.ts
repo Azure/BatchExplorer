@@ -1,4 +1,4 @@
-export * from "./job-schedule-autopool.component";
+export * from "./autopool/job-schedule-autopool.component";
 export * from "./job-schedule-configuration.component";
 export * from "./job-schedule-default.component";
 export * from "./job-schedule-details.module";

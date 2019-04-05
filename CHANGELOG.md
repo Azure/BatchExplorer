@@ -1,3 +1,11 @@
+# 2.0.3
+
+### Bug fixes
+* Recent templates from "my library" are a bit too long  [\#1969](https://github.com/Azure/BatchExplorer/issues/1969)
+* Job schedule with autopool fail to display [\#1995](https://github.com/Azure/BatchExplorer/issues/1995)
+* Pool graphs One Day and One Week option both have value of 1 day [\#1999](https://github.com/Azure/BatchExplorer/issues/1999)
+* Microsoft portfolio settings not persisted  [\#2004](https://github.com/Azure/BatchExplorer/issues/2004)
+
 # 2.0.2
 
 ### Bug fixes
