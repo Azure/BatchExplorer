@@ -1,17 +1,39 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
+    ControlValueAccessor,
+    FormControl,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
 } from "@angular/forms";
 import { ListView, autobind } from "@batch-flask/core";
 import { PipeableSelectOptions } from "@batch-flask/ui/form/editable-table";
 import { BatchApplication } from "app/models";
-import { ApplicationListParams, BatchApplicationPackageService, BatchApplicationService } from "app/services";
+import {
+    ApplicationListParams,
+    BatchApplicationPackageService,
+    BatchApplicationService,
+} from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { List } from "immutable";
 import { Subject, of, pipe } from "rxjs";
-import { distinctUntilChanged, filter, map, publishReplay, refCount, switchMap, takeUntil } from "rxjs/operators";
+import {
+    distinctUntilChanged,
+    filter,
+    map,
+    publishReplay,
+    refCount,
+    switchMap,
+    takeUntil,
+} from "rxjs/operators";
 
 import "./app-package-picker.scss";
 
@@ -24,13 +46,25 @@ interface PackageReference {
     selector: "bl-app-package-picker",
     templateUrl: "app-package-picker.html",
     providers: [
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AppPackagePickerComponent), multi: true },
-        { provide: NG_VALIDATORS, useExisting: forwardRef(() => AppPackagePickerComponent), multi: true },
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => AppPackagePickerComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => AppPackagePickerComponent),
+            multi: true,
+        },
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppPackagePickerComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
-    public references = new FormControl<PackageReference[]>([], this._duplicateValidator);
+export class AppPackagePickerComponent
+    implements ControlValueAccessor, Validator, OnInit, OnDestroy {
+    public references = new FormControl<PackageReference[]>(
+        [],
+        this._duplicateValidator,
+    );
     public applicationNames: string[] = [];
     public _propagateChange: (references: PackageReference[]) => void;
     public hasAutoStorage: boolean;
@@ -42,26 +76,31 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         private applicationService: BatchApplicationService,
         private autoStorageService: AutoStorageService,
         private packageService: BatchApplicationPackageService,
-        private changeDetector: ChangeDetectorRef) {
-
+        private changeDetector: ChangeDetectorRef,
+    ) {
         this.data = this.applicationService.listView();
 
-        this.autoStorageService.hasAutoStorage.pipe(takeUntil(this._destroy)).subscribe((hasAutoStorage) => {
-            this.hasAutoStorage = hasAutoStorage;
-            this.changeDetector.markForCheck();
-        });
+        this.autoStorageService.hasAutoStorage
+            .pipe(takeUntil(this._destroy))
+            .subscribe(hasAutoStorage => {
+                this.hasAutoStorage = hasAutoStorage;
+                this.changeDetector.markForCheck();
+            });
 
         // subscribe to the application data proxy
-        this.data.items.subscribe((applications) => {
-            this.applicationNames = applications.map(x => x.name).toArray();
+        this.data.items.subscribe(applications => {
+            this.applicationNames = applications.map(x => x.name && x.name.toLowerCase()).toArray();
+            console.log("Load all", this.applicationNames);
             this.changeDetector.markForCheck();
         });
 
-        this.references.valueChanges.pipe(takeUntil(this._destroy)).subscribe((references: PackageReference[]) => {
-            if (this._propagateChange) {
-                this._propagateChange(references);
-            }
-        });
+        this.references.valueChanges
+            .pipe(takeUntil(this._destroy))
+            .subscribe((references: PackageReference[]) => {
+                if (this._propagateChange) {
+                    this._propagateChange(references);
+                }
+            });
     }
 
     public ngOnInit() {
@@ -75,6 +114,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public writeValue(references: PackageReference[]) {
+        console.log("Names", references.map(x => x.applicationId));
         this.references.setValue(references);
     }
 
@@ -100,16 +140,24 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             map((values: { applicationId: string }) => values.applicationId),
             distinctUntilChanged(),
             filter(x => Boolean(x)),
-            switchMap(applicationName => this.applicationService.getByName(applicationName)),
-            switchMap(application => application ? this.packageService.listAll(application.id) : of(List([]))),
-            map((packages) => packages.map(x => x.name.toLowerCase()).toArray()),
+            switchMap(applicationName =>
+                this.applicationService.getByName(applicationName),
+            ),
+            switchMap(application =>
+                application
+                    ? this.packageService.listAll(application.id)
+                    : of(List([])),
+            ),
+            map(packages => packages.map(x => x.name.toLowerCase()).toArray()),
             publishReplay(1),
             refCount(),
         );
     }
 
     @autobind()
-    private _duplicateValidator(control: FormControl<PackageReference[]>): ValidationErrors | null {
+    private _duplicateValidator(
+        control: FormControl<PackageReference[]>,
+    ): ValidationErrors | null {
         const references = control.value;
         if (references === null) {
             return null;
@@ -118,14 +166,17 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         const uniqueIds = new Set<string>();
 
         for (const reference of references) {
-            const uid = `${reference.applicationId}/versions/${reference.version}`;
+            const uid = `${reference.applicationId}/versions/${
+                reference.version
+            }`;
             if (uniqueIds.has(uid)) {
                 duplicate = uid;
                 return {
                     duplicate: {
                         value: duplicate,
-                        message:
-                            `Application ${reference.applicationId} has version ${reference.version} specified twice`,
+                        message: `Application ${
+                            reference.applicationId
+                        } has version ${reference.version} specified twice`,
                     },
                 };
             }
