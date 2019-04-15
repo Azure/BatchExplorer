@@ -90,7 +90,6 @@ export class AppPackagePickerComponent
         // subscribe to the application data proxy
         this.data.items.subscribe(applications => {
             this.applicationNames = applications.map(x => x.name && x.name.toLowerCase()).toArray();
-            console.log("Load all", this.applicationNames);
             this.changeDetector.markForCheck();
         });
 
@@ -114,7 +113,6 @@ export class AppPackagePickerComponent
     }
 
     public writeValue(references: PackageReference[]) {
-        console.log("Names", references.map(x => x.applicationId));
         this.references.setValue(references);
     }
 
