@@ -18,4 +18,5 @@ export enum CloudServiceOsFamily {
     windowsServer2012 = "3",
     windowsServer2012R2 = "4",
     windowsServer2016 = "5",
+    windowsServer2019 = "6",
 }
