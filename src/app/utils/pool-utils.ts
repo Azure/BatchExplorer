@@ -130,8 +130,10 @@ export class PoolUtils {
                 return "Windows Server 2012";
             } else if (osFamily === CloudServiceOsFamily.windowsServer2012R2) {
                 return "Windows Server 2012 R2";
-            } else {
+            } else if (osFamily === CloudServiceOsFamily.windowsServer2016) {
                 return "Windows Server 2016";
+            } else {
+                return "Windows Server 2019";
             }
         }
 

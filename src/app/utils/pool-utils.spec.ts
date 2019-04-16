@@ -29,6 +29,12 @@ describe("PoolUtils", () => {
                 },
             });
 
+            const cs6Pool = new Pool({
+                cloudServiceConfiguration: {
+                    osFamily: CloudServiceOsFamily.windowsServer2019,
+                },
+            });
+
             const vm1Pool = new Pool({
                 virtualMachineConfiguration: {
                     imageReference: {
@@ -57,6 +63,7 @@ describe("PoolUtils", () => {
             expect(PoolUtils.getOsName(cs3Pool)).toBe("Windows Server 2012");
             expect(PoolUtils.getOsName(cs4Pool)).toBe("Windows Server 2012 R2");
             expect(PoolUtils.getOsName(cs5Pool)).toBe("Windows Server 2016");
+            expect(PoolUtils.getOsName(cs6Pool)).toBe("Windows Server 2019");
             expect(PoolUtils.getOsName(vm1Pool)).toBe("UbuntuServer 16.04-LTS");
             expect(PoolUtils.getOsName(vm2Pool)).toBe("Windows Server 2012-R2-Datacenter");
         });
@@ -85,6 +92,12 @@ describe("PoolUtils", () => {
             const cs5Pool = new Pool({
                 cloudServiceConfiguration: {
                     osFamily: CloudServiceOsFamily.windowsServer2016,
+                },
+            });
+
+            const cs6Pool = new Pool({
+                cloudServiceConfiguration: {
+                    osFamily: CloudServiceOsFamily.windowsServer2019,
                 },
             });
 
@@ -140,6 +153,7 @@ describe("PoolUtils", () => {
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(cs3Pool))).toBe("windows");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(cs4Pool))).toBe("windows");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(cs5Pool))).toBe("windows");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(cs6Pool))).toBe("windows");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(vm1Pool))).toBe("linux");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(vm2Pool))).toBe("windows");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(vm3Pool))).toBe("windows");
