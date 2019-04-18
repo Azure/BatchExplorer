@@ -1,3 +1,8 @@
+# 2.0.4
+
+### Fixes
+* Vulnerabilities with dependencies
+
 # 2.0.3
 
 ### Bug fixes
