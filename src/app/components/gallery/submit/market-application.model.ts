@@ -11,6 +11,8 @@ export enum NcjParameterExtendedType {
     fileGroupWriteSas = "file-group-write-sas",
     dropDown = "drop-down",
     jobId = "job-id",
+    renderingContainerImage= "rendering-container-image",
+    containerImageOnPool= "container-image-on-pool",
 }
 
 export class NcjParameterWrapper {
@@ -21,12 +23,14 @@ export class NcjParameterWrapper {
     public defaultValue: any;
     public allowedValues: string[];
     public wildcards: string;
+    public additionalProperties: StringMap<string>;
 
     constructor(public id: string, public param: NcjParameter) {
         this._computeName();
         this._computeDefaultValue();
         this._computeDescription();
         this._computeType();
+        this._computeAdditionalProperties();
     }
 
     private _computeName() {
@@ -63,6 +67,12 @@ export class NcjParameterWrapper {
     private _computeWildcardFilter() {
         if (this.param.metadata && this.param.metadata.wildcards) {
             this.wildcards = this.param.metadata.wildcards;
+        }
+    }
+
+    private _computeAdditionalProperties() {
+        if (this.param.additionalProperties) {
+            this.additionalProperties = this.param.additionalProperties;
         }
     }
 

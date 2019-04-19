@@ -30,7 +30,7 @@ class TestComponent {
 const applications = {
     apple: Fixtures.application.create({ id: "/applications/apple", name: "apple" }),
     banana: Fixtures.application.create({ id: "/applications/banana", name: "banana" }),
-    orange: Fixtures.application.create({ id: "/applications/orange", name: "orange" }),
+    orange: Fixtures.application.create({ id: "/applications/Orange", name: "Orange" }),
 };
 
 const packages = {

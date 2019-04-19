@@ -19,7 +19,9 @@ import {
     PoolAllocationMode,
 } from "app/models";
 import { BatchAccountService } from "app/services";
+import { of } from "rxjs";
 import { click } from "test/utils/helpers";
+import { BatchAccountCommands } from "../../action";
 import { AccountSummaryCardComponent } from "./account-summary-card.component";
 
 const sub1 = new ArmSubscription({
@@ -80,11 +82,19 @@ describe("AccountSummaryCardComponent", () => {
     let detailsEl: DebugElement;
     let shellSpy: MockElectronShell;
     let accountServiceSpy;
+    let commandsSpy;
 
     beforeEach(() => {
         shellSpy = new MockElectronShell();
         accountServiceSpy = {
 
+        };
+
+        commandsSpy = {
+            getFromCache: () => of(acc1),
+            activate: {
+                enabled: () => true,
+            },
         };
 
         TestBed.configureTestingModule({
@@ -110,6 +120,15 @@ describe("AccountSummaryCardComponent", () => {
                 { provide: PermissionService, useValue: null },
             ],
         });
+
+        TestBed.overrideComponent(
+            AccountSummaryCardComponent,
+            {
+                set: {
+                    providers: [{ provide: BatchAccountCommands, useValue: commandsSpy }],
+                },
+            },
+        );
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-account-summary-card"));

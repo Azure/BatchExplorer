@@ -1,11 +1,14 @@
-import { Component, ElementRef, OnDestroy, ViewChild, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild, forwardRef,
+} from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { SSHPublicKey } from "app/models";
 import { SSHKeyService } from "app/services";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 import "./ssh-key-picker.scss";
 
@@ -13,10 +16,10 @@ import "./ssh-key-picker.scss";
     selector: "bl-ssh-key-picker",
     templateUrl: "ssh-key-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SSHKeyPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => SSHKeyPickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
     public savedSSHKeys: List<SSHPublicKey> = List([]);
@@ -35,26 +38,37 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
         initialDividerPosition: -205,
     };
 
-    private _subs: Subscription[] = [];
+    public homePublicKey: string | null = null;
+    private _destroy = new Subject();
     private _propagateChange: (value: string) => void = null;
 
-    constructor(private sshKeyService: SSHKeyService, private dialogService: DialogService) {
-        this._subs.push(sshKeyService.keys.subscribe((keys) => {
+    constructor(
+        public dialogService: DialogService,
+        private sshKeyService: SSHKeyService,
+        private changeDetector: ChangeDetectorRef) {
+
+        sshKeyService.getLocalPublicKey(sshKeyService.homePublicKeyPath).subscribe((value: string | null) => {
+            this.homePublicKey = value;
+            this.changeDetector.markForCheck();
+        });
+        sshKeyService.keys.pipe(takeUntil(this._destroy)).subscribe((keys) => {
             this.savedSSHKeys = keys;
-        }));
-        this._subs.push(this.sshKeyValue.valueChanges.subscribe((value) => {
+            this.changeDetector.markForCheck();
+        });
+        this.sshKeyValue.valueChanges.pipe(takeUntil(this._destroy)).subscribe((value) => {
             if (this._propagateChange) {
                 this._propagateChange(value);
             }
-        }));
+        });
     }
 
     public ngOnDestroy() {
-        this._subs.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
     }
 
-    public writeValue(value: any) {
-        this.sshKeyValue.patchValue(value);
+    public writeValue(value: string) {
+        this.sshKeyValue.setValue(value);
     }
 
     public registerOnChange(fn) {
@@ -89,6 +103,12 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
 
     public selectKey(key: SSHPublicKey) {
         this.sshKeyValue.patchValue(key.value);
+    }
+
+    public selectHomeKey() {
+        if (this.homePublicKey) {
+            this.sshKeyValue.patchValue(this.homePublicKey);
+        }
     }
 
     public deleteKey(key: SSHPublicKey) {

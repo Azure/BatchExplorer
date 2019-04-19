@@ -1,0 +1,19 @@
+<ng-container *ngIf="isArmBatchAccount && !unsupportedSubscription">
+    <div class="graph">
+        <canvas blChart
+            [datasets]="datasets"
+            [options]="options"
+            [chartType]="chartType"
+            [attr.aria-label]="label">
+        </canvas>
+    </div>
+    <div class="total">
+        <i *ngIf="showPartialDataWarning" class="fa fa-warning" matTooltip="Cost tracking at the pool level is a recent change. Data will be missing before April 2019"></i>
+        <bl-time-range-picker [formControl]="timeRange" [quickRanges]="quickRanges" [showLabel]="false"></bl-time-range-picker>
+
+        <i *ngIf="loading" class="fa fa-spiner fa-spin"  title="Loading"></i>
+        <span *ngIf="!loading">
+            {{total}} {{currency}}
+        </span>
+    </div>
+</ng-container>

@@ -9,74 +9,30 @@ import { Observable } from "rxjs";
 import { map, share, switchMap, take, tap } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { BatchAccountService } from "../batch-account";
+import { AzureCostQuery, CostManagementDimensions, QueryResult } from "./azure-cost-mangement-api.model";
 
 export interface AzureCostEntry {
     preTaxCost: number;
-    meter: string;
     date: Date;
+}
+
+export interface BatchAccountCost {
+    // Sum of all the prices for the given period
+    totalForPeriod: number;
+
+    // Currency
     currency: string;
-    resourceId: string;
+
+    // Costs per pool
+    pools: StringMap<BatchPoolCost>;
 }
 
-interface AzureCostAggregation {
+export interface BatchPoolCost {
+    // Sum of all the prices for the given period
+    totalForPeriod: number;
 
-}
-
-interface AzureCostQuerySortConfiguration {
-    direction: "ascending" | "descending";
-    name: string;
-}
-
-interface AzureCostQueryGrouping {
-    type: "Dimension" | "Tag";
-    name: CostManagementDimensions;
-}
-
-interface QueryFilter {
-    And?: QueryFilter[];
-    Or?: QueryFilter[];
-    Not?: QueryFilter;
-    Dimensions?: {
-        Name: string,
-        Operator: "In" | "Eq",
-        Values: string[],
-    };
-}
-
-interface AzureCostQuery {
-    type: string;
-    timeframe?: "Custom" | "MonthToDate" | "TheLastMonth" | "TheLastWeek";
-    timePeriod?: {
-        from: string;
-        to: string;
-    };
-    dataSet: {
-        granularity: string;
-        aggregation: StringMap<AzureCostAggregation>;
-        sorting: AzureCostQuerySortConfiguration[]
-        grouping: AzureCostQueryGrouping[];
-        filter?: QueryFilter;
-    };
-}
-
-interface QueryResult {
-    id: string;
-    name: string;
-    properties: {
-        nextLink: string | null,
-        columns: Array<{ name: string, type: string }>,
-        rows: any[][],
-    };
-
-}
-
-export enum CostManagementDimensions {
-    ResourceId = "ResourceId",
-    MeterSubCategory = "MeterSubCategory",
-    MeterCategory = "MeterCategory",
-    Meter = "Meter",
-    ServiceName = "ServiceName",
-    ServiceTier = "ServiceTier",
+    // Costs per pool
+    costs: AzureCostEntry[];
 }
 
 function costManagementUrl(scope: string) {
@@ -87,7 +43,7 @@ function costManagementUrl(scope: string) {
 export class AzureCostManagementService {
     constructor(private accountService: BatchAccountService, private azure: AzureHttpService) { }
 
-    public getCost(timeRange: TimeRange): Observable<AzureCostEntry[]> {
+    public getCost(timeRange: TimeRange): Observable<BatchAccountCost> {
         return this.accountService.currentAccount.pipe(
             take(1),
             tap((account) => {
@@ -105,7 +61,7 @@ export class AzureCostManagementService {
 
     public getCostFor(
         subscription: ArmSubscription, accountId: string, timeRange: TimeRange,
-    ): Observable<AzureCostEntry[]> {
+    ): Observable<BatchAccountCost> {
 
         const subId = ArmResourceUtils.getSubscriptionIdFromResourceId(accountId);
         const resourceGroup = ArmResourceUtils.getResourceGroupFromResourceId(accountId);
@@ -119,13 +75,11 @@ export class AzureCostManagementService {
         );
     }
 
-    private _processQueryResponse(accountId: string, response: QueryResult): AzureCostEntry[] {
+    private _processQueryResponse(accountId: string, response: QueryResult): BatchAccountCost {
         const columnIndexes = {
             cost: null,
             date: null,
             resourceId: null,
-            meterCategory: null,
-            meterSubCategory: null,
             currency: null,
         };
 
@@ -140,12 +94,6 @@ export class AzureCostManagementService {
                 case CostManagementDimensions.ResourceId:
                     columnIndexes.resourceId = index;
                     break;
-                case CostManagementDimensions.MeterSubCategory:
-                    columnIndexes.meterSubCategory = index;
-                    break;
-                case CostManagementDimensions.MeterCategory:
-                    columnIndexes.meterCategory = index;
-                    break;
                 case "Currency":
                     columnIndexes.currency = index;
                     break;
@@ -156,32 +104,85 @@ export class AzureCostManagementService {
         for (const [key, index] of Object.entries(columnIndexes)) {
             if (index === null) {
                 log.error(`Failed to retrieve column index for ${key}`, response.properties.columns);
-                return [];
+                return {
+                    totalForPeriod: 0,
+                    currency: "n/a",
+                    pools: {},
+                };
             }
         }
 
-        return response.properties.rows.filter((row) => {
+        const rows = response.properties.rows.filter((row) => {
             // Filter empty meters
-            return row[columnIndexes.meterCategory] !== ""
-                || row[columnIndexes.meterSubCategory] !== ""
-                || row[columnIndexes.resourceId]
+            return row[columnIndexes.resourceId]
                 || row[columnIndexes.cost] !== 0;
         }).map((row) => {
             return {
                 preTaxCost: row[columnIndexes.cost],
-                date: this._parseDate(row[columnIndexes.date]),
-                meter: `${row[columnIndexes.meterCategory]} (${row[columnIndexes.meterSubCategory]})`,
+                date: row[columnIndexes.date],
                 currency: row[columnIndexes.currency],
                 resourceId: row[columnIndexes.resourceId],
             };
         }).filter(entry => entry.resourceId.toLowerCase().startsWith(accountId.toLowerCase()));
+
+        return this._buildResponseFromRows(rows);
+    }
+
+    private _buildResponseFromRows(rows: Array<{
+        date: number, preTaxCost: number, currency: string, resourceId: string,
+    }>): BatchAccountCost {
+        let currency: string | null = null;
+        let total = 0;
+        const poolMap: StringMap<{ [key: number]: AzureCostEntry }> = {};
+        const days = new Set<number>();
+        for (const row of rows) {
+            const poolId = ArmResourceUtils.getAccountNameFromResourceId(row.resourceId);
+            if (!(poolId in poolMap)) {
+                poolMap[poolId] = {};
+            }
+            if (!days.has(row.date)) {
+                days.add(row.date);
+            }
+            poolMap[poolId][row.date] = {
+                preTaxCost: row.preTaxCost,
+                date: this._parseDate(row.date),
+            };
+            total += row.preTaxCost;
+            if (currency == null && row.currency) {
+                currency = row.currency;
+            }
+        }
+        for (const map of Object.values(poolMap)) {
+            for (const day of days) {
+                if (!(day in map)) {
+                    map[day] = {
+                        preTaxCost: 0,
+                        date: this._parseDate(day),
+                    };
+                }
+            }
+        }
+
+        const result: StringMap<BatchPoolCost> = {};
+        for (const [poolId, map] of Object.entries(poolMap)) {
+            const costs = Object.values(map);
+            result[poolId] = {
+                totalForPeriod: costs.reduce((t, c) => t + c.preTaxCost, 0),
+                costs: costs.sortBy(x => x.date),
+            };
+        }
+        return {
+            totalForPeriod: total,
+            currency: currency || "",
+            pools: result,
+        };
     }
 
     private _parseDate(date: number) {
         return DateTime.fromFormat(date.toString(), "yyyyLLdd").toJSDate();
     }
 
-    private _buildQuery(timeRange: TimeRange): AzureCostQuery {
+    private _buildQuery(timeRange: TimeRange, resourceIds: string[] = []): AzureCostQuery {
         return {
             type: "Usage",
             timeframe: "Custom",
@@ -208,26 +209,17 @@ export class AzureCostManagementService {
                         type: "Dimension",
                         name: CostManagementDimensions.ResourceId,
                     },
-                    {
-                        type: "Dimension",
-                        name: CostManagementDimensions.MeterSubCategory,
-                    },
-                    {
-                        type: "Dimension",
-                        name: CostManagementDimensions.MeterCategory,
-                    },
                 ],
                 filter: {
                     Dimensions: {
                         Name: "ResourceType",
                         Operator: "In",
-                        Values: ["Microsoft.Batch/batchaccounts", "Microsoft.Batch/batchaccounts/batchpools"],
+                        Values: [
+                            "Microsoft.Batch/batchaccounts",
+                            "Microsoft.Batch/batchaccounts/batchpools",
+                            "Microsoft.Batch/batchaccounts/pools",
+                        ],
                     },
-                    // Dimensions: {
-                    //     Name: "ResourceId",
-                    //     Operator: "In",
-                    //     Values: [accountId],
-                    // },
                 },
             },
         };

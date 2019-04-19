@@ -1,44 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { QuickRange, TimeRange } from "@batch-flask/ui";
+import { QuickRange, QuickRanges, TimeRange } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
 import { BatchAccountService, Theme, ThemeService } from "app/services";
 import {
     UsageDetailsUnsupportedSubscription,
 } from "app/services/azure-consumption";
-import { AzureCostEntry, AzureCostManagementService } from "app/services/azure-cost-management";
-import { DateTime } from "luxon";
+import { AzureCostManagementService, BatchAccountCost } from "app/services/azure-cost-management";
+import { Constants } from "common";
 import { Subject, combineLatest, of } from "rxjs";
 import { catchError, filter, startWith, switchMap, takeUntil } from "rxjs/operators";
 
 import "./account-cost-card.scss";
-
-const today = DateTime.local();
-
-const thisMonthRange = new QuickRange({
-    label: "This month",
-    start: today.startOf("month").toJSDate(),
-    end: today.endOf("month").toJSDate(),
-});
-
-const lastMonthRange = new QuickRange({
-    label: "Last month",
-    start: today.minus({month: 1}).startOf("month").toJSDate(),
-    end: today.minus({month: 1}).endOf("month").toJSDate(),
-});
-
-const thisQuarterRange = new QuickRange({
-    label: "This quarter",
-    start: today.startOf("quarter").toJSDate(),
-    end: today.endOf("quarter").toJSDate(),
-});
-
-const thisYearRange = new QuickRange({
-    label: "This year",
-    start: today.startOf("year").toJSDate(),
-    end: today.endOf("year").toJSDate(),
-});
 
 @Component({
     selector: "bl-account-cost-card",
@@ -56,13 +30,15 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     public total: string;
 
     public quickRanges: QuickRange[] = [
-        thisMonthRange,
-        lastMonthRange,
-        thisQuarterRange,
-        thisYearRange,
+        QuickRanges.thisMonthRange,
+        QuickRanges.lastMonthRange,
+        QuickRanges.thisQuarterRange,
+        QuickRanges.thisYearRange,
     ];
 
-    public timeRange = new FormControl<TimeRange>(thisMonthRange);
+    public timeRange = new FormControl<TimeRange>(QuickRanges.thisMonthRange);
+
+    public costMangementUrl: string | null = null;
 
     private _destroy = new Subject();
 
@@ -77,9 +53,11 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         const currentAccountObs = this.accountService.currentAccount.pipe(
             filter((account) => {
                 this.isArmBatchAccount = account instanceof ArmBatchAccount;
-                if (this.isArmBatchAccount) {
+                if (account instanceof ArmBatchAccount) {
+                    this.costMangementUrl = Constants.ExternalLinks.costManagementUrl.format(account.subscriptionId);
                     this._updateUsages();
                 } else {
+                    this.costMangementUrl = null;
                     this.unsupportedSubscription = false;
                 }
                 this.changeDetector.markForCheck();
@@ -128,57 +106,19 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    private _computeDataSets(usages: AzureCostEntry[], theme: Theme) {
-        const groups: StringMap<{ meter: string, usages: StringMap<{ x: Date, y: number }> }> = {};
+    private _computeDataSets(accountCost: BatchAccountCost, theme: Theme) {
+        this.currency = accountCost.currency;
+        this.total = accountCost.totalForPeriod.toFixed(2);
 
-        if (usages.length > 0) {
-            this.currency = usages.first().currency;
-        }
-
-        let total = 0;
-
-        const days = new Set<string>();
-        for (const usage of usages) {
-            const meterId = usage.meter;
-
-            if (!(meterId in groups)) {
-                groups[meterId] = {
-                    meter: usage.meter,
-                    usages: {},
-                };
-            }
-            const isoDate = usage.date.toISOString();
-            days.add(isoDate);
-            if (isoDate in groups[meterId].usages) {
-                groups[meterId].usages[isoDate].y += usage.preTaxCost;
-            } else {
-                groups[meterId].usages[isoDate] = {
-                    x: usage.date,
-                    y: usage.preTaxCost,
-                };
-            }
-
-            total += usage.preTaxCost;
-        }
-
-        for (const { usages } of Object.values(groups)) {
-            for (const day of days) {
-                if (!(day in usages)) {
-                    usages[day] = {
-                        x: new Date(day),
-                        y: 0,
-                    };
-                }
-            }
-        }
-        this.total = total.toFixed(2);
-        this.datasets = Object.values(groups).map((data, i) => {
+        this.datasets = Object.entries(accountCost.pools).map(([poolId, poolCost], i) => {
             const color = theme.chartColors.get(i);
             return {
-                label: data.meter,
+                label: poolId,
                 backgroundColor: color,
                 borderColor: color,
-                data: Object.values(data.usages).sortBy(x => x.x),
+                data: poolCost.costs.map((x) => {
+                    return { x: x.date, y: x.preTaxCost };
+                }),
             };
         });
         this._setChartOptions();
@@ -219,6 +159,8 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                     time: {
                         unit: "day",
                         unitStepSize: 1,
+                        min: this.timeRange.value.start.toISOString(),
+                        max: this.timeRange.value.end.toISOString(),
                         displayFormats: {
                             day: "MMM DD",
                         },

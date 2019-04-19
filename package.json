@@ -3,6 +3,7 @@
   "sideEffects": [
     "src/@batch-flask/extensions/*",
     "src/app/environment.ts",
+    "src/app/commands/**/*",
     "*.scss"
   ],
   "productName": "Batch Explorer",
@@ -15,7 +16,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "2.0.4",
+  "version": "2.1.0",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json --files",
@@ -186,7 +187,6 @@
     "luxon": "^1.11.4",
     "make-dir": "^2.1.0",
     "monaco-editor": "^0.16.0",
-    "mousetrap": "^1.6.3",
     "node-abi": "^2.7.0",
     "node-forge": "^0.8.1",
     "patternomaly": "^1.3.2",

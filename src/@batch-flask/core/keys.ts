@@ -22,4 +22,13 @@ export enum KeyCode {
     Space = "Space",
     Enter = "Enter",
     Tab = "Tab",
+    Escape = "Escape",
+}
+
+export enum KeyModifier {
+    Shift = "shift",
+    Alt = "alt",
+    Ctrl = "ctrl",
+    Cmd = "cmd",
+    CtrlOrCmd = "ctrlorcmd",
 }

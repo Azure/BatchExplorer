@@ -56,6 +56,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public poolParams: FormGroup;
     public jobParametersWrapper: NcjParameterWrapper[];
     public poolParametersWrapper: NcjParameterWrapper[];
+    public poolContainerImage: string;
 
     private _destroy = new Subject();
     private _controlChanges: Subscription[] = [];
@@ -86,6 +87,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
 
         this.form = new FormGroup({});
+
         this.settingsService.watch("jobTemplate").pipe(takeUntil(this._destroy)).subscribe((jobTemplate) => {
             this._defaultOutputDataContainer = jobTemplate.defaultOutputFileGroup;
         });
@@ -142,6 +144,17 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public get jobTemplateIsAutoPool() {
         return Boolean(this.jobTemplate.job.properties.poolInfo
             && this.jobTemplate.job.properties.poolInfo.autoPoolSpecification);
+    }
+
+    public get jobTemplateNeedsContainerImage(): boolean {
+        if (!this.jobTemplate.parameters.containerImage ||
+            !this.jobTemplate.parameters.containerImage.additionalProperties) {
+            return false;
+        }
+
+        return Boolean(this.jobTemplate.parameters.containerImage.additionalProperties.app
+        && this.jobTemplate.parameters.containerImage.additionalProperties.renderEngine
+        && this.jobTemplate.parameters.containerImage.additionalProperties.imageReferenceId);
     }
 
     public pickMode(mode: NcjTemplateMode) {
@@ -344,6 +357,10 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup && Boolean(change)) {
                 // Quick-Fix until we modify the CLI to finally sort out file group prefixes
                 change = this.fileGroupService.addFileGroupPrefix(change);
+            }
+
+            if (this._parameterTypeMap[key] === NcjParameterExtendedType.renderingContainerImage && Boolean(change)) {
+                this.poolContainerImage = change;
             }
 
             // Set the parameters on the route so when page reloads we keep the existing parameters

@@ -10,11 +10,3 @@ declare module "element-resize-detector" {
     }
     export = ElementResizeDetectorMaker;
 }
-
-// https://craig.is/killing/mice
-declare module "mousetrap" {
-    function bind(key: string, callback: Function);
-    function unbind(key: string, callback: Function);
-    function trigger(key: string);
-    function reset();
-}

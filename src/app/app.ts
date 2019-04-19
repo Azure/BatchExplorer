@@ -17,6 +17,8 @@ import "font-awesome/css/font-awesome.min.css";
 import "./environment";
 import "./styles/main.scss";
 
+import "app/commands";
+
 interface LoadingTimeResults {
     startup: number;
     loadTranslations: number;

@@ -1,0 +1,44 @@
+<div class="header">
+    <bl-form-field>
+        <input *ngIf="!searchByKeyBinding" blInput #searchInput class="search" placeholder="Filter"
+            [formControl]="search">
+        <input *ngIf="searchByKeyBinding" blInput #searchInput class="search" placeholder="Filter"
+            [formControl]="search" (blKeyBindingListener)="updateFilterWithKeyBinding($event)">
+        <div blFormFieldSuffix>
+            <bl-clickable (do)="toggleKeybindingSearch()" class="keybinding-listener-btn"
+                [class.active]="searchByKeyBinding" title="Record keys">
+                <i class="fa fa-keyboard-o"></i>
+            </bl-clickable>
+        </div>
+    </bl-form-field>
+</div>
+
+<div class="content">
+    <bl-table [data]="displayedCommands" [config]="tableConfig" [activeItem]="activeItem" (activeItemChange)="editKeyBinding($event)">
+        <bl-column name="description">
+            <div *blHeadCellDef>Command</div>
+            <div *blCellDef="let command">{{command.description}}</div>
+        </bl-column>
+
+        <bl-column name="state">
+            <div *blHeadCellDef>Shortcut</div>
+            <div *blCellDef="let command">{{command.binding}}</div>
+        </bl-column>
+
+        <bl-column name="isDefault">
+            <div *blHeadCellDef>Source</div>
+            <div *blCellDef="let command">
+                <ng-container *ngIf="command.isDefault; else userBinding">
+                    Default
+                </ng-container>
+                <ng-template #userBinding>
+                    User <bl-clickable (do)="removeUserBinding(command.id)" title="Reset to default"><i class="fa fa-undo"></i></bl-clickable>
+                </ng-template>
+            </div>
+        </bl-column>
+    </bl-table>
+
+    <div *ngIf="displayedCommands.length === 0" class="no-commands-with-filter">
+        No commands match the filter
+    </div>
+</div>

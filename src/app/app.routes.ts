@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { KeyBindingsComponent } from "@batch-flask/ui";
 import { ActivityMonitorComponent } from "@batch-flask/ui/activity/activity-monitor";
 import { RequireActiveBatchAccountGuard } from "app/components/common/guards";
 import { ThemeColorsComponent } from "app/components/misc";
@@ -97,5 +98,9 @@ export const routes: Routes = [
     {
         path: "standalone/pools/:poolId/graphs",
         component: PoolStandaloneGraphsComponent,
+    },
+    {
+        path: "keybindings",
+        component: KeyBindingsComponent,
     },
 ];

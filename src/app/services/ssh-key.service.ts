@@ -3,6 +3,7 @@ import { GlobalStorage } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
 import { SSHPublicKey } from "app/models";
 import { List } from "immutable";
+import * as path from "path";
 import { Observable, from } from "rxjs";
 import { map, publishReplay, refCount, share, switchMap, take } from "rxjs/operators";
 
@@ -10,9 +11,13 @@ import { map, publishReplay, refCount, share, switchMap, take } from "rxjs/opera
 export class SSHKeyService {
     public static readonly KEY = "ssh-pub-keys";
 
+    // Path to ~/.ssh/id_rsa.pub
+    public readonly homePublicKeyPath: string;
     public keys: Observable<List<SSHPublicKey>>;
 
     constructor(private storage: GlobalStorage, private fs: FileSystemService) {
+        this.homePublicKeyPath = path.join(this.fs.commonFolders.home, ".ssh", "id_rsa.pub");
+
         this.keys = this.storage.watch(SSHKeyService.KEY).pipe(
             map(data => Array.isArray(data) ? List(data) : List([])),
             publishReplay(1),
@@ -46,8 +51,8 @@ export class SSHKeyService {
         return from(this.fs.exists(path));
     }
 
-    public getLocalPublicKey(path: string): Observable<string> {
-        return from(this.fs.readFile(path));
+    public getLocalPublicKey(path: string): Observable<string | null> {
+        return from(this.fs.exists(path).then(exists => exists ? this.fs.readFile(path) : null));
     }
 
     private _saveSSHPublicKeys(keys: List<SSHPublicKey> = null): Observable<any> {

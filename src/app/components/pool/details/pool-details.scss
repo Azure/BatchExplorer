@@ -15,6 +15,10 @@ bl-pool-details {
     }
 
     div[summaryTile] > bl-pool-state-graph {
-        margin: 10px;
+        padding: 5px;
+        border-bottom: 1px solid $border-color;
+    }
+    div[summaryTile] > bl-pool-cost-card {
+        padding: 5px;
     }
 }

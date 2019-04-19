@@ -1,5 +1,5 @@
 <bl-clickable [blCallout]="callout" class="time-range">
-    {{'time-range-picker.timeRange' | i18n }}: {{currentLabel}}
+    <ng-container *ngIf="showLabel">{{'time-range-picker.timeRange' | i18n }}:</ng-container> {{currentLabel}}
 </bl-clickable>
 
 <bl-callout #callout="blCallout">

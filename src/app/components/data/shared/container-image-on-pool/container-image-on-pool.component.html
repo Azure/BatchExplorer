@@ -1,0 +1,17 @@
+<div *ngIf="showControls" >
+    <div class="grow">
+        <div class="gcol">
+            <bl-form-field>
+                <input blInput [formControl]="appVersionControl" placeholder="{{appDisplay}} Version on selected Pool" readonly />
+            </bl-form-field>
+        </div>
+        <div class="gcol">
+            <bl-form-field>
+                <input blInput [formControl]="rendererVersionControl" placeholder="{{renderEngineDisplay}} Version on selected Pool" readonly />
+            </bl-form-field>
+        </div>
+    </div>
+    <p *ngIf="containerImage" class="container-image-display">
+        Job will execute with container image:      {{ containerImage }}
+    </p>
+</div>

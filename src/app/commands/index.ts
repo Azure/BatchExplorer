@@ -1,2 +1,5 @@
-export * from "./core";
-export * from "./open-add-pool.command";
+import "./account.appcmd";
+import "./data.appcmd";
+import "./job.appcmd";
+import "./list.appcmd";
+import "./pool.appcmd";

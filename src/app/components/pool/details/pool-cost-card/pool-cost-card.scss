@@ -1,0 +1,18 @@
+@import "app/styles/variables";
+
+bl-pool-cost-card {
+    display: block;
+
+    canvas {
+        width: 300px;
+        height: 75px;
+    }
+
+    .total {
+        text-align: center;
+    }
+
+    .fa-warning {
+        color: $warn-color;
+    }
+}

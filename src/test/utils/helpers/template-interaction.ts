@@ -111,8 +111,17 @@ export function mouseleave(el: DebugElement | HTMLElement) {
     sendEvent(el, event);
 }
 
-export function keydown(el: DebugElement | HTMLElement, key: string, code?: KeyCode, keyCode?: number) {
+export function keydown(el: DebugElement | HTMLElement | Node, key: string, code?: KeyCode, keyCode?: number) {
     const event = new KeyboardEvent("keydown", {
+        key,
+        code,
+        keyCode,
+    } as any);
+    sendEvent(el, event);
+}
+
+export function keyup(el: DebugElement | HTMLElement | Node, key: string, code?: KeyCode, keyCode?: number) {
+    const event = new KeyboardEvent("keyup", {
         key,
         code,
         keyCode,
