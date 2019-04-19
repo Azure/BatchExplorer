@@ -1,3 +1,24 @@
+# 2.1.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/35?closed=1)
+
+### feature:
+
+
+### bug:
+
+
+### other:
+
+* Clone pool not setting app package name [\#2019](https://github.com/Azure/BatchExplorer/issues/2019)
+* Pressing keys while leaving the window break keyboard shortcuts [\#2014](https://github.com/Azure/BatchExplorer/issues/2014)
+* Allow key bindings to be edited by the user [\#2009](https://github.com/Azure/BatchExplorer/issues/2009)
+* Page to see key bindings [\#2006](https://github.com/Azure/BatchExplorer/issues/2006)
+* Enable Keyboard shortcuts for pool/job operations [\#1997](https://github.com/Azure/BatchExplorer/issues/1997)
+* Show cost per pool  [\#1993](https://github.com/Azure/BatchExplorer/issues/1993)
+* Node connect experience merge configure page [\#1991](https://github.com/Azure/BatchExplorer/issues/1991)
+* Allow updating local batch account properties [\#1951](https://github.com/Azure/BatchExplorer/issues/1951)
+* New job created in NCJ adds to the bottom of the quick-list [\#1277](https://github.com/Azure/BatchExplorer/issues/1277)
+
 # 2.0.4
 
 ### Fixes
