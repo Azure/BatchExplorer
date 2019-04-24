@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
-    OnChanges, OnDestroy, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
+    OnChanges, OnDestroy, forwardRef,
+} from "@angular/core";
 import {
     ControlValueAccessor,
     FormBuilder,
@@ -11,8 +13,10 @@ import { isNotNullOrUndefined } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
 import { Offer, Pool } from "app/models";
 import { RenderApplication, RenderEngine, RenderingContainerImage } from "app/models/rendering-container-image";
-import { PoolOsService, PoolService, RenderingContainerImageService,
-    VmSizeService } from "app/services";
+import {
+    PoolOsService, PoolService, RenderingContainerImageService,
+    VmSizeService,
+} from "app/services";
 import { PoolUtils } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Subject, combineLatest } from "rxjs";
@@ -88,8 +92,8 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
             }));
 
         ciFilteredPools.subscribe((pools) => {
-                this.displayedPools = pools;
-                this.changeDetector.markForCheck();
+            this.displayedPools = pools;
+            this.changeDetector.markForCheck();
         });
 
         combineLatest(
@@ -103,7 +107,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
         });
 
         this.vmSizeService.sizes.pipe(takeUntil(this._destroy)).subscribe((sizes) => {
-            if (!sizes) {return; }
+            if (!sizes) { return; }
             const vmSizeCoresMap = new Map<string, number>();
             sizes.forEach((size) => {
                 vmSizeCoresMap.set(size.id, size.numberOfCores);
@@ -191,7 +195,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
     }
 
     private _filterPool(pool: Pool, filters: PoolFilters, inputs: Inputs | null,
-                        containerImages: Map <string, RenderingContainerImage>): boolean {
+                        containerImages: Map<string, RenderingContainerImage>): boolean {
         if (filters.id !== "" && !pool.id.toLowerCase().contains(filters.id.toLowerCase())) {
             return false;
         }
@@ -242,7 +246,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
     }
 
     private _filterByContainerImage(pool: Pool, inputs: Inputs,
-                                    containerImages: Map <string, RenderingContainerImage>) {
+                                    containerImages: Map<string, RenderingContainerImage>) {
         if (!pool.virtualMachineConfiguration ||
             !pool.virtualMachineConfiguration.containerConfiguration) {
             return false;
@@ -254,8 +258,8 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
                     return false;
                 }
                 const isMatch = (image.app === inputs.app
-                        && image.renderer === inputs.renderEngine
-                        && image.imageReferenceId === inputs.imageReferenceId);
+                    && image.renderer === inputs.renderEngine
+                    && image.imageReferenceId === inputs.imageReferenceId);
                 return isMatch;
             }) != null;
     }
