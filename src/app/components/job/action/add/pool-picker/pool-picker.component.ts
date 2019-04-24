@@ -1,12 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    OnChanges,
-    OnDestroy,
-    forwardRef,
-} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
+    OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor,
     FormBuilder,
@@ -14,28 +7,16 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { isNotNullOrUndefined } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
 import { Offer, Pool } from "app/models";
-import {
-    RenderApplication,
-    RenderEngine,
-    RenderingContainerImage,
-} from "app/models/rendering-container-image";
-import {
-    PoolOsService,
-    PoolService,
-    RenderingContainerImageService,
-    VmSizeService,
-} from "app/services";
+import { RenderApplication, RenderEngine, RenderingContainerImage } from "app/models/rendering-container-image";
+import { PoolOsService, PoolService, RenderingContainerImageService,
+    VmSizeService } from "app/services";
 import { PoolUtils } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Subject, combineLatest } from "rxjs";
-import {
-    distinctUntilChanged,
-    map,
-    startWith,
-    takeUntil,
-} from "rxjs/operators";
+import { distinctUntilChanged, filter, map, startWith, takeUntil } from "rxjs/operators";
 
 import "./pool-picker.scss";
 
@@ -58,20 +39,11 @@ const CLOUD_SERVICE_OFFER = "cloudservice-windows";
     templateUrl: "pool-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => PoolPickerComponent),
-            multi: true,
-        },
-        {
-            provide: NG_VALIDATORS,
-            useExisting: forwardRef(() => PoolPickerComponent),
-            multi: true,
-        },
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PoolPickerComponent), multi: true },
+        { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolPickerComponent), multi: true },
     ],
 })
-export class PoolPickerComponent
-    implements ControlValueAccessor, OnChanges, OnDestroy {
+export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     @Input() public app: RenderApplication;
@@ -94,73 +66,62 @@ export class PoolPickerComponent
         private poolOsService: PoolOsService,
         private vmSizeService: VmSizeService,
         private renderingContainerImageService: RenderingContainerImageService,
-        private changeDetector: ChangeDetectorRef,
-    ) {
+        private changeDetector: ChangeDetectorRef) {
         this.filters = formBuilder.group({
             id: "",
             offer: null,
         });
 
         const containerImageMap = this.renderingContainerImageService.containerImagesAsMap();
+
         const ciFilteredPools = combineLatest(
             this.poolService.pools,
-            this.filters.valueChanges.pipe(
-                startWith(this.filters.value),
-                distinctUntilChanged(),
-            ),
-            this._inputs,
+            this.filters.valueChanges.pipe(startWith(this.filters.value), distinctUntilChanged()),
+            this._inputs.pipe(filter(isNotNullOrUndefined)),
             containerImageMap,
         ).pipe(
             takeUntil(this._destroy),
             map(([pools, filters, inputs, containerImages]) => {
-                return pools
-                    .filter(pool => {
-                        return this._filterPool(
-                            pool,
-                            filters,
-                            inputs,
-                            containerImages,
-                        );
-                    })
-                    .toList();
-            }),
-        );
+                return pools.filter((pool) => {
+                    return this._filterPool(pool, filters, inputs, containerImages);
+                }).toList();
+            }));
 
-        ciFilteredPools.subscribe(pools => {
-            this.displayedPools = pools;
+        ciFilteredPools.subscribe((pools) => {
+                this.displayedPools = pools;
+                this.changeDetector.markForCheck();
+        });
+
+        combineLatest(
+            this.poolOsService.offers,
+            ciFilteredPools,
+        ).pipe(
+            takeUntil(this._destroy),
+        ).subscribe(([offers, pools]) => {
+            this._updateOffers(offers.allOffers, pools);
             this.changeDetector.markForCheck();
         });
 
-        combineLatest(this.poolOsService.offers, ciFilteredPools)
-            .pipe(takeUntil(this._destroy))
-            .subscribe(([offers, pools]) => {
-                this._updateOffers(offers.allOffers, pools);
-                this.changeDetector.markForCheck();
+        this.vmSizeService.sizes.pipe(takeUntil(this._destroy)).subscribe((sizes) => {
+            if (!sizes) {return; }
+            const vmSizeCoresMap = new Map<string, number>();
+            sizes.forEach((size) => {
+                vmSizeCoresMap.set(size.id, size.numberOfCores);
             });
 
-        this.vmSizeService.sizes
-            .pipe(takeUntil(this._destroy))
-            .subscribe(sizes => {
-                if (!sizes) {
-                    return;
-                }
-                const vmSizeCoresMap = new Map<string, number>();
-                sizes.forEach(size => {
-                    vmSizeCoresMap.set(size.id, size.numberOfCores);
-                });
-
-                this._vmSizeCoresMap = vmSizeCoresMap;
-                this.changeDetector.markForCheck();
-            });
+            this._vmSizeCoresMap = vmSizeCoresMap;
+            this.changeDetector.markForCheck();
+        });
     }
 
     public ngOnChanges(changes) {
         if (changes.app && changes.renderEngine && changes.imageReferenceId) {
-            this._inputs.next({
-                app: this.app,
-                renderEngine: this.renderEngine,
-                imageReferenceId: this.imageReferenceId,
-            });
+            this._inputs.next(
+                {
+                    app: this.app,
+                    renderEngine: this.renderEngine,
+                    imageReferenceId: this.imageReferenceId,
+                });
         }
     }
 
@@ -229,16 +190,9 @@ export class PoolPickerComponent
         return this._upperCaseFirstChar(this.imageReferenceId.substring(0, 6));
     }
 
-    private _filterPool(
-        pool: Pool,
-        filters: PoolFilters,
-        inputs: Inputs | null,
-        containerImages: Map<string, RenderingContainerImage>,
-    ): boolean {
-        if (
-            filters.id !== "" &&
-            !pool.id.toLowerCase().contains(filters.id.toLowerCase())
-        ) {
+    private _filterPool(pool: Pool, filters: PoolFilters, inputs: Inputs | null,
+                        containerImages: Map <string, RenderingContainerImage>): boolean {
+        if (filters.id !== "" && !pool.id.toLowerCase().contains(filters.id.toLowerCase())) {
             return false;
         }
 
@@ -248,12 +202,8 @@ export class PoolPickerComponent
             }
         }
 
-        if (
-            inputs &&
-            inputs.app &&
-            inputs.renderEngine &&
-            inputs.imageReferenceId
-        ) {
+        if (inputs && inputs.app && inputs.renderEngine && inputs.imageReferenceId) {
+
             if (!this._filterByContainerImage(pool, inputs, containerImages)) {
                 return false;
             }
@@ -265,24 +215,16 @@ export class PoolPickerComponent
         const filterByPaaS = offer === CLOUD_SERVICE_OFFER;
         const isIaaS = PoolUtils.isIaas(pool);
         if (isIaaS) {
-            if (filterByPaaS) {
-                return false;
-            }
-            if (
-                pool.virtualMachineConfiguration.imageReference.offer !== offer
-            ) {
-                return false;
-            }
+            if (filterByPaaS) { return false; }
+            if (pool.virtualMachineConfiguration.imageReference.offer !== offer) { return false; }
         } else {
-            if (!filterByPaaS) {
-                return false;
-            }
+            if (!filterByPaaS) { return false; }
         }
         return true;
     }
 
     private _updateOffers(offers: Offer[], pools: List<Pool>) {
-        const offersMap = offers.map(offer => {
+        const offersMap = offers.map((offer) => {
             const count = pools.count(x => this._filterByOffer(x, offer.name));
             return {
                 name: offer.name,
@@ -290,9 +232,7 @@ export class PoolPickerComponent
             };
         });
 
-        const cloudServiceCount = pools.count(x =>
-            this._filterByOffer(x, CLOUD_SERVICE_OFFER),
-        );
+        const cloudServiceCount = pools.count(x => this._filterByOffer(x, CLOUD_SERVICE_OFFER));
         offersMap.push({
             name: CLOUD_SERVICE_OFFER,
             label: `Windows (Cloud service) (${cloudServiceCount})`,
@@ -301,32 +241,23 @@ export class PoolPickerComponent
         this.offers = offersMap;
     }
 
-    private _filterByContainerImage(
-        pool: Pool,
-        inputs: Inputs,
-        containerImages: Map<string, RenderingContainerImage>,
-    ) {
-        if (
-            !pool.virtualMachineConfiguration ||
-            !pool.virtualMachineConfiguration.containerConfiguration
-        ) {
+    private _filterByContainerImage(pool: Pool, inputs: Inputs,
+                                    containerImages: Map <string, RenderingContainerImage>) {
+        if (!pool.virtualMachineConfiguration ||
+            !pool.virtualMachineConfiguration.containerConfiguration) {
             return false;
         }
-        return (
-            pool.virtualMachineConfiguration.containerConfiguration.containerImageNames.find(
-                imageId => {
-                    const image = containerImages.get(imageId);
-                    if (!image) {
-                        return false;
-                    }
-                    const isMatch =
-                        image.app === inputs.app &&
-                        image.renderer === inputs.renderEngine &&
-                        image.imageReferenceId === inputs.imageReferenceId;
-                    return isMatch;
-                },
-            ) != null
-        );
+        return pool.virtualMachineConfiguration.containerConfiguration.containerImageNames
+            .find(imageId => {
+                const image = containerImages.get(imageId);
+                if (!image) {
+                    return false;
+                }
+                const isMatch = (image.app === inputs.app
+                        && image.renderer === inputs.renderEngine
+                        && image.imageReferenceId === inputs.imageReferenceId);
+                return isMatch;
+            }) != null;
     }
 
     private _upperCaseFirstChar(lower: string) {
