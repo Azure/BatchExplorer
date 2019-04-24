@@ -14,11 +14,23 @@ import { click, updateInput } from "test/utils/helpers";
 import { GithubDataServiceMock } from "test/utils/mocks";
 
 @Component({
-    template: `<bl-pool-picker [formControl]="poolInfo"
-        [app]="app" [renderEngine]="renderEngine" [imageReferenceId]="imageReferenceId">
-    </bl-pool-picker>`,
+    template: `
+        <bl-pool-picker [formControl]="poolInfo">
+        </bl-pool-picker>
+    `,
 })
-class TestComponent {
+class SimpleTestComponent {
+    public poolInfo = new FormControl({});
+}
+
+@Component({
+    template: `
+        <bl-pool-picker [formControl]="poolInfo"
+            [app]="app" [renderEngine]="renderEngine" [imageReferenceId]="imageReferenceId">
+        </bl-pool-picker>
+    `,
+})
+class TestComponent extends SimpleTestComponent {
     public poolInfo = new FormControl({});
 
     public app: RenderApplication;
@@ -149,7 +161,7 @@ describe("PoolPickerComponent", () => {
 
         TestBed.configureTestingModule({
             imports: [FormsModule, ReactiveFormsModule, SelectModule, ButtonsModule, I18nTestingModule],
-            declarations: [PoolPickerComponent, TestComponent],
+            declarations: [PoolPickerComponent, TestComponent, SimpleTestComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 { provide: PoolService, useValue: poolServiceSpy },
@@ -162,6 +174,25 @@ describe("PoolPickerComponent", () => {
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-pool-picker"));
         fixture.detectChanges();
+    });
+
+    it("list all pools when not providing rendering filters", () => {
+        const simpleFixture = TestBed.createComponent(SimpleTestComponent);
+        de = simpleFixture.debugElement.query(By.css("bl-pool-picker"));
+        simpleFixture.detectChanges();
+
+        const pools = de.queryAll(By.css(".pool-list .pool"));
+        expect(pools.length).toBe(5);
+        expect(pools[0].query(By.css(".title")).nativeElement.textContent).toContain("centos-pool-1");
+        expect(pools[0].query(By.css(".details")).nativeElement.textContent).toContain("3");
+        expect(pools[1].query(By.css(".title")).nativeElement.textContent).toContain("centos-pool-2");
+        expect(pools[1].query(By.css(".details")).nativeElement.textContent).toContain("1");
+        expect(pools[2].query(By.css(".title")).nativeElement.textContent).toContain("ubuntu-pool-1");
+        expect(pools[2].query(By.css(".details")).nativeElement.textContent).toContain("19");
+        expect(pools[3].query(By.css(".title")).nativeElement.textContent).toContain("windows-pool-1");
+        expect(pools[3].query(By.css(".details")).nativeElement.textContent).toContain("43");
+        expect(pools[4].query(By.css(".title")).nativeElement.textContent).toContain("windows-cloudservice-pool-1");
+        expect(pools[4].query(By.css(".details")).nativeElement.textContent).toContain("12");
     });
 
     it("should list all the pools", () => {
@@ -249,18 +280,18 @@ describe("PoolPickerComponent", () => {
     describe("filter by containerImage", () => {
         // the below id's need to match github-data.service.mock
         const ubuntuContainerImages =
-        [
-            "ubuntu_maya_vray",
-            "ubuntu_maya2017u5_arnold2011",
-            "ubuntu_maya2017u5_arnold2023",
-            "ubuntu_3dsmax_vray25001",
-        ];
+            [
+                "ubuntu_maya_vray",
+                "ubuntu_maya2017u5_arnold2011",
+                "ubuntu_maya2017u5_arnold2023",
+                "ubuntu_3dsmax_vray25001",
+            ];
 
         const windowsContainerImages =
-        [
-            "win_maya_arnold",
-            "win_maya2017_vray",
-        ];
+            [
+                "win_maya_arnold",
+                "win_maya2017_vray",
+            ];
 
         let containerImagePools: Pool[];
 
