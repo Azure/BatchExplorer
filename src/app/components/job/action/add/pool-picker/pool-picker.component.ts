@@ -14,7 +14,6 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { isNotNullOrUndefined } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
 import { Offer, Pool } from "app/models";
 import {
@@ -33,7 +32,6 @@ import { List } from "immutable";
 import { BehaviorSubject, Subject, combineLatest } from "rxjs";
 import {
     distinctUntilChanged,
-    filter,
     map,
     startWith,
     takeUntil,
@@ -115,7 +113,6 @@ export class PoolPickerComponent
         ).pipe(
             takeUntil(this._destroy),
             map(([pools, filters, inputs, containerImages]) => {
-                console.log("pools", pools, filters, inputs, containerImages);
                 return pools
                     .filter(pool => {
                         return this._filterPool(
