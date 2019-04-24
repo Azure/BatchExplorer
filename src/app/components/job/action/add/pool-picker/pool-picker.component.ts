@@ -81,7 +81,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
         const ciFilteredPools = combineLatest(
             this.poolService.pools,
             this.filters.valueChanges.pipe(startWith(this.filters.value), distinctUntilChanged()),
-            this._inputs.pipe(filter(isNotNullOrUndefined)),
+            this._inputs,
             containerImageMap,
         ).pipe(
             takeUntil(this._destroy),
