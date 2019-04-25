@@ -17,9 +17,10 @@
     "**/__pycache__/**/*": true,
     ".awcache/**": true
   },
-  "python.autoComplete.extraPaths": [
-    "${workspaceRoot}/python"
-  ],
+  "python.autoComplete.extraPaths": ["${workspaceRoot}/python"],
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
   "vsicons.presets.angular": true,
   "css.validate": false,
   "scss.validate": false,
