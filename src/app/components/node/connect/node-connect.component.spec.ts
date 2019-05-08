@@ -193,8 +193,11 @@ describe("NodeConnectComponent", () => {
                 expect(updateUserArgs.length).toBe(3);
                 expect(updateUserArgs[0]).toBe("iaas-linux-pool");
                 expect(updateUserArgs[1]).toBe("node-1");
-                expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ name: "foo" }));
-                expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ sshPublicKey: "baz" }));
+                expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({
+                    name: "foo",
+                    sshPublicKey: "baz",
+                    isAdmin: true,
+                }));
 
                 // validate calls to launchApplication
                 expect(batchExplorerServiceSpy.launchApplication).toHaveBeenCalledOnce();
@@ -216,8 +219,11 @@ describe("NodeConnectComponent", () => {
             expect(updateUserArgs.length).toBe(3);
             expect(updateUserArgs[0]).toBe("iaas-linux-pool");
             expect(updateUserArgs[1]).toBe("node-1");
-            expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ name: "foo" }));
-            expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ sshPublicKey: "baz" }));
+            expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({
+                name: "foo",
+                sshPublicKey: "baz",
+                isAdmin: true,
+            }));
         });
     });
 

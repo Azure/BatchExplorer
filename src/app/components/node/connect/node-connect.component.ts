@@ -148,8 +148,9 @@ export class NodeConnectComponent implements OnInit {
         const userConfig = this.userConfig;
 
         const credentials: AddNodeUserAttributes = {
-            name: this.userConfig.name,
-            expiryTime: DateTime.local().plus(this.userConfig.expireIn).toJSDate(),
+            name: userConfig.name,
+            expiryTime: DateTime.local().plus(userConfig.expireIn).toJSDate(),
+            isAdmin: userConfig.isAdmin,
         };
 
         if (this.linux && userConfig.usingSSHKey) {
