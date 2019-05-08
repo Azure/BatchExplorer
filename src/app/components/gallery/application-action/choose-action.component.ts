@@ -27,7 +27,7 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     @Output() public actionChange = new EventEmitter<string>();
 
     public actions: List<ApplicationAction>;
-    public _baseUrl: Observable<string>;
+    private _baseUrl: string;
 
     private _application = new BehaviorSubject<ApplicationSelection | null>(null);
     private _destroy = new Subject();
@@ -37,7 +37,7 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
         private electronShell: ElectronShell,
         private templateService: NcjTemplateService,
         private settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
-        this._baseUrl = this.settingsService.watch("microsoftPortfolio").pipe(
+        this.settingsService.watch("microsoftPortfolio").pipe(
             takeUntil(this._destroy),
             map((settings) => {
                 const branch = settings.branch;
@@ -54,7 +54,7 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
             }),
             publishReplay(1),
             refCount(),
-        );
+        ).subscribe(url => this._baseUrl = url);
 
         this._application.pipe(
             takeUntil(this._destroy),
@@ -85,10 +85,8 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     public viewOnGithub(action: ApplicationAction) {
         if (this.isMicrosoftOfficial) {
             const { applicationId } = this.application;
-            this._baseUrl.subscribe((baseUrl) => {
-                const link = `${baseUrl}/${applicationId}/${action.id}`;
-                this.electronShell.openExternal(link);
-            });
+            const link = `${this._baseUrl}/${applicationId}/${action.id}`;
+            this.electronShell.openExternal(link);
         }
     }
 

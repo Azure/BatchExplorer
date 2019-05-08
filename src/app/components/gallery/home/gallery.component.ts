@@ -29,7 +29,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
     public activeApplication: ApplicationSelection | null = null;
 
-    public _baseUrl: Observable<string>;
+    private _baseUrl: string;
     private _destroy = new Subject();
 
     constructor(
@@ -42,7 +42,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
         public autoStorageService: AutoStorageService,
         private settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
 
-        this._baseUrl = this.settingsService.watch("microsoftPortfolio").pipe(
+        this.settingsService.watch("microsoftPortfolio").pipe(
             takeUntil(this._destroy),
             map((settings) => {
                 const branch = settings.branch;
@@ -59,7 +59,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
             }),
             publishReplay(1),
             refCount(),
-        );
+        ).subscribe(url => this._baseUrl = url);
 
         this.quicksearch.valueChanges.pipe(takeUntil(this._destroy)).subscribe((query) => {
             this.query = query;
@@ -107,10 +107,8 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
     @autobind()
     public openReadme(applicationId: string) {
-        this._baseUrl.subscribe((baseUrl) => {
-            const link = `${baseUrl}/${applicationId}/readme.md`;
-            this.electronShell.openExternal(link, { activate: true });
-            });
+        const link = `${this._baseUrl}/${applicationId}/readme.md`;
+        this.electronShell.openExternal(link, { activate: true });
     }
 
     public submitAction(actionId: string) {
