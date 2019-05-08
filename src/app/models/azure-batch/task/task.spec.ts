@@ -61,14 +61,27 @@ describe("Task model", () => {
     });
 
     describe("#runtime", () => {
+        let clock: jasmine.Clock;
+        beforeEach(() => {
+            clock = jasmine.clock();
+        });
+
+        afterEach(() => {
+            clock.uninstall();
+        });
+
         it("returns null if execution info is not defined", () => {
             expect(new Task({ id: "task-1" }).runtime).toBe(null);
         });
         it("returns null if start time is not defined", () => {
             expect(new Task({ id: "task-1", executionInfo: {} } as any).runtime).toBe(null);
         });
-        it("returns null if end time is not defined", () => {
-            expect(new Task({ id: "task-1", executionInfo: { startTime: new Date() } } as any).runtime).toBe(null);
+        it("returns diff with now if end time is not defined", () => {
+            const startTime = new Date(new Date().getTime() - 20_000);
+            const now = new Date();
+            clock.mockDate(now);
+            const runtime = new Task({ id: "task-1", executionInfo: { startTime } } as any).runtime;
+            expect(runtime).toBe(now.getTime() - startTime.getTime());
         });
         it("returns runtime in milliseconds when both start and endtime are defined", () => {
             const startTime = new Date(2018, 9, 3, 20, 30, 21);
