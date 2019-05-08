@@ -1,7 +1,8 @@
 # 2.1.2
 
 ### Bug fixes
-* Cannot connect to a node as an Admin [\#2029](https://github.com/Azure/BatchExplorer/issues/2033)
+* Cannot connect to a node as an Admin [\#2033](https://github.com/Azure/BatchExplorer/issues/2033)
+* Sort task by runtime fix for running tasks [\#2034](https://github.com/Azure/BatchExplorer/issues/2034)
 
 # 2.1.1
 
