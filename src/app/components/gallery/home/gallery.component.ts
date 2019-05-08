@@ -7,7 +7,7 @@ import { DialogService } from "@batch-flask/ui";
 import { MICROSOFT_PORTFOLIO, NcjTemplateService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { BEUserDesktopConfiguration, Constants } from "common";
-import { Observable, Subject } from "rxjs";
+import { Subject } from "rxjs";
 import { map, publishReplay, refCount, takeUntil } from "rxjs/operators";
 import { ApplicationSelection } from "../application-list";
 import { SubmitMarketApplicationComponent } from "../submit";

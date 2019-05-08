@@ -7,7 +7,7 @@ import { ApplicationAction } from "app/models";
 import { MICROSOFT_PORTFOLIO, NcjTemplateService } from "app/services";
 import { BEUserDesktopConfiguration, Constants } from "common";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 import { distinctUntilChanged, filter, map, publishReplay, refCount, switchMap, takeUntil } from "rxjs/operators";
 import { ApplicationSelection } from "../application-list";
 
