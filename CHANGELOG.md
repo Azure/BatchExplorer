@@ -1,3 +1,8 @@
+# 2.1.2
+
+### Bug fixes
+* Cannot connect to a node as an Admin [\#2029](https://github.com/Azure/BatchExplorer/issues/2033)
+
 # 2.1.1
 
 ### Bug fixes
