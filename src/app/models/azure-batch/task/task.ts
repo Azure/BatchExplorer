@@ -103,8 +103,9 @@ export class Task extends Record<TaskAttributes> {
 
     public get runtime(): number | null {
         const info = this.executionInfo;
-        if (!info || !info.endTime || !info.startTime) { return null; }
-        return info.endTime.getTime() - info.startTime.getTime();
+        if (!info || !info.startTime) { return null; }
+        const endTime = info.endTime ? info.endTime.getTime() : new Date().getTime();
+        return endTime - info.startTime.getTime();
     }
 
     /**
