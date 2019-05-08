@@ -18,7 +18,7 @@
         <div class="gallery-application-actions" *ngIf="activeApplication">
             <div class="actions-header">
                 <h2>{{'gallery.actions' | i18n }}</h2>
-                <bl-clickable (do)="openReadme(activeApplication)">{{'gallery.viewReadme' | i18n }}</bl-clickable>
+                <bl-clickable (do)="openReadme(activeApplication.applicationId)">{{'gallery.viewReadme' | i18n }}</bl-clickable>
                 <bl-clickable (do)="selectApplication(null)">{{'common.back' | i18n }}</bl-clickable>
             </div>
             <bl-choose-action [application]="activeApplication" (actionChange)="submitAction($event)"></bl-choose-action>
