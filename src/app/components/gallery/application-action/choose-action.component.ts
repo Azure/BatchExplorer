@@ -1,13 +1,14 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
-import { isNotNullOrUndefined } from "@batch-flask/core";
+import { UserConfigurationService, isNotNullOrUndefined } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { ApplicationAction } from "app/models";
 import { MICROSOFT_PORTFOLIO, NcjTemplateService } from "app/services";
+import { BEUserDesktopConfiguration, Constants } from "common";
 import { List } from "immutable";
-import { BehaviorSubject, Subject } from "rxjs";
-import { distinctUntilChanged, filter, switchMap, takeUntil } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { distinctUntilChanged, filter, map, publishReplay, refCount, switchMap, takeUntil } from "rxjs/operators";
 import { ApplicationSelection } from "../application-list";
 
 import "./choose-action.scss";
@@ -26,6 +27,7 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     @Output() public actionChange = new EventEmitter<string>();
 
     public actions: List<ApplicationAction>;
+    public _baseUrl: Observable<string>;
 
     private _application = new BehaviorSubject<ApplicationSelection | null>(null);
     private _destroy = new Subject();
@@ -33,7 +35,26 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     constructor(
         private changeDetector: ChangeDetectorRef,
         private electronShell: ElectronShell,
-        private templateService: NcjTemplateService) {
+        private templateService: NcjTemplateService,
+        private settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
+        this._baseUrl = this.settingsService.watch("microsoftPortfolio").pipe(
+            takeUntil(this._destroy),
+            map((settings) => {
+                const branch = settings.branch;
+                const repo = settings.repo;
+                const path = settings.path;
+                return {
+                    branch: branch || "master",
+                    repo: repo || "Azure/batch-extension-templates",
+                    path: path || "templates",
+                };
+            }),
+            map(({repo, branch, path}) => {
+                return this._getRepoUrl(repo, branch, path);
+            }),
+            publishReplay(1),
+            refCount(),
+        );
 
         this._application.pipe(
             takeUntil(this._destroy),
@@ -64,8 +85,10 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
     public viewOnGithub(action: ApplicationAction) {
         if (this.isMicrosoftOfficial) {
             const { applicationId } = this.application;
-            const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${applicationId}/${action.id}`;
-            this.electronShell.openExternal(link);
+            this._baseUrl.subscribe((baseUrl) => {
+                const link = `${baseUrl}/${applicationId}/${action.id}`;
+                this.electronShell.openExternal(link);
+            });
         }
     }
 
@@ -75,5 +98,9 @@ export class ChooseActionComponent implements OnChanges, OnDestroy {
 
     public get isMicrosoftOfficial() {
         return this.application.portfolioId === MICROSOFT_PORTFOLIO.id;
+    }
+
+    private _getRepoUrl(repo: string, branch: string, path: string) {
+        return `${Constants.ServiceUrl.github}/${repo}/tree/${branch}/${path}`;
     }
 }

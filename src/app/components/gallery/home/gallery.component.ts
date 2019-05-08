@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@batch-flask/core";
+import { UserConfigurationService, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { DialogService } from "@batch-flask/ui";
 import { MICROSOFT_PORTFOLIO, NcjTemplateService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { BEUserDesktopConfiguration, Constants } from "common";
+import { Observable, Subject } from "rxjs";
+import { map, publishReplay, refCount, takeUntil } from "rxjs/operators";
 import { ApplicationSelection } from "../application-list";
 import { SubmitMarketApplicationComponent } from "../submit";
 
@@ -28,6 +29,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
     public activeApplication: ApplicationSelection | null = null;
 
+    public _baseUrl: Observable<string>;
     private _destroy = new Subject();
 
     constructor(
@@ -37,7 +39,27 @@ export class GalleryComponent implements OnInit, OnDestroy {
         private electronShell: ElectronShell,
         private dialogService: DialogService,
         private templateService: NcjTemplateService,
-        public autoStorageService: AutoStorageService) {
+        public autoStorageService: AutoStorageService,
+        private settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
+
+        this._baseUrl = this.settingsService.watch("microsoftPortfolio").pipe(
+            takeUntil(this._destroy),
+            map((settings) => {
+                const branch = settings.branch;
+                const repo = settings.repo;
+                const path = settings.path;
+                return {
+                    branch: branch || "master",
+                    repo: repo || "Azure/batch-extension-templates",
+                    path: path || "templates",
+                };
+            }),
+            map(({repo, branch, path}) => {
+                return this._getRepoUrl(repo, branch, path);
+            }),
+            publishReplay(1),
+            refCount(),
+        );
 
         this.quicksearch.valueChanges.pipe(takeUntil(this._destroy)).subscribe((query) => {
             this.query = query;
@@ -85,8 +107,10 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
     @autobind()
     public openReadme(applicationId: string) {
-        const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${applicationId}`;
-        this.electronShell.openExternal(link, { activate: true });
+        this._baseUrl.subscribe((baseUrl) => {
+            const link = `${baseUrl}/${applicationId}/readme.md`;
+            this.electronShell.openExternal(link, { activate: true });
+            });
     }
 
     public submitAction(actionId: string) {
@@ -101,5 +125,9 @@ export class GalleryComponent implements OnInit, OnDestroy {
                 this.activeApplication.portfolioId,
                 this.activeApplication.applicationId]);
         });
+    }
+
+    private _getRepoUrl(repo: string, branch: string, path: string) {
+        return `${Constants.ServiceUrl.github}/${repo}/tree/${branch}/${path}`;
     }
 }

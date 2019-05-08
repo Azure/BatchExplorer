@@ -139,6 +139,7 @@ export const Environment = {
 
 export const ServiceUrl = {
     githubRaw: "https://raw.githubusercontent.com",
+    github: "https://github.com",
 };
 
 export const ResourceUrl = {
