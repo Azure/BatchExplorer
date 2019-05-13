@@ -57,29 +57,29 @@ describe("UserIdentityComponent", () => {
             username: "bar",
         });
 
-        expect(options[3].label).toEqual("Pool user");
-        expect(options[3].value).toEqual({
+        expect(options[2].label).toEqual("Pool user");
+        expect(options[2].value).toEqual({
             autoUser: {
                 elevationLevel: UserAccountElevationLevel.nonadmin,
                 scope: AutoUserScope.pool,
             },
         });
-        expect(options[4].label).toEqual("Pool user (Admin)");
-        expect(options[4].value).toEqual({
+        expect(options[3].label).toEqual("Pool user (Admin)");
+        expect(options[3].value).toEqual({
             autoUser: {
                 elevationLevel: UserAccountElevationLevel.admin,
                 scope: AutoUserScope.pool,
             },
         });
-        expect(options[5].label).toEqual("Task user");
-        expect(options[5].value).toEqual({
+        expect(options[4].label).toEqual("Task user");
+        expect(options[4].value).toEqual({
             autoUser: {
                 elevationLevel: UserAccountElevationLevel.nonadmin,
                 scope: AutoUserScope.task,
             },
         });
-        expect(options[6].label).toEqual("Task user (Admin)");
-        expect(options[6].value).toEqual({
+        expect(options[5].label).toEqual("Task user (Admin)");
+        expect(options[5].value).toEqual({
             autoUser: {
                 elevationLevel: UserAccountElevationLevel.admin,
                 scope: AutoUserScope.task,
@@ -96,7 +96,7 @@ describe("UserIdentityComponent", () => {
         expect(testComponent.control.value).toEqual({
             autoUser: {
                 elevationLevel: UserAccountElevationLevel.admin,
-                scope: AutoUserScope.task,
+                scope: AutoUserScope.pool,
             },
         });
     });
@@ -135,7 +135,7 @@ describe("UserIdentityComponent", () => {
         expect([...select.selected].first()).toEqual({
             autoUser: {
                 elevationLevel: UserAccountElevationLevel.nonadmin,
-                scope: AutoUserScope.task,
+                scope: AutoUserScope.pool,
             },
         });
     });
