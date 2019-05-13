@@ -14,16 +14,6 @@ interface UserOption {
 
 const defaultUsers = [
     {
-        label: "Task user",
-        scope: AutoUserScope.task,
-        elevationLevel: UserAccountElevationLevel.nonadmin,
-    },
-    {
-        label: "Task user (Admin)",
-        scope: AutoUserScope.task,
-        elevationLevel: UserAccountElevationLevel.admin,
-    },
-    {
         label: "Pool user",
         scope: AutoUserScope.pool,
         elevationLevel: UserAccountElevationLevel.nonadmin,
@@ -31,6 +21,16 @@ const defaultUsers = [
     {
         label: "Pool user (Admin)",
         scope: AutoUserScope.pool,
+        elevationLevel: UserAccountElevationLevel.admin,
+    },
+    {
+        label: "Task user",
+        scope: AutoUserScope.task,
+        elevationLevel: UserAccountElevationLevel.nonadmin,
+    },
+    {
+        label: "Task user (Admin)",
+        scope: AutoUserScope.task,
         elevationLevel: UserAccountElevationLevel.admin,
     },
 ].map(({ label, scope, elevationLevel }) => {
