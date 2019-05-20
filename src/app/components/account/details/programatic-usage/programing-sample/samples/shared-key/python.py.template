@@ -13,7 +13,7 @@ credentials = batchauth.SharedKeyCredentials(BATCH_ACCOUNT_NAME,
 
 batch_client = batch.BatchServiceClient(
     credentials,
-    base_url=BATCH_ACCOUNT_URL)
+    batch_url=BATCH_ACCOUNT_URL)
 
 # Perform action with the batch_client
 jobs = batch_client.job.list()
