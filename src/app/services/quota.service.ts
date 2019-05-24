@@ -104,7 +104,7 @@ export class QuotaService implements OnDestroy {
 
     public updateJobUsage() {
         const obs = this.jobService.listAll({
-            filter: FilterBuilder.prop("state").eq(JobState.active),
+            filter: FilterBuilder.prop("state").ne(JobState.completed),
             select: "id",
         });
         obs.subscribe((jobs) => {
