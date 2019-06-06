@@ -116,8 +116,7 @@ export class NodePricing {
         });
     }
 
-    private _parseVmName(category: string, name: string):
-    { os: OsType, lowpri: boolean, vmSizes: string[] } {
+    private _parseVmName(category: string, name: string): { os: OsType, lowpri: boolean, vmSizes: string[] } {
         let lowpri = false;
         if (name.endsWith(" Low Priority")) {
             lowpri = true;
