@@ -4,7 +4,7 @@ import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils } from "app/utils";
-import { DateTime } from "luxon";
+// import { DateTime } from "luxon";
 import { BehaviorSubject, Observable, forkJoin, from, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
@@ -157,13 +157,12 @@ export class PricingService {
                 if (meter.MeterStatus === "Active"
                     && meter.MeterRegion !== ""
                     && meter.MeterRegion !== "Azure Stack"
-                    && meter.MeterRegion in regionMapping
-                    && !meter.MeterSubCategory.includes("Promo")) {
+                    && meter.MeterRegion in regionMapping) {
 
                     pricing.nodes.add(
                         regionMapping[meter.MeterRegion],
                         meter.MeterSubCategory,
-                        meter.MeterName,
+                        meter.MeterSubCategory === "Promo" ? meter.MeterName + "Promo" : meter.MeterName,
                         meter.MeterRates["0"]);
                 }
             }
@@ -198,16 +197,17 @@ export class PricingService {
         return from(this.gobalStorage.get(pricingFilename)).pipe(
             map((data: { lastSync: string, map: any } | null) => {
                 // If wrong format
-                if (!data || !data.lastSync || !data.map) {
-                    return null;
-                }
+                // if (!data || !data.lastSync || !data.map) {
+                //     return null;
+                // }
 
-                const lastSync = DateTime.fromISO(data.lastSync);
-                const weekOld = DateTime.local().minus({ days: 7 });
-                if (lastSync < weekOld) {
-                    return null;
-                }
-                return BatchPricing.fromJS(data.map);
+                // const lastSync = DateTime.fromISO(data.lastSync);
+                // const weekOld = DateTime.local().minus({ days: 7 });
+                // if (lastSync < weekOld) {
+                //     return null;
+                // }
+                // return BatchPricing.fromJS(data.map);
+                return null;
             }),
             catchError((error) => {
                 log.error("Error retrieving pricing locally", error);
