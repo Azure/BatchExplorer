@@ -1,5 +1,5 @@
 import { InMemoryDataStore } from "@batch-flask/core";
-import { AzureEnvironment } from "@batch-flask/core/azure-environment";
+import { AzureChina, AzureEnvironment, AzureGermany, AzurePublic } from "@batch-flask/core/azure-environment";
 import { Constants } from "common";
 import * as proxyquire from "proxyquire";
 import { Subscription } from "rxjs";
@@ -33,28 +33,28 @@ describe("BatchExplorerProperties", () => {
     describe("azureEnvironment", () => {
         it("default to public cloud if not set", async () => {
             await properties.init();
-            expect(properties.azureEnvironment).toBe(AzureEnvironment.Azure);
+            expect(properties.azureEnvironment).toBe(AzurePublic);
 
-            expect(envFromObs).toBe(AzureEnvironment.Azure);
+            expect(envFromObs).toBe(AzurePublic);
         });
 
         it("loads the environment from the store", async () => {
-            await store.setItem(Constants.localStorageKey.azureEnvironment, AzureEnvironment.AzureChina.id);
+            await store.setItem(Constants.localStorageKey.azureEnvironment, AzureChina.id);
             await properties.init();
-            expect(properties.azureEnvironment).toBe(AzureEnvironment.AzureChina);
+            expect(properties.azureEnvironment).toBe(AzureChina);
 
-            expect(envFromObs).toBe(AzureEnvironment.AzureChina);
+            expect(envFromObs).toBe(AzureChina);
         });
 
         it("updates the enviromnent in the store", async () => {
             await properties.init();
-            await properties.updateAzureEnvironment(AzureEnvironment.AzureGermany);
-            expect(properties.azureEnvironment).toBe(AzureEnvironment.AzureGermany);
+            await properties.updateAzureEnvironment(AzureGermany);
+            expect(properties.azureEnvironment).toBe(AzureGermany);
 
-            expect(envFromObs).toBe(AzureEnvironment.AzureGermany);
+            expect(envFromObs).toBe(AzureGermany);
 
             const id = await store.getItem(Constants.localStorageKey.azureEnvironment);
-            expect(id).toBe(AzureEnvironment.AzureGermany.id);
+            expect(id).toBe(AzureGermany.id);
         });
     });
 
