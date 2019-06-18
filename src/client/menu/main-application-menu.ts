@@ -198,16 +198,13 @@ export class MainApplicationMenu {
     }
 
     private _buildEnvironmentMenu(envs: AzureEnvironment[]): MenuItemConstructorOptions {
-        const supportedEnvs = envs.filter(x => !x.custom).map(env => this.envToMenu(env));
-        const customEnvs = envs.filter(x => x.custom).map(env => this.envToMenu(env));
         return {
             label: "Environment",
             submenu: [{
                 label: "Azure Environment",
                 submenu: [
-                    ...supportedEnvs,
+                    ...envs.map(env => this.envToMenu(env)),
                     { type: "separator" },
-                    ...customEnvs,
                     {
                         label: "Edit custom environments",
                         click: () => this.environmentService.editCustomEnvironments(),
@@ -219,7 +216,7 @@ export class MainApplicationMenu {
 
     private envToMenu(env: AzureEnvironment): MenuItemConstructorOptions {
         return {
-            label: env.name,
+            label: `${env.name} [User]`,
             type: "radio",
             checked: this.properties.azureEnvironment.id === env.id,
             click: () => this.app.updateAzureEnvironment(env).catch((error) => {

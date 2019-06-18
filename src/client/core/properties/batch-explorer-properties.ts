@@ -1,6 +1,8 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { DataStore } from "@batch-flask/core";
-import { AzureEnvironment, AzurePublic, SupportedEnvironments } from "@batch-flask/core/azure-environment";
+import {
+    AzureEnvironment, AzureEnvironmentService, AzurePublic,
+} from "@batch-flask/core/azure-environment";
 import { Constants } from "common";
 import { systemPreferences } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -15,7 +17,7 @@ export class BatchExplorerProperties implements OnDestroy {
     private _azureEnvironment = new BehaviorSubject(AzurePublic);
     private _isOSHighContrast = new BehaviorSubject(false);
 
-    constructor(private store: DataStore) {
+    constructor(private store: DataStore, private azureEnvironmentService: AzureEnvironmentService) {
         this.isOSHighContrast = this._isOSHighContrast.asObservable();
         this._isOSHighContrast.next(systemPreferences.isInvertedColorScheme());
         systemPreferences.on("inverted-color-scheme-changed", () => {
@@ -44,8 +46,9 @@ export class BatchExplorerProperties implements OnDestroy {
 
     private async _loadAzureEnvironment() {
         const initialEnv = await this.store.getItem(Constants.localStorageKey.azureEnvironment);
-        if (initialEnv && initialEnv in SupportedEnvironments) {
-            this._azureEnvironment.next(SupportedEnvironments[initialEnv]);
+        const env = initialEnv && await this.azureEnvironmentService.get(initialEnv);
+        if (env) {
+            this._azureEnvironment.next(env);
         }
     }
 }
