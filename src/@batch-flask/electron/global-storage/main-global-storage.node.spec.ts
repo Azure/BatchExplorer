@@ -5,6 +5,7 @@ import { MainGlobalStorage } from "./main-global-storage";
 describe("MainGlobalStorage", () => {
     let service: MainGlobalStorage;
     let fsSpy;
+    let shellSpy;
     let content: string;
     let sub: Subscription;
 
@@ -18,7 +19,12 @@ describe("MainGlobalStorage", () => {
                 userData: "~/batch-explorer",
             },
         };
-        service = new MainGlobalStorage(fsSpy);
+
+        shellSpy = {
+            openItem: jasmine.createSpy("openItem"),
+        };
+
+        service = new MainGlobalStorage(fsSpy, shellSpy);
     });
 
     afterEach(() => {
