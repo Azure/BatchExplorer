@@ -61,7 +61,7 @@ export const AzurePublic: AzureEnvironment = {
     custom: false,
 };
 
-const azureChina: AzureEnvironment = {
+export const AzureChina: AzureEnvironment = {
     id: "AzureChina",
     name: "Azure China",
     aadUrl: "https://login.chinacloudapi.cn/",
@@ -102,7 +102,7 @@ const azureUSGov: AzureEnvironment = {
 
 export const SupportedEnvironments = {
     [AzurePublic.id]: AzurePublic,
-    [azureChina.id]: azureChina,
+    [AzureChina.id]: AzureChina,
     [azureGermany.id]: azureGermany,
     [azureUSGov.id]: azureUSGov,
 };
