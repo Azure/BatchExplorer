@@ -216,7 +216,7 @@ export class MainApplicationMenu {
 
     private envToMenu(env: AzureEnvironment): MenuItemConstructorOptions {
         return {
-            label: `${env.name} [User]`,
+            label: `${env.name}${env.custom ? " [User]" : ""}`,
             type: "radio",
             checked: this.properties.azureEnvironment.id === env.id,
             click: () => this.app.updateAzureEnvironment(env).catch((error) => {
