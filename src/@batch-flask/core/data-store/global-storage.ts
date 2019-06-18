@@ -75,6 +75,7 @@ export abstract class GlobalStorage {
     public getContent(key: string): Promise<string | null> {
         return this.watchContent(key).pipe(take(1)).toPromise();
     }
+
     /**
      * @param key Key of the storage
      * @param content Plain content to store

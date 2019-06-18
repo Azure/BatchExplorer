@@ -8,6 +8,7 @@ import {
     TranslationsLoaderService,
     USER_CONFIGURATION_STORE,
 } from "@batch-flask/core";
+import { AzureEnvironmentService } from "@batch-flask/core/azure-environment";
 import { GLOBAL_STORAGE, MainGlobalStorage } from "@batch-flask/electron";
 import { ElectronMainModule } from "@batch-flask/electron/electron-main.module";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
@@ -56,8 +57,9 @@ export function initializeServices(injector) {
         { provide: TranslationsLoaderService, useClass: ClientTranslationsLoaderService },
         { provide: DataStore, useClass: LocalDataStore },
         { provide: USER_CONFIGURATION_STORE, useClass: MainConfigurationStore },
-        { provide: GlobalStorage, useClass: MainGlobalStorage },
+        { provide: GlobalStorage, useExisting: MainGlobalStorage },
         { provide: GLOBAL_STORAGE, useExisting: GlobalStorage },
+        MainGlobalStorage,
         DevTranslationsLoader,
         BatchExplorerApplication,
         BatchExplorerProcess,
@@ -66,7 +68,7 @@ export function initializeServices(injector) {
         BatchExplorerProperties,
         AADService,
         BlIpcMain,
-
+        AzureEnvironmentService,
         ...servicesToInitialize,
     ],
 })

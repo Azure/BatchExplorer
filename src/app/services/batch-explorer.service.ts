@@ -40,7 +40,7 @@ export class BatchExplorerService implements OnDestroy {
 
         this._envSub = wrapMainObservable(this._app.properties.azureEnvironmentObs, zone).subscribe((x) => {
             // Clone the environement to prevent calling the electron ipc sync for every key
-            this._azureEnvironment = new AzureEnvironment(x);
+            this._azureEnvironment = { ...x };
         });
         this.aadService = this._app.aadService;
         this.pythonServer = this._app.pythonServer;

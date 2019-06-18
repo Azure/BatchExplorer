@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { DataStore } from "@batch-flask/core";
-import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
+import { AzureEnvironment, AzurePublic, SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { Constants } from "common";
 import { systemPreferences } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -12,7 +12,7 @@ export class BatchExplorerProperties implements OnDestroy {
 
     public isOSHighContrast: Observable<boolean>;
 
-    private _azureEnvironment = new BehaviorSubject(AzureEnvironment.Azure);
+    private _azureEnvironment = new BehaviorSubject(AzurePublic);
     private _isOSHighContrast = new BehaviorSubject(false);
 
     constructor(private store: DataStore) {

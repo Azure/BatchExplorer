@@ -40,9 +40,15 @@ export interface AzureEnvironment extends AADResources {
      * Azure storage endpoint
      */
     readonly storageEndpoint: string;
+
+    /**
+     * If the environment is coming from a user.
+     */
+    readonly custom: boolean;
 }
 
-const azure: AzureEnvironment = {
+// tslint:disable: variable-name
+export const AzurePublic: AzureEnvironment = {
     id: "Azure",
     name: "Azure Public(Default)",
     aadUrl: "https://login.microsoftonline.com/",
@@ -52,6 +58,7 @@ const azure: AzureEnvironment = {
     aadGraph: "https://graph.windows.net/",
     appInsights: "https://api.applicationinsights.io/",
     storageEndpoint: "core.windows.net",
+    custom: false,
 };
 
 const azureChina: AzureEnvironment = {
@@ -64,6 +71,7 @@ const azureChina: AzureEnvironment = {
     aadGraph: "https://graph.chinacloudapi.cn/",
     appInsights: "https://api.applicationinsights.io/",
     storageEndpoint: "core.chinacloudapi.cn",
+    custom: false,
 };
 
 const azureGermany: AzureEnvironment = {
@@ -76,6 +84,7 @@ const azureGermany: AzureEnvironment = {
     aadGraph: "https://graph.cloudapi.de/",
     appInsights: "https://api.applicationinsights.io/",
     storageEndpoint: "core.cloudapi.de",
+    custom: false,
 };
 
 const azureUSGov: AzureEnvironment = {
@@ -88,11 +97,11 @@ const azureUSGov: AzureEnvironment = {
     aadGraph: "https://graph.windows.net/",
     appInsights: "https://api.applicationinsights.io/",
     storageEndpoint: "core.usgovcloudapi.net",
+    custom: false,
 };
 
-// tslint:disable-next-line: variable-name
 export const SupportedEnvironments = {
-    [azure.id]: azure,
+    [AzurePublic.id]: AzurePublic,
     [azureChina.id]: azureChina,
     [azureGermany.id]: azureGermany,
     [azureUSGov.id]: azureUSGov,
