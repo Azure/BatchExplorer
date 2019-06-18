@@ -10,6 +10,7 @@ describe("BatchExplorerProperties", () => {
     let properties: BatchExplorerProperties;
     let envFromObs: AzureEnvironment | null;
     let isInvertedColorScheme;
+    let azureEnvironmentServiceSpy;
     let invertedColorChangeCallback: () => void;
 
     beforeEach(() => {
@@ -26,7 +27,11 @@ describe("BatchExplorerProperties", () => {
             },
         });
 
-        properties = new BatchExplorerProperties(store);
+        azureEnvironmentServiceSpy = {
+            get: () => Promise.resolve(AzureChina),
+        };
+
+        properties = new BatchExplorerProperties(store, azureEnvironmentServiceSpy);
         properties.azureEnvironmentObs.subscribe(x => envFromObs = x);
     });
 
