@@ -62,7 +62,9 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
     // But this is a false positive when using dev server has it doesn't seem to ignore localhost
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
 
-    if (args.ignoreCertificateError) {
+    log.info("PArams", args);
+    if (args.ignoreCertificateErrors) {
+        log.warn("Ignoring HTTPS certificates");
         app.commandLine.appendSwitch("ignore-certificate-errors", "true");
     }
 

@@ -4,7 +4,7 @@ import { app } from "electron";
 export interface BatchExplorerArgs {
     updated?: boolean;
     userDataDir?: string;
-    ignoreCertificateError?: boolean;
+    ignoreCertificateErrors?: boolean;
     args: string[];
 }
 
