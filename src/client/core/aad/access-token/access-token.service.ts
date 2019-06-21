@@ -1,6 +1,6 @@
 import { AccessToken } from "@batch-flask/core";
-import { AADResourceName } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
+import { AADResourceName } from "client/azure-environment";
 import { RequestInit, fetch } from "client/core/fetch";
 import { BatchExplorerProperties } from "client/core/properties";
 import { AADConfig } from "../aad-config";

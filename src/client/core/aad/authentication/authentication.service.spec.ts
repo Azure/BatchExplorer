@@ -1,4 +1,4 @@
-import { AzurePublic } from "@batch-flask/core/azure-environment";
+import { AzurePublic } from "client/azure-environment";
 import { MockAuthenticationWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import {
     AuthenticationService, AuthenticationState, AuthorizeError, AuthorizeResult,

@@ -1,5 +1,5 @@
 import { InMemoryDataStore } from "@batch-flask/core";
-import { AzureChina, AzureEnvironment, AzureGermany, AzurePublic } from "@batch-flask/core/azure-environment";
+import { AzureChina, AzureEnvironment, AzureGermany, AzurePublic } from "client/azure-environment";
 import { Constants } from "common";
 import * as proxyquire from "proxyquire";
 import { Subscription } from "rxjs";

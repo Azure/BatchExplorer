@@ -1,5 +1,5 @@
 import { AccessToken, InMemoryDataStore } from "@batch-flask/core";
-import { AzureChina, AzurePublic } from "@batch-flask/core/azure-environment";
+import { AzureChina, AzurePublic } from "client/azure-environment";
 import { Constants } from "common";
 import { DateTime } from "luxon";
 import * as proxyquire from "proxyquire";

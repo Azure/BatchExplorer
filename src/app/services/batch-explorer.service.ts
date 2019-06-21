@@ -1,7 +1,7 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
-import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { ElectronRemote } from "@batch-flask/electron";
 import { wrapMainObservable } from "@batch-flask/electron/utils";
+import { AzureEnvironment } from "client/azure-environment";
 import { BatchExplorerApplication } from "client/core";
 import { AADService, AuthenticationWindow } from "client/core/aad";
 import { PythonRpcServerProcess } from "client/python-process";

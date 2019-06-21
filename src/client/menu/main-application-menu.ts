@@ -1,6 +1,6 @@
 import { Inject, Injectable, forwardRef } from "@angular/core";
-import { AzureEnvironment, AzureEnvironmentService } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
+import { AzureEnvironment, AzureEnvironmentService } from "client/azure-environment";
 import { BatchExplorerApplication } from "client/core";
 import { BatchExplorerProperties } from "client/core/properties";
 import { TelemetryManager } from "client/core/telemetry/telemetry-manager";

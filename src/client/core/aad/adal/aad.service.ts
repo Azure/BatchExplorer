@@ -1,8 +1,8 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { AccessToken, AccessTokenCache, DataStore, ServerError } from "@batch-flask/core";
-import { AADResourceName, AzurePublic } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
+import { AADResourceName, AzurePublic } from "client/azure-environment";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { fetch } from "client/core/fetch";

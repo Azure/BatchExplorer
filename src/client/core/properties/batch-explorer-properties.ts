@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { DataStore } from "@batch-flask/core";
 import {
     AzureEnvironment, AzureEnvironmentService, AzurePublic,
-} from "@batch-flask/core/azure-environment";
+} from "client/azure-environment";
 import { Constants } from "common";
 import { systemPreferences } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";

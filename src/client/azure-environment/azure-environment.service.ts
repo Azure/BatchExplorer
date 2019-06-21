@@ -28,6 +28,7 @@ export class AzureEnvironmentService {
         const envs = await this.envs.pipe(take(1)).toPromise();
         return envs.find(x => x.id === id);
     }
+
     public async editCustomEnvironments() {
         const filePaths = clientFileUrl("resources/default-env.json", false);
         const content = await this.fs.readFile(process.env.HOT ? filePaths.dev : filePaths.prod);

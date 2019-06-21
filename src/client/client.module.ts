@@ -8,9 +8,9 @@ import {
     TranslationsLoaderService,
     USER_CONFIGURATION_STORE,
 } from "@batch-flask/core";
-import { AzureEnvironmentService } from "@batch-flask/core/azure-environment";
 import { GLOBAL_STORAGE, MainGlobalStorage } from "@batch-flask/electron";
 import { ElectronMainModule } from "@batch-flask/electron/electron-main.module";
+import { AzureEnvironmentService } from "client/azure-environment";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { MainConfigurationStore } from "client/core/user-configuration";
 import { ClientLocaleService } from "./core";
