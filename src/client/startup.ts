@@ -6,6 +6,7 @@ import { MainApplicationMenu } from "client/menu";
 import { app, protocol, session, shell } from "electron";
 import { autoUpdater } from "electron-updater";
 import * as path from "path";
+import { BatchExplorerArgs } from "./cli";
 import { Constants } from "./client-constants";
 import { BatchExplorerClientModule, initializeServices } from "./client.module";
 import { ClientLocaleService, listenToSelectCertifcateEvent } from "./core";
@@ -56,10 +57,14 @@ async function startApplication(batchExplorerApp: BatchExplorerApplication, menu
     });
 }
 
-export async function startBatchExplorer() {
+export async function startBatchExplorer(args: BatchExplorerArgs) {
     // Those warnings are electron complaining we are loading remote data
     // But this is a false positive when using dev server has it doesn't seem to ignore localhost
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
+
+    if (args.ignoreCertificateError) {
+        app.commandLine.appendSwitch("ignore-certificate-errors", "true");
+    }
 
     const module = await platformDynamicServer().bootstrapModule(BatchExplorerClientModule);
     const localeService = module.injector.get(LocaleService) as ClientLocaleService;
