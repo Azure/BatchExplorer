@@ -10,10 +10,11 @@ import { ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
 import { ArmBatchAccount, NodeAgentSku, Resource } from "app/models";
 import { BatchAccountService, ComputeService, PoolOsService } from "app/services";
-import { Subject, of } from "rxjs";
-import { distinctUntilChanged, switchMap, takeUntil } from "rxjs/operators";
+import { Observable, Subject, concat, forkJoin, of } from "rxjs";
+import { distinctUntilChanged, map, switchMap, takeUntil } from "rxjs/operators";
 
 import "./custom-image-picker.scss";
+import { image } from "d3";
 
 export interface CustomImageSelection {
     imageId: string;
@@ -92,8 +93,11 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
                 if (!subscriptionId || !location) {
                     return of([]);
                 }
-
-                return this.computeService.listCustomImages(subscriptionId, location);
+                const managedImages = this.computeService.listCustomImages(subscriptionId, location);
+                const sharedImageGalleries = this.computeService.listSIG(subscriptionId, location);
+                return forkJoin(managedImages, sharedImageGalleries, (images, galleries) => {
+                    return [...images, ...galleries];
+                });
             }),
         ).subscribe({
             next: (resources) => {
