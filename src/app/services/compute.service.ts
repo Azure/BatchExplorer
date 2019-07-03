@@ -30,8 +30,6 @@ export interface ComputeUsage {
 
 const computeProvider = "Microsoft.Compute";
 const computeImageProvider = computeProvider + "/images";
-const computeGalleryProvider = computeProvider + "/galleries";
-const computeGalleryImageProvider = computeProvider + "/galleries/images";
 const computeGalleryImageVersionProvider = computeProvider + "/galleries/images/versions";
 
 @Injectable({providedIn: "root"})

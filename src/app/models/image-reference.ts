@@ -11,12 +11,8 @@ export interface CustomImageAttributes {
     virtualMachineImageId: string;
 }
 
-export interface SharedImageGalleryImageAttributes {
-    virtualMachineImageId: string;
-}
-
 export type ImageReferenceAttributes =
-MarketImageReferenceAttributes | CustomImageAttributes | SharedImageGalleryImageAttributes;
+MarketImageReferenceAttributes | CustomImageAttributes;
 
 /**
  * Class for displaying Batch ImageReference information.
