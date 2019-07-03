@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { ArmBatchAccount, Resource } from "app/models";
 import { Observable, empty } from "rxjs";
-import { expand, flatMap, map, mergeMap, reduce, share, switchAll, tap } from "rxjs/operators";
+import { expand, flatMap, map, reduce, share, tap } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
 import { BatchAccountService } from "./batch-account";
@@ -74,7 +74,8 @@ public number;
 
     public listCustomImages(subscriptionId: string, location: string): Observable<Resource[]> {
         const params = new HttpParams()
-            .set("$filter", `resourceType eq '${computeImageProvider}' and location eq '${location}'`);
+            .set("$filter", `(resourceType eq '${computeImageProvider}' or` +
+            ` resourceType eq '${computeGalleryImageVersionProvider}') and location eq '${location}'`);
         const options = { params };
 
         return this.subscriptionService.get(subscriptionId).pipe(
@@ -93,21 +94,8 @@ public number;
     }
 
     public listSIG(subscriptionId: string, location: string): Observable<Resource[]> {
-        // const sigImages = this._listSIGGalleries(subscriptionId, location).pipe(
-        //     mergeMap(galleries => galleries.map(
-        //         gallery => this._listSIGImages(subscriptionId, location, gallery.name).pipe(
-        //             mergeMap(images => images.map(
-        //                 image => this._listSIGImageVersions(subscriptionId, location, image.name).pipe(
-        //                     map(versions => versions.map(
-        //                         version => this._createSIGResource(gallery, image, version),
-        //                     ),
-        // )))))))).pipe(
-        //     switchAll(),
-        //     switchAll(),
-        // );
-        // return sigImages;
         const params = new HttpParams()
-            .set("$filter", `resourceType eq '${computeGalleryImageVersionProvider}' and location eq '${location}'`);
+            .set("$filter", `resourceType eq  and location eq '${location}'`);
         const options = { params };
 
         return this.subscriptionService.get(subscriptionId).pipe(
@@ -124,72 +112,6 @@ public number;
             share(),
         );
     }
-
-    // private _createSIGResource(gallery: Resource, image: Resource, version: Resource) {
-    //     const resource = version;
-    //     resource.name = gallery.name + ":" + image.name + ":" + version.name;
-    //     return resource;
-    // }
-
-    private _listSIGImageVersions(subscriptionId: string, location: string, imageName: string): Observable<Resource[]> {
-        const params = new HttpParams()
-            .set("$filter", `resourceType eq '${computeGalleryImageVersionProvider}' and location eq '${location}'`);
-        const options = { params };
-
-        return this.subscriptionService.get(subscriptionId).pipe(
-            flatMap((subscription) => {
-                return this.azure.get<ArmListResponse>(subscription, resourceUrl(subscriptionId), options).pipe(
-                    expand(obs => {
-                        return obs.nextLink ? this.azure.get(subscription, obs.nextLink, options) : empty();
-                    }),
-                    reduce((images, response: ArmListResponse<Resource>) => {
-                        return [...images, ...response.value];
-                    }, []),
-                );
-            }),
-            share(),
-        );
-    }
-
-    // private _listSIGGalleries(subscriptionId: string, location: string): Observable<Resource[]> {
-    //     const params = new HttpParams()
-    //         .set("$filter", `resourceType eq '${computeGalleryProvider}' and location eq '${location}'`);
-    //     const options = { params };
-
-    //     return this.subscriptionService.get(subscriptionId).pipe(
-    //         flatMap((subscription) => {
-    //             return this.azure.get<ArmListResponse>(subscription, resourceUrl(subscriptionId), options).pipe(
-    //                 expand(obs => {
-    //                     return obs.nextLink ? this.azure.get(subscription, obs.nextLink, options) : empty();
-    //                 }),
-    //                 reduce((images, response: ArmListResponse<Resource>) => {
-    //                     return [...images, ...response.value];
-    //                 }, []),
-    //             );
-    //         }),
-    //         share(),
-    //     );
-    // }
-
-    // private _listSIGImages(subscriptionId: string, location: string, galleryName: string): Observable<Resource[]> {
-    //     const params = new HttpParams()
-    //         .set("$filter", `resourceType eq '${computeGalleryImageProvider}' and location eq '${location}'`);
-    //     const options = { params };
-
-    //     return this.subscriptionService.get(subscriptionId).pipe(
-    //         flatMap((subscription) => {
-    //             return this.azure.get<ArmListResponse>(subscription, resourceUrl(subscriptionId), options).pipe(
-    //                 expand(obs => {
-    //                     return obs.nextLink ? this.azure.get(subscription, obs.nextLink, options) : empty();
-    //                 }),
-    //                 reduce((images, response: ArmListResponse<Resource>) => {
-    //                     return [...images, ...response.value];
-    //                 }, []),
-    //             );
-    //         }),
-    //         share(),
-    //     );
-    // }
 
     private _getTotalRegionalQuotas(data: ComputeUsage[]): number {
         for (const obj of data) {
