@@ -67,7 +67,7 @@ export class StorageAccountService {
                 return this.azure.get<ArmListResponse<StorageAccountAttributes>>(
                     subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
                         expand(obs => {
-                            return obs.nextLink ? this.azure.get(subscription, obs.nextLink, options) : empty();
+                            return obs.nextLink ? this.azure.get(subscription, obs.nextLink) : empty();
                         }),
                         reduce((accounts, response: ArmListResponse<unknown>) => {
                             return [...accounts, ...response.value];

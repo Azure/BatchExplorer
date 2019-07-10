@@ -183,7 +183,7 @@ export class ArmBatchAccountService implements OnDestroy {
                     subscription,
                     `/subscriptions/${subscriptionId}/providers/Microsoft.Batch/batchAccounts`, options).pipe(
                         expand(obs => {
-                            return obs.nextLink ? this.azure.get(subscription, obs.nextLink, options) : empty();
+                            return obs.nextLink ? this.azure.get(subscription, obs.nextLink) : empty();
                         }),
                         reduce((batchAccounts, response: ArmListResponse<any>) => {
                             return [...batchAccounts, ...response.value];
