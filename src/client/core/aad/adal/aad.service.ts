@@ -9,7 +9,6 @@ import { fetch } from "client/core/fetch";
 import { BatchExplorerProperties } from "client/core/properties";
 import { SecureDataStore } from "client/core/secure-data-store";
 import { TelemetryManager } from "client/core/telemetry";
-// import { TelemetryManager } from "client/core/telemetry";
 import { Constants } from "common";
 import { IpcEvent } from "common/constants";
 import { Deferred } from "common/deferred";
