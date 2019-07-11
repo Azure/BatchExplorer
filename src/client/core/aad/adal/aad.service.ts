@@ -1,8 +1,8 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { AccessToken, AccessTokenCache, DataStore, ServerError } from "@batch-flask/core";
-import { AADResourceName, AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
+import { AADResourceName, AzurePublic } from "client/azure-environment";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { fetch } from "client/core/fetch";
@@ -292,7 +292,7 @@ export class AADService {
     }
 
     private async _ensureTelemetryOptInNationalClouds() {
-        if (this.properties.azureEnvironment.id === AzureEnvironment.Azure.id) {
+        if (this.properties.azureEnvironment.id === AzurePublic.id) {
             return;
         }
         // If user hasn't picked a telemetry setting ask to opt in or out

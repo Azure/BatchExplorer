@@ -1,5 +1,5 @@
 import { AccessToken, InMemoryDataStore } from "@batch-flask/core";
-import { AzureEnvironment } from "@batch-flask/core/azure-environment";
+import { AzureChina, AzurePublic } from "client/azure-environment";
 import { Constants } from "common";
 import { DateTime } from "luxon";
 import * as proxyquire from "proxyquire";
@@ -55,7 +55,7 @@ describe("AADService", () => {
         };
 
         propertiesSpy = {
-            azureEnvironment: AzureEnvironment.Azure,
+            azureEnvironment: AzurePublic,
         };
         telemetryManagerSpy = {
             enableTelemetry: jasmine.createSpy("enableTelemetry"),
@@ -224,7 +224,7 @@ describe("AADService", () => {
         });
 
         it("login to national cloud", async () => {
-            propertiesSpy.azureEnvironment = AzureEnvironment.AzureChina;
+            propertiesSpy.azureEnvironment = AzureChina;
             await service.login().done;
             expect(dialogSpy.showMessageBox).toHaveBeenCalledTimes(1);
             expect(dialogSpy.showMessageBox).toHaveBeenCalled();

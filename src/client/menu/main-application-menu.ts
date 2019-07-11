@@ -1,6 +1,6 @@
 import { Inject, Injectable, forwardRef } from "@angular/core";
-import { SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
+import { AzureEnvironment, AzureEnvironmentService } from "client/azure-environment";
 import { BatchExplorerApplication } from "client/core";
 import { BatchExplorerProperties } from "client/core/properties";
 import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
@@ -8,6 +8,7 @@ import { HelpMenu } from "client/menu/help-menu";
 import { ProxySettingsManager } from "client/proxy";
 import { Constants } from "common";
 import { BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, app } from "electron";
+import { take } from "rxjs/operators";
 
 function setupOSXSpecificMenu(template) {
     if (process.platform === "darwin") {
@@ -54,16 +55,18 @@ export class MainApplicationMenu {
         private helpMenu: HelpMenu,
         private telemetryManager: TelemetryManager,
         private proxySettings: ProxySettingsManager,
+        private environmentService: AzureEnvironmentService,
         @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
         private properties: BatchExplorerProperties) {
     }
 
-    public applyMenu() {
+    public async applyMenu() {
+        const envs = await this.environmentService.envs.pipe(take(1)).toPromise();
         const template = [
             this._buildEditMenu(),
             this._buildViewMenu(),
             this._buildWindowMenu(),
-            this._buildEnvironmentMenu(),
+            this._buildEnvironmentMenu(envs),
             this.helpMenu.getElectronMenu(),
         ];
 
@@ -194,22 +197,31 @@ export class MainApplicationMenu {
         };
     }
 
-    private _buildEnvironmentMenu(): MenuItemConstructorOptions {
+    private _buildEnvironmentMenu(envs: AzureEnvironment[]): MenuItemConstructorOptions {
         return {
             label: "Environment",
             submenu: [{
                 label: "Azure Environment",
-                submenu: Object.values(SupportedEnvironments).map((env): MenuItemConstructorOptions => {
-                    return {
-                        label: env.name,
-                        type: "radio",
-                        checked: this.properties.azureEnvironment.id === env.id,
-                        click: () => this.app.updateAzureEnvironment(env).catch((error) => {
-                            log.error("Error updating the azure environment", error);
-                        }),
-                    };
-                }),
+                submenu: [
+                    ...envs.map(env => this.envToMenu(env)),
+                    { type: "separator" },
+                    {
+                        label: "Edit custom environments",
+                        click: () => this.environmentService.editCustomEnvironments(),
+                    },
+                ],
             }],
+        };
+    }
+
+    private envToMenu(env: AzureEnvironment): MenuItemConstructorOptions {
+        return {
+            label: `${env.name}${env.custom ? " [User]" : ""}`,
+            type: "radio",
+            checked: this.properties.azureEnvironment.id === env.id,
+            click: () => this.app.updateAzureEnvironment(env).catch((error) => {
+                log.error("Error updating the azure environment", error);
+            }),
         };
     }
 }

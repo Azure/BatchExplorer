@@ -1,4 +1,4 @@
-import { AzureEnvironment } from "@batch-flask/core/azure-environment";
+import { AzurePublic } from "client/azure-environment";
 import { MockAuthenticationWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import {
     AuthenticationService, AuthenticationState, AuthorizeError, AuthorizeResult,
@@ -14,7 +14,7 @@ describe("AuthenticationService", () => {
             splashScreen: new MockSplashScreen(),
             authenticationWindow: new MockAuthenticationWindow(),
             properties: {
-                azureEnvironment: AzureEnvironment.Azure,
+                azureEnvironment: AzurePublic,
             },
         };
         const config = {
@@ -75,7 +75,7 @@ describe("AuthenticationService", () => {
         });
 
         it("Should error it fail to load", async () => {
-            fakeAuthWindow.notifyError({code: 4, description: "Foo bar"});
+            fakeAuthWindow.notifyError({ code: 4, description: "Foo bar" });
             await promise;
 
             expect(result).toBeNull();
