@@ -1,9 +1,9 @@
 import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import { ArmBatchAccount, Resource } from "app/models";
+import { ArmBatchAccount, ArmLocation, ArmLocationAttributes, Resource } from "app/models";
 import { Observable, empty } from "rxjs";
-import { expand, flatMap, map, reduce, share, tap } from "rxjs/operators";
+import { combineAll, expand, flatMap, map, reduce, share, tap } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
 import { BatchAccountService } from "./batch-account";
@@ -16,6 +16,41 @@ export function computeUrl(subscriptionId: string) {
 
 export function resourceUrl(subscriptionId: string) {
     return `/subscriptions/${subscriptionId}/resources`;
+}
+
+export interface TargetRegion {
+    name: string;
+    regionalReplicaCount: number;
+    storageAccountType: string;
+}
+
+export interface ArmSharedImageGalleryVersion {
+    id: string;
+    location: string;
+    name: string;
+    type: string;
+    properties: {
+        provisioningState: string;
+        publishingProfile: {
+            endOfLifeDate: string;
+            excludeFromLatest: boolean;
+            publishedDate: string;
+            replicaCount: number;
+            storageAccountType: string;
+            source: {
+                managedImage: {
+                    id: string;
+                },
+            }
+            targetRegions: TargetRegion[];
+            storageProfile: {
+                osDiskImage: {
+                    sizeInGB: number;
+                    hostCaching: string;
+                },
+            }
+        };
+    };
 }
 
 export interface ComputeUsage {
@@ -72,8 +107,7 @@ public number;
 
     public listCustomImages(subscriptionId: string, location: string): Observable<Resource[]> {
         const params = new HttpParams()
-            .set("$filter", `(resourceType eq '${computeImageProvider}' or` +
-            ` resourceType eq '${computeGalleryImageVersionProvider}') and location eq '${location}'`);
+            .set("$filter", `resourceType eq '${computeImageProvider}' and location eq '${location}'`);
         const options = { params };
 
         return this.subscriptionService.get(subscriptionId).pipe(
@@ -93,22 +127,53 @@ public number;
 
     public listSIG(subscriptionId: string, location: string): Observable<Resource[]> {
         const params = new HttpParams()
-            .set("$filter", `resourceType eq  and location eq '${location}'`);
+            .set("$filter", `resourceType eq '${computeGalleryImageVersionProvider}' and location eq '${location}'`);
         const options = { params };
-
-        return this.subscriptionService.get(subscriptionId).pipe(
+        const x = this.subscriptionService.get(subscriptionId).pipe(
             flatMap((subscription) => {
-                return this.azure.get<ArmListResponse>(subscription, resourceUrl(subscriptionId), options).pipe(
-                    expand(obs => {
-                        return obs.nextLink ? this.azure.get(subscription, obs.nextLink, options) : empty();
+                const locationsUri = `subscriptions/${subscription.subscriptionId}/locations`;
+                return this.azure.get<ArmListResponse<ArmLocationAttributes>>(subscription, locationsUri).pipe(
+                    flatMap(response => response.value.map(x => new ArmLocation(x))),
+                    flatMap(armLocation => {
+                        if (armLocation.name === location) {
+                            return this.azure.get<ArmListResponse>(
+                                subscription, resourceUrl(subscriptionId), options).pipe(
+                                    expand(obs => {
+                                        return obs.nextLink ? this.azure.get(
+                                            subscription, obs.nextLink, options) : empty();
+                                    }),
+                                    reduce((images: Resource[], response: ArmListResponse<Resource>) => {
+                                        return [...images, ...response.value];
+                                    }, []),
+                                    flatMap(resources => resources.map(resource => {
+                                        return this.azure.get<ArmSharedImageGalleryVersion>(
+                                            subscription, resource.id).pipe(
+                                                map(armResource => ({resource, armResource})),
+                                            );
+                                    })),
+                                    combineAll(),
+                                    map(resources => resources.filter(resource => {
+                                            for (const region of
+                                                resource.armResource.properties.publishingProfile.targetRegions) {
+                                                console.log(`${region.name} === ${armLocation.displayName}`);
+                                                if (region.name === armLocation.displayName) {
+                                                    console.log(`true`);
+                                                    return true;
+                                                }
+                                            }
+                                            console.log(`false`);
+                                            return false;
+                                    })),
+                                    map(resources => resources.map(resource => resource.resource)),
+                            );
+                        }
+                        return empty();
                     }),
-                    reduce((images, response: ArmListResponse<Resource>) => {
-                        return [...images, ...response.value];
-                    }, []),
+                    share(),
                 );
             }),
-            share(),
         );
+        return x;
     }
 
     private _getTotalRegionalQuotas(data: ComputeUsage[]): number {
