@@ -11,7 +11,7 @@ import { LoadingStatus } from "@batch-flask/ui";
 import { ArmBatchAccount, NodeAgentSku, Resource } from "app/models";
 import { BatchAccountService, ComputeService, PoolOsService } from "app/services";
 import { Subject, forkJoin, of } from "rxjs";
-import { concat, distinctUntilChanged, switchMap, takeUntil } from "rxjs/operators";
+import { distinctUntilChanged, switchMap, takeUntil } from "rxjs/operators";
 
 import "./custom-image-picker.scss";
 

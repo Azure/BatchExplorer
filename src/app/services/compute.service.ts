@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { ArmBatchAccount, ArmLocation, ArmLocationAttributes, Resource } from "app/models";
 import { Observable, empty } from "rxjs";
-import { combineAll, expand, flatMap, map, reduce, share, tap } from "rxjs/operators";
+import { combineAll, concatAll, expand, flatMap, map, mergeAll, reduce, share, tap } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
 import { BatchAccountService } from "./batch-account";
@@ -133,8 +133,8 @@ public number;
             flatMap((subscription) => {
                 const locationsUri = `subscriptions/${subscription.subscriptionId}/locations`;
                 return this.azure.get<ArmListResponse<ArmLocationAttributes>>(subscription, locationsUri).pipe(
-                    flatMap(response => response.value.map(x => new ArmLocation(x))),
-                    flatMap(armLocation => {
+                    map(response => response.value.map(x => new ArmLocation(x))),
+                    map(armLocations => armLocations.map(armLocation => {
                         if (armLocation.name === location) {
                             return this.azure.get<ArmListResponse>(
                                 subscription, resourceUrl(subscriptionId), options).pipe(
@@ -168,7 +168,9 @@ public number;
                             );
                         }
                         return empty();
-                    }),
+                    })),
+                    mergeAll(),
+                    concatAll(),
                     share(),
                 );
             }),
