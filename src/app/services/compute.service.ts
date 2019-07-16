@@ -43,12 +43,12 @@ export interface ArmSharedImageGalleryVersion {
                 },
             }
             targetRegions: TargetRegion[];
-            storageProfile: {
-                osDiskImage: {
-                    sizeInGB: number;
-                    hostCaching: string;
-                },
-            }
+        };
+        storageProfile: {
+            osDiskImage: {
+                sizeInGB: number;
+                hostCaching: string;
+            },
         };
     };
 }

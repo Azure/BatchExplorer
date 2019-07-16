@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { FormModule, SelectComponent, SelectModule } from "@batch-flask/ui";
 import { ArmBatchAccount, ArmSubscription, NodeAgentSku, Resource } from "app/models";
-import { BatchAccountService, ComputeService, PoolOsService } from "app/services";
+import { ArmSharedImageGalleryVersion, BatchAccountService, ComputeService, PoolOsService } from "app/services";
 import { List } from "immutable";
 import { of } from "rxjs";
 import { CustomImagePickerComponent } from "./custom-image-picker.component";
@@ -34,6 +34,15 @@ const images: Resource[] = [
     },
 ];
 
+const sigVersions: Resource[] = [
+    {
+        id: "/sub/sub-1/resources/test/providers/Microsoft.Compute/galleries/test/images/tesimage/versions/1.12.1",
+        name: "test/testimage/1.12.1",
+        type: "Microsoft.Compute/galleries/images/versions",
+        location: "westus",
+    },
+];
+
 const skus = [
     new NodeAgentSku({ id: "batch.centos" }),
     new NodeAgentSku({ id: "batch.ubuntu" }),
@@ -55,6 +64,7 @@ describe("CustomImagePickerComponent", () => {
     beforeEach(() => {
         computeServiceSpy = {
             listCustomImages: jasmine.createSpy("listCustomImages").and.returnValue(of(images)),
+            listSIG: jasmine.createSpy("listSIG").and.returnValue(of(sigVersions)),
         };
 
         poolOSServiceSpy = {
@@ -101,6 +111,7 @@ describe("CustomImagePickerComponent", () => {
         const options = imageSelect.options.toArray();
         expect(options[0].label).toEqual("Ubuntu custom image");
         expect(options[1].label).toEqual("CentOS custom image");
+        expect(options[1].label).toEqual("test/testimage/1.12.1");
     });
 
     it("list the available skus", () => {
