@@ -149,7 +149,6 @@ public number;
                     map(resources => resources.filter(resource => {
                             for (const region of
                                 resource.armResource.properties.publishingProfile.targetRegions) {
-                                console.log(`${region.name} === ${armLocation.displayName}`);
                                 if (region.name === armLocation.displayName) {
                                     return true;
                                 }
