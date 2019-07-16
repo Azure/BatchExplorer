@@ -1,7 +1,7 @@
 import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import { ArmBatchAccount, ArmLocation, ArmLocationAttributes, Resource } from "app/models";
+import { ArmBatchAccount, ArmLocation, ArmLocationAttributes, ArmSubscription, Resource } from "app/models";
 import { Observable, empty } from "rxjs";
 import { combineAll, concatAll, expand, flatMap, map, reduce, share, tap } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
@@ -125,47 +125,51 @@ public number;
         );
     }
 
-    public listSIG(subscriptionId: string, location: string): Observable<Resource[]> {
+    public _filterSIGVersions(armSubscription: ArmSubscription, armLocation: ArmLocation, filterLocation: string) {
         const params = new HttpParams()
             .set("$filter", `resourceType eq '${computeGalleryImageVersionProvider}' and location eq '${location}'`);
         const options = { params };
+        if (armLocation.name === filterLocation) {
+            return this.azure.get<ArmListResponse>(
+                armSubscription, resourceUrl(armSubscription.subscriptionId), options).pipe(
+                    expand(obs => {
+                        return obs.nextLink ? this.azure.get(
+                            armSubscription, obs.nextLink, options) : empty();
+                    }),
+                    reduce((images: Resource[], response: ArmListResponse<Resource>) => {
+                        return [...images, ...response.value];
+                    }, []),
+                    flatMap(resources => resources.map(resource => {
+                        return this.azure.get<ArmSharedImageGalleryVersion>(
+                            armSubscription, resource.id).pipe(
+                                map(armResource => ({resource, armResource})),
+                            );
+                    })),
+                    combineAll(),
+                    map(resources => resources.filter(resource => {
+                            for (const region of
+                                resource.armResource.properties.publishingProfile.targetRegions) {
+                                console.log(`${region.name} === ${armLocation.displayName}`);
+                                if (region.name === armLocation.displayName) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                    })),
+                    map(resources => resources.map(resource => resource.resource)),
+            );
+        }
+        return empty();
+    }
+
+    public listSIG(subscriptionId: string, location: string): Observable<Resource[]> {
         const x = this.subscriptionService.get(subscriptionId).pipe(
             flatMap((subscription) => {
                 const locationsUri = `subscriptions/${subscription.subscriptionId}/locations`;
                 return this.azure.get<ArmListResponse<ArmLocationAttributes>>(subscription, locationsUri).pipe(
                     map(response => response.value.map(x => new ArmLocation(x))),
                     flatMap(armLocations => armLocations.map(armLocation => {
-                        if (armLocation.name === location) {
-                            return this.azure.get<ArmListResponse>(
-                                subscription, resourceUrl(subscriptionId), options).pipe(
-                                    expand(obs => {
-                                        return obs.nextLink ? this.azure.get(
-                                            subscription, obs.nextLink, options) : empty();
-                                    }),
-                                    reduce((images: Resource[], response: ArmListResponse<Resource>) => {
-                                        return [...images, ...response.value];
-                                    }, []),
-                                    flatMap(resources => resources.map(resource => {
-                                        return this.azure.get<ArmSharedImageGalleryVersion>(
-                                            subscription, resource.id).pipe(
-                                                map(armResource => ({resource, armResource})),
-                                            );
-                                    })),
-                                    combineAll(),
-                                    map(resources => resources.filter(resource => {
-                                            for (const region of
-                                                resource.armResource.properties.publishingProfile.targetRegions) {
-                                                console.log(`${region.name} === ${armLocation.displayName}`);
-                                                if (region.name === armLocation.displayName) {
-                                                    return true;
-                                                }
-                                            }
-                                            return false;
-                                    })),
-                                    map(resources => resources.map(resource => resource.resource)),
-                            );
-                        }
-                        return empty();
+                        return this._filterSIGVersions(subscription, armLocation, location);
                     })),
                     concatAll(),
                     share(),
