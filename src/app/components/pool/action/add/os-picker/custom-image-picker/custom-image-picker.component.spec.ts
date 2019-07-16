@@ -107,11 +107,11 @@ describe("CustomImagePickerComponent", () => {
     });
 
     it("list the available images", () => {
-        expect(imageSelect.options.length).toEqual(2);
+        expect(imageSelect.options.length).toEqual(3);
         const options = imageSelect.options.toArray();
         expect(options[0].label).toEqual("Ubuntu custom image");
         expect(options[1].label).toEqual("CentOS custom image");
-        expect(options[1].label).toEqual("test/testimage/1.12.1");
+        expect(options[2].label).toEqual("test/testimage/1.12.1");
     });
 
     it("list the available skus", () => {
