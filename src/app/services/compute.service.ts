@@ -134,7 +134,7 @@ public number;
                 const locationsUri = `subscriptions/${subscription.subscriptionId}/locations`;
                 return this.azure.get<ArmListResponse<ArmLocationAttributes>>(subscription, locationsUri).pipe(
                     map(response => response.value.map(x => new ArmLocation(x))),
-                    map(armLocations => armLocations.map(armLocation => {
+                    flatMap(armLocations => armLocations.map(armLocation => {
                         if (armLocation.name === location) {
                             return this.azure.get<ArmListResponse>(
                                 subscription, resourceUrl(subscriptionId), options).pipe(
@@ -157,11 +157,9 @@ public number;
                                                 resource.armResource.properties.publishingProfile.targetRegions) {
                                                 console.log(`${region.name} === ${armLocation.displayName}`);
                                                 if (region.name === armLocation.displayName) {
-                                                    console.log(`true`);
                                                     return true;
                                                 }
                                             }
-                                            console.log(`false`);
                                             return false;
                                     })),
                                     map(resources => resources.map(resource => resource.resource)),
@@ -169,7 +167,6 @@ public number;
                         }
                         return empty();
                     })),
-                    mergeAll(),
                     concatAll(),
                     share(),
                 );
