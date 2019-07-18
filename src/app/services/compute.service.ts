@@ -127,7 +127,7 @@ public number;
 
     public _filterSIGVersions(armSubscription: ArmSubscription, armLocation: ArmLocation, filterLocation: string) {
         const params = new HttpParams()
-            .set("$filter", `resourceType eq '${computeGalleryImageVersionProvider}' and location eq '${location}'`);
+            .set("$filter", `resourceType eq '${computeGalleryImageVersionProvider}'`);
         const options = { params };
         if (armLocation.name === filterLocation) {
             return this.azure.get<ArmListResponse>(
