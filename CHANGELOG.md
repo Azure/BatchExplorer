@@ -1,3 +1,16 @@
+# 2.2.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/36?closed=1)
+
+### feature:
+* Add SharedImageGallery support to the custom images blade of pool create.
+* Users can now specify custom Azure environments
+
+### bug:
+* Promo VMSize's now display projected pricing correctly.
+
+### other:
+
+
 # 2.1.2
 
 ### Bug fixes
