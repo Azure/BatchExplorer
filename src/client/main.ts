@@ -39,6 +39,6 @@ import "@batch-flask/extensions";
 import { log } from "@batch-flask/utils";
 import { startBatchExplorer } from "./startup";
 
-startBatchExplorer().catch((e) => {
+startBatchExplorer(program).catch((e) => {
     log.error("Error starting Batch Explorer", e);
 });

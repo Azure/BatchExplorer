@@ -12,7 +12,7 @@ import { EvaluateAutoScaleForumlaComponent } from "./evaluate-autoscale-formula.
 const poolWithAutoScale = new Pool({
     id: "pool-with-autoscale",
     enableAutoScale: true,
-    autoScaleFormula: "$targetDedicated=1",
+    autoScaleFormula: "$targetDedicatedNodes=1",
 });
 
 const poolNoAutoScale = new Pool({

@@ -2,8 +2,8 @@ import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { StorageAccount, StorageAccountAttributes } from "app/models";
 import { List } from "immutable";
-import { Observable } from "rxjs";
-import { flatMap, map, share } from "rxjs/operators";
+import { Observable, empty } from "rxjs";
+import { expand, flatMap, map, reduce, share, switchMap } from "rxjs/operators";
 import { AzureHttpService } from "./azure-http.service";
 import { ArmListResponse } from "./core";
 import { SubscriptionService } from "./subscription";
@@ -63,12 +63,19 @@ export class StorageAccountService {
         const options = { params };
 
         return this.subscriptionService.get(subscriptionId).pipe(
-            flatMap((subscription) => {
+            switchMap((subscription) => {
                 return this.azure.get<ArmListResponse<StorageAccountAttributes>>(
-                    subscription, `/subscriptions/${subscriptionId}/resources`, options);
+                    subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
+                        expand(obs => {
+                            return obs.nextLink ? this.azure.get(subscription, obs.nextLink) : empty();
+                        }),
+                        reduce((accounts, response: ArmListResponse<unknown>) => {
+                            return [...accounts, ...response.value];
+                        }, []),
+                    );
             }),
             map(response => {
-                return List(response.value.map((data) => {
+                return List(response.map((data) => {
                     return new StorageAccount(data);
                 })) as any;
             }),

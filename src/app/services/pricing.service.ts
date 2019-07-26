@@ -157,8 +157,7 @@ export class PricingService {
                 if (meter.MeterStatus === "Active"
                     && meter.MeterRegion !== ""
                     && meter.MeterRegion !== "Azure Stack"
-                    && meter.MeterRegion in regionMapping
-                    && !meter.MeterSubCategory.includes("Promo")) {
+                    && meter.MeterRegion in regionMapping) {
 
                     pricing.nodes.add(
                         regionMapping[meter.MeterRegion],

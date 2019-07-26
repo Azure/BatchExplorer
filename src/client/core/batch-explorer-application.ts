@@ -1,8 +1,8 @@
 import { Injectable, Injector } from "@angular/core";
 import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
-import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { AutoUpdateService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
+import { AzureEnvironment } from "client/azure-environment";
 import { parseArguments } from "client/cli";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { BatchExplorerProperties } from "client/core/properties";

@@ -49,6 +49,7 @@ const baseConfig = {
         new CopyWebpackPlugin([
             { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },
             { context: "src/client/proxy", from: "**/*", to: "client/proxy" },
+            { context: "src/client/resources", from: "**/*", to: "client/resources" },
             { context: "src/app/assets", from: "**/*", to: "assets" },
         ]),
         new HtmlWebpackPlugin({

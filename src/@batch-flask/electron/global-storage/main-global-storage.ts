@@ -4,13 +4,14 @@ import * as path from "path";
 import { Observable, Subscriber, from } from "rxjs";
 import { publishReplay, refCount } from "rxjs/operators";
 import { FileSystemService } from "../fs.service";
+import { ElectronShell } from "../shell.service";
 
 @Injectable()
 export class MainGlobalStorage extends GlobalStorage {
     private _subscriberMap = new Map<string, Subscriber<any | null>>();
     private _obs = new Map<string, Observable<string | null>>();
 
-    constructor(private fs: FileSystemService) {
+    constructor(private fs: FileSystemService, private shell: ElectronShell) {
         super();
     }
 
@@ -43,6 +44,21 @@ export class MainGlobalStorage extends GlobalStorage {
             this._subscriberMap.get(key)!.next(content);
         }
         await this.fs.saveFile(this._getFile(key), content);
+    }
+
+    public async setDefault(key: string, content: string): Promise<void> {
+        const filename = this._getFile(key);
+        if (await this.fs.exists(filename)) {
+            return;
+        }
+        if (this._subscriberMap.has(key)) {
+            this._subscriberMap.get(key)!.next(content);
+        }
+        await this.fs.saveFile(filename, content);
+    }
+
+    public openFile(key: string) {
+        this.shell.openItem(this._getFile(key));
     }
 
     private _readFile(key: string): Observable<string | null> {

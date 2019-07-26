@@ -1,10 +1,10 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
-import { AADResourceName } from "@batch-flask/core/azure-environment";
 import { ElectronRemote } from "@batch-flask/electron";
 import { wrapMainObservable } from "@batch-flask/electron/utils";
 import { NotificationService } from "@batch-flask/ui";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
+import { AADResourceName } from "client/azure-environment";
 import { AADService } from "client/core/aad";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
