@@ -19,19 +19,19 @@ export interface PoolPriceOptions {
 }
 
 const iconMapping = {
-    "UbuntuServer": Icons.ubuntu,
+    "ubuntuserver": Icons.ubuntu,
     "ubuntu-server-container": Icons.ubuntu,
     "ubuntu-server-container-rdma": Icons.ubuntu,
-    "CentOS": Icons.centos,
-    "CentOS-HPC": Icons.centos,
-    "WindowsServer": Icons.windows,
-    "Debian": Icons.debian,
-    "Oracle-Linux": Icons.oracle,
+    "centos": Icons.centos,
+    "centos-hpc": Icons.centos,
+    "windowsserver": Icons.windows,
+    "debian": Icons.debian,
+    "oracle-linux": Icons.oracle,
     "linux-data-science-vm": Icons.linux,
     "linux-data-science-vm-ubuntu": Icons.ubuntu,
-    "openSUSE-Leap": Icons.openSUSE,
-    "SLES": Icons.openSUSE,
-    "SLES-HPC": Icons.openSUSE,
+    "opensuse-Leap": Icons.openSUSE,
+    "sles": Icons.openSUSE,
+    "sles-hpc": Icons.openSUSE,
     "standard-data-science-vm": Icons.windows,
     "rendering-windows2016": Icons.windows,
     "autodesk-maya-arnold-centos73": Icons.centos,
@@ -84,7 +84,7 @@ export class PoolUtils {
     }
 
     public static iconForOffer(offerName: string) {
-        const icon = iconMapping[offerName];
+        const icon = iconMapping[offerName.toLowerCase()];
         if (icon) {
             return icon;
         }

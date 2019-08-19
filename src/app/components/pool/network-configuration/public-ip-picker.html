@@ -1,0 +1,11 @@
+<div class="inputs" *ngIf="loadingStatus === LoadingStatus.Ready" style="padding: 10px;">
+    <bl-select placeholder="Public IPs" [multiple]="true" [formControl]="ipAddresses" [filterable]="true">
+        <bl-option *ngFor="let publicIP of publicIPs;trackBy: trackByFn"
+            [value]="publicIP.id"
+            [label]="publicIP.name">
+        </bl-option>
+    </bl-select>
+</div>
+<div *ngIf="loadingStatus === LoadingStatus.Error" id="{{id}}-error-msg" style="padding: 10px;">
+    {{ publicIPErrorMsg }}
+</div>

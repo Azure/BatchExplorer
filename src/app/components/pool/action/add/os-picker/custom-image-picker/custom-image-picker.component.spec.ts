@@ -4,8 +4,8 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { FormModule, SelectComponent, SelectModule } from "@batch-flask/ui";
-import { ArmBatchAccount, ArmSubscription, NodeAgentSku, Resource } from "app/models";
-import { ArmSharedImageGalleryVersion, BatchAccountService, ComputeService, PoolOsService } from "app/services";
+import { ArmBatchAccount, ArmSubscription, ImageInformation, Resource } from "app/models";
+import { BatchAccountService, ComputeService, PoolOsService } from "app/services";
 import { List } from "immutable";
 import { of } from "rxjs";
 import { CustomImagePickerComponent } from "./custom-image-picker.component";
@@ -44,9 +44,9 @@ const sigVersions: Resource[] = [
 ];
 
 const skus = [
-    new NodeAgentSku({ id: "batch.centos" }),
-    new NodeAgentSku({ id: "batch.ubuntu" }),
-    new NodeAgentSku({ id: "batch.windows" }),
+    new ImageInformation({ id: "batch.centos" }),
+    new ImageInformation({ id: "batch.ubuntu" }),
+    new ImageInformation({ id: "batch.windows" }),
 ];
 
 describe("CustomImagePickerComponent", () => {
@@ -54,9 +54,9 @@ describe("CustomImagePickerComponent", () => {
     let testComponent: TestComponent;
     let de: DebugElement;
     let imageSelectEl: DebugElement;
-    let nodeAgentSkuSelectEl: DebugElement;
+    let imageInformationSelectEl: DebugElement;
     let imageSelect: SelectComponent;
-    let nodeAgentSkuSelect: SelectComponent;
+    let imageInformationSelect: SelectComponent;
     let computeServiceSpy;
     let poolOSServiceSpy;
     let accountServiceSpy;
@@ -68,7 +68,7 @@ describe("CustomImagePickerComponent", () => {
         };
 
         poolOSServiceSpy = {
-            nodeAgentSkus: of(List(skus)),
+            imageInformations: of(List(skus)),
         };
 
         accountServiceSpy = {
@@ -95,15 +95,15 @@ describe("CustomImagePickerComponent", () => {
         fixture.detectChanges();
 
         imageSelectEl = de.query(By.css(".image-id-picker"));
-        nodeAgentSkuSelectEl = de.query(By.css(".node-agent-sku-picker"));
+        imageInformationSelectEl = de.query(By.css(".node-agent-sku-picker"));
 
         imageSelect = imageSelectEl && imageSelectEl.componentInstance;
-        nodeAgentSkuSelect = nodeAgentSkuSelectEl && nodeAgentSkuSelectEl.componentInstance;
+        imageInformationSelect = imageInformationSelectEl && imageInformationSelectEl.componentInstance;
     });
 
     it("has all the forms element", () => {
         expect(imageSelectEl).not.toBeFalsy();
-        expect(nodeAgentSkuSelectEl).not.toBeFalsy();
+        expect(imageInformationSelectEl).not.toBeFalsy();
     });
 
     it("list the available images", () => {
@@ -115,8 +115,8 @@ describe("CustomImagePickerComponent", () => {
     });
 
     it("list the available skus", () => {
-        expect(nodeAgentSkuSelect.options.length).toEqual(3);
-        const options = nodeAgentSkuSelect.options.toArray();
+        expect(imageInformationSelect.options.length).toEqual(3);
+        const options = imageInformationSelect.options.toArray();
         expect(options[0].label).toEqual("batch.centos");
         expect(options[1].label).toEqual("batch.ubuntu");
         expect(options[2].label).toEqual("batch.windows");
@@ -126,22 +126,22 @@ describe("CustomImagePickerComponent", () => {
         imageSelect.selectOption(imageSelect.options.toArray()[0]);
         expect(testComponent.control.value).toEqual({
             imageId: images[0].id,
-            nodeAgentSku: null,
+            imageInformation: null,
         });
-        nodeAgentSkuSelect.selectOption(nodeAgentSkuSelect.options.toArray()[1]);
+        imageInformationSelect.selectOption(imageInformationSelect.options.toArray()[1]);
         expect(testComponent.control.value).toEqual({
             imageId: images[0].id,
-            nodeAgentSku: "batch.ubuntu",
+            imageInformation: "batch.ubuntu",
         });
     });
 
     it("updates select when updating parent compoennt", () => {
         testComponent.control.setValue({
             imageId: images[1].id,
-            nodeAgentSku: "batch.centos",
+            imageInformation: "batch.centos",
         });
         fixture.detectChanges();
         expect(imageSelect.firstSelection).toEqual(imageSelect.options.toArray()[1]);
-        expect(nodeAgentSkuSelect.firstSelection).toEqual(nodeAgentSkuSelect.options.toArray()[0]);
+        expect(imageInformationSelect.firstSelection).toEqual(imageInformationSelect.options.toArray()[0]);
     });
 });

@@ -76,6 +76,11 @@ export class PoolConfigurationComponent {
         return  poolEndpointConfig && poolEndpointConfig.inboundNATPools;
     }
 
+    public get publicIPs() {
+        const publicIPs = this.decorator.publicIPs;
+        return publicIPs;
+    }
+
     private _refresh(pool: Pool) {
         if (pool) {
             this.decorator = new PoolDecorator(this._pool);

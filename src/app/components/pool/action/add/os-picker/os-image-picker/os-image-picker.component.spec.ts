@@ -7,7 +7,7 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import {
     I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,
 } from "@batch-flask/core/testing";
-import { NodeAgentSku, PoolOsSkus } from "app/models";
+import { ImageInformation, PoolOsSkus } from "app/models";
 import { PoolOsService } from "app/services";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
@@ -33,7 +33,7 @@ class FakeCustomImagePickerComponent extends MockControlValueAccessorComponent<a
 
 }
 
-const centosSku = new NodeAgentSku({
+const centosSku = new ImageInformation({
     id: "batch.node.centos 7",
     verifiedImageReferences: [
         { publisher: "OpenLogic", offer: "CentOS", sku: "7.5", version: "latest" },
@@ -49,7 +49,7 @@ const centosSku = new NodeAgentSku({
     osType: "linux",
 });
 
-const windowsSku = new NodeAgentSku({
+const windowsSku = new ImageInformation({
     id: "batch.node.windows amd64", verifiedImageReferences: [
         // tslint:disable:max-line-length
         { publisher: "MicrosoftWindowsServer", offer: "WindowsServer", sku: "2019-Datacenter", version: "latest" },

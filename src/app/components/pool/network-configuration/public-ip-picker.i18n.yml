@@ -1,0 +1,5 @@
+public-ip-picker:
+  publicIP:
+    label: Public IP
+  errorLoading: Server encountered an error loading public IPs, please try again later.
+  noCustomImageAvailable: No public IPs in the region for this account

@@ -1,6 +1,9 @@
+import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { first, map } from "rxjs/operators";
+import { Resource } from "app/models";
+import { Observable, empty } from "rxjs";
+import { combineAll, expand, first, flatMap, map, reduce, share } from "rxjs/operators";
+import { AzureHttpService, SubscriptionService, resourceUrl } from "..";
 import { ArmHttpService } from "../arm-http.service";
 import { ArmListResponse } from "../core";
 
@@ -22,14 +25,21 @@ export interface Subnet {
     name: string;
 }
 
+export interface PublicIP {
+    id: string;
+    name: string;
+}
+
 /**
  * Wrapper around the http service so call the azure ARM network api.
  * Set the Authorization header and the api version
  */
 @Injectable({providedIn: "root"})
 export class NetworkConfigurationService {
-    constructor(private armService: ArmHttpService) {
-    }
+    constructor(
+        private armService: ArmHttpService,
+        private azure: AzureHttpService,
+        private subscriptionService: SubscriptionService) {}
 
     /**
      *
@@ -67,6 +77,27 @@ export class NetworkConfigurationService {
                 return this._filterByLocation(response.value, location, type);
             }),
             first(),
+        );
+    }
+
+    public listPublicIPs(subscriptionId: string, location: string): Observable<PublicIP[]> {
+        const params = new HttpParams().set(
+            "$filter", `resourceType eq 'Microsoft.Network/publicIPAddresses' and location eq '${location}'`);
+        const options = { params };
+        return this.subscriptionService.get(subscriptionId).pipe(
+            flatMap((subscription) => {
+                return this.azure.get<ArmListResponse>(subscription, resourceUrl(subscriptionId), options).pipe(
+                    expand(obs => {
+                        return obs.nextLink ? this.azure.get(subscription, obs.nextLink, options) : empty();
+                    }),
+                    reduce((images: Resource[], response: ArmListResponse<Resource>) => {
+                        return [...images, ...response.value];
+                    }, []),
+                    flatMap(images => images.map(image => this.azure.get<PublicIP>(subscription, image.id))),
+                    combineAll(),
+                );
+            }),
+            share(),
         );
     }
 

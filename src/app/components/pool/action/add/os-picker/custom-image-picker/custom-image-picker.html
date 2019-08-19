@@ -13,10 +13,10 @@
     <bl-form-field>
         <bl-select
             class="node-agent-sku-picker"
-            placeholder="{{'custom-image-picker.nodeAgentSku.label' | i18n}}"
-            [formControl]="nodeAgentSku">
+            placeholder="{{'custom-image-picker.imageInformation.label' | i18n}}"
+            [formControl]="imageInformation">
 
-            <bl-option *ngFor="let nodeAgent of nodeAgentSkus;trackBy: trackNodeAgentSku"
+            <bl-option *ngFor="let nodeAgent of imageInformations;trackBy: trackImageInformation"
                 [value]="nodeAgent.id"
                 [label]="nodeAgent.id"></bl-option>
         </bl-select>

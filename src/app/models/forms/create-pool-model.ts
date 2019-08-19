@@ -50,6 +50,7 @@ export interface CreatePoolModel {
     appLicenses: string[];
     appPackages: PackageReferenceModel[];
     inboundNATPools: InboundNATPoolDto[];
+    ipAddresses: string[];
     subnetId: string;
     certificateReferences: CertificateReferenceDto[];
     metadata: MetaDataDto[];
@@ -106,6 +107,13 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         };
     }
 
+    if (output.ipAddresses && output.ipAddresses.length > 0) {
+        data.networkConfiguration = {
+            publicIPs: output.ipAddresses,
+            ...data.networkConfiguration,
+        };
+    }
+
     if (output.subnetId) {
         data.networkConfiguration = {
             subnetId: output.subnetId,
@@ -152,6 +160,8 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         appPackages: pool.applicationPackageReferences,
         inboundNATPools: pool.networkConfiguration && pool.networkConfiguration.endpointConfiguration ?
             pool.networkConfiguration.endpointConfiguration.inboundNATPools : [],
+        ipAddresses: pool.networkConfiguration && pool.networkConfiguration.publicIPs ?
+            pool.networkConfiguration.publicIPs : [],
         subnetId: pool.networkConfiguration && pool.networkConfiguration.subnetId,
         certificateReferences: pool.certificateReferences || [],
         metadata: pool.metadata,

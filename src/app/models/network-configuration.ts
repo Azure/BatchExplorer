@@ -1,5 +1,7 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { List } from "immutable";
 import { PoolEndpointConfiguration, PoolEndpointConfigurationAttributes } from "./pool-endpoint-configuration";
+import { PublicIP } from "./public-ip";
 
 export enum DynamicVNetAssignmentScope {
     Job = "job",
@@ -10,6 +12,7 @@ export interface NetworkConfigurationAttributes {
     subnetId: string;
     endpointConfiguration: PoolEndpointConfigurationAttributes;
     dynamicVNetAssignmentScope: DynamicVNetAssignmentScope;
+    publicIPs: PublicIP[];
 }
 
 /**
@@ -20,4 +23,5 @@ export class NetworkConfiguration extends Record<NetworkConfigurationAttributes>
     @Prop() public subnetId: string;
     @Prop() public endpointConfiguration: PoolEndpointConfiguration;
     @Prop() public dynamicVNetAssignmentScope: DynamicVNetAssignmentScope = DynamicVNetAssignmentScope.None;
+    @ListProp(PublicIP) public publicIPs: List<string> = List([]);
 }
