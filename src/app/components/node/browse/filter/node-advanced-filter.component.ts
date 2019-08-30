@@ -19,7 +19,7 @@ export class NodeAdvancedFilterComponent {
             state: new StatePickerControl("State", [
                 NodeState.idle, NodeState.running, NodeState.creating, NodeState.leavingPool,
                 NodeState.rebooting, NodeState.reimaging, NodeState.starting, NodeState.startTaskFailed,
-                NodeState.unknown, NodeState.unusable, NodeState.waitingForStartTask,
+                NodeState.unknown, NodeState.unusable, NodeState.offline, NodeState.waitingForStartTask,
             ]),
         });
 
