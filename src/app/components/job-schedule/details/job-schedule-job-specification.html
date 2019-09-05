@@ -74,7 +74,7 @@
             <bl-text-property label="Retention time" [value]="prepTask.constraints?.retentionTime"></bl-text-property>
             <bl-bool-property label="Wait for success" [value]="prepTask.waitForSuccess" yesNo="true"></bl-bool-property>
             <bl-bool-property label="Run elevated" [value]="prepTask.runElevated" yesNo="true"></bl-bool-property>
-            <bl-bool-property label="Re-run on node reboot" [value]="prepTask.rerunOnNodeRebootAfterSuccess" yesNo="true"></bl-bool-property>
+            <bl-bool-property label="Rerun on node reboot" [value]="prepTask.rerunOnNodeRebootAfterSuccess" yesNo="true"></bl-bool-property>
             <bl-resource-files-properties [files]="prepTask.resourceFiles"></bl-resource-files-properties>
 
             <bl-table-property *ngIf="prepTask.environmentSettings.length > 0" label="Environment settings">

@@ -1,4 +1,4 @@
 task-commands:
-  rerun: Re-run
+  rerun: Rerun
   terminate: Terminate
   delete: Delete
