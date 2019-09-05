@@ -1019,7 +1019,7 @@
         <source>Delete</source>
       </trans-unit>
       <trans-unit id="task-commands.rerun">
-        <source>Re-run</source>
+        <source>Rerun</source>
       </trans-unit>
       <trans-unit id="task-commands.terminate">
         <source>Terminate</source>
