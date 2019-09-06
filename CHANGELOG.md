@@ -5,7 +5,8 @@
 
 
 ### bug:
-
+* Task filter not applied when refresh clicked
+* Unable to filter for "offline" nodes
 
 ### other:
 
