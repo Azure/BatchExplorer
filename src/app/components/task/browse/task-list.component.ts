@@ -101,7 +101,6 @@ export class TaskListComponent extends ListBaseComponent implements OnChanges, O
     @autobind()
     public refresh(): Observable<any> {
         this.data.params = { jobId: this.jobId };
-        this.data.setOptions(Object.assign({}, this._baseOptions));
         this.changeDetector.detectChanges();
 
         return this.data.fetchNext(true);
