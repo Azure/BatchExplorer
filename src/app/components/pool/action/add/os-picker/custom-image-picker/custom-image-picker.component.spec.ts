@@ -144,23 +144,4 @@ describe("CustomImagePickerComponent", () => {
         expect(imageSelect.firstSelection).toEqual(imageSelect.options.toArray()[1]);
         expect(nodeAgentSkuSelect.firstSelection).toEqual(nodeAgentSkuSelect.options.toArray()[0]);
     });
-
-    it("list images only custom images", () => {
-        computeServiceSpy = {
-            listCustomImages: jasmine.createSpy("listCustomImages").and.returnValue(of(images)),
-        };
-        expect(nodeAgentSkuSelect.options.length).toEqual(2);
-        const options = nodeAgentSkuSelect.options.toArray();
-        expect(options[0].label).toEqual("batch.centos");
-        expect(options[1].label).toEqual("batch.ubuntu");
-    });
-
-    it("list images only sig", () => {
-        computeServiceSpy = {
-            listSIG: jasmine.createSpy("listSIG").and.returnValue(of(sigVersions)),
-        };
-        expect(nodeAgentSkuSelect.options.length).toEqual(1);
-        const options = nodeAgentSkuSelect.options.toArray();
-        expect(options[2].label).toEqual("test/testimage/1.12.1");
-    });
 });
