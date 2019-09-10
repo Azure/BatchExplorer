@@ -2,7 +2,7 @@ import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { ArmBatchAccount, ArmLocation, ArmLocationAttributes, ArmSubscription, Resource } from "app/models";
-import { Observable, empty } from "rxjs";
+import { Observable, empty, of } from "rxjs";
 import { combineAll, concatAll, expand, flatMap, map, reduce, share, tap } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
@@ -158,7 +158,7 @@ public number;
                     map(resources => resources.map(resource => resource.resource)),
             );
         }
-        return empty();
+        return of([]);
     }
 
     public listSIG(subscriptionId: string, location: string): Observable<Resource[]> {
