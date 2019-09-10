@@ -145,3 +145,123 @@ describe("CustomImagePickerComponent", () => {
         expect(nodeAgentSkuSelect.firstSelection).toEqual(nodeAgentSkuSelect.options.toArray()[0]);
     });
 });
+
+// Test edge case of only having custom image/sig
+
+describe("CustomImagePickerComponent", () => {
+    let fixture: ComponentFixture<TestComponent>;
+    let testComponent: TestComponent;
+    let de: DebugElement;
+    let imageSelectEl: DebugElement;
+    let nodeAgentSkuSelectEl: DebugElement;
+    let imageSelect: SelectComponent;
+    let nodeAgentSkuSelect: SelectComponent;
+    let computeServiceSpy;
+    let poolOSServiceSpy;
+    let accountServiceSpy;
+
+    beforeEach(() => {
+        computeServiceSpy = {
+            listCustomImages: jasmine.createSpy("listCustomImages").and.returnValue(of(images)),
+        };
+
+        poolOSServiceSpy = {
+            nodeAgentSkus: of(List(skus)),
+        };
+
+        accountServiceSpy = {
+            currentAccount: of(new ArmBatchAccount({
+                id: "subs/sub1/batchAccounts/acc-1",
+                location: "westus",
+                name: "My account",
+                subscription: sub1,
+                properties: { accountEndpoint: "https://endpoint.batch.azure.com" },
+            } as any)),
+        };
+        TestBed.configureTestingModule({
+            imports: [SelectModule, ReactiveFormsModule, FormsModule, FormModule, I18nTestingModule],
+            declarations: [CustomImagePickerComponent, TestComponent],
+            providers: [
+                { provide: ComputeService, useValue: computeServiceSpy },
+                { provide: PoolOsService, useValue: poolOSServiceSpy },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
+            ],
+        });
+        fixture = TestBed.createComponent(TestComponent);
+        testComponent = fixture.componentInstance;
+        de = fixture.debugElement.query(By.css("bl-custom-image-picker"));
+        fixture.detectChanges();
+
+        imageSelectEl = de.query(By.css(".image-id-picker"));
+        nodeAgentSkuSelectEl = de.query(By.css(".node-agent-sku-picker"));
+
+        imageSelect = imageSelectEl && imageSelectEl.componentInstance;
+        nodeAgentSkuSelect = nodeAgentSkuSelectEl && nodeAgentSkuSelectEl.componentInstance;
+    });
+
+    it("list the available images", () => {
+        expect(imageSelect.options.length).toEqual(2);
+        const options = imageSelect.options.toArray();
+        expect(options[0].label).toEqual("Ubuntu custom image");
+        expect(options[1].label).toEqual("CentOS custom image");
+    });
+});
+
+describe("CustomImagePickerComponent", () => {
+    let fixture: ComponentFixture<TestComponent>;
+    let testComponent: TestComponent;
+    let de: DebugElement;
+    let imageSelectEl: DebugElement;
+    let nodeAgentSkuSelectEl: DebugElement;
+    let imageSelect: SelectComponent;
+    let nodeAgentSkuSelect: SelectComponent;
+    let computeServiceSpy;
+    let poolOSServiceSpy;
+    let accountServiceSpy;
+
+    beforeEach(() => {
+        computeServiceSpy = {
+            listSIG: jasmine.createSpy("listSIG").and.returnValue(of(sigVersions)),
+        };
+
+        poolOSServiceSpy = {
+            nodeAgentSkus: of(List(skus)),
+        };
+
+        accountServiceSpy = {
+            currentAccount: of(new ArmBatchAccount({
+                id: "subs/sub1/batchAccounts/acc-1",
+                location: "westus",
+                name: "My account",
+                subscription: sub1,
+                properties: { accountEndpoint: "https://endpoint.batch.azure.com" },
+            } as any)),
+        };
+        TestBed.configureTestingModule({
+            imports: [SelectModule, ReactiveFormsModule, FormsModule, FormModule, I18nTestingModule],
+            declarations: [CustomImagePickerComponent, TestComponent],
+            providers: [
+                { provide: ComputeService, useValue: computeServiceSpy },
+                { provide: PoolOsService, useValue: poolOSServiceSpy },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
+            ],
+        });
+        fixture = TestBed.createComponent(TestComponent);
+        testComponent = fixture.componentInstance;
+        de = fixture.debugElement.query(By.css("bl-custom-image-picker"));
+        fixture.detectChanges();
+
+        imageSelectEl = de.query(By.css(".image-id-picker"));
+        nodeAgentSkuSelectEl = de.query(By.css(".node-agent-sku-picker"));
+
+        imageSelect = imageSelectEl && imageSelectEl.componentInstance;
+        nodeAgentSkuSelect = nodeAgentSkuSelectEl && nodeAgentSkuSelectEl.componentInstance;
+    });
+
+    it("list the available images", () => {
+        expect(imageSelect.options.length).toEqual(1);
+        const options = imageSelect.options.toArray();
+        expect(options[0].label).toEqual("test/testimage/1.12.1");
+    });
+});
+
