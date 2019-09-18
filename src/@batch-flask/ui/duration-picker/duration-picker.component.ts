@@ -149,6 +149,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
         if (changes.defaultDuration) {
             if (this.defaultDuration) {
                 this.time = this.defaultDuration;
+                this.value = this._getDuration();
             }
         }
         this.stateChanges.next();
