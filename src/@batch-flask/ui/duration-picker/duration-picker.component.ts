@@ -146,7 +146,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                 this.unit = DurationUnit.Days;
             }
         }
-        if (changes.defaultDuration) {
+        if (changes.defaultDuration && !this.time) {
             if (this.defaultDuration) {
                 this.time = this.defaultDuration;
                 this.value = this._getDuration();
