@@ -21,6 +21,7 @@ import { DurationPickerModule } from "./duration-picker.module";
 class TestComponent {
     public allowUnlimited = true;
     public control = new FormControl<Duration>();
+    public defaultValue = "";
 }
 
 @Component({
@@ -183,12 +184,21 @@ describe("DurationPickerComponent", () => {
                 expect(component.time).toEqual("");
             });
 
-            it("set to hours when value is null and allow unlimited is false", () => {
+            it("set to days when value is null and allow unlimited is false", () => {
                 testComponent.allowUnlimited = false;
                 testComponent.control.setValue(null);
                 fixture.detectChanges();
-                expect(component.unit).toEqual(DurationUnit.Hours);
+                expect(component.unit).toEqual(DurationUnit.Days);
                 expect(component.time).toEqual("");
+            });
+
+            it("set correct default value when specified", () => {
+                testComponent.allowUnlimited = false;
+                testComponent.defaultValue = "7";
+                testComponent.control.setValue(null);
+                fixture.detectChanges();
+                expect(component.unit).toEqual(DurationUnit.Days);
+                expect(component.time).toEqual("7");
             });
         });
     });
