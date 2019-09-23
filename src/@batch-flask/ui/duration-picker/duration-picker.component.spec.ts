@@ -197,6 +197,8 @@ describe("DurationPickerComponent", () => {
                 testComponent.defaultValue = "7";
                 testComponent.control.setValue(null);
                 fixture.detectChanges();
+                testComponent.control.setValue("");
+                fixture.detectChanges();
                 expect(component.unit).toEqual(DurationUnit.Days);
                 expect(component.time).toEqual("7");
             });
