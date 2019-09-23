@@ -21,7 +21,7 @@ import { DurationPickerModule } from "./duration-picker.module";
 class TestComponent {
     public allowUnlimited = true;
     public control = new FormControl<Duration>();
-    public defaultValue = "";
+    public defaultDuration = "";
 }
 
 @Component({
@@ -194,10 +194,8 @@ describe("DurationPickerComponent", () => {
 
             it("set correct default value when specified", () => {
                 testComponent.allowUnlimited = false;
-                testComponent.defaultValue = "7";
+                testComponent.defaultDuration = "7";
                 testComponent.control.setValue(null);
-                fixture.detectChanges();
-                testComponent.control.setValue("");
                 fixture.detectChanges();
                 expect(component.unit).toEqual(DurationUnit.Days);
                 expect(component.time).toEqual("7");
