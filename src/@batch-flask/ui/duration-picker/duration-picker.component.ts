@@ -19,7 +19,7 @@ import {
     NG_VALUE_ACCESSOR,
     NgControl,
 } from "@angular/forms";
-import { FlagInput, UNLIMITED_DURATION_THRESHOLD, coerceBooleanProperty } from "@batch-flask/core";
+import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectComponent } from "@batch-flask/ui/select";
 import { Duration } from "luxon";
@@ -236,7 +236,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                     this.invalidTimeNumber = true;
                     return null;
                 } else {
-                    const duration = Duration.fromObject({
+                    return Duration.fromObject({
                         [this.unit]: Number(this.time),
                     });
                 }
@@ -249,6 +249,9 @@ export class DurationPickerComponent implements FormFieldControl<any>,
      * otherwise next smaller unit will be checked until last unit.
      */
     private _setTimeAndUnitFromDuration(duration: Duration) {
+        if (!duration) {
+            return;
+        }
         const days = duration.as("day");
         const hours = duration.as("hour");
         const minutes = duration.as("minute");
