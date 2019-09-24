@@ -19,7 +19,7 @@ import {
     NG_VALUE_ACCESSOR,
     NgControl,
 } from "@angular/forms";
-import { FlagInput, UNLIMITED_DURATION_THRESHOLD, coerceBooleanProperty } from "@batch-flask/core";
+import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectComponent } from "@batch-flask/ui/select";
 import { Duration } from "luxon";
@@ -74,6 +74,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     public label: string;
 
     @Input() public allowUnlimited: boolean = true;
+    @Input() public defaultDuration: string = "";
 
     @Input() @FlagInput() public required = false;
 
@@ -142,7 +143,13 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     public ngOnChanges(changes) {
         if (changes.allowUnlimited) {
             if (!this.allowUnlimited && this.unit === DurationUnit.Unlimited) {
-                this.unit = DurationUnit.Hours;
+                this.unit = DurationUnit.Days;
+            }
+        }
+        if (changes.defaultDuration && !this.time) {
+            if (this.defaultDuration) {
+                this.time = this.defaultDuration;
+                this.value = this._getDuration();
             }
         }
         this.stateChanges.next();
@@ -229,21 +236,11 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                     this.invalidTimeNumber = true;
                     return null;
                 } else {
-                    const duration = Duration.fromObject({
+                    return Duration.fromObject({
                         [this.unit]: Number(this.time),
                     });
-                    return this._isDurationUnlimited(duration) ? null : duration;
                 }
         }
-    }
-
-    private _isDurationUnlimited(duration: Duration): boolean {
-        if (!duration) {
-            return true;
-        }
-        const days = duration.as("day");
-        // Days must not be greater than threshold, otherwise just set it to unlimited
-        return days > UNLIMITED_DURATION_THRESHOLD;
     }
 
     /**
@@ -252,12 +249,9 @@ export class DurationPickerComponent implements FormFieldControl<any>,
      * otherwise next smaller unit will be checked until last unit.
      */
     private _setTimeAndUnitFromDuration(duration: Duration) {
-        if (this._isDurationUnlimited(duration)) {
-            this.unit = DurationUnit.Unlimited;
-            this.time = "";
+        if (!duration) {
             return;
         }
-
         const days = duration.as("day");
         const hours = duration.as("hour");
         const minutes = duration.as("minute");
