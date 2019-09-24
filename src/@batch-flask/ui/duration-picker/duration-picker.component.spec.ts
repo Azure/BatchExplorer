@@ -21,7 +21,6 @@ import { DurationPickerModule } from "./duration-picker.module";
 class TestComponent {
     public allowUnlimited = true;
     public control = new FormControl<Duration>();
-    public defaultDuration = "";
 }
 
 @Component({
@@ -35,6 +34,21 @@ class TestComponent {
     `,
 })
 class TestWithFormFieldComponent extends TestComponent {
+}
+
+@Component({
+    template: `
+        <bl-duration-picker label="My duration picker"
+            [formControl]="control"
+            [allowUnlimited]="allowUnlimited"
+            [defaultDuration]="default">
+        </bl-duration-picker>
+    `,
+})
+class TestWithDefaultComponent {
+    public allowUnlimited = false;
+    public control = new FormControl<Duration>();
+    public default = "7";
 }
 
 describe("DurationPickerComponent", () => {
@@ -191,15 +205,6 @@ describe("DurationPickerComponent", () => {
                 expect(component.unit).toEqual(DurationUnit.Days);
                 expect(component.time).toEqual("");
             });
-
-            it("set correct default value when specified", () => {
-                testComponent.allowUnlimited = false;
-                testComponent.defaultDuration = "7";
-                testComponent.control.setValue(null);
-                fixture.detectChanges();
-                expect(component.unit).toEqual(DurationUnit.Days);
-                expect(component.time).toEqual("7");
-            });
         });
     });
 
@@ -231,4 +236,15 @@ describe("DurationPickerComponent", () => {
             expect(inputEl.nativeElement).toEqual(document.activeElement);
         });
     });
+
+    describe("when picker in form-field", () => {
+        beforeEach(async () => {
+            await setupFor(TestWithDefaultComponent);
+        });
+        it("set correct default value when specified", async () => {
+            expect(component.unit).toEqual(DurationUnit.Days);
+            expect(component.time).toEqual("7");
+        });
+    });
+
 });
