@@ -4,7 +4,7 @@
 
 ![](images/form.png)
 
-You first need to use the `bl-complex-form` componenent. You will need to pass the formGroup as an input and the submit method(Don't forget to autobind the submit)
+You first need to use the `bl-complex-form` component. You will need to pass the formGroup as an input and the submit method(Don't forget to autobind the submit)
 
 ```html
 <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
