@@ -26,7 +26,7 @@ export abstract class FormFieldControl<T> {
     public readonly ngControl: NgControl | null;
 
     /** Whether the control is required. */
-    public readonly required: boolean;
+    public readonly required: boolean | string;
 
     /** Whether the control is disabled. */
     public readonly disabled: boolean;

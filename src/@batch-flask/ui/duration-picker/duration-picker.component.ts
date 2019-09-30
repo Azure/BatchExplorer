@@ -76,7 +76,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     @Input() public allowUnlimited: boolean = true;
     @Input() public defaultDuration: string = "";
 
-    @Input() @FlagInput() public required = false;
+    @Input() @FlagInput() public required: boolean | string = false;
 
     @Input()
     public get disabled(): boolean {
@@ -138,6 +138,9 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                 this.changeDetector.markForCheck();
             });
         }
+        if (this._propagateChange) {
+            this._propagateChange(this.value);
+        }
     }
 
     public ngOnChanges(changes) {
@@ -164,7 +167,12 @@ export class DurationPickerComponent implements FormFieldControl<any>,
 
     public writeValue(value: Duration | string): void {
         if (value === null || value === undefined) {
-            this.value = null;
+            if (this.defaultDuration) {
+                this.time = this.defaultDuration;
+                this.value = this._getDuration();
+            } else {
+                this.value = null;
+            }
         } else if (value instanceof Duration) {
             this.value = value;
         } else {
@@ -183,12 +191,11 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     }
 
     public validate() {
-        if (this.invalidTimeNumber || this.invalidCustomDuration) {
+        if (this.invalidTimeNumber || this.invalidCustomDuration || (this.required && !this.time)) {
             return {
                 duration: "Invalid",
             };
         }
-        return false;
     }
 
     public setDescribedByIds(ids: string[]): void {
@@ -232,7 +239,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                 return this._getCustomDuration(this.time);
             default:
                 const time = Number(this.time);
-                if (isNaN(time)) {
+                if (isNaN(time) || time < 0) {
                     this.invalidTimeNumber = true;
                     return null;
                 } else {
@@ -250,6 +257,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
      */
     private _setTimeAndUnitFromDuration(duration: Duration) {
         if (!duration) {
+            this.time = "";
             return;
         }
         const days = duration.as("day");
