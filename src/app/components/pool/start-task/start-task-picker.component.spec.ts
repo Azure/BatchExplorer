@@ -1,14 +1,11 @@
 import { CommonModule } from "@angular/common";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
-import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 import { TranslationsLoaderService } from "@batch-flask/core";
 import { MockControlValueAccessorComponent, controlValueAccessorProvider } from "@batch-flask/core/testing";
-import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { FormModule } from "@batch-flask/ui";
 import { UserAccount } from "app/models";
 import { ContainerConfigurationDto } from "app/models/dtos";
@@ -63,9 +60,6 @@ describe("StartTaskPickerComponent", () => {
                 FormModule,
                 FormsModule,
                 ReactiveFormsModule,
-                BrowserDynamicTestingModule,
-                HttpClientTestingModule,
-                ElectronTestingModule,
                 MatCheckboxModule,
             ],
             declarations: [
@@ -94,7 +88,7 @@ describe("StartTaskPickerComponent", () => {
         fixture.detectChanges();
     }
 
-    it("default waitForSuccess checkbox value is true", () => {
+    it("should default waitForSuccess checkbox value as true", () => {
         expect(component.form.value.waitForSuccess).toBe(true);
     });
 });
