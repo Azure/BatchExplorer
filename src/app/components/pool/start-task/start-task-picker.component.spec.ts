@@ -50,7 +50,7 @@ class MockResourceFilePickerComponent extends MockControlValueAccessorComponent<
     @Input() public hideCaption = false;
 }
 
-fdescribe("StartTaskPickerComponent", () => {
+describe("StartTaskPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let component: StartTaskPickerComponent;
     let testComponent: TestComponent;
