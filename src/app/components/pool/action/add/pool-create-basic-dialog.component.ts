@@ -69,7 +69,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             appLicenses: [[]],
             appPackages: [[]],
             inboundNATPools: [[]],
-            publicIPs: [[]],
             subnetId: [null],
             certificateReferences: [[]],
             metadata: [null],
@@ -94,9 +93,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             if (!value.virtualMachineConfiguration) {
                 this.form.patchValue({
                     inboundNATPools: [],
-                });
-                this.form.patchValue({
-                    publicIPs: [],
                 });
             }
 

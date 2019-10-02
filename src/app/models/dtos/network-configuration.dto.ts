@@ -4,5 +4,4 @@ import { PoolEndPointConfigurationDto } from "./pool-endpoint-configuration.dto"
 export class NetworkConfigurationDto extends Dto<NetworkConfigurationDto> {
     @DtoAttr() public subnetId: string;
     @DtoAttr() public endpointConfiguration: PoolEndPointConfigurationDto;
-    @DtoAttr() public publicIPs: string[];
 }

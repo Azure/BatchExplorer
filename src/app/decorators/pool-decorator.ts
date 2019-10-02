@@ -32,7 +32,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public url: string;
     public virtualMachineConfiguration: VirtualMachineConfigurationDecorator;
     public vmSize: string;
-    public publicIPs: List<string>;
     public poolEndpointConfiguration: PoolEndpointConfigurationDecorator;
     public poolOs: string;
     public lastResized: string;
@@ -83,8 +82,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.certificateReferences = List(pool.certificateReferences);
         this.networkSubnetId = pool.networkConfiguration && pool.networkConfiguration.subnetId;
         this.applicationLicenses = pool.applicationLicenses.join(", ");
-        this.publicIPs =
-            pool.networkConfiguration && pool.networkConfiguration.publicIPs;
     }
 
     private _computePoolOs(): string {
