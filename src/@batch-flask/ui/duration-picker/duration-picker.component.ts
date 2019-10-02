@@ -76,7 +76,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     @Input() public allowUnlimited: boolean = true;
     @Input() public defaultDuration: string = "";
 
-    @Input() @FlagInput() public required: boolean | string = false;
+    @Input() @FlagInput() public required: boolean = false;
 
     @Input()
     public get disabled(): boolean {
@@ -196,6 +196,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                 duration: "Invalid",
             };
         }
+        return null;
     }
 
     public setDescribedByIds(ids: string[]): void {
