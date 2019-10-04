@@ -31,6 +31,7 @@ export class NetworkSecurityGroupRule extends Record<NetworkSecurityGroupRuleAtt
     @Prop() public access: NetworkSecurityGroupRuleAccess;
     @Prop() public priority: number;
     @Prop() public sourceAddressPrefix: string;
+    @ListProp(String) public sourcePortRanges: List<string>;
 }
 
 @Model()
