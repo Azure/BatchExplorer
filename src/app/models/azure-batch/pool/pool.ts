@@ -124,7 +124,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop() public startTask: StartTask;
 
-    @Prop() public mountConfiguration: MountConfiguration;
+    @ListProp(MountConfiguration) public mountConfiguration: List<MountConfiguration>;
 
     @Prop() public networkConfiguration: NetworkConfiguration;
 

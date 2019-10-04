@@ -34,7 +34,7 @@ export interface NfsMountConfigurationAttributes {
 export interface MountConfigurationAttributes {
     azureBlobFileSystemConfiguration: AzureBlobFileSystemConfiguration;
     azureFileShareConfiguration: AzureFileShareConfiguration;
-    cifsMountConfiguraiton: CifsMountConfiguration;
+    cifsMountConfiguration: CifsMountConfiguration;
     nfsMountConfiguration: NfsMountConfiguration;
 }
 
@@ -80,6 +80,6 @@ export class NfsMountConfiguration extends Record<NfsMountConfigurationAttribute
 export class MountConfiguration extends Record<MountConfigurationAttributes> {
     @Prop() public azureBlobFileSystemConfiguration: AzureBlobFileSystemConfiguration;
     @Prop() public azureFileShareConfiguration: AzureFileShareConfiguration;
-    @Prop() public cifsMountConfiguraiton: CifsMountConfiguration;
+    @Prop() public cifsMountConfiguration: CifsMountConfiguration;
     @Prop() public nfsMountConfiguration: NfsMountConfiguration;
 }
