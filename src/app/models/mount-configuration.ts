@@ -1,5 +1,4 @@
-import { ListProp, Model, Prop, Record } from "@batch-flask/core";
-import { List } from "immutable";
+import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface AzureBlobFileSystemConfigurationAttributes {
     accountKey: string;
