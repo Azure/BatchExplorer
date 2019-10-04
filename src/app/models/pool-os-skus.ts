@@ -1,6 +1,6 @@
 import { ObjectUtils } from "@batch-flask/utils";
 import { List } from "immutable";
-import { ImageInformation } from "./node-agent-sku";
+import { ImageInformation } from "./image-information";
 
 const dataScienceVms = {
     "linux-data-science-vm": {
