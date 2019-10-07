@@ -23,7 +23,7 @@ import "./sidebar-content.scss";
 export class SidebarContentComponent implements OnInit {
     @Input()  private sidebar: MatSidenav;
 
-    @ViewChild(PortalHostDirective) private portalHost: PortalHostDirective;
+    @ViewChild(PortalHostDirective, { static: false }) private portalHost: PortalHostDirective;
 
     private currentComponentRef: ComponentRef<SidebarPageComponent>;
 

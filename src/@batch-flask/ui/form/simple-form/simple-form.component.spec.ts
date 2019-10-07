@@ -20,7 +20,7 @@ import { complexFormMockComponents } from "test/utils/mocks/components";
     `,
 })
 export class FormTestComponent {
-    @ViewChild("banner")
+    @ViewChild("banner", { static: false })
     public actionForm: SimpleFormComponent;
 
     public form: FormGroup;

@@ -36,10 +36,10 @@ let idCounter = 0;
 export class QuickListComponent extends AbstractListBase {
     @Input() public id = `bl-quick-list-${idCounter++}`;
 
-    @ContentChild(QuickListRowStatusDirective, { read: TemplateRef }) public statusDef: TemplateRef<any>;
-    @ContentChild(QuickListRowTitleDirective, { read: TemplateRef }) public titleDef: TemplateRef<any>;
-    @ContentChild(QuickListRowStateDirective, { read: TemplateRef }) public stateDef: TemplateRef<any>;
-    @ContentChild(QuickListRowExtraDirective, { read: TemplateRef }) public extraDef: TemplateRef<any>;
+    @ContentChild(QuickListRowStatusDirective, { read: TemplateRef, static: false }) public statusDef: TemplateRef<any>;
+    @ContentChild(QuickListRowTitleDirective, { read: TemplateRef, static: false }) public titleDef: TemplateRef<any>;
+    @ContentChild(QuickListRowStateDirective, { read: TemplateRef, static: false }) public stateDef: TemplateRef<any>;
+    @ContentChild(QuickListRowExtraDirective, { read: TemplateRef, static: false }) public extraDef: TemplateRef<any>;
 
     @HostBinding("attr.role") public readonly role = "listbox";
 

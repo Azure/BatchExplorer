@@ -25,10 +25,10 @@ export class NodeListDisplayComponent extends ListBaseComponent {
 
     @Output() public scrollBottom = new EventEmitter();
 
-    @ViewChild(QuickListComponent)
+    @ViewChild(QuickListComponent, { static: false })
     public list: QuickListComponent;
 
-    @ViewChild(TableComponent)
+    @ViewChild(TableComponent, { static: false })
     public table: TableComponent;
 
     constructor(injector: Injector) {

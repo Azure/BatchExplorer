@@ -51,7 +51,8 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     private _config = defaultConfig;
     private _fileType: string;
 
-    @ViewChild("viewerContainer", { read: ViewContainerRef }) private _viewerContainer: ViewContainerRef;
+    @ViewChild("viewerContainer", { read: ViewContainerRef, static: false})
+    private _viewerContainer: ViewContainerRef;
 
     constructor(
         private resolver: ComponentFactoryResolver,

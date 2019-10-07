@@ -38,10 +38,10 @@ export class TagsComponent {
 
     public tagEditString = "";
 
-    @ViewChild("editButton", { read: ElementRef })
+    @ViewChild("editButton", { read: ElementRef, static: false })
     private _editButton: ElementRef;
 
-    @ViewChild("editInput")
+    @ViewChild("editInput", { static: false })
     private _editInput: ElementRef;
 
     constructor(private changeDetector: ChangeDetectorRef) {
