@@ -44,9 +44,9 @@ const sigVersions: Resource[] = [
 ];
 
 const skus = [
-    new ImageInformation({ id: "batch.centos" }),
-    new ImageInformation({ id: "batch.ubuntu" }),
-    new ImageInformation({ id: "batch.windows" }),
+    new ImageInformation({nodeAgentSKUId: "batch.centos" }),
+    new ImageInformation({nodeAgentSKUId:  "batch.ubuntu" }),
+    new ImageInformation({nodeAgentSKUId:  "batch.windows" }),
 ];
 
 describe("CustomImagePickerComponent", () => {
@@ -68,7 +68,7 @@ describe("CustomImagePickerComponent", () => {
         };
 
         poolOSServiceSpy = {
-            imageInformations: of(List(skus)),
+            supportedImages: of(List(skus)),
         };
 
         accountServiceSpy = {
@@ -126,19 +126,19 @@ describe("CustomImagePickerComponent", () => {
         imageSelect.selectOption(imageSelect.options.toArray()[0]);
         expect(testComponent.control.value).toEqual({
             imageId: images[0].id,
-            imageInformation: null,
+            nodeAgentSku: null,
         });
         imageInformationSelect.selectOption(imageInformationSelect.options.toArray()[1]);
         expect(testComponent.control.value).toEqual({
             imageId: images[0].id,
-            imageInformation: "batch.ubuntu",
+            nodeAgentSku: "batch.ubuntu",
         });
     });
 
     it("updates select when updating parent compoennt", () => {
         testComponent.control.setValue({
             imageId: images[1].id,
-            imageInformation: "batch.centos",
+            nodeAgentSku: "batch.centos",
         });
         fixture.detectChanges();
         expect(imageSelect.firstSelection).toEqual(imageSelect.options.toArray()[1]);

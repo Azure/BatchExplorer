@@ -6,6 +6,8 @@ export interface ImageInformationAttributes {
     verificationType: string;
     nodeAgentSKUId: string;
     osType: string;
+    batchSupportEndOfLife: Date;
+    capabilities: List<string>;
     imageReference: ImageReferenceAttributes;
 }
 

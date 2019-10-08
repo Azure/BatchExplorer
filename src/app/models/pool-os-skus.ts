@@ -21,12 +21,12 @@ const renderingPublisher = "batch";
 
 // Docker container supported os
 const dockerContainer = {
-    "WindowsServer": [
-        "2016-Datacenter-with-Containers",
-        "2019-Datacenter-with-Containers",
-        "2019-Datacenter-with-Containers-smalldisk",
-        "2019-Datacenter-Core-with-Containers",
-        "2019-Datacenter-Core-with-Containers-smalldisk",
+    "windowsserver": [
+        "2016-datacenter-with-containers",
+        "2019-datacenter-with-containers",
+        "2019-datacenter-with-containers-smalldisk",
+        "2019-datacenter-core-with-containers",
+        "2019-datacenter-core-with-containers-smalldisk",
     ],
     "centos-container-rdma": true,
     "centos-container": true,

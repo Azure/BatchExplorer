@@ -18,7 +18,7 @@ export class PoolOsService {
         this.supportedImages = this.accountService.currentAccountId.pipe(
             distinctUntilChanged(),
             switchMap(() => {
-                return this._loadImageInformations().pipe(
+                return this._loadImageInformation().pipe(
                     catchError((error) => {
                         log.error("Failed to load node agent skus", error);
                         return of(List<ImageInformation>([]));
@@ -36,7 +36,7 @@ export class PoolOsService {
         );
     }
 
-    private _loadImageInformations(): Observable<List<ImageInformation>> {
+    private _loadImageInformation(): Observable<List<ImageInformation>> {
         return this.http.get<BatchListResponse<ImageInformationAttributes>>("/supportedimages").pipe(
             expand(response => {
                 return response["odata.nextLink"] ? this.http.get(response["odata.nextLink"]) : empty();

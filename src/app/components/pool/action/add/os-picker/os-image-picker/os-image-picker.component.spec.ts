@@ -10,7 +10,7 @@ import {
 import { ImageInformation, PoolOsSkus } from "app/models";
 import { PoolOsService } from "app/services";
 import { List } from "immutable";
-import { BehaviorSubject } from "rxjs";
+import { of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { OsOfferTileComponent } from "../os-offer-tile";
 import { OSImagePickerComponent, OSImageSelection } from "./os-image-picker.component";
@@ -33,44 +33,162 @@ class FakeCustomImagePickerComponent extends MockControlValueAccessorComponent<a
 
 }
 
-const centosSku = new ImageInformation({
-    id: "batch.node.centos 7",
-    verifiedImageReferences: [
-        { publisher: "OpenLogic", offer: "CentOS", sku: "7.5", version: "latest" },
-        { publisher: "OpenLogic", offer: "CentOS-HPC", sku: "7.4", version: "latest" },
-        { publisher: "OpenLogic", offer: "CentOS-HPC", sku: "7.3", version: "latest" },
-        { publisher: "OpenLogic", offer: "CentOS-HPC", sku: "7.1", version: "latest" },
-        { publisher: "Oracle", offer: "Oracle-Linux", sku: "7.5", version: "latest" },
-        { publisher: "microsoft-ads", offer: "linux-data-science-vm", sku: "linuxdsvm", version: "latest" },
-        { publisher: "batch", offer: "rendering-centos73", sku: "rendering", version: "latest" },
-        { publisher: "microsoft-azure-batch", offer: "centos-container", sku: "7-5", version: "latest" },
-        { publisher: "microsoft-azure-batch", offer: "centos-container-rdma", sku: "7-4", version: "latest" },
-    ],
-    osType: "linux",
-});
+const skus = List<ImageInformation>([
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.centos 7",
+        osType: "linux",
+        imageReference: { publisher: "openlogic", offer: "centos", sku: "7.5", version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.centos 7",
+        osType: "linux",
+        imageReference: { publisher: "openlogic", offer: "centos-hpc", sku: "7.4", version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.centos 7",
+        osType: "linux",
+        imageReference: { publisher: "openlogic", offer: "centos-hpc", sku: "7.3", version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.centos 7",
+        osType: "linux",
+        imageReference: { publisher: "openlogic", offer: "centos-hpc", sku: "7.1", version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.centos 7",
+        osType: "linux",
+        imageReference: { publisher: "oracle", offer: "oracle-linux", sku: "7.5", version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.centos 7",
+        osType: "linux",
+        imageReference: {
+            publisher: "microsoft-ads",
+            offer: "linux-data-science-vm",
+            sku: "linuxdsvm",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.centos 7",
+        osType: "linux",
+        imageReference: { publisher: "batch", offer: "rendering-centos73", sku: "rendering", version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.centos 7",
+        osType: "linux",
+        imageReference: {
+            publisher: "microsoft-azure-batch",
+            offer: "centos-container",
+            sku: "7-5",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.centos 7",
+        osType: "linux",
+        imageReference: {
+            publisher: "microsoft-azure-batch",
+            offer: "centos-container-rdma",
+            sku: "7-4",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.windows amd64",
+        osType: "windows",
+        imageReference: {
+            publisher: "microsoftwindowsserver",
+            offer: "windowsserver",
+            sku: "2019-datacenter",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.windows amd64",
+        osType: "windows",
+        imageReference: {
+            publisher: "microsoftwindowsserver",
+            offer: "windowsserver",
+            sku: "2016-datacenter",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.windows amd64",
+        osType: "windows",
+        imageReference: {
+            publisher: "microsoftwindowsserver",
+            offer: "windowsserver",
+            sku: "2012-R2-datacenter",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.windows amd64",
+        osType: "windows",
+        imageReference: {
+            publisher: "microsoftwindowsserver",
+            offer: "windowsserver",
+            sku: "2012-datacenter",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.windows amd64",
+        osType: "windows",
+        imageReference: {
+            publisher: "microsoftwindowsserver",
+            offer: "windowsserver",
+            sku: "2008-R2-SP1",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.windows amd64",
+        osType: "windows",
+        imageReference: {
+            publisher: "microsoftwindowsserver",
+            offer: "windowsserver",
+            sku: "2008-R2-SP1-smalldisk",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.windows amd64",
+        osType: "windows",
+        imageReference: {
+            publisher: "microsoftwindowsserver",
+            offer: "windowsserver",
+            sku: "2019-datacenter-with-containers",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.windows amd64",
+        osType: "windows",
+        imageReference: {
+            publisher: "microsoftwindowsserver",
+            offer: "windowsserver",
+            sku: "2016-datacenter-with-containers",
+            version: "latest" },
+    }),
+    new ImageInformation({
+        verificationType: "verified",
+        nodeAgentSKUId: "batch.node.windows amd64",
+        osType: "windows",
+        imageReference: { publisher: "microsoft-dsvm", offer: "dsvm-windows", sku: "server-2016", version: "latest" },
+    }),
+]);
 
-const windowsSku = new ImageInformation({
-    id: "batch.node.windows amd64", verifiedImageReferences: [
-        // tslint:disable:max-line-length
-        { publisher: "MicrosoftWindowsServer", offer: "WindowsServer", sku: "2019-Datacenter", version: "latest" },
-        { publisher: "MicrosoftWindowsServer", offer: "WindowsServer", sku: "2016-Datacenter", version: "latest" },
-        { publisher: "MicrosoftWindowsServer", offer: "WindowsServer", sku: "2012-R2-Datacenter", version: "latest" },
-        { publisher: "MicrosoftWindowsServer", offer: "WindowsServer", sku: "2012-Datacenter", version: "latest" },
-        { publisher: "MicrosoftWindowsServer", offer: "WindowsServer", sku: "2008-R2-SP1", version: "latest" },
-        { publisher: "MicrosoftWindowsServer", offer: "WindowsServer", sku: "2008-R2-SP1-smalldisk", version: "latest" },
-        { publisher: "MicrosoftWindowsServer", offer: "WindowsServer", sku: "2019-Datacenter-with-Containers", version: "latest" },
-        { publisher: "MicrosoftWindowsServer", offer: "WindowsServer", sku: "2016-Datacenter-with-Containers", version: "latest" },
-        { publisher: "microsoft-dsvm", offer: "dsvm-windows", sku: "server-2016", version: "latest" },
-        { publisher: "batch", offer: "rendering-windows2016", sku: "rendering", version: "latest" },
-        // tslint:enable:max-line-length
-    ],
-    osType: "windows",
-});
-
-const skuSet1 = new PoolOsSkus(List([
-    centosSku,
-    windowsSku,
-]));
+const skuSet1 = new PoolOsSkus(skus);
 
 describe("OSImagePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
@@ -80,7 +198,7 @@ describe("OSImagePickerComponent", () => {
 
     beforeEach(() => {
         poolOsServiceSpy = {
-            offers: new BehaviorSubject(skuSet1),
+            offers: of(skuSet1),
         };
         TestBed.configureTestingModule({
             imports: [
@@ -114,22 +232,22 @@ describe("OSImagePickerComponent", () => {
         expect(tabs.length).toBe(5);
     });
 
-    it("shows 1 tile for each Distribution + CLoudService in the distribution tab", () => {
+    it("shows 1 tile for each Distribution + CloudService in the distribution tab", () => {
         const tiles = getTiles(0);
         expect(tiles.length).toEqual(5);
-        expect(tiles[0].nativeElement.textContent).toContain("CentOS");
-        expect(tiles[1].nativeElement.textContent).toContain("CentOS HPC");
-        expect(tiles[2].nativeElement.textContent).toContain("Oracle Linux");
-        expect(tiles[3].nativeElement.textContent).toContain("WindowsServer");
+        expect(tiles[0].nativeElement.textContent).toContain("centos");
+        expect(tiles[1].nativeElement.textContent).toContain("centos hpc");
+        expect(tiles[2].nativeElement.textContent).toContain("oracle linux");
+        expect(tiles[3].nativeElement.textContent).toContain("windowsserver");
         expect(tiles[4].nativeElement.textContent).toContain("WindowsServer(Cloud Service)");
     });
 
-    it("shows 1 tile for each Distribution + CLoudService in the container tab", () => {
+    it("shows 1 tile for each Distribution + CloudService in the container tab", () => {
         const tiles = getTiles(3);
         expect(tiles.length).toEqual(3);
         expect(tiles[0].nativeElement.textContent).toContain("centos container");
         expect(tiles[1].nativeElement.textContent).toContain("centos container rdma");
-        expect(tiles[2].nativeElement.textContent).toContain("WindowsServer");
+        expect(tiles[2].nativeElement.textContent).toContain("windowsserver");
     });
 
     it("picks the latest cloud service family when clicking on the tile", () => {
@@ -159,8 +277,8 @@ describe("OSImagePickerComponent", () => {
             cloudServiceConfiguration: null,
             virtualMachineConfiguration: {
                 imageReference: {
-                    publisher: "OpenLogic",
-                    offer: "CentOS-HPC",
+                    publisher: "openlogic",
+                    offer: "centos-hpc",
                     sku: "7.1",
                 },
                 nodeAgentSKUId: "batch.node.centos 7",
