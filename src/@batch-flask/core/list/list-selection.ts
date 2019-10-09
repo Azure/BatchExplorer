@@ -9,7 +9,7 @@ export interface ListSelectionAttributes {
 
 export class ListSelection {
     public all: boolean = false;
-    public keys = new Set();
+    public keys = new Set<string>();
 
     constructor(selection?: ListSelection | ListSelectionAttributes) {
         if (!selection) { return; }
@@ -18,7 +18,7 @@ export class ListSelection {
         if (selection instanceof ListSelection) {
             this.keys = selection.keys;
         } else {
-            this.keys = new Set(selection.keys);
+            this.keys = new Set<string>(selection.keys);
         }
     }
 

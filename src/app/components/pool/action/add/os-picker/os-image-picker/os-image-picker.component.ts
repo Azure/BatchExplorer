@@ -50,7 +50,7 @@ const cloudServiceOsFamilies = [{
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OSImagePickerComponent implements OnChanges, OnDestroy {
-    @Input() public formGroup: FormGroup<OSImageSelection>;
+    @Input() public formGroup: FormGroup;
 
     // Shared to the view
     public cloudServiceOsFamilies = cloudServiceOsFamilies;

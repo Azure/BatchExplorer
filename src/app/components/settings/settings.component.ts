@@ -34,7 +34,7 @@ export class SettingsComponent implements OnDestroy {
         return { name: "Settings" };
     }
 
-    public form: FormGroup<SettingsSelection>;
+    public form: FormGroup;
     public viewerOptions = ["log", "code", "image"];
     public saved = false;
     public modified = false;

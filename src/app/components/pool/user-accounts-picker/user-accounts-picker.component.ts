@@ -25,7 +25,7 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
     public UserAccountElevationLevel = UserAccountElevationLevel;
     @Input() public osType: OSType;
 
-    public userAccounts = new FormControl<UserAccountDto[]>([], this._duplicateValidator);
+    public userAccounts = new FormControl([], this._duplicateValidator);
 
     private _propagateChange?: (value: UserAccountDto[]) => void;
     private _destroy = new Subject();
@@ -71,7 +71,7 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
     }
 
     @autobind()
-    private _duplicateValidator(control: FormControl<UserAccountDto[]>): ValidationErrors | null {
+    private _duplicateValidator(control: FormControl): ValidationErrors | null {
         const users = control.value;
         if (users === null) {
             return null;

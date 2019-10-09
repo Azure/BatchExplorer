@@ -27,8 +27,8 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
 
     @Input() public armNetworkOnly: boolean = true;
 
-    public virtualNetworkControl = new FormControl<string | null>(null);
-    public subnetControl = new FormControl<string | null>(null);
+    public virtualNetworkControl = new FormControl(null);
+    public subnetControl = new FormControl(null);
     public subnets: Subnet[] = [];
     public subscriptionId: string;
     public location: string;

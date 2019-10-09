@@ -16,7 +16,7 @@ import "./subscription-picker.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionPickerComponent implements ControlValueAccessor, OnDestroy {
-    public subscriptionId = new FormControl<string>();
+    public subscriptionId = new FormControl();
     public subscriptionList: ArmSubscription[];
 
     private _propagateChange: (value: ArmSubscription) => void = null;

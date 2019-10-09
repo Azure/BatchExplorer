@@ -43,7 +43,7 @@ export class CertificateReferencesPickerComponent implements OnInit, OnDestroy, 
 
     public certificates: Certificate[] = [];
 
-    public references = new FormControl<CertificateReferenceAttributes[]>([], this._duplicateValidator);
+    public references = new FormControl([], this._duplicateValidator);
     public _propagateChange: (value: CertificateReferenceAttributes[]) => void;
 
     private _destroy = new Subject();
@@ -101,7 +101,7 @@ export class CertificateReferencesPickerComponent implements OnInit, OnDestroy, 
     }
 
     @autobind()
-    private _duplicateValidator(control: FormControl<CertificateReferenceAttributes[]>): ValidationErrors | null {
+    private _duplicateValidator(control: FormControl): ValidationErrors | null {
         const certificates = control.value;
         if (certificates === null) {
             return null;

@@ -38,7 +38,7 @@ export class FileOrDirectoryPickerComponent implements AsyncValidator, ControlVa
 
     public invalidPath: string;
     public isDraging = 0;
-    public paths: FormControl<FileOrDirectoryDto[]>;
+    public paths: FormControl;
 
     private _propagateChange: (value: FileOrDirectoryDto[]) => void = null;
     private _sub: Subscription;

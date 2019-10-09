@@ -60,7 +60,7 @@ export class UserIdentityPickerComponent implements OnChanges, OnDestroy {
     @Input() public userAccounts: List<UserAccount> | UserAccount[];
 
     public options: UserOption[];
-    public selected = new FormControl<UserIdentityAttributes>();
+    public selected = new FormControl();
     private _propagateChange: (value: UserIdentityAttributes) => void = null;
     private _sub: Subscription;
 

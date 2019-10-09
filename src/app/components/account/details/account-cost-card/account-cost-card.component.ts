@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { QuickRange, QuickRanges, TimeRange } from "@batch-flask/ui";
+import { QuickRange, QuickRanges } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
 import { BatchAccountService, Theme, ThemeService } from "app/services";
@@ -36,7 +36,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         QuickRanges.thisYearRange,
     ];
 
-    public timeRange = new FormControl<TimeRange>(QuickRanges.thisMonthRange);
+    public timeRange = new FormControl(QuickRanges.thisMonthRange);
 
     public costMangementUrl: string | null = null;
 

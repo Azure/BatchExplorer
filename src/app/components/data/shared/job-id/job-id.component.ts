@@ -29,7 +29,7 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
     @Input() public label: string;
     @Input() public hint: string;
 
-    public value: FormControl<string>;
+    public value: FormControl;
     public warning = false;
 
     private _propagateChange: (value: any) => void = null;
