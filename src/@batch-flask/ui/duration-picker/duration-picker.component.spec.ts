@@ -116,7 +116,7 @@ describe("DurationPickerComponent", () => {
                 expect(component.time).toBe("invalid-num");
                 const errors = de.queryAll(By.css(".error"));
                 expect(errors.length).toBe(1);
-                expect(errors[0].nativeElement.textContent).toContain("Input should be a valid number");
+                expect(errors[0].nativeElement.textContent).toContain("Input should be a valid positive number");
                 expect(testComponent.control.valid).toBe(false, "Testcomponent control should be invalid");
             });
 
