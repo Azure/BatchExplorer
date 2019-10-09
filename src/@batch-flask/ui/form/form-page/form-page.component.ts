@@ -61,7 +61,7 @@ export class FormPageComponent implements OnChanges, AfterContentInit, OnDestroy
      */
     @Output() public submit = new EventEmitter();
 
-    @ViewChild(TemplateRef)
+    @ViewChild(TemplateRef, { static: false })
     public content: TemplateRef<any>;
 
     @ContentChildren(FormSectionComponent)

@@ -10,5 +10,5 @@ export class FormSectionComponent {
 
     @Input() public subtitle: string;
 
-    @ViewChild(TemplateRef) public content: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: false }) public content: TemplateRef<any>;
 }

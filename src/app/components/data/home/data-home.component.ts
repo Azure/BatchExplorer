@@ -26,9 +26,9 @@ export class DataHomeComponent implements OnInit {
         return { name: "Storage containers" };
     }
 
-    @ViewChild(MatMenuTrigger) public trigger: MatMenuTrigger;
+    @ViewChild(MatMenuTrigger, { static: false }) public trigger: MatMenuTrigger;
 
-    @ViewChild("layout")
+    @ViewChild("layout", { static: false })
     public layout: BrowseLayoutComponent;
 
     public fileGroupsId = "file-groups";

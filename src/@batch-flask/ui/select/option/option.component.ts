@@ -47,7 +47,7 @@ export class SelectOptionComponent<TOption = any> implements OnChanges, KeyNavig
 
     @Input() public disabled: boolean;
 
-    @ViewChild(TemplateRef) public content: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: false }) public content: TemplateRef<any>;
 
     constructor(
         private _element: ElementRef,

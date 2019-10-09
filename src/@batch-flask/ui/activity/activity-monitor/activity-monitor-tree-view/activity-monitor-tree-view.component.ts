@@ -42,7 +42,7 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
     public flashIndex: number = -1;
 
     @ViewChildren(ActivityMonitorItemComponent) private _itemComponents: QueryList<ActivityMonitorItemComponent>;
-    @ViewChild(FocusSectionComponent) private _focusSectionComponent: FocusSectionComponent;
+    @ViewChild(FocusSectionComponent, { static: false }) private _focusSectionComponent: FocusSectionComponent;
 
     constructor(private changeDetector: ChangeDetectorRef) { }
 

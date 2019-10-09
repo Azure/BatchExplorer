@@ -10,6 +10,6 @@ import "./metrics-monitor-metric.scss";
 export class MetricsMonitorGraphComponent {
     @Input() public label: string;
 
-    @ViewChild("preview") public preview: TemplateRef<any>;
-    @ViewChild("chart") public chart: TemplateRef<any>;
+    @ViewChild("preview", { static: false }) public preview: TemplateRef<any>;
+    @ViewChild("chart", { static: false }) public chart: TemplateRef<any>;
 }

@@ -5,7 +5,7 @@ import { Component, ContentChild, Input, TemplateRef, ViewChild } from "@angular
     template: "<ng-template><ng-content></ng-content></ng-template>",
 })
 export class TabLabelComponent {
-    @ViewChild(TemplateRef)
+    @ViewChild(TemplateRef, { static: false })
     public content: TemplateRef<any>;
 }
 
@@ -25,9 +25,9 @@ export class TabComponent {
     @Input()
     public disabled: boolean;
 
-    @ContentChild(TabLabelComponent)
+    @ContentChild(TabLabelComponent, {static: false})
     public label: TemplateRef<any>;
 
-    @ViewChild(TemplateRef)
+    @ViewChild(TemplateRef, { static: false })
     public content: TemplateRef<any>;
 }
