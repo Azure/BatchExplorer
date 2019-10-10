@@ -32,7 +32,7 @@ export class LocationPickerComponent implements OnChanges, OnDestroy, ControlVal
      * Show location only for the given resources
      */
     @Input() public resourceType?: string;
-    public location = new FormControl();
+    public location = new FormControl<string>();
     public locations: ArmLocation[] = [];
     public loadingStatus = LoadingStatus.Loading;
 

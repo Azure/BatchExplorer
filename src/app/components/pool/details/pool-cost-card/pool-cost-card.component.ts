@@ -41,7 +41,7 @@ export class PoolCostCardComponent implements OnInit, OnChanges, OnDestroy {
         QuickRanges.thisYearRange,
     ];
 
-    public timeRange = new FormControl(QuickRanges.thisMonthRange);
+    public timeRange = new FormControl<TimeRange>(QuickRanges.thisMonthRange);
     public loading: boolean = false;
     // If the start time is less than april 1st 2019 billing was done per account not per pool
     public showPartialDataWarning: boolean = false;

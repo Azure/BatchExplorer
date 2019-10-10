@@ -61,7 +61,7 @@ interface PackageReference {
 })
 export class AppPackagePickerComponent
     implements ControlValueAccessor, Validator, OnInit, OnDestroy {
-    public references = new FormControl(
+    public references = new FormControl<PackageReference[]>(
         [],
         this._duplicateValidator,
     );
@@ -154,7 +154,7 @@ export class AppPackagePickerComponent
 
     @autobind()
     private _duplicateValidator(
-        control: FormControl,
+        control: FormControl<PackageReference[]>,
     ): ValidationErrors | null {
         const references = control.value;
         if (references === null) {

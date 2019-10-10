@@ -18,7 +18,7 @@ export class DataDiskPickerComponent implements ControlValueAccessor, Validator 
     public storageAccountTypes = Object.values(StorageAccountType);
     public cachingOptions = Object.values(CachingType);
 
-    public disks = new FormControl();
+    public disks = new FormControl<Array<Partial<AttrOf<DataDiskDto>>>>();
     private _changeCallback: (disks: DataDiskDto[]) => void;
     private _touchedCallback: () => void;
 
