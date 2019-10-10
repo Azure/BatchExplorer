@@ -7,10 +7,10 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import {
     I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,
 } from "@batch-flask/core/testing";
-import { ImageInformation, PoolOsSkus } from "app/models";
+import { ImageInformation, PoolOsSkus, VerificationType } from "app/models";
 import { PoolOsService } from "app/services";
 import { List } from "immutable";
-import { of } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { OsOfferTileComponent } from "../os-offer-tile";
 import { OSImagePickerComponent, OSImageSelection } from "./os-image-picker.component";
@@ -35,37 +35,37 @@ class FakeCustomImagePickerComponent extends MockControlValueAccessorComponent<a
 
 const skus = List<ImageInformation>([
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.centos 7",
         osType: "linux",
         imageReference: { publisher: "openlogic", offer: "centos", sku: "7.5", version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.centos 7",
         osType: "linux",
         imageReference: { publisher: "openlogic", offer: "centos-hpc", sku: "7.4", version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.centos 7",
         osType: "linux",
         imageReference: { publisher: "openlogic", offer: "centos-hpc", sku: "7.3", version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.centos 7",
         osType: "linux",
         imageReference: { publisher: "openlogic", offer: "centos-hpc", sku: "7.1", version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.centos 7",
         osType: "linux",
         imageReference: { publisher: "oracle", offer: "oracle-linux", sku: "7.5", version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.centos 7",
         osType: "linux",
         imageReference: {
@@ -75,13 +75,13 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.centos 7",
         osType: "linux",
         imageReference: { publisher: "batch", offer: "rendering-centos73", sku: "rendering", version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.centos 7",
         osType: "linux",
         imageReference: {
@@ -91,7 +91,7 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.centos 7",
         osType: "linux",
         imageReference: {
@@ -101,7 +101,7 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.windows amd64",
         osType: "windows",
         imageReference: {
@@ -111,7 +111,7 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.windows amd64",
         osType: "windows",
         imageReference: {
@@ -121,7 +121,7 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.windows amd64",
         osType: "windows",
         imageReference: {
@@ -131,7 +131,7 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.windows amd64",
         osType: "windows",
         imageReference: {
@@ -141,7 +141,7 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.windows amd64",
         osType: "windows",
         imageReference: {
@@ -151,7 +151,7 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.windows amd64",
         osType: "windows",
         imageReference: {
@@ -161,7 +161,7 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.windows amd64",
         osType: "windows",
         imageReference: {
@@ -171,7 +171,7 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.windows amd64",
         osType: "windows",
         imageReference: {
@@ -181,7 +181,7 @@ const skus = List<ImageInformation>([
             version: "latest" },
     }),
     new ImageInformation({
-        verificationType: "verified",
+        verificationType: VerificationType.Verified,
         nodeAgentSKUId: "batch.node.windows amd64",
         osType: "windows",
         imageReference: { publisher: "microsoft-dsvm", offer: "dsvm-windows", sku: "server-2016", version: "latest" },
@@ -198,7 +198,7 @@ describe("OSImagePickerComponent", () => {
 
     beforeEach(() => {
         poolOsServiceSpy = {
-            offers: of(skuSet1),
+            offers: new BehaviorSubject(skuSet1),
         };
         TestBed.configureTestingModule({
             imports: [

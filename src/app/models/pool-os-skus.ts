@@ -1,6 +1,6 @@
 import { ObjectUtils } from "@batch-flask/utils";
 import { List } from "immutable";
-import { ImageInformation } from "./image-information";
+import { ImageInformation, VerificationType } from "./image-information";
 
 const dataScienceVms = {
     "linux-data-science-vm": {
@@ -62,7 +62,7 @@ export class PoolOsSkus {
          */
         let targetOffers: StringMap<Offer> | null = null;
         images.forEach((image: ImageInformation) => {
-            if (image.verificationType === "verified") {
+            if (image.verificationType === VerificationType.Verified) {
                 const imageReference =  image.imageReference;
                 targetOffers = offers;
                 if (dockerContainer[imageReference.offer]

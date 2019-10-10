@@ -2,8 +2,13 @@ import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { List } from "immutable";
 import { ImageReference, ImageReferenceAttributes } from "./image-reference";
 
+export enum VerificationType {
+    Unverified = "unverified",
+    Verified = "verified",
+}
+
 export interface ImageInformationAttributes {
-    verificationType: string;
+    verificationType: VerificationType;
     nodeAgentSKUId: string;
     osType: string;
     batchSupportEndOfLife: Date;
