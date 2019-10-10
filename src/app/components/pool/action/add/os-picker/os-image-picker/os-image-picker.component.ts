@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { NodeAgentSku, Offer, PoolOsSkus, Resource, Sku } from "app/models";
+import { ImageInformation, Offer, PoolOsSkus, Resource, Sku } from "app/models";
 import { PoolOsService } from "app/services";
 import { Subject, Subscription } from "rxjs";
 import { startWith, takeUntil } from "rxjs/operators";
@@ -64,30 +64,30 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
     public selectedFamilyName: string;
 
     public get vmOffers() {
-        return this._nodeAgentSkuMap.vmOffers;
+        return this._imageInformationMap.vmOffers;
     }
 
     public get dataScienceOffers() {
-        return this._nodeAgentSkuMap.dataScienceOffers;
+        return this._imageInformationMap.dataScienceOffers;
     }
 
     public get renderingOffers() {
-        return this._nodeAgentSkuMap.renderingOffers;
+        return this._imageInformationMap.renderingOffers;
     }
 
     public get dockerOffers() {
-        return this._nodeAgentSkuMap.dockerOffers;
+        return this._imageInformationMap.dockerOffers;
     }
 
     public customImage: CustomImageSelection;
 
-    private _nodeAgentSkuMap: PoolOsSkus = new PoolOsSkus();
+    private _imageInformationMap: PoolOsSkus = new PoolOsSkus();
     private _sub: Subscription;
     private _destroy = new Subject();
 
     constructor(private changeDetector: ChangeDetectorRef, poolOsService: PoolOsService) {
         poolOsService.offers.pipe(takeUntil(this._destroy)).subscribe((offers) => {
-            this._nodeAgentSkuMap = offers;
+            this._imageInformationMap = offers;
             this.changeDetector.markForCheck();
         });
     }
@@ -196,8 +196,8 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
         return image.id;
     }
 
-    public trackNodeAgentSku(_, nodeAgent: NodeAgentSku) {
-        return nodeAgent.id;
+    public trackImageInformation(_, image: ImageInformation) {
+        return image.nodeAgentSKUId;
     }
 
     private _updateCustomImage() {

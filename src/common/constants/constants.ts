@@ -102,7 +102,7 @@ export const ApiVersion = {
     arm: "2016-09-01",
     armClassicStorage: "2016-11-01",
     armStorage: "2016-12-01",
-    armBatch: "2018-12-01",
+    armBatch: "2019-08-01",
     compute: "2019-03-01",
     commerce: "2016-08-31-preview",
     authorization: "2017-05-01",
@@ -111,7 +111,7 @@ export const ApiVersion = {
     network: "2017-10-01",
     classicNetwork: "2015-12-01",
     consumption: "2018-10-01",
-    batchService: "2018-12-01.8.0",
+    batchService: "2019-08-01.10.0",
     costManagement: "2019-01-01",
 };
 

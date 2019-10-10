@@ -43,7 +43,7 @@ export * from "./multi-instance-settings";
 export * from "./name-value-pair";
 export * from "./ncj-job-template";
 export * from "./network-configuration";
-export * from "./node-agent-sku";
+export * from "./image-information";
 export * from "./node-connection-settings";
 export * from "./node-recent-task";
 export * from "./node-user";

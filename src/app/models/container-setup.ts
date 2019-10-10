@@ -21,6 +21,7 @@ export interface TaskContainerSettingsAttributes {
     imageName: string;
     containerRunOptions: string;
     registry: Partial<ContainerRegistryAttributes>;
+    workingDirectory: string;
 }
 
 @Model()
@@ -35,6 +36,7 @@ export class TaskContainerSettings extends Record<TaskContainerSettingsAttribute
     @Prop() public imageName: string;
     @Prop() public containerRunOptions: string;
     @Prop() public registry: ContainerRegistry;
+    @Prop() public workingDirectory: string;
 }
 
 @Model()
