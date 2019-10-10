@@ -163,8 +163,8 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     private _keyNavigator: ListKeyNavigator<SelectOptionComponent>;
     private _selected: Set<any> = new Set<any>();
 
-    @ViewChild("selectButton", { read: ElementRef, static: false }) private _selectButtonEl: ElementRef;
-    @ViewChild("filterInput", { static: false }) private _filterInputEl: ElementRef;
+    @ViewChild("selectButton", { read: ElementRef, static: true }) private _selectButtonEl: ElementRef;
+    @ViewChild("filterInput", { static: true }) private _filterInputEl: ElementRef;
 
     public get dropdownOpen() {
         return Boolean(this._dropdownRef);

@@ -160,7 +160,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     protected _config: Required<AbstractListBaseConfig> = abstractListDefaultConfig;
     protected _keyNavigator: ListKeyNavigator<AbstractListItem>;
 
-    @ViewChild(VirtualScrollComponent, { static: false }) private _virtualScroll: VirtualScrollComponent;
+    @ViewChild(VirtualScrollComponent, { static: true }) private _virtualScroll: VirtualScrollComponent;
     private _subs: Subscription[] = [];
     private _items: any[] = [];
 

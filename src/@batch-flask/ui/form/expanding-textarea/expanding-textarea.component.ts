@@ -17,7 +17,7 @@ export class ExpandingTextareaComponent implements ControlValueAccessor {
     @Input() public hint: string;
 
     @HostBinding("class.expanded") public expanded: boolean = false;
-    @ViewChild("textarea", { static: false }) public textarea: ElementRef;
+    @ViewChild("textarea", { static: true }) public textarea: ElementRef;
 
     private _propagateChange: any;
     private _propagateTouched: any;

@@ -9,5 +9,5 @@ import "./callout.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalloutComponent {
-    @ViewChild(TemplateRef, { static: false }) public template: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: true }) public template: TemplateRef<any>;
 }

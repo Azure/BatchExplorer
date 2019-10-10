@@ -29,9 +29,9 @@ export class FakeComponent {
     `,
 })
 export class AppTestComponent implements AfterViewInit {
-    @ViewChild("rightSidebar", { static: false })
+    @ViewChild("rightSidebar", { static: true })
     public sidebar: MatSidenav;
-    @ViewChild("sidebarContent", { static: false })
+    @ViewChild("sidebarContent", { static: true })
     public sidebarContent: SidebarContentComponent;
 
     constructor(private sidebarManager: GlobalSidebarService) {

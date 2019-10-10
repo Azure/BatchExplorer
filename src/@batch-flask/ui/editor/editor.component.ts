@@ -52,9 +52,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     @Output() public focus = new EventEmitter();
     @Output() public blur = new EventEmitter();
 
-    @ViewChild("editor", { static: false }) public editorContent: ElementRef;
+    @ViewChild("editor", { static: true }) public editorContent: ElementRef;
 
-    @ViewChild("host", { static: false })
+    @ViewChild("host", { static: true })
     public host;
 
     public isFocused = false;

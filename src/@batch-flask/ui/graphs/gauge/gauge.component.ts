@@ -55,7 +55,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         }
     }
 
-    @ViewChild("gauge", { static: false })
+    @ViewChild("gauge", { static: true })
     public gaugeEl: ElementRef;
 
     public percent = 0;

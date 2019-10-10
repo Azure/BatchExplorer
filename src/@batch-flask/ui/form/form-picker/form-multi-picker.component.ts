@@ -37,7 +37,7 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
      */
     @Input() public max = -1;
 
-    @ContentChild(FormPickerItemTemplateDirective, {static: false})
+    @ContentChild(FormPickerItemTemplateDirective, {static: true })
     public itemTemplate: FormPickerItemTemplateDirective;
 
     public values: any[];
@@ -45,7 +45,7 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
 
     public hasValue = false;
 
-    @ViewChild("page", { static: false })
+    @ViewChild("page", { static: true })
     private _page: FormPageComponent;
 
     @ViewChildren("button")

@@ -28,7 +28,7 @@ export class SidebarPageComponent implements OnDestroy {
     @HostBinding("attr.role") public role = "dialog";
     @HostBinding("attr.aria-modal") public ariaModal = true;
 
-    @ViewChild(PortalHostDirective, { static: false })
+    @ViewChild(PortalHostDirective, { static: true })
     private portalHost: PortalHostDirective;
 
     private componentRef: ComponentRef<any> = null;

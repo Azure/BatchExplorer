@@ -58,13 +58,13 @@ export class BrowseLayoutComponent implements OnInit, AfterViewInit, AfterConten
     public get config() { return this._config; }
     @Input() public keyField = "id";
 
-    @ViewChild("advancedFilterContainer", { static: false })
+    @ViewChild("advancedFilterContainer", { static: true })
     public advancedFilterContainer: ElementRef;
 
-    @ContentChild(BrowseLayoutListDirective, {static: false})
+    @ContentChild(BrowseLayoutListDirective, {static: true })
     public listDirective: BrowseLayoutListDirective;
 
-    @ContentChild(BrowseLayoutAdvancedFilterDirective, {static: false})
+    @ContentChild(BrowseLayoutAdvancedFilterDirective, {static: true })
     public advancedFilterDirective: BrowseLayoutAdvancedFilterDirective;
 
     public splitPaneConfig: SplitPaneConfig = {
@@ -89,7 +89,7 @@ export class BrowseLayoutComponent implements OnInit, AfterViewInit, AfterConten
 
     public selection = new ListSelection();
 
-    @ViewChild(SplitPaneComponent, { static: false })
+    @ViewChild(SplitPaneComponent, { static: true })
     private _splitPane: SplitPaneComponent;
 
     private _activeItemKey: string = null;

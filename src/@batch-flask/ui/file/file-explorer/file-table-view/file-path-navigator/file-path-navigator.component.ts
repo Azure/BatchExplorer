@@ -41,7 +41,7 @@ export class FilePathNavigatorComponent implements OnInit, OnChanges, OnDestroy 
     public control = new FormControl("");
     public availablePaths: List<File> = List([]);
 
-    @ViewChild(MatAutocompleteTrigger, { static: false }) public _autocomplete: MatAutocompleteTrigger;
+    @ViewChild(MatAutocompleteTrigger, { static: true }) public _autocomplete: MatAutocompleteTrigger;
 
     private _destroy = new Subject();
 

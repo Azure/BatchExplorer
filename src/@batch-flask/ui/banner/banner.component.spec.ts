@@ -18,7 +18,7 @@ import { ClickableComponent } from "../buttons";
     `,
 })
 export class BannerTestComponent {
-    @ViewChild("banner", { static: false })
+    @ViewChild("banner", { static: true })
     public banner: BannerComponent;
 
     public includeDetails = true;

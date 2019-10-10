@@ -77,7 +77,7 @@ export class ButtonComponent extends ClickableComponent {
         }
     }
 
-    @ViewChild(MatTooltip, { static: false }) private _tooltip: MatTooltip;
+    @ViewChild(MatTooltip, { static: true }) private _tooltip: MatTooltip;
 
     private _status = SubmitStatus.Idle;
 

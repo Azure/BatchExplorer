@@ -28,7 +28,7 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy {
 
     public tailable: boolean = false;
 
-    @ViewChild("editor", { static: false }) public editor: EditorComponent;
+    @ViewChild("editor", { static: true }) public editor: EditorComponent;
 
     public followingLog = false;
     public lastContentLength = 0;

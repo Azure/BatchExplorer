@@ -59,25 +59,25 @@ export class ScrollableComponent implements OnDestroy, AfterViewInit {
     @Output()
     public scrollBottom = new EventEmitter<number>();
 
-    @ViewChild("scrollable", { static: false })
+    @ViewChild("scrollable", { static: true })
     public scrollable;
 
-    @ViewChild("trackY", { static: false })
+    @ViewChild("trackY", { static: true })
     public trackY;
 
-    @ViewChild("scrollbarY", { static: false })
+    @ViewChild("scrollbarY", { static: true })
     public scrollbarY;
 
-    @ViewChild("trackX", { static: false })
+    @ViewChild("trackX", { static: true })
     public trackX;
 
-    @ViewChild("scrollbarX", { static: false })
+    @ViewChild("scrollbarX", { static: true })
     public scrollbarX;
 
-    @ViewChild("scrollContent", { static: false })
+    @ViewChild("scrollContent", { static: true })
     public scrollContent;
 
-    @ViewChild("content", { static: false })
+    @ViewChild("content", { static: true })
     public simpleBarContent;
 
     @HostBinding("attr.sid")
