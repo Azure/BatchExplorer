@@ -28,7 +28,7 @@ export class FormFieldComponent implements AfterContentInit {
     @ContentChildren(HintComponent) public hints: QueryList<HintComponent>;
     @ContentChildren(FormErrorComponent) public errors: QueryList<FormErrorComponent>;
 
-    @ContentChild(FormFieldControl, {static: true }) public control: FormFieldControl<any>;
+    @ContentChild(FormFieldControl, {static: false }) public control: FormFieldControl<any>;
 
     @HostBinding("class.bl-disabled")
     public get disabled() {
@@ -39,20 +39,20 @@ export class FormFieldComponent implements AfterContentInit {
     }
 
     public ngAfterContentInit() {
-        if (!this.control) {
+       if (!this.control) {
             throw new SanitizedError("bl-form-field is expecting a control. This can either be a blInput, bl-select.");
         }
-        this.prefix.changes.subscribe(() => this.changeDetector.markForCheck());
-        this.suffix.changes.subscribe(() => this.changeDetector.markForCheck());
-        this.hints.changes.subscribe(() => {
+       this.prefix.changes.subscribe(() => this.changeDetector.markForCheck());
+       this.suffix.changes.subscribe(() => this.changeDetector.markForCheck());
+       this.hints.changes.subscribe(() => {
             this._syncDescribedByIds();
             this.changeDetector.markForCheck();
         });
-        this.errors.changes.subscribe(() => {
+       this.errors.changes.subscribe(() => {
             this._syncDescribedByIds();
             this.changeDetector.markForCheck();
         });
-        this._syncDescribedByIds();
+       this._syncDescribedByIds();
     }
 
     @HostListener("click", ["$event"])
