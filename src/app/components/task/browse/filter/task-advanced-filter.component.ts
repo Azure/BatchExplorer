@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { Filter } from "@batch-flask/core";
-import { AdvancedFilter, ListFilterControl, StatePickerControl } from "@batch-flask/ui/advanced-filter";
-import { TaskState } from "app/models";
+import { AdvancedFilter, ListFilterControl, StatePickerControl, ResultPickerControl } from "@batch-flask/ui/advanced-filter";
+import { TaskState, TaskResult } from "app/models";
 import { ODataFields } from "common/constants";
 
 @Component({
@@ -17,6 +17,9 @@ export class TaskAdvancedFilterComponent {
         this.advancedFilter = new AdvancedFilter({
             [ODataFields.state]: new StatePickerControl("State", [
                 TaskState.active, TaskState.completed, TaskState.running, TaskState.preparing,
+            ]),
+            [ODataFields.result]: new ResultPickerControl("Result", [
+                TaskResult.success, TaskResult.failure
             ]),
             [ODataFields.taskExitCode]: new ListFilterControl("Exit code", {
                 number: true,

@@ -21,11 +21,11 @@
     }
 }
 
-bl-adv-filter-statepicker {
+bl-adv-filter-statepicker, bl-adv-filter-resultpicker {
     legend {
         color: $primary-color;
     }
-    .state-checkbox {
+    .odata-checkbox {
         margin-right: 10px;
     }
 }

@@ -128,6 +128,7 @@ export const ExternalLinks = {
 
 export const ODataFields = {
     state: "state",
+    result: "executionInfo/result",
     taskExitCode: "executionInfo/exitCode",
 };
 
