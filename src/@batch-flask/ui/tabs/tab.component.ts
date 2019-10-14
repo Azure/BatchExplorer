@@ -5,7 +5,7 @@ import { Component, ContentChild, Input, TemplateRef, ViewChild } from "@angular
     template: "<ng-template><ng-content></ng-content></ng-template>",
 })
 export class TabLabelComponent {
-    @ViewChild(TemplateRef, { static: false })
+    @ViewChild(TemplateRef, { static: true })
     public content: TemplateRef<any>;
 }
 
