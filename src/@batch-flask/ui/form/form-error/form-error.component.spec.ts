@@ -18,13 +18,13 @@ import { FormErrorComponent } from "@batch-flask/ui/form/form-error";
     `,
 })
 export class FormErrorTestComponent {
-    @ViewChild("idRequiredError", { static: true })
+    @ViewChild("idRequiredError", { static: false })
     public idRequiredError: FormErrorComponent;
 
-    @ViewChild("idMaxLengthError", { static: true })
+    @ViewChild("idMaxLengthError", { static: false })
     public idMaxLengthError: FormErrorComponent;
 
-    @ViewChild("osNameError", { static: true })
+    @ViewChild("osNameError", { static: false })
     public osNameError: FormErrorComponent;
 
     public form: FormGroup;

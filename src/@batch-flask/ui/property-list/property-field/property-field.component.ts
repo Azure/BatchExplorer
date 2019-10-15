@@ -13,7 +13,7 @@ let idCounter = 0;
 export class PropertyFieldComponent implements AfterContentInit {
     @Input() public id = `bl-property-field-${idCounter++}`;
 
-    @ContentChild(PropertyContentComponent, {static: true}) private _content: PropertyContentComponent | undefined;
+    @ContentChild(PropertyContentComponent, {static: false }) private _content: PropertyContentComponent | undefined;
 
     public get ariaDescribedByIds() {
         return `${this.id}_describe`;

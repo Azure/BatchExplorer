@@ -45,7 +45,7 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
 
     public hasValue = false;
 
-    @ViewChild("page", { static: true })
+    @ViewChild("page", { static: false })
     private _page: FormPageComponent;
 
     @ViewChildren("button")
