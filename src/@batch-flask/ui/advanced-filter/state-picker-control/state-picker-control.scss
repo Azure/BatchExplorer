@@ -1,0 +1,10 @@
+@import "app/styles/variables";
+
+bl-adv-filter-statepicker {
+    legend {
+        color: $primary-color;
+    }
+    .odata-checkbox {
+        margin-right: 10px;
+    }
+}
