@@ -23,7 +23,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
         quickSearchField: "name",
     };
 
-    @ViewChild("layout", { static: false })
+    @ViewChild("layout", { static: true })
     public layout: BrowseLayoutComponent;
 
     public subscriptionIds = new FormControl();

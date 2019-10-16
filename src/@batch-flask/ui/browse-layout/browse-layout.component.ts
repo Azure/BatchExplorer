@@ -58,10 +58,10 @@ export class BrowseLayoutComponent implements OnInit, AfterViewInit, AfterConten
     public get config() { return this._config; }
     @Input() public keyField = "id";
 
-    @ViewChild("advancedFilterContainer", { static: false })
+    @ViewChild("advancedFilterContainer", { static: true })
     public advancedFilterContainer: ElementRef;
 
-    @ContentChild(BrowseLayoutListDirective, {static: false })
+    @ContentChild(BrowseLayoutListDirective, {static: true })
     public listDirective: BrowseLayoutListDirective;
 
     @ContentChild(BrowseLayoutAdvancedFilterDirective, {static: false })
