@@ -21,7 +21,7 @@ export class SimpleDialogComponent {
     @Input()
     public subtitle: string;
 
-    @ViewChild(TemplateRef)
+    @ViewChild(TemplateRef, { static: true })
     public content: TemplateRef<any>;
 
     @Input()

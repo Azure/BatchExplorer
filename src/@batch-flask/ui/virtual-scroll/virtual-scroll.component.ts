@@ -85,17 +85,18 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
 
     public viewportItems: any[] = [];
 
-    @ViewChild("content", { read: ElementRef })
+    @ViewChild("content", { read: ElementRef, static: false })
     public contentElementRef: ElementRef;
 
-    @ContentChild(VirtualScrollTailComponent)
+    @ContentChild(VirtualScrollTailComponent, { static: false })
     public set tail(tail: VirtualScrollTailComponent) {
         this._tail = tail;
         this.refresh();
     }
     public get tail() { return this._tail; }
 
-    @ContentChild(VirtualScrollRowDirective) public rowDef: VirtualScrollRowDirective<any>;
+    @ContentChild(VirtualScrollRowDirective, { static: false })
+    public rowDef: VirtualScrollRowDirective<any>;
 
     public topPadding: number;
     public previousStart: number;
@@ -110,7 +111,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
     private _tail: VirtualScrollTailComponent;
     private _erd: any;
 
-    @ViewChild("padding", { read: ElementRef })
+    @ViewChild("padding", { read: ElementRef, static: false })
     private _paddingElementRef: ElementRef;
 
     constructor(

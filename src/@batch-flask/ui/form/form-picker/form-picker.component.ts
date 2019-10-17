@@ -34,10 +34,10 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
 
     public hasValue = false;
 
-    @ViewChild("button")
+    @ViewChild("button", { static: false })
     private _button: ElementRef;
 
-    @ViewChild("page")
+    @ViewChild("page", { static: false })
     private _page: FormPageComponent;
 
     private _propagateChange: (value: any) => void;

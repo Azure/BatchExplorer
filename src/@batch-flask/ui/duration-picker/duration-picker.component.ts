@@ -114,8 +114,8 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     protected _propagateChange: (value: Duration) => void = null;
     protected _duration: Duration;
 
-    @ViewChild("inputEl") private _inputEl: ElementRef;
-    @ViewChild(SelectComponent) private _select: SelectComponent;
+    @ViewChild("inputEl", { static: false }) private _inputEl: ElementRef;
+    @ViewChild(SelectComponent, { static: false }) private _select: SelectComponent;
 
     private _id: string;
     private _disabled: boolean;

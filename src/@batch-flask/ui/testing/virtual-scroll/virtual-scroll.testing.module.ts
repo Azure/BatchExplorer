@@ -18,7 +18,8 @@ export class VirtualScrollMockComponent implements OnChanges {
     @Input() public childHeight: number;
     @Output() public update = new EventEmitter();
 
-    @ContentChild(VirtualScrollRowDirective) public rowDef: VirtualScrollRowDirective<any>;
+    @ContentChild(VirtualScrollRowDirective, { static: false })
+    public rowDef: VirtualScrollRowDirective<any>;
 
     public ensureItemVisible = jasmine.createSpy("ensureItemVisible");
 

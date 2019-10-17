@@ -47,7 +47,9 @@ export abstract class ListBaseComponent extends SelectableList implements OnDest
     public get status() { return this._status; }
     public _applyFilterSub: Subscription;
 
-    @ViewChild(AbstractListBase) public list: AbstractListBase;
+    @ViewChild(AbstractListBase, { static: false })
+    public list: AbstractListBase;
+
     private i18n: I18nService;
 
     private liveAnnouncer: LiveAnnouncer;
