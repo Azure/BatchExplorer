@@ -28,7 +28,7 @@ export class DataHomeComponent implements OnInit {
 
     @ViewChild(MatMenuTrigger, { static: false }) public trigger: MatMenuTrigger;
 
-    @ViewChild("layout", { static: false })
+    @ViewChild("layout", { static: true })
     public layout: BrowseLayoutComponent;
 
     public fileGroupsId = "file-groups";
