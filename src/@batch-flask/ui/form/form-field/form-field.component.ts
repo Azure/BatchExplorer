@@ -39,20 +39,20 @@ export class FormFieldComponent implements AfterContentInit {
     }
 
     public ngAfterContentInit() {
-       if (!this.control) {
+        if (!this.control) {
             throw new SanitizedError("bl-form-field is expecting a control. This can either be a blInput, bl-select.");
         }
-       this.prefix.changes.subscribe(() => this.changeDetector.markForCheck());
-       this.suffix.changes.subscribe(() => this.changeDetector.markForCheck());
-       this.hints.changes.subscribe(() => {
+        this.prefix.changes.subscribe(() => this.changeDetector.markForCheck());
+        this.suffix.changes.subscribe(() => this.changeDetector.markForCheck());
+        this.hints.changes.subscribe(() => {
             this._syncDescribedByIds();
             this.changeDetector.markForCheck();
         });
-       this.errors.changes.subscribe(() => {
+        this.errors.changes.subscribe(() => {
             this._syncDescribedByIds();
             this.changeDetector.markForCheck();
         });
-       this._syncDescribedByIds();
+        this._syncDescribedByIds();
     }
 
     @HostListener("click", ["$event"])
