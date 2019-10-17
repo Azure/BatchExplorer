@@ -119,7 +119,7 @@ export class TablePropertyComponent implements AfterContentInit {
 
     @Input() public expandable = true;
 
-    @ContentChild(TablePropertyHeaderComponent, {static: false })
+    @ContentChild(TablePropertyHeaderComponent, { static: false })
     public header: TablePropertyHeaderComponent;
 
     @ContentChildren(TablePropertyRowComponent)

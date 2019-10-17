@@ -30,7 +30,7 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
     @Input() public maxWidth: number = null;
     @Input() public name: string;
 
-    @ContentChild(TableHeadCellDefDirective, { read: TemplateRef, static: true})
+    @ContentChild(TableHeadCellDefDirective, { read: TemplateRef, static: true })
     public headCell: TemplateRef<any>;
     @ContentChild(TableCellDefDirective, { read: TemplateRef, static: true })
     public cell: TemplateRef<any>;

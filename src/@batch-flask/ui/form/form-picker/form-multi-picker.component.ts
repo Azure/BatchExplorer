@@ -13,7 +13,7 @@ import "./form-multi-picker.scss";
     selector: "[blFormPickerItem]",
 })
 export class FormPickerItemTemplateDirective {
-    @ContentChild(TemplateRef, {static: false})
+    @ContentChild(TemplateRef, { static: false })
     public template: TemplateRef<any>;
 }
 
@@ -37,7 +37,7 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
      */
     @Input() public max = -1;
 
-    @ContentChild(FormPickerItemTemplateDirective, {static: true })
+    @ContentChild(FormPickerItemTemplateDirective, { static: true })
     public itemTemplate: FormPickerItemTemplateDirective;
 
     public values: any[];

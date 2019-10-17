@@ -28,7 +28,7 @@ export class FormFieldComponent implements AfterContentInit {
     @ContentChildren(HintComponent) public hints: QueryList<HintComponent>;
     @ContentChildren(FormErrorComponent) public errors: QueryList<FormErrorComponent>;
 
-    @ContentChild(FormFieldControl, {static: false }) public control: FormFieldControl<any>;
+    @ContentChild(FormFieldControl, { static: false }) public control: FormFieldControl<any>;
 
     @HostBinding("class.bl-disabled")
     public get disabled() {

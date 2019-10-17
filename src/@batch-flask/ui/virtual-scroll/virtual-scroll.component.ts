@@ -88,14 +88,14 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
     @ViewChild("content", { read: ElementRef, static: false })
     public contentElementRef: ElementRef;
 
-    @ContentChild(VirtualScrollTailComponent, {static: false})
+    @ContentChild(VirtualScrollTailComponent, { static: false })
     public set tail(tail: VirtualScrollTailComponent) {
         this._tail = tail;
         this.refresh();
     }
     public get tail() { return this._tail; }
 
-    @ContentChild(VirtualScrollRowDirective, {static: false})
+    @ContentChild(VirtualScrollRowDirective, { static: false })
     public rowDef: VirtualScrollRowDirective<any>;
 
     public topPadding: number;

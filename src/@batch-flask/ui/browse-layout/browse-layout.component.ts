@@ -61,10 +61,10 @@ export class BrowseLayoutComponent implements OnInit, AfterViewInit, AfterConten
     @ViewChild("advancedFilterContainer", { static: true })
     public advancedFilterContainer: ElementRef;
 
-    @ContentChild(BrowseLayoutListDirective, {static: true })
+    @ContentChild(BrowseLayoutListDirective, { static: true })
     public listDirective: BrowseLayoutListDirective;
 
-    @ContentChild(BrowseLayoutAdvancedFilterDirective, {static: false })
+    @ContentChild(BrowseLayoutAdvancedFilterDirective, { static: false })
     public advancedFilterDirective: BrowseLayoutAdvancedFilterDirective;
 
     public splitPaneConfig: SplitPaneConfig = {

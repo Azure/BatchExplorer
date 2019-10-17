@@ -25,7 +25,7 @@ export class TabComponent {
     @Input()
     public disabled: boolean;
 
-    @ContentChild(TabLabelComponent, {static: true})
+    @ContentChild(TabLabelComponent, { static: true })
     public label: TemplateRef<any>;
 
     @ViewChild(TemplateRef, { static: true })
