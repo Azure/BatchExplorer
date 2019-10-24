@@ -102,17 +102,8 @@ describe("FilePathNavigatorComponent", () => {
         inputEl.nativeElement.focus();
         fixture.detectChanges();
         keydown(inputEl, null, KeyCode.ArrowDown, DOWN_ARROW);
-
-        console.log("INPUT 1: ", inputEl.nativeElement.value);
-
         keydown(inputEl, null, KeyCode.ArrowDown, DOWN_ARROW);
-
-        console.log("INPUT 2: ", inputEl.nativeElement.value);
-
         keydown(de, null, KeyCode.ArrowRight);
-
-        console.log("INPUT 3: ", inputEl.nativeElement.value);
-
         fixture.detectChanges();
         await fixture.whenStable();
         expect(inputEl.nativeElement.value).toEqual("foo/bar2.txt");
