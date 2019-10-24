@@ -2,13 +2,20 @@
 [All items](https://github.com/Azure/BatchExplorer/milestone/38?closed=1)
 
 ### feature:
-
+* StartTask WaitForSuccess should be defaulted to true [\#2105](https://github.com/Azure/BatchExplorer/issues/2105)
+* Unable to filter for failed tasks [\#2084](https://github.com/Azure/BatchExplorer/issues/2084)
 
 ### bug:
-
+* Required caused save to be disabled even though populated [\#2103](https://github.com/Azure/BatchExplorer/issues/2103)
+* No Results Displayed if User Did Not Have a SIG Image. [\#2102](https://github.com/Azure/BatchExplorer/issues/2102)
+* Start time and End time in Job execution information are empty [\#2088](https://github.com/Azure/BatchExplorer/issues/2088)
+* Batch Explorers Unlimited retention time actually sets value to 7d  [\#2083](https://github.com/Azure/BatchExplorer/issues/2083)
 
 ### other:
-
+* Release/prepare 2.4.0 [\#2108](https://github.com/Azure/BatchExplorer/issues/2108)
+* Update @angular dependencies [\#2107](https://github.com/Azure/BatchExplorer/issues/2107)
+* Update Batch API [\#2106](https://github.com/Azure/BatchExplorer/issues/2106)
+* Update python dependency [\#2104](https://github.com/Azure/BatchExplorer/issues/2104)
 
 # 2.3.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/37?closed=1)
