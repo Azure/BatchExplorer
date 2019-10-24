@@ -80,9 +80,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     @Input() public nodes: List<Node>;
 
-    @ViewChild("heatmap") public heatmapEl: ElementRef;
+    @ViewChild("heatmap", { static: false }) public heatmapEl: ElementRef;
 
-    @ViewChild("svg") public svgEl: ElementRef;
+    @ViewChild("svg", { static: false }) public svgEl: ElementRef;
 
     public colors: HeatmapColor;
     public selectedNodeId = new BehaviorSubject<string>(null);

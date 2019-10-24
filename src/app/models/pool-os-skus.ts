@@ -1,6 +1,6 @@
 import { ObjectUtils } from "@batch-flask/utils";
 import { List } from "immutable";
-import { NodeAgentSku } from "./node-agent-sku";
+import { ImageInformation, VerificationType } from "./image-information";
 
 const dataScienceVms = {
     "linux-data-science-vm": {
@@ -21,12 +21,12 @@ const renderingPublisher = "batch";
 
 // Docker container supported os
 const dockerContainer = {
-    "WindowsServer": [
-        "2016-Datacenter-with-Containers",
-        "2019-Datacenter-with-Containers",
-        "2019-Datacenter-with-Containers-smalldisk",
-        "2019-Datacenter-Core-with-Containers",
-        "2019-Datacenter-Core-with-Containers-smalldisk",
+    "windowsserver": [
+        "2016-datacenter-with-containers",
+        "2019-datacenter-with-containers",
+        "2019-datacenter-with-containers-smalldisk",
+        "2019-datacenter-core-with-containers",
+        "2019-datacenter-core-with-containers-smalldisk",
     ],
     "centos-container-rdma": true,
     "centos-container": true,
@@ -53,7 +53,7 @@ export class PoolOsSkus {
     public renderingOffers: Offer[];
     public dockerOffers: Offer[];
 
-    constructor(skus: List<NodeAgentSku> = List([])) {
+    constructor(images: List<ImageInformation> = List([])) {
         const offers: StringMap<Offer> = {};
         const dockerOffers: StringMap<Offer> = {};
         /**
@@ -61,8 +61,9 @@ export class PoolOsSkus {
          * in a seperate container configuration tab
          */
         let targetOffers: StringMap<Offer> | null = null;
-        skus.forEach((sku: NodeAgentSku) => {
-            for (const imageReference of sku.verifiedImageReferences.toArray()) {
+        images.forEach((image: ImageInformation) => {
+            if (image.verificationType === VerificationType.Verified) {
+                const imageReference =  image.imageReference;
                 targetOffers = offers;
                 if (dockerContainer[imageReference.offer]
                     && (dockerContainer[imageReference.offer] === true
@@ -79,8 +80,8 @@ export class PoolOsSkus {
                 const offer = targetOffers[imageReference.offer];
                 offer.skus.push({
                     name: imageReference.sku,
-                    nodeAgentId: sku.id,
-                    osType: sku.osType,
+                    nodeAgentId: image.nodeAgentSKUId,
+                    osType: image.osType,
                 });
             }
         });

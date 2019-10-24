@@ -38,8 +38,8 @@
                 <span *ngIf="job?.executionInfo?.endTime">Completed in: {{ executionInfo.runtime }}</span>
             </div>
 
-            <bl-text-property label="Start time" [value]="executionInfo.startTime"></bl-text-property>
-            <bl-text-property label="End time" [value]="executionInfo.endTime"></bl-text-property>
+            <bl-date-property label="Start time" [value]="job.executionInfo.startTime"></bl-date-property>
+            <bl-date-property label="End time" [value]="job.executionInfo.endTime"></bl-date-property>
             <bl-text-property label="Execution time" [value]="executionInfo.runtime"></bl-text-property>
             <bl-text-property label="Termination reason" [value]="executionInfo.terminateReason"></bl-text-property>
         </bl-property-group>

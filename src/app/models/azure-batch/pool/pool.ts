@@ -5,6 +5,7 @@ import {
 import { CertificateReference } from "app/models/certificate-reference";
 import { CloudServiceConfiguration } from "app/models/cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "app/models/metadata";
+import { MountConfiguration } from "app/models/mount-configuration";
 import { NetworkConfiguration } from "app/models/network-configuration";
 import { ResizeError } from "app/models/resize-error";
 import { StartTask, StartTaskAttributes } from "app/models/start-task";
@@ -122,6 +123,8 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
     @Prop() public vmSize: string;
 
     @Prop() public startTask: StartTask;
+
+    @ListProp(MountConfiguration) public mountConfiguration: List<MountConfiguration>;
 
     @Prop() public networkConfiguration: NetworkConfiguration;
 

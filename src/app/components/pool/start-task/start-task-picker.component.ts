@@ -51,7 +51,7 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
     public reset() {
         this.form.reset({
             maxTaskRetryCount: 0,
-            waitForSuccess: false,
+            waitForSuccess: true,
         });
     }
 

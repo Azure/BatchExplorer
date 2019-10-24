@@ -8,7 +8,7 @@ import {
 } from "@angular/forms";
 import { ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
-import { ArmBatchAccount, NodeAgentSku, Resource } from "app/models";
+import { ArmBatchAccount, ImageInformation, Resource } from "app/models";
 import { BatchAccountService, ComputeService, PoolOsService } from "app/services";
 import { Subject, forkJoin, of } from "rxjs";
 import { distinctUntilChanged, switchMap, takeUntil } from "rxjs/operators";
@@ -35,7 +35,7 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
     @Input() public id = `bl-custom-image-picker-${idCounter++}`;
 
     public customImages: Resource[] = [];
-    public nodeAgentSkus: NodeAgentSku[] = [];
+    public supportedImages: ImageInformation[] = [];
 
     public customImage = new FormControl();
     public nodeAgentSku = new FormControl();
@@ -76,10 +76,10 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
     }
 
     public ngOnInit() {
-        this.poolOsService.nodeAgentSkus.pipe(
+        this.poolOsService.supportedImages.pipe(
             takeUntil(this._destroy),
         ).subscribe((result) => {
-            this.nodeAgentSkus = result.toArray();
+            this.supportedImages = result.toArray();
             this.changeDetector.markForCheck();
         });
 
@@ -123,7 +123,6 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
         // Write
         const formValue = this._form.value;
         if (value) {
-
             if (formValue.customImage === value.imageId && formValue.nodeAgentSku === value.nodeAgentSku) {
                 return;
             }
@@ -132,7 +131,7 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
                 nodeAgentSku: value.nodeAgentSku,
             });
         } else {
-            if (formValue.customImage || formValue.nodeAgentSkus) {
+            if (formValue.customImage || formValue.nodeAgentSku) {
                 this._form.patchValue({
                     customImage: null,
                     nodeAgentSku: null,

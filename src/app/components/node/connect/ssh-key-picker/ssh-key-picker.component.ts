@@ -25,7 +25,7 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
     public savedSSHKeys: List<SSHPublicKey> = List([]);
     public sshKeyValue = new FormControl("");
 
-    @ViewChild("nameInput")
+    @ViewChild("nameInput", { static: false })
     public nameInput: ElementRef;
 
     public splitPaneConfig = {

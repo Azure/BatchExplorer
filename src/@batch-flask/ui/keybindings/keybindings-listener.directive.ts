@@ -10,7 +10,7 @@ export class KeyBindingListenerDirective {
 
     // Send the key binding being currently pressed to the parent. Will emit null when user press Escape to get out
     @Output("blKeyBindingListener") public output = new EventEmitter<KeyBinding | null>();
-    private _keys = new Set();
+    private _keys = new Set<string>();
 
     @HostListener("keydown", ["$event"])
     public handleKeydown(event: KeyboardEvent) {

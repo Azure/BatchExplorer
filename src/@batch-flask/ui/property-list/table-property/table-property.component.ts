@@ -14,7 +14,7 @@ import "./table-property.scss";
     `,
 })
 export class TablePropertyHeaderComponent {
-    @ViewChild(TemplateRef)
+    @ViewChild(TemplateRef, { static: false })
     public content: TemplateRef<any>;
 
     @HostBinding("attr.role") public role = "row";
@@ -27,7 +27,7 @@ export class TablePropertyHeaderComponent {
     `,
 })
 export class TablePropertyRowComponent {
-    @ViewChild(TemplateRef)
+    @ViewChild(TemplateRef, { static: false })
     public content: TemplateRef<any>;
 
     @HostBinding("attr.role") public role = "row";
@@ -119,7 +119,7 @@ export class TablePropertyComponent implements AfterContentInit {
 
     @Input() public expandable = true;
 
-    @ContentChild(TablePropertyHeaderComponent)
+    @ContentChild(TablePropertyHeaderComponent, { static: false })
     public header: TablePropertyHeaderComponent;
 
     @ContentChildren(TablePropertyRowComponent)

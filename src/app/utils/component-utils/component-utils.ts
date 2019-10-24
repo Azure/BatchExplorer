@@ -32,7 +32,7 @@ export class ComponentUtils {
      * Now you navigate back to /pool/pool-2. As pool-4 wasn't present originally it will be removed from the list
      *
      * @param route Angular Activated Route
-     * @param view ListView used in the componenent
+     * @param view ListView used in the component
      */
     public static setActiveItem<TEntity extends Record<any>>(route: ActivatedRoute, view: ListView<TEntity, any>) {
         route.url.subscribe((url) => {

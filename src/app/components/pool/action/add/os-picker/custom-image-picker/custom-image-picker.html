@@ -16,9 +16,9 @@
             placeholder="{{'custom-image-picker.nodeAgentSku.label' | i18n}}"
             [formControl]="nodeAgentSku">
 
-            <bl-option *ngFor="let nodeAgent of nodeAgentSkus;trackBy: trackNodeAgentSku"
-                [value]="nodeAgent.id"
-                [label]="nodeAgent.id"></bl-option>
+            <bl-option *ngFor="let imageInformation of supportedImages;trackBy: trackImageInformation"
+                [value]="imageInformation.nodeAgentSKUId"
+                [label]="imageInformation.nodeAgentSKUId"></bl-option>
         </bl-select>
     </bl-form-field>
 </div>

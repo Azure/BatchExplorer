@@ -19,7 +19,7 @@ export class DirectoryPickerComponent {
     @Output()
     public eventChange = new EventEmitter<Event>();
 
-    @ViewChild("picker")
+    @ViewChild("picker", { static: false })
     private _picker: ElementRef;
 
     public launchBrowse() {

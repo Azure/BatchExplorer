@@ -1,5 +1,4 @@
-import { Component } from "@angular/core";
-import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
+import { Component, OnInit } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DynamicForm, I18nService, autobind } from "@batch-flask/core";
 import { ComplexFormConfig } from "@batch-flask/ui/form";

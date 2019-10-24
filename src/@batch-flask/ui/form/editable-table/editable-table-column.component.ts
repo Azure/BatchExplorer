@@ -38,5 +38,5 @@ export class EditableTableColumnComponent {
     /** Select options when type is EditableTableColumnType.Select */
     @Input() public options: EditableTableSelectOptions;
 
-    @ViewChild(TemplateRef) public content: TemplateRef<any>;
+    @ViewChild(TemplateRef, { static: true }) public content: TemplateRef<any>;
 }

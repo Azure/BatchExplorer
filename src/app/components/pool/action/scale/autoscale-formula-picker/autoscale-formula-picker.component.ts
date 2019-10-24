@@ -36,7 +36,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     public predefinedFormula: AutoscaleFormula[];
     public autoscaleFormulaValue: string;
 
-    @ViewChild("nameInput")
+    @ViewChild("nameInput", { static: false })
     public nameInput: ElementRef;
     public config: EditorConfig = {
         language: "batch-autoscale",

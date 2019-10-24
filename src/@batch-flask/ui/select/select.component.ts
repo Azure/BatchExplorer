@@ -125,7 +125,8 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     @ContentChildren(SelectOptionComponent, { descendants: true })
     public options: QueryList<SelectOptionComponent<TValue>>;
 
-    @ContentChild(OptionTemplateDirective, { read: TemplateRef }) public optionTemplate: TemplateRef<any>;
+    @ContentChild(OptionTemplateDirective, { read: TemplateRef, static: false })
+    public optionTemplate: TemplateRef<any>;
 
     public filter: string = "";
 
@@ -162,8 +163,10 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     private _keyNavigator: ListKeyNavigator<SelectOptionComponent>;
     private _selected: Set<any> = new Set<any>();
 
-    @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
-    @ViewChild("filterInput") private _filterInputEl: ElementRef;
+    @ViewChild("selectButton", { read: ElementRef, static: false })
+    private _selectButtonEl: ElementRef;
+    @ViewChild("filterInput", { static: false })
+    private _filterInputEl: ElementRef;
 
     public get dropdownOpen() {
         return Boolean(this._dropdownRef);

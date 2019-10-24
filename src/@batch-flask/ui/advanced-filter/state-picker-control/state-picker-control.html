@@ -1,0 +1,10 @@
+<div [formGroup]="advancedFilter.group" *ngIf="advancedFilter && control">
+    <fieldset [formGroupName]="control.name">
+        <legend>{{control.label}}</legend>
+        <span *ngFor="let state of control.states;trackBy: trackByFn" class="odata-checkbox">
+            <mat-checkbox color="primary" [formControlName]="state" [name]="state">
+                {{state}}
+            </mat-checkbox>
+        </span>
+    </fieldset>
+</div>

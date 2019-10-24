@@ -52,7 +52,8 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
 
     private _destroy = new Subject();
 
-    @ViewChild("searchInput") private _searchEl: ElementRef;
+    @ViewChild("searchInput", { static: false })
+    private _searchEl: ElementRef;
 
     constructor(
         private keybindingService: KeyBindingsService,

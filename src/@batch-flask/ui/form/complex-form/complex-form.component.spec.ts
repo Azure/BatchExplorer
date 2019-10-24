@@ -38,7 +38,7 @@ const date = new Date(2017, 9, 13, 23, 43, 38);
     `,
 })
 export class FormTestComponent {
-    @ViewChild("banner")
+    @ViewChild("banner", { static: false })
     public createForm: ComplexFormComponent;
 
     public form: FormGroup;

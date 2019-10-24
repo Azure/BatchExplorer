@@ -36,6 +36,21 @@ class TestComponent {
 class TestWithFormFieldComponent extends TestComponent {
 }
 
+@Component({
+    template: `
+        <bl-duration-picker label="My duration picker"
+            [formControl]="control"
+            [allowUnlimited]="allowUnlimited"
+            [defaultDuration]="default">
+        </bl-duration-picker>
+    `,
+})
+class TestWithDefaultComponent {
+    public allowUnlimited = false;
+    public control = new FormControl<Duration>();
+    public default = "7";
+}
+
 describe("DurationPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
@@ -101,7 +116,7 @@ describe("DurationPickerComponent", () => {
                 expect(component.time).toBe("invalid-num");
                 const errors = de.queryAll(By.css(".error"));
                 expect(errors.length).toBe(1);
-                expect(errors[0].nativeElement.textContent).toContain("Input should be a valid number");
+                expect(errors[0].nativeElement.textContent).toContain("Input should be a valid positive number");
                 expect(testComponent.control.valid).toBe(false, "Testcomponent control should be invalid");
             });
 
@@ -183,11 +198,11 @@ describe("DurationPickerComponent", () => {
                 expect(component.time).toEqual("");
             });
 
-            it("set to hours when value is null and allow unlimited is false", () => {
+            it("set to days when value is null and allow unlimited is false", () => {
                 testComponent.allowUnlimited = false;
                 testComponent.control.setValue(null);
                 fixture.detectChanges();
-                expect(component.unit).toEqual(DurationUnit.Hours);
+                expect(component.unit).toEqual(DurationUnit.Days);
                 expect(component.time).toEqual("");
             });
         });
@@ -221,4 +236,15 @@ describe("DurationPickerComponent", () => {
             expect(inputEl.nativeElement).toEqual(document.activeElement);
         });
     });
+
+    describe("when picker in form-field", () => {
+        beforeEach(async () => {
+            await setupFor(TestWithDefaultComponent);
+        });
+        it("set correct default value when specified", async () => {
+            expect(component.unit).toEqual(DurationUnit.Days);
+            expect(component.time).toEqual("7");
+        });
+    });
+
 });

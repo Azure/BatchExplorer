@@ -79,7 +79,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
 
     @Output() public dropOnRow = new EventEmitter<DropEvent>();
 
-    @ViewChild(TableHeadComponent) public head: TableHeadComponent;
+    @ViewChild(TableHeadComponent, { static: false }) public head: TableHeadComponent;
     @ContentChildren(TableColumnComponent) public columnComponents: QueryList<TableColumnComponent>;
     @HostBinding("class.drag-hover") public isDraging = 0;
     @HostBinding("class.activable") public get activable() {

@@ -17,7 +17,10 @@
     </div>
 </div>
 <div class="error" *ngIf="invalidTimeNumber">
-    Input should be a valid number
+    Input should be a valid positive number
+</div>
+<div class="error" *ngIf="required && !this.time">
+    Input is required
 </div>
 <div class="error" *ngIf="invalidCustomDuration">
     This is not a valid ISO 8601 duration <i>(e.g. PT1M, P1D)</i>
