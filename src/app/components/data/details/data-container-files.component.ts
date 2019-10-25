@@ -10,7 +10,7 @@ import { Subscription } from "rxjs";
 })
 export class DataContainerFilesComponent implements OnDestroy {
 
-    @ViewChild("blobExplorer")
+    @ViewChild("blobExplorer", { static: false })
     public blobExplorer: BlobFilesBrowserComponent;
 
     @Input() public storageAccountId: string;

@@ -22,7 +22,7 @@ export class PinnedEntityService implements OnDestroy {
     public loaded: Observable<boolean>;
 
     /**
-     * List of favourties for the currently selected Batch Account
+     * List of favorites for the currently selected Batch Account
      */
     public favorites: Observable<List<PinnableEntity>>;
     public _currentAccount: BatchAccount;

@@ -9,9 +9,9 @@ import "./vtab.scss";
 export class VTabComponent {
     @Input() public id: string;
 
-    @ViewChild("label")
+    @ViewChild("label", { static: true })
     public label: TemplateRef<any>;
 
-    @ViewChild("content")
+    @ViewChild("content", { static: true })
     public content: TemplateRef<any>;
 }

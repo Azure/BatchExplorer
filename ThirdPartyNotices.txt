@@ -14,57 +14,56 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 4. @angular/compiler-cli(https://github.com/angular/angular/tree/master/packages/compiler-cli) - MIT
 5. @angular/core(https://github.com/angular/angular#readme) - MIT
 6. @angular/forms(https://github.com/angular/angular#readme) - MIT
-7. @angular/http(https://github.com/angular/angular#readme) - MIT
-8. @angular/material(https://github.com/angular/material2#readme) - MIT
-9. @angular/platform-browser(https://github.com/angular/angular#readme) - MIT
-10. @angular/platform-browser-dynamic(https://github.com/angular/angular#readme) - MIT
-11. @angular/platform-server(https://github.com/angular/angular#readme) - MIT
-12. @angular/router(https://github.com/angular/angular/tree/master/packages/router) - MIT
-13. @azure/storage-blob(https://github.com/Azure/azure-storage-js#readme) - MIT
-14. @types/keytar(https://github.com/DefinitelyTyped/DefinitelyTyped#readme) - MIT
-15. applicationinsights(https://github.com/Microsoft/ApplicationInsights-node.js#readme) - MIT
-16. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
-17. chart.js(http://www.chartjs.org) - MIT
-18. chokidar(https://github.com/paulmillr/chokidar) - MIT
-19. commander(https://github.com/tj/commander.js#readme) - MIT
-20. d3(https://d3js.org) - BSD-3-Clause
-21. decode-uri-component(https://github.com/SamVerschueren/decode-uri-component#readme) - MIT
-22. download(https://github.com/kevva/download#readme) - MIT
-23. electron-updater(https://github.com/electron-userland/electron-builder) - MIT
-24. element-resize-detector(https://github.com/wnr/element-resize-detector) - MIT
-25. extract-zip(https://github.com/maxogden/extract-zip#readme) - BSD-2-Clause
-26. focus-visible(https://github.com/WICG/focus-visible) - W3C
-27. font-awesome(http://fontawesome.io/) - (OFL-1.1 AND MIT)
-28. get-proxy-settings(https://github.com/Azure/get-proxy-settings) - MIT
-29. glob(https://github.com/isaacs/node-glob#readme) - ISC
-30. hammerjs(http://hammerjs.github.io/) - MIT
-31. https-proxy-agent(https://github.com/TooTallNate/node-https-proxy-agent#readme) - MIT
-32. immutable(https://facebook.github.com/immutable-js) - MIT
-33. inflection(https://github.com/dreamerslab/node.inflection#readme) - MIT
-34. js-yaml(https://github.com/nodeca/js-yaml) - MIT
-35. jschardet(https://github.com/aadsm/jschardet#readme) - LGPL-2.1+
-36. keytar(http://atom.github.io/node-keytar) - MIT
-37. load-json-file(https://github.com/sindresorhus/load-json-file#readme) - MIT
-38. luxon(https://github.com/moment/luxon#readme) - MIT
-39. make-dir(https://github.com/sindresorhus/make-dir#readme) - MIT
-40. monaco-editor(https://github.com/Microsoft/monaco-editor#readme) - MIT
-41. node-abi(https://github.com/lgeiger/node-abi#readme) - MIT
-42. node-forge(https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
-43. patternomaly(https://github.com/ashiguruma/patternomaly#readme) - MIT
-44. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
-45. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
-46. strip-json-comments(https://github.com/sindresorhus/strip-json-comments#readme) - MIT
-47. tinycolor2(https://github.com/TinyColor) - MIT
-48. winston(https://github.com/winstonjs/winston#readme) - MIT
-49. winston-daily-rotate-file(https://github.com/winstonjs/winston-daily-rotate-file#readme) - MIT
-50. write-file-webpack-plugin(https://github.com/gajus/write-file-webpack-plugin#readme) - BSD-3-Clause
-51. xml2js(https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
-52. zone.js(https://github.com/angular/zone.js#readme) - MIT
-53. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
-54. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
-55. node.js(https://nodejs.org/en/) - MIT
-56. python(https://www.python.org/) - PSF
-57. Electron(https://electronjs.org/) - electron
+7. @angular/material(https://github.com/angular/material2#readme) - MIT
+8. @angular/platform-browser(https://github.com/angular/angular#readme) - MIT
+9. @angular/platform-browser-dynamic(https://github.com/angular/angular#readme) - MIT
+10. @angular/platform-server(https://github.com/angular/angular#readme) - MIT
+11. @angular/router(https://github.com/angular/angular/tree/master/packages/router) - MIT
+12. @azure/storage-blob(https://github.com/Azure/azure-storage-js#readme) - MIT
+13. @types/keytar(https://github.com/DefinitelyTyped/DefinitelyTyped#readme) - MIT
+14. applicationinsights(https://github.com/Microsoft/ApplicationInsights-node.js#readme) - MIT
+15. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
+16. chart.js(http://www.chartjs.org) - MIT
+17. chokidar(https://github.com/paulmillr/chokidar) - MIT
+18. commander(https://github.com/tj/commander.js#readme) - MIT
+19. d3(https://d3js.org) - BSD-3-Clause
+20. decode-uri-component(https://github.com/SamVerschueren/decode-uri-component#readme) - MIT
+21. download(https://github.com/kevva/download#readme) - MIT
+22. electron-updater(https://github.com/electron-userland/electron-builder) - MIT
+23. element-resize-detector(https://github.com/wnr/element-resize-detector) - MIT
+24. extract-zip(https://github.com/maxogden/extract-zip#readme) - BSD-2-Clause
+25. focus-visible(https://github.com/WICG/focus-visible) - W3C
+26. font-awesome(http://fontawesome.io/) - (OFL-1.1 AND MIT)
+27. get-proxy-settings(https://github.com/Azure/get-proxy-settings) - MIT
+28. glob(https://github.com/isaacs/node-glob#readme) - ISC
+29. hammerjs(http://hammerjs.github.io/) - MIT
+30. https-proxy-agent(https://github.com/TooTallNate/node-https-proxy-agent#readme) - MIT
+31. immutable(https://facebook.github.com/immutable-js) - MIT
+32. inflection(https://github.com/dreamerslab/node.inflection#readme) - MIT
+33. js-yaml(https://github.com/nodeca/js-yaml) - MIT
+34. jschardet(https://github.com/aadsm/jschardet#readme) - LGPL-2.1+
+35. keytar(http://atom.github.io/node-keytar) - MIT
+36. load-json-file(https://github.com/sindresorhus/load-json-file#readme) - MIT
+37. luxon(https://github.com/moment/luxon#readme) - MIT
+38. make-dir(https://github.com/sindresorhus/make-dir#readme) - MIT
+39. monaco-editor(https://github.com/Microsoft/monaco-editor#readme) - MIT
+40. node-abi(https://github.com/lgeiger/node-abi#readme) - MIT
+41. node-forge(https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
+42. patternomaly(https://github.com/ashiguruma/patternomaly#readme) - MIT
+43. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
+44. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
+45. strip-json-comments(https://github.com/sindresorhus/strip-json-comments#readme) - MIT
+46. tinycolor2(https://github.com/TinyColor) - MIT
+47. winston(https://github.com/winstonjs/winston#readme) - MIT
+48. winston-daily-rotate-file(https://github.com/winstonjs/winston-daily-rotate-file#readme) - MIT
+49. write-file-webpack-plugin(https://github.com/gajus/write-file-webpack-plugin#readme) - BSD-3-Clause
+50. xml2js(https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
+51. zone.js(https://github.com/angular/zone.js#readme) - MIT
+52. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
+53. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
+54. node.js(https://nodejs.org/en/) - MIT
+55. python(https://www.python.org/) - PSF
+56. Electron(https://electronjs.org/) - electron
 
 ============================================================
     Start license for @angular/animations
@@ -267,35 +266,6 @@ THE SOFTWARE.
 
 ------------------------------------------------------------
     End license for @angular/forms
-============================================================
-
-============================================================
-    Start license for @angular/http
-------------------------------------------------------------
-The MIT License
-
-Copyright (c) 2010-2019 Google LLC. http://angular.io/license
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-------------------------------------------------------------
-    End license for @angular/http
 ============================================================
 
 ============================================================
@@ -831,23 +801,11 @@ The MIT License (MIT)
 
 Copyright (c) Sam Verschueren <sam.verschueren@gmail.com> (github.com/SamVerschueren)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ------------------------------------------------------------
     End license for decode-uri-component
@@ -2761,29 +2719,6 @@ The externally maintained libraries used by Node.js are:
     distribution of the software without specific, written prior permission.
     M.I.T. makes no representations about the suitability of this software for any
     purpose.  It is provided "as is" without express or implied warranty.
-  """
-
-- HTTP Parser, located at deps/http_parser, is licensed as follows:
-  """
-    Copyright Joyent, Inc. and other Node contributors.
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to
-    deal in the Software without restriction, including without limitation the
-    rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-    sell copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-    IN THE SOFTWARE.
   """
 
 - ICU, located at deps/icu-small, is licensed as follows:

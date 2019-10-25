@@ -1,10 +1,9 @@
-import { AsyncValidatorFn, ValidatorFn } from "@angular/forms";
 import { Observable } from "rxjs";
 
 /**
  * Add some typing to the angular forms
  */
-declare module "@angular/forms/src/model" {
+declare module "@angular/forms/forms" {
 
     interface FormControl<T = any> {
         readonly valueChanges: Observable<T>;

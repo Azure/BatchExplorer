@@ -1,8 +1,10 @@
 import { Component, HostBinding, Input } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import * as FilterBuilder from "@batch-flask/core/filter-builder";
-import { AdvancedFilter } from "./advanced-filter";
-import { AdvancedFilterControlBase } from "./control-base";
+import { AdvancedFilter } from "../advanced-filter";
+import { AdvancedFilterControlBase } from "../control-base";
+
+import "./state-picker-control.scss";
 
 export class StatePickerControl extends AdvancedFilterControlBase {
     constructor(label: string, public states: string[]) {
@@ -27,18 +29,7 @@ let idCounter = 0;
 
 @Component({
     selector: "bl-adv-filter-statepicker",
-    template: `
-        <div [formGroup]="advancedFilter.group" *ngIf="advancedFilter && control">
-            <fieldset [formGroupName]="control.name">
-                <legend>{{control.label}}</legend>
-                <span *ngFor="let state of control.states;trackBy: trackByFn" class="state-checkbox">
-                    <mat-checkbox color="primary" [formControlName]="state" [name]="state">
-                        {{state}}
-                    </mat-checkbox>
-                </span>
-            </fieldset>
-        </div>
-    `,
+    templateUrl: "state-picker-control.html",
 })
 export class AdvancedFilterStatePickerComponent {
     @Input() @HostBinding("attr.id") public id = `bl-adv-filter-statepicker-${idCounter++}`;

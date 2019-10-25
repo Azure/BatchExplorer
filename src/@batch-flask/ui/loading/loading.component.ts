@@ -18,7 +18,7 @@ import "./loading.scss";
     templateUrl: "loading.html",
 })
 export class LoadingComponent implements OnDestroy {
-    @ViewChild("ref")
+    @ViewChild("ref", { static: false })
     public loadingContent: ElementRef;
 
     /**

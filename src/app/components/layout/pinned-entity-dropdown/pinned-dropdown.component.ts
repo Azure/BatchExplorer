@@ -19,7 +19,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
     public favorites: Observable<List<PinnableEntity>>;
     public title: string = "";
 
-    @ViewChild(DropdownComponent) private _dropdown: DropdownComponent;
+    @ViewChild(DropdownComponent, { static: false }) private _dropdown: DropdownComponent;
     private _subscriptions: Subscription[] = [];
     private _accountEndpoint: string = "";
 

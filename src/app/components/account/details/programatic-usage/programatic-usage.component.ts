@@ -24,7 +24,7 @@ export interface AADCredential {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProgramaticUsageComponent {
-    @ViewChild("tabs") public tabs: VTabGroupComponent;
+    @ViewChild("tabs", { static: false }) public tabs: VTabGroupComponent;
     public CredentialType = CredentialType;
     public account: BatchAccount;
     public sharedKeyCredentials: SharedKeyCredentials;

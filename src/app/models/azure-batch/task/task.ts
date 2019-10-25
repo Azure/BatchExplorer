@@ -130,3 +130,8 @@ export enum TaskState {
     running = "running",
     completed = "completed",
 }
+
+export enum TaskResult {
+    failure = "Failure",
+    success = "Success",
+}

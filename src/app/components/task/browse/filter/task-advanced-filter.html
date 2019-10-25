@@ -3,6 +3,7 @@
 		<h1>Task advanced filters</h1>
 		<br>
 		<bl-adv-filter-statepicker [advancedFilter]="advancedFilter" [control]="advancedFilter.controls.state"></bl-adv-filter-statepicker>
+        <bl-adv-filter-resultpicker [advancedFilter]="advancedFilter" [control]="advancedFilter.controls['executionInfo/result']"></bl-adv-filter-resultpicker>
 		<bl-adv-filter-list [advancedFilter]="advancedFilter" [control]="advancedFilter.controls['executionInfo/exitCode']"></bl-adv-filter-list>
 	</bl-adv-filter>
 </bl-card>

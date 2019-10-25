@@ -19,7 +19,7 @@ import {
     NG_VALUE_ACCESSOR,
     NgControl,
 } from "@angular/forms";
-import { FlagInput, UNLIMITED_DURATION_THRESHOLD, coerceBooleanProperty } from "@batch-flask/core";
+import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectComponent } from "@batch-flask/ui/select";
 import { Duration } from "luxon";
@@ -74,8 +74,9 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     public label: string;
 
     @Input() public allowUnlimited: boolean = true;
+    @Input() public defaultDuration: string = "";
 
-    @Input() @FlagInput() public required = false;
+    @Input() @FlagInput() public required: boolean = false;
 
     @Input()
     public get disabled(): boolean {
@@ -113,8 +114,8 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     protected _propagateChange: (value: Duration) => void = null;
     protected _duration: Duration;
 
-    @ViewChild("inputEl") private _inputEl: ElementRef;
-    @ViewChild(SelectComponent) private _select: SelectComponent;
+    @ViewChild("inputEl", { static: false }) private _inputEl: ElementRef;
+    @ViewChild(SelectComponent, { static: false }) private _select: SelectComponent;
 
     private _id: string;
     private _disabled: boolean;
@@ -137,12 +138,21 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                 this.changeDetector.markForCheck();
             });
         }
+        if (this._propagateChange) {
+            this._propagateChange(this.value);
+        }
     }
 
     public ngOnChanges(changes) {
         if (changes.allowUnlimited) {
             if (!this.allowUnlimited && this.unit === DurationUnit.Unlimited) {
-                this.unit = DurationUnit.Hours;
+                this.unit = DurationUnit.Days;
+            }
+        }
+        if (changes.defaultDuration && !this.time) {
+            if (this.defaultDuration) {
+                this.time = this.defaultDuration;
+                this.value = this._getDuration();
             }
         }
         this.stateChanges.next();
@@ -157,7 +167,12 @@ export class DurationPickerComponent implements FormFieldControl<any>,
 
     public writeValue(value: Duration | string): void {
         if (value === null || value === undefined) {
-            this.value = null;
+            if (this.defaultDuration) {
+                this.time = this.defaultDuration;
+                this.value = this._getDuration();
+            } else {
+                this.value = null;
+            }
         } else if (value instanceof Duration) {
             this.value = value;
         } else {
@@ -176,12 +191,12 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     }
 
     public validate() {
-        if (this.invalidTimeNumber || this.invalidCustomDuration) {
+        if (this.invalidTimeNumber || this.invalidCustomDuration || (this.required && !this.time)) {
             return {
                 duration: "Invalid",
             };
         }
-        return false;
+        return null;
     }
 
     public setDescribedByIds(ids: string[]): void {
@@ -225,25 +240,15 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                 return this._getCustomDuration(this.time);
             default:
                 const time = Number(this.time);
-                if (isNaN(time)) {
+                if (isNaN(time) || time < 0) {
                     this.invalidTimeNumber = true;
                     return null;
                 } else {
-                    const duration = Duration.fromObject({
+                    return Duration.fromObject({
                         [this.unit]: Number(this.time),
                     });
-                    return this._isDurationUnlimited(duration) ? null : duration;
                 }
         }
-    }
-
-    private _isDurationUnlimited(duration: Duration): boolean {
-        if (!duration) {
-            return true;
-        }
-        const days = duration.as("day");
-        // Days must not be greater than threshold, otherwise just set it to unlimited
-        return days > UNLIMITED_DURATION_THRESHOLD;
     }
 
     /**
@@ -252,12 +257,10 @@ export class DurationPickerComponent implements FormFieldControl<any>,
      * otherwise next smaller unit will be checked until last unit.
      */
     private _setTimeAndUnitFromDuration(duration: Duration) {
-        if (this._isDurationUnlimited(duration)) {
-            this.unit = DurationUnit.Unlimited;
+        if (!duration) {
             this.time = "";
             return;
         }
-
         const days = duration.as("day");
         const hours = duration.as("hour");
         const minutes = duration.as("minute");

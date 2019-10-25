@@ -58,7 +58,7 @@ export class KeyBindingsService implements OnDestroy {
 
     public listen(): Subscription {
         this._loadCommands();
-        const keys = new Set();
+        const keys = new Set<string>();
 
         return merge(
             fromEvent(document, "keydown").pipe(
