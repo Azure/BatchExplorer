@@ -176,7 +176,7 @@
     "get-proxy-settings": "^0.1.11",
     "glob": "^7.1.3",
     "hammerjs": "^2.0.8",
-    "https-proxy-agent": "^2.2.1",
+    "https-proxy-agent": "^2.2.4",
     "immutable": "^3.8.2",
     "inflection": "^1.12.0",
     "js-yaml": "^3.13.1",
