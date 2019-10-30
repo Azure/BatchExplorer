@@ -1,3 +1,7 @@
+### Fixes
+* Vulnerabilities with dependencies
+* Fix issue where the Python server would not start due to dependency collisions.
+
 # 2.4.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/38?closed=1)
 
