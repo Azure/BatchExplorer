@@ -10,6 +10,7 @@ import { RangeValidator } from "@batch-flask/ui/validation";
 import { UserAccount, VirtualMachineConfiguration } from "app/models";
 import { Constants } from "common";
 import { List } from "immutable";
+import { Duration } from "luxon";
 
 export class JobTaskBaseComponent implements ControlValueAccessor {
     @Input() public userAccounts: List<UserAccount> | UserAccount[];

@@ -74,7 +74,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     public label: string;
 
     @Input() public allowUnlimited: boolean = true;
-    @Input() public defaultDuration: string = "";
+    @Input() public defaultDuration: string;
 
     @Input() @FlagInput() public required: boolean = false;
 
@@ -179,6 +179,9 @@ export class DurationPickerComponent implements FormFieldControl<any>,
             this.value = Duration.fromISO(value);
         }
         this._setTimeAndUnitFromDuration(this.value);
+        if (this._propagateChange) {
+            this._propagateChange(this.value);
+        }
         this.changeDetector.markForCheck();
     }
 
