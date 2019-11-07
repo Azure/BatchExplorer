@@ -5,7 +5,7 @@
             <div [other-fix]="fixStopResizeError" fixMessage="Rescale"></div>
             <div code>{{resizeError.code}}</div>
             <span title="{{resizeError.message}} ({{dedicatedQuota | async}} cores)" message>{{resizeError.message}} ({{dedicatedQuota | async}} cores)</span>
-            <div details *ngIf="resizeError.values !== 0">
+            <div details *ngIf="resizeError.values.size !== 0">
                 <div *ngFor="let entry of resizeError.values;trackBy: trackErrorValue">
                     <div>{{entry.key}}: {{entry.value}}</div>
                 </div>
@@ -16,7 +16,7 @@
             <div [other-fix]="fixStopResizeError" fixMessage="Rescale"></div>
             <div code>{{resizeError.code}}</div>
             <span title="{{resizeError.message}} ({{lowPriorityQuota | async}} cores)" message>{{resizeError.message}} ({{lowPriorityQuota | async}} cores)</span>
-            <div details *ngIf="resizeError.values !== 0">
+            <div details *ngIf="resizeError.values.size !== 0">
                 <div *ngFor="let entry of resizeError.values;trackBy: trackErrorValue">
                     <div>{{entry.key}}: {{entry.value}}</div>
                 </div>
