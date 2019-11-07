@@ -145,7 +145,7 @@ describe("NodeConnectComponent", () => {
     it("should have created a default user config", () => {
         expect(component.userConfig).toEqual({
             name: "foo",
-            expireIn: Duration.fromObject({ hours: 24 }),
+            expireIn: Duration.fromObject({ days: 24 }),
             isAdmin: true,
             password: jasmine.anything() as any,
             usingSSHKey: false,
