@@ -68,24 +68,24 @@ describe("BannerComponent", () => {
     });
 
     describe("When there is details", () => {
-        it("should not show details by default(Until you click)", () => {
-            expect(fixture.componentRef.instance.banner.showDetails).toBe(false);
+        it("should show details by default (Without clicking)", () => {
+            expect(fixture.componentRef.instance.banner.showDetails).toBe(true);
         });
 
         it("should not show the more fixes button", () => {
             expect(de.query(By.css(".other-fixes-btn"))).toBeNull();
         });
 
-        it("should not have the carret on facing left", () => {
+        it("should have caret facing down by default", () => {
             const carretEl = de.query(By.css(".caret"));
             expect(carretEl).not.toBe(null);
-            expect(carretEl.classes["fa-caret-left"]).toBe(true);
-            expect(carretEl.classes["fa-caret-down"]).toBe(false);
+            expect(carretEl.classes["fa-caret-left"]).toBe(false);
+            expect(carretEl.classes["fa-caret-down"]).toBe(true);
         });
 
-        it("should show details after you click", () => {
+        it("should close details after you click", () => {
             de.query(By.css(".summary-container")).nativeElement.click();
-            expect(fixture.componentRef.instance.banner.showDetails).toBe(true);
+            expect(fixture.componentRef.instance.banner.showDetails).toBe(false);
         });
 
         it("carret change when you click", () => {
@@ -94,8 +94,8 @@ describe("BannerComponent", () => {
 
             const carretEl = de.query(By.css(".caret"));
             expect(carretEl).not.toBe(null);
-            expect(carretEl.classes["fa-caret-left"]).toBe(false);
-            expect(carretEl.classes["fa-caret-down"]).toBe(true);
+            expect(carretEl.classes["fa-caret-left"]).toBe(true);
+            expect(carretEl.classes["fa-caret-down"]).toBe(false);
         });
     });
 
