@@ -5,6 +5,7 @@ import {
     NG_VALUE_ACCESSOR,
     Validators,
 } from "@angular/forms";
+import { Duration } from "luxon";
 import { JobTaskBaseComponent } from "./job-task-base.component";
 
 const DEFAULT_JOBPREPARATION_ID = "jobpreparation";
@@ -13,6 +14,9 @@ const DEFAULT_JOBPREPARATION = {
     commandLine: "",
     waitForSuccess: true,
     rerunOnNodeRebootAfterSuccess: true,
+    constraints: {
+        retentionTime: Duration.fromObject({days: 7}),
+    },
 };
 const INVALID_RESPONSE = {
     jobPreparationTaskPicker: {
@@ -34,8 +38,8 @@ export class JobPreparationTaskPickerComponent extends JobTaskBaseComponent {
     constructor(formBuilder: FormBuilder) {
         super(formBuilder, DEFAULT_JOBPREPARATION, INVALID_RESPONSE);
         this._baseFormControls["id"] = [DEFAULT_JOBPREPARATION_ID, Validators.required];
-        this._baseFormControls["waitForSuccess"] = [true];
         this._baseFormControls["rerunOnNodeRebootAfterSuccess"] = [true];
+        this._baseFormControls["waitForSuccess"] = [true];
         this.form = formBuilder.group(this._baseFormControls);
         this.form.valueChanges.subscribe((val: any) => {
             if (this._propagateChange) {

@@ -5,6 +5,7 @@ import {
     NG_VALUE_ACCESSOR,
     Validators,
 } from "@angular/forms";
+import { Duration } from "luxon";
 import { JobTaskBaseComponent } from "./job-task-base.component";
 
 const DEFAULT_JOBRELEASE_ID = "jobrelease";
@@ -16,6 +17,9 @@ const INVALID_RESPONSE = {
     jobReleaseTaskPicker: {
         valid: false,
         missingSelection: true,
+    },
+    constraints: {
+        retentionTime: Duration.fromObject({days: 7}),
     },
 };
 
