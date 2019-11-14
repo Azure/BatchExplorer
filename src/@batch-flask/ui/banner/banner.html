@@ -13,7 +13,7 @@
             <bl-clickable class="btn" (do)="triggerFix()" [ngSwitch]="state" [class.disabled]="state !== errorStates.Error">
                 <span *ngSwitchCase="errorStates.Error">Fix: {{ fixMessage }}</span>
                 <span *ngSwitchCase="errorStates.Fixing">
-                    <i class="fa fa-spinner fa-spin"></i> Fixing
+                    <i class="fa fa-spinner fa-spin"></i>Fixing
                 </span>
                 <span *ngSwitchCase="errorStates.Fixed">
                     <i class="fa fa-check"></i>Fixed
