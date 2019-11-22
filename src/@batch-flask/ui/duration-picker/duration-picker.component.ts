@@ -20,7 +20,7 @@ import {
     NgControl,
 } from "@angular/forms";
 import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
-import { MaxDurations } from "@batch-flask/core/constants";
+import { MaxDurationValue } from "@batch-flask/core/constants";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectComponent } from "@batch-flask/ui/select";
 import { Duration } from "luxon";
@@ -240,34 +240,24 @@ export class DurationPickerComponent implements FormFieldControl<any>,
         this.invalidCustomDuration = false;
         this.invalidDurationValue = false;
 
+        const currDuration = Duration.fromObject({[this.unit]: Number(this.time)});
+
         switch (this.unit) {
-            case DurationUnit.Unlimited:
-                return null;
             case DurationUnit.Custom:
                 return this._getCustomDuration(this.time);
             default:
                 const time = Number(this.time);
                 if (isNaN(time) || time < 0) {
                     this.invalidTimeNumber = true;
-                    return null;
-                } else if (time > MaxDurations.maxDays && this.unit === "days") {
-                    this.invalidDurationValue = true;
-                    return null;
-                } else if (time > MaxDurations.maxHours && this.unit === "hours") {
-                    this.invalidDurationValue = true;
-                    return null;
-                } else if (time > MaxDurations.maxMinutes && this.unit === "minutes") {
-                    this.invalidDurationValue = true;
-                    return null;
-                } else if (time > MaxDurations.maxSeconds && this.unit === "seconds") {
-                    this.invalidDurationValue = true;
-                    return null;
                 } else {
-                    return Duration.fromObject({
-                        [this.unit]: Number(this.time),
-                    });
+                    if (currDuration > MaxDurationValue) {
+                        this.invalidDurationValue = true;
+                    } else {
+                        return currDuration;
+                    }
                 }
         }
+        return null;
     }
 
     /**

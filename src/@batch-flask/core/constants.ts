@@ -1,3 +1,5 @@
+import { Duration } from "luxon";
+
 // tslint:disable:variable-name
 
 export enum MouseButton {
@@ -41,10 +43,17 @@ export const DataStoreKeys = {
     selectedWorkspaceId: "selected-workspace-id",
 };
 
-export const MaxDurations = {
-    // server returns "P10675199DT2H48M5.4775807S" for unlimited duration
-    maxDays: 10675199,
-    maxHours: 256204776,
-    maxMinutes: 15372286560,
-    maxSeconds: 922337193600,
-};
+// export const MaxDurations = {
+//     maxDays: 10675199,
+//     maxHours: 256204776,
+//     maxMinutes: 15372286560,
+//     maxSeconds: 922337193600,
+// };
+
+// // server returns "P10675199DT2H48M5.4775807S" for unlimited duration
+export const MaxDurationValue = Duration.fromObject({
+    days: 10675199,
+    hours: 2,
+    minutes: 48,
+    seconds: 5.4775807,
+});
