@@ -50,7 +50,6 @@ class MockResourceFilePickerComponent extends MockControlValueAccessorComponent<
 describe("StartTaskPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let component: StartTaskPickerComponent;
-    let testComponent: TestComponent;
     let de: DebugElement;
 
     beforeEach(() => {
@@ -80,7 +79,6 @@ describe("StartTaskPickerComponent", () => {
 
     function setup() {
         fixture = TestBed.createComponent(TestComponent);
-        testComponent = fixture.componentInstance;
         fixture.detectChanges();
 
         de = fixture.debugElement.query(By.css("bl-start-task-picker"));

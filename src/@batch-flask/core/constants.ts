@@ -40,3 +40,11 @@ export const DataStoreKeys = {
      */
     selectedWorkspaceId: "selected-workspace-id",
 };
+
+export const MaxDurations = {
+    // server returns "P10675199DT2H48M5.4775807S" for unlimited duration
+    maxDays: 10675199,
+    maxHours: 256204776,
+    maxMinutes: 15372286560,
+    maxSeconds: 922337193600,
+};

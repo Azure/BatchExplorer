@@ -20,6 +20,7 @@ import {
     NgControl,
 } from "@angular/forms";
 import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
+import { MaxDurations } from "@batch-flask/core/constants";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectComponent } from "@batch-flask/ui/select";
 import { Duration } from "luxon";
@@ -105,6 +106,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     // Validation fields
     public invalidTimeNumber = false;
     public invalidCustomDuration = false;
+    public invalidDurationValue = false;
 
     @HostBinding("attr.aria-describedby")
     public ariaDescribedby: string;
@@ -194,7 +196,8 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     }
 
     public validate() {
-        if (this.invalidTimeNumber || this.invalidCustomDuration || (this.required && !this.time)) {
+        if (this.invalidTimeNumber || this.invalidCustomDuration ||
+            this.invalidCustomDuration || (this.required && !this.time)) {
             return {
                 duration: "Invalid",
             };
@@ -235,6 +238,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     private _getDuration(): Duration {
         this.invalidTimeNumber = false;
         this.invalidCustomDuration = false;
+        this.invalidDurationValue = false;
 
         switch (this.unit) {
             case DurationUnit.Unlimited:
@@ -245,6 +249,18 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                 const time = Number(this.time);
                 if (isNaN(time) || time < 0) {
                     this.invalidTimeNumber = true;
+                    return null;
+                } else if (time > MaxDurations.maxDays && this.unit === "days") {
+                    this.invalidDurationValue = true;
+                    return null;
+                } else if (time > MaxDurations.maxHours && this.unit === "hours") {
+                    this.invalidDurationValue = true;
+                    return null;
+                } else if (time > MaxDurations.maxMinutes && this.unit === "minutes") {
+                    this.invalidDurationValue = true;
+                    return null;
+                } else if (time > MaxDurations.maxSeconds && this.unit === "seconds") {
+                    this.invalidDurationValue = true;
                     return null;
                 } else {
                     return Duration.fromObject({
