@@ -249,12 +249,10 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                 const time = Number(this.time);
                 if (isNaN(time) || time < 0) {
                     this.invalidTimeNumber = true;
+                } else if (currDuration > MaxDurationValue) {
+                    this.invalidDurationValue = true;
                 } else {
-                    if (currDuration > MaxDurationValue) {
-                        this.invalidDurationValue = true;
-                    } else {
-                        return currDuration;
-                    }
+                     return currDuration;
                 }
         }
         return null;
