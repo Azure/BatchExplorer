@@ -252,7 +252,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                 } else if (currDuration > MaxDurationValue) {
                     this.invalidDurationValue = true;
                 } else {
-                     return currDuration;
+                    return currDuration;
                 }
         }
         return null;
