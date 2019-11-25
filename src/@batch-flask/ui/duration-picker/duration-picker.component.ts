@@ -20,6 +20,7 @@ import {
     NgControl,
 } from "@angular/forms";
 import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
+import { MaxDurationValue } from "@batch-flask/core/constants";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectComponent } from "@batch-flask/ui/select";
 import { Duration } from "luxon";
@@ -105,6 +106,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     // Validation fields
     public invalidTimeNumber = false;
     public invalidCustomDuration = false;
+    public invalidDurationValue = false;
 
     @HostBinding("attr.aria-describedby")
     public ariaDescribedby: string;
@@ -194,7 +196,8 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     }
 
     public validate() {
-        if (this.invalidTimeNumber || this.invalidCustomDuration || (this.required && !this.time)) {
+        if (this.invalidTimeNumber || this.invalidCustomDuration ||
+            this.invalidCustomDuration || (this.required && !this.time)) {
             return {
                 duration: "Invalid",
             };
@@ -235,23 +238,24 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     private _getDuration(): Duration {
         this.invalidTimeNumber = false;
         this.invalidCustomDuration = false;
+        this.invalidDurationValue = false;
+
+        const currDuration = Duration.fromObject({[this.unit]: Number(this.time)});
 
         switch (this.unit) {
-            case DurationUnit.Unlimited:
-                return null;
             case DurationUnit.Custom:
                 return this._getCustomDuration(this.time);
             default:
                 const time = Number(this.time);
                 if (isNaN(time) || time < 0) {
                     this.invalidTimeNumber = true;
-                    return null;
+                } else if (currDuration > MaxDurationValue) {
+                    this.invalidDurationValue = true;
                 } else {
-                    return Duration.fromObject({
-                        [this.unit]: Number(this.time),
-                    });
+                    return currDuration;
                 }
         }
+        return null;
     }
 
     /**

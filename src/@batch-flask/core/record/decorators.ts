@@ -1,5 +1,4 @@
 import { SanitizedError } from "@batch-flask/utils";
-import { Duration } from "luxon";
 import { RecordMissingExtendsError } from "./errors";
 import { setProp, updateTypeMetadata } from "./helpers";
 import { Record } from "./record";
@@ -76,18 +75,4 @@ export function Model() {
             }
         });
     };
-}
-
-/**
- * The value of unlimited maxWallClockTime/retentionTime threshold
- */
-export const UNLIMITED_DURATION_THRESHOLD = 365;
-
-/**
- * The function that converts duration to unlimited when current duration is greater than UNLIMITED_DURATION_THRESHOLD
- * in both mutator and accessor of maxWallClockTime/retentionTime.
- * @param duration
- */
-export function TransformDuration(duration: Duration) {
-    return (duration && duration.as("day") < UNLIMITED_DURATION_THRESHOLD) ? duration : null;
 }

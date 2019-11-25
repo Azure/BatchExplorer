@@ -25,4 +25,7 @@
 <div class="error" *ngIf="invalidCustomDuration">
     This is not a valid ISO 8601 duration <i>(e.g. PT1M, P1D)</i>
 </div>
+<div class="error" *ngIf="invalidDurationValue">
+    Input must be less than 10675199 days
+</div>
 
