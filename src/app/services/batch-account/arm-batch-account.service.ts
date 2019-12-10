@@ -84,7 +84,7 @@ export class ArmBatchAccountService implements OnDestroy {
         );
     }
 
-    public putResourcGroup(sub: ArmSubscription, resourceGroup: string, body: any) {
+    public putResourceGroup(sub: ArmSubscription, resourceGroup: string, body: any) {
         const rgUri = this.getResoureGroupId(sub, resourceGroup);
         return this.azure.put(sub, rgUri, { body: body });
     }
