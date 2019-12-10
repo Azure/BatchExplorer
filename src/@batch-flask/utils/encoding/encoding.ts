@@ -142,6 +142,6 @@ export class EncodingUtils {
             return null;
         }
 
-        return guessed.encoding;
+        return Encoding[guessed.encoding as keyof Encoding];
     }
 }
