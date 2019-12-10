@@ -215,7 +215,15 @@ describe("AADService", () => {
 
     describe("Login", () => {
         beforeEach(() => {
-            spyOn(service, "accessTokenData").and.returnValue(of({}));
+            spyOn(service, "accessTokenData").and.returnValue(of(new AccessToken({
+                access_token: "",
+                refresh_token: "",
+                token_type: "",
+                expires_in: 1,
+                ext_expires_in: 1,
+                expires_on: new Date(),
+                not_before: new Date()
+            })));
         });
 
         it("login to public cloud", async () => {

@@ -13,7 +13,7 @@ export enum Encoding {
 }
 
 export interface EncodingResult {
-    encoding: Encoding | null;
+    encoding: Encoding | string | null;
     seemsBinary: boolean;
 }
 export class EncodingUtils {
@@ -96,7 +96,7 @@ export class EncodingUtils {
         return { seemsBinary, encoding };
     }
 
-    public static detectEncodingByBOMFromBuffer(buffer: any, bytesRead: number): Encoding | null {
+    public static detectEncodingByBOMFromBuffer(buffer: any, bytesRead: number): Encoding | string | null {
         if (!buffer || bytesRead < 2) {
             return null;
         }
@@ -142,6 +142,6 @@ export class EncodingUtils {
             return null;
         }
 
-        return Encoding[guessed.encoding as keyof Encoding];
+        return guessed.encoding;
     }
 }
