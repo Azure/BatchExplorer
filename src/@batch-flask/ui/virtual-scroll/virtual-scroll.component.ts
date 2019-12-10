@@ -313,7 +313,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         start = Math.max(0, start);
         end += this.bufferAmount;
         end = Math.min(items.length, end);
-        this._detectViewportChanges(items, start, end, forceViewportUpdate);
+        this._detectViewportChanges(items, start, end, d.itemsPerCol, forceViewportUpdate);
     }
 
     private _computeRange(d: VirtualScrollDimensions) {
@@ -357,8 +357,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         }
     }
 
-    private _detectViewportChanges(items: any, start: number, end: number, forceViewportUpdate: boolean) {
-        const minNum = this._calculateDimensions().itemsPerCol;
+    private _detectViewportChanges(items: any, start: number, end: number, minNum: number, forceViewportUpdate: boolean) {
         if (start !== this.previousStart || end !== this.previousEnd || end < minNum || forceViewportUpdate === true) {
             this.zone.run(() => {
                 this._applyViewportChanges(items, start, end, forceViewportUpdate);
