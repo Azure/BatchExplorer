@@ -357,7 +357,12 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         }
     }
 
-    private _detectViewportChanges(items: any, start: number, end: number, minNum: number, forceViewportUpdate: boolean) {
+    private _detectViewportChanges(
+        items: any,
+        start: number,
+        end: number,
+        minNum: number,
+        forceViewportUpdate: boolean) {
         if (start !== this.previousStart || end !== this.previousEnd || end < minNum || forceViewportUpdate === true) {
             this.zone.run(() => {
                 this._applyViewportChanges(items, start, end, forceViewportUpdate);
