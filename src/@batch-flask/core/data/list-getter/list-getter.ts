@@ -75,7 +75,8 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
 
     private _fetchNext(token: ContinuationToken): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(token.params);
-        return this.listNext(token).pipe(switchMap(x => this._processItems(cache, x, token.params, token.options, false)));
+        return this.listNext(token).pipe(
+            switchMap(x => this._processItems(cache, x, token.params, token.options, false)));
     }
 
     private _processItems(
@@ -83,7 +84,7 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
         response: any,
         params: TParams,
         options: ListOptions,
-        isFirstPage: boolean): Observable<ListResponse<TEntity>>{
+        isFirstPage: boolean): Observable<ListResponse<TEntity>> {
 
         const { data, nextLink } = response;
         const items: TEntity[] = data.map(x => this._createItem(x, params));
@@ -96,7 +97,7 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
 
         if (items.length !== 0 && isFirstPage) {
             cache.queryCache.cacheQuery(keys, token);
-        } else if (items.length == 0 && nextLink) {
+        } else if (items.length === 0 && nextLink) {
             return this._fetchNext(token);
         }
         return of({
