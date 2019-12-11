@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { Record } from "@batch-flask/core/record";
 import { List, OrderedSet } from "immutable";
 import { Observable, empty, of } from "rxjs";
-import { expand, map, reduce, share, flatMap } from "rxjs/operators";
+import { expand, map, reduce, share, switchMap } from "rxjs/operators";
 import { DataCache } from "../data-cache";
 import { GenericGetter, GenericGetterConfig } from "../generic-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "../list-options";
@@ -70,12 +70,12 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
             return of(cachedResponse);
         }
 
-        return this.list(params, options).pipe(flatMap(x => this._processItems(cache, x, params, options, true)));
+        return this.list(params, options).pipe(switchMap(x => this._processItems(cache, x, params, options, true)));
     }
 
     private _fetchNext(token: ContinuationToken): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(token.params);
-        return this.listNext(token).pipe(flatMap(x => this._processItems(cache, x, token.params, token.options, false)));
+        return this.listNext(token).pipe(switchMap(x => this._processItems(cache, x, token.params, token.options, false)));
     }
 
     private _processItems(
