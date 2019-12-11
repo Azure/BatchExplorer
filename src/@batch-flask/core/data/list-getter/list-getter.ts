@@ -97,7 +97,7 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
 
         if (items.length !== 0 && isFirstPage) {
             cache.queryCache.cacheQuery(keys, token);
-        } else if (items.length === 0 && nextLink) {
+        } else if (items.length === 0 && !isFirstPage && nextLink) {
             return this._fetchNext(token);
         }
         return of({
