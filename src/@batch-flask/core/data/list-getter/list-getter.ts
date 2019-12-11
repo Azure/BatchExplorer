@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { Record } from "@batch-flask/core/record";
 import { List, OrderedSet } from "immutable";
 import { Observable, empty, of } from "rxjs";
-import { expand, map, reduce, share, mergeMap, flatMap } from "rxjs/operators";
+import { expand, map, reduce, share, flatMap } from "rxjs/operators";
 import { DataCache } from "../data-cache";
 import { GenericGetter, GenericGetterConfig } from "../generic-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "../list-options";
