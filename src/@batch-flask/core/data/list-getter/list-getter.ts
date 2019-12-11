@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { Record } from "@batch-flask/core/record";
 import { List, OrderedSet } from "immutable";
 import { Observable, empty, of } from "rxjs";
-import { expand, map, reduce, share } from "rxjs/operators";
+import { expand, map, reduce, share, mergeMap, flatMap } from "rxjs/operators";
 import { DataCache } from "../data-cache";
 import { GenericGetter, GenericGetterConfig } from "../generic-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "../list-options";
@@ -70,12 +70,12 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
             return of(cachedResponse);
         }
 
-        return this.list(params, options).pipe(map(x => this._processItems(cache, x, params, options, true)));
+        return this.list(params, options).pipe(flatMap(x => this._processItems(cache, x, params, options, true)));
     }
 
     private _fetchNext(token: ContinuationToken): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(token.params);
-        return this.listNext(token).pipe(map(x => this._processItems(cache, x, token.params, token.options, false)));
+        return this.listNext(token).pipe(flatMap(x => this._processItems(cache, x, token.params, token.options, false)));
     }
 
     private _processItems(
@@ -83,25 +83,26 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
         response: any,
         params: TParams,
         options: ListOptions,
-        isFirstPage: boolean): ListResponse<TEntity> {
+        isFirstPage: boolean): Observable<ListResponse<TEntity>>{
 
         const { data, nextLink } = response;
-        const items = data.map(x => this._createItem(x, params));
-        const keys = OrderedSet(cache.addItems(items, options.select));
+        const items: TEntity[] = data.map(x => this._createItem(x, params));
+        const keys: OrderedSet<string> = OrderedSet(cache.addItems(items, options.select));
         const token = {
             nextLink,
             params,
             options,
         };
 
-        if (items.size !== 0 && isFirstPage) {
+        if (items.length !== 0 && isFirstPage) {
             cache.queryCache.cacheQuery(keys, token);
+        } else if (items.length == 0 && nextLink) {
+            return this._fetchNext(token);
         }
-
-        return {
+        return of({
             items: List(items),
             nextLink: nextLink && token,
-        };
+        });
     }
 
     /**
