@@ -14,7 +14,7 @@ import { BatchExplorerApplication } from "./core/batch-explorer-application";
 
 function initAutoUpdate() {
     autoUpdater.allowPrerelease = true;
-    autoUpdater.autoDownload = true;
+    autoUpdater.autoDownload = false;
     autoUpdater.allowDowngrade = true;
     autoUpdater.logger = log;
     autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
