@@ -3,4 +3,3 @@ pylint==2.3.0
 azure-batch-extensions==7.0.0
 pyinstaller==3.4
 azure-batch==8.0.0
-azure-mgmt-storage==2.0.0
