@@ -110,7 +110,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
 
         let observable: Observable<any> = null;
         if (this.isNewResourceGroup) {
-            observable = this.accountService.putResourcGroup(subscription, resourceGroup, {
+            observable = this.accountService.putResourceGroup(subscription, resourceGroup, {
                 location: formData.location,
             }).pipe(
                 flatMap(() => this.accountService.create(subscription, resourceGroup, accountName, body)),

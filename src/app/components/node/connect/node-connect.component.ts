@@ -146,7 +146,6 @@ export class NodeConnectComponent implements OnInit {
             this.generatePassword();
         }
         const userConfig = this.userConfig;
-
         const credentials: AddNodeUserAttributes = {
             name: userConfig.name,
             expiryTime: DateTime.local().plus(userConfig.expireIn).toJSDate(),
@@ -209,7 +208,7 @@ export class NodeConnectComponent implements OnInit {
 
         this.userConfig = {
             name: this.settingsService.current.nodeConnect.defaultUsername,
-            expireIn: Duration.fromObject({ hours: 24 }),
+            expireIn: Duration.fromObject({ days: 1 }),
             isAdmin: true,
             sshPublicKey: sshPublicKey || "",
             usingSSHKey: Boolean(sshPublicKey),

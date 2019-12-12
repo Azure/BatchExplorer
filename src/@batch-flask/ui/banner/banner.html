@@ -13,7 +13,7 @@
             <bl-clickable class="btn" (do)="triggerFix()" [ngSwitch]="state" [class.disabled]="state !== errorStates.Error">
                 <span *ngSwitchCase="errorStates.Error">Fix: {{ fixMessage }}</span>
                 <span *ngSwitchCase="errorStates.Fixing">
-                    <i class="fa fa-spinner fa-spin"></i> Fixing
+                    <i class="fa fa-spinner fa-spin"></i>Fixing
                 </span>
                 <span *ngSwitchCase="errorStates.Fixed">
                     <i class="fa fa-check"></i>Fixed
@@ -33,7 +33,7 @@
         </div>
         <i class="caret fa" [class.fa-caret-left]="!showDetails" [class.fa-caret-down]="showDetails" *ngIf="details.children.length !== 0"></i>
     </bl-clickable>
-    <div class="details-container" [hidden]="!showDetails" #details>
+    <div class="details-container" [hidden]="!showDetails || details.children.length == 0" #details>
         <ng-content select="[details]"></ng-content>
     </div>
 </bl-card>

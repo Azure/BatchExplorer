@@ -10,7 +10,7 @@ import {
 import { ImageInformation, PoolOsSkus, VerificationType } from "app/models";
 import { PoolOsService } from "app/services";
 import { List } from "immutable";
-import { BehaviorSubject, of } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
 import { OsOfferTileComponent } from "../os-offer-tile";
 import { OSImagePickerComponent, OSImageSelection } from "./os-image-picker.component";

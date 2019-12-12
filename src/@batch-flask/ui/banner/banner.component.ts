@@ -60,7 +60,7 @@ export class BannerComponent implements OnChanges {
     @ContentChildren(BannerOtherFixDirective)
     public otherFixes: QueryList<BannerOtherFixDirective>;
 
-    public showDetails = false;
+    public showDetails = true;
 
     public state = ErrorState.Error;
 
