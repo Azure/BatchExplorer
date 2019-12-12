@@ -3,18 +3,18 @@
 
 ### feature:
 
+* Change Error Messages Inner Details to be shown by default [\#2140](https://github.com/Azure/BatchExplorer/issues/2140)
 
 ### bug:
 
-
-### other:
-
-* EULA text still displays BatchLabs text [\#2141](https://github.com/Azure/BatchExplorer/issues/2141)
-* Change Error Messages Inner Details to be shown by default [\#2140](https://github.com/Azure/BatchExplorer/issues/2140)
 * Account create fails with 'Must specify a location' [\#2135](https://github.com/Azure/BatchExplorer/issues/2135)
 * When listing tasks with OData, pagination may not be followed to termination [\#2127](https://github.com/Azure/BatchExplorer/issues/2127)
 * When attempting to RDP/SSH to a node you must update expiresOn property otherwise you get a spinning wheel [\#2119](https://github.com/Azure/BatchExplorer/issues/2119)
 * When Creating a JobPrep or JobRelease task you must update retentionTime to pass validation [\#2118](https://github.com/Azure/BatchExplorer/issues/2118)
+
+### other:
+
+* EULA text still displays BatchLabs text [\#2141](https://github.com/Azure/BatchExplorer/issues/2141)
 
 ### Fixes
 * Vulnerabilities with dependencies
