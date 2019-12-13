@@ -53,7 +53,7 @@ export class SettingsComponent implements OnDestroy {
             defaultUploadContainer: [""],
             nodeConnectDefaultUsername: [""],
             updateChannel: [""],
-            updateOnQuit: [true],
+            updateOnQuit: [false],
             githubDataRepo: [""],
             githubDataBranch: [""],
             microsoftPortfolioRepo: [""],
