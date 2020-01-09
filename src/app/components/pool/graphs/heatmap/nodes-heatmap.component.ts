@@ -331,11 +331,27 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         return array;
     }
 
+    /**
+     * Display either how many tasks are running on a given node or an error code if the node errors.
+     * @param Selection object
+     *
+     * If the nodes are in an error state, it will return show a tooltip with the error state and the node id.
+     * If the nodes are not in an error state, it will show the number of tasks running on the node and the
+     * node id.
+     */
     private _displayTileTooltip(titleNode) {
         titleNode.text((tile) => {
             const count = tile.node.runningTasksCount;
-            return `${count} tasks running on this node (${tile.node.id})`;
-        });
+            if (tile.node.state === NodeState.unusable) {
+                return `Error: Unusable Node (${tile.node.id})`;
+            } else if (tile.node.state === NodeState.startTaskFailed) {
+                return `Error: StartTaskFailed (${tile.node.id})`;
+            } else if (tile.node.state === NodeState.unknown) {
+                return `Error: Unknown (${tile.node.id})`;
+            } else {
+                return `${count} tasks running on this node (${tile.node.id})`;
+            }
+       });
     }
 
     private _getTaskHeight(tileSize: number, node: Node) {
