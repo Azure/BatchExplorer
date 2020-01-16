@@ -343,7 +343,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         titleNode.text((tile) => {
             const count = tile.node.runningTasksCount;
             if (tile.node.state === NodeState.unusable) {
-                return `Error: Unusable Node (${tile.node.id})`;
+                return `Error: Unusable state on node (${tile.node.id})`;
             } else if (tile.node.state === NodeState.startTaskFailed) {
                 return `Error: StartTaskFailed (${tile.node.id})`;
             } else if (tile.node.state === NodeState.unknown) {
