@@ -1,5 +1,5 @@
 <bl-banner *ngIf="startTaskFailedError" fixMessage="Edit the start task" [fix]="openEditStartTask">
-    <div message>It seems like the start task is failing on {{startTaskFailedError.failedStartTaskNodes}} out of {{startTaskFailedError.nodeCount}} nodes.</div>
+    <div message>The start task has failed on {{startTaskFailedError.failedStartTaskNodes}} out of {{startTaskFailedError.nodeCount}} nodes.</div>
     <div [other-fix]="rebootFailedNodes" fixMessage="Reboot failed nodes"></div>
     <div *ngIf="isPaasPool" [other-fix]="reimageFailedNodes" fixMessage="Reimage failed nodes"></div>
 </bl-banner>
