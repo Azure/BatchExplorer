@@ -4,7 +4,7 @@
     <div *ngIf="isPaasPool" [other-fix]="reimageFailedNodes" fixMessage="Reimage failed nodes"></div>
 </bl-banner>
 <bl-banner *ngIf="unusableNodeError">
-    <div message>It seems like {{unusableNodeError.failedUnusableNodes}} out of {{unusableNodeError.nodeCount}} nodes are unusable.</div>
+    <div message>{{unusableNodeError.failedUnusableNodes}} out of {{unusableNodeError.nodeCount}} nodes are in an unusable state.</div>
 </bl-banner>
 <bl-metrics-monitor class="graphs-container">
     <!-- Only show the heatmap, available nodes and running tasks on the pool -->
