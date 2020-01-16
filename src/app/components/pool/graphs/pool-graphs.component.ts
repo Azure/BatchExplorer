@@ -54,6 +54,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public tasks: List<Task> = List([]);
 
     public startTaskFailedError: any;
+    public unusableNodeError: any;
     public isPaasPool: boolean = false;
     public hasGPU: boolean = false;
 
@@ -176,15 +177,38 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
         return from(window.domReady);
     }
+
     private _scanForProblems() {
-        const failedNodes = this._stateCounter.get(NodeState.startTaskFailed).getValue();
+        const failedStartTaskNodes = this._stateCounter.get(NodeState.startTaskFailed).getValue();
+        const failedUnusableNodes = this._stateCounter.get(NodeState.unusable).getValue();
         const nodeCount = this.nodes.size;
-        if (nodeCount > 0 && (failedNodes > 10 || failedNodes / nodeCount > 0.3)) {
-            this.startTaskFailedError = {
-                failedNodes, nodeCount,
-            };
+
+        if (nodeCount > 0) {
+            const isStartTaskError: Boolean = failedStartTaskNodes > 10 || failedStartTaskNodes / nodeCount > 0.3;
+            const isUnusableError: Boolean = failedUnusableNodes > 10 || failedUnusableNodes / nodeCount > 0.3;
+
+            if (isStartTaskError && isUnusableError) {
+                this.startTaskFailedError = {
+                    failedStartTaskNodes, nodeCount,
+                };
+                this.unusableNodeError = {
+                    failedUnusableNodes, nodeCount,
+                };
+            } else if (isUnusableError) {
+                this.unusableNodeError = {
+                    failedUnusableNodes, nodeCount,
+                };
+            } else if (isStartTaskError) {
+                this.startTaskFailedError = {
+                    failedStartTaskNodes, nodeCount,
+                };
+            } else {
+                this.startTaskFailedError = null;
+                this.unusableNodeError = null;
+            }
         } else {
             this.startTaskFailedError = null;
+            this.unusableNodeError = null;
         }
     }
 
