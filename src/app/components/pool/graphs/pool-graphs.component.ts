@@ -181,34 +181,33 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     private _scanForProblems() {
         const failedStartTaskNodes = this._stateCounter.get(NodeState.startTaskFailed).getValue();
         const failedUnusableNodes = this._stateCounter.get(NodeState.unusable).getValue();
+
         const nodeCount = this.nodes.size;
 
-        if (nodeCount > 0) {
-            const isStartTaskError: Boolean = failedStartTaskNodes > 10 || failedStartTaskNodes / nodeCount > 0.3;
-            const isUnusableError: Boolean = failedUnusableNodes > 10 || failedUnusableNodes / nodeCount > 0.3;
+        const isStartTaskError: Boolean = failedStartTaskNodes > 10 || failedStartTaskNodes / nodeCount > 0.3;
+        const isUnusableError: Boolean = failedUnusableNodes > 10 || failedUnusableNodes / nodeCount > 0.3;
 
-            if (isStartTaskError && isUnusableError) {
-                this.startTaskFailedError = {
-                    failedStartTaskNodes, nodeCount,
-                };
-                this.unusableNodeError = {
-                    failedUnusableNodes, nodeCount,
-                };
-            } else if (isUnusableError) {
-                this.unusableNodeError = {
-                    failedUnusableNodes, nodeCount,
-                };
-            } else if (isStartTaskError) {
-                this.startTaskFailedError = {
-                    failedStartTaskNodes, nodeCount,
-                };
-            } else {
-                this.startTaskFailedError = null;
-                this.unusableNodeError = null;
-            }
-        } else {
+        if ((!isStartTaskError && !isUnusableError) || nodeCount <= 0) {
             this.startTaskFailedError = null;
             this.unusableNodeError = null;
+        } else {
+
+            if (isStartTaskError && !isUnusableError) {
+                this.startTaskFailedError = {
+                    failedStartTaskNodes, nodeCount,
+                };
+            } else if (!isStartTaskError && isUnusableError) {
+                this.unusableNodeError = {
+                    failedUnusableNodes, nodeCount,
+                };
+            } else {
+                this.startTaskFailedError = {
+                    failedStartTaskNodes, nodeCount,
+                };
+                this.unusableNodeError = {
+                    failedUnusableNodes, nodeCount,
+                };
+            }
         }
     }
 

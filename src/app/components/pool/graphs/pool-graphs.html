@@ -1,12 +1,10 @@
 <bl-banner *ngIf="startTaskFailedError" fixMessage="Edit the start task" [fix]="openEditStartTask">
-    <div message>It seems like the start task is failing on many nodes.
-        ({{startTaskFailedError.failedStartTaskNodes}}/{{startTaskFailedError.nodeCount}})</div>
+    <div message>It seems like the start task is failing on {{startTaskFailedError.failedStartTaskNodes}} out of {{startTaskFailedError.nodeCount}} nodes.</div>
     <div [other-fix]="rebootFailedNodes" fixMessage="Reboot failed nodes"></div>
     <div *ngIf="isPaasPool" [other-fix]="reimageFailedNodes" fixMessage="Reimage failed nodes"></div>
 </bl-banner>
 <bl-banner *ngIf="unusableNodeError">
-    <div message>It seems like many nodes are unusable.
-        ({{unusableNodeError.failedUnusableNodes}}/{{unusableNodeError.nodeCount}})</div>
+    <div message>It seems like {{unusableNodeError.failedUnusableNodes}} out of {{unusableNodeError.nodeCount}} nodes are unusable.</div>
 </bl-banner>
 <bl-metrics-monitor class="graphs-container">
     <!-- Only show the heatmap, available nodes and running tasks on the pool -->
