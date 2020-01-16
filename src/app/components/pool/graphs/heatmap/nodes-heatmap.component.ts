@@ -347,7 +347,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             } else if (tile.node.state === NodeState.startTaskFailed) {
                 return `Error: Start task failed on node (${tile.node.id})`;
             } else if (tile.node.state === NodeState.unknown) {
-                return `Error: Unknown (${tile.node.id})`;
+                return `Error: Unknown state on node (${tile.node.id})`;
             } else {
                 return `${count} tasks running on this node (${tile.node.id})`;
             }
