@@ -191,7 +191,6 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this.startTaskFailedError = null;
             this.unusableNodeError = null;
         } else {
-
             if (isStartTaskError && !isUnusableError) {
                 this.startTaskFailedError = {
                     failedStartTaskNodes, nodeCount,
