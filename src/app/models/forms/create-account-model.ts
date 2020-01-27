@@ -13,7 +13,7 @@ export interface CreateAccountModel {
 
 export function createAccountFormToJsonData(formData: CreateAccountModel): AccountCreateDto {
     const data: any = {
-        location: formData.location.name,
+        location: formData.location,
     };
 
     if (formData.storageAccountId) {

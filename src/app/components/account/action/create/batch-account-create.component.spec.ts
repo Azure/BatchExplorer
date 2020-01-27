@@ -34,7 +34,7 @@ describe("BatchAccountCreateComponent ", () => {
 
     beforeEach(() => {
         accountServiceSpy = {
-            putResourcGroup: jasmine.createSpy("putResourcGroup").and.callFake((sub, rg, body) => {
+            putResourceGroup: jasmine.createSpy("putResourceGroup").and.callFake((sub, rg, body) => {
                 if (sub.subscriptionId === "mock-bad-subscription") {
                     const options = {
                         status: 400,
