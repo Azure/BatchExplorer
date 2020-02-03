@@ -72,7 +72,7 @@ export const DEFAULT_BE_USER_CONFIGURATION: BEUserDesktopConfiguration = {
     },
     update: {
         channel: null,
-        updateOnQuit: false,
+        updateOnQuit: true,
     },
     storage: {
         defaultUploadContainer: "batch-explorer-input",

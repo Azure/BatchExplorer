@@ -68,7 +68,7 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
         app.commandLine.appendSwitch("ignore-certificate-errors", "true");
     }
 
-    if (args.doNotAutoupdate) {
+    if (args.disableAutoupdate) {
         log.warn("Application will not autoupdate");
         autoUpdater.autoInstallOnAppQuit = false;
     }
