@@ -1,5 +1,5 @@
 import { platformDynamicServer } from "@angular/platform-server";
-import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
+import { LocaleService, TranslationsLoaderService, UserConfigurationService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { MainApplicationMenu } from "client/menu";
@@ -68,11 +68,6 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
         app.commandLine.appendSwitch("ignore-certificate-errors", "true");
     }
 
-    if (args.disableAutoupdate) {
-        log.warn("Application will not autoupdate");
-        autoUpdater.autoInstallOnAppQuit = false;
-    }
-
     const module = await platformDynamicServer().bootstrapModule(BatchExplorerClientModule);
     const localeService = module.injector.get(LocaleService) as ClientLocaleService;
     await localeService.load();
@@ -80,6 +75,14 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
     await translationLoader.load();
     const batchExplorerApp = module.injector.get(BatchExplorerApplication);
     const menu = module.injector.get(MainApplicationMenu);
+
+    if (args.disableAutoupdate) {
+        log.warn("Application will not autoupdate");
+        autoUpdater.autoInstallOnAppQuit = false;
+        const userConfigService = module.injector.get(UserConfigurationService);
+        userConfigService.set("updateOnQuit", false);
+    }
+
     initializeServices(module.injector);
 
     setupSingleInstance(batchExplorerApp);
