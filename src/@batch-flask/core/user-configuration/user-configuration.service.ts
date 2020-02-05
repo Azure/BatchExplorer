@@ -18,8 +18,6 @@ export interface BatchFlaskUserConfiguration {
     };
 
     fileAssociations?: Array<{extension: string, type: string}>;
-
-    updateOnQuit?: boolean;
 }
 
 export interface UserConfigurationStore<T> {
