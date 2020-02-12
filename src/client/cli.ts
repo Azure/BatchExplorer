@@ -14,7 +14,7 @@ export interface BatchExplorerArgs {
 export function parseArguments(argv: string[]): BatchExplorerArgs {
     return commander
         .version(app.getVersion())
-        .option("--disable-autoupdate", "Disables autoupdate for one instance of opening the application")
+        .option("--disable-auto-update", "Disables autoupdate for one instance of opening the application")
         .option("--updated", "If the application was just updated")
         .option("--user-data-dir <path>", "Change the user data directory. Used for tests")
         .option("--ignore-certificate-errors", "Ignore https certificate errors")
