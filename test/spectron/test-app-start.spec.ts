@@ -65,7 +65,8 @@ describe("Bundled application is starting correctly", () => {
         await app.client.windowByIndex(MAIN_WINDOW_INDEX);
         expect(await app.browserWindow.isVisible()).toBe(true);
         expect(await app.browserWindow.getTitle()).toEqual("Batch Explorer");
-        await app.client.waitUntilTextExists("bl-account-list .quick-list-row-title", "prodtest1", 60_000);
+        // await app.client.waitUntilTextExists("bl-account-list .quick-list-row-title", "prodtest1", 60_000);
+        await app.client.waitUntilTextExists("bl-account-list .quick-list-row-title", "aprodtest1", 60_000);
 
     });
 
