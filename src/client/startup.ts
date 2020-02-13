@@ -68,6 +68,11 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
         app.commandLine.appendSwitch("ignore-certificate-errors", "true");
     }
 
+    if (args.disableAutoupdate) {
+        log.warn("Application will not autoupdate");
+        autoUpdater.autoInstallOnAppQuit = false;
+    }
+
     const module = await platformDynamicServer().bootstrapModule(BatchExplorerClientModule);
     const localeService = module.injector.get(LocaleService) as ClientLocaleService;
     await localeService.load();
