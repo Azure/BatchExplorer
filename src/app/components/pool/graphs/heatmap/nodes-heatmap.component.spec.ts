@@ -144,7 +144,7 @@ describe("NodesHeatmapComponent", () => {
             const title = group.select("title");
 
             expect(title).not.toBeFalsy("Should have a rect in bg");
-            expect(title.text()).toContain("2 tasks running on this node");
+            expect(title.text()).toContain("2 tasks running on node");
         });
     });
 
