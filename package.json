@@ -122,7 +122,7 @@
     "mini-css-extract-plugin": "^0.5.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "node-fetch": "^2.3.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "nyc": "^14.0.0",
     "proxyquire": "^2.1.0",
     "raw-loader": "^1.0.0",
