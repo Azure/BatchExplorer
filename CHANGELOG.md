@@ -3,16 +3,15 @@
 
 ### feature:
 
+* Display Unusable Node Banner on Pools Page [\#2153](https://github.com/Azure/BatchExplorer/issues/2153)
+* Disable Auto-update with Command Line [\#2152](https://github.com/Azure/BatchExplorer/issues/2152)
 
 ### bug:
 
-
-### other:
-
 * PyInstaller Vulnerability [\#2155](https://github.com/Azure/BatchExplorer/issues/2155)
 * Governance Updates [\#2154](https://github.com/Azure/BatchExplorer/issues/2154)
-* Display Unusable Node Banner on Pools Page [\#2153](https://github.com/Azure/BatchExplorer/issues/2153)
-* Disable Auto-update with Command Line [\#2152](https://github.com/Azure/BatchExplorer/issues/2152)
+
+### other:
 
 # 2.5.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/39?closed=1)
