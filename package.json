@@ -121,6 +121,7 @@
     "merge2": "^1.2.3",
     "mini-css-extract-plugin": "^0.5.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
+    "node": "^8.15.0",
     "node-fetch": "^2.3.0",
     "node-sass": "^4.13.1",
     "nyc": "^14.0.0",
