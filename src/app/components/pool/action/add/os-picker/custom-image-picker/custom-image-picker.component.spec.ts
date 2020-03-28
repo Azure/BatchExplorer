@@ -49,7 +49,7 @@ const skus = [
     new ImageInformation({nodeAgentSKUId:  "batch.windows" }),
 ];
 
-describe("CustomImagePickerComponent", () => {
+fdescribe("CustomImagePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;

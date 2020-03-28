@@ -92,9 +92,9 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
                 if (!subscriptionId || !location) {
                     return of([]);
                 }
-                const customImages = this.computeService.listCustomImages(subscriptionId, location);
+                // const customImages = this.computeService.listCustomImages(subscriptionId, location);
                 const sigImages = this.computeService.listSIG(subscriptionId, location);
-                return forkJoin(customImages, sigImages, (images, sigVersions) => [...images, ...sigVersions]);
+                return forkJoin(sigImages, (images, sigVersions) => [...images, ...sigVersions]);
             }),
         ).subscribe({
             next: (resources) => {
