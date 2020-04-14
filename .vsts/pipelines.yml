@@ -8,7 +8,7 @@ jobs:
 
   - job: MacOS
     pool:
-      vmImage: macos10.15
+      vmImage: macOS-10.15
     steps:
        - template: ./darwin/ci.yml
 
