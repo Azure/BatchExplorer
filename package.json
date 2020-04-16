@@ -69,7 +69,7 @@
     "node": ">=6.0.0"
   },
   "devDependencies": {
-    "@ngtools/webpack": "^8.3.8",
+    "@ngtools/webpack": "^9.1.0",
     "@types/chart.js": "^2.7.45",
     "@types/chokidar": "^1.7.5",
     "@types/colors": "^1.2.1",
@@ -168,7 +168,7 @@
     "commander": "^2.19.0",
     "d3": "^5.8.0",
     "decode-uri-component": "^0.2.0",
-    "download": "^7.1.0",
+    "download": "^8.0.0",
     "electron-updater": "^4.0.6",
     "element-resize-detector": "^1.1.15",
     "extract-zip": "^1.6.7",
