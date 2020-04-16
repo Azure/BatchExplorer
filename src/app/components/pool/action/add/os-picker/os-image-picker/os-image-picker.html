@@ -24,7 +24,7 @@
         </bl-os-offer-tile>
     </mat-tab>
     <mat-tab label="Custom image">
-        <bl-custom-image-picker [ngModel]="customImage" (ngModelChange)="pickCustomImage($event)"></bl-custom-image-picker>
+        <bl-custom-image-picker [ngModel]="sigImage" (ngModelChange)="pickSigImage($event)"></bl-custom-image-picker>
     </mat-tab>
 </mat-tab-group>
 <p *ngIf="selectedSku" style="padding-top: 10px;">

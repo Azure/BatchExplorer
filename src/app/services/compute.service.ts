@@ -64,7 +64,6 @@ export interface ComputeUsage {
 }
 
 const computeProvider = "Microsoft.Compute";
-// const computeImageProvider = computeProvider + "/images";
 const computeGalleryImageVersionProvider = computeProvider + "/galleries/images/versions";
 
 @Injectable({providedIn: "root"})
@@ -104,26 +103,6 @@ public number;
             share(),
         );
     }
-
-    // public listCustomImages(subscriptionId: string, location: string): Observable<Resource[]> {
-    //     const params = new HttpParams()
-    //         .set("$filter", `resourceType eq '${computeImageProvider}' and location eq '${location}'`);
-    //     const options = { params };
-
-    //     return this.subscriptionService.get(subscriptionId).pipe(
-    //         flatMap((subscription) => {
-    //             return this.azure.get<ArmListResponse>(subscription, resourceUrl(subscriptionId), options).pipe(
-    //                 expand(obs => {
-    //                     return obs.nextLink ? this.azure.get(subscription, obs.nextLink, options) : empty();
-    //                 }),
-    //                 reduce((images, response: ArmListResponse<Resource>) => {
-    //                     return [...images, ...response.value];
-    //                 }, []),
-    //             );
-    //         }),
-    //         share(),
-    //     );
-    // }
 
     public _filterSIGVersions(armSubscription: ArmSubscription, armLocation: ArmLocation, filterLocation: string) {
         const params = new HttpParams()

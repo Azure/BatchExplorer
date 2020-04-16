@@ -2,12 +2,12 @@
     <bl-form-field>
         <bl-select
             class="image-id-picker"
-            placeholder="{{'custom-image-picker.customImage.label' | i18n}}"
-            [formControl]="customImage"
+            placeholder="{{'custom-image-picker.sigImage.label' | i18n}}"
+            [formControl]="sigImage"
             attr.aria-describedby="{{id}}-error-msg">
 
-            <bl-option *ngFor="let image of customImages;trackBy: trackResource" [value]="image.id" [label]="image.name"></bl-option>
-            <bl-option  *ngIf="customImages.length === 0" [disabled]="true" [label]="'custom-image-picker.noCustomImageAvailable' | i18n"></bl-option>
+            <bl-option *ngFor="let image of sigImages;trackBy: trackResource" [value]="image.id" [label]="image.name"></bl-option>
+            <bl-option  *ngIf="sigImages.length === 0" [disabled]="true" [label]="'custom-image-picker.noSigImageAvailable' | i18n"></bl-option>
         </bl-select>
     </bl-form-field>
     <bl-form-field>
@@ -23,5 +23,5 @@
     </bl-form-field>
 </div>
 <div *ngIf="loadingStatus === LoadingStatus.Error" id="{{id}}-error-msg" style="padding: 10px;">
-    {{ customImagesErrorMsg }}
+    {{ sigImagesErrorMsg }}
 </div>
