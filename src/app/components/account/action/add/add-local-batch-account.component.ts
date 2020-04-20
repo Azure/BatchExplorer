@@ -25,7 +25,7 @@ export class AddLocalBatchAccountComponent {
         this.form = formBuilder.group({
             displayName: [""],
             name: ["", Validators.required],
-            url: ["", [Validators.required, Validators.pattern(UrlUtils.URL_REGEX)]],
+            url: ["", {validators: [Validators.required, Validators.pattern(UrlUtils.URL_REGEX)], updateOn: "blur"}],
             key: ["", Validators.required],
         });
     }
