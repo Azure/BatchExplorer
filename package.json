@@ -16,7 +16,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "2.5.0",
+  "version": "2.6.0",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json --files",
@@ -69,7 +69,7 @@
     "node": ">=6.0.0"
   },
   "devDependencies": {
-    "@ngtools/webpack": "^8.3.8",
+    "@ngtools/webpack": "^9.1.0",
     "@types/chart.js": "^2.7.45",
     "@types/chokidar": "^1.7.5",
     "@types/colors": "^1.2.1",
@@ -106,7 +106,7 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine": "~3.3.1",
     "jasmine-spec-reporter": "^4.2.1",
-    "karma": "^4.0.1",
+    "karma": "^4.4.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
     "karma-electron": "^6.0.0",
@@ -122,7 +122,7 @@
     "mini-css-extract-plugin": "^0.5.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "node-fetch": "^2.3.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "nyc": "^14.0.0",
     "proxyquire": "^2.1.0",
     "raw-loader": "^1.0.0",
@@ -167,7 +167,7 @@
     "commander": "^2.19.0",
     "d3": "^5.8.0",
     "decode-uri-component": "^0.2.0",
-    "download": "^7.1.0",
+    "download": "^8.0.0",
     "electron-updater": "^4.0.6",
     "element-resize-detector": "^1.1.15",
     "extract-zip": "^1.6.7",
