@@ -13,7 +13,7 @@ import { BatchAccountService, ComputeService, PoolOsService } from "app/services
 import { Subject, of } from "rxjs";
 import { distinctUntilChanged, switchMap, takeUntil } from "rxjs/operators";
 
-import "./custom-image-picker.scss";
+import "./sig-image-picker.scss";
 
 export interface SigImageSelection {
     imageId: string;
@@ -23,16 +23,16 @@ export interface SigImageSelection {
 let idCounter = 0;
 
 @Component({
-    selector: "bl-custom-image-picker",
-    templateUrl: "custom-image-picker.html",
+    selector: "bl-sig-image-picker",
+    templateUrl: "sig-image-picker.html",
     providers: [
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => CustomImagePickerComponent), multi: true },
-        { provide: NG_VALIDATORS, useExisting: forwardRef(() => CustomImagePickerComponent), multi: true },
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SigImagePickerComponent), multi: true },
+        { provide: NG_VALIDATORS, useExisting: forwardRef(() => SigImagePickerComponent), multi: true },
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
-    @Input() public id = `bl-custom-image-picker-${idCounter++}`;
+export class SigImagePickerComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
+    @Input() public id = `bl-sig-image-picker-${idCounter++}`;
 
     public sigImages: Resource[] = [];
     public supportedImages: ImageInformation[] = [];

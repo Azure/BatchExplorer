@@ -1,4 +1,4 @@
-custom-image-picker:
+sig-image-picker:
   sigImage:
     label: Image
   nodeAgentSku:

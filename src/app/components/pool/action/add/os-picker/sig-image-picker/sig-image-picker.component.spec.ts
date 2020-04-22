@@ -8,10 +8,10 @@ import { ArmBatchAccount, ArmSubscription, ImageInformation, Resource } from "ap
 import { BatchAccountService, ComputeService, PoolOsService } from "app/services";
 import { List } from "immutable";
 import { of } from "rxjs";
-import { CustomImagePickerComponent } from "./custom-image-picker.component";
+import { SigImagePickerComponent } from "./sig-image-picker.component";
 
 @Component({
-    template: `<bl-custom-image-picker [formControl]="control"></bl-custom-image-picker>`,
+    template: `<bl-sig-image-picker [formControl]="control"></bl-sig-image-picker>`,
 })
 class TestComponent {
     public control = new FormControl();
@@ -19,25 +19,16 @@ class TestComponent {
 
 const sub1 = new ArmSubscription({ id: "/subs/sub-1", subscriptionId: "sub-1" });
 
-const images: Resource[] = [
-    {
-        id: "/sub/sub-1/resources/image-1",
-        location: "westus",
-        name: "Ubuntu custom image",
-        type: "Microsoft.Compute/image",
-    },
-    {
-        id: "/sub/sub-1/resources/image-2",
-        location: "westus",
-        name: "CentOS custom image",
-        type: "Microsoft.Compute/image",
-    },
-];
-
 const sigVersions: Resource[] = [
     {
-        id: "/sub/sub-1/resources/test/providers/Microsoft.Compute/galleries/test/images/tesimage/versions/1.12.1",
+        id: "/sub/sub-1/resources/test/providers/Microsoft.Compute/galleries/test/images/testimage/versions/1.12.1",
         name: "test/testimage/1.12.1",
+        type: "Microsoft.Compute/galleries/images/versions",
+        location: "westus",
+    },
+    {
+        id: "/sub/sub-1/resources/test/providers/Microsoft.Compute/galleries/test/images/testimage/versions/1.12.2",
+        name: "test/testimage/1.12.2",
         type: "Microsoft.Compute/galleries/images/versions",
         location: "westus",
     },
@@ -49,7 +40,7 @@ const skus = [
     new ImageInformation({nodeAgentSKUId:  "batch.windows" }),
 ];
 
-fdescribe("CustomImagePickerComponent", () => {
+describe("SigImagePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -63,7 +54,6 @@ fdescribe("CustomImagePickerComponent", () => {
 
     beforeEach(() => {
         computeServiceSpy = {
-            listCustomImages: jasmine.createSpy("listCustomImages").and.returnValue(of(images)),
             listSIG: jasmine.createSpy("listSIG").and.returnValue(of(sigVersions)),
         };
 
@@ -82,7 +72,7 @@ fdescribe("CustomImagePickerComponent", () => {
         };
         TestBed.configureTestingModule({
             imports: [SelectModule, ReactiveFormsModule, FormsModule, FormModule, I18nTestingModule],
-            declarations: [CustomImagePickerComponent, TestComponent],
+            declarations: [SigImagePickerComponent, TestComponent],
             providers: [
                 { provide: ComputeService, useValue: computeServiceSpy },
                 { provide: PoolOsService, useValue: poolOSServiceSpy },
@@ -91,7 +81,7 @@ fdescribe("CustomImagePickerComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bl-custom-image-picker"));
+        de = fixture.debugElement.query(By.css("bl-sig-image-picker"));
         fixture.detectChanges();
 
         imageSelectEl = de.query(By.css(".image-id-picker"));
@@ -107,11 +97,10 @@ fdescribe("CustomImagePickerComponent", () => {
     });
 
     it("list the available images", () => {
-        expect(imageSelect.options.length).toEqual(3);
+        expect(imageSelect.options.length).toEqual(2);
         const options = imageSelect.options.toArray();
-        expect(options[0].label).toEqual("Ubuntu custom image");
-        expect(options[1].label).toEqual("CentOS custom image");
-        expect(options[2].label).toEqual("test/testimage/1.12.1");
+        expect(options[0].label).toEqual("test/testimage/1.12.1");
+        expect(options[1].label).toEqual("test/testimage/1.12.2");
     });
 
     it("list the available skus", () => {
@@ -125,19 +114,19 @@ fdescribe("CustomImagePickerComponent", () => {
     it("updating select will emit value", () => {
         imageSelect.selectOption(imageSelect.options.toArray()[0]);
         expect(testComponent.control.value).toEqual({
-            imageId: images[0].id,
+            imageId: sigVersions[0].id,
             nodeAgentSku: null,
         });
         imageInformationSelect.selectOption(imageInformationSelect.options.toArray()[1]);
         expect(testComponent.control.value).toEqual({
-            imageId: images[0].id,
+            imageId: sigVersions[0].id,
             nodeAgentSku: "batch.ubuntu",
         });
     });
 
-    it("updates select when updating parent compoennt", () => {
+    it("updates select when updating parent component", () => {
         testComponent.control.setValue({
-            imageId: images[1].id,
+            imageId: sigVersions[1].id,
             nodeAgentSku: "batch.centos",
         });
         fixture.detectChanges();

@@ -4,7 +4,7 @@ import { ImageInformation, Offer, PoolOsSkus, Resource, Sku } from "app/models";
 import { PoolOsService } from "app/services";
 import { Subject, Subscription } from "rxjs";
 import { startWith, takeUntil } from "rxjs/operators";
-import { SigImageSelection } from "../custom-image-picker";
+import { SigImageSelection } from "../sig-image-picker";
 
 import "./os-image-picker.scss";
 
