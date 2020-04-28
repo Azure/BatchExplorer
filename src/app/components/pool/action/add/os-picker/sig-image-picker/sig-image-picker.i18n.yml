@@ -1,7 +1,7 @@
-custom-image-picker:
-  customImage:
+sig-image-picker:
+  sigImage:
     label: Image
   nodeAgentSku:
     label: Node agent
   errorLoading: Server encountered an error loading custom images, please try again later.
-  noCustomImageAvailable: No custom images in the region for this account
+  noSigImageAvailable: No custom images in the region for this account

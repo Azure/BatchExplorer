@@ -3,12 +3,12 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatMenuModule, MatTabsModule } from "@angular/material";
 import { BaseModule, FormModule, I18nUIModule, SelectModule } from "@batch-flask/ui";
-import { CustomImagePickerComponent, DataDiskPickerComponent, OsOfferTileComponent, PoolOsPickerComponent } from ".";
+import { DataDiskPickerComponent, OsOfferTileComponent, PoolOsPickerComponent, SigImagePickerComponent } from ".";
 import { ContainerConfigurationPickerModule } from "../container-configuration-picker";
 import { OSImagePickerComponent } from "./os-image-picker";
 
 const publicComponents = [
-    CustomImagePickerComponent,
+    SigImagePickerComponent,
     PoolOsPickerComponent,
     DataDiskPickerComponent,
 ];

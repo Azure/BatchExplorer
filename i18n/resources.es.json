@@ -39,7 +39,7 @@
   "common.yes": "Sí",
   "create-new-aad-app.create": "Crear",
   "create-new-aad-app.title": "Crear una aplicación nueva",
-  "custom-image-picker.customImage.label": "Imagen",
+  "sig-image-picker.sigImage.label": "Imagen",
   "datetime-picker.currentTimeZone": "Zona horaria actual",
   "datetime-picker.date": "Fecha",
   "datetime-picker.time": "Tiempo",

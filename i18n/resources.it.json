@@ -27,7 +27,7 @@
   "common.yes": "Sì",
   "create-new-aad-app.create": "Crea",
   "create-new-aad-app.title": "Crea una nuova applicazione",
-  "custom-image-picker.customImage.label": "Immagine",
+  "sig-image-picker.sigImage.label": "Immagine",
   "datetime-picker.currentTimeZone": "Fuso orario corrente",
   "duration-picker.unit.custom": "Personalizzato (formato ISO)",
   "duration-picker.unit.days": "Giorni",

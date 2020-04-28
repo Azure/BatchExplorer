@@ -26,7 +26,7 @@ class TestComponent {
 }
 
 @Component({
-    selector: "bl-custom-image-picker", template: "",
+    selector: "bl-sig-image-picker", template: "",
     providers: [controlValueAccessorProvider(() => FakeCustomImagePickerComponent)],
 })
 class FakeCustomImagePickerComponent extends MockControlValueAccessorComponent<any> {

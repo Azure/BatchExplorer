@@ -14,7 +14,7 @@
   "common.none": "brak",
   "common.refreshing": "Odświeżanie",
   "common.yes": "Tak",
-  "custom-image-picker.customImage.label": "Obraz",
+  "sig-image-picker.sigImage.label": "Obraz",
   "datetime-picker.currentTimeZone": "Bieżąca strefa czasowa",
   "duration-picker.unit.custom": "Niestandardowe (format ISO)",
   "duration-picker.unit.days": "Dni",
