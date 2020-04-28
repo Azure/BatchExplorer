@@ -20,10 +20,6 @@ steps:
               "operationSetCode": "SigntoolSign",
               "parameters": [
               {
-                  "parameterName":"FileDigest",
-                  "parameterValue":"/fd \"SHA256\""
-              },
-              {
                   "parameterName": "OpusName",
                   "parameterValue": "Microsoft"
               },
@@ -36,8 +32,8 @@ steps:
                   "parameterValue": "/NPH"
               },
               {
-                  "parameterName":"TimeStamp",
-                  "parameterValue":"/tr\"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                  "parameterName": "TimeStamp",
+                  "parameterValue": "/t \"http://ts4096.gtm.microsoft.com/TSS/AuthenticodeTS\""
               }
               ],
               "toolName": "sign",
