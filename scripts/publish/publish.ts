@@ -126,7 +126,7 @@ async function commitChanges() {
 }
 
 async function push() {
-    await run(`git push -u`);
+    await run(`git push --set-upstream origin`);
 }
 
 async function createIssueIfNot(millestoneId, version) {

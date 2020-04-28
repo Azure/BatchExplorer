@@ -1,3 +1,15 @@
+# 2.7.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/41?closed=1)
+
+### feature:
+
+
+### bug:
+
+
+### other:
+
+
 # 2.6.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/40?closed=1)
 
