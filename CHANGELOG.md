@@ -1,14 +1,11 @@
 # 2.7.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/41?closed=1)
 
-### feature:
-
-
 ### bug:
-
+* Fix issue where the image selector when creating pools only showed verified images [\#2169](https://github.com/Azure/BatchExplorer/pull/2169)
 
 ### other:
-
+* Remove support for managed images kind of custom images as this will no longer be supported by latest API's. Customers should switch to using Shared Image Galleries, which are the latest form of custom image support (https://docs.microsoft.com/en-us/azure/batch/batch-sig-images) or can disable updates (introduced in version 2.6.0) for the short term. [\#2153](https://github.com/Azure/BatchExplorer/issues/2153)
 
 # 2.6.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/40?closed=1)
