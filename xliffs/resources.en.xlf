@@ -265,27 +265,6 @@
       <trans-unit id="create-new-aad-app.title">
         <source>Create a new application</source>
       </trans-unit>
-      <trans-unit id="custom-image-picker">
-        <source/>
-      </trans-unit>
-      <trans-unit id="custom-image-picker.customImage">
-        <source/>
-      </trans-unit>
-      <trans-unit id="custom-image-picker.customImage.label">
-        <source>Image</source>
-      </trans-unit>
-      <trans-unit id="custom-image-picker.errorLoading">
-        <source>Server encountered an error loading custom images, please try again later.</source>
-      </trans-unit>
-      <trans-unit id="custom-image-picker.noCustomImageAvailable">
-        <source>No custom images in the region for this account</source>
-      </trans-unit>
-      <trans-unit id="custom-image-picker.nodeAgentSku">
-        <source/>
-      </trans-unit>
-      <trans-unit id="custom-image-picker.nodeAgentSku.label">
-        <source>Node agent</source>
-      </trans-unit>
       <trans-unit id="datetime-picker">
         <source/>
       </trans-unit>
@@ -1002,6 +981,27 @@
       </trans-unit>
       <trans-unit id="settings.title">
         <source>Settings</source>
+      </trans-unit>
+      <trans-unit id="sig-image-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="sig-image-picker.errorLoading">
+        <source>Server encountered an error loading custom images, please try again later.</source>
+      </trans-unit>
+      <trans-unit id="sig-image-picker.noSigImageAvailable">
+        <source>No custom images in the region for this account</source>
+      </trans-unit>
+      <trans-unit id="sig-image-picker.nodeAgentSku">
+        <source/>
+      </trans-unit>
+      <trans-unit id="sig-image-picker.nodeAgentSku.label">
+        <source>Node agent</source>
+      </trans-unit>
+      <trans-unit id="sig-image-picker.sigImage">
+        <source/>
+      </trans-unit>
+      <trans-unit id="sig-image-picker.sigImage.label">
+        <source>Image</source>
       </trans-unit>
       <trans-unit id="storage-error-display">
         <source/>
