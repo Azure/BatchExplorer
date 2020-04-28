@@ -1,6 +1,7 @@
 import { ObjectUtils } from "@batch-flask/utils";
 import { List } from "immutable";
-import { ImageInformation, VerificationType } from "./image-information";
+import { ImageInformation } from "./image-information";
+import { ImageReference } from "./image-reference";
 
 const dataScienceVms = {
     "linux-data-science-vm": {
@@ -28,6 +29,7 @@ const dockerContainer = {
         "2019-datacenter-core-with-containers",
         "2019-datacenter-core-with-containers-smalldisk",
     ],
+    "windowsserversemiannual": ["datacenter-core-1809-with-containers-smalldisk"],
     "centos-container-rdma": true,
     "centos-container": true,
     "ubuntu-server-container": true,
@@ -60,30 +62,74 @@ export class PoolOsSkus {
          * Split current offer to normal offer and docker offer because some docker container must be displayed
          * in a seperate container configuration tab
          */
+        //  TODO: Eventually we should have either a check box (similar to portal) specifying whether to load
+        //        unverified images, or add some visual indicator to those which are unverified.
         let targetOffers: StringMap<Offer> | null = null;
         images.forEach((image: ImageInformation) => {
-            if (image.verificationType === VerificationType.Verified) {
-                const imageReference =  image.imageReference;
-                targetOffers = offers;
-                if (dockerContainer[imageReference.offer]
-                    && (dockerContainer[imageReference.offer] === true
-                        || dockerContainer[imageReference.offer].includes(imageReference.sku))) {
-                    targetOffers = dockerOffers;
-                }
-                if (!(imageReference.offer in targetOffers)) {
-                    targetOffers[imageReference.offer] = {
-                        name: imageReference.offer,
-                        publisher: imageReference.publisher,
-                        skus: [],
-                    };
-                }
-                const offer = targetOffers[imageReference.offer];
-                offer.skus.push({
-                    name: imageReference.sku,
-                    nodeAgentId: image.nodeAgentSKUId,
-                    osType: image.osType,
+            let imageReference = image.imageReference;
+            // Do some manual cleanup here as some images made breaking name changes
+            // (causes UI to not collate same offer)
+            if (imageReference.offer.includes("dsvm-win")) {
+                imageReference = new ImageReference({
+                    publisher: imageReference.publisher,
+                    sku: imageReference.sku,
+                    offer: "dsvm-windows",
+                    version: imageReference.version,
+                    virtualMachineImageId: imageReference.virtualMachineImageId,
+                });
+            } else if (imageReference.publisher === "microsoft-dsvm" && (imageReference.offer.includes("ubuntu"))) {
+                imageReference = new ImageReference({
+                    publisher: imageReference.publisher,
+                    sku: imageReference.sku,
+                    offer: "linux-data-science-vm-ubuntu",
+                    version: imageReference.version,
+                    virtualMachineImageId: imageReference.virtualMachineImageId,
+                });
+            } else if (imageReference.offer === "windowsserversemiannual") {
+                imageReference = new ImageReference({
+                    publisher: imageReference.publisher,
+                    sku: imageReference.sku,
+                    offer: "windowsserver",
+                    version: imageReference.version,
+                    virtualMachineImageId: imageReference.virtualMachineImageId,
+                });
+            } else if (imageReference.offer === "debian-10") {
+                imageReference = new ImageReference({
+                    publisher: imageReference.publisher,
+                    sku: imageReference.sku,
+                    offer: "debian",
+                    version: imageReference.version,
+                    virtualMachineImageId: imageReference.virtualMachineImageId,
                 });
             }
+            if (imageReference.sku === "linuxdsvmubuntu" && image.nodeAgentSKUId.includes("16.04")) {
+                imageReference = new ImageReference({
+                    publisher: imageReference.publisher,
+                    sku: "16.04",
+                    offer: imageReference.offer,
+                    version: imageReference.version,
+                    virtualMachineImageId: imageReference.virtualMachineImageId,
+                });
+            }
+            targetOffers = offers;
+            if (dockerContainer[imageReference.offer]
+                && (dockerContainer[imageReference.offer] === true
+                    || dockerContainer[imageReference.offer].includes(imageReference.sku))) {
+                targetOffers = dockerOffers;
+            }
+            if (!(imageReference.offer in targetOffers)) {
+                targetOffers[imageReference.offer] = {
+                    name: imageReference.offer,
+                    publisher: imageReference.publisher,
+                    skus: [],
+                };
+            }
+            const offer = targetOffers[imageReference.offer];
+            offer.skus.push({
+                name: imageReference.sku,
+                nodeAgentId: image.nodeAgentSKUId,
+                osType: image.osType,
+            });
         });
 
         this.allOffers = ObjectUtils.values(offers);
