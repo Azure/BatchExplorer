@@ -37,7 +37,7 @@ steps:
               },
               {
                   "parameterName":"TimeStamp",
-                  "parameterValue":“/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                  "parameterValue":"/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
               }
               ],
               "toolName": "sign",
