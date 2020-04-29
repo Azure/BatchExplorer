@@ -20,7 +20,7 @@
   "common.updated": "Updated",
   "common.yes": "Ja",
   "create-new-aad-app.create": "Erstellen",
-  "custom-image-picker.customImage.label": "Bild",
+  "sig-image-picker.sigImage.label": "Bild",
   "datetime-picker.date": "Date",
   "datetime-picker.time": "Zeit",
   "duration-picker.unit.custom": "Benutzerdefiniert (ISO-Format)",

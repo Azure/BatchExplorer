@@ -125,8 +125,8 @@ async function commitChanges() {
     await run(`git commit --allow-empty -am "Updated changelog and version."`);
 }
 
-async function push() {
-    await run(`git push -u`);
+async function push(branchName: string) {
+    await run(`git push --set-upstream origin ${branchName}`);
 }
 
 async function createIssueIfNot(millestoneId, version) {
@@ -180,7 +180,7 @@ async function startPublish() {
     await updateChangeLog(version, millestoneId);
     await updateThirdParty();
     await commitChanges();
-    await push();
+    await push(releaseBranch);
     const issue = await createIssueIfNot(millestoneId, version);
     await createPullrequestIfNot(version, releaseBranch, issue);
     await buildApp();

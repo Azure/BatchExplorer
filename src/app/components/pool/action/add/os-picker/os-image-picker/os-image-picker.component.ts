@@ -4,7 +4,7 @@ import { ImageInformation, Offer, PoolOsSkus, Resource, Sku } from "app/models";
 import { PoolOsService } from "app/services";
 import { Subject, Subscription } from "rxjs";
 import { startWith, takeUntil } from "rxjs/operators";
-import { CustomImageSelection } from "../custom-image-picker";
+import { SigImageSelection } from "../sig-image-picker";
 
 import "./os-image-picker.scss";
 
@@ -79,7 +79,7 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
         return this._imageInformationMap.dockerOffers;
     }
 
-    public customImage: CustomImageSelection;
+    public sigImage: SigImageSelection;
 
     private _imageInformationMap: PoolOsSkus = new PoolOsSkus();
     private _sub: Subscription;
@@ -116,7 +116,7 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
                     this.selectedFamilyName = item && item.name;
                 }
 
-                this._updateCustomImage();
+                this._updateSigImage();
 
                 this.changeDetector.markForCheck();
             });
@@ -174,7 +174,7 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    public pickCustomImage(result: CustomImageSelection | null) {
+    public pickSigImage(result: SigImageSelection | null) {
         if (!result) { return; }
 
         this.formGroup.patchValue({
@@ -200,16 +200,16 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
         return image.nodeAgentSKUId;
     }
 
-    private _updateCustomImage() {
+    private _updateSigImage() {
         const config = this.formGroup.value.virtualMachineConfiguration;
         const ref = config && config.imageReference;
         if (ref && ref.virtualMachineImageId) {
-            this.customImage = {
+            this.sigImage = {
                 imageId: ref.virtualMachineImageId,
                 nodeAgentSku: config.nodeAgentSKUId,
             };
         } else {
-            this.customImage = null;
+            this.sigImage = null;
         }
     }
     private _clearSub() {

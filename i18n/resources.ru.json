@@ -19,7 +19,7 @@
   "common.updated": "Обновлен",
   "common.yes": "Да",
   "create-new-aad-app.create": "Создать",
-  "custom-image-picker.customImage.label": "Образ",
+  "sig-image-picker.sigImage.label": "Образ",
   "datetime-picker.date": "Дата",
   "datetime-picker.time": "Время",
   "duration-picker.unit.custom": "Пользовательский (ISO формат)",

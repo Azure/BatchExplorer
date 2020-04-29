@@ -22,7 +22,7 @@
   "common.yes": "Sim",
   "create-new-aad-app.create": "Criar",
   "create-new-aad-app.secret.label": "Segredo",
-  "custom-image-picker.customImage.label": "Imagem",
+  "sig-image-picker.sigImage.label": "Imagem",
   "duration-picker.unit.days": "dias",
   "duration-picker.unit.hours": "Horas",
   "duration-picker.unit.label": "Unidade",
