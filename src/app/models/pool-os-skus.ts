@@ -1,8 +1,5 @@
 import { ObjectUtils } from "@batch-flask/utils";
 import { List } from "immutable";
-<<<<<<< HEAD
-import { ImageInformation } from "./image-information";
-import { ImageReference } from "./image-reference";
 import { ImageInformation } from "./image-information";
 
 const dataScienceVms = {
