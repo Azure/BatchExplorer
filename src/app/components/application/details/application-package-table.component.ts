@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, OnChanges, OnDestroy } from "@angular/core";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { ListSelection, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
 import { BatchApplication, BatchApplicationPackage } from "app/models";

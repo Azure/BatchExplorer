@@ -12,7 +12,7 @@ import { take } from "rxjs/operators";
 
 function setupOSXSpecificMenu(template) {
     if (process.platform === "darwin") {
-        const name = app.getName();
+        const name = app.name;
         template.unshift({
             label: name,
             submenu: [
@@ -87,7 +87,7 @@ export class MainApplicationMenu {
                 { role: "copy" },
                 { role: "paste" },
                 { role: "delete" },
-                { role: "selectall" },
+                { role: "selectAll" },
                 { type: "separator" },
                 {
                     label: "Settings",

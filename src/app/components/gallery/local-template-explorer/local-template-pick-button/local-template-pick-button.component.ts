@@ -32,7 +32,7 @@ export class LocalTemplatePickButtonComponent {
     }
 
     public pickALocalTemplate() {
-        const files = this.notificationService.dialog.showOpenDialog({
+        const files = this.notificationService.dialog.showOpenDialogSync({
             filters: [
                 { extensions: ["json"], name: "Json (*.json)" },
                 { extensions: ["*"], name: "All files (*.*)" },

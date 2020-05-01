@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { autobind } from "@batch-flask/core";
 import { ElectronShell, FileSystemService } from "@batch-flask/electron";
 import { Activity, ActivityService } from "@batch-flask/ui/activity";

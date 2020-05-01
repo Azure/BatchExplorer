@@ -26,7 +26,7 @@ async function baseBuild(options?: electronBuilder.CliOptions) {
 async function createWindowsExecutable() {
     return baseBuild({
         dir: true,
-        platform: "windows",
+        win: ["exe"],
     });
 }
 

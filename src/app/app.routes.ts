@@ -36,22 +36,22 @@ export const routes: Routes = [
     {
         path: "jobs",
         canActivate: [RequireActiveBatchAccountGuard],
-        loadChildren: "./components/job/job.module#JobModule",
+        loadChildren: () => import("./components/job/job.module").then(m => m.JobModule),
     },
     {
         path: "jobschedules",
         canActivate: [RequireActiveBatchAccountGuard],
-        loadChildren: "./components/job-schedule/job-schedule.module#JobScheduleModule",
+        loadChildren: () => import("./components/job-schedule/job-schedule.module").then(m => m.JobScheduleModule),
     },
     {
         path: "pools",
         canActivate: [RequireActiveBatchAccountGuard],
-        loadChildren: "./components/pool/pool.module#PoolModule",
+        loadChildren: () => import("./components/pool/pool.module").then(m => m.PoolModule),
     },
     {
         path: "certificates",
         canActivate: [RequireActiveBatchAccountGuard],
-        loadChildren: "./components/certificate/certificate.module#CertificateModule",
+        loadChildren: () => import("./components/certificate/certificate.module").then(m => m.CertificateModule),
     },
     // Redirect for old Gallery URL not to break plugins using it
     {
@@ -71,25 +71,25 @@ export const routes: Routes = [
     {
         path: "gallery",
         canActivate: [RequireActiveBatchAccountGuard],
-        loadChildren: "./components/gallery/gallery.module#GalleryModule",
+        loadChildren: () => import("./components/gallery/gallery.module").then(m => m.GalleryModule),
     },
     {
         path: "applications",
         canActivate: [RequireActiveBatchAccountGuard],
-        loadChildren: "./components/application/application.module#ApplicationModule",
+        loadChildren: () => import("./components/application/application.module").then(m => m.ApplicationModule),
     },
     {
         path: "data",
         canActivate: [RequireActiveBatchAccountGuard],
-        loadChildren: "./components/data/data.module#DataModule",
+        loadChildren: () => import("./components/data/data.module").then(m => m.DataModule),
     },
     {
         path: "pools/:poolId/nodes",
-        loadChildren: "./components/node/node.module#NodeModule",
+        loadChildren: () => import("./components/node/node.module").then(m => m.NodeModule),
     },
     {
         path: "jobs/:jobId/tasks",
-        loadChildren: "./components/task/task.module#TaskModule",
+        loadChildren: () => import("./components/task/task.module").then(m => m.TaskModule),
     },
     {
         path: "theme/colors",

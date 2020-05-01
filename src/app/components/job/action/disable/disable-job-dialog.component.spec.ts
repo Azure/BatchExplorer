@@ -1,6 +1,6 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { By } from "@angular/platform-browser";
 import { ServerError } from "@batch-flask/core";
 import { DisableJobDialogComponent } from "app/components/job/action";

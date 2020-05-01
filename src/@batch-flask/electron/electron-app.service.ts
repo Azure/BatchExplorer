@@ -16,7 +16,10 @@ export class ElectronApp {
 
     }
 
-    public getPath(name: string): string {
+    public getPath(name:
+        "home" | "appData" | "userData" | "cache" | "temp" | "exe" |
+        "module" | "desktop" | "documents" | "downloads" | "music" |
+        "pictures" | "videos" | "logs" | "pepperFlashSystemPlugin"): string {
         return this._app.getPath(name);
     }
 }

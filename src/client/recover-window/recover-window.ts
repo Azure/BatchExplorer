@@ -35,6 +35,9 @@ export class RecoverWindow extends UniqueWindow {
             resizable: false,
             titleBarStyle: "hidden",
             frame: false,
+            webPreferences: {
+                nodeIntegration: true,
+            },
         });
         window.loadURL(url);
         window.webContents.once("dom-ready", () => {

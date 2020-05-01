@@ -18,7 +18,7 @@ export class ProxyCredentialsWindow extends UniqueWindow {
 
     protected createWindow() {
         const window = new BrowserWindow({
-            title: app.getName(),
+            title: app.name,
             height: 340,
             width: 340,
             icon: Constants.urls.icon,
@@ -26,6 +26,9 @@ export class ProxyCredentialsWindow extends UniqueWindow {
             titleBarStyle: "hidden",
             show: false,
             center: true,
+            webPreferences: {
+                nodeIntegration: true,
+            },
         });
         window.loadURL(url);
         window.once("ready-to-show", () => {

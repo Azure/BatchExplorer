@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { CertificateDecorator } from "app/decorators";
 import { Certificate } from "app/models";
 
-// tslint:disable:trackBy-function
+// tslint:disable:template-use-track-by-function
 @Component({
     selector: "bl-certificate-configuration",
     templateUrl: "certificate-configuration.html",

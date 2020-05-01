@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { Command, KeyBinding, KeyBindingsService } from "@batch-flask/core";
 import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";

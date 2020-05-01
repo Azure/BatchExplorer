@@ -118,11 +118,11 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
                         min: 0,
                         callback: (value) => {
                             if (value > 180) {
-                                if (value % 60 === 0) {
-                                    return value / 60 + "m";
+                                if (value as number % 60 === 0) {
+                                    return value as number / 60 + "m";
                                 }
                             } else {
-                                if (value % 1 === 0) {
+                                if (value as number % 1 === 0) {
                                     return value + "s";
                                 }
                             }

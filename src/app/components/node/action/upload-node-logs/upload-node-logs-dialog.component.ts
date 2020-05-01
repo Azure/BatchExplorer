@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { Activity, ActivityResponse, ActivityService } from "@batch-flask/ui";

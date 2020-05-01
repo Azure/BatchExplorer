@@ -1,6 +1,6 @@
-import { EventEmitter, Input, Output } from "@angular/core";
+import { Directive, EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { ServerError, autobind } from "@batch-flask/core";
 import { SidebarRef } from "../sidebar";
 
@@ -11,6 +11,9 @@ export interface GenericContainer {
      */
     destroy();
 }
+
+@Directive()
+// tslint:disable-next-line: directive-class-suffix
 export class FormBase {
     @Output() public done = new EventEmitter();
 

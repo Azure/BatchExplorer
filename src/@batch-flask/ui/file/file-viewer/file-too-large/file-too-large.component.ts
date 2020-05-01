@@ -25,25 +25,25 @@ export class FileTooLargeComponent {
         private notificationService: NotificationService,
     ) { }
 
-    public download() {
+    public async download() {
         this.downloading = true;
         this.changeDetector.markForCheck();
         const dialog = this.remote.dialog;
-        const pathToFile = dialog.showSaveDialog({
+        const saveDialog = await dialog.showSaveDialog({
             buttonLabel: "Download",
             // Set default filename of file to download
             defaultPath: this.file.name,
         });
 
-        if (!pathToFile) {
+        if (!saveDialog || !saveDialog.filePath) {
             return;
         }
-        this.fileLoader.download(pathToFile).subscribe(() => {
+        this.fileLoader.download(saveDialog.filePath).subscribe(() => {
             this.downloading = false;
             this.changeDetector.markForCheck();
 
-            this.shell.showItemInFolder(pathToFile);
-            this.notificationService.success("Download complete!", `File was saved locally at ${pathToFile}`);
+            this.shell.showItemInFolder(saveDialog.filePath);
+            this.notificationService.success("Download complete!", `File was saved locally at ${saveDialog.filePath}`);
         });
     }
 

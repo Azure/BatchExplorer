@@ -1,7 +1,7 @@
 import { app, dialog } from "electron";
 
 export function listenToSelectCertifcateEvent() {
-    app.on("select-client-certificate", (
+    app.on("select-client-certificate", async (
         event: Event,
         webcontents: Electron.WebContents,
         url: string,
@@ -13,11 +13,11 @@ export function listenToSelectCertifcateEvent() {
             return false;
         }
         event.preventDefault();
-        const picked = dialog.showMessageBox({
+        const picked = await dialog.showMessageBox({
             message: "Pick certificate",
             buttons: certificates.map(x => x.issuerName),
         });
 
-        callback(certificates[picked]);
+        callback(certificates[picked.response]);
     });
 }

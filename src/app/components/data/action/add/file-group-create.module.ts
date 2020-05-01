@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { MatCheckboxModule } from "@angular/material";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { ButtonsModule, FormModule } from "@batch-flask/ui";
 import { FileOrDirectoryPickerModule } from "../../shared/file-or-directory-picker";
 import { FileGroupCreateFormComponent } from "./file-group-create-form.component";

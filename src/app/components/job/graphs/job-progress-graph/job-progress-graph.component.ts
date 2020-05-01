@@ -88,7 +88,7 @@ export class JobProgressGraphComponent implements OnChanges {
                     position: "bottom",
                     ticks: {
                         min: 0,
-                        callback: (value) => {
+                        callback: (value: number) => {
                             const seconds = Math.floor(value / 1000);
                             if (seconds > 180) {
                                 if (seconds % 60 === 0) {
@@ -161,7 +161,8 @@ export class JobProgressGraphComponent implements OnChanges {
     }
 
     private _getToolTip(tooltipItem: Chart.ChartTooltipItem) {
-        const x = parseInt(tooltipItem.xLabel, 10);
+        const { xLabel, yLabel } = tooltipItem;
+        const x = typeof xLabel === "string" ? parseInt(xLabel, 10) : xLabel;
         let type: string;
         let task: Task;
         const time = DateUtils.prettyDuration(Duration.fromObject({ milliseconds: x }), true);
@@ -173,7 +174,7 @@ export class JobProgressGraphComponent implements OnChanges {
             type = "task completed";
         }
 
-        const taskCount = parseInt(tooltipItem.yLabel, 10);
+        const taskCount = typeof yLabel === "string" ? parseInt(yLabel, 10) : yLabel;
         const taskId = task ? task.id : "?";
         return [`${NumberUtils.nth(taskCount)} ${type} at ${time}`, `Task id: ${taskId}`];
     }

@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
+import { Component, DebugElement, Directive, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -26,8 +26,10 @@ const sizeC = { id: "size_c", name: "Size C", numberOfCores: 4, resourceDiskSize
 const sizeD = { id: "size_d", name: "Size D", numberOfCores: 2, resourceDiskSizeInMB: 4000 };
 
 // tslint:disable:component-class-suffix
-// tslint:disable:trackBy-function
+// tslint:disable:template-use-track-by-function
 
+@Directive()
+// tslint:disable-next-line: directive-class-suffix
 class BaseTestComponent {
     public sizes: any[] = [];
     public pickedSize: string;

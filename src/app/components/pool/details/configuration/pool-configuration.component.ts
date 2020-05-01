@@ -11,7 +11,7 @@ import { List } from "immutable";
 import { flatMap } from "rxjs/operators";
 import { EditAppPackageFormComponent, EditCertificateReferencesComponent } from "../../action/edit";
 
-// tslint:disable:trackBy-function
+// tslint:disable:template-use-track-by-function
 @Component({
     selector: "bl-pool-configuration",
     templateUrl: "pool-configuration.html",

@@ -63,7 +63,7 @@ export class MainWindow extends GenericWindow {
     protected createWindow() {
         this._state.next(WindowState.Loading);
         const window = new BrowserWindow({
-            title: app.getName(),
+            title: app.name,
             height: 1000,
             icon: Constants.urls.icon,
             width: 1600,
@@ -74,6 +74,7 @@ export class MainWindow extends GenericWindow {
             webPreferences: {
                 webSecurity: false,
                 allowRunningInsecureContent: false,
+                nodeIntegration: true,
             },
         });
 
@@ -117,7 +118,7 @@ export class MainWindow extends GenericWindow {
     private _setupEvents(window: Electron.BrowserWindow) {
         window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
             log.error("There was a crash", { event, killed });
-            this.batchExplorerApp.recoverWindow.createWithError(event.returnValue);
+            this.batchExplorerApp.recoverWindow.createWithError("The window has crashed: killed=" + event.returnValue);
         });
 
         ipcMain.once("app-ready", (event) => {

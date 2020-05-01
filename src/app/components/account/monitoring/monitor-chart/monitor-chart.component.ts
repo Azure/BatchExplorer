@@ -209,7 +209,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                         min: 0,
                         autoSkip: true,
                         callback: (value) => {
-                            if (value % 1 === 0) {
+                            if (value as number % 1 === 0) {
                                 return value;
                             }
                         },
@@ -232,7 +232,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
 
     private _computeTooltipTitle(item: Chart.ChartTooltipItem, data) {
         const interval = this.interval;
-        const start = DateTime.fromISO(item.xLabel);
+        const start = DateTime.fromISO(item.xLabel as string);
         const end = start.plus(interval);
         return `Data between ${start.toFormat("hh:mm A")} and ${end.toFormat("hh:mm A")} on ${start.toFormat("LL")}`;
     }

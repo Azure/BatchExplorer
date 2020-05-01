@@ -10,7 +10,7 @@ const tabDefs = [
     { label: "Custom", content: "Something else is happening" },
 ];
 
-// tslint:disable:trackBy-function
+// tslint:disable:template-use-track-by-function
 @Component({
     template: `
         <bl-vtab-group>

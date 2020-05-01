@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { log } from "@batch-flask/utils";
 import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { NcjTemplateService } from "app/services";

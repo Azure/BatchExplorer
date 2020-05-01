@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, forwardR
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import { MatCheckboxChange, MatDialog, MatDialogConfig } from "@angular/material";
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { ListSelection } from "@batch-flask/core/list";
 import { TableConfig } from "@batch-flask/ui/table";
 import { ApplicationLicense } from "app/models";

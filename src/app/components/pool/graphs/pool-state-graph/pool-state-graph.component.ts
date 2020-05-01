@@ -187,8 +187,6 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
             scales: {
                 xAxes: [{
                     display: this.interactive,
-                    categoryPercentage: 1.0,
-                    barPercentage: 0.9,
                     stacked: true,
                     gridLines: {
                         display: false,
@@ -201,7 +199,7 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
                     display: this.interactive,
                     ticks: {
                         beginAtZero: true,
-                        callback: value => { if (value % 1 === 0) { return value; } },
+                        callback: value => { if (value as number % 1 === 0) { return value; } },
                         display: this.interactive,
                     },
                     stacked: true,

@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatTooltipModule } from "@angular/material";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { By } from "@angular/platform-browser";
 import { FailureInfo, Task, TaskState } from "app/models";
 import { TaskStateComponent } from "./task-state.component";

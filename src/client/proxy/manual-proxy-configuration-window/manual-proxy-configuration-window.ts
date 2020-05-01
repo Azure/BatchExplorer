@@ -19,7 +19,7 @@ export class ManualProxyConfigurationWindow extends GenericWindow {
 
     protected createWindow() {
         const window = new BrowserWindow({
-            title: app.getName(),
+            title: app.name,
             height: 400,
             width: 500,
             icon: Constants.urls.icon,
@@ -27,6 +27,9 @@ export class ManualProxyConfigurationWindow extends GenericWindow {
             titleBarStyle: "hidden",
             show: false,
             center: true,
+            webPreferences: {
+                nodeIntegration: true,
+            },
         });
         if (this.currentSettings) {
             const setting = this.currentSettings.https || this.currentSettings.http;

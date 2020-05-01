@@ -168,7 +168,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
 
     private _exportAsJSON(jobSchedule: JobSchedule) {
         const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
+        const localPath = dialog.showSaveDialogSync({
             buttonLabel: "Export",
             defaultPath: `${jobSchedule.id}.json`,
         });

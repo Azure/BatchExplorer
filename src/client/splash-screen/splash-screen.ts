@@ -32,6 +32,9 @@ export class SplashScreen extends UniqueWindow {
             frame: false,
             show: false,
             center: true,
+            webPreferences: {
+                nodeIntegration: true,
+            },
         });
         window.loadURL(url);
         window.once("ready-to-show", () => {

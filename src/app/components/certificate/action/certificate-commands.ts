@@ -102,7 +102,7 @@ export class CertificateCommands extends EntityCommands<Certificate> {
 
     private _exportAsJSON(certificate: Certificate) {
         const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
+        const localPath = dialog.showSaveDialogSync({
             buttonLabel: "Export",
             defaultPath: `${certificate.thumbprint}.json`,
         });

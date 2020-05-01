@@ -69,14 +69,14 @@
     // "prefer-readonly": true,
 
     // Codelyzer rules(Angular2)
-    "contextual-life-cycle": true,
-    "decorator-not-allowed": true,
+    "contextual-lifecycle": true,
+    "contextual-decorator": true,
     "directive-selector": [true, "attribute", "bl", "camelCase"],
     "component-selector": [true, "element", "bl", "kebab-case"],
-    "use-input-property-decorator": true,
-    "use-output-property-decorator": true,
-    "use-host-property-decorator": true,
-    "no-attribute-parameter-decorator": true,
+    "no-inputs-metadata-property": true,
+    "no-outputs-metadata-property": true,
+    "no-host-metadata-property": true,
+    "no-attribute-decorator": true,
     "no-input-rename": true,
     "no-output-rename": true,
     "no-forward-ref": false,
@@ -87,8 +87,8 @@
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,
     "no-shadowed-variable": false,
-    "trackBy-function": true,
-    "banana-in-box": true,
+    "template-use-track-by-function": true,
+    "template-banana-in-box": true,
     "function-constructor": true
   },
   "jsRules": {
