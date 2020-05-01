@@ -3,7 +3,7 @@ import {
     HostListener, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from "@angular/material";
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { KeyCode } from "@batch-flask/core/keys";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { File } from "@batch-flask/ui/file/file.model";

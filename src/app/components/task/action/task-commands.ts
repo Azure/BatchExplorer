@@ -110,7 +110,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
 
     private _exportAsJSON(task: Task) {
         const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
+        const localPath = dialog.showSaveDialogSync({
             buttonLabel: "Export",
             defaultPath: `${this.params.jobId}.${task.id}.json`,
         });

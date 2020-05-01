@@ -11,7 +11,7 @@ import {
     Self,
     ViewChild,
 } from "@angular/core";
-import { MatTooltip } from "@angular/material";
+import { MatTooltip } from "@angular/material/tooltip";
 import { RouterLink } from "@angular/router";
 import { log } from "@batch-flask/utils";
 import { Observable, isObservable } from "rxjs";

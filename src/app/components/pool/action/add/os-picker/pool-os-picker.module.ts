@@ -1,7 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatMenuModule, MatTabsModule } from "@angular/material";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatTabsModule } from "@angular/material/tabs";
 import { BaseModule, FormModule, I18nUIModule, SelectModule } from "@batch-flask/ui";
 import { DataDiskPickerComponent, OsOfferTileComponent, PoolOsPickerComponent, SigImagePickerComponent } from ".";
 import { ContainerConfigurationPickerModule } from "../container-configuration-picker";

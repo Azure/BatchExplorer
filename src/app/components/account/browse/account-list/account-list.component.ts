@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Injector, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Injector, Input, OnDestroy, forwardRef } from "@angular/core";
 import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -27,8 +27,8 @@ import "./account-list.scss";
 export class AccountListComponent extends ListBaseComponent implements OnDestroy {
 
     public accounts: List<BatchAccount> = List([]);
-    public displayedAccounts: List<BatchAccount> = List([]);
-    public loadingStatus: LoadingStatus = LoadingStatus.Loading;
+    @Input() public displayedAccounts: List<BatchAccount> = List([]);
+    @Input() public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     private _destroy = new Subject();
 

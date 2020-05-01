@@ -6,7 +6,7 @@ import { sendEvent } from "test/utils/helpers";
 import { VirtualScrollRowDirective } from "./virtual-scroll-row.directive";
 import { VirtualScrollComponent } from "./virtual-scroll.component";
 
-// tslint:disable:trackBy-function
+// tslint:disable:template-use-track-by-function
 
 @Component({
     template: `

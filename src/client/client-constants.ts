@@ -11,7 +11,7 @@ const portrange = 45032;
 function getPort(port = portrange): Promise<number> {
     return new Promise((resolve, reject) => {
         const server = net.createServer();
-        server.listen(port, (err) => {
+        server.listen(port, () => {
             server.once("close", () => {
                 resolve(port);
             });

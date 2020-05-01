@@ -86,7 +86,7 @@ export class VersionService implements OnDestroy {
     private _resolveVersionChannel(): VersionType {
         const match = versionRegex.exec(this.version);
         if (match && match.length >= 2) {
-            if (Object.values(VersionType).includes(match[1])) {
+            if (Object.values(VersionType).includes(match[1] as VersionType)) {
                 return match[1] as VersionType;
             }
         }

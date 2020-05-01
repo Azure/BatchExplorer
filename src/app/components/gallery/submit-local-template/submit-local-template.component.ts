@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy,  Component, Input } from "@angular/core";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateType } from "app/models";
 import { LocalTemplateService } from "app/services";
 

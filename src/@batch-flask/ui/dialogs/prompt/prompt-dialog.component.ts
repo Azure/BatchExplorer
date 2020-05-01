@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn } from "@angular/forms";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { autobind } from "@batch-flask/core";
 import { AsyncSubject, Observable } from "rxjs";
 import { ValidatorMessage } from "../dialog.service";

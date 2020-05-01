@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatCheckboxModule } from "@angular/material";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { By } from "@angular/platform-browser";
 import { TranslationsLoaderService } from "@batch-flask/core";
 import { MockControlValueAccessorComponent, controlValueAccessorProvider } from "@batch-flask/core/testing";

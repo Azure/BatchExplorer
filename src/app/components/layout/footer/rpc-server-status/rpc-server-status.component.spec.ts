@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatTooltip, MatTooltipModule } from "@angular/material";
+import { MatTooltip, MatTooltipModule } from "@angular/material/tooltip";
 import { By } from "@angular/platform-browser";
 import { FileSystemService } from "@batch-flask/electron";
 import { ElectronTestingModule } from "@batch-flask/electron/testing";

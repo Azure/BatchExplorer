@@ -5,7 +5,7 @@ import { ApplicationPackageReference, ExitOptions, Job, NameValuePair, Task } fr
 import { JobAction, TaskFailureAction } from "app/models/job-action";
 import { List } from "immutable";
 
-// tslint:disable:trackBy-function
+// tslint:disable:template-use-track-by-function
 @Component({
     selector: "bl-task-configuration",
     templateUrl: "task-configuration.html",

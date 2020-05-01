@@ -185,7 +185,7 @@ export class JobCommands extends EntityCommands<Job> {
 
     private _exportAsJSON(job: Job) {
         const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
+        const localPath = dialog.showSaveDialogSync({
             buttonLabel: "Export",
             defaultPath: `${job.id}.json`,
         });

@@ -160,7 +160,7 @@ export class PoolCommands extends EntityCommands<Pool> {
 
     private _exportAsJSON(pool: Pool) {
         const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
+        const localPath = dialog.showSaveDialogSync({
             buttonLabel: "Export",
             defaultPath: `${pool.id}.json`,
         });

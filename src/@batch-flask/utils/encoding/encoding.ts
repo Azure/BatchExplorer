@@ -142,6 +142,6 @@ export class EncodingUtils {
             return null;
         }
 
-        return guessed.encoding;
+        return guessed.encoding as Encoding;
     }
 }

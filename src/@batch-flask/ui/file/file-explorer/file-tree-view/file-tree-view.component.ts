@@ -237,7 +237,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
      * Treeview context menu directory/files download actions
      * @param treeRow
      */
-    public download(treeRow: TreeRow) {
+    public async download(treeRow: TreeRow) {
         if (treeRow.isDirectory) {
             const ref = this.dialog.open(DownloadFolderComponent);
             ref.componentInstance.navigator = this.fileNavigator;
@@ -245,12 +245,12 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             ref.componentInstance.folder = treeRow.path;
         } else {
             const dialog = this.remote.dialog;
-            const localPath = dialog.showSaveDialog({
+            const localPath = await dialog.showSaveDialog({
                 buttonLabel: "Download",
                 defaultPath: treeRow.name,
             });
             if (localPath) {
-                this._saveFile(treeRow.path, treeRow.name, localPath);
+                this._saveFile(treeRow.path, treeRow.name, localPath.filePath);
             }
         }
     }

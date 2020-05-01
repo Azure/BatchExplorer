@@ -4,7 +4,7 @@ import {
     OnDestroy,
     Type,
 } from "@angular/core";
-import { MatSidenav } from "@angular/material";
+import { MatSidenav } from "@angular/material/sidenav";
 import { log } from "@batch-flask/utils";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map, publishReplay, refCount } from "rxjs/operators";

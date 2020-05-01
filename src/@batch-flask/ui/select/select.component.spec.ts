@@ -1,5 +1,5 @@
 import { OverlayContainer, OverlayModule } from "@angular/cdk/overlay";
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, Directive } from "@angular/core";
 import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
@@ -20,7 +20,8 @@ const baseOptions = [
     { value: "opt-5", label: "Rice" },
 ];
 
-// tslint:disable:trackBy-function
+@Directive()
+// tslint:disable-next-line: directive-class-suffix trackBy-function
 class TestComponent {
     public options: any[] = baseOptions;
     public value = new FormControl(null);
@@ -49,6 +50,7 @@ class TestComponent {
 class SelectWithLabelComponent extends TestComponent {
 }
 
+// tslint:disable:template-use-track-by-function
 @Component({
     template: `
         <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">

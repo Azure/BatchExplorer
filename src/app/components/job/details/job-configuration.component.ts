@@ -13,7 +13,7 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 import { flatMap } from "rxjs/operators";
 
-// tslint:disable:trackBy-function
+// tslint:disable:template-use-track-by-function
 @Component({
     selector: "bl-job-configuration",
     templateUrl: "job-configuration.html",

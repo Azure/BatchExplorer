@@ -1,5 +1,6 @@
 import {
     ChangeDetectorRef,
+    Directive,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -83,6 +84,8 @@ const lastSorting: StringMap<SortingInfo> = {};
  * 1. Extend class
  * 2. Refefine items with @ContentChildren and the class that inherit fSelectableListItemBase
  */
+@Directive()
+// tslint:disable-next-line: directive-class-suffix
 export class AbstractListBase extends SelectableList implements OnDestroy {
     public LoadingStatus = LoadingStatus;
     public SortingStatus = SortingStatus;

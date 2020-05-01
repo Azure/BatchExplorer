@@ -1,7 +1,7 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { By } from "@angular/platform-browser";
 import { KeyBinding, KeyBindingsService } from "@batch-flask/core";
 import { KeyCode } from "@batch-flask/core/keys";

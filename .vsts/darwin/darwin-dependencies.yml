@@ -10,7 +10,7 @@ steps:
       npm install -g npm@latest
       npm --version
       npm install -g node-gyp node-pre-gyp
-      npm i --save-dev node@8.15.0
+      npm i --save-dev node@12.18.2
       npm install
       pip install --upgrade pip
       pip install -r python/requirements.txt

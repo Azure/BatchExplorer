@@ -1,6 +1,6 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { enterZone } from "@batch-flask/core";
-import { EventEmitter } from "electron";
+import { EventEmitter } from "events";
 import { Observable, Subject, fromEvent } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { willUnload } from "./utils";

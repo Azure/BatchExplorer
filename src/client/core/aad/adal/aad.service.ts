@@ -298,7 +298,7 @@ export class AADService {
         // If user hasn't picked a telemetry setting ask to opt in or out
         if (this.telemetryManager.userTelemetryEnabled == null) {
             const wikiLink = "https://github.com/Azure/BatchExplorer/wiki/Crash-reporting-and-telemetry";
-            const response = dialog.showMessageBox({
+            const val = await dialog.showMessageBox({
                 type: "question",
                 buttons: ["Enable", "Disable"],
                 title: "Telemetry settings",
@@ -310,9 +310,9 @@ export class AADService {
                 noLink: true,
             });
 
-            if (response === 0) {
+            if (val.response === 0) {
                 return this.telemetryManager.enableTelemetry({ restart: false });
-            } else if (response === 1) {
+            } else if (val.response === 1) {
                 return this.telemetryManager.disableTelemetry();
             }
         }

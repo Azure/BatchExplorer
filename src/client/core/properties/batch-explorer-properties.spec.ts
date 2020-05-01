@@ -5,27 +5,41 @@ import * as proxyquire from "proxyquire";
 import { Subscription } from "rxjs";
 import { BatchExplorerProperties } from "./batch-explorer-properties";
 
+interface MockRequires {
+    electron: {
+        nativeTheme: {
+            on: (event: string, x: () => void) => void,
+            shouldUseInvertedColorScheme: boolean,
+        },
+    };
+}
+
 describe("BatchExplorerProperties", () => {
     let store: InMemoryDataStore;
     let properties: BatchExplorerProperties;
     let envFromObs: AzureEnvironment | null;
-    let isInvertedColorScheme;
     let azureEnvironmentServiceSpy;
     let invertedColorChangeCallback: () => void;
+    let mockRequires: MockRequires;
 
     beforeEach(() => {
-        isInvertedColorScheme = false;
         envFromObs = null;
         store = new InMemoryDataStore();
 
-        const { BatchExplorerProperties } = proxyquire("./batch-explorer-properties", {
+        mockRequires = {
             electron: {
-                systemPreferences: {
-                    isInvertedColorScheme: () => isInvertedColorScheme,
-                    on: (name: string, x) => invertedColorChangeCallback = x,
+                nativeTheme: {
+                    on: (event: string, x) => {
+                        if (event === "updated") {
+                            invertedColorChangeCallback = x;
+                        }
+                    },
+                    shouldUseInvertedColorScheme: false,
                 },
             },
-        });
+        };
+
+        const { BatchExplorerProperties } = proxyquire("./batch-explorer-properties", mockRequires);
 
         azureEnvironmentServiceSpy = {
             get: () => Promise.resolve(AzureChina),
@@ -85,7 +99,7 @@ describe("BatchExplorerProperties", () => {
         it("listen to system even if theme change", () => {
             expect(isHighContrast).toBe(false);
 
-            isInvertedColorScheme = true;
+            mockRequires.electron.nativeTheme.shouldUseInvertedColorScheme = true;
             invertedColorChangeCallback();
             expect(isHighContrast).toBe(true);
         });

@@ -12,7 +12,7 @@ import {
     Self,
     SimpleChanges,
 } from "@angular/core";
-import { MatMenuTrigger } from "@angular/material";
+import { MatMenuTrigger } from "@angular/material/menu";
 import { RouterLink } from "@angular/router";
 import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { Permission, PermissionService } from "@batch-flask/ui/permission";

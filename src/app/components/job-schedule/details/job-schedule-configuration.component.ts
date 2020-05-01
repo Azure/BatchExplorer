@@ -5,7 +5,7 @@ import { JobSchedule, Metadata } from "app/models";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-// tslint:disable:trackBy-function
+// tslint:disable:template-use-track-by-function
 @Component({
     selector: "bl-job-schedule-configuration",
     templateUrl: "job-schedule-configuration.html",

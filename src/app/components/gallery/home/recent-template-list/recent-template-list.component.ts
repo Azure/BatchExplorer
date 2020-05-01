@@ -33,7 +33,7 @@ export class RecentTemplateListComponent implements OnDestroy {
 
     public createParameterFile(recent: RecentSubmission) {
         const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
+        const localPath = dialog.showSaveDialogSync({
             buttonLabel: "Save",
             defaultPath: this._getParameterFileName(recent.mode),
         });

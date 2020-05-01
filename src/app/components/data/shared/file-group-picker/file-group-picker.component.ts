@@ -4,7 +4,7 @@ import {
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { MatOptionSelectionChange } from "@angular/material";
+import { MatOptionSelectionChange } from "@angular/material/core";
 import { FilterBuilder, ListView } from "@batch-flask/core";
 import { Activity, DialogService } from "@batch-flask/ui";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
