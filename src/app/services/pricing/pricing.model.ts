@@ -1,3 +1,5 @@
+import { BatchSoftwareSkus } from "app/models/batch-software-skus";
+
 export type OsType = "linux" | "windows";
 
 export interface RegionPrices {
@@ -132,7 +134,7 @@ export class NodePricing {
 export interface SoftwarePrice {
     name: string;
     price: number;
-    perCore: boolean;
+    theSku: BatchSoftwareSkus;
 }
 
 export class SoftwarePricing {
@@ -143,11 +145,11 @@ export class SoftwarePricing {
     }
     private _map: Map<string, SoftwarePrice> = new Map();
 
-    public add(software: string, price: number, perCore = false) {
+    public add(software: string, price: number, theSku) {
         this._map.set(software, {
             name: software,
             price,
-            perCore,
+            theSku,
         });
     }
 
@@ -159,10 +161,12 @@ export class SoftwarePricing {
         return this._map.get(software);
     }
 
+    // TODO: test this to make sure data.theSku works with logic
     public getPrice(software: string, coreCount = 1): number {
         const data = this._map.get(software);
         if (!data) { return null; }
-        return data.perCore ? coreCount * data.price : data.price;
+        console.log("GET PRICE WHAT IS SKU FORMAT? :", data.theSku);
+        return data.theSku ? coreCount * data.price : data.price;
     }
 }
 
