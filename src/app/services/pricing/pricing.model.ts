@@ -1,4 +1,4 @@
-import { BatchSoftwareSkus } from "app/models/batch-software-skus";
+import { SoftwareBillingUnit } from "app/models/software-billing-unit";
 
 export type OsType = "linux" | "windows";
 
@@ -134,7 +134,7 @@ export class NodePricing {
 export interface SoftwarePrice {
     name: string;
     price: number;
-    theSku: BatchSoftwareSkus;
+    billingUnit: SoftwareBillingUnit;
 }
 
 export class SoftwarePricing {
@@ -145,11 +145,11 @@ export class SoftwarePricing {
     }
     private _map: Map<string, SoftwarePrice> = new Map();
 
-    public add(software: string, price: number, theSku) {
+    public add(software: string, price: number, billingUnit) {
         this._map.set(software, {
             name: software,
             price,
-            theSku,
+            billingUnit,
         });
     }
 
@@ -161,12 +161,10 @@ export class SoftwarePricing {
         return this._map.get(software);
     }
 
-    // TODO: test this to make sure data.theSku works with logic
     public getPrice(software: string, coreCount = 1): number {
         const data = this._map.get(software);
         if (!data) { return null; }
-        console.log("GET PRICE WHAT IS SKU FORMAT? :", data.theSku);
-        return data.theSku ? coreCount * data.price : data.price;
+        return data.billingUnit === "core" ? coreCount * data.price : data.price;
     }
 }
 

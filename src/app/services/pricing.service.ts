@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { GlobalStorage } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { ArmBatchAccount, BatchSoftwareLicense, BatchSoftwareSkus, Pool, RateCardMeter } from "app/models";
+import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter, SoftwareBillingUnit } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils } from "app/utils";
 import { DateTime } from "luxon";
@@ -65,7 +65,7 @@ const softwareMeterId = {
 @Injectable({ providedIn: "root" })
 export class PricingService {
     public pricing: Observable<BatchPricing>;
-    public theSku: string;
+    public billingUnit: string;
     private _pricingMap = new BehaviorSubject<BatchPricing>(null);
 
     constructor(
@@ -83,7 +83,6 @@ export class PricingService {
 
     public getSoftwarePricing(): Observable<SoftwarePricing> {
         return this._getPrice((account, pricing) => {
-            console.log("PRICING FOR SOFTWARES: ", pricing.softwares);
             return pricing.softwares;
         });
     }
@@ -175,31 +174,26 @@ export class PricingService {
         return pricing;
     }
 
-    // IMPORTANT FOR PRICING CHANGES IN SOFTWARE
     private _processSoftwaresPricings(meters: RateCardMeter[], pricing: BatchPricing) {
         for (const meter of meters) {
-            // debugger;
-            // console.log("EACH METER: ", meter);
             if (meter.MeterId in softwareMeterId) {
-                console.log("meter.MeterId: ", meter.MeterId);
                 const software = softwareMeterId[meter.MeterId];
-                console.log("THE SOFTWARE: ", software);
-                console.log("THE METER NAME: ", meter.MeterName);
-                // const perCore = meter.MeterName.toLowerCase().includes("1 vcpu");
-                switch (meter.MeterName.toLowerCase()) {
-                    case "1 vcpu":
-                        this.theSku = BatchSoftwareSkus.core;
-                        break;
-                    case "1 gpu":
-                        this.theSku = BatchSoftwareSkus.gpu;
-                        break;
-                    default:
-                        this.theSku = BatchSoftwareSkus.node;
-                }
-                console.log("The CORE: ", this.theSku);
-                console.log("THIS IS THE PRICE: ", meter.MeterRates["0"]);
-                pricing.softwares.add(software, meter.MeterRates["0"], this.theSku);
+                this._setBillingUnit(meter);
+                pricing.softwares.add(software, meter.MeterRates["0"], this.billingUnit);
             }
+        }
+    }
+
+    private _setBillingUnit(meter: RateCardMeter) {
+        switch (meter.MeterName.toLowerCase()) {
+            case "1 vcpu vm license":
+                this.billingUnit = SoftwareBillingUnit.core;
+                break;
+            case "1 gpu vm license":
+                this.billingUnit = SoftwareBillingUnit.gpu;
+                break;
+            default:
+                this.billingUnit = SoftwareBillingUnit.node;
         }
     }
 
@@ -251,7 +245,6 @@ export class PricingService {
      * @param callback Callback when account and prices are loaded
      */
     private _getPrice<T>(callback: (account: ArmBatchAccount, pricing: BatchPricing) => T) {
-        console.log("WHATS HERE? :", this.accountService.currentAccount);
         return this.accountService.currentAccount.pipe(
             take(1),
             flatMap((account) => {
