@@ -183,9 +183,9 @@ describe("PoolUtils", () => {
         } as any);
 
         const softwares = new SoftwarePricing();
-        softwares.add("vray", 0.02, true);
-        softwares.add("3dsmax", 0.65, false);
-        softwares.add("maya", 0.75, false);
+        softwares.add("vray", 0.02, "core");
+        softwares.add("3dsmax", 0.65, "node");
+        softwares.add("maya", 0.75, "node");
 
         it("works for a basic pool", () => {
             const windowsConfig = {

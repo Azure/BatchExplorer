@@ -70,17 +70,13 @@ describe("AppLicensePickerComponent", () => {
 
         const row1Columns = tableRows[0].queryAll(By.css(".bl-table-cell"));
         expect(row1Columns.length).toBe(3, "Row has 3 columns");
-        console.log("MAYA NAME: ", row1Columns[0].nativeElement.textContent);
         expect(row1Columns[0].nativeElement.textContent).toContain("Autodesk Maya");
-        console.log("MAYA EULA: ", row1Columns[1].nativeElement.textContent);
         expect(row1Columns[1].nativeElement.textContent).toContain("EULA");
-        console.log("MAYA PRICING: ", row1Columns[2].nativeElement.textContent);
         expect(row1Columns[2].nativeElement.textContent).toContain("$12/node/hour");
 
         const row2Columns = tableRows[1].queryAll(By.css(".bl-table-cell"));
         expect(row2Columns[0].nativeElement.textContent).toContain("Autodesk 3ds Max");
         expect(row2Columns[1].nativeElement.textContent).toContain("EULA");
-        console.log("3DS PRICING: ", row2Columns[2].nativeElement.textContent);
         expect(row2Columns[2].nativeElement.textContent).toContain("-");
 
         const row3Columns = tableRows[2].queryAll(By.css(".bl-table-cell"));
