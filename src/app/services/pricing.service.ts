@@ -174,6 +174,11 @@ export class PricingService {
         return pricing;
     }
 
+    /**
+     * Sets the software prices using meter IDs
+     * @param meters RateCardMeter[]
+     * @param pricing BatchPricing
+     */
     private _processSoftwaresPricings(meters: RateCardMeter[], pricing: BatchPricing) {
         for (const meter of meters) {
             if (meter.MeterId in softwareMeterId) {
@@ -184,6 +189,10 @@ export class PricingService {
         }
     }
 
+    /**
+     * Sets billing unit of software prices
+     * @param meter RateCardMeter
+     */
     private _setBillingUnit(meter: RateCardMeter) {
         switch (meter.MeterName.toLowerCase()) {
             case "1 vcpu vm license":
