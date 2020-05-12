@@ -181,7 +181,7 @@
     "inflection": "^1.12.0",
     "js-yaml": "^3.13.1",
     "jschardet": "^2.1.0",
-    "keytar": "^4.4.1",
+    "keytar": "^4.5.0",
     "load-json-file": "^5.2.0",
     "luxon": "^1.11.4",
     "make-dir": "^2.1.0",
