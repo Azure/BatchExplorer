@@ -145,7 +145,7 @@ export class SoftwarePricing {
     }
     private _map: Map<string, SoftwarePrice> = new Map();
 
-    public add(software: string, price: number, billingUnit) {
+    public add(software: string, price: number, billingUnit: SoftwareBillingUnit) {
         this._map.set(software, {
             name: software,
             price,

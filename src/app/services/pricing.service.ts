@@ -65,7 +65,7 @@ const softwareMeterId = {
 @Injectable({ providedIn: "root" })
 export class PricingService {
     public pricing: Observable<BatchPricing>;
-    public billingUnit: string;
+    public billingUnit: SoftwareBillingUnit;
     private _pricingMap = new BehaviorSubject<BatchPricing>(null);
 
     constructor(

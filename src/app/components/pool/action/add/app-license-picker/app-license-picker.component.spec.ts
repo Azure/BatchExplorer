@@ -10,6 +10,7 @@ import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { AppLicensePickerComponent } from "app/components/pool/action/add";
+import { SoftwareBillingUnit } from "app/models";
 import { PricingService } from "app/services";
 import { SoftwarePricing } from "app/services/pricing";
 import { of } from "rxjs";
@@ -22,8 +23,8 @@ class TestComponent {
 }
 
 const pricing = new SoftwarePricing();
-pricing.add("maya", 12, "node");
-pricing.add("arnold", 5, "node");
+pricing.add("maya", 12, SoftwareBillingUnit.node);
+pricing.add("arnold", 5, SoftwareBillingUnit.node);
 
 describe("AppLicensePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;

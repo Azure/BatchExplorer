@@ -138,7 +138,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
             const cost = this._pricing && this._pricing.get(software.id);
             let costStr = "-";
             if (cost) {
-                costStr = `$${cost.price}/${cost.billingUnit}/hour`;
+                costStr = `$${cost.price}/${cost.billingUnit as string}/hour`;
             }
             return new ApplicationLicense({
                 ...software,
