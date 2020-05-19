@@ -55,17 +55,31 @@ const regionMapping = {
 };
 
 const softwareMeterId = {
-    "da155550-4041-54ce-bf5c-385c0bd5eaba": BatchSoftwareLicense.arnold,
-    "0ec88494-2022-4939-b809-0d914d954692": BatchSoftwareLicense["3dsmax"],
-    "1d3bb602-0cde-4618-9fb0-f9d94805c2a6": BatchSoftwareLicense.maya,
-    "e2d2d63e-8741-499a-8989-f5f7ec5c3b3f": BatchSoftwareLicense.vray,
-    "450f680c-b109-486a-8fec-2b9e7ab0fbc9": BatchSoftwareLicense.vrayrt,
+    "da155550-4041-54ce-bf5c-385c0bd5eaba": {
+        license: BatchSoftwareLicense.arnold,
+        billingUnit: SoftwareBillingUnit.node,
+    },
+    "0ec88494-2022-4939-b809-0d914d954692": {
+        license: BatchSoftwareLicense["3dsmax"],
+        billingUnit: SoftwareBillingUnit.node,
+    },
+    "1d3bb602-0cde-4618-9fb0-f9d94805c2a6": {
+        license: BatchSoftwareLicense.maya,
+        billingUnit: SoftwareBillingUnit.node,
+    },
+    "e2d2d63e-8741-499a-8989-f5f7ec5c3b3f": {
+        license: BatchSoftwareLicense.vray,
+        billingUnit: SoftwareBillingUnit.core,
+    },
+    "450f680c-b109-486a-8fec-2b9e7ab0fbc9": {
+        license: BatchSoftwareLicense.vrayrt,
+        billingUnit: SoftwareBillingUnit.gpu,
+    },
 };
 
 @Injectable({ providedIn: "root" })
 export class PricingService {
     public pricing: Observable<BatchPricing>;
-    public billingUnit: SoftwareBillingUnit;
     private _pricingMap = new BehaviorSubject<BatchPricing>(null);
 
     constructor(
@@ -182,27 +196,10 @@ export class PricingService {
     private _processSoftwaresPricings(meters: RateCardMeter[], pricing: BatchPricing) {
         for (const meter of meters) {
             if (meter.MeterId in softwareMeterId) {
-                const software = softwareMeterId[meter.MeterId];
-                this._setBillingUnit(meter);
-                pricing.softwares.add(software, meter.MeterRates["0"], this.billingUnit);
+                const software = softwareMeterId[meter.MeterId].license;
+                const unit = softwareMeterId[meter.MeterId].billingUnit;
+                pricing.softwares.add(software, meter.MeterRates["0"], unit);
             }
-        }
-    }
-
-    /**
-     * Sets billing unit of software prices
-     * @param meter RateCardMeter
-     */
-    private _setBillingUnit(meter: RateCardMeter) {
-        switch (meter.MeterName.toLowerCase()) {
-            case "1 vcpu vm license":
-                this.billingUnit = SoftwareBillingUnit.core;
-                break;
-            case "1 gpu vm license":
-                this.billingUnit = SoftwareBillingUnit.gpu;
-                break;
-            default:
-                this.billingUnit = SoftwareBillingUnit.node;
         }
     }
 
