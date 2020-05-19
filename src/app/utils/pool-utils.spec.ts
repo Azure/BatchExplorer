@@ -1,7 +1,6 @@
-import { CloudServiceOsFamily, Pool, VmSize } from "app/models";
+import { CloudServiceOsFamily, Pool, SoftwareBillingUnit, VmSize } from "app/models";
 import { SoftwarePricing } from "app/services/pricing";
 import { PoolUtils } from "app/utils";
-import { SoftwareBillingUnit } from "app/models";
 
 describe("PoolUtils", () => {
     describe("#getOsName()", () => {
