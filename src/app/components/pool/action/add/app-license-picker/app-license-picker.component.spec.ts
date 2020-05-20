@@ -10,6 +10,7 @@ import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { AppLicensePickerComponent } from "app/components/pool/action/add";
+import { SoftwareBillingUnit } from "app/models";
 import { PricingService } from "app/services";
 import { SoftwarePricing } from "app/services/pricing";
 import { of } from "rxjs";
@@ -22,8 +23,8 @@ class TestComponent {
 }
 
 const pricing = new SoftwarePricing();
-pricing.add("maya", 12, false);
-pricing.add("arnold", 5, true);
+pricing.add("maya", 12, SoftwareBillingUnit.node);
+pricing.add("arnold", 5, SoftwareBillingUnit.node);
 
 describe("AppLicensePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
@@ -64,9 +65,9 @@ describe("AppLicensePickerComponent", () => {
         fixture.detectChanges();
     });
 
-    it("Should show 4 licenses", () => {
+    it("Should show 5 licenses", () => {
         const tableRows = debugElement.queryAll(By.css("bl-row-render"));
-        expect(tableRows.length).toBe(4);
+        expect(tableRows.length).toBe(5);
 
         const row1Columns = tableRows[0].queryAll(By.css(".bl-table-cell"));
         expect(row1Columns.length).toBe(3, "Row has 3 columns");
@@ -82,12 +83,17 @@ describe("AppLicensePickerComponent", () => {
         const row3Columns = tableRows[2].queryAll(By.css(".bl-table-cell"));
         expect(row3Columns[0].nativeElement.textContent).toContain("Autodesk Arnold");
         expect(row3Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row3Columns[2].nativeElement.textContent).toContain("$5/core/hour");
+        expect(row3Columns[2].nativeElement.textContent).toContain("$5/node/hour");
 
         const row4Columns = tableRows[3].queryAll(By.css(".bl-table-cell"));
         expect(row4Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray");
         expect(row4Columns[1].nativeElement.textContent).toContain("EULA");
         expect(row4Columns[2].nativeElement.textContent).toContain("-");
+
+        const row5Columns = tableRows[4].queryAll(By.css(".bl-table-cell"));
+        expect(row5Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray RT");
+        expect(row5Columns[1].nativeElement.textContent).toContain("EULA");
+        expect(row5Columns[2].nativeElement.textContent).toContain("-");
     });
 
     it("Should select license by checking checkbox", () => {

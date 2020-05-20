@@ -30,6 +30,10 @@ const softwares = [
         id: "vray",
         description: "Chaos Group V-Ray",
     },
+    {
+        id: "vrayrt",
+        description: "Chaos Group V-Ray RT",
+    },
 ];
 
 @Component({
@@ -134,8 +138,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
             const cost = this._pricing && this._pricing.get(software.id);
             let costStr = "-";
             if (cost) {
-                const unit = cost.perCore ? "core" : "node";
-                costStr = `$${cost.price}/${unit}/hour`;
+                costStr = `$${cost.price}/${cost.billingUnit as string}/hour`;
             }
             return new ApplicationLicense({
                 ...software,

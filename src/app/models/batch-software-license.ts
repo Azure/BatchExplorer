@@ -6,4 +6,5 @@ export enum BatchSoftwareLicense {
     arnold = "arnold",
     maya = "maya",
     vray = "vray",
+    vrayrt = "vrayrt",
 }

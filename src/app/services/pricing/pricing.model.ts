@@ -1,3 +1,5 @@
+import { SoftwareBillingUnit } from "app/models/software-billing-unit";
+
 export type OsType = "linux" | "windows";
 
 export interface RegionPrices {
@@ -132,7 +134,7 @@ export class NodePricing {
 export interface SoftwarePrice {
     name: string;
     price: number;
-    perCore: boolean;
+    billingUnit: SoftwareBillingUnit;
 }
 
 export class SoftwarePricing {
@@ -143,11 +145,11 @@ export class SoftwarePricing {
     }
     private _map: Map<string, SoftwarePrice> = new Map();
 
-    public add(software: string, price: number, perCore = false) {
+    public add(software: string, price: number, billingUnit: SoftwareBillingUnit) {
         this._map.set(software, {
             name: software,
             price,
-            perCore,
+            billingUnit,
         });
     }
 
@@ -162,7 +164,7 @@ export class SoftwarePricing {
     public getPrice(software: string, coreCount = 1): number {
         const data = this._map.get(software);
         if (!data) { return null; }
-        return data.perCore ? coreCount * data.price : data.price;
+        return data.billingUnit === "core" ? coreCount * data.price : data.price;
     }
 }
 

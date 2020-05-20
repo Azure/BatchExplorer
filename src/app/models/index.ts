@@ -14,6 +14,7 @@ export * from "./autoscale-formula";
 export * from "./azure-batch";
 export * from "./batch-account";
 export * from "./batch-software-license";
+export * from "./software-billing-unit";
 export * from "./blob-container";
 export * from "./certificate-reference";
 export * from "./certificate";

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { GlobalStorage } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
+import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter, SoftwareBillingUnit } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils } from "app/utils";
 import { DateTime } from "luxon";
@@ -55,10 +55,26 @@ const regionMapping = {
 };
 
 const softwareMeterId = {
-    "089f79d8-0349-432c-96a6-8add90b8a40e": BatchSoftwareLicense.arnold,
-    "0ec88494-2022-4939-b809-0d914d954692": BatchSoftwareLicense["3dsmax"],
-    "1d3bb602-0cde-4618-9fb0-f9d94805c2a6": BatchSoftwareLicense.maya,
-    "e2d2d63e-8741-499a-8989-f5f7ec5c3b3f": BatchSoftwareLicense.vray,
+    "da155550-4041-54ce-bf5c-385c0bd5eaba": {
+        license: BatchSoftwareLicense.arnold,
+        billingUnit: SoftwareBillingUnit.node,
+    },
+    "0ec88494-2022-4939-b809-0d914d954692": {
+        license: BatchSoftwareLicense["3dsmax"],
+        billingUnit: SoftwareBillingUnit.node,
+    },
+    "1d3bb602-0cde-4618-9fb0-f9d94805c2a6": {
+        license: BatchSoftwareLicense.maya,
+        billingUnit: SoftwareBillingUnit.node,
+    },
+    "e2d2d63e-8741-499a-8989-f5f7ec5c3b3f": {
+        license: BatchSoftwareLicense.vray,
+        billingUnit: SoftwareBillingUnit.core,
+    },
+    "450f680c-b109-486a-8fec-2b9e7ab0fbc9": {
+        license: BatchSoftwareLicense.vrayrt,
+        billingUnit: SoftwareBillingUnit.gpu,
+    },
 };
 
 @Injectable({ providedIn: "root" })
@@ -172,12 +188,17 @@ export class PricingService {
         return pricing;
     }
 
+    /**
+     * Sets the software prices using meter IDs
+     * @param meters RateCardMeter[]
+     * @param pricing BatchPricing
+     */
     private _processSoftwaresPricings(meters: RateCardMeter[], pricing: BatchPricing) {
         for (const meter of meters) {
             if (meter.MeterId in softwareMeterId) {
-                const software = softwareMeterId[meter.MeterId];
-                const perCore = meter.MeterName.toLowerCase().includes("1 vcpu");
-                pricing.softwares.add(software, meter.MeterRates["0"], perCore);
+                const software = softwareMeterId[meter.MeterId].license;
+                const unit = softwareMeterId[meter.MeterId].billingUnit;
+                pricing.softwares.add(software, meter.MeterRates["0"], unit);
             }
         }
     }
