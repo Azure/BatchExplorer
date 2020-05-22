@@ -27,7 +27,7 @@ import { MainWindowManager } from "./main-window-manager";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = ClientConstants.isDev ? "-dev" : "";
-const userAgent = `(${osName}) BatchExplorer/${ClientConstants.version}${isDev}`;
+const userAgent = `Mozilla/5.0 (${osName}) BatchExplorer/${ClientConstants.version}${isDev}`;
 
 export enum BatchExplorerState {
     Loading,
