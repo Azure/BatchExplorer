@@ -33,39 +33,58 @@ describe("Bundled application is starting correctly", () => {
     });
 
     it("Show the splash screen, auth window then login", async () => {
+        console.log("Start println debugging");
         const windowCount = await app.client.getWindowCount();
+        console.log("1");
         // Splash screen + Auth window + Main window
         expect(windowCount).toEqual(3);
 
+        console.log("2");
         await app.client.windowByIndex(MAIN_WINDOW_INDEX);
+        console.log("3");
         expect(await app.browserWindow.isVisible()).toBe(false);
+        console.log("4");
 
         await app.client.windowByIndex(SPLASH_SCREEN_WINDOW_INDEX);
+        console.log("5");
         expect(await app.browserWindow.isVisible()).toBe(true);
+        console.log("6");
         expect(await app.browserWindow.getBounds()).toEqual(jasmine.objectContaining({
             width: 340,
             height: 340,
         }));
+        console.log("7");
 
         await app.client.waitUntilTextExists("#message", "Prompting for user input");
+        console.log("8");
         await app.client.windowByIndex(AUTH_WINDOW_INDEX);
+        console.log("9");
 
         expect(await app.browserWindow.isVisible()).toBe(true);
+        console.log("10");
         expect(await app.browserWindow.getTitle()).toEqual("BatchExplorer: Login to Azure Public(Default)");
+        console.log("11");
         expect(await app.browserWindow.getBounds()).toEqual(jasmine.objectContaining({
             width: 800,
             height: 700,
         }));
+        console.log("12");
 
         await signIn(app.client);
+        console.log("13");
         await app.client.waitUntil(async () => {
             return await app.client.getWindowCount() === 1;
         });
+        console.log("14");
 
         await app.client.windowByIndex(MAIN_WINDOW_INDEX);
+        console.log("15");
         expect(await app.browserWindow.isVisible()).toBe(true);
+        console.log("16");
         expect(await app.browserWindow.getTitle()).toEqual("Batch Explorer");
+        console.log("17");
         await app.client.waitUntilTextExists("bl-account-list .quick-list-row-title", "0prodtest", 60_000);
+        console.log("18");
 
     });
 
