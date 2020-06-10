@@ -62,15 +62,15 @@ function confirm-branch() {
 function confirm-latest-commit() {
     git fetch
 
-   $local_commit = [string](git rev-parse HEAD)
-   $remote_commit = [string](git rev-parse "@{u}")
+    $local_commit = [string](git rev-parse HEAD)
+    $remote_commit = [string](git rev-parse "@{u}")
 
-   if($local_commit -eq $remote_commit) {
+    if($local_commit -eq $remote_commit) {
         add-success "Branch is up to date."
-   } else {
+    } else {
         $behind = [string](git rev-list --count $local_commit...$remote_commit)
         add-warning "Branch is out of date by $behind commits. Run 'git pull' to update."
-   }
+    }
 }
 
 function confirm-node-version() {
@@ -122,8 +122,8 @@ function install-python-dependencies() {
         add-failure "Invalid version of python installed. Needs python >= 3.5. You can either have globably available in the path as python, python3 or set the BL_PYTHON_PATH environment variable."
     }
 
-    Write-Host "$python $root/scripts/install/install-python-dep.py"
-    cmd /c "$python $root/scripts/install/install-python-dep.py"
+    Write-Host "$python `"$root/scripts/install/install-python-dep.py`""
+    cmd /c "$python `"$root/scripts/install/install-python-dep.py`""
 
     if($lastExitCode -eq 0) {
         add-success "Installed python dependencies correctly" -foreground "green";
