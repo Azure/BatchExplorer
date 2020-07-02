@@ -6,7 +6,7 @@ steps:
 
   - script: |
       export DISPLAY=:99
-      xvfb-run npm run test
+      xvfb-run --server-args '-screen 0 1024x768x24' npm run test
     displayName: Run tests
 
   - task: PublishTestResults@2
