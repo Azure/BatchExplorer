@@ -31,6 +31,21 @@
       ]
     },
     {
+      "name": "TestClient",
+      "type": "node",
+      "request": "launch",
+      "protocol": "inspector",
+      "program": "${workspaceRoot}/test/client/run-jasmine.js",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "test"
+      }
+    },
+    {
       "name": "Attach to Process",
       "type": "chrome",
       "request": "attach",
