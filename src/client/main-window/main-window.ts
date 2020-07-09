@@ -1,7 +1,7 @@
 import { AUTO_UPDATE_MAIN_SERVICE_TOKEN } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import { TelemetryManager } from "client/core/telemetry";
-import { BrowserWindow, app, ipcMain } from "electron";
+import { BrowserWindow, app, ipcMain, nativeImage } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
 import { BatchExplorerApplication, GenericWindow } from "../core";
@@ -65,7 +65,7 @@ export class MainWindow extends GenericWindow {
         const window = new BrowserWindow({
             title: app.name,
             height: 1000,
-            icon: Constants.urls.icon,
+            icon: nativeImage.createFromDataURL(Constants.urls.icon),
             width: 1600,
             minWidth: 1200,
             minHeight: 300,
@@ -75,6 +75,7 @@ export class MainWindow extends GenericWindow {
                 webSecurity: false,
                 allowRunningInsecureContent: false,
                 nodeIntegration: true,
+                enableRemoteModule: true,
             },
         });
 
@@ -98,18 +99,6 @@ export class MainWindow extends GenericWindow {
         // Open the DevTools.
         if (process.env.NODE_ENV !== "production") {
             window.webContents.openDevTools();
-            // activate devtron for the user if they have it installed and it's not already added
-            try {
-                const devtronAlreadyAdded = BrowserWindow.getDevToolsExtensions &&
-                    {}.hasOwnProperty.call(BrowserWindow.getDevToolsExtensions(), "devtron");
-
-                if (!devtronAlreadyAdded) {
-                    BrowserWindow.addDevToolsExtension(require("devtron").path);
-                }
-            } catch (error) {
-                log.error("Error adding devtron", error);
-            }
-
         }
 
         return window;

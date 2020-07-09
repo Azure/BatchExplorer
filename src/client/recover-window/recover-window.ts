@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, nativeImage } from "electron";
 import { Constants } from "../client-constants";
 import { UniqueWindow } from "../core";
 
@@ -31,12 +31,13 @@ export class RecoverWindow extends UniqueWindow {
         const window = new BrowserWindow({
             height: 440,
             width: 440,
-            icon: Constants.urls.icon,
+            icon: nativeImage.createFromDataURL(Constants.urls.icon),
             resizable: false,
             titleBarStyle: "hidden",
             frame: false,
             webPreferences: {
                 nodeIntegration: true,
+                enableRemoteModule: true,
             },
         });
         window.loadURL(url);

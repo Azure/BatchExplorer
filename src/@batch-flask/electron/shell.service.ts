@@ -20,10 +20,16 @@ export class ElectronShell {
 
     /**
      * Open the given file in the desktop's default manner.
-     * @returns Whether the item was successfully shown.
+     * @returns A result object which contains a boolean that indicates
+     *          whether the item was successfully shown, and an error
+     *          message (which defaults to "" if success is true)
      */
-    public openItem(fullPath: string): boolean {
-        return this._shell.openItem(fullPath);
+    public async openItem(fullPath: string): Promise<{success: boolean, errorMessage: string}> {
+        const result = await this._shell.openPath(fullPath);
+        return {
+            success: result === "",
+            errorMessage: result,
+        };
     }
 
     /**

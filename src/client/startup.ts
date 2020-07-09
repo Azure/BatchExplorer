@@ -62,10 +62,6 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
     // But this is a false positive when using dev server has it doesn't seem to ignore localhost
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
 
-    // TODO: After upgrading to Electron 9, see if removing this line breaks
-    //       anything. (The default in Electron 9 has changed to true)
-    app.allowRendererProcessReuse = false;
-
     log.info("Program arguments", args);
     if (args.ignoreCertificateErrors) {
         log.warn("Ignoring HTTPS certificates");

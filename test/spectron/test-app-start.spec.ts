@@ -15,8 +15,8 @@ describe("Bundled application is starting correctly", () => {
         app = new Application({
             path: getExePath(),
             args: ["--insecure-test"],
-            startTimeout: 10000,
-            waitTimeout: 10000,
+            startTimeout: 20000,
+            waitTimeout: 20000,
         });
 
         await app.start();
@@ -84,15 +84,26 @@ async function signIn(client: SpectronClient) {
 
     if (!email || !password) { return; }
 
-    await client.element(`input[type="email"]`).setValue(email);
-    await client.element(`input[type="submit"]`).click();
+    const emailInput = await client.$(`input[type="email"]`);
+    await emailInput.setValue(email);
+
+    const nextButton = await client.$(`input[type="submit"]`);
+    await nextButton.click();
+
     await delay(5000);
-    const url = await client.url();
-    if (url.value.startsWith("https://msft.sts.microsoft.com")) {
-        await client.element(`#loginMessage .actionLink`).click(); // Click on "Sign with email or passwork instead"
+
+    const url = await client.getUrl();
+    if (url.startsWith("https://msft.sts.microsoft.com")) {
+        // Click on "Sign with email or passwork instead"
+        const signInWithEmailOrPasswordLink = await client.$(`#loginMessage .actionLink`);
+        await signInWithEmailOrPasswordLink.click();
     }
-    await client.element(`input[type="password"]`).setValue(password);
-    await client.element(`#submitButton`).click();
+
+    const pwInput = await client.$(`input[type="password"]`);
+    await pwInput.setValue(password);
+
+    const submitButton = await client.$(`#submitButton`);
+    await submitButton.click();
 }
 
 function delay(time?: number) {
