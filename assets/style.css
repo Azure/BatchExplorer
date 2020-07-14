@@ -82,7 +82,7 @@ a {
 
 .btn-link {
     border-radius: 0 !important;
-    background-color: #28a745 !important;
+    background-color: #165f28 !important;
     color: white !important;
     display: inline-grid !important;
     align-items: center;
@@ -90,6 +90,10 @@ a {
     max-width: 320px;
     width: 100%;
     margin: 2px;
+}
+
+.text-link {
+    color: #0078d4;
 }
 
 .os-download-btn {
@@ -143,7 +147,7 @@ a {
 }
 
 .os-download .alternate-downloads {
-    color:grey;
+    color: #CCCCCC;
 }
 
 .insider-builds-link  {
@@ -166,7 +170,7 @@ a {
 
 .swimlane p {
     line-height: 2.5rem;
-    color:gray;
+    color:#595959;
     /* font-size: 1.8rem; */
 }
 
@@ -203,7 +207,7 @@ footer .links li:not(:last-child) {
 }
 
 .warning {
-    color: orange;
+    color: #e31c3d;
 }
 
 .license-and-privacy {
