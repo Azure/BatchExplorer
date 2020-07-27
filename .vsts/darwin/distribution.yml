@@ -1,6 +1,8 @@
 steps:
   - template: ./darwin-dependencies.yml
   - script: |
+      set -e
+      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run -s build:prod
       npm run -s build-python
       npm run -s package darwin-app
@@ -14,6 +16,8 @@ steps:
 
   - template: ./sign.yml
   - script: |
+      set -e
+      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       unzip ./release/BatchExplorer*.zip -d ./release/mac
       ls ./release/mac
       rm -f ./release/mac/*.pkg
