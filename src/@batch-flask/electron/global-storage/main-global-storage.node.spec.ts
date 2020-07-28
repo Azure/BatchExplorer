@@ -20,7 +20,7 @@ describe("MainGlobalStorage", () => {
         };
 
         shellSpy = {
-            openItem: jasmine.createSpy("openItem"),
+            openItem: jasmine.createSpy("openItem").and.returnValue(Promise.resolve({success: true, errorMessage: ""})),
         };
 
         service = new MainGlobalStorage(fsSpy, shellSpy);

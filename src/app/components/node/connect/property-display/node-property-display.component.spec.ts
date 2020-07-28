@@ -55,7 +55,7 @@ describe("NodePropertyDisplay", () => {
         pubKeySubject = new BehaviorSubject("baz");
 
         electronShellSpy = {
-            openItem: jasmine.createSpy("").and.returnValue(true),
+            openItem: jasmine.createSpy("openItem").and.returnValue(Promise.resolve({success: true, errorMessage: ""})),
             showItemInFolder: jasmine.createSpy("").and.returnValue(true),
         };
 

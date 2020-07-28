@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, nativeImage } from "electron";
 import { Constants } from "../client-constants";
 import { UniqueWindow } from "../core";
 
@@ -26,7 +26,7 @@ export class SplashScreen extends UniqueWindow {
         const window = new BrowserWindow({
             height: 340,
             width: 340,
-            icon: Constants.urls.icon,
+            icon: nativeImage.createFromDataURL(Constants.urls.icon),
             resizable: false,
             titleBarStyle: "hidden",
             frame: false,
@@ -34,6 +34,7 @@ export class SplashScreen extends UniqueWindow {
             center: true,
             webPreferences: {
                 nodeIntegration: true,
+                enableRemoteModule: true,
             },
         });
         window.loadURL(url);

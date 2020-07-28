@@ -52,6 +52,7 @@ module.exports = function(config) {
                     show: true,
                     webPreferences: {
                         nodeIntegration: true,
+                        enableRemoteModule: true,
                     }
                 }
             }
