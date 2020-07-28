@@ -2,20 +2,20 @@ name: $(SourceBranch)$(Rev:.r)
 jobs:
   - job: Linux
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-18.04
     steps:
        - template: ./linux/ci.yml
 
   - job: MacOS
     pool:
-      vmImage: macOS-10.14
+      vmImage: macOS-10.15
       demands: xcode
     steps:
        - template: ./darwin/ci.yml
 
   - job: Windows
     pool:
-      vmImage: vs2017-win2016
+      vmImage: windows-2019
     steps:
       - template: ./win/ci.yml
 
