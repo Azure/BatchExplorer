@@ -1,10 +1,4 @@
 steps:
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core sdk'
-    inputs:
-      packageType: sdk
-      version: 2.1.x
-
   - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
     inputs:
       ConnectedServiceName: 'ESRP CodeSign'
@@ -15,13 +9,13 @@ steps:
         [
           {
             "KeyCode" : "CP-401337-Apple",
-            "OperationCode" : "MacAppDeveloperSign",
+            "OperationCode" : "MacAppNotarize",
             "Parameters" : {
-              "Hardening": "--options=runtime"
+              "BundleId": "com.microsoft.azure.BatchExplorer"
             },
             "ToolName" : "sign",
             "ToolVersion" : "1.0"
           }
         ]
       SessionTimeout: 120
-    displayName: Codesign
+    displayName: Notarization

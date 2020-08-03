@@ -1,6 +1,7 @@
 steps:
   - template: ../common/set-dist-vars.yml
   - template: ./darwin-dependencies.yml
+
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
@@ -16,6 +17,9 @@ steps:
     displayName: Build .app
 
   - template: ./sign.yml
+
+  - template: ./notarize.yml
+
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
@@ -27,6 +31,7 @@ steps:
       npm run -s package darwin-dmg
       rm -rf ./release/mac/*
     displayName: Build dmg
+
   - script: npm run package darwin-manifest
     displayName: Create manifest
   - template: ../common/generate-sbom.yml
