@@ -1,8 +1,10 @@
 productName: "BatchExplorer"
-appId: "microsoft.azure.batch-explorer"
+appId: "com.microsoft.azure.BatchExplorer"
 
-# Package electron code into a asar archive. Set to false to debug issues.
+# Package electron code into a asar archive, except for .node binaries
+# (see https://github.com/electron-userland/electron-builder/issues/4656)
 asar: true
+asarUnpack: "**/*.node"
 
 files:
   - "build/"
@@ -31,6 +33,16 @@ protocols:
 # Mac OS configuration
 mac:
   icon: "src/app/assets/images/icon.icns"
+  target:
+    - "dmg"
+    - "zip"
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: "../.vsts/darwin/entitlements.plist"
+  entitlementsInherit: "../.vsts/darwin/entitlements.plist"
+  extendInfo:
+    # Required for hardening via ESRP
+    - CSFlags: 65536
 
 # Config for OSX dmg
 dmg:
