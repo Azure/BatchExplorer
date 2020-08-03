@@ -14,6 +14,23 @@ steps:
     displayName: Build packages
 
   - script: |
+      set -e
+      dir=$(Agent.TempDirectory)
+      keychain=$dir/buildagent.keychain
+      security create-keychain -p pwd $keychain
+      security default-keychain -s $keychain
+      security unlock-keychain -p pwd $keychain
+      echo "$(apple-developer-certificate)" | base64 -D > $dir/cert.p12
+      security import $dir/cert.p12 -k $keychain -P "$(apple-developer-certificate-key)" -T /usr/bin/codesign
+      security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k pwd $keychain
+
+      echo "##vso[task.setvariable variable=CSC_LINK]$dir/cert.p12
+      echo "##vso[task.setvariable variable=CSC_KEY_PASSWORD]$(apple-developer-certificate-key)
+    displayName: Prepare Apple Developer certificate
+
+  - script: |
+      set -e
+      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run build-python
       npm run package darwin-app
       cd ./release/mac
@@ -25,24 +42,27 @@ steps:
     workingDirectory: desktop
     displayName: Build .app
 
-  - template: ./sign.yml
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       unzip ./release/BatchExplorer*.zip -d ./release/mac
       ls ./release/mac
       rm -f ./release/mac/*.pkg
-      # rm -rf ./release/*.zip
-      mv ./release/*.zip ./release/code-sign-results.zip
       npm run package darwin-dmg
       rm -rf ./release/mac/*
     workingDirectory: desktop
     displayName: Build dmg
 
+  - template: ./sign.yml
+
+  - template: ./notarize.yml
+
   - script: npm run package darwin-manifest
     workingDirectory: desktop
     displayName: Create manifest
+
   - template: ../common/generate-sbom.yml
+
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: darwin

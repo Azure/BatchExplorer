@@ -39,6 +39,7 @@ stages:
           vmImage: macOS-11
           demands: xcode
         variables:
+          - group: BatchExplorer-Signing
           - name: EOCompliance-Mac
             value: true
         steps:
