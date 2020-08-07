@@ -30,10 +30,9 @@ protocols:
 # Mac OS configuration
 mac:
   icon: "src/app/assets/images/icon.icns"
-  hardenedRuntime: true
+  hardenedRuntime: false
   gatekeeperAssess: false
   entitlements: "resources/darwin/entitlements.darwin.plist"
-  entitlementsInherit: "resources/darwin/entitlements.darwin.inherit.plist"
   extendInfo:
     # Required for hardening via ESRP
     - CSFlags: 65536
