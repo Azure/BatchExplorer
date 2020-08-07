@@ -33,6 +33,7 @@ mac:
   hardenedRuntime: true
   gatekeeperAssess: false
   entitlements: "resources/darwin/entitlements.darwin.plist"
+  entitlementsInherit: "resources/darwin/entitlements.darwin.inherit.plist"
   extendInfo:
     # Required for hardening via ESRP
     - CSFlags: 65536
