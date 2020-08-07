@@ -30,7 +30,7 @@ protocols:
 # Mac OS configuration
 mac:
   icon: "src/app/assets/images/icon.icns"
-  hardenedRuntime: false
+  hardenedRuntime: true
   gatekeeperAssess: false
   entitlements: "resources/darwin/entitlements.darwin.plist"
   extendInfo:
