@@ -18,6 +18,8 @@ steps:
 
   - template: ./sign.yml
 
+  - template: ./notarize.yml
+
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
@@ -33,8 +35,6 @@ steps:
   - script: npm run package darwin-manifest
     displayName: Create manifest
   - template: ../common/generate-sbom.yml
-
-  - template: ./notarize.yml
 
   - template: ../common/publish-artifacts.yml
     parameters:
