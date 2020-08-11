@@ -32,8 +32,7 @@ mac:
   icon: "src/app/assets/images/icon.icns"
   hardenedRuntime: true
   gatekeeperAssess: false
-  entitlements: "resources/darwin/entitlements.darwin.plist"
-  entitlementsInherit: "resources/darwin/entitlements.darwin.inherit.plist"
+  entitlements: ".vsts/darwin/entitlements.plist"
   extendInfo:
     # Required for hardening via ESRP
     - CSFlags: 65536
