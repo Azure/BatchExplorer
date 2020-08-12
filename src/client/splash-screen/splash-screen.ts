@@ -1,6 +1,6 @@
 import { BrowserWindow, nativeImage } from "electron";
 import { Constants } from "../client-constants";
-import { UniqueWindow } from "../core";
+import { UniqueWindow } from "../core/unique-window";
 
 const urls = Constants.urls.splash;
 const url = process.env.HOT ? urls.dev : urls.prod;
