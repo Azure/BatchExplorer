@@ -95,7 +95,7 @@ async function signIn(client: SpectronClient) {
     const url = await client.getUrl();
     if (url.startsWith("https://msft.sts.microsoft.com")) {
         // Click on "Sign with email or passwork instead"
-        const signInWithEmailOrPasswordLink = await client.$(`#loginMessage .actionLink`);
+        const signInWithEmailOrPasswordLink = await client.$("#authOptions .optionButton");
         await signInWithEmailOrPasswordLink.click();
     }
 
