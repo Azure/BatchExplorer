@@ -94,7 +94,7 @@
     "codelyzer": "^5.2.2",
     "colors": "^1.4.0",
     "concurrently": "^5.2.0",
-    "copy-webpack-plugin": "^5.1.1",
+    "copy-webpack-plugin": "^6.0.3",
     "cross-env": "^5.2.1",
     "css-loader": "^2.1.1",
     "electron": "^9.1.1",
