@@ -111,7 +111,7 @@ export class DateUtils {
         if (!(date instanceof DateTime)) {
             date = DateTime.fromJSDate(date);
         }
-        return date.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS);
+        return String(date.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS));
     }
 
     /**
