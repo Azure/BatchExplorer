@@ -104,14 +104,14 @@ export class DateUtils {
 
     /**
      * Returns a full date and time
-     * @example Feb 14th, 2017, 14:03:01
+     * @example Feb 14th, 2017, 14:03:01ß
      */
     public static fullDateAndTime(date: Date | DateTime): string {
         if (!date) { return ""; }
         if (!(date instanceof DateTime)) {
             date = DateTime.fromJSDate(date);
         }
-        return date.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS);
+        return date.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS) ?? "";
     }
 
     /**
