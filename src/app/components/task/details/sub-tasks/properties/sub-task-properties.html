@@ -30,6 +30,6 @@
         <bl-text-property label="Category" [value]="failureInfo.category"></bl-text-property>
         <bl-text-property label="Code" [value]="failureInfo.code"></bl-text-property>
         <bl-text-property label="Message" [value]="failureInfo.message"></bl-text-property>
-        <bl-text-property label="Details" [value]="failureInfo.details"></bl-text-property>
+        <bl-text-property label="Details" [value]="formatErrorDetails(failureInfo.details)" [wrap]="true"></bl-text-property>
     </bl-property-group>
 </bl-property-list>
