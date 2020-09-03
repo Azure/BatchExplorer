@@ -64,7 +64,7 @@
     "rebooting-node-count": "#ff755c"
   },
   "input": {
-    "border": "#d5d5d5",
+    "border": "#949494",
     "focus-border": "var(--color-primary)",
     "placeholder": "var(--color-text-secondary)",
     "text": "var(--color-text-primary)",
