@@ -27,7 +27,7 @@ import { MainWindowManager } from "./main-window-manager";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = ClientConstants.isDev ? "-dev" : "";
-const userAgent = `(${osName}) BatchExplorer/${ClientConstants.version}${isDev}`;
+const userAgentSuffix = `(${osName}) BatchExplorer/${ClientConstants.version}${isDev}`;
 
 export enum BatchExplorerState {
     Loading,
@@ -91,7 +91,10 @@ export class BatchExplorerApplication {
         this.pythonServer.start();
         this._initializer.init();
 
-        this._setCommonHeaders();
+        const window = await this.openFromArguments(process.argv, false);
+        if (!window) { return; }
+
+        this._setCommonHeaders(window);
         const loginResponse = this.aadService.login();
         loginResponse.done.catch((e) => {
             if (e instanceof LogoutError) {
@@ -108,8 +111,7 @@ export class BatchExplorerApplication {
         await loginResponse.started;
 
         this._initializer.setTaskStatus("window", "Loading application");
-        const window = await this.openFromArguments(process.argv, false);
-        if (!window) { return; }
+
         const windowSub = window.state.subscribe((state) => {
             switch (state) {
                 case WindowState.Loading:
@@ -325,8 +327,9 @@ export class BatchExplorerApplication {
         }
     }
 
-    private _setCommonHeaders() {
+    private _setCommonHeaders(window: MainWindow) {
         const requestFilter = { urls: ["*://*/*"] };
+        const userAgent = `${window.webContents.getUserAgent()} ${userAgentSuffix}`;
         session!.defaultSession!.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
             if (details.url.includes("batch.azure.com")) {
                 details.requestHeaders["Origin"] = "http://localhost";
