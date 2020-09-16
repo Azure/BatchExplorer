@@ -15,7 +15,7 @@
     </bl-button>
 </div>
 <div class="toggle-error-btn" *ngIf="error">
-    <button mat-icon-button color="warn" (click)="toggleShowError()" matTooltip="There was an error submitting this form" matTooltipPosition="above">
+    <button aria-label="Show or hide validation error" mat-icon-button color="warn" (click)="toggleShowError()" matTooltip="There was an error submitting this form" matTooltipPosition="above">
         <mat-icon fontIcon="fa-exclamation-triangle"></mat-icon>
     </button>
 </div>
