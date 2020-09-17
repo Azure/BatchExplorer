@@ -187,7 +187,7 @@
     "luxon": "^1.24.1",
     "make-dir": "^2.1.0",
     "node-abi": "^2.18.0",
-    "node-forge": "^0.8.5",
+    "node-forge": "^0.10.0",
     "patternomaly": "^1.3.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.2",
