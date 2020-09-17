@@ -122,9 +122,9 @@ export class MainWindow extends GenericWindow {
             }
         });
 
-        window.webContents.on("did-fail-load", (error) => {
+        window.webContents.on("did-fail-load", (event, errorCode, errorDescription) => {
             this._state.next(WindowState.FailedLoad);
-            log.error("Fail to load", error);
+            log.error(`Failed to load main window: ${errorDescription} (Error code ${errorCode})`);
         });
 
         // tslint:disable-next-line:ban-types
