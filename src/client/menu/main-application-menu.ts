@@ -139,7 +139,7 @@ export class MainApplicationMenu {
                         // open secondary windows
                         if (focusedWindow.id === 1) {
                             BrowserWindow.getAllWindows().forEach((win) => {
-                                if (win.id > 1) {
+                                if (!win.isDestroyed() && win.id > 1) {
                                     win.close();
                                 }
                             });
