@@ -29,7 +29,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public targetLowPriorityNodes?: number;
 
-    @DtoAttr() public maxTasksPerNode?: number;
+    @DtoAttr() public taskSlotsPerNode?: number;
 
     @DtoAttr() public taskSchedulingPolicy?: {
         nodeFillType?: NodeFillType;

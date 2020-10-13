@@ -61,7 +61,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             os: this._osControl,
             // note: probably not advisable to default vmSize value
             vmSize: ["", Validators.required],
-            maxTasksPerNode: 1,
+            taskSlotsPerNode: 1,
             enableInterNodeCommunication: false,
             taskSchedulingPolicy: [NodeFillType.pack],
             startTask: null,

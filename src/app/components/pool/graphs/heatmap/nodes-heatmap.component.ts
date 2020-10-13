@@ -355,13 +355,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _getTaskHeight(tileSize: number, node: Node) {
-        const maxTaskPerNode = this.pool.maxTasksPerNode;
-        const taskHeight = Math.floor(tileSize / maxTaskPerNode);
-        const remaining = tileSize % maxTaskPerNode;
+        const taskSlotsPerNode = this.pool.taskSlotsPerNode;
+        const taskHeight = Math.floor(tileSize / taskSlotsPerNode);
+        const remaining = tileSize % taskSlotsPerNode;
         let height;
         const combine = taskHeight < 2;
         if (combine) {
-            height = Math.floor(tileSize / maxTaskPerNode * node.runningTasksCount);
+            height = Math.floor(tileSize / taskSlotsPerNode * node.runningTasksCount);
         } else {
             height = taskHeight - 1;
         }
