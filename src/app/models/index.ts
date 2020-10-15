@@ -37,6 +37,8 @@ export * from "./job-schedule-stats";
 export * from "./job-schedule";
 export * from "./job-stats";
 export * from "./job-task-counts";
+export * from "./job-task-slot-counts";
+export * from "./job-task-counts-result";
 export * from "./key-bindings";
 export * from "./list-result";
 export * from "./metadata";
