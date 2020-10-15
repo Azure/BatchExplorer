@@ -28,7 +28,7 @@ export class HeatmapMockComponent {
     public width = "400px";
     public height = "250px";
     public nodes: List<Node> = List([]);
-    public pool = new Pool({ id: "pool-id", maxTasksPerNode: 1 });
+    public pool = new Pool({ id: "pool-id", taskSlotsPerNode: 1 });
     public interactive = true;
 }
 
@@ -151,7 +151,7 @@ describe("NodesHeatmapComponent", () => {
     describe("Running task overlay", () => {
         it("when there is space should show 2 green sripes", () => {
             testComponent.nodes = createNodes(2);
-            testComponent.pool = new Pool({ id: "pool-4", maxTasksPerNode: 4 });
+            testComponent.pool = new Pool({ id: "pool-4", taskSlotsPerNode: 4 });
             fixture.detectChanges();
             const tiles = svg.selectAll("g.node-group");
             expect(tiles.size()).toBe(2);
@@ -170,7 +170,7 @@ describe("NodesHeatmapComponent", () => {
 
         it("when there is no space should combine green sripes", () => {
             testComponent.nodes = createNodes(2);
-            testComponent.pool = new Pool({ id: "pool-100", maxTasksPerNode: 300 });
+            testComponent.pool = new Pool({ id: "pool-100", taskSlotsPerNode: 300 });
             fixture.detectChanges();
             const tiles = svg.selectAll("g.node-group");
             expect(tiles.size()).toBe(2);
