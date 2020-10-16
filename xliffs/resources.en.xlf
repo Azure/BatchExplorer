@@ -683,7 +683,7 @@
         <source>Total task run</source>
       </trans-unit>
       <trans-unit id="node-configuration.total-tasks-succeeded">
-        <source>Total succeessful tasks</source>
+        <source>Total successful tasks</source>
       </trans-unit>
       <trans-unit id="node-configuration.url">
         <source>URL</source>
