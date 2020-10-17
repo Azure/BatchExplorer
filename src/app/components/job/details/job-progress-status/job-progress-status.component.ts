@@ -134,7 +134,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         const obs = this.jobService.getTaskCounts(this.job.id);
 
         obs.subscribe((x) => {
-            this.jobTaskCounts = x;
+            this.jobTaskCounts = x.taskCounts;
             this.countRunningTasks();
             this._computeProgress();
             this.changeDetectorRef.markForCheck();

@@ -1,10 +1,10 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-import { JobTaskCounts } from "./job-task-counts";
-import { JobTaskSlotCounts } from "./job-task-slot-counts";
+import { JobTaskCounts, JobTaskCountsAttributes } from "./job-task-counts";
+import { JobTaskSlotCounts, JobTaskSlotCountsAttributes } from "./job-task-slot-counts";
 
 export interface JobTaskCountsResultAttributes {
-    taskCounts: JobTaskCounts;
-    taskSlotCounts: JobTaskSlotCounts;
+    taskCounts: JobTaskCountsAttributes;
+    taskSlotCounts: JobTaskSlotCountsAttributes;
 }
 
 @Model()
