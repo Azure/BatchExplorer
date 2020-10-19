@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Filter, ListView, autobind } from "@batch-flask/core";
+import { Filter, ListSelection, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Node } from "app/models";
@@ -82,4 +82,9 @@ export class NodeListComponent extends ListBaseComponent implements OnChanges, O
     public onScrollToBottom(): Observable<any> {
         return this.data.fetchNext();
     }
+
+    public deleteSelection(selection: ListSelection) {
+        this.commands.delete.executeFromSelection(selection).subscribe();
+    }
+
 }
