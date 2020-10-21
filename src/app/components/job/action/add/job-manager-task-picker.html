@@ -28,6 +28,11 @@
             <bl-duration-picker formControlName="retentionTime" label="Retention time" [allowUnlimited]="false" [defaultDuration]="7" required></bl-duration-picker>
         </bl-form-field>
     </div>
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="requiredSlots" placeholder="Required slots">
+        </bl-form-field>
+    </div>
     <div class="form-element pad-top">
         <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
         </bl-user-identity-picker>

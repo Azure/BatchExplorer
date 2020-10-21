@@ -20,6 +20,7 @@ export interface JobManagerTaskAttributes {
     applicationPackageReferences: ApplicationPackageReference[];
     environmentSettings: NameValuePair[];
     constraints: TaskConstraints;
+    requiredSlots: number;
     killJobOnCompletion: boolean;
     allowLowPriorityNode: boolean;
     runExclusive: boolean;
@@ -43,6 +44,7 @@ export class JobManagerTask extends Record<JobManagerTaskAttributes> {
 
     @ListProp(NameValuePair) public environmentSettings: List<NameValuePair> = List([]);
     @Prop() public constraints: TaskConstraints;
+    @Prop() public requiredSlots: number;
     @Prop() public killJobOnCompletion: boolean;
     @Prop() public runExclusive: boolean;
     @Prop() public allowLowPriorityNode: boolean;
@@ -50,5 +52,4 @@ export class JobManagerTask extends Record<JobManagerTaskAttributes> {
     @Prop() public userIdentity: UserIdentity;
     @ListProp(TaskOutputFile) public outputFiles: List<TaskOutputFile> = List([]);
     @Prop() public authenticationTokenSettings: AuthenticationTokenSettings;
-
 }

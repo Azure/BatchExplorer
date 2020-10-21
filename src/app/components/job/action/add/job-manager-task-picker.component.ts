@@ -12,6 +12,7 @@ const DEFAULT_JOBMANAGER = {
     commandLine: "",
     killJobOnCompletion: true,
     runExclusive: true,
+    requiredSlots: 1,
 };
 const INVALID_RESPONSE = {
     jobManagerTaskPicker: {
@@ -34,6 +35,7 @@ export class JobManagerTaskPickerComponent extends JobTaskBaseComponent {
         this._baseFormControls["displayName"] = [null];
         this._baseFormControls["killJobOnCompletion"] = [true];
         this._baseFormControls["runExclusive"] = [true];
+        this._baseFormControls["requiredSlots"] = [1];
         this.form = formBuilder.group(this._baseFormControls);
         this.form.valueChanges.subscribe((val: any) => {
             if (this._propagateChange) {

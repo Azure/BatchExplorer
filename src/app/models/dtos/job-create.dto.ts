@@ -22,6 +22,7 @@ export class JobManagerTaskDto extends Dto<JobPreparationTaskDto> {
     @DtoAttr() public allowLowPriorityNode: boolean;
     @DtoAttr() public killJobOnCompletion: boolean;
     @DtoAttr() public constraints: TaskConstraintsDto;
+    @DtoAttr() public requiredSlots: number;
     @DtoAttr() public containerSettings: TaskContainerSettingsDto;
     @DtoAttr() public userIdentity: UserIdentityDto;
     @DtoAttr() public authenticationTokenSettings: AuthenticationTokenSettingsDto;
