@@ -17,6 +17,7 @@ export interface CreateTaskModel {
     environmentSettings: any[];
     affinityInfo: any;
     constraints: TaskConstraintsModel;
+    requiredSlots: number;
     userIdentity: any;
     multiInstanceSettings: any;
     appPackages: PackageReferenceModel[];
@@ -37,6 +38,7 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): TaskCreateD
             maxTaskRetryCount: formData.constraints && formData.constraints.maxTaskRetryCount,
             retentionTime: formData.constraints && formData.constraints.retentionTime,
         },
+        requiredSlots: formData.requiredSlots,
         userIdentity: formData.userIdentity,
         multiInstanceSettings: formData.multiInstanceSettings,
         applicationPackageReferences: formData.appPackages,
@@ -59,6 +61,7 @@ export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
         resourceFiles: task.resourceFiles || [],
         environmentSettings: task.environmentSettings || [],
         affinityInfo: task.affinityInfo,
+        requiredSlots: task.requiredSlots,
         userIdentity: task.userIdentity,
         multiInstanceSettings: task.multiInstanceSettings,
         appPackages: task.applicationPackageReferences,

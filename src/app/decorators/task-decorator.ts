@@ -14,6 +14,7 @@ export class TaskDecorator extends DecoratorBase<Task> {
     public previousState: string;
     public commandLine: string;
     public successExitCodes: string;
+    public requiredSlots: number;
 
     public exitConditions: {};
     public resourceFiles: {};
@@ -37,6 +38,7 @@ export class TaskDecorator extends DecoratorBase<Task> {
         this.state = this.stateField(task.state);
         this.previousState = this.stateField(task.previousState);
         this.commandLine = this.stringField(task.commandLine);
+        this.requiredSlots = task.requiredSlots;
 
         this.exitConditions = task.exitConditions || {};
         this.resourceFiles = task.resourceFiles || {};

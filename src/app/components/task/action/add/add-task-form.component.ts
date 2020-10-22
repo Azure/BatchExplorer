@@ -66,6 +66,7 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
             commandLine: ["", Validators.required],
             constraints: this.constraintsGroup,
             userIdentity: [null],
+            requiredSlots: [1, [Validators.required, Validators.min(1)]],
             fileGroups: [[]],
             resourceFiles: [[]],
             environmentSettings: [[]],
