@@ -3,6 +3,7 @@ import {
     FormBuilder,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
+    Validators,
 } from "@angular/forms";
 import { JobTaskBaseComponent } from "./job-task-base.component";
 
@@ -35,7 +36,7 @@ export class JobManagerTaskPickerComponent extends JobTaskBaseComponent {
         this._baseFormControls["displayName"] = [null];
         this._baseFormControls["killJobOnCompletion"] = [true];
         this._baseFormControls["runExclusive"] = [true];
-        this._baseFormControls["requiredSlots"] = [1];
+        this._baseFormControls["requiredSlots"] = [1, [Validators.required, Validators.min(1)]];
         this.form = formBuilder.group(this._baseFormControls);
         this.form.valueChanges.subscribe((val: any) => {
             if (this._propagateChange) {

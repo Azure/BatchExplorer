@@ -32,6 +32,8 @@
         <bl-form-field>
             <input blInput formControlName="requiredSlots" placeholder="Required slots">
         </bl-form-field>
+        <bl-error controlName="requiredSlots" code="required">Required slots is a required field</bl-error>
+        <bl-error controlName="requiredSlots" code="min">Required slots value must be greater than 0</bl-error>
     </div>
     <div class="form-element pad-top">
         <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
