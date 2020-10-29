@@ -42,7 +42,7 @@ export interface PoolAttributes {
     id: string;
     eTag: string;
     lastModified: Date;
-    maxTasksPerNode: number;
+    taskSlotsPerNode: number;
     resizeErrors: Array<Partial<ResizeError>>;
     resizeTimeout: Duration;
     state: string;
@@ -96,7 +96,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop() public lastModified: Date;
 
-    @Prop() public maxTasksPerNode: number = 1;
+    @Prop() public taskSlotsPerNode: number = 1;
 
     @ListProp(ResizeError) public resizeErrors: List<ResizeError> = List([]);
 

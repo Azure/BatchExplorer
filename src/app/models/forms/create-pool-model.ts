@@ -41,7 +41,7 @@ export interface CreatePoolModel {
     displayName: string;
     scale: PoolScaleSelection;
     vmSize: string;
-    maxTasksPerNode: string;
+    taskSlotsPerNode: string;
     enableInterNodeCommunication: boolean;
     os: PoolOSPickerModel;
     startTask: any;
@@ -62,7 +62,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         displayName: output.displayName,
         vmSize: output.vmSize,
         enableAutoScale: outputScale.enableAutoScale,
-        maxTasksPerNode: Number(output.maxTasksPerNode),
+        taskSlotsPerNode: Number(output.taskSlotsPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
         taskSchedulingPolicy: {
             nodeFillType: output.taskSchedulingPolicy,
@@ -138,7 +138,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             autoScaleEvaluationInterval: autoScaleInterval,
             resizeTimeout: pool.resizeTimeout,
         },
-        maxTasksPerNode: pool.maxTasksPerNode.toString(),
+        taskSlotsPerNode: pool.taskSlotsPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
         taskSchedulingPolicy: pool.taskSchedulingPolicy.nodeFillType,
         os: {

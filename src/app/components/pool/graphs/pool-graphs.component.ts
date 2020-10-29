@@ -118,7 +118,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.pool) {
             this.performanceData.pool = this.pool;
-            this.maxRunningTasks = this.pool ? this.pool.targetNodes * this.pool.maxTasksPerNode : 0;
+            this.maxRunningTasks = this.pool ? this.pool.targetNodes * this.pool.taskSlotsPerNode : 0;
             this.isPaasPool = Boolean(this.pool.cloudServiceConfiguration);
             if (ComponentUtils.recordChangedId(changes.pool) && !this.node) {
                 this.performanceData.update();
