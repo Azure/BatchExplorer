@@ -50,17 +50,18 @@ describe("JobProgressStatusComponent", () => {
 
         jobServiceSpy = {
             getTaskCounts: jasmine.createSpy("getTaskCounts").and.callFake((jobId) => {
+                const activeTasks = jobId === "large-job" ? 234000 : 12;
                 const taskCounts = new JobTaskCounts({
                     running: 4,
                     completed: 8,
-                    active: jobId === "large-job" ? 234000 : 12,
+                    active: activeTasks,
                     failed: 2,
                     succeeded: 6,
                 });
                 const taskSlotCounts = new JobTaskSlotCounts({
                     running: 3,
                     completed: 10,
-                    active: jobId === "large-job" ? 234000 : 12,
+                    active: activeTasks,
                     failed: 3,
                     succeeded: 9,
                 });
