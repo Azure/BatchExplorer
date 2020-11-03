@@ -3,7 +3,7 @@ steps:
     inputs:
       ConnectedServiceName: 'ESRP CodeSign'
       FolderPath: ./release
-      Pattern: 'BatchExplorer-*mac.zip,*.dmg'
+      Pattern: 'BatchExplorer-mac.zip,*.dmg'
       signConfigType: inlineSignParams
       inlineOperation: |
         [
