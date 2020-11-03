@@ -12,13 +12,7 @@ steps:
       zip -y -r ../BatchExplorer-mac.zip ./BatchExplorer.app
       cd ../..
       rm -rf ./release/mac/*.app
-      mkdir ./release/keep
-      cp ./release/*.zip ./release/keep/before-code-sign.zip
     displayName: Build .app
-
-  - template: ./sign.yml
-
-  - template: ./notarize.yml
 
   - script: |
       set -e
@@ -26,11 +20,13 @@ steps:
       unzip ./release/BatchExplorer*.zip -d ./release/mac
       ls ./release/mac
       rm -f ./release/mac/*.pkg
-      # rm -rf ./release/*.zip
-      mv ./release/*.zip ./release/code-sign-results.zip
       npm run -s package darwin-dmg
       rm -rf ./release/mac/*
     displayName: Build dmg
+
+  - template: ./sign.yml
+
+  - template: ./notarize.yml
 
   - script: npm run package darwin-manifest
     displayName: Create manifest
