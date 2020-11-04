@@ -32,11 +32,13 @@ protocols:
 # Mac OS configuration
 mac:
   icon: "src/app/assets/images/icon.icns"
+  target:
+    - "dmg"
+    - "zip"
   hardenedRuntime: false
   gatekeeperAssess: false
   entitlements: ".vsts/darwin/entitlements.plist"
   entitlementsInherit: ".vsts/darwin/entitlements.plist"
-  target: ["dmg", "zip"]
   extendInfo:
     # Required for hardening via ESRP
     - CSFlags: 65536
