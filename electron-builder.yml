@@ -1,8 +1,8 @@
 productName: "BatchExplorer"
-appId: "microsoft.azure.batch-explorer"
+appId: "com.microsoft.azure.BatchExplorer"
 
 # Package electron code into a asar archive. Set to false to debug issues.
-asar: true
+asar: false
 
 files:
   - "build/"
