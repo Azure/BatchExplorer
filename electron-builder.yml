@@ -35,7 +35,7 @@ mac:
   target:
     - "dmg"
     - "zip"
-  hardenedRuntime: false
+  hardenedRuntime: true
   gatekeeperAssess: false
   entitlements: ".vsts/darwin/entitlements.plist"
   entitlementsInherit: ".vsts/darwin/entitlements.plist"
