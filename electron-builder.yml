@@ -3,8 +3,8 @@ appId: "com.microsoft.azure.BatchExplorer"
 
 # Package electron code into a asar archive, except for .node binaries
 # (see https://github.com/electron-userland/electron-builder/issues/4656)
-asar:
-  asarUnpack: "**/*.node"
+asar: true
+asarUnpack: "**/*.node"
 
 files:
   - "build/"
