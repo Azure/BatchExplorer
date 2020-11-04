@@ -1,8 +1,10 @@
 productName: "BatchExplorer"
 appId: "com.microsoft.azure.BatchExplorer"
 
-# Package electron code into a asar archive. Set to false to debug issues.
-asar: false
+# Package electron code into a asar archive, except for .node binaries
+# (see https://github.com/electron-userland/electron-builder/issues/4656)
+asar:
+  asarUnpack: "**/*.node"
 
 files:
   - "build/"
