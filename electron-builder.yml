@@ -36,6 +36,7 @@ mac:
   gatekeeperAssess: false
   entitlements: ".vsts/darwin/entitlements.plist"
   entitlementsInherit: ".vsts/darwin/entitlements.plist"
+  target: ["dmg", "zip"]
   extendInfo:
     # Required for hardening via ESRP
     - CSFlags: 65536
