@@ -32,7 +32,7 @@ protocols:
 # Mac OS configuration
 mac:
   icon: "src/app/assets/images/icon.icns"
-  hardenedRuntime: true
+  hardenedRuntime: false
   gatekeeperAssess: false
   extendInfo:
     # Required for hardening via ESRP
