@@ -53,8 +53,8 @@
   },
   "monitorChart": {
     "core-count": "#1c3f95",
-    "low-priority-core-count": "#ffa90d",
-    "task-start-event": "#ffa90d",
+    "low-priority-core-count": "#a36a00",
+    "task-start-event": "#a36a00",
     "task-complete-event": "#388e3c",
     "task-fail-event": "#aa3939",
     "starting-node-count": "#1c3f95",
