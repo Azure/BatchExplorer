@@ -9,7 +9,8 @@ import {
 } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { UserConfigurationService, autobind } from "@batch-flask/core";
+import { TelemetryService, UserConfigurationService, autobind } from "@batch-flask/core";
+import { EventTelemetry } from "@batch-flask/core/telemetry";
 import { DialogService } from "@batch-flask/ui";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { exists, log } from "@batch-flask/utils";
@@ -19,7 +20,7 @@ import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
 import { NcjFileGroupService, NcjSubmitService, NcjTemplateService } from "app/services";
 import { StorageContainerService } from "app/services/storage";
 import { BEUserDesktopConfiguration, Constants } from "common";
-import { Subject, Subscription, of } from "rxjs";
+import { Observable, Subject, Subscription, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from "rxjs/operators";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
 
@@ -84,7 +85,8 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private dialogService: DialogService,
         private fileGroupService: NcjFileGroupService,
         private storageService: StorageContainerService,
-        private settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
+        private settingsService: UserConfigurationService<BEUserDesktopConfiguration>,
+        private telemetryService: TelemetryService) {
 
         this.form = new FormGroup({});
 
@@ -174,17 +176,19 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
     @autobind()
     public submit() {
-        let method;
-        const methods = {
-            [NcjTemplateMode.NewPoolAndJob]: this._createJobWithAutoPool,
-            [NcjTemplateMode.ExistingPoolAndJob]: this._createJob,
-            [NcjTemplateMode.NewPool]: this._createPool,
+        let method: () => Observable<any>;
+        const methods: { [key in  NcjTemplateMode]?: () => Observable<any> } = {
+            [NcjTemplateMode.NewPoolAndJob]:  this._createJobWithAutoPool,
+            [NcjTemplateMode.ExistingPoolAndJob]:  this._createJob,
+            [NcjTemplateMode.NewPool]:  this._createPool,
         };
         method = methods[this.modeState];
 
         if (method) {
             const obs = method();
             obs.subscribe();
+
+            this.gallerySubmitTelemetry(this.modeState);
 
             return obs;
         } else {
@@ -193,8 +197,20 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         }
     }
 
+    private gallerySubmitTelemetry(mode: NcjTemplateMode) {
+        const telemetry: EventTelemetry = {
+            name: "Execute action",
+            properties: {
+                name: "submit",
+                type:  "Gallery",
+                templateMode: NcjTemplateMode[mode],
+            },
+        };
+        this.telemetryService.trackEvent(telemetry);
+    }
+
     @autobind()
-    private _createJobWithAutoPool() {
+    private _createJobWithAutoPool(): Observable<any> {
         this._saveTemplateAsRecent();
         return this.ncjSubmitService.expandPoolTemplate(this.poolTemplate, this.poolParams.value).pipe(
             switchMap(data => this._runJobWithPool(data)),
@@ -202,7 +218,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     @autobind()
-    private _createJob() {
+    private _createJob(): Observable<any> {
         const jobTemplate = { ...this.jobTemplate };
         if (!this.jobTemplateIsAutoPool) {
             jobTemplate.job.properties.poolInfo = this.pickedPool.value;
@@ -214,7 +230,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     @autobind()
-    private _createPool() {
+    private _createPool(): Observable<any> {
         this._saveTemplateAsRecent();
         const obs = this.ncjSubmitService.createPool(this.poolTemplate, this.poolParams.value);
         obs.subscribe((data) => {

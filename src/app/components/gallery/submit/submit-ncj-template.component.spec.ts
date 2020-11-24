@@ -5,8 +5,8 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
-import { MaterialModule, UserConfigurationService } from "@batch-flask/core";
-import { I18nTestingModule, MockUserConfigurationService } from "@batch-flask/core/testing";
+import { MaterialModule, TelemetryService, UserConfigurationService } from "@batch-flask/core";
+import { I18nTestingModule, MockUserConfigurationService, TelemetryTestingModule, TestTelemetryService } from "@batch-flask/core/testing";
 import { I18nUIModule, SelectModule } from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -115,6 +115,7 @@ describe("SubmitNcjTemplateComponent", () => {
     let poolOsServiceSpy;
     let settingsServiceSpy: MockUserConfigurationService;
     let renderingContainerImageServiceSpy;
+    let telemetryServiceSpy: TestTelemetryService;
 
     const blendFile = "myscene.blend";
     let queryParameters;
@@ -222,6 +223,7 @@ describe("SubmitNcjTemplateComponent", () => {
                 SelectModule,
                 I18nTestingModule,
                 I18nUIModule,
+                TelemetryTestingModule,
             ],
             declarations: [NoItemMockComponent, SubmitNcjTemplateComponent, FileGroupSasComponent,
                 TestComponent, FileGroupPickerComponent, CloudFilePickerComponent, ParameterInputComponent,
@@ -248,6 +250,8 @@ describe("SubmitNcjTemplateComponent", () => {
 
             schemas: [NO_ERRORS_SCHEMA],
         });
+
+        telemetryServiceSpy = TestBed.get(TelemetryService);
 
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
@@ -280,6 +284,34 @@ describe("SubmitNcjTemplateComponent", () => {
 
         it("should set mode to create auto-pool", () => {
             expect(component.modeState).toBe(NcjTemplateMode.NewPoolAndJob);
+        });
+    });
+
+    describe("Submit", () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            de = fixture.debugElement.query(By.css("bl-submit-ncj-template"));
+            component = de.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it("Should submit telemetry", () => {
+            component.modeState = NcjTemplateMode.NewPool;
+            component.submit();
+            expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledOnce();
+        });
+
+        it("should have telemetry properties", () => {
+            component.modeState = NcjTemplateMode.NewPool;
+            component.submit();
+            expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledWith({
+                name: "Execute action",
+                properties: {
+                    name: "submit",
+                    type:  "Gallery",
+                    templateMode: "ExistingPoolAndJob",
+                },
+            });
         });
     });
 });
