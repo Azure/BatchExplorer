@@ -2,23 +2,22 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch",
+      "name": "Debug: Main",
       "type": "node",
       "request": "launch",
       "protocol": "inspector",
       "program": "${workspaceRoot}/src/client/main.ts",
       "stopOnEntry": false,
-      "args": [],
+      "args": [
+        "--remote-debugging-port=9222",
+        "--nolazy"
+      ],
       "cwd": "${workspaceRoot}",
       "preLaunchTask": "build-client",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
       "windows": {
         "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
       },
-      "runtimeArgs": [
-        "--remote-debugging-port=9222",
-        "--nolazy"
-      ],
       "env": {
         "NODE_ENV": "development",
         "HOT": "1"
@@ -28,10 +27,31 @@
       "sourceMaps": true,
       "outFiles": [
         "${workspaceRoot}/build/**/*.js"
-      ]
+      ],
+      "presentation": {
+          "hidden": false,
+          "group": "Debug",
+          "order": 20
+      }
     },
     {
-      "name": "TestClient",
+      "name": "Attach: Renderer",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "sourceMaps": true,
+      "trace": "verbose",
+      "url": "file://*",
+      "webRoot": "${workspaceRoot}/build",
+      "timeout": 30000,
+      "presentation": {
+        "hidden": false,
+        "group": "Debug",
+        "order": 30
+      }
+    },
+    {
+      "name": "Test: Client",
       "type": "node",
       "request": "launch",
       "protocol": "inspector",
@@ -43,17 +63,26 @@
       ],
       "env": {
         "NODE_ENV": "test"
+      },
+      "presentation": {
+        "hidden": false,
+        "group": "Test",
+        "order": 10
       }
-    },
+    }
+  ],
+  "compounds": [
     {
-      "name": "Attach to Process",
-      "type": "chrome",
-      "request": "attach",
-      "port": 9222,
-      "sourceMaps": true,
-      "trace": "verbose",
-      "url": "file://*",
-      "webRoot": "${workspaceRoot}/build"
+        "name": "Debug: All",
+        "configurations": [
+            "Debug: Main",
+            "Attach: Renderer"
+        ],
+        "presentation": {
+            "hidden": false,
+            "group": "Debug",
+            "order": 10
+        }
     }
   ]
 }
