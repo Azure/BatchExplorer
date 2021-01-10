@@ -7,7 +7,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { BatchAccountService, PoolService, PricingService } from "app/services";
+import { BatchAccountService, PoolService, PricingService, VmSizeService } from "app/services";
 import { NumberUtils } from "app/utils";
 import { Constants } from "common";
 import { Observable, Subscription } from "rxjs";
@@ -31,6 +31,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     private _renderingSkuSelected: boolean = false;
     private _subs: Subscription[] = [];
     private _lastFormValue: CreatePoolModel;
+    private _maxCores: number = 256;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -38,6 +39,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private poolService: PoolService,
         private accountService: BatchAccountService,
         private pricingService: PricingService,
+        private vmSizeService: VmSizeService,
         changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) {
 
@@ -61,7 +63,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             os: this._osControl,
             // note: probably not advisable to default vmSize value
             vmSize: ["", Validators.required],
-            taskSlotsPerNode: 1,
+            taskSlotsPerNode: [1, Validators.max(256)],
             enableInterNodeCommunication: false,
             taskSchedulingPolicy: [NodeFillType.pack],
             startTask: null,
@@ -115,6 +117,17 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 || value.vmSize !== this._lastFormValue.vmSize
                 || this._lastFormValue.scale !== value.scale) {
                 this._updateEstimatedPrice();
+            }
+            if (value.vmSize === "") {
+                this.form.get('taskSlotsPerNode').setValidators([Validators.max(256)]);
+            } else if (value.vmSize !== "" || value.vmSize !== this._lastFormValue.vmSize) {
+                const obs = this.vmSizeService.get(value.vmSize);
+                obs.subscribe({
+                    next: (vmSize) => {
+                        this._maxCores = Math.min(vmSize.numberOfCores * 4, 256);
+                        this.form.get('taskSlotsPerNode').setValidators([Validators.max(this._maxCores)]);
+                    }
+                })
             }
             this._lastFormValue = value;
         });
