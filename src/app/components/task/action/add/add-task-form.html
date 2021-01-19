@@ -30,6 +30,15 @@
                 <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
                 </bl-user-identity-picker>
             </div>
+
+            <div class="form-element">
+                <bl-form-field>
+                    <input blInput formControlName="requiredSlots" placeholder="Required slots">
+                </bl-form-field>
+                <bl-error controlName="requiredSlots" code="required">Required slots is a required field</bl-error>
+                <bl-error controlName="requiredSlots" code="min">Required slots value must be greater than or equal to 1</bl-error>
+            </div>
+
         </bl-form-section>
 
         <bl-form-section title="Constraints" subtitle="The execution constraints that apply to this task">

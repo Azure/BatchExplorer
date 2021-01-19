@@ -1,7 +1,7 @@
 import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatRadioGroup, MatRadioModule } from "@angular/material";
+import { MatRadioGroup, MatRadioModule } from "@angular/material/radio";
 import { By } from "@angular/platform-browser";
 import {
     I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,

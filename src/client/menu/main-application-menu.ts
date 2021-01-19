@@ -12,7 +12,7 @@ import { take } from "rxjs/operators";
 
 function setupOSXSpecificMenu(template) {
     if (process.platform === "darwin") {
-        const name = app.getName();
+        const name = app.name;
         template.unshift({
             label: name,
             submenu: [
@@ -87,7 +87,7 @@ export class MainApplicationMenu {
                 { role: "copy" },
                 { role: "paste" },
                 { role: "delete" },
-                { role: "selectall" },
+                { role: "selectAll" },
                 { type: "separator" },
                 {
                     label: "Settings",
@@ -139,7 +139,7 @@ export class MainApplicationMenu {
                         // open secondary windows
                         if (focusedWindow.id === 1) {
                             BrowserWindow.getAllWindows().forEach((win) => {
-                                if (win.id > 1) {
+                                if (!win.isDestroyed() && win.id > 1) {
                                     win.close();
                                 }
                             });

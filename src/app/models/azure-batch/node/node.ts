@@ -25,6 +25,7 @@ export interface NodeAttributes {
     totalTasksRun: number;
     totalTasksSucceeded: number;
     runningTasksCount: number;
+    runningTaskSlotsCount: number;
     isDedicated: boolean;
     recentTasks: Array<Partial<NodeRecentTask>>;
     certificateReferences: Array<Partial<CertificateReference>>;
@@ -54,6 +55,7 @@ export class Node extends Record<NodeAttributes> {
     @Prop() public totalTasksRun: number = 0;
     @Prop() public totalTasksSucceeded: number = 0;
     @Prop() public runningTasksCount: number = 0;
+    @Prop() public runningTaskSlotsCount: number = 0;
     @Prop() public isDedicated: boolean;
     @Prop() public startTaskInfo: StartTaskInfo;
     @Prop() public startTask: StartTask;

@@ -1,9 +1,9 @@
-<div class="action-btn" [ngClass]="type" [matTooltip]="tooltipTitle" [matTooltipPosition]="tooltipPosition" [ngSwitch]="status">
+<div class="action-btn" [ngClass]="type" [matTooltip]="tooltipTitle" [matTooltipPosition]="tooltipPosition">
     <div [class.hide]="status !== SubmitStatus.Idle" class="label">
         <i [class]="icon"></i>
         <ng-content></ng-content>
     </div>
-    <div class="overlay">
+    <div class="overlay" [ngSwitch]="status">
         <i class="fa fa-spinner fa-spin" *ngSwitchCase="SubmitStatus.Submitting"></i>
         <i class="fa fa-warning" *ngSwitchCase="SubmitStatus.Failed"></i>
         <span class="success-container" *ngSwitchCase="SubmitStatus.Succeeded">

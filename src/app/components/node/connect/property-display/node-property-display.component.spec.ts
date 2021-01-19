@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatCheckboxModule } from "@angular/material";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { By } from "@angular/platform-browser";
 import { UserConfigurationService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
@@ -55,7 +55,7 @@ describe("NodePropertyDisplay", () => {
         pubKeySubject = new BehaviorSubject("baz");
 
         electronShellSpy = {
-            openItem: jasmine.createSpy("").and.returnValue(true),
+            openItem: jasmine.createSpy("openItem").and.returnValue(Promise.resolve({success: true, errorMessage: ""})),
             showItemInFolder: jasmine.createSpy("").and.returnValue(true),
         };
 

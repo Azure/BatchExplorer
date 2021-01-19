@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { NcjTemplateService, RecentSubmission } from "app/services";
 
 import "./submit-recent-template.scss";

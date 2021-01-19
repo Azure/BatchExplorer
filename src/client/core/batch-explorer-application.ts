@@ -27,7 +27,7 @@ import { MainWindowManager } from "./main-window-manager";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = ClientConstants.isDev ? "-dev" : "";
-const userAgent = `(${osName}) BatchExplorer/${ClientConstants.version}${isDev}`;
+const userAgentSuffix = `(${osName}) BatchExplorer/${ClientConstants.version}${isDev}`;
 
 export enum BatchExplorerState {
     Loading,
@@ -91,7 +91,10 @@ export class BatchExplorerApplication {
         this.pythonServer.start();
         this._initializer.init();
 
-        this._setCommonHeaders();
+        const window = await this.openFromArguments(process.argv, false);
+        if (!window) { return; }
+
+        this._setCommonHeaders(window);
         const loginResponse = this.aadService.login();
         loginResponse.done.catch((e) => {
             if (e instanceof LogoutError) {
@@ -108,8 +111,7 @@ export class BatchExplorerApplication {
         await loginResponse.started;
 
         this._initializer.setTaskStatus("window", "Loading application");
-        const window = this.openFromArguments(process.argv, false);
-        if (!window) { return; }
+
         const windowSub = window.state.subscribe((state) => {
             switch (state) {
                 case WindowState.Loading:
@@ -124,7 +126,6 @@ export class BatchExplorerApplication {
                     break;
                 case WindowState.Ready:
                     this._initializer.completeTask("window");
-                    windowSub.unsubscribe();
                     appReady.resolve();
             }
         });
@@ -138,13 +139,15 @@ export class BatchExplorerApplication {
                     break;
                 case AuthenticationState.Authenticated:
                     this._initializer.completeLogin();
-                    authSub.unsubscribe();
                     loggedIn.resolve();
                     break;
-
             }
         });
         await Promise.all([appReady.promise, loggedIn.promise]);
+
+        windowSub.unsubscribe();
+        authSub.unsubscribe();
+
         window.show();
     }
 
@@ -183,7 +186,7 @@ export class BatchExplorerApplication {
         return this.windows.openNewWindow(link);
     }
 
-    public openFromArguments(argv: string[], showWhenReady = true): MainWindow | null {
+    public async openFromArguments(argv: string[], showWhenReady = true): Promise<MainWindow | null> {
         if (ClientConstants.isDev) {
             return this.windows.openNewWindow(undefined, showWhenReady);
         }
@@ -196,16 +199,14 @@ export class BatchExplorerApplication {
             const link = new BatchExplorerLink(arg);
             return this.openLink(link, false);
         } catch (e) {
-            dialog.showMessageBox({
+            await dialog.showMessageBox({
                 type: "error",
                 title: "Cannot open given link in BatchExplorer",
                 message: e.message,
-            }, () => {
-                // If there is no window open we quit the app
-                if (this.windows.size === 0) {
-                    this.quit();
-                }
             });
+            if (this.windows.size === 0) {
+                this.quit();
+            }
             return null;
         }
     }
@@ -286,7 +287,8 @@ export class BatchExplorerApplication {
             this.telemetryService.flush(true);
         });
 
-        process.on("unhandledRejection", r => {
+        // tslint:disable-next-line: ban-types
+        process.on("unhandledRejection", (r: Error) => {
             log.error("Unhandled promise error:", r);
             this.telemetryService.trackError(r);
             this.telemetryService.flush(true);
@@ -325,8 +327,9 @@ export class BatchExplorerApplication {
         }
     }
 
-    private _setCommonHeaders() {
-        const requestFilter = { urls: ["https://*", "http://*"] };
+    private _setCommonHeaders(window: MainWindow) {
+        const requestFilter = { urls: ["*://*/*"] };
+        const userAgent = `${window.webContents.getUserAgent()} ${userAgentSuffix}`;
         session!.defaultSession!.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
             if (details.url.includes("batch.azure.com")) {
                 details.requestHeaders["Origin"] = "http://localhost";

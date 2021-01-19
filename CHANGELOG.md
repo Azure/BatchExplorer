@@ -1,3 +1,24 @@
+# 2.8.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/42?closed=1)
+
+### feature:
+* Variable Slot Pricing [\#2251](https://github.com/Azure/BatchExplorer/issues/2251)
+* Update build pipeline [\#2245](https://github.com/Azure/BatchExplorer/issues/2245)
+* Add Chaos Group V-Ray RT to Software License [\#2242](https://github.com/Azure/BatchExplorer/issues/2242)
+
+### bug:
+* Occasional MacOS freezing issue on application startup [\#2254](https://github.com/Azure/BatchExplorer/issues/2254)
+* Accessibility Luminosity Contrast Issues [\#2253](https://github.com/Azure/BatchExplorer/issues/2253)
+* Multi-select Deletion for Node list [\#2250](https://github.com/Azure/BatchExplorer/issues/2250)
+* Windows install scripts to support paths with spaces [\#2248](https://github.com/Azure/BatchExplorer/issues/2248)
+* Subtask Blade Detail Display Issue [\#2247](https://github.com/Azure/BatchExplorer/issues/2247)
+* Stuck on Splash Screen - Mac [\#2246](https://github.com/Azure/BatchExplorer/issues/2246)
+* Fix Windows/Linux packaging issues [\#2244](https://github.com/Azure/BatchExplorer/issues/2244)
+* Fix Signing [\#2241](https://github.com/Azure/BatchExplorer/issues/2241)
+* Impossible to verify account and complete login [\#2212](https://github.com/Azure/BatchExplorer/issues/2212)
+* BatchExplorer does not work with Okta [\#2165](https://github.com/Azure/BatchExplorer/issues/2165)
+
+
 # 2.7.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/41?closed=1)
 

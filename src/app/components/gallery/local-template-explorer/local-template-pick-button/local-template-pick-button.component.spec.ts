@@ -26,7 +26,7 @@ describe("LocalTemplatePickButtonComponent", () => {
     beforeEach(() => {
         electronRemoteSpy = {
             dialog: {
-                showOpenDialog: jasmine.createSpy("showOpenDialog").and.callFake(() => pickFileResponse),
+                showOpenDialogSync: jasmine.createSpy("showOpenDialogSync").and.callFake(() => pickFileResponse),
             },
         };
         fsSpy = {

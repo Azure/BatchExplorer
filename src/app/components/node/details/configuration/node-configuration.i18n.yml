@@ -10,7 +10,7 @@ node-configuration:
   allocation-time: Allocation time
   running-tasks-count: Running tasks
   total-tasks-run: Total task run
-  total-tasks-succeeded: Total succeessful tasks
+  total-tasks-succeeded: Total successful tasks
   internal-ip: Internal ip
   external-ip: External ip
   is-dedicated: Is dedicated

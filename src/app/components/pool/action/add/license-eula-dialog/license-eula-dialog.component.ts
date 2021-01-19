@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { ElectronShell } from "@batch-flask/electron";
 import { ApplicationLicense } from "app/models";
 
@@ -22,7 +22,8 @@ export class LicenseEulaDialogComponent {
     }
 
     public get isVray(): boolean {
-        return this.license && this.license.id === "vray";
+        return this.license && (this.license.id === "vray"
+            || this.license.id === "vrayrt");
     }
 
     public openLink(link: string) {

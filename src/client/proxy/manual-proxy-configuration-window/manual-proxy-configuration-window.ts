@@ -2,7 +2,7 @@ import { autobind } from "@batch-flask/core";
 import { Constants } from "client/client-constants";
 import { BatchExplorerApplication, ClosedWindowError, GenericWindow } from "client/core";
 import { Deferred } from "common";
-import { BrowserWindow, app, ipcMain } from "electron";
+import { BrowserWindow, app, ipcMain, nativeImage } from "electron";
 import { ProxySetting, ProxySettings } from "get-proxy-settings";
 const urls = Constants.urls.manualProxyConfiguration;
 const url = process.env.HOT ? urls.dev : urls.prod;
@@ -19,14 +19,18 @@ export class ManualProxyConfigurationWindow extends GenericWindow {
 
     protected createWindow() {
         const window = new BrowserWindow({
-            title: app.getName(),
+            title: app.name,
             height: 400,
             width: 500,
-            icon: Constants.urls.icon,
+            icon: nativeImage.createFromDataURL(Constants.urls.icon),
             resizable: false,
             titleBarStyle: "hidden",
             show: false,
             center: true,
+            webPreferences: {
+                nodeIntegration: true,
+                enableRemoteModule: true,
+            },
         });
         if (this.currentSettings) {
             const setting = this.currentSettings.https || this.currentSettings.http;

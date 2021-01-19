@@ -1,7 +1,8 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatAutocompleteModule, MatCheckboxModule } from "@angular/material";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { By } from "@angular/platform-browser";
 import { FormModule } from "@batch-flask/ui/form";
 import { updateInput } from "test/utils/helpers";

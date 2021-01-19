@@ -70,4 +70,7 @@
     "useCache": true,
     "useWebpackText": true
   },
+  "angularCompilerOptions": {
+    "enableIvy": false
+  },
 }

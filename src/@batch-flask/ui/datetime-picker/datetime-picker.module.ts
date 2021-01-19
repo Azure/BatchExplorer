@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatDatepickerModule } from "@angular/material";
+import { MatDatepickerModule } from "@angular/material/datepicker";
 import { I18nUIModule } from "../i18n";
 import { DatetimePickerComponent } from "./datetime-picker.component";
 

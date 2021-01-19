@@ -77,6 +77,8 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
 
     @DtoAttr() public userIdentity?: UserIdentityDto;
 
+    @DtoAttr() public requiredSlots?: number;
+
     @DtoAttr() public multiInstanceSettings?: MultiInstanceSettingsDto;
 
     @DtoAttr() public dependsOn?: TaskDependenciesDto;

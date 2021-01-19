@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, forwardR
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import { MatCheckboxChange, MatDialog, MatDialogConfig } from "@angular/material";
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { ListSelection } from "@batch-flask/core/list";
 import { TableConfig } from "@batch-flask/ui/table";
 import { ApplicationLicense } from "app/models";
@@ -29,6 +30,10 @@ const softwares = [
     {
         id: "vray",
         description: "Chaos Group V-Ray",
+    },
+    {
+        id: "vrayrt",
+        description: "Chaos Group V-Ray RT",
     },
 ];
 
@@ -134,8 +139,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
             const cost = this._pricing && this._pricing.get(software.id);
             let costStr = "-";
             if (cost) {
-                const unit = cost.perCore ? "core" : "node";
-                costStr = `$${cost.price}/${unit}/hour`;
+                costStr = `$${cost.price}/${cost.billingUnit as string}/hour`;
             }
             return new ApplicationLicense({
                 ...software,

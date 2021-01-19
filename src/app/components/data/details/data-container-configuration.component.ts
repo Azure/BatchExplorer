@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/c
 import { ContainerDecorator } from "app/decorators";
 import { BlobContainer } from "app/models";
 
-// tslint:disable:trackBy-function
+// tslint:disable:template-use-track-by-function
 @Component({
     selector: "bl-data-container-configuration",
     templateUrl: "data-container-configuration.html",

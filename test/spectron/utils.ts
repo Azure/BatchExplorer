@@ -3,7 +3,7 @@ export function getExePath(): string  {
         case "win32":
             return "./release/win-unpacked/BatchExplorer.exe";
         case "darwin":
-            return "./release/BatchExplorer.app/Contents/MacOS/BatchExplorer";
+            return "./release/mac/BatchExplorer.app/Contents/MacOS/BatchExplorer";
         default:
             return "";
     }

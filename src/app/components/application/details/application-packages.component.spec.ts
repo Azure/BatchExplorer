@@ -1,6 +1,6 @@
 import { Component, Injector, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { By } from "@angular/platform-browser";
 import { ListSelection } from "@batch-flask/core/list";
 import { I18nTestingModule } from "@batch-flask/core/testing";

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { autobind } from "@batch-flask/core";
 import { AsyncSubject, Observable } from "rxjs";
 

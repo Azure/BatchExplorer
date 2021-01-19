@@ -1,7 +1,7 @@
 import { AUTO_UPDATE_MAIN_SERVICE_TOKEN } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import { TelemetryManager } from "client/core/telemetry";
-import { BrowserWindow, app, ipcMain } from "electron";
+import { BrowserWindow, app, ipcMain, nativeImage } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
 import { BatchExplorerApplication, GenericWindow } from "../core";
@@ -63,9 +63,9 @@ export class MainWindow extends GenericWindow {
     protected createWindow() {
         this._state.next(WindowState.Loading);
         const window = new BrowserWindow({
-            title: app.getName(),
+            title: app.name,
             height: 1000,
-            icon: Constants.urls.icon,
+            icon: nativeImage.createFromDataURL(Constants.urls.icon),
             width: 1600,
             minWidth: 1200,
             minHeight: 300,
@@ -74,6 +74,8 @@ export class MainWindow extends GenericWindow {
             webPreferences: {
                 webSecurity: false,
                 allowRunningInsecureContent: false,
+                nodeIntegration: true,
+                enableRemoteModule: true,
             },
         });
 
@@ -97,18 +99,6 @@ export class MainWindow extends GenericWindow {
         // Open the DevTools.
         if (process.env.NODE_ENV !== "production") {
             window.webContents.openDevTools();
-            // activate devtron for the user if they have it installed and it's not already added
-            try {
-                const devtronAlreadyAdded = BrowserWindow.getDevToolsExtensions &&
-                    {}.hasOwnProperty.call(BrowserWindow.getDevToolsExtensions(), "devtron");
-
-                if (!devtronAlreadyAdded) {
-                    BrowserWindow.addDevToolsExtension(require("devtron").path);
-                }
-            } catch (error) {
-                log.error("Error adding devtron", error);
-            }
-
         }
 
         return window;
@@ -117,7 +107,7 @@ export class MainWindow extends GenericWindow {
     private _setupEvents(window: Electron.BrowserWindow) {
         window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
             log.error("There was a crash", { event, killed });
-            this.batchExplorerApp.recoverWindow.createWithError(event.returnValue);
+            this.batchExplorerApp.recoverWindow.createWithError("The window has crashed: killed=" + event.returnValue);
         });
 
         ipcMain.once("app-ready", (event) => {
@@ -132,9 +122,9 @@ export class MainWindow extends GenericWindow {
             }
         });
 
-        window.webContents.on("did-fail-load", (error) => {
+        window.webContents.on("did-fail-load", (event, errorCode, errorDescription) => {
             this._state.next(WindowState.FailedLoad);
-            log.error("Fail to load", error);
+            log.error(`Failed to load main window: ${errorDescription} (Error code ${errorCode})`);
         });
 
         // tslint:disable-next-line:ban-types

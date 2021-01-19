@@ -6,6 +6,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { Uri, editor } from "monaco-editor";
 import { AutoscaleLanguage } from "./monaco-languages";
+import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 
 import "./editor.scss";
 
@@ -62,7 +63,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     private _value = "";
     private _resizeDetector: any;
     private _config: EditorConfig;
-    private _editor: monaco.editor.IStandaloneCodeEditor;
+    private _editor: IStandaloneCodeEditor;
     private _model: monaco.editor.IModel;
     private _modelChangeSub: monaco.IDisposable;
 
@@ -116,9 +117,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         const monaco = await import("monaco-editor");
         AutoscaleLanguage.define();
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
-        const options: monaco.editor.IEditorConstructionOptions = this.config;
+        // const options: IEditorConstructionOptions = this.config;
 
-        options.value = this._value;
+        // options.value = this._value;
 
         // Monaco editor model should not be created when model exists.
         // Assign _model to existing model instead of create new one to avoid error

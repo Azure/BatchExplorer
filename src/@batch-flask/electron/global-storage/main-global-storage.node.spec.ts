@@ -7,7 +7,6 @@ describe("MainGlobalStorage", () => {
     let fsSpy;
     let shellSpy;
     let content: string;
-    let sub: Subscription;
 
     beforeEach(() => {
         content = `{"foo": "bar"}`;
@@ -21,16 +20,10 @@ describe("MainGlobalStorage", () => {
         };
 
         shellSpy = {
-            openItem: jasmine.createSpy("openItem"),
+            openItem: jasmine.createSpy("openItem").and.returnValue(Promise.resolve({success: true, errorMessage: ""})),
         };
 
         service = new MainGlobalStorage(fsSpy, shellSpy);
-    });
-
-    afterEach(() => {
-        if (sub) {
-            sub.unsubscribe();
-        }
     });
 
     it("write to file when calling save", () => {
@@ -53,8 +46,8 @@ describe("MainGlobalStorage", () => {
         it("only read the file when subscribed to", async () => {
             expect(fsSpy.readFile).not.toHaveBeenCalled();
             const callback = jasmine.createSpy("callback");
-            sub = service.watchContent("my-data").subscribe(callback);
-            await Promise.resolve();
+
+            await watchContentAndCallback(service, "my-data", callback);
 
             expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
             expect(fsSpy.readFile).toHaveBeenCalledWith(path.join("~/batch-explorer", "data", "my-data.json"));
@@ -66,28 +59,29 @@ describe("MainGlobalStorage", () => {
             expect(fsSpy.readFile).not.toHaveBeenCalled();
             const callback1 = jasmine.createSpy("callback1");
             const callback2 = jasmine.createSpy("callback2");
-            sub = service.watchContent("my-data").subscribe(callback1);
-            await Promise.resolve();
+
+            await watchContentAndCallback(service, "my-data", callback1);
 
             expect(callback1).toHaveBeenCalledTimes(1);
             expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
 
-            const sub2 = service.watchContent("my-data").subscribe(callback2);
-            await Promise.resolve();
+            await watchContentAndCallback(service, "my-data", callback2);
+
             expect(callback2).toHaveBeenCalledTimes(1);
             expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
-            sub2.unsubscribe();
         });
 
         it("calls the callback when saving data", async () => {
             const callback = jasmine.createSpy("callback");
-            sub = service.watchContent("my-data").subscribe(callback);
-            await Promise.resolve();
+
+            await watchContentAndCallback(service, "my-data", callback);
 
             expect(callback).toHaveBeenCalledTimes(1);
             expect(callback).toHaveBeenCalledWith(`{"foo": "bar"}`);
 
             service.save("my-data", "some-other-content");
+
+            await watchContentAndCallback(service, "my-data", callback);
 
             expect(callback).toHaveBeenCalledTimes(2);
             expect(callback).toHaveBeenCalledWith(`some-other-content`);
@@ -95,8 +89,8 @@ describe("MainGlobalStorage", () => {
 
         it("doesn;t the callback when saving data for other key", async () => {
             const callback = jasmine.createSpy("callback");
-            sub = service.watchContent("my-data").subscribe(callback);
-            await Promise.resolve();
+
+            await watchContentAndCallback(service, "my-data", callback);
 
             expect(callback).toHaveBeenCalledTimes(1);
             expect(callback).toHaveBeenCalledWith(`{"foo": "bar"}`);
@@ -111,8 +105,8 @@ describe("MainGlobalStorage", () => {
     describe("#watch", () => {
         it("watch the data parsed as JSON", async () => {
             const callback = jasmine.createSpy("callback");
-            sub = service.watch("my-data").subscribe(callback);
-            await Promise.resolve();
+
+            await watchAndCallback(service, "my-data", callback);
 
             expect(callback).toHaveBeenCalledTimes(1);
             expect(callback).toHaveBeenCalledWith({ foo: "bar" });
@@ -121,8 +115,8 @@ describe("MainGlobalStorage", () => {
         it("returns null when the data is invalid json", async () => {
             content = "invalid-json";
             const callback = jasmine.createSpy("callback");
-            sub = service.watch("my-data").subscribe(callback);
-            await Promise.resolve();
+
+            await watchAndCallback(service, "my-data", callback);
 
             expect(callback).toHaveBeenCalledTimes(1);
             expect(callback).toHaveBeenCalledWith(null);
@@ -130,13 +124,15 @@ describe("MainGlobalStorage", () => {
 
         it("calls the callback when saving data", async () => {
             const callback = jasmine.createSpy("callback");
-            sub = service.watch("my-data").subscribe(callback);
-            await Promise.resolve();
+
+            await watchAndCallback(service, "my-data", callback);
 
             expect(callback).toHaveBeenCalledTimes(1);
             expect(callback).toHaveBeenCalledWith({ foo: "bar" });
 
             service.set("my-data", { other: 123 });
+
+            await watchAndCallback(service, "my-data", callback);
 
             expect(callback).toHaveBeenCalledTimes(2);
             expect(callback).toHaveBeenCalledWith({ other: 123 });
@@ -146,17 +142,46 @@ describe("MainGlobalStorage", () => {
             expect(fsSpy.readFile).not.toHaveBeenCalled();
             const callback1 = jasmine.createSpy("callback1");
             const callback2 = jasmine.createSpy("callback2");
-            sub = service.watch("my-data").subscribe(callback1);
-            await Promise.resolve();
+
+            await watchAndCallback(service, "my-data", callback1);
 
             expect(callback1).toHaveBeenCalledTimes(1);
             expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
 
-            const sub2 = service.watch("my-data").subscribe(callback2);
-            await Promise.resolve();
+            await watchAndCallback(service, "my-data", callback2);
+
             expect(callback2).toHaveBeenCalledTimes(1);
             expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
-            sub2.unsubscribe();
         });
     });
 });
+
+/**
+ * Subscribes to the service and returns a promise which resolves when the first
+ * value is received from watchContent()
+ */
+async function watchContentAndCallback(service: MainGlobalStorage, key: string, callback: (...args) => any) {
+    let sub: Subscription | undefined;
+    await new Promise(resolve => {
+        sub = service.watchContent(key).subscribe((...args) => {
+            callback(...args);
+            resolve();
+        });
+    });
+    sub?.unsubscribe();
+}
+
+/**
+ * Subscribes to the service and returns a promise which resolves when the first
+ * value is received from watch()
+ */
+async function watchAndCallback(service: MainGlobalStorage, key: string, callback: (...args) => any) {
+    let sub: Subscription | undefined;
+    await new Promise(resolve => {
+        sub = service.watch(key).subscribe((...args) => {
+            callback(...args);
+            resolve();
+        });
+    });
+    sub?.unsubscribe();
+}

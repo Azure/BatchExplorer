@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { AbstractListBaseConfig } from "@batch-flask/ui";
 import { BatchAccount } from "app/models";
 import { BatchAccountService } from "app/services";

@@ -20,6 +20,18 @@ export class MockedFile implements File {
         Object.assign(this, data);
     }
 
+    public arrayBuffer(): Promise<ArrayBuffer> {
+        throw new Error("Method not implemented.");
+    }
+
+    public stream(): ReadableStream<any> {
+        throw new Error("Method not implemented.");
+    }
+
+    public text(): Promise<string> {
+        throw new Error("Method not implemented.");
+    }
+
     public slice(start: number, end: number) {
         return new Blob([end - start] as any);
     }

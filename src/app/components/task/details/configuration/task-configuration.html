@@ -9,6 +9,7 @@
             <bl-date-property [label]="'creationTime.label' | i18n" [value]="task.creationTime"></bl-date-property>
             <bl-date-property [label]="'lastModified.label' | i18n" [value]="task.lastModified"></bl-date-property>
             <bl-text-property [label]="'userIdentity.label' | i18n" [value]="decorator.userIdentitySummary"></bl-text-property>
+            <bl-text-property [label]="'requiredSlots.label' | i18n" [value]="task.requiredSlots"></bl-text-property>
             <bl-date-property [label]="'stateTransitionTime.label' | i18n" [value]="task.stateTransitionTime"></bl-date-property>
             <bl-date-property [label]="'previousStateTransitionTime.label' | i18n" [value]="task.previousStateTransitionTime"></bl-date-property>
             <bl-text-property [label]="'exitConditions.label' | i18n" *ngIf="!task.exitConditions" value="None"></bl-text-property>

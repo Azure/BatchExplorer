@@ -1,6 +1,7 @@
 import { Component, OnDestroy, Optional } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { MatCheckboxChange, MatDialogRef } from "@angular/material";
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { MatDialogRef } from "@angular/material/dialog";
 import { DynamicForm, autobind } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
 import {

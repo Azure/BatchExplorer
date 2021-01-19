@@ -1,27 +1,20 @@
 steps:
   - template: ../dependencies.yml
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '2.7.x'
-    displayName: Install python 2.7 for node-gyp
-
-  - powershell: |
-      $pythonPath = Get-Command python | Select-Object -ExpandProperty Definition
-      echo "Python2 $pythonPath"
-      npm config set python $pythonPath
-    displayName: Configure python2 for node-gyp
 
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.6.x'
-    displayName: Install python 3.6 for BatchExplorer
+      versionSpec: '3.8.x'
+    displayName: Install python 3.8 for BatchExplorer
 
+  # KLUDGE: Use `npm i` instead of `npm ci` due to this issue:
+  #         https://github.com/npm/cli/issues/558#issuecomment-580392554
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
-      node --version
-      exec { npm i -g npm }
-      exec { npm install }
       exec { python -m pip install --upgrade pip }
+      exec { python --version }
       exec { pip install -r python/requirements.txt }
-    displayName: Install dependencies
+      exec { Write-Host "Node.js version" $(node --version) }
+      exec { Write-Host "NPM version" $(npm --version) }
+      exec { npm install --loglevel=error }
+    displayName: Install Windows dependencies

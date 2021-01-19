@@ -6,7 +6,7 @@ pool:
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '10.8.x'
+      versionSpec: '12.18.x'
 
   - script: npm ci
     displayName: Install dependencies
@@ -55,6 +55,6 @@ steps:
       today=`date +%Y-%m-%d`
       git -c user.email=batch-ex@microsoft.com -c user.name='Batch Explorer Automated' commit -am "Updating english translations $today"
       git status -s
-      git push https://timotheeguerin:$(GH_TOKEN)@github.com/Azure/BatchExplorer loc
+      git push https://dpwatrous:$(GH_TOKEN)@github.com/Azure/BatchExplorer loc
     workingDirectory: $(locdir)
     displayName: Commit and push changes if any

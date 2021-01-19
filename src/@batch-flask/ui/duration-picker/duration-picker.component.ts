@@ -240,8 +240,6 @@ export class DurationPickerComponent implements FormFieldControl<any>,
         this.invalidCustomDuration = false;
         this.invalidDurationValue = false;
 
-        const currDuration = Duration.fromObject({[this.unit]: Number(this.time)});
-
         switch (this.unit) {
             case DurationUnit.Custom:
                 return this._getCustomDuration(this.time);
@@ -249,7 +247,11 @@ export class DurationPickerComponent implements FormFieldControl<any>,
                 const time = Number(this.time);
                 if (isNaN(time) || time < 0) {
                     this.invalidTimeNumber = true;
-                } else if (currDuration > MaxDurationValue) {
+                    return null;
+                }
+
+                const currDuration = Duration.fromObject({[this.unit]: time});
+                if (currDuration > MaxDurationValue) {
                     this.invalidDurationValue = true;
                 } else {
                     return currDuration;

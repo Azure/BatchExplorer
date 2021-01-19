@@ -47,13 +47,20 @@ module.exports = function(config) {
         customLaunchers: {
             CustomElectron: {
                 base: "Electron",
-                flags: ["--show", "--enable-precise-memory-info"]
+                flags: ["--enable-precise-memory-info"],
+                browserWindowOptions: {
+                    show: true,
+                    webPreferences: {
+                        nodeIntegration: true,
+                        enableRemoteModule: true,
+                    }
+                }
             }
         },
         electronOpts: {
             title: "Banana",
             "webPreferences": {
-                "blinkFeatures": "PreciseMemoryInfo"
+                "blinkFeatures": "PreciseMemoryInfo",
             }
         },
 

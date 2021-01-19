@@ -1,7 +1,8 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatButtonToggleModule, MatCheckboxModule } from "@angular/material";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { FormModule, SelectModule } from "@batch-flask/ui";

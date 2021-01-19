@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from "@angular/cdk/a11y";
-import { ChangeDetectorRef, Injector, Input, OnDestroy, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Directive, Injector, Input, OnDestroy, ViewChild } from "@angular/core";
 import { I18nService, ListSelection, SelectableList } from "@batch-flask/core";
 import { Filter, FilterBuilder } from "@batch-flask/core/filter-builder";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
@@ -17,6 +17,8 @@ export interface ListBaseComponent {
     onScrollToBottom?();
 }
 
+@Directive()
+// tslint:disable-next-line: directive-class-suffix
 export abstract class ListBaseComponent extends SelectableList implements OnDestroy {
     @Input() public set quicklist(quicklist: boolean) {
         this._quicklist = quicklist;

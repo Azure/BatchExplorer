@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Input, OnDestroy } from "@angular/core";
+import { ChangeDetectorRef, Directive, Input, OnDestroy } from "@angular/core";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { FileLoader } from "../../file-loader";
 import { File } from "../../file.model";
@@ -25,6 +25,8 @@ export interface FileViewerConfig {
 /**
  * Generic file viewer
  */
+@Directive()
+// tslint:disable-next-line: directive-class-suffix
 export abstract class FileViewer implements OnDestroy {
     /**
      * Max file size this viewer support

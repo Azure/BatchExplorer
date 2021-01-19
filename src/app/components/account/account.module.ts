@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { MatButtonToggleModule } from "@angular/material";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { TimeRangePickerModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";

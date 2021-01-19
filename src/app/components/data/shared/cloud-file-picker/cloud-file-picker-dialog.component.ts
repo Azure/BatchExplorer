@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { MatCheckboxChange, MatDialogRef } from "@angular/material";
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { MatDialogRef } from "@angular/material/dialog";
 import { EntityView, ServerError, autobind } from "@batch-flask/core";
 import { FileExplorerConfig, FileExplorerSelectable } from "@batch-flask/ui";
 import { BlobContainer } from "app/models";

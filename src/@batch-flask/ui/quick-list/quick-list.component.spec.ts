@@ -28,7 +28,7 @@ interface TestItem {
     id: string;
     name: string;
 }
-// tslint:disable:trackBy-function
+// tslint:disable:template-use-track-by-function
 @Component({
     template: `
         <div style="height: 1000px">

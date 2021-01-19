@@ -8,7 +8,7 @@ import {
     Type,
     ViewChild,
 } from "@angular/core";
-import { MatSidenav } from "@angular/material";
+import { MatSidenav } from "@angular/material/sidenav";
 import { log } from "@batch-flask/utils";
 import { GlobalSidebarService } from "../sidebar-manager";
 import { SidebarPageComponent } from "../sidebar-page";

@@ -73,7 +73,7 @@ export class JobsBarChartComponent implements OnInit, OnChanges {
                     stacked: true,
                     ticks: {
                         min: 0,
-                        callback: (value) => {
+                        callback: (value: number) => {
                             const seconds = Math.floor(value / 1000);
                             if (seconds > 180) {
                                 if (seconds % 60 === 0) {

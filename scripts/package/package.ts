@@ -20,19 +20,17 @@ async function baseBuild(options?: electronBuilder.CliOptions) {
 }
 
 /**
- * Just create the windows executable.
- * This is so exe can be signed before creating installer
+ * Create a standalone Windows executable
  */
 async function createWindowsExecutable() {
     return baseBuild({
         dir: true,
-        platform: "windows",
+        win: ["portable"],
     });
 }
 
 /**
- * Just create the windows executable.
- * This is so exe can be signed before creating installer
+ * Create a Windows installer
  */
 async function createWindowsInstaller() {
     return baseBuild({
@@ -43,8 +41,7 @@ async function createWindowsInstaller() {
 }
 
 /**
- * Just create the mac os app file.
- * This is so app can be signed before creating the dmg
+ * Create an expanded MacOS application
  */
 async function createDarwinApp() {
     return baseBuild({
@@ -53,8 +50,7 @@ async function createDarwinApp() {
 }
 
 /**
- * Just create the mac os app file.
- * This is so app can be signed before creating the dmg
+ * Create a MacOS installer
  */
 async function createDarwinDmg() {
     return baseBuild({

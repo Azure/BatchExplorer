@@ -2,7 +2,7 @@ import { DOWN_ARROW } from "@angular/cdk/keycodes";
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
-import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteTrigger } from "@angular/material";
+import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { By } from "@angular/platform-browser";
 import { KeyCode } from "@batch-flask/core/keys";
 import { I18nTestingModule } from "@batch-flask/core/testing";

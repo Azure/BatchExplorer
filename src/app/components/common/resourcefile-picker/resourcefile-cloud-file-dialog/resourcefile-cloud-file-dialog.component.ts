@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { autobind } from "@batch-flask/core";
 import { FileExplorerConfig, FileExplorerSelectable } from "@batch-flask/ui";
 import { ArmBatchAccount, ResourceFileAttributes } from "app/models";

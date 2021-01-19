@@ -1,4 +1,4 @@
-import { CloudServiceOsFamily, Pool, VmSize } from "app/models";
+import { CloudServiceOsFamily, Pool, SoftwareBillingUnit, VmSize } from "app/models";
 import { SoftwarePricing } from "app/services/pricing";
 import { PoolUtils } from "app/utils";
 
@@ -183,9 +183,9 @@ describe("PoolUtils", () => {
         } as any);
 
         const softwares = new SoftwarePricing();
-        softwares.add("vray", 0.02, true);
-        softwares.add("3dsmax", 0.65, false);
-        softwares.add("maya", 0.75, false);
+        softwares.add("vray", 0.02, SoftwareBillingUnit.core);
+        softwares.add("3dsmax", 0.65, SoftwareBillingUnit.node);
+        softwares.add("maya", 0.75, SoftwareBillingUnit.node);
 
         it("works for a basic pool", () => {
             const windowsConfig = {

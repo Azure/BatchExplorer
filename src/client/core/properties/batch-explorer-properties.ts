@@ -4,7 +4,7 @@ import {
     AzureEnvironment, AzureEnvironmentService, AzurePublic,
 } from "client/azure-environment";
 import { Constants } from "common";
-import { systemPreferences } from "electron";
+import { nativeTheme } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({ providedIn: "root" })
@@ -19,9 +19,9 @@ export class BatchExplorerProperties implements OnDestroy {
 
     constructor(private store: DataStore, private azureEnvironmentService: AzureEnvironmentService) {
         this.isOSHighContrast = this._isOSHighContrast.asObservable();
-        this._isOSHighContrast.next(systemPreferences.isInvertedColorScheme());
-        systemPreferences.on("inverted-color-scheme-changed", () => {
-            this._isOSHighContrast.next(systemPreferences.isInvertedColorScheme());
+        this._isOSHighContrast.next(nativeTheme.shouldUseInvertedColorScheme);
+        nativeTheme.on("updated", () => {
+            this._isOSHighContrast.next(nativeTheme.shouldUseInvertedColorScheme);
         });
         this.azureEnvironmentObs = this._azureEnvironment.asObservable();
     }

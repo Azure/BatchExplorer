@@ -1,6 +1,7 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { MatProgressSpinnerModule, MatTooltip, MatTooltipModule } from "@angular/material";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatTooltip, MatTooltipModule } from "@angular/material/tooltip";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { LocaleService } from "@batch-flask/core";

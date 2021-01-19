@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { PollService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { Job, JobTaskCounts, Node, Pool } from "app/models";
+import { Job, JobTaskCounts, JobTaskCountsResult, JobTaskSlotCounts, Node, Pool } from "app/models";
 import { JobService, NodeService, PoolService } from "app/services";
 import { of } from "rxjs";
 import { click } from "test/utils/helpers";
@@ -34,7 +34,7 @@ describe("JobProgressStatusComponent", () => {
     beforeEach(() => {
         poolServiceSpy = {
             view: () => new MockEntityView<any, Pool>(Pool, {
-                item: new Pool({ id: "pool-1", maxTasksPerNode: 8, currentDedicatedNodes: 3 }),
+                item: new Pool({ id: "pool-1", taskSlotsPerNode: 8, currentDedicatedNodes: 3 }),
             }),
         };
 
@@ -50,13 +50,23 @@ describe("JobProgressStatusComponent", () => {
 
         jobServiceSpy = {
             getTaskCounts: jasmine.createSpy("getTaskCounts").and.callFake((jobId) => {
-                return of(new JobTaskCounts({
+                const activeTasks = jobId === "large-job" ? 234000 : 12;
+                const taskCounts = new JobTaskCounts({
                     running: 4,
                     completed: 8,
-                    active: jobId === "large-job" ? 234000 : 12,
+                    active: activeTasks,
                     failed: 2,
                     succeeded: 6,
-                }));
+                });
+                const taskSlotCounts = new JobTaskSlotCounts({
+                    running: 3,
+                    completed: 10,
+                    active: activeTasks,
+                    failed: 3,
+                    succeeded: 9,
+                });
+                const taskCountsResult: JobTaskCountsResult = new JobTaskCountsResult({taskCounts, taskSlotCounts});
+                return of(taskCountsResult);
             }),
         };
 

@@ -1,5 +1,5 @@
 import { Component, HostBinding, OnDestroy, OnInit } from "@angular/core";
-import { MatIconRegistry } from "@angular/material";
+import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { KeyBindingsService, TelemetryService, UserConfigurationService } from "@batch-flask/core";

@@ -13,24 +13,28 @@ export class ElectronShell {
     }
     /**
      * Show the given file in a file manager. If possible, select the file.
-     * @returns Whether the item was successfully shown.
      */
-    public showItemInFolder(fullPath: string): boolean {
-        return this._shell.showItemInFolder(fullPath);
+    public showItemInFolder(fullPath: string): void {
+        this._shell.showItemInFolder(fullPath);
     }
 
     /**
      * Open the given file in the desktop's default manner.
-     * @returns Whether the item was successfully shown.
+     * @returns A result object which contains a boolean that indicates
+     *          whether the item was successfully shown, and an error
+     *          message (which defaults to "" if success is true)
      */
-    public openItem(fullPath: string): boolean {
-        return this._shell.openItem(fullPath);
+    public async openItem(fullPath: string): Promise<{success: boolean, errorMessage: string}> {
+        const result = await this._shell.openPath(fullPath);
+        return {
+            success: result === "",
+            errorMessage: result,
+        };
     }
 
     /**
      * Open the given external protocol URL in the desktop's default manner
      * (e.g., mailto: URLs in the default mail user agent).
-     * @returns Whether an application was available to open the URL.
      */
     public openExternal(url: string, options?: {
         /**
@@ -38,7 +42,7 @@ export class ElectronShell {
          * Default: true.
          */
         activate: boolean;
-    }): boolean {
+    }): Promise<void> {
         if (!url.startsWith("https://")) {
             throw new SanitizedError("Do not use electron external with something else than urls."
                 + " It could be used to run commands on osx for example.\n"

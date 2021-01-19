@@ -149,7 +149,7 @@ export const pool = new FixtureFactory<Pool>(Pool, {
     targetDedicated: 5,
     enableAutoScale: false,
     enableInterNodeCommunication: false,
-    maxTasksPerNode: 3,
+    taskSlotsPerNode: 3,
     taskSchedulingPolicy: {
         nodeFillType: "Spread",
     },

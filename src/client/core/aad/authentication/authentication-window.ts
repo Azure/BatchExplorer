@@ -12,6 +12,7 @@ export class AuthenticationWindow extends UniqueWindow {
             center: true,
             webPreferences: {
                 nodeIntegration: false,
+                enableRemoteModule: true,
                 preload: ClientConstants.urls.preloadInsecureTest,
             },
             title: `BatchExplorer: Login to ${this.properties.azureEnvironment.name}`,
