@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { log } from "@batch-flask/utils/logging";
-import { of } from "rxjs";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { catchError, first, map } from "rxjs/operators";
 import { ArmHttpService } from "../arm-http.service";
 import { ArmListResponse } from "../core";
