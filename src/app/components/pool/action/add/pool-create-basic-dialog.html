@@ -1,6 +1,6 @@
 <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig" [fileUri]="fileUri">
     <bl-form-page main-form-page title="Add a pool to the account" [formGroup]="form">
-        <bl-form-section title="General info" subtitle="Basic information about the pool">
+        <bl-form-section title="Pool details" subtitle="Basic information about the pool">
             <div class="grow">
                 <div class="gcol">
                     <bl-form-field class="form-element">
@@ -18,25 +18,6 @@
                         <input blInput formControlName="displayName" placeholder="Display name">
                     </bl-form-field>
                 </div>
-            </div>
-            <bl-form-field>
-                <input blInput type="number" formControlName="taskSlotsPerNode" placeholder="Task slots per node">
-            </bl-form-field>
-            <div class="form-element">
-                <mat-checkbox formControlName="enableInterNodeCommunication" color="primary">
-                    Enable inter-node communication
-                </mat-checkbox>
-            </div>
-            <div class="form-element">
-                <bl-form-field>
-                    <bl-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
-                        <bl-option [value]="NodeFillType.pack" label="Pack"></bl-option>
-                        <bl-option [value]="NodeFillType.spread" label="Spread"></bl-option>
-                    </bl-select>
-                </bl-form-field>
-            </div>
-            <div class="form-element">
-                <bl-key-value-picker formControlName="metadata" label="Metadata"></bl-key-value-picker>
             </div>
         </bl-form-section>
 
@@ -64,6 +45,31 @@
             <div class="form-element element-spacer">
                 <bl-vm-size-picker formControlName="vmSize" [osSource]="osSource" [osType]="osType"></bl-vm-size-picker>
                 <bl-error controlName="vmSize" code="required">You must select a VM size</bl-error>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="Optional settings" subtitle="Optional information about the pool">
+            <bl-form-field>
+                <input blInput type="number" formControlName="taskSlotsPerNode" placeholder="Task slots per node">
+
+                <bl-error controlName="taskSlotsPerNode" code="max">Maximum amount of slots exceeded, choose a value less than: {{form.controls.taskSlotsPerNode.errors?.max}}</bl-error>
+                <bl-error controlName="taskSlotsPerNode" code="min">Slots amount must be greater than or equal to 1</bl-error>
+            </bl-form-field>
+            <div class="form-element">
+                <mat-checkbox formControlName="enableInterNodeCommunication" color="primary">
+                    Enable inter-node communication
+                </mat-checkbox>
+            </div>
+            <div class="form-element">
+                <bl-form-field>
+                    <bl-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
+                        <bl-option [value]="NodeFillType.pack" label="Pack"></bl-option>
+                        <bl-option [value]="NodeFillType.spread" label="Spread"></bl-option>
+                    </bl-select>
+                </bl-form-field>
+            </div>
+            <div class="form-element">
+                <bl-key-value-picker formControlName="metadata" label="Metadata"></bl-key-value-picker>
             </div>
         </bl-form-section>
 
