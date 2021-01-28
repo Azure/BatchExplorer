@@ -10,7 +10,7 @@ import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } fro
 import { BatchAccountService, PoolService, PricingService, VmSizeService } from "app/services";
 import { NumberUtils } from "app/utils";
 import { Constants } from "common";
-import { Observable, of, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 import { map } from "rxjs/operators";
 
 @Component({
@@ -18,6 +18,18 @@ import { map } from "rxjs/operators";
     templateUrl: "pool-create-basic-dialog.html",
 })
 export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreateDto> implements OnDestroy {
+
+    public get startTask() {
+        return this.form.controls.startTask.value;
+    }
+
+    public get renderingSkuSelected(): boolean {
+        return this._renderingSkuSelected;
+    }
+
+    public get virtualMachineConfiguration() {
+        return this._osControl.value && this._osControl.value.virtualMachineConfiguration;
+    }
     public osSource: PoolOsSources = PoolOsSources.IaaS;
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
@@ -76,11 +88,11 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             metadata: [null],
         });
 
-        this.form.controls['vmSize'].valueChanges.subscribe({​​
-            next: (value) => {​​
-               this.form.controls['taskSlotsPerNode'].updateValueAndValidity();
-            }​​
-        }​​);
+        this.form.controls["vmSize"].valueChanges.subscribe({
+            next: (value) => {
+                this.form.controls["taskSlotsPerNode"].updateValueAndValidity();
+            },
+        });
 
         this.form.controls["taskSlotsPerNode"].setAsyncValidators([this.slotValidator()]);
 
@@ -130,21 +142,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         });
     }
 
-    private slotValidator(): AsyncValidatorFn {
-        return (formControl: AbstractControl): Observable<ValidationErrors> => {
-            const valueInput = this.form.controls["taskSlotsPerNode"].value;
-            if (this.form.controls["vmSize"].value === "") {
-                return of(valueInput > 256 ? { max: 256 } : null);
-            }
-            return this.vmSizeService.get(this.form.controls["vmSize"].value).pipe(
-                map(res => {
-                    const maxCores = Math.min(res.numberOfCores * 4, 256);
-                    return valueInput > maxCores ? { max: maxCores } : null;
-                })
-            );
-        }
-    }
-
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
     }
@@ -172,16 +169,19 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         return createPoolToData(data);
     }
 
-    public get startTask() {
-        return this.form.controls.startTask.value;
-    }
-
-    public get renderingSkuSelected(): boolean {
-        return this._renderingSkuSelected;
-    }
-
-    public get virtualMachineConfiguration() {
-        return this._osControl.value && this._osControl.value.virtualMachineConfiguration;
+    private slotValidator(): AsyncValidatorFn {
+        return (formControl: AbstractControl): Observable<ValidationErrors> => {
+            const valueInput = this.form.controls["taskSlotsPerNode"].value;
+            if (this.form.controls["vmSize"].value === "") {
+                return of(valueInput > 256 ? { max: 256 } : null);
+            }
+            return this.vmSizeService.get(this.form.controls["vmSize"].value).pipe(
+                map(res => {
+                    const maxCores = Math.min(res.numberOfCores * 4, 256);
+                    return valueInput > maxCores ? { max: maxCores } : null;
+                }),
+            );
+        };
     }
 
     private _canShowLicensePicker(config: any): boolean {
