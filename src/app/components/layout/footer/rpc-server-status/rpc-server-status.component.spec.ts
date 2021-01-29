@@ -54,7 +54,7 @@ describe("RpcServerStatusComponent", () => {
 
         it("Shows connected title", () => {
             const tooltip = clickableEl.injector.get(MatTooltip);
-            expect(tooltip.message).toEqual("Python service is connnected and running.");
+            expect(tooltip.message).toEqual("Python service is connected and running.");
         });
 
         it("Opens context menu when clicking ", () => {

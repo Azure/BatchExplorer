@@ -22,7 +22,7 @@ export class RpcServerStatusComponent implements OnDestroy {
 
     public get title() {
         if (this.connected) {
-            return "Python service is connnected and running.";
+            return "Python service is connected and running.";
         } else {
             return "Python service is currently disconnected. Click to take action.";
         }
