@@ -6,7 +6,9 @@
                 <p>{{error.message}}</p>
             </div>
             <div class="troubleshoot-btn">
-                <bl-clickable (do)="toggleDebugInformation()" matTooltip="Troubleshoot details">
+                <bl-clickable (do)="toggleDebugInformation()"
+                        aria-label="Troubleshoot details"
+                        matTooltip="Troubleshoot details">
                     <i class="fa fa-bug"></i>
                 </bl-clickable>
             </div>
