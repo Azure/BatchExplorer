@@ -48,7 +48,7 @@ let idCounter = 0;
             [attr.aria-live]="assertive">
             Copied.
         </div>
-        <div [id]="ariaDescribedBy" [hidden]="true" aria-hidden="true">Click to copy</div>
+        <div [id]="ariaDescribedBy" [hidden]="true">Click to copy</div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
