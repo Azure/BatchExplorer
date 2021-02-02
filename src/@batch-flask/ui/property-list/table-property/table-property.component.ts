@@ -164,6 +164,14 @@ export class TablePropertyComponent implements AfterContentInit {
         this.changeDetector.markForCheck();
     }
 
+    public toggleExpand(event: Event) {
+        if (!(event instanceof KeyboardEvent)
+            || event.code === "Space"
+            || event.code === "Enter") {
+            this.expanded = !this.expanded;
+        }
+    }
+
     public trackRow(index, row: TablePropertyRowComponent) {
         return index;
     }
