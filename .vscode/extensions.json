@@ -1,7 +1,7 @@
 {
   "recommendations": [
     "ms-vscode.vscode-typescript-tslint-plugin",
-    "shinnn.stylelint",
+    "stylelint.vscode-stylelint",
     "EditorConfig.EditorConfig",
     "msjsdiag.debugger-for-chrome"
   ]
