@@ -7,7 +7,11 @@ export class MockElectronDialog {
     public showSaveDialog: jasmine.Spy;
 
     constructor() {
-        this.showSaveDialog = jasmine.createSpy("dialog.showSaveDialog").and.returnValue("/some/local/path/foo.ts");
+        this.showSaveDialog =
+            jasmine.createSpy("dialog.showSaveDialog").and.callFake(
+                () => new Promise(
+                    resolve => resolve({ filePath: "/some/local/path/foo.ts" }),
+                ));
     }
 }
 
