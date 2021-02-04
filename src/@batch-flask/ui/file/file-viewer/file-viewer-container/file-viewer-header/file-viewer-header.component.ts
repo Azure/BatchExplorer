@@ -5,7 +5,8 @@ import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { prettyBytes } from "@batch-flask/utils";
-import { Subscription } from "rxjs";
+import { SaveDialogReturnValue } from "electron";
+import { Observable, Subscription } from "rxjs";
 import { FileViewer, FileViewerCommand, FileViewerConfig } from "../../file-viewer";
 
 import "./file-viewer-header.scss";
@@ -66,12 +67,14 @@ export class FileViewerHeaderComponent implements OnChanges {
     }
 
     @autobind()
-    public downloadFile() {
+    public async downloadFile(): Promise<Observable<string>> {
         const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
+        const retValue: SaveDialogReturnValue = await dialog.showSaveDialog({
             buttonLabel: "Download",
             defaultPath: this.fileLoader.filename,
         });
+
+        const localPath: string = retValue.filePath;
 
         if (localPath) {
             return this._saveFile(localPath);
@@ -102,7 +105,7 @@ export class FileViewerHeaderComponent implements OnChanges {
         }
     }
 
-    private _saveFile(pathToFile) {
+    private _saveFile(pathToFile: string): Observable<string> {
         if (pathToFile === undefined) {
             return;
         }
