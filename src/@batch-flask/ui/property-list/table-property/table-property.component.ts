@@ -48,7 +48,7 @@ let idCounter = 0;
             [attr.aria-live]="assertive">
             Copied.
         </div>
-        <div [id]="ariaDescribedBy" [hidden]="true" aria-hidden="true">Click to copy</div>
+        <div [id]="ariaDescribedBy" [hidden]="true">Click to copy</div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -162,6 +162,14 @@ export class TablePropertyComponent implements AfterContentInit {
     public expand() {
         this.expanded = true;
         this.changeDetector.markForCheck();
+    }
+
+    public toggleExpand(event: Event) {
+        if (!(event instanceof KeyboardEvent)
+            || event.code === "Space"
+            || event.code === "Enter") {
+            this.expanded = !this.expanded;
+        }
     }
 
     public trackRow(index, row: TablePropertyRowComponent) {

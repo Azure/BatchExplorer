@@ -11,6 +11,6 @@
         (mouseup)="handleMouseUp($event, tab)">
 
         <span class="name">{{tab.displayName}}</span>
-        <bl-clickable class="tab-close" (do)="closeTab(tab, $event)" title="Close tab"><i class="fa fa-times close-icon"></i></bl-clickable>
+        <bl-clickable class="tab-close" (do)="closeTab(tab, $event)" title="Close tab" aria-label="Close tab"><i class="fa fa-times close-icon"></i></bl-clickable>
     </bl-clickable>
 </div>
