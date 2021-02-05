@@ -61,6 +61,9 @@
       <trans-unit id="account-monitoring.currentNodeStates">
         <source>Current node states</source>
       </trans-unit>
+      <trans-unit id="account-monitoring.expandLabel">
+        <source>Expand chart</source>
+      </trans-unit>
       <trans-unit id="account-monitoring.failedTask">
         <source>Failed task</source>
       </trans-unit>
