@@ -22,6 +22,15 @@
     {
       "type": "npm",
       "script": "tslint"
+    },
+    {
+      "type": "npm",
+      "script": "eslint",
+      "problemMatcher": [
+        "$eslint-stylish"
+      ],
+      "label": "npm: eslint",
+      "detail": "eslint -c .eslintrc.json --ext .ts src/"
     }
   ]
 }

@@ -47,7 +47,7 @@ export interface AzureEnvironment extends AADResources {
     readonly custom: boolean;
 }
 
-// tslint:disable: variable-name
+/* eslint-disable @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match */
 export const AzurePublic: AzureEnvironment = {
     id: "Azure",
     name: "Azure Public(Default)",

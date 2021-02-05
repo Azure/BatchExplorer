@@ -12,7 +12,7 @@ import "./multi-instance-settings-picker.scss";
     templateUrl: "multi-instance-settings-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        // tslint:disable-next-line:max-line-length
+        // eslint-disable-next-line max-len
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => MultiInstanceSettingsPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => MultiInstanceSettingsPickerComponent), multi: true },
     ],

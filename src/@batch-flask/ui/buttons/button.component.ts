@@ -62,7 +62,7 @@ export class ButtonComponent extends ClickableComponent {
     @Input() public icon: string;
     @Input() public title: string;
     @Input() public tooltipPosition: string = "above";
-    // tslint:disable-next-line:no-input-rename
+    // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input("attr.aria-describedby") public userAriaDescribedBy: string;
 
     /**

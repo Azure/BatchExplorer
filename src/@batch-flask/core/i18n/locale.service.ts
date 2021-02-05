@@ -21,7 +21,7 @@ export enum Locale {
     ChineseTraditional = "zh-Hant",
 }
 
-// tslint:disable-next-line:variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 export const TranslatedLocales = {
     [Locale.Czech]: "Čeština‎",
     [Locale.German]: "Deutsch",

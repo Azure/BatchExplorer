@@ -11,7 +11,7 @@ async function run() {
     const jobs = await batchClient.job.list();
 
     for (const job of jobs) {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-line no-console
         console.log(job.id);
     }
 }

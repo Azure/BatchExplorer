@@ -199,11 +199,11 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     }
 
     private _updateActiveItem(node: FileTreeNode): boolean {
-        // tslint:disable-next-line:no-bitwise
+        // eslint-disable-next-line no-bitwise
         if (node.isDirectory && (this.config.selectable & FileExplorerSelectable.folder)) {
             this.activeFileChange.emit(node.path);
             return true;
-            // tslint:disable-next-line:no-bitwise
+            // eslint-disable-next-line no-bitwise
         } else if (!node.isDirectory && (this.config.selectable & FileExplorerSelectable.file)) {
             this.activeFileChange.emit(node.path);
             return true;

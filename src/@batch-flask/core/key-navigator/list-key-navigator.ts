@@ -237,7 +237,7 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
         const items = this._items;
 
         // Check up to the length of the items(In case every item is disabled)
-        // tslint:disable-next-line:prefer-for-of
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let i = 0; i < items.length; i++) {
             index = this._wrapIndex(index);
             if (!items[index]) {

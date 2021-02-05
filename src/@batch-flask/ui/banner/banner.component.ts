@@ -18,13 +18,13 @@ export enum BannerType {
 import "./banner.scss";
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: "[other-fix]",
 })
 export class BannerOtherFixDirective {
     @Input() public fixMessage: string;
 
-    // tslint:disable-next-line:no-input-rename
+    // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input("other-fix") public fix: () => Observable<any>;
 }
 
