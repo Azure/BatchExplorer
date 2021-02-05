@@ -12,7 +12,7 @@ import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
 import { BatchExplorerLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
-import { app, dialog, ipcMain, session } from "electron";
+import { app, dialog, ipcMain, protocol, session } from "electron";
 import { UpdateCheckResult } from "electron-updater";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
 import * as os from "os";
@@ -79,6 +79,7 @@ export class BatchExplorerApplication {
         await this.aadService.init();
         this._registerProtocol();
         this._setupProcessEvents();
+        this._registerFileProtocol();
         await this.proxySettings.init();
     }
 
@@ -325,6 +326,13 @@ export class BatchExplorerApplication {
         } else {
             log.error(`Failed to register ${Constants.legacyProtocolName}:// as a protocol for Batch Explorer`);
         }
+    }
+
+    private _registerFileProtocol() {
+        protocol.registerFileProtocol("file", (request,  callback) => {
+            const pathName = decodeURI(request.url.replace("file:///", ""));
+            callback(pathName);
+        });
     }
 
     private _setCommonHeaders(window: MainWindow) {
