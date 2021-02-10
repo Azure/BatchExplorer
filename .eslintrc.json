@@ -32,7 +32,8 @@
         "eslint-plugin-jsdoc",
         "eslint-plugin-prefer-arrow",
         "@typescript-eslint",
-        "@typescript-eslint/tslint"
+        "@typescript-eslint/tslint",
+        "ban"
       ],
       "rules": {
         "@angular-eslint/component-class-suffix": "error",
@@ -177,6 +178,35 @@
         "arrow-parens": [
           "off",
           "always"
+        ],
+        "ban/ban": [
+          "warn",
+          {
+            "name": [
+              "batchExplorerApp",
+              "debugCrash"
+            ],
+            "message": "Should only be called while debugging"
+          },
+          {
+            "name": [
+              "log",
+              "debug"
+            ],
+            "message": "Should only be called while debugging"
+          },
+          {
+            "name": "fdescribe",
+            "message": "Should only be called when focusing on a test suite"
+          },
+          {
+            "name": "fit",
+            "message": "Should only be called when focusing on a unit test"
+          },
+          {
+            "name": "allowInsecureRequest",
+            "message": "Should only be used for development with proxy"
+          }
         ],
         "brace-style": [
           "error",
