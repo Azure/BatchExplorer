@@ -92,7 +92,6 @@
         ],
         "@typescript-eslint/consistent-type-assertions": "error",
         "@typescript-eslint/consistent-type-definitions": "error",
-        "@typescript-eslint/dot-notation": "off",
         "@typescript-eslint/explicit-member-accessibility": [
           "warn",
           {
@@ -104,13 +103,10 @@
           "warn",
           4
         ],
-        "@typescript-eslint/member-delimiter-style": "off",
         "@typescript-eslint/member-ordering": "warn",
-        "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/no-empty-function": "warn",
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/no-extra-semi": "error",
-        "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-extra-non-null-assertion": "error",
         "@typescript-eslint/no-floating-promises": "warn",
         "@typescript-eslint/no-for-in-array": "error",
@@ -121,13 +117,6 @@
         "@typescript-eslint/no-namespace": "error",
         "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
         "@typescript-eslint/no-non-null-assertion": "warn",
-        "@typescript-eslint/no-parameter-properties": "off",
-        "@typescript-eslint/no-shadow": [
-          "off",
-          {
-            "hoist": "all"
-          }
-        ],
         "@typescript-eslint/no-this-alias": "error",
         "@typescript-eslint/no-unnecessary-type-assertion": "warn",
         "@typescript-eslint/no-unsafe-assignment": "off",
@@ -140,14 +129,6 @@
             "allowTernary": true
           }
         ],
-        "@typescript-eslint/no-unused-vars": [
-          "warn",
-          {
-            "varsIgnorePattern": "^_$",
-            "argsIgnorePattern": "^_$"
-          }
-        ],
-        "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/no-var-requires": "warn",
         "@typescript-eslint/prefer-as-const": "error",
         "@typescript-eslint/prefer-for-of": "error",
@@ -180,11 +161,6 @@
         "@typescript-eslint/type-annotation-spacing": "warn",
         "@typescript-eslint/unbound-method": "warn",
         "@typescript-eslint/unified-signatures": "error",
-        "arrow-body-style": "off",
-        "arrow-parens": [
-          "off",
-          "always"
-        ],
         "ban/ban": [
           "warn",
           {
@@ -225,7 +201,6 @@
           "error",
           "always-multiline"
         ],
-        "complexity": "off",
         "constructor-super": "error",
         "curly": "error",
         "eol-last": "error",
@@ -262,7 +237,6 @@
         "jsdoc/check-alignment": "error",
         "jsdoc/check-indentation": "warn",
         "jsdoc/newline-after-description": "warn",
-        "max-classes-per-file": "off",
         "max-len": [
           "warn",
           {
@@ -270,9 +244,7 @@
           }
         ],
         "new-parens": "error",
-        "no-array-constructor": "off",
         "no-async-promise-executor": "warn",
-        "no-bitwise": "off",
         "no-caller": "error",
         "no-case-declarations": "warn",
         "no-cond-assign": "error",
@@ -281,12 +253,8 @@
         "no-duplicate-case": "error",
         "no-duplicate-imports": "error",
         "no-empty": "error",
-        "no-empty-function": "off",
         "no-eval": "warn",
         "no-extra-boolean-cast": "warn",
-        "no-fallthrough": "off",
-        "no-implied-eval": "off",
-        "no-invalid-this": "off",
         "no-irregular-whitespace": "error",
         "no-multi-spaces": "warn",
         "no-multiple-empty-lines": "error",
@@ -301,18 +269,14 @@
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
         "no-undef-init": "error",
-        "no-underscore-dangle": "off",
         "no-unsafe-finally": "error",
         "no-unused-labels": "error",
-        "no-unused-vars": "off",
         "no-useless-escape": "warn",
         "no-var": "error",
-        "object-shorthand": "off",
         "one-var": [
           "error",
           "never"
         ],
-        "prefer-arrow/prefer-arrow-functions": "off",
         "prefer-const": "error",
         "prefer-rest-params": "warn",
         "quote-props": [
@@ -320,7 +284,6 @@
           "consistent-as-needed"
         ],
         "radix": "error",
-        "require-await": "off",
         "spaced-comment": [
           "warn",
           "always",
@@ -331,8 +294,7 @@
           }
         ],
         "unicorn/filename-case": "error",
-        "use-isnan": "error",
-        "valid-typeof": "off"
+        "use-isnan": "error"
       }
     },
     /*
