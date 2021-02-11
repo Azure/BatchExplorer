@@ -9,6 +9,7 @@ import { Pool, PoolAllocationState } from "app/models";
 import { JobService, PinnedEntityService, PoolService } from "app/services";
 import { from } from "rxjs";
 import { PoolCreateBasicDialogComponent } from "./add/pool-create-basic-dialog.component";
+import { StartTaskEditFormComponent } from "../start-task/start-task-edit-form.component";
 import { DeletePoolDialogComponent, DeletePoolOutput } from "./delete";
 import { PoolResizeDialogComponent } from "./resize";
 
@@ -19,6 +20,7 @@ export class PoolCommands extends EntityCommands<Pool> {
     public stopResize: EntityCommand<Pool, void>;
     public clone: EntityCommand<Pool, void>;
     public delete: EntityCommand<Pool, DeletePoolOutput>;
+    public editStartTask: EntityCommand<Pool, void>;
     public exportAsJSON: EntityCommand<Pool, void>;
     public pin: EntityCommand<Pool, void>;
 
@@ -101,6 +103,17 @@ export class PoolCommands extends EntityCommands<Pool> {
             permission: Permission.Write,
         });
 
+        this.editStartTask = this.simpleCommand({
+            name: "editStartTask",
+            ...COMMAND_LABEL_ICON.EditStartTask,
+            action: (pool: Pool) => this._editStartTask(pool),
+            visible: (pool) => true,
+            multiple: false,
+            confirm: false,
+            notify: false,
+            permission: Permission.Write
+        })
+
         this.exportAsJSON = this.simpleCommand({
             name: "exportAsJson",
             ...COMMAND_LABEL_ICON.ExportAsJSON,
@@ -131,6 +144,7 @@ export class PoolCommands extends EntityCommands<Pool> {
             this.stopResize,
             this.clone,
             this.delete,
+            this.editStartTask,
             this.exportAsJSON,
             this.pin,
         ];
@@ -156,6 +170,11 @@ export class PoolCommands extends EntityCommands<Pool> {
     private _clonePool(pool: Pool) {
         const ref = this.sidebarManager.open(`add-pool-${pool.id}`, PoolCreateBasicDialogComponent);
         ref.component.setValueFromEntity(pool);
+    }
+
+    private _editStartTask(pool: Pool) {
+        const ref = this.sidebarManager.open(`edit-start-task-${pool.id}`, StartTaskEditFormComponent);
+        ref.component.pool = pool;
     }
 
     private _exportAsJSON(pool: Pool) {
