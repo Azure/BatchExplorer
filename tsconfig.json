@@ -44,16 +44,6 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "plugins": [
-      {
-        "name": "typescript-tslint-plugin",
-        "configFile": "./tslint.json",
-        "alwaysShowRuleFailuresAsWarnings": true,
-        "ignoreDefinitionFiles": true,
-        "suppressWhileTypeErrorsPresent": false,
-        "mockTypeScriptVersion": false
-      }
-    ]
   },
   "files": [
     "definitions/index.d.ts",
