@@ -73,6 +73,14 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
         autoUpdater.autoInstallOnAppQuit = false;
     }
 
+    if (Constants.isDev) {
+        // Need to explicitly disable CORS when running in dev mode because
+        // the RateCard API returns a 404 when a pre-flight OPTIONS request
+        // is issued to it.
+        // See: https://github.com/electron/electron/issues/23664
+        app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors");
+    }
+
     const module = await platformDynamicServer().bootstrapModule(BatchExplorerClientModule);
     const localeService = module.injector.get(LocaleService) as ClientLocaleService;
     await localeService.load();
