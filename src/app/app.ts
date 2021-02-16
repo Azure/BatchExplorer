@@ -1,4 +1,4 @@
-// tslint:disable: ordered-imports
+/* eslint-disable import/order */
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { ipcRenderer, remote } from "electron";
 
@@ -57,7 +57,7 @@ Promise.resolve().then(() => {
     return platformBrowserDynamic().bootstrapModule(AppModule);
 }).then(() => {
     timeEnd("bootstrap");
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log("Loading times", durations);
 }).catch(error => {
     log.error("Bootstrapping failed :: ", error);

@@ -3,7 +3,7 @@ import { autobind } from "@batch-flask/core";
 import { ButtonAction } from "./button.component";
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class BaseButton {
     @Input() public action: ButtonAction;
     @Input() public disabled: boolean;

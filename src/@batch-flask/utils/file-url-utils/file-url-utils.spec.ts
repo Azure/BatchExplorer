@@ -1,6 +1,6 @@
 import { FileUrlUtils } from "./file-url-utils";
 
-// tslint:disable:max-line-length
+/* eslint-disable max-len */
 describe("FileUrlUtils", () => {
     it("get file name from url", () => {
         const out = FileUrlUtils.getFileName(

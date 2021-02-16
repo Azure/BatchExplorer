@@ -8,7 +8,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@
     templateUrl: "directory-picker.html",
 })
 export class DirectoryPickerComponent {
-    // tslint:disable-next-line:no-input-rename
+    // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input("attr.aria-describedby") public ariaDescribedBy: string;
 
     @Input() public canPickFile: boolean = false;

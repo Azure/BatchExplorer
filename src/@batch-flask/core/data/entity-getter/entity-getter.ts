@@ -77,7 +77,7 @@ export abstract class EntityGetter<TEntity extends Record<any>, TParams> extends
                 cache.deleteItemByKey(queryKey);
             } else {
                 const paramsString = Object.keys(params).join(",");
-                // tslint:disable-next-line:max-line-length
+                // eslint-disable-next-line max-len
 
                 log.warn(`Unable to find unique key for cached item ${this.type.name}. `
                     + `Cache key is: ${cache.uniqueField}, with params: ${paramsString}. `

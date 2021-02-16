@@ -9,7 +9,7 @@ import { Subscription } from "rxjs";
     selector: "bl-registry-picker",
     templateUrl: "registry-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
+        /* eslint-disable @angular-eslint/no-forward-ref */
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => RegistryPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => RegistryPickerComponent), multi: true },
     ],

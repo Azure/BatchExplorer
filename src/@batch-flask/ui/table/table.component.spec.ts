@@ -25,11 +25,11 @@ const sizeB = { id: "size_b", name: "Size B", numberOfCores: 8, resourceDiskSize
 const sizeC = { id: "size_c", name: "Size C", numberOfCores: 4, resourceDiskSizeInMB: 80000 };
 const sizeD = { id: "size_d", name: "Size D", numberOfCores: 2, resourceDiskSizeInMB: 4000 };
 
-// tslint:disable:component-class-suffix
-// tslint:disable:template-use-track-by-function
+/* eslint-disable @angular-eslint/component-class-suffix */
+/* eslint-disable  */
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 class BaseTestComponent {
     public sizes: any[] = [];
     public pickedSize: string;

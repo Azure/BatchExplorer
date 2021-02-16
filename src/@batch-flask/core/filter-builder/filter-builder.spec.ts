@@ -1,6 +1,6 @@
 import { FilterBuilder } from "@batch-flask/core";
 
-// tslint:disable:max-line-length
+/* eslint-disable max-len */
 describe("Filter builder", () => {
     it("filter parser handles ONE search parameter", () => {
         const builder = FilterBuilder.prop("displayName").startswith("bob");

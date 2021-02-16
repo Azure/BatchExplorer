@@ -31,11 +31,11 @@ export class MainWindow extends GenericWindow {
     public state: Observable<WindowState>;
 
     public get webContents() {
-        return this._window!.webContents;
+        return this._window.webContents;
     }
 
     private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
-    private _resolveAppReady: () => void;
+    private _resolveAppReady: (value?: any) => void;
 
     constructor(batchExplorerApp: BatchExplorerApplication, private telemetryManager: TelemetryManager) {
         super(batchExplorerApp);
@@ -57,7 +57,7 @@ export class MainWindow extends GenericWindow {
     }
 
     public once(event: any, callback: (...args) => void) {
-        return this._window!.once(event, callback);
+        return this._window.once(event, callback);
     }
 
     protected createWindow() {
@@ -127,7 +127,7 @@ export class MainWindow extends GenericWindow {
             log.error(`Failed to load main window: ${errorDescription} (Error code ${errorCode})`);
         });
 
-        // tslint:disable-next-line:ban-types
+        // eslint-disable-next-line @typescript-eslint/ban-types
         window.on("unresponsive", (error: Error) => {
             log.error("There was a crash", error);
             this.batchExplorerApp.recoverWindow.createWithError(error.message);

@@ -1,12 +1,12 @@
-// tslint:disable-next-line
+// eslint-disable-next-line
 /// <reference path="../../src/test/utils/matchers/index.d.ts"/>
 jasmine.MAX_PRETTY_PRINT_DEPTH = 3;
 
 import "reflect-metadata";
 
-// tslint:disable: ordered-imports
+/* eslint-disable import/order */
 import "core-js/es6";
-// tslint:disable:no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
 require("zone.js/dist/zone");
 require("zone.js/dist/long-stack-trace-zone");
 require("zone.js/dist/proxy"); // since zone.js 0.6.15

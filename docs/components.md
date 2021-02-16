@@ -9,7 +9,7 @@ Official documentation from angular https://angular.io/docs/ts/latest/api/core/i
 3. Name the compoennt selector `bl-do-something`
 4. Name the template and the css file the same as the component `do-something.html` and `do-something.scss`
 
-Note: TSLint will complain if you don't follow the format for #2 and 3
+Note: Linting will complain if you don't follow the format for #2 and 3
 
 ## Component template
 You can either have the template be inline(Only use this if the template is extremely simple - 3 lines max)

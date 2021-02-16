@@ -10,7 +10,7 @@ import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "./table-property.component";
 
-// tslint:disable:template-use-track-by-function
+/* eslint-disable  */
 @Component({
     template: `
         <bl-table-property label="Files">

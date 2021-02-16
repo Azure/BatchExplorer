@@ -1,6 +1,6 @@
 import { Logger } from "./base-logger";
 
-// tslint:disable:no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
 let _logger: any;
 
 if (process.env.NODE_ENV === "test") {

@@ -22,7 +22,7 @@ const outerSeparator = "=".repeat(60);
 
 const defaultLicenseRoot = path.join(Constants.root, "scripts/lca/default-licenses");
 
-// tslint:disable:no-console
+// eslint-disable no-console
 const defaultLicenses = {
     "mit": fs.readFileSync(path.join(defaultLicenseRoot, "mit.txt")).toString(),
     "bsd-2-clause": fs.readFileSync(path.join(defaultLicenseRoot, "bsd-2-clause.txt")).toString(),

@@ -40,7 +40,7 @@ export class FakeMouseEvent {
 /**
  * Button events to pass to `DebugElement.triggerEventHandler` for RouterLink event handler
  */
-// tslint:disable-next-line:variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 export const ButtonClickEvents = {
     left: new MouseEvent("click", { button: 0 }),
     leftShift: new MouseEvent("click", { button: 0, shiftKey: true }),

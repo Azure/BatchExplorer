@@ -176,13 +176,12 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
     @autobind()
     public submit() {
-        let method: () => Observable<any>;
         const methods: { [key in  NcjTemplateMode]?: () => Observable<any> } = {
             [NcjTemplateMode.NewPoolAndJob]:  this._createJobWithAutoPool,
             [NcjTemplateMode.ExistingPoolAndJob]:  this._createJob,
             [NcjTemplateMode.NewPool]:  this._createPool,
         };
-        method = methods[this.modeState];
+        const method: () => Observable<any> = methods[this.modeState];
 
         if (method) {
             const obs = method();
@@ -368,7 +367,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
     private _handleControlChangeEvents(formGroup, key) {
         // Listen to control value change events and update the route parameters to match
-        // tslint:disable-next-line:max-line-length
+        // eslint-disable-next-line max-len
         this._controlChanges.push(formGroup[key].valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((change) => {
             if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup && Boolean(change)) {
                 // Quick-Fix until we modify the CLI to finally sort out file group prefixes

@@ -1,5 +1,5 @@
 import { XliffSerializer } from "./xliff-serializer";
-// tslint:disable:max-line-length
+/* eslint-disable max-len */
 
 describe("XLiffSerializer", () => {
     it("Serialize english translations", () => {

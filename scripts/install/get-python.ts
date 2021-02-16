@@ -1,4 +1,4 @@
-// tslint:disable:no-console
+// eslint-disable no-console
 import "../../src/client/init";
 
 import { initLogger } from "../../src/client/logger";

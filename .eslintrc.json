@@ -1,0 +1,363 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "node_modules/**/*",
+    "**/node_modules/**/*",
+    "dist/**/*",
+    "build/**/*",
+    "python/**/*",
+    "docs/**/*",
+    "data/**/*"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "overrides": [
+    /*
+     * TYPESCRIPT FILES
+     */
+    {
+      "files": ["src/**/*.ts"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "prettier",
+        "prettier/@typescript-eslint"
+      ],
+      "parserOptions": {
+        "project": [
+          "./tsconfig.eslint.json"
+        ],
+        "sourceType": "module",
+        "createDefaultProgram": false
+      },
+      "plugins": [
+        "eslint-plugin-import",
+        "eslint-plugin-unicorn",
+        "@angular-eslint/eslint-plugin",
+        "@angular-eslint/eslint-plugin-template",
+        "eslint-plugin-jsdoc",
+        "eslint-plugin-prefer-arrow",
+        "@typescript-eslint",
+        "ban",
+        "import"
+      ],
+      "rules": {
+        "@angular-eslint/component-class-suffix": "error",
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "bl",
+            "style": "kebab-case"
+          }
+        ],
+        "@angular-eslint/contextual-decorator": "error",
+        "@angular-eslint/contextual-lifecycle": "error",
+        "@angular-eslint/directive-class-suffix": "error",
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "bl",
+            "style": "camelCase"
+          }
+        ],
+        "@angular-eslint/no-attribute-decorator": "error",
+        "@angular-eslint/no-forward-ref": "off",
+        "@angular-eslint/no-host-metadata-property": "error",
+        "@angular-eslint/no-input-rename": "warn",
+        "@angular-eslint/no-inputs-metadata-property": "error",
+        "@angular-eslint/no-output-rename": "error",
+        "@angular-eslint/no-outputs-metadata-property": "error",
+        "@angular-eslint/use-lifecycle-interface": "warn",
+        "@angular-eslint/use-pipe-transform-interface": "error",
+        "@typescript-eslint/adjacent-overload-signatures": "off",
+        "@typescript-eslint/array-type": [
+          "error",
+          {
+            "default": "array-simple"
+          }
+        ],
+        "@typescript-eslint/await-thenable": "warn",
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/ban-types": [
+          "warn",
+          {
+            "types": {
+              "Error": {
+                "message": "Try not to use a basic Error but a SanitizedError if possible or a custom error class"
+              }
+            }
+          }
+        ],
+        "@typescript-eslint/consistent-type-assertions": "error",
+        "@typescript-eslint/consistent-type-definitions": "error",
+        "@typescript-eslint/explicit-member-accessibility": [
+          "warn",
+          {
+            "accessibility": "explicit"
+          }
+        ],
+        "@typescript-eslint/explicit-module-boundary-types": "warn",
+        "@typescript-eslint/indent": [
+          "warn",
+          4
+        ],
+        "@typescript-eslint/member-ordering": "warn",
+        "@typescript-eslint/no-empty-function": "warn",
+        "@typescript-eslint/no-empty-interface": "off",
+        "@typescript-eslint/no-extra-semi": "error",
+        "@typescript-eslint/no-extra-non-null-assertion": "error",
+        "@typescript-eslint/no-floating-promises": "warn",
+        "@typescript-eslint/no-for-in-array": "error",
+        "@typescript-eslint/no-implied-eval": "warn",
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-misused-new": "error",
+        "@typescript-eslint/no-misused-promises": "warn",
+        "@typescript-eslint/no-namespace": "error",
+        "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
+        "@typescript-eslint/no-non-null-assertion": "warn",
+        "@typescript-eslint/no-this-alias": "error",
+        "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-call": "warn",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-return": "warn",
+        "@typescript-eslint/no-unused-expressions": [
+          "error",
+          {
+            "allowTernary": true
+          }
+        ],
+        "@typescript-eslint/no-var-requires": "warn",
+        "@typescript-eslint/prefer-as-const": "error",
+        "@typescript-eslint/prefer-for-of": "error",
+        "@typescript-eslint/prefer-function-type": "error",
+        "@typescript-eslint/prefer-namespace-keyword": "error",
+        "@typescript-eslint/prefer-regexp-exec": "error",
+        "@typescript-eslint/quotes": [
+          "error",
+          "double",
+          {
+            "avoidEscape": true,
+            "allowTemplateLiterals": true
+          }
+        ],
+        "@typescript-eslint/require-await": "warn",
+        "@typescript-eslint/restrict-plus-operands": "warn",
+        "@typescript-eslint/restrict-template-expressions": "warn",
+        "@typescript-eslint/semi": [
+          "error",
+          "always"
+        ],
+        "@typescript-eslint/triple-slash-reference": [
+          "error",
+          {
+            "path": "always",
+            "types": "prefer-import",
+            "lib": "always"
+          }
+        ],
+        "@typescript-eslint/type-annotation-spacing": "warn",
+        "@typescript-eslint/unbound-method": "warn",
+        "@typescript-eslint/unified-signatures": "error",
+        "ban/ban": [
+          "warn",
+          {
+            "name": [
+              "batchExplorerApp",
+              "debugCrash"
+            ],
+            "message": "Should only be called while debugging"
+          },
+          {
+            "name": [
+              "log",
+              "debug"
+            ],
+            "message": "Should only be called while debugging"
+          },
+          {
+            "name": "fdescribe",
+            "message": "Should only be called when focusing on a test suite"
+          },
+          {
+            "name": "fit",
+            "message": "Should only be called when focusing on a unit test"
+          },
+          {
+            "name": "allowInsecureRequest",
+            "message": "Should only be used for development with proxy"
+          }
+        ],
+        "brace-style": [
+          "error",
+          "1tbs",
+          {
+            "allowSingleLine": true
+          }
+        ],
+        "comma-dangle": [
+          "error",
+          "always-multiline"
+        ],
+        "constructor-super": "error",
+        "curly": "error",
+        "eol-last": "error",
+        "eqeqeq": [
+          "error",
+          "smart"
+        ],
+        "guard-for-in": "error",
+        "id-blacklist": [
+          "warn",
+          "any",
+          "Number",
+          "number",
+          "String",
+          "string",
+          "Boolean",
+          "boolean",
+          "Undefined",
+          "undefined"
+        ],
+        "id-match": "error",
+        "import/no-relative-parent-imports": "error",
+        "import/order": [
+          "error",
+          {
+            "groups": [
+              [
+                "external",
+                "builtin"
+              ]
+            ]
+          }
+        ],
+        "jsdoc/check-alignment": "error",
+        "jsdoc/check-indentation": "warn",
+        "jsdoc/newline-after-description": "warn",
+        "max-len": [
+          "warn",
+          {
+            "code": 120
+          }
+        ],
+        "new-parens": "error",
+        "no-async-promise-executor": "warn",
+        "no-caller": "error",
+        "no-case-declarations": "warn",
+        "no-cond-assign": "error",
+        "no-console": "error",
+        "no-debugger": "error",
+        "no-duplicate-case": "error",
+        "no-duplicate-imports": "error",
+        "no-empty": "error",
+        "no-eval": "warn",
+        "no-extra-boolean-cast": "warn",
+        "no-irregular-whitespace": "error",
+        "no-multi-spaces": "warn",
+        "no-multiple-empty-lines": "error",
+        "no-new-func": "error",
+        "no-new-wrappers": "error",
+        "no-prototype-builtins": "warn",
+        "no-return-await": "error",
+        "no-self-assign": "warn",
+        "no-sequences": "error",
+        "no-sparse-arrays": "error",
+        "no-template-curly-in-string": "error",
+        "no-throw-literal": "error",
+        "no-trailing-spaces": "error",
+        "no-undef-init": "error",
+        "no-unsafe-finally": "error",
+        "no-unused-labels": "error",
+        "no-useless-escape": "warn",
+        "no-var": "error",
+        "one-var": [
+          "error",
+          "never"
+        ],
+        "prefer-const": "error",
+        "prefer-rest-params": "warn",
+        "quote-props": [
+          "error",
+          "consistent-as-needed"
+        ],
+        "radix": "error",
+        "spaced-comment": [
+          "warn",
+          "always",
+          {
+            "markers": [
+              "/"
+            ]
+          }
+        ],
+        "unicorn/filename-case": "error",
+        "use-isnan": "error"
+      }
+    },
+    /*
+     * COMPONENT TEMPLATES
+     */
+    {
+      "files": ["src/**/*.html"],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
+      ],
+      "rules": {
+        "@angular-eslint/template/use-track-by-function": "warn"
+      }
+    },
+    /*
+     * @BATCH-FLASK
+     */
+    {
+      "files": ["src/@batch-flask/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "app",
+                "message": "Importing modules in @batch-flask from app/* is forbidden"
+              },
+              {
+                "name": "common",
+                "message": "Importing modules in @batch-flask from common/* is forbidden"
+              }
+            ],
+            "patterns": ["app/*", "common/*"]
+          }
+        ]
+      }
+    },
+    /*
+     * NODE SCRIPTS
+     */
+    {
+      "files": ["scripts/**/*.ts", "config/**/*.ts"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "prettier",
+        "prettier/@typescript-eslint"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.eslint.json"
+        ],
+        "sourceType": "script",
+        "createDefaultProgram": false
+      },
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ]
+}

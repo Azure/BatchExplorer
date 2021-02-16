@@ -16,7 +16,7 @@ describe("Bundled application is starting correctly", () => {
         });
 
         await app.start();
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log("User path: ", await app.electron.remote.app.getPath("userData"));
     });
 

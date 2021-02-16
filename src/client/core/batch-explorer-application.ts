@@ -280,7 +280,7 @@ export class BatchExplorerApplication {
             process.exit(1);
         });
 
-        // tslint:disable-next-line:ban-types
+        // eslint-disable-next-line @typescript-eslint/ban-types
         process.on("uncaughtException" as any, (error: Error) => {
             log.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
@@ -288,7 +288,7 @@ export class BatchExplorerApplication {
             this.telemetryService.flush(true);
         });
 
-        // tslint:disable-next-line: ban-types
+        // eslint-disable-next-line @typescript-eslint/ban-types
         process.on("unhandledRejection", (r: Error) => {
             log.error("Unhandled promise error:", r);
             this.telemetryService.trackError(r);

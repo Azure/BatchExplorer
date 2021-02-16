@@ -15,7 +15,6 @@ export interface ProxySettingConfiguration {
     credentials: ProxyCredentials | null;
 }
 
-// @ts-ignore
 function allowInsecureRequest() {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }

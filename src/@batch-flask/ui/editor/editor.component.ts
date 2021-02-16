@@ -173,7 +173,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
 
     public onChange: (value: any) => any = () => null;
 
-    // tslint:disable-next-line:no-empty
+    // eslint-disable-next-line no-empty,@typescript-eslint/no-empty-function
     public onTouched() { }
     public registerOnChange(fn) { this.onChange = fn; }
     public registerOnTouched(fn) { this.onTouched = fn; }
