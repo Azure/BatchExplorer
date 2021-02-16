@@ -1,20 +1,26 @@
 {
   "root": true,
-  "ignorePatterns": [],
+  "ignorePatterns": [
+    "node_modules/**/*",
+    "**/node_modules/**/*",
+    "dist/**/*"
+  ],
   "env": {
     "browser": true,
     "es6": true,
     "node": true
   },
   "overrides": [
+    /*
+     * TYPESCRIPT FILES
+     */
     {
-      "files": [
-        "*.ts"
-      ],
+      "files": ["*.ts"],
       "extends": [
+        "eslint:recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:@angular-eslint/template/process-inline-templates",
         "prettier",
         "prettier/@typescript-eslint"
       ],
@@ -32,8 +38,8 @@
         "eslint-plugin-jsdoc",
         "eslint-plugin-prefer-arrow",
         "@typescript-eslint",
-        "@typescript-eslint/tslint",
-        "ban"
+        "ban",
+        "import"
       ],
       "rules": {
         "@angular-eslint/component-class-suffix": "error",
@@ -45,6 +51,7 @@
             "style": "kebab-case"
           }
         ],
+        "@angular-eslint/contextual-decorator": "error",
         "@angular-eslint/contextual-lifecycle": "error",
         "@angular-eslint/directive-class-suffix": "error",
         "@angular-eslint/directive-selector": [
@@ -100,12 +107,11 @@
         "@typescript-eslint/member-delimiter-style": "off",
         "@typescript-eslint/member-ordering": "warn",
         "@typescript-eslint/naming-convention": "off",
-        "@typescript-eslint/no-array-constructor": "error",
         "@typescript-eslint/no-empty-function": "warn",
         "@typescript-eslint/no-empty-interface": "off",
+        "@typescript-eslint/no-extra-semi": "error",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-extra-non-null-assertion": "error",
-        "@typescript-eslint/no-extra-semi": "error",
         "@typescript-eslint/no-floating-promises": "warn",
         "@typescript-eslint/no-for-in-array": "error",
         "@typescript-eslint/no-implied-eval": "warn",
@@ -241,6 +247,7 @@
           "undefined"
         ],
         "id-match": "error",
+        "import/no-relative-parent-imports": "error",
         "import/order": [
           "error",
           {
@@ -264,8 +271,10 @@
         ],
         "new-parens": "error",
         "no-array-constructor": "off",
+        "no-async-promise-executor": "warn",
         "no-bitwise": "off",
         "no-caller": "error",
+        "no-case-declarations": "warn",
         "no-cond-assign": "error",
         "no-console": "error",
         "no-debugger": "error",
@@ -274,14 +283,18 @@
         "no-empty": "error",
         "no-empty-function": "off",
         "no-eval": "warn",
+        "no-extra-boolean-cast": "warn",
         "no-fallthrough": "off",
         "no-implied-eval": "off",
         "no-invalid-this": "off",
         "no-irregular-whitespace": "error",
+        "no-multi-spaces": "warn",
         "no-multiple-empty-lines": "error",
         "no-new-func": "error",
         "no-new-wrappers": "error",
+        "no-prototype-builtins": "warn",
         "no-return-await": "error",
+        "no-self-assign": "warn",
         "no-sequences": "error",
         "no-sparse-arrays": "error",
         "no-template-curly-in-string": "error",
@@ -292,6 +305,7 @@
         "no-unsafe-finally": "error",
         "no-unused-labels": "error",
         "no-unused-vars": "off",
+        "no-useless-escape": "warn",
         "no-var": "error",
         "object-shorthand": "off",
         "one-var": [
@@ -321,15 +335,40 @@
         "valid-typeof": "off"
       }
     },
+    /*
+     * COMPONENT TEMPLATES
+     */
     {
-      "files": [
-        "*.html"
-      ],
+      "files": ["*.html"],
       "extends": [
         "plugin:@angular-eslint/template/recommended"
       ],
       "rules": {
         "@angular-eslint/template/use-track-by-function": "warn"
+      }
+    },
+    /*
+     * @BATCH-FLASK
+     */
+    {
+      "files": ["src/@batch-flask/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "app",
+                "message": "Importing modules in @batch-flask from app/* is forbidden"
+              },
+              {
+                "name": "common",
+                "message": "Importing modules in @batch-flask from common/* is forbidden"
+              }
+            ],
+            "patterns": ["app/*", "common/*"]
+          }
+        ]
       }
     }
   ]
