@@ -3,7 +3,11 @@
   "ignorePatterns": [
     "node_modules/**/*",
     "**/node_modules/**/*",
-    "dist/**/*"
+    "dist/**/*",
+    "build/**/*",
+    "python/**/*",
+    "docs/**/*",
+    "data/**/*"
   ],
   "env": {
     "browser": true,
@@ -15,7 +19,7 @@
      * TYPESCRIPT FILES
      */
     {
-      "files": ["*.ts"],
+      "files": ["src/**/*.ts"],
       "extends": [
         "eslint:recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
@@ -26,9 +30,10 @@
       ],
       "parserOptions": {
         "project": [
-          "./tsconfig.json"
+          "./tsconfig.eslint.json"
         ],
-        "sourceType": "module"
+        "sourceType": "module",
+        "createDefaultProgram": false
       },
       "plugins": [
         "eslint-plugin-import",
@@ -301,7 +306,7 @@
      * COMPONENT TEMPLATES
      */
     {
-      "files": ["*.html"],
+      "files": ["src/**/*.html"],
       "extends": [
         "plugin:@angular-eslint/template/recommended"
       ],
@@ -331,6 +336,27 @@
             "patterns": ["app/*", "common/*"]
           }
         ]
+      }
+    },
+    /*
+     * NODE SCRIPTS
+     */
+    {
+      "files": ["scripts/**/*.ts", "config/**/*.ts"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "prettier",
+        "prettier/@typescript-eslint"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.eslint.json"
+        ],
+        "sourceType": "script",
+        "createDefaultProgram": false
+      },
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
       }
     }
   ]

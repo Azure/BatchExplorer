@@ -1,4 +1,4 @@
-// tslint:disable:no-console
+// eslint-disable no-console
 import "../../src/client/init";
 
 import * as fs from "fs";
@@ -8,7 +8,7 @@ import { promisify } from "util";
 import { XliffSerializer } from "../../src/@batch-flask/compiler";
 import { loadDevTranslations } from "./load-dev-translations";
 
-const ensureDir = promisify(mkdirp);
+const ensureDir = mkdirp;
 const writeFile = promisify(fs.writeFile);
 
 async function createXliffTranslations() {
