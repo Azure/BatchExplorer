@@ -18,14 +18,18 @@
     "sourceMap": true,
     "noImplicitAny": false,
     "moduleResolution": "node",
-    // "strictNullChecks": true,
     "listEmittedFiles": false, // debug option
     "listFiles": false, // debug option
     // Base Url only applies to typescript compilation so tsc knows where the modules are.
     // This means absolute path only works in the browser environment you need to use relative import for the code in side the client folder
     // Node.js doesn't support custom load path yet
     "baseUrl": ".",
-    "noUnusedLocals": true,
+
+    // Defer TS checking to ESLint
+    "noUnusedLocals": false,
+    "strict": false,
+    "strictNullChecks": false,
+
     "paths": {
       "*": [
         "src/*",
@@ -40,16 +44,6 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "plugins": [
-      {
-        "name": "typescript-tslint-plugin",
-        "configFile": "./tslint.json",
-        "alwaysShowRuleFailuresAsWarnings": true,
-        "ignoreDefinitionFiles": true,
-        "suppressWhileTypeErrorsPresent": false,
-        "mockTypeScriptVersion": false
-      }
-    ]
   },
   "files": [
     "definitions/index.d.ts",

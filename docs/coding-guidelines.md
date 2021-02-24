@@ -4,8 +4,9 @@ General guidelines on how to code for this probject
 
 ## Libraries
 Those will be run automatically by the CI and if any error is found will fail the build.
- * `tslint` for typescript styling. With vscode install the tslint extension to have live warning.
- * `stylelint` for scss. With vscode install the stylelint extension to have live warning.
+
+* `eslint` for TypeScript linting. Install the ESLint extension for live warnings.
+* `stylelint` for scss. With vscode install the stylelint extension to have live warning.
 
 ## Other
 

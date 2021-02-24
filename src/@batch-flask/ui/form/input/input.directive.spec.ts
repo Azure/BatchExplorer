@@ -4,7 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { InputDirective } from "./input.directive";
 
-// tslint:disable:component-class-suffix
+/* eslint-disable @angular-eslint/component-class-suffix */
 
 describe("InputDirective", () => {
     let fixture: ComponentFixture<any>;

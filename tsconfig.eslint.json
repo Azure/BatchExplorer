@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+
+    "config/**/*.ts",
+    "package/**/*.ts",
+    "publish/**/*.ts",
+    "scripts/**/*.ts",
+    "swagger/**/*.ts"
+  ]
+}

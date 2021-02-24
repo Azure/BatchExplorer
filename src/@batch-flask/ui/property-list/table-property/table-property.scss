@@ -70,6 +70,10 @@ bl-table-property {
         align-items: center;
         justify-content: center;
 
+        > bl-button.expand:focus {
+            outline: 1px solid $outline-color;
+        }
+
         > button {
             display: block;
             margin: auto;

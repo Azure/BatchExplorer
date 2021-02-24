@@ -21,7 +21,11 @@
     },
     {
       "type": "npm",
-      "script": "tslint"
+      "script": "eslint",
+      "problemMatcher": [
+        "$eslint-stylish"
+      ],
+      "label": "npm: eslint"
     }
   ]
 }

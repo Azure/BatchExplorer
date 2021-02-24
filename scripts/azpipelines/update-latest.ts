@@ -1,5 +1,4 @@
-// tslint:disable:no-console
-// @ts-check
+// eslint-disable no-console
 const azureStorage = require("azure-storage");
 const makeDir = require("make-dir");
 const path = require("path");

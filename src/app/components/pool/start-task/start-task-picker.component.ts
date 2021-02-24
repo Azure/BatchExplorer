@@ -9,7 +9,7 @@ import { List } from "immutable";
     selector: "bl-start-task-picker",
     templateUrl: "start-task-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
+        /* eslint-disable @angular-eslint/no-forward-ref */
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => StartTaskPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => StartTaskPickerComponent), multi: true },
     ],

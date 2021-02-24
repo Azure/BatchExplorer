@@ -1,9 +1,8 @@
-// tslint:disable:no-console
+// eslint-disable no-console
 import "../../src/client/init";
 
 import * as path from "path";
 process.env.NODE_PATH = process.env.NODE_PATH + path.delimiter + path.join(__dirname, "../..");
-// tslint:disable-next-line:no-var-requires
 require("module").Module._initPaths();
 
 import "reflect-metadata";

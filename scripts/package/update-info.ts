@@ -1,4 +1,4 @@
-// tslint:disable:no-console
+// eslint-disable no-console
 import * as crypto from "crypto";
 import * as fs from "fs";
 import * as yaml from "js-yaml";

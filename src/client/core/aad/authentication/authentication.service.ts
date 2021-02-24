@@ -61,7 +61,6 @@ export class LogoutError extends SanitizedError {
  */
 export class AuthenticationService {
     public state: Observable<AuthenticationState>;
-    // @ts-ignore
     private _waitingForAuth = false;
     private _authorizeQueue: AuthorizeQueueItem[] = [];
     private _currentAuthorization: AuthorizeQueueItem | null = null;

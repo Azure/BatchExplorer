@@ -1,5 +1,5 @@
 import { Component, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ServerError } from "@batch-flask/core";
 import { TimeZoneTestingModule } from "@batch-flask/core/testing";
@@ -93,12 +93,14 @@ describe("FileViewerHeaderComponent", () => {
             expect(de.query(By.css("bl-download-button bl-button"))).not.toBeFalsy();
         });
 
-        it("download the file if clicking download button", () => {
+        it("download the file if clicking download button", fakeAsync(() => {
             const downloadSpy = spyOn(testComponent.fileLoader, "download")
                 .and.returnValue(of("/some/local/path/foo.ts"));
             click(de.query(By.css("bl-download-button bl-button")));
-            expect(TestBed.get(ElectronRemote).dialog.showSaveDialog).toHaveBeenCalledOnce();
-            expect(TestBed.get(ElectronRemote).dialog.showSaveDialog).toHaveBeenCalledWith({
+            flush();
+
+            expect(TestBed.inject(ElectronRemote).dialog.showSaveDialog).toHaveBeenCalledOnce();
+            expect(TestBed.inject(ElectronRemote).dialog.showSaveDialog).toHaveBeenCalledWith({
                 buttonLabel: "Download",
                 defaultPath: "foo.ts",
             });
@@ -106,22 +108,24 @@ describe("FileViewerHeaderComponent", () => {
             expect(downloadSpy).toHaveBeenCalledWith("/some/local/path/foo.ts");
 
             // Show the item
-            expect(TestBed.get(ElectronShell).showItemInFolder).toHaveBeenCalledOnce();
-            expect(TestBed.get(ElectronShell).showItemInFolder).toHaveBeenCalledWith("/some/local/path/foo.ts");
-        });
+            expect(TestBed.inject(ElectronShell).showItemInFolder).toHaveBeenCalledOnce();
+            expect(TestBed.inject(ElectronShell).showItemInFolder).toHaveBeenCalledWith("/some/local/path/foo.ts");
+        }));
 
-        it("show a notification if the download failed", () => {
+        it("show a notification if the download failed", fakeAsync(() => {
             const downloadSpy = spyOn(testComponent.fileLoader, "download")
                 .and.returnValue(throwError(new ServerError({ message: "Some fake error" } as any)));
 
             click(de.query(By.css("bl-download-button bl-button")));
+            flush();
+
             expect(downloadSpy).toHaveBeenCalledOnce();
 
             // Show the item
             expect(notificationSpy.error).toHaveBeenCalledOnce();
             expect(notificationSpy.error)
                 .toHaveBeenCalledWith("Download failed", "foo.ts failed to download. Some fake error");
-        });
+        }));
     });
 
     it("open the file in the default editor", () => {

@@ -91,7 +91,7 @@ async function build() {
 }
 
 build().catch((err) => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable no-console
     console.error(err);
     process.exit(1);
 });

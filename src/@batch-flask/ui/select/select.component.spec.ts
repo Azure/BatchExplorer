@@ -21,7 +21,7 @@ const baseOptions = [
 ];
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix trackBy-function
+// eslint-disable-next-line @angular-eslint/directive-class-suffix,
 class TestComponent {
     public options: any[] = baseOptions;
     public value = new FormControl(null);
@@ -50,7 +50,7 @@ class TestComponent {
 class SelectWithLabelComponent extends TestComponent {
 }
 
-// tslint:disable:template-use-track-by-function
+/* eslint-disable  */
 @Component({
     template: `
         <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">

@@ -4,7 +4,7 @@ import { ResourceDescriptor } from "app/models";
 export class InvalidArmResourceIdError extends Error {
 
 }
-// tslint:disable:max-line-length
+/* eslint-disable max-len */
 /**
  * Class for parsing and testing Batch and ARM resource ID's.
  * From: MsPortalFx.ViewModels.Services.ResourceTypes.ts
@@ -155,7 +155,7 @@ export class ArmResourceUtils {
         result.resources = [];
         result.resourceMap = {};
 
-        // tslint:disable-next-line
+        // eslint-disable-next-line
         while (tokens = ArmResourceUtils.regExpResourceTypeExtractor.exec(resources)) {
             if (!tokens) {
                 throw new InvalidArmResourceIdError("Invalid resource id: " + id);

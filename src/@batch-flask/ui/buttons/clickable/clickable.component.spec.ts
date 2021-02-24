@@ -6,7 +6,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { click } from "test/utils/helpers";
 import { ClickableComponent } from "./clickable.component";
 
-// tslint:disable:component-class-suffix
+/* eslint-disable @angular-eslint/component-class-suffix */
 
 describe("ClickableComponent", () => {
     let fixture: ComponentFixture<TestComponent>;

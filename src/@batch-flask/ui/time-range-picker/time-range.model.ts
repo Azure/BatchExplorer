@@ -50,7 +50,7 @@ export class QuickRange extends TimeRange {
 
 const today = DateTime.local();
 
-// tslint:disable-next-line:variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 export const QuickRanges = {
     lastHour: new QuickRange({ label: "Last hour", start: Duration.fromObject({ hours: -1 }) }),
     last24h: new QuickRange({ label: "Last 24h", start: Duration.fromObject({ hours: -24 }) }),

@@ -16,7 +16,10 @@
 </div>
 
 <div class="monitor-charts" *ngIf="isArmAccount">
-    <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']" *ngFor="let metricType of chartTypes;trackBy: trackMetric">
+    <a class="monitor-chart"
+        [title]="'account-monitoring.expandLabel' | i18n"
+        [attr.aria-label]="'account-monitoring.expandLabel' | i18n"
+        [routerLink]="['/accounts', account.id, 'monitor']" *ngFor="let metricType of chartTypes;trackBy: trackMetric">
         <bl-monitor-chart [metrics]="metricType" [timeRange]="currentRange" [chartType]="chartType"></bl-monitor-chart>
     </a>
     <div class="monitor-chart current-node-counts">
