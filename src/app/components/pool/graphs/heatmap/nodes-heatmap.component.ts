@@ -343,7 +343,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
      */
     private _displayTileTooltip(titleNode) {
         titleNode.text((tile) => {
-            const count = tile.node.runningTasksCount;
+            const taskCount = tile.node.runningTasksCount;
+            const taskSlotsCount = tile.node.runningTaskSlotsCount;
             if (tile.node.state === NodeState.unusable) {
                 return `Error: Unusable state on node (${tile.node.id})`;
             } else if (tile.node.state === NodeState.startTaskFailed) {
@@ -351,7 +352,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             } else if (tile.node.state === NodeState.unknown) {
                 return `Error: Unknown state on node (${tile.node.id})`;
             } else {
-                return `${count} tasks running on node (${tile.node.id})`;
+                return `${taskCount} tasks (${taskSlotsCount} slots) running on node (${tile.node.id})`;
             }
        });
     }
