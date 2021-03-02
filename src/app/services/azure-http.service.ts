@@ -4,13 +4,12 @@ import { Injectable } from "@angular/core";
 import { AccessToken, HttpRequestOptions, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { SanitizedError } from "@batch-flask/utils";
 import { ArmSubscription } from "app/models";
+import { ArmResourceUtils } from "app/utils";
 import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
 import { catchError, mergeMap, retryWhen, share, switchMap } from "rxjs/operators";
 import { AdalService } from "./adal";
 import { BatchExplorerService } from "./batch-explorer.service";
-
-const apiVersion = Constants.ApiVersion.arm;
 
 function mergeOptions(original: HttpRequestOptions, body?: any): HttpRequestOptions {
     const options = original || {};
@@ -20,20 +19,6 @@ function mergeOptions(original: HttpRequestOptions, body?: any): HttpRequestOpti
 
     return options;
 }
-
-const providersApiVersion = {
-    "microsoft.batch": Constants.ApiVersion.armBatch,
-    "microsoft.classicstorage": Constants.ApiVersion.armClassicStorage,
-    "microsoft.storage": Constants.ApiVersion.armStorage,
-    "microsoft.compute": Constants.ApiVersion.compute,
-    "microsoft.commerce": Constants.ApiVersion.commerce,
-    "microsoft.authorization": Constants.ApiVersion.authorization,
-    "microsoft.insights": Constants.ApiVersion.monitor,
-    "microsoft.network": Constants.ApiVersion.network,
-    "microsoft.classicnetwork": Constants.ApiVersion.classicNetwork,
-    "microsoft.consumption": Constants.ApiVersion.consumption,
-    "microsoft.costmanagement": Constants.ApiVersion.costManagement,
-};
 
 type SubscriptionOrTenant = ArmSubscription | string;
 
@@ -100,20 +85,6 @@ export class AzureHttpService {
         return this.request("DELETE", subscription, uri, options);
     }
 
-    public apiVersion(uri: string) {
-        const providerSpecific = /.*\/providers\/([a-zA-Z.]*)\/.+/i;
-        const match = providerSpecific.exec(uri);
-        if (match && match.length > 1) {
-            const provider = match[1].toLowerCase();
-            if (provider in providersApiVersion) {
-                return providersApiVersion[provider];
-            } else {
-                throw new SanitizedError(`Unkown provider '${provider}'`);
-            }
-        }
-        return apiVersion;
-    }
-
     private _getTenantId(subscriptionOrTenant: SubscriptionOrTenant, uri: string): string {
         if (subscriptionOrTenant instanceof ArmSubscription) {
             return subscriptionOrTenant.tenantId;
@@ -141,7 +112,7 @@ export class AzureHttpService {
         }
 
         if (!options.params.has("api-version") && !uri.contains("api-version")) {
-            options.params = options.params.set("api-version", this.apiVersion(uri));
+            options.params = options.params.set("api-version", ArmResourceUtils.getApiVersionForUri(uri));
         }
         return options;
     }
