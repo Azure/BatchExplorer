@@ -9,6 +9,7 @@ import { BatchAccountService } from "../batch-account";
 import { computeUrl } from "../compute.service";
 import { ArmListResponse } from "../core";
 import { GithubDataService } from "../github-data";
+import { mapResourceSkuToVmSize } from "../../models/vm-size";
 
 const includedVmsSizesPath = "data/vm-sizes-list.json";
 
@@ -116,6 +117,9 @@ export class VmSizeService implements OnDestroy {
                         iaas: responseJson.iaas,
                     },
                 };
+
+                console.log("THIS IS DATA: ", data);
+
                 this._vmSizeCategories.next(data.category);
                 this._includedSizes.next(data.included);
             },
@@ -148,6 +152,7 @@ export class VmSizeService implements OnDestroy {
             return null;
         }
         return List<VmSize>(sizes.filter((size) => {
+            console.log("0", size.name);
             for (const regex of includedPatterns) {
                 if (new RegExp(regex).test(size.name.toLowerCase())) {
                     return true;
@@ -159,11 +164,14 @@ export class VmSizeService implements OnDestroy {
 
     private _fetchVmSizesForAccount(account: ArmBatchAccount): Observable<List<VmSize> | null> {
         const { subscription, location } = account;
-        const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/vmSizes`;
+        const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/skus`;
+        console.log("URL FOR COMPUTE: ", url);
         return this.arm.get<ArmListResponse<any>>(url).pipe(
             map((response) => {
-                const sizes = response.value.map(x => new VmSize(x));
-                return List<VmSize>(sizes);
+                // call json mapper here
+                console.log("THIS IS RESPONSE VALUE IN SERVICE: ", response.value);
+                return mapResourceSkuToVmSize(response.value[0]);
+                // return response.value.map(x => mapResourceSkuToVmSize(x))[0];
             }),
             catchError((error) => {
                 log.error("Error loading vm sizes for account ", { account: account.toJS(), error });
