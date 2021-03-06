@@ -1,0 +1,17 @@
+{
+    // Use defaults for all rules
+    "default": true,
+
+    // Unordered list indentation
+    "MD007": { "indent": 4 },
+
+    // Line length
+    "MD013": false,
+
+    // Duplicate headings
+    "MD024": false,
+
+    // Emphasis used instead of a heading
+    "MD036": false
+
+}

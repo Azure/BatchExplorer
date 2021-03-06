@@ -5,11 +5,13 @@ This is a documentation to help create models which are DataStructure that maps 
 All models should be immmutable using the record api defined in `@batch-flask/core`.
 
 Note: Before writting a model double check this is the best option:
+
 * Models should be for containg data returned from remote APIs.
 * Models are immutable which means it should not be for a structure containing user edit.
 * Don't use models for internal data structure.(For a component or a small set of components)
 
-### Step 1: Create file
+## Step 1: Create file
+
 Create model file `my-new-model.ts` in `app/models`
 add this to `app/models/index.ts`
 
@@ -27,7 +29,7 @@ import { MyNewModel } from "app/models"
 import { MyNewModel } from "app/models/myNewModel"
 ```
 
-### Step 2: Write the attribute interface
+## Step 2: Write the attribute interface
 
 In this interface define all the attributes of the model
 This may look like we are creating a lot of duplicate code here but it makes it worth it when using the model later as you'll have typing when creating a new model.
@@ -47,10 +49,11 @@ export interface MyModelAttributes {
 ### Step 3: Write the model class
 
 You need to do the following for the class:
-- Decorate the class with the `@Model` decorator
-- Extend the class with the `Record` class
-- Decorate all attributes of the model with `@Prop` and all list attributes with `@ListProp`. Note: `@Prop` will be able to get the type of a nested model automatically. However you need to pass the type of the model in the list decorator.
-- For default values just set the value in the class body `@Prop public a: string = "abc"`
+
+* Decorate the class with the `@Model` decorator
+* Extend the class with the `Record` class
+* Decorate all attributes of the model with `@Prop` and all list attributes with `@ListProp`. Note: `@Prop` will be able to get the type of a nested model automatically. However you need to pass the type of the model in the list decorator.
+* For default values just set the value in the class body `@Prop public a: string = "abc"`
 
 ```typescript
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
