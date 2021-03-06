@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "../util/common-config/.eslintrc-common.json"
+  ],
+  "rules": {
+    "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-case-declarations": "off",
+    "no-extra-boolean-cast": "off",
+    "no-useless-escape": "off"
+  }
+}

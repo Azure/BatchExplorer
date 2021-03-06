@@ -1,0 +1,12 @@
+profile-button:
+  profile: Profile
+  settings: Settings
+  authentication: Authentication
+  keybindings: Keybindings
+  about: About
+  thirdPartyNotices: Third party notices
+  playground: Playground
+  viewLogs: View logs
+  report: Report a bug or feature request
+  viewTheme: View theme colors
+  logout: Logout

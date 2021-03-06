@@ -1,0 +1,74 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "ignorePatterns": [
+    "**/coverage/*",
+    "**/lib/**/*",
+    "**/lib-*/**/*",
+    "**/node_modules/**/*"
+  ],
+  "rules": {
+    "@typescript-eslint/no-inferrable-types": "off",
+    "max-len": [
+      "error",
+      {
+        "code": 140,
+        "ignoreComments": true,
+        "ignoreUrls": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true
+      }
+    ],
+    "no-console": [
+      "warn",
+      {
+        "allow": ["warn", "error"]
+      }
+    ],
+    "no-constant-condition": [
+      "error",
+      {
+        "checkLoops": false
+      }
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "@fluentui",
+            "message": "Import from @fluentui/react/lib/* instead to keep bundle sizes small via tree shaking"
+          },
+          {
+            "name": "@fluentui/react",
+            "message": "Import from @fluentui/react/lib/* instead to keep bundle sizes small via tree shaking"
+          },
+          {
+            "name": "@fluentui/react/lib",
+            "message": "Import from @fluentui/react/lib/* instead to keep bundle sizes small via tree shaking"
+          },
+          {
+            "name": "monaco-editor",
+            "message": "Import from monaco-editor/esm/vs/editor/editor.api.js instead to avoid pulling Monaco into the main bundle"
+          },
+          {
+            "name": "office-ui-fabric-react",
+            "message": "Import from @fluentui/react/lib/* instead: office-ui-fabric-react is deprecated"
+          }
+        ],
+        "patterns": ["office-ui-fabric-react/*"]
+      }
+    ],
+    "semi": ["error", "always"]
+  }
+}

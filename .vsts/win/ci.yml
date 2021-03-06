@@ -4,15 +4,16 @@ steps:
 
   - powershell: |
       $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
-      npm run build-and-pack
+      yarn build:package
     displayName: Build and package
 
   - powershell: |
-      . .vsts/win/exec.ps1
+      . ../.vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       $env:BE_TEST_AAD_USER_EMAIL = "$(uiTestingAccountEmail)"
       $env:BE_TEST_AAD_USER_PASSWORD = "$(uiTestingAccountPassword)"
-      npm run test-e2e
+      yarn test-e2e
+    workingDirectory: desktop
     displayName: End to end tests
 
   - template: ./security-analysis.yml

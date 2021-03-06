@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.common.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "../lib-cjs",
+    "tsBuildInfoFile": "../build/cache/ts.cjs.buildinfo"
+  },
+  "exclude": ["__tests__"]
+}

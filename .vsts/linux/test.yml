@@ -1,0 +1,31 @@
+steps:
+  - template: ./linux-dependencies.yml
+
+  - script: yarn lint
+    displayName: Lint
+
+  - script: yarn build:clean
+    displayName: Build packages
+
+  - script: yarn test-models
+    workingDirectory: desktop
+    displayName: Test models against swagger
+
+  - script: |
+      export DISPLAY=:99
+      xvfb-run --server-args '-screen 0 1024x768x24' yarn test:all
+    displayName: Run tests
+
+  - task: PublishTestResults@2
+    inputs:
+      testRunner: 'JUnit'
+      testResultsFiles: '**/TEST*-*.xml'
+      searchFolder: $(System.DefaultWorkingDirectory)/build
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: cobertura
+      summaryFileLocation: $(System.DefaultWorkingDirectory)/build/*/coverage/cobertura.xml
+      reportDirectory: $(System.DefaultWorkingDirectory)/build/*/coverage/html
+  - script: codecov -t $(codecov.uploadToken)
+    displayName: Upload code coverage to codecov

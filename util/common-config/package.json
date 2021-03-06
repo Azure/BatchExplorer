@@ -1,0 +1,19 @@
+{
+  "name": "@batch/common-config",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Common configuration for Batch UI libraries",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Azure/BatchExplorer"
+  },
+  "author": "Microsoft",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "devDependencies": {
+    "jest": "^27.1.0",
+    "ts-jest": "^27.0.5"
+  }
+}

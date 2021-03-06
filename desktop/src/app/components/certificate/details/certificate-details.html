@@ -1,0 +1,23 @@
+<bl-loading [status]="data.newDataStatus | async">
+    <div *ngIf="certificate" class="fit-details-container">
+        <bl-summary-card>
+            <div summaryTitle>{{decorator.thumbprint}}</div>
+            <div summarySubtitle>
+                <i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}
+            </div>
+            <bl-button-group summaryActions>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-commands-list [commands]="commands" [entity]="certificate"></bl-commands-list>
+            </bl-button-group>
+        </bl-summary-card>
+        <bl-card class="details">
+            <bl-tab-group>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-reactcontainer [component]="CertificateDisplay" [props]="certificateDisplayProps"></bl-reactcontainer>
+                    <!-- <bl-certificate-configuration [certificate]="certificate"></bl-certificate-configuration> -->
+                </bl-tab>
+            </bl-tab-group>
+        </bl-card>
+    </div>
+</bl-loading>

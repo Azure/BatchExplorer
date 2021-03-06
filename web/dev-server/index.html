@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Batch Standalone</title>
+        <style>
+            html {
+                box-sizing: border-box;
+                width: 100%;
+                height: 100%;
+            }
+
+            body {
+                min-height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            html, body {
+                border: 0;
+                padding: 0;
+                margin: 0;
+            }
+
+            *, *:before, *:after {
+                box-sizing: inherit;
+            }
+
+            #explorer-root {
+                display: flex;
+                flex-direction: column;
+                flex: 1 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <noscript>
+            Javascript must be enabled to view this application
+        </noscript>
+        <div id="explorer-root"></div>
+        <script>
+            batchexplorer.init(document.getElementById("explorer-root"));
+        </script>
+    </body>
+</html>

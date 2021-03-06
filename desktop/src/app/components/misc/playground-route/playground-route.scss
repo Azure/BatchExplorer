@@ -1,0 +1,22 @@
+@import "app/styles/variables";
+
+bl-theme-colors {
+    $header-height: 50px;
+    height: $contentview-height;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+
+    > .header {
+        height: $header-height;
+        padding: 10px;
+        border-bottom: 1px solid $border-color;
+    }
+
+}
+
+
+.playground {
+    overflow: scroll;
+}

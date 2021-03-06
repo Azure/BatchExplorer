@@ -5,7 +5,7 @@ steps:
       versionSpec: '3.8.x'
     displayName: Install Python 3.8 for Batch Explorer
 
-  - bash: ./scripts/azpipelines/setup-python.sh
+  - bash: ./.vsts/common/setup-python.sh
     displayName: Set up Python environment and private feed
 
   - task: PipAuthenticate@1
@@ -16,7 +16,7 @@ steps:
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      pip install -r python/requirements.txt
+      pip install -r desktop/python/requirements.txt
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
     displayName: Install Python dependencies (Linux)
 
@@ -24,6 +24,6 @@ steps:
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
-      exec { pip install -r python/requirements.txt }
+      exec { pip install -r desktop/python/requirements.txt }
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     displayName: Install Python dependencies (Windows)

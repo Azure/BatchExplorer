@@ -4,6 +4,10 @@ steps:
       versionSpec: '16.x.x'
 
   - script: |
+      corepack enable
+    displayName: Install Yarn via Corepack
+
+  - script: |
       cp .vsts/pipelines.npmrc .npmrc
     displayName: Stage .npmrc configuration
 

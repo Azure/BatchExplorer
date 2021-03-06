@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.common.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "../lib-cjs",
+    "tsBuildInfoFile": "../build/cache/ts.cjs.buildinfo"
+  },
+  "exclude": ["__tests__"],
+  "references": [
+    { "path": "../../common/config/tsconfig.cjs.json" },
+    { "path": "../../service/config/tsconfig.cjs.json" }
+  ]
+}

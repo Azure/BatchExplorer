@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "strict": true,
+    "target": "ES5",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "noUnusedLocals": true,
+    "declaration": true,
+    "declarationMap": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "useDefineForClassFields": true
+  }
+}
