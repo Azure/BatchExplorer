@@ -3,7 +3,7 @@ steps:
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      npm run build-and-pack
+      yarn build:package
     displayName: Build and pack
   - template: ../common/publish-artifacts.yml
     parameters:

@@ -15,16 +15,16 @@ When to use spectron test vs unit test:
 Build the executable
 
 ```bash
-npm run build-and-pack
+yarn build:package
 ```
 
 ## Run
 
 ```bash
-npm run spectron
+yarn spectron
 
 # To keep the windows open when the test are over(For debugging)
-npm run spectron:keep
+yarn spectron:keep
 ```
 
 ## Write tests

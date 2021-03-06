@@ -1,0 +1,10 @@
+{
+  "extends": "../util/common-config/tsconfig-base.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "outDir": "lib",
+    "baseUrl": ".",
+    "typeRoots": ["./node_modules/@types", "./types"]
+  },
+  "include": ["src/explorer-web"]
+}

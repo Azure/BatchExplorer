@@ -4,19 +4,17 @@
 
 Follow the **Building Batch Explorer yourself** instruction of the [wiki](https://github.com/Azure/BatchExplorer/wiki/Build-batch-explorer-yourself) in order to install all require dependencies.
 
-**Use `npm` 5 and above. This ensures a consistent build environment with the right set of dependencies**
-
 Start the dev server
 
 ```bash
-npm run dev-server
+yarn dev-server
 ```
 
 Start electron
 
 ```bash
 # In the command line
-npm run dev-electron
+yarn dev-electron
 
 # In VSCode just press F5
 ```
@@ -40,35 +38,35 @@ If you're using VSCode (recommended) we suggest you use the following extensions
 **Magic command** (starts the server and electron in dev mode)
 
 ```shell
-npm run dev
+yarn dev
 ```
 
 Build project
 
 ```shell
-npm run build
+yarn build
 ```
 
 Run app
 
 ```shell
-npm run electron
+yarn electron
 ```
 
 Run watch (this will build files on save)
 
 ```shell
-npm run watch
+yarn watch
 ```
 
 Run dev server (this will handle the refresh of files and later should have live reload)
 
 ```shell
-npm run dev-server
+yarn dev-server
 ```
 
 Run dev electron (to use the dev server you need to run this)
 
 ```shell
-npm run dev-electron
+yarn dev-electron
 ```

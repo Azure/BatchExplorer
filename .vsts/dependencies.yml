@@ -1,7 +1,7 @@
 steps:
-  - powershell: ./scripts/azpipelines/build-type.ps1 "$(Build.SourceBranch)" "$(Build.BuildNumber)"
+  - powershell: ./desktop/scripts/azpipelines/build-type.ps1 "$(Build.SourceBranch)" "$(Build.BuildNumber)"
     displayName: Resolve build type
 
   - task: NodeTool@0
     inputs:
-      versionSpec: '12.18.x'
+      versionSpec: '14.16.x'

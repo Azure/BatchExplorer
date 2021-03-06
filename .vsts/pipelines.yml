@@ -19,6 +19,12 @@ jobs:
     steps:
       - template: ./win/ci.yml
 
+  - job: Test
+    pool:
+      vmImage: ubuntu-18.04
+    steps:
+       - template: ./linux/test.yml
+
   - job: RegisterDependencies
     displayName: Register dependencies
     pool:

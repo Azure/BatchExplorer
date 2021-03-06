@@ -13,9 +13,11 @@ steps:
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       echo "Python version $(python --version)"
-      pip install -r python/requirements.txt
+      pip install -r ./desktop/python/requirements.txt
       echo "Node.js version $(node --version)"
       echo "NPM version $(npm --version)"
+      npm install -g yarn
+      echo "Yarn version $(yarn --version)"
       npm install -g codecov
-      npm install
+      yarn install
     displayName: Install Linux dependencies

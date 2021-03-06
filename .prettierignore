@@ -1,0 +1,13 @@
+/**/node_modules/
+/**/lib/
+/**/lib-cjs/
+/**/lib-umd/
+/**/test-results/
+
+*.md
+*.html
+
+desktop
+docs
+.vsts
+.vscode

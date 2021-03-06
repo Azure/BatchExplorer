@@ -5,8 +5,10 @@ steps:
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       python --version
-      pip install -r python/requirements.txt
+      pip install -r ./desktop/python/requirements.txt
       echo "Node.js version $(node --version)"
       echo "NPM version $(npm --version)"
-      npm ci
+      npm install -g yarn
+      echo "Yarn version $(yarn --version)"
+      yarn install
     displayName: Install MacOS dependencies

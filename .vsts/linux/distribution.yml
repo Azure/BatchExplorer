@@ -3,12 +3,13 @@ steps:
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      npm run build-and-pack
+      yarn build:package
     displayName: Build and pack
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      npm run package linux-manifest
+      yarn package linux-manifest
+    workingDirectory: desktop
     displayName: Create manifest
   - template: ../common/publish-artifacts.yml
     parameters:

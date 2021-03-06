@@ -3,15 +3,15 @@ steps:
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      npm run -s build:prod
-      npm run -s build-python
-      npm run -s package darwin-app
-      cd ./release/mac
+      yarn build:prod
+      yarn build-python
+      yarn package darwin-app
+      cd ./desktop/release/mac
       zip -y -r ../BatchExplorer-mac.zip ./BatchExplorer.app
       cd ../..
-      rm -rf ./release/mac/*.app
-      mkdir ./release/keep
-      cp ./release/*.zip ./release/keep/before-code-sign.zip
+      rm -rf ./desktop/release/mac/*.app
+      mkdir ./desktop/release/keep
+      cp ./desktop/release/*.zip ./desktop/release/keep/before-code-sign.zip
     displayName: Build .app
 
   - template: ./sign.yml
@@ -23,11 +23,15 @@ steps:
       rm -f ./release/mac/*.pkg
       # rm -rf ./release/*.zip
       mv ./release/*.zip ./release/code-sign-results.zip
-      npm run -s package darwin-dmg
+      yarn package darwin-dmg
       rm -rf ./release/mac/*
+    workingDirectory: desktop
     displayName: Build dmg
-  - script: npm run package darwin-manifest
+
+  - script: yarn package darwin-manifest
+    workingDirectory: desktop
     displayName: Create manifest
+
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: darwin

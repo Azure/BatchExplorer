@@ -1,0 +1,12 @@
+{
+  "extends": "../../../util/common-config/tsconfig-base.json",
+  "compilerOptions": {
+    "outDir": "../lib",
+    "rootDir": "../src/ui-service",
+    "baseUrl": "..",
+    "typeRoots": ["../node_modules/@types"],
+    "tsBuildInfoFile": "../build/cache/ts.buildinfo"
+  },
+  "include": ["../src/ui-service"],
+  "references": [{ "path": "../../common/config/tsconfig.build.json" }]
+}

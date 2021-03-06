@@ -2,7 +2,7 @@ steps:
   - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
     inputs:
       ConnectedServiceName: 'ESRP CodeSign'
-      FolderPath: ./release
+      FolderPath: ./desktop/release
       Pattern: 'BatchExplorer-mac.zip'
       signConfigType: inlineSignParams
       inlineOperation: |

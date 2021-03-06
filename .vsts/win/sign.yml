@@ -9,7 +9,7 @@ steps:
     displayName: ${{ parameters.name }}
     inputs:
       ConnectedServiceName: 'ESRP CodeSign'
-      FolderPath: ./release
+      FolderPath: ./desktop/release
       Pattern: ${{ parameters.pattern }}
       UseMinimatch: true
       signConfigType: inlineSignParams

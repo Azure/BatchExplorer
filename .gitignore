@@ -1,20 +1,7 @@
-node_modules/
-build/
-dll/
-typings/
-logs/
-*.log*
-*.mem.csv
-release/
-.awcache
+/**/node_modules/
+/**/lib
+/**/lib-cjs
+/**/lib-umd
+/**/build
+/desktop/release/
 coverage/
-*.stackdump
-.nyc_output/
-coverage.lcov
-documentation/
-.python-version
-
-# Ignore the english compiled file
-i18n/resources.en.json
-i18n/xliff/
-i18n/xliffs/

@@ -5,6 +5,6 @@ steps:
   - task: PublishBuildArtifacts@1
     displayName: Publish artifacts
     inputs:
-      pathtoPublish: ./release
+      pathtoPublish: ./desktop/release
       artifactName: ${{ parameters.folder }}
       artifactType: Container

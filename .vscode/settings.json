@@ -1,31 +1,76 @@
-// Place your settings in this file to overwrite default and user settings.
 {
-  // The number of spaces a tab is equal to. This setting is overriden based on the file contents when `editor.detectIndentation` is on.
+  // Angular
+  "vsicons.presets.angular": true,
+
+  // CSS
+  "css.validate": false,
+  "scss.validate": false,
+
+  // Default Formatting
   "editor.tabSize": 4,
-  // When opening a file, `editor.tabSize` and `editor.insertSpaces` will be detected based on the file contents.
   "editor.detectIndentation": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": false,
+
+  // Per Language Formatting
+  // Keep this up to date with .prettierignore
+  // Run Prettier first, followed by ESLint
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": [
+        "source.formatDocument",
+        "source.fixAll.eslint"
+    ]
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": [
+        "source.formatDocument",
+        "source.fixAll.eslint"
+    ]
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": [
+        "source.formatDocument",
+        "source.fixAll.eslint"
+    ]
+  },
+  "[json]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": [
+        "source.formatDocument",
+        "source.fixAll.eslint"
+    ]
+  },
+  "[jsonc]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": [
+        "source.formatDocument",
+        "source.fixAll.eslint"
+    ]
+  },
+
+  // Python
+  "python.autoComplete.extraPaths": ["${workspaceRoot}/python"],
+  "python.formatting.provider": "yapf",
+
+  // Typescript
   "typescript.tsdk": "node_modules/typescript/lib",
+
+  // General
   "search.exclude": {
     "**/node_modules": true,
     "**/bower_components": true,
-    "build/**": true,
-    "python/build/**": true,
-    "release/**": true,
-    "dll/**": true
+    "**/build/**": true,
+    "**/lib/**": true,
+    "**/lib-*/**": true,
+    "desktop/python/build/**": true,
+    "desktop/release/**": true,
+    "desktop/dll/**": true
   },
   "files.exclude": {
     "**/__pycache__/**/*": true,
     ".awcache/**": true
-  },
-  "python.autoComplete.extraPaths": ["${workspaceRoot}/python"],
-  "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
-  "vsicons.presets.angular": true,
-  "css.validate": false,
-  "scss.validate": false,
-  "python.formatting.provider": "yapf",
-  "editor.codeActionsOnSave": {
-    "source.fixAll": true
   }
 }

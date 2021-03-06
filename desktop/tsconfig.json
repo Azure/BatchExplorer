@@ -1,0 +1,71 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es6",
+      "es2015",
+      "es2016",
+      "es2017"
+    ],
+    "noImplicitThis": true,
+    "removeComments": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "listEmittedFiles": false, // debug option
+    "listFiles": false, // debug option
+    // Base Url only applies to typescript compilation so tsc knows where the modules are.
+    // This means absolute path only works in the browser environment you need to use relative import for the code in side the client folder
+    // Node.js doesn't support custom load path yet
+    "baseUrl": ".",
+
+    // Defer TS checking to ESLint
+    "noUnusedLocals": false,
+    "strict": false,
+    "strictNullChecks": false,
+
+    "paths": {
+      "*": [
+        "src/*",
+      ],
+    },
+    "types": [
+      "node",
+      "electron",
+      "jasmine",
+      "hammerjs"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+  },
+  "files": [
+    "definitions/index.d.ts",
+    "definitions/missing-defs.d.ts",
+    "../node_modules/monaco-editor/monaco.d.ts"
+  ],
+  // This is not actually used for building but to let the editor know what files use this config
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "package.json",
+  ],
+  "exclude": [
+    "**/testing/**/*",
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "forkChecker": true,
+    "useCache": true,
+    "useWebpackText": true
+  },
+  "angularCompilerOptions": {
+    "enableIvy": false
+  },
+}

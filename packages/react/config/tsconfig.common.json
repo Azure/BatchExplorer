@@ -1,0 +1,17 @@
+{
+  "extends": "../../../util/common-config/tsconfig-base.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "jsx": "react",
+    "outDir": "../lib",
+    "rootDir": "../src/ui-react",
+    "baseUrl": "..",
+    "typeRoots": ["../node_modules/@types"],
+    "tsBuildInfoFile": "../build/cache/ts.buildinfo"
+  },
+  "include": ["../src/ui-react"],
+  "references": [
+    { "path": "../../common/config/tsconfig.build.json" },
+    { "path": "../../service/config/tsconfig.build.json" }
+  ]
+}

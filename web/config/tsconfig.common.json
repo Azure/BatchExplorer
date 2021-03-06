@@ -1,0 +1,17 @@
+{
+  "extends": "../../util/common-config/tsconfig-base.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "outDir": "../lib",
+    "rootDir": "../src/explorer-web",
+    "baseUrl": "..",
+    "typeRoots": ["../node_modules/@types"],
+    "tsBuildInfoFile": "../build/cache/ts.buildinfo"
+  },
+  "include": ["../src/explorer-web"],
+  "references": [
+    { "path": "../../packages/common/config/tsconfig.build.json" },
+    { "path": "../../packages/react/config/tsconfig.build.json" },
+    { "path": "../../packages/service/config/tsconfig.build.json" }
+  ]
+}

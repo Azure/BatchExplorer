@@ -1,0 +1,17 @@
+build/
+dll/
+typings/
+logs/
+*.log*
+*.mem.csv
+.awcache
+*.stackdump
+.nyc_output/
+coverage.lcov
+documentation/
+.python-version
+
+# Ignore the english compiled file
+i18n/resources.en.json
+i18n/xliff/
+i18n/xliffs/
