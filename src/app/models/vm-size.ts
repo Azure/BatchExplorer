@@ -62,7 +62,7 @@ export class VmSize extends Record<VmSizeAttributes> {
  *
  * @param skuJson
  */
-export function mapResourceSkuToVmSize(skuJson: any): List<VmSize> {
+export function mapResourceSkuToVmSize(skuJson: any[]): List<VmSize> {
     console.log("2", skuJson);
     const skuToCapabilities = _getCapabilitiesMap(skuJson);
     const skuToVmSize: VmSize[] = [];
@@ -82,10 +82,10 @@ export function mapResourceSkuToVmSize(skuJson: any): List<VmSize> {
     return List<VmSize>(skuToVmSize);
 }
 
-function _getCapabilitiesMap(skuJson: any): any {
+function _getCapabilitiesMap(skuJson: any[]): any {
     const skuToCapabilities = {};
-    for (let i = 0; i < skuJson.skus.length; i++) {
-        const sku = skuJson.skus[i];
+    for (let i = 0; i < skuJson.length; i++) {
+        const sku = skuJson[i];
         const capabilities = new Map(sku.capabilities.map(capability => [capability.name, capability.value]));
         skuToCapabilities[sku.name] = capabilities;
     }
