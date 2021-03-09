@@ -3,6 +3,7 @@
 General guidelines on how to code for this probject
 
 ## Libraries
+
 Those will be run automatically by the CI and if any error is found will fail the build.
 
 * `eslint` for TypeScript linting. Install the ESLint extension for live warnings.
@@ -11,11 +12,14 @@ Those will be run automatically by the CI and if any error is found will fail th
 ## Other
 
 ### Imports
+
 Use 2 group for import(TSLint will then make sure they are sorted alpha in each group):
+
   1. For npm import
   2. For local import
 
 e.g.
+
 ```typescript
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -29,9 +33,9 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 ```
 
 ### Relative import
+
 Try to use absolute import whenever possible(From the root of the project - start with `"app/...")
 Only use a relative import for
-
 
 ```typescript
 // Good

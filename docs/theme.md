@@ -11,8 +11,6 @@
 
 5. Optional: Set scss varialbes in `theme/core.scss` to be alias of css vars for you new attributes
 
-
-
 ## Use theme colors in javascript
 
 ```ts

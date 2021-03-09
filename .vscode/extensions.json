@@ -5,6 +5,7 @@
     "msjsdiag.debugger-for-chrome",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "rvest.vs-code-prettier-eslint"
+    "rvest.vs-code-prettier-eslint",
+    "davidanson.vscode-markdownlint"
   ]
 }

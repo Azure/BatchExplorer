@@ -1,27 +1,31 @@
-# 2.9.0
+# Release History
+
+## 2.9.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/43?closed=1)
 
-### bug:
+### bug
 
 * Image preview in Task Output was broken [\#2274](https://github.com/Azure/BatchExplorer/issues/2274)
 * Cannot download task output files [\#2272](https://github.com/Azure/BatchExplorer/issues/2272)
 * Addresses high-severity accessibility issues [\#2287](https://github.com/Azure/BatchExplorer/pull/2287)
 
-### other:
+### other
 
 * Virtual Machine Sizes A8-A11 will be retired [\#2278](https://github.com/Azure/BatchExplorer/issues/2278)
 
-# 2.8.0
+## 2.8.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/42?closed=1)
 
-### feature:
+### feature
+
 * Variable Slot Pricing [\#2251](https://github.com/Azure/BatchExplorer/issues/2251)
 * Update build pipeline [\#2245](https://github.com/Azure/BatchExplorer/issues/2245)
 * Add Chaos Group V-Ray RT to Software License [\#2242](https://github.com/Azure/BatchExplorer/issues/2242)
 
-### bug:
+### bug
+
 * Occasional MacOS freezing issue on application startup [\#2254](https://github.com/Azure/BatchExplorer/issues/2254)
 * Accessibility Luminosity Contrast Issues [\#2253](https://github.com/Azure/BatchExplorer/issues/2253)
 * Multi-select Deletion for Node list [\#2250](https://github.com/Azure/BatchExplorer/issues/2250)
@@ -33,113 +37,128 @@
 * Impossible to verify account and complete login [\#2212](https://github.com/Azure/BatchExplorer/issues/2212)
 * BatchExplorer does not work with Okta [\#2165](https://github.com/Azure/BatchExplorer/issues/2165)
 
+## 2.7.0
 
-# 2.7.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/41?closed=1)
 
-### bug:
+### bug
+
 * Fix issue where the image selector when creating pools only showed verified images [\#2169](https://github.com/Azure/BatchExplorer/pull/2169)
 
-### other:
-* Remove support for managed images kind of custom images as this will no longer be supported by latest API's. Customers should switch to using Shared Image Galleries, which are the latest form of custom image support (https://docs.microsoft.com/en-us/azure/batch/batch-sig-images) or can disable updates (introduced in version 2.6.0) for the short term. [\#2153](https://github.com/Azure/BatchExplorer/issues/2153)
+### other
 
-# 2.6.0
+* Remove support for managed images kind of custom images as this will no longer be supported by latest API's. Customers should switch to using Shared Image Galleries, which are the latest form of custom image support (<https://docs.microsoft.com/en-us/azure/batch/batch-sig-images>) or can disable updates (introduced in version 2.6.0) for the short term. [\#2153](https://github.com/Azure/BatchExplorer/issues/2153)
+
+## 2.6.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/40?closed=1)
 
-### feature:
+### feature
 
 * Display Unusable Node Banner on Pools Page [\#2153](https://github.com/Azure/BatchExplorer/issues/2153)
 * Disable Auto-update with Command Line [\#2152](https://github.com/Azure/BatchExplorer/issues/2152)
 
-### bug:
+### bug
 
 * PyInstaller Vulnerability [\#2155](https://github.com/Azure/BatchExplorer/issues/2155)
 * Governance Updates [\#2154](https://github.com/Azure/BatchExplorer/issues/2154)
 
-### other:
+### other
 
-# 2.5.0
+## 2.5.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/39?closed=1)
 
-### feature:
+### feature
 
 * Change Error Messages Inner Details to be shown by default [\#2140](https://github.com/Azure/BatchExplorer/issues/2140)
 
-### bug:
+### bug
 
 * Account create fails with 'Must specify a location' [\#2135](https://github.com/Azure/BatchExplorer/issues/2135)
 * When listing tasks with OData, pagination may not be followed to termination [\#2127](https://github.com/Azure/BatchExplorer/issues/2127)
 * When attempting to RDP/SSH to a node you must update expiresOn property otherwise you get a spinning wheel [\#2119](https://github.com/Azure/BatchExplorer/issues/2119)
 * When Creating a JobPrep or JobRelease task you must update retentionTime to pass validation [\#2118](https://github.com/Azure/BatchExplorer/issues/2118)
 
-### other:
+### other
 
 * EULA text still displays BatchLabs text [\#2141](https://github.com/Azure/BatchExplorer/issues/2141)
 
 ### Fixes
+
 * Vulnerabilities with dependencies
 * Fix issue where the Python server would not start due to dependency collisions.
 
-# 2.4.0
+## 2.4.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/38?closed=1)
 
-### feature:
+### feature
+
 * StartTask WaitForSuccess should be defaulted to true [\#2105](https://github.com/Azure/BatchExplorer/issues/2105)
 * Unable to filter for failed tasks [\#2084](https://github.com/Azure/BatchExplorer/issues/2084)
 
-### bug:
+### bug
+
 * Required caused save to be disabled even though populated [\#2103](https://github.com/Azure/BatchExplorer/issues/2103)
 * No Results Displayed if User Did Not Have a SIG Image. [\#2102](https://github.com/Azure/BatchExplorer/issues/2102)
 * Start time and End time in Job execution information are empty [\#2088](https://github.com/Azure/BatchExplorer/issues/2088)
 * Batch Explorers Unlimited retention time actually sets value to 7d  [\#2083](https://github.com/Azure/BatchExplorer/issues/2083)
 
-### other:
+### other
+
 * Release/prepare 2.4.0 [\#2108](https://github.com/Azure/BatchExplorer/issues/2108)
 * Update @angular dependencies [\#2107](https://github.com/Azure/BatchExplorer/issues/2107)
 * Update Batch API [\#2106](https://github.com/Azure/BatchExplorer/issues/2106)
 * Update python dependency [\#2104](https://github.com/Azure/BatchExplorer/issues/2104)
 
-# 2.3.0
+## 2.3.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/37?closed=1)
 
-### feature:
+### feature
 
+### bug
 
-### bug:
 * Task filter not applied when refresh clicked
 * Unable to filter for "offline" nodes
 
-### other:
+### other
 
+## 2.2.0
 
-# 2.2.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/36?closed=1)
 
-### feature:
+### feature
+
 * Add SharedImageGallery support to the custom images blade of pool create.
 * Users can now specify custom Azure environments
 
-### bug:
+### bug
+
 * Promo VMSize's now display projected pricing correctly.
 
-### other:
+### other
 
-
-# 2.1.2
+## 2.1.2
 
 ### Bug fixes
+
 * Cannot connect to a node as an Admin [\#2033](https://github.com/Azure/BatchExplorer/issues/2033)
 * Sort task by runtime fix for running tasks [\#2034](https://github.com/Azure/BatchExplorer/issues/2034)
 
-# 2.1.1
+## 2.1.1
 
 ### Bug fixes
+
 * Cannot view any pool when creating a job [\#2029](https://github.com/Azure/BatchExplorer/issues/2029)
 
-# 2.1.0
+## 2.1.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/35?closed=1)
 
-### Features:
+### Features
+
 * Allow key bindings to be edited by the user [\#2009](https://github.com/Azure/BatchExplorer/issues/2009)
 * Enable Keyboard shortcuts for pool/job operations [\#1997](https://github.com/Azure/BatchExplorer/issues/1997)
 * Show cost per pool  [\#1993](https://github.com/Azure/BatchExplorer/issues/1993)
@@ -147,49 +166,55 @@
 * Allow updating local batch account properties [\#1951](https://github.com/Azure/BatchExplorer/issues/1951)
 * New job created in NCJ adds to the bottom of the quick-list [\#1277](https://github.com/Azure/BatchExplorer/issues/1277)
 
+### Bug fixes
 
-### Bug fixes:
 * OS Family 6 (Windows Serer 2019) is not displayed correctly [\#2027](https://github.com/Azure/BatchExplorer/issues/2027)
 * Clone pool not setting app package name [\#2019](https://github.com/Azure/BatchExplorer/issues/2019)
 * Pressing keys while leaving the window break keyboard shortcuts [\#2014](https://github.com/Azure/BatchExplorer/issues/2014)
 
+### Others
 
-### Others:
 * Page to see key bindings [\#2006](https://github.com/Azure/BatchExplorer/issues/2006)
 
-# 2.0.4
+## 2.0.4
 
 ### Fixes
+
 * Vulnerabilities with dependencies
 
-# 2.0.3
+## 2.0.3
 
 ### Bug fixes
+
 * Recent templates from "my library" are a bit too long  [\#1969](https://github.com/Azure/BatchExplorer/issues/1969)
 * Job schedule with autopool fail to display [\#1995](https://github.com/Azure/BatchExplorer/issues/1995)
 * Pool graphs One Day and One Week option both have value of 1 day [\#1999](https://github.com/Azure/BatchExplorer/issues/1999)
 * Microsoft portfolio settings not persisted  [\#2004](https://github.com/Azure/BatchExplorer/issues/2004)
 
-# 2.0.2
+## 2.0.2
 
 ### Bug fixes
+
 * **Vulnerabilities** with js-yaml. [\#1990](https://github.com/Azure/BatchExplorer/issues/1990)
 * Node counts graphs don't recover from errors(e.g. Connection died). [\#1989](https://github.com/Azure/BatchExplorer/issues/1989)
 * Null exception in resource files properties [\#1984](https://github.com/Azure/BatchExplorer/issues/1984)
 * Only loads permissions for first selected batch account [\#1987](https://github.com/Azure/BatchExplorer/issues/1987)
 
-# 2.0.1
+## 2.0.1
 
 ### Bug fixes
+
 * Null route when clicking on node or task that isn't loaded yet [\#1983](https://github.com/Azure/BatchExplorer/issues/1983)
 * Open a local template file null expection [\#1980](https://github.com/Azure/BatchExplorer/issues/1980)
 * Null pointer exception in job schedule details [\#1978](https://github.com/Azure/BatchExplorer/issues/1978)
 * Null currentTab in VTab Component  [\#1976](https://github.com/Azure/BatchExplorer/issues/1976)
 
-# 2.0.0
+## 2.0.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/32?closed=1)
 
-### Features:
+### Features
+
 * Sort jobs by end time and keep last sort order [\#1966](https://github.com/Azure/BatchExplorer/issues/1966)
 * Subscription list sorted alphabetically [\#1963](https://github.com/Azure/BatchExplorer/issues/1963)
 * Local Template library show full path to file [\#1943](https://github.com/Azure/BatchExplorer/issues/1943)
@@ -213,7 +238,8 @@
 * Display multi instance settings on the sub task [\#1554](https://github.com/Azure/BatchExplorer/issues/1554)
 * Batch account favourites should be user specific. [\#250](https://github.com/Azure/BatchExplorer/issues/250)
 
-### Bug fixes:
+### Bug fixes
+
 * CTRL+Click not selecting quick-list items [\#1970](https://github.com/Azure/BatchExplorer/issues/1970)
 * Dashboard app package table has URL not name [\#1957](https://github.com/Azure/BatchExplorer/issues/1957)
 * Local template open in default editor should not open a copy [\#1944](https://github.com/Azure/BatchExplorer/issues/1944)
@@ -226,15 +252,15 @@
 * Pool quota out of sync with pool list [\#1906](https://github.com/Azure/BatchExplorer/issues/1906)
 * Stale pool statistics / graphs [\#1505](https://github.com/Azure/BatchExplorer/issues/1505)
 
-### Others:
+### Others
+
 * Switch from bunyan to winston for logging [\#1865](https://github.com/Azure/BatchExplorer/issues/1865)
 * New user configuration/settings system [\#1841](https://github.com/Azure/BatchExplorer/issues/1841)
 
-
-
-# 0.19.2
+## 0.19.2
 
 ### Bug fixes
+
 * Issue when using branch with / in github-data.source.branch setting [\#1870](https://github.com/Azure/BatchExplorer/issues/1870)
 * Issue with listing subscriptions when having more than 50 [\#1872](https://github.com/Azure/BatchExplorer/issues/1872)
 * Observable from main process are not being cleanup when windows refresh or close [\#1874](https://github.com/Azure/BatchExplorer/issues/1874)
@@ -246,18 +272,21 @@
 * Add / edit start task won't load when user account present on pool create [\#1855](https://github.com/Azure/BatchExplorer/issues/1855)
 * Linux deb package not installable [\#1852](https://github.com/Azure/BatchExplorer/issues/1852)
 
-# 0.19.1
+## 0.19.1
 
 ### Bug fixes
-*  Drilldown into tasks no longer works when filtered [\#1843](https://github.com/Azure/BatchExplorer/issues/1843)
-*  Create job schedule from job is broken  [\#1844](https://github.com/Azure/BatchExplorer/issues/1844)
-*  Check for updates throws uncaught errors sometimes [\#1847](https://github.com/Azure/BatchExplorer/issues/1847)
-*  Null pointer exception in pool picker when using Local Batch account [\#1850](https://github.com/Azure/BatchExplorer/issues/1850)
 
-# 0.19.0
+* Drilldown into tasks no longer works when filtered [\#1843](https://github.com/Azure/BatchExplorer/issues/1843)
+* Create job schedule from job is broken  [\#1844](https://github.com/Azure/BatchExplorer/issues/1844)
+* Check for updates throws uncaught errors sometimes [\#1847](https://github.com/Azure/BatchExplorer/issues/1847)
+* Null pointer exception in pool picker when using Local Batch account [\#1850](https://github.com/Azure/BatchExplorer/issues/1850)
+
+## 0.19.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/27?closed=1)
 
-### Feature:
+### Feature
+
 * VNet picker should alllow removing selection [\#1822](https://github.com/Azure/BatchExplorer/issues/1822)
 * Show Resource Group of Batch Account [\#1818](https://github.com/Azure/BatchExplorer/issues/1818)
 * Multi delete nodes support [\#1812](https://github.com/Azure/BatchExplorer/issues/1812)
@@ -279,7 +308,8 @@
 * Need to be able to resize quick-list panel [\#1544](https://github.com/Azure/BatchExplorer/issues/1544)
 * Manage certificates and app packages for existing pools. [\#1334](https://github.com/Azure/BatchExplorer/issues/1334)
 
-### Bug fixes:
+### Bug fixes
+
 * Recent template not working [\#1813](https://github.com/Azure/BatchExplorer/issues/1813)
 * Drag and drop upload is broken [\#1801](https://github.com/Azure/BatchExplorer/issues/1801)
 * Insider build icon is showing electron icon [\#1793](https://github.com/Azure/BatchExplorer/issues/1793)
@@ -298,8 +328,8 @@
 * 2 errors overlay when task node doesnt exist [\#1740](https://github.com/Azure/BatchExplorer/issues/1740)
 * Add local batch account with IP [\#1685](https://github.com/Azure/BatchExplorer/issues/1685)
 
+### Other
 
-### Other:
 * Remove flags as this is not compliant with Microsoft policy [\#1806](https://github.com/Azure/BatchExplorer/issues/1806)
 * Migrate out of @angular/http [\#1745](https://github.com/Azure/BatchExplorer/issues/1745)
 * Sort xliffs translations alphabetically [\#1731](https://github.com/Azure/BatchExplorer/issues/1731)
@@ -311,47 +341,51 @@
 * Redesign how the upload works by having a addFile property on file navigator [\#1292](https://github.com/Azure/BatchExplorer/issues/1292)
 * Add CI to check the bundled app(.exe, .app) is working [\#580](https://github.com/Azure/BatchExplorer/issues/580)
 
-# 0.18.4
+## 0.18.4
 
 ### Bug fixes
-*  Task exit code filter switch between include and exclude error [\#1687](https://github.com/Azure/BatchExplorer/issues/1687)
-*  Error in pool container picker with null registries [\#1690](https://github.com/Azure/BatchExplorer/issues/1690)
-*  Can't view content of prep/release task files [\#1692](https://github.com/Azure/BatchExplorer/issues/1692)
-*  Issue when rescaling a pool and toggling autoscale [\#1751](https://github.com/Azure/BatchExplorer/issues/1751)
 
-# 0.18.3
+* Task exit code filter switch between include and exclude error [\#1687](https://github.com/Azure/BatchExplorer/issues/1687)
+* Error in pool container picker with null registries [\#1690](https://github.com/Azure/BatchExplorer/issues/1690)
+* Can't view content of prep/release task files [\#1692](https://github.com/Azure/BatchExplorer/issues/1692)
+* Issue when rescaling a pool and toggling autoscale [\#1751](https://github.com/Azure/BatchExplorer/issues/1751)
 
-### Bug fixes
-*  Increase pool quota quick fix not working [\#1667](https://github.com/Azure/BatchExplorer/issues/1667)
-*  Can't export task to csv first time opening the statistics blade [\#1673](https://github.com/Azure/BatchExplorer/issues/1673)
-*  Error on toggle filter button [\#1671](https://github.com/Azure/BatchExplorer/issues/1671)
-*  Error when copying property which value is not a string(int) [\#1675](https://github.com/Azure/BatchExplorer/issues/1675)
-*  Can't create a pool with custom images [\#1677](https://github.com/Azure/BatchExplorer/issues/1677)
-*  Upload node logs not tracking upload on national clouds [\#1680](https://github.com/Azure/BatchExplorer/issues/1680)
-*  Quota usages not showing up [\#1683](https://github.com/Azure/BatchExplorer/issues/v)
-
-
-# 0.18.2
+## 0.18.3
 
 ### Bug fixes
-*  Unique windows show() nul pointer exception [\#1644](https://github.com/Azure/BatchExplorer/issues/1644)
-*  Reimage node is calling reboot [\#1646](https://github.com/Azure/BatchExplorer/issues/1646)
-*  Error loading metrics create null pointer exception [\#1648](https://github.com/Azure/BatchExplorer/issues/1648)
-*  View readme of NCJ application not working [\#1652](https://github.com/Azure/BatchExplorer/issues/1652)
-*  Cloning of Batch Pools does not work [\#1650](https://github.com/Azure/BatchExplorer/issues/1650)
-*  Error when button component doesn't return an observable [\#1654](https://github.com/Azure/BatchExplorer/issues/1654)
-*  Selecting checkbox doesn't add a tick to the checkbox [\#1658](https://github.com/Azure/BatchExplorer/issues/1658)
 
+* Increase pool quota quick fix not working [\#1667](https://github.com/Azure/BatchExplorer/issues/1667)
+* Can't export task to csv first time opening the statistics blade [\#1673](https://github.com/Azure/BatchExplorer/issues/1673)
+* Error on toggle filter button [\#1671](https://github.com/Azure/BatchExplorer/issues/1671)
+* Error when copying property which value is not a string(int) [\#1675](https://github.com/Azure/BatchExplorer/issues/1675)
+* Can't create a pool with custom images [\#1677](https://github.com/Azure/BatchExplorer/issues/1677)
+* Upload node logs not tracking upload on national clouds [\#1680](https://github.com/Azure/BatchExplorer/issues/1680)
+* Quota usages not showing up [\#1683](https://github.com/Azure/BatchExplorer/issues/v)
 
-# 0.18.1
+## 0.18.2
 
 ### Bug fixes
+
+* Unique windows show() nul pointer exception [\#1644](https://github.com/Azure/BatchExplorer/issues/1644)
+* Reimage node is calling reboot [\#1646](https://github.com/Azure/BatchExplorer/issues/1646)
+* Error loading metrics create null pointer exception [\#1648](https://github.com/Azure/BatchExplorer/issues/1648)
+* View readme of NCJ application not working [\#1652](https://github.com/Azure/BatchExplorer/issues/1652)
+* Cloning of Batch Pools does not work [\#1650](https://github.com/Azure/BatchExplorer/issues/1650)
+* Error when button component doesn't return an observable [\#1654](https://github.com/Azure/BatchExplorer/issues/1654)
+* Selecting checkbox doesn't add a tick to the checkbox [\#1658](https://github.com/Azure/BatchExplorer/issues/1658)
+
+## 0.18.1
+
+### Bug fixes
+
 * Crash on pool configuration [\#1638](https://github.com/Azure/BatchExplorer/issues/1638)
 
-# 0.18.0
+## 0.18.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/24?closed=1)
 
-### Fetures:
+### Fetures
+
 * Disable/reenable scheduling on nodes [\#1629](https://github.com/Azure/BatchExplorer/issues/1629)
 * Show flags of the country where the account is located [\#1626](https://github.com/Azure/BatchExplorer/pull/1627)
 * Add link to privacy statement in application [\#1618](https://github.com/Azure/BatchExplorer/issues/1618)
@@ -367,7 +401,8 @@
 * Support client side sorting for tables and quick list [\#1573](https://github.com/Azure/BatchExplorer/issues/1573)
 * Pull application license data from BatchPricing.softwares [\#1563](https://github.com/Azure/BatchExplorer/issues/1563)
 
-### Bug fixes:
+### Bug fixes
+
 * Certificate list blank [\#1624](https://github.com/Azure/BatchExplorer/issues/1624)
 * Account favourites not showing up when one is invalid [\#1619](https://github.com/Azure/BatchExplorer/issues/1619)
 * Cloning tasks having issue with user identity [\#1616](https://github.com/Azure/BatchExplorer/issues/1616)
@@ -388,19 +423,22 @@
 * In progress forms CSS busted [\#1566](https://github.com/Azure/BatchExplorer/issues/1566)
 
 ### Accessiblity
+
 * Account list favorite not accessible [\#1626](https://github.com/Azure/BatchExplorer/issues/1626)
 
-### Other:
+### Other
+
 * Setup a new swagger validator to validate models [\#1632](https://github.com/Azure/BatchExplorer/issues/1632)
 * Switch to node 10 [\#1377](https://github.com/Azure/BatchExplorer/issues/1377)
 
+## 0.17.3
 
-# 0.17.3
+### Minor feature
 
-### Minor feature:
 * Display storage account URL in the Credentials and code samples dialog [\#1556](https://github.com/Azure/BatchExplorer/issues/1556)
 
-### Bug fixes:
+### Bug fixes
+
 * Cannot upload files to file group in govt cloud [\#1557](https://github.com/Azure/BatchExplorer/issues/1557)
 * Cannot login to GOVT cloud [\#1548](https://github.com/Azure/BatchExplorer/issues/1548)
 * Pricing broken, due to api breaking change [\#1562](https://github.com/Azure/BatchExplorer/issues/1562)
@@ -408,21 +446,26 @@
 * Not persisting the last login and the last selected cloud [\#1542](https://github.com/Azure/BatchExplorer/issues/1542)
 * Caching issue on national clouds [\#1559](https://github.com/Azure/BatchExplorer/issues/1559)
 
-# 0.17.1
+## 0.17.1
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/25?closed=1)
 
-### Bug fixes:
+### Bug fixes
+
 * Task outputs is broken when not using autostorage account [\#1522](https://github.com/Azure/BatchExplorer/issues/1522)
 * Cannot connect to Windows Cloud Service node [\#1529](https://github.com/Azure/BatchExplorer/issues/1529)
 * Users should be able to see password used to connect to remote node [\#1532](https://github.com/Azure/BatchExplorer/issues/1532)
 
 ### Other
+
 * Task properties pool and node should be links [\#1523](https://github.com/Azure/BatchExplorer/issues/1523)
 
-# 0.17.0
+## 0.17.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/21?closed=1)
 
-### Feature:
+### Feature
+
 * Improve experience for finding failed task [\#829](https://github.com/Azure/BatchExplorer/issues/829)
 * Make title bar inline with app [\#162](https://github.com/Azure/BatchExplorer/issues/162)
 * Add ability to remove pinned items from drop down [\#1379](https://github.com/Azure/BatchExplorer/issues/1379)
@@ -441,45 +484,52 @@
 * BatchLabs: App splited in features that are can be enabled and disabled [\#1449](https://github.com/Azure/BatchExplorer/issues/1449)
 * BatchLabs one click node connect [\#1452](https://github.com/Azure/BatchExplorer/issues/1452)
 
-### Bug fixes:
+### Bug fixes
+
 * Uncaught exception for container pools with no container images and/or registries specified [\#1512](https://github.com/Azure/BatchExplorer/issues/1512)
 * Task timeline doesn't cancel requests when leaving component [\#1472](https://github.com/Azure/BatchExplorer/issues/1472)
 * Pool from Windows managed image displays as Linux [\#1436](https://github.com/Azure/BatchExplorer/issues/1436)
 
-### Accessibility:
+### Accessibility
+
 * Server error component is not keyboard accessible [\#1426](https://github.com/Azure/BatchExplorer/issues/1426)
 * Images tags are missing alt attributes [\#1482](https://github.com/Azure/BatchExplorer/issues/1482)
 * Tags are not accessible via keyboard [\#1420](https://github.com/Azure/BatchExplorer/issues/1420)
 * Notification not keyboard accessible [\#1424](https://github.com/Azure/BatchExplorer/issues/1424)
 
-### Other:
+### Other
+
 * Rename BatchLabs to BatchExplorer [\#1497](https://github.com/Azure/BatchExplorer/issues/1497)
 * CSS quicklist error notice in incorrect place for pools, schedules and certs [\#1510](https://github.com/Azure/BatchExplorer/issues/1510)
 * Add some dependency injection logic in client process [\#1470](https://github.com/Azure/BatchExplorer/issues/1470)
 * Monaco editor switch to webpack [\#1156](https://github.com/Azure/BatchExplorer/issues/1156)
 
+## 0.16.2
 
-# 0.16.2
 [All items](https://github.com/Azure/BatchExplorer/milestone/23closed=1)
 
-### Bug fixes:
+### Bug fixes
+
 * Unable to terminate multiple tasks [\#1457](https://github.com/Azure/BatchExplorer/issues/1457)
 * Pool with more then 2500 nodes does not show heatmap [\#1484](https://github.com/Azure/BatchExplorer/issues/1484)
 * Window asking for proxy credentials is showing a blank screen. [\#1489](https://github.com/Azure/BatchExplorer/issues/1489)
 
-# 0.16.1
+## 0.16.1
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/22closed=1)
 
-### Bug fixes:
+### Bug fixes
+
 * App insights docs has wrong environment variables names [\#1443](https://github.com/Azure/BatchExplorer/issues/1443)
 * Deleting 1 folder from a file group deletes ALL that match it! [\#1440](https://github.com/Azure/BatchExplorer/issues/1440)
 * Application package state equals version string [\#1442](https://github.com/Azure/BatchExplorer/issues/1442)
 * Transitioning a pool from fixed scaling to auto-scaling never enables the "Save" button [\#1441](https://github.com/Azure/BatchExplorer/issues/1441)
 
-# 0.16.0
+## 0.16.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/19?closed=1)
 
-### Features:
+### Features
 
 * Show in the footer if BatchExplorer is connected to the internet [\#1408](https://github.com/Azure/BatchExplorer/issues/1408)
 * BatchExplorer not very helpfull when not able to loads tenants(Bad proxy for example) [\#1403](https://github.com/Azure/BatchExplorer/issues/1403)
@@ -496,7 +546,7 @@
 * Add and update metadata for entities [\#1318](https://github.com/Azure/BatchExplorer/issues/1318)
 * Read file support different encoding [\#875](https://github.com/Azure/BatchExplorer/issues/875)
 
-### Bug fixes:
+### Bug fixes
 
 * Unable to resize pool using Batch Explorer on mac. [\#1413](https://github.com/Azure/BatchExplorer/issues/1413)
 * Opening 2 batchlabs instance is broken [\#1411](https://github.com/Azure/BatchExplorer/issues/1411)
@@ -513,28 +563,35 @@
 * Pressing enter on editable table remove the row [\#1327](https://github.com/Azure/BatchExplorer/issues/1327)
 
 ### Accessibility
+
 First few steps towards an accessible BatchExplorer
+
 * Navigation dropdowns not accessible via keyboard [\#1401](https://github.com/Azure/BatchExplorer/issues/1401)
 * Breadcrumb is not accessible via keyboard [\#1400](https://github.com/Azure/BatchExplorer/issues/1400)
 * Main navigation keyboard navigation and focus style [\#1395](https://github.com/Azure/BatchExplorer/issues/1395)
 
-### Other:
+### Other
+
 * Misleading documentation enable-app-insights-doc [\#1348](https://github.com/Azure/BatchExplorer/issues/1348)
 * Make it clear for that search field only support startswith [\#1326](https://github.com/Azure/BatchExplorer/issues/1326)
 
-# 0.15.2
+## 0.15.2
+
 Fixes:
+
 * 3rd subscription in account list is always disabled [\#1374](https://github.com/Azure/BatchExplorer/issues/1374)
 
-# 0.15.1
+## 0.15.1
+
 * Enable browsing files of a offline node
 * Change offline node color
 * Allow custom image and docker container
 
-# 0.15.0
+## 0.15.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/17?closed=1)
 
-### feature:
+### feature
 
 * List context menu redesign(multi select support) [\#1300](https://github.com/Azure/BatchExplorer/issues/1300)
 * Select support disable [\#1295](https://github.com/Azure/BatchExplorer/issues/1295)
@@ -561,7 +618,7 @@ Fixes:
 * Batch Account Certificates Experience [\#1165](https://github.com/Azure/BatchExplorer/issues/1165)
 * Refresh folder in file explorer should remove removed items. [\#874](https://github.com/Azure/BatchExplorer/issues/874)
 
-### bug:
+### bug
 
 * Prod build is borken with the new Commands [\#1311](https://github.com/Azure/BatchExplorer/issues/1311)
 * Spelling mistake on release website [\#1310](https://github.com/Azure/BatchExplorer/issues/1310)
@@ -585,7 +642,7 @@ Fixes:
 * Allow optional/empty fields in job/pool templates [\#1082](https://github.com/Azure/BatchExplorer/issues/1082)
 * Occasionally selecting a Batch account doesn't populate the jobs and pool from the selected account. [\#653](https://github.com/Azure/BatchExplorer/issues/653)
 
-### other:
+### other
 
 * New form field should support hints and error [\#1279](https://github.com/Azure/BatchExplorer/issues/1279)
 * Update batchlabs website to point to azure storage builds [\#1275](https://github.com/Azure/BatchExplorer/issues/1275)
@@ -594,15 +651,17 @@ Fixes:
 * Gallery breadcrumb is still market [\#1227](https://github.com/Azure/BatchExplorer/issues/1227)
 * BatchExplorer auto update wait to be downloaded before quit and install [\#1206](https://github.com/Azure/BatchExplorer/issues/1206)
 
-# 0.14.1
+## 0.14.1
 
 ### Hot fixes
+
 * Selecting an item when the filter is open would not close the filter [\#1207](https://github.com/Azure/BatchExplorer/issues/1207)
 
-# 0.14.0
+## 0.14.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/16?closed=1)
 
-### Feature:
+### Feature
 
 * Add MS and NCS_V3 sizes to vm size picker. [\#1191](https://github.com/Azure/BatchExplorer/issues/1191)
 * Allow to pick custom user accounts when adding a task [\#1188](https://github.com/Azure/BatchExplorer/issues/1188)
@@ -627,7 +686,7 @@ Fixes:
 * More finely grained upload progress for file groups. [\#707](https://github.com/Azure/BatchExplorer/issues/707)
 * Support for adding custom image to pools [\#434](https://github.com/Azure/BatchExplorer/issues/434)
 
-### Bug:
+### Bug
 
 * Batch account with no autostorage add pool doesn't show user accounts and start task picker [\#1190](https://github.com/Azure/BatchExplorer/issues/1190)
 * Getting a 400 error when trying to load files from Node.  [\#1181](https://github.com/Azure/BatchExplorer/issues/1181)
@@ -651,13 +710,13 @@ Fixes:
 * Task advanced filter is not applying [\#1158](https://github.com/Azure/BatchExplorer/issues/1158)
 * Fix tool tip for account credentials dialog and show ARM resource ID for Account  [\#1201](https://github.com/Azure/BatchExplorer/issues/1201)
 
-### Usability:
+### Usability
 
 * Do not show the pool os information is using custom image [\#1192](https://github.com/Azure/BatchExplorer/issues/1192)
 * Pool cpu usage individual cpu is confusing [\#1145](https://github.com/Azure/BatchExplorer/issues/1145)
 * Account charts are a bit confusing [\#1138](https://github.com/Azure/BatchExplorer/issues/1138)
 
-### Other:
+### Other
 
 * Remove all import from "electron" [\#1140](https://github.com/Azure/BatchExplorer/issues/1140)
 * Complete making @batch-flask independent [\#1109](https://github.com/Azure/BatchExplorer/issues/1109)
@@ -668,24 +727,26 @@ Fixes:
 * Redesign table component [\#1101](https://github.com/Azure/BatchExplorer/issues/1101)
 * Gallery tab still has "Market" breadcrumb & title [\#1076](https://github.com/Azure/BatchExplorer/issues/1076)
 
-# 0.13.1
+## 0.13.1
 
 Hot fixes:
+
 * Logs being in the wrong folder [#1087](https://github.com/Azure/BatchExplorer/issues/1087)
 * Proxy settings crashing if not in the expected format
 * Error popup after updating [#1083](https://github.com/Azure/BatchExplorer/issues/1083)
 * Fix auto update
 
-# 0.13.0
+## 0.13.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/15?closed=1)
 
-### feature:
+### feature
 
 * Ctrl+Shift+N for new window [\#1046](https://github.com/Azure/BatchExplorer/issues/1046)
 * BatchExplorer behind proxy [\#1015](https://github.com/Azure/BatchExplorer/issues/1015)
 * Metadata property should display as pre [\#1010](https://github.com/Azure/BatchExplorer/issues/1010)
 
-### bug:
+### bug
 
 * Log out button doesnt work [\#1068](https://github.com/Azure/BatchExplorer/issues/1068)
 * Stale task list [\#1065](https://github.com/Azure/BatchExplorer/issues/1065)
@@ -699,35 +760,39 @@ Hot fixes:
 * Splash screen goes behind the app half way through loading [\#1035](https://github.com/Azure/BatchExplorer/issues/1035)
 * Job Statistics: Graph fails to load "Loading Tasks. This can take a long time" [\#873](https://github.com/Azure/BatchExplorer/issues/873)
 
-### other:
+### other
 
+## 0.12.4
 
-# 0.12.4
+### Hot fix
 
-### Hot fix:
 * Error redeem auth code for a token... [\#1044](https://github.com/Azure/BatchExplorer/issues/1044)
 * Updater appears to be broken [\#1042](https://github.com/Azure/BatchExplorer/issues/1042)
 
-# 0.12.3
+## 0.12.3
 
-### Hot fix:
+### Hot fix
+
 * File-group/container issue with adding more files(Disabled for non file group for now) [\#1033](https://github.com/Azure/BatchExplorer/issues/1033)
 * Storage Container Search Broken  [\#1039](https://github.com/Azure/BatchExplorer/issues/1039)
 
-# 0.12.2
+## 0.12.2
 
-### Hot fix:
+### Hot fix
+
 * Update Electron to fix vulnerability [\#1030](https://github.com/Azure/BatchExplorer/issues/1030)
 
-# 0.12.1
+## 0.12.1
 
-### Hot fix:
+### Hot fix
+
 * Subscriptions not loading if not cached [\#1027](https://github.com/Azure/BatchExplorer/issues/1027)
 
-# 0.12.0
+## 0.12.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/14?closed=1)
 
-### Feature:
+### Feature
 
 * Data view should show all blob container not just file group [\#1006](https://github.com/Azure/BatchExplorer/issues/1006)
 * Rbac permission support. Disable action in batchlabs if user doesn't have write permission [\#1000](https://github.com/Azure/BatchExplorer/issues/1000)
@@ -741,16 +806,17 @@ Hot fixes:
 * Make a open component in a new window  [\#74](https://github.com/Azure/BatchExplorer/issues/74)
 * Update the theming system to use json instead of scss [\#1012](https://github.com/Azure/BatchExplorer/issues/1012)
 
-### Other:
+### Other
 
 * Implement a new promise base communication from renderer to main process [\#1004](https://github.com/Azure/BatchExplorer/issues/1004)
 * Add code coverage [\#987](https://github.com/Azure/BatchExplorer/issues/987)
 * Extract AAD logic to be outside of the angular service into the node environment [\#963](https://github.com/Azure/BatchExplorer/issues/963)
 
-# 0.11.0
+## 0.11.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/12?closed=1)
 
-### feature:
+### feature
 
 * Register batchlabs default protocol to open from the browser [\#934](https://github.com/Azure/BatchExplorer/issues/934)
 * Batch Explorer should show a clear error when it cannot connect to its python web service [\#923](https://github.com/Azure/BatchExplorer/issues/923)
@@ -761,37 +827,39 @@ Hot fixes:
 * Export entities to template to allow cloning after deleted [\#19](https://github.com/Azure/BatchExplorer/issues/19)
 * NCJ advanced type for generating a container SAS [\#757](https://github.com/Azure/BatchExplorer/issues/757)
 
-### bug:
+### bug
 
 * Shortcut "cmd+H" is not supported on macOS [\#948](https://github.com/Azure/BatchExplorer/issues/948)
 * Pricing is broken [\#857](https://github.com/Azure/BatchExplorer/issues/857)
 * Pool estimated cost take rendering license into account [\#684](https://github.com/Azure/BatchExplorer/issues/684)
 
-### other:
+### other
 
 * Application package icons need updating [\#939](https://github.com/Azure/BatchExplorer/issues/939)
 * Tweak quick search ui [\#924](https://github.com/Azure/BatchExplorer/issues/924)
 * List multi select should change color when losing focus [\#31](https://github.com/Azure/BatchExplorer/issues/31)
 
-# 0.10.2
-### Bug:
+## 0.10.2
+
+### Bug
 
 * VM Size selector broken [\#940](https://github.com/Azure/BatchExplorer/issues/940)
 
-# 0.10.1
+## 0.10.1
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/13?closed=1)
 
-### Bug:
+### Bug
 
 * Nodes with start task failed state don't show the files [\#929](https://github.com/Azure/BatchExplorer/issues/929)
 * OS Family Not Reported on Pool Correctly [\#927](https://github.com/Azure/BatchExplorer/issues/927)
 * Error reading job prep-task [\#926](https://github.com/Azure/BatchExplorer/issues/926)
 
+## 0.10.0
 
-# 0.10.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/11?closed=1)
 
-### Feature:
+### Feature
 
 * Move breadcrumb in the header [\#906](https://github.com/Azure/BatchExplorer/issues/906)
 * Create Pool/Job/Task monaco json editor intellisense [\#888](https://github.com/Azure/BatchExplorer/issues/888)
@@ -804,7 +872,7 @@ Hot fixes:
 * Ability to write json payload in the create forms and submit instead of UI [\#844](https://github.com/Azure/BatchExplorer/issues/844)
 * Allow users to create empty file groups [\#826](https://github.com/Azure/BatchExplorer/issues/826)
 
-### Bug:
+### Bug
 
 * Data upload in file group is not working [\#912](https://github.com/Azure/BatchExplorer/issues/912)
 * Create empty file-group doesn't validate container name [\#905](https://github.com/Azure/BatchExplorer/issues/905)
@@ -814,7 +882,7 @@ Hot fixes:
 * Account quota not updating when refreshing [\#885](https://github.com/Azure/BatchExplorer/issues/885)
 * Missing SKU details about Linux N series VM [\#872](https://github.com/Azure/BatchExplorer/issues/872)
 
-### Other:
+### Other
 
 * Prepare release 0.10.0 [\#915](https://github.com/Azure/BatchExplorer/issues/915)
 * Useragent should include OS [\#895](https://github.com/Azure/BatchExplorer/issues/895)
@@ -825,10 +893,11 @@ Hot fixes:
 * Add typing to RxProxy options [\#204](https://github.com/Azure/BatchExplorer/issues/204)
 * Perf counter support [\#112](https://github.com/Azure/BatchExplorer/issues/112)
 
-# 0.9.0
+## 0.9.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/10?closed=1)
 
-### Feature:
+### Feature
 
 * Make start task command line textbox wrap [\#847](https://github.com/Azure/BatchExplorer/issues/847)
 * Command line properties is often too long to be displayed in properties. [\#837](https://github.com/Azure/BatchExplorer/issues/837)
@@ -842,7 +911,7 @@ Hot fixes:
 * Add context menu to app packages quick-list [\#776](https://github.com/Azure/BatchExplorer/issues/776)
 * Allow file group creation from NCJ job submission page [\#761](https://github.com/Azure/BatchExplorer/issues/761)
 
-### Bug:
+### Bug
 
 * Can't add a task when job is disabled [\#864](https://github.com/Azure/BatchExplorer/issues/864)
 * Can't preview image on Windows or Linux nodes [\#853](https://github.com/Azure/BatchExplorer/issues/853)
@@ -852,7 +921,7 @@ Hot fixes:
 * When deleting job from the details card the css overlay is not removed. [\#828](https://github.com/Azure/BatchExplorer/issues/828)
 * Failed to upload file groups for classic storage accounts [\#819](https://github.com/Azure/BatchExplorer/issues/819)
 
-### Other:
+### Other
 
 * Getting ready for version 0.9.0 [\#866](https://github.com/Azure/BatchExplorer/issues/866)
 * Set user agent to BatchExplorer for all request [\#861](https://github.com/Azure/BatchExplorer/issues/861)
@@ -860,10 +929,11 @@ Hot fixes:
 * Refactor rx-entity-proxy to a new system [\#795](https://github.com/Azure/BatchExplorer/issues/795)
 * Make an about page [\#279](https://github.com/Azure/BatchExplorer/issues/279)
 
-# 0.8.0
+## 0.8.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/9?closed=1)
 
-### Feature:
+### Feature
 
 * Ncj app gallery [\#786](https://github.com/Azure/BatchExplorer/issues/786)
 * Task output messages confusing for customers [\#769](https://github.com/Azure/BatchExplorer/issues/769)
@@ -874,7 +944,7 @@ Hot fixes:
 * Ability to resize the tree view in the file explorer(Movable splitter) [\#724](https://github.com/Azure/BatchExplorer/issues/724)
 * Find a way to surface prep and release task failures [\#708](https://github.com/Azure/BatchExplorer/issues/708)
 
-### Bug:
+### Bug
 
 * Form picker(Start task) reset to empty from when clicking cancel [\#801](https://github.com/Azure/BatchExplorer/issues/801)
 * Typo in pool configuration [\#798](https://github.com/Azure/BatchExplorer/issues/798)
@@ -889,7 +959,8 @@ Hot fixes:
 * Copy and paste doesn't work on osx prod build [\#727](https://github.com/Azure/BatchExplorer/issues/727)
 * Misleading message "The files for the specified task have been cleaned from the node." [\#689](https://github.com/Azure/BatchExplorer/issues/689)
 
-### Other:
+### Other
+
 * Organize summary card for all entities [\#754](https://github.com/Azure/BatchExplorer/issues/754)
 * Disable tab animations [\#747](https://github.com/Azure/BatchExplorer/issues/747)
 * show subscription name in the account details subtitle [\#740](https://github.com/Azure/BatchExplorer/issues/740)
@@ -898,10 +969,12 @@ Hot fixes:
 * Refactor server error to work better with all different inputs [\#694](https://github.com/Azure/BatchExplorer/issues/694)
 * Remove storage node proxy [\#685](https://github.com/Azure/BatchExplorer/issues/685)
 
-# 0.7.0
+## 0.7.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/8?closed=1)
 
-### Features:
+### Features
+
 * Ability to view third party notice from UI [\#690](https://github.com/Azure/BatchExplorer/issues/690)
 * Command line input for task improvement [\#670](https://github.com/Azure/BatchExplorer/issues/670)
 * Add files to a file group with drag and drop [\#651](https://github.com/Azure/BatchExplorer/issues/651)
@@ -919,7 +992,8 @@ Hot fixes:
 * Provide built app for download [\#405](https://github.com/Azure/BatchExplorer/issues/405)
 * Smart card support for windows  [\#271](https://github.com/Azure/BatchExplorer/issues/271)
 
-### Bugs:
+### Bugs
+
 * Heatmap display bug when resizing window or pool resize [\#715](https://github.com/Azure/BatchExplorer/issues/715)
 * Exit code is not showing in the task table list [\#712](https://github.com/Azure/BatchExplorer/issues/712)
 * Job preparation and release task having styling issues [\#709](https://github.com/Azure/BatchExplorer/issues/709)
@@ -942,7 +1016,8 @@ Hot fixes:
 * Handle forbidden 403 errors [\#577](https://github.com/Azure/BatchExplorer/issues/577)
 * Cannot read a blob from a file group with a full path. [\#561](https://github.com/Azure/BatchExplorer/issues/561)
 
-### Other:
+### Other
+
 * Update readme to prepare for the release [\#692](https://github.com/Azure/BatchExplorer/issues/692)
 * ThirdPartyNotice generator [\#682](https://github.com/Azure/BatchExplorer/issues/682)
 * Log python stdout and stderr to file [\#678](https://github.com/Azure/BatchExplorer/issues/678)
@@ -951,10 +1026,12 @@ Hot fixes:
 * Table selection/activation improvement [\#626](https://github.com/Azure/BatchExplorer/issues/626)
 * Upload file group as a background task [\#615](https://github.com/Azure/BatchExplorer/issues/615)
 
-# Version 0.6.0(Beta)
+## Version 0.6.0(Beta)
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/6?closed=1)
 
 ### Features
+
 * Show pool estimated pricing [\#595](https://github.com/Azure/BatchExplorer/issues/595)
 * Added graphs for the job [\#591](https://github.com/Azure/BatchExplorer/issues/591)
 * Download a file group(NCJ)  [\#589](https://github.com/Azure/BatchExplorer/issues/589)
@@ -970,10 +1047,12 @@ Hot fixes:
 
 [Many bug fixes](https://github.com/Azure/BatchExplorer/issues?q=is%3Aissue+milestone%3A0.6.0+is%3Aclosed+label%3Abug)
 
-# Version 0.5.0(Beta)
+## Version 0.5.0(Beta)
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/5?closed=1)
 
 ### Features
+
 * Link Storage account in Batch Explorer [\#385](https://github.com/Azure/BatchExplorer/issues/385)
 * New actions buttons [\#408](https://github.com/Azure/BatchExplorer/issues/408)
 * Low priority VMs [\#414](https://github.com/Azure/BatchExplorer/issues/414)
@@ -986,10 +1065,12 @@ Hot fixes:
 * Job prep/release task status read experience [\#429](https://github.com/Azure/BatchExplorer/issues/429)
 * Start task failed show error banner on node details [\#476](https://github.com/Azure/BatchExplorer/issues/476)
 
-# Version 0.4.0(Beta)
+## Version 0.4.0(Beta)
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/3?closed=1)
 
 ### Features
+
 * Added a new multi picker control [\#358](https://github.com/Azure/BatchExplorer/issues/358)
 * Added user accounts support at pool creation using the multi picker [\#359](https://github.com/Azure/BatchExplorer/issues/359)
 * Update enabled/disabled properties icon to be less confusing [\#354](https://github.com/Azure/BatchExplorer/issues/354)
@@ -1007,42 +1088,49 @@ Hot fixes:
 * Listen to electron error events to show a recovery window [\#337](https://github.com/Azure/BatchExplorer/issues/337)
 
 ### Fixes
+
 * Edit start task cannot cancel [\#367](https://github.com/Azure/BatchExplorer/issues/367)
 * Fix bug where graphs keeps history when switching between pools [\#353](https://github.com/Azure/BatchExplorer/issues/353)
 * Fix unwanted form submit when pressing enter [\#393](https://github.com/Azure/BatchExplorer/issues/393)
 * Fix configuration tabs having a nested scrollbar [\#397](https://github.com/Azure/BatchExplorer/issues/397)
 * Fix list not having focus after click [\#400](https://github.com/Azure/BatchExplorer/issues/400)
 
+## Version 0.3.1(Beta)
 
-# Version 0.3.1(Beta)
 [All items](https://github.com/Azure/BatchExplorer/milestone/4?closed=1)
 
 ### Fixes
+
 * Fix error when cloning a pool not using autoscale forumla [\#342](https://github.com/Azure/BatchExplorer/issues/342)
 * UI bug in the pool nodes preview(Font size is off) [\#332](https://github.com/Azure/BatchExplorer/issues/332)
 * Application edit form missed in the new form refactor [\#334](https://github.com/Azure/BatchExplorer/issues/334)
 
-# Version 0.3.0(Beta)
+## Version 0.3.0(Beta)
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/2?closed=1)
 
 ### Features
+
 * Autoscale forumla support with option to save forumla [\#321](https://github.com/Azure/BatchExplorer/issues/321)
 * Big work on the form UI(Also added pool start task picker)
-  - Section and picker [\#321](https://github.com/Azure/BatchExplorer/issues/4)
-  - Form error sticky at the bottom not to miss it [\#317](https://github.com/Azure/BatchExplorer/issues/317)
+    * Section and picker [\#321](https://github.com/Azure/BatchExplorer/issues/4)
+    * Form error sticky at the bottom not to miss it [\#317](https://github.com/Azure/BatchExplorer/issues/317)
 * Read/Save files to azure storage UX  [\#110](https://github.com/Azure/BatchExplorer/issues/110)
 * New VM size picker as a sortable table [\#292](https://github.com/Azure/BatchExplorer/issues/292)
 * New pool picker for the job create experience [\#284](https://github.com/Azure/BatchExplorer/issues/284)
 * New OS picker for the pool create experience [\#278](https://github.com/Azure/BatchExplorer/issues/278)
 * Added refresh account button [\#289](https://github.com/Azure/BatchExplorer/issues/289)
+
 ### Fixes
+
 * Bug with max results [\#295](https://github.com/Azure/BatchExplorer/issues/295) [\#297](https://github.com/Azure/BatchExplorer/issues/297) [\#299](https://github.com/Azure/BatchExplorer/issues/299)
 
+## Version 0.2.0(Beta)
 
-# Version 0.2.0(Beta)
 [All items](https://github.com/Azure/BatchExplorer/milestone/1?closed=1)
 
 ### Features
+
 * Production build [PR 173](https://github.com/Azure/BatchExplorer/pull/173)
 * Improve the VM size experience to show info about each vm size [PR 277](https://github.com/Azure/BatchExplorer/pull/277)
 * Load all the VM sizes [PR 275](https://github.com/Azure/BatchExplorer/pull/275)
@@ -1054,13 +1142,15 @@ Hot fixes:
 * Added yarn [PR 260](https://github.com/Azure/BatchExplorer/pull/260)
 
 ### Fixes
+
 * Fix node files `Load more` always showing [PR 268](https://github.com/Azure/BatchExplorer/pull/268)
 
-# Version 0.1.0(Beta)
+## Version 0.1.0(Beta)
 
 Initial version
 
 ### Features
+
 * Login with azure active directory(Giving access to user subscriptions and applications)
 * Browse pools, node, jobs, tasks, applications
 * Basic creationg of pools, jobs and tasks
