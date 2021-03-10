@@ -196,3 +196,136 @@ export const vmSizeSampleResponse = {
     ],
     "nextLink": null
 }
+
+export const badResponseIsNaN = {
+    "value": [
+        {
+            "resourceType": "virtualMachines",
+            "locations": [
+                "westus"
+            ],
+            "capabilities": [
+                {
+                    "name": "MaxResourceVolumeMB",
+                    "value": "20480"
+                },
+                {
+                    "name": "OSVhdSizeMB",
+                    "value": "1047552"
+                },
+                {
+                    "name": "vCPUs",
+                    "value": "invalidValue"
+                },
+                {
+                    "name": "MemoryGB",
+                    "value": "0.75"
+                },
+                {
+                    "name": "MaxDataDiskCount",
+                    "value": "1"
+                },
+                {
+                    "name": "GPUs",
+                    "value": "0"
+                },
+            ],
+            "locationInfo": [
+                {
+                    "location": "westus",
+                    "zones": [
+                        "2",
+                        "1"
+                    ],
+                    "zoneDetails": [
+                        {
+                            "name": [
+                                "2"
+                            ],
+                            "capabilities": [
+                                {
+                                    "name": "UltraSSDAvailable",
+                                    "value": "True"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "name": "Standard_A0",
+            "tier": "Standard",
+            "size": "A0",
+            "family": "standardA0_A7Family"
+        }
+    ],
+    "nextLink": null
+}
+
+export const responseWithExtraCapability = {
+    "value": [
+        {
+            "resourceType": "virtualMachines",
+            "locations": [
+                "westus"
+            ],
+            "capabilities": [
+                {
+                    "name": "MaxResourceVolumeMB",
+                    "value": "20480"
+                },
+                {
+                    "name": "OSVhdSizeMB",
+                    "value": "1047552"
+                },
+                {
+                    "name": "vCPUs",
+                    "value": "1"
+                },
+                {
+                    // unit test should skip this capability
+                    "name": "HyperVGenerations",
+                    "value": "V1"
+                },
+                {
+                    "name": "MemoryGB",
+                    "value": "0.75"
+                },
+                {
+                    "name": "MaxDataDiskCount",
+                    "value": "1"
+                },
+                {
+                    "name": "GPUs",
+                    "value": "0"
+                },
+            ],
+            "locationInfo": [
+                {
+                    "location": "westus",
+                    "zones": [
+                        "2",
+                        "1"
+                    ],
+                    "zoneDetails": [
+                        {
+                            "name": [
+                                "2"
+                            ],
+                            "capabilities": [
+                                {
+                                    "name": "UltraSSDAvailable",
+                                    "value": "True"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "name": "Standard_A0",
+            "tier": "Standard",
+            "size": "A0",
+            "family": "standardA0_A7Family"
+        }
+    ],
+    "nextLink": null
+}
