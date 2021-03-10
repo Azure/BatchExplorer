@@ -2,7 +2,11 @@ import { ArmBatchAccount, ArmSubscription, LocalBatchAccount } from "app/models"
 import { BehaviorSubject, of } from "rxjs";
 import { take } from "rxjs/operators";
 import { VmSizeService } from "./vm-size.service";
-import { vmSizeSampleResponse as vmSizesResponse } from "./vmsize_sample_responses";
+import {
+    vmSizeSampleResponse as vmSizesResponse,
+    badResponseIsNaN,
+    responseWithExtraCapability
+} from "./vmsize_sample_responses";
 
 const sub1 = new ArmSubscription({
     id: "/subscriptions/sub1",
@@ -30,7 +34,7 @@ const githubDataResponse = {
     ],
 };
 
-fdescribe("VMSizeService", () => {
+describe("VMSizeService", () => {
     let service: VmSizeService;
     let armSpy;
     let githubDataSpy;
@@ -143,6 +147,50 @@ fdescribe("VMSizeService", () => {
                 memoryInMB: 3584,
                 maxDataDiskCount: 4,
             },
+        ]);
+    });
+
+    it("gets the size with invalid response data", async () => {
+        armSpy = {
+            get: jasmine.createSpy("arm.get").and.returnValue(of(badResponseIsNaN)),
+        };
+        const serviceWithNaN = new VmSizeService(armSpy, githubDataSpy, accountServiceSpy);
+        const sizes = await serviceWithNaN.sizes.pipe(take(1)).toPromise();
+        expect(sizes).not.toBeFalsy();
+
+        expect(sizes!.toJS()).toEqual([
+            {
+                id: "standard_a0",
+                name: "Standard_A0",
+                numberOfCores: 0,
+                numberOfGpus: 0,
+                osDiskSizeInMB: 1047552,
+                resourceDiskSizeInMB: 20480,
+                memoryInMB: 768,
+                maxDataDiskCount: 1,
+            }
+        ]);
+    });
+
+    it("gets the size with extra capability in response data", async () => {
+        armSpy = {
+            get: jasmine.createSpy("arm.get").and.returnValue(of(responseWithExtraCapability)),
+        };
+        const serviceWithExtraCap = new VmSizeService(armSpy, githubDataSpy, accountServiceSpy);
+        const sizes = await serviceWithExtraCap.sizes.pipe(take(1)).toPromise();
+        expect(sizes).not.toBeFalsy();
+
+        expect(sizes!.toJS()).toEqual([
+            {
+                id: "standard_a0",
+                name: "Standard_A0",
+                numberOfCores: 1,
+                numberOfGpus: 0,
+                osDiskSizeInMB: 1047552,
+                resourceDiskSizeInMB: 20480,
+                memoryInMB: 768,
+                maxDataDiskCount: 1,
+            }
         ]);
     });
 
