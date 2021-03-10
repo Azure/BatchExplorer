@@ -73,6 +73,7 @@ export class TerminalService {
     }
 
     public runInTerminal(command: string, terminal?: string, envVars?: StringMap<string>): Promise<number> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise<number>(async (resolve, reject) => {
             let myTerminal;
 

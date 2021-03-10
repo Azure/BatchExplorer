@@ -1,5 +1,3 @@
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
-/* eslint-disable id-blacklist */
 interface String {
     /**
      * Format a string

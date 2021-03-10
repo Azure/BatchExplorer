@@ -31,6 +31,7 @@ export class EditorMockComponent implements ControlValueAccessor {
 
     public onChange: (value: any) => any = () => null;
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     public onTouched() { }
     public registerOnChange(fn) { this.onChange = fn; }
     public registerOnTouched(fn) { this.onTouched = fn; }
