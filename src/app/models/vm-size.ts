@@ -59,11 +59,10 @@ export class VmSize extends Record<VmSizeAttributes> {
 }
 
 /**
- *
- * @param skuJson
+ * Maps capabilities from Resource SKUs JSON response to VM size model.
+ * @param skuJson response value from ARM
  */
 export function mapResourceSkuToVmSize(skuJson: any[]): List<VmSize> {
-    console.log("2", skuJson);
     const skuToCapabilities = _getCapabilitiesMap(skuJson);
     const skuToVmSize: VmSize[] = [];
     for (let skuName in skuToCapabilities) {
@@ -78,7 +77,6 @@ export function mapResourceSkuToVmSize(skuJson: any[]): List<VmSize> {
         vmSize.maxDataDiskCount = _parseIntOrReturnDefault(capabilities.get("MaxDataDiskCount"));
         skuToVmSize.push(new VmSize(vmSize as VmSizeAttributes));
     }
-    console.log("1", skuToVmSize);
     return List<VmSize>(skuToVmSize);
 }
 
@@ -89,7 +87,6 @@ function _getCapabilitiesMap(skuJson: any[]): any {
         const capabilities = new Map(sku.capabilities.map(capability => [capability.name, capability.value]));
         skuToCapabilities[sku.name] = capabilities;
     }
-    console.log("3", skuToCapabilities);
     return skuToCapabilities;
 }
 
@@ -102,15 +99,3 @@ function _parseFloatOrReturnDefault(skuCapabilityValue : string): number {
     const value = parseFloat(skuCapabilityValue);
     return isNaN(value) ? 0 : value;
 }
-
-// {
-//     "name": "Standard_NV12s_v2", // name
-//     "numberOfCores": 12, // capabilities[n].name === "vCPUs"
-//     "osDiskSizeInMB": 1047552, // capabilities[n].name === "OSVhdSizeMB"
-//     "resourceDiskSizeInMB": 688128, // capabilities[n].name === "MaxResourceVolumeMB"
-//     "memoryInMB": 229376, // (capabilities[n].name === "MemoryGB") * 1024
-//     "maxDataDiskCount": 24 // capabilities[n].name === "MaxDataDiskCount"
-//     // capabilities[n].name === "GPUs"
-//     },
-
-// {locations: Array(1), capabilities: Array(21), locationInfo: Array(1), name: "Standard_B1ms", tier: "Standard", …}
