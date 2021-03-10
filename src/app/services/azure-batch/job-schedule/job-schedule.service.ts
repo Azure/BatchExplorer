@@ -21,8 +21,7 @@ export interface JobScheduleParams {
     id?: string;
 }
 
-export interface JobScheduleListOptions extends ListOptionsAttributes {
-}
+export type JobScheduleListOptions = ListOptionsAttributes;
 
 @Injectable({providedIn: "root"})
 export class JobScheduleService {

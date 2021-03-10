@@ -28,6 +28,10 @@ export class LoadingComponent implements OnDestroy {
 
     @Input() public size: "small" | "medium" | "large" = "large";
 
+    public get status() {
+        return this._status;
+    }
+
     @Input() public set status(value: LoadingStatus) {
         if (this.loadOnlyOnce && this._alreadyLoaded && value === LoadingStatus.Loading) {
             return;
@@ -39,10 +43,6 @@ export class LoadingComponent implements OnDestroy {
 
     @Input() public error: ServerError;
     @Input() public relative: boolean = false;
-
-    public get status() {
-        return this._status;
-    }
 
     public statuses = DisplayStatus;
     public displayStatus = new BehaviorSubject<DisplayStatus>(DisplayStatus.Loading);

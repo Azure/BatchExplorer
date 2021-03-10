@@ -23,8 +23,7 @@ export interface JobParams {
     id?: string;
 }
 
-export interface JobListOptions extends ListOptionsAttributes {
-}
+export type JobListOptions = ListOptionsAttributes;
 
 @Injectable({providedIn: "root"})
 export class JobService {
