@@ -70,9 +70,15 @@ describe("VMSizeService", () => {
     it("use the batch account subscription and location for the sizes", async () => {
         await service.sizes.pipe(take(1)).toPromise();
         expect(armSpy.get).toHaveBeenCalledOnce();
+
+        const expectedOptionsParam = {
+            params: {
+                "$filter": `location eq '${testWestusAccount.location}'`
+            }
+        };
+
         expect(armSpy.get).toHaveBeenCalledWith(
-            "subscriptions/sub1/providers/Microsoft.Compute/skus",
-            {​​ params: {​​ "$filter": `location eq '${testWestusAccount.location}'` }​​ });
+            "subscriptions/sub1/providers/Microsoft.Compute/skus", expectedOptionsParam);
     });
 
     it("only calls the vm sizes api once per account", async () => {
@@ -93,12 +99,18 @@ describe("VMSizeService", () => {
             properties: {} as any,
             subscription: sub1,
         });
+
+        const expectedOptionsParam = {
+            params: {
+                "$filter": `location eq '${testBrazilAccount.location}'`
+            }
+        };
+
         accountServiceSpy.currentAccount.next(testBrazilAccount);
 
         expect(armSpy.get).toHaveBeenCalledTimes(2);
         expect(armSpy.get).toHaveBeenCalledWith(
-            "subscriptions/sub1/providers/Microsoft.Compute/skus",
-            {​ params: {​​ "$filter": `location eq '${testBrazilAccount.location}'` }​​ });
+            "subscriptions/sub1/providers/Microsoft.Compute/skus", expectedOptionsParam);
         sizeSub.unsubscribe();
     });
 

@@ -65,7 +65,7 @@ export class VmSize extends Record<VmSizeAttributes> {
 export function mapResourceSkuToVmSize(skuJson: any[]): List<VmSize> {
     const skuToCapabilities = _getCapabilitiesMap(skuJson);
     const skuToVmSize: VmSize[] = [];
-    for (let skuName in skuToCapabilities) {
+    for (const skuName in skuToCapabilities) {
         const vmSize: Partial<VmSizeAttributes> = {};
         const capabilities = skuToCapabilities[skuName];
         vmSize.name = skuName;
