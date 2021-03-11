@@ -1,4 +1,5 @@
 import { Model, Prop, Record } from "@batch-flask/core";
+import { symlink } from "fs";
 import { List } from "immutable";
 
 export interface VmSizeAttributes {
@@ -84,8 +85,10 @@ function _getCapabilitiesMap(skuJson: any[]): any {
     const skuToCapabilities = {};
     for (let i = 0; i < skuJson.length; i++) {
         const sku = skuJson[i];
-        const capabilities = new Map(sku.capabilities.map(capability => [capability.name, capability.value]));
-        skuToCapabilities[sku.name] = capabilities;
+        if (sku.capabilities) {
+            const capabilities = new Map(sku.capabilities.map(capability => [capability.name, capability.value]));
+            skuToCapabilities[sku.name] = capabilities;
+        }
     }
     return skuToCapabilities;
 }
