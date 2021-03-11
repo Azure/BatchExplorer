@@ -161,7 +161,12 @@ export class VmSizeService implements OnDestroy {
     private _fetchVmSizesForAccount(account: ArmBatchAccount): Observable<List<VmSize> | null> {
         const { subscription, location } = account;
         const url = `${computeUrl(subscription.subscriptionId)}/skus`;
-        return this.arm.get<ArmListResponse<any>>(url, {​​ params: {​​ "$filter": `location eq '${location}'` }​​ }​​).pipe(
+        const options = {
+            params: {
+                "$filter": `location eq '${location}'`
+            }
+        };
+        return this.arm.get<ArmListResponse<any>>(url, options).pipe(
             map((response) => {
                 return mapResourceSkuToVmSize(response.value);
             }),
