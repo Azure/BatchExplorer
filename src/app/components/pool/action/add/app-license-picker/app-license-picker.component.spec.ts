@@ -68,7 +68,7 @@ describe("AppLicensePickerComponent", () => {
 
     it("Should show 5 licenses", () => {
         const tableRows = debugElement.queryAll(By.css("bl-row-render"));
-        expect(tableRows.length).toBe(5);
+        expect(tableRows.length).toBe(4);
 
         const row1Columns = tableRows[0].queryAll(By.css(".bl-table-cell"));
         expect(row1Columns.length).toBe(3, "Row has 3 columns");
