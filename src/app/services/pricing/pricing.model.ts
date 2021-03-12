@@ -161,10 +161,16 @@ export class SoftwarePricing {
         return this._map.get(software);
     }
 
-    public getPrice(software: string, coreCount = 1): number {
+    public getPrice(software: string, coreCount = 1, gpuCount = 0): number {
         const data = this._map.get(software);
         if (!data) { return null; }
-        return data.billingUnit === "core" ? coreCount * data.price : data.price;
+        if (data.billingUnit === "gpu") {
+            return gpuCount * data.price;
+        } else if (data.billingUnit === "core") {
+            return coreCount * data.price;
+        } else {
+            return data.price;
+        }
     }
 }
 
