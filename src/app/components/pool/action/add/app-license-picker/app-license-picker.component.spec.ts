@@ -87,14 +87,9 @@ describe("AppLicensePickerComponent", () => {
         expect(row3Columns[2].nativeElement.textContent).toContain("$5/node/hour");
 
         const row4Columns = tableRows[3].queryAll(By.css(".bl-table-cell"));
-        expect(row4Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray");
+        expect(row4Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray & V-Ray RT ");
         expect(row4Columns[1].nativeElement.textContent).toContain("EULA");
         expect(row4Columns[2].nativeElement.textContent).toContain("-");
-
-        const row5Columns = tableRows[4].queryAll(By.css(".bl-table-cell"));
-        expect(row5Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray RT");
-        expect(row5Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row5Columns[2].nativeElement.textContent).toContain("-");
     });
 
     it("Should select license by checking checkbox", () => {
