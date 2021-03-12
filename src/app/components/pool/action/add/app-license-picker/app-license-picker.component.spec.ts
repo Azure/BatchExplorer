@@ -66,9 +66,9 @@ describe("AppLicensePickerComponent", () => {
         fixture.detectChanges();
     });
 
-    it("Should show 5 licenses", () => {
+    it("Should show 4 licenses", () => {
         const tableRows = debugElement.queryAll(By.css("bl-row-render"));
-        expect(tableRows.length).toBe(5);
+        expect(tableRows.length).toBe(4);
 
         const row1Columns = tableRows[0].queryAll(By.css(".bl-table-cell"));
         expect(row1Columns.length).toBe(3, "Row has 3 columns");
@@ -87,14 +87,9 @@ describe("AppLicensePickerComponent", () => {
         expect(row3Columns[2].nativeElement.textContent).toContain("$5/node/hour");
 
         const row4Columns = tableRows[3].queryAll(By.css(".bl-table-cell"));
-        expect(row4Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray");
+        expect(row4Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray & V-Ray RT");
         expect(row4Columns[1].nativeElement.textContent).toContain("EULA");
         expect(row4Columns[2].nativeElement.textContent).toContain("-");
-
-        const row5Columns = tableRows[4].queryAll(By.css(".bl-table-cell"));
-        expect(row5Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray RT");
-        expect(row5Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row5Columns[2].nativeElement.textContent).toContain("-");
     });
 
     it("Should select license by checking checkbox", () => {
