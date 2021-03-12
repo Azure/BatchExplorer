@@ -127,6 +127,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
         this._previousNativeValue = this.value;
 
         // Force setter to be called in case id was not specified.
+        // eslint-disable-next-line no-self-assign
         this.id = this.id;
     }
 

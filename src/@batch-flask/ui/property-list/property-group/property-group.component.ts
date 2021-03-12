@@ -26,14 +26,14 @@ export class PropertyGroupComponent {
 
     @Input() public edit: () => void;
 
+    public get collapsed() { return this._collapsed; }
+
     @Input() public set collapsed(collapsed) {
         this._collapsed = collapsed;
         this.collapsedChange.emit(collapsed);
     }
 
     public get contentId() { return `${this.id}_content`; }
-
-    public get collapsed() { return this._collapsed; }
 
     private _collapsed = false;
 

@@ -176,9 +176,9 @@ export function createKeyboardEvent(type: string, code: KeyCode, keyCode?: numbe
     });
 
     // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
-    event.preventDefault = function () {
+    event.preventDefault = function (...args) {
         Object.defineProperty(event, "defaultPrevented", { get: () => true });
-        return originalPreventDefault.apply(this, arguments);
+        return originalPreventDefault.apply(this, args);
     };
 
     return event;
