@@ -98,7 +98,7 @@ export class MainWindow extends GenericWindow {
 
         // Open the DevTools.
         if (process.env.NODE_ENV !== "production") {
-            window.webContents.openDevTools();
+            window.webContents.openDevTools({ mode: 'undocked' });
         }
 
         return window;
