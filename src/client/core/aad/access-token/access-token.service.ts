@@ -4,7 +4,7 @@ import { AADResourceName } from "client/azure-environment";
 import { RequestInit, fetch } from "client/core/fetch";
 import { BatchExplorerProperties } from "client/core/properties";
 import { AADConfig } from "../aad-config";
-import { objectToParams } from "../adal-constants";
+import { objectToParams } from "../aad-constants";
 
 const contentType = "application/x-www-form-urlencoded";
 

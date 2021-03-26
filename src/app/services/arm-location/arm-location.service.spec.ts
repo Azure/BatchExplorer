@@ -4,7 +4,7 @@ import { AccessToken } from "@batch-flask/core";
 import { ArmLocation, ArmSubscription, TenantDetails } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, of } from "rxjs";
-import { AdalService } from "../adal";
+import { AuthService } from "../aad";
 import { AzureHttpService } from "../azure-http.service";
 import { BatchExplorerService } from "../batch-explorer.service";
 import { ArmLocationService } from "./arm-location.service";
@@ -65,12 +65,12 @@ const batchLoc2 = new ArmLocation({
 describe("ArmLocationService", () => {
     let service: ArmLocationService;
 
-    let adalSpy;
+    let authSpy;
     let armProviderServiceSpy;
     let httpMock: HttpTestingController;
 
     beforeEach(() => {
-        adalSpy = {
+        authSpy = {
             tenantsIds: new BehaviorSubject(["tenant-1", "tenant-2"]),
             accessTokenData: jasmine.createSpy("accessTokenData").and.callFake((id) => {
                 return of(tokens[id]);
@@ -95,7 +95,7 @@ describe("ArmLocationService", () => {
                         },
                     },
                 },
-                { provide: AdalService, useValue: adalSpy },
+                { provide: AuthService, useValue: authSpy },
             ],
         });
 

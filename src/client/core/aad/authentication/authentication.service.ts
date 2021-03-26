@@ -3,7 +3,7 @@ import { BatchExplorerApplication } from "client/core/batch-explorer-application
 import { Deferred } from "common";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
-import * as AdalConstants from "../adal-constants";
+import * as AADConstants from "../aad-constants";
 
 enum AuthorizePromptType {
     login = "login",
@@ -109,7 +109,7 @@ export class AuthenticationService {
             return this._logoutDeferred.promise;
         }
 
-        const url = AdalConstants.logoutUrl(this.app.properties.azureEnvironment.aadUrl, this.config.tenant);
+        const url = AADConstants.logoutUrl(this.app.properties.azureEnvironment.aadUrl, this.config.tenant);
         const authWindow = this.app.authenticationWindow;
         authWindow.create();
         this._setupEvents();
@@ -130,7 +130,7 @@ export class AuthenticationService {
             return;
         }
         this._waitingForAuth = true;
-        const { tenantId, silent } = this._currentAuthorization = this._authorizeQueue.shift()!;
+        const { tenantId, silent } = this._currentAuthorization = this._authorizeQueue.shift();
         const authWindow = this.app.authenticationWindow;
         authWindow.create();
         authWindow.loadURL(this._buildUrl(tenantId, silent));
@@ -147,7 +147,7 @@ export class AuthenticationService {
      * @param silent @see #authorize
      */
     private _buildUrl(tenantId, silent: boolean): string {
-        const params: AdalConstants.AuthorizeUrlParams = {
+        const params: AADConstants.AuthorizeUrlParams = {
             response_type: "id_token+code",
             redirect_uri: encodeURIComponent(this.config.redirectUri),
             client_id: this.config.clientId,
@@ -160,7 +160,7 @@ export class AuthenticationService {
         if (silent) {
             params.prompt = AuthorizePromptType.none;
         }
-        return AdalConstants.authorizeUrl(this.app.properties.azureEnvironment.aadUrl, tenantId, params);
+        return AADConstants.authorizeUrl(this.app.properties.azureEnvironment.aadUrl, tenantId, params);
     }
 
     /**
