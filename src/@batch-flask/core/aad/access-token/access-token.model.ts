@@ -20,6 +20,9 @@ export interface AccessTokenAttributes {
 
     ext_expires_in: number;
     not_before: Date;
+
+    tenantId?: string;
+    resource?: string;
 }
 
 export class AccessToken {
@@ -50,6 +53,9 @@ export class AccessToken {
     public ext_expires_in: number;
     public not_before: Date;
 
+    public tenantId?: string;
+    public resource?: string;
+
     constructor(data: AccessTokenAttributes) {
         this.access_token = data.access_token;
         this.refresh_token = data.refresh_token;
@@ -58,6 +64,8 @@ export class AccessToken {
         this.expires_on = new Date(data.expires_on);
         this.ext_expires_in = data.ext_expires_in;
         this.not_before = new Date(data.not_before);
+        this.tenantId = data.tenantId;
+        this.resource = data.resource;
     }
 
     /**

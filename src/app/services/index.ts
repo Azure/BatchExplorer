@@ -34,7 +34,6 @@ export * from "./storage-account.service";
 export * from "./predefined-formula.service";
 export * from "./node-connect";
 export * from "./themes";
-export * from "./tenant-details.service";
 export * from "./network";
 export * from "./user-configuration";
 export * from "./version";

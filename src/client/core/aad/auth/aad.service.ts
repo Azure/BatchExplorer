@@ -1,13 +1,13 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
-import { AccessToken, AccessTokenCache, DataStore, ServerError } from "@batch-flask/core";
+import { AccessToken, DataStore, ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
+import { TenantDetails } from "app/models";
 import { AADResourceName, AzurePublic } from "client/azure-environment";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { fetch } from "client/core/fetch";
 import { BatchExplorerProperties } from "client/core/properties";
-import { SecureDataStore } from "client/core/secure-data-store";
 import { TelemetryManager } from "client/core/telemetry";
 import { Constants } from "common";
 import { IpcEvent } from "common/constants";
@@ -15,10 +15,10 @@ import { Deferred } from "common/deferred";
 import { dialog } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
+import AuthProvider from "../auth-provider";
 import {
-    AccessTokenService,
-} from "../access-token";
-import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError } from "../authentication";
+    AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError
+} from "../authentication";
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
 
@@ -33,38 +33,35 @@ const aadConfig: AADConfig = {
 export class AADService {
     public currentUser: Observable<AADUser | null>;
 
-    public tenantsIds: Observable<string[]>;
+    public tenants: Observable<TenantDetails[]>;
 
     public userAuthorization: AuthenticationService;
     public authenticationState: Observable<AuthenticationState | null>;
 
     private _authenticationState = new BehaviorSubject<AuthenticationState | null>(null);
-    private _accessTokenService: AccessTokenService;
     private _userDecoder: UserDecoder;
     private _newAccessTokenSubject: StringMap<Deferred<AccessToken>> = {};
 
     private _currentUser = new BehaviorSubject<AADUser | null>(null);
-    private _tenantsIds = new BehaviorSubject<string[]>([]);
-    private _tokenCache: AccessTokenCache;
+    private _tenants = new BehaviorSubject<TenantDetails[]>([]);
 
     constructor(
         @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
         private localStorage: DataStore,
         private properties: BatchExplorerProperties,
         private telemetryManager: TelemetryManager,
-        secureStore: SecureDataStore,
-        ipcMain: BlIpcMain) {
-        this._tokenCache = new AccessTokenCache(secureStore);
+        ipcMain: BlIpcMain
+    ) {
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
-        this.tenantsIds = this._tenantsIds.asObservable();
-        this.userAuthorization = new AuthenticationService(this.app, aadConfig);
-        this._accessTokenService = new AccessTokenService(properties, aadConfig);
+        this.tenants = this._tenants.asObservable();
+        this.userAuthorization = new AuthenticationService(this.app, aadConfig,
+            new AuthProvider(this.app, aadConfig));
         this.authenticationState = this._authenticationState.asObservable();
 
-        ipcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
-            return this.accessTokenData(tenantId, resource);
-        });
+        ipcMain.on(IpcEvent.AAD.accessTokenData,
+            async ({ tenantId, resource }) =>
+                await this.accessTokenData(tenantId, resource));
 
         this.userAuthorization.state.subscribe((state) => {
             this._authenticationState.next(state);
@@ -72,16 +69,12 @@ export class AADService {
     }
 
     public async init() {
-        await Promise.all([
-            this._retrieveUserFromLocalStorage(),
-            this._tokenCache.init(),
-        ]);
+        await this._retrieveUserFromLocalStorage();
     }
 
     /**
      * Login to azure active directory.
      * This will retrieve fresh tokens for all tenant and resources needed by BatchExplorer.
-     * It will try to use the refresh token cached to prevent a new prompt window if possible.
      */
     public login(): { started: Promise<any>, done: Promise<any> } {
         const started = this._ensureTelemetryOptInNationalClouds();
@@ -93,8 +86,7 @@ export class AADService {
 
     public async logout() {
         await this.localStorage.removeItem(Constants.localStorageKey.currentUser);
-        this._tokenCache.clear();
-        this._tenantsIds.next([]);
+        this._tenants.next([]);
         await this._clearUserSpecificCache();
         for (const [, window] of this.app.windows) {
             window.webContents.session.clearStorageData({ storages: ["localStorage"] });
@@ -113,14 +105,7 @@ export class AADService {
      * @param resource
      */
     public async accessTokenData(tenantId: string, resource?: AADResourceName): Promise<AccessToken> {
-        resource = resource || "arm";
-        if (this._tokenCache.hasToken(tenantId, resource)) {
-            const token = this._tokenCache.getToken(tenantId, resource);
-            if (!token.expireInLess(Constants.AAD.refreshMargin)) {
-                return token;
-            }
-        }
-        return this._retrieveNewAccessToken(tenantId, resource);
+        return this._retrieveNewAccessToken(tenantId, resource || "arm");
     }
 
     private async _loginInCurrentCloud() {
@@ -136,13 +121,12 @@ export class AADService {
             }
         }
         try {
-            const tenantIds = await this._loadTenantIds();
+            const tenants = await this._loadTenants();
 
-            this._tenantsIds.next(tenantIds);
-            this._refreshAllAccessTokens();
+            this._tenants.next(tenants);
         } catch (error) {
             log.error("Error retrieving tenants", error);
-            this._tenantsIds.error(ServerError.fromARM(error));
+            this._tenants.error(ServerError.fromARM(error));
         }
     }
 
@@ -162,20 +146,10 @@ export class AADService {
     }
 
     /**
-     * Retrieve a new access token using the refresh token if available or authorize the user and use authorization code
-     * Will set the currentAccesToken.
+     * Retrieve a new access token.
      * @return Observable with access token object
      */
     private async _retrieveNewAccessToken(tenantId: string, resource: AADResourceName): Promise<AccessToken> {
-        const token = this._tokenCache.getToken(tenantId, resource);
-        if (token && token.refresh_token) {
-            return this._useRefreshToken(tenantId, resource, token.refresh_token);
-        }
-
-        if (resource in this._newAccessTokenSubject) {
-            return this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)].promise;
-        }
-
         const defer = new Deferred<AccessToken>();
         this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)] = defer;
         this._redeemNewAccessToken(tenantId, resource);
@@ -189,52 +163,33 @@ export class AADService {
     /**
      * Load a new access token from the authorization code given at login
      */
-    private async _redeemNewAccessToken(tenantId: string, resource: AADResourceName, forceReLogin = false) {
+    private async _redeemNewAccessToken(tenantId: string, resource: AADResourceName) {
         const defer = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
 
         try {
-
-            const result = await this._authorizeUser(tenantId, forceReLogin);
-            this._processUserToken(result.id_token);
-            const tid = tenantId === "common" ? this._currentUser.value!.tid : tenantId;
-            const token = await this._accessTokenService.redeem(resource, tid!, result.code);
-            this._processAccessToken(tenantId, resource, token);
+            const result: AuthorizeResult =
+                await this.userAuthorization.authorizeResource(
+                    tenantId,
+                    this.properties.azureEnvironment[resource as string]
+                );
+            this._processUserToken(result.idToken);
             delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
-            defer.resolve(token);
+            defer.resolve(new AccessToken({
+                access_token: result.accessToken,
+                refresh_token: null,
+                token_type: result.tokenType,
+                expires_in: null,
+                expires_on: result.expiresOn,
+                ext_expires_in: null,
+                not_before: null,
+                tenantId,
+                resource
+            }));
 
         } catch (e) {
             log.error(`Error redeem auth code for a token for resource ${resource}`, e);
             delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
             defer.reject(e);
-        }
-    }
-
-    private async _authorizeUser(tenantId, forceReLogin): Promise<AuthorizeResult> {
-        if (forceReLogin) {
-            return this.userAuthorization.authorize(tenantId, false);
-        } else {
-            return this.userAuthorization.authorizeTrySilentFirst(tenantId);
-        }
-    }
-
-    /**
-     * Use the refresh token to get a new access token
-     * @param tenantId TenantId to access
-     * @param resource Resource to access
-     * @param refreshToken Refresh token
-     */
-    private async _useRefreshToken(
-        tenantId: string,
-        resource: AADResourceName,
-        refreshToken: string): Promise<AccessToken> {
-        try {
-            const token = await this._accessTokenService.refresh(resource, tenantId, refreshToken);
-            this._processAccessToken(tenantId, resource, token);
-            return token;
-        } catch (error) {
-            log.warn("Refresh token is not valid", error);
-            this._tokenCache.removeToken(tenantId, resource);
-            return this._retrieveNewAccessToken(tenantId, resource);
         }
     }
 
@@ -251,44 +206,27 @@ export class AADService {
         this.localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(user));
     }
 
-    private _processAccessToken(tenantId: string, resource: string, token: AccessToken) {
-        this._tokenCache.storeToken(tenantId, resource, token);
-    }
-
-    private async _loadTenantIds(): Promise<string[]> {
+    private async _loadTenants(): Promise<TenantDetails[]> {
         const token = await this.accessTokenData("common");
 
         const headers = {
             Authorization: `${token.token_type} ${token.access_token}`,
         };
         const options = { headers };
-        const url = `${this.properties.azureEnvironment.arm}tenants?api-version=${Constants.ApiVersion.arm}`;
+        const url = this._tenantURL();
         const response = await fetch(url, options);
-        log.info("Listing tenants response", response.status, response.statusText);
         const { value } = await response.json();
-        return value.map(x => x.tenantId);
+        return value;
+    }
+
+    private _tenantURL() {
+        return this.properties.azureEnvironment.arm +
+            `tenants?api-version=${Constants.ApiVersion.arm}`;
     }
 
     private async _clearUserSpecificCache() {
         this.localStorage.removeItem(Constants.localStorageKey.subscriptions);
         this.localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
-        await this._tokenCache.clear();
-    }
-
-    private async _refreshAllAccessTokens() {
-        const tenantIds = this._tenantsIds.value;
-        for (const tenantId of tenantIds) {
-            for (const resource of this._resources()) {
-                await this._retrieveNewAccessToken(tenantId, resource);
-            }
-        }
-    }
-
-    private _resources(): AADResourceName[] {
-        return [
-            "arm",
-            "batch",
-        ];
     }
 
     private async _ensureTelemetryOptInNationalClouds() {
