@@ -1,12 +1,21 @@
 import { AzurePublic } from "client/azure-environment";
+import { MockAuthProvider } from "test/utils/mocks/auth";
 import { MockAuthenticationWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import {
     AuthenticationService, AuthenticationState, AuthorizeError, AuthorizeResult,
 } from "./authentication.service";
 
+const CONFIG = {
+    tenant: "common",
+    clientId: "abc",
+    redirectUri: "http://localhost",
+    logoutRedirectUri: "http://localhost",
+};
+
 describe("AuthenticationService", () => {
     let userAuthorization: AuthenticationService;
     let fakeAuthWindow: MockAuthenticationWindow;
+    let fakeAuthProvider: MockAuthProvider;
     let appSpy;
     let state: AuthenticationState;
     beforeEach(() => {
@@ -17,13 +26,9 @@ describe("AuthenticationService", () => {
                 azureEnvironment: AzurePublic,
             },
         };
-        const config = {
-            tenant: "common",
-            clientId: "abc",
-            redirectUri: "http://localhost",
-            logoutRedirectUri: "http://localhost",
-        };
-        userAuthorization = new AuthenticationService(appSpy, config);
+        fakeAuthProvider = new MockAuthProvider(appSpy, CONFIG);
+        userAuthorization = new AuthenticationService(appSpy, CONFIG,
+            fakeAuthProvider);
         fakeAuthWindow = appSpy.authenticationWindow;
         userAuthorization.state.subscribe(x => state = x);
     });
@@ -32,42 +37,32 @@ describe("AuthenticationService", () => {
         let result: AuthorizeResult | null;
         let error: AuthorizeError | null;
         let promise;
-        beforeEach(() => {
+        beforeEach(async () => {
             result = null;
             error = null;
             const obs = userAuthorization.authorize("tenant-1");
             promise = obs.then((out) => result = out).catch((e) => error = e);
         });
 
-        it("Should have called loadurl", () => {
+        it("Should have called loadurl", async () => {
+            fakeAuthWindow.notifyRedirect(CONFIG.redirectUri);
+            await promise;
+
             expect(fakeAuthWindow.loadURL).toHaveBeenCalledTimes(1);
             const args = fakeAuthWindow.loadURL.calls.mostRecent().args;
             expect(args.length).toBe(1);
-            const url = args[0];
-            expect(url).toContain("https://login.microsoftonline.com/tenant-1/oauth2/authorize");
-            expect(url).toContain("&resource=https://management.azure.com/");
-            expect(url).toContain("?response_type=id_token+code");
-            expect(url).toContain("&scope=user_impersonation+openid");
-            expect(url).toContain("&client_id=abc");
-            expect(url).toContain("&redirect_uri=http%3A%2F%2Flocalhost");
-            expect(url).not.toContain("&prompt=none");
         });
 
         it("window should be visible", () => {
             expect(fakeAuthWindow.isVisible()).toBe(true);
         });
 
-        it("state should now be UserInput", () => {
-            expect(state).toBe(AuthenticationState.UserInput);
-        });
-
-        it("Should return the id token and code when sucessfull", async () => {
-            const newUrl = "http://localhost/#id_token=sometoken&code=somecode";
-            fakeAuthWindow.notifyRedirect(newUrl);
+        it("should return the id token and code when successful", async () => {
+            fakeAuthWindow.notifyRedirect(CONFIG.redirectUri);
+            fakeAuthProvider.fakeToken = { accessToken: "somecode" };
             await promise;
             expect(result).not.toBeNull();
-            expect(result!.id_token).toEqual("sometoken");
-            expect(result!.code).toEqual("somecode");
+            expect(result.accessToken).toEqual("somecode");
             expect(error).toBeNull();
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
@@ -80,21 +75,24 @@ describe("AuthenticationService", () => {
 
             expect(result).toBeNull();
             expect(error).not.toBeNull();
-            expect(error!.error).toEqual("Failed to authenticate");
-            expect(error!.description).toEqual("Failed to load the AAD login page (4:Foo bar)");
+            expect(error.error).toEqual("Failed to authenticate");
+            expect(error.description).toEqual("Failed to load the AAD login page (4:Foo bar)");
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
         });
 
         it("Should error when the url redirect returns an error", async () => {
-            const newUrl = "http://localhost/#error=someerror&error_description=There was an error";
-            fakeAuthWindow.notifyRedirect(newUrl);
+            fakeAuthWindow.notifyRedirect(CONFIG.redirectUri);
+            fakeAuthProvider.fakeError = {
+                error: "someerror",
+                description: "There was an error"
+            }
             await promise;
 
             expect(result).toBeNull();
             expect(error).not.toBeNull();
-            expect(error!.error).toEqual("someerror");
-            expect(error!.description).toEqual("There was an error");
+            expect(error.error).toEqual("someerror");
+            expect(error.description).toEqual("There was an error");
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
         });
@@ -110,42 +108,43 @@ describe("AuthenticationService", () => {
             expect(tenant1Spy).not.toHaveBeenCalled();
             expect(tenant2Spy).not.toHaveBeenCalled();
 
-            const newUrl1 = "http://localhost/#id_token=sometoken&code=somecode";
-            fakeAuthWindow.notifyRedirect(newUrl1);
+            fakeAuthWindow.notifyRedirect(CONFIG.redirectUri);
+            fakeAuthProvider.fakeToken = { accessToken: "somecode" };
             await p1;
 
             // Should have set tenant-1
             expect(result).not.toBeNull();
-            expect(result!.id_token).toEqual("sometoken");
-            expect(result!.code).toEqual("somecode");
+            expect(result.accessToken).toEqual("somecode");
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
             expect(tenant1Spy).toHaveBeenCalled();
-            expect(tenant1Spy).toHaveBeenCalledWith({ id_token: "sometoken", code: "somecode" });
+            expect(tenant1Spy).toHaveBeenCalledWith({
+                accessToken: "somecode",
+                id_token: null,
+                code: null,
+                session_state: null
+            });
 
             expect(tenant2Spy).not.toHaveBeenCalled();
 
             // Should now authorize for tenant-2
-            const newUrl2 = "http://localhost/#id_token=sometoken2&code=somecode2";
-            fakeAuthWindow.notifyRedirect(newUrl2);
+            fakeAuthWindow.notifyRedirect(CONFIG.redirectUri);
             await p2;
 
             expect(tenant2Spy).toHaveBeenCalled();
-            expect(tenant2Spy).toHaveBeenCalledWith({ id_token: "sometoken2", code: "somecode2" });
+            expect(tenant2Spy).toHaveBeenCalledWith({
+                accessToken: "somecode",
+                id_token: null,
+                code: null,
+                session_state: null
+            });
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(2);
         });
     });
 
     describe("Authorize silently", () => {
         beforeEach(() => {
-            userAuthorization.authorize("tenant-1", true);
-        });
-
-        it("should set the prompt=none params", () => {
-            const args = fakeAuthWindow.loadURL.calls.mostRecent().args;
-            expect(args.length).toBe(1);
-            const url = args[0];
-            expect(url).toContain("&prompt=none");
+            userAuthorization.authorize("tenant-1");
         });
 
         it("shoud not be visible", () => {
@@ -186,31 +185,7 @@ describe("AuthenticationService", () => {
             expect(error).toBeNull();
 
             expect(userAuthorization.authorize).toHaveBeenCalledTimes(1);
-            expect(userAuthorization.authorize).toHaveBeenCalledWith("tenant-1", true);
-        });
-
-        it("Should call silent false if silent true return sucessfully", async () => {
-            authorizeOutput = jasmine.createSpy("output").and.returnValues(
-                Promise.reject(badResult),
-                Promise.resolve(goodResult));
-            callAuth();
-            await promise;
-            expect(result).toEqual(goodResult);
-            expect(error).toBeNull();
-
-            expect(userAuthorization.authorize).toHaveBeenCalledTimes(2);
-            expect(userAuthorization.authorize).toHaveBeenCalledWith("tenant-1", true);
-            expect(userAuthorization.authorize).toHaveBeenCalledWith("tenant-1", false);
-        });
-
-        it("Should return error if both silent true and false return an error", async () => {
-            authorizeOutput = jasmine.createSpy("output").and.returnValue(Promise.reject(badResult));
-            callAuth();
-            await promise;
-
-            expect(userAuthorization.authorize).toHaveBeenCalledTimes(2);
-            expect(result).toBeNull();
-            expect(error).toEqual(badResult);
+            expect(userAuthorization.authorize).toHaveBeenCalledWith("tenant-1");
         });
     });
 });

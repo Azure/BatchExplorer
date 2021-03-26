@@ -3,6 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { AccessToken } from "@batch-flask/core";
 import { MockUserConfigurationService } from "@batch-flask/core/testing";
 import { ArmSubscription, TenantDetails } from "app/models";
+import { Constants } from "common";
 import { BehaviorSubject, of } from "rxjs";
 import { AuthService } from "../aad";
 import { AzureHttpService } from "../azure-http.service";
@@ -10,8 +11,8 @@ import { BatchExplorerService } from "../batch-explorer.service";
 import { SubscriptionService } from "./subscription.service";
 
 const tenantDetails: StringMap<TenantDetails> = {
-    "tenant-1": new TenantDetails({ displayName: "Tenant 1", objectId: "tenant-1" }),
-    "tenant-2": new TenantDetails({ displayName: "Tenant 2", objectId: "tenant-2" }),
+    "tenant-1": new TenantDetails({ tenantId: "tenant-1", displayName: "Tenant 1" }),
+    "tenant-2": new TenantDetails({ tenantId: "tenant-2", displayName: "Tenant 2" }),
 };
 
 const tokens: StringMap<AccessToken> = {
@@ -55,7 +56,6 @@ const sub3 = new ArmSubscription({
 describe("SubscriptionService", () => {
     let service: SubscriptionService;
 
-    let tenantDetailsServiceSpy;
     let authSpy;
     let settingsServiceSpy: MockUserConfigurationService;
     let httpMock: HttpTestingController;
@@ -63,15 +63,9 @@ describe("SubscriptionService", () => {
 
     beforeEach(() => {
         authSpy = {
-            tenantsIds: new BehaviorSubject(["tenant-1", "tenant-2"]),
+            tenants: new BehaviorSubject(Object.values(tenantDetails)),
             accessTokenData: jasmine.createSpy("accessTokenData").and.callFake((id) => {
                 return of(tokens[id]);
-            }),
-        };
-
-        tenantDetailsServiceSpy = {
-            get: jasmine.createSpy("tenantDetailsService.get").and.callFake((id) => {
-                return of(tenantDetails[id]);
             }),
         };
 
@@ -96,7 +90,10 @@ describe("SubscriptionService", () => {
 
         settingsServiceSpy = new MockUserConfigurationService({});
         service = new SubscriptionService(
-            tenantDetailsServiceSpy, TestBed.get(AzureHttpService), TestBed.get(AuthService), settingsServiceSpy);
+            TestBed.get(AzureHttpService),
+            TestBed.get(AuthService),
+            settingsServiceSpy
+        );
         service.subscriptions.subscribe(x => subscriptions = x.toJS());
     });
 
@@ -112,12 +109,8 @@ describe("SubscriptionService", () => {
             done();
         });
 
-        expect(tenantDetailsServiceSpy.get).toHaveBeenCalledTimes(2);
-        expect(tenantDetailsServiceSpy.get).toHaveBeenCalledWith("tenant-1");
-        expect(tenantDetailsServiceSpy.get).toHaveBeenCalledWith("tenant-2");
-
         const reqs = httpMock.match({
-            url: "https://management.azure.com/subscriptions?api-version=2016-09-01",
+            url: `https://management.azure.com/subscriptions?api-version=${Constants.ApiVersion.arm}`,
             method: "GET",
         });
         expect(reqs.length).toEqual(2);
@@ -131,11 +124,11 @@ describe("SubscriptionService", () => {
         });
         reqs[1].flush({
             value: [sub1Res],
-            nextLink: "https://management.azure.com/subscriptions?api-version=2016-09-01&token=next-foo",
+            nextLink: `https://management.azure.com/subscriptions?api-version=${Constants.ApiVersion.arm}&token=next-foo`,
         });
 
         const nextReq = httpMock.expectOne({
-            url: "https://management.azure.com/subscriptions?api-version=2016-09-01&token=next-foo",
+            url: `https://management.azure.com/subscriptions?api-version=${Constants.ApiVersion.arm}&token=next-foo`,
             method: "GET",
         });
         expect(nextReq.request.body).toBe(null);
