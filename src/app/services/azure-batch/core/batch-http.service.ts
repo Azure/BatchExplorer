@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
 import { ArmBatchAccount, BatchAccount, LocalBatchAccount } from "app/models";
-import { AdalService } from "app/services/adal";
+import { AuthService } from "app/services/aad";
 import { BatchAccountService } from "app/services/batch-account";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { Constants } from "common";
@@ -23,7 +23,7 @@ export class AzureBatchHttpService extends HttpService {
 
     constructor(
         httpHandler: HttpHandler,
-        private adal: AdalService,
+        private auth: AuthService,
         private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
         super(httpHandler);
@@ -72,7 +72,7 @@ export class AzureBatchHttpService extends HttpService {
 
     private _setupRequestForArm(account: ArmBatchAccount, options) {
         const tenantId = account.subscription.tenantId;
-        return this.adal.accessTokenData(tenantId, "batch").pipe(
+        return this.auth.accessTokenData(tenantId, "batch").pipe(
             map((accessToken) => this.addAuthorizationHeader(options, accessToken)),
         );
     }

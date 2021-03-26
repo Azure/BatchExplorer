@@ -4,7 +4,7 @@ import { TenantDetails, TenantDetailsAttributes } from "app/models";
 import { Constants } from "common";
 import { Observable } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
-import { AdalService } from "./adal";
+import { AuthService } from "./aad";
 import { BatchExplorerService } from "./batch-explorer.service";
 
 @Injectable({providedIn: "root"})
@@ -13,12 +13,12 @@ export class TenantDetailsService {
         return this.batchExplorer.azureEnvironment.aadGraph;
     }
 
-    constructor(private adal: AdalService, private http: HttpClient, private batchExplorer: BatchExplorerService) {
+    constructor(private auth: AuthService, private http: HttpClient, private batchExplorer: BatchExplorerService) {
 
     }
 
     public get(tenantId: string): Observable<TenantDetails> {
-        return this.adal.accessTokenData(tenantId, "aadGraph").pipe(
+        return this.auth.accessTokenData(tenantId, "aadGraph").pipe(
             flatMap((accessToken) => {
                 const options = {
                     headers: new HttpHeaders({

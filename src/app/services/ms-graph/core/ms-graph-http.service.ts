@@ -2,7 +2,7 @@ import { HttpHandler } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpService, ServerError } from "@batch-flask/core";
 import { ArmBatchAccount } from "app/models";
-import { AdalService } from "app/services/adal";
+import { AuthService } from "app/services/aad";
 import { BatchAccountService } from "app/services/batch-account";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { Observable, throwError } from "rxjs";
@@ -19,7 +19,7 @@ export class MsGraphHttpService extends HttpService {
 
     constructor(
         httpHandler: HttpHandler,
-        private adal: AdalService,
+        private auth: AuthService,
         private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
 
@@ -39,7 +39,7 @@ export class MsGraphHttpService extends HttpService {
                 }
             }),
             flatMap((account: ArmBatchAccount) => {
-                return this.adal.accessTokenData(account.subscription.tenantId, "msGraph");
+                return this.auth.accessTokenData(account.subscription.tenantId, "msGraph");
             }),
             flatMap((accessToken) => {
                 options = this.addAuthorizationHeader(options, accessToken);

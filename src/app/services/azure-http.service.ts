@@ -7,7 +7,7 @@ import { ArmResourceUtils } from "app/utils";
 import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
 import { catchError, mergeMap, retryWhen, share, switchMap } from "rxjs/operators";
-import { AdalService } from "./adal";
+import { AuthService } from "./aad";
 import { BatchExplorerService } from "./batch-explorer.service";
 
 function mergeOptions(original: HttpRequestOptions, body?: any): HttpRequestOptions {
@@ -33,7 +33,7 @@ export class InvalidSubscriptionOrTenant extends Error {
  */
 @Injectable({ providedIn: "root" })
 export class AzureHttpService {
-    constructor(private http: HttpClient, private adal: AdalService, private batchExplorer: BatchExplorerService) {
+    constructor(private http: HttpClient, private auth: AuthService, private batchExplorer: BatchExplorerService) {
     }
 
     public request(
@@ -41,7 +41,7 @@ export class AzureHttpService {
         subscriptionOrTenant: SubscriptionOrTenant,
         uri: string,
         options: HttpRequestOptions): Observable<any> {
-        return this.adal.accessTokenData(this._getTenantId(subscriptionOrTenant, uri)).pipe(
+        return this.auth.accessTokenData(this._getTenantId(subscriptionOrTenant, uri)).pipe(
             switchMap((accessToken) => {
                 options = this._setupRequestOptions(uri, options, accessToken);
                 return this.http.request(method, this._computeUrl(uri), options).pipe(

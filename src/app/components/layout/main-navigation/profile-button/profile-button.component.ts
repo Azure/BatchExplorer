@@ -14,7 +14,7 @@ import {
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { OS, log } from "@batch-flask/utils";
 import {
-    AdalService, BatchExplorerService,
+    AuthService, BatchExplorerService,
 } from "app/services";
 import { Constants } from "common";
 import * as path from "path";
@@ -39,7 +39,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     private _destroy = new Subject();
 
     constructor(
-        adalService: AdalService,
+        authService: AuthService,
         private i18n: I18nService,
         private localeService: LocaleService,
         private changeDetector: ChangeDetectorRef,
@@ -53,7 +53,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
         private fs: FileSystemService,
         private router: Router) {
 
-        adalService.currentUser.pipe(takeUntil(this._destroy)).subscribe((user) => {
+        authService.currentUser.pipe(takeUntil(this._destroy)).subscribe((user) => {
             if (user) {
                 this.currentUserName = `${user.name} (${user.unique_name})`;
             } else {
