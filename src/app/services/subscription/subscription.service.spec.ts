@@ -4,7 +4,7 @@ import { AccessToken } from "@batch-flask/core";
 import { MockUserConfigurationService } from "@batch-flask/core/testing";
 import { ArmSubscription, TenantDetails } from "app/models";
 import { BehaviorSubject, of } from "rxjs";
-import { AdalService } from "../adal";
+import { AuthService } from "../aad";
 import { AzureHttpService } from "../azure-http.service";
 import { BatchExplorerService } from "../batch-explorer.service";
 import { SubscriptionService } from "./subscription.service";
@@ -56,13 +56,13 @@ describe("SubscriptionService", () => {
     let service: SubscriptionService;
 
     let tenantDetailsServiceSpy;
-    let adalSpy;
+    let authSpy;
     let settingsServiceSpy: MockUserConfigurationService;
     let httpMock: HttpTestingController;
     let subscriptions: ArmSubscription[] = [];
 
     beforeEach(() => {
-        adalSpy = {
+        authSpy = {
             tenantsIds: new BehaviorSubject(["tenant-1", "tenant-2"]),
             accessTokenData: jasmine.createSpy("accessTokenData").and.callFake((id) => {
                 return of(tokens[id]);
@@ -88,7 +88,7 @@ describe("SubscriptionService", () => {
                         },
                     },
                 },
-                { provide: AdalService, useValue: adalSpy },
+                { provide: AuthService, useValue: authSpy },
             ],
         });
 
@@ -96,7 +96,7 @@ describe("SubscriptionService", () => {
 
         settingsServiceSpy = new MockUserConfigurationService({});
         service = new SubscriptionService(
-            tenantDetailsServiceSpy, TestBed.get(AzureHttpService), TestBed.get(AdalService), settingsServiceSpy);
+            tenantDetailsServiceSpy, TestBed.get(AzureHttpService), TestBed.get(AuthService), settingsServiceSpy);
         service.subscriptions.subscribe(x => subscriptions = x.toJS());
     });
 

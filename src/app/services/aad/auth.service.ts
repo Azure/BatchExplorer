@@ -6,13 +6,13 @@ import { NotificationService } from "@batch-flask/ui";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { AADResourceName } from "client/azure-environment";
 import { AADService } from "client/core/aad";
-import { AADUser } from "client/core/aad/adal/aad-user";
+import { AADUser } from "client/core/aad/auth/aad-user";
 import { Constants } from "common";
 import { Observable, from, throwError } from "rxjs";
 import { catchError, publishReplay, refCount } from "rxjs/operators";
 
 @Injectable({ providedIn: "root" })
-export class AdalService implements OnDestroy {
+export class AuthService implements OnDestroy {
     public tenantsIds: Observable<string[]>;
     public currentUser: Observable<AADUser>;
 

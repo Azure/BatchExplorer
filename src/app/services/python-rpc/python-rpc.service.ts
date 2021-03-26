@@ -7,7 +7,7 @@ import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { PythonRpcServerProcess } from "client/python-process";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, forkJoin, of } from "rxjs";
 import { catchError, delay, first, retryWhen, share, switchMap, take, tap } from "rxjs/operators";
-import { AdalService } from "../adal";
+import { AuthService } from "../aad";
 import { BatchAccountService } from "../batch-account";
 
 @Injectable({ providedIn: "root" })
@@ -22,7 +22,7 @@ export class PythonRpcService {
 
     constructor(
         private accountService: BatchAccountService,
-        private adalService: AdalService,
+        private authService: AuthService,
         private _zone: NgZone,
         private batchExplorer: BatchExplorerService,
     ) {
@@ -144,8 +144,8 @@ export class PythonRpcService {
                 }
             }),
             switchMap((account: ArmBatchAccount) => {
-                const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, "batch");
-                const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, "arm");
+                const batchToken = this.authService.accessTokenFor(account.subscription.tenantId, "batch");
+                const armToken = this.authService.accessTokenFor(account.subscription.tenantId, "arm");
                 return forkJoin(batchToken, armToken).pipe(
                     first(),
                     switchMap(([batchToken, armToken]) => {

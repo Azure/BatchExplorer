@@ -28,7 +28,7 @@ export * from "./resource-access";
 export * from "./ssh-key.service";
 export * from "./subscription";
 export * from "./compute";
-export * from "./adal";
+export * from "./aad";
 export * from "./python-rpc";
 export * from "./storage-account.service";
 export * from "./predefined-formula.service";

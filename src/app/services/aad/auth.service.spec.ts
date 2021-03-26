@@ -1,5 +1,5 @@
 import { AccessToken, ServerError } from "@batch-flask/core";
-import { AdalService } from "app/services/adal";
+import { AuthService } from "app/services/aad";
 import { DateTime } from "luxon";
 import { BehaviorSubject } from "rxjs";
 
@@ -15,8 +15,8 @@ const token1 = new AccessToken({
     refresh_token: "foorefresh",
 });
 
-describe("AdalService spec", () => {
-    let service: AdalService;
+describe("AuthService spec", () => {
+    let service: AuthService;
     let aadServiceSpy;
     let remoteSpy;
     let batchExplorerSpy;
@@ -42,7 +42,7 @@ describe("AdalService spec", () => {
         zoneSpy = {
             run: jasmine.createSpy("zone.run").and.callFake(callback => callback()),
         };
-        service = new AdalService(zoneSpy, batchExplorerSpy, remoteSpy, notificationServiceSpy);
+        service = new AuthService(zoneSpy, batchExplorerSpy, remoteSpy, notificationServiceSpy);
     });
 
     afterEach(() => {
@@ -129,7 +129,7 @@ describe("AdalService spec", () => {
         });
     });
 
-    it("updates the tenants ids when updated by the adal service", () => {
+    it("updates the tenants ids when updated by the auth service", () => {
         let tenantIds;
         service.tenantsIds.subscribe(x => tenantIds = x);
         expect(zoneSpy.run).toHaveBeenCalledTimes(1);

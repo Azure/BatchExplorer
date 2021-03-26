@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { AccessToken, HttpInterface, HttpMethod, HttpRequestOptions, RetryableHttpCode, ServerError,
  } from "@batch-flask/core";
 import { ArmBatchAccount } from "app/models";
-import { AdalService } from "app/services/adal";
+import { AuthService } from "app/services/aad";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
@@ -24,7 +24,7 @@ function mergeOptions(original: HttpRequestOptions, body?: any): HttpRequestOpti
 export class AppInsightsApiService implements HttpInterface {
     constructor(
         private http: HttpClient,
-        private adal: AdalService,
+        private auth: AuthService,
         private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
     }
@@ -54,7 +54,7 @@ export class AppInsightsApiService implements HttpInterface {
                 }
             }),
             switchMap((account: ArmBatchAccount) => {
-                return this.adal.accessTokenData(account.subscription.tenantId, "appInsights");
+                return this.auth.accessTokenData(account.subscription.tenantId, "appInsights");
             }),
             switchMap((accessToken) => {
                 options = this._setupRequestOptions(options, accessToken);

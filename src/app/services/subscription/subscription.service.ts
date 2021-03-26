@@ -11,7 +11,7 @@ import {
     distinctUntilChanged, expand, filter, first, flatMap, map,
     publishReplay, reduce, refCount, shareReplay, switchMap, takeUntil,
 } from "rxjs/operators";
-import { AdalService } from "../adal";
+import { AuthService } from "../aad";
 import { AzureHttpService } from "../azure-http.service";
 import { ArmListResponse } from "../core";
 import { TenantDetailsService } from "../tenant-details.service";
@@ -28,7 +28,7 @@ export class SubscriptionService implements OnDestroy {
     constructor(
         private tenantDetailsService: TenantDetailsService,
         private azure: AzureHttpService,
-        private adal: AdalService,
+        private auth: AuthService,
         private settingsService: UserConfigurationService<BEUserConfiguration>) {
 
         const ignoredPatterns = this.settingsService.watch("subscriptions").pipe(
@@ -62,7 +62,7 @@ export class SubscriptionService implements OnDestroy {
     }
 
     public load(): Observable<any> {
-        const obs = this.adal.tenantsIds.pipe(
+        const obs = this.auth.tenantsIds.pipe(
             filter(ids => ids.length > 0),
             first(),
             switchMap((tenantIds) => {

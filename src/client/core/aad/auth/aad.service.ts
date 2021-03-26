@@ -22,7 +22,7 @@ import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutErro
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
 
-const adalConfig: AADConfig = {
+const aadConfig: AADConfig = {
     tenant: "common",
     clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
     redirectUri: "urn:ietf:wg:oauth:2.0:oob",
@@ -58,8 +58,8 @@ export class AADService {
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenantsIds = this._tenantsIds.asObservable();
-        this.userAuthorization = new AuthenticationService(this.app, adalConfig);
-        this._accessTokenService = new AccessTokenService(properties, adalConfig);
+        this.userAuthorization = new AuthenticationService(this.app, aadConfig);
+        this._accessTokenService = new AccessTokenService(properties, aadConfig);
         this.authenticationState = this._authenticationState.asObservable();
 
         ipcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
