@@ -32,7 +32,10 @@
           "hidden": false,
           "group": "Debug",
           "order": 20
-      }
+      },
+      "skipFiles": [
+        "${workspaceFolder}/node_modules/**"
+      ]
     },
     {
       "name": "Attach: Renderer",
@@ -48,7 +51,10 @@
         "hidden": false,
         "group": "Debug",
         "order": 30
-      }
+      },
+      "skipFiles": [
+        "${workspaceFolder}/node_modules/**"
+      ]
     },
     {
       "name": "Test: Client",
