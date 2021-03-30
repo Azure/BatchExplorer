@@ -15,9 +15,7 @@ import { Deferred } from "common/deferred";
 import { dialog } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
-import {
-    AccessTokenService,
-} from "../access-token";
+import { AccessTokenService } from "../access-token";
 import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError } from "../authentication";
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
@@ -53,7 +51,8 @@ export class AADService {
         private properties: BatchExplorerProperties,
         private telemetryManager: TelemetryManager,
         secureStore: SecureDataStore,
-        ipcMain: BlIpcMain) {
+        ipcMain: BlIpcMain
+    ) {
         this._tokenCache = new AccessTokenCache(secureStore);
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
@@ -195,12 +194,10 @@ export class AADService {
         try {
 
             const result = await this._authorizeUser(tenantId, forceReLogin);
-            this._processUserToken(result.id_token);
-            const tid = tenantId === "common" ? this._currentUser.value!.tid : tenantId;
-            const token = await this._accessTokenService.redeem(resource, tid!, result.code);
-            this._processAccessToken(tenantId, resource, token);
+            const token = result.id_token;
+            this._processUserToken(token);
             delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
-            defer.resolve(token);
+            defer.resolve(new AccessToken(null));
 
         } catch (e) {
             log.error(`Error redeem auth code for a token for resource ${resource}`, e);
@@ -226,7 +223,8 @@ export class AADService {
     private async _useRefreshToken(
         tenantId: string,
         resource: AADResourceName,
-        refreshToken: string): Promise<AccessToken> {
+        refreshToken: string
+    ): Promise<AccessToken> {
         try {
             const token = await this._accessTokenService.refresh(resource, tenantId, refreshToken);
             this._processAccessToken(tenantId, resource, token);
