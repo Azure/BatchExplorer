@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import * as AADConstants from "../aad-constants";
 import AuthProvider from "../auth-provider";
+import {AADResourceName, AzurePublic} from "client/azure-environment";
 
 enum AuthorizePromptType {
     login = "login",
@@ -130,8 +131,7 @@ export class AuthenticationService {
             return;
         }
         const { tenantId, silent } = this._currentAuthorization = this._authorizeQueue.shift();
-        await this._authProvider.getToken((url: string) => {
-            const authWindow = this.app.authenticationWindow;
+        await this._authProvider.getToken(AzurePublic.arm + '/', (url: string) => {
             this._loadAuthWindow(url, { show: true });
             this._state.next(AuthenticationState.UserInput);
             return this._currentAuthorization.deferred.promise;

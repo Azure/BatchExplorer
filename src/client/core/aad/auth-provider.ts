@@ -6,6 +6,7 @@ import {
     PublicClientApplication
  } from "@azure/msal-node";
 import { MSALAccessTokenCache } from "app/services/aad/msal-token-cache";
+import {AADResourceName} from "client/azure-environment";
 import { BatchExplorerApplication } from "..";
 import { AADConfig } from "./aad-config";
 
@@ -35,8 +36,6 @@ export default class AuthProvider {
         };
 
         this._client = new PublicClientApplication(msalConfig);
-
-        this._configureScopes();
     }
 
     /**
@@ -47,12 +46,12 @@ export default class AuthProvider {
      *
      * @param authCodeCallback Handles interactive authentication code retrieval
      */
-    public async getToken(authCodeCallback: (url: string) => Promise<string>):
+    public async getToken(resourceURI: string, authCodeCallback: (url: string) => Promise<string>):
     Promise<void> {
         if (this._account) {
             await this._client.acquireTokenSilent({
                 account: this._account,
-                scopes: this._scopes
+                scopes: this._getScopes(resourceURI)
             });
         } else {
             const url = await this._client.getAuthCodeUrl(this._authRequest());
@@ -77,15 +76,8 @@ export default class AuthProvider {
         }
     }
 
-    private _configureScopes(): void {
-        this._scopes = [];
-        MSAL_SCOPES.forEach(scope => {
-            this._scopes.push(`${this.app.properties.azureEnvironment.arm}/${scope}`);
-            this._scopes.push(`${this.app.properties.azureEnvironment.batch}/${scope}`);
-            this._scopes.push(`${this.app.properties.azureEnvironment.aadGraph}/${scope}`);
-            this._scopes.push(`${this.app.properties.azureEnvironment.msGraph}/${scope}`);
-            this._scopes.push(`${this.app.properties.azureEnvironment.appInsights}/${scope}`);
-        });
+    private _getScopes(resourceURI: string): string[] {
+        return MSAL_SCOPES.map(scope => `${resourceURI}/${scope}`);
     }
 
     private _authRequest() {
