@@ -34,6 +34,7 @@
           "order": 20
       },
       "skipFiles": [
+        "<node_internals>/**",
         "${workspaceFolder}/node_modules/**"
       ]
     },
@@ -53,6 +54,7 @@
         "order": 30
       },
       "skipFiles": [
+        "<node_internals>/**",
         "${workspaceFolder}/node_modules/**"
       ]
     },
