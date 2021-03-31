@@ -12,6 +12,8 @@ import { AADConfig } from "./aad-config";
 
 const MSAL_SCOPES = ["user_impersonation"];
 
+export type AuthorizationResult = AuthenticationResult;
+
 /**
  * Provides authentication services
  */
@@ -31,7 +33,7 @@ export default class AuthProvider {
                     this.config.tenant // URL already terminates with '/'
             },
             cache: {
-                cachePlugin: new MSALAccessTokenCache()
+                // cachePlugin: new MSALAccessTokenCache()
             }
         };
 
@@ -47,20 +49,23 @@ export default class AuthProvider {
      * @param authCodeCallback Handles interactive authentication code retrieval
      */
     public async getToken(resourceURI: string, authCodeCallback: (url: string) => Promise<string>):
-    Promise<void> {
+    Promise<AuthorizationResult> {
         if (this._account) {
             await this._client.acquireTokenSilent({
                 account: this._account,
                 scopes: this._getScopes(resourceURI)
             });
         } else {
-            const url = await this._client.getAuthCodeUrl(this._authRequest());
+            const authRequest = this._authRequest(resourceURI);
+            const url = await this._client.getAuthCodeUrl(authRequest);
             const authCode = await authCodeCallback(url);
-            const result: AuthenticationResult =
-                await this._client.acquireTokenByCode({
-                    ...this._authRequest(),
-                    code: authCode
-                });
+            const request = {
+                ...authRequest,
+                code: authCode
+            };
+            const result: AuthorizationResult =
+                await this._client.acquireTokenByCode(request);
+            return result;
         }
     }
 
@@ -80,9 +85,9 @@ export default class AuthProvider {
         return MSAL_SCOPES.map(scope => `${resourceURI}/${scope}`);
     }
 
-    private _authRequest() {
+    private _authRequest(resourceURI: string) {
         return {
-            scopes: this._scopes,
+            scopes: this._getScopes(resourceURI),
             redirectUri: this.config.redirectUri
         }
     }

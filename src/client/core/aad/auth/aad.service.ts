@@ -188,29 +188,29 @@ export class AADService {
     /**
      * Load a new access token from the authorization code given at login
      */
-    private async _redeemNewAccessToken(tenantId: string, resource: AADResourceName, forceReLogin = false) {
+    private async _redeemNewAccessToken(tenantId: string, resource: AADResourceName) {
         const defer = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
 
         try {
 
-            const result = await this._authorizeUser(tenantId, forceReLogin);
-            const token = result.id_token;
-            this._processUserToken(token);
+            const result: AuthorizeResult =
+                await this.userAuthorization.authorize(tenantId, false);
+            this._processUserToken(result.idToken);
             delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
-            defer.resolve(new AccessToken(null));
+            defer.resolve(new AccessToken({
+                access_token: result.accessToken,
+                refresh_token: null,
+                token_type: result.tokenType,
+                expires_in: null,
+                expires_on: result.expiresOn,
+                ext_expires_in: null,
+                not_before: null
+            }));
 
         } catch (e) {
             log.error(`Error redeem auth code for a token for resource ${resource}`, e);
             delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
             defer.reject(e);
-        }
-    }
-
-    private async _authorizeUser(tenantId, forceReLogin): Promise<AuthorizeResult> {
-        if (forceReLogin) {
-            return this.userAuthorization.authorize(tenantId, false);
-        } else {
-            return this.userAuthorization.authorizeTrySilentFirst(tenantId);
         }
     }
 
