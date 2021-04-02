@@ -57,12 +57,14 @@ export class AADService {
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenantsIds = this._tenantsIds.asObservable();
-        this.userAuthorization = new AuthenticationService(this.app, aadConfig);
+        this.userAuthorization =
+            new AuthenticationService(this.app, aadConfig);
         this._accessTokenService = new AccessTokenService(properties, aadConfig);
         this.authenticationState = this._authenticationState.asObservable();
 
-        ipcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
-            return this.accessTokenData(tenantId, resource);
+        ipcMain.on(IpcEvent.AAD.accessTokenData, async ({ tenantId, resource }) => {
+            const token = await this.accessTokenData(tenantId, resource);
+            return token;
         });
 
         this.userAuthorization.state.subscribe((state) => {
@@ -194,7 +196,10 @@ export class AADService {
         try {
 
             const result: AuthorizeResult =
-                await this.userAuthorization.authorize(tenantId, false);
+                await this.userAuthorization.authorizeResource(
+                    tenantId,
+                    this.properties.azureEnvironment[resource as string]
+                );
             this._processUserToken(result.idToken);
             delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
             defer.resolve(new AccessToken({

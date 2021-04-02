@@ -5,12 +5,10 @@ import {
     Configuration,
     PublicClientApplication
  } from "@azure/msal-node";
-import { MSALAccessTokenCache } from "app/services/aad/msal-token-cache";
-import {AADResourceName} from "client/azure-environment";
 import { BatchExplorerApplication } from "..";
 import { AADConfig } from "./aad-config";
 
-const MSAL_SCOPES = ["user_impersonation"];
+const MSAL_SCOPES = [".default"];
 
 export type AuthorizationResult = AuthenticationResult;
 
@@ -18,9 +16,8 @@ export type AuthorizationResult = AuthenticationResult;
  * Provides authentication services
  */
 export default class AuthProvider {
-    private _client: ClientApplication;
+    private _clients: StringMap<ClientApplication> = {};
     private _account: AccountInfo;
-    private _scopes: string[];
 
     constructor(
         private app: BatchExplorerApplication,
@@ -31,13 +28,10 @@ export default class AuthProvider {
                 clientId: this.config.clientId,
                 authority: this.app.properties.azureEnvironment.aadUrl +
                     this.config.tenant // URL already terminates with '/'
-            },
-            cache: {
-                // cachePlugin: new MSALAccessTokenCache()
             }
         };
 
-        this._client = new PublicClientApplication(msalConfig);
+        this._clients["common"] = new PublicClientApplication(msalConfig);
     }
 
     /**
@@ -48,25 +42,48 @@ export default class AuthProvider {
      *
      * @param authCodeCallback Handles interactive authentication code retrieval
      */
-    public async getToken(resourceURI: string, authCodeCallback: (url: string) => Promise<string>):
-    Promise<AuthorizationResult> {
+    public async getToken(
+        tenantId: string,
+        resourceURI: string,
+        authCodeCallback: (url: string) => Promise<string>
+    ): Promise<AuthorizationResult> {
+        tenantId = "common";
+        const client = this._getClient(tenantId);
         if (this._account) {
-            await this._client.acquireTokenSilent({
+            const scopes = this._getScopes(resourceURI);
+            return await client.acquireTokenSilent({
                 account: this._account,
-                scopes: this._getScopes(resourceURI)
+                scopes
             });
         } else {
             const authRequest = this._authRequest(resourceURI);
-            const url = await this._client.getAuthCodeUrl(authRequest);
+            const url = await client.getAuthCodeUrl(authRequest);
             const authCode = await authCodeCallback(url);
             const request = {
                 ...authRequest,
                 code: authCode
             };
             const result: AuthorizationResult =
-                await this._client.acquireTokenByCode(request);
+                await client.acquireTokenByCode(request);
+            this._account = result.account;
             return result;
         }
+    }
+
+    private _getClient(tenantId: string) {
+        if (tenantId in this._clients) {
+            return this._clients[tenantId];
+        }
+        const msalConfig: Configuration = {
+            auth: {
+                clientId: this.config.clientId,
+                authority: this.app.properties.azureEnvironment.aadUrl +
+                    tenantId // URL already terminates with '/'
+            }
+        };
+
+        this._clients[tenantId] = new PublicClientApplication(msalConfig);
+        return this._clients[tenantId];
     }
 
     public logout(): void {
@@ -75,14 +92,17 @@ export default class AuthProvider {
 
     private async _removeAccount(): Promise<void> {
         if (this._account) {
-            const cache = this._client.getTokenCache();
+            const cache = this._clients["common"].getTokenCache();
             cache.removeAccount(this._account);
             this._account = null;
         }
     }
 
     private _getScopes(resourceURI: string): string[] {
-        return MSAL_SCOPES.map(scope => `${resourceURI}/${scope}`);
+        if (resourceURI.startsWith(this.app.properties.azureEnvironment.arm)) {
+            resourceURI += "/";
+        }
+        return MSAL_SCOPES.map(scope => `${resourceURI}${scope}`);
     }
 
     private _authRequest(resourceURI: string) {

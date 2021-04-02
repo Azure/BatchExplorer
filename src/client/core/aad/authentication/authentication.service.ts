@@ -6,7 +6,6 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import * as AADConstants from "../aad-constants";
 import AuthProvider, { AuthorizationResult } from "../auth-provider";
-import {AADResourceName, AzurePublic} from "client/azure-environment";
 
 export interface AuthorizeResult extends AuthorizationResult {
     code: string;
@@ -81,7 +80,14 @@ export class AuthenticationService {
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
     public async authorize(tenantId: string, silent = false): Promise<AuthorizeResult> {
-        return await this._authorizeNext();
+        return this.authorizeResource(
+            tenantId, this.app.properties.azureEnvironment.arm
+        );
+    }
+
+    public async authorizeResource(tenantId: string, resourceURI: string):
+    Promise<AuthorizeResult> {
+        return await this._authorizeNext(tenantId, resourceURI);
     }
 
     /**
@@ -112,9 +118,10 @@ export class AuthenticationService {
         return deferred.promise;
     }
 
-    private async _authorizeNext(): Promise<AuthorizeResult> {
+    private async _authorizeNext(tenantId: string, resourceURI: string):
+    Promise<AuthorizeResult> {
         this._authCodeDeferred = new Deferred<string>();
-        const authResult: AuthorizationResult = await this._authProvider.getToken(AzurePublic.arm, async (url: string) => {
+        const authResult: AuthorizationResult = await this._authProvider.getToken(tenantId, resourceURI, async (url: string) => {
             this._loadAuthWindow(url, { show: true });
             this._state.next(AuthenticationState.UserInput);
             return await this._authCodeDeferred.promise;
