@@ -9,6 +9,7 @@
       "program": "${workspaceRoot}/src/client/main.ts",
       "stopOnEntry": false,
       "args": [
+        "--inspect=9223",
         "--remote-debugging-port=9222",
         "--nolazy"
       ],
@@ -42,7 +43,7 @@
       "name": "Attach: Renderer",
       "type": "chrome",
       "request": "attach",
-      "port": 9222,
+      "port": 9223,
       "sourceMaps": true,
       "trace": "verbose",
       "url": "file://*",
