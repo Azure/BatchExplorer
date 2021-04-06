@@ -9,8 +9,7 @@
       "program": "${workspaceRoot}/src/client/main.ts",
       "stopOnEntry": false,
       "args": [
-        "--inspect=9223",
-        "--remote-debugging-port=9222",
+        "--remote-debugging-port=9292",
         "--nolazy"
       ],
       "cwd": "${workspaceRoot}",
@@ -43,10 +42,10 @@
       "name": "Attach: Renderer",
       "type": "chrome",
       "request": "attach",
-      "port": 9223,
+      "port": 9292,
       "sourceMaps": true,
       "trace": "verbose",
-      "url": "file://*",
+      "urlFilter": "file://*",
       "webRoot": "${workspaceRoot}/build",
       "timeout": 30000,
       "presentation": {
