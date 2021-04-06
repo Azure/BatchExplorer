@@ -8,7 +8,7 @@ import {
 import { BatchExplorerApplication } from "..";
 import { AADConfig } from "./aad-config";
 
-const MSAL_SCOPES = [".default"];
+const MSAL_SCOPES = ["user_impersonation"];
 
 export type AuthorizationResult = AuthenticationResult;
 
@@ -16,7 +16,7 @@ export type AuthorizationResult = AuthenticationResult;
  * Provides authentication services
  */
 export default class AuthProvider {
-    private _clients: StringMap<ClientApplication> = {};
+    private _client: ClientApplication;
     private _account: AccountInfo;
 
     constructor(
@@ -31,7 +31,7 @@ export default class AuthProvider {
             }
         };
 
-        this._clients["common"] = new PublicClientApplication(msalConfig);
+        this._client = new PublicClientApplication(msalConfig);
     }
 
     /**
@@ -43,47 +43,28 @@ export default class AuthProvider {
      * @param authCodeCallback Handles interactive authentication code retrieval
      */
     public async getToken(
-        tenantId: string,
         resourceURI: string,
         authCodeCallback: (url: string) => Promise<string>
     ): Promise<AuthorizationResult> {
-        tenantId = "common";
-        const client = this._getClient(tenantId);
         if (this._account) {
             const scopes = this._getScopes(resourceURI);
-            return await client.acquireTokenSilent({
+            return await this._client.acquireTokenSilent({
                 account: this._account,
                 scopes
             });
         } else {
             const authRequest = this._authRequest(resourceURI);
-            const url = await client.getAuthCodeUrl(authRequest);
+            const url = await this._client.getAuthCodeUrl(authRequest);
             const authCode = await authCodeCallback(url);
             const request = {
                 ...authRequest,
                 code: authCode
             };
             const result: AuthorizationResult =
-                await client.acquireTokenByCode(request);
+                await this._client.acquireTokenByCode(request);
             this._account = result.account;
             return result;
         }
-    }
-
-    private _getClient(tenantId: string) {
-        if (tenantId in this._clients) {
-            return this._clients[tenantId];
-        }
-        const msalConfig: Configuration = {
-            auth: {
-                clientId: this.config.clientId,
-                authority: this.app.properties.azureEnvironment.aadUrl +
-                    tenantId // URL already terminates with '/'
-            }
-        };
-
-        this._clients[tenantId] = new PublicClientApplication(msalConfig);
-        return this._clients[tenantId];
     }
 
     public logout(): void {
@@ -92,7 +73,7 @@ export default class AuthProvider {
 
     private async _removeAccount(): Promise<void> {
         if (this._account) {
-            const cache = this._clients["common"].getTokenCache();
+            const cache = this._client.getTokenCache();
             cache.removeAccount(this._account);
             this._account = null;
         }

@@ -121,11 +121,15 @@ export class AuthenticationService {
     private async _authorizeNext(tenantId: string, resourceURI: string):
     Promise<AuthorizeResult> {
         this._authCodeDeferred = new Deferred<string>();
-        const authResult: AuthorizationResult = await this._authProvider.getToken(tenantId, resourceURI, async (url: string) => {
-            this._loadAuthWindow(url, { show: true });
-            this._state.next(AuthenticationState.UserInput);
-            return await this._authCodeDeferred.promise;
-        });
+        const authResult: AuthorizationResult =
+            await this._authProvider.getToken(
+                resourceURI,
+                async (url: string) => {
+                    this._loadAuthWindow(url, { show: true });
+                    this._state.next(AuthenticationState.UserInput);
+                    return await this._authCodeDeferred.promise;
+                }
+            );
         this._state.next(AuthenticationState.Authenticated);
         return {
             ...authResult,
@@ -135,7 +139,9 @@ export class AuthenticationService {
         } as AuthorizeResult
     }
 
-    private _loadAuthWindow(url: string, opts?: { show?: boolean, clear?: boolean }) {
+    private _loadAuthWindow(
+        url: string, opts?: { show?: boolean, clear?: boolean }
+    ) {
         const authWindow = this.app.authenticationWindow;
         authWindow.create();
         this._setupEvents();

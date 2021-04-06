@@ -3,6 +3,7 @@ import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/electron";
 import { wrapMainObservable } from "@batch-flask/electron/utils";
 import { NotificationService } from "@batch-flask/ui";
+import { TenantDetails } from "app/models";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { AADResourceName } from "client/azure-environment";
 import { AADService } from "client/core/aad";
@@ -13,7 +14,7 @@ import { catchError, publishReplay, refCount } from "rxjs/operators";
 
 @Injectable({ providedIn: "root" })
 export class AuthService implements OnDestroy {
-    public tenantsIds: Observable<string[]>;
+    public tenants: Observable<TenantDetails[]>;
     public currentUser: Observable<AADUser>;
 
     private _aadService: AADService;
@@ -28,7 +29,7 @@ export class AuthService implements OnDestroy {
         this._aadService = batchExplorer.aadService;
 
         this.currentUser = wrapMainObservable(this._aadService.currentUser, zone);
-        this.tenantsIds = wrapMainObservable(this._aadService.tenantsIds, zone).pipe(
+        this.tenants = wrapMainObservable(this._aadService.tenants, zone).pipe(
             catchError((error) => {
                 const serverError = new ServerError(error);
                 this.notificationService.error(

@@ -2,6 +2,7 @@
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { AccessToken, AccessTokenCache, DataStore, ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
+import { TenantDetails } from "app/models";
 import { AADResourceName, AzurePublic } from "client/azure-environment";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BlIpcMain } from "client/core/bl-ipc-main";
@@ -31,7 +32,7 @@ const aadConfig: AADConfig = {
 export class AADService {
     public currentUser: Observable<AADUser | null>;
 
-    public tenantsIds: Observable<string[]>;
+    public tenants: Observable<TenantDetails[]>;
 
     public userAuthorization: AuthenticationService;
     public authenticationState: Observable<AuthenticationState | null>;
@@ -42,7 +43,7 @@ export class AADService {
     private _newAccessTokenSubject: StringMap<Deferred<AccessToken>> = {};
 
     private _currentUser = new BehaviorSubject<AADUser | null>(null);
-    private _tenantsIds = new BehaviorSubject<string[]>([]);
+    private _tenants = new BehaviorSubject<TenantDetails[]>([]);
     private _tokenCache: AccessTokenCache;
 
     constructor(
@@ -56,15 +57,14 @@ export class AADService {
         this._tokenCache = new AccessTokenCache(secureStore);
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
-        this.tenantsIds = this._tenantsIds.asObservable();
+        this.tenants = this._tenants.asObservable();
         this.userAuthorization =
             new AuthenticationService(this.app, aadConfig);
         this._accessTokenService = new AccessTokenService(properties, aadConfig);
         this.authenticationState = this._authenticationState.asObservable();
 
         ipcMain.on(IpcEvent.AAD.accessTokenData, async ({ tenantId, resource }) => {
-            const token = await this.accessTokenData(tenantId, resource);
-            return token;
+            return await this.accessTokenData(tenantId, resource);
         });
 
         this.userAuthorization.state.subscribe((state) => {
@@ -95,7 +95,7 @@ export class AADService {
     public async logout() {
         await this.localStorage.removeItem(Constants.localStorageKey.currentUser);
         this._tokenCache.clear();
-        this._tenantsIds.next([]);
+        this._tenants.next([]);
         await this._clearUserSpecificCache();
         for (const [, window] of this.app.windows) {
             window.webContents.session.clearStorageData({ storages: ["localStorage"] });
@@ -137,13 +137,12 @@ export class AADService {
             }
         }
         try {
-            const tenantIds = await this._loadTenantIds();
+            const tenants = await this._loadTenants();
 
-            this._tenantsIds.next(tenantIds);
-            this._refreshAllAccessTokens();
+            this._tenants.next(tenants);
         } catch (error) {
             log.error("Error retrieving tenants", error);
-            this._tenantsIds.error(ServerError.fromARM(error));
+            this._tenants.error(ServerError.fromARM(error));
         }
     }
 
@@ -258,7 +257,7 @@ export class AADService {
         this._tokenCache.storeToken(tenantId, resource, token);
     }
 
-    private async _loadTenantIds(): Promise<string[]> {
+    private async _loadTenants(): Promise<TenantDetails[]> {
         const token = await this.accessTokenData("common");
 
         const headers = {
@@ -269,29 +268,13 @@ export class AADService {
         const response = await fetch(url, options);
         log.info("Listing tenants response", response.status, response.statusText);
         const { value } = await response.json();
-        return value.map(x => x.tenantId);
+        return value;
     }
 
     private async _clearUserSpecificCache() {
         this.localStorage.removeItem(Constants.localStorageKey.subscriptions);
         this.localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
         await this._tokenCache.clear();
-    }
-
-    private async _refreshAllAccessTokens() {
-        const tenantIds = this._tenantsIds.value;
-        for (const tenantId of tenantIds) {
-            for (const resource of this._resources()) {
-                await this._retrieveNewAccessToken(tenantId, resource);
-            }
-        }
-    }
-
-    private _resources(): AADResourceName[] {
-        return [
-            "arm",
-            "batch",
-        ];
     }
 
     private async _ensureTelemetryOptInNationalClouds() {
