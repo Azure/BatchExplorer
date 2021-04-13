@@ -24,12 +24,15 @@ const aggregationAttributes = {
     [MonitorChartAggregation.Avg]: "average",
     [MonitorChartAggregation.Sum]: "total",
 };
+
+let idCounter = 0;
 @Component({
     selector: "bl-monitor-chart",
     templateUrl: "monitor-chart.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
+    @Input() public headerId = `monitor-chart-header-id-${idCounter++}`;
     @Input() public chartType: ChartType = ChartType.Line;
     @Input() public metrics: MonitorChartType;
     @Input() public preview: boolean = false;
@@ -77,11 +80,11 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             }),
         );
 
-        const metrics = combineLatest(
+        const metrics = combineLatest([
             this._metrics.pipe(filter(isNotNullOrUndefined)),
             this._timeRange.pipe(filter(isNotNullOrUndefined)),
             this.accountService.currentAccountId,
-        ).pipe(
+        ]).pipe(
             takeUntil(this._destroy),
             tap(() => {
                 this.chartError = null;
