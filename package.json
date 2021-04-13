@@ -14,7 +14,7 @@
   },
   "author": {
     "name": "Microsoft Corporation",
-    "email": "tiguerin@microsoft.com"
+    "email": "batchexplorer@microsoft.com"
   },
   "version": "2.9.0",
   "main": "build/client/main.prod.js",
