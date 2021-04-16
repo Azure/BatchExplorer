@@ -35,6 +35,24 @@ bl-gallery {
         }
     }
 
+    .gallery-deprecation-warning {
+        > .warning {
+            background-color: #ffd9ad;
+            color: black;
+
+            > .summary-container {
+
+                &.standard {
+                    height: unset;
+                }
+
+                > .message {
+                    white-space: normal;
+                }
+            }
+        }
+    }
+
     .gallery-application-recent {
         margin: 0 auto;
         display: flex;
