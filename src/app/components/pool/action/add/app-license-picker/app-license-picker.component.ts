@@ -5,6 +5,7 @@ import {
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { ListSelection } from "@batch-flask/core/list";
+import { ElectronShell } from "@batch-flask/electron";
 import { TableConfig } from "@batch-flask/ui/table";
 import { ApplicationLicense } from "app/models";
 import { PricingService } from "app/services";
@@ -59,7 +60,8 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     constructor(
         private pricingService: PricingService,
         private changeDetector: ChangeDetectorRef,
-        private dialog: MatDialog) {
+        private dialog: MatDialog,
+        private electronShell: ElectronShell) {
     }
 
     public ngOnInit() {
@@ -149,5 +151,9 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
             });
         }));
         this.changeDetector.markForCheck();
+    }
+
+    public openLink(link: string) {
+        this.electronShell.openExternal(link, {activate: true});
     }
 }

@@ -35,9 +35,11 @@ bl-gallery {
         }
     }
 
+    // static colors for deprecation warnings
     .gallery-deprecation-warning {
         > .warning {
             background-color: var(--color-warn-50);
+            // using the color from var(--color-text-primary)
             color: #333333;
 
             > .summary-container {
@@ -54,7 +56,8 @@ bl-gallery {
     }
 
     .gallery-warning-alternative-link {
-        color: #1d54af; // using the color from var(--color-primary-800);
+        // using the color from var(--color-primary-800);
+        color: #1d54af;
     }
 
     .gallery-application-recent {
