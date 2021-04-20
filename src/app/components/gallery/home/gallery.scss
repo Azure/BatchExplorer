@@ -37,8 +37,8 @@ bl-gallery {
 
     .gallery-deprecation-warning {
         > .warning {
-            background-color: #ffd9ad;
-            color: black;
+            background-color: var(--color-warn-50);
+            color: #333333;
 
             > .summary-container {
 
@@ -51,6 +51,10 @@ bl-gallery {
                 }
             }
         }
+    }
+
+    .gallery-warning-alternative-link {
+        color: #1d54af; // using the color from var(--color-primary-800);
     }
 
     .gallery-application-recent {
