@@ -1,3 +1,20 @@
+# 2.9.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/43?closed=1)
+
+### feature:
+
+
+### bug:
+
+
+### other:
+
+* Fix high-severity accessibility issues [\#2287](https://github.com/Azure/BatchExplorer/issues/2287)
+* Prepare for release of version 2.9.0 [\#2285](https://github.com/Azure/BatchExplorer/issues/2285)
+* Virtual Machine Sizes A8-A11 Will be Retired [\#2278](https://github.com/Azure/BatchExplorer/issues/2278)
+* Image preview is broken in Task Output [\#2274](https://github.com/Azure/BatchExplorer/issues/2274)
+* Cannot download task output files [\#2272](https://github.com/Azure/BatchExplorer/issues/2272)
+
 # Release History
 
 ## 2.9.0

@@ -108,12 +108,13 @@ async function updateChangeLog(version, millestoneId) {
     const changelogFile = path.join(root, "CHANGELOG.md");
     const changelogContent = fs.readFileSync(changelogFile);
 
-    if (changelogContent.indexOf(`## ${version}`) === -1) {
-        fs.writeFileSync(changelogFile, `${stdout}\n${changelogContent}`);
-        success("Added changes to the changelog");
-    } else {
-        success("Changelog already contains the changes for this version");
-    }
+    // if (changelogContent.indexOf(`## ${version}`) === -1) {
+    fs.writeFileSync(changelogFile, `${stdout}\n${changelogContent}`);
+    success("Added changes to the changelog");
+    // }
+    // else {
+    //     success("Changelog already contains the changes for this version");
+    // }
 }
 
 async function updateThirdParty() {
