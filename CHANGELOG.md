@@ -1,7 +1,8 @@
 # 2.9.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/43?closed=1)
 
-### feature:
+### feature
 
 * Switch to Resource Sku API for VM size retrieval [\#2300](https://github.com/Azure/BatchExplorer/issues/2300)
 
