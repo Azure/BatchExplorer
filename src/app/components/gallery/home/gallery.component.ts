@@ -128,4 +128,8 @@ export class GalleryComponent implements OnInit, OnDestroy {
     private _getRepoUrl(repo: string, branch: string, path: string) {
         return `${Constants.ServiceUrl.github}/${repo}/tree/${branch}/${path}`;
     }
+
+    public openLink(link: string) {
+        this.electronShell.openExternal(link, {activate: true});
+    }
 }

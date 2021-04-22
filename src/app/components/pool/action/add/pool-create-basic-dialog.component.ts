@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, ValidationErrors, Validators } from "@angular/forms";
 import { DynamicForm, autobind } from "@batch-flask/core";
+import { ElectronShell } from "@batch-flask/electron";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -12,6 +13,8 @@ import { NumberUtils } from "app/utils";
 import { Constants } from "common";
 import { Observable, Subscription, of } from "rxjs";
 import { map } from "rxjs/operators";
+
+import "./pool-create-basic-dialog.scss";
 
 @Component({
     selector: "bl-pool-create-basic-dialog",
@@ -53,7 +56,8 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private pricingService: PricingService,
         private vmSizeService: VmSizeService,
         changeDetector: ChangeDetectorRef,
-        private notificationService: NotificationService) {
+        private notificationService: NotificationService,
+        private electronShell: ElectronShell) {
 
         super(PoolCreateDto);
         this._setComplexFormConfig();
@@ -214,5 +218,9 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 fromDto: (value) => this.dtoToForm(value),
             },
         };
+    }
+
+    public openLink(link: string) {
+        this.electronShell.openExternal(link, {activate: true});
     }
 }
