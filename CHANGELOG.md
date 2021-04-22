@@ -1,3 +1,22 @@
+# 2.10.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/44?closed=1)
+
+### feature:
+
+
+### bug:
+
+
+### other:
+
+* Simplify ESLint [\#2312](https://github.com/Azure/BatchExplorer/issues/2312)
+* Add markdown linting [\#2311](https://github.com/Azure/BatchExplorer/issues/2311)
+* Add undocked mode for devtools to fix freezing issue [\#2310](https://github.com/Azure/BatchExplorer/issues/2310)
+* Add deprecation warnings for cloud service pools, graphics and rendering images, and pay-for-use licensing [\#2309](https://github.com/Azure/BatchExplorer/issues/2309)
+* Switch to Typescript in upload-to-storage [\#2308](https://github.com/Azure/BatchExplorer/issues/2308)
+* Switch to Resource Sku API for VM size retrieval [\#2300](https://github.com/Azure/BatchExplorer/issues/2300)
+* Cannot select Vray RT Software License [\#2273](https://github.com/Azure/BatchExplorer/issues/2273)
+
 # Release History
 
 ## 2.9.0
