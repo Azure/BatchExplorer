@@ -1,18 +1,24 @@
-# Release History
-
-## 2.9.0
+# 2.9.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/43?closed=1)
+
+### feature
+
+* Switch to Resource Sku API for VM size retrieval [\#2300](https://github.com/Azure/BatchExplorer/issues/2300)
 
 ### bug
 
 * Image preview in Task Output was broken [\#2274](https://github.com/Azure/BatchExplorer/issues/2274)
 * Cannot download task output files [\#2272](https://github.com/Azure/BatchExplorer/issues/2272)
 * Addresses high-severity accessibility issues [\#2287](https://github.com/Azure/BatchExplorer/pull/2287)
+* Cannot select Vray RT Software License [\#2273](https://github.com/Azure/BatchExplorer/issues/2273)
 
 ### other
 
 * Virtual Machine Sizes A8-A11 will be retired [\#2278](https://github.com/Azure/BatchExplorer/issues/2278)
+* Add deprecation warnings for cloud service pools, graphics and rendering images, and pay-for-use licensing [\#2309](https://github.com/Azure/BatchExplorer/issues/2309)
+
+# Release History
 
 ## 2.8.0
 

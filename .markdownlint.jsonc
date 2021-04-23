@@ -2,6 +2,9 @@
     // Use defaults for all rules
     "default": true,
 
+    // Header levels should only increment by one level at a time
+    "MD001": false,
+
     // Unordered list indentation
     "MD007": { "indent": 4 },
 
@@ -10,6 +13,9 @@
 
     // Duplicate headings
     "MD024": false,
+
+    // Multiple top level headers in the same document
+    "MD025": false,
 
     // Emphasis used instead of a heading
     "MD036": false
