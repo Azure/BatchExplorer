@@ -13,7 +13,7 @@
     </div>
 </div>
 <button class="select-version" [matMenuTriggerFor]="menu" title="Select version">
-    <i class="fa fa-cog" aria-label="Select version"></i>
+    <i class="fa fa-cog" aria-hidden="true"></i>
 </button>
 <mat-menu #menu="matMenu">
     <button mat-menu-item *ngFor="let sku of skus;trackBy: trackSku" (click)="onClickSku(sku)">{{sku.name}}</button>
