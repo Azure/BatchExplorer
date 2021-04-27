@@ -5,6 +5,9 @@
         [attr.for]="control.id"
         [attr.aria-owns]="control.id">
         {{control.placeholder}}
+        <sup *ngIf="control.required">
+            <i class="fa fa-asterisk" aria-hidden="true"></i>
+        </sup>
     </label>
 </div>
 <div class="input-container">
