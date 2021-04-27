@@ -28,6 +28,11 @@ bl-form-field {
         // Having this opacity make contrast ratio too loos
         // opacity: 0.5;
     }
+
+    .fa-asterisk {
+        color: var(--color-danger);
+        font-size: 8px;
+    }
 }
 
 bl-form-field {
