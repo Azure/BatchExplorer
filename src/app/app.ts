@@ -1,4 +1,3 @@
-/* eslint-disable import/order */
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { ipcRenderer, remote } from "electron";
 

@@ -14,8 +14,8 @@ export interface ListResponse<TEntity> {
     nextLink: ContinuationToken | null;
 }
 
-export interface ListGetterConfig<TEntity extends Record<any>, TParams> extends GenericGetterConfig<TEntity, TParams> {
-}
+export type ListGetterConfig<TEntity extends Record<any>, TParams> =
+    GenericGetterConfig<TEntity, TParams>;
 
 export abstract class ListGetter<TEntity extends Record<any>, TParams> extends GenericGetter<TEntity, TParams>  {
 

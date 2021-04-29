@@ -103,7 +103,10 @@ export const ApiVersion = {
     armClassicStorage: "2016-11-01",
     armStorage: "2016-12-01",
     armBatch: "2019-08-01",
-    compute: "2019-03-01",
+    compute: {
+        default: "2019-03-01",
+        skus: "2019-04-01",
+    },
     commerce: "2016-08-31-preview",
     authorization: "2017-05-01",
     aadGraph: "1.6",
@@ -113,6 +116,21 @@ export const ApiVersion = {
     consumption: "2018-10-01",
     batchService: "2020-09-01.12.0",
     costManagement: "2019-01-01",
+};
+
+export const providersApiVersion: {[resourceProvider: string]: string} = {
+    "microsoft.batch": ApiVersion.armBatch,
+    "microsoft.classicstorage": ApiVersion.armClassicStorage,
+    "microsoft.storage": ApiVersion.armStorage,
+    "microsoft.compute": ApiVersion.compute.default,
+    "microsoft.compute/skus": ApiVersion.compute.skus,
+    "microsoft.commerce": ApiVersion.commerce,
+    "microsoft.authorization": ApiVersion.authorization,
+    "microsoft.insights": ApiVersion.monitor,
+    "microsoft.network": ApiVersion.network,
+    "microsoft.classicnetwork": ApiVersion.classicNetwork,
+    "microsoft.consumption": ApiVersion.consumption,
+    "microsoft.costmanagement": ApiVersion.costManagement,
 };
 
 export const ExternalLinks = {

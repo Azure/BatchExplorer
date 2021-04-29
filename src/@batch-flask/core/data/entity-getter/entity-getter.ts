@@ -12,9 +12,8 @@ export interface FetchOptions {
     cached?: boolean;
 }
 
-export interface EntityGetterConfig<TEntity extends Record<any>, TParams>
-    extends GenericGetterConfig<TEntity, TParams> {
-}
+export type EntityGetterConfig<TEntity extends Record<any>, TParams> =
+    GenericGetterConfig<TEntity, TParams>;
 
 const defaultFetchOptions = {
     cached: false,

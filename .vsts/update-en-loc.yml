@@ -53,7 +53,7 @@ steps:
       fi
 
       today=`date +%Y-%m-%d`
-      git -c user.email=batch-ex@microsoft.com -c user.name='Batch Explorer Automated' commit -am "Updating english translations $today"
+      git -c user.email=batchexplorer@microsoft.com -c user.name='Batch Explorer Automated' commit -am "Updating english translations $today"
       git status -s
       git push https://dpwatrous:$(GH_TOKEN)@github.com/Azure/BatchExplorer loc
     workingDirectory: $(locdir)

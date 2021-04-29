@@ -9,6 +9,7 @@ import { BatchAccountService } from "../batch-account";
 import { computeUrl } from "../compute.service";
 import { ArmListResponse } from "../core";
 import { GithubDataService } from "../github-data";
+import { mapResourceSkuToVmSize } from "../../models/vm-size";
 
 const includedVmsSizesPath = "data/vm-sizes-list.json";
 
@@ -159,11 +160,15 @@ export class VmSizeService implements OnDestroy {
 
     private _fetchVmSizesForAccount(account: ArmBatchAccount): Observable<List<VmSize> | null> {
         const { subscription, location } = account;
-        const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/vmSizes`;
-        return this.arm.get<ArmListResponse<any>>(url).pipe(
+        const url = `${computeUrl(subscription.subscriptionId)}/skus`;
+        const options = {
+            params: {
+                "$filter": `location eq '${location}'`
+            }
+        };
+        return this.arm.get<ArmListResponse<any>>(url, options).pipe(
             map((response) => {
-                const sizes = response.value.map(x => new VmSize(x));
-                return List<VmSize>(sizes);
+                return mapResourceSkuToVmSize(response.value);
             }),
             catchError((error) => {
                 log.error("Error loading vm sizes for account ", { account: account.toJS(), error });

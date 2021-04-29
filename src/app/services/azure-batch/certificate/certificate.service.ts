@@ -23,8 +23,7 @@ export interface CertificateParams {
     thumbprintAlgorithm?: string;
 }
 
-export interface CertificateListOptions extends ListOptionsAttributes {
-}
+export type CertificateListOptions = ListOptionsAttributes;
 
 export interface NewCertificateDto {
     password: string;

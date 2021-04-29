@@ -1,10 +1,10 @@
 // eslint-disable no-console
-const azureStorage = require("azure-storage");
-const makeDir = require("make-dir");
-const path = require("path");
-const fs = require("fs");
-const { getManifest, getContainerName } = require("./utils");
-const { promisify } = require("util");
+import * as azureStorage from "azure-storage";
+import makeDir from "make-dir";
+import * as path from "path";
+import * as fs from "fs";
+import { getManifest, getContainerName } from "./utils";
+import { promisify } from "util";
 
 const copyFile = promisify(fs.copyFile);
 
@@ -28,7 +28,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function getProperties(container, blob) {
+async function getProperties(container, blob): Promise<azureStorage.BlobService.BlobResult> {
     return new Promise((resolve, reject) => {
         blobService.getBlobProperties(container, blob, (error, result) => {
             if (error) { return reject(error); }

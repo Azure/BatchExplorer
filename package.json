@@ -14,7 +14,7 @@
   },
   "author": {
     "name": "Microsoft Corporation",
-    "email": "tiguerin@microsoft.com"
+    "email": "batchexplorer@microsoft.com"
   },
   "version": "2.9.0",
   "main": "build/client/main.prod.js",
@@ -50,11 +50,13 @@
     "dev": "concurrently --kill-others \"npm run -s dev-server\" \"npm run -s dev-electron\"",
     "dev-electron": "cross-env HOT=1 electron build/client/main.js",
     "dev-server": "npm run webpack-dev-server -- --hot --inline --colors --content-base app/",
-    "eslint": "eslint -c .eslintrc.json .",
+    "eslint": "eslint -c .eslintrc.json --quiet .",
+    "eslint:verbose": "eslint -c .eslintrc.json .",
     "stylelint": "stylelint --syntax scss \"src/app/**/*.scss\"",
+    "markdownlint": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules/**/*\"",
     "spectron": "node ./test/spectron/run.js",
     "spectron:keep": "cross-env SPECTRON_NO_CLEANUP=1 npm run -s spectron",
-    "lint": "npm run -s eslint && npm run -s stylelint",
+    "lint": "npm run -s eslint && npm run -s stylelint && npm run -s markdownlint",
     "package": "npm run -s ts scripts/package/package.ts",
     "start-publish": "npm run -s ts scripts/publish/publish.ts",
     "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package",
@@ -130,6 +132,8 @@
     "karma-sourcemap-loader": "^0.3.8",
     "karma-webpack": "^4.0.2",
     "loader-utils": "^1.4.0",
+    "markdownlint": "^0.23.1",
+    "markdownlint-cli2": "^0.0.14",
     "merge2": "^1.4.1",
     "mini-css-extract-plugin": "^0.5.0",
     "monaco-editor": "^0.19.0",

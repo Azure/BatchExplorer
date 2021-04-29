@@ -22,8 +22,7 @@ export class LicenseEulaDialogComponent {
     }
 
     public get isVray(): boolean {
-        return this.license && (this.license.id === "vray"
-            || this.license.id === "vrayrt");
+        return this.license && (this.license.id === "vray");
     }
 
     public openLink(link: string) {

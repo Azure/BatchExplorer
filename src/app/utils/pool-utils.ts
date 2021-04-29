@@ -1,6 +1,7 @@
 import { Icon, IconSources } from "@batch-flask/ui/icon";
 import { CloudServiceOsFamily, OSType, Pool, PoolAllocationState, VmSize } from "app/models";
 import { SoftwarePricing, VMPrices } from "app/services/pricing";
+import { List } from "immutable";
 import * as Icons from "./icons";
 
 export interface PoolPrice {
@@ -203,9 +204,14 @@ export class PoolUtils {
         let dedicatedPrice = nodeCost.regular * dedicatedCount;
         let lowPriPrice = nodeCost.lowpri * lowPriCount;
 
-        pool.applicationLicenses.forEach((license: string) => {
-            dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * dedicatedCount;
-            lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * lowPriCount;
+        let licenses = List<string>(pool.applicationLicenses.slice());
+        if (licenses.contains("vray")) {
+            licenses = licenses.push("vrayrt");
+        }
+
+       licenses.forEach((license: string) => {
+            dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores, vmSpec.numberOfGpus) * dedicatedCount;
+            lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores, vmSpec.numberOfGpus) * lowPriCount;
         });
 
         return {

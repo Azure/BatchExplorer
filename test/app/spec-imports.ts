@@ -4,8 +4,6 @@ jasmine.MAX_PRETTY_PRINT_DEPTH = 3;
 
 import "reflect-metadata";
 
-/* eslint-disable import/order */
-import "core-js/es6";
 /* eslint-disable @typescript-eslint/no-var-requires */
 require("zone.js/dist/zone");
 require("zone.js/dist/long-stack-trace-zone");
