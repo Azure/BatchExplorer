@@ -9,7 +9,7 @@ import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest, empty, forkJoin } from "rxjs";
 import {
     distinctUntilChanged, expand, filter, first, flatMap, map,
-    publishReplay, reduce, refCount, shareReplay, switchMap, takeUntil,
+    publishReplay, reduce, refCount, shareReplay, switchMap, takeUntil, tap,
 } from "rxjs/operators";
 import { AuthService } from "../aad";
 import { AzureHttpService } from "../azure-http.service";
@@ -64,8 +64,7 @@ export class SubscriptionService implements OnDestroy {
             filter(tenants => tenants.length > 0),
             first(),
             switchMap((tenants: TenantDetails[]) => forkJoin(
-                tenants.map(tenant =>
-                    this._loadSubscriptionsForTenant(tenant)))
+                tenants.map(tenant => this._loadSubscriptionsForTenant(tenant)))
             ),
             publishReplay(1),
             refCount(),
@@ -122,6 +121,7 @@ export class SubscriptionService implements OnDestroy {
 
     private _loadSubscriptionsForTenant(tenant: TenantDetails): Observable<ArmSubscription[]> {
         return this.azure.get<ArmListResponse<ArmSubscriptionAttributes>>(tenant.tenantId, "subscriptions").pipe(
+            tap(subs => console.log("_loadSubscriptionsForTenant", tenant.tenantId, subs)),
             expand((response) => {
                 if (response.nextLink) {
                     return this.azure.get(tenant.tenantId, response.nextLink);
@@ -130,10 +130,10 @@ export class SubscriptionService implements OnDestroy {
                 }
             }),
             reduce((subs, response: ArmListResponse<any>) => {
-                const newSubs = response.value
-                    /* @@ FIXME: Should request once, not per tenant */
-                    .filter(sub => sub.tenantId === tenant.tenantId)
-                    .map(sub => this._createSubscription(tenant, sub));
+                const newSubs = response.value.map(
+                    sub => this._createSubscription(tenant, sub)
+                );
+                console.log(`[${tenant.tenantId}] Got ${newSubs.length} subscriptions`)
                 return [...subs, ...newSubs];
             }, [])
         );

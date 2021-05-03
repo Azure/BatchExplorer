@@ -64,7 +64,16 @@ export class AADService {
         this.authenticationState = this._authenticationState.asObservable();
 
         ipcMain.on(IpcEvent.AAD.accessTokenData, async ({ tenantId, resource }) => {
-            return await this.accessTokenData(tenantId, resource);
+            const token = await this.accessTokenData(tenantId, resource);
+            console.log(`app
+            Tenant: ${tenantId}
+            Resource: ${resource}
+            AccessToken:
+                Tenant: ${token.tenantId}
+                Resource: ${token.resource}
+                Token: ...${token.access_token.substring(token.access_token.length - 6)}
+            `);
+            return token
         });
 
         this.userAuthorization.state.subscribe((state) => {
@@ -115,12 +124,12 @@ export class AADService {
      */
     public async accessTokenData(tenantId: string, resource?: AADResourceName): Promise<AccessToken> {
         resource = resource || "arm";
-        if (this._tokenCache.hasToken(tenantId, resource)) {
-            const token = this._tokenCache.getToken(tenantId, resource);
-            if (!token.expireInLess(Constants.AAD.refreshMargin)) {
-                return token;
-            }
-        }
+        // if (this._tokenCache.hasToken(tenantId, resource)) {
+        //     const token = this._tokenCache.getToken(tenantId, resource);
+        //     if (!token.expireInLess(Constants.AAD.refreshMargin)) {
+        //         return token;
+        //     }
+        // }
         return this._retrieveNewAccessToken(tenantId, resource);
     }
 
@@ -193,7 +202,6 @@ export class AADService {
         const defer = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
 
         try {
-
             const result: AuthorizeResult =
                 await this.userAuthorization.authorizeResource(
                     tenantId,
@@ -208,7 +216,9 @@ export class AADService {
                 expires_in: null,
                 expires_on: result.expiresOn,
                 ext_expires_in: null,
-                not_before: null
+                not_before: null,
+                tenantId,
+                resource
             }));
 
         } catch (e) {

@@ -71,27 +71,42 @@ export class AuthService implements OnDestroy {
      */
     public async accessTokenDataAsync(tenantId: string, resource: AADResourceName = null): Promise<AccessToken> {
         const key = `${tenantId}/${resource}`;
+        console.log(`\n\n[${key}] Token ${key in this._waitingPromises}`)
         if (key in this._waitingPromises) {
-            return this._waitingPromises[key];
+            console.log(`[${key}] Returning cached promise`);
+            // return this._waitingPromises[key];
         }
         if (this.tokenCache.hasToken(tenantId, resource)) {
             const token = this.tokenCache.getToken(tenantId, resource);
+            console.log(`[${key}] Cached token ${!token.expireInLess(Constants.AAD.refreshMargin)}`);
 
             if (!token.expireInLess(Constants.AAD.refreshMargin)) {
-                return token;
+                // return token;
             }
         }
 
-        const promise = this.remote.send(Constants.IpcEvent.AAD.accessTokenData, { tenantId, resource }).then((x) => {
+        const promise = this.remote.send(
+            Constants.IpcEvent.AAD.accessTokenData, { tenantId, resource })
+        .then((x) => {
+            console.log(`[${key}] renderer
+            Tenant: ${tenantId}
+            Resource: ${resource}
+            AccessToken:
+                Tenant: ${x.tenantId}
+                Resource: ${x.resource}
+                Token: ...${x.access_token.substring(x.access_token.length - 6)}
+            `);
             const token = new AccessToken({ ...x });
             this.tokenCache.storeToken(tenantId, resource, token);
-            delete this._waitingPromises[key];
             return token;
         }).catch((e) =>  {
-            delete this._waitingPromises[key];
-            return Promise.reject(e);
+            console.log(`[${key}] promise.reject`)
+            throw e;
+        // }).finally(() => {
+        //     console.log(`[${key}] promise.finally`);
         });
         this._waitingPromises[key] = promise;
+        console.log(`[${key}] new promise`);
         return promise;
     }
 }
