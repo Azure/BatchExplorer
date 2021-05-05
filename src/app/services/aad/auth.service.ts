@@ -101,6 +101,7 @@ export class AuthService implements OnDestroy {
             return token;
         }).catch((e) =>  {
             console.log(`[${key}] promise.reject`)
+            console.warn(e);
             throw e;
         // }).finally(() => {
         //     console.log(`[${key}] promise.finally`);

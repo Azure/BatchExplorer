@@ -16,8 +16,7 @@ export type AuthorizationResult = AuthenticationResult;
  */
 export default class AuthProvider {
     private _clients: StringMap<ClientApplication> = {};
-    private _account: AccountInfo;
-    private _tokensFetched: StringMap<boolean> = {};
+    private _accounts: StringMap<AccountInfo> = {};
 
     constructor(
         private app: BatchExplorerApplication,
@@ -43,32 +42,42 @@ export default class AuthProvider {
         const { resourceURI, tenantId = "common", authCodeCallback } = options;
         const client = this._getClient(tenantId);
         const authRequest = this._authRequest(resourceURI, tenantId);
-        if (this._account && this._tokensFetched[tenantId]) {
-            const result = await client.acquireTokenSilent({
-                ...authRequest,
-                account: this._account
-            });
-            console.log(`
-Silent
-authority: ${authRequest.authority}
-token: ...${result.accessToken.substring(result.accessToken.length - 6)}
-            `);
-            return result;
-        } else {
-            const url = await client.getAuthCodeUrl(authRequest);
-            const code = await authCodeCallback(url);
-            const result: AuthorizationResult =
-                await client.acquireTokenByCode({ ...authRequest, code });
-            if (result) {
-                this._account = result.account;
-                this._tokensFetched[tenantId] = true
-            console.log(`
-Interactive
-authority: ${authRequest.authority}
-token: ...${result.accessToken.substring(result.accessToken.length - 6)}
-            `);
+        if (this._accounts[tenantId]) {
+            try {
+                const result = await client.acquireTokenSilent({
+                    ...authRequest, account: this._accounts[tenantId]
+                });
+                console.log(`[${tenantId}]
+    Silent
+    authority: ${authRequest.authority}
+    token: ...${result.accessToken.substring(result.accessToken.length - 6)}
+                `);
+                return result;
+            } catch (e) {
+                console.error("Unable to acquire token silently", e);
+                console.error(`** Tenant ${tenantId}`);
+                throw e;
             }
-            return result;
+        } else {
+            try {
+                console.log(`[${tenantId}] Starting interactive`);
+                const url = await client.getAuthCodeUrl(authRequest);
+                const code = await authCodeCallback(url);
+                const result: AuthorizationResult =
+                    await client.acquireTokenByCode({ ...authRequest, code });
+                if (result) {
+                    this._accounts[tenantId] = result.account;
+                    console.log(`[${tenantId}]
+    Interactive
+    authority: ${authRequest.authority}
+    token: ...${result.accessToken.substring(result.accessToken.length - 6)}
+                    `);
+                }
+                return result;
+            } catch (e) {
+                console.error("Unable to acquire access token interactively", e);
+                throw e;
+            }
         }
     }
 
@@ -91,12 +100,12 @@ token: ...${result.accessToken.substring(result.accessToken.length - 6)}
 
     private async _removeAccount(): Promise<void> {
         for (const tenantId in this._clients) {
-            if (this._account) {
+            if (this._accounts[tenantId]) {
                 const cache = this._clients[tenantId].getTokenCache();
-                cache.removeAccount(this._account);
+                cache.removeAccount(this._accounts[tenantId]);
             }
+            delete this._accounts[tenantId];
         }
-        this._account = null;
     }
 
     private _getScopes(resourceURI: string): string[] {
@@ -114,11 +123,7 @@ token: ...${result.accessToken.substring(result.accessToken.length - 6)}
             scopes: this._getScopes(resourceURI),
             redirectUri: this.config.redirectUri,
             authority:
-                `${this.app.properties.azureEnvironment.aadUrl}${tenantId}/`,
-
-            extraQueryParameters: {
-                "instance_aware": "true"
-            }
+                `${this.app.properties.azureEnvironment.aadUrl}${tenantId}/`
         };
     }
 }
