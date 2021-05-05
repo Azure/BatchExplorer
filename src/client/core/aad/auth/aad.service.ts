@@ -63,18 +63,9 @@ export class AADService {
         this._accessTokenService = new AccessTokenService(properties, aadConfig);
         this.authenticationState = this._authenticationState.asObservable();
 
-        ipcMain.on(IpcEvent.AAD.accessTokenData, async ({ tenantId, resource }) => {
-            const token = await this.accessTokenData(tenantId, resource);
-            console.log(`app
-            Tenant: ${tenantId}
-            Resource: ${resource}
-            AccessToken:
-                Tenant: ${token.tenantId}
-                Resource: ${token.resource}
-                Token: ...${token.access_token.substring(token.access_token.length - 6)}
-            `);
-            return token
-        });
+        ipcMain.on(IpcEvent.AAD.accessTokenData,
+            async ({ tenantId, resource }) =>
+                await this.accessTokenData(tenantId, resource));
 
         this.userAuthorization.state.subscribe((state) => {
             this._authenticationState.next(state);
@@ -123,14 +114,7 @@ export class AADService {
      * @param resource
      */
     public async accessTokenData(tenantId: string, resource?: AADResourceName): Promise<AccessToken> {
-        resource = resource || "arm";
-        // if (this._tokenCache.hasToken(tenantId, resource)) {
-        //     const token = this._tokenCache.getToken(tenantId, resource);
-        //     if (!token.expireInLess(Constants.AAD.refreshMargin)) {
-        //         return token;
-        //     }
-        // }
-        return this._retrieveNewAccessToken(tenantId, resource);
+        return this._retrieveNewAccessToken(tenantId, resource || "arm");
     }
 
     private async _loginInCurrentCloud() {
@@ -274,11 +258,15 @@ export class AADService {
             Authorization: `${token.token_type} ${token.access_token}`,
         };
         const options = { headers };
-        const url = `${this.properties.azureEnvironment.arm}tenants?api-version=${Constants.ApiVersion.arm}`;
+        const url = this._tenantURL();
         const response = await fetch(url, options);
-        log.info("Listing tenants response", response.status, response.statusText);
         const { value } = await response.json();
         return value;
+    }
+
+    private _tenantURL() {
+        return this.properties.azureEnvironment.arm +
+            `tenants?api-version=${Constants.ApiVersion.arm}`;
     }
 
     private async _clearUserSpecificCache() {

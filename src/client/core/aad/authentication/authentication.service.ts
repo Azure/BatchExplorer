@@ -76,7 +76,6 @@ export class AuthenticationService {
      * @returns Observable with the successful AuthorizeResult.
      */
     public async authorize(tenantId: string): Promise<AuthorizeResult> {
-        console.log(`[${tenantId}] *** authorize(${tenantId})`);
         return this.authorizeResource(
             tenantId, this.app.properties.azureEnvironment.arm
         );
@@ -91,17 +90,11 @@ export class AuthenticationService {
      */
     public async authorizeResource(tenantId: string, resourceURI: string):
     Promise<AuthorizeResult> {
-        console.log(`
-[${tenantId}] *** authorizeResource(${tenantId}, ${resourceURI})`);
         const existingAuth = this._authQueue.get(tenantId, resourceURI);
         if (existingAuth) {
-            console.log(`[${tenantId}] Exists ${tenantId} ${resourceURI}`);
             return existingAuth.deferred.promise;
-        } else {
-            console.log(`[${tenantId}] No existing auth  ${resourceURI}`);
         }
         const deferred = this._authQueue.add(tenantId, resourceURI);
-        console.log(`   authorizeNext(${tenantId})`);
         this._authorizeNext();
         return deferred.promise;
     }
@@ -125,18 +118,16 @@ export class AuthenticationService {
         this._authQueue.clear();
 
         const url = AADConstants.logoutUrl(this.app.properties.azureEnvironment.aadUrl, this.config.tenant);
-        this._loadAuthWindow(url, { clear: true });
+        this._loadAuthWindow(url, true);
         const deferred = this._logoutDeferred = new Deferred();
         return deferred.promise;
     }
 
     private async _authorizeNext() {
         if (this._authQueue.authInProgress()) {
-            console.log(`   authInProgress`);
             return;
         }
         const { tenantId, resourceURI, deferred } = this._authQueue.shift();
-        console.log(`[${tenantId}] _authorizeNext(${tenantId}, ${resourceURI}) ${this._state.getValue()}`)
 
         try {
             const authResult: AuthorizationResult =
@@ -146,7 +137,6 @@ export class AuthenticationService {
                     authCodeCallback:
                         url => this._authorizationCodeCallback(url)
                 });
-            console.log(`[${tenantId}] Got auth result; resolving`);
 
             if (this._state.getValue() !== AuthenticationState.Authenticated) {
                 this._state.next(AuthenticationState.Authenticated);
@@ -167,26 +157,21 @@ export class AuthenticationService {
     }
 
     private async _authorizationCodeCallback(url: string) {
-        console.log(`[${url.substring(34,70)}] authCodeCallback()`);
         const code = await this._loadAuthWindow(url);
-        console.log(`[${url.substring(34,70)}] Got code`);
         this._state.next(AuthenticationState.UserInput);
         return code;
     }
 
-    private _loadAuthWindow(
-        url: string, opts: { clear?: boolean } = {}
-    ) {
+    private _loadAuthWindow(url: string, clear = false) {
         const authWindow = this.app.authenticationWindow;
         const deferred = new Deferred<string>();
         authWindow.create();
-        console.log(`[${url.substring(0,70)}] created window`);
         authWindow.onRedirect(newUrl =>
             this._authWindowRedirected(newUrl, deferred));
         authWindow.onNavigate(newUrl => this._handleNavigate(newUrl));
         authWindow.onError(error => this._handleError(error));
 
-        if (opts.clear) {
+        if (clear) {
             authWindow.clearCookies();
         }
 
@@ -196,7 +181,6 @@ export class AuthenticationService {
     }
 
     private _handleNavigate(url: string) {
-        console.log(`[${url.substring(0,70)}] Navigated isLogout? ${AADConstants.isLogoutURL(url)}`);
         if (this._logoutDeferred && AADConstants.isLogoutURL(url)) {
             this._closeWindow();
             const deferred = this._logoutDeferred;
@@ -211,11 +195,7 @@ export class AuthenticationService {
      * @param url Url used for callback
      * @param callback Called with the result of the auth code
      */
-    private _authWindowRedirected(
-        url: string,
-        deferred: Deferred<string>
-    ) {
-        console.log(`[${url.substring(0,40)}] AuthWindowRedirected() [url? ${!this._isRedirectUrl(url)} current? ${!this._authQueue.hasCurrent()}]`)
+    private _authWindowRedirected(url: string, deferred: Deferred<string>) {
         if (!this._isRedirectUrl(url) || !this._authQueue.hasCurrent()) {
             return;
         }
@@ -223,7 +203,9 @@ export class AuthenticationService {
         this._closeWindow();
         const params: AuthCodeResult = this._getRedirectUrlParams(url);
         if (params.error) {
-            deferred.reject(new AuthorizeError(params as AuthorizeResponseError));
+            deferred.reject(
+                new AuthorizeError(params as AuthorizeResponseError)
+            );
         } else {
             deferred.resolve(params.code);
         }
@@ -264,6 +246,9 @@ export class AuthenticationService {
     }
 }
 
+/**
+ * Manages multiple authorization requests
+ */
 class AuthorizeQueue {
     private queue: AuthorizeQueueItem[] = [];
     public current: AuthorizeQueueItem = null;
@@ -278,18 +263,15 @@ class AuthorizeQueue {
     public add(tenantId: string, resourceURI: string) {
         const deferred = new Deferred<AuthorizeResult>();
         this.queue.push({ tenantId, resourceURI, deferred });
-        console.log(`[${tenantId}] queue.add(${resourceURI})`);
         return deferred;
     }
 
     public shift(): AuthorizeQueueItem {
         this.current = this.queue.shift();
-        console.log(`[${this.current.tenantId}] queue.shift()`)
         return this.current;
     }
 
     public authInProgress() {
-        console.log(`[${this.queue.length}] authInProgress(${this.current?.tenantId})`);
         return this.hasCurrent() || this.queue.length === 0;
     }
 

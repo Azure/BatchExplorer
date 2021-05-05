@@ -40,44 +40,31 @@ export default class AuthProvider {
         authCodeCallback: (url: string) => Promise<string>
     }): Promise<AuthorizationResult> {
         const { resourceURI, tenantId = "common", authCodeCallback } = options;
+
+        /**
+         * KLUDGE: msal.js does not handle well access tokens across multiple
+         * tenants within the same cache. It lets you specify a different
+         * authority per request but it returns the same access token.
+         *
+         * Until this is resolved, we use one client application per tenant.
+         */
         const client = this._getClient(tenantId);
+
         const authRequest = this._authRequest(resourceURI, tenantId);
         if (this._accounts[tenantId]) {
-            try {
-                const result = await client.acquireTokenSilent({
-                    ...authRequest, account: this._accounts[tenantId]
-                });
-                console.log(`[${tenantId}]
-    Silent
-    authority: ${authRequest.authority}
-    token: ...${result.accessToken.substring(result.accessToken.length - 6)}
-                `);
-                return result;
-            } catch (e) {
-                console.error("Unable to acquire token silently", e);
-                console.error(`** Tenant ${tenantId}`);
-                throw e;
-            }
+            const result = await client.acquireTokenSilent({
+                ...authRequest, account: this._accounts[tenantId]
+            });
+            return result;
         } else {
-            try {
-                console.log(`[${tenantId}] Starting interactive`);
-                const url = await client.getAuthCodeUrl(authRequest);
-                const code = await authCodeCallback(url);
-                const result: AuthorizationResult =
-                    await client.acquireTokenByCode({ ...authRequest, code });
-                if (result) {
-                    this._accounts[tenantId] = result.account;
-                    console.log(`[${tenantId}]
-    Interactive
-    authority: ${authRequest.authority}
-    token: ...${result.accessToken.substring(result.accessToken.length - 6)}
-                    `);
-                }
-                return result;
-            } catch (e) {
-                console.error("Unable to acquire access token interactively", e);
-                throw e;
+            const url = await client.getAuthCodeUrl(authRequest);
+            const code = await authCodeCallback(url);
+            const result: AuthorizationResult =
+                await client.acquireTokenByCode({ ...authRequest, code });
+            if (result) {
+                this._accounts[tenantId] = result.account;
             }
+            return result;
         }
     }
 

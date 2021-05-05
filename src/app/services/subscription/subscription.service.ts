@@ -121,7 +121,6 @@ export class SubscriptionService implements OnDestroy {
 
     private _loadSubscriptionsForTenant(tenant: TenantDetails): Observable<ArmSubscription[]> {
         return this.azure.get<ArmListResponse<ArmSubscriptionAttributes>>(tenant.tenantId, "subscriptions").pipe(
-            tap(subs => console.log("_loadSubscriptionsForTenant", tenant.tenantId, subs)),
             expand((response) => {
                 if (response.nextLink) {
                     return this.azure.get(tenant.tenantId, response.nextLink);
@@ -133,7 +132,6 @@ export class SubscriptionService implements OnDestroy {
                 const newSubs = response.value.map(
                     sub => this._createSubscription(tenant, sub)
                 );
-                console.log(`[${tenant.tenantId}] Got ${newSubs.length} subscriptions`)
                 return [...subs, ...newSubs];
             }, [])
         );
