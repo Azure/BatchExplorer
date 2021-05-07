@@ -8,6 +8,7 @@
     "app/**/*.ts",
     "app/**/*.spec.ts",
     "src/common/**/*.ts",
+    "src/test/**/*.ts",
     "test/**/*.ts",
     "**/testing/**/*",
   ],
