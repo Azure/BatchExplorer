@@ -75,7 +75,12 @@
         "hidden": false,
         "group": "Test",
         "order": 10
-      }
+      },
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**",
+        "${workspaceFolder}/test/client/**"
+      ]
     }
   ],
   "compounds": [
