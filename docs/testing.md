@@ -23,7 +23,7 @@ fdescribe("MyModuleB", () => {
 });
 ```
 
-**Note: TSLint will scan for `fdescribe` and `fit` so you don't forget one when creating a PR**
+**Note: ESLint will scan for `fdescribe` and `fit` so you don't forget one when creating a PR**
 
 ## Test the client
 
