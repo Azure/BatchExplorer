@@ -30,7 +30,7 @@ export class AuthorizeError extends Error {
     public state?: string;
 
     constructor(error: AuthorizeResponseError) {
-        const description = error.error_description && error.error_description.replace(/\+/g, " ");
+        const description = error.error_description?.replace(/\+/g, " ");
         super(`${error.error}: ${description}`);
         this.error = error.error;
         this.description = description;
@@ -64,10 +64,12 @@ export class AuthenticationService {
     private _authQueue = new AuthorizeQueue();
     private _state = new BehaviorSubject(AuthenticationState.None);
     private _logoutDeferred: Deferred<void> | null;
-    private _authProvider: AuthProvider =
-        new AuthProvider(this.app, this.config);
 
-    constructor(private app: BatchExplorerApplication, private config: AADConfig) {
+    constructor(
+        private app: BatchExplorerApplication,
+        private config: AADConfig,
+        private authProvider: AuthProvider
+    ) {
         this.state = this._state.asObservable();
     }
 
@@ -114,7 +116,7 @@ export class AuthenticationService {
             return this._logoutDeferred.promise;
         }
 
-        this._authProvider.logout();
+        this.authProvider.logout();
         this._authQueue.clear();
 
         const url = AADConstants.logoutUrl(this.app.properties.azureEnvironment.aadUrl, this.config.tenant);
@@ -131,7 +133,7 @@ export class AuthenticationService {
 
         try {
             const authResult: AuthorizationResult =
-                await this._authProvider.getToken({
+                await this.authProvider.getToken({
                     resourceURI,
                     tenantId,
                     authCodeCallback:

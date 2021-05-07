@@ -19,8 +19,8 @@ export default class AuthProvider {
     private _accounts: StringMap<AccountInfo> = {};
 
     constructor(
-        private app: BatchExplorerApplication,
-        private config: AADConfig
+        protected app: BatchExplorerApplication,
+        protected config: AADConfig
     ) {
         // Prime common tenant
         this._getClient(this.config.tenant);
@@ -72,7 +72,7 @@ export default class AuthProvider {
         this._removeAccount();
     }
 
-    private _getClient(tenantId: string): ClientApplication {
+    protected _getClient(tenantId: string): ClientApplication {
         if (tenantId in this._clients) {
             return this._clients[tenantId];
         }

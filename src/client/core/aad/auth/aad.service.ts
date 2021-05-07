@@ -17,6 +17,7 @@ import { dialog } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import { AccessTokenService } from "../access-token";
+import AuthProvider from "../auth-provider";
 import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError } from "../authentication";
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
@@ -58,8 +59,8 @@ export class AADService {
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenants = this._tenants.asObservable();
-        this.userAuthorization =
-            new AuthenticationService(this.app, aadConfig);
+        this.userAuthorization = new AuthenticationService(this.app, aadConfig,
+            new AuthProvider(this.app, aadConfig));
         this._accessTokenService = new AccessTokenService(properties, aadConfig);
         this.authenticationState = this._authenticationState.asObservable();
 
