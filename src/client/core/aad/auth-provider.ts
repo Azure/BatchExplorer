@@ -21,10 +21,7 @@ export default class AuthProvider {
     constructor(
         protected app: BatchExplorerApplication,
         protected config: AADConfig
-    ) {
-        // Prime common tenant
-        this._getClient(this.config.tenant);
-    }
+    ) {}
 
     /**
      * Retrieves an access token

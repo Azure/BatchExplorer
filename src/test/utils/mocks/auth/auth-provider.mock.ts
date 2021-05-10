@@ -14,9 +14,8 @@ export class MockAuthProvider extends AuthProvider {
         );
     }
 }
-
 export class MockClientApplication extends ClientApplication {
-    constructor(private fakeAuthProvider: MockAuthProvider) {
+    constructor(public fakeAuthProvider: MockAuthProvider) {
         super({
             auth: {
                 clientId: fakeAuthProvider.fakeConfig.clientId
@@ -36,3 +35,13 @@ export class MockClientApplication extends ClientApplication {
     }
 
 }
+
+export const createMockClientApplication = () => {
+    const fakeAuthProvider = new MockAuthProvider({}, {
+        tenant: null,
+        clientId: null,
+        redirectUri: null,
+        logoutRedirectUri: null
+    });
+    return new MockClientApplication(fakeAuthProvider);
+};
