@@ -25,7 +25,7 @@ describe("AuthService spec", () => {
 
     beforeEach(() => {
         aadServiceSpy = {
-            tenantsIds: new BehaviorSubject([]),
+            tenants: new BehaviorSubject([]),
             currentUser: new BehaviorSubject([]),
         };
         remoteSpy = {
@@ -46,15 +46,15 @@ describe("AuthService spec", () => {
     });
 
     afterEach(() => {
-        aadServiceSpy.tenantsIds.complete();
+        aadServiceSpy.tenants.complete();
         service.ngOnDestroy();
     });
 
-    it("It notify of error if tenants ids fail", () => {
+    it("raises an error when tenants cannot be fetched", () => {
         const nextSpy = jasmine.createSpy("next");
         const errorSpy = jasmine.createSpy("error");
-        service.tenantsIds.subscribe(nextSpy, errorSpy);
-        aadServiceSpy.tenantsIds.error(new ServerError({
+        service.tenants.subscribe(nextSpy, errorSpy);
+        aadServiceSpy.tenants.error(new ServerError({
             status: 300,
             code: "ERRNOCONN",
             statusText: "ERRNOCONN",
@@ -110,31 +110,35 @@ describe("AuthService spec", () => {
             expect(tokenB).toEqual(token1);
         });
 
-        it("it calls again the main process if previous call returned an error", async () => {
+        it("calls again the main process if previous call returned an error", async () => {
             remoteSpy.send = jasmine.createSpy("send").and.returnValues(
                 Promise.reject("some-error"),
                 Promise.resolve(token1),
             );
             try {
                 await service.accessTokenDataAsync(tenant1, resource1);
-                fail("Shouldn't have succeeded");
+                fail("First call to accessTokenDataAsync houldn't have succeeded");
             } catch (e) {
                 expect(remoteSpy.send).toHaveBeenCalledTimes(1);
                 expect(e).toEqual("some-error");
             }
-            const token = await service.accessTokenDataAsync(tenant1, resource1);
-            expect(remoteSpy.send).toHaveBeenCalledTimes(2);
-            expect(token).toEqual(token1);
 
+            try {
+                const token = await service.accessTokenDataAsync(tenant1, resource1);
+                expect(remoteSpy.send).toHaveBeenCalledTimes(2);
+                expect(token).toEqual(token1);
+            } catch (e) {
+                fail(`Second call to accessTokenDataAsync should have succeeded [err=${e}]`);
+            }
         });
     });
 
-    it("updates the tenants ids when updated by the auth service", () => {
-        let tenantIds;
-        service.tenantsIds.subscribe(x => tenantIds = x);
+    it("updates the tenants when updated by the auth service", () => {
+        let tenants;
+        service.tenants.subscribe(x => tenants = x);
         expect(zoneSpy.run).toHaveBeenCalledTimes(1);
-        aadServiceSpy.tenantsIds.next(["foo-1", "foo-2"]);
+        aadServiceSpy.tenants.next(["foo-1", "foo-2"]);
         expect(zoneSpy.run).toHaveBeenCalledTimes(2);
-        expect(tenantIds).toEqual(["foo-1", "foo-2"]);
+        expect(tenants).toEqual(["foo-1", "foo-2"]);
     });
 });

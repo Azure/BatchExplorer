@@ -89,7 +89,9 @@ export class AuthService implements OnDestroy {
             this.tokenCache.storeToken(tenantId, resource, token);
             return token;
         }).catch((e) =>  {
-            throw e;
+            return Promise.reject(e);
+        }).finally(() => {
+            delete this._waitingPromises[key];
         });
         this._waitingPromises[key] = promise;
         return promise;
