@@ -11,7 +11,7 @@ describe("Bundled application is starting correctly", () => {
         app = new Application({
             path: getExePath(),
             args: ["--insecure-test"],
-            startTimeout: 20000,
+            startTimeout: 3000,
             waitTimeout: 20000,
         });
 
@@ -29,16 +29,15 @@ describe("Bundled application is starting correctly", () => {
     });
 
     it("Show the splash screen, auth window then login", async () => {
-        const windowCount = await app.client.getWindowCount();
+        await delay(2_000);
+
         // Splash screen + Auth window + Main window
-        expect(windowCount).toEqual(3);
+        expect(await app.client.getWindowCount()).toEqual(3);
 
-        const windows = await getWindowIndices(app);
-
-        await app.client.windowByIndex(windows.main);
+        await switchToWindow(app, WindowType.main);
         expect(await app.browserWindow.isVisible()).toBe(false);
 
-        await app.client.windowByIndex(windows.splash);
+        await switchToWindow(app, WindowType.splash);
         expect(await app.browserWindow.isVisible()).toBe(true);
         expect(await app.browserWindow.getBounds()).toEqual(jasmine.objectContaining({
             width: 340,
@@ -46,7 +45,7 @@ describe("Bundled application is starting correctly", () => {
         }));
 
         await app.client.waitUntilTextExists("#message", "Prompting for user input");
-        await app.client.windowByIndex(windows.auth);
+        await switchToWindow(app, WindowType.auth);
 
         expect(await app.browserWindow.isVisible()).toBe(true);
         expect(await app.browserWindow.getTitle()).toEqual("BatchExplorer: Login to Azure Public(Default)");
@@ -60,8 +59,7 @@ describe("Bundled application is starting correctly", () => {
             return await app.client.getWindowCount() === 1;
         });
 
-        // Switch to main window which is now at index 0
-        await app.client.windowByIndex(0);
+        await switchToWindow(app, WindowType.main);
 
         expect(await app.browserWindow.isVisible()).toBe(true);
         expect(await app.browserWindow.getTitle()).toEqual("Batch Explorer");
@@ -93,9 +91,16 @@ async function signIn(client: SpectronClient) {
     await delay(5000);
 
     const url = await client.getUrl();
-    if (url.startsWith("https://msft.sts.microsoft.com")) {
+
+    if (url.startsWith("https://login.microsoftonline.com/common/oauth2/v2.0/authorize")) {
         // Click on "Sign with email or passwork instead"
-        const signInWithEmailOrPasswordLink = await client.$("#authOptions .optionButton");
+        const signInWithEmailOrPasswordLink =
+            await client.$("#redirectToIdpLink");
+        await signInWithEmailOrPasswordLink.click();
+    } else if (url.startsWith("https://msft.sts.microsoft.com")) {
+        // Click on "Sign with email or passwork instead"
+        const signInWithEmailOrPasswordLink =
+            await client.$("#authOptions .optionButton");
         await signInWithEmailOrPasswordLink.click();
     }
 
@@ -110,44 +115,32 @@ function delay(time?: number) {
     return new Promise(r => setTimeout(r, time));
 }
 
-interface WindowIndices {
-    splash: number;
-    main: number;
-    auth: number;
+enum WindowType {
+    auth = "auth",
+    splash = "splash",
+    main = "main"
 }
 
-/**
- * Gets a map containing the index of each window in the application (splash screen,
- * auth window, main window). The order of these windows seems to vary
- * between Windows and MacOS, so use the URLs to detect which is which.
- */
-async function getWindowIndices(app: Application): Promise<WindowIndices> {
-    const allWindows = [
-        await app.client.windowByIndex(0),
-        await app.client.windowByIndex(1),
-        await app.client.windowByIndex(2),
-    ];
-
-    const windows: WindowIndices = {
-        splash: -1,
-        main: -1,
-        auth: -1,
-    };
-
-    for (let i = 0; i < allWindows.length; i++) {
+async function switchToWindow(app: Application, type: WindowType) {
+    const count = await app.client.getWindowCount();
+    const matcher = windowMatcher(type);
+    for (let i = 0; i < count; i++) {
         await app.client.windowByIndex(i);
-
         const url = await app.client.getUrl();
-        if (url.endsWith("index.html#/accounts")) {
-            windows.main = i;
-        } else if (url.endsWith("splash-screen.html")) {
-            windows.splash = i;
-        } else if (url.startsWith("https://login.microsoftonline.com")) {
-            windows.auth = i;
-        } else {
-            throw new Error("Unknown window URL: " + url);
+        if (url && matcher(url)) {
+            return;
         }
     }
+    throw new Error(`Could not find window ${type}`);
+    }
 
-    return windows;
+function windowMatcher(type: WindowType) {
+    switch (type) {
+        case WindowType.main:
+            return url => url.endsWith("index.html#/accounts");
+        case WindowType.splash:
+            return url => url.endsWith("splash-screen.html");
+        case WindowType.auth:
+            return url => url.startsWith("https://login.microsoftonline.com");
+    }
 }
