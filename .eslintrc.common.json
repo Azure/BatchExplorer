@@ -1,6 +1,7 @@
 {
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "unused-imports"
   ],
   "extends": [
     "eslint:recommended",
@@ -11,7 +12,7 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-inferrable-types": "off",
-    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
     "max-len": [
       "error",
       {

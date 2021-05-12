@@ -2,7 +2,6 @@ import { Location } from "@angular/common";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AccessToken, HttpRequestOptions, RetryableHttpCode, ServerError } from "@batch-flask/core";
-import { SanitizedError } from "@batch-flask/utils";
 import { ArmSubscription } from "app/models";
 import { ArmResourceUtils } from "app/utils";
 import { Constants } from "common";
