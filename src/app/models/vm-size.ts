@@ -1,5 +1,4 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-import { symlink } from "fs";
 import { List } from "immutable";
 
 export interface VmSizeAttributes {
