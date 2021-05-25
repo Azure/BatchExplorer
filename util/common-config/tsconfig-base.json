@@ -13,6 +13,7 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "module": "ESNext",
-    "sourceMap": true
+    "sourceMap": true,
+    "useDefineForClassFields": true
   }
 }

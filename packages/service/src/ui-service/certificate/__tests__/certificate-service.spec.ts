@@ -34,12 +34,13 @@ describe("Certificate service", () => {
             )
         );
 
-        const cert = await service.get(
+        const view = await service.get(
             "bd7c0d29efad85c5174364c330db1698b14f7f55"
         );
-
-        expect(cert?.id).toBe("bd7c0d29efad85c5174364c330db1698b14f7f55");
-        expect(cert?.reactivable).toBe(false);
+        const cert = view.model;
+        expect(cert?.thumbprint).toBe(
+            "bd7c0d29efad85c5174364c330db1698b14f7f55"
+        );
     });
 
     test("Get cert 404 not found", async () => {

@@ -1,59 +1,26 @@
-import { Certificate } from "@batch/ui-service";
+import { CertificateView } from "@batch/ui-service";
 import { Stack } from "@fluentui/react/lib/Stack";
 import * as React from "react";
+import { observer } from "mobx-react-lite";
 import { ActionBar } from "../action/action-bar";
-import { PropertyGroup } from "../property/property-group";
-import { PropertyList } from "../property/property-list";
-import { TextProperty } from "../property/text-property";
+import { CertificatePropertyList } from "../certificate/certificate-property-list";
 
 export interface CertificateDisplayProps {
-    certificate?: Certificate;
+    view?: CertificateView;
 }
 
-export const CertificateDisplay: React.FC<CertificateDisplayProps> = (
-    props
-) => {
-    const [, setState] = React.useState();
-
-    const certificate = props.certificate;
-    if (!certificate) {
+export const CertificateDisplay = observer((props: CertificateDisplayProps) => {
+    if (!props.view || !props.view.model) {
         return <div>No certificate found</div>;
     }
 
+    const cert = props.view.model;
     return (
         <Stack tokens={{ childrenGap: 16 }}>
             <ActionBar
-                items={[
-                    { text: "One" },
-                    { text: "Two" },
-                    {
-                        text: "Throw a Test Error",
-                        onClick: () => {
-                            try {
-                                throw new Error("Test error!");
-                            } catch (e) {
-                                setState(() => {
-                                    throw e;
-                                });
-                            }
-                        },
-                    },
-                ]}
+                items={[{ text: "Action One" }, { text: "Action Two" }]}
             />
-            <PropertyList>
-                <PropertyGroup label="General">
-                    <TextProperty
-                        label="Thumbprint algorithm"
-                        value={certificate.thumbprintAlgorithm}
-                    />
-                    <TextProperty
-                        label="Thumbprint"
-                        value={certificate.thumbprint}
-                    />
-                    <TextProperty label="URL" value={certificate.url} />
-                    <TextProperty label="State" value={certificate.state} />
-                </PropertyGroup>
-            </PropertyList>
+            <CertificatePropertyList view={new CertificateView(cert)} />
         </Stack>
     );
-};
+});

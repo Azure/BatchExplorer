@@ -1,5 +1,5 @@
 import * as React from "react";
-import { isPromise } from "@batch/ui-common";
+import { isPromiseLike } from "@batch/ui-common";
 
 export type AsyncEffectCallback = () => Promise<unknown>;
 
@@ -37,7 +37,7 @@ export function useAsyncEffect(
     React.useEffect(
         () => {
             const ret = effect();
-            if (!isPromise(ret) && typeof ret === "function") {
+            if (!isPromiseLike(ret) && typeof ret === "function") {
                 // Cleanup functions should be returned
                 return ret;
             }

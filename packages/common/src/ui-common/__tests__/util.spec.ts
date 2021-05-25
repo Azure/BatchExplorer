@@ -1,5 +1,5 @@
 import { initMockEnvironment } from "../environment";
-import { cloneDeep, uniqueId } from "../util";
+import { cloneDeep, isArray, isPromiseLike, uniqueId } from "../util";
 
 describe("Common utilities", () => {
     beforeEach(() => initMockEnvironment());
@@ -43,5 +43,35 @@ describe("Common utilities", () => {
             },
             list: [1, 2, "a", "b"],
         });
+    });
+
+    test("isPromiseLike() function", () => {
+        // Promise-like
+        expect(isPromiseLike(Promise.resolve())).toBe(true);
+        expect(
+            isPromiseLike({
+                then: () => "foo",
+            })
+        ).toBe(true);
+
+        // Not promise-like
+        expect(isPromiseLike("nope")).toBe(false);
+        expect(isPromiseLike({})).toBe(false);
+        expect(
+            isPromiseLike({
+                then: "still nope",
+            })
+        ).toBe(false);
+    });
+
+    test("isArray() function", () => {
+        // Arrays
+        expect(isArray([])).toBe(true);
+        expect(isArray(["yup"])).toBe(true);
+
+        // Not arrays
+        expect(isArray("nope")).toBe(false);
+        expect(isArray(new Set([]))).toBe(false);
+        expect(isArray({})).toBe(false);
     });
 });
