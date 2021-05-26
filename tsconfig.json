@@ -1,0 +1,18 @@
+/* This file is used for editor support only, not builds */
+{
+  "extends": "./util/common-config/tsconfig-base.json",
+  "include": [
+    "./packages/*/src/**/*.ts(x)",
+    "./web/src/**/*.ts(x)",
+    "./desktop/src/**/*.ts(x)",
+    "./desktop/test/**/*.ts(x)"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@batch/ui-common/*": ["./packages/common/src/ui-common"],
+      "@batch/ui-react/*": ["./packages/react/src/ui-react"],
+      "@batch/ui-service/*": ["./packages/service/src/ui-service"],
+      "@batch/explorer-web/*": ["./web/src/explorer-web"]
+    }
+  }
+}
