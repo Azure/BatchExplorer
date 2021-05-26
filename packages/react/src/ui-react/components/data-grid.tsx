@@ -4,44 +4,59 @@ import {
     IColumn,
     SelectionMode,
 } from "@fluentui/react/lib/DetailsList";
+import { useAppTheme } from "../theme";
 
 export interface DataGridProps {
     columns?: string[] | DataGridColumn[];
+    columnDefaultMaxWidth?: number;
     items?: unknown[];
     onActiveItemChanged?: (
-        item?: any,
+        item?: unknown,
         index?: number,
         ev?: React.FocusEvent<HTMLElement>
     ) => void;
-    selectionMode: "single" | "multiple" | "none";
+    selectionMode?: "single" | "multiple" | "none";
 }
 
 export interface DataGridColumn {
-    fieldName?: string;
+    label?: string;
+    prop?: string;
+    minWidth?: number;
+    maxWidth?: number;
 }
 
+const defaultColumnMinWidth = 48;
+
+/**
+ * Displays a sortable, filterable grid. Wraps the Fluent UI DetailsList
+ * component
+ */
 export const DataGrid: React.FC<DataGridProps> = (props) => {
+    const theme = useAppTheme();
+
     const columns: IColumn[] = [];
     if (props.columns) {
         let i = 1;
         for (const c of props?.columns) {
             if (typeof c === "string") {
+                // Simple column names
                 columns.push({
                     key: `column${i++}`,
                     name: c,
                     fieldName: c,
-                    minWidth: 100,
+                    minWidth: defaultColumnMinWidth,
+                    maxWidth: props.columnDefaultMaxWidth,
                     isResizable: true,
-                    isSorted: true,
                 });
-            } else if (c.fieldName) {
+            } else if (c.prop) {
+                // Column props
                 columns.push({
                     key: `column${i++}`,
-                    name: c.fieldName,
-                    fieldName: c.fieldName,
-                    minWidth: 100,
+                    name: c.label ?? c.prop,
+                    fieldName: c.prop,
+                    minWidth: defaultColumnMinWidth,
+                    maxWidth: c.maxWidth ?? props.columnDefaultMaxWidth,
                     isResizable: true,
-                    isSorted: true,
                 });
             } else {
                 throw new Error(
@@ -54,6 +69,7 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
 
     return (
         <DetailsList
+            theme={theme}
             onActiveItemChanged={props.onActiveItemChanged}
             selectionMode={
                 props.selectionMode === "single"

@@ -4,7 +4,7 @@ import {
     ICommandBarItemProps,
 } from "@fluentui/react/lib/CommandBar";
 import { uniqueId } from "@batch/ui-common";
-import { useTheme } from "@fluentui/react-theme-provider";
+import { useAppTheme } from "../../theme";
 
 export interface ActionBarItem {
     /**
@@ -25,7 +25,7 @@ export interface ActionBarProps {
 }
 
 export const ActionBar: React.FC<ActionBarProps> = (props) => {
-    const theme = useTheme();
+    const theme = useAppTheme();
     const commandBarItems = props.items?.map((item) => _toCommandBarItem(item));
     return <CommandBar theme={theme} items={commandBarItems ?? []} />;
 };

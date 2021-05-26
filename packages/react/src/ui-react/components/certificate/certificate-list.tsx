@@ -8,20 +8,25 @@ export interface CertificateListProps {
     onCertificateSelected?: (selected: Certificate, index: number) => void;
 }
 
+/**
+ * A tabular list of certificates
+ */
 export const CertificateList = observer((props: CertificateListProps) => {
     const { view } = props;
     return (
         <DataGrid
+            selectionMode="single"
             onActiveItemChanged={(_, index) => {
                 index != null &&
                     props.onCertificateSelected &&
                     props.onCertificateSelected(view.items[index], index);
             }}
+            columnDefaultMaxWidth={200}
             columns={[
-                { fieldName: "thumbprint" },
-                { fieldName: "thumbprintAlgorithm" },
-                { fieldName: "state" },
-                { fieldName: "stateTransitionTime" },
+                { prop: "thumbprint", label: "Thumbprint", maxWidth: 300 },
+                { prop: "thumbprintAlgorithm", label: "Thumbprint Algorithm" },
+                { prop: "state", label: "State" },
+                { prop: "stateTransitionTime", label: "State Transition Time" },
             ]}
             items={view.items}
         />
