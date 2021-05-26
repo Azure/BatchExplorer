@@ -15,7 +15,6 @@ export const CertificateDisplay = observer((props: CertificateDisplayProps) => {
         return <ContentPane>No certificate to display</ContentPane>;
     }
 
-    const cert = props.view.model;
     return (
         <Stack tokens={{ childrenGap: 16 }}>
             <ActionBar
@@ -27,7 +26,7 @@ export const CertificateDisplay = observer((props: CertificateDisplayProps) => {
                     { text: "Export as JSON", icon: { iconName: "Download" } },
                 ]}
             />
-            <CertificatePropertyList view={new CertificateView(cert)} />
+            <CertificatePropertyList view={props.view} />
         </Stack>
     );
 });
