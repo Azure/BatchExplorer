@@ -4,6 +4,7 @@ import * as React from "react";
 import { observer } from "mobx-react-lite";
 import { ActionBar } from "../action/action-bar";
 import { CertificatePropertyList } from "./certificate-property-list";
+import { ContentPane } from "../layout";
 
 export interface CertificateDisplayProps {
     view?: CertificateView;
@@ -11,7 +12,7 @@ export interface CertificateDisplayProps {
 
 export const CertificateDisplay = observer((props: CertificateDisplayProps) => {
     if (!props.view || !props.view.model) {
-        return <div>No certificate found</div>;
+        return <ContentPane>No certificate to display</ContentPane>;
     }
 
     const cert = props.view.model;

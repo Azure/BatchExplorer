@@ -24,26 +24,26 @@ export const CertificatePage = observer(() => {
     }, [certListView]);
 
     return (
-        // TODO: Get account from data
-        <DisplayPane title="Certificates" subtitle={certListView.batchAccount}>
-            <Stack tokens={{ childrenGap: 16 }}>
-                <CertificateList
-                    view={certListView}
-                    onCertificateSelected={(_, index) => {
-                        certListView.clearSelection();
-                        certListView.selectByIndex(index);
-                    }}
+        <Stack tokens={{ childrenGap: 16 }}>
+            <CertificateList
+                view={certListView}
+                onCertificateSelected={(_, index) => {
+                    certListView.clearSelection();
+                    certListView.selectByIndex(index);
+                }}
+            />
+            <DisplayPane
+                title="Certificates"
+                subtitle={certListView.batchAccount}
+            >
+                <CertificateDisplay
+                    view={
+                        new CertificateView(
+                            certListView.firstSelection() ?? undefined
+                        )
+                    }
                 />
-                <div style={{ padding: "16px" }}>
-                    <CertificateDisplay
-                        view={
-                            new CertificateView(
-                                certListView.firstSelection() ?? undefined
-                            )
-                        }
-                    />
-                </div>
-            </Stack>
-        </DisplayPane>
+            </DisplayPane>
+        </Stack>
     );
 });

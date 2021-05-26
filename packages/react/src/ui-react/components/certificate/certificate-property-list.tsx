@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { PropertyGroup } from "../property/property-group";
 import { PropertyList } from "../property/property-list";
 import { TextProperty } from "../property/text-property";
+import { ContentPane } from "../layout";
 
 export interface CertificatePropertyListProps {
     view: CertificateView;
@@ -15,7 +16,7 @@ export interface CertificatePropertyListProps {
 export const CertificatePropertyList = observer(
     (props: CertificatePropertyListProps) => {
         if (!props.view.model) {
-            return <div>No certificate found</div>;
+            return <ContentPane>No certificate to display</ContentPane>;
         }
 
         const cert = props.view.model;
