@@ -7,21 +7,62 @@ import {
 import { useAppTheme } from "../theme";
 
 export interface DataGridProps {
+    /**
+     * A list of columns to display in the grid
+     */
     columns?: string[] | DataGridColumn[];
+
+    /**
+     * Global default maximum width for all grid columns. When maxWidth is
+     * specified per column, that value will override this one.
+     */
     columnDefaultMaxWidth?: number;
+
+    /**
+     * A list of objects to display in the grid
+     */
     items?: unknown[];
+
+    /**
+     * Callback when a row in the grid becomes active by clicking or navigating
+     * via the keyboard
+     */
     onActiveItemChanged?: (
         item?: unknown,
         index?: number,
         ev?: React.FocusEvent<HTMLElement>
     ) => void;
+
+    /**
+     * Allow single multiple or no selections. If "none" is specified, selection
+     * checkboxes will not appear.
+     */
     selectionMode?: "single" | "multiple" | "none";
 }
 
+/**
+ * Represents a single column of data in the grid
+ */
 export interface DataGridColumn {
+    /**
+     * User-friendly column label (if not defined, the property name will be
+     * used)
+     */
     label?: string;
+
+    /**
+     * The name of the property to look up when determining the column's value
+     */
     prop?: string;
+
+    /**
+     * Minimum width (in pixels) of the column
+     */
     minWidth?: number;
+
+    /**
+     * Maximum width (in pixels) of the column
+     */
     maxWidth?: number;
 }
 

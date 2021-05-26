@@ -3,7 +3,7 @@ import { Stack } from "@fluentui/react/lib/Stack";
 import * as React from "react";
 import { observer } from "mobx-react-lite";
 import { ActionBar } from "../action/action-bar";
-import { CertificatePropertyList } from "../certificate/certificate-property-list";
+import { CertificatePropertyList } from "./certificate-property-list";
 
 export interface CertificateDisplayProps {
     view?: CertificateView;

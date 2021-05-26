@@ -6,6 +6,9 @@ import {
 } from "@batch/ui-common/lib/environment";
 import { initializeIcons } from "@fluentui/react/lib/Icons";
 
+// Prevent icons from being initialized more than once globally
+let iconsInitialized = false;
+
 /**
  * Environment for a browser-based application
  */
@@ -16,7 +19,10 @@ export class BrowserEnvironment extends AbstractEnvironment<
     name = EnvironmentName.Browser;
 
     async beforeInit(): Promise<void> {
-        initializeIcons();
+        if (!iconsInitialized) {
+            initializeIcons();
+            iconsInitialized = true;
+        }
     }
 
     async beforeDestroy(): Promise<void> {

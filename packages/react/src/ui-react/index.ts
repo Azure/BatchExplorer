@@ -1,3 +1,7 @@
-export { BrowserEnvironment } from "./environment";
+export {
+    BrowserEnvironment,
+    MockBrowserEnvironment,
+    initMockBrowserEnvironment,
+} from "./environment";
 export { getTheme, listThemes, defaultTheme } from "./theme";
 export * from "./hooks";

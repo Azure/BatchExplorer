@@ -7,7 +7,8 @@ import { observer } from "mobx-react-lite";
 import { Stack } from "office-ui-fabric-react/lib/Stack";
 import * as React from "react";
 import { useAsyncEffect } from "../../hooks";
-import { CertificateDisplay, DisplayPane } from "../display";
+import { DisplayPane } from "../layout/display-pane";
+import { CertificateDisplay } from "./certificate-display";
 import { CertificateList } from "./certificate-list";
 
 /**
