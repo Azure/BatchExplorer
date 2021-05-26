@@ -24,9 +24,9 @@ export const CertificateList = observer((props: CertificateListProps) => {
             columnDefaultMaxWidth={200}
             columns={[
                 { prop: "thumbprint", label: "Thumbprint", maxWidth: 300 },
-                { prop: "thumbprintAlgorithm", label: "Thumbprint Algorithm" },
+                { prop: "thumbprintAlgorithm", label: "Algorithm" },
                 { prop: "state", label: "State" },
-                { prop: "stateTransitionTime", label: "State Transition Time" },
+                { prop: "stateTransitionTime", label: "Last Updated" },
             ]}
             items={view.items}
         />
