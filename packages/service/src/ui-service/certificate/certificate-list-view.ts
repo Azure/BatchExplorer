@@ -5,16 +5,22 @@ import { AbstractModelListView, SelectableListView } from "../view";
 import { Certificate } from "./certificate-models";
 import type { CertificateService } from "./certificate-service";
 
+/**
+ * Observable data store for lists of certificates
+ */
 export class CertificateListView
     extends AbstractModelListView<CertificateService, Certificate>
     implements SelectableListView<Certificate> {
     @observable selectedItems: IObservableArray<Certificate>;
+    @observable batchAccount: string;
 
     private logger = getLogger();
 
     constructor(service: CertificateService, models: Certificate[] = []) {
         super(service, models);
         this.selectedItems = observable([]);
+        // TODO: Get Batch account either from the URL or the context
+        this.batchAccount = "prodtest1";
         makeObservable(this);
     }
 
@@ -51,7 +57,7 @@ export class CertificateListView
      * Gets new models from the service and updates the model list
      */
     async load(): Promise<void> {
-        // Mock out the call to list certificates until HTTP auth is supported
+        // KLUDGE: Mock out the call to list certificates until HTTP auth is supported
         const httpClient: MockHttpClient = getEnvironment().getInjectable(
             DependencyName.HttpClient
         );

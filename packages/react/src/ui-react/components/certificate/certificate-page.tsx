@@ -25,7 +25,7 @@ export const CertificatePage = observer(() => {
 
     return (
         // TODO: Get account from data
-        <DisplayPane title="Certificates" subtitle="prodtest1">
+        <DisplayPane title="Certificates" subtitle={certListView.batchAccount}>
             <Stack tokens={{ childrenGap: 16 }}>
                 <CertificateList
                     view={certListView}
