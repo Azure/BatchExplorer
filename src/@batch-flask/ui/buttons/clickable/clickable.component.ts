@@ -32,6 +32,11 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     @Input() public disabled = false;
 
     /**
+     * Set this to false to show that the element has not been selected yet
+     */
+    @Input() public selected = false;
+
+    /**
      * Optional requirement to be able to access this button
      */
     @Input() public permission?: Permission;
@@ -57,6 +62,10 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     @Input() @HostBinding("attr.role") public role = "button";
     @HostBinding("attr.aria-disabled") public get ariaDisabled() { return this.disabled; }
 
+    @HostBinding("attr.aria-selected") public get ariaSelected() {
+        return this.selected;
+    } 
+ 
     public subtitle = "";
 
     private permissionService: PermissionService | null;
@@ -95,6 +104,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     @HostListener("click", ["$event"])
     public handleClick(event: Event) {
+        this.selected = true;
         event.preventDefault();
         event.stopPropagation();
         this.handleAction(event);
