@@ -12,6 +12,14 @@ export interface ActionBarItem {
      */
     text: string;
 
+    /**
+     * Properties for icons rendered alongside (or instead of) item text
+     */
+    icon?: ActionBarIcon;
+
+    /**
+     * Mouse/keyboard activation callback
+     */
     onClick?: (
         event?:
             | React.MouseEvent<HTMLElement>
@@ -21,7 +29,17 @@ export interface ActionBarItem {
 }
 
 export interface ActionBarProps {
+    /**
+     * A list of action items to render
+     */
     items?: ActionBarItem[];
+}
+
+export interface ActionBarIcon extends React.HTMLAttributes<HTMLElement> {
+    /**
+     * The name of the icon. See: https://uifabricicons.azurewebsites.net/
+     */
+    iconName?: string;
 }
 
 export const ActionBar: React.FC<ActionBarProps> = (props) => {
@@ -44,6 +62,12 @@ function _toCommandBarItem(item: ActionBarItem): ICommandBarItemProps {
             if (item.onClick) {
                 item.onClick(event, item);
             }
+        };
+    }
+
+    if (item.icon) {
+        commandBarItem.iconProps = {
+            ...item.icon,
         };
     }
 

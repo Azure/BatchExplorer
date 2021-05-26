@@ -20,12 +20,12 @@ export const CertificatePage = observer(() => {
     );
 
     useAsyncEffect(async () => {
-        certListView;
         await certListView.load();
     }, [certListView]);
 
     return (
-        <DisplayPane>
+        // TODO: Get account from data
+        <DisplayPane title="Certificates" subtitle="prodtest1">
             <Stack tokens={{ childrenGap: 16 }}>
                 <CertificateList
                     view={certListView}

@@ -18,7 +18,13 @@ export const CertificateDisplay = observer((props: CertificateDisplayProps) => {
     return (
         <Stack tokens={{ childrenGap: 16 }}>
             <ActionBar
-                items={[{ text: "Action One" }, { text: "Action Two" }]}
+                // TODO: Get actions from data
+                items={[
+                    { text: "Refresh", icon: { iconName: "Refresh" } },
+                    { text: "Delete", icon: { iconName: "Delete" } },
+                    { text: "Reactivate", icon: { iconName: "Redo" } },
+                    { text: "Export as JSON", icon: { iconName: "Download" } },
+                ]}
             />
             <CertificatePropertyList view={new CertificateView(cert)} />
         </Stack>

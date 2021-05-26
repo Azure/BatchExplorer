@@ -1,7 +1,13 @@
+import { Stack } from "@fluentui/react/lib/Stack";
 import * as React from "react";
 import { ContentPane } from "./content-pane";
 
-interface DisplayContainerState {
+interface DisplayPaneProps {
+    title?: string;
+    subtitle?: string;
+}
+
+interface DisplayPaneState {
     hasError: boolean;
     errorDetails?: {
         error: Error;
@@ -15,8 +21,8 @@ interface DisplayContainerState {
  * errors.
  */
 export class DisplayPane extends React.Component<
-    unknown,
-    DisplayContainerState
+    DisplayPaneProps,
+    DisplayPaneState
 > {
     constructor(props: Record<string, never>) {
         super(props);
@@ -28,7 +34,7 @@ export class DisplayPane extends React.Component<
     static getDerivedStateFromError(
         error: Error,
         errorInfo: React.ErrorInfo
-    ): DisplayContainerState {
+    ): DisplayPaneState {
         return {
             hasError: true,
             errorDetails: {
@@ -49,7 +55,27 @@ export class DisplayPane extends React.Component<
     }
 
     render(): React.ReactNode {
-        return <ContentPane>{this._renderContent()}</ContentPane>;
+        let titleContainer: JSX.Element = <></>;
+        if (this.props.title) {
+            titleContainer = (
+                <Stack
+                    style={{
+                        borderBottom: "1px solid black",
+                        paddingBottom: "16px",
+                    }}
+                >
+                    <h2 style={{ marginBottom: "4px" }}>{this.props.title}</h2>
+                    {this.props.subtitle && <div>{this.props.subtitle}</div>}
+                </Stack>
+            );
+        }
+
+        return (
+            <ContentPane>
+                {titleContainer}
+                {this._renderContent()}
+            </ContentPane>
+        );
     }
 
     private _renderContent(): React.ReactNode {
