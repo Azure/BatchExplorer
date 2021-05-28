@@ -6,6 +6,7 @@
     *ngFor="let application of displayedApplications;trackBy: trackApplication"
     class="application"
     [class.active]="application.id === active?.applicationId && application.portfolioId === active?.portfolioId"
+    [attr.aria-selected]="application.id === active?.applicationId && application.portfolioId === active?.portfolioId"
     [title]="application.description"
     (do)="selectApplication(application)">
     <img class="logo" [src]="application.icon" alt="Logo of {{application.name}}">
