@@ -31,7 +31,6 @@ export class ClickableComponent implements OnChanges, OnDestroy {
      */
     @Input() public disabled = false;
 
-
     /**
      * Optional requirement to be able to access this button
      */
