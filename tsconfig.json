@@ -10,6 +10,7 @@
   "compilerOptions": {
     "paths": {
       "@batch/ui-common/*": ["./packages/common/src/ui-common"],
+      "@batch/ui-playground/*": ["./packages/playground/src/ui-playground"],
       "@batch/ui-react/*": ["./packages/react/src/ui-react"],
       "@batch/ui-service/*": ["./packages/service/src/ui-service"],
       "@batch/explorer-web/*": ["./web/src/explorer-web"]

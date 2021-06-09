@@ -1,3 +1,4 @@
+import { PlaygroundExample } from "@batch/ui-playground";
 import { defaultTheme, listThemes } from "@batch/ui-react";
 import { CertificatePage } from "@batch/ui-react/lib/components/certificate";
 import {
@@ -6,6 +7,7 @@ import {
     IDropdownStyles,
 } from "@fluentui/react/lib/Dropdown";
 import * as React from "react";
+import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import { AppRoot } from "./layout/app-root";
 import { Footer } from "./layout/footer";
 import { Header } from "./layout/header";
@@ -31,25 +33,36 @@ export const Application: React.FC = () => {
 
     return (
         <AppRoot theme={theme}>
-            <Header>
-                <Dropdown
-                    styles={dropdownStyles}
-                    defaultSelectedKey={defaultTheme}
-                    placeholder="Select a theme"
-                    label="Theme"
-                    options={themeOptions}
-                    onRenderLabel={() => <></>}
-                    onChange={(_, option) => {
-                        if (option) {
-                            setTheme(String(option.key));
-                        }
-                    }}
-                />
-            </Header>
-            <Main>
-                <CertificatePage />
-            </Main>
-            <Footer />
+            <BrowserRouter>
+                <Header>
+                    <Link to="/">Home</Link>
+                    <Link to="/playground">Playground</Link>
+                    <Dropdown
+                        styles={dropdownStyles}
+                        defaultSelectedKey={defaultTheme}
+                        placeholder="Select a theme"
+                        label="Theme"
+                        options={themeOptions}
+                        onRenderLabel={() => <></>}
+                        onChange={(_, option) => {
+                            if (option) {
+                                setTheme(String(option.key));
+                            }
+                        }}
+                    />
+                </Header>
+                <Main>
+                    <Switch>
+                        <Route path="/playground">
+                            <PlaygroundExample />
+                        </Route>
+                        <Route path="/">
+                            <CertificatePage />
+                        </Route>
+                    </Switch>
+                </Main>
+                <Footer />
+            </BrowserRouter>
         </AppRoot>
     );
 };
