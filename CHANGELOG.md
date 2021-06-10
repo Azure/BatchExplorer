@@ -1,3 +1,15 @@
+# 2.10.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/44?closed=1)
+
+### feature
+
+* Migrates authentication to MSAL [\#2331](https://github.com/Azure/BatchExplorer/issues/2331)
+
+### other
+
+* Switch to Typescript in upload-to-storage [\#2308](https://github.com/Azure/BatchExplorer/issues/2308)
+
 # 2.9.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/43?closed=1)
