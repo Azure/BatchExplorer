@@ -81,7 +81,7 @@ async function confirmVersion(version: string) {
         ask(`Up program to be version ${version} (From millestone title) [Y/n]`, true, (ok) => {
             if (ok) {
                 success(`A new release for version ${version} will be prepared`);
-                resolve();
+                resolve(null);
             } else {
                 reject(new Error("Millestone version wasn't confirmed. Please change millestone title"));
             }
@@ -168,6 +168,9 @@ async function startPublish() {
     checkGithubToken();
     const millestoneId = getMillestoneId();
     const millestone = await loadMillestone(millestoneId);
+    if (!millestone.title && millestone["message"]) {
+        throw new Error(`Error fetching milestone: ${millestone["message"]}`);
+    }
     const version = millestone.title;
     await confirmVersion(version);
     const releaseBranch = getPreparationBranchName(version);
