@@ -79,7 +79,7 @@ describe("ProfileButtonComponent", () => {
     it("shows the current user info in tooltip", () => {
         authServiceSpy.currentUser.next({
             name: "Some Name",
-            unique_name: "some.name@example.com",
+            username: "some.name@example.com",
         });
         fixture.detectChanges();
         const tooltip: MatTooltip = clickableEl.injector.get(MatTooltip);
