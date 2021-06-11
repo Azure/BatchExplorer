@@ -18,6 +18,7 @@ export interface TokenUrlParams {
     grant_type: string;
 }
 
+const LOGOUT_PATH = "oauth2/logout";
 export interface LogoutParams {
     post_logout_redirect_uri?: string;
 }
@@ -28,7 +29,11 @@ export function authorizeUrl(aadUrl: string, tenant: string, params: AuthorizeUr
 }
 
 export function logoutUrl(aadUrl: string, tenant: string) {
-    return `${aadUrl}${tenant}/oauth2/logout`;
+    return `${aadUrl}${tenant}/${LOGOUT_PATH}`;
+}
+
+export function isLogoutURL(url: string) {
+    return url.endsWith(LOGOUT_PATH);
 }
 
 export function objectToParams(object): string {

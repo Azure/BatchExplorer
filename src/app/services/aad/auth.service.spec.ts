@@ -1,5 +1,5 @@
 import { AccessToken, ServerError } from "@batch-flask/core";
-import { AdalService } from "app/services/adal";
+import { AuthService } from "app/services/aad";
 import { DateTime } from "luxon";
 import { BehaviorSubject } from "rxjs";
 
@@ -15,8 +15,8 @@ const token1 = new AccessToken({
     refresh_token: "foorefresh",
 });
 
-describe("AdalService spec", () => {
-    let service: AdalService;
+describe("AuthService spec", () => {
+    let service: AuthService;
     let aadServiceSpy;
     let remoteSpy;
     let batchExplorerSpy;
@@ -25,7 +25,7 @@ describe("AdalService spec", () => {
 
     beforeEach(() => {
         aadServiceSpy = {
-            tenantsIds: new BehaviorSubject([]),
+            tenants: new BehaviorSubject([]),
             currentUser: new BehaviorSubject([]),
         };
         remoteSpy = {
@@ -42,19 +42,19 @@ describe("AdalService spec", () => {
         zoneSpy = {
             run: jasmine.createSpy("zone.run").and.callFake(callback => callback()),
         };
-        service = new AdalService(zoneSpy, batchExplorerSpy, remoteSpy, notificationServiceSpy);
+        service = new AuthService(zoneSpy, batchExplorerSpy, remoteSpy, notificationServiceSpy);
     });
 
     afterEach(() => {
-        aadServiceSpy.tenantsIds.complete();
+        aadServiceSpy.tenants.complete();
         service.ngOnDestroy();
     });
 
-    it("It notify of error if tenants ids fail", () => {
+    it("raises an error when tenants cannot be fetched", () => {
         const nextSpy = jasmine.createSpy("next");
         const errorSpy = jasmine.createSpy("error");
-        service.tenantsIds.subscribe(nextSpy, errorSpy);
-        aadServiceSpy.tenantsIds.error(new ServerError({
+        service.tenants.subscribe(nextSpy, errorSpy);
+        aadServiceSpy.tenants.error(new ServerError({
             status: 300,
             code: "ERRNOCONN",
             statusText: "ERRNOCONN",
@@ -110,31 +110,35 @@ describe("AdalService spec", () => {
             expect(tokenB).toEqual(token1);
         });
 
-        it("it calls again the main process if previous call returned an error", async () => {
+        it("calls again the main process if previous call returned an error", async () => {
             remoteSpy.send = jasmine.createSpy("send").and.returnValues(
                 Promise.reject("some-error"),
                 Promise.resolve(token1),
             );
             try {
                 await service.accessTokenDataAsync(tenant1, resource1);
-                fail("Shouldn't have succeeded");
+                fail("First call to accessTokenDataAsync shouldn't have succeeded");
             } catch (e) {
                 expect(remoteSpy.send).toHaveBeenCalledTimes(1);
                 expect(e).toEqual("some-error");
             }
-            const token = await service.accessTokenDataAsync(tenant1, resource1);
-            expect(remoteSpy.send).toHaveBeenCalledTimes(2);
-            expect(token).toEqual(token1);
 
+            try {
+                const token = await service.accessTokenDataAsync(tenant1, resource1);
+                expect(remoteSpy.send).toHaveBeenCalledTimes(2);
+                expect(token).toEqual(token1);
+            } catch (e) {
+                fail(`Second call to accessTokenDataAsync should have succeeded [err=${e}]`);
+            }
         });
     });
 
-    it("updates the tenants ids when updated by the adal service", () => {
-        let tenantIds;
-        service.tenantsIds.subscribe(x => tenantIds = x);
+    it("updates the tenants when updated by the auth service", () => {
+        let tenants;
+        service.tenants.subscribe(x => tenants = x);
         expect(zoneSpy.run).toHaveBeenCalledTimes(1);
-        aadServiceSpy.tenantsIds.next(["foo-1", "foo-2"]);
+        aadServiceSpy.tenants.next(["foo-1", "foo-2"]);
         expect(zoneSpy.run).toHaveBeenCalledTimes(2);
-        expect(tenantIds).toEqual(["foo-1", "foo-2"]);
+        expect(tenants).toEqual(["foo-1", "foo-2"]);
     });
 });

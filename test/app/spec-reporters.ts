@@ -52,13 +52,6 @@ if (process.env.DEBUG_TIME) {
 
 jasmine.getEnv().addReporter({
     jasmineDone: (result) => {
-        // KLUDGE: Delete the sort function from the result to prevent errors
-        //         when sending it over IPC. This may be fixed in a later
-        //         version of karma-jasmine or karma-electron (in which case
-        //         this line may be removed)
-        //         See: https://github.com/twolfson/karma-electron/issues/47
-        delete result.order.sort;
-
         console.log("Total memory is", chromePerformance.memory.usedJSHeapSize);
 
         setTimeout(() => {

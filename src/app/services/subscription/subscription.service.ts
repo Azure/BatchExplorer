@@ -11,10 +11,9 @@ import {
     distinctUntilChanged, expand, filter, first, flatMap, map,
     publishReplay, reduce, refCount, shareReplay, switchMap, takeUntil,
 } from "rxjs/operators";
-import { AdalService } from "../adal";
+import { AuthService } from "../aad";
 import { AzureHttpService } from "../azure-http.service";
 import { ArmListResponse } from "../core";
-import { TenantDetailsService } from "../tenant-details.service";
 
 @Injectable({ providedIn: "root" })
 export class SubscriptionService implements OnDestroy {
@@ -26,9 +25,8 @@ export class SubscriptionService implements OnDestroy {
     private _destroy = new Subject();
 
     constructor(
-        private tenantDetailsService: TenantDetailsService,
         private azure: AzureHttpService,
-        private adal: AdalService,
+        private auth: AuthService,
         private settingsService: UserConfigurationService<BEUserConfiguration>) {
 
         const ignoredPatterns = this.settingsService.watch("subscriptions").pipe(
@@ -62,12 +60,12 @@ export class SubscriptionService implements OnDestroy {
     }
 
     public load(): Observable<any> {
-        const obs = this.adal.tenantsIds.pipe(
-            filter(ids => ids.length > 0),
+        const obs = this.auth.tenants.pipe(
+            filter(tenants => tenants.length > 0),
             first(),
-            switchMap((tenantIds) => {
-                return forkJoin(tenantIds.map(tenantId => this._loadSubscriptionsForTenant(tenantId)));
-            }),
+            switchMap((tenants: TenantDetails[]) => forkJoin(
+                tenants.map(tenant => this._loadSubscriptionsForTenant(tenant)))
+            ),
             publishReplay(1),
             refCount(),
         );
@@ -121,28 +119,30 @@ export class SubscriptionService implements OnDestroy {
         );
     }
 
-    private _loadSubscriptionsForTenant(tenantId: string): Observable<ArmSubscription[]> {
-        return this.tenantDetailsService.get(tenantId).pipe(
-            switchMap((tenantDetails) => {
-                return this.azure.get<ArmListResponse<ArmSubscriptionAttributes>>(tenantId, "subscriptions").pipe(
-                    expand((response) => {
-                        if (response.nextLink) {
-                            return this.azure.get(tenantId, response.nextLink);
-                        } else {
-                            return empty();
-                        }
-                    }),
-                    reduce((subs, response: ArmListResponse<any>) => {
-                        const newSubs = response.value.map(x => this._createSubscription(tenantDetails, x));
-                        return [...subs, ...newSubs];
-                    }, []),
-                );
+    private _loadSubscriptionsForTenant(tenant: TenantDetails): Observable<ArmSubscription[]> {
+        return this.azure.get<ArmListResponse<ArmSubscriptionAttributes>>(tenant.tenantId, "subscriptions").pipe(
+            expand((response) => {
+                if (response.nextLink) {
+                    return this.azure.get(tenant.tenantId, response.nextLink);
+                } else {
+                    return empty();
+                }
             }),
+            reduce((subs, response: ArmListResponse<any>) => {
+                const newSubs = response.value.map(
+                    sub => this._createSubscription(tenant, sub)
+                );
+                return [...subs, ...newSubs];
+            }, [])
         );
     }
 
     private _createSubscription(tenant: TenantDetails, data: any): ArmSubscription {
-        return new ArmSubscription({ ...data, tenant, tenantId: tenant.id });
+        return new ArmSubscription({
+            ...data,
+            tenant,
+            tenantId: tenant.tenantId
+        });
     }
 
     private _cacheSubscriptions() {

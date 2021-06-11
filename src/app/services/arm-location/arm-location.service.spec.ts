@@ -2,16 +2,17 @@ import { HttpClientTestingModule, HttpTestingController } from "@angular/common/
 import { TestBed } from "@angular/core/testing";
 import { AccessToken } from "@batch-flask/core";
 import { ArmLocation, ArmSubscription, TenantDetails } from "app/models";
+import { Constants } from "common";
 import { List } from "immutable";
 import { BehaviorSubject, of } from "rxjs";
-import { AdalService } from "../adal";
+import { AuthService } from "../aad";
 import { AzureHttpService } from "../azure-http.service";
 import { BatchExplorerService } from "../batch-explorer.service";
 import { ArmLocationService } from "./arm-location.service";
 
 const tenantDetails: StringMap<TenantDetails> = {
-    "tenant-1": new TenantDetails({ displayName: "Tenant 1", objectId: "tenant-1" }),
-    "tenant-2": new TenantDetails({ displayName: "Tenant 2", objectId: "tenant-2" }),
+    "tenant-1": new TenantDetails({ displayName: "Tenant 1" }),
+    "tenant-2": new TenantDetails({ displayName: "Tenant 2" }),
 };
 
 const tokens: StringMap<AccessToken> = {
@@ -65,12 +66,12 @@ const batchLoc2 = new ArmLocation({
 describe("ArmLocationService", () => {
     let service: ArmLocationService;
 
-    let adalSpy;
+    let authSpy;
     let armProviderServiceSpy;
     let httpMock: HttpTestingController;
 
     beforeEach(() => {
-        adalSpy = {
+        authSpy = {
             tenantsIds: new BehaviorSubject(["tenant-1", "tenant-2"]),
             accessTokenData: jasmine.createSpy("accessTokenData").and.callFake((id) => {
                 return of(tokens[id]);
@@ -95,7 +96,7 @@ describe("ArmLocationService", () => {
                         },
                     },
                 },
-                { provide: AdalService, useValue: adalSpy },
+                { provide: AuthService, useValue: authSpy },
             ],
         });
 
@@ -113,7 +114,7 @@ describe("ArmLocationService", () => {
         });
 
         const reqs = httpMock.expectOne(
-            "https://management.azure.com/subscriptions/sub1/locations?api-version=2016-09-01",
+            `https://management.azure.com/subscriptions/sub1/locations?api-version=${Constants.ApiVersion.arm}`,
         );
         expect(reqs.request.body).toBe(null);
 
@@ -135,7 +136,7 @@ describe("ArmLocationService", () => {
             sub1, "Microsoft.Batch", "batchAccounts");
 
         const reqs = httpMock.expectOne(
-            "https://management.azure.com/subscriptions/sub1/locations?api-version=2016-09-01",
+            `https://management.azure.com/subscriptions/sub1/locations?api-version=${Constants.ApiVersion.arm}`,
         );
         expect(reqs.request.body).toBe(null);
 

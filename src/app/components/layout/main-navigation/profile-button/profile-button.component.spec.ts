@@ -15,7 +15,7 @@ import {
     ContextMenuSeparator,
     MultiContextMenuItem,
 } from "@batch-flask/ui";
-import { AdalService, BatchExplorerService } from "app/services";
+import { AuthService, BatchExplorerService } from "app/services";
 import { ProgressInfo } from "builder-util-runtime";
 import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
@@ -32,7 +32,7 @@ describe("ProfileButtonComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let de: DebugElement;
     let clickableEl: DebugElement;
-    let adalServiceSpy;
+    let authServiceSpy;
     let autoUpdateServiceSpy;
     let batchExplorerServiceSpy;
     let contextMenuServiceSpy: ContextMenuServiceMock;
@@ -43,7 +43,7 @@ describe("ProfileButtonComponent", () => {
         checkForUpdatesResponse = Promise.resolve({ updateInfo: { version: "1.2.4" } });
         contextMenuServiceSpy = new ContextMenuServiceMock();
         notificationServiceSpy = new NotificationServiceMock();
-        adalServiceSpy = {
+        authServiceSpy = {
             currentUser: new BehaviorSubject(null),
         };
 
@@ -58,7 +58,7 @@ describe("ProfileButtonComponent", () => {
             imports: [MatTooltipModule, RouterTestingModule, I18nTestingModule, MatProgressSpinnerModule],
             declarations: [ProfileButtonComponent, ClickableComponent, TestComponent],
             providers: [
-                { provide: AdalService, useValue: adalServiceSpy },
+                { provide: AuthService, useValue: authServiceSpy },
                 { provide: AutoUpdateService, useValue: autoUpdateServiceSpy },
                 { provide: BatchExplorerService, useValue: batchExplorerServiceSpy },
                 { provide: ElectronShell, useValue: null },
@@ -77,7 +77,7 @@ describe("ProfileButtonComponent", () => {
     });
 
     it("shows the current user info in tooltip", () => {
-        adalServiceSpy.currentUser.next({
+        authServiceSpy.currentUser.next({
             name: "Some Name",
             unique_name: "some.name@example.com",
         });
