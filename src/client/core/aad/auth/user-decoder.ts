@@ -16,7 +16,7 @@ export class UserDecoder {
         const decodedPayLoad = this.safeDecodeBase64(jwtDecoded.JWSPayload);
 
         const user = JSON.parse(decodedPayLoad);
-
+        user.username = user.preferred_username;
         return user as AADUser;
     }
 

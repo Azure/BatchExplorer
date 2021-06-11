@@ -199,7 +199,7 @@ export class AADService {
     private _processUserToken(idToken: string) {
         const user = this._userDecoder.decode(idToken);
         const prevUser = this._currentUser.value;
-        if (!prevUser || prevUser.unique_name !== user.unique_name) {
+        if (!prevUser || prevUser.username !== user.username) {
             this._clearUserSpecificCache();
         }
         this._currentUser.next(user);
