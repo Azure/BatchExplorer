@@ -81,6 +81,25 @@
       }
     },
     {
+      "name": "Service: Test Watch",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "./node_modules/.bin/jest",
+        "--runInBand",
+        "--watch"
+      ],
+      "cwd": "${workspaceRoot}/packages/service",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "port": 9229,
+      "presentation": {
+        "group": "Packages",
+        "order": 20
+      }
+    },
+    {
       "name": "Desktop: Debug Client",
       "type": "node",
       "request": "launch",
