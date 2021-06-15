@@ -1,6 +1,7 @@
 {
   "extends": "../../../util/common-config/tsconfig-base.json",
   "compilerOptions": {
+    "skipLibCheck": true,
     "jsx": "react",
     "outDir": "../lib",
     "rootDir": "../src/ui-playground",

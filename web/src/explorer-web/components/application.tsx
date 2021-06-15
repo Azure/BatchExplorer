@@ -13,7 +13,10 @@ import { AppRoot } from "./layout/app-root";
 import { Footer } from "./layout/footer";
 import { Header } from "./layout/header";
 import { Main } from "./layout/main";
+import { Stack, IStackTokens } from "@fluentui/react/";
+import { PrimaryButton } from "@fluentui/react/lib/Button";
 
+//DefaultButton
 const dropdownStyles: Partial<IDropdownStyles> = {
     dropdown: { width: 300 },
 };
@@ -32,26 +35,48 @@ export const Application: React.FC = () => {
         return options;
     }, []);
 
+    /* const linkStyle = {
+        textDecoration: "none",
+        color: "white",
+        //backgroundColor: "#056ce3",
+        backgroundColor: "#0939d6",
+        fontSize: "1.2em",
+        marginRight: "2em",
+    }; */
+
+    const stackTokens: IStackTokens = { childrenGap: 30 };
+
     return (
         <AppRoot theme={theme}>
             <BrowserRouter>
                 <Header>
-                    <Link to="/">Home</Link>
-                    <Link to="/editor">Editor</Link>
-                    <Link to="/playground">Playground</Link>
-                    <Dropdown
-                        styles={dropdownStyles}
-                        defaultSelectedKey={defaultTheme}
-                        placeholder="Select a theme"
-                        label="Theme"
-                        options={themeOptions}
-                        onRenderLabel={() => <></>}
-                        onChange={(_, option) => {
-                            if (option) {
-                                setTheme(String(option.key));
-                            }
-                        }}
-                    />
+                    {/* &nbsp; &nbsp; */}
+                    <Stack horizontal tokens={stackTokens}>
+                        <Link to="/">
+                            <PrimaryButton text="Home"></PrimaryButton>
+                        </Link>
+                        <Link to="/editor">
+                            <PrimaryButton text="Editor"></PrimaryButton>
+                        </Link>
+                        {/* &nbsp; &nbsp; */}
+                        <Link to="/playground">
+                            <PrimaryButton text="Playground"></PrimaryButton>
+                        </Link>
+
+                        <Dropdown
+                            styles={dropdownStyles}
+                            defaultSelectedKey={defaultTheme}
+                            placeholder="Select a theme"
+                            label="Theme"
+                            options={themeOptions}
+                            onRenderLabel={() => <></>}
+                            onChange={(_, option) => {
+                                if (option) {
+                                    setTheme(String(option.key));
+                                }
+                            }}
+                        />
+                    </Stack>
                 </Header>
                 <Main>
                     <Switch>
