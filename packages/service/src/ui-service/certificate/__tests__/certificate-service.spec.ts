@@ -54,6 +54,7 @@ describe("Certificate service", () => {
         );
 
         const cert = await service.get("does-not-exist");
-        expect(cert).toBeNull();
+        expect(cert.response.status).toBe(404);
+        expect(cert.model).toBeUndefined();
     });
 });
