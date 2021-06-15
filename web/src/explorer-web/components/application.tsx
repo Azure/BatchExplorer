@@ -1,5 +1,6 @@
 import { PlaygroundExample } from "@batch/ui-playground";
 import { defaultTheme, listThemes } from "@batch/ui-react";
+import { MonacoEditor } from "@batch/ui-react/lib/components";
 import { CertificatePage } from "@batch/ui-react/lib/components/certificate";
 import {
     Dropdown,
@@ -36,6 +37,7 @@ export const Application: React.FC = () => {
             <BrowserRouter>
                 <Header>
                     <Link to="/">Home</Link>
+                    <Link to="/editor">Editor</Link>
                     <Link to="/playground">Playground</Link>
                     <Dropdown
                         styles={dropdownStyles}
@@ -55,6 +57,22 @@ export const Application: React.FC = () => {
                     <Switch>
                         <Route path="/playground">
                             <PlaygroundExample />
+                        </Route>
+                        <Route path="/editor">
+                            <MonacoEditor
+                                language="json"
+                                containerStyle={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    flexGrow: 1,
+                                    width: "100%",
+                                }}
+                                editorOptions={{
+                                    minimap: {
+                                        enabled: false,
+                                    },
+                                }}
+                            />
                         </Route>
                         <Route path="/">
                             <CertificatePage />

@@ -8,6 +8,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TSConfigPathsWebpackPlugin = require("tsconfig-paths-webpack-plugin");
 const BundleAnalyzerWebpackPlugin = require("webpack-bundle-analyzer")
     .BundleAnalyzerPlugin;
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const webpack = require("webpack");
 
 const MODE_DEV = "development";
@@ -47,6 +48,12 @@ module.exports = (env) => {
             ENV: JSON.stringify({
                 MODE: OPTS.DEV_MODE ? "dev" : "prod",
             }),
+        })
+    );
+
+    webpackPlugins.push(
+        new MonacoWebpackPlugin({
+            languages: ["json"],
         })
     );
 
@@ -108,6 +115,14 @@ module.exports = (env) => {
                         loader: "tsx",
                         target: "es2015",
                     },
+                },
+                {
+                    test: /\.css$/,
+                    use: ["style-loader", "css-loader"],
+                },
+                {
+                    test: /\.ttf$/,
+                    use: ["file-loader"],
                 },
             ],
         },
