@@ -19,7 +19,6 @@ const MonacoEditorLazy = React.lazy(async () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return req.ensure([], (req: any) => resolve(req("./MonacoEditorImpl")));
     });
-    // return await import("./MonacoEditorImpl");
 });
 
 const LoadingSpinner: React.FC = () => {
