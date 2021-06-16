@@ -24,8 +24,9 @@ const categoriesDisplayName = {
     compute: "Compute optimized",
     memory: "Memory optimized",
     storage: "Storage optimized",
-    gpu: "GPU",
+    gpu: "GPU - accelerated compute",
     hpc: "High performance compute",
+    fpga: "FPGA - accelerated compute",
 };
 
 export class VmSizeDecorator {
