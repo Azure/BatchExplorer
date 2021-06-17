@@ -674,22 +674,31 @@ export const Button = () => {
                 </Stack>
             </div>
             <h2 style={headingStyle}> JSON Editor for Normal Button</h2>
-            <MonacoEditor
-                language="json"
-                containerStyle={{
-                    // display: "flex",
-                    //flexDirection: "column",
-                    //flexGrow: 1,
-                    width: "100%",
-                    height: "10%",
-                    // justifyContent: "center",
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: 500,
                 }}
-                editorOptions={{
-                    minimap: {
-                        enabled: false,
-                    },
-                }}
-            />
+            >
+                <MonacoEditor
+                    language="json"
+                    containerStyle={{
+                        // display: "flex",
+                        //flexDirection: "column",
+                        //flexGrow: 1,
+                        width: "80%",
+                        height: "100%",
+                        // justifyContent: "center",
+                    }}
+                    editorOptions={{
+                        minimap: {
+                            enabled: false,
+                        },
+                    }}
+                />
+            </div>
             {/* <Slider
                 label="Font Size"
                 min={0}
@@ -871,29 +880,38 @@ export const Button = () => {
                 </Stack>
             </div>
             <h2 style={headingStyle}> JSON Editor for Icon Button</h2>
-            <MonacoEditor
-                language="json"
-                containerStyle={{
+            <div
+                style={{
                     display: "flex",
-                    flexDirection: "column",
-                    // flexGrow: 1,
-                    width: "100%",
-                    height: "10%",
-                    //justifyContent: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: 500,
                 }}
-                editorOptions={{
-                    minimap: {
-                        enabled: false,
-                    },
-                }}
-            />
-            <hr
+            >
+                <MonacoEditor
+                    language="json"
+                    containerStyle={{
+                        // display: "flex",
+                        //flexDirection: "column",
+                        //flexGrow: 1,
+                        width: "80%",
+                        height: "100%",
+                        // justifyContent: "center",
+                    }}
+                    editorOptions={{
+                        minimap: {
+                            enabled: false,
+                        },
+                    }}
+                />
+            </div>
+            {/* <hr
                 style={{
                     color: "red",
                     backgroundColor: "red",
                     height: 1,
                 }}
-            />
+            /> */}
         </>
     );
 };
