@@ -1,24 +1,23 @@
-import React from "react";
-import { DefaultButton } from "@fluentui/react/lib/Button";
-import { TextField } from "@fluentui/react/lib/TextField";
-import { headingStyle } from "../../../style";
+import { MonacoEditor } from "@batch/ui-react/lib/components";
+import { IIconProps, Slider } from "@fluentui/react/lib/";
+import { DefaultButton, IconButton } from "@fluentui/react/lib/Button";
 import {
     ChoiceGroup,
     IChoiceGroupOption,
 } from "@fluentui/react/lib/ChoiceGroup";
+import { IStackProps, IStackStyles, Stack } from "@fluentui/react/lib/Stack";
+import { TextField } from "@fluentui/react/lib/TextField";
+import React from "react";
 import {
-    TextFieldOnChange,
     ChoiceGroupOnChange,
-    Item,
     ICONS,
+    Item,
+    TextFieldOnChange,
 } from "../../../functions";
-import { IIconProps } from "@fluentui/react/lib/";
-import { IconButton } from "@fluentui/react/lib/Button";
-import { Slider } from "@fluentui/react/lib/";
-import { Stack, IStackProps, IStackStyles } from "@fluentui/react/lib/Stack";
-import { MonacoEditor } from "@batch/ui-react/lib/components";
+import { headingStyle } from "../../../style";
+import { DemoPane } from "../../../layout/demo-pane";
 
-export const Button: React.FC = () => {
+export const ButtonDemo: React.FC = () => {
     const [labelValue, setLabelValue] = React.useState("");
     const [selectedKey, setSelectedKey] = React.useState<string | undefined>(
         "primary"
@@ -529,8 +528,7 @@ export const Button: React.FC = () => {
     };
 
     return (
-        <>
-            <h1 style={headingStyle}> Normal Button</h1>
+        <DemoPane title="Normal Button">
             {/* Normal Button component */}
             <div style={{ display: "flex", justifyContent: alignKey }}>
                 <DefaultButton
@@ -929,6 +927,6 @@ export const Button: React.FC = () => {
                     height: 1,
                 }}
             /> */}
-        </>
+        </DemoPane>
     );
 };

@@ -19,7 +19,7 @@ import { Packages } from "../displays/packages";
 import { PoolGraph } from "../displays/poolgraph";
 import { Tasks } from "../displays/tasks";
 import { TextField } from "../generic/textfield";
-import { CheckboxDemo } from "../demo/generic/checkbox/checkbox-demo";
+import { Checkbox } from "../generic/checkbox";
 
 export const DemoMainContent: React.FC = () => {
     return (
@@ -28,7 +28,7 @@ export const DemoMainContent: React.FC = () => {
                 <ButtonDemo />
             </Route>
             <Route path="/checkbox">
-                <CheckboxDemo />
+                <Checkbox />
             </Route>
             <Route path="/combobox">
                 <ComboBox />

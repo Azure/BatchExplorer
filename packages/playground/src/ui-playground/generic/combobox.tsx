@@ -1,7 +1,6 @@
-//import { useAppTheme } from "@batch/ui-react/lib/theme";
 import * as React from "react";
-import { headingStyle } from "../style";
+import { DemoPane } from "../layout/demo-pane";
 
-export const ComboBox: React.FC = (props) => {
-    return <h1 style={headingStyle}>ComboBox</h1>;
+export const ComboBox: React.FC = () => {
+    return <DemoPane title="ComboBox">This is a combo box demo</DemoPane>;
 };
