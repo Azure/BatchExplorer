@@ -1,7 +1,7 @@
 import React from "react";
 import { DefaultButton } from "@fluentui/react/lib/Button";
 import { TextField } from "@fluentui/react/lib/TextField";
-import { headingStyle } from "../style";
+import { headingStyle } from "../../../style";
 import {
     ChoiceGroup,
     IChoiceGroupOption,
@@ -11,7 +11,7 @@ import {
     ChoiceGroupOnChange,
     Item,
     ICONS,
-} from "../functions";
+} from "../../../functions";
 import { IIconProps } from "@fluentui/react/lib/";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { Slider } from "@fluentui/react/lib/";
