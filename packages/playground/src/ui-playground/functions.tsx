@@ -67,13 +67,16 @@ export function ChoiceGroupOnChange(
         setResult(foundItems);
     }; */
 
-// Create an interface for product item
+// Interface for adding Fluent UI icons to the list of most commonly used icons
 export interface Item {
     id: number;
     name: string;
 }
-// This list holds some products of a fiction store
-export const PRODUCTS: Item[] = [
+/*
+ * This is a list of the Fluent UI icons that are most commonly used in Batch Explorer.
+ * To see the full list of icons : https://uifabricicons.azurewebsites.net/
+ */
+export const ICONS: Item[] = [
     {
         id: 1,
         name: "Accept",

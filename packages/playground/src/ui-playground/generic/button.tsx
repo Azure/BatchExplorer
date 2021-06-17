@@ -10,7 +10,7 @@ import {
     TextFieldOnChange,
     ChoiceGroupOnChange,
     Item,
-    PRODUCTS,
+    ICONS,
 } from "../functions";
 import { IIconProps } from "@fluentui/react/lib/";
 import { IconButton } from "@fluentui/react/lib/Button";
@@ -114,6 +114,10 @@ export const Button = () => {
         []
     );
 
+    /*
+     * This function takes in user input on whether they want to include a hyperlink or not and,
+     * based on that, fills in the URL text field value with the user's input
+     */
     function theString(param: string | undefined): string {
         if (param == "url" && errorMsg == "") {
             return secondTextFieldValue;
@@ -122,6 +126,9 @@ export const Button = () => {
         }
     }
 
+    /*
+     * This function returns true if the user wants to include a hyperlink and false if not.
+     */
     function CheckURL(param: string | undefined): boolean {
         if (param == "url") {
             return false;
@@ -130,6 +137,9 @@ export const Button = () => {
         }
     }
 
+    /*
+     * This function fills in the URL textbox if the user wants a hyperlink and empties it if not.
+     */
     function standard(param: string): string {
         if (CheckURL(urlKey) == false) {
             return param;
@@ -240,7 +250,7 @@ export const Button = () => {
             const enteredName = (event.target as HTMLTextAreaElement).value;
             setQuery(enteredName);
 
-            const foundItems = PRODUCTS.filter((item) =>
+            const foundItems = ICONS.filter((item) =>
                 item.name.toLowerCase().includes(enteredName.toLowerCase())
             );
             setResult(foundItems);
@@ -248,18 +258,20 @@ export const Button = () => {
         []
     );
 
+    /*
+     * When a user clicks on any of the items in the icon name dropdown, this function
+     * automatically populates the textfield with the name of that item.
+     */
     function Foo(param: string): void {
         setQuery(param);
 
-        const foundItem = PRODUCTS.filter((item) =>
+        const foundItem = ICONS.filter((item) =>
             item.name.toLowerCase().includes(param.toLowerCase())
         );
         setResult(foundItem);
     }
 
-    //Fourth
-
-    //Padding
+    //Padding Sliders - Normal Button
 
     const [paddingSliderValue, setPaddingSliderValue] = React.useState(15);
     const paddingSliderOnChange = (value: number) => {
@@ -289,7 +301,7 @@ export const Button = () => {
     const paddingSliderTopOnChange = (value: number) =>
         setPaddingSliderTopValue(value);
 
-    // Margin
+    // Margin Sliders - Normal Button
 
     const [marginSliderValue, setMarginSliderValue] = React.useState(0);
     const marginSliderOnChange = (value: number) => {
@@ -321,7 +333,7 @@ export const Button = () => {
     const marginSliderBottomOnChange = (value: number) =>
         setMarginSliderBottomValue(value);
 
-    //Font Size
+    //Font Size - Normal Button
     const [fontValue, setFontValue] = React.useState(12);
     const fontOnChange = (value: number) => setFontValue(value);
 
@@ -333,6 +345,9 @@ export const Button = () => {
     const paddingSliderBottomOnChange = (value: number) =>
         setPaddingSliderBottomValue(value);
 
+    /*
+    Styles the normal button based on the padding, margin, and font size parameters set directly above
+    */
     const newStyle = {
         padding: paddingSliderValue,
 
@@ -351,6 +366,7 @@ export const Button = () => {
         fontSize: fontValue,
     };
 
+    // Alignment options for normal button (left, right, or center)
     const alignOptions: IChoiceGroupOption[] = [
         { key: "flex-start", text: "Left" },
         { key: "center", text: "Middle" },
@@ -365,7 +381,7 @@ export const Button = () => {
         "center"
     );
 
-    //Padding
+    //Padding Sliders - Icon Button
 
     const [iconPaddingSliderValue, setIconPaddingSliderValue] = React.useState(
         15
@@ -399,7 +415,7 @@ export const Button = () => {
     const iconPaddingSliderTopOnChange = (value: number) =>
         setIconPaddingSliderTopValue(value);
 
-    // Margin
+    // Margin Sliders - Icon Button
 
     const [iconMarginSliderValue, setIconMarginSliderValue] = React.useState(0);
     const iconMarginSliderOnChange = (value: number) => {
@@ -438,8 +454,6 @@ export const Button = () => {
     const iconMarginSliderBottomOnChange = (value: number) =>
         setIconMarginSliderBottomValue(value);
 
-    //Font Size
-
     const [
         iconPaddingSliderBottomValue,
         setIconPaddingSliderBottomValue,
@@ -448,6 +462,9 @@ export const Button = () => {
     const iconPaddingSliderBottomOnChange = (value: number) =>
         setIconPaddingSliderBottomValue(value);
 
+    /*
+    Styles the icon button based on the padding and margin parameters set directly above
+    */
     const iconStyle = {
         padding: iconPaddingSliderValue,
 
@@ -464,8 +481,9 @@ export const Button = () => {
         marginTop: iconMarginSliderTopValue,
     };
 
-    //return _ => {
-    //}
+    /*
+     * Determines width and height of the user's window (and updates dynamically every time they resize it)
+     */
     const [width, setWidth] = React.useState(window.innerWidth);
     const [height, setHeight] = React.useState(window.innerHeight);
 
@@ -479,7 +497,10 @@ export const Button = () => {
         return () => window.removeEventListener("resize", updateDimensions);
     }, []);
 
+    //Styles for the setting columns
     const stackTokens = { childrenGap: width / 30 }; //gap between the columns - 30
+
+    //Styles specifically for normal button columns
     const stackStyles: Partial<IStackStyles> = {
         root: {
             width: width / 1.2,
@@ -489,6 +510,7 @@ export const Button = () => {
             overflow: "scroll",
         }, //width of the actual columns
     };
+
     const columnProps: Partial<IStackProps> = {
         tokens: { childrenGap: 55 },
         styles: {
@@ -500,6 +522,7 @@ export const Button = () => {
         },
     };
 
+    //Styles specifically for icon button columns
     const iconStackStyles: Partial<IStackStyles> = {
         root: {
             width: width / 1.2, //width / 1.2
@@ -513,7 +536,7 @@ export const Button = () => {
     return (
         <>
             <h1 style={headingStyle}> Normal Button</h1>
-            {/* Actual component */}
+            {/* Normal Button component */}
             <div style={{ display: "flex", justifyContent: alignKey }}>
                 <DefaultButton
                     id="btn"
@@ -528,7 +551,6 @@ export const Button = () => {
                     href={theString(urlKey)} //href="https://www.google.com/"
                     target="_blank"
                     split={true}
-                    //style={newStyle}
                     style={newStyle}
                 />
             </div>
@@ -679,7 +701,7 @@ export const Button = () => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    height: 500,
+                    height: height / 3, //500
                 }}
             >
                 <MonacoEditor
@@ -885,7 +907,7 @@ export const Button = () => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    height: 500,
+                    height: height / 3, //500
                 }}
             >
                 <MonacoEditor
