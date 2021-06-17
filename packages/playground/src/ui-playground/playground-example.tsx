@@ -24,13 +24,7 @@ import { Packages } from "./displays/packages";
 import { Tasks } from "./displays/tasks";
 
 //import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
-import {
-    BrowserRouter as Router,
-    Link,
-    Route,
-    Switch,
-    useRouteMatch,
-} from "react-router-dom";
+import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import { DefaultButton } from "@fluentui/react/lib/Button";
 //import { Label } from "@fluentui/react/lib/Label";
 import { categoryStyle, linkStyle } from "./style";
@@ -47,7 +41,6 @@ export interface PlaygroundExampleProps {
  */
 export const PlaygroundExample: React.FC<PlaygroundExampleProps> = (props) => {
     //return <span className="be-example-simple">{props.text ?? myHeading}</span>;
-    const match = useRouteMatch();
 
     return (
         <div className="hi">
@@ -81,7 +74,7 @@ export const PlaygroundExample: React.FC<PlaygroundExampleProps> = (props) => {
                                 </h2>
                             </li>
                             <li>
-                                <Link to={`${match.url}/button`}>
+                                <Link to="/button">
                                     <DefaultButton
                                         text="Button"
                                         style={linkStyle}
@@ -252,7 +245,7 @@ export const PlaygroundExample: React.FC<PlaygroundExampleProps> = (props) => {
 
                     <div style={{ flex: 1, padding: "10px" }}>
                         <Switch>
-                            <Route path={`${match.path}/button`}>
+                            <Route path="/button">
                                 <Button />
                             </Route>
                             <Route path="/checkbox">

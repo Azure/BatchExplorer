@@ -45,3 +45,125 @@ export function ChoiceGroupOnChange(
 
     return Hello;
 }
+
+// This function is called when the input changes
+
+/*  const inputHandler = React.useCallback(
+        (
+            event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+            newValue?: string
+        ) => {
+            const enteredName = (event.target as HTMLTextAreaElement).value;
+            setQuery(enteredName);
+        },
+        []
+    );
+
+    // This function is triggered when the Search buttion is clicked
+    const search = () => {
+        const foundItems = PRODUCTS.filter((item) =>
+            item.name.toLowerCase().includes(query.toLowerCase())
+        );
+        setResult(foundItems);
+    }; */
+
+// Create an interface for product item
+export interface Item {
+    id: number;
+    name: string;
+}
+// This list holds some products of a fiction store
+export const PRODUCTS: Item[] = [
+    {
+        id: 1,
+        name: "Accept",
+    },
+    {
+        id: 2,
+        name: "Add",
+    },
+    {
+        id: 3,
+        name: "Calendar",
+    },
+    {
+        id: 4,
+        name: "ChevronLeft",
+    },
+    {
+        id: 5,
+        name: "ChevronRight",
+    },
+    {
+        id: 6,
+        name: "ChromeFullScreen",
+    },
+    {
+        id: 7,
+        name: "Clear",
+    },
+    {
+        id: 8,
+        name: "Delete",
+    },
+    {
+        id: 9,
+        name: "Download",
+    },
+    {
+        id: 10,
+        name: "DownloadDocument",
+    },
+    {
+        id: 11,
+        name: "Edit",
+    },
+    {
+        id: 12,
+        name: "Filter",
+    },
+    {
+        id: 13,
+        name: "FilterSolid",
+    },
+    {
+        id: 14,
+        name: "Info",
+    },
+    {
+        id: 15,
+        name: "Label",
+    },
+    {
+        id: 16,
+        name: "NavigateExternalInline",
+    },
+    {
+        id: 17,
+        name: "Recent",
+    },
+    {
+        id: 18,
+        name: "Refresh",
+    },
+    {
+        id: 19,
+        name: "RemoveFilter",
+    },
+    {
+        id: 20,
+        name: "Save",
+    },
+    {
+        id: 21,
+        name: "StackedColumnChart2Fill",
+    },
+    {
+        id: 22,
+        name: "ToggleLeft",
+    },
+    {
+        id: 23,
+        name: "ToggleRight",
+    },
+];
