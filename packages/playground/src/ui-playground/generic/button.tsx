@@ -14,8 +14,6 @@ import {
 } from "../functions";
 import { IIconProps } from "@fluentui/react/lib/";
 import { IconButton } from "@fluentui/react/lib/Button";
-import { initializeIcons } from "@fluentui/react/lib/Icons";
-initializeIcons();
 import { Slider } from "@fluentui/react/lib/";
 import { Stack, IStackProps, IStackStyles } from "@fluentui/react/lib/Stack";
 import { MonacoEditor } from "@batch/ui-react/lib/components";
