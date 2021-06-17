@@ -20,7 +20,7 @@ import { Slider } from "@fluentui/react/lib/";
 import { Stack, IStackProps, IStackStyles } from "@fluentui/react/lib/Stack";
 import { MonacoEditor } from "@batch/ui-react/lib/components";
 
-export const Button = () => {
+export const Button: React.FC = () => {
     const [labelValue, setLabelValue] = React.useState("");
     const [selectedKey, setSelectedKey] = React.useState<string | undefined>(
         "primary"
@@ -243,10 +243,7 @@ export const Button = () => {
     const [result, setResult] = React.useState<Item[] | undefined>();
 
     const mainfinal = React.useCallback(
-        (
-            event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-            newValue?: string
-        ) => {
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
             const enteredName = (event.target as HTMLTextAreaElement).value;
             setQuery(enteredName);
 

@@ -39,7 +39,7 @@ export interface PlaygroundExampleProps {
 /**
  * Example component
  */
-export const PlaygroundExample: React.FC<PlaygroundExampleProps> = (props) => {
+export const PlaygroundExample: React.FC<PlaygroundExampleProps> = () => {
     //return <span className="be-example-simple">{props.text ?? myHeading}</span>;
 
     return (
