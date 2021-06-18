@@ -107,7 +107,6 @@ describe("DataGrid component", () => {
         expect(thirdRowCells[2].textContent).toBe("black");
 
         expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
-        expect({ violations: [] }).toHaveNoViolations();
     });
 });
 
