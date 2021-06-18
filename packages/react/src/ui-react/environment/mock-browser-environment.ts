@@ -1,5 +1,5 @@
 import { MockEnvironment } from "@batch/ui-common/lib/environment";
-import { initializeIcons } from "@fluentui/react/lib/Icons";
+import { initFluentIcons } from "./environment-util";
 
 /**
  * Mock environment for a browser-based application
@@ -7,6 +7,6 @@ import { initializeIcons } from "@fluentui/react/lib/Icons";
 export class MockBrowserEnvironment extends MockEnvironment {
     async beforeInit(): Promise<void> {
         super.beforeInit();
-        initializeIcons();
+        initFluentIcons();
     }
 }
