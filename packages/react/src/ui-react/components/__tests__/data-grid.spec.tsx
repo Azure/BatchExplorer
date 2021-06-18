@@ -1,7 +1,15 @@
 import { render, screen } from "@testing-library/react";
 import * as React from "react";
+import { runAxe } from "../../test-util/a11y";
 import { initMockBrowserEnvironment } from "../../environment";
 import { DataGrid } from "../data-grid";
+
+const ignoredA11yRules = {
+    rules: {
+        // TODO: Re-enable this when DetailsList fixes this issue
+        "aria-toggle-field-name": { enabled: false },
+    },
+};
 
 describe("DataGrid component", () => {
     beforeEach(() => initMockBrowserEnvironment());
@@ -16,12 +24,14 @@ describe("DataGrid component", () => {
         expect(screen.getAllByRole("columnheader").length).toBe(1);
     });
 
-    test("Simple grid", () => {
+    test("Simple grid", async () => {
         const cars = [
             { make: "Volkswagen", model: "Jetta" },
             { make: "Porsche", model: "911" },
         ];
-        render(<DataGrid items={cars} columns={["make", "model"]} />);
+        const { container } = render(
+            <DataGrid items={cars} columns={["make", "model"]} />
+        );
         const gridEl = screen.getByRole("grid");
 
         // Header plus 2 data rows, sorted alphabetically by the first column
@@ -44,15 +54,17 @@ describe("DataGrid component", () => {
         expect(secondRowCells.length).toBe(2);
         expect(secondRowCells[0].textContent).toBe("Porsche");
         expect(secondRowCells[1].textContent).toBe("911");
+
+        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
     });
 
-    test("Custom grid columns", () => {
+    test("Custom grid columns", async () => {
         const cars = [
             { make: "Volkswagen", model: "Jetta" },
             { make: "Porsche", model: "911", color: "red" },
             { make: "Tesla", model: "Model S", color: "black" },
         ];
-        render(
+        const { container } = render(
             <DataGrid
                 items={cars}
                 columns={[
@@ -93,6 +105,9 @@ describe("DataGrid component", () => {
         expect(thirdRowCells[0].textContent).toBe("Tesla");
         expect(thirdRowCells[1].textContent).toBe("Model S");
         expect(thirdRowCells[2].textContent).toBe("black");
+
+        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+        expect({ violations: [] }).toHaveNoViolations();
     });
 });
 

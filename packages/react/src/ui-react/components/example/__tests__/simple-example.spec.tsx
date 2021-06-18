@@ -1,7 +1,7 @@
 import { getEnvironment, initMockEnvironment } from "@batch/ui-common";
 import { render, screen } from "@testing-library/react";
 import * as React from "react";
-import { axe } from "../../../test-util/a11y";
+import { runAxe } from "../../../test-util/a11y";
 import { SimpleExample } from "../simple-example";
 
 /**
@@ -31,7 +31,7 @@ describe("Example component", () => {
     });
 
     test("Check a11y", async () => {
-        const result = await axe(render(<SimpleExample />).container);
+        const result = await runAxe(render(<SimpleExample />).container);
         expect(result).toHaveNoViolations();
     });
 });
