@@ -1,4 +1,4 @@
-import { isArray } from "lodash";
+import { isArray } from "@batch/ui-common/lib/util";
 
 export interface ODataListJson<T> {
     value: T[];
