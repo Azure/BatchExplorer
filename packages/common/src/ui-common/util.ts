@@ -78,7 +78,8 @@ export interface DebouncedFunction<T extends (...args: unknown[]) => unknown> {
  * even if we remove lodash as a dependency.
  *
  * @param callback
- * @returns
+ * @returns A version of the passed-in function which executes on a delay, and
+ *          has additional methods for canceling/flushing any pending executions.
  */
 export function debounce<T extends (...args: unknown[]) => unknown>(callback: T, wait?: number, opts?: {
     /**
