@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import { DemoNavMenu } from "./layout/demo-nav-menu";
 import { DemoMainContent } from "./layout/demo-main-content";
 
@@ -11,8 +11,9 @@ export interface PlaygroundExampleProps {
 }
 
 /**
- * Example component
+ * Playground
  */
+
 export const PlaygroundExample: React.FC<PlaygroundExampleProps> = () => {
     return (
         <div className="hi">
@@ -29,6 +30,13 @@ export const PlaygroundExample: React.FC<PlaygroundExampleProps> = () => {
             >
                 Shared Component Library Playground
             </h1>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignContent: "center",
+                }}
+            ></div>
 
             <Router>
                 <div style={{ display: "flex" }}>
@@ -36,7 +44,6 @@ export const PlaygroundExample: React.FC<PlaygroundExampleProps> = () => {
                         style={{
                             padding: "2px",
                             width: "20%", //distance between "sidebar" and the actual elements being displayed
-                            //background: "#f0f0f0",
                         }}
                     >
                         <DemoNavMenu />

@@ -2,12 +2,13 @@ import { Routes } from "@angular/router";
 import { KeyBindingsComponent } from "@batch-flask/ui";
 import { ActivityMonitorComponent } from "@batch-flask/ui/activity/activity-monitor";
 import { RequireActiveBatchAccountGuard } from "app/components/common/guards";
-import { ThemeColorsComponent } from "app/components/misc";
+import { ThemeColorsComponent } from "app/components/misc/theme-colors";
 import { PoolStandaloneGraphsComponent } from "app/components/pool/graphs/standalone";
 import { SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { AccountMonitoringHomeComponent } from "./components/account/monitoring";
+import { PlaygroundRouteComponent } from "./components/misc/playground-route";
 
 // set up the routing table
 export const routes: Routes = [
@@ -94,6 +95,14 @@ export const routes: Routes = [
     {
         path: "theme/colors",
         component: ThemeColorsComponent,
+    },
+    {
+        path: "playground",
+        component:  PlaygroundRouteComponent,
+    },
+    {
+        path: "playground/:component",
+        component:  PlaygroundRouteComponent,
     },
     {
         path: "standalone/pools/:poolId/graphs",

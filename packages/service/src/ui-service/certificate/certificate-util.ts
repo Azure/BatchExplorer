@@ -33,6 +33,7 @@ export function parseCertificateJson(json: string | unknown): Certificate {
             obj.previousStateTransitionTime
         );
     }
+
     return obj;
 }
 

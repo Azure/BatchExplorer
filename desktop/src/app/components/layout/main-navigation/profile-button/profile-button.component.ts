@@ -110,7 +110,13 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
                 click: () => this._gotoThemeColors(),
             }),
             new ContextMenuSeparator(),
+            new ContextMenuItem({
+                label: this.i18n.t("profile-button.playground"),
+                click: () => this._gotoPlayground(),
+            }),
+            new ContextMenuSeparator(),
             new ContextMenuItem({ label: this.i18n.t("profile-button.logout"), click: () => this._logout() }),
+
         ];
 
         items.unshift(this._getAutoUpdateMenuItem());
@@ -131,6 +137,10 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
     private _gotoThemeColors() {
         this.router.navigate(["/theme/colors"]);
+    }
+
+    private _gotoPlayground() {
+        this.router.navigate(["/playground"]);
     }
 
     private _openThirdPartyNotices() {

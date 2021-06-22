@@ -12,15 +12,43 @@ export function TextFieldOnChange(
     e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string | undefined
 ) => void {
-    // ...
-    const Hello = (
-        e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-        newValue?: string
-    ) => {
+    function Result(
+        e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+    ): void {
         param((e.target as HTMLTextAreaElement).value);
-    };
+    }
+    return Result;
+}
 
-    return Hello;
+/*
+ * Checks the value of a URL entered into a textbox to make sure that it is valid
+ */
+export function UrlOnChange(
+    settingErrorMsg: React.Dispatch<React.SetStateAction<string>>,
+    settingActualUrl: React.Dispatch<React.SetStateAction<string>>
+): (
+    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+    newValue?: string | undefined
+) => void {
+    function Result(
+        event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+        newValue?: string
+    ): void {
+        if (
+            !newValue ||
+            ((newValue.startsWith("http") || newValue.startsWith("https")) &&
+                newValue.includes(".") &&
+                newValue.lastIndexOf(".") != newValue.length - 1) ||
+            (!newValue && newValue[0] == "/")
+        ) {
+            settingErrorMsg("");
+            settingActualUrl(newValue || "");
+        } else {
+            settingErrorMsg("Error: Invalid URL (must begin with HTTP or /)");
+            settingActualUrl(newValue);
+        }
+    }
+    return Result;
 }
 
 /*
@@ -32,40 +60,14 @@ export function ChoiceGroupOnChange(
     ev?: React.FormEvent<HTMLInputElement | HTMLElement> | undefined,
     option?: IChoiceGroupOption | undefined
 ) => void {
-    // ...
-    const Hello = React.useCallback(
-        (
-            ev?: React.FormEvent<HTMLInputElement | HTMLElement>,
-            option?: IChoiceGroupOption
-        ) => {
-            param(option?.key);
-        },
-        []
-    );
-
-    return Hello;
+    function Result(
+        ev?: React.FormEvent<HTMLInputElement | HTMLElement>,
+        option?: IChoiceGroupOption
+    ): void {
+        param(option?.key);
+    }
+    return Result;
 }
-
-// This function is called when the input changes
-
-/*  const inputHandler = React.useCallback(
-        (
-            event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-            newValue?: string
-        ) => {
-            const enteredName = (event.target as HTMLTextAreaElement).value;
-            setQuery(enteredName);
-        },
-        []
-    );
-
-    // This function is triggered when the Search buttion is clicked
-    const search = () => {
-        const foundItems = PRODUCTS.filter((item) =>
-            item.name.toLowerCase().includes(query.toLowerCase())
-        );
-        setResult(foundItems);
-    }; */
 
 // Interface for adding Fluent UI icons to the list of most commonly used icons
 export interface Item {
@@ -170,3 +172,24 @@ export const ICONS: Item[] = [
         name: "ToggleRight",
     },
 ];
+
+/*
+ * Function that gets the height and width of a user's browser/app
+ * window and updates on every resize
+ */
+export function HeightAndWidth(): number[] {
+    const [height, setHeight] = React.useState(window.innerHeight);
+    const [width, setWidth] = React.useState(window.innerWidth);
+
+    const updateDimensions = () => {
+        setHeight(window.innerHeight);
+        setWidth(window.innerWidth);
+    };
+
+    React.useEffect(() => {
+        window.addEventListener("resize", updateDimensions);
+        return () => window.removeEventListener("resize", updateDimensions);
+    }, []);
+
+    return [height, width];
+}

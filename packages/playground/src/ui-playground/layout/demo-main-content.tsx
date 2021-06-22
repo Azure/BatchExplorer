@@ -1,88 +1,80 @@
 import * as React from "react";
 import { Route, Switch } from "react-router";
 import { ButtonDemo } from "../demo/generic/button/button-demo";
-import { ComboBox } from "../generic/combobox";
-import { Dropdown } from "../generic/dropdown";
-import { Graph } from "../generic/graph";
-import { SearchBox } from "../generic/searchbox";
-import { GalleryApplication } from "../batch/galleryapplication";
-import { Quota } from "../batch/quota";
-import { Resources } from "../batch/resources";
-import { Tab } from "../batch/tab";
-import { Toolbar } from "../batch/toolbar";
-import { Configuration } from "../displays/configuration";
-import { CreateItem } from "../displays/createitem";
-import { File } from "../displays/file";
-import { JobSpecification } from "../displays/jobspecification";
-import { Nodes } from "../displays/nodes";
-import { Packages } from "../displays/packages";
-import { PoolGraph } from "../displays/poolgraph";
-import { Tasks } from "../displays/tasks";
-import { TextField } from "../generic/textfield";
-import { Checkbox } from "../generic/checkbox";
+import { ComboBoxDemo } from "../demo/generic/combobox/combobox-demo";
+import { SearchBoxDemo } from "../demo/generic/searchbox/searchbox-demo";
+import { QuotaDemo } from "../demo/batch/quota/quota-demo";
+import { ResourcesDemo } from "../demo/batch/resources/resources-demo";
+import { TabDemo } from "../demo/batch/tab/tab-demo";
+import { ToolbarDemo } from "../demo/batch/toolbar/toolbar-demo";
+import { CertificateDemo } from "../demo/displays/certificate/certificate-demo";
+import { CreateItemDemo } from "../demo/displays/createitem/createitem-demo";
+import { FileDemo } from "../demo/displays/file/file-demo";
+import { JobSpecificationDemo } from "../demo/displays/jobspecification/jobspecification-demo";
+import { NodesDemo } from "../demo/displays/nodes/nodes-demo";
+import { PackagesDemo } from "../demo/displays/packages/packages-demo";
+import { PoolGraphDemo } from "../demo/displays/poolgraph/poolgraph-demo";
+import { TasksDemo } from "../demo/displays/tasks/tasks-demo";
+import { TextFieldDemo } from "../demo/generic/textfield/textfield-demo";
+import { CheckboxDemo } from "../demo/generic/checkbox/checkbox-demo";
+import { SubscriptionsDemo } from "../demo/batch/subscriptions/subscriptions-demo";
 
 export const DemoMainContent: React.FC = () => {
     return (
         <Switch>
-            <Route path="/button">
+            <Route path="/playground/button">
                 <ButtonDemo />
             </Route>
-            <Route path="/checkbox">
-                <Checkbox />
+            <Route path="/playground/checkbox">
+                <CheckboxDemo />
             </Route>
-            <Route path="/combobox">
-                <ComboBox />
+            <Route path="/playground/combobox">
+                <ComboBoxDemo />
             </Route>
-            <Route path="/dropdown">
-                <Dropdown />
+            <Route path="/playground/searchbox">
+                <SearchBoxDemo />
             </Route>
-            <Route path="/graph">
-                <Graph />
+            <Route path="/playground/textfield">
+                <TextFieldDemo />
             </Route>
-            <Route path="/searchbox">
-                <SearchBox />
+            <Route path="/playground/quota">
+                <QuotaDemo />
             </Route>
-            <Route path="/textfield">
-                <TextField />
+            <Route path="/playground/resources">
+                <ResourcesDemo />
             </Route>
-            <Route path="/galleryapplication">
-                <GalleryApplication />
+            <Route path="/playground/subscriptions">
+                <SubscriptionsDemo />
             </Route>
-            <Route path="/quota">
-                <Quota />
+            <Route path="/playground/tab">
+                <TabDemo />
             </Route>
-            <Route path="/resources">
-                <Resources />
+            <Route path="/playground/toolbar">
+                <ToolbarDemo />
             </Route>
-            <Route path="/tab">
-                <Tab />
+            <Route path="/playground/certificate">
+                <CertificateDemo />
             </Route>
-            <Route path="/toolbar">
-                <Toolbar />
+            <Route path="/playground/createitem">
+                <CreateItemDemo />
             </Route>
-            <Route path="/configuration">
-                <Configuration />
+            <Route path="/playground/file">
+                <FileDemo />
             </Route>
-            <Route path="/createitem">
-                <CreateItem />
+            <Route path="/playground/poolgraph">
+                <PoolGraphDemo />
             </Route>
-            <Route path="/file">
-                <File />
+            <Route path="/playground/jobspecification">
+                <JobSpecificationDemo />
             </Route>
-            <Route path="/poolgraph">
-                <PoolGraph />
+            <Route path="/playground/nodes">
+                <NodesDemo />
             </Route>
-            <Route path="/jobspecification">
-                <JobSpecification />
+            <Route path="/playground/packages">
+                <PackagesDemo />
             </Route>
-            <Route path="/nodes">
-                <Nodes />
-            </Route>
-            <Route path="/packages">
-                <Packages />
-            </Route>
-            <Route path="/tasks">
-                <Tasks />
+            <Route path="/playground/tasks">
+                <TasksDemo />
             </Route>
         </Switch>
     );

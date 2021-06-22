@@ -1,63 +1,138 @@
-import { DefaultButton } from "@fluentui/react/lib/Button";
 import * as React from "react";
-import { Link } from "react-router-dom";
-import { categoryStyle, linkStyle } from "../style";
+import { Nav, INavStyles, INavLinkGroup } from "@fluentui/react/lib/Nav";
 
 export const DemoNavMenu: React.FC = () => {
+    const navStyles: Partial<INavStyles> = {
+        root: { width: 230, overflow: "visible", position: "static" },
+    };
+
+    const navLinkGroups: INavLinkGroup[] = [
+        {
+            name: "Form",
+            expandAriaLabel: "Expand Form section",
+            collapseAriaLabel: "Collapse Form section",
+            links: [
+                {
+                    key: "Button",
+                    name: "Button",
+                    url: "#/playground/button",
+                },
+                {
+                    key: "Checkbox",
+                    name: "Checkbox",
+                    url: "#/playground/checkbox",
+                },
+                {
+                    key: "ComboBox",
+                    name: "ComboBox",
+                    url: "#/playground/combobox",
+                },
+                {
+                    key: "SearchBox",
+                    name: "SearchBox",
+                    url: "#/playground/searchbox",
+                },
+                {
+                    key: "TextField",
+                    name: "TextField",
+                    url: "#/playground/textfield",
+                },
+            ],
+        },
+        {
+            name: "Batch components",
+            expandAriaLabel: "Expand Batch components section",
+            collapseAriaLabel: "Collapse Batch components section",
+            links: [
+                {
+                    key: "Quota",
+                    name: "Quota",
+                    url: "#/playground/quota",
+                },
+                {
+                    key: "Resources",
+                    name: "Resources",
+                    url: "#/playground/resources",
+                },
+                {
+                    key: "Subscriptions",
+                    name: "Subscriptions",
+                    url: "#/playground/subscriptions",
+                },
+                {
+                    key: "Tab",
+                    name: "Tab",
+                    url: "#/playground/tab",
+                },
+                {
+                    key: "Toolbar",
+                    name: "Toolbar",
+                    url: "#/playground/toolbar",
+                },
+            ],
+        },
+        {
+            name: "Displays",
+            expandAriaLabel: "Expand Displays section",
+            collapseAriaLabel: "Collapse Displays section",
+            links: [
+                {
+                    key: "Certificate",
+                    name: "Certificate",
+                    url: "#/playground/certificate",
+                },
+                {
+                    key: "CreateItem",
+                    name: "Create Item",
+                    url: "#/playground/createitem",
+                },
+                {
+                    key: "File",
+                    name: "File",
+                    url: "#/playground/file",
+                },
+                {
+                    key: "PoolGraph",
+                    name: "Pool Graph",
+                    url: "#/playground/poolgraph",
+                },
+                {
+                    key: "JobSpecification",
+                    name: "Job Specification",
+                    url: "#/playground/jobspecification",
+                },
+                {
+                    key: "Nodes",
+                    name: "Nodes",
+                    url: "#/playground/nodes",
+                },
+                {
+                    key: "Packages",
+                    name: "Packages",
+                    url: "#/playground/packages",
+                },
+                {
+                    key: "Tasks",
+                    name: "Tasks",
+                    url: "#/playground/tasks",
+                },
+            ],
+        },
+    ];
+
     return (
-        <ul style={{ listStyleType: "none", padding: 0 }}>
-            <DemoCategoryTitle title="Generic Components" />
-            <DemoLink url="/button" label="Button" />
-            <DemoLink url="/checkbox" label="Checkbox" />
-            <DemoLink url="/combobox" label="ComboBox" />
-            <DemoLink url="/dropdown" label="Dropdown" />
-            <DemoLink url="/graph" label="Graph" />
-            <DemoLink url="/searchbox" label="SearchBox" />
-            <DemoLink url="/textfield" label="TextField" />
-
-            <DemoCategoryTitle title="Batch Components" />
-            <DemoLink url="/galleryapplication" label="Gallery Application" />
-            <DemoLink url="/quota" label="Quota" />
-            <DemoLink url="/resources" label="Resources" />
-            <DemoLink url="/tab" label="Tab" />
-            <DemoLink url="/toolbar" label="Toolbar" />
-
-            <DemoCategoryTitle title="Displays" />
-            <DemoLink url="/configuration" label="Configuration" />
-            <DemoLink url="/createitem" label="Create Item" />
-            <DemoLink url="/file" label="File" />
-            <DemoLink url="/poolgraph" label="Pool Graph" />
-            <DemoLink url="/jobspecification" label="Job Specification" />
-            <DemoLink url="/nodes" label="Nodes" />
-            <DemoLink url="/packages" label="Packages" />
-            <DemoLink url="/tasks" label="Tasks" />
-        </ul>
-    );
-};
-
-const DemoCategoryTitle: React.FC<{
-    title: string;
-}> = (props) => {
-    return (
-        <li>
-            <h2 style={categoryStyle}>{props.title}</h2>
-        </li>
-    );
-};
-
-interface DemoLinkProps {
-    url: string;
-    label: string;
-}
-
-const DemoLink: React.FC<DemoLinkProps> = (props) => {
-    const { url, label } = props;
-    return (
-        <li>
-            <Link to={url}>
-                <DefaultButton text={label} style={linkStyle}></DefaultButton>
-                {props.children}
-            </Link>
-        </li>
+        <div>
+            <div>
+                <ul style={{ listStyleType: "none", padding: 0 }}>
+                    <li>
+                        <Nav
+                            styles={navStyles}
+                            ariaLabel="Nav for playground components"
+                            groups={navLinkGroups}
+                        />
+                    </li>
+                </ul>
+            </div>
+        </div>
     );
 };
