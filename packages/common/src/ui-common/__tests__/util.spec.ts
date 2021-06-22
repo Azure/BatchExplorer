@@ -1,5 +1,6 @@
+import { debounce } from "lodash";
 import { initMockEnvironment } from "../environment";
-import { cloneDeep, isArray, isPromiseLike, uniqueId } from "../util";
+import { cloneDeep, delay, isArray, isPromiseLike, uniqueId } from "../util";
 
 describe("Common utilities", () => {
     beforeEach(() => initMockEnvironment());
@@ -73,5 +74,39 @@ describe("Common utilities", () => {
         expect(isArray("nope")).toBe(false);
         expect(isArray(new Set([]))).toBe(false);
         expect(isArray({})).toBe(false);
+    });
+
+    test("debounce() function", async () => {
+        let count = 0;
+        const incrementCount = () => {
+            count++;
+        };
+
+        const debouncedIncrement = debounce(incrementCount, 0);
+
+        // Hasn't been called yet
+        expect(count).toBe(0);
+
+        debouncedIncrement();
+        debouncedIncrement();
+        debouncedIncrement();
+
+        // Still hasn't run, but is pending
+        expect(count).toBe(0);
+
+        await delay(20);
+
+        expect(count).toBe(1);
+    });
+
+    test("delay() function", async () => {
+        let value = "foo";
+        const promise = delay(0);
+        promise.then(() => {
+            value = "bar";
+        });
+        expect(value).toBe("foo");
+        await promise;
+        expect(value).toBe("bar");
     });
 });

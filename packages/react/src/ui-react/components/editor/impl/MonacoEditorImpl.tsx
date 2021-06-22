@@ -1,5 +1,8 @@
 import * as React from "react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import {debounce, DebouncedFunction} from "@batch/ui-common"
+
+const defaultOnChangeDelay = 200;
 
 export interface MonacoEditorImplProps {
     /**
@@ -32,8 +35,21 @@ export interface MonacoEditorImplProps {
     containerStyle?: React.CSSProperties;
 
     /**
-     * Callback for when the text contents of the editor changes, but only
-     * called onBlur
+     * Number of milliseconds to wait for more user input before firing an
+     * onChange event.
+     */
+    onChangeDelay?: number;
+
+    /**
+     * Maximum number of milliseconds to wait before firing an onChange event.
+     * If not specified, changes will be delayed until user input slows enough.
+     */
+     onChangeMaxWait?: number;
+
+    /**
+     * Callback for when the text contents of the editor changes. Change events
+     * are debounced automatically. When onBlur is called, onChange is called
+     * immediately (ignoring debouncing).
      */
     onChange?: (value: string) => void;
 
@@ -140,6 +156,17 @@ function _createEditor(
         model,
     });
 
+    let debouncedOnChange: DebouncedFunction<() => void> | undefined;
+    if (props.onChange) {
+        debouncedOnChange = debounce(() => {
+            if (props.onChange) {
+                props.onChange(model.getValue());
+            }
+        }, props.onChangeDelay ?? defaultOnChangeDelay, {
+            maxWait: props.onChangeMaxWait
+        });
+    }
+
     if (props.onCreate) {
         props.onCreate(editor);
     }
@@ -148,11 +175,15 @@ function _createEditor(
         if (props.onImmediateChange) {
             props.onImmediateChange(model.getValue());
         }
+        if (debouncedOnChange) {
+            debouncedOnChange();
+        }
     });
 
     editor.onDidBlurEditorText(() => {
-        if (props.onChange) {
-            props.onChange(model.getValue());
+        if (debouncedOnChange) {
+            // Make sure to call onChange with the most recent value
+            debouncedOnChange.flush();
         }
     });
 

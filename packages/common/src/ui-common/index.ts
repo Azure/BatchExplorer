@@ -10,5 +10,5 @@ export {
     DependencyName,
 } from "./environment";
 export { getLogger } from "./logging/logging-util";
-export { uniqueId, cloneDeep, isPromiseLike, isArray } from "./util";
+export { cloneDeep, debounce, DebouncedFunction, delay, isPromiseLike, isArray, uniqueId } from "./util";
 export { uniqueElementId } from "./dom";
