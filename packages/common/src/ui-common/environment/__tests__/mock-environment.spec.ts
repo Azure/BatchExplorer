@@ -1,3 +1,10 @@
+import {
+    fromIso,
+    getLocalTimeZoneOffset,
+    setLocalTimeZoneOffset,
+    toIsoLocal,
+} from "../../datetime";
+import { destroyEnvironment } from "../environment-util";
 import { MockLogger } from "../../logging";
 import { getMockEnvironment, initMockEnvironment } from "../environment-util";
 
@@ -17,5 +24,29 @@ describe("Mock environment tests", () => {
         const mockLogger = env.getLogger() as MockLogger;
         mockLogger.expectInfo("This is from a mock logger");
         mockLogger.info("This is from a mock logger");
+    });
+
+    test("Mock environment sets a hard-coded timezone offset of -3", () => {
+        // Store the system's offset before the mock environment changes it
+        const systemOffset = getLocalTimeZoneOffset();
+
+        initMockEnvironment();
+
+        expect(getLocalTimeZoneOffset()).toBe(-3);
+        expect(toIsoLocal(fromIso("2020-12-03T12:00:00.000Z"))).toBe(
+            "2020-12-03T09:00:00.000-03:00"
+        );
+        // If we happen to be in the -3 timezone offset, use -2 instead
+        if (systemOffset === -3) {
+            setLocalTimeZoneOffset(-2);
+            expect(getLocalTimeZoneOffset()).toBe(-2);
+            expect(toIsoLocal(fromIso("2020-12-03T12:00:00.000Z"))).toBe(
+                "2020-12-03T10:00:00.000-02:00"
+            );
+        }
+        destroyEnvironment();
+
+        // System offset should be restored
+        expect(getLocalTimeZoneOffset()).toBe(systemOffset);
     });
 });

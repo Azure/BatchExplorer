@@ -1,4 +1,5 @@
 import { DependencyFactories } from ".";
+import { setLocalTimeZoneOffset } from "../datetime";
 import { MockHttpClient } from "../http/mock-http-client";
 import { MockLogger } from "../logging";
 import { AbstractEnvironment } from "./abstract-environment";
@@ -28,11 +29,13 @@ export class MockEnvironment extends AbstractEnvironment<
     }
 
     async beforeInit(): Promise<void> {
-        // No-op
+        // Hard-coded timezone offset for unit testing
+        setLocalTimeZoneOffset(-3);
     }
 
     async beforeDestroy(): Promise<void> {
-        // No-op
+        // Reset to the system time zone
+        setLocalTimeZoneOffset(null);
     }
 
     /**
