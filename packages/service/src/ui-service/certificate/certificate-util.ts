@@ -1,3 +1,4 @@
+import { fromIso } from "@batch/ui-common";
 import { Certificate } from "./certificate-models";
 
 /**
@@ -12,4 +13,24 @@ export function isCertificate(obj: unknown): obj is Certificate {
         return true;
     }
     return false;
+}
+
+/**
+ * Parse a JSON string into a certificate model object
+ *
+ * @param json The JSON to parse
+ *
+ * @returns A new certificate model object
+ */
+export function parseCertificateJson(json: string): Certificate {
+    const obj = JSON.parse(json);
+    if (obj.stateTransitionTime) {
+        obj.stateTransitionTime = fromIso(obj.stateTransitionTime);
+    }
+    if (obj.previousStateTransitionTime) {
+        obj.previousStateTransitionTime = fromIso(
+            obj.previousStateTransitionTime
+        );
+    }
+    return obj;
 }
