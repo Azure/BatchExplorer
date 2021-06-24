@@ -34,3 +34,7 @@ export function parseCertificateJson(json: string): Certificate {
     }
     return obj;
 }
+
+export function certificateToJson(certificate: Certificate): string {
+    return JSON.stringify(certificate, null, 4);
+}
