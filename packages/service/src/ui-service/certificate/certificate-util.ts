@@ -35,6 +35,13 @@ export function parseCertificateJson(json: string): Certificate {
     return obj;
 }
 
+/**
+ * Serialize a certificate to a JSON string
+ *
+ * @param certificate The certificate to serialize
+ *
+ * @returns A formatted JSON string
+ */
 export function certificateToJson(certificate: Certificate): string {
     return JSON.stringify(certificate, null, 4);
 }
