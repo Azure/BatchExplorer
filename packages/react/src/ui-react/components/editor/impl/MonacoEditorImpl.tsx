@@ -86,6 +86,10 @@ export class EditorController {
     setLanguage(language: string): void {
         monaco.editor.setModelLanguage(this.model, language);
     }
+
+    setValue(value: string | null): void {
+        this.model.setValue(value ?? "");
+    }
 }
 
 /**
@@ -134,7 +138,15 @@ export const MonacoEditor: React.FC<MonacoEditorImplProps> = (props) => {
                 _destroyEditor(editor);
             }
         };
-    }, [props, containerRef, controllerRef, value]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [containerRef, controllerRef]);
+
+    React.useEffect(() => {
+        const controller = controllerRef.current;
+        if (controller) {
+            controller.setValue(value);
+        }
+    }, [value]);
 
     return (
         <div
