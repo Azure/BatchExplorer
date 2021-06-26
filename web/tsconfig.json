@@ -6,5 +6,10 @@
     "baseUrl": ".",
     "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["src/explorer-web"]
+  "include": ["src/explorer-web"],
+  "references": [
+    { "path": "../packages/common" },
+    { "path": "../packages/react" },
+    { "path": "../packages/service" }
+  ]
 }
