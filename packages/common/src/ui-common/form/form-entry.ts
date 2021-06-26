@@ -259,7 +259,7 @@ export abstract class AbstractFormEntry implements FormEntry {
     constructor(rootForm: Form | "_useThis", init: FormEntryInit) {
         if (rootForm === "_useThis") {
             // KLUDGE: "_useThis" should only be used by root forms
-            this.rootForm = (this as unknown) as Form;
+            this.rootForm = this as unknown as Form;
         } else {
             this.rootForm = rootForm;
         }
@@ -317,7 +317,8 @@ export abstract class AbstractFormEntry implements FormEntry {
  */
 export abstract class AbstractContainerFormEntry
     extends AbstractFormEntry
-    implements ContainerFormEntry {
+    implements ContainerFormEntry
+{
     constructor(rootForm: Form | "_useThis", init: FormEntryInit) {
         super(rootForm, init);
     }

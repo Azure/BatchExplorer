@@ -15,7 +15,8 @@ export interface SelectableListView<T> {
 }
 
 export abstract class AbstractModelListView<S, T>
-    implements ModelListView<S, T> {
+    implements ModelListView<S, T>
+{
     readonly service: S;
 
     @observable items: IObservableArray<T>;

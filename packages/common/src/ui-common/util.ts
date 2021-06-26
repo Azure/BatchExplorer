@@ -81,22 +81,26 @@ export interface DebouncedFunction<T extends (...args: unknown[]) => unknown> {
  * @returns A version of the passed-in function which executes on a delay, and
  *          has additional methods for canceling/flushing any pending executions.
  */
-export function debounce<T extends (...args: unknown[]) => unknown>(callback: T, wait?: number, opts?: {
-    /**
-     * Invoke the function at the beginning of the interval
-     */
-    leading?: boolean;
+export function debounce<T extends (...args: unknown[]) => unknown>(
+    callback: T,
+    wait?: number,
+    opts?: {
+        /**
+         * Invoke the function at the beginning of the interval
+         */
+        leading?: boolean;
 
-    /**
-     * Invoke the function at the end of the interval
-     */
-    trailing?: boolean;
+        /**
+         * Invoke the function at the end of the interval
+         */
+        trailing?: boolean;
 
-    /**
-     * After a certain amount of time, invoke the function no matter what
-     */
-    maxWait?: number;
-}): DebouncedFunction<T> {
+        /**
+         * After a certain amount of time, invoke the function no matter what
+         */
+        maxWait?: number;
+    }
+): DebouncedFunction<T> {
     return lodashDebounce(callback, wait, opts);
 }
 
@@ -108,5 +112,5 @@ export function debounce<T extends (...args: unknown[]) => unknown>(callback: T,
 export function delay(ms: number): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
-    })
+    });
 }

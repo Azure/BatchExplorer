@@ -278,22 +278,18 @@ export const ButtonDemo: React.FC = () => {
         setPaddingSliderBottomValue(value);
     };
 
-    const [paddingSliderLeftValue, setPaddingSliderLeftValue] = React.useState(
-        15
-    );
+    const [paddingSliderLeftValue, setPaddingSliderLeftValue] =
+        React.useState(15);
     const paddingSliderLeftOnChange = (value: number) =>
         setPaddingSliderLeftValue(value);
 
-    const [
-        paddingSliderRightValue,
-        setPaddingSliderRightValue,
-    ] = React.useState(15);
+    const [paddingSliderRightValue, setPaddingSliderRightValue] =
+        React.useState(15);
     const paddingSliderRightOnChange = (value: number) =>
         setPaddingSliderRightValue(value);
 
-    const [paddingSliderTopValue, setPaddingSliderTopValue] = React.useState(
-        15
-    );
+    const [paddingSliderTopValue, setPaddingSliderTopValue] =
+        React.useState(15);
     const paddingSliderTopOnChange = (value: number) =>
         setPaddingSliderTopValue(value);
 
@@ -312,9 +308,8 @@ export const ButtonDemo: React.FC = () => {
     const marginSliderLeftOnChange = (value: number) =>
         setMarginSliderLeftValue(value);
 
-    const [marginSliderRightValue, setMarginSliderRightValue] = React.useState(
-        0
-    );
+    const [marginSliderRightValue, setMarginSliderRightValue] =
+        React.useState(0);
     const marginSliderRightOnChange = (value: number) =>
         setMarginSliderRightValue(value);
 
@@ -322,10 +317,8 @@ export const ButtonDemo: React.FC = () => {
     const marginSliderTopOnChange = (value: number) =>
         setMarginSliderTopValue(value);
 
-    const [
-        marginSliderBottomValue,
-        setMarginSliderBottomValue,
-    ] = React.useState(0);
+    const [marginSliderBottomValue, setMarginSliderBottomValue] =
+        React.useState(0);
     const marginSliderBottomOnChange = (value: number) =>
         setMarginSliderBottomValue(value);
 
@@ -333,10 +326,8 @@ export const ButtonDemo: React.FC = () => {
     const [fontValue, setFontValue] = React.useState(12);
     const fontOnChange = (value: number) => setFontValue(value);
 
-    const [
-        paddingSliderBottomValue,
-        setPaddingSliderBottomValue,
-    ] = React.useState(15);
+    const [paddingSliderBottomValue, setPaddingSliderBottomValue] =
+        React.useState(15);
 
     const paddingSliderBottomOnChange = (value: number) =>
         setPaddingSliderBottomValue(value);
@@ -379,9 +370,8 @@ export const ButtonDemo: React.FC = () => {
 
     //Padding Sliders - Icon Button
 
-    const [iconPaddingSliderValue, setIconPaddingSliderValue] = React.useState(
-        15
-    );
+    const [iconPaddingSliderValue, setIconPaddingSliderValue] =
+        React.useState(15);
     const iconPaddingSliderOnChange = (value: number) => {
         setIconPaddingSliderValue(value);
         setIconPaddingSliderLeftValue(value);
@@ -390,24 +380,18 @@ export const ButtonDemo: React.FC = () => {
         setIconPaddingSliderBottomValue(value);
     };
 
-    const [
-        iconPaddingSliderLeftValue,
-        setIconPaddingSliderLeftValue,
-    ] = React.useState(15);
+    const [iconPaddingSliderLeftValue, setIconPaddingSliderLeftValue] =
+        React.useState(15);
     const iconPaddingSliderLeftOnChange = (value: number) =>
         setIconPaddingSliderLeftValue(value);
 
-    const [
-        iconPaddingSliderRightValue,
-        setIconPaddingSliderRightValue,
-    ] = React.useState(15);
+    const [iconPaddingSliderRightValue, setIconPaddingSliderRightValue] =
+        React.useState(15);
     const iconPaddingSliderRightOnChange = (value: number) =>
         setIconPaddingSliderRightValue(value);
 
-    const [
-        iconPaddingSliderTopValue,
-        setIconPaddingSliderTopValue,
-    ] = React.useState(15);
+    const [iconPaddingSliderTopValue, setIconPaddingSliderTopValue] =
+        React.useState(15);
     const iconPaddingSliderTopOnChange = (value: number) =>
         setIconPaddingSliderTopValue(value);
 
@@ -422,38 +406,28 @@ export const ButtonDemo: React.FC = () => {
         setIconMarginSliderBottomValue(value);
     };
 
-    const [
-        iconMarginSliderLeftValue,
-        setIconMarginSliderLeftValue,
-    ] = React.useState(0);
+    const [iconMarginSliderLeftValue, setIconMarginSliderLeftValue] =
+        React.useState(0);
     const iconMarginSliderLeftOnChange = (value: number) =>
         setIconMarginSliderLeftValue(value);
 
-    const [
-        iconMarginSliderRightValue,
-        setIconMarginSliderRightValue,
-    ] = React.useState(0);
+    const [iconMarginSliderRightValue, setIconMarginSliderRightValue] =
+        React.useState(0);
     const iconMarginSliderRightOnChange = (value: number) =>
         setIconMarginSliderRightValue(value);
 
-    const [
-        iconMarginSliderTopValue,
-        setIconMarginSliderTopValue,
-    ] = React.useState(0);
+    const [iconMarginSliderTopValue, setIconMarginSliderTopValue] =
+        React.useState(0);
     const iconMarginSliderTopOnChange = (value: number) =>
         setIconMarginSliderTopValue(value);
 
-    const [
-        iconMarginSliderBottomValue,
-        setIconMarginSliderBottomValue,
-    ] = React.useState(0);
+    const [iconMarginSliderBottomValue, setIconMarginSliderBottomValue] =
+        React.useState(0);
     const iconMarginSliderBottomOnChange = (value: number) =>
         setIconMarginSliderBottomValue(value);
 
-    const [
-        iconPaddingSliderBottomValue,
-        setIconPaddingSliderBottomValue,
-    ] = React.useState(15);
+    const [iconPaddingSliderBottomValue, setIconPaddingSliderBottomValue] =
+        React.useState(15);
 
     const iconPaddingSliderBottomOnChange = (value: number) =>
         setIconPaddingSliderBottomValue(value);

@@ -17,7 +17,8 @@ export type FormInit = FormEntryWithValueInit;
  */
 export class Form
     extends AbstractContainerFormEntry
-    implements FormEntryWithValue {
+    implements FormEntryWithValue
+{
     isSubForm: boolean;
 
     private _controller: FormController;

@@ -10,7 +10,8 @@ import type { CertificateService } from "./certificate-service";
  */
 export class CertificateListView
     extends AbstractModelListView<CertificateService, Certificate>
-    implements SelectableListView<Certificate> {
+    implements SelectableListView<Certificate>
+{
     @observable selectedItems: IObservableArray<Certificate>;
     @observable batchAccount: string;
 

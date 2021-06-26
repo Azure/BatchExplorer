@@ -29,7 +29,7 @@ export function initMockBrowserEnvironment(
  * Initializes FluentUI icons, but only if they have not been initialized
  * previously.
  */
-export function initFluentIcons() {
+export function initFluentIcons(): void {
     if (!_fluentIconsInitialized) {
         initializeIcons();
         _fluentIconsInitialized = true;
