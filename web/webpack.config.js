@@ -6,8 +6,8 @@ const path = require("path");
 const { ESBuildMinifyPlugin } = require("esbuild-loader");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TSConfigPathsWebpackPlugin = require("tsconfig-paths-webpack-plugin");
-const BundleAnalyzerWebpackPlugin = require("webpack-bundle-analyzer")
-    .BundleAnalyzerPlugin;
+const BundleAnalyzerWebpackPlugin =
+    require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const webpack = require("webpack");
 

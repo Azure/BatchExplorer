@@ -15,7 +15,8 @@ import {
 export abstract class AbstractEnvironment<
     C extends EnvironmentConfig,
     D extends DependencyFactories
-> implements Environment<C> {
+> implements Environment<C>
+{
     abstract readonly name: EnvironmentName;
     readonly mode: EnvironmentMode;
 

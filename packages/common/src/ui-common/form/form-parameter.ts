@@ -22,7 +22,8 @@ export interface FormParameterInit extends FormEntryWithValueInit {
  */
 export class FormParameter
     extends AbstractFormEntry
-    implements FormEntryWithValue {
+    implements FormEntryWithValue
+{
     private readonly _type: FormParameterType;
     private _initialValue?: any;
 

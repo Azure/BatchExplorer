@@ -4,7 +4,7 @@ import {
     CertificateView,
 } from "@batch/ui-service";
 import { observer } from "mobx-react-lite";
-import { Stack } from "office-ui-fabric-react/lib/Stack";
+import { Stack } from "@fluentui/react/lib/Stack";
 import * as React from "react";
 import { useAsyncEffect } from "../../hooks";
 import { DisplayPane } from "../layout/display-pane";
