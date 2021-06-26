@@ -1,5 +1,8 @@
 {
   "extends": "./tsconfig.common.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "../build/cache/ts.build.buildinfo"
+  },
   "exclude": ["__tests__"],
   "references": [
     { "path": "../../common/config/tsconfig.build.json" },
