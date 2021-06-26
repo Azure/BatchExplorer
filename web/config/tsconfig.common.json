@@ -4,9 +4,7 @@
     "jsx": "react",
     "outDir": "../lib",
     "rootDir": "../src/explorer-web",
-    "baseUrl": "../src",
-    "typeRoots": ["../node_modules/@types"],
-    "tsBuildInfoFile": "../build/cache/ts.buildinfo"
+    "typeRoots": ["../node_modules/@types"]
   },
   "include": ["../src/explorer-web"]
 }
