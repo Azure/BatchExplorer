@@ -1,5 +1,5 @@
-import { MockHttpClient } from "../../http";
-import { MockLogger } from "../../logging";
+import { MockHttpClient } from "ui-common/http";
+import { MockLogger } from "ui-common/logging";
 import { AbstractEnvironment } from "../abstract-environment";
 import {
     DependencyFactories,

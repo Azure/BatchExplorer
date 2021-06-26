@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../lib",
     "rootDir": "../src/ui-common",
-    "baseUrl": "..",
+    "baseUrl": "../src",
     "typeRoots": ["../node_modules/@types"],
     "tsBuildInfoFile": "../build/cache/ts.buildinfo"
   },
