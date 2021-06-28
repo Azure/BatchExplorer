@@ -134,7 +134,6 @@ module.exports = (env) => {
         },
 
         optimization: {
-            splitChunks: false,
             minimizer: OPTS.DEV_MODE
                 ? []
                 : [
