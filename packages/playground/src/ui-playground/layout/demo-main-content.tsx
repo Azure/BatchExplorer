@@ -2,8 +2,6 @@ import * as React from "react";
 import { Route, Switch } from "react-router";
 import { ButtonDemo } from "../demo/generic/button/button-demo";
 import { ComboBoxDemo } from "../demo/generic/combobox/combobox-demo";
-import { DropdownDemo } from "../demo/generic/dropdown/dropdown-demo";
-import { GraphDemo } from "../demo/generic/graph/graph-demo";
 import { SearchBoxDemo } from "../demo/generic/searchbox/searchbox-demo";
 import { GalleryApplicationDemo } from "../demo/batch/galleryapplication/galleryapplication-demo";
 import { QuotaDemo } from "../demo/batch/quota/quota-demo";
@@ -32,12 +30,6 @@ export const DemoMainContent: React.FC = () => {
             </Route>
             <Route path="/combobox">
                 <ComboBoxDemo />
-            </Route>
-            <Route path="/dropdown">
-                <DropdownDemo />
-            </Route>
-            <Route path="/graph">
-                <GraphDemo />
             </Route>
             <Route path="/searchbox">
                 <SearchBoxDemo />

@@ -10,8 +10,6 @@ export const DemoNavMenu: React.FC = () => {
             <DemoLink url="/button" label="Button" />
             <DemoLink url="/checkbox" label="Checkbox" />
             <DemoLink url="/combobox" label="ComboBox" />
-            <DemoLink url="/dropdown" label="Dropdown" />
-            <DemoLink url="/graph" label="Graph" />
             <DemoLink url="/searchbox" label="SearchBox" />
             <DemoLink url="/textfield" label="TextField" />
 

@@ -1,9 +1,8 @@
 import * as React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
 import {
-    ComboBox,
+    VirtualizedComboBox,
     IComboBox,
-    SelectableOptionMenuItemType,
     IComboBoxOption,
     IComboBoxStyles,
     IComboBoxOptionStyles,
@@ -25,37 +24,23 @@ import {
     updateA,
     Toggle,
 } from "@fluentui/react/lib/index";
+import { PrimaryButton } from "@fluentui/react/lib/Button";
 
 export const ComboBoxDemo: React.FC = () => {
     const comboBoxRef = React.useRef<IComboBox>(null);
 
-    const INITIAL_OPTIONS: IComboBoxOption[] = [
-        {
-            key: "Header1",
-            text: "First heading",
-            itemType: SelectableOptionMenuItemType.Header,
-        },
-        { key: "A", text: "Option A" },
-        { key: "B", text: "Option B" },
-        { key: "C", text: "Option C" },
-        { key: "D", text: "Option D" },
-        {
-            key: "divider",
-            text: "-",
-            itemType: SelectableOptionMenuItemType.Divider,
-        },
-        {
-            key: "Header2",
-            text: "Second heading",
-            itemType: SelectableOptionMenuItemType.Header,
-        },
-        { key: "E", text: "Option E" },
-        { key: "F", text: "Option F", disabled: true },
-        { key: "G", text: "Option G" },
-        { key: "H", text: "Option H" },
-        { key: "I", text: "Option I" },
-        { key: "J", text: "Option J" },
-    ];
+    const INITIAL_OPTIONS: IComboBoxOption[] = [];
+    for (let i = 0; i < 10; i++) {
+        INITIAL_OPTIONS.push({
+            key: `${i}`,
+            text: `Option ${i}`,
+        });
+    }
+
+    //INITIAL_OPTIONS[7] = { key: "meep", text: "milk" };
+    //console.log(INITIAL_OPTIONS[7]);
+
+    //we can add new element, pop the last element, and change an existing element
 
     const [labelValue, setLabelValue] = React.useState("Sample text");
 
@@ -77,6 +62,8 @@ export const ComboBoxDemo: React.FC = () => {
         "C",
         "D",
     ]);
+
+    //options;
 
     let newKey = 1;
 
@@ -244,9 +231,8 @@ export const ComboBoxDemo: React.FC = () => {
 
     const [color, setColor] = React.useState(white);
     const [showPreview, setShowPreview] = React.useState(true);
-    const [alphaType, setAlphaType] = React.useState<
-        IColorPickerProps["alphaType"]
-    >("alpha");
+    const [alphaType, setAlphaType] =
+        React.useState<IColorPickerProps["alphaType"]>("alpha");
 
     const updateColor = React.useCallback(
         (ev: any, colorObj: IColor) => setColor(colorObj),
@@ -402,9 +388,57 @@ export const ComboBoxDemo: React.FC = () => {
         }, */
     };
 
+    function removeElement(): void {
+        INITIAL_OPTIONS.pop();
+        options.pop();
+    }
+
+    const [addedValue, setAddedValue] = React.useState<string>("");
+
+    function addElement(): void {
+        //TextFieldOnChange(setAddedValue);
+
+        options.push({
+            key: `${options.length}`,
+            text: `Option ${addedValue}`,
+        });
+
+        console.log("INITIAL_OPTIONS: " + INITIAL_OPTIONS.values);
+    }
+
+    const [changeKey, setChangeKey] = React.useState<string>("");
+
+    const [changeValue, setChangeValue] = React.useState<string>("");
+
+    const [errorMsg, setErrorMsg] = React.useState<string>("");
+
+    //INITIAL_OPTIONS[7] = { key: "meep", text: "milk" };
+    //console.log(INITIAL_OPTIONS[7]);
+
+    const isFixedString = (s: string) =>
+        !isNaN(+s) && isFinite(+s) && !/e/i.test(s);
+
+    function changeElement(): void {
+        const milk = parseInt(changeKey);
+        //const bool = isNaN(milk);
+        if (isFixedString(changeKey) && milk < options.length) {
+            setErrorMsg("");
+            options[milk] = { key: milk, text: changeValue };
+        } else {
+            setErrorMsg(
+                "ERROR: Please enter a valid number within the list bounds"
+            );
+        }
+
+        //options[milk] = { key: milk, text: changeValue };
+
+        //setChangeKey("");
+        //setChangeValue("");
+    }
+
     return (
         <DemoPane title="ComboBox">
-            <ComboBox
+            <VirtualizedComboBox
                 componentRef={comboBoxRef}
                 //defaultSelectedKey="C"
                 label={labelValue}
@@ -420,7 +454,31 @@ export const ComboBoxDemo: React.FC = () => {
                 onChange={Mane()}
                 comboBoxOptionStyles={comboBoxOptionStyles}
             />
-            {/* <Toggle label="Allow freeform" checked={Milk()} /> */}
+            <TextField
+                label="Added value"
+                defaultValue={addedValue}
+                onChange={TextFieldOnChange(setAddedValue)}
+            />
+            <PrimaryButton text="Add Element" onClick={addElement} />
+
+            <br></br>
+            <br></br>
+            <PrimaryButton text="Remove Element" onClick={removeElement} />
+
+            <TextField
+                label="Changed Key"
+                defaultValue={changeKey}
+                errorMessage={errorMsg}
+                onChange={TextFieldOnChange(setChangeKey)}
+            />
+
+            <TextField
+                label="Changed Value"
+                defaultValue={changeValue}
+                onChange={TextFieldOnChange(setChangeValue)}
+            />
+
+            <PrimaryButton text="Change Element" onClick={changeElement} />
 
             <TextField
                 label="Text"
