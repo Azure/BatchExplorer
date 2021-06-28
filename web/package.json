@@ -15,10 +15,12 @@
   "test": "jest",
   "scripts": {
     "build": "run-s compile bundle:dev",
+    "build:analyze": "run-s clean compile bundle:analyze",
     "build:clean": "run-s clean compile bundle:dev",
     "build:prod": "run-s clean compile bundle:prod",
     "build:test": "run-s build test",
     "bundle": "yarn bundle:dev",
+    "bundle:analyze": "webpack --env.analyze",
     "bundle:dev": "webpack --env.dev",
     "bundle:prod": "webpack",
     "butil": "butil",
