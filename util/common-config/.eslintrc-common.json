@@ -46,10 +46,6 @@
       {
         "paths": [
           {
-            "name": "office-ui-fabric-react",
-            "message": "Import from @fluentui/react/lib/* instead: office-ui-fabric-react is deprecated"
-          },
-          {
             "name": "@fluentui",
             "message": "Import from @fluentui/react/lib/* instead to keep bundle sizes small via tree shaking"
           },
@@ -60,6 +56,14 @@
           {
             "name": "@fluentui/react/lib",
             "message": "Import from @fluentui/react/lib/* instead to keep bundle sizes small via tree shaking"
+          },
+          {
+            "name": "monaco-editor",
+            "message": "Import from monaco-editor/esm/vs/editor/editor.api.js instead to avoid pulling Monaco into the main bundle"
+          },
+          {
+            "name": "office-ui-fabric-react",
+            "message": "Import from @fluentui/react/lib/* instead: office-ui-fabric-react is deprecated"
           }
         ],
         "patterns": ["office-ui-fabric-react/*"]

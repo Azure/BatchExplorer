@@ -54,6 +54,7 @@ module.exports = (env) => {
     webpackPlugins.push(
         new MonacoWebpackPlugin({
             languages: ["json"],
+            filename: "[name].monaco-worker.js",
         })
     );
 
