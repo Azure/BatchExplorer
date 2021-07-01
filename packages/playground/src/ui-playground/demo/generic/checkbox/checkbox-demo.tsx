@@ -1,7 +1,7 @@
 //import { useAppTheme } from "@batch/ui-react/lib/theme";
 import * as React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
-import { Checkbox } from "@fluentui/react/lib/";
+import { Checkbox, Toggle } from "@fluentui/react/lib/";
 import { TextField } from "@fluentui/react/lib/TextField";
 import {
     ChoiceGroup,
@@ -10,6 +10,15 @@ import {
 import { Link } from "@fluentui/react/lib/Link";
 
 import { TextFieldOnChange, ChoiceGroupOnChange } from "../../../functions";
+import { Icon } from "@fluentui/react/lib/Icon";
+import { Stack } from "@fluentui/react/lib/Stack";
+import { TooltipHost } from "@fluentui/react/lib/Tooltip";
+import {
+    IStackProps,
+    IStackStyles,
+    IStackTokens,
+} from "@fluentui/react/lib/Stack";
+import { HeightAndWidth } from "../../../functions";
 export const CheckboxDemo: React.FC = (props) => {
     //return <h1 style={headingStyle}>Checkbox</h1>;
 
@@ -26,14 +35,14 @@ export const CheckboxDemo: React.FC = (props) => {
 
     //const [labelValue, setLabelValue] = React.useState("Sample text");
 
-    const [disabledKey, setDisabledKey] = React.useState<string | undefined>(
-        "nondisabled"
-    );
+    //New Disabled
 
-    const disabledOptions: IChoiceGroupOption[] = [
-        { key: "nondisabled", text: "nondisabled" },
-        { key: "disabled", text: "disabled" },
-    ];
+    const [disabledValue, setDisabledValue] = React.useState(false);
+
+    const onDisabledChange = React.useCallback(
+        (ev, checked?: boolean) => setDisabledValue(!!checked),
+        []
+    );
 
     const [boxEndKey, setBoxEndKey] = React.useState<
         "start" | "end" | undefined
@@ -68,14 +77,14 @@ export const CheckboxDemo: React.FC = (props) => {
         return Hello;
     }
 
-    const [indeterminateKey, setIndeterminateKey] = React.useState<
-        string | undefined
-    >("false");
+    //New Indeterminate
 
-    const indeterminateOptions: IChoiceGroupOption[] = [
-        { key: "false", text: "false" },
-        { key: "true", text: "true" },
-    ];
+    const [indeterminateValue, setIndeterminateValue] = React.useState(false);
+
+    const onIndeterminateChange = React.useCallback(
+        (ev, checked?: boolean) => setIndeterminateValue(!!checked),
+        []
+    );
 
     const [alignKey, setAlignKey] = React.useState<string | undefined>(
         "center"
@@ -174,6 +183,33 @@ export const CheckboxDemo: React.FC = (props) => {
         }
     }
 
+    const sectionStackTokens: IStackTokens = { childrenGap: 10 };
+    const wrapStackTokens: IStackTokens = { childrenGap: 30 };
+
+    // Mutating styles definition
+    const stackStyles: IStackStyles = {
+        root: {
+            width: HeightAndWidth()[1] - HeightAndWidth()[1] / 6,
+            display: "flex",
+            justifyContent: "center",
+            //align: "center",
+        },
+    };
+
+    const columnProps: Partial<IStackProps> = {
+        tokens: { childrenGap: 55 },
+        styles: {
+            root: {
+                width: window.screen.availWidth / 8, //window.screen.availWidth / 5.5
+                display: "flex",
+                justifyContent: "center",
+                align: "center",
+                //overflowX: "scroll",
+                // overflowY: "scroll",
+            },
+        },
+    };
+
     return (
         <DemoPane title="Checkbox">
             <div style={{ display: "flex", justifyContent: alignKey }}>
@@ -181,64 +217,124 @@ export const CheckboxDemo: React.FC = (props) => {
                     //label={labelValue}
                     checked={isChecked}
                     onChange={onChange}
-                    disabled={disabledKey == "disabled"}
+                    disabled={disabledValue}
                     //defaultIndeterminate
                     boxSide={boxEndKey}
-                    indeterminate={indeterminateKey == "true"}
+                    indeterminate={indeterminateValue}
                     onRenderLabel={_renderLabelWithLink}
                 />
             </div>
+            <br></br>
+            <br></br>
+            <hr
+                style={{
+                    color: "purple",
+                    backgroundColor: "purple",
+                    height: 5,
+                }}
+            />
+            <br></br>
+            <br></br>
             {/* <TextField
                 label="Text"
                 defaultValue={labelValue}
                 onChange={TextFieldOnChange(setLabelValue)}
             /> */}
-            <TextField
-                label="Text"
-                defaultValue={secondValue}
-                onChange={TextFieldOnChange(setSecondValue)}
-            />
-            <TextField
-                label="URL Placeholder"
-                defaultValue={placeholderValue}
-                onChange={TextFieldOnChange(setPlaceholderValue)}
-            />
-            <TextField
-                label="Actual URL"
-                defaultValue={urlValue}
-                onChange={onChangeSecondTextFieldValue}
-                errorMessage={errorMsg}
-            />
-            <ChoiceGroup
-                selectedKey={textUrlOrderKey}
-                options={textUrlOrderOptions}
-                onChange={ChoiceGroupOnChange(setTextUrlOrderKey)}
-                label="Text first or second?"
-            />
-            <ChoiceGroup
-                selectedKey={disabledKey}
-                options={disabledOptions}
-                onChange={ChoiceGroupOnChange(setDisabledKey)}
-                label="Disabled status"
-            />
-            <ChoiceGroup
-                selectedKey={boxEndKey}
-                options={boxEndOptions}
-                onChange={ModifiedChoiceGroupOnChange(setBoxEndKey)}
-                label="Box end status"
-            />
-            <ChoiceGroup
-                selectedKey={indeterminateKey}
-                options={indeterminateOptions}
-                onChange={ChoiceGroupOnChange(setIndeterminateKey)}
-                label="Indeterminate status"
-            />
-            <ChoiceGroup
-                selectedKey={alignKey}
-                options={alignOptions}
-                onChange={ChoiceGroupOnChange(setAlignKey)}
-                label="Alignment"
-            />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <Stack tokens={sectionStackTokens}>
+                    <Stack
+                        horizontal
+                        horizontalAlign="center"
+                        wrap
+                        styles={stackStyles}
+                        tokens={wrapStackTokens}
+                    >
+                        <span>
+                            <Stack {...columnProps}>
+                                <TextField
+                                    label="Text"
+                                    defaultValue={secondValue}
+                                    onChange={TextFieldOnChange(setSecondValue)}
+                                />
+
+                                <TextField
+                                    label="Actual URL"
+                                    defaultValue={urlValue}
+                                    onChange={onChangeSecondTextFieldValue}
+                                    errorMessage={errorMsg}
+                                />
+
+                                <TextField
+                                    label="URL Placeholder"
+                                    defaultValue={placeholderValue}
+                                    onChange={TextFieldOnChange(
+                                        setPlaceholderValue
+                                    )}
+                                />
+
+                                <Toggle
+                                    label={
+                                        <div>
+                                            Disabled{" "}
+                                            <TooltipHost content="Disabled state of the checkbox.">
+                                                <Icon
+                                                    iconName="Info"
+                                                    aria-label="Info tooltip"
+                                                />
+                                            </TooltipHost>
+                                        </div>
+                                    }
+                                    inlineLabel
+                                    onChange={onDisabledChange}
+                                    checked={disabledValue}
+                                />
+
+                                <Toggle
+                                    label={
+                                        <div>
+                                            Indeterminate{" "}
+                                            <TooltipHost content="Controlled indeterminate visual state for checkbox.">
+                                                <Icon
+                                                    iconName="Info"
+                                                    aria-label="Info tooltip"
+                                                />
+                                            </TooltipHost>
+                                        </div>
+                                    }
+                                    inlineLabel
+                                    onChange={onIndeterminateChange}
+                                    checked={indeterminateValue}
+                                />
+
+                                <ChoiceGroup
+                                    selectedKey={textUrlOrderKey}
+                                    options={textUrlOrderOptions}
+                                    onChange={ChoiceGroupOnChange(
+                                        setTextUrlOrderKey
+                                    )}
+                                    label="Text first or second?"
+                                />
+
+                                <ChoiceGroup
+                                    selectedKey={boxEndKey}
+                                    options={boxEndOptions}
+                                    onChange={ModifiedChoiceGroupOnChange(
+                                        setBoxEndKey
+                                    )}
+                                    label="Box end status"
+                                />
+
+                                <ChoiceGroup
+                                    selectedKey={alignKey}
+                                    options={alignOptions}
+                                    onChange={ChoiceGroupOnChange(setAlignKey)}
+                                    label="Alignment"
+                                />
+                            </Stack>
+                        </span>
+                    </Stack>
+                </Stack>
+            </div>
         </DemoPane>
     );
 };

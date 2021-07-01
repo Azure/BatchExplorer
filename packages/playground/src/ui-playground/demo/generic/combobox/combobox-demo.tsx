@@ -20,11 +20,18 @@ import {
     getColorFromString,
     IColorPickerStyles,
     IColor,
-    IColorPickerProps,
-    updateA,
     Toggle,
 } from "@fluentui/react/lib/index";
 import { PrimaryButton } from "@fluentui/react/lib/Button";
+import { TooltipHost } from "@fluentui/react/lib/Tooltip";
+import { Icon } from "@fluentui/react/lib/Icon";
+import { Stack } from "@fluentui/react/lib/Stack";
+import { HeightAndWidth } from "../../../functions";
+import {
+    IStackProps,
+    IStackStyles,
+    IStackTokens,
+} from "@fluentui/react/lib/Stack";
 
 export const ComboBoxDemo: React.FC = () => {
     const comboBoxRef = React.useRef<IComboBox>(null);
@@ -48,15 +55,6 @@ export const ComboBoxDemo: React.FC = () => {
         string | number | undefined
     >("C"); */
 
-    const [allowFreeformKey, setAllowFreeformKey] = React.useState<
-        string | undefined
-    >("true");
-
-    const allowFreeformOptions: IChoiceGroupOption[] = [
-        { key: "true", text: "true" },
-        { key: "false", text: "false" },
-    ];
-
     const [options, setOptions] = React.useState(INITIAL_OPTIONS);
     const [selectedKeys, setSelectedKeys] = React.useState<string[]>([
         "C",
@@ -64,6 +62,15 @@ export const ComboBoxDemo: React.FC = () => {
     ]);
 
     //options;
+
+    //Freeform Status
+
+    const [freeformValue, setFreeformValue] = React.useState(false);
+
+    const onFreeformChange = React.useCallback(
+        (ev, checked?: boolean) => setFreeformValue(!!checked),
+        []
+    );
 
     let newKey = 1;
 
@@ -75,7 +82,7 @@ export const ComboBoxDemo: React.FC = () => {
             value?: string
         ): void => {
             let selected = option?.selected;
-            if (allowFreeformKey == "true" && !option && value) {
+            if (freeformValue == true && !option && value) {
                 // If allowFreeform is true, the newly selected option might be something the user typed that
                 // doesn't exist in the options list yet. So there's extra work to manually add it.
                 selected = true;
@@ -91,7 +98,7 @@ export const ComboBoxDemo: React.FC = () => {
                 );
             }
         },
-        [allowFreeformKey]
+        [freeformValue]
     );
 
     const [selectedKey, setSelectedKey] = React.useState<
@@ -106,7 +113,7 @@ export const ComboBoxDemo: React.FC = () => {
             value?: string
         ): void => {
             let key = option?.key;
-            if (allowFreeformKey == "true" && !option && value) {
+            if (freeformValue == true && !option && value) {
                 // If allowFreeform is true, the newly selected option might be something the user typed that
                 // doesn't exist in the options list yet. So there's extra work to manually add it.
                 key = `${newKey++}`;
@@ -118,11 +125,11 @@ export const ComboBoxDemo: React.FC = () => {
 
             setSelectedKey(key);
         },
-        [allowFreeformKey]
+        [freeformValue]
     );
 
     function Mane() {
-        if (multiSelectKey == "true") {
+        if (multiSelectValue == true) {
             return onChange;
         } else {
             return singleOnChange;
@@ -130,7 +137,7 @@ export const ComboBoxDemo: React.FC = () => {
     }
 
     function Wow() {
-        if (multiSelectKey == "true") {
+        if (multiSelectValue == true) {
             return selectedKeys;
         } else {
             return selectedKey;
@@ -145,70 +152,36 @@ export const ComboBoxDemo: React.FC = () => {
         }
     } */
 
-    const [multiSelectKey, setMultiSelectKey] = React.useState<
-        string | undefined
-    >("false");
+    //New Multiselect
+    const [multiSelectValue, setMultiSelectValue] = React.useState(false);
 
-    const multiSelectOptions: IChoiceGroupOption[] = [
-        { key: "false", text: "false" },
-        { key: "true", text: "true" },
-    ];
-
-    const [disabledKey, setDisabledKey] = React.useState<string | undefined>(
-        "nondisabled"
+    const onMultiSelectChange = React.useCallback(
+        (ev, checked?: boolean) => setMultiSelectValue(!!checked),
+        []
     );
 
-    const disabledOptions: IChoiceGroupOption[] = [
-        { key: "nondisabled", text: "nondisabled" },
-        { key: "disabled", text: "disabled" },
-    ];
+    //New Disabled
 
-    const [autoCompleteKey, setAutoCompleteKey] = React.useState<
-        "off" | "on" | undefined
-    >("off");
+    const [disabledValue, setDisabledValue] = React.useState(false);
 
-    const autoCompleteOptions: IChoiceGroupOption[] = [
-        { key: "off", text: "off" },
-        { key: "on", text: "on" },
-    ];
+    const onDisabledChange = React.useCallback(
+        (ev, checked?: boolean) => setDisabledValue(!!checked),
+        []
+    );
 
-    function ModifiedChoiceGroupOnChange(
-        param: React.Dispatch<React.SetStateAction<"off" | "on" | undefined>>
-    ): (
-        ev?: React.FormEvent<HTMLInputElement | HTMLElement> | undefined,
-        option?: IChoiceGroupOption | undefined
-    ) => void {
-        // ...
-        const Hello = React.useCallback(
-            (
-                ev?: React.FormEvent<HTMLInputElement | HTMLElement>,
-                option?: IChoiceGroupOption
-            ) => {
-                if (option?.key == "on") {
-                    param("on");
-                } else {
-                    param("off");
-                }
-            },
-            []
-        );
+    //NEW Static Error Message
+    const [staticErrorMessageValue, setStaticErrorMessageValue] =
+        React.useState(false);
 
-        return Hello;
-    }
-
-    const [staticErrorMessageKey, setStaticErrorMessageKey] = React.useState<
-        string | undefined
-    >("no");
-
-    const staticErrorMessageOptions: IChoiceGroupOption[] = [
-        { key: "no", text: "no" },
-        { key: "yes", text: "yes" },
-    ];
+    const onStaticErrorMessageChange = React.useCallback(
+        (ev, checked?: boolean) => setStaticErrorMessageValue(!!checked),
+        []
+    );
 
     const [secondTextFieldValue, setSecondTextFieldValue] = React.useState("");
 
     function standard(param: string): string {
-        if (CheckURL(staticErrorMessageKey) == false) {
+        if (CheckURL(staticErrorMessageValue) == false) {
             return param;
         } else {
             return "";
@@ -218,8 +191,8 @@ export const ComboBoxDemo: React.FC = () => {
     /*
      * This function returns true if the user wants to include a hyperlink and false if not.
      */
-    function CheckURL(param: string | undefined): boolean {
-        if (param == "yes") {
+    function CheckURL(param: boolean): boolean {
+        if (param == true) {
             return false;
         } else {
             return true;
@@ -230,16 +203,9 @@ export const ComboBoxDemo: React.FC = () => {
     const white = getColorFromString("#ffffff")!;
 
     const [color, setColor] = React.useState(white);
-    const [showPreview, setShowPreview] = React.useState(true);
-    const [alphaType, setAlphaType] =
-        React.useState<IColorPickerProps["alphaType"]>("alpha");
 
     const updateColor = React.useCallback(
         (ev: any, colorObj: IColor) => setColor(colorObj),
-        []
-    );
-    const onShowPreviewClick = React.useCallback(
-        (ev: any, checked?: boolean) => setShowPreview(!!checked),
         []
     );
 
@@ -251,23 +217,6 @@ export const ComboBoxDemo: React.FC = () => {
         },
         colorRectangle: { height: 268 },
     };
-
-    const alphaOptions: IChoiceGroupOption[] = [
-        { key: "alpha", text: "Alpha" },
-        { key: "transparency", text: "Transparency" },
-        { key: "none", text: "None" },
-    ];
-
-    const onAlphaTypeChange = React.useCallback(
-        (ev: any, option: IChoiceGroupOption = alphaOptions[0]) => {
-            if (option.key === "none") {
-                // If hiding the alpha slider, remove transparency from the color
-                setColor(updateA(color, 100));
-            }
-            setAlphaType(option.key as IColorPickerProps["alphaType"]);
-        },
-        [color]
-    );
 
     const [defaultColorKey, setDefaultColorKey] = React.useState<
         string | undefined
@@ -303,7 +252,7 @@ export const ComboBoxDemo: React.FC = () => {
     const comboBoxStyles: Partial<IComboBoxStyles> = {
         root: {
             color: returnColor(),
-            maxWidth: 300,
+            width: 400,
             backgroundColor:
                 defaultColorKey == "custom" ? "#" + color.hex : undefined,
         },
@@ -436,132 +385,264 @@ export const ComboBoxDemo: React.FC = () => {
         //setChangeValue("");
     }
 
+    //New autocomplete
+
+    const [autoCompleteValue, setAutoCompleteValue] = React.useState(false);
+
+    const onAutoCompleteChange = React.useCallback(
+        (ev, checked?: boolean) => setAutoCompleteValue(!!checked),
+        []
+    );
+
+    const sectionStackTokens: IStackTokens = { childrenGap: 50 };
+    const wrapStackTokens: IStackTokens = { childrenGap: 400 };
+
+    // Mutating styles definition
+    const stackStyles: IStackStyles = {
+        root: {
+            width: HeightAndWidth()[1] - HeightAndWidth()[1] / 6,
+            display: "flex",
+            justifyContent: "center",
+            //align: "center",
+        },
+    };
+
+    const columnProps: Partial<IStackProps> = {
+        tokens: { childrenGap: 55 },
+        styles: {
+            root: {
+                width: window.screen.availWidth / 8, //window.screen.availWidth / 5.5
+                display: "flex",
+                justifyContent: "center",
+                align: "center",
+                //overflowX: "scroll",
+                // overflowY: "scroll",
+            },
+        },
+    };
+
     return (
         <DemoPane title="ComboBox">
-            <VirtualizedComboBox
-                componentRef={comboBoxRef}
-                //defaultSelectedKey="C"
-                label={labelValue}
-                options={options}
-                styles={comboBoxStyles}
-                multiSelect={multiSelectKey == "true"}
-                allowFreeform={allowFreeformKey == "true"}
-                autoComplete={autoCompleteKey}
-                errorMessage={standard(secondTextFieldValue)}
-                //manipulate color
-                disabled={disabledKey == "disabled"}
-                selectedKey={Wow()}
-                onChange={Mane()}
-                comboBoxOptionStyles={comboBoxOptionStyles}
-            />
-            <TextField
-                label="Added value"
-                defaultValue={addedValue}
-                onChange={TextFieldOnChange(setAddedValue)}
-            />
-            <PrimaryButton text="Add Element" onClick={addElement} />
-
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <VirtualizedComboBox
+                    componentRef={comboBoxRef}
+                    //defaultSelectedKey="C"
+                    label={labelValue}
+                    options={options}
+                    styles={comboBoxStyles}
+                    multiSelect={multiSelectValue}
+                    allowFreeform={freeformValue}
+                    autoComplete={autoCompleteValue ? "on" : "off"}
+                    errorMessage={standard(secondTextFieldValue)}
+                    //manipulate color
+                    disabled={disabledValue}
+                    selectedKey={Wow()}
+                    onChange={Mane()}
+                    comboBoxOptionStyles={comboBoxOptionStyles}
+                />
+            </div>
             <br></br>
             <br></br>
-            <PrimaryButton text="Remove Element" onClick={removeElement} />
+            <hr
+                style={{
+                    color: "purple",
+                    backgroundColor: "purple",
+                    height: 5,
+                }}
+            />
+            <br></br>
+            <br></br>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <Stack tokens={sectionStackTokens}>
+                    <Stack
+                        horizontal
+                        horizontalAlign="center"
+                        wrap
+                        styles={stackStyles}
+                        tokens={wrapStackTokens}
+                    >
+                        <span>
+                            <Stack {...columnProps}>
+                                <TextField
+                                    label="Added value"
+                                    defaultValue={addedValue}
+                                    onChange={TextFieldOnChange(setAddedValue)}
+                                />
+                                <PrimaryButton
+                                    text="Add Element"
+                                    onClick={addElement}
+                                />
 
-            <TextField
-                label="Changed Key"
-                defaultValue={changeKey}
-                errorMessage={errorMsg}
-                onChange={TextFieldOnChange(setChangeKey)}
-            />
+                                <br></br>
+                                <br></br>
+                                <PrimaryButton
+                                    text="Remove Element"
+                                    onClick={removeElement}
+                                />
 
-            <TextField
-                label="Changed Value"
-                defaultValue={changeValue}
-                onChange={TextFieldOnChange(setChangeValue)}
-            />
+                                <TextField
+                                    label="Changed Key"
+                                    defaultValue={changeKey}
+                                    errorMessage={errorMsg}
+                                    onChange={TextFieldOnChange(setChangeKey)}
+                                />
 
-            <PrimaryButton text="Change Element" onClick={changeElement} />
+                                <TextField
+                                    label="Changed Value"
+                                    defaultValue={changeValue}
+                                    onChange={TextFieldOnChange(setChangeValue)}
+                                />
 
-            <TextField
-                label="Text"
-                defaultValue={labelValue}
-                onChange={TextFieldOnChange(setLabelValue)}
-            />
-            <ChoiceGroup
-                selectedKey={allowFreeformKey}
-                options={allowFreeformOptions}
-                onChange={ChoiceGroupOnChange(setAllowFreeformKey)}
-                label="Freeform status"
-            />
-            <ChoiceGroup
-                selectedKey={multiSelectKey}
-                options={multiSelectOptions}
-                onChange={ChoiceGroupOnChange(setMultiSelectKey)}
-                label="Multi-select status"
-            />
-            <ChoiceGroup
-                selectedKey={disabledKey}
-                options={disabledOptions}
-                onChange={ChoiceGroupOnChange(setDisabledKey)}
-                label="Disabled status"
-            />
-            <ChoiceGroup
-                selectedKey={autoCompleteKey}
-                options={autoCompleteOptions}
-                onChange={ModifiedChoiceGroupOnChange(setAutoCompleteKey)}
-                label="Autocomplete status"
-            />
-            <ChoiceGroup
-                selectedKey={staticErrorMessageKey}
-                options={staticErrorMessageOptions}
-                onChange={ChoiceGroupOnChange(setStaticErrorMessageKey)}
-                label="Would you like to include a static error message?"
-            />
-            <TextField
-                label="Static Error Message"
-                value={standard(secondTextFieldValue)}
-                onChange={TextFieldOnChange(setSecondTextFieldValue)}
-                disabled={CheckURL(staticErrorMessageKey)}
-            />
-            <ColorPicker
-                color={color}
-                onChange={updateColor}
-                alphaType={alphaType}
-                showPreview={showPreview}
-                styles={colorPickerStyles}
-                // The ColorPicker provides default English strings for visible text.
-                // If your app is localized, you MUST provide the `strings` prop with localized strings.
-                strings={
-                    {
-                        // By default, the sliders will use the text field labels as their aria labels.
-                        // Previously this example had more detailed instructions in the labels, but this is
-                        // a bad practice and not recommended. Labels should be concise, and match visible text when possible.
-                        //hueAriaLabel: "Hue",
-                    }
-                }
-            />
-            <Toggle
-                label="Show preview box"
-                onChange={onShowPreviewClick}
-                checked={showPreview}
-            />
+                                <PrimaryButton
+                                    text="Change Element"
+                                    onClick={changeElement}
+                                />
+                            </Stack>
+                        </span>
+                        <span>
+                            <Stack {...columnProps}>
+                                <TextField
+                                    label="Text"
+                                    defaultValue={labelValue}
+                                    onChange={TextFieldOnChange(setLabelValue)}
+                                />
 
-            <ChoiceGroup
-                label="Alpha slider type"
-                options={alphaOptions}
-                defaultSelectedKey={alphaOptions[0].key}
-                onChange={onAlphaTypeChange}
-            />
-            <ChoiceGroup
-                selectedKey={defaultColorKey}
-                options={defaultColorOptions}
-                onChange={ChoiceGroupOnChange(setDefaultColorKey)}
-                label="Default background color? Yes or no"
-            />
-            <ChoiceGroup
-                selectedKey={textColorKey}
-                options={textColorOptions}
-                onChange={ChoiceGroupOnChange(setTextColorKey)}
-                label="Text color? Default, black, or white"
-            />
+                                <Toggle
+                                    label={
+                                        <div>
+                                            Freeform{" "}
+                                            <TooltipHost content="Whether the ComboBox is free form, meaning that the user input is not bound to provided options. Defaults to false.">
+                                                <Icon
+                                                    iconName="Info"
+                                                    aria-label="Info tooltip"
+                                                />
+                                            </TooltipHost>
+                                        </div>
+                                    }
+                                    inlineLabel
+                                    onChange={onFreeformChange}
+                                    checked={freeformValue}
+                                />
+
+                                <Toggle
+                                    label={
+                                        <div>
+                                            Multiselect{" "}
+                                            <TooltipHost content="Enables multi-choice selections when set to true.">
+                                                <Icon
+                                                    iconName="Info"
+                                                    aria-label="Info tooltip"
+                                                />
+                                            </TooltipHost>
+                                        </div>
+                                    }
+                                    inlineLabel
+                                    onChange={onMultiSelectChange}
+                                    checked={multiSelectValue}
+                                />
+
+                                <Toggle
+                                    label={
+                                        <div>
+                                            Disabled{" "}
+                                            <TooltipHost content="When set to true, it disables the entire menu.">
+                                                <Icon
+                                                    iconName="Info"
+                                                    aria-label="Info tooltip"
+                                                />
+                                            </TooltipHost>
+                                        </div>
+                                    }
+                                    inlineLabel
+                                    onChange={onDisabledChange}
+                                    checked={disabledValue}
+                                />
+
+                                <Toggle
+                                    label={
+                                        <div>
+                                            Autocomplete{" "}
+                                            <TooltipHost content="If set to true, while the user is inputting text, it will suggest potential matches from the list of options. This feature is only activated if the freeform toggle is set to True.">
+                                                <Icon
+                                                    iconName="Info"
+                                                    aria-label="Info tooltip"
+                                                />
+                                            </TooltipHost>
+                                        </div>
+                                    }
+                                    inlineLabel
+                                    onChange={onAutoCompleteChange}
+                                    checked={autoCompleteValue}
+                                />
+
+                                <Toggle
+                                    label={
+                                        <div>
+                                            Would you like to include a static
+                                            error message?{" "}
+                                            <TooltipHost content="If set to true, you may input a static error message to be displayed underneath the menu. Otherwise, the error message field is disabled.">
+                                                <Icon
+                                                    iconName="Info"
+                                                    aria-label="Info tooltip"
+                                                />
+                                            </TooltipHost>
+                                        </div>
+                                    }
+                                    inlineLabel
+                                    onChange={onStaticErrorMessageChange}
+                                    checked={staticErrorMessageValue}
+                                />
+                                <TextField
+                                    label="Static Error Message"
+                                    value={standard(secondTextFieldValue)}
+                                    onChange={TextFieldOnChange(
+                                        setSecondTextFieldValue
+                                    )}
+                                    disabled={CheckURL(staticErrorMessageValue)}
+                                />
+                            </Stack>
+                        </span>
+                        <span>
+                            <Stack {...columnProps}>
+                                <ChoiceGroup
+                                    selectedKey={defaultColorKey}
+                                    options={defaultColorOptions}
+                                    onChange={ChoiceGroupOnChange(
+                                        setDefaultColorKey
+                                    )}
+                                    label="Background color"
+                                />
+                                <ColorPicker
+                                    color={color}
+                                    onChange={updateColor}
+                                    alphaType={"none"}
+                                    showPreview={true}
+                                    styles={colorPickerStyles}
+                                    // The ColorPicker provides default English strings for visible text.
+                                    // If your app is localized, you MUST provide the `strings` prop with localized strings.
+                                    strings={
+                                        {
+                                            // By default, the sliders will use the text field labels as their aria labels.
+                                            // Previously this example had more detailed instructions in the labels, but this is
+                                            // a bad practice and not recommended. Labels should be concise, and match visible text when possible.
+                                            //hueAriaLabel: "Hue",
+                                        }
+                                    }
+                                />
+
+                                <ChoiceGroup
+                                    selectedKey={textColorKey}
+                                    options={textColorOptions}
+                                    onChange={ChoiceGroupOnChange(
+                                        setTextColorKey
+                                    )}
+                                    label="Text color? Default, black, or white"
+                                />
+                            </Stack>
+                        </span>
+                    </Stack>
+                </Stack>
+            </div>
         </DemoPane>
     );
 };

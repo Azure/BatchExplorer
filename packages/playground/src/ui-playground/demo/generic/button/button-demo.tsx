@@ -552,9 +552,19 @@ export const ButtonDemo: React.FC = () => {
                 />
             </div>
             <br></br>
+            <hr
+                style={{
+                    color: "purple",
+                    backgroundColor: "purple",
+                    height: 5,
+                }}
+            />
+            <br></br>
+            <br></br>
             <Stack tokens={sectionStackTokens}>
                 <Stack
                     horizontal
+                    horizontalAlign="center"
                     wrap
                     styles={stackStyles}
                     tokens={wrapStackTokens}
@@ -773,6 +783,15 @@ export const ButtonDemo: React.FC = () => {
                     style={iconStyle}
                 />
             </div>
+            <hr
+                style={{
+                    color: "purple",
+                    backgroundColor: "purple",
+                    height: 5,
+                }}
+            />
+            <br></br>
+            <br></br>
             <div style={{ display: "flex", justifyContent: "center" }}>
                 <Stack tokens={sectionStackTokens}>
                     <Stack
