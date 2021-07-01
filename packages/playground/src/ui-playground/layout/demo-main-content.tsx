@@ -18,6 +18,7 @@ import { PoolGraphDemo } from "../demo/displays/poolgraph/poolgraph-demo";
 import { TasksDemo } from "../demo/displays/tasks/tasks-demo";
 import { TextFieldDemo } from "../demo/generic/textfield/textfield-demo";
 import { CheckboxDemo } from "../demo/generic/checkbox/checkbox-demo";
+import { SubscriptionsDemo } from "../demo/batch/subscriptions/subscriptions-demo";
 
 export const DemoMainContent: React.FC = () => {
     return (
@@ -45,6 +46,9 @@ export const DemoMainContent: React.FC = () => {
             </Route>
             <Route path="/resources">
                 <ResourcesDemo />
+            </Route>
+            <Route path="/subscriptions">
+                <SubscriptionsDemo />
             </Route>
             <Route path="/tab">
                 <TabDemo />

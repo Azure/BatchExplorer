@@ -17,6 +17,7 @@ export const DemoNavMenu: React.FC = () => {
             <DemoLink url="/galleryapplication" label="Gallery Application" />
             <DemoLink url="/quota" label="Quota" />
             <DemoLink url="/resources" label="Resources" />
+            <DemoLink url="/subscriptions" label="Subscriptions" />
             <DemoLink url="/tab" label="Tab" />
             <DemoLink url="/toolbar" label="Toolbar" />
 

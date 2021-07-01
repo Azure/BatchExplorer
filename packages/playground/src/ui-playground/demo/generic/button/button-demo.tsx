@@ -1,4 +1,3 @@
-import { MonacoEditor } from "@batch/ui-react/lib/components";
 import { IIconProps, Slider } from "@fluentui/react/lib/";
 import { DefaultButton, IconButton } from "@fluentui/react/lib/Button";
 import {
@@ -151,10 +150,6 @@ export const ButtonDemo: React.FC = () => {
     const [disabledIconKey, setDisabledIconKey] = React.useState<
         string | undefined
     >("nondisabled");
-
-    /* const [disabledFocusIconKey, setDisabledFocusIconKey] = React.useState<
-        string | undefined
-    >("focus"); */
 
     const [checkedIconKey, setCheckedIconKey] = React.useState<
         string | undefined
@@ -470,17 +465,6 @@ export const ButtonDemo: React.FC = () => {
     //Styles for the setting columns
     const stackTokens = { childrenGap: HeightAndWidth()[1] / 30 }; //gap between the columns - 30
 
-    //Styles specifically for normal button columns
-    /*  const stackStyles: Partial<IStackStyles> = {
-        root: {
-            width: width / 1.2,
-            height: height / 2.8,
-            display: "flex",
-            justifyContent: "center",
-            overflow: "scroll",
-        }, //width of the actual columns
-    };
-*/
     const columnProps: Partial<IStackProps> = {
         tokens: { childrenGap: 55 },
         styles: {
@@ -495,26 +479,6 @@ export const ButtonDemo: React.FC = () => {
         },
     };
 
-    //Styles specifically for icon button columns
-    /*  const iconStackStyles: Partial<IStackStyles> = {
-        root: {
-            width: HeightAndWidth()[1] / 1.2, //width / 1.2
-            height: HeightAndWidth()[0] / 2.1,
-            display: "flex",
-            justifyContent: "center",
-            overflow: "scroll",
-        }, //width of the actual columns
-    }; */
-
-    // Non-mutating styles definition
-    /* const itemStyles: React.CSSProperties = {
-        alignItems: "center",
-        display: "flex",
-        height: 50,
-        justifyContent: "center",
-        width: 50,
-    }; */
-
     // Tokens definition
     const sectionStackTokens: IStackTokens = { childrenGap: 10 };
     const wrapStackTokens: IStackTokens = { childrenGap: 30 };
@@ -528,8 +492,6 @@ export const ButtonDemo: React.FC = () => {
             //align: "center",
         },
     };
-
-    const msg2 = `No results.\nPlease try another search term.`;
 
     return (
         <DemoPane title="Default Button">
@@ -722,47 +684,12 @@ export const ButtonDemo: React.FC = () => {
                     styles={stackStyles}
                 ></Stack>
             </div>
-            <h2 style={headingStyle}> JSON Editor for Default Button</h2>
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: HeightAndWidth()[0] / 3, //500
-                    whiteSpace: "pre",
-                }}
-            >
-                <MonacoEditor
-                    value={msg2}
-                    language="json"
-                    containerStyle={{
-                        // display: "flex",
-                        //flexDirection: "column",
-                        //flexGrow: 1,
-                        width: "80%",
-                        height: "100%",
-                        // justifyContent: "center",
-                    }}
-                    editorOptions={{
-                        minimap: {
-                            enabled: false,
-                        },
-                    }}
-                />
-            </div>
-            {/* <Slider
-                label="Font Size"
-                min={0}
-                max={100}
-                defaultValue={50}
-                value={fontValue}
-                onChange={fontOnChange}
-            /> */}
+
             <hr
                 style={{
                     color: "red",
                     backgroundColor: "red",
-                    height: 5,
+                    height: 10,
                 }}
             />
 
@@ -850,14 +777,7 @@ export const ButtonDemo: React.FC = () => {
                                     )}
                                     label="Disabled status for icon"
                                 />
-                                {/* <ChoiceGroup
-                            selectedKey={disabledFocusIconKey}
-                            options={allowDisabledFocusOptions}
-                            onChange={ChoiceGroupOnChange(
-                                setDisabledFocusIconKey
-                            )}
-                            label="Focus in disabled mode"
-                            /> */}
+
                                 <ChoiceGroup
                                     selectedKey={checkedIconKey}
                                     options={checkedOptions}
@@ -964,39 +884,6 @@ export const ButtonDemo: React.FC = () => {
                     </Stack>
                 </Stack>
             </div>
-            <h2 style={headingStyle}> JSON Editor for Icon Button</h2>
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: HeightAndWidth()[0] / 3, //500
-                }}
-            >
-                <MonacoEditor
-                    language="json"
-                    containerStyle={{
-                        // display: "flex",
-                        //flexDirection: "column",
-                        //flexGrow: 1,
-                        width: "80%",
-                        height: "100%",
-                        // justifyContent: "center",
-                    }}
-                    editorOptions={{
-                        minimap: {
-                            enabled: false,
-                        },
-                    }}
-                />
-            </div>
-            {/* <hr
-                style={{
-                    color: "red",
-                    backgroundColor: "red",
-                    height: 1,
-                }}
-            /> */}
         </DemoPane>
     );
 };
