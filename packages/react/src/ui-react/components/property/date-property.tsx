@@ -1,24 +1,25 @@
+import { toIsoLocal } from "@batch/ui-common";
 import * as React from "react";
 import { PropertyField } from "./property-field";
 
-export interface TextPropertyProps {
+export interface DatePropertyProps {
     label?: string;
-    value?: string;
+    value?: Date;
 }
 
 /**
  * Displays a property as plain, unformatted text
  */
-export const TextProperty: React.FC<TextPropertyProps> = (props) => {
+export const DateProperty: React.FC<DatePropertyProps> = (props) => {
     return (
         <PropertyField
             label={props.label}
             value={props.value}
             renderLabel={(label) => {
-                return <label>{label ? label : "-"}</label>;
+                return <label>{label}</label>;
             }}
             renderValue={(value) => {
-                return <span>{value ? value : "-"}</span>;
+                return <span>{value ? toIsoLocal(value) : "-"}</span>;
             }}
         />
     );

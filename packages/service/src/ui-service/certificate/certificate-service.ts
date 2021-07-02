@@ -3,9 +3,11 @@ import {
     HttpListResult,
     HttpResult,
 } from "../http-service";
-import { isCertificate } from "./certificate-util";
 import { Certificate } from "./certificate-models";
-import { isODataListJson } from "../odata";
+import {
+    parseCertificateJson,
+    parseCertificateListJson,
+} from "./certificate-util";
 
 export const defaultThumbprintAlgorithm = "sha1";
 
@@ -36,16 +38,16 @@ export class CertificateService extends AbstractHttpService {
             return new HttpResult(response);
         }
 
-        const json = await response.json();
+        const text = await response.text();
 
-        // Validate response
-        if (!isCertificate(json)) {
-            throw new Error(
-                "Malformed response: " + JSON.stringify(json, null, 4)
-            );
+        let cert: Certificate;
+        try {
+            cert = parseCertificateJson(text);
+        } catch (e) {
+            throw new Error("Malformed response: " + text);
         }
 
-        return new HttpResult(response, json);
+        return new HttpResult(response, cert);
     }
 
     /**
@@ -71,25 +73,15 @@ export class CertificateService extends AbstractHttpService {
             return new HttpListResult(response);
         }
 
-        const json = await response.json();
+        const text = await response.text();
 
-        // Validate list result
-        if (!isODataListJson<Certificate>(json)) {
-            throw new Error(
-                "Malformed response: " + JSON.stringify(json, null, 4)
-            );
+        let certs: Certificate[];
+        try {
+            certs = parseCertificateListJson(text);
+        } catch (e) {
+            throw new Error("Malformed response: " + text);
         }
 
-        // Validate certs
-        for (const obj of json.value) {
-            if (!isCertificate(obj)) {
-                throw new Error(
-                    "Malformed certificate in response: " +
-                        JSON.stringify(obj, null, 4)
-                );
-            }
-        }
-
-        return new HttpListResult(response, json.value);
+        return new HttpListResult(response, certs);
     }
 }

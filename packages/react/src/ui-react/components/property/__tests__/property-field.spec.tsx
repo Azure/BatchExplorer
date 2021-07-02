@@ -18,8 +18,8 @@ describe("PropertyField component", () => {
 
     test("No props", () => {
         render(<PropertyField />);
-        expect(screen.getByTestId("label").textContent).toEqual("");
-        expect(screen.getByTestId("content").textContent).toEqual("");
+        expect(screen.getByTestId("label").textContent).toEqual("-");
+        expect(screen.getByTestId("content").textContent).toEqual("-");
     });
 
     test("Custom render functions", async () => {

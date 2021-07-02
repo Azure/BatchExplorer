@@ -1,18 +1,18 @@
 import { Stack } from "@fluentui/react/lib/Stack";
 import * as React from "react";
 
-export interface PropertyFieldProps {
+export interface PropertyFieldProps<T> {
     label?: string;
-    value?: unknown;
+    value?: T;
     renderLabel?: (label?: string) => React.ReactNode;
-    renderValue?: (value?: unknown) => React.ReactNode;
+    renderValue?: (value?: T) => React.ReactNode;
 }
 
 /**
  * Displays a single key/value pair with an icon to copy the value to
  * the clipboard
  */
-export const PropertyField: React.FC<PropertyFieldProps> = (props) => {
+export function PropertyField<T>(props: PropertyFieldProps<T>): JSX.Element {
     return (
         <>
             <Stack tokens={{ childrenGap: 8 }} horizontal>
@@ -28,8 +28,8 @@ export const PropertyField: React.FC<PropertyFieldProps> = (props) => {
             </Stack>
         </>
     );
-};
+}
 PropertyField.defaultProps = {
-    renderLabel: (label) => (label ? label : ""),
-    renderValue: (value) => (value ? String(value) : ""),
+    renderLabel: (label: string) => (label ? label : "-"),
+    renderValue: (value: unknown) => (value ? String(value) : "-"),
 };

@@ -1,10 +1,11 @@
 import { CertificateView } from "@batch/ui-service";
-import * as React from "react";
 import { observer } from "mobx-react-lite";
+import * as React from "react";
+import { ContentPane } from "../layout";
+import { DateProperty } from "../property/date-property";
 import { PropertyGroup } from "../property/property-group";
 import { PropertyList } from "../property/property-list";
 import { TextProperty } from "../property/text-property";
-import { ContentPane } from "../layout";
 
 export interface CertificatePropertyListProps {
     view: CertificateView;
@@ -30,6 +31,19 @@ export const CertificatePropertyList = observer(
                     <TextProperty label="Thumbprint" value={cert.thumbprint} />
                     <TextProperty label="URL" value={cert.url} />
                     <TextProperty label="State" value={cert.state} />
+                    <DateProperty
+                        label="State transition time"
+                        value={cert.stateTransitionTime}
+                    />
+                    <TextProperty
+                        label="Previous state"
+                        value={cert.previousState}
+                    />
+                    <DateProperty
+                        label="Previous transition time"
+                        value={cert.previousStateTransitionTime}
+                    />
+                    <TextProperty label="Public data" value={cert.publicData} />
                 </PropertyGroup>
             </PropertyList>
         );
