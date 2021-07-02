@@ -38,7 +38,7 @@ let idCounter = 0;
 @Component({
     selector: "bl-tp-cell",
     template: `
-        <div class="cell-value">
+        <div class="cell-value" aria-keyshortcuts="Enter Space">
             <ng-container *ngIf="!useContent">{{value}}</ng-container>
             <ng-content *ngIf="useContent"></ng-content>
         </div>
