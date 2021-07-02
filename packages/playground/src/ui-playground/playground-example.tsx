@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import { DemoNavMenu } from "./layout/demo-nav-menu";
 import { DemoMainContent } from "./layout/demo-main-content";
 

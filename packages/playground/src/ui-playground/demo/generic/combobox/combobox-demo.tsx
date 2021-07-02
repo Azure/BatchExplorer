@@ -6,11 +6,9 @@ import {
     IComboBoxOption,
     IComboBoxStyles,
     IComboBoxOptionStyles,
-    // Toggle,
 } from "@fluentui/react/lib/";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { ChoiceGroupOnChange, TextFieldOnChange } from "../../../functions";
-//import { useBoolean } from "@fluentui/react/lib/";
 import {
     ChoiceGroup,
     IChoiceGroupOption,
@@ -44,24 +42,13 @@ export const ComboBoxDemo: React.FC = () => {
         });
     }
 
-    //INITIAL_OPTIONS[7] = { key: "meep", text: "milk" };
-    //console.log(INITIAL_OPTIONS[7]);
-
-    //we can add new element, pop the last element, and change an existing element
-
     const [labelValue, setLabelValue] = React.useState("Sample text");
-
-    /* const [selectedKey, setSelectedKey] = React.useState<
-        string | number | undefined
-    >("C"); */
 
     const [options, setOptions] = React.useState(INITIAL_OPTIONS);
     const [selectedKeys, setSelectedKeys] = React.useState<string[]>([
         "C",
         "D",
     ]);
-
-    //options;
 
     //Freeform Status
 
@@ -83,8 +70,6 @@ export const ComboBoxDemo: React.FC = () => {
         ): void => {
             let selected = option?.selected;
             if (freeformValue == true && !option && value) {
-                // If allowFreeform is true, the newly selected option might be something the user typed that
-                // doesn't exist in the options list yet. So there's extra work to manually add it.
                 selected = true;
                 option = { key: `${newKey++}`, text: value };
                 setOptions((prevOptions) => [...prevOptions, option!]);
@@ -114,8 +99,6 @@ export const ComboBoxDemo: React.FC = () => {
         ): void => {
             let key = option?.key;
             if (freeformValue == true && !option && value) {
-                // If allowFreeform is true, the newly selected option might be something the user typed that
-                // doesn't exist in the options list yet. So there's extra work to manually add it.
                 key = `${newKey++}`;
                 setOptions((prevOptions) => [
                     ...prevOptions,
@@ -144,14 +127,6 @@ export const ComboBoxDemo: React.FC = () => {
         }
     }
 
-    /*  function Milk() {
-        if (allowFreeformKey == "true") {
-            return true;
-        } else {
-            return false;
-        }
-    } */
-
     //New Multiselect
     const [multiSelectValue, setMultiSelectValue] = React.useState(false);
 
@@ -161,7 +136,6 @@ export const ComboBoxDemo: React.FC = () => {
     );
 
     //New Disabled
-
     const [disabledValue, setDisabledValue] = React.useState(false);
 
     const onDisabledChange = React.useCallback(
@@ -257,46 +231,32 @@ export const ComboBoxDemo: React.FC = () => {
                 defaultColorKey == "custom" ? "#" + color.hex : undefined,
         },
         input: {
-            //color: textColorKey,
             color: returnColor(),
             backgroundColor:
                 defaultColorKey == "custom" ? "#" + color.hex : undefined,
-            //backgroundColor: undefined,
         },
         optionsContainerWrapper: {
-            //color: textColorKey,
             color: returnColor(),
             backgroundColor:
                 defaultColorKey == "custom" ? "#" + color.hex : undefined,
-            //backgroundColor: undefined,
         },
         rootHovered: {
-            //color: textColorKey,
             color: returnColor(),
-            //backgroundColor:
-            //    defaultColorKey == "custom" ? "#" + color.hex : undefined,
-            //backgroundColor: undefined,
         },
         inputDisabled: {
-            //color: textColorKey,
             color: returnColor(),
             backgroundColor:
                 defaultColorKey == "custom" ? "#" + color.hex : undefined,
-            //backgroundColor: undefined,
         },
         rootPressed: {
-            //color: textColorKey,
             color: returnColor(),
             backgroundColor:
                 defaultColorKey == "custom" ? "#" + color.hex : undefined,
-            //backgroundColor: undefined,
         },
         rootDisabled: {
-            //color: textColorKey,
             color: returnColor(),
             backgroundColor:
                 defaultColorKey == "custom" ? "#" + color.hex : undefined,
-            //backgroundColor: undefined,
         },
     };
 
@@ -308,33 +268,18 @@ export const ComboBoxDemo: React.FC = () => {
                 defaultColorKey == "custom" ? "#" + color.hex : undefined,
         },
         rootHovered: {
-            //color: textColorKey,
             color: returnColor(),
-            // backgroundColor:
-            //    defaultColorKey == "custom" ? "#" + color.hex : undefined,
-            //backgroundColor: undefined,
         },
         rootPressed: {
-            //color: textColorKey,
             color: returnColor(),
             backgroundColor:
                 defaultColorKey == "custom" ? "#" + color.hex : undefined,
-            //backgroundColor: undefined,
         },
         rootDisabled: {
-            //color: textColorKey,
             color: returnColor(),
             backgroundColor:
                 defaultColorKey == "custom" ? "#" + color.hex : undefined,
-            //backgroundColor: undefined,
         },
-        /*  optionTextWrapper: {
-            //color: textColorKey,
-            color: returnColor(),
-            backgroundColor:
-                defaultColorKey == "custom" ? "#" + color.hex : undefined,
-            //backgroundColor: undefined,
-        }, */
     };
 
     function removeElement(): void {
@@ -345,11 +290,9 @@ export const ComboBoxDemo: React.FC = () => {
     const [addedValue, setAddedValue] = React.useState<string>("");
 
     function addElement(): void {
-        //TextFieldOnChange(setAddedValue);
-
         options.push({
             key: `${options.length}`,
-            text: `Option ${addedValue}`,
+            text: `${addedValue}`,
         });
 
         console.log("INITIAL_OPTIONS: " + INITIAL_OPTIONS.values);
@@ -361,15 +304,11 @@ export const ComboBoxDemo: React.FC = () => {
 
     const [errorMsg, setErrorMsg] = React.useState<string>("");
 
-    //INITIAL_OPTIONS[7] = { key: "meep", text: "milk" };
-    //console.log(INITIAL_OPTIONS[7]);
-
     const isFixedString = (s: string) =>
         !isNaN(+s) && isFinite(+s) && !/e/i.test(s);
 
     function changeElement(): void {
         const milk = parseInt(changeKey);
-        //const bool = isNaN(milk);
         if (isFixedString(changeKey) && milk < options.length) {
             setErrorMsg("");
             options[milk] = { key: milk, text: changeValue };
@@ -378,15 +317,9 @@ export const ComboBoxDemo: React.FC = () => {
                 "ERROR: Please enter a valid number within the list bounds"
             );
         }
-
-        //options[milk] = { key: milk, text: changeValue };
-
-        //setChangeKey("");
-        //setChangeValue("");
     }
 
     //New autocomplete
-
     const [autoCompleteValue, setAutoCompleteValue] = React.useState(false);
 
     const onAutoCompleteChange = React.useCallback(
@@ -426,7 +359,6 @@ export const ComboBoxDemo: React.FC = () => {
             <div style={{ display: "flex", justifyContent: "center" }}>
                 <VirtualizedComboBox
                     componentRef={comboBoxRef}
-                    //defaultSelectedKey="C"
                     label={labelValue}
                     options={options}
                     styles={comboBoxStyles}
@@ -434,7 +366,6 @@ export const ComboBoxDemo: React.FC = () => {
                     allowFreeform={freeformValue}
                     autoComplete={autoCompleteValue ? "on" : "off"}
                     errorMessage={standard(secondTextFieldValue)}
-                    //manipulate color
                     disabled={disabledValue}
                     selectedKey={Wow()}
                     onChange={Mane()}
@@ -618,16 +549,7 @@ export const ComboBoxDemo: React.FC = () => {
                                     alphaType={"none"}
                                     showPreview={true}
                                     styles={colorPickerStyles}
-                                    // The ColorPicker provides default English strings for visible text.
-                                    // If your app is localized, you MUST provide the `strings` prop with localized strings.
-                                    strings={
-                                        {
-                                            // By default, the sliders will use the text field labels as their aria labels.
-                                            // Previously this example had more detailed instructions in the labels, but this is
-                                            // a bad practice and not recommended. Labels should be concise, and match visible text when possible.
-                                            //hueAriaLabel: "Hue",
-                                        }
-                                    }
+                                    strings={{}}
                                 />
 
                                 <ChoiceGroup

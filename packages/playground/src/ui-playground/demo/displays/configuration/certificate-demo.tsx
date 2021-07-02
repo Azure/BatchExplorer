@@ -1,12 +1,11 @@
 import * as React from "react";
-//import { headingStyle } from "../../../style";
 import { DemoPane } from "../../../layout/demo-pane";
 import { MonacoEditor } from "@batch/ui-react/lib/components";
 import { parseCertificateJson, certificateToJson } from "@batch/ui-service";
-
-//import { CertificateView } from "@batch/ui-service";
+import { CertificateView } from "@batch/ui-service";
+import { CertificateDisplay } from "@batch/ui-react/lib/components";
 import { Certificate } from "@batch/ui-service";
-import { TextField, ITextFieldStyles } from "@fluentui/react/lib/TextField";
+import { HeightAndWidth } from "../../../functions";
 
 const testCert: Certificate = {
     thumbprint: "bd7c0d29efad85c5174364c330db1698b14f7f55",
@@ -19,51 +18,48 @@ const testCert: Certificate = {
 
 const valueString: string = certificateToJson(testCert);
 
-export const ConfigurationDemo: React.FC = (props) => {
-    const [theThumbprint, setTheThumbprint] = React.useState<
-        string | undefined
-    >("bd7c0d29efad85c5174364c330db1698b14f7f55");
+export const CertificateDemo: React.FC = (props) => {
+    let obj: Certificate = testCert;
 
-    //console.log("value");
-
-    //const certificateView = new CertificateView(testCert);
-    //const cert = certificateView.model;
+    const [myCert, setMyCert] = React.useState<Certificate>(obj);
 
     const jsonOnChange = React.useCallback((value: string) => {
-        const obj: Certificate = parseCertificateJson(value);
+        obj = parseCertificateJson(value);
 
-        setTheThumbprint(obj.thumbprint);
-        //console.warn(obj.thumbprint);
+        setMyCert(obj);
     }, []);
 
-    const textFieldStyles: Partial<ITextFieldStyles> = {
-        root: { backgroundColor: "#000000", color: "#000000" },
-    };
-
     return (
-        <DemoPane title="Configuration">
-            <TextField
-                label=""
-                value={theThumbprint}
-                readOnly
-                styles={textFieldStyles}
-            />
+        <DemoPane title="Certificate">
+            <CertificateDisplay view={new CertificateView(myCert)} />
 
-            <MonacoEditor
-                value={valueString}
-                onChange={jsonOnChange}
-                onChangeDelay={20}
-                language="json"
-                containerStyle={{
-                    width: "80%",
-                    height: "100%",
+            <br></br>
+
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: HeightAndWidth()[0] / 3, //500
+                    whiteSpace: "pre",
                 }}
-                editorOptions={{
-                    minimap: {
-                        enabled: false,
-                    },
-                }}
-            />
+            >
+                <MonacoEditor
+                    value={valueString}
+                    onChange={jsonOnChange}
+                    onChangeDelay={20}
+                    language="json"
+                    containerStyle={{
+                        width: "80%",
+                        height: "100%",
+                    }}
+                    editorOptions={{
+                        minimap: {
+                            enabled: false,
+                        },
+                    }}
+                />
+            </div>
         </DemoPane>
     );
 };
