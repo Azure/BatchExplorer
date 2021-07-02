@@ -1,4 +1,5 @@
-import { fromIso, toIsoLocal, toIsoUtc } from "../datetime";
+import { DateTime } from "luxon";
+import { fromIso, isDate, toIsoLocal, toIsoUtc } from "../datetime";
 import { initMockEnvironment } from "../environment";
 
 describe("Date/time utilities", () => {
@@ -29,5 +30,17 @@ describe("Date/time utilities", () => {
         expect(
             toIsoUtc(new Date(Date.parse("03 Dec 2020 00:12:00 EST")))
         ).toEqual("2020-12-03T05:12:00.000Z");
+    });
+
+    test("isDate() function", () => {
+        expect(isDate(new Date())).toBeTruthy();
+
+        expect(isDate("2020-12-03T00:12:00.000Z")).toBeFalsy();
+        expect(isDate(fromIso("2020-12-03T00:12:00.000Z"))).toBeTruthy();
+
+        // Luxon DateTime != Date
+        expect(
+            isDate(DateTime.fromISO("2020-12-03T00:12:00.000Z"))
+        ).toBeFalsy();
     });
 });

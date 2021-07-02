@@ -70,3 +70,14 @@ export function toIsoLocal(date: Date): string {
 export function toIsoUtc(date: Date): string {
     return DateTime.fromJSDate(date, { zone: "utc" }).toISO();
 }
+
+/**
+ * Checks if an object is a date type
+ *
+ * @param obj The object to check
+ *
+ * @returns True if the object is a date, false otherwise
+ */
+export function isDate(obj: unknown): obj is Date {
+    return obj instanceof Date;
+}

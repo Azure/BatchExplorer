@@ -27,3 +27,4 @@ export {
     setLocalTimeZoneOffset,
 } from "./datetime";
 export { uniqueElementId } from "./dom";
+export { autoFormat } from "./format";

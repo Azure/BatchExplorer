@@ -3,6 +3,7 @@ import * as React from "react";
 import { runAxe } from "../../test-util/a11y";
 import { initMockBrowserEnvironment } from "../../environment";
 import { DataGrid } from "../data-grid";
+import { fromIso } from "@batch/ui-common";
 
 const ignoredA11yRules = {
     rules: {
@@ -27,10 +28,14 @@ describe("DataGrid component", () => {
     test("Simple grid", async () => {
         const cars = [
             { make: "Volkswagen", model: "Jetta" },
-            { make: "Porsche", model: "911" },
+            {
+                make: "Porsche",
+                model: "911",
+                madeOn: fromIso("2021-06-01T00:12:00Z"),
+            },
         ];
         const { container } = render(
-            <DataGrid items={cars} columns={["make", "model"]} />
+            <DataGrid items={cars} columns={["make", "model", "madeOn"]} />
         );
         const gridEl = screen.getByRole("grid");
 
@@ -41,19 +46,24 @@ describe("DataGrid component", () => {
 
         const columnHeaders = screen.getAllByRole("columnheader");
         // One extra column header for the select checkbox column
-        expect(columnHeaders.length).toBe(3);
+        expect(columnHeaders.length).toBe(4);
         expect(getColumnHeaderText(columnHeaders[1])).toBe("make");
         expect(getColumnHeaderText(columnHeaders[2])).toBe("model");
+        expect(getColumnHeaderText(columnHeaders[3])).toBe("madeOn");
 
         const firstRowCells = getRowDataCells(rows[1]);
-        expect(firstRowCells.length).toBe(2);
+        expect(firstRowCells.length).toBe(3);
         expect(firstRowCells[0].textContent).toBe("Volkswagen");
         expect(firstRowCells[1].textContent).toBe("Jetta");
+        expect(firstRowCells[2].textContent).toBe("");
 
         const secondRowCells = getRowDataCells(rows[2]);
-        expect(secondRowCells.length).toBe(2);
+        expect(secondRowCells.length).toBe(3);
         expect(secondRowCells[0].textContent).toBe("Porsche");
         expect(secondRowCells[1].textContent).toBe("911");
+        expect(secondRowCells[2].textContent).toBe(
+            "2021-05-31T21:12:00.000-03:00"
+        );
 
         expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
     });
@@ -61,7 +71,12 @@ describe("DataGrid component", () => {
     test("Custom grid columns", async () => {
         const cars = [
             { make: "Volkswagen", model: "Jetta" },
-            { make: "Porsche", model: "911", color: "red" },
+            {
+                make: "Porsche",
+                model: "911",
+                color: "red",
+                madeOn: fromIso("2021-06-01T00:12:00Z"),
+            },
             { make: "Tesla", model: "Model S", color: "black" },
         ];
         const { container } = render(
@@ -71,6 +86,7 @@ describe("DataGrid component", () => {
                     { prop: "make", label: "Manufacturer" },
                     { prop: "model", label: "Model" },
                     { prop: "color", label: "Color" },
+                    { prop: "madeOn", label: "Manufacture Date" },
                 ]}
             />
         );
@@ -83,28 +99,34 @@ describe("DataGrid component", () => {
 
         const columnHeaders = screen.getAllByRole("columnheader");
         // One extra column header for the select checkbox column
-        expect(columnHeaders.length).toBe(4);
+        expect(columnHeaders.length).toBe(5);
         expect(getColumnHeaderText(columnHeaders[1])).toBe("Manufacturer");
         expect(getColumnHeaderText(columnHeaders[2])).toBe("Model");
         expect(getColumnHeaderText(columnHeaders[3])).toBe("Color");
+        expect(getColumnHeaderText(columnHeaders[4])).toBe("Manufacture Date");
 
         const firstRowCells = getRowDataCells(rows[1]);
-        expect(firstRowCells.length).toBe(3);
+        expect(firstRowCells.length).toBe(4);
         expect(firstRowCells[0].textContent).toBe("Volkswagen");
         expect(firstRowCells[1].textContent).toBe("Jetta");
         expect(firstRowCells[2].textContent).toBe("");
+        expect(firstRowCells[3].textContent).toBe("");
 
         const secondRowCells = getRowDataCells(rows[2]);
-        expect(secondRowCells.length).toBe(3);
+        expect(secondRowCells.length).toBe(4);
         expect(secondRowCells[0].textContent).toBe("Porsche");
         expect(secondRowCells[1].textContent).toBe("911");
         expect(secondRowCells[2].textContent).toBe("red");
+        expect(secondRowCells[3].textContent).toBe(
+            "2021-05-31T21:12:00.000-03:00"
+        );
 
         const thirdRowCells = getRowDataCells(rows[3]);
-        expect(thirdRowCells.length).toBe(3);
+        expect(thirdRowCells.length).toBe(4);
         expect(thirdRowCells[0].textContent).toBe("Tesla");
         expect(thirdRowCells[1].textContent).toBe("Model S");
         expect(thirdRowCells[2].textContent).toBe("black");
+        expect(thirdRowCells[3].textContent).toBe("");
 
         expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
     });

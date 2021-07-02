@@ -5,6 +5,7 @@ import {
     SelectionMode,
 } from "@fluentui/react/lib/DetailsList";
 import { useAppTheme } from "../theme";
+import { autoFormat } from "@batch/ui-common";
 
 export interface DataGridProps {
     /**
@@ -75,38 +76,44 @@ const defaultColumnMinWidth = 48;
 export const DataGrid: React.FC<DataGridProps> = (props) => {
     const theme = useAppTheme();
 
-    const columns: IColumn[] = [];
-    if (props.columns) {
-        let i = 1;
-        for (const c of props?.columns) {
-            if (typeof c === "string") {
-                // Simple column names
-                columns.push({
-                    key: `column${i++}`,
-                    name: c,
-                    fieldName: c,
-                    minWidth: defaultColumnMinWidth,
-                    maxWidth: props.columnDefaultMaxWidth,
-                    isResizable: true,
-                });
-            } else if (c.prop) {
-                // Column props
-                columns.push({
-                    key: `column${i++}`,
-                    name: c.label ?? c.prop,
-                    fieldName: c.prop,
-                    minWidth: defaultColumnMinWidth,
-                    maxWidth: c.maxWidth ?? props.columnDefaultMaxWidth,
-                    isResizable: true,
-                });
-            } else {
-                throw new Error(
-                    "Invalid DataGrid column configuration: " +
-                        JSON.stringify(c)
-                );
+    const detailsListColumns = React.useMemo(() => {
+        const detailsListCols: IColumn[] = [];
+        if (props.columns) {
+            let i = 1;
+            for (const c of props?.columns) {
+                if (typeof c === "string") {
+                    // Simple column names
+                    detailsListCols.push({
+                        key: `column${i++}`,
+                        name: c,
+                        fieldName: c,
+                        onRender: (item) => autoFormat(item[c]),
+                        minWidth: defaultColumnMinWidth,
+                        maxWidth: props.columnDefaultMaxWidth,
+                        isResizable: true,
+                    });
+                } else if (c.prop) {
+                    // Column props
+                    detailsListCols.push({
+                        key: `column${i++}`,
+                        name: c.label ?? c.prop,
+                        fieldName: c.prop,
+                        onRender: (item) =>
+                            autoFormat(c.prop ? item[c.prop] : null),
+                        minWidth: defaultColumnMinWidth,
+                        maxWidth: c.maxWidth ?? props.columnDefaultMaxWidth,
+                        isResizable: true,
+                    });
+                } else {
+                    throw new Error(
+                        "Invalid DataGrid column configuration: " +
+                            JSON.stringify(c)
+                    );
+                }
             }
         }
-    }
+        return detailsListCols;
+    }, [props.columns, props.columnDefaultMaxWidth]);
 
     return (
         <DetailsList
@@ -121,7 +128,7 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
                     ? SelectionMode.none
                     : undefined
             }
-            columns={columns}
+            columns={detailsListColumns}
             items={props.items ?? []}
         />
     );
