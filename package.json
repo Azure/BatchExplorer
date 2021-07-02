@@ -58,7 +58,7 @@
     "build:package": "lerna run workspace:build:package --stream",
     "build:prod": "lerna run workspace:build:prod --stream",
     "build:test": "lerna run workspace:build:test --stream",
-    "clean": "lerna run workspace:clean --stream",
+    "clean": "lerna run --parallel workspace:clean --stream",
     "gather-build-results": "butil gather-build-results .",
     "launch": "yarn launch:web",
     "launch:desktop": "lerna run --parallel workspace:launch:desktop --stream",
