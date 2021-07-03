@@ -6,6 +6,10 @@ export interface TextPropertyProps {
     value?: string;
 }
 
+function getText(value?: string): string {
+    return value != null ? value : "";
+}
+
 /**
  * Displays a property as plain, unformatted text
  */
@@ -18,7 +22,8 @@ export const TextProperty: React.FC<TextPropertyProps> = (props) => {
                 return <label>{label ? label : "-"}</label>;
             }}
             renderValue={(value) => {
-                return <span>{value ? value : "-"}</span>;
+                const text = getText(value);
+                return <span>{text !== "" ? text : "-"}</span>;
             }}
         />
     );

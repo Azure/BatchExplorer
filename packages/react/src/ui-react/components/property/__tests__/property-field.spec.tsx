@@ -1,11 +1,12 @@
 import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { PropertyField } from "../property-field";
-import { initMockEnvironment, uniqueElementId } from "@batch/ui-common";
+import { uniqueElementId } from "@batch/ui-common";
 import { runAxe } from "../../../test-util/a11y";
+import { initMockBrowserEnvironment } from "../../../environment";
 
 describe("PropertyField component", () => {
-    beforeEach(() => initMockEnvironment());
+    beforeEach(() => initMockBrowserEnvironment());
 
     test("Simple key/value pair", async () => {
         const { container } = render(

@@ -28,3 +28,4 @@ export {
 } from "./datetime";
 export { uniqueElementId } from "./dom";
 export { autoFormat } from "./format";
+export { copyToClipboard } from "./clipboard";
