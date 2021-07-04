@@ -6,6 +6,7 @@ import { Certificate, CertificateState } from "app/models";
 import { CertificateParams, CertificateService } from "app/services";
 import { Subscription } from "rxjs";
 import { CertificateCommands } from "../action";
+import { CertificateView } from "@batch/ui-service";
 import {
     CertificateDisplay,
     CertificateDisplayProps
@@ -55,7 +56,7 @@ export class CertificateDetailsComponent implements OnInit, OnDestroy {
             if (certificate) {
                 this.decorator = new CertificateDecorator(certificate);
                 this.certificateDisplayProps = {
-                    view: certificate as any
+                    view: new CertificateView(certificate)
                 };
             }
         });
