@@ -33,15 +33,19 @@ export class ReactContainerComponent<P> implements AfterViewInit, OnChanges, OnD
     @Input() public component: React.FC<P> | React.ComponentClass<P>
     @Input() public props: P;
 
+    private _initialized: boolean = false;
     private _isMounted: boolean = false;
 
     ngAfterViewInit() {
+        this._initialized = true;
         this._render();
         this._isMounted = true;
     }
 
     ngOnChanges() {
-        this._render();
+        if (this._initialized) {
+            this._render();
+        }
     }
 
     private _render() {
