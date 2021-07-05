@@ -3,7 +3,6 @@ import {
     CommandBar,
     ICommandBarItemProps,
 } from "@fluentui/react/lib/CommandBar";
-import { uniqueId } from "@batch/ui-common";
 import { useAppTheme } from "../../theme";
 
 export interface ActionBarItem {
@@ -13,9 +12,10 @@ export interface ActionBarItem {
     text: string;
 
     /**
-     * Properties for icons rendered alongside (or instead of) item text
+     * Properties for icons rendered alongside (or instead of) item text.
+     * Alternatively, the name of the fluent icon to use.
      */
-    icon?: ActionBarIcon;
+    icon?: ActionBarIcon | string;
 
     /**
      * Mouse/keyboard activation callback
@@ -33,6 +33,11 @@ export interface ActionBarProps {
      * A list of action items to render
      */
     items?: ActionBarItem[];
+
+    /**
+     * If true, forces all buttons to be rendered with icons only
+     */
+    iconsOnly?: boolean;
 }
 
 export interface ActionBarIcon extends React.HTMLAttributes<HTMLElement> {
@@ -44,13 +49,19 @@ export interface ActionBarIcon extends React.HTMLAttributes<HTMLElement> {
 
 export const ActionBar: React.FC<ActionBarProps> = (props) => {
     const theme = useAppTheme();
-    const commandBarItems = props.items?.map((item) => _toCommandBarItem(item));
+    const commandBarItems = props.items?.map((item, index) =>
+        _toCommandBarItem(props, item, index)
+    );
     return <CommandBar theme={theme} items={commandBarItems ?? []} />;
 };
 
-function _toCommandBarItem(item: ActionBarItem): ICommandBarItemProps {
+function _toCommandBarItem(
+    props: ActionBarProps,
+    item: ActionBarItem,
+    index: number
+): ICommandBarItemProps {
     const commandBarItem: ICommandBarItemProps = {
-        key: uniqueId("bl-action-bar-item"),
+        key: "bl-action-bar-item-" + index,
         // Use emdash instead of dash to avoid the fluentui behavior
         // of interpreting dashes as a divider item
         text: item.text === "-" ? "—" : item.text,
@@ -65,10 +76,18 @@ function _toCommandBarItem(item: ActionBarItem): ICommandBarItemProps {
         };
     }
 
-    if (item.icon) {
+    if (typeof item.icon === "string") {
+        commandBarItem.iconProps = {
+            iconName: item.icon,
+        };
+    } else if (item.icon) {
         commandBarItem.iconProps = {
             ...item.icon,
         };
+    }
+
+    if (props.iconsOnly) {
+        commandBarItem.iconOnly = true;
     }
 
     return commandBarItem;
