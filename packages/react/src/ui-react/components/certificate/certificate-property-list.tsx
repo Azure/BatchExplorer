@@ -23,7 +23,7 @@ export const CertificatePropertyList = observer(
         const cert = props.view.model;
         return (
             <PropertyList>
-                <PropertyGroup label="General">
+                <PropertyGroup title="General">
                     <TextProperty
                         label="Thumbprint algorithm"
                         value={cert.thumbprintAlgorithm}
