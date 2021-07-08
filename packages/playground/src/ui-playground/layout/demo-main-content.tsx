@@ -23,61 +23,61 @@ import { SubscriptionsDemo } from "../demo/batch/subscriptions/subscriptions-dem
 export const DemoMainContent: React.FC = () => {
     return (
         <Switch>
-            <Route path="/button">
+            <Route path="/playground/button">
                 <ButtonDemo />
             </Route>
-            <Route path="/checkbox">
+            <Route path="/playground/checkbox">
                 <CheckboxDemo />
             </Route>
-            <Route path="/combobox">
+            <Route path="/playground/combobox">
                 <ComboBoxDemo />
             </Route>
-            <Route path="/searchbox">
+            <Route path="/playground/searchbox">
                 <SearchBoxDemo />
             </Route>
-            <Route path="/textfield">
+            <Route path="/playground/textfield">
                 <TextFieldDemo />
             </Route>
-            <Route path="/galleryapplication">
+            <Route path="/playground/galleryapplication">
                 <GalleryApplicationDemo />
             </Route>
-            <Route path="/quota">
+            <Route path="/playground/quota">
                 <QuotaDemo />
             </Route>
-            <Route path="/resources">
+            <Route path="/playground/resources">
                 <ResourcesDemo />
             </Route>
-            <Route path="/subscriptions">
+            <Route path="/playground/subscriptions">
                 <SubscriptionsDemo />
             </Route>
-            <Route path="/tab">
+            <Route path="/playground/tab">
                 <TabDemo />
             </Route>
-            <Route path="/toolbar">
+            <Route path="/playground/toolbar">
                 <ToolbarDemo />
             </Route>
-            <Route path="/certificate">
+            <Route path="/playground/certificate">
                 <CertificateDemo />
             </Route>
-            <Route path="/createitem">
+            <Route path="/playground/createitem">
                 <CreateItemDemo />
             </Route>
-            <Route path="/file">
+            <Route path="/playground/file">
                 <FileDemo />
             </Route>
-            <Route path="/poolgraph">
+            <Route path="/playground/poolgraph">
                 <PoolGraphDemo />
             </Route>
-            <Route path="/jobspecification">
+            <Route path="/playground/jobspecification">
                 <JobSpecificationDemo />
             </Route>
-            <Route path="/nodes">
+            <Route path="/playground/nodes">
                 <NodesDemo />
             </Route>
-            <Route path="/packages">
+            <Route path="/playground/packages">
                 <PackagesDemo />
             </Route>
-            <Route path="/tasks">
+            <Route path="/playground/tasks">
                 <TasksDemo />
             </Route>
         </Switch>

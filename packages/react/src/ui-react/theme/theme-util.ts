@@ -22,7 +22,7 @@ export const BaseThemeHighContrastDark = AzureThemeHighContrastDark;
 /**
  * The name of the default theme
  */
-export const defaultTheme = "explorerDark";
+export const defaultTheme = "explorerLight";
 
 /**
  * React component hook that returns a theme as an AppTheme rather than a

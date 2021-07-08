@@ -8,7 +8,7 @@ import {
     IDropdownStyles,
 } from "@fluentui/react/lib/Dropdown";
 import * as React from "react";
-import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
+import { HashRouter, Link, Route, Switch } from "react-router-dom";
 import { AppRoot } from "./layout/app-root";
 import { Footer } from "./layout/footer";
 import { Header } from "./layout/header";
@@ -48,7 +48,7 @@ export const Application: React.FC = () => {
 
     return (
         <AppRoot theme={theme}>
-            <BrowserRouter>
+            <HashRouter>
                 <Header>
                     {/* &nbsp; &nbsp; */}
                     <Stack horizontal tokens={stackTokens}>
@@ -105,7 +105,7 @@ export const Application: React.FC = () => {
                     </Switch>
                 </Main>
                 <Footer />
-            </BrowserRouter>
+            </HashRouter>
         </AppRoot>
     );
 };
