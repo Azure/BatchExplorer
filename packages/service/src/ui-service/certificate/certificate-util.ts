@@ -33,7 +33,32 @@ export function parseCertificateJson(json: string | unknown): Certificate {
             obj.previousStateTransitionTime
         );
     }
+
+    obj.state = StateChecker(obj.state);
+
+    obj.previousState = StateChecker(obj.previousState);
+
     return obj;
+}
+
+/**
+ * Checks whether what the user has entered for the certificate object's current or previous state is valid
+ *
+ * @param certObjectState The certificate object state to check
+ *
+ * @returns The original parameter if the certificate object state is valid, and an empty string if not
+ */
+function StateChecker(certObjectState: string) {
+    if (
+        certObjectState != "active" &&
+        certObjectState != "deletefailed" &&
+        certObjectState != "deleting" &&
+        certObjectState != "-"
+    ) {
+        return "";
+    } else {
+        return certObjectState;
+    }
 }
 
 /**

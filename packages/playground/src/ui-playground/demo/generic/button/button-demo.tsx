@@ -490,6 +490,7 @@ export const ButtonDemo: React.FC = () => {
             display: "flex",
             justifyContent: "center",
             //align: "center",
+            //overflowY: "scroll",
         },
     };
 
@@ -680,6 +681,7 @@ export const ButtonDemo: React.FC = () => {
             <div style={{ display: "flex", justifyContent: "center" }}>
                 <Stack
                     horizontal
+                    horizontalAlign="center"
                     tokens={stackTokens}
                     styles={stackStyles}
                 ></Stack>
@@ -723,6 +725,7 @@ export const ButtonDemo: React.FC = () => {
                 <Stack tokens={sectionStackTokens}>
                     <Stack
                         horizontal
+                        horizontalAlign="center"
                         wrap
                         styles={stackStyles}
                         tokens={wrapStackTokens}
