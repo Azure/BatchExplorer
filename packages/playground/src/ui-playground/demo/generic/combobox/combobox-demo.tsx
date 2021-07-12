@@ -294,8 +294,6 @@ export const ComboBoxDemo: React.FC = () => {
             key: `${options.length}`,
             text: `${addedValue}`,
         });
-
-        console.log("INITIAL_OPTIONS: " + INITIAL_OPTIONS.values);
     }
 
     const [changeKey, setChangeKey] = React.useState<string>("");
@@ -395,37 +393,40 @@ export const ComboBoxDemo: React.FC = () => {
                         <span>
                             <Stack {...columnProps}>
                                 <TextField
-                                    label="Added value"
+                                    label="Item to Add"
                                     defaultValue={addedValue}
                                     onChange={TextFieldOnChange(setAddedValue)}
+                                    description="Enter the name of an item to add to the bottom of the combobox list."
                                 />
                                 <PrimaryButton
-                                    text="Add Element"
+                                    text="Add Item"
                                     onClick={addElement}
                                 />
 
                                 <br></br>
                                 <br></br>
                                 <PrimaryButton
-                                    text="Remove Element"
+                                    text="Remove Last Item"
                                     onClick={removeElement}
                                 />
 
                                 <TextField
-                                    label="Changed Key"
+                                    label="Index of Item"
                                     defaultValue={changeKey}
                                     errorMessage={errorMsg}
                                     onChange={TextFieldOnChange(setChangeKey)}
+                                    description="Enter the index (any number starting from 0) of the item you want to change."
                                 />
 
                                 <TextField
-                                    label="Changed Value"
+                                    label="New Value of Item"
                                     defaultValue={changeValue}
                                     onChange={TextFieldOnChange(setChangeValue)}
+                                    description="Enter the value of the item you want to change at the above index."
                                 />
 
                                 <PrimaryButton
-                                    text="Change Element"
+                                    text="Change Item"
                                     onClick={changeElement}
                                 />
                             </Stack>

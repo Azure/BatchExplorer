@@ -20,8 +20,6 @@ import {
 } from "@fluentui/react/lib/Stack";
 import { HeightAndWidth } from "../../../functions";
 export const CheckboxDemo: React.FC = (props) => {
-    //return <h1 style={headingStyle}>Checkbox</h1>;
-
     const [isChecked, setIsChecked] = React.useState(false);
     const onChange = React.useCallback(
         (
@@ -32,10 +30,6 @@ export const CheckboxDemo: React.FC = (props) => {
         },
         []
     );
-
-    //const [labelValue, setLabelValue] = React.useState("Sample text");
-
-    //New Disabled
 
     const [disabledValue, setDisabledValue] = React.useState(false);
 
@@ -76,8 +70,6 @@ export const CheckboxDemo: React.FC = (props) => {
 
         return Hello;
     }
-
-    //New Indeterminate
 
     const [indeterminateValue, setIndeterminateValue] = React.useState(false);
 
@@ -214,11 +206,9 @@ export const CheckboxDemo: React.FC = (props) => {
         <DemoPane title="Checkbox">
             <div style={{ display: "flex", justifyContent: alignKey }}>
                 <Checkbox
-                    //label={labelValue}
                     checked={isChecked}
                     onChange={onChange}
                     disabled={disabledValue}
-                    //defaultIndeterminate
                     boxSide={boxEndKey}
                     indeterminate={indeterminateValue}
                     onRenderLabel={_renderLabelWithLink}
@@ -235,11 +225,6 @@ export const CheckboxDemo: React.FC = (props) => {
             />
             <br></br>
             <br></br>
-            {/* <TextField
-                label="Text"
-                defaultValue={labelValue}
-                onChange={TextFieldOnChange(setLabelValue)}
-            /> */}
             <div style={{ display: "flex", justifyContent: "center" }}>
                 <Stack tokens={sectionStackTokens}>
                     <Stack

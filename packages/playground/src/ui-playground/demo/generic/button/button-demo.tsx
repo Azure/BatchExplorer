@@ -213,7 +213,7 @@ export const ButtonDemo: React.FC = () => {
     /*
      * This function fills in the URL textbox if the user wants to include a URL (and doesn't if they don't).
      */
-    function mynext(param: string): string {
+    function fillInURLTextbox(param: string): string {
         if (CheckURL(iconUrlKey) == false) {
             return param;
         } else {
@@ -224,7 +224,7 @@ export const ButtonDemo: React.FC = () => {
     /*
      * This function returns the actual URL the user has typed if the user wants to include a URL and there is no error message on their URL
      */
-    function dup(param: string | undefined): string {
+    function actualURL(param: string | undefined): string {
         if (param == "url" && errorMsg == "") {
             return firstTextFieldValue;
         } else {
@@ -236,7 +236,7 @@ export const ButtonDemo: React.FC = () => {
 
     const [result, setResult] = React.useState<Item[] | undefined>();
 
-    const mainfinal = React.useCallback(
+    const filterItems = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
             const enteredName = (event.target as HTMLTextAreaElement).value;
             setQuery(enteredName);
@@ -253,7 +253,7 @@ export const ButtonDemo: React.FC = () => {
      * When a user clicks on any of the items in the icon name dropdown, this function
      * automatically populates the textfield with the name of that item.
      */
-    function Foo(param: string): void {
+    function PopulateTextfield(param: string): void {
         setQuery(param);
 
         const foundItem = ICONS.filter((item) =>
@@ -446,22 +446,6 @@ export const ButtonDemo: React.FC = () => {
         marginTop: iconMarginSliderTopValue,
     };
 
-    /*
-     * Determines width and height of the user's window (and updates dynamically every time they resize it)
-     */
-    /* const [width, setWidth] = React.useState(window.innerWidth);
-    const [height, setHeight] = React.useState(window.innerHeight);
-
-    const updateDimensions = () => {
-        setWidth(window.innerWidth);
-        setHeight(window.innerHeight);
-    };
-
-    React.useEffect(() => {
-        window.addEventListener("resize", updateDimensions);
-        return () => window.removeEventListener("resize", updateDimensions);
-    }, []); */
-
     //Styles for the setting columns
     const stackTokens = { childrenGap: HeightAndWidth()[1] / 30 }; //gap between the columns - 30
 
@@ -501,16 +485,15 @@ export const ButtonDemo: React.FC = () => {
                 <DefaultButton
                     id="btn"
                     name="btn"
-                    primary={selectedKey == "primary"} //done
-                    text={labelValue} //done
+                    primary={selectedKey == "primary"}
+                    text={labelValue}
                     allowDisabledFocus={true}
                     disabled={disabledKey == "disabled"}
                     checked={checkedKey == "checked"}
                     ariaDescription="hello"
                     ariaLabel="hello"
-                    href={theString(urlKey)} //href="https://www.google.com/"
+                    href={theString(urlKey)}
                     target="_blank"
-                    split={true}
                     style={newStyle}
                 />
             </div>
@@ -563,17 +546,10 @@ export const ButtonDemo: React.FC = () => {
                     </span>
                     <span>
                         <Stack {...columnProps}>
-                            {/* <ChoiceGroup
-                            selectedKey={disabledFocusKey}
-                            options={allowDisabledFocusOptions}
-                            onChange={ChoiceGroupOnChange(setDisabledFocusKey)}
-                            label="Focus in disabled mode"
-                        /> */}
                             <Slider
                                 label="Font Size"
                                 min={0}
                                 max={100}
-                                defaultValue={50}
                                 value={fontValue}
                                 onChange={fontOnChange}
                             />
@@ -698,16 +674,13 @@ export const ButtonDemo: React.FC = () => {
             <h1 style={headingStyle}> Icon Button</h1>
             <div style={{ display: "flex", justifyContent: iconAlignKey }}>
                 <IconButton
-                    //menuProps={menuProps}
                     iconProps={emojiIcon}
-                    //title="sdwerer"
                     ariaLabel="Emoji"
                     allowDisabledFocus={true}
                     disabled={disabledIconKey == "disabled"}
                     checked={checkedIconKey == "checked"}
-                    href={dup(iconUrlKey)} //{secondTextFieldValue ? urlKey == "url" : ""}
+                    href={actualURL(iconUrlKey)}
                     target="_blank"
-                    split={true}
                     size={50}
                     style={iconStyle}
                 />
@@ -734,23 +707,20 @@ export const ButtonDemo: React.FC = () => {
                             <Stack {...columnProps}>
                                 <TextField
                                     label="Enter an icon name [example: Delete]"
-                                    defaultValue="hello"
                                     value={query}
-                                    onChange={mainfinal}
-                                    //errorMessage={"Error: not a valid icon"}
+                                    onChange={filterItems}
                                 />
 
                                 {/* Display search result */}
-
                                 <div className="search-result">
                                     {result && result.length > 0 ? (
                                         result.map((item) => (
                                             <li key={item.id} className="item">
-                                                {/*   <span style={headingStyle}>{item.id}</span> */}
-
                                                 <DefaultButton
                                                     onClick={() =>
-                                                        Foo(item.name)
+                                                        PopulateTextfield(
+                                                            item.name
+                                                        )
                                                     }
                                                     text={item.name}
                                                 />
@@ -799,9 +769,13 @@ export const ButtonDemo: React.FC = () => {
                                 />
                                 <TextField
                                     label="URL"
-                                    value={mynext(firstTextFieldValue)}
+                                    value={fillInURLTextbox(
+                                        firstTextFieldValue
+                                    )}
                                     onChange={onChangeIconUrlLink}
-                                    errorMessage={mynext(iconErrorMsg)}
+                                    errorMessage={fillInURLTextbox(
+                                        iconErrorMsg
+                                    )}
                                     disabled={CheckURL(iconUrlKey)}
                                 />
                             </Stack>
