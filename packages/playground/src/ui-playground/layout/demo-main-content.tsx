@@ -8,7 +8,7 @@ import { QuotaDemo } from "../demo/batch/quota/quota-demo";
 import { ResourcesDemo } from "../demo/batch/resources/resources-demo";
 import { TabDemo } from "../demo/batch/tab/tab-demo";
 import { ToolbarDemo } from "../demo/batch/toolbar/toolbar-demo";
-import { CertificateDemo } from "../demo/displays/configuration/certificate-demo";
+import { CertificateDemo } from "../demo/displays/certificate/certificate-demo";
 import { CreateItemDemo } from "../demo/displays/createitem/createitem-demo";
 import { FileDemo } from "../demo/displays/file/file-demo";
 import { JobSpecificationDemo } from "../demo/displays/jobspecification/jobspecification-demo";
