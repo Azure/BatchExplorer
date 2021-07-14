@@ -59,6 +59,7 @@ export class RefreshButtonComponent implements OnDestroy {
     @autobind()
     public onClick() {
         this.status = RefreshStatus.Refreshing;
+        this.liveAnnouncer.announce("Refreshing in progress");
         this._refreshSub = this.refresh().subscribe(
             () => {
                 this.status = RefreshStatus.Succeeded;
