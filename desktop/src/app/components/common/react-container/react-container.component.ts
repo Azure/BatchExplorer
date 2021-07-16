@@ -1,11 +1,11 @@
 import {
-    AfterViewInit,
     Component,
     ElementRef,
     Input,
     OnChanges,
     OnDestroy,
     ViewChild,
+    AfterViewChecked, ChangeDetectionStrategy
 } from "@angular/core";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -23,27 +23,39 @@ export const NoComponentFound: React.FC = props => {
 
 @Component({
     selector: "bl-reactcontainer",
-    template: `<div class="react-root" #container></div>`
+    template: `<ng-container *ngIf="_themeInitialized"><div class="react-root" #container></div></ng-container>`,
 })
-export class ReactContainerComponent<P> implements AfterViewInit, OnChanges, OnDestroy {
+export class ReactContainerComponent<P> implements OnChanges, OnDestroy, AfterViewChecked {
 
     @ViewChild('container') rootElement: ElementRef;
 
     @Input() public component: React.FC<P> | React.ComponentClass<P>
     @Input() public props: P;
+    private _themeInitialized: boolean = false;
 
     private _initialized: boolean = false;
-    private _isMounted: boolean = false;
 
     private _subs: Subscription[] = [];
 
     private _themeName: string = "explorerLight";
 
+    private _themeService: ThemeService;
 
-    ngAfterViewInit() {
-        this._initialized = true;
-        this._render();
-        this._isMounted = true;
+    constructor(themeService: ThemeService) {
+
+        this._themeService = themeService;
+
+        this._subs.push(this._themeService.currentTheme.subscribe((theme) => {
+            this._setTheme(theme);
+            this._themeInitialized = true;
+        }));
+    }
+
+    ngAfterViewChecked() {
+        if (!this._initialized && this.rootElement) {
+            this._render();
+            this._initialized = true;
+        }
     }
 
     ngOnChanges() {
@@ -58,24 +70,20 @@ export class ReactContainerComponent<P> implements AfterViewInit, OnChanges, OnD
                 React.createElement(this.component ?? NoComponentFound, this.props)
             )
         , this.rootElement.nativeElement);
+
     }
 
     ngOnDestroy(): void {
-        if (this._isMounted) {
+        for(const sub of this._subs) {
+            sub.unsubscribe();
+        }
+
+        if (this._initialized && this.rootElement) {
             ReactDOM.unmountComponentAtNode(this.rootElement.nativeElement);
         }
     }
 
-
-    constructor(themeService: ThemeService) {
-        this._subs.push(themeService.currentTheme.subscribe((theme) => {
-            this._setTheme(theme);
-        }));
-        console.log("Constructor Executed");
-    }
-
     private _setTheme(theme: Theme) {
-        console.log("theme.name 1: " + theme.name);
         if (theme.name == "dark") {
             this._themeName = "explorerDark";
         }  else if (theme.name == "classic") {
@@ -85,6 +93,7 @@ export class ReactContainerComponent<P> implements AfterViewInit, OnChanges, OnD
         } else if (theme.name == "unknown") {
             this._themeName = "explorerHighContrastLight";
         }
+
     }
 
 }
