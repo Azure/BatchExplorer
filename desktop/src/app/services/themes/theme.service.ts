@@ -102,15 +102,16 @@ export class ThemeService implements OnDestroy {
             this._notifyErrorLoadingTheme(e.message);
             return null;
         }
-        const theme = await this._loadThemeAt(filePath);
-        this._watchThemeFile(filePath);
+        const theme = await this._loadThemeAt(filePath, name);
+        theme.name = name;
+        this._watchThemeFile(filePath, name);
         return theme;
     }
 
-    private async _loadThemeAt(filePath: string) {
+    private async _loadThemeAt(filePath: string, name: string) {
         try {
             const content = await this.fs.readFile(filePath);
-            return new Theme(JSON.parse(stripJsonComments(content)));
+            return new Theme(name, JSON.parse(stripJsonComments(content)));
         } catch (e) {
             log.error(`Error loading theme file ${filePath}`, { e });
             this._notifyErrorLoadingTheme(`Theme file ${filePath} contains invalid json`);
@@ -119,7 +120,7 @@ export class ThemeService implements OnDestroy {
     }
 
     private async _setTheme(theme: Theme) {
-        const computedTheme = new Theme({} as any).merge(await this._baseThemeDefinition).merge(theme);
+        const computedTheme = new Theme(theme.name, {} as any).merge(await this._baseThemeDefinition).merge(theme);
         computedTheme.isHighContrast = theme.isHighContrast;
         this._currentTheme.next(computedTheme);
     }
@@ -130,14 +131,14 @@ export class ThemeService implements OnDestroy {
         });
     }
 
-    private _watchThemeFile(filePath: string) {
+    private _watchThemeFile(filePath: string, name: string) {
         if (this._watcher) {
             this._watcher.close();
         }
         this._watcher = this.fs.watch(filePath);
         this._watcher.on("change", async () => {
             log.info("[BatchExplorer] Theme file updated. Reloading theme.");
-            const theme = await this._loadThemeAt(filePath);
+            const theme = await this._loadThemeAt(filePath, name);
             this.zone.run(() => {
                 this._setTheme(theme);
             });

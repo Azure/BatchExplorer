@@ -2,7 +2,9 @@ import * as React from "react";
 import { Nav, INavStyles, INavLinkGroup } from "@fluentui/react/lib/Nav";
 
 export const DemoNavMenu: React.FC = () => {
-    const navStyles: Partial<INavStyles> = { root: { width: 300 } };
+    const navStyles: Partial<INavStyles> = {
+        root: { width: 230, overflow: "visible", position: "static" },
+    };
 
     const navLinkGroups: INavLinkGroup[] = [
         {
@@ -126,11 +128,13 @@ export const DemoNavMenu: React.FC = () => {
     return (
         <div>
             <div>
-                <Nav
-                    styles={navStyles}
-                    ariaLabel="Nav for playground components"
-                    groups={navLinkGroups}
-                />
+                <ul style={{ listStyleType: "none", padding: 0 }}>
+                    <Nav
+                        styles={navStyles}
+                        ariaLabel="Nav for playground components"
+                        groups={navLinkGroups}
+                    />
+                </ul>
             </div>
         </div>
     );

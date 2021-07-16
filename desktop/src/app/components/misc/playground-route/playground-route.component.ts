@@ -7,7 +7,6 @@ import { PlaygroundExample, PlaygroundExampleProps } from "@batch/ui-playground"
 @Component({
     selector: "bl-theme-colors",
     templateUrl: "playground-route.html",
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlaygroundRouteComponent  {
 

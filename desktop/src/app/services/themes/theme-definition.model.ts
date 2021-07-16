@@ -9,6 +9,8 @@ export interface EntityColorDefinition {
 export interface ThemeDefinition {
     type: "high-contrast" | "standard";
 
+     name: string;
+
     /**
      * Primary color
      */

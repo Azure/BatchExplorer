@@ -97,10 +97,11 @@ export const routes: Routes = [
         component: ThemeColorsComponent,
     },
     {
-        matcher: (url) => {
-            return url.length >= 1 && url[0].path.startsWith('playground') ? ({consumed: url}) : null;
-          },
-
+        path: "playground",
+        component:  PlaygroundRouteComponent,
+    },
+    {
+        path: "playground/:component",
         component:  PlaygroundRouteComponent,
     },
     {

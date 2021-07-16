@@ -94,6 +94,7 @@
     "@batch/build-util": "^1.0.0",
     "@batch/common-config": "^1.0.0",
     "@batch/ui-common": "^1.0.0",
+    "@batch/ui-playground": "^1.0.0",
     "@batch/ui-react": "^1.0.0",
     "@batch/ui-service": "^1.0.0",
     "@fluentui/react": "7.147.1",
