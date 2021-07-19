@@ -25,9 +25,6 @@ export const SearchBoxDemo: React.FC = (props) => {
         root: {
             width: 400,
         },
-        /* field: {
-            color: "#000000",
-        }, */
     };
 
     const [disableAnimationKey, setDisableAnimationKey] = React.useState(false);
@@ -64,8 +61,7 @@ export const SearchBoxDemo: React.FC = (props) => {
         { key: "Filter", text: "Filter" },
     ];
 
-    const filterIcon: IIconProps = { iconName: filterIconKey }; //Search or Filter - choiceGroup
-    //const labelId = "labelElement";
+    const filterIcon: IIconProps = { iconName: filterIconKey };
 
     const sectionStackTokens: IStackTokens = { childrenGap: 10 };
     const wrapStackTokens: IStackTokens = { childrenGap: 30 };
@@ -76,7 +72,6 @@ export const SearchBoxDemo: React.FC = (props) => {
             width: HeightAndWidth()[1] - HeightAndWidth()[1] / 6,
             display: "flex",
             justifyContent: "center",
-            //align: "center",
         },
     };
 
@@ -88,8 +83,6 @@ export const SearchBoxDemo: React.FC = (props) => {
                 display: "flex",
                 justifyContent: "center",
                 align: "center",
-                //overflowX: "scroll",
-                // overflowY: "scroll",
             },
         },
     };
@@ -109,7 +102,6 @@ export const SearchBoxDemo: React.FC = (props) => {
                     ariaLabel="Searchbox that can be customized as needed"
                     placeholder={placeHolderValue}
                     disableAnimation={disableAnimationKey}
-                    //onSearch={(newValue) => console.log("value is " + newValue)}
                     underlined={underlineKey}
                     disabled={disabledKey}
                     iconProps={filterIcon}
