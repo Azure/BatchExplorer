@@ -33,6 +33,11 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public get virtualMachineConfiguration() {
         return this._osControl.value && this._osControl.value.virtualMachineConfiguration;
     }
+
+    public get cloudServiceConfiguration() {
+        return this._osControl.value && this._osControl.value.cloudServiceConfiguration;
+    }
+
     public osSource: PoolOsSources = PoolOsSources.IaaS;
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;

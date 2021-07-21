@@ -28,13 +28,15 @@
         </bl-form-section>
 
         <bl-form-section title="Select an operating system configuration" subtitle="Choose the operating system to be installed on all the nodes in the pool">
-            <bl-banner class="cloud-services-deprecation-warning" type="warning">
-                <div message>
-                    Cloud Services pools are deprecated and will be retired on 29 February 2024. Existing ‘CloudServiceConfiguration’ pools will need to be deleted and new
-                    <a class="cloud-services-warning-alternative-link" (click)="openLink('https://docs.microsoft.com/en-us/azure/batch/batch-pool-cloud-service-to-virtual-machine-configuration?WT.mc_id=Portal-Microsoft_Azure_Batch')" href="javascript:void(0)">‘VirtualMachineConfiguration’ pools created. </a>
-                    For new pools, select either a different ‘Distributions‘ or ‘Custom Image’ option.
-                </div>
-            </bl-banner>
+            <ng-container *ngIf="cloudServiceConfiguration">
+                <bl-banner class="cloud-services-deprecation-warning" type="warning">
+                    <div message>
+                        Cloud Services pools are deprecated and will be retired on 29 February 2024. Existing ‘CloudServiceConfiguration’ pools will need to be deleted and new
+                        <a class="cloud-services-warning-alternative-link" (click)="openLink('https://docs.microsoft.com/en-us/azure/batch/batch-pool-cloud-service-to-virtual-machine-configuration?WT.mc_id=Portal-Microsoft_Azure_Batch')" href="javascript:void(0)">‘VirtualMachineConfiguration’ pools created. </a>
+                        For new pools, select either a different ‘Distributions‘ or ‘Custom Image’ option.
+                    </div>
+                </bl-banner>
+            </ng-container>
             <div class="form-element">
                 <bl-pool-os-picker formControlName="os"></bl-pool-os-picker>
             </div>
