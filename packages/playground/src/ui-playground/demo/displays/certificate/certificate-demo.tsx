@@ -7,7 +7,7 @@ import { CertificateDisplay } from "@batch/ui-react/lib/components";
 import { Certificate } from "@batch/ui-service";
 import { HeightAndWidth } from "../../../functions";
 import { Label } from "@fluentui/react/lib/Label";
-import { ILabelStyles } from "@fluentui/react/lib/";
+import { ILabelStyles } from "@fluentui/react/lib/Label";
 
 const testCert: Certificate = {
     thumbprint: "bd7c0d29efad85c5174364c330db1698b14f7f55",

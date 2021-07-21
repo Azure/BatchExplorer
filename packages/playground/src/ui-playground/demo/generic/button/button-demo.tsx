@@ -1,4 +1,5 @@
-import { IIconProps, Slider } from "@fluentui/react/lib/";
+import { Slider } from "@fluentui/react/lib/Slider";
+import { IIconProps } from "@fluentui/react/lib/Icon";
 import { DefaultButton, IconButton } from "@fluentui/react/lib/Button";
 import {
     ChoiceGroup,

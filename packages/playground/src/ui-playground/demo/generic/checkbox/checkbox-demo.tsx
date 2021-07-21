@@ -1,7 +1,8 @@
 //import { useAppTheme } from "@batch/ui-react/lib/theme";
 import * as React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
-import { Checkbox, Toggle } from "@fluentui/react/lib/";
+import { Checkbox } from "@fluentui/react/lib/Checkbox";
+import { Toggle } from "@fluentui/react/lib/Toggle";
 import { TextField } from "@fluentui/react/lib/TextField";
 import {
     ChoiceGroup,

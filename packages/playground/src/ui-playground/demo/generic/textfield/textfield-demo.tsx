@@ -1,16 +1,13 @@
 import * as React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
-import { TextField } from "@fluentui/react/lib/TextField";
+import { TextField, ITextFieldStyleProps } from "@fluentui/react/lib/TextField";
 import {
     ChoiceGroup,
     IChoiceGroupOption,
 } from "@fluentui/react/lib/ChoiceGroup";
 import { ChoiceGroupOnChange } from "../../../functions";
-import {
-    ITextFieldStyleProps,
-    Position,
-    Toggle,
-} from "@fluentui/react/lib/index";
+import { Toggle } from "@fluentui/react/lib/Toggle";
+import { Position } from "@fluentui/react/lib/Positioning";
 import { TextFieldOnChange } from "../../../functions";
 import { SpinButton } from "@fluentui/react/lib/SpinButton";
 import { TooltipHost } from "@fluentui/react/lib/Tooltip";
@@ -22,7 +19,8 @@ import {
     IStackStyles,
     IStackTokens,
 } from "@fluentui/react/lib/Stack";
-import { IStyleFunctionOrObject, ITextFieldStyles } from "@fluentui/react/lib/";
+import { ITextFieldStyles } from "@fluentui/react/lib/TextField";
+import { IStyleFunctionOrObject } from "@uifabric/merge-styles";
 
 export const TextFieldDemo: React.FC = () => {
     const [required, setRequired] = React.useState(false);

@@ -2,7 +2,7 @@ import * as React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
 import { SearchBox, ISearchBoxStyles } from "@fluentui/react/lib/SearchBox";
 import { IIconProps } from "@fluentui/react/lib/Icon";
-import { Toggle } from "@fluentui/react/lib/index";
+import { Toggle } from "@fluentui/react/lib/Toggle";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { ChoiceGroupOnChange, TextFieldOnChange } from "../../../functions";
 import {

@@ -1,25 +1,12 @@
 import * as React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
-import {
-    VirtualizedComboBox,
-    IComboBox,
-    IComboBoxOption,
-    IComboBoxStyles,
-    IComboBoxOptionStyles,
-} from "@fluentui/react/lib/";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { ChoiceGroupOnChange, TextFieldOnChange } from "../../../functions";
 import {
     ChoiceGroup,
     IChoiceGroupOption,
 } from "@fluentui/react/lib/ChoiceGroup";
-import {
-    ColorPicker,
-    getColorFromString,
-    IColorPickerStyles,
-    IColor,
-    Toggle,
-} from "@fluentui/react/lib/index";
+
 import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import { Icon } from "@fluentui/react/lib/Icon";
@@ -30,6 +17,19 @@ import {
     IStackStyles,
     IStackTokens,
 } from "@fluentui/react/lib/Stack";
+import {
+    IComboBox,
+    IComboBoxOption,
+    IComboBoxStyles,
+    IComboBoxOptionStyles,
+    VirtualizedComboBox,
+} from "@fluentui/react/lib/ComboBox";
+import { getColorFromString, IColor } from "@fluentui/react/lib/Color";
+import {
+    ColorPicker,
+    IColorPickerStyles,
+} from "@fluentui/react/lib/ColorPicker";
+import { Toggle } from "@fluentui/react/lib/Toggle";
 
 export const ComboBoxDemo: React.FC = () => {
     const comboBoxRef = React.useRef<IComboBox>(null);
