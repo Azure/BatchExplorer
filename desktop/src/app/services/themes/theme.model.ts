@@ -145,10 +145,12 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor("chart-colors") public chartColors: ChartColors;
 
     public isHighContrast: boolean;
+    public name: string;
 
-    constructor(data: ThemeDefinition) {
+    constructor(name: string, data: ThemeDefinition) {
         super(data);
         this.isHighContrast = data.type === "high-contrast";
+        this.name = name;
     }
 }
 

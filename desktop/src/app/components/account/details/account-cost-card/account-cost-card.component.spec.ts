@@ -89,7 +89,7 @@ describe("AccountCostCardComponent", () => {
         };
 
         themeServiceSpy = {
-            currentTheme: of(new Theme({
+            currentTheme: of(new Theme("testTheme", {
                 "chart-colors": [
                     "#003f5c",
                     "#aa3939",
