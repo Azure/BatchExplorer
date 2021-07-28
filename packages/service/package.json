@@ -49,9 +49,6 @@
     "workspace:test:desktop": "yarn test",
     "workspace:test:web": "yarn test"
   },
-  "peerDependencies": {
-    "tslib": ">=1.9.0 <=3.0.0"
-  },
   "dependencies": {
     "mobx": "^6.3.2",
     "tslib": "^2.1.0"
