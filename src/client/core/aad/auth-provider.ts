@@ -6,6 +6,7 @@ import {
 } from "@azure/msal-node";
 import { BatchExplorerApplication } from "..";
 import { AADConfig } from "./aad-config";
+import { defaultTenant } from "./aad-constants";
 
 const MSAL_SCOPES = ["user_impersonation"];
 
@@ -36,7 +37,7 @@ export default class AuthProvider {
         tenantId?: string,
         authCodeCallback: (url: string, silent?: boolean) => Promise<string>
     }): Promise<AuthorizationResult> {
-        const { resourceURI, tenantId = "common", authCodeCallback } = options;
+        const { resourceURI, tenantId = defaultTenant, authCodeCallback } = options;
 
         /**
          * KLUDGE: msal.js does not handle well access tokens across multiple
