@@ -24,7 +24,7 @@
 
     "unit-case": "lower",
     "unit-no-unknown": true,
-    "unit-blacklist": ["rem"],
+    "unit-disallowed-list": ["rem"],
 
     "value-no-vendor-prefix": true,
 
