@@ -4,9 +4,10 @@ import { By } from "@angular/platform-browser";
 import { ElectronShell } from "@batch-flask/electron";
 import { ElectronTestingModule, MockElectronShell } from "@batch-flask/electron/testing";
 import { PoolErrorDisplayComponent } from "app/components/pool/details";
-import { Pool, ResizeErrorCode } from "app/models";
+import { NameValuePair, Pool, ResizeErrorCode } from "app/models";
 import { BatchAccountService, PoolService } from "app/services";
 import { Constants } from "common";
+import { List } from "immutable";
 import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
@@ -59,6 +60,9 @@ describe("PoolErrorDisplayComponent", () => {
                 resizeErrors: [{
                     code: ResizeErrorCode.accountCoreQuotaReached,
                     message: "Reached account core quota",
+                    values: List([
+                        new NameValuePair({name: "details", value: "Regional quota reached"})
+                    ])
                 }],
             });
             fixture.detectChanges();
@@ -68,10 +72,11 @@ describe("PoolErrorDisplayComponent", () => {
             expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
         });
 
-        it("Should show the code and message", () => {
+        it("Should show the code, message, and details", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent).toContain(ResizeErrorCode.accountCoreQuotaReached);
             expect(banner.nativeElement.textContent).toContain("Reached account core quota");
+            expect(banner.nativeElement.textContent).toContain("details: Regional quota reached");
         });
 
         it("should propose increase quota as a first fix", () => {
