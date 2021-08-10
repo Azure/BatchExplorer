@@ -80,12 +80,12 @@ function getMilestoneId() {
 
 async function confirmVersion(version: string) {
     return new Promise((resolve, reject) => {
-        ask(`Up program to be version ${version} (From milestone title) [Y/n]`, true, (ok) => {
+        ask(`Update version to ${version} (From milestone title) [Y/n]`, true, (ok) => {
             if (ok) {
                 success(`A new release for version ${version} will be prepared`);
                 resolve(null);
             } else {
-                reject(new Error("milestone version wasn't confirmed. Please change milestone title"));
+                reject(new Error("Milestone version wasn't confirmed. Please change milestone title"));
             }
         });
     });
@@ -106,7 +106,7 @@ async function switchToNewBranch(branchName: string) {
 }
 
 async function bumpVersion(version) {
-    const currentBranch = getCurrentBranch();
+    const currentBranch = await getCurrentBranch();
     const nextVersion = calcNextVersion(version);
     const bumpBranch = `release/bump-${nextVersion}`;
     await gotoMainBranch();
