@@ -1,12 +1,13 @@
 # 2.11.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/45?closed=1)
 
-### feature:
+### feature
 
 * Dynamically show/hide cloud services deprecation warning [\#2360](https://github.com/Azure/BatchExplorer/issues/2360)
 * Add fpga to vm size categories [\#2359](https://github.com/Azure/BatchExplorer/issues/2359)
 
-### bug:
+### bug
 
 * Fix resize error name wasn't being displayed properly [\#2361](https://github.com/Azure/BatchExplorer/issues/2361)
 * Fix accessibility issues regarding luminosity contrast, screen-reader, and keyboard shortcuts [\#2358](https://github.com/Azure/BatchExplorer/issues/2358)
