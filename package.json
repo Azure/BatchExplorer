@@ -16,7 +16,7 @@
     "name": "Microsoft Corporation",
     "email": "batchexplorer@microsoft.com"
   },
-  "version": "2.11.0",
+  "version": "2.12.0",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json --files",
