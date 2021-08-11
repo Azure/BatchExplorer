@@ -18,6 +18,26 @@
 * Bump version after release [\#2338](https://github.com/Azure/BatchExplorer/issues/2338)
 * User button tooltip shows 'undefined' instead of user name [\#2334](https://github.com/Azure/BatchExplorer/issues/2334)
 
+# 2.11.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/45?closed=1)
+
+### feature:
+
+
+### bug:
+
+
+### other:
+
+* Prepare for release of version 2.11.0 [\#2363](https://github.com/Azure/BatchExplorer/issues/2363)
+* Fix resize error name wasn't being displayed properly [\#2361](https://github.com/Azure/BatchExplorer/issues/2361)
+* Dynamically show/hide cloud services deprecation warning [\#2360](https://github.com/Azure/BatchExplorer/issues/2360)
+* Add fpga to vm size categories  [\#2359](https://github.com/Azure/BatchExplorer/issues/2359)
+* Fix accessibility issues regarding luminosity contrast, screen-reader, and keyboard shortcuts [\#2358](https://github.com/Azure/BatchExplorer/issues/2358)
+* Unable to login with my personal account.  [\#2344](https://github.com/Azure/BatchExplorer/issues/2344)
+* Bump version after release [\#2338](https://github.com/Azure/BatchExplorer/issues/2338)
+* User button tooltip shows 'undefined' instead of user name [\#2334](https://github.com/Azure/BatchExplorer/issues/2334)
+
 # 2.10.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/44?closed=1)
