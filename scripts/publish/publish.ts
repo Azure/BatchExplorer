@@ -106,7 +106,7 @@ async function switchToNewBranch(branchName: string) {
 }
 
 async function bumpVersion(version) {
-    const currentBranch = getCurrentBranch();
+    const currentBranch = await getCurrentBranch();
     const nextVersion = calcNextVersion(version);
     const bumpBranch = `release/bump-${nextVersion}`;
     await gotoMainBranch();
