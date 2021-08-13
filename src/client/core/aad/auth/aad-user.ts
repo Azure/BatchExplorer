@@ -45,15 +45,6 @@ export interface AADUser {
      */
     amr?: string[];
 
-    /**
-     * Last name of user
-     */
-    family_name?: string;
-
-    /**
-     * First name of user
-     */
-    given_name: string;
     ipaddr: string;
 
     /**
@@ -73,22 +64,19 @@ export interface AADUser {
     tid?: string;
 
     /**
-     * Unique name
      * Provides a human readable value that identifies the subject of the token.
-     * This value is not guaranteed to be unique within a tenant and is designed to be used only for display purposes.
-     */
-    unique_name: string;
-
-    /**
-     * User principal name
-     * Stores the user name of the user principal.
      * @example "frankm@contoso.com"
      */
-    upn?: string;
+    preferred_username: string;
 
     /**
      * Version
      * @example 1.0
      */
     ver?: string;
+
+    /**
+     * The calculated username
+     */
+    username?: string;
 }

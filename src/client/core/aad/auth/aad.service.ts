@@ -15,6 +15,7 @@ import { Deferred } from "common/deferred";
 import { dialog } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
+import { defaultTenant } from "../aad-constants";
 import AuthProvider from "../auth-provider";
 import {
     AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError
@@ -110,7 +111,7 @@ export class AADService {
 
     private async _loginInCurrentCloud() {
         try {
-            await this.accessTokenData("common");
+            await this.accessTokenData(defaultTenant);
             this._authenticationState.next(AuthenticationState.Authenticated);
         } catch (error) {
             if (error instanceof LogoutError) {
@@ -199,7 +200,7 @@ export class AADService {
     private _processUserToken(idToken: string) {
         const user = this._userDecoder.decode(idToken);
         const prevUser = this._currentUser.value;
-        if (!prevUser || prevUser.unique_name !== user.unique_name) {
+        if (!prevUser || prevUser.username !== user.username) {
             this._clearUserSpecificCache();
         }
         this._currentUser.next(user);
@@ -207,7 +208,7 @@ export class AADService {
     }
 
     private async _loadTenants(): Promise<TenantDetails[]> {
-        const token = await this.accessTokenData("common");
+        const token = await this.accessTokenData(defaultTenant);
 
         const headers = {
             Authorization: `${token.token_type} ${token.access_token}`,

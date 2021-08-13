@@ -53,9 +53,9 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
         private fs: FileSystemService,
         private router: Router) {
 
-        authService.currentUser.pipe(takeUntil(this._destroy)).subscribe((user) => {
+        authService.currentUser.pipe(takeUntil(this._destroy)).subscribe(user => {
             if (user) {
-                this.currentUserName = `${user.name} (${user.unique_name})`;
+                this.currentUserName = `${user.name} (${user.username})`;
             } else {
                 this.currentUserName = "";
             }

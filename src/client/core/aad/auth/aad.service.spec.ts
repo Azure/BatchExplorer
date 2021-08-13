@@ -16,8 +16,6 @@ const sampleUser: AADUser = {
     nbf: 1483372574,
     exp: 1483376474,
     amr: ["pwd", "mfa"],
-    family_name: "Smith",
-    given_name: "Frank",
     ipaddr: "198.217.117.26",
     name: "Frank Smith",
     nonce: "be4e7843-305e-42ab-988d-7ee109989d70",
@@ -25,8 +23,8 @@ const sampleUser: AADUser = {
     platf: "5",
     sub: "0WzjD2jhHJVb-3h2PbwUDCJOIPPIJmQQYE832uFqiII",
     tid: "72f988bf-86f1-41af-91ab-2d7cd011db47",
-    unique_name: "frank.smith@example.com",
-    upn: "frank.smith@example.com",
+    preferred_username: "frank.smith@example.com",
+    username: "frank.smith@example.com",
     ver: "1.0",
 };
 
@@ -93,7 +91,7 @@ describe("AADService", () => {
         let user: AADUser | null = null;
         tmpService.currentUser.subscribe(x => user = x);
         expect(user).not.toBeNull();
-        expect(user.upn).toEqual("frank.smith@example.com");
+        expect(user.username).toEqual("frank.smith@example.com");
         done();
     });
 

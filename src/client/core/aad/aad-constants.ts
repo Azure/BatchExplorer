@@ -1,4 +1,4 @@
-export const defaultTenant = "common";
+export const defaultTenant = "organizations";
 
 export interface AuthorizeUrlParams {
     response_type: string;
