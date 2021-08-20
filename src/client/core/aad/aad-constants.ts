@@ -1,4 +1,10 @@
-export const defaultTenant = "organizations";
+export enum TenantPlaceholders {
+    common = "common",
+    organizations = "organizations",
+    consumers = "consumers"
+}
+
+export const defaultTenant = TenantPlaceholders.organizations;
 
 export interface AuthorizeUrlParams {
     response_type: string;
