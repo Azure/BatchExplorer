@@ -1,4 +1,4 @@
-import { AzurePublic } from "client/azure-environment";
+import { delay } from "test/utils/helpers/misc";
 import { MockAuthProvider } from "test/utils/mocks/auth";
 import { MockAuthenticationWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import {
@@ -21,10 +21,7 @@ describe("AuthenticationService", () => {
     beforeEach(() => {
         appSpy = {
             splashScreen: new MockSplashScreen(),
-            authenticationWindow: new MockAuthenticationWindow(),
-            properties: {
-                azureEnvironment: AzurePublic,
-            },
+            authenticationWindow: new MockAuthenticationWindow()
         };
         fakeAuthProvider = new MockAuthProvider(appSpy, CONFIG);
         userAuthorization = new AuthenticationService(appSpy, CONFIG,
@@ -42,6 +39,7 @@ describe("AuthenticationService", () => {
             error = null;
             const obs = userAuthorization.authorize("tenant-1");
             promise = obs.then((out) => result = out).catch((e) => error = e);
+            await delay();
         });
 
         it("Should have called loadurl", async () => {
@@ -69,7 +67,7 @@ describe("AuthenticationService", () => {
             expect(state).toBe(AuthenticationState.Authenticated);
         });
 
-        it("Should error it fail to load", async () => {
+        it("Should error when the window fails to load", async () => {
             fakeAuthWindow.notifyError({ code: 4, description: "Foo bar" });
             await promise;
 
@@ -97,7 +95,7 @@ describe("AuthenticationService", () => {
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
         });
 
-        it("should only authorize 1 tenant at the time and queue the others", async () => {
+        it("should only authorize 1 tenant at a time and queue the others", async () => {
             const obs1 = userAuthorization.authorize("tenant-1");
             const obs2 = userAuthorization.authorize("tenant-2");
             const tenant1Spy = jasmine.createSpy("Tenant-1");
