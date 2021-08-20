@@ -71,6 +71,9 @@
       "env": {
         "NODE_ENV": "test"
       },
+      "outFiles": [
+        "${workspaceRoot}/build/**/*.js"
+      ],
       "presentation": {
         "hidden": false,
         "group": "Test",
