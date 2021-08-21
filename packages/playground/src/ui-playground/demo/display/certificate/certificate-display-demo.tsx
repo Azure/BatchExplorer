@@ -22,7 +22,7 @@ const testCert: Certificate = {
 
 const valueString: string = certificateToJson(testCert);
 
-export const CertificateDemo: React.FC = () => {
+export const CertificateDisplayDemo: React.FC = () => {
     const obj = React.useRef(testCert);
 
     const [myCert, setMyCert] = React.useState<Certificate>(obj.current);

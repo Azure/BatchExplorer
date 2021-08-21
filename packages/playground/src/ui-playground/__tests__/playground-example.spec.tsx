@@ -1,8 +1,8 @@
-import { initMockEnvironment } from "@batch/ui-common";
+import { initMockBrowserEnvironment } from "@batch/ui-react";
 import { render, screen } from "@testing-library/react";
 import * as React from "react";
 import { PlaygroundExample } from "../playground-example";
-import { runAxe } from "./runAxe";
+import { runAxe } from "@batch/ui-react/lib/test-util/a11y";
 
 /**
  * Test the example component to make sure the testing framework is working
@@ -10,7 +10,7 @@ import { runAxe } from "./runAxe";
  * component tests.
  */
 describe("Playground tests", () => {
-    beforeEach(() => initMockEnvironment());
+    beforeEach(() => initMockBrowserEnvironment());
 
     test("Render the playground", () => {
         render(<PlaygroundExample text="Playground" />);
@@ -32,20 +32,20 @@ describe("Playground tests", () => {
 
         expect(navigation.length).toBe(1);
 
-        //Expect Button to be defined
+        // Expect Button to be defined
         expect(screen.getByText("Button")).toBeDefined();
 
-        //Expect 'Random' to not be defined
+        // Expect 'Random' to not be defined
         expect(() => screen.getByText("Random")).toThrow(
             /Unable to find an element/
         );
 
-        //Testing number of list elements
+        // Testing number of list elements
         const list = screen.getAllByRole("list");
 
-        expect(list.length).toBe(4);
+        expect(list.length).toBe(3);
 
-        //Testing list item elements
+        // Testing list item elements
         const listItem = screen.getAllByRole("listitem");
 
         expect(
@@ -78,12 +78,6 @@ describe("Playground tests", () => {
                 .getAttribute("title")
         ).toBe("TextField");
 
-        expect(
-            listItem[0]
-                .getElementsByClassName("ms-Button")[5]
-                .getAttribute("title")
-        ).toBe("Quota");
-
-        expect(listItem.length).toBe(19);
+        expect(listItem.length).toBe(7);
     });
 });

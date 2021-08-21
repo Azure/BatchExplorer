@@ -13,7 +13,6 @@ export interface PlaygroundExampleProps {
 /**
  * Playground
  */
-
 export const PlaygroundExample: React.FC<PlaygroundExampleProps> = () => {
     return (
         <div className="hi">

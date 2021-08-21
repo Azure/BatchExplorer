@@ -1,14 +1,14 @@
-import { initMockEnvironment } from "@batch/ui-common";
+import { initMockBrowserEnvironment } from "@batch/ui-react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import * as React from "react";
-import { runAxe } from "./runAxe";
-import { ButtonDemo, testCount } from "../demo/generic/button/button-demo";
+import { runAxe } from "@batch/ui-react/lib/test-util/a11y";
+import { ButtonDemo, testCount } from "../demo/form/button/button-demo";
 
 /**
  * Tests for the Button component of the playground
  */
 describe("Button tests", () => {
-    beforeEach(() => initMockEnvironment());
+    beforeEach(() => initMockBrowserEnvironment());
 
     test("Render the button component", () => {
         render(<ButtonDemo />);

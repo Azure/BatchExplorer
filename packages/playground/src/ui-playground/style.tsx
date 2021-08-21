@@ -1,5 +1,3 @@
-// For any functions related to styling the look of the playground
-
 /*
  * Style for icons on the left-hand side of the playground page
  */
