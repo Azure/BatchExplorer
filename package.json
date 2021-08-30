@@ -16,7 +16,7 @@
     "name": "Microsoft Corporation",
     "email": "batchexplorer@microsoft.com"
   },
-  "version": "2.11.0",
+  "version": "2.12.0",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json --files",
@@ -85,6 +85,7 @@
     "@types/inflection": "^1.5.28",
     "@types/jasmine": "^3.5.12",
     "@types/js-yaml": "^3.12.5",
+    "@types/keytar": "^4.4.2",
     "@types/luxon": "^1.24.3",
     "@types/node": "12.12.21",
     "@types/node-fetch": "^2.5.7",
@@ -175,7 +176,6 @@
     "@angular/router": "^9.1.12",
     "@azure/msal-node": "^1.3.0",
     "@azure/storage-blob": "^10.5.0",
-    "@types/keytar": "^4.4.2",
     "applicationinsights": "^1.8.5",
     "azure-storage": "^2.10.4",
     "chart.js": "^2.9.3",
