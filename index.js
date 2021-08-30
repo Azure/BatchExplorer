@@ -12,6 +12,12 @@ const feedUrls = {
 
 const feedUrl = feedUrls[buildType];
 
+const OS = {
+    Windows: "windows",
+    Linux: "linux",
+    Mac: "mac"
+}
+
 function getLatest(source) {
     const rand = Math.floor(Math.random() * 100000);
     const url = `${feedUrl}/${source}?noCache=${rand}`;
@@ -45,8 +51,14 @@ function updateDownloadLinks() {
         downloadLinkEls[key].href = downloadLinks[key];
     }
 
-    // TODO: figure out what OS the user is running and pick the right default
-    document.getElementById("primary-download-btn").href = downloadLinks["windowsInstaller"]
+    const os = getOS();
+    const key =
+        os === OS.Windows ? "windowsInstaller" :
+        os === OS.Mac     ? "osxDmg"           :
+        os === OS.Linux   ? "linuxDeb"         :
+        "windowsInstaller";
+
+    document.getElementById("primary-download-btn").href = downloadLinks[key]
 
     document.getElementById("download-windows-installer-btn").href = downloadLinks["windowsInstaller"]
     document.getElementById("download-osx-app-btn").href = downloadLinks["osxDmg"]
@@ -91,4 +103,17 @@ function getLinks(versionEl, downloadLinks) {
         downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchExplorer-${version}-mac.zip`;
         updateDownloadLinks()
     });
+}
+
+function getOS() {
+    if (navigator.userAgent.indexOf("Win") != -1) {
+        return OS.Windows;
+    }
+    if (navigator.userAgent.indexOf("Mac") != -1) {
+        return OS.Mac;
+    }
+    if (navigator.userAgent.indexOf("Linux") != -1) {
+        return OS.Linux;
+    }
+    return null;
 }
