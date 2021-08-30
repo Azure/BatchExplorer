@@ -1,3 +1,4 @@
+import { instrumentAuthProvider, instrumentForAuth } from "test/utils/mocks/auth";
 import AuthProvider from "./auth-provider";
 
 describe("AuthProvider", () => {
@@ -13,6 +14,7 @@ describe("AuthProvider", () => {
             }
         }
     };
+    instrumentForAuth(appSpy);
     const config: any = {
         tenant: "common",
         redirectUri: "my-redirect-uri",
@@ -24,12 +26,13 @@ describe("AuthProvider", () => {
     });
 
     it("authenticates interactively first, then silently", async () => {
-        const call = () => authProvider.getToken({
+        const call = async () => await authProvider.getToken({
             resourceURI: "resourceURI1", tenantId: "tenant1",
             authCodeCallback: authCodeCallbackSpy
         });
         const clientSpy = makeClientApplicationSpy();
         spyOn<any>(authProvider, "_getClient").and.returnValue(clientSpy);
+        instrumentAuthProvider(authProvider);
 
         returnToken(clientSpy.acquireTokenByCode, "interactive-token-1");
         returnToken(clientSpy.acquireTokenSilent, "silent-token-1");

@@ -3,6 +3,7 @@ import { AzureChina, AzurePublic } from "client/azure-environment";
 import { Constants } from "common";
 import { DateTime } from "luxon";
 import * as proxyquire from "proxyquire";
+import { instrumentForAuth } from "test/utils/mocks/auth";
 import { MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import { AADUser } from "./aad-user";
 import { AADService } from "./aad.service";
@@ -41,9 +42,9 @@ describe("AADService", () => {
         localStorage = new InMemoryDataStore();
         appSpy = {
             mainWindow: new MockBrowserWindow(),
-            splashScreen: new MockSplashScreen(),
-            properties: { azureEnvironment: "public" }
+            splashScreen: new MockSplashScreen()
         };
+        instrumentForAuth(appSpy);
 
         ipcMainMock = {
             on: () => null,
