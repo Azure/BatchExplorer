@@ -85,12 +85,15 @@ export class AADService {
         };
     }
 
-    public async logout() {
+    public async logout(closeWindows = true) {
         await this.localStorage.removeItem(Constants.localStorageKey.currentUser);
         this._tenants.next([]);
         await this._clearUserSpecificCache();
         for (const [, window] of this.app.windows) {
             window.webContents.session.clearStorageData({ storages: ["localStorage"] });
+        }
+        if (closeWindows) {
+            this.app.windows.closeAll();
         }
         await this.userAuthorization.logout();
     }
