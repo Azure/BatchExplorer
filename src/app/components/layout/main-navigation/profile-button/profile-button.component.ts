@@ -39,7 +39,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     private _destroy = new Subject();
 
     constructor(
-        authService: AuthService,
+        private authService: AuthService,
         private i18n: I18nService,
         private localeService: LocaleService,
         private changeDetector: ChangeDetectorRef,
@@ -195,8 +195,9 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
     private _update() {
         if (!OS.isLinux()) {
-            setImmediate(() => {
+            setImmediate(async () => {
                 this.remote.electronApp.removeAllListeners("window-all-closed");
+                await this.authService.logout(false);
                 this.autoUpdateService.quitAndInstall();
                 this.remote.getCurrentWindow().close();
             });

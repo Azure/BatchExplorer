@@ -75,8 +75,8 @@ export class AuthService implements OnDestroy {
         // Nothing to do
     }
 
-    public logout() {
-        this._aadService.logout();
+    public logout(closeWindows = true) {
+        this._aadService.logout(closeWindows);
     }
 
     public accessTokenFor(tenantId: string, resource: AADResourceName = null) {
