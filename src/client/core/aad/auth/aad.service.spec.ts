@@ -99,7 +99,7 @@ describe("AADService", () => {
     describe("Login", () => {
         beforeEach(() => {
             const newToken = new AccessToken({
-                access_token: "newToken", expires_on: DateTime.local().plus({ hours: 1 }),
+                accessToken: "newToken", expiresOn: DateTime.local().plus({ hours: 1 }),
             } as any);
             spyOn(service, "accessTokenData").and.returnValue(new Promise((resolve) => resolve(newToken)));
         });

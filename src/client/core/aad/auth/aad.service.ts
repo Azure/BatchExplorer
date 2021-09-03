@@ -97,7 +97,7 @@ export class AADService {
     }
 
     public async accessTokenFor(tenantId: string, resource?: AADResourceName) {
-        return this.accessTokenData(tenantId, resource).then(x => x.access_token);
+        return this.accessTokenData(tenantId, resource).then(x => x.accessToken);
     }
 
     /**
@@ -176,13 +176,9 @@ export class AADService {
             this._processUserToken(result.idToken);
             delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
             defer.resolve(new AccessToken({
-                access_token: result.accessToken,
-                refresh_token: null,
-                token_type: result.tokenType,
-                expires_in: null,
-                expires_on: result.expiresOn,
-                ext_expires_in: null,
-                not_before: null,
+                accessToken: result.accessToken,
+                tokenType: result.tokenType,
+                expiresOn: result.expiresOn,
                 tenantId,
                 resource
             }));
@@ -211,7 +207,7 @@ export class AADService {
         const token = await this.accessTokenData(defaultTenant);
 
         const headers = {
-            Authorization: `${token.token_type} ${token.access_token}`,
+            Authorization: `${token.tokenType} ${token.accessToken}`,
         };
         const options = { headers };
         const url = this._tenantURL();

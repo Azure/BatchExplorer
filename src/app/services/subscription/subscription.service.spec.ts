@@ -16,8 +16,12 @@ const tenantDetails: StringMap<TenantDetails> = {
 };
 
 const tokens: StringMap<AccessToken> = {
-    "tenant-1": new AccessToken({ access_token: "tenant-1-token", token_type: "Bearer" } as any),
-    "tenant-2": new AccessToken({ access_token: "tenant-2-token", token_type: "Bearer" } as any),
+    "tenant-1": new AccessToken({
+        accessToken: "tenant-1-token",
+        tokenType: "Bearer" } as any),
+    "tenant-2": new AccessToken({
+        accessToken: "tenant-2-token",
+        tokenType: "Bearer" } as any),
 };
 
 const sub1Res = {

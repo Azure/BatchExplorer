@@ -97,7 +97,7 @@ export class AppInsightsApiService implements HttpInterface {
         if (!(options.headers instanceof HttpHeaders)) {
             options.headers = new HttpHeaders(options.headers);
         }
-        options.headers = options.headers.set("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
+        options.headers = options.headers.set("Authorization", `${accessToken.tokenType} ${accessToken.accessToken}`);
 
         return options;
     }

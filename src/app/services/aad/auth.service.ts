@@ -52,7 +52,7 @@ export class AuthService implements OnDestroy {
     }
 
     public accessTokenFor(tenantId: string, resource: AADResourceName = null) {
-        return from(this.accessTokenDataAsync(tenantId, resource).then(x => x.access_token));
+        return from(this.accessTokenDataAsync(tenantId, resource).then(x => x.accessToken));
     }
 
     /**
