@@ -104,7 +104,7 @@ export class AzureHttpService {
         if (!(options.headers instanceof HttpHeaders)) {
             options.headers = new HttpHeaders(options.headers);
         }
-        options.headers = options.headers.set("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
+        options.headers = options.headers.set("Authorization", `${accessToken.tokenType} ${accessToken.accessToken}`);
 
         if (!(options.params instanceof HttpParams)) {
             options.params = new HttpParams({ fromObject: options.params });

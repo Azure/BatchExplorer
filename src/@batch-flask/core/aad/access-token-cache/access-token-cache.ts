@@ -7,7 +7,7 @@ const dataStoreKey = DataStoreKeys.currentAccessToken;
  * Hellper class to storage the access tokens in memory and in the localstorage.
  */
 export class AccessTokenCache {
-    private _tokens: any = {};
+    private _tokens: StringMap<StringMap<AccessToken>> = {};
 
     constructor(private storage?: DataStore) { }
 
@@ -19,7 +19,7 @@ export class AccessTokenCache {
         return tenantId in this._tokens && resource in this._tokens[tenantId];
     }
 
-    public getToken(tenantId: string, resource: string) {
+    public getToken(tenantId: string, resource: string): AccessToken {
         const tenantTokens = this._tokens[tenantId];
         return tenantTokens && tenantTokens[resource];
     }

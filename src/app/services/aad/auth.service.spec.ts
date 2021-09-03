@@ -6,13 +6,9 @@ import { BehaviorSubject } from "rxjs";
 const tenant1 = "tenant-1";
 const resource1 = "batch";
 const token1 = new AccessToken({
-    access_token: "sometoken",
-    expires_on: DateTime.local().plus({ hours: 1 }).toJSDate(),
-    expires_in: 3600,
-    token_type: "Bearer",
-    ext_expires_in: 3600,
-    not_before: DateTime.local().plus({ hours: 1 }).toJSDate(),
-    refresh_token: "foorefresh",
+    accessToken: "sometoken",
+    expiresOn: DateTime.local().plus({ hours: 1 }).toJSDate(),
+    tokenType: "Bearer",
 });
 
 describe("AuthService spec", () => {
@@ -72,7 +68,7 @@ describe("AuthService spec", () => {
     it("#accessTokenFor returns observable with token string", (done) => {
         service.accessTokenFor(tenant1, resource1).subscribe((token) => {
             expect(remoteSpy.send).toHaveBeenCalledOnce();
-            expect(token).toEqual(token1.access_token);
+            expect(token).toEqual(token1.accessToken);
             done();
         });
     });

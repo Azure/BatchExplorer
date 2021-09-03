@@ -5,13 +5,9 @@ import { AccessTokenCache } from "./access-token-cache";
 const tenant1 = "tenant-1";
 const resource1 = "http://example.com";
 const token1 = {
-    access_token: "sometoken",
-    expires_on: DateTime.local().plus({ hours: 1 }).toJSDate(),
-    expires_in: 3600,
-    token_type: "Bearer",
-    ext_expires_in: 3600,
-    not_before: DateTime.local().plus({ hours: 1 }).toJSDate(),
-    refresh_token: "foorefresh",
+    accessToken: "sometoken",
+    expiresOn: DateTime.local().plus({ hours: 1 }).toJSDate(),
+    tokenType: "Bearer",
 };
 
 describe("AccessTokenCache", () => {
@@ -34,8 +30,8 @@ describe("AccessTokenCache", () => {
             const token = {
                 [tenant1]: {
                     [resource1]: {
-                        access_token: "sometoken",
-                        expires_on: DateTime.local().minus({ hours: 1 }).toJSDate(),
+                        accessToken: "sometoken",
+                        expiresOn: DateTime.local().minus({ hours: 1 }).toJSDate(),
                     },
                 },
             };
@@ -54,7 +50,7 @@ describe("AccessTokenCache", () => {
             await cache.init();
             const token = cache.getToken(tenant1, resource1);
             expect(token).not.toBeFalsy();
-            expect(token.access_token).toEqual("sometoken");
+            expect(token.accessToken).toEqual("sometoken");
             done();
         });
     });
