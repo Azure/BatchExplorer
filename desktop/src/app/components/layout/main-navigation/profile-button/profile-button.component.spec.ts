@@ -130,7 +130,7 @@ describe("ProfileButtonComponent", () => {
         fixture.detectChanges();
         expect(contextMenuServiceSpy.openMenu).toHaveBeenCalledOnce();
         const items = contextMenuServiceSpy.lastMenu.items;
-        expect(items.length).toBe(13);
+        expect(items.length).toBe(15);
     });
 
     describe("Clicking on the profile", () => {
@@ -138,7 +138,7 @@ describe("ProfileButtonComponent", () => {
             click(clickableEl);
             expect(contextMenuServiceSpy.openMenu).toHaveBeenCalled();
             const items = contextMenuServiceSpy.lastMenu.items;
-            expect(items.length).toEqual(13);
+            expect(items.length).toEqual(15);
 
             expect(items[0] instanceof ContextMenuItem).toBe(true);
             expect((items[0] as ContextMenuItem).label).toEqual("Check for updates");
@@ -174,7 +174,12 @@ describe("ProfileButtonComponent", () => {
             expect(items[11] instanceof ContextMenuSeparator).toBe(true);
 
             expect(items[12] instanceof ContextMenuItem).toBe(true);
-            expect((items[12] as ContextMenuItem).label).toEqual("profile-button.logout");
+            expect((items[12] as ContextMenuItem).label).toEqual("profile-button.playground");
+
+            expect(items[13] instanceof ContextMenuSeparator).toBe(true);
+
+            expect(items[14] instanceof ContextMenuItem).toBe(true);
+            expect((items[14] as ContextMenuItem).label).toEqual("profile-button.logout");
         });
 
         it("check for updates and show update notification when there is one", fakeAsync(() => {
