@@ -8,7 +8,7 @@ export interface DemoPaneProps {
 export const DemoPane: React.FC<DemoPaneProps> = (props) => {
     const { title, children } = props;
     return (
-        <div style={{ flex: 1, padding: "10px" }}>
+        <div style={{ flex: 1, padding: "16px" }}>
             <h1 style={headingStyle}>{title}</h1>
             {children}
         </div>

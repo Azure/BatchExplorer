@@ -28,6 +28,11 @@ export const DemoNavMenu: React.FC = () => {
                     url: "#/playground/combobox",
                 },
                 {
+                    key: "Dropdown",
+                    name: "Dropdown",
+                    url: "#/playground/dropdown",
+                },
+                {
                     key: "SearchBox",
                     name: "SearchBox",
                     url: "#/playground/searchbox",
@@ -54,7 +59,7 @@ export const DemoNavMenu: React.FC = () => {
     ];
 
     return (
-        <div>
+        <div style={{ width: "250px", height: "100%" }}>
             <ul style={{ listStyleType: "none", padding: 0 }}>
                 <li>
                     <Nav

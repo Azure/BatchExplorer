@@ -15,19 +15,17 @@ export interface PlaygroundExampleProps {
  */
 export const PlaygroundExample: React.FC<PlaygroundExampleProps> = () => {
     return (
-        <div className="hi">
+        <div>
             <h1
                 style={{
-                    fontSize: "2em",
+                    fontSize: "1.5em",
                     margin: 0,
-                    padding: 0,
-                    fontWeight: 600,
-                    lineHeight: 4,
+                    padding: "16px 16px 0",
+                    fontWeight: 400,
                     userSelect: "none",
-                    textAlign: "center",
                 }}
             >
-                Shared Component Library Playground
+                UI Component Playground
             </h1>
             <div
                 style={{
@@ -39,15 +37,9 @@ export const PlaygroundExample: React.FC<PlaygroundExampleProps> = () => {
 
             <Router>
                 <div style={{ display: "flex" }}>
-                    <div
-                        style={{
-                            padding: "2px",
-                            width: "20%", //distance between "sidebar" and the actual elements being displayed
-                        }}
-                    >
+                    <div>
                         <DemoNavMenu />
                     </div>
-
                     <DemoMainContent />
                 </div>
             </Router>

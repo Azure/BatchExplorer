@@ -11,13 +11,6 @@ import {
 import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import { Icon } from "@fluentui/react/lib/Icon";
-import { Stack } from "@fluentui/react/lib/Stack";
-import { HeightAndWidth } from "../../../functions";
-import {
-    IStackProps,
-    IStackStyles,
-    IStackTokens,
-} from "@fluentui/react/lib/Stack";
 import {
     IComboBox,
     IComboBoxOption,
@@ -32,6 +25,9 @@ import {
 } from "@fluentui/react/lib/ColorPicker";
 import { Toggle } from "@fluentui/react/lib/Toggle";
 import { SyntheticEvent } from "react";
+import { DemoComponentContainer } from "../../../layout/demo-component-container";
+import { DemoControlContainer } from "../../../layout/demo-control-container";
+import { Stack } from "@fluentui/react/lib/Stack";
 
 export const ComboBoxDemo: React.FC = () => {
     const comboBoxRef = React.useRef<IComboBox>(null);
@@ -296,18 +292,9 @@ export const ComboBoxDemo: React.FC = () => {
         },
     };
 
-    // Mutating styles definition
-    const stackStyles: IStackStyles = {
-        root: {
-            width: HeightAndWidth()[1] - HeightAndWidth()[1] / 6,
-            display: "flex",
-            justifyContent: "center",
-        },
-    };
-
     return (
         <DemoPane title="ComboBox">
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <DemoComponentContainer minWidth="400px">
                 <VirtualizedComboBox
                     componentRef={comboBoxRef}
                     label={labelValue}
@@ -328,9 +315,7 @@ export const ComboBoxDemo: React.FC = () => {
                     }
                     comboBoxOptionStyles={comboBoxOptionStyles}
                 />
-            </div>
-            <br></br>
-            <br></br>
+            </DemoComponentContainer>
             <hr
                 style={{
                     color: "purple",
@@ -338,195 +323,148 @@ export const ComboBoxDemo: React.FC = () => {
                     height: 5,
                 }}
             />
-            <br></br>
-            <br></br>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <Stack tokens={sectionStackTokens}>
-                    <Stack
-                        horizontal
-                        horizontalAlign="center"
-                        wrap
-                        styles={stackStyles}
-                        tokens={wrapStackTokens}
-                    >
-                        <span>
-                            <Stack {...columnProps}>
-                                <TextField
-                                    label="Item to Add"
-                                    defaultValue={addedValue}
-                                    onChange={TextFieldOnChange(setAddedValue)}
-                                    description="Enter the name of an item to add to the bottom of the combobox list."
-                                />
-                                <PrimaryButton
-                                    text="Add Item"
-                                    onClick={addElement}
-                                />
-
-                                <br></br>
-                                <br></br>
-                                <PrimaryButton
-                                    text="Remove Last Item"
-                                    onClick={removeElement}
-                                />
-
-                                <TextField
-                                    label="Index of Item"
-                                    defaultValue={changeKey}
-                                    errorMessage={errorMsg}
-                                    onChange={TextFieldOnChange(setChangeKey)}
-                                    description="Enter the index (any number starting from 0) of the item you want to change."
-                                />
-
-                                <TextField
-                                    label="New Value of Item"
-                                    defaultValue={changeValue}
-                                    onChange={TextFieldOnChange(setChangeValue)}
-                                    description="Enter the value of the item you want to change at the above index."
-                                />
-
-                                <PrimaryButton
-                                    text="Change Item"
-                                    onClick={changeElement}
-                                />
-                            </Stack>
-                        </span>
-                        <span>
-                            <Stack {...columnProps}>
-                                <TextField
-                                    label="Text"
-                                    defaultValue={labelValue}
-                                    onChange={TextFieldOnChange(setLabelValue)}
-                                />
-
-                                <Toggle
-                                    label={
-                                        <div>
-                                            Freeform{" "}
-                                            <TooltipHost content="Whether the ComboBox is free form, meaning that the user input is not bound to provided options. Defaults to false.">
-                                                <Icon
-                                                    iconName="Info"
-                                                    aria-label="Info tooltip"
-                                                />
-                                            </TooltipHost>
-                                        </div>
-                                    }
-                                    inlineLabel
-                                    onChange={onFreeformChange}
-                                    checked={freeformValue}
-                                />
-
-                                <Toggle
-                                    label={
-                                        <div>
-                                            Multiselect{" "}
-                                            <TooltipHost content="Enables multi-choice selections when set to true.">
-                                                <Icon
-                                                    iconName="Info"
-                                                    aria-label="Info tooltip"
-                                                />
-                                            </TooltipHost>
-                                        </div>
-                                    }
-                                    inlineLabel
-                                    onChange={onMultiSelectChange}
-                                    checked={multiSelectValue}
-                                />
-
-                                <Toggle
-                                    label={
-                                        <div>
-                                            Disabled{" "}
-                                            <TooltipHost content="When set to true, it disables the entire menu.">
-                                                <Icon
-                                                    iconName="Info"
-                                                    aria-label="Info tooltip"
-                                                />
-                                            </TooltipHost>
-                                        </div>
-                                    }
-                                    inlineLabel
-                                    onChange={onDisabledChange}
-                                    checked={disabledValue}
-                                />
-
-                                <Toggle
-                                    label={
-                                        <div>
-                                            Autocomplete{" "}
-                                            <TooltipHost content="If set to true, while the user is inputting text, it will suggest potential matches from the list of options. This feature is only activated if the freeform toggle is set to True.">
-                                                <Icon
-                                                    iconName="Info"
-                                                    aria-label="Info tooltip"
-                                                />
-                                            </TooltipHost>
-                                        </div>
-                                    }
-                                    inlineLabel
-                                    onChange={onAutoCompleteChange}
-                                    checked={autoCompleteValue}
-                                />
-
-                                <Toggle
-                                    label={
-                                        <div>
-                                            Would you like to include a static
-                                            error message?{" "}
-                                            <TooltipHost content="If set to true, you may input a static error message to be displayed underneath the menu. Otherwise, the error message field is disabled.">
-                                                <Icon
-                                                    iconName="Info"
-                                                    aria-label="Info tooltip"
-                                                />
-                                            </TooltipHost>
-                                        </div>
-                                    }
-                                    inlineLabel
-                                    onChange={onStaticErrorMessageChange}
-                                    checked={staticErrorMessageBool}
-                                />
-                                <TextField
-                                    label="Static Error Message"
-                                    value={fillInErrorMsg(
-                                        staticErrorMessageValue
-                                    )}
-                                    onChange={TextFieldOnChange(
-                                        setStaticErrorMessageValue
-                                    )}
-                                    disabled={!staticErrorMessageBool}
-                                />
-                            </Stack>
-                        </span>
-                        <span>
-                            <Stack {...columnProps}>
-                                <ChoiceGroup
-                                    selectedKey={defaultColorKey}
-                                    options={defaultColorOptions}
-                                    onChange={ChoiceGroupOnChange(
-                                        setDefaultColorKey
-                                    )}
-                                    label="Background Color"
-                                />
-                                <ColorPicker
-                                    color={color}
-                                    onChange={updateColor}
-                                    alphaType={"none"}
-                                    showPreview={true}
-                                    styles={colorPickerStyles}
-                                    strings={{}}
-                                />
-
-                                <ChoiceGroup
-                                    selectedKey={textColorKey}
-                                    options={textColorOptions}
-                                    onChange={ChoiceGroupOnChange(
-                                        setTextColorKey
-                                    )}
-                                    label="Text Color"
-                                />
-                            </Stack>
-                        </span>
-                    </Stack>
+            <DemoControlContainer>
+                <Stack tokens={{ childrenGap: 8 }}>
+                    <TextField
+                        label="Item to Add"
+                        defaultValue={addedValue}
+                        onChange={TextFieldOnChange(setAddedValue)}
+                        description="Enter the name of an item to add to the bottom of the combobox list."
+                    />
+                    <PrimaryButton text="Add Item" onClick={addElement} />
+                    <PrimaryButton
+                        text="Remove Last Item"
+                        onClick={removeElement}
+                    />
                 </Stack>
-            </div>
+                <TextField
+                    label="Index of Item"
+                    defaultValue={changeKey}
+                    errorMessage={errorMsg}
+                    onChange={TextFieldOnChange(setChangeKey)}
+                    description="Enter the index (any number starting from 0) of the item you want to change."
+                />
+                <Stack tokens={{ childrenGap: 8 }}>
+                    <TextField
+                        label="New Value of Item"
+                        defaultValue={changeValue}
+                        onChange={TextFieldOnChange(setChangeValue)}
+                        description="Enter the value of the item you want to change at the above index."
+                    />
+                    <PrimaryButton text="Change Item" onClick={changeElement} />
+                </Stack>
+                <TextField
+                    label="Text"
+                    defaultValue={labelValue}
+                    onChange={TextFieldOnChange(setLabelValue)}
+                />
+                <Toggle
+                    label={
+                        <div>
+                            Freeform{" "}
+                            <TooltipHost content="Whether the ComboBox is free form, meaning that the user input is not bound to provided options. Defaults to false.">
+                                <Icon
+                                    iconName="Info"
+                                    aria-label="Info tooltip"
+                                />
+                            </TooltipHost>
+                        </div>
+                    }
+                    inlineLabel
+                    onChange={onFreeformChange}
+                    checked={freeformValue}
+                />
+                <Toggle
+                    label={
+                        <div>
+                            Multiselect{" "}
+                            <TooltipHost content="Enables multi-choice selections when set to true.">
+                                <Icon
+                                    iconName="Info"
+                                    aria-label="Info tooltip"
+                                />
+                            </TooltipHost>
+                        </div>
+                    }
+                    inlineLabel
+                    onChange={onMultiSelectChange}
+                    checked={multiSelectValue}
+                />
+                <Toggle
+                    label={
+                        <div>
+                            Disabled{" "}
+                            <TooltipHost content="When set to true, it disables the entire menu.">
+                                <Icon
+                                    iconName="Info"
+                                    aria-label="Info tooltip"
+                                />
+                            </TooltipHost>
+                        </div>
+                    }
+                    inlineLabel
+                    onChange={onDisabledChange}
+                    checked={disabledValue}
+                />
+                <Toggle
+                    label={
+                        <div>
+                            Autocomplete{" "}
+                            <TooltipHost content="If set to true, while the user is inputting text, it will suggest potential matches from the list of options. This feature is only activated if the freeform toggle is set to True.">
+                                <Icon
+                                    iconName="Info"
+                                    aria-label="Info tooltip"
+                                />
+                            </TooltipHost>
+                        </div>
+                    }
+                    inlineLabel
+                    onChange={onAutoCompleteChange}
+                    checked={autoCompleteValue}
+                />
+                <Toggle
+                    label={
+                        <div>
+                            Would you like to include a static error message?{" "}
+                            <TooltipHost content="If set to true, you may input a static error message to be displayed underneath the menu. Otherwise, the error message field is disabled.">
+                                <Icon
+                                    iconName="Info"
+                                    aria-label="Info tooltip"
+                                />
+                            </TooltipHost>
+                        </div>
+                    }
+                    inlineLabel
+                    onChange={onStaticErrorMessageChange}
+                    checked={staticErrorMessageBool}
+                />
+                <TextField
+                    label="Static Error Message"
+                    value={fillInErrorMsg(staticErrorMessageValue)}
+                    onChange={TextFieldOnChange(setStaticErrorMessageValue)}
+                    disabled={!staticErrorMessageBool}
+                />
+                <ChoiceGroup
+                    selectedKey={defaultColorKey}
+                    options={defaultColorOptions}
+                    onChange={ChoiceGroupOnChange(setDefaultColorKey)}
+                    label="Background Color"
+                />
+                <ChoiceGroup
+                    selectedKey={textColorKey}
+                    options={textColorOptions}
+                    onChange={ChoiceGroupOnChange(setTextColorKey)}
+                    label="Text Color"
+                />
+                <ColorPicker
+                    color={color}
+                    onChange={updateColor}
+                    alphaType={"none"}
+                    showPreview={true}
+                    styles={colorPickerStyles}
+                    strings={{}}
+                />
+            </DemoControlContainer>
         </DemoPane>
     );
 };
@@ -534,22 +472,6 @@ export const ComboBoxDemo: React.FC = () => {
 /*
  * Styling
  */
-
-const sectionStackTokens: IStackTokens = { childrenGap: 50 };
-const wrapStackTokens: IStackTokens = { childrenGap: 400 };
-
-const columnProps: Partial<IStackProps> = {
-    tokens: { childrenGap: 55 },
-    styles: {
-        root: {
-            width: window.screen.availWidth / 8,
-            display: "flex",
-            justifyContent: "center",
-            align: "center",
-        },
-    },
-};
-
 const colorPickerStyles: Partial<IColorPickerStyles> = {
     panel: { padding: 12 },
     root: {
@@ -562,7 +484,6 @@ const colorPickerStyles: Partial<IColorPickerStyles> = {
 /*
  * Options
  */
-
 const defaultColorOptions: IChoiceGroupOption[] = [
     { key: "default", text: "Default Color" },
     { key: "custom", text: "Custom Color" },

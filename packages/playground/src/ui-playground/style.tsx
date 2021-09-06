@@ -24,10 +24,10 @@ export const HEADER_HEIGHT = "48px";
  * Style for each component's title
  */
 export const headingStyle: React.CSSProperties = {
-    fontSize: "1.5em",
+    fontSize: "18px",
     margin: 0,
     padding: 0,
-    fontWeight: 600,
+    fontWeight: 400,
     lineHeight: HEADER_HEIGHT,
     textAlign: "center",
     userSelect: "none",
