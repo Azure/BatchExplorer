@@ -6,9 +6,12 @@ import {
 } from "app/models";
 import { BEUserConfiguration, Constants } from "common";
 import { List, Set } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest, empty, forkJoin } from "rxjs";
 import {
-    distinctUntilChanged, expand, filter, first, flatMap, map,
+    AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest,
+    forkJoin, EMPTY
+} from "rxjs";
+import {
+    distinctUntilChanged, expand, filter, first, map, mergeMap,
     publishReplay, reduce, refCount, shareReplay, switchMap, takeUntil,
 } from "rxjs/operators";
 import { AuthService } from "../aad";
@@ -27,7 +30,8 @@ export class SubscriptionService implements OnDestroy {
     constructor(
         private azure: AzureHttpService,
         private auth: AuthService,
-        private settingsService: UserConfigurationService<BEUserConfiguration>) {
+        private settingsService: UserConfigurationService<BEUserConfiguration>
+    ) {
 
         const ignoredPatterns = this.settingsService.watch("subscriptions").pipe(
             takeUntil(this._destroy),
@@ -36,7 +40,9 @@ export class SubscriptionService implements OnDestroy {
         );
 
         this.subscriptions = this._subscriptionsLoaded.pipe(
-            flatMap(() => combineLatest(this._subscriptions, ignoredPatterns)),
+            mergeMap(() => combineLatest([
+                this._subscriptions, ignoredPatterns
+            ])),
             takeUntil(this._destroy),
             map(([subscriptions, ignoredPatterns]) => {
                 return this._ignoreSubscriptions(subscriptions, ignoredPatterns);
@@ -111,7 +117,7 @@ export class SubscriptionService implements OnDestroy {
         const uri = `subscriptions/${subscription.subscriptionId}/resourcegroups`;
         return this.azure.get<ArmListResponse>(subscription, uri).pipe(
             expand(obs => {
-                return obs.nextLink ? this.azure.get(subscription, obs.nextLink) : empty();
+                return obs.nextLink ? this.azure.get(subscription, obs.nextLink) : EMPTY;
             }),
             reduce((resourceGroups, response: ArmListResponse<any>) => {
                 return [...resourceGroups, ...response.value];
@@ -119,13 +125,16 @@ export class SubscriptionService implements OnDestroy {
         );
     }
 
-    private _loadSubscriptionsForTenant(tenant: TenantDetails): Observable<ArmSubscription[]> {
-        return this.azure.get<ArmListResponse<ArmSubscriptionAttributes>>(tenant.tenantId, "subscriptions").pipe(
-            expand((response) => {
+    private _loadSubscriptionsForTenant(tenant: TenantDetails):
+        Observable<ArmSubscription[]> {
+        return this.azure.get<ArmListResponse<ArmSubscriptionAttributes>>(
+            tenant.tenantId, "subscriptions"
+        ).pipe(
+            expand(response => {
                 if (response.nextLink) {
                     return this.azure.get(tenant.tenantId, response.nextLink);
                 } else {
-                    return empty();
+                    return EMPTY;
                 }
             }),
             reduce((subs, response: ArmListResponse<any>) => {

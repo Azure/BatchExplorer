@@ -4,7 +4,7 @@ import { AccessToken } from "../access-token";
 
 const dataStoreKey = DataStoreKeys.currentAccessToken;
 /**
- * Hellper class to storage the access tokens in memory and in the localstorage.
+ * Helper class to storage the access tokens in memory and in the localstorage.
  */
 export class AccessTokenCache {
     private _tokens: StringMap<StringMap<AccessToken>> = {};
