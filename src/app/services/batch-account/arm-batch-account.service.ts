@@ -208,7 +208,7 @@ export class ArmBatchAccountService implements OnDestroy {
                     return this.list(subscription.subscriptionId).pipe(
                         catchError((error) => {
                             const sub = `${subscription.displayName}(${subscription.subscriptionId})`;
-                            log.error(`Error to list batch accounts in ${sub}`, error);
+                            log.error(`Error listing batch accounts in ${sub}`, error);
                             return of(List([]));
                         }),
                     );
