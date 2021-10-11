@@ -71,9 +71,6 @@
       "env": {
         "NODE_ENV": "test"
       },
-      "outFiles": [
-        "${workspaceRoot}/build/**/*.js"
-      ],
       "presentation": {
         "hidden": false,
         "group": "Test",
@@ -81,8 +78,7 @@
       },
       "skipFiles": [
         "<node_internals>/**",
-        "${workspaceFolder}/node_modules/**",
-        "${workspaceFolder}/test/client/**"
+        "${workspaceFolder}/node_modules/**"
       ]
     }
   ],

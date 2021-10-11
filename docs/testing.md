@@ -1,6 +1,6 @@
 # Test in Batch Explorer
 
-## Test the browser code(99% of the code should be there)
+## Test the browser code (99% of the code should be there)
 
 Start the browser test watch
 
@@ -36,6 +36,8 @@ npm run test-client
 # For working on test
 npm run test-client-watch
 ```
+
+By default, all output logged by Batch Explorer is silenced. To enable console logging, set a `TEST_LOGGING` environment variable to a truthy value (e.g., `1`).
 
 ## Summary
 
