@@ -4,7 +4,7 @@
 
 Follow the **Building Batch Explorer yourself** instruction of the [wiki](https://github.com/Azure/BatchExplorer/wiki/Build-batch-explorer-yourself) in order to install all require dependencies.
 
-**Use `npm` 5 and above. This ensures a consistent build environment with the right set of dependencies**
+**Use `npm` 7 and above. This ensures a consistent build environment with the right set of dependencies**
 
 Start the dev server
 
