@@ -206,7 +206,7 @@ describe("VMSizeService", () => {
         ]);
     });
 
-    it("fitlers the IAAS sizes", async () => {
+    it("filters the IAAS sizes", async () => {
         const sizes = await service.virtualMachineSizes.pipe(take(1)).toPromise();
         expect(sizes).not.toBeFalsy();
         expect(sizes!.toJS().map(x => x.id)).toEqual([
@@ -215,7 +215,7 @@ describe("VMSizeService", () => {
         ]);
     });
 
-    it("fitlers the Cloud Service sizes", async () => {
+    it("filters the Cloud Service sizes", async () => {
         const sizes = await service.cloudServiceSizes.pipe(take(1)).toPromise();
         expect(sizes).not.toBeFalsy();
         expect(sizes!.toJS().map(x => x.id)).toEqual([
