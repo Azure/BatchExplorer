@@ -2,26 +2,22 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, VmSize } from "app/models";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, Subject, combineLatest, of } from "rxjs";
+import { BehaviorSubject, Observable, Subject, of } from "rxjs";
 import { catchError, map, publishReplay, refCount, share, switchMap, take, takeUntil } from "rxjs/operators";
 import { ArmHttpService } from "../arm-http.service";
 import { BatchAccountService } from "../batch-account";
-import { computeUrl } from "../compute.service";
-import { ArmListResponse } from "../core";
 import { GithubDataService } from "../github-data";
+import { ArmListResponse } from "../core";
 import { mapResourceSkuToVmSize } from "../../models/vm-size";
 
 const includedVmsSizesPath = "data/vm-sizes-list.json";
 
-interface VmSizeData {
-    category: StringMap<string[]>;
-    included: IncludedSizes;
+export function supportedSkusUrl(subscriptionId: string, location: string) {
+    return `/subscriptions/${subscriptionId}/providers/Microsoft.Batch/locations/${location}`
 }
 
-interface IncludedSizes {
-    all: string[];
-    paas: string[];
-    iaas: string[];
+interface VmSizeCategories {
+    category: StringMap<string[]>;
 }
 
 @Injectable({ providedIn: "root" })
@@ -41,6 +37,7 @@ export class VmSizeService implements OnDestroy {
      */
     public virtualMachineSizes: Observable<List<VmSize>>;
     public vmSizeCategories: Observable<StringMap<string[]>>;
+    // delete bc you can get this information directly through API
     public additionalVmSizeCores = {
         extrasmall: 1,
         small: 1,
@@ -49,7 +46,7 @@ export class VmSizeService implements OnDestroy {
         extralarge: 8,
     };
 
-    private _includedSizes = new BehaviorSubject<IncludedSizes | null>(null);
+    /** Placeholder categories until it's added as part of the Service */
     private _vmSizeCategories = new BehaviorSubject<StringMap<string[]>>(null);
     private _destroy = new Subject();
 
@@ -58,40 +55,31 @@ export class VmSizeService implements OnDestroy {
         private githubData: GithubDataService,
         accountService: BatchAccountService) {
 
-        this.loadVmSizeData();
+        this.loadVmSizeCategories();
 
-        this.sizes = accountService.currentAccount.pipe(
+        this.cloudServiceSizes = accountService.currentAccount.pipe(
             takeUntil(this._destroy),
             switchMap((account) => {
                 if (!(account instanceof ArmBatchAccount)) {
                     return of(null);
                 } else {
-                    return this._fetchVmSizesForAccount(account);
+                    const cloudServiceUrl = `${supportedSkusUrl(account.subscription.subscriptionId, account.location)}}/cloudServiceSkus?api-version=2021-06-01`
+                    return this._fetchVmSkusForAccount(account, cloudServiceUrl);
                 }
             }),
             publishReplay(1),
             refCount(),
         );
 
-        const obs = combineLatest(this.sizes, this._includedSizes);
-
-        this.cloudServiceSizes = obs.pipe(
-            map(([sizes, included]) => {
-                if (!included) {
-                    return sizes;
+        this.virtualMachineSizes = accountService.currentAccount.pipe(
+            takeUntil(this._destroy),
+            switchMap((account) => {
+                if (!(account instanceof ArmBatchAccount)) {
+                    return of(null);
+                } else {
+                    const vmUrl = `${supportedSkusUrl(account.subscription.subscriptionId, account.location)}/virtualMachineSkus?api-version=2021-06-01`
+                    return this._fetchVmSkusForAccount(account, vmUrl);
                 }
-                return this.filterSizes(sizes, included.all.concat(included.paas));
-            }),
-            publishReplay(1),
-            refCount(),
-        );
-
-        this.virtualMachineSizes = obs.pipe(
-            map(([sizes, included]) => {
-                if (!included) {
-                    return sizes;
-                }
-                return this.filterSizes(sizes, included.all.concat(included.iaas));
             }),
             publishReplay(1),
             refCount(),
@@ -105,20 +93,17 @@ export class VmSizeService implements OnDestroy {
         this._destroy.complete();
     }
 
-    public loadVmSizeData() {
+    /**
+     *  Placeholder categories until it's added as part of the Service
+     */
+    public loadVmSizeCategories() {
         this.githubData.get(includedVmsSizesPath).subscribe({
             next: (response: string) => {
                 const responseJson = JSON.parse(response);
-                const data: VmSizeData = {
+                const data: VmSizeCategories = {
                     category: responseJson.category,
-                    included: {
-                        all: responseJson.all,
-                        paas: responseJson.paas,
-                        iaas: responseJson.iaas,
-                    },
                 };
                 this._vmSizeCategories.next(data.category);
-                this._includedSizes.next(data.included);
             },
             error: (error) => {
                 log.error("Error loading included vm sizes from github", error);
@@ -139,35 +124,11 @@ export class VmSizeService implements OnDestroy {
             share(),
         );
     }
-    /**
-     * Filter the given list of vm sizes by including any patching the given patterns.
-     * @param sizes Sizes to filter
-     * @param includedPatterns List of regex patterns to include
-     */
-    public filterSizes(sizes: List<VmSize>, includedPatterns: string[]): List<VmSize> {
-        if (!sizes) {
-            return null;
-        }
-        return List<VmSize>(sizes.filter((size) => {
-            for (const regex of includedPatterns) {
-                if (new RegExp(regex).test(size.name.toLowerCase())) {
-                    return true;
-                }
-            }
-            return false;
-        }));
-    }
 
-    private _fetchVmSizesForAccount(account: ArmBatchAccount): Observable<List<VmSize> | null> {
-        const { subscription, location } = account;
-        const url = `${computeUrl(subscription.subscriptionId)}/skus`;
-        const options = {
-            params: {
-                "$filter": `location eq '${location}'`
-            }
-        };
-        return this.arm.get<ArmListResponse<any>>(url, options).pipe(
+    private _fetchVmSkusForAccount(account: ArmBatchAccount, query: string): Observable<List<VmSize> | null> {
+        return this.arm.get<ArmListResponse<any>>(query).pipe(
             map((response) => {
+                console.log(response);
                 return mapResourceSkuToVmSize(response.value);
             }),
             catchError((error) => {
