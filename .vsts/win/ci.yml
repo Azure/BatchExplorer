@@ -4,6 +4,7 @@ steps:
     displayName: 'Run CredScan'
     inputs:
       suppressionsFile: test/cred-scan-exclude.json
+      toolMajorVersion: V2
       debugMode: false
 
   - template: ./win-dependencies.yml
