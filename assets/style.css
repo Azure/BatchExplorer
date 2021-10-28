@@ -92,6 +92,16 @@ a {
     margin: 2px;
 }
 
+.btn-link.focus, .btn-link:focus {
+    outline: 1px solid white;
+    outline-offset: -4px;
+}
+
+.btn-link.btn-secondary {
+    background-color:#595959 !important;
+    border-color:#595959 !important;
+}
+
 .text-link {
     color: #0078d4;
 }
