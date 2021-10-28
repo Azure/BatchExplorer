@@ -166,6 +166,10 @@ a {
     text-align: center;
 }
 
+h2.heading-sm {
+    font-size: 1.5rem;
+}
+
 .swimlane {
     padding: 6rem 0 6rem;
     min-height: 30rem;
