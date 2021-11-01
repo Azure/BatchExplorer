@@ -5,7 +5,7 @@
     <bl-property-group label="" class="wide" class="prerequisites">
         <bl-table-property label="Prerequisites" *ngIf="prerequisites">
             <bl-table-property-row *ngFor="let prerequisite of prerequisites;trackBy: trackPrerequisite">
-                <bl-tp-cell [value]="prerequisite"></bl-tp-cell>
+                <bl-tp-cell [value]="prerequisite" role="button" attr.aria-label="Copy {{prerequisites}} to clipboard"></bl-tp-cell>
             </bl-table-property-row>
         </bl-table-property>
     </bl-property-group>
