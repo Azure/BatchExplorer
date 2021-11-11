@@ -15,7 +15,7 @@
         </div>
     </div>
     <bl-button-group summaryActions>
-        <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+        <bl-refresh-btn [refresh]="refresh" title="Refresh account summary page"></bl-refresh-btn>
         <bl-commands-list [commands]="commands" [entity]="account"></bl-commands-list>
     </bl-button-group>
     <div summaryTile *ngIf="armAccount">
