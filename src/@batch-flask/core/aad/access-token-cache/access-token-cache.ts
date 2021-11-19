@@ -32,10 +32,14 @@ export class AccessTokenCache {
         this._saveToStorage();
     }
 
-    public removeToken(tenantId: string, resource: string) {
+    public removeToken(tenantId: string, resource?: string) {
         const tenantTokens = this._tokens[tenantId];
         if (tenantTokens) {
-            delete tenantTokens[resource];
+            if (resource) {
+                delete tenantTokens[resource];
+            } else {
+                delete this._tokens[tenantId];
+            }
         }
     }
 
