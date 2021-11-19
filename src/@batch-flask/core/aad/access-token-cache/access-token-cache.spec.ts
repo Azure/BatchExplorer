@@ -14,6 +14,33 @@ describe("AccessTokenCache", () => {
     let cache: AccessTokenCache;
     let localStorageSpy: InMemoryDataStore;
 
+    it("should remove all tenant tokens when no resource specified", () => {
+        cache = new AccessTokenCache();
+
+        const accessToken = new AccessToken(token1);
+        cache.storeToken("tenant1", null, accessToken);
+        cache.storeToken("tenant1", "resource1", accessToken);
+        cache.storeToken("tenant1", "resource2", accessToken);
+
+        cache.storeToken("tenant2", null, accessToken);
+        cache.storeToken("tenant2", "resource1", accessToken);
+        cache.storeToken("tenant2", "resource2", accessToken);
+
+        expect(cache.hasToken("tenant1", null)).toBeTruthy();
+        expect(cache.hasToken("tenant1", "resource1")).toBeTruthy();
+        expect(cache.hasToken("tenant1", "resource2")).toBeTruthy();
+        cache.removeToken("tenant1");
+
+        expect(cache.hasToken("tenant1", null)).toBeFalsy();
+        expect(cache.hasToken("tenant1", "resource1")).toBeFalsy();
+        expect(cache.hasToken("tenant1", "resource2")).toBeFalsy();
+
+        cache.removeToken("tenant2", "resource1")
+        expect(cache.hasToken("tenant2", null)).toBeTruthy();
+        expect(cache.hasToken("tenant2", "resource1")).toBeFalsy();
+        expect(cache.hasToken("tenant2", "resource2")).toBeTruthy();
+    });
+
     describe("when using localstorage", () => {
         localStorageSpy = new InMemoryDataStore();
         beforeEach(() => {
