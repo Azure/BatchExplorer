@@ -1,0 +1,7 @@
+<div class="auth-settings-header">
+    <h1 tabindex="0" autofocus>{{'auth-settings.title' | i18n}}</h1>
+    <div class="saved" *ngIf="saved" attr.aria-live="assertive">
+        {{'auth-settings.saved' | i18n}}
+    </div>
+</div>
+<be-tenant-picker></be-tenant-picker>

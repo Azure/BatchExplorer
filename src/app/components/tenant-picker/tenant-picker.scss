@@ -1,0 +1,17 @@
+@import "app/styles/variables";
+@import "../settings/settings";
+
+$tenant-picker-max-width: 600px;
+be-tenant-picker {
+    @extend bl-settings;
+
+    .tenants-editor {
+        @extend .settings-editor;
+        max-width: $tenant-picker-max-width;
+        .tenant-picker-header {
+            display: flex;
+            justify-content: space-between;
+        }
+
+    }
+}

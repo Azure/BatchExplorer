@@ -122,7 +122,7 @@ export class MainWindowManager {
         if (visibileWindows.length > 0) { return; }
 
         // If no visible window quit the app
-        log.info(`Main Window ${this.constructor.name} closed. Quiting the app.`);
+        log.info(`Main Window ${this.constructor.name} closed. Quitting the app.`);
         this.batchExplorerApp.quit();
     }
 }

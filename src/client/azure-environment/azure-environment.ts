@@ -50,7 +50,7 @@ export interface AzureEnvironment extends AADResources {
 /* eslint-disable @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match */
 export const AzurePublic: AzureEnvironment = {
     id: "Azure",
-    name: "Azure Public(Default)",
+    name: "Azure Public (Default)",
     aadUrl: "https://login.microsoftonline.com/",
     arm: "https://management.azure.com/",
     batch: "https://batch.core.windows.net/",

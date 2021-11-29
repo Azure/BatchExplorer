@@ -18,4 +18,5 @@ export * from "./rxjs-operators";
 export * from "./server-error";
 export * from "./telemetry";
 export * from "./timezone";
+export * from "./tenant-settings";
 export * from "./user-configuration";

@@ -52,7 +52,7 @@ export abstract class ListBaseComponent extends SelectableList implements OnDest
     @ViewChild(AbstractListBase, { static: false })
     public list: AbstractListBase;
 
-    private i18n: I18nService;
+    protected i18n: I18nService;
 
     private liveAnnouncer: LiveAnnouncer;
 

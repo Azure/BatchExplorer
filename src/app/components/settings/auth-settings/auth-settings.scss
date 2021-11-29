@@ -1,0 +1,10 @@
+@import "app/styles/variables";
+@import "../settings";
+
+be-auth-settings {
+    @extend bl-settings;
+
+    .auth-settings-header {
+        @extend .settings-header;
+    }
+}
