@@ -1,0 +1,69 @@
+<div class="container {{isHomeTenant() ? 'home-tenant': ''}}">
+    <div class="left">
+        <mat-checkbox
+            *ngIf="!isHomeTenant()"
+            color="primary"
+            [matTooltip]="checkboxTooltip()"
+            matTooltipPosition="before"
+            [checked]="active"
+            (change)="onSelectionChanged($event)"></mat-checkbox>
+        <i *ngIf="isHomeTenant()"
+            class="fa fa-home fa-lg"
+            title="{{'tenant-card.home-tenant' | i18n}}">
+        </i>
+    </div>
+    <div class="main">
+        <div class="tenant-summary">
+            <bl-summary-card>
+                <div summaryTitle>{{tenant.displayName}}</div>
+                <div summarySubtitle beCopyable>{{tenant.tenantId}}</div>
+                <div summaryDetails>
+                    <div>
+                        <span class="label">{{"tenant-card.country-code" | i18n}}</span>
+                        {{tenant.countryCode}}
+                    </div>
+                    <div>
+                        <span class="label">{{"tenant-card.default-domain" | i18n}}</span>
+                        {{tenant.defaultDomain}}
+                    </div>
+                </div>
+            </bl-summary-card>
+            <div class="tenant-logo-container"
+                *ngIf="tenant.tenantBrandingLogoUrl">
+                <img class="tenant-logo" [src]="tenant.tenantBrandingLogoUrl"
+                    alt="{{'tenant-card.logo-alt' | i18n: { name: tenant.displayName } }}"
+                />
+            </div>
+        </div>
+        <div *ngIf="status === tenantStatus.failed" class="tenant-error"
+            role="status">
+            <span class="error-title">
+                <i class="fa fa-exclamation-triangle"></i>&nbsp;
+                {{authorization.message}}
+            </span>
+            <pre class="error-details">{{authorization.messageDetails}}</pre>
+            <bl-button type="plain"
+                *ngIf="active"
+                attr.aria-label="{{'tenant-card.reauthenticate-button' | i18n}}"
+                (do)="refresh(true)"
+            >
+                {{"tenant-card.reauthenticate-button" | i18n}}
+            </bl-button>
+        </div>
+    </div>
+    <div class="right">
+        <div class="badge"
+            [ngSwitch]="status"
+            role="status"
+            tabIndex="0"
+            matTooltip="{{statusText()}}"
+            matTooltipClass="tenant-card-tooltip-{{status}}"
+            matTooltipPosition="after">
+            <i *ngSwitchCase="tenantStatus.authorized"
+                class="fa fa-2x fa-check-circle"></i>
+            <i *ngSwitchCase="tenantStatus.failed"
+                class="fa fa-2x fa-exclamation-circle"></i>
+            <i *ngSwitchDefault class="fa fa-2x fa-question-circle"></i>
+        </div>
+    </div>
+</div>

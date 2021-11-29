@@ -13,6 +13,7 @@ export interface AccessTokenAttributes {
     expiresOn: Date;
 
     tenantId?: string;
+    homeTenantId?: string;
     resource?: string;
 }
 
@@ -32,6 +33,7 @@ export class AccessToken {
     public expiresOn: Date;
 
     public tenantId?: string;
+    public homeTenantId?: string;
     public resource?: string;
 
     constructor(data: AccessTokenAttributes) {
@@ -39,6 +41,7 @@ export class AccessToken {
         this.tokenType = data.tokenType;
         this.expiresOn = new Date(data.expiresOn);
         this.tenantId = data.tenantId;
+        this.homeTenantId = data.homeTenantId;
         this.resource = data.resource;
     }
 

@@ -88,7 +88,14 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     public openSettingsContextMenu() {
         const items = [
             new ContextMenuSeparator(),
-            new ContextMenuItem({ label: this.i18n.t("profile-button.settings"), click: () => this._goToSettings() }),
+            new ContextMenuItem({
+                label: this.i18n.t("profile-button.settings"),
+                click: () => this._goToSettings()
+            }),
+            new ContextMenuItem({
+                label: this.i18n.t("profile-button.authentication"),
+                click: () => this._goToAuthSettings()
+            }),
             new ContextMenuItem({
                 label: this.i18n.t("profile-button.keybindings"), click: () => this._goToKeyBindings(),
             }),
@@ -119,6 +126,10 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
     private _goToSettings() {
         this.router.navigate(["/settings"]);
+    }
+
+    private _goToAuthSettings() {
+        this.router.navigate(["/auth-settings"]);
     }
 
     private _goToKeyBindings() {

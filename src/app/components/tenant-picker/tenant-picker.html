@@ -1,0 +1,21 @@
+<div class="tenants-editor">
+    <div class="tenant-picker-header">
+        <h2 tabindex="0" autofocus>{{'tenant-picker.title' | i18n}}</h2>
+        <div class="saved" *ngIf="saved" attr.aria-live="assertive">
+            {{'tenant-picker.saved' | i18n}}
+        </div>
+        <bl-button
+            icon="fa fa-refresh"
+            title="{{'tenant-picker.refresh' | i18n}}"
+            [action]="refresh"></bl-button>
+    </div>
+    <bl-hint>{{'tenant-picker.microcopy' | i18n}}</bl-hint>
+    <div class="tenant-card-list" role="list">
+        <be-tenant-card
+            *ngFor="let setting of tenantSettings.value; trackBy: trackByIndex"
+            [authorization]="setting"
+            role="listitem"
+            (refreshTenant)="refreshTenant($event)">
+        </be-tenant-card>
+    </div>
+</div>
