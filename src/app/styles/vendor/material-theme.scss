@@ -94,6 +94,17 @@ mat-checkbox[small] {
     }
 }
 
+mat-checkbox.cdk-keyboard-focused {
+    & > label {
+        outline: 1px solid $outline-color;
+        outline-offset: 2px;
+    }
+
+    .mat-focus-indicator {
+        display: none;
+    }
+}
+
 mat-dialog-container.mat-dialog-container {
     padding: 0;
     width: auto !important;

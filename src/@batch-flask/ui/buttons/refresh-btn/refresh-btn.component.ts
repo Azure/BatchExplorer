@@ -35,6 +35,8 @@ export class RefreshButtonComponent implements OnDestroy {
 
     @Input() public type: string = "square";
 
+    @Input() public title: string = "Refresh";
+
     @Input() public tooltipPosition: string = "above";
 
     public set status(status: RefreshStatus) {
