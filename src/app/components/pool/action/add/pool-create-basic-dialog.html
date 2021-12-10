@@ -21,7 +21,8 @@
             </div>
         </bl-form-section>
 
-        <bl-form-section title="Scale" subtitle="Number of nodes in your pool using a fixed number or an auto scaling forumla">
+        <bl-form-section title="Scale" subtitle="Number of nodes in your pool using a fixed number or an auto scaling formula">
+            <a (click)="openLink('https://docs.microsoft.com/en-us/azure/batch/batch-low-pri-vms')" href="javascript:void(0)">Learn more about Spot/Low Priority Nodes</a>
             <div class="form-element">
                 <bl-pool-scale-picker formControlName="scale"></bl-pool-scale-picker>
             </div>
