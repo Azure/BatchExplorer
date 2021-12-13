@@ -44,7 +44,7 @@
           "title": "The desired number of dedicated compute nodes in the pool.",
           "description": "The desired number of dedicated compute nodes in the pool."
         },
-        "targetSpotLowPriorityNodes": {
+        "targetLowPriorityNodes": {
           "type": "integer",
           "format": "int32",
           "title": "The desired number of Spot/low-priority compute nodes in the pool.",
