@@ -1,17 +1,20 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { UserConfigurationService } from "@batch-flask/core";
-import { StringUtils, log } from "@batch-flask/utils";
+import { StringUtils } from "@batch-flask/utils";
 import {
     ArmSubscription, ArmSubscriptionAttributes, ResourceGroup, TenantDetails,
 } from "app/models";
 import { BEUserConfiguration, Constants } from "common";
 import { List, Set } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest, empty, forkJoin } from "rxjs";
 import {
-    distinctUntilChanged, expand, filter, first, flatMap, map,
-    publishReplay, reduce, refCount, shareReplay, switchMap, takeUntil,
+    AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest,
+    forkJoin, EMPTY, of
+} from "rxjs";
+import {
+    catchError,
+    distinctUntilChanged, expand, filter, first, map, mergeMap, publishReplay, reduce, refCount, shareReplay, switchMap, takeUntil,
 } from "rxjs/operators";
-import { AuthService } from "../aad";
+import { AuthService, TenantAuthorization, TenantStatus } from "../aad";
 import { AzureHttpService } from "../azure-http.service";
 import { ArmListResponse } from "../core";
 
@@ -27,7 +30,8 @@ export class SubscriptionService implements OnDestroy {
     constructor(
         private azure: AzureHttpService,
         private auth: AuthService,
-        private settingsService: UserConfigurationService<BEUserConfiguration>) {
+        private settingsService: UserConfigurationService<BEUserConfiguration>
+    ) {
 
         const ignoredPatterns = this.settingsService.watch("subscriptions").pipe(
             takeUntil(this._destroy),
@@ -36,7 +40,9 @@ export class SubscriptionService implements OnDestroy {
         );
 
         this.subscriptions = this._subscriptionsLoaded.pipe(
-            flatMap(() => combineLatest(this._subscriptions, ignoredPatterns)),
+            mergeMap(() => combineLatest([
+                this._subscriptions, ignoredPatterns
+            ])),
             takeUntil(this._destroy),
             map(([subscriptions, ignoredPatterns]) => {
                 return this._ignoreSubscriptions(subscriptions, ignoredPatterns);
@@ -60,14 +66,17 @@ export class SubscriptionService implements OnDestroy {
     }
 
     public load(): Observable<any> {
-        const obs = this.auth.tenants.pipe(
-            filter(tenants => tenants.length > 0),
-            first(),
-            switchMap((tenants: TenantDetails[]) => forkJoin(
-                tenants.map(tenant => this._loadSubscriptionsForTenant(tenant)))
+        const obs = this.auth.getTenantAuthorizations().pipe(
+            filter(authorizations => authorizations.length > 0),
+            switchMap((authorizations: TenantAuthorization[]) =>
+                forkJoin(authorizations.map(authorization =>
+                    this.loadTenantSubscriptions(authorization)
+                        .pipe(catchError(error => of(error)))
+                    )
+                )
             ),
             publishReplay(1),
-            refCount(),
+            refCount()
         );
         obs.subscribe({
             next: (tenantSubscriptions) => {
@@ -75,12 +84,30 @@ export class SubscriptionService implements OnDestroy {
                 this._subscriptions.next(List(subscriptions));
                 this._cacheSubscriptions();
                 this._markSubscriptionsAsLoaded();
-            },
-            error: (error) => {
-                log.error("Error loading subscriptions", error);
-            },
+            }
         });
         return obs;
+    }
+
+    /**
+     * Loads subscriptions for an authorized tenant.
+     *
+     * If the tenant is inactive, an empty list is returned.
+     *
+     * If the tenant is unauthorized, a notification is displayed, inviting the
+     * user to configure their active tenants, and an empty list is returned.
+     *
+     * @param authorization The tenant authorization
+     * @returns list of subscriptions
+     */
+    loadTenantSubscriptions(authorization: TenantAuthorization):
+    Observable<ArmSubscription[]> {
+        if (!authorization.active ||
+            authorization.status === TenantStatus.failed) {
+            return of([]);
+        } else {
+            return this._loadSubscriptionsForTenant(authorization.tenant);
+        }
     }
 
     public setAccountSubscriptionFilter(subIds: Set<string>) {
@@ -88,8 +115,12 @@ export class SubscriptionService implements OnDestroy {
             return;
         }
         this._accountSubscriptionFilter.next(subIds);
-        localStorage.setItem(Constants.localStorageKey.accountSubscriptionFilter, JSON.stringify(subIds.toJS()));
+        localStorage.setItem(
+            Constants.localStorageKey.accountSubscriptionFilter,
+            JSON.stringify(subIds.toJS())
+        );
     }
+
     /**
      * Get the subscription with the given object.
      * @param subscriptionId Id of the subscription(UUID)
@@ -111,7 +142,7 @@ export class SubscriptionService implements OnDestroy {
         const uri = `subscriptions/${subscription.subscriptionId}/resourcegroups`;
         return this.azure.get<ArmListResponse>(subscription, uri).pipe(
             expand(obs => {
-                return obs.nextLink ? this.azure.get(subscription, obs.nextLink) : empty();
+                return obs.nextLink ? this.azure.get(subscription, obs.nextLink) : EMPTY;
             }),
             reduce((resourceGroups, response: ArmListResponse<any>) => {
                 return [...resourceGroups, ...response.value];
@@ -119,13 +150,16 @@ export class SubscriptionService implements OnDestroy {
         );
     }
 
-    private _loadSubscriptionsForTenant(tenant: TenantDetails): Observable<ArmSubscription[]> {
-        return this.azure.get<ArmListResponse<ArmSubscriptionAttributes>>(tenant.tenantId, "subscriptions").pipe(
-            expand((response) => {
+    private _loadSubscriptionsForTenant(tenant: TenantDetails):
+        Observable<ArmSubscription[]> {
+        return this.azure.get<ArmListResponse<ArmSubscriptionAttributes>>(
+            tenant.tenantId, "subscriptions"
+        ).pipe(
+            expand(response => {
                 if (response.nextLink) {
                     return this.azure.get(tenant.tenantId, response.nextLink);
                 } else {
-                    return empty();
+                    return EMPTY;
                 }
             }),
             reduce((subs, response: ArmListResponse<any>) => {

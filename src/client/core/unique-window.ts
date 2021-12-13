@@ -97,7 +97,7 @@ export abstract class GenericWindow {
 export abstract class UniqueWindow extends GenericWindow {
     public create() {
         super.create();
-        this.setupCommonEvents(this._window!);
+        this.setupCommonEvents(this._window);
     }
 
     public setupCommonEvents(window: Electron.BrowserWindow) {

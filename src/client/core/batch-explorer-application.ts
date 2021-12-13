@@ -259,6 +259,8 @@ export class BatchExplorerApplication {
 
     private _setupProcessEvents() {
         ipcMain.on("reload", () => {
+            this.pythonServer.restart();
+
             // Destroy window and error window if applicable
             this.windows.closeAll();
             this.recoverWindow.destroy();

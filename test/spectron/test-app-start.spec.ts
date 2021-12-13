@@ -11,8 +11,8 @@ describe("Bundled application is starting correctly", () => {
         app = new Application({
             path: getExePath(),
             args: ["--insecure-test"],
-            startTimeout: 3000,
-            waitTimeout: 20000,
+            startTimeout: 3_000,
+            waitTimeout: 20_000,
         });
 
         await app.start();
@@ -48,7 +48,7 @@ describe("Bundled application is starting correctly", () => {
         await switchToWindow(app, WindowType.auth);
 
         expect(await app.browserWindow.isVisible()).toBe(true);
-        expect(await app.browserWindow.getTitle()).toEqual("BatchExplorer: Login to Azure Public(Default)");
+        expect(await app.browserWindow.getTitle()).toEqual("BatchExplorer: Login to Azure Public (Default)");
         expect(await app.browserWindow.getBounds()).toEqual(jasmine.objectContaining({
             width: 800,
             height: 700,
@@ -88,7 +88,7 @@ async function signIn(client: SpectronClient) {
     const nextButton = await client.$(`input[type="submit"]`);
     await nextButton.click();
 
-    await delay(5000);
+    await delay(5_000);
 
     const url = await client.getUrl();
 

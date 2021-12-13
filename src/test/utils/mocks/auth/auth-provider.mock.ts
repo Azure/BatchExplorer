@@ -1,6 +1,6 @@
 import { AuthenticationResult, ClientApplication } from "@azure/msal-node";
 import { AzurePublic } from "client/azure-environment";
-import { AuthorizeError } from "client/core/aad";
+import { AuthorizeError, AuthorizeResponseError } from "client/core/aad";
 import { AADConfig } from "client/core/aad/aad-config";
 import AuthProvider from "client/core/aad/auth-provider";
 
@@ -19,19 +19,23 @@ export class MockAuthProvider extends AuthProvider {
     }
 }
 export class MockClientApplication extends ClientApplication {
-    constructor(public fakeAuthProvider: MockAuthProvider) {
+    constructor(public fakeAuthProvider?: MockAuthProvider) {
         super({
             auth: {
-                clientId: fakeAuthProvider.fakeConfig.clientId
+                clientId: fakeAuthProvider?.fakeConfig.clientId
             }
         });
     }
 
     public getAuthCodeUrl(request) {
         if (request?.prompt === "none") {
-            throw new Error("No silent auth");
+            throw new AuthorizeError({
+                error: "fakeError",
+                error_description: "fakeErrorDescription",
+                error_code: ""
+            });
         }
-        return Promise.resolve(this.fakeAuthProvider.fakeConfig.redirectUri);
+        return Promise.resolve(this.fakeAuthProvider?.fakeConfig.redirectUri);
     }
 
     public acquireTokenByCode() {
@@ -42,6 +46,25 @@ export class MockClientApplication extends ClientApplication {
             this.fakeAuthProvider.fakeToken as AuthenticationResult);
     }
 
+    public async acquireTokenSilent() {
+        return null;
+    }
+}
+
+export class MockAuthorizeError extends AuthorizeError {
+    static responseErrorPrototype: AuthorizeResponseError = {
+        error: "error",
+        error_description: "description"
+    };
+
+    constructor(options: Partial<AuthorizeError>) {
+        const error = Object.assign(MockAuthorizeError.responseErrorPrototype,
+            { error: options.error });
+        super(error);
+        for (const opt in options) {
+            this[opt] = options[opt];
+        }
+    }
 }
 
 export const createMockClientApplication = () => {
@@ -65,7 +88,7 @@ export const instrumentAuthProvider = (authProvider: AuthProvider) => {
     const tenants = {};
     spyOn<any>(authProvider, "_getAccount").and.callFake(tenantId => {
         if (tenantId in tenants) {
-            return { tenantId };
+            return new MockClientApplication();
         } else {
             tenants[tenantId] = true;
             throw new Error("no account");

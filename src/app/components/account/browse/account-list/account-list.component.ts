@@ -5,10 +5,10 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchAccountCommands } from "app/components/account/action";
 import { BatchAccount } from "app/models";
-import { BatchAccountService, SubscriptionService } from "app/services";
+import { BatchAccountService } from "app/services";
 import { List } from "immutable";
 import { Observable, Subject, of } from "rxjs";
-import { shareReplay, switchMap, takeUntil } from "rxjs/operators";
+import { takeUntil } from "rxjs/operators";
 
 import "./account-list.scss";
 
@@ -35,8 +35,8 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     constructor(
         public commands: BatchAccountCommands,
         private accountService: BatchAccountService,
-        injector: Injector,
-        private subscriptionService: SubscriptionService) {
+        injector: Injector
+    ) {
         super(injector);
         this._updateDisplayedAccounts();
 
@@ -46,9 +46,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
             this._updateDisplayedAccounts();
         });
 
-        this.accountService.accountFavorites.pipe(takeUntil(this._destroy)).subscribe((accounts) => {
-            this.changeDetector.markForCheck();
-        });
+        this.accountService.accountFavorites.pipe(takeUntil(this._destroy)).subscribe(() => this.changeDetector.markForCheck());
     }
 
     public ngOnDestroy() {
@@ -59,10 +57,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
     @autobind()
     public refresh(): Observable<any> {
-        return this.subscriptionService.load().pipe(
-            switchMap(() => this.accountService.load()),
-            shareReplay(1),
-        );
+        return this.accountService.loadSubscriptionsAndAccounts()
     }
 
     public handleFilter(filter: Filter) {

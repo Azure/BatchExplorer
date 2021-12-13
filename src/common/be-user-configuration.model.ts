@@ -32,6 +32,9 @@ export interface BEUserConfiguration extends BatchFlaskUserConfiguration {
         branch: string,
     };
 
+    tenants: {
+        [tenantId: string]: "active" | "inactive"
+    }
 }
 
 /**
@@ -70,6 +73,7 @@ export const DEFAULT_BE_USER_CONFIGURATION: BEUserDesktopConfiguration = {
     subscriptions: {
         ignore: [],
     },
+    tenants: {},
     update: {
         channel: null,
         updateOnQuit: true,

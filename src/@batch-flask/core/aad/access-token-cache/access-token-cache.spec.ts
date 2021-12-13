@@ -5,18 +5,41 @@ import { AccessTokenCache } from "./access-token-cache";
 const tenant1 = "tenant-1";
 const resource1 = "http://example.com";
 const token1 = {
-    access_token: "sometoken",
-    expires_on: DateTime.local().plus({ hours: 1 }).toJSDate(),
-    expires_in: 3600,
-    token_type: "Bearer",
-    ext_expires_in: 3600,
-    not_before: DateTime.local().plus({ hours: 1 }).toJSDate(),
-    refresh_token: "foorefresh",
+    accessToken: "sometoken",
+    expiresOn: DateTime.local().plus({ hours: 1 }).toJSDate(),
+    tokenType: "Bearer",
 };
 
 describe("AccessTokenCache", () => {
     let cache: AccessTokenCache;
     let localStorageSpy: InMemoryDataStore;
+
+    it("should remove all tenant tokens when no resource specified", () => {
+        cache = new AccessTokenCache();
+
+        const accessToken = new AccessToken(token1);
+        cache.storeToken("tenant1", null, accessToken);
+        cache.storeToken("tenant1", "resource1", accessToken);
+        cache.storeToken("tenant1", "resource2", accessToken);
+
+        cache.storeToken("tenant2", null, accessToken);
+        cache.storeToken("tenant2", "resource1", accessToken);
+        cache.storeToken("tenant2", "resource2", accessToken);
+
+        expect(cache.hasToken("tenant1", null)).toBeTruthy();
+        expect(cache.hasToken("tenant1", "resource1")).toBeTruthy();
+        expect(cache.hasToken("tenant1", "resource2")).toBeTruthy();
+        cache.removeToken("tenant1");
+
+        expect(cache.hasToken("tenant1", null)).toBeFalsy();
+        expect(cache.hasToken("tenant1", "resource1")).toBeFalsy();
+        expect(cache.hasToken("tenant1", "resource2")).toBeFalsy();
+
+        cache.removeToken("tenant2", "resource1")
+        expect(cache.hasToken("tenant2", null)).toBeTruthy();
+        expect(cache.hasToken("tenant2", "resource1")).toBeFalsy();
+        expect(cache.hasToken("tenant2", "resource2")).toBeTruthy();
+    });
 
     describe("when using localstorage", () => {
         localStorageSpy = new InMemoryDataStore();
@@ -34,8 +57,8 @@ describe("AccessTokenCache", () => {
             const token = {
                 [tenant1]: {
                     [resource1]: {
-                        access_token: "sometoken",
-                        expires_on: DateTime.local().minus({ hours: 1 }).toJSDate(),
+                        accessToken: "sometoken",
+                        expiresOn: DateTime.local().minus({ hours: 1 }).toJSDate(),
                     },
                 },
             };
@@ -54,7 +77,7 @@ describe("AccessTokenCache", () => {
             await cache.init();
             const token = cache.getToken(tenant1, resource1);
             expect(token).not.toBeFalsy();
-            expect(token.access_token).toEqual("sometoken");
+            expect(token.accessToken).toEqual("sometoken");
             done();
         });
     });

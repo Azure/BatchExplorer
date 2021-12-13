@@ -4,67 +4,44 @@ import { DateTime } from "luxon";
 /* eslint-disable @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match */
 
 export interface AccessTokenAttributes {
-    access_token: string;
-    refresh_token: string;
-    token_type: string;
-
-    /**
-     * Number of seconds before the token expires
-     */
-    expires_in: number;
+    accessToken: string;
+    tokenType: string;
 
     /**
      * Datetime when the token expires
      */
-    expires_on: Date;
-
-    ext_expires_in: number;
-    not_before: Date;
+    expiresOn: Date;
 
     tenantId?: string;
+    homeTenantId?: string;
     resource?: string;
 }
 
 export class AccessToken {
     public static isValidToken(data: AccessTokenAttributes) {
-        return exists(data.access_token)
-            && exists(data.refresh_token)
-            && exists(data.token_type)
-            && exists(data.expires_in)
-            && exists(data.expires_on)
-            && exists(data.ext_expires_in)
-            && exists(data.not_before);
+        return exists(data.accessToken)
+            && exists(data.tokenType)
+            && exists(data.expiresOn);
     }
 
-    public access_token: string;
-    public refresh_token: string = "Bearer";
-    public token_type: string;
-
-    /**
-     * Number of seconds before the token expires
-     */
-    public expires_in: number;
+    public accessToken: string;
+    public tokenType: string;
 
     /**
      * Datetime when the token expires
      */
-    public expires_on: Date;
-
-    public ext_expires_in: number;
-    public not_before: Date;
+    public expiresOn: Date;
 
     public tenantId?: string;
+    public homeTenantId?: string;
     public resource?: string;
 
     constructor(data: AccessTokenAttributes) {
-        this.access_token = data.access_token;
-        this.refresh_token = data.refresh_token;
-        this.token_type = data.token_type;
-        this.expires_in = data.expires_in;
-        this.expires_on = new Date(data.expires_on);
-        this.ext_expires_in = data.ext_expires_in;
-        this.not_before = new Date(data.not_before);
+        this.accessToken = data.accessToken;
+        this.tokenType = data.tokenType;
+        this.expiresOn = new Date(data.expiresOn);
         this.tenantId = data.tenantId;
+        this.homeTenantId = data.homeTenantId;
         this.resource = data.resource;
     }
 
@@ -72,7 +49,7 @@ export class AccessToken {
      * @return true if the token is going to expire in less than the specified number of milliseconds
      */
     public expireInLess(milliseconds: number): boolean {
-        const expireIn = DateTime.fromJSDate(this.expires_on).diff(DateTime.utc()).as("milliseconds");
+        const expireIn = DateTime.fromJSDate(this.expiresOn).diff(DateTime.utc()).as("milliseconds");
         return expireIn < milliseconds;
     }
 
@@ -81,6 +58,6 @@ export class AccessToken {
     }
 
     public toHeader() {
-        return `${this.token_type} ${this.access_token}`;
+        return `${this.tokenType} ${this.accessToken}`;
     }
 }

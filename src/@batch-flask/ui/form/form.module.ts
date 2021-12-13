@@ -7,6 +7,7 @@ import { EditorModule } from "@batch-flask/ui/editor";
 import { SelectModule } from "@batch-flask/ui/select";
 import { ServerErrorModule } from "@batch-flask/ui/server-error";
 import { ButtonsModule } from "../buttons";
+import { CopyableDirective } from "../copyable/copyable.directive";
 import { I18nUIModule } from "../i18n";
 import { ComplexFormComponent } from "./complex-form";
 import { FormFooterComponent } from "./complex-form/footer";
@@ -50,6 +51,7 @@ const components = [
     HintComponent,
     FormFieldPrefixDirective,
     FormFieldSuffixDirective,
+    CopyableDirective,
 ];
 
 @NgModule({

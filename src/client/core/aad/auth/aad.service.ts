@@ -57,12 +57,12 @@ export class AADService {
         this.currentUser = this._currentUser.asObservable();
         this.tenants = this._tenants.asObservable();
         this.userAuthorization = new AuthenticationService(this.app, aadConfig,
-            new AuthProvider(this.app, aadConfig));
+            new AuthProvider(this.app, aadConfig), this);
         this.authenticationState = this._authenticationState.asObservable();
 
         ipcMain.on(IpcEvent.AAD.accessTokenData,
-            async ({ tenantId, resource }) =>
-                await this.accessTokenData(tenantId, resource));
+            async ({ tenantId, resource, forceRefresh }) =>
+                await this.accessTokenData(tenantId, resource, forceRefresh));
 
         this.userAuthorization.state.subscribe((state) => {
             this._authenticationState.next(state);
@@ -85,19 +85,21 @@ export class AADService {
         };
     }
 
-    public async logout() {
+    public async logout(closeWindows = true) {
         await this.localStorage.removeItem(Constants.localStorageKey.currentUser);
         this._tenants.next([]);
         await this._clearUserSpecificCache();
         for (const [, window] of this.app.windows) {
             window.webContents.session.clearStorageData({ storages: ["localStorage"] });
         }
-        this.app.windows.closeAll();
+        if (closeWindows) {
+            this.app.windows.closeAll();
+        }
         await this.userAuthorization.logout();
     }
 
     public async accessTokenFor(tenantId: string, resource?: AADResourceName) {
-        return this.accessTokenData(tenantId, resource).then(x => x.access_token);
+        return this.accessTokenData(tenantId, resource).then(x => x.accessToken);
     }
 
     /**
@@ -105,8 +107,11 @@ export class AADService {
      * @param tenantId
      * @param resource
      */
-    public async accessTokenData(tenantId: string, resource?: AADResourceName): Promise<AccessToken> {
-        return this._retrieveNewAccessToken(tenantId, resource || "arm");
+    public async accessTokenData(
+        tenantId: string, resource?: AADResourceName, forceRefresh = false
+    ): Promise<AccessToken> {
+        return this._retrieveNewAccessToken(tenantId, resource || "arm",
+            forceRefresh);
     }
 
     private async _loginInCurrentCloud() {
@@ -150,10 +155,13 @@ export class AADService {
      * Retrieve a new access token.
      * @return Observable with access token object
      */
-    private async _retrieveNewAccessToken(tenantId: string, resource: AADResourceName): Promise<AccessToken> {
+    private async _retrieveNewAccessToken(
+        tenantId: string, resource: AADResourceName, forceRefresh: boolean
+    ): Promise<AccessToken> {
         const defer = new Deferred<AccessToken>();
-        this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)] = defer;
-        this._redeemNewAccessToken(tenantId, resource);
+        this._newAccessTokenSubject[
+            this._tenantResourceKey(tenantId, resource)] = defer;
+        this._redeemNewAccessToken(tenantId, resource, forceRefresh);
         return defer.promise;
     }
 
@@ -164,32 +172,32 @@ export class AADService {
     /**
      * Load a new access token from the authorization code given at login
      */
-    private async _redeemNewAccessToken(tenantId: string, resource: AADResourceName) {
-        const defer = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
-
+    private async _redeemNewAccessToken(
+        tenantId: string, resource: AADResourceName, forceRefresh: boolean
+    ) {
+        const subjectKey = this._tenantResourceKey(tenantId, resource);
+        const defer = this._newAccessTokenSubject[subjectKey];
+        delete this._newAccessTokenSubject[subjectKey];
         try {
             const result: AuthorizeResult =
                 await this.userAuthorization.authorizeResource(
                     tenantId,
-                    this.properties.azureEnvironment[resource as string]
+                    this.properties.azureEnvironment[resource as string],
+                    forceRefresh
                 );
             this._processUserToken(result.idToken);
-            delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
+
             defer.resolve(new AccessToken({
-                access_token: result.accessToken,
-                refresh_token: null,
-                token_type: result.tokenType,
-                expires_in: null,
-                expires_on: result.expiresOn,
-                ext_expires_in: null,
-                not_before: null,
+                accessToken: result.accessToken,
+                tokenType: result.tokenType,
+                expiresOn: result.expiresOn,
                 tenantId,
+                homeTenantId: result.account?.homeAccountId?.split(".")[1],
                 resource
             }));
-
         } catch (e) {
-            log.error(`Error redeem auth code for a token for resource ${resource}`, e);
-            delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
+            log.error(`Error redeeming auth code for a token for resource ` +
+                `${resource}: ${e}`);
             defer.reject(e);
         }
     }
@@ -211,13 +219,15 @@ export class AADService {
         const token = await this.accessTokenData(defaultTenant);
 
         const headers = {
-            Authorization: `${token.token_type} ${token.access_token}`,
+            Authorization: `${token.tokenType} ${token.accessToken}`,
         };
         const options = { headers };
         const url = this._tenantURL();
         const response = await fetch(url, options);
         const { value } = await response.json();
-        return value;
+        const tenants = value as TenantDetails[];
+        tenants.forEach(tenant => tenant.homeTenantId = token.homeTenantId);
+        return tenants;
     }
 
     private _tenantURL() {
