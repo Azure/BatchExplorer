@@ -162,6 +162,12 @@ mat-button-toggle-group {
         &:last-child {
             border: 1px solid $primary-color;
         }
+        &.mat-button-toggle-appearance-standard.cdk-keyboard-focused:not(.mat-button-toggle-disabled) {
+            .mat-button-toggle-focus-overlay {
+                opacity: 0.2;
+            }
+            border: 1px solid $primary-text;
+        }
     }
 }
 
