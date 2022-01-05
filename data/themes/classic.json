@@ -49,6 +49,7 @@
     "basic-bg": "#e5e5e5",
     "basic-hover-bg": "#d5d5d5",
     "disabled-text": "#d5d5d5",
+    "focus-text": "var(--color-primary)",
     "disabled-bg": "#ededed"
   },
   "monitorChart": {
