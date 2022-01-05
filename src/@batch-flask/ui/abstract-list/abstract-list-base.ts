@@ -177,7 +177,8 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         private breadcrumbService: BreadcrumbService,
         private elementRef: ElementRef,
         private contextService: ContextService,
-        changeDetection: ChangeDetectorRef) {
+        changeDetection: ChangeDetectorRef
+    ) {
         super(changeDetection);
         this._initKeyNavigator();
 
@@ -358,26 +359,26 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             this.activateItem(this.focusedItem);
             event.preventDefault();
         } else {
-            let previousFocussedId = null;
+            let previousFocusedId = null;
             if (event.shiftKey) {
                 const focusedItem = this._keyNavigator.focusedItem;
-                previousFocussedId = focusedItem && focusedItem.id;
+                previousFocusedId = focusedItem && focusedItem.id;
             }
             // Handle the navigation
             this._keyNavigator.onKeydown(event);
 
             const focusedItem = this._keyNavigator.focusedItem;
-            const focussedId = focusedItem && focusedItem.id;
+            const focusedId = focusedItem && focusedItem.id;
 
-            if (previousFocussedId && previousFocussedId !== focussedId) {
-                if (!focussedId) { return; }
-                if (this.selection.has(focussedId)) {
-                    this.selection.delete(previousFocussedId);
+            if (previousFocusedId && previousFocusedId !== focusedId) {
+                if (!focusedId) { return; }
+                if (this.selection.has(focusedId)) {
+                    this.selection.delete(previousFocusedId);
                 } else {
-                    this.selection.add(focussedId);
+                    this.selection.add(focusedId);
                 }
             } else if (event.code === KeyCode.ArrowDown || event.code === KeyCode.ArrowUp) {
-                this.selection = new ListSelection({ keys: [focussedId] });
+                this.selection = new ListSelection({ keys: [focusedId] });
             }
         }
         this.changeDetector.markForCheck();
