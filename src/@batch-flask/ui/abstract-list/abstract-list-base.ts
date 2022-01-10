@@ -7,6 +7,7 @@ import {
     HostListener,
     Input,
     OnDestroy,
+    OnInit,
     Output,
     ViewChild,
 } from "@angular/core";
@@ -86,7 +87,8 @@ const lastSorting: StringMap<SortingInfo> = {};
  */
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
-export class AbstractListBase extends SelectableList implements OnDestroy {
+export class AbstractListBase extends SelectableList
+implements OnDestroy, OnInit {
     public LoadingStatus = LoadingStatus;
     public SortingStatus = SortingStatus;
 
@@ -144,7 +146,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public get selection() { return super.selection; }
 
     // Aria
-    @HostBinding("attr.tabindex") public readonly tabindex = 0;
     @HostBinding("attr.aria-multiselectable") public ariaMultiSelectable = true;
 
     @Output() public scrollBottom = new EventEmitter();
@@ -175,7 +176,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         private contextmenuService: ContextMenuService,
         private router: Router,
         private breadcrumbService: BreadcrumbService,
-        private elementRef: ElementRef,
+        protected elementRef: ElementRef,
         private contextService: ContextService,
         changeDetection: ChangeDetectorRef
     ) {
@@ -205,6 +206,17 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             }
         });
 
+        this.handleKeyboardFocus = this.handleKeyboardFocus.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+    }
+
+    public ngOnInit(): void {
+        const listContainer = this.getListContainer();
+        listContainer.tabIndex = 0;
+        listContainer.addEventListener("focus", this.handleKeyboardFocus);
+        listContainer.addEventListener("blur", this.handleBlur);
+        listContainer.addEventListener("keydown", this.handleKeyPress);
     }
 
     public ngOnDestroy() {
@@ -214,10 +226,19 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         if (this._keyNavigator) {
             this._keyNavigator.dispose();
         }
+
+        const listContainer = this.getListContainer();
+        listContainer.removeEventListener("focus", this.handleKeyboardFocus);
+        listContainer.removeEventListener("blur", this.handleBlur);
+        listContainer.removeEventListener("keydown", this.handleKeyPress);
     }
 
     public focus() {
         this.elementRef.nativeElement.focus();
+    }
+
+    public focusList() {
+        this.getListContainer().focus();
     }
 
     public updateViewPortItems(items) {
@@ -323,8 +344,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this._clicking = false;
     }
 
-    @HostListener("focus", ["$event"])
-    public handleFocusViaKeyboard(event: FocusEvent) {
+    public handleKeyboardFocus() {
         this.listFocused = true;
         if (!this._clicking) {
             this._pickFocusedItem();
@@ -337,11 +357,8 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
      * When an item is being focused out, check if its because we are focusing another.
      * - If so all good.
      * - Otherwise means we focused out of the list
-     * @param event FocusEvent emitted
-     * @param item Item displayed in the row
      */
-    @HostListener("blur", ["$event"])
-    public handleBlur(_: FocusEvent) {
+    public handleBlur() {
         this.listFocused = false;
         this.contextService.removeContext("list.focused");
         this._keyNavigator.focusColumn(-1);
@@ -353,8 +370,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    @HostListener("keydown", ["$event"])
-    public keyPressed(event: KeyboardEvent) {
+    public handleKeyPress(event: KeyboardEvent) {
         if (event.code === KeyCode.Space || event.code === KeyCode.Enter) {
             this.activateItem(this.focusedItem);
             event.preventDefault();
@@ -479,6 +495,17 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             }
             this.changeDetector.markForCheck();
         }
+    }
+
+    /**
+     * Gets the DOM element representing the list of items. Subcomponents can
+     * override this if their DOM is decorated with other elements that aren't
+     * relevant for list interactions such as navigation.
+     *
+     * @returns An element containing the list of items
+     */
+    protected getListContainer(): HTMLElement {
+        return this.elementRef.nativeElement;
     }
 
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */

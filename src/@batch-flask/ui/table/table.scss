@@ -37,6 +37,10 @@ bl-table {
         display: flex;
         height: 100%;
 
+        &:focus {
+            outline: none;
+        }
+
         > bl-virtual-scroll {
             flex: 1;
             min-height: 0;
