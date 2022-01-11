@@ -169,23 +169,11 @@ bl-table {
 
         outline: none;
 
-        &:focus {
-            color: $hover-bg-color;
-        }
-
         &.sortable {
             cursor: pointer;
 
             .sort-icon {
                 margin-left: 3px;
-            }
-
-            &:hover:not(.sorting) > .sort-icon {
-                color: $hover-bg-color;
-            }
-
-            &:focus:not(.sorting) > .sort-icon {
-                color: $hover-bg-color;
             }
         }
 
