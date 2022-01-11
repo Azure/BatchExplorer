@@ -4,14 +4,14 @@ jobs:
     pool:
       vmImage: ubuntu-18.04
     steps:
-       - template: ./linux/ci.yml
+      - template: ./linux/ci.yml
 
   - job: MacOS
     pool:
       vmImage: macOS-10.15
       demands: xcode
     steps:
-       - template: ./darwin/ci.yml
+      - template: ./darwin/ci.yml
 
   - job: Windows
     pool:
@@ -30,4 +30,4 @@ jobs:
     steps:
       - template: ./win/win-dependencies.yml
       - task: ComponentGovernanceComponentDetection@0
-        displayName: 'Component Detection'
+        displayName: "Component Detection"
