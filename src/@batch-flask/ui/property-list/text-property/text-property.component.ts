@@ -1,6 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
-import { ClipboardService } from "@batch-flask/electron";
-import { exists } from "@batch-flask/utils";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import "./text-property.scss";
 
@@ -19,19 +17,4 @@ export class TextPropertyComponent {
      * If the value should be wrapped when too long
      */
     @Input() public wrap: boolean = false;
-
-    public clipboardDisplayed = false;
-
-    constructor(private changeDetector: ChangeDetectorRef, private clipboard: ClipboardService) {}
-
-    public showClipboard(value: boolean) {
-        this.clipboardDisplayed = value;
-        this.changeDetector.markForCheck();
-    }
-
-    public copyToClipBoard() {
-        if (exists(this.value)) {
-            this.clipboard.writeText(this.value.toString());
-        }
-    }
 }

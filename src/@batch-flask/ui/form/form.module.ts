@@ -7,7 +7,7 @@ import { EditorModule } from "@batch-flask/ui/editor";
 import { SelectModule } from "@batch-flask/ui/select";
 import { ServerErrorModule } from "@batch-flask/ui/server-error";
 import { ButtonsModule } from "../buttons";
-import { CopyableDirective } from "../copyable/copyable.directive";
+import { CopyableModule } from "../copyable";
 import { I18nUIModule } from "../i18n";
 import { ComplexFormComponent } from "./complex-form";
 import { FormFooterComponent } from "./complex-form/footer";
@@ -34,7 +34,6 @@ const modules = [
 // Add subcomponnent not in a module here
 const components = [
     ComplexFormComponent,
-    CopyableDirective,
     ExpandingTextareaComponent,
     FormErrorComponent,
     FormFieldComponent,
@@ -60,6 +59,7 @@ const components = [
     imports: [
         ButtonsModule,
         CommonModule,
+        CopyableModule,
         EditorModule,
         FormsModule,
         I18nUIModule,

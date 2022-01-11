@@ -4,6 +4,7 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 import { EditorModule } from "@batch-flask/ui/editor";
 import { ButtonsModule } from "../buttons";
+import { CopyableModule } from "../copyable";
 import { I18nUIModule } from "../i18n";
 import { BoolPropertyComponent } from "./bool-property";
 import { DatePropertyComponent } from "./date-property";
@@ -49,6 +50,7 @@ const privateComponents = [
     imports: [
         ButtonsModule,
         CommonModule,
+        CopyableModule,
         EditorModule,
         I18nUIModule,
         MaterialModule,
