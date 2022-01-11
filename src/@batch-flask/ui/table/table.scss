@@ -102,6 +102,11 @@ bl-table {
             }
         }
 
+        &.focused.selected {
+            outline: 1px dashed $primary-contrast-color;
+            outline-offset: -2px;
+        }
+
         &.drop-target {
             background: $hover-bg-color;
         }
