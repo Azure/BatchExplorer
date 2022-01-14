@@ -94,17 +94,12 @@ bl-table {
         }
 
         &.selected {
-            background-color: $primary-color-light;
+            background-color: $primary-color;
             color: $card-background;
 
             .checkbox {
                 border-color: $secondary-text;
             }
-        }
-
-        &.focused {
-            outline: 2px dashed $primary-color;
-            outline-offset: -2px;
         }
 
         &.drop-target {
