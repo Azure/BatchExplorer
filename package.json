@@ -136,7 +136,7 @@
     "mini-css-extract-plugin": "^0.5.0",
     "monaco-editor": "^0.19.0",
     "monaco-editor-webpack-plugin": "^1.9.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "nyc": "^14.1.1",
     "prettier": "^2.2.1",
     "proxyquire": "^2.1.3",
