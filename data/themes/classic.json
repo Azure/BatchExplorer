@@ -15,7 +15,7 @@
   "hover-bg": "#d5d5d5",
   "selection": "var(--color-primary)",
   "outline": "#528bff",
-  "border": "#d5d5d5",
+  "border": "#919191",
   "editor": "vs",
   "text": {
     "primary": "#333333",
@@ -49,6 +49,7 @@
     "basic-bg": "#e5e5e5",
     "basic-hover-bg": "#d5d5d5",
     "disabled-text": "#d5d5d5",
+    "focus-text": "var(--color-primary)",
     "disabled-bg": "#ededed"
   },
   "monitorChart": {
@@ -64,7 +65,7 @@
     "rebooting-node-count": "#ff755c"
   },
   "input": {
-    "border": "#d5d5d5",
+    "border": "#919191",
     "focus-border": "var(--color-primary)",
     "placeholder": "var(--color-text-secondary)",
     "text": "var(--color-text-primary)",

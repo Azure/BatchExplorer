@@ -95,6 +95,7 @@ export class ButtonColors extends ThemeElement<ThemeDefinition["button"]> {
     @CssColor("basic-bg") public basicBg: string;
     @CssColor("basic-hover-bg") public basicHoverBg: string;
     @CssColor("disabled-text") public disabledText: string;
+    @CssColor("focus-text") public focusText: string;
     @CssColor("disabled-bg") public disabledBg: string;
 }
 

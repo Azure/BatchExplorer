@@ -7,7 +7,7 @@ import { EditorModule } from "@batch-flask/ui/editor";
 import { SelectModule } from "@batch-flask/ui/select";
 import { ServerErrorModule } from "@batch-flask/ui/server-error";
 import { ButtonsModule } from "../buttons";
-import { CopyableDirective } from "../copyable/copyable.directive";
+import { CopyableModule } from "../copyable";
 import { I18nUIModule } from "../i18n";
 import { ComplexFormComponent } from "./complex-form";
 import { FormFooterComponent } from "./complex-form/footer";
@@ -33,40 +33,40 @@ const modules = [
 
 // Add subcomponnent not in a module here
 const components = [
-    SimpleFormComponent,
     ComplexFormComponent,
-    FormErrorComponent,
-    FormPageComponent,
-    FormSectionComponent,
-    FormMultiPickerComponent,
-    FormPickerComponent,
-    FormPickerItemTemplateDirective,
-    KeyValuePickerComponent,
     ExpandingTextareaComponent,
-    SingleLineTextareaDirective,
-    FormJsonEditorComponent,
-    FormFooterComponent,
-    InputDirective,
+    FormErrorComponent,
     FormFieldComponent,
-    HintComponent,
     FormFieldPrefixDirective,
     FormFieldSuffixDirective,
-    CopyableDirective,
+    FormFooterComponent,
+    FormJsonEditorComponent,
+    FormMultiPickerComponent,
+    FormPageComponent,
+    FormPickerComponent,
+    FormPickerItemTemplateDirective,
+    FormSectionComponent,
+    HintComponent,
+    InputDirective,
+    KeyValuePickerComponent,
+    SimpleFormComponent,
+    SingleLineTextareaDirective
 ];
 
 @NgModule({
     declarations: components,
     exports: [...modules, ...components],
     imports: [
-        I18nUIModule,
-        CommonModule,
         ButtonsModule,
+        CommonModule,
+        CopyableModule,
+        EditorModule,
         FormsModule,
+        I18nUIModule,
         MaterialModule,
         ReactiveFormsModule,
-        SelectModule,
         RouterModule,
-        EditorModule,
+        SelectModule,
         ServerErrorModule,
         ...modules,
     ],

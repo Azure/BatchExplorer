@@ -115,7 +115,8 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         elementRef: ElementRef,
         liveAnnouncer: LiveAnnouncer,
         contextService: ContextService,
-        breadcrumbService: BreadcrumbService) {
+        breadcrumbService: BreadcrumbService
+    ) {
         super(contextmenuService, router, breadcrumbService, elementRef, contextService, changeDetection);
 
         this.columnManager = new TableColumnManager(this.dataPresenter, liveAnnouncer);
@@ -173,5 +174,9 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.isDraging = 0;
 
         this.dropOnRow.emit({ key: item.id, data: event.dataTransfer! });
+    }
+
+    protected getListContainer(): HTMLElement {
+        return this.elementRef.nativeElement.querySelector(".table-body");
     }
 }

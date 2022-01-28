@@ -14,6 +14,7 @@
         <be-tenant-card
             *ngFor="let setting of tenantSettings.value; trackBy: trackByIndex"
             [authorization]="setting"
+            tabindex="0"
             role="listitem"
             (refreshTenant)="refreshTenant($event)">
         </be-tenant-card>

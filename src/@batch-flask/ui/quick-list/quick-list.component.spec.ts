@@ -99,10 +99,6 @@ describe("QuickListComponent", () => {
         expect(de.attributes["aria-multiselectable"]).toEqual("true");
     });
 
-    it("has tabindex", () => {
-        expect(de.attributes["tabindex"]).toEqual("0");
-    });
-
     it("sets aria-setsize on each of the items", () => {
         for (const item of items) {
             expect(item.attributes["aria-setsize"]).toEqual("5");

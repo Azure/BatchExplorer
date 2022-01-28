@@ -120,6 +120,7 @@ export interface ThemeDefinition {
         "basic-bg": string;
         "basic-hover-bg": string;
         "disabled-text": string;
+        "focus-text": string;
         "disabled-bg": string;
     };
 

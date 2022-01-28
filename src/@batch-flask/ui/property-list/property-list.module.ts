@@ -4,6 +4,7 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 import { EditorModule } from "@batch-flask/ui/editor";
 import { ButtonsModule } from "../buttons";
+import { CopyableModule } from "../copyable";
 import { I18nUIModule } from "../i18n";
 import { BoolPropertyComponent } from "./bool-property";
 import { DatePropertyComponent } from "./date-property";
@@ -24,19 +25,19 @@ import { TextPropertyComponent } from "./text-property";
 
 const publicComponents = [
     BoolPropertyComponent,
+    DatePropertyComponent,
+    EntityConfigurationComponent,
     LinkPropertyComponent,
-    PropertyListComponent,
+    PropertyContentComponent,
+    PropertyFieldComponent,
     PropertyGroupComponent,
-    TextPropertyComponent,
+    PropertyListComponent,
     TablePropertyCellComponent,
+    TablePropertyCellPlainComponent,
     TablePropertyComponent,
     TablePropertyHeaderComponent,
     TablePropertyRowComponent,
-    TablePropertyCellPlainComponent,
-    EntityConfigurationComponent,
-    DatePropertyComponent,
-    PropertyFieldComponent,
-    PropertyContentComponent,
+    TextPropertyComponent,
 ];
 
 const privateComponents = [
@@ -46,7 +47,15 @@ const privateComponents = [
     declarations: [...publicComponents, ...privateComponents],
     entryComponents: [],
     exports: publicComponents,
-    imports: [I18nUIModule, ButtonsModule, CommonModule, MaterialModule, RouterModule, EditorModule],
+    imports: [
+        ButtonsModule,
+        CommonModule,
+        CopyableModule,
+        EditorModule,
+        I18nUIModule,
+        MaterialModule,
+        RouterModule
+    ],
 })
 
 export class PropertyListModule {

@@ -1,5 +1,6 @@
 import { Directive, ElementRef, HostListener } from "@angular/core";
 import { I18nService } from "@batch-flask/core";
+import { KeyCode } from "@batch-flask/core/keys";
 import { ClipboardService } from "@batch-flask/electron";
 
 import "./copyable.scss";
@@ -35,14 +36,24 @@ export class CopyableDirective {
         container.appendChild(this.button);
     }
 
+    @HostListener("focus")
     @HostListener("mouseenter")
     onMouseEnter() {
         this.button.style.display = null;
     }
 
+    @HostListener("blur")
     @HostListener("mouseleave")
     onMouseLeave() {
         this.button.style.display = "none";
+    }
+
+    @HostListener("keydown", ["$event"])
+    onKeyPress(event: KeyboardEvent) {
+        if (event.key === KeyCode.Enter) {
+            event.preventDefault();
+            this.copyToClipboard();
+        }
     }
 
     copyToClipboard() {

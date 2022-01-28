@@ -63,7 +63,7 @@ bl-button {
             color: $primary-text;
 
             &:hover, &:focus {
-                color: $button-disabled-text-color;
+                color: $button-focus-text-color;
             }
         }
 
