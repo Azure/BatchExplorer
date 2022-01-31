@@ -17,7 +17,9 @@ describe("Bundled application is starting correctly", () => {
 
         await app.start();
         // eslint-disable-next-line no-console
-        console.log("User path: ", await app.electron.remote.app.getPath("userData"));
+        // TODO: Why did the typings break in spectron 13?
+        const electron = app.electron as unknown as any;
+        console.log("User path: ", await electron.remote.app.getPath("userData"));
     });
 
     afterEach(() => {
