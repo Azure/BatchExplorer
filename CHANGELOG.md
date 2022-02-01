@@ -4,21 +4,20 @@
 
 ### Features
 
+* New Authentication Settings page allows users to select AAD tenants [\#2161](https://github.com/Azure/BatchExplorer/issues/2161),[\#2380](https://github.com/Azure/BatchExplorer/issues/2380)
 * Update Naming of Low Priority to Spot/Low Priority  [\#2417](https://github.com/Azure/BatchExplorer/issues/2417)
 * Update to call List Supported Virtual Machine and Cloud Service SKUs [\#2416](https://github.com/Azure/BatchExplorer/issues/2416)
-* Add primary download button based on OS for Batch Explorer website [\#2413](https://github.com/Azure/BatchExplorer/issues/2413)
-* Enable logging with Node tests [\#2394](https://github.com/Azure/BatchExplorer/issues/2394)
-* Authentication Failure with Multi-Tenant Configured Account [\#2380](https://github.com/Azure/BatchExplorer/issues/2380)
-* Issues with Authentication with Multi-Tenant configured accounts [\#2161](https://github.com/Azure/BatchExplorer/issues/2161)
+* Add persistent cache to prevent users from having to log in on every app start [\#2412](https://github.com/Azure/BatchExplorer/issues/2412)
 
 ### Bugs
 
 * Unable to save passwordless certificate [\#2420](https://github.com/Azure/BatchExplorer/issues/2420)
-* January 2022 Accessibility Milestone [\#2419](https://github.com/Azure/BatchExplorer/issues/2419)
-* Error when running in dev mode [\#2418](https://github.com/Azure/BatchExplorer/issues/2418)
-* October 2021 Accessibility Milestone  [\#2415](https://github.com/Azure/BatchExplorer/issues/2415)
-* Accessibility Milestone for Batch Explorer home page [\#2414](https://github.com/Azure/BatchExplorer/issues/2414)
-* Add persistent cache to avoids making users log in every time they start the app [\#2412](https://github.com/Azure/BatchExplorer/issues/2412)
+* Accessibility fixes and improvements [\#2414](https://github.com/Azure/BatchExplorer/issues/2414),[\#2415](https://github.com/Azure/BatchExplorer/issues/2415),[\#2419](https://github.com/Azure/BatchExplorer/issues/2419)
+
+### Other
+
+* Enable logging with Node tests [\#2394](https://github.com/Azure/BatchExplorer/issues/2394)
+* Add primary download button based on OS for Batch Explorer website [\#2413](https://github.com/Azure/BatchExplorer/issues/2413)
 
 # 2.11.0
 
