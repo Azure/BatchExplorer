@@ -133,6 +133,21 @@
       <trans-unit id="add-task-form.title">
         <source>Add task</source>
       </trans-unit>
+      <trans-unit id="auth-service">
+        <source/>
+      </trans-unit>
+      <trans-unit id="auth-service.activate-tenant">
+        <source>Activate tenant to authorize</source>
+      </trans-unit>
+      <trans-unit id="auth-service.tenant-error">
+        <source>Cannot access resources for tenant {tenantName}</source>
+      </trans-unit>
+      <trans-unit id="auth-settings">
+        <source/>
+      </trans-unit>
+      <trans-unit id="auth-settings.title">
+        <source>Authentication Settings</source>
+      </trans-unit>
       <trans-unit id="batch-account-create">
         <source/>
       </trans-unit>
@@ -186,6 +201,12 @@
       </trans-unit>
       <trans-unit id="batch-account-create.subscription.required">
         <source>Subscription is a required field</source>
+      </trans-unit>
+      <trans-unit id="be-copyable">
+        <source/>
+      </trans-unit>
+      <trans-unit id="be-copyable.copied">
+        <source>Copied</source>
       </trans-unit>
       <trans-unit id="blob-container-picker">
         <source/>
@@ -836,7 +857,7 @@
         <source/>
       </trans-unit>
       <trans-unit id="pool-scale-picker.targetLowPriorityNodes.label">
-        <source>Low priority nodes</source>
+        <source>Spot/low-priority nodes</source>
       </trans-unit>
       <trans-unit id="pool-scale-picker.type">
         <source/>
@@ -855,6 +876,9 @@
       </trans-unit>
       <trans-unit id="profile-button.about">
         <source>About</source>
+      </trans-unit>
+      <trans-unit id="profile-button.authentication">
+        <source>Authentication</source>
       </trans-unit>
       <trans-unit id="profile-button.keybindings">
         <source>Keybindings</source>
@@ -1230,6 +1254,63 @@
       </trans-unit>
       <trans-unit id="task-node-info.poolNotFound">
         <source>Pool doesn't exist anymore</source>
+      </trans-unit>
+      <trans-unit id="tenant-card">
+        <source/>
+      </trans-unit>
+      <trans-unit id="tenant-card.activate">
+        <source>Activate tenant</source>
+      </trans-unit>
+      <trans-unit id="tenant-card.country-code">
+        <source>Country Code</source>
+      </trans-unit>
+      <trans-unit id="tenant-card.deactivate">
+        <source>Deactivate tenant</source>
+      </trans-unit>
+      <trans-unit id="tenant-card.default-domain">
+        <source>Default Domain</source>
+      </trans-unit>
+      <trans-unit id="tenant-card.home-tenant">
+        <source>Home tenant</source>
+      </trans-unit>
+      <trans-unit id="tenant-card.logo-alt">
+        <source>Logo for {name}</source>
+      </trans-unit>
+      <trans-unit id="tenant-card.reauthenticate-button">
+        <source>Reauthenticate</source>
+      </trans-unit>
+      <trans-unit id="tenant-card.status">
+        <source>Tenant status</source>
+      </trans-unit>
+      <trans-unit id="tenant-card.status-authorized">
+        <source>Authorized</source>
+      </trans-unit>
+      <trans-unit id="tenant-card.status-failed">
+        <source>Failed</source>
+      </trans-unit>
+      <trans-unit id="tenant-card.status-unknown">
+        <source>Unknown</source>
+      </trans-unit>
+      <trans-unit id="tenant-error-service">
+        <source/>
+      </trans-unit>
+      <trans-unit id="tenant-error-service.error-action">
+        <source>Configure authentication settings</source>
+      </trans-unit>
+      <trans-unit id="tenant-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="tenant-picker.microcopy">
+        <source>Select which Azure AD tenants associated with the user credentials to log into for Azure Batch workflows. The home tenant cannot be deactivated.</source>
+      </trans-unit>
+      <trans-unit id="tenant-picker.refresh">
+        <source>Refresh tenants</source>
+      </trans-unit>
+      <trans-unit id="tenant-picker.saved">
+        <source>Saved</source>
+      </trans-unit>
+      <trans-unit id="tenant-picker.title">
+        <source>Azure Active Directory Tenants</source>
       </trans-unit>
       <trans-unit id="time-range-picker">
         <source/>
