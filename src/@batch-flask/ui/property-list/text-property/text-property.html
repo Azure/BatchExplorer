@@ -1,9 +1,11 @@
-<bl-property-field (mouseenter)="showClipboard(true)" (mouseleave)="showClipboard(false)">
+<bl-property-field>
     <div propertyLabel>{{label}}</div>
-    <bl-property-content class="property-content-box" [wrap]="wrap" [title]="value">
+    <bl-property-content
+        class="property-content-box"
+        [wrap]="wrap"
+        [title]="value"
+        beCopyable
+    >
         {{value}}
     </bl-property-content>
-    <div propertyClipboard [hidden]="!clipboardDisplayed" class="clipboard" *ngIf="copyable">
-        <i class="fa fa-clipboard" (click)="copyToClipBoard()"></i>
-    </div>
 </bl-property-field>

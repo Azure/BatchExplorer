@@ -41,6 +41,16 @@ bl-button {
         display: inline-block;
     }
 
+    &[type="wide"] {
+        &.focus-outline.focus-visible, &.focus-visible {
+            outline-color: rgb(39, 185, 211);
+            outline-width: 2.5px;
+            outline-style: solid;
+            outline-offset: -1px;
+            opacity: 1;
+        }
+    }
+
     &[type="plain"] {
         &[color="primary"] {
             color: $primary-color;
@@ -53,7 +63,7 @@ bl-button {
             color: $primary-text;
 
             &:hover, &:focus {
-                color: $button-disabled-text-color;
+                color: $button-focus-text-color;
             }
         }
 

@@ -1,0 +1,12 @@
+tenant-card:
+  country-code: Country Code
+  default-domain: Default Domain
+  status: Tenant status
+  status-unknown: Unknown
+  status-authorized: Authorized
+  status-failed: Failed
+  home-tenant: Home tenant
+  reauthenticate-button: Reauthenticate
+  activate: Activate tenant
+  deactivate: Deactivate tenant
+  logo-alt: Logo for {name}

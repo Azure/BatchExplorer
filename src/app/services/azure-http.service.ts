@@ -40,18 +40,23 @@ export class AzureHttpService {
         method: string,
         subscriptionOrTenant: SubscriptionOrTenant,
         uri: string,
-        options: HttpRequestOptions): Observable<any> {
-        return this.auth.accessTokenData(this._getTenantId(subscriptionOrTenant, uri)).pipe(
-            switchMap((accessToken) => {
-                options = this._setupRequestOptions(uri, options, accessToken);
-                return this.http.request(method, this._computeUrl(uri), options).pipe(
+        options: HttpRequestOptions
+    ): Observable<any> {
+        return this.auth.accessTokenData(
+            this._getTenantId(subscriptionOrTenant, uri)
+        ).pipe(
+            catchError(error => throwError(error)),
+            switchMap(accessToken =>
+                this.http.request(method, this._computeUrl(uri),
+                    this._setupRequestOptions(uri, options, accessToken)
+                ).pipe(
                     retryWhen(attempts => this._retryWhen(attempts)),
                     catchError((error) => {
                         const err = ServerError.fromARM(error);
                         return throwError(err);
                     }),
-                );
-            }),
+                )
+            ),
             share(),
         );
 
@@ -104,7 +109,7 @@ export class AzureHttpService {
         if (!(options.headers instanceof HttpHeaders)) {
             options.headers = new HttpHeaders(options.headers);
         }
-        options.headers = options.headers.set("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
+        options.headers = options.headers.set("Authorization", `${accessToken.tokenType} ${accessToken.accessToken}`);
 
         if (!(options.params instanceof HttpParams)) {
             options.params = new HttpParams({ fromObject: options.params });

@@ -1,5 +1,7 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { BasicEntityGetter, DataCache, DataCacheTracker, EntityView, UserSpecificDataStore } from "@batch-flask/core";
+import { Router } from "@angular/router";
+import { BasicEntityGetter, DataCache, DataCacheTracker, EntityView, I18nService, UserSpecificDataStore } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui";
 import {
     AccountKeys, ArmBatchAccount, BatchAccount, LOCAL_BATCH_ACCOUNT_PREFIX,
 } from "app/models";
@@ -56,7 +58,11 @@ export class BatchAccountService implements OnDestroy {
         private localBatchAccountService: LocalBatchAccountService,
         private userSpecificStore: UserSpecificDataStore,
         private azure: AzureHttpService,
-        private subscriptionService: SubscriptionService) {
+        private subscriptionService: SubscriptionService,
+        private notificationService: NotificationService,
+        private router: Router,
+        private i18n: I18nService
+    ) {
         this._getter = new BasicEntityGetter<BatchAccount, { id: string }>(Object as any, {
             cache: () => this._cache,
             supplyData: (params) => this._fetchAccount(params.id),
@@ -131,6 +137,15 @@ export class BatchAccountService implements OnDestroy {
             localStorage.removeItem(Constants.localStorageKey.lastStorageAccount);
         }
         this.refresh();
+    }
+
+    public loadSubscriptionsAndAccounts(): Observable<any> {
+        const obs = this.subscriptionService.load().pipe(
+            switchMap(() => this.load()),
+            shareReplay(1)
+        );
+        obs.subscribe({ next: tenantSubs => tenantSubs });
+        return obs;
     }
 
     /**

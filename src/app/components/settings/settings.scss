@@ -15,7 +15,7 @@ bl-settings {
         display: flex;
         align-items: center;
 
-        > h1 {
+        > h1, > h2 {
             flex: 1;
 
             &:not(.focus-visible) {

@@ -2,11 +2,11 @@ variables:
   locdir: $(Build.ArtifactStagingDirectory)/BatchExplorer
 
 pool:
-  vmImage: ubuntu-16.04
+  vmImage: ubuntu-20.04
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '12.18.x'
+      versionSpec: '16.x.x'
 
   - script: npm ci
     displayName: Install dependencies

@@ -5,7 +5,7 @@ import { UpdateStatus } from "./base";
 
 const mock = proxyquire.noCallThru();
 
-describe("AutoUdpateMainService", () => {
+describe("AutoUpdateMainService", () => {
     let service: AutoUpdateMainService;
     let autoUpdaterSpy;
     let status;
@@ -24,7 +24,7 @@ describe("AutoUdpateMainService", () => {
 
         const { AutoUpdateMainService } = mock("./auto-update-main.service", {
             "electron-updater": {
-                autoUpdater: autoUpdaterSpy,
+                autoUpdater: autoUpdaterSpy
             },
         });
 

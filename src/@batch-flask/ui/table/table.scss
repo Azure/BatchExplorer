@@ -37,6 +37,10 @@ bl-table {
         display: flex;
         height: 100%;
 
+        &:focus {
+            outline: none;
+        }
+
         > bl-virtual-scroll {
             flex: 1;
             min-height: 0;
@@ -90,7 +94,7 @@ bl-table {
         }
 
         &.selected {
-            background-color: $primary-color-light;
+            background-color: $primary-color;
             color: $card-background;
 
             .checkbox {
@@ -98,8 +102,8 @@ bl-table {
             }
         }
 
-        &.focused {
-            outline: 2px dashed $primary-color;
+        &.focused.selected {
+            outline: 1px dashed $primary-contrast-color;
             outline-offset: -2px;
         }
 
@@ -165,23 +169,11 @@ bl-table {
 
         outline: none;
 
-        &:focus {
-            color: $hover-bg-color;
-        }
-
         &.sortable {
             cursor: pointer;
 
             .sort-icon {
                 margin-left: 3px;
-            }
-
-            &:hover:not(.sorting) > .sort-icon {
-                color: $hover-bg-color;
-            }
-
-            &:focus:not(.sorting) > .sort-icon {
-                color: $hover-bg-color;
             }
         }
 

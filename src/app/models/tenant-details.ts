@@ -20,4 +20,5 @@ export class TenantDetails extends Record<TenantDetailsAttributes> {
     @Prop() public tenantCategory: string;
     @Prop() public tenantId: string;
     @Prop() public tenantType: string;
+    @Prop() public homeTenantId: string;
 }

@@ -1,5 +1,6 @@
 import { AuthenticationResult, ClientApplication } from "@azure/msal-node";
-import { AuthorizeError } from "client/core/aad";
+import { AzurePublic } from "client/azure-environment";
+import { AuthorizeError, AuthorizeResponseError } from "client/core/aad";
 import { AADConfig } from "client/core/aad/aad-config";
 import AuthProvider from "client/core/aad/auth-provider";
 
@@ -8,27 +9,33 @@ export class MockAuthProvider extends AuthProvider {
     public fakeConfig: AADConfig;
     public fakeError: Partial<AuthorizeError>;
     constructor(app: any, config: AADConfig) {
+        instrumentForAuth(app);
         super(app, config);
         this.fakeConfig = config;
-        this._getClient = jasmine.createSpy("_getClient").and.returnValue(
+        spyOn<any>(this, "_getClient").and.returnValue(
             new MockClientApplication(this)
         );
+        instrumentAuthProvider(this);
     }
 }
 export class MockClientApplication extends ClientApplication {
-    constructor(public fakeAuthProvider: MockAuthProvider) {
+    constructor(public fakeAuthProvider?: MockAuthProvider) {
         super({
             auth: {
-                clientId: fakeAuthProvider.fakeConfig.clientId
+                clientId: fakeAuthProvider?.fakeConfig.clientId
             }
         });
     }
 
     public getAuthCodeUrl(request) {
         if (request?.prompt === "none") {
-            throw "No silent auth";
+            throw new AuthorizeError({
+                error: "fakeError",
+                error_description: "fakeErrorDescription",
+                error_code: ""
+            });
         }
-        return Promise.resolve(this.fakeAuthProvider.fakeConfig.redirectUri);
+        return Promise.resolve(this.fakeAuthProvider?.fakeConfig.redirectUri);
     }
 
     public acquireTokenByCode() {
@@ -39,6 +46,25 @@ export class MockClientApplication extends ClientApplication {
             this.fakeAuthProvider.fakeToken as AuthenticationResult);
     }
 
+    public async acquireTokenSilent() {
+        return null;
+    }
+}
+
+export class MockAuthorizeError extends AuthorizeError {
+    static responseErrorPrototype: AuthorizeResponseError = {
+        error: "error",
+        error_description: "description"
+    };
+
+    constructor(options: Partial<AuthorizeError>) {
+        const error = Object.assign(MockAuthorizeError.responseErrorPrototype,
+            { error: options.error });
+        super(error);
+        for (const opt in options) {
+            this[opt] = options[opt];
+        }
+    }
 }
 
 export const createMockClientApplication = () => {
@@ -50,3 +76,22 @@ export const createMockClientApplication = () => {
     });
     return new MockClientApplication(fakeAuthProvider);
 };
+
+export const instrumentForAuth = app => {
+    app.injector = {
+        get: () => jasmine.createSpyObj("DataStore", ["getItem", "setItem"])
+    };
+    app.properties = { azureEnvironment: AzurePublic }
+}
+
+export const instrumentAuthProvider = (authProvider: AuthProvider) => {
+    const tenants = {};
+    spyOn<any>(authProvider, "_getAccount").and.callFake(tenantId => {
+        if (tenantId in tenants) {
+            return new MockClientApplication();
+        } else {
+            tenants[tenantId] = true;
+            throw new Error("no account");
+        }
+    });
+}

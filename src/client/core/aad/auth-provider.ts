@@ -1,43 +1,71 @@
 import {
     AccountInfo,
     AuthenticationResult,
-    ClientApplication,
     PublicClientApplication
 } from "@azure/msal-node";
+import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "..";
+import { SecureDataStore } from "../secure-data-store";
 import { AADConfig } from "./aad-config";
-import { defaultTenant } from "./aad-constants";
+import { defaultTenant, unretryableAuthCodeErrors, TenantPlaceholders } from "./aad-constants";
+import { AuthorizeError } from "./authentication";
+import MSALCachePlugin from "./msal-cache-plugin";
 
 const MSAL_SCOPES = ["user_impersonation"];
 
 export type AuthorizationResult = AuthenticationResult;
 
+export type AuthCodeCallback =
+    (url: string, tenant: string, silent?: boolean) => Promise<string>;
+
 /**
  * Provides authentication services
  */
 export default class AuthProvider {
-    private _clients: StringMap<ClientApplication> = {};
+    private _clients: StringMap<PublicClientApplication> = {};
     private _accounts: StringMap<AccountInfo> = {};
+    private _cachePlugin: MSALCachePlugin;
+    private _logoutPromise?: Promise<void>;
+    private _primaryClient?: PublicClientApplication;
+
+    // Used for reauthentication to associated tenants
+    private _primaryUsername?: string;
 
     constructor(
         protected app: BatchExplorerApplication,
         protected config: AADConfig
-    ) {}
+    ) {
+        this._cachePlugin =
+            new MSALCachePlugin(app.injector.get(SecureDataStore));
+    }
 
     /**
-     * Retrieves an access token
+     * Retrieves an access token for a tenant and resource
      *
      * Will attempt to retrieve the token silently if an account exists in the
      * cache, but will fall back to interactive access token retrieval.
      *
+     * @param resourceURI: The resource URI for which to get an access token
+     * @param tenantId: The tenant from which to get the token (defaults to the
+     *     default tenant)
      * @param authCodeCallback Handles interactive authentication code retrieval
      */
     public async getToken(options: {
         resourceURI: string,
         tenantId?: string,
-        authCodeCallback: (url: string, silent?: boolean) => Promise<string>
+        forceRefresh?: boolean,
+        authCodeCallback: AuthCodeCallback
     }): Promise<AuthorizationResult> {
-        const { resourceURI, tenantId = defaultTenant, authCodeCallback } = options;
+        const {
+            resourceURI,
+            tenantId = defaultTenant,
+            forceRefresh = false,
+            authCodeCallback
+        } = options;
+
+        if (this._logoutPromise) {
+            await this._logoutPromise;
+        }
 
         /**
          * KLUDGE: msal.js does not handle well access tokens across multiple
@@ -49,12 +77,21 @@ export default class AuthProvider {
         const client = this._getClient(tenantId);
 
         const authRequest = this._authRequest(resourceURI, tenantId);
-        if (this._accounts[tenantId]) {
+        try {
+            log.debug(`[${tenantId}] Trying to silently acquire token`);
+            const account = await this._getAccount(tenantId);
+
+            if (!account) {
+                throw new Error(
+                    "[internal] No account for silent token acquisition"
+                );
+            }
             const result = await client.acquireTokenSilent({
-                ...authRequest, account: this._accounts[tenantId]
+                ...authRequest, account, forceRefresh
             });
             return result;
-        } else {
+        } catch (silentTokenException) {
+            log.debug(`[${tenantId}] Trying silent auth code flow (${silentTokenException})`);
             let url, code;
 
             try {
@@ -62,46 +99,129 @@ export default class AuthProvider {
                 url = await client.getAuthCodeUrl(
                     { ...authRequest, prompt: "none" }
                 );
-                code = await authCodeCallback(url, true);
-            } catch (e) {
-                url = await client.getAuthCodeUrl(authRequest);
-                code = await authCodeCallback(url);
+                code = await authCodeCallback(url, tenantId, true);
+            } catch (silentAuthException) {
+                if (!this._isTenantAuthRetryable(silentAuthException)) {
+                    log.warn(`Fatal authentication exception for ${tenantId}:` +
+                        ` ${silentAuthException} (non-retryable error code ` +
+                        silentAuthException.errorCodes.join(";") + `)`);
+                    throw silentAuthException;
+                }
+                log.debug(
+                    `[${tenantId}] Trying interactive auth code flow (${silentAuthException})`);
+                url = await client.getAuthCodeUrl({
+                    ...authRequest,
+                    domainHint: tenantId,
+                    loginHint: this._primaryUsername
+                });
+
+                code = await authCodeCallback(url, tenantId);
             }
 
             const result: AuthorizationResult =
                 await client.acquireTokenByCode({ ...authRequest, code });
-            if (result) {
-                this._accounts[tenantId] = result.account;
-            }
+            this._processAccountInfo(result.account);
             return result;
         }
     }
 
-    public logout(): void {
-        this._removeAccount();
+    public async logout(tenantId?: string): Promise<void> {
+        this._logoutPromise = this._removeAccounts(tenantId);
+        return this._logoutPromise;
     }
 
-    protected _getClient(tenantId: string): ClientApplication {
+    private async _removeAccounts(tenantId?: string): Promise<void> {
+        const cache = this._primaryClient?.getTokenCache();
+        if (!cache) {
+            return;
+        }
+        const accounts = await cache.getAllAccounts();
+        if (tenantId) {
+            for (const account of accounts) {
+                if (account.tenantId === tenantId) {
+                    await cache.removeAccount(account);
+                    break;
+                }
+            }
+            delete this._accounts[tenantId];
+        } else {
+            for (const account of accounts) {
+                await cache.removeAccount(account);
+            }
+            this._accounts = {};
+            this._clients = {};
+            this._primaryClient = undefined;
+            this._primaryUsername = undefined;
+        }
+    }
+
+    protected _getClient(tenantId: string): PublicClientApplication {
         if (tenantId in this._clients) {
             return this._clients[tenantId];
         }
-        return this._clients[tenantId] = new PublicClientApplication({
+        const client = this._createClient(tenantId);
+        if (!this._primaryClient) {
+            this._primaryClient = client;
+        }
+        this._clients[tenantId] = client;
+        return client;
+    }
+
+    private _createClient(tenantId: string): PublicClientApplication {
+        return  new PublicClientApplication({
             auth: {
                 clientId: this.config.clientId,
                 authority:
                     `${this.app.properties.azureEnvironment.aadUrl}${tenantId}/`
+            },
+            cache: {
+                cachePlugin: this._cachePlugin
             }
         });
     }
 
-    private async _removeAccount(): Promise<void> {
-        for (const tenantId in this._clients) {
-            if (this._accounts[tenantId]) {
-                const cache = this._clients[tenantId].getTokenCache();
-                cache.removeAccount(this._accounts[tenantId]);
-            }
-            delete this._accounts[tenantId];
+    private async _getAccount(tenantId: string): Promise<AccountInfo> {
+        if (tenantId in this._accounts) {
+            return this._accounts[tenantId];
         }
+        const cache = this._clients[tenantId].getTokenCache();
+        const accounts: AccountInfo[] = await cache.getAllAccounts();
+        let homeAccountId = null;
+        for (const account of accounts) {
+            if (account.tenantId === tenantId) {
+                return this._accounts[tenantId] = account;
+            } else if (!homeAccountId) {
+                homeAccountId = account.homeAccountId;
+            }
+        }
+
+        /* SPECIAL CASE: If the tenant is one of the tenant placeholders (e.g.,
+         * "common"), fallback to the home tenant account, since the tenant in
+         * the account dictionary are always resolved IDs.
+         */
+        if (tenantId in TenantPlaceholders) {
+            return this._accounts[tenantId] =
+                await cache.getAccountByHomeId(homeAccountId);
+        }
+
+        throw new Error(
+            `Unable to find a valid AAD account for tenant ${tenantId}`
+        );
+    }
+
+    private _processAccountInfo(account: AccountInfo) {
+        if (!this._primaryUsername) {
+            this._primaryUsername = account.username;
+        }
+    }
+
+    private _isTenantAuthRetryable(error: AuthorizeError) {
+        for (const code of error.errorCodes) {
+            if (unretryableAuthCodeErrors.includes(code)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private _getScopes(resourceURI: string): string[] {

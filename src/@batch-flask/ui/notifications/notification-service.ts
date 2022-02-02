@@ -25,11 +25,13 @@ export class NotificationService {
         level: NotificationLevel,
         title: string,
         message: string,
-        config: NotificationConfig = {}): Notification {
-
+        config: NotificationConfig = {}
+    ): Notification {
         const notification = new Notification(level, title, message, config);
         this._notifications.next(this._notifications.getValue().push(notification));
-        this._registerForDismiss(notification);
+        if (config.autoDismiss > 0) {
+            this._registerForDismiss(notification);
+        }
         return notification;
     }
 

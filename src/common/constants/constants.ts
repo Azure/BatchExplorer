@@ -206,6 +206,7 @@ export const AAD = {
 export const IpcEvent = {
     AAD: {
         accessTokenData: "AAD_ACCESS_TOKEN_DATA",
+        clearTenantAuth: "AAD_CLEAR_TENANT_AUTH"
     },
     launchApplication: "LAUNCH_APPLICATION",
     logoutAndLogin: "LOGOUT_AND_LOGIN",
