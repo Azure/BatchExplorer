@@ -1,9 +1,9 @@
 # These owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence,
-# they will be requested for review when someone opens a 
+# they will be requested for review when someone opens a
 # pull request.
 
-*       @cRui861  @dpwatrous  @gingi  @zfengms  @paterasMSFT
+*       @cRui861  @dpwatrous  @gingi  @zfengms  @paterasMSFT  @seth-barshay  @wiboris
 
 # Builds
-/.vsts/ @bgklein  @cRui861  @dpwatrous
+/.vsts/ @cRui861  @dpwatrous  @gingi  @zfengms  @paterasMSFT  @seth-barshay  @wiboris
