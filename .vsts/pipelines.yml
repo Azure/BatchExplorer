@@ -23,6 +23,8 @@ jobs:
       name: Azure-Pipelines-EO-Batch-Explorer
       demands:
         - ImageOverride -equals BatchExplorerBuildImage-Windows
+    variables:
+      Packaging.EnableSBOMSigning: true
     steps:
       - template: ./win/ci.yml
 
