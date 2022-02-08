@@ -31,6 +31,8 @@ steps:
   - script: npm run lint
     displayName: Lint
 
+  - template: ../common/generate-sbom.yml
+
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: linux

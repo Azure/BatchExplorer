@@ -5,6 +5,7 @@ steps:
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run build-and-pack
     displayName: Build and pack
+  - template: ../common/generate-sbom.yml
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: darwin

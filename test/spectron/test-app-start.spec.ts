@@ -28,17 +28,20 @@ describe("Bundled application is starting correctly", () => {
         }
     });
 
-    it("Show the splash screen, auth window then login", async () => {
+    it("Show the splash screen, auth window, then login", async () => {
         await delay(2_000);
 
         // Splash screen + Auth window + Main window
-        expect(await app.client.getWindowCount()).toEqual(3);
+        expect(await app.client.getWindowCount()).toEqual(3,
+            "should have had 3 windows");
 
         await switchToWindow(app, WindowType.main);
-        expect(await app.browserWindow.isVisible()).toBe(false);
+        expect(await app.browserWindow.isVisible()).toBe(false,
+            "browser window shouldn't be visible");
 
         await switchToWindow(app, WindowType.splash);
-        expect(await app.browserWindow.isVisible()).toBe(true);
+        expect(await app.browserWindow.isVisible()).toBe(true,
+            "browser window should be visible");
         expect(await app.browserWindow.getBounds()).toEqual(jasmine.objectContaining({
             width: 340,
             height: 340,
@@ -52,7 +55,7 @@ describe("Bundled application is starting correctly", () => {
         expect(await app.browserWindow.getBounds()).toEqual(jasmine.objectContaining({
             width: 800,
             height: 700,
-        }));
+        }), "browser window should be 800x700");
 
         await signIn(app.client);
         await app.client.waitUntil(async () => {
@@ -61,7 +64,8 @@ describe("Bundled application is starting correctly", () => {
 
         await switchToWindow(app, WindowType.main);
 
-        expect(await app.browserWindow.isVisible()).toBe(true);
+        expect(await app.browserWindow.isVisible()).toBe(true,
+            "browser window should be visible");
         expect(await app.browserWindow.getTitle()).toEqual("Batch Explorer");
         await app.client.waitUntilTextExists("bl-account-list .quick-list-row-title", "0prodtest", 60_000);
 
@@ -132,7 +136,7 @@ async function switchToWindow(app: Application, type: WindowType) {
         }
     }
     throw new Error(`Could not find window ${type}`);
-    }
+}
 
 function windowMatcher(type: WindowType) {
     switch (type) {
