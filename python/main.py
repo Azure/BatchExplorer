@@ -1,6 +1,7 @@
 # """
 #     Main module
 # """
+import asyncio
 import logging
 import signal
 import sys
@@ -13,7 +14,7 @@ def setup_logging():
     logging.basicConfig(format='%(message)s', level="INFO")
 
 
-def run():
+async def main():
     """
         Main function of the app that start the server
     """
@@ -24,9 +25,9 @@ def run():
         port = int(sys.argv[1])
 
     ws_server = server.websocket_server.WebsocketServer(port)
-    ws_server.run_forever()
+    await ws_server.run_forever()
 
 
 
 if __name__ == "__main__":
-    run()
+    asyncio.run(main())

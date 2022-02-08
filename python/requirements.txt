@@ -1,5 +1,5 @@
-websockets==9.1
+websockets==10.1
 pylint==2.3.0
 azure-batch-extensions==7.0.0
-pyinstaller==4.8
+pyinstaller==4.9
 azure-batch==8.0.0
