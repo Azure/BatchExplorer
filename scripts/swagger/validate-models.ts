@@ -61,7 +61,7 @@ for (const mapping of nameMapping) {
 }
 
 async function getSpecs() {
-    const baseUrl = `https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/batch`;
+    const baseUrl = `https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/batch`;
     const url = `${baseUrl}/data-plane/Microsoft.Batch/stable/${dataPlaneVersion}/BatchService.json`;
     const response = await fetch(url);
     return response.json();
