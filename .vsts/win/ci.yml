@@ -8,10 +8,10 @@ steps:
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
-      $env:SPECTRON_AAD_USER_EMAIL = "$(uiTestingAccountEmail)"
-      $env:SPECTRON_AAD_USER_PASSWORD = "$(uiTestingAccountPassword)"
-      npm run spectron
-    displayName: Running spectron
+      $env:BE_TEST_AAD_USER_EMAIL = "$(uiTestingAccountEmail)"
+      $env:BE_TEST_AAD_USER_PASSWORD = "$(uiTestingAccountPassword)"
+      npm run test-e2e
+    displayName: Running end to end tests
 
   - template: ./security-analysis.yml
 
