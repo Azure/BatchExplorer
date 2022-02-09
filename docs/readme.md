@@ -9,7 +9,7 @@
 * [Components](components.md)
 * [Models](models.md)
 * [Testing](testing.md)
-* [Spectron E2E tests](spectron.md)
+* [E2E tests](e2etests.md)
 * [Controls](core/Readme.md)
 
 ## How to
