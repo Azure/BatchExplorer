@@ -1,4 +1,5 @@
 steps:
+  - template: ./credscan.yml
   - template: ./win-dependencies.yml
   - powershell: ./scripts/azpipelines/update-build-name.ps1
     displayName: Resolve version
@@ -9,6 +10,8 @@ steps:
       exec { npm run build-python }
       exec { npm run package win-exe }
     displayName: Build executable
+
+  - template: ./security-analysis.yml
 
   - template: ./sign.yml
     parameters:
