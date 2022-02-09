@@ -27,6 +27,7 @@ steps:
         **/BatchExplorer*Setup*.exe
   - powershell: npm run package win-manifest
     displayName: Create manifest
+  - template: ../common/generate-sbom.yml
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: windows

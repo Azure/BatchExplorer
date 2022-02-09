@@ -33,7 +33,6 @@ steps:
     inputs:
       CredScan: true
 
-  - template: ../common/generate-sbom.yml
 
   - template: ../common/publish-artifacts.yml
     parameters:
