@@ -48,7 +48,7 @@ describe("ToggleFilterButtonComponent", () => {
         });
     });
 
-    describe("when filter is empty", () => {
+    describe("when fitler is empty", () => {
         it("should not show marker", () => {
             expect(de.query(By.css(".filtering"))).toBeFalsy();
         });
