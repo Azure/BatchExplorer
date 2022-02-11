@@ -6,6 +6,7 @@ steps:
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
+      $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
       exec { npm run build:prod }
       exec { npm run build-python }
       exec { npm run package win-exe }

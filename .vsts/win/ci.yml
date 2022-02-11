@@ -2,7 +2,9 @@ steps:
   - template: ./credscan.yml
   - template: ./win-dependencies.yml
 
-  - powershell: npm run build-and-pack
+  - powershell: |
+      $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
+      npm run build-and-pack
     displayName: Build and package
 
   - powershell: |

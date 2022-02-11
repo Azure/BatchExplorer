@@ -8,12 +8,8 @@ steps:
       sudo apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0 rpm
     displayName: Install Linux packages
   - template: ../dependencies.yml
-  - template: ../pyenv.yml
   - script: |
       set -e
-      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      echo "Python version $(python --version)"
-      pip install -r python/requirements.txt
       echo "Node.js version $(node --version)"
       echo "NPM version $(npm --version)"
       npm install -g codecov

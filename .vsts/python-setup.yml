@@ -1,0 +1,24 @@
+steps:
+  - task: UsePythonVersion@0
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      versionSpec: '3.8.x'
+    displayName: Install Python 3.8 for Batch Explorer
+
+  - bash: ./scripts/azpipelines/setup-python.sh
+    displayName: Set up Python environment
+
+  - script: |
+      set -e
+      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
+      pip install -r python/requirements.txt
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+    displayName: Install Python dependencies (Linux)
+
+  - powershell: |
+      . .vsts/win/exec.ps1
+      $ErrorActionPreference = "Stop"
+      $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
+      exec { pip install -r python/requirements.txt }
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    displayName: Install Python dependencies (Windows)
