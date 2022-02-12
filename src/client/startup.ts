@@ -116,13 +116,12 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
 }
 
 function secureRemoteContentLoading() {
-    app.on("web-contents-created", (event, contents) => {
-        contents.on("new-window", (event, navigationUrl) => {
+    app.on("web-contents-created", (_, contents) => {
+        contents.setWindowOpenHandler((details) => {
             // In this example, we'll ask the operating system
             // to open this event's url in the default browser.
-            event.preventDefault();
-
-            shell.openExternal(navigationUrl);
+            shell.openExternal(details.url);
+            return { action: "deny" };
         });
     });
 

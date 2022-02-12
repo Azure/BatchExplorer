@@ -10,7 +10,7 @@ describe("Breadcrumb service", () => {
     beforeEach(() => {
         routerSpy = {
             events: new Subject(),
-            navigateByUrl: jasmine.createSpy("router navigate option"),
+            navigate: jasmine.createSpy("router navigate option"),
         };
         service = new BreadcrumbService(routerSpy, null);
     });
@@ -38,8 +38,8 @@ describe("Breadcrumb service", () => {
     it("Navigate to breadcrumb call router navigate", () => {
         service.navigateTo(pool1Crumb);
 
-        expect(routerSpy.navigateByUrl).toHaveBeenCalledOnce();
-        expect(routerSpy.navigateByUrl).toHaveBeenCalledWith("/pools/a", {
+        expect(routerSpy.navigate).toHaveBeenCalledOnce();
+        expect(routerSpy.navigate).toHaveBeenCalledWith(["/pools/a"], {
             relativeTo: null,
             queryParams: { tab: "nodes" },
         });

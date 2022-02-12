@@ -78,7 +78,7 @@ describe("NodeConnectService", () => {
             ],
         });
 
-        nodeConnectService = TestBed.get(NodeConnectService);
+        nodeConnectService = TestBed.inject(NodeConnectService);
     });
 
     afterEach(() => {
