@@ -6,7 +6,12 @@ steps:
     displayName: Install Python 3.8 for Batch Explorer
 
   - bash: ./scripts/azpipelines/setup-python.sh
-    displayName: Set up Python environment
+    displayName: Set up Python environment and private feed
+
+  - task: PipAuthenticate@1
+    displayName: 'Pip Authenticate'
+    inputs:
+      artifactFeeds: 'BatchExplorer'
 
   - script: |
       set -e
