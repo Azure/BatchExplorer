@@ -60,6 +60,7 @@ const modules = [
             useHash: false,
             paramsInheritanceStrategy: "always",
             preloadingStrategy: PreloadAllModules,
+            relativeLinkResolution: "legacy"
         }),
         BaseModule,
         KeyBindingsModule,

@@ -1,7 +1,6 @@
 const webpack = require("webpack");
 const helpers = require("./helpers");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CheckerPlugin = require("awesome-typescript-loader").CheckerPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { AngularCompilerPlugin } = require("@ngtools/webpack");
 const { commonRules } = require("./webpack.common");
@@ -37,7 +36,6 @@ const baseConfig = {
         ],
     },
     plugins: [
-        new CheckerPlugin(),
         new MonacoWebpackPlugin(),
         new AngularCompilerPlugin({
             skipCodeGeneration: !AOT,

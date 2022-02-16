@@ -56,7 +56,7 @@ describe("TaskNodeInfoComponent", () => {
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
-        router = TestBed.get(Router);
+        router = TestBed.inject(Router);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-task-node-info"));
         fixture.detectChanges();

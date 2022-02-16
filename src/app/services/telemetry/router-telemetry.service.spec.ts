@@ -48,15 +48,15 @@ describe("RouterTelemetryService", () => {
             ],
         });
 
-        router = TestBed.get(Router);
-        service = TestBed.get(RouterTelemetryService);
+        router = TestBed.inject(Router);
+        service = TestBed.inject(RouterTelemetryService);
         service.init();
 
     });
 
     it("send event when router navigate", async () => {
         expect(telemetryServiceSpy.trackPageView).not.toHaveBeenCalled();
-        await TestBed.get(NgZone).run(() => {
+        await TestBed.inject(NgZone).run(() => {
             return router.navigateByUrl("/pools");
         });
         expect(telemetryServiceSpy.trackPageView).toHaveBeenCalledOnce();
