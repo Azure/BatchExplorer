@@ -88,7 +88,7 @@ describe("GalleryApplicationList", () => {
         expect(apps[3].query(By.css(".logo")).nativeElement.getAttribute("src")).toEqual(applications[2].icon);
     });
 
-    it("filter", () => {
+    it("fitler", () => {
         testComponent.filter = "m";
         fixture.detectChanges();
 

@@ -1,3 +1,9 @@
+# 2.12.1
+
+### Hot Fixes
+
+* Reverting changes for using List Supported Virtual Machine and Cloud Service SKUs due to issue with backend [\#2440](https://github.com/Azure/BatchExplorer/issues/2440)
+
 # 2.12.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/46?closed=1)
