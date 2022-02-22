@@ -15,17 +15,18 @@ test.describe("Bundled application is starting correctly", () => {
         await app.close();
     });
 
-    test("Show the splash screen, auth window, then login", async () => {
-        const windows = await waitForWindows(app, 4);
-        expect(windows.length).toEqual(4);
+    test("Check that windows are loaded", async () => {
+        await waitForWindows(app, 4);
+        expect(await getWindow(app, WindowType.splash)).toBeTruthy();
+        expect(await getWindow(app, WindowType.main)).toBeTruthy();
+        expect(await getWindow(app, WindowType.auth)).toBeTruthy();
+        expect(await getWindow(app, WindowType.devTools)).toBeTruthy();
+    });
 
+    test("Log in", async () => {
         const authWindow = await getWindow(app, WindowType.auth);
-        const mainWindow = await getWindow(app, WindowType.main);
-
         expect(await authWindow.title()).toEqual("Sign in to your account");
         await signIn(app, authWindow);
-
-        expect(await mainWindow.title()).toEqual("Batch Explorer");
     });
 
     test("Select an account", async () => {
