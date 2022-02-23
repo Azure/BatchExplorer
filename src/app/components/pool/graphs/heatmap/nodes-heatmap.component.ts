@@ -352,14 +352,18 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             } else if (tile.node.state === NodeState.unknown) {
                 return `Error: Unknown state on node (${tile.node.id})`;
             } else {
-                return `${taskCount} tasks (${taskSlotsCount} slots) running on node (${tile.node.id})`;
+                return `${taskCount} tasks (${taskSlotsCount}/${this.pool.taskSlotsPerNode} slots) running on node (${tile.node.id})`;
             }
        });
     }
 
     private _getTaskSlotsHeight(tileSize: number, node: Node) {
         const taskSlotsPerNode = this.pool.taskSlotsPerNode;
-        const taskSlotsHeight = Math.floor(tileSize / taskSlotsPerNode);
+        const taskSlotsCount = node.runningTaskSlotsCount;
+        let taskSlotsHeight = 0;
+        if (taskSlotsPerNode) {
+            taskSlotsHeight = Math.floor((taskSlotsCount / taskSlotsPerNode) * tileSize);
+        }
         const remaining = tileSize % taskSlotsPerNode;
         let height;
         const combine = taskSlotsHeight < 2;
