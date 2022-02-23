@@ -144,7 +144,7 @@ describe("NodesHeatmapComponent", () => {
             const title = group.select("title");
 
             expect(title).not.toBeFalsy("Should have a rect in bg");
-            expect(title.text()).toContain("2 tasks running on node");
+            expect(title.text()).toContain(`2 tasks (0/1 slots) running on node (node-${i + 1})`);
         });
     });
 
@@ -159,7 +159,7 @@ describe("NodesHeatmapComponent", () => {
                 const group = d3.select(groups[i]);
                 const bg = group.select("g.tasks");
                 const taskRects = bg.selectAll("rect");
-                expect(taskRects.size()).toBe(2, "Should have 2 rect");
+                expect(taskRects.size()).toBe(0, "Should have 0 rect");
                 taskRects.each((d, i, rects) => {
                     const rect = d3.select(rects[i]);
                     expect(rect.attr("height")).not.toBe("0");
@@ -178,7 +178,7 @@ describe("NodesHeatmapComponent", () => {
                 const group = d3.select(groups[i]);
                 const bg = group.select("g.tasks");
                 const taskRects = bg.selectAll("rect");
-                expect(taskRects.size()).toBe(1, "Should have only 1 rect");
+                expect(taskRects.size()).toBe(0, "Should have only 0 rect");
                 taskRects.each((d, i, rects) => {
                     const rect = d3.select(rects[i]);
                     expect(rect.attr("height")).not.toBe("0");
