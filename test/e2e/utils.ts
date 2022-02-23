@@ -46,15 +46,23 @@ export enum WindowType {
 }
 
 export async function getWindow(app: ElectronApplication, type: WindowType): Promise<Page> {
-    const windows = await app.windows();
     const matcher = windowMatcher(type);
-    for (let i = 0; i < windows.length; i++) {
-        const url = windows[i].url();
-        if (url && matcher(url)) {
-            return windows[i];
+    while (true) {
+        const win: Page | null = await new Promise(resolve => setTimeout(() => {
+            const windows = app.windows();
+            for (let i = 0; i < windows.length; i++) {
+                const url = windows[i].url();
+                if (url && matcher(url)) {
+                    resolve(windows[i]);
+                }
+            }
+            resolve(null);
+        }, 50));
+
+        if (win) {
+            return win;
         }
     }
-    throw new Error(`Could not find window ${type}`);
 }
 
 function windowMatcher(type: WindowType): (url: string) => boolean {

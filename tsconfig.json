@@ -58,13 +58,5 @@
   ],
   "exclude": [
     "**/testing/**/*",
-  ],
-  "awesomeTypescriptLoaderOptions": {
-    "forkChecker": true,
-    "useCache": true,
-    "useWebpackText": true
-  },
-  "angularCompilerOptions": {
-    "enableIvy": false
-  },
+  ]
 }
