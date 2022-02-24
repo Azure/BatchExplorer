@@ -360,10 +360,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _getTaskSlotsHeight(tileSize: number, node: Node) {
         const taskSlotsPerNode = this.pool.taskSlotsPerNode;
         const taskSlotsCount = node.runningTaskSlotsCount;
-        let taskSlotsHeight = 0;
-        if (taskSlotsPerNode) {
-            taskSlotsHeight = Math.floor((taskSlotsCount / taskSlotsPerNode) * tileSize);
-        }
+        const taskSlotsHeight = Math.floor((taskSlotsCount / taskSlotsPerNode) * tileSize);
         const remaining = tileSize % taskSlotsPerNode;
         let height;
         const combine = taskSlotsHeight < 2;
