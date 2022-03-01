@@ -1,4 +1,4 @@
-import * as commander from "commander";
+import { program } from "commander";
 import * as fs from "fs";
 import fetch from "node-fetch";
 import * as path from "path";
@@ -223,8 +223,8 @@ function run(options: ThirdPartyNoticeOptions = {}) {
     });
 }
 
-// const options = commander
-//     .option("-c, --check", "Check the current third party notice file is valid.")
-//     .parse(process.argv);
+const options = program
+    .option("-c, --check", "Check the current third party notice file is valid.")
+    .parse(process.argv);
 
-// run(options as any);
+run(options as any);
