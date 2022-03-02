@@ -156,6 +156,28 @@ describe("AuthProvider", () => {
         expectRetryable(["50071", "50133"], false); // One retryable, one not
 
     });
+
+    it("shouldn't fail with non-auth exception", async () => {
+        spyOn<any>(authProvider, "_createClient").and.callFake(tenantId => {
+            const spy = makeClientApplicationSpy();
+            returnToken(spy.acquireTokenByCode, `${tenantId}-token`);
+            return spy;
+        });
+        const authCodeSpy =
+            jasmine.createSpy("authCodeCallback").and.returnValues(
+                Promise.reject(new Error("Non-auth error")),
+            );
+
+        try {
+            await authProvider.getToken({
+                tenantId: "tenant1",
+                resourceURI: "resourceURI1",
+                authCodeCallback: authCodeSpy
+            });
+        } catch (e) {
+            fail(`Should not have thrown error: ${e}`);
+        }
+    });
 });
 
 const makeTokenCacheSpy = () => jasmine.createSpyObj(
