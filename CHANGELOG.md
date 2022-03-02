@@ -36,6 +36,26 @@
 * Switch to private feed to manage public dependencies for both NPM and PyPi [\#2458](https://github.com/Azure/BatchExplorer/issues/2458)
 * CyberEO Compliance [\#2457](https://github.com/Azure/BatchExplorer/issues/2457)
 
+# 2.13.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/47?closed=1)
+
+### feature:
+
+
+### bug:
+
+
+### other:
+
+* Issue with creating new batch accounts [\#2465](https://github.com/Azure/BatchExplorer/issues/2465)
+* Prepare for release of version 2.13.0 [\#2463](https://github.com/Azure/BatchExplorer/issues/2463)
+* Bring back VM SKU API support to display VM information in Pools [\#2462](https://github.com/Azure/BatchExplorer/issues/2462)
+* Issue with taskslots in node heatmap displaying incorrectly [\#2461](https://github.com/Azure/BatchExplorer/issues/2461)
+* Enable Angular's Ivy compiler  [\#2460](https://github.com/Azure/BatchExplorer/issues/2460)
+* Switch from Spectron to Playwright for e2e tests [\#2459](https://github.com/Azure/BatchExplorer/issues/2459)
+* Switch to private feed to manage public dependencies for both NPM and PyPi [\#2458](https://github.com/Azure/BatchExplorer/issues/2458)
+* CyberEO Compliance [\#2457](https://github.com/Azure/BatchExplorer/issues/2457)
+
 # 2.12.1
 
 ### Hot Fixes
