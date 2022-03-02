@@ -18,7 +18,7 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 8. @angular/platform-browser-dynamic(https://github.com/angular/angular) - MIT
 9. @angular/platform-server(https://github.com/angular/angular) - MIT
 10. @angular/router(https://github.com/angular/angular/tree/master/packages/router) - MIT
-11. @azure/msal-node(https://github.com/AzureAD/microsoft-authentication-library-for-js) - MIT
+11. @azure/msal-node(https://github.com/AzureAD/microsoft-authentication-library-for-js#readme) - MIT
 12. @azure/storage-blob(https://github.com/Azure/azure-sdk-for-js#readme) - MIT
 13. applicationinsights(https://github.com/microsoft/ApplicationInsights-node.js#readme) - MIT
 14. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
