@@ -101,7 +101,9 @@ export default class AuthProvider {
                 );
                 code = await authCodeCallback(url, tenantId, true);
             } catch (silentAuthException) {
-                if (!this._isTenantAuthRetryable(silentAuthException)) {
+                log.debug(`[${tenantId}] Silent auth failed (${silentAuthException})`)
+                if (silentAuthException instanceof AuthorizeError &&
+                    !this._isTenantAuthRetryable(silentAuthException)) {
                     log.warn(`Fatal authentication exception for ${tenantId}:` +
                         ` ${silentAuthException} (non-retryable error code ` +
                         silentAuthException.errorCodes.join(";") + `)`);
