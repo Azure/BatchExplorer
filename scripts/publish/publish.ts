@@ -110,12 +110,11 @@ async function bumpVersion(version) {
     const nextVersion = calcNextVersion(version);
     const bumpBranch = `release/bump-${nextVersion}`;
     await gotoMainBranch();
-    await run (`git branch --set-upstream-to=origin/${bumpBranch} ${bumpBranch}`);
     await switchToNewBranch(bumpBranch);
     await run(`npm version --no-git-tag-version --allow-same-version ${nextVersion}`);
 
     await run(`git commit -am "Bump version to ${nextVersion}"`);
-    await run(`git push origin ${bumpBranch}`);
+    await run(`git push --set-upstream origin ${bumpBranch}`);
     await run(`git checkout "${currentBranch}"`);
     success(`Updated version in package.json to ${nextVersion} (branch: ${bumpBranch})`);
 }
