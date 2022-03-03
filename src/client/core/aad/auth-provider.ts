@@ -74,7 +74,7 @@ export default class AuthProvider {
          *
          * Until this is resolved, we use one client application per tenant.
          */
-        const client = this._getClient(tenantId);
+        const client = await this._getClient(tenantId);
 
         const authRequest = this._authRequest(resourceURI, tenantId);
         try {
@@ -157,11 +157,12 @@ export default class AuthProvider {
         }
     }
 
-    protected _getClient(tenantId: string): PublicClientApplication {
+    protected async _getClient(tenantId: string):
+        Promise<PublicClientApplication> {
         if (tenantId in this._clients) {
             return this._clients[tenantId];
         }
-        const client = this._createClient(tenantId);
+        const client = await this._createClient(tenantId);
         if (!this._primaryClient) {
             this._primaryClient = client;
         }
@@ -169,12 +170,26 @@ export default class AuthProvider {
         return client;
     }
 
-    private _createClient(tenantId: string): PublicClientApplication {
-        return  new PublicClientApplication({
+    private async _createClient(tenantId: string):
+        Promise<PublicClientApplication> {
+        const proxySettings = await this.app.proxySettings.settings;
+        const proxyUrl = proxySettings?.http.toString();
+        if (proxyUrl) {
+            log.info(`[${tenantId}] Proxying auth endpoints through ` +
+                proxyUrl);
+        }
+
+        const authority =
+            `${this.app.properties.azureEnvironment.aadUrl}${tenantId}/`;
+
+        return new PublicClientApplication({
+            system: {
+                proxyUrl
+            },
             auth: {
                 clientId: this.config.clientId,
-                authority:
-                    `${this.app.properties.azureEnvironment.aadUrl}${tenantId}/`
+                authority,
+                knownAuthorities: [authority]
             },
             cache: {
                 cachePlugin: this._cachePlugin
