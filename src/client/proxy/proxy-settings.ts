@@ -8,7 +8,7 @@ import {
     ProxyCredentials, ProxySetting, ProxySettings,
 } from "get-proxy-settings";
 import { BehaviorSubject } from "rxjs";
-import { filter, map, take } from "rxjs/operators";
+import { map, take } from "rxjs/operators";
 
 export interface ProxySettingConfiguration {
     settings: ProxySettings | null;
@@ -30,7 +30,6 @@ export class ProxySettingsManager {
 
     public get settings(): Promise<ProxySettings | null> {
         return this._settings.pipe(
-            filter(x => x !== null),
             take(1),
             map(x => x?.settings),
         ).toPromise();
