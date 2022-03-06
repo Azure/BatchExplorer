@@ -29,17 +29,17 @@
   "dependencies": {},
   "devDependencies": {
     "@octokit/core": "^3.5.1",
-    "@typescript-eslint/eslint-plugin": "^4.30.0",
-    "@typescript-eslint/parser": "^4.30.0",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.13.0",
     "cross-env": "^7.0.3",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "lerna": "^4.0.0",
-    "markdownlint": "^0.24.0",
-    "markdownlint-cli2": "^0.3.0",
-    "prettier": "^2.3.2",
-    "typescript": "~4.4.2"
+    "markdownlint": "^0.25.1",
+    "markdownlint-cli2": "^0.4.0",
+    "prettier": "^2.5.1",
+    "typescript": "~4.6.2"
   },
   "resolutions": {
     "**/@types/react": "16.9.35",
