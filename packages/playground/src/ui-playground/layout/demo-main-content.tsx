@@ -7,6 +7,7 @@ import { TextFieldDemo } from "../demo/form/textfield/textfield-demo";
 import { CheckboxDemo } from "../demo/form/checkbox/checkbox-demo";
 import { CertificateDisplayDemo } from "../demo/display/certificate/certificate-display-demo";
 import { DropdownDemo } from "../demo/form/dropdown-demo";
+import { FormContainerDemo } from "../demo/form/form-container-demo";
 
 export const DemoMainContent: React.FC = () => {
     return (
@@ -22,6 +23,9 @@ export const DemoMainContent: React.FC = () => {
             </Route>
             <Route path="/playground/dropdown">
                 <DropdownDemo />
+            </Route>
+            <Route path="/playground/formcontainer">
+                <FormContainerDemo />
             </Route>
             <Route path="/playground/searchbox">
                 <SearchBoxDemo />

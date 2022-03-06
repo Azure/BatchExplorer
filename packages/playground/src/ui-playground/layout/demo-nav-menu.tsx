@@ -33,6 +33,11 @@ export const DemoNavMenu: React.FC = () => {
                     url: "#/playground/dropdown",
                 },
                 {
+                    key: "FormContainer",
+                    name: "FormContainer",
+                    url: "#/playground/formcontainer",
+                },
+                {
                     key: "SearchBox",
                     name: "SearchBox",
                     url: "#/playground/searchbox",

@@ -32,7 +32,7 @@ export function initMockBrowserEnvironment(
  * environment is not a mock browser environment.
  */
 export function getMockBrowserEnvironment(): MockBrowserEnvironment {
-    const env = getMockEnvironment() as unknown as MockBrowserEnvironment;
+    const env = getMockEnvironment() as MockBrowserEnvironment;
     if (!env.isMockBrowserEnvironment) {
         throw new Error(
             "Current environment is not a mock browser environment"

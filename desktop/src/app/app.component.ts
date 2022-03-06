@@ -8,9 +8,11 @@ import { Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { EnvironmentMode, initEnvironment } from "@batch/ui-common";
 import { DependencyName } from "@batch/ui-common/lib/environment";
+import { DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
+import { DefaultFormLayoutProvider } from "@batch/ui-react/lib/components/form/form-layout";
 import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import { FetchHttpClient } from "@batch/ui-common/lib/http";
-import { BrowserEnvironment } from "@batch/ui-react";
+import { BrowserEnvironment, BrowserDependencyName } from "@batch/ui-react";
 import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
@@ -71,7 +73,13 @@ export class AppComponent implements OnInit, OnDestroy {
                 // TODO: Create an adapter which hooks up to the desktop logger
                 [DependencyName.Logger]: () => new ConsoleLogger(),
                 // TODO: Create an HTTP client which hooks up to the desktop one
-                [DependencyName.HttpClient]: () => new FetchHttpClient()
+                [DependencyName.HttpClient]: () => new FetchHttpClient(),
+                [BrowserDependencyName.ParameterTypeResolver]: () => {
+                    return new DefaultParameterTypeResolver();
+                },
+                [BrowserDependencyName.FormLayoutProvider]: () => {
+                    return new DefaultFormLayoutProvider();
+                },
             }
         ));
 

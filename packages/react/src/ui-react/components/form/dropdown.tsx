@@ -1,23 +1,26 @@
 import * as React from "react";
-import { BaseFormControlProps } from "./form-base";
+import { FormControlProps } from "./form-control";
 import {
     Dropdown as FluentDropdown,
     IDropdownOption as FluentDropdownOption,
 } from "@fluentui/react/lib/Dropdown";
 
-export interface DropdownProps<T> extends BaseFormControlProps<T> {
-    options: DropdownOption<T>[];
+export interface DropdownProps<V> extends FormControlProps<V> {
+    options: DropdownOption<V>[];
 }
 
-export interface DropdownOption<T> {
-    value: T;
+export interface DropdownOption<V> {
+    value: V;
     label?: string;
 }
+
+const undefinedKey = "<- No selection ->";
+const nullKey = "<- None ->";
 
 /**
  * A simple dropdown form control supporting single selection
  */
-export function Dropdown<T>(props: DropdownProps<T>): JSX.Element {
+export function Dropdown<V>(props: DropdownProps<V>): JSX.Element {
     if (props.hidden) {
         return <></>;
     }
@@ -28,23 +31,43 @@ export function Dropdown<T>(props: DropdownProps<T>): JSX.Element {
             disabled={props.disabled}
             errorMessage={props.errorMessage}
             label={props.label}
-            options={_transformOptions(props.value, props.options)}
+            selectedKey={valueToKey(props.value)}
+            options={_transformOptions(props)}
+            onChange={(event, option, index) => {
+                if (props.onChange && index != null) {
+                    props.onChange(props.options[index].value);
+                }
+            }}
         ></FluentDropdown>
     );
 }
 
-function _transformOptions<T>(
-    value: T,
-    options: DropdownOption<T>[]
-): FluentDropdownOption[] {
+function valueToKey<V>(value: V): string {
+    if (value === undefined) {
+        return undefinedKey;
+    }
+    if (value === null) {
+        return nullKey;
+    }
+
+    const stringValue = String(value);
+    if (stringValue === undefinedKey || stringValue === nullKey) {
+        throw new Error(
+            `Invalid key "${stringValue}". Cannot use a key which is reserved for null or undefined values.`
+        );
+    }
+    return stringValue;
+}
+
+function _transformOptions<V>(props: DropdownProps<V>): FluentDropdownOption[] {
+    const { options } = props;
     let index = 0;
     return options.map((option) => {
-        const valueString = String(option.value);
+        const key = valueToKey(option.value);
         return {
-            key: valueString,
-            text: option.label ?? valueString,
+            key: key,
+            text: option.label ?? key,
             index: index++,
-            selected: value === option.value,
         };
     });
 }

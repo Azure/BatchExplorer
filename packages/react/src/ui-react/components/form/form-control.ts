@@ -1,17 +1,7 @@
-import {
-    FormParameter,
-    FormParameterInit,
-} from "@batch/ui-common/src/ui-common/form";
-
 /**
  * Shared properties for all form controls
  */
-export interface BaseFormControlProps<T> {
-    /**
-     * The parameter associated with this form control
-     */
-    parameter?: FormParameter | FormParameterInit;
-
+export interface FormControlProps<V> {
     /**
      * The accessible label for the form control. Only needed if the accessible
      * label should be different from the visible label
@@ -50,10 +40,9 @@ export interface BaseFormControlProps<T> {
     label?: string;
 
     /**
-     * Called to update the state of the control when its associated value has
-     * changed.
+     * Callback for when the value of the control changes
      */
-    onChange?: (value: T) => void;
+    onChange?: (value: V) => void;
 
     /**
      * A user-visible bit of text which is shown in place of a value when
@@ -65,5 +54,5 @@ export interface BaseFormControlProps<T> {
     /**
      * The current value associated with this control
      */
-    value?: T;
+    value?: V;
 }

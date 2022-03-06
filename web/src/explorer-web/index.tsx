@@ -6,6 +6,9 @@ import { BrowserEnvironment } from "@batch/ui-react";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Application } from "./components";
+import { BrowserDependencyName } from "@batch/ui-react/lib/environment";
+import { DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
+import { DefaultFormLayoutProvider } from "@batch/ui-react/lib/components/form/form-layout";
 
 // Defined by webpack
 declare const ENV: {
@@ -21,6 +24,12 @@ export function init(rootEl: HTMLElement): void {
             {
                 [DependencyName.Logger]: () => new ConsoleLogger(),
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
+                [BrowserDependencyName.ParameterTypeResolver]: () => {
+                    return new DefaultParameterTypeResolver();
+                },
+                [BrowserDependencyName.FormLayoutProvider]: () => {
+                    return new DefaultFormLayoutProvider();
+                },
             }
         )
     );
