@@ -47,6 +47,8 @@ export const SectionTitle = <
         <div>
             <h3
                 style={{
+                    fontWeight: 600,
+                    fontSize: "14px",
                     marginBottom: "4px",
                     paddingBottom: "4px",
                     borderBottom: `1px solid ${theme.palette.neutralTertiary}`,
