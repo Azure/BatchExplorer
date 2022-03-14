@@ -18,7 +18,6 @@ export function TextField(
             className={props.className}
             disabled={props.disabled}
             errorMessage={props.errorMessage}
-            label={props.label}
             value={props.value == null ? "" : props.value}
             onChange={(_, newValue) => {
                 if (props.onChange) {

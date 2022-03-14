@@ -14,6 +14,10 @@ type ExampleFormValues = {
     model?: string;
     description?: string;
     milesPerChange?: number;
+
+    // TODO: Can we not require sections to be specified here, but still
+    //       prevent naming collisions at compile time?
+    carInfoSection?: never;
 };
 
 const form = createForm<ExampleFormValues>({
@@ -30,16 +34,22 @@ form.param("subscriptionId", ParameterType.SubscriptionId, {
     value: "/fake/sub2",
 });
 
-form.param("make", ParameterType.String, {
-    title: "Make",
+const carSection = form.section("carInfoSection", {
+    title: "Car Info",
+    description: "Information about the car's make, model, etc.",
 });
 
-form.param("model", ParameterType.String, {
+carSection.param("make", ParameterType.String, {
+    title: "Make",
+    description: "The brand of the vehicle",
+});
+
+carSection.param("model", ParameterType.String, {
     title: "Model",
     value: "Model Y",
 });
 
-form.param("description", ParameterType.String, {
+carSection.param("description", ParameterType.String, {
     title: "Description",
 });
 

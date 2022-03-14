@@ -30,7 +30,6 @@ export function Dropdown<V>(props: DropdownProps<V>): JSX.Element {
             className={props.className}
             disabled={props.disabled}
             errorMessage={props.errorMessage}
-            label={props.label}
             selectedKey={valueToKey(props.value)}
             options={_transformOptions(props)}
             onChange={(event, option, index) => {
