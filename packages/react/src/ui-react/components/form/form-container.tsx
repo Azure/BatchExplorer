@@ -1,18 +1,20 @@
 import * as React from "react";
 import { Form } from "@batch/ui-common/lib/form";
 import { getBrowserEnvironment } from "../../environment";
+import { FormLayoutType } from "./form-layout";
 
 export interface FormContainerProps<
     FormValues extends Record<string, unknown>
 > {
     form: Form<FormValues>;
+    layout?: FormLayoutType;
     onFormChange?: (newValues: FormValues, oldValues: FormValues) => void;
 }
 
 export const FormContainer = <FormValues extends Record<string, unknown>>(
     props: FormContainerProps<FormValues>
 ) => {
-    const { form, onFormChange } = props;
+    const { form, layout, onFormChange } = props;
 
     // KLUDGE: This is really here only to trigger a re-render
     const [, setFormValues] = React.useState(form.values);
@@ -34,5 +36,5 @@ export const FormContainer = <FormValues extends Record<string, unknown>>(
         };
     }, [form, formChangeHandler]);
 
-    return getBrowserEnvironment().getFormLayout().render(form);
+    return getBrowserEnvironment().getFormLayout(layout).render(form);
 };
