@@ -4,7 +4,7 @@ import lodashCloneDeep from "lodash/cloneDeep";
 import lodashIsArray from "lodash/isArray";
 import lodashDebounce from "lodash/debounce";
 
-import { getEnvironment } from "./environment";
+import { getEnvironment } from "../environment";
 
 export function uniqueId(prefix: string = "id"): string {
     const env = getEnvironment();

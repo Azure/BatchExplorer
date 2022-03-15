@@ -10,6 +10,7 @@
     "noUnusedLocals": true,
     "declaration": true,
     "declarationMap": true,
+    "downlevelIteration": true,
     "moduleResolution": "node",
     "importHelpers": true,
     "module": "ESNext",

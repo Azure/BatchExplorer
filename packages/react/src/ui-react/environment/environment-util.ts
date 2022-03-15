@@ -7,9 +7,21 @@ import {
 } from "@batch/ui-common/lib/environment";
 import { initializeIcons } from "@fluentui/react/lib/Icons";
 import { BrowserEnvironmentConfig } from ".";
+import { DefaultParameterTypeResolver } from "../components/form";
+import { DefaultFormLayoutProvider } from "../components/form/form-layout";
+import { BrowserDependencyFactories } from "./browser-environment";
 import { MockBrowserEnvironment } from "./mock-browser-environment";
 
 let _fluentIconsInitialized = false;
+
+export const mockBrowserDepFactories: Partial<BrowserDependencyFactories> = {
+    parameterTypeResolver: () => {
+        return new DefaultParameterTypeResolver();
+    },
+    formLayoutProvider: () => {
+        return new DefaultFormLayoutProvider();
+    },
+};
 
 /**
  * Initialize a global mock browser environment.
@@ -21,6 +33,7 @@ export function initMockBrowserEnvironment(
     const config = { ...mockEnvironmentConfig, ...configOverrides };
     const depFactories = {
         ...mockDependencyFactories,
+        ...mockBrowserDepFactories,
         ...depFactoryOverrides,
     };
     initEnvironment(new MockBrowserEnvironment(config, depFactories));

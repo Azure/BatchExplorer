@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 import TypedEmitter from "typed-emitter";
-import { cloneDeep } from "../util";
+import { cloneDeep, OrderedMap } from "../util";
 
 /**
  * Create a new Form
@@ -138,22 +138,22 @@ export interface FormInit<FormValues extends Record<string, unknown>> {
  */
 export interface Form<FormValues extends Record<string, unknown>> {
     values: FormValues;
-    readonly entryMap: Map<
-        string,
-        Entry<FormValues, Extract<keyof FormValues, string>>
-    >;
 
     title?: string;
     description?: string;
+    entryCount: number;
 
     _emitter: TypedEmitter<{
         change: (newValues: FormValues, oldValues: FormValues) => void;
     }>;
 
-    updateValue<EntryName extends keyof FormValues>(
-        name: EntryName,
-        value: FormValues[EntryName]
-    ): void;
+    entries(): IterableIterator<
+        Entry<FormValues, Extract<keyof FormValues, string>>
+    >;
+
+    getEntry(
+        entryName: string
+    ): Entry<FormValues, Extract<keyof FormValues, string>>;
 
     param<EntryName extends Extract<keyof FormValues, string>>(
         name: EntryName,
@@ -188,6 +188,11 @@ export interface Form<FormValues extends Record<string, unknown>> {
     >(
         name: EntryName
     ): SubForm<FormValues, EntryName, SubFormValues>;
+
+    updateValue<EntryName extends keyof FormValues>(
+        name: EntryName,
+        value: FormValues[EntryName]
+    ): void;
 }
 
 class FormImpl<FormValues extends Record<string, unknown>>
@@ -199,6 +204,10 @@ class FormImpl<FormValues extends Record<string, unknown>>
     _emitter = new EventEmitter() as TypedEmitter<{
         change: (newValues: FormValues, oldValues: FormValues) => void;
     }>;
+
+    get entryCount(): number {
+        return this._entryMap.size;
+    }
 
     private _values: FormValues;
 
@@ -215,37 +224,27 @@ class FormImpl<FormValues extends Record<string, unknown>>
         }
     }
 
-    /**
-     * Update form values by creating a copy and setting the new values object
-     *
-     * @param name The name of the entry to update values for
-     * @param value The new value
-     */
-    updateValue<EntryName extends keyof FormValues>(
-        name: EntryName,
-        value: FormValues[EntryName]
-    ): void {
-        const newValues = cloneDeep(this.values);
-        newValues[name] = value;
-        this.values = newValues;
-    }
-
-    get entryMap(): Map<
+    private _entryMap: OrderedMap<
         string,
         Entry<FormValues, Extract<keyof FormValues, string>>
-    > {
-        return this._entries;
-    }
-
-    private _entries: Map<
-        string,
-        Entry<FormValues, Extract<keyof FormValues, string>>
-    > = new Map();
+    > = new OrderedMap();
 
     constructor(init: FormInit<FormValues>) {
         this._values = init.values;
         this.title = init.title;
         this.description = init.description;
+    }
+
+    entries(): IterableIterator<
+        Entry<FormValues, Extract<keyof FormValues, string>>
+    > {
+        return this._entryMap.values();
+    }
+
+    getEntry(
+        entryName: string
+    ): Entry<FormValues, Extract<keyof FormValues, string>> {
+        return this._entryMap.getRequired(entryName);
     }
 
     param<EntryName extends Extract<keyof FormValues, string>>(
@@ -259,7 +258,7 @@ class FormImpl<FormValues extends Record<string, unknown>>
     getParam<EntryName extends Extract<keyof FormValues, string>>(
         name: EntryName
     ): Parameter<FormValues, EntryName> {
-        const entry = this.entryMap.get(name);
+        const entry = this.getEntry(name);
         if (!(entry instanceof Parameter)) {
             throw new Error(`Entry "${name}" is not a parameter`);
         }
@@ -276,7 +275,7 @@ class FormImpl<FormValues extends Record<string, unknown>>
     getSection<EntryName extends Extract<keyof FormValues, string>>(
         name: EntryName
     ): Section<FormValues, EntryName> {
-        const entry = this.entryMap.get(name);
+        const entry = this.getEntry(name);
         if (!(entry instanceof Section)) {
             throw new Error(`Entry "${name}" is not a section`);
         }
@@ -297,7 +296,7 @@ class FormImpl<FormValues extends Record<string, unknown>>
         EntryName extends Extract<keyof FormValues, string>,
         SubFormValues extends FormValues[EntryName] & Record<string, unknown>
     >(name: EntryName): SubForm<FormValues, EntryName, SubFormValues> {
-        const entry = this.entryMap.get(name);
+        const entry = this.getEntry(name);
         if (!(entry instanceof SubForm)) {
             throw new Error(`Entry "${name}" is not a sub-form`);
         }
@@ -308,16 +307,31 @@ class FormImpl<FormValues extends Record<string, unknown>>
         this._emitter.emit("change", newValues, oldValues);
     }
 
+    /**
+     * Update form values by creating a copy and setting the new values object
+     *
+     * @param name The name of the entry to update values for
+     * @param value The new value
+     */
+    updateValue<EntryName extends keyof FormValues>(
+        name: EntryName,
+        value: FormValues[EntryName]
+    ): void {
+        const newValues = cloneDeep(this.values);
+        newValues[name] = value;
+        this.values = newValues;
+    }
+
     // KLUDGE: This isn't truly private because it is called by form entries
     _addChild<EntryName extends Extract<keyof FormValues, string>>(
         entry: Entry<FormValues, EntryName>
     ): void {
-        if (this._entries.has(entry.name)) {
+        if (this._entryMap.has(entry.name)) {
             throw new Error(
                 `An entry named "${entry.name}" already exists in the form`
             );
         }
-        this._entries.set(entry.name, entry);
+        this._entryMap.set(entry.name, entry);
     }
 }
 
@@ -343,6 +357,18 @@ export class SubForm<
         change: (newValues: FormValues, oldValues: FormValues) => void;
     }>;
 
+    get entryCount(): number {
+        return this.form.entryCount;
+    }
+
+    get values(): FormValues {
+        return this.form.values;
+    }
+
+    set values(newValues: FormValues) {
+        this.form.values = newValues;
+    }
+
     constructor(
         parentForm: Form<ParentFormValues>,
         name: EntryName,
@@ -367,32 +393,16 @@ export class SubForm<
         (this.parentForm as FormImpl<ParentFormValues>)._addChild(this);
     }
 
-    get entryMap(): Map<
-        string,
+    entries(): IterableIterator<
         Entry<FormValues, Extract<keyof FormValues, string>>
     > {
-        return this.form.entryMap;
+        return this.form.entries();
     }
 
-    get values(): FormValues {
-        return this.form.values;
-    }
-
-    set values(newValues: FormValues) {
-        this.form.values = newValues;
-    }
-
-    /**
-     * Update form values by creating a copy and setting the new values object
-     *
-     * @param name The name of the entry to update values for
-     * @param value The new value
-     */
-    updateValue<EntryName extends keyof FormValues>(
-        name: EntryName,
-        value: FormValues[EntryName]
-    ): void {
-        this.form.updateValue(name, value);
+    getEntry(
+        entryName: string
+    ): Entry<FormValues, Extract<keyof FormValues, string>> {
+        return this.form.getEntry(entryName);
     }
 
     param<EntryName extends Extract<keyof FormValues, string>>(
@@ -437,6 +447,13 @@ export class SubForm<
         SubFormValues extends FormValues[EntryName] & Record<string, unknown>
     >(name: EntryName): SubForm<FormValues, EntryName, SubFormValues> {
         return this.form.getSubForm(name);
+    }
+
+    updateValue<EntryName extends keyof FormValues>(
+        name: EntryName,
+        value: FormValues[EntryName]
+    ): void {
+        this.form.updateValue(name, value);
     }
 }
 

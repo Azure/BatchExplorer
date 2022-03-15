@@ -108,13 +108,13 @@ export class ListFormLayout implements FormLayout {
         form: Form<FormValues>
     ): JSX.Element {
         const rows: JSX.Element[] = [];
-        form.entryMap.forEach((entry) => {
+        for (const entry of form.entries()) {
             if (entry instanceof Parameter) {
                 rows.push(<ParameterRow key={entry.name} param={entry} />);
             } else if (entry instanceof Section) {
                 rows.push(<SectionTitle key={entry.name} section={entry} />);
             }
-        });
+        }
 
         return (
             <div style={{ maxWidth: "480px" }}>

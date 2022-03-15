@@ -1,8 +1,8 @@
 import { debounce } from "lodash";
-import { initMockEnvironment } from "../environment";
-import { cloneDeep, delay, isArray, isPromiseLike, uniqueId } from "../util";
+import { initMockEnvironment } from "../../environment";
+import { cloneDeep, delay, isArray, isPromiseLike, uniqueId } from "../../util";
 
-describe("Common utilities", () => {
+describe("Common utility functions", () => {
     beforeEach(() => initMockEnvironment());
 
     test("uniqueId() function", () => {

@@ -20,7 +20,7 @@ describe("Dropdown form control", () => {
             ></Dropdown>
         );
 
-        const ddEl = screen.getByRole("combobox", { name: "Card" });
+        const ddEl = screen.getByRole("combobox");
         expect(ddEl).toBeDefined();
 
         expect(

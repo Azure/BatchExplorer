@@ -12,7 +12,7 @@ import { DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/for
 import { DefaultFormLayoutProvider } from "@batch/ui-react/lib/components/form/form-layout";
 import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import { FetchHttpClient } from "@batch/ui-common/lib/http";
-import { BrowserEnvironment, BrowserDependencyName } from "@batch/ui-react";
+import { BrowserDependencyName } from "@batch/ui-react";
 import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
@@ -29,6 +29,7 @@ import { BEUserConfiguration } from "common";
 import { Environment } from "common/constants";
 import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
 
 @Component({
     selector: "bl-app",
@@ -65,7 +66,7 @@ export class AppComponent implements OnInit, OnDestroy {
         private workspaceService: WorkspaceService,
     ) {
         // Initialize shared component lib environment
-        initEnvironment(new BrowserEnvironment(
+        initEnvironment(new DefaultBrowserEnvironment(
             {
                 mode: ENV === Environment.prod ? EnvironmentMode.Production : EnvironmentMode.Development
             },

@@ -13,10 +13,10 @@ export interface FormContainerProps<
 
 export const FormContainer = <FormValues extends Record<string, unknown>>(
     props: FormContainerProps<FormValues>
-) => {
+): JSX.Element => {
     const { form, layout, onFormChange } = props;
 
-    // KLUDGE: This is really here only to trigger a re-render
+    // KLUDGE: This is really here only to trigger a rerender
     const [, setFormValues] = React.useState(form.values);
 
     const formChangeHandler = React.useCallback(

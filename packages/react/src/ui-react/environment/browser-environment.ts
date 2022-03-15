@@ -2,6 +2,7 @@ import { Parameter } from "@batch/ui-common";
 import {
     AbstractEnvironment,
     DependencyFactories,
+    Environment,
     EnvironmentConfig,
     EnvironmentName,
     getEnvironment,
@@ -13,10 +14,23 @@ import {
 } from "../components/form/form-layout";
 import { ParameterTypeResolver } from "../components/form/parameter-type";
 import { initFluentIcons } from "./environment-util";
+import { MockBrowserEnvironment } from "./mock-browser-environment";
 
 export enum BrowserDependencyName {
     ParameterTypeResolver = "parameterTypeResolver",
     FormLayoutProvider = "formLayoutProvider",
+}
+
+export interface BrowserEnvironment
+    extends Environment<BrowserEnvironmentConfig> {
+    getFormControl<
+        FormValues extends Record<string, unknown>,
+        EntryName extends Extract<keyof FormValues, string>
+    >(
+        param: Parameter<FormValues, EntryName>
+    ): JSX.Element;
+
+    getFormLayout(layoutType?: FormLayoutType): FormLayout;
 }
 
 export interface BrowserEnvironmentConfig extends EnvironmentConfig {
@@ -31,10 +45,13 @@ export interface BrowserDependencyFactories extends DependencyFactories {
 /**
  * Environment for a browser-based application
  */
-export class BrowserEnvironment extends AbstractEnvironment<
-    BrowserEnvironmentConfig,
-    BrowserDependencyFactories
-> {
+export class DefaultBrowserEnvironment
+    extends AbstractEnvironment<
+        BrowserEnvironmentConfig,
+        BrowserDependencyFactories
+    >
+    implements BrowserEnvironment
+{
     name = EnvironmentName.Browser;
 
     async beforeInit(): Promise<void> {
@@ -91,7 +108,10 @@ export function getBrowserEnvironment(): BrowserEnvironment {
             "Unable to get environment: No environment has been initialized"
         );
     }
-    if (currentEnv instanceof BrowserEnvironment) {
+    if (
+        currentEnv instanceof DefaultBrowserEnvironment ||
+        currentEnv instanceof MockBrowserEnvironment
+    ) {
         return currentEnv;
     }
     throw new Error(

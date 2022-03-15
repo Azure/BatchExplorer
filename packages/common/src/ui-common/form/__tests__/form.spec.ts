@@ -8,13 +8,13 @@ test("Single parameter form", () => {
             message: "Hello world!",
         },
     });
-    expect(form.entryMap.size).toEqual(0);
+    expect(form.entryCount).toEqual(0);
     expect(form.values).toEqual({ message: "Hello world!" });
 
     const messageParam = form.param("message", ParameterType.String, {
         value: "Hello galaxy!",
     });
-    expect(form.entryMap.size).toEqual(1);
+    expect(form.entryCount).toEqual(1);
     expect(form.values).toEqual({ message: "Hello galaxy!" });
 
     messageParam.value = "Hello universe!";
@@ -49,7 +49,7 @@ test("Multi-parameter form with sections", () => {
         title: "Drivers",
     });
     expect(form.values).toEqual({ make: "Tesla", model: "Model Y" });
-    expect(form.entryMap.size).toEqual(4);
+    expect(form.entryCount).toEqual(4);
 
     form.values = {
         make: "Ford",
