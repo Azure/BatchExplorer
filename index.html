@@ -22,173 +22,177 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-dark" style="background-color:#333333">
-        <span class="navbar-brand mb-0 h1"> <i class="fa fa-flask"></i> Batch Explorer</span>
-    </nav>
-    <div class="navbar navbar-light" style="display: block; background-color:#e3e3e3">
-        <div class="text-center">Version <span id="batch-labs-version">Loading...</span> is now available! Find more details below.</div>
-    </div>
-    <div class="jumbotron">
-        <div class="row">
-            <div class="col-md-5">
-                <div style="margin-top:14px;">
-                    <h1 class="text-center">Batch Explorer</h1>
-                    <p class="text-center">Debug and monitor your Azure Batch applications</p>
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-md-5 col-lg-12 text-center">
-                            <a
-                                class="btn btn-link"
-                                href="#"
-                                id="primary-download-btn">
-                                Download
-                            </a>
+    <header>
+        <nav class="navbar navbar-dark" style="background-color:#333333">
+            <span class="navbar-brand mb-0 h1"> <i class="fa fa-flask"></i> Batch Explorer</span>
+        </nav>
+        <div class="navbar navbar-light" style="display: block; background-color:#e3e3e3">
+            <div class="text-center">Version <span id="batch-labs-version">Loading...</span> is now available! Find more details below.</div>
+        </div>
+    </header>
+    <main>
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-md-5">
+                    <div style="margin-top:14px;">
+                        <h1 class="text-center">Batch Explorer</h1>
+                        <p class="text-center">Debug and monitor your Azure Batch applications</p>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-5 col-lg-12 text-center">
+                                <a
+                                    class="btn btn-link"
+                                    href="#"
+                                    id="primary-download-btn">
+                                    Download
+                                </a>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-7 col-lg-12 text-center">
+                                <a class="btn btn-secondary btn-link" 
+                                    href="https://github.com/Azure/BatchExplorer">
+                                    View on GitHub
+                                </a>
+                            </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-7 col-lg-12 text-center">
-                            <a class="btn btn-secondary btn-link" 
-                                href="https://github.com/Azure/BatchExplorer">
-                                View on GitHub
-                            </a>
-                        </div>
+                        <p class="text-center" style="font-size: small; padding-top:8px; color:#595959">
+                            By using Batch Explorer, you agree to its <a class="text-link" href="#licenseandprivacy" >license and privacy statement</a>
+                        </p>
                     </div>
-                    <p class="text-center" style="font-size: small; padding-top:8px; color:#595959">
-                        By using Batch Explorer, you agree to its <a class="text-link" href="#licenseandprivacy" >license and privacy statement</a>
-                    </p>
                 </div>
-            </div>
-            <div class="col-md-7">
-                <img alt="Job blade displaying job with 30 tasks" src="assets/images/job-home.png" class="demo-image">
+                <div class="col-md-7">
+                    <img alt="Job blade displaying job with 30 tasks" src="assets/images/job-home.png" class="demo-image">
+                </div>
             </div>
         </div>
-    </div>
-    <div class="download-content">
-        <div class="downloads">
-            <div class="os-download">
-                <div class="type">
-                    <i class="fa fa-windows"></i>
-                </div>
-                <a
-                    class="btn btn-success btn-link os-download-btn"
-                    href="#"
-                    id="download-windows-installer-btn">
-                    Windows
-                </a>
-                <div class="alternate-downloads">
-                    <span><a href="#" id="download-windows-installer">Installer</a> | <a href="#" id="download-windows-zip">zip</a></span>
-                </div>
-            </div>
-
-            <div class="os-download">
-                <div class="type">
-                    <i class="fa fa-apple"></i>
-                </div>
-                <a 
-                    class="btn btn-success btn-link btn-link os-download-btn"
-                    href="#"
-                    id="download-osx-app-btn">
-                        OSX
-                </a>
-                <div class="alternate-downloads">
-                    <span><a href="#" id="download-osx-dmg">dmg</a></span>
-                    | <span><a href="#" id="download-osx-zip">zip</a></span>
-                </div>
-                    
-            </div>
-
-            <div class="os-download">
-                <div class="type">
-                    <i class="fa fa-linux"></i>
-                </div>
-                <a 
-                    class="btn btn-success btn-link btn-link os-download-btn"
-                    href="#"
-                    id="download-linux-deb-btn">
-                        Linux
-                </a>
-                <div class="alternate-downloads">
-                    <span><a href="#" id="download-linux-deb">deb</a> 
-                        | <a href="#" id="download-linux-rpm">rpm</a> 
-                        | <a href="#" id="download-linux-appimage">AppImage</a></span>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-    <div class="insider-builds-link">
-        <h2 class="heading-sm">Want new features sooner?</h2>
-        Get the <a class="text-link" href="insider.html">Insider builds</a> instead
-    </div>
-    <div class="swimlane">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <a href="assets/images/dashboard.png" aria-label="View dashboard image" target="_blank">
-                        <img alt="Batch account blade displaying account summary and statistics" src="assets/images/dashboard.png" class="screenshot">
+        <div class="download-content">
+            <div class="downloads">
+                <div class="os-download">
+                    <div class="type">
+                        <i class="fa fa-windows"></i>
+                    </div>
+                    <a
+                        class="btn btn-success btn-link os-download-btn"
+                        href="#"
+                        id="download-windows-installer-btn">
+                        Windows
                     </a>
+                    <div class="alternate-downloads">
+                        <span><a href="#" id="download-windows-installer">Installer</a> | <a href="#" id="download-windows-zip">zip</a></span>
+                    </div>
                 </div>
-                <div class="col-sm-6 offset-sm-2">
-                    <h2>Account overviews</h2>
-                    <p>Manage your accounts, view high level statistics, quotas and account properties at a glance. 
-                        Use the dashboard for high level management or to quickly drill into any features offered by the Azure Batch service.</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="swimlane dark">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <h2>Pool views</h2>
-                    <p>See what the nodes in your pool are doing at any given time with a real-time heat map. 
-                        Also included are out-of-the box metrics and quick drill-downs to node properties and file explorers.</p>
-                </div>
-                <div class="col-sm-4 offset-sm-2">
-                    <a href="assets/images/pool-home.png" aria-label="View Pool blade image" target="_blank">
-                        <img alt="Pool blade displaying node information and real-time heat map" src="assets/images/pool-home.png" class="screenshot">
+                <div class="os-download">
+                    <div class="type">
+                        <i class="fa fa-apple"></i>
+                    </div>
+                    <a 
+                        class="btn btn-success btn-link btn-link os-download-btn"
+                        href="#"
+                        id="download-osx-app-btn">
+                            OSX
                     </a>
+                    <div class="alternate-downloads">
+                        <span><a href="#" id="download-osx-dmg">dmg</a></span>
+                        | <span><a href="#" id="download-osx-zip">zip</a></span>
+                    </div>
+                        
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="swimlane">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <a href="assets/images/job-home.png" aria-label="View Job blade image" target="_blank">
-                        <img alt="Job blade displaying progress of jobs and of work for your tasks" src="assets/images/job-home.png" class="screenshot">
+                <div class="os-download">
+                    <div class="type">
+                        <i class="fa fa-linux"></i>
+                    </div>
+                    <a 
+                        class="btn btn-success btn-link btn-link os-download-btn"
+                        href="#"
+                        id="download-linux-deb-btn">
+                            Linux
                     </a>
+                    <div class="alternate-downloads">
+                        <span><a href="#" id="download-linux-deb">deb</a> 
+                            | <a href="#" id="download-linux-rpm">rpm</a> 
+                            | <a href="#" id="download-linux-appimage">AppImage</a></span>
+                    </div>
                 </div>
-                <div class="col-sm-6 offset-sm-2">
-                    <h2>Job management</h2>
-                    <p>Quickly track the progress of jobs, view the size of the queue and job throughput and highlight errors. 
-                        The jobs view is a great place to view the state of progress of work of your tasks.</p>
+                
+            </div>
+        </div>
+        <div class="insider-builds-link">
+            <h2 class="heading-sm">Want new features sooner?</h2>
+            Get the <a class="text-link" href="insider.html">Insider builds</a> instead
+        </div>
+        <div class="swimlane">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <a href="assets/images/dashboard.png" aria-label="View dashboard image" target="_blank">
+                            <img alt="Batch account blade displaying account summary and statistics" src="assets/images/dashboard.png" class="screenshot">
+                        </a>
+                    </div>
+                    <div class="col-sm-6 offset-sm-2">
+                        <h2>Account overviews</h2>
+                        <p>Manage your accounts, view high level statistics, quotas and account properties at a glance. 
+                            Use the dashboard for high level management or to quickly drill into any features offered by the Azure Batch service.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="swimlane dark">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <h2>Task performance</h2>
-                    <p>Use graphing tools to understand task runtime distribution to find outliers, hidden issue or performance bottlenecks.</p>
-                </div>
-                <div class="col-sm-4 offset-sm-2">
-                    <a href="assets/images/job-running-tasks-graph.png" aria-label="View Job running Tasks graph image" target="_blank">
-                        <img alt="Job completed task graph blade displaying a graphing tool to monitor task completion" src="assets/images/job-running-tasks-graph.png" class="screenshot">
-                    </a>
+        <div class="swimlane dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2>Pool views</h2>
+                        <p>See what the nodes in your pool are doing at any given time with a real-time heat map. 
+                            Also included are out-of-the box metrics and quick drill-downs to node properties and file explorers.</p>
+                    </div>
+                    <div class="col-sm-4 offset-sm-2">
+                        <a href="assets/images/pool-home.png" aria-label="View Pool blade image" target="_blank">
+                            <img alt="Pool blade displaying node information and real-time heat map" src="assets/images/pool-home.png" class="screenshot">
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="license-and-privacy">
-       <h2 id="licenseandprivacy" class="heading-sm">LICENSE AND PRIVACY TERMS</h2>
-        By downloading and using Batch Explorer, you agree to the <a class="text-link" href="EULA.html" >license</a> and 
-        <a class="text-link" href="https://privacy.microsoft.com/en-us/privacystatement">privacy statement</a>. Batch Explorer automatically sends telemetry data and crash dumps to help us improve the product. If you would prefer not to have this data sent please go see <a class="text-link" href="https://github.com/Azure/BatchExplorer/wiki/Crash-reporting-and-telemetry#how-to-disable-crash-reporting-and-telemetry">How to Disable Crash Reporting</a> to learn how to disable it.
-    </div>
+
+        <div class="swimlane">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <a href="assets/images/job-home.png" aria-label="View Job blade image" target="_blank">
+                            <img alt="Job blade displaying progress of jobs and of work for your tasks" src="assets/images/job-home.png" class="screenshot">
+                        </a>
+                    </div>
+                    <div class="col-sm-6 offset-sm-2">
+                        <h2>Job management</h2>
+                        <p>Quickly track the progress of jobs, view the size of the queue and job throughput and highlight errors. 
+                            The jobs view is a great place to view the state of progress of work of your tasks.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swimlane dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2>Task performance</h2>
+                        <p>Use graphing tools to understand task runtime distribution to find outliers, hidden issue or performance bottlenecks.</p>
+                    </div>
+                    <div class="col-sm-4 offset-sm-2">
+                        <a href="assets/images/job-running-tasks-graph.png" aria-label="View Job running Tasks graph image" target="_blank">
+                            <img alt="Job completed task graph blade displaying a graphing tool to monitor task completion" src="assets/images/job-running-tasks-graph.png" class="screenshot">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="license-and-privacy">
+        <h2 id="licenseandprivacy" class="heading-sm">LICENSE AND PRIVACY TERMS</h2>
+            By downloading and using Batch Explorer, you agree to the <a class="text-link" href="EULA.html" >license</a> and 
+            <a class="text-link" href="https://privacy.microsoft.com/en-us/privacystatement">privacy statement</a>. Batch Explorer automatically sends telemetry data and crash dumps to help us improve the product. If you would prefer not to have this data sent please go see <a class="text-link" href="https://github.com/Azure/BatchExplorer/wiki/Crash-reporting-and-telemetry#how-to-disable-crash-reporting-and-telemetry">How to Disable Crash Reporting</a> to learn how to disable it.
+        </div>
+    </main>
 
     <footer class="footer">
         <div class="container">
