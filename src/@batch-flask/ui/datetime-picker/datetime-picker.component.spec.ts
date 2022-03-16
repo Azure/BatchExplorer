@@ -72,6 +72,11 @@ describe("DatetimePickerComponent", () => {
             expect(testComponent.control.value).toEqual(new Date(2017, 11, 14, 17, 32));
         });
 
+        it("correctly handles midnight", () => {
+            testComponent.control.setValue(new Date(2022, 3, 15, 0, 0));
+            expect(timeInputEl.nativeElement.value).toEqual("00:00");
+        });
+
         it("updates the inputs when setting the date time as a string", () => {
             testComponent.control.setValue(new Date(2017, 11, 14, 17, 32).toISOString());
             expect(dateInputEl.nativeElement.value).toEqual("12/14/2017");
