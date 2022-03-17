@@ -9,8 +9,7 @@
 * Fix node heatmap display issue for taskSlots [\#2461](https://github.com/Azure/BatchExplorer/issues/2461)
 
 ### other:
-* Switch to private feed to manage public dependencies for both NPM and PyPi [\#2458](https://github.com/Azure/BatchExplorer/issues/2458)
-* CyberEO Compliance [\#2457](https://github.com/Azure/BatchExplorer/issues/2457)
+* Cyber Executive Order Compliance [\#2457](https://github.com/Azure/BatchExplorer/issues/2457)
 
 # 2.12.1
 
