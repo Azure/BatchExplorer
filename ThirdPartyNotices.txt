@@ -7,24 +7,24 @@ Microsoft licenses the Third Party IP to you under the licensing terms for the M
 Microsoft reserves all other rights not expressly granted under this agreement, whether by implication, estoppel or otherwise.
 
 
-0. @angular/animations(https://github.com/angular/angular#readme) - MIT
+0. @angular/animations(https://github.com/angular/angular) - MIT
 1. @angular/cdk(https://github.com/angular/components#readme) - MIT
-2. @angular/common(https://github.com/angular/angular#readme) - MIT
-3. @angular/compiler(https://github.com/angular/angular#readme) - MIT
-4. @angular/core(https://github.com/angular/angular#readme) - MIT
-5. @angular/forms(https://github.com/angular/angular#readme) - MIT
+2. @angular/common(https://github.com/angular/angular) - MIT
+3. @angular/compiler(https://github.com/angular/angular) - MIT
+4. @angular/core(https://github.com/angular/angular) - MIT
+5. @angular/forms(https://github.com/angular/angular) - MIT
 6. @angular/material(https://github.com/angular/components#readme) - MIT
-7. @angular/platform-browser(https://github.com/angular/angular#readme) - MIT
-8. @angular/platform-browser-dynamic(https://github.com/angular/angular#readme) - MIT
-9. @angular/platform-server(https://github.com/angular/angular#readme) - MIT
+7. @angular/platform-browser(https://github.com/angular/angular) - MIT
+8. @angular/platform-browser-dynamic(https://github.com/angular/angular) - MIT
+9. @angular/platform-server(https://github.com/angular/angular) - MIT
 10. @angular/router(https://github.com/angular/angular/tree/master/packages/router) - MIT
-11. @azure/msal-node(https://github.com/AzureAD/microsoft-authentication-library-for-js) - MIT
+11. @azure/msal-node(https://github.com/AzureAD/microsoft-authentication-library-for-js#readme) - MIT
 12. @azure/storage-blob(https://github.com/Azure/azure-sdk-for-js#readme) - MIT
 13. applicationinsights(https://github.com/microsoft/ApplicationInsights-node.js#readme) - MIT
 14. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
 15. chart.js(https://www.chartjs.org) - MIT
 16. chokidar(https://github.com/paulmillr/chokidar) - MIT
-17. commander(https://github.com/tj/commander.js#readme) - MIT
+17. commander(https://github.com/tj/commander.js) - MIT
 18. d3(https://d3js.org) - BSD-3-Clause
 19. decode-uri-component(https://github.com/SamVerschueren/decode-uri-component#readme) - MIT
 20. download(https://github.com/kevva/download#readme) - MIT
@@ -34,35 +34,34 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 24. focus-visible(https://github.com/WICG/focus-visible) - W3C
 25. font-awesome(http://fontawesome.io/) - (OFL-1.1 AND MIT)
 26. get-proxy-settings(https://github.com/Azure/get-proxy-settings) - MIT
-27. github-changelog-gen(https://github.com/timotheeguerin/gh-changelog-gen#readme) - MIT
-28. glob(https://github.com/isaacs/node-glob#readme) - ISC
-29. hammerjs(http://hammerjs.github.io/) - MIT
-30. https-proxy-agent(https://github.com/TooTallNate/node-https-proxy-agent#readme) - MIT
-31. immutable(https://facebook.github.com/immutable-js) - MIT
-32. inflection(https://github.com/dreamerslab/node.inflection#readme) - MIT
-33. js-yaml(https://github.com/nodeca/js-yaml) - MIT
-34. jschardet(https://github.com/aadsm/jschardet#readme) - LGPL-2.1+
-35. keytar(http://atom.github.io/node-keytar) - MIT
-36. load-json-file(https://github.com/sindresorhus/load-json-file#readme) - MIT
-37. luxon(https://github.com/moment/luxon#readme) - MIT
-38. make-dir(https://github.com/sindresorhus/make-dir#readme) - MIT
-39. node-abi(https://github.com/lgeiger/node-abi#readme) - MIT
-40. node-forge(https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
-41. patternomaly(https://github.com/ashiguruma/patternomaly#readme) - MIT
-42. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
-43. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
-44. strip-json-comments(https://github.com/sindresorhus/strip-json-comments#readme) - MIT
-45. tinycolor2(https://github.com/bgrins/TinyColor#readme) - MIT
-46. winston(https://github.com/winstonjs/winston#readme) - MIT
-47. winston-daily-rotate-file(https://github.com/winstonjs/winston-daily-rotate-file#readme) - MIT
-48. write-file-webpack-plugin(https://github.com/gajus/write-file-webpack-plugin#readme) - BSD-3-Clause
-49. xml2js(https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
-50. zone.js(https://github.com/angular/angular#readme) - MIT
-51. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
-52. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
-53. node.js(https://nodejs.org/en/) - MIT
-54. python(https://www.python.org/) - PSF
-55. Electron(https://electronjs.org/) - electron
+27. glob(https://github.com/isaacs/node-glob) - ISC
+28. hammerjs(http://hammerjs.github.io/) - MIT
+29. https-proxy-agent(https://github.com/TooTallNate/node-https-proxy-agent#readme) - MIT
+30. immutable(https://facebook.github.com/immutable-js) - MIT
+31. inflection(https://github.com/dreamerslab/node.inflection#readme) - MIT
+32. js-yaml(https://github.com/nodeca/js-yaml) - MIT
+33. jschardet(https://github.com/aadsm/jschardet#readme) - LGPL-2.1+
+34. keytar(http://atom.github.io/node-keytar) - MIT
+35. load-json-file(https://github.com/sindresorhus/load-json-file#readme) - MIT
+36. luxon(https://github.com/moment/luxon#readme) - MIT
+37. make-dir(https://github.com/sindresorhus/make-dir#readme) - MIT
+38. node-abi(https://github.com/lgeiger/node-abi#readme) - MIT
+39. node-forge(https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
+40. patternomaly(https://github.com/ashiguruma/patternomaly#readme) - MIT
+41. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
+42. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
+43. strip-json-comments(https://github.com/sindresorhus/strip-json-comments#readme) - MIT
+44. tinycolor2(https://github.com/bgrins/TinyColor#readme) - MIT
+45. winston(https://github.com/winstonjs/winston#readme) - MIT
+46. winston-daily-rotate-file(https://github.com/winstonjs/winston-daily-rotate-file#readme) - MIT
+47. write-file-webpack-plugin(https://github.com/gajus/write-file-webpack-plugin#readme) - BSD-3-Clause
+48. xml2js(https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
+49. zone.js(https://github.com/angular/angular) - MIT
+50. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
+51. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
+52. node.js(https://nodejs.org/en/) - MIT
+53. python(https://www.python.org/) - PSF
+54. Electron(https://electronjs.org/) - electron
 
 ============================================================
     Start license for @angular/animations
@@ -656,7 +655,7 @@ SOFTWARE.
 ------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2014-2021 Chart.js Contributors
+Copyright (c) 2014-2022 Chart.js Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -888,26 +887,154 @@ Specifications are made under the [W3C CLA](https://www.w3.org/community/about/a
 ============================================================
     Start license for font-awesome
 ------------------------------------------------------------
+Fonticons, Inc. (https://fontawesome.com)
+
+--------------------------------------------------------------------------------
+
 Font Awesome Free License
--------------------------
 
 Font Awesome Free is free, open source, and GPL friendly. You can use it for
 commercial projects, open source projects, or really almost whatever you want.
 Full Font Awesome Free license: https://fontawesome.com/license/free.
 
-# Icons: CC BY 4.0 License (https://creativecommons.org/licenses/by/4.0/)
-In the Font Awesome Free download, the CC BY 4.0 license applies to all icons
-packaged as SVG and JS file types.
+--------------------------------------------------------------------------------
 
-# Fonts: SIL OFL 1.1 License (https://scripts.sil.org/OFL)
+# Icons: CC BY 4.0 License (https://creativecommons.org/licenses/by/4.0/)
+
+The Font Awesome Free download is licensed under a Creative Commons
+Attribution 4.0 International License and applies to all icons packaged
+as SVG and JS file types.
+
+--------------------------------------------------------------------------------
+
+# Fonts: SIL OFL 1.1 License
+
 In the Font Awesome Free download, the SIL OFL license applies to all icons
 packaged as web and desktop font files.
 
+Copyright (c) 2022 Fonticons, Inc. (https://fontawesome.com)
+with Reserved Font Name: "Font Awesome".
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+
+SIL OPEN FONT LICENSE
+Version 1.1 - 26 February 2007
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded,
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting — in part or in whole — any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.
+
+--------------------------------------------------------------------------------
+
 # Code: MIT License (https://opensource.org/licenses/MIT)
+
 In the Font Awesome Free download, the MIT license applies to all non-font and
 non-icon files.
 
+Copyright 2022 Fonticons, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in the
+Software without restriction, including without limitation the rights to use, copy,
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+--------------------------------------------------------------------------------
+
 # Attribution
+
 Attribution is required by MIT, SIL OFL, and CC BY licenses. Downloaded Font
 Awesome Free files already contain embedded comments with sufficient
 attribution, so you shouldn't need to do anything additional when using these
@@ -917,7 +1044,10 @@ We've kept attribution comments terse, so we ask that you do not actively work
 to remove them from files, especially code. They're a great way for folks to
 learn about Font Awesome.
 
+--------------------------------------------------------------------------------
+
 # Brand Icons
+
 All brand icons are trademarks of their respective owners. The use of these
 trademarks does not indicate endorsement of the trademark holder by Font
 Awesome, nor vice versa. **Please do not use brand logos for any purpose except
@@ -957,40 +1087,11 @@ to represent the company, product, or service to which they refer.**
 ============================================================
 
 ============================================================
-    Start license for github-changelog-gen
-------------------------------------------------------------
-MIT License
-
-Copyright (c) 2017 Timothee Guerin
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-------------------------------------------------------------
-    End license for github-changelog-gen
-============================================================
-
-============================================================
     Start license for glob
 ------------------------------------------------------------
 The ISC License
 
-Copyright (c) Isaac Z. Schlueter and Contributors
+Copyright (c) 2009-2022 Isaac Z. Schlueter and Contributors
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -3270,6 +3371,31 @@ The externally maintained libraries used by Node.js are:
     The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  """
+
+- undici, located at deps/undici, is licensed as follows:
+  """
+    MIT License
+
+    Copyright (c) Matteo Collina and Undici contributors
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
   """
 
 - OpenSSL, located at deps/openssl, is licensed as follows:
