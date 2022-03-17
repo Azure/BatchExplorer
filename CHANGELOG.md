@@ -1,20 +1,14 @@
 # 2.13.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/47?closed=1)
 
-### feature:
+### Feature:
+* Bring back VM SKU API support for displaying VM information in Pools [\#2462](https://github.com/Azure/BatchExplorer/issues/2462)
 
-
-### bug:
-
+### Bug:
+* Accessibility fixes and improvements  [\#2471](https://github.com/Azure/BatchExplorer/issues/2471)
+* Fix node heatmap display issue for taskSlots [\#2461](https://github.com/Azure/BatchExplorer/issues/2461)
 
 ### other:
-
-* February a11y Issues  [\#2471](https://github.com/Azure/BatchExplorer/issues/2471)
-* Prepare for release of version 2.13.0 [\#2463](https://github.com/Azure/BatchExplorer/issues/2463)
-* Bring back VM SKU API support to display VM information in Pools [\#2462](https://github.com/Azure/BatchExplorer/issues/2462)
-* Issue with taskslots in node heatmap displaying incorrectly [\#2461](https://github.com/Azure/BatchExplorer/issues/2461)
-* Enable Angular's Ivy compiler  [\#2460](https://github.com/Azure/BatchExplorer/issues/2460)
-* Switch from Spectron to Playwright for e2e tests [\#2459](https://github.com/Azure/BatchExplorer/issues/2459)
 * Switch to private feed to manage public dependencies for both NPM and PyPi [\#2458](https://github.com/Azure/BatchExplorer/issues/2458)
 * CyberEO Compliance [\#2457](https://github.com/Azure/BatchExplorer/issues/2457)
 
