@@ -7,8 +7,10 @@ import {
 } from "@batch/ui-common/lib/environment";
 import { initializeIcons } from "@fluentui/react/lib/Icons";
 import { BrowserEnvironmentConfig } from ".";
-import { DefaultParameterTypeResolver } from "../components/form";
-import { DefaultFormLayoutProvider } from "../components/form/form-layout";
+import {
+    DefaultFormLayoutProvider,
+    DefaultParameterTypeResolver,
+} from "../components/form";
 import { BrowserDependencyFactories } from "./browser-environment";
 import { MockBrowserEnvironment } from "./mock-browser-environment";
 

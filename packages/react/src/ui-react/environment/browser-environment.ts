@@ -7,6 +7,7 @@ import {
     EnvironmentName,
     getEnvironment,
 } from "@batch/ui-common/lib/environment";
+import { FormValues } from "@batch/ui-common/lib/form";
 import {
     FormLayout,
     FormLayoutProvider,
@@ -23,12 +24,7 @@ export enum BrowserDependencyName {
 
 export interface BrowserEnvironment
     extends Environment<BrowserEnvironmentConfig> {
-    getFormControl<
-        FormValues extends Record<string, unknown>,
-        EntryName extends Extract<keyof FormValues, string>
-    >(
-        param: Parameter<FormValues, EntryName>
-    ): JSX.Element;
+    getFormControl<V extends FormValues>(param: Parameter<V>): JSX.Element;
 
     getFormLayout(layoutType?: FormLayoutType): FormLayout;
 }
@@ -65,10 +61,7 @@ export class DefaultBrowserEnvironment
     /**
      * Get the form control for a given parameter
      */
-    getFormControl<
-        FormValues extends Record<string, unknown>,
-        EntryName extends Extract<keyof FormValues, string>
-    >(param: Parameter<FormValues, EntryName>): JSX.Element {
+    getFormControl<V extends FormValues>(param: Parameter<V>): JSX.Element {
         const resolver = this.getInjectable<ParameterTypeResolver>(
             BrowserDependencyName.ParameterTypeResolver
         );

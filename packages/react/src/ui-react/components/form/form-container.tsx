@@ -1,18 +1,16 @@
 import * as React from "react";
-import { Form } from "@batch/ui-common/lib/form";
+import { Form, FormValues } from "@batch/ui-common/lib/form";
 import { getBrowserEnvironment } from "../../environment";
 import { FormLayoutType } from "./form-layout";
 
-export interface FormContainerProps<
-    FormValues extends Record<string, unknown>
-> {
-    form: Form<FormValues>;
+export interface FormContainerProps<V extends FormValues> {
+    form: Form<V>;
     layout?: FormLayoutType;
-    onFormChange?: (newValues: FormValues, oldValues: FormValues) => void;
+    onFormChange?: (newValues: V, oldValues: V) => void;
 }
 
-export const FormContainer = <FormValues extends Record<string, unknown>>(
-    props: FormContainerProps<FormValues>
+export const FormContainer = <V extends FormValues>(
+    props: FormContainerProps<V>
 ): JSX.Element => {
     const { form, layout, onFormChange } = props;
 
@@ -20,7 +18,7 @@ export const FormContainer = <FormValues extends Record<string, unknown>>(
     const [, setFormValues] = React.useState(form.values);
 
     const formChangeHandler = React.useCallback(
-        (newValues: FormValues, oldValues: FormValues) => {
+        (newValues: V, oldValues: V) => {
             setFormValues(newValues);
             if (onFormChange) {
                 onFormChange(newValues, oldValues);

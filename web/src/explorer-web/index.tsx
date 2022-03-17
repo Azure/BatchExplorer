@@ -9,8 +9,10 @@ import {
     BrowserDependencyName,
     DefaultBrowserEnvironment,
 } from "@batch/ui-react/lib/environment";
-import { DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
-import { DefaultFormLayoutProvider } from "@batch/ui-react/lib/components/form/form-layout";
+import {
+    DefaultFormLayoutProvider,
+    DefaultParameterTypeResolver,
+} from "@batch/ui-react/lib/components/form";
 
 // Defined by webpack
 declare const ENV: {

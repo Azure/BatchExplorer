@@ -14,6 +14,11 @@ export interface FormControlProps<V> {
     className?: string;
 
     /**
+     * CSS styles
+     */
+    style?: React.CSSProperties;
+
+    /**
      * If true, the form control will be greyed out and non-interactive.
      */
     disabled?: boolean;

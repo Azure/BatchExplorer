@@ -17,13 +17,13 @@ describe("Form container tests", () => {
             values: {},
         });
         form.param("make", ParameterType.String, {
-            title: "Make",
+            label: "Make",
         });
         form.param("model", ParameterType.String, {
-            title: "Model",
+            label: "Model",
         });
         form.param("description", ParameterType.String, {
-            title: "Description",
+            label: "Description",
         });
 
         const { container } = render(<FormContainer form={form} />);

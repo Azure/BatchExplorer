@@ -2,21 +2,19 @@ import { EventEmitter } from "events";
 import TypedEmitter from "typed-emitter";
 import { cloneDeep, OrderedMap } from "../util";
 
+export type FormValues = Record<string, unknown>;
+
 /**
  * Create a new Form
  *
  * @param initialValues The initial values of the form
  * @returns The newly-created form
  */
-export function createForm<FormValues extends Record<string, unknown>>(
-    init: FormInit<FormValues>
-): Form<FormValues> {
+export function createForm<V extends FormValues>(init: FormInit<V>): Form<V> {
     return new FormImpl(init);
 }
 
-export function isForm<FormValues extends Record<string, unknown>>(
-    obj: unknown
-): obj is Form<FormValues> {
+export function isForm<V extends FormValues>(obj: unknown): obj is Form<V> {
     return obj instanceof FormImpl;
 }
 
@@ -27,11 +25,12 @@ export enum ParameterType {
     Boolean = "Boolean",
 }
 
-export interface Entry<
-    FormValues extends Record<string, unknown>,
-    EntryName extends Extract<keyof FormValues, string>
-> {
-    name: EntryName;
+export interface Entry<V extends FormValues> {
+    name: string;
+
+    parentForm: Form<V>;
+
+    parentSection?: Section<V>;
 
     /**
      * A short title
@@ -66,31 +65,12 @@ export interface Entry<
     errorMessage?: string;
 }
 
-export interface ValuedEntry<
-    FormValues extends Record<string, unknown>,
-    EntryName extends Extract<keyof FormValues, string>
-> extends Entry<FormValues, EntryName> {
-    value?: FormValues[EntryName];
+export interface ValuedEntry<V extends FormValues> extends Entry<V> {
+    value?: V[Extract<keyof V, string>];
 }
 
-export interface ContainerEntry<
-    FormValues extends Record<string, unknown>,
-    EntryName extends Extract<keyof FormValues, string>
-> extends Entry<FormValues, EntryName> {
-    param<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName,
-        type: string,
-        init?: ParameterInit<FormValues, EntryName>
-    ): Parameter<FormValues, EntryName>;
-
-    section<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName,
-        init?: SectionInit
-    ): Section<FormValues, EntryName>;
-}
-
-export interface EntryInit {
-    title?: string;
+export interface EntryInit<V extends FormValues> {
+    parentSection?: Section<V>;
     description?: string;
     disabled?: boolean;
     hidden?: boolean;
@@ -98,18 +78,13 @@ export interface EntryInit {
     errorMessage?: string;
 }
 
-export interface ValuedEntryInit<
-    FormValues extends Record<string, unknown>,
-    EntryName extends Extract<keyof FormValues, string>
-> extends EntryInit {
-    value?: FormValues[EntryName];
+export interface ValuedEntryInit<V extends FormValues> extends EntryInit<V> {
+    value?: V[Extract<keyof V, string>];
 }
 
-export interface ParameterInit<
-    FormValues extends Record<string, unknown>,
-    EntryName extends Extract<keyof FormValues, string>
-> extends ValuedEntryInit<FormValues, EntryName> {
-    title?: string;
+export interface ParameterInit<V extends FormValues>
+    extends ValuedEntryInit<V> {
+    label?: string;
     description?: string;
     disabled?: boolean;
     hidden?: boolean;
@@ -117,16 +92,18 @@ export interface ParameterInit<
     errorMessage?: string;
 }
 
-export interface SubFormInit extends EntryInit {
+export interface SubFormInit<V extends FormValues> extends EntryInit<V> {
+    title?: string;
     expanded?: boolean;
 }
 
-export interface SectionInit extends EntryInit {
+export interface SectionInit<V extends FormValues> extends EntryInit<V> {
+    title?: string;
     expanded?: boolean;
 }
 
-export interface FormInit<FormValues extends Record<string, unknown>> {
-    values: FormValues;
+export interface FormInit<V extends FormValues> {
+    values: V;
     title?: string;
     description?: string;
 }
@@ -136,86 +113,75 @@ export interface FormInit<FormValues extends Record<string, unknown>> {
  * A form's value is an object with key/value pairs representing parameter names
  * and values or subform names and values
  */
-export interface Form<FormValues extends Record<string, unknown>> {
-    values: FormValues;
+export interface Form<V extends FormValues> {
+    values: V;
 
     title?: string;
     description?: string;
-    entryCount: number;
+
+    childEntriesCount: number;
+    allEntriesCount: number;
 
     _emitter: TypedEmitter<{
-        change: (newValues: FormValues, oldValues: FormValues) => void;
+        change: (newValues: V, oldValues: V) => void;
     }>;
 
-    entries(): IterableIterator<
-        Entry<FormValues, Extract<keyof FormValues, string>>
-    >;
+    childEntries(): IterableIterator<Entry<V>>;
 
-    getEntry(
-        entryName: string
-    ): Entry<FormValues, Extract<keyof FormValues, string>>;
+    allEntries(): IterableIterator<Entry<V>>;
 
-    param<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName,
+    getEntry(entryName: string): Entry<V> | undefined;
+
+    param(
+        name: Extract<keyof V, string>,
         type: string,
-        init?: ParameterInit<FormValues, EntryName>
-    ): Parameter<FormValues, EntryName>;
+        init?: ParameterInit<V>
+    ): Parameter<V>;
 
-    getParam<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName
-    ): Parameter<FormValues, EntryName>;
+    getParam(name: Extract<keyof V, string>): Parameter<V>;
 
-    section<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName,
-        init?: SectionInit
-    ): Section<FormValues, EntryName>;
+    section(name: string, init?: SectionInit<V>): Section<V>;
 
-    getSection<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName
-    ): Section<FormValues, EntryName>;
+    getSection(name: string): Section<V>;
 
-    subForm<
-        EntryName extends Extract<keyof FormValues, string>,
-        SubFormValues extends FormValues[EntryName] & Record<string, unknown>
-    >(
-        name: EntryName,
-        form: Form<SubFormValues>
-    ): SubForm<FormValues, EntryName, SubFormValues>;
+    subForm<S extends V[Extract<keyof V, string>] & FormValues>(
+        name: Extract<keyof V, string>,
+        form: Form<S>
+    ): SubForm<V, S>;
 
-    getSubForm<
-        EntryName extends Extract<keyof FormValues, string>,
-        SubFormValues extends FormValues[EntryName] & Record<string, unknown>
-    >(
-        name: EntryName
-    ): SubForm<FormValues, EntryName, SubFormValues>;
+    getSubForm<S extends V[Extract<keyof V, string>] & FormValues>(
+        name: Extract<keyof V, string>
+    ): SubForm<V, S>;
 
-    updateValue<EntryName extends keyof FormValues>(
-        name: EntryName,
-        value: FormValues[EntryName]
+    updateValue(
+        name: Extract<keyof V, string>,
+        value: V[Extract<keyof V, string>]
     ): void;
 }
 
-class FormImpl<FormValues extends Record<string, unknown>>
-    implements Form<FormValues>
-{
+class FormImpl<V extends FormValues> implements Form<V> {
     title?: string;
     description?: string;
 
     _emitter = new EventEmitter() as TypedEmitter<{
-        change: (newValues: FormValues, oldValues: FormValues) => void;
+        change: (newValues: V, oldValues: V) => void;
     }>;
 
-    get entryCount(): number {
-        return this._entryMap.size;
+    get childEntriesCount(): number {
+        return this._childEntries.size;
     }
 
-    private _values: FormValues;
+    get allEntriesCount(): number {
+        return this._allEntries.size;
+    }
 
-    get values(): FormValues {
+    private _values: V;
+
+    get values(): V {
         return this._values;
     }
 
-    set values(newValues: FormValues) {
+    set values(newValues: V) {
         const oldValues = this._values;
         this._values = newValues;
 
@@ -224,40 +190,46 @@ class FormImpl<FormValues extends Record<string, unknown>>
         }
     }
 
-    private _entryMap: OrderedMap<
-        string,
-        Entry<FormValues, Extract<keyof FormValues, string>>
-    > = new OrderedMap();
+    /**
+     * Includes all entries for the entire form, including nested parameters,
+     * sections and subforms, but *not* entries inside form objects associated
+     * with subforms.
+     */
+    private _allEntries: Map<string, Entry<V>> = new Map();
 
-    constructor(init: FormInit<FormValues>) {
+    /**
+     * Only includes direct children of the form (not those inside sections).
+     * Ordered in display-order.
+     */
+    private _childEntries: OrderedMap<string, Entry<V>> = new OrderedMap();
+
+    constructor(init: FormInit<V>) {
         this._values = init.values;
         this.title = init.title;
         this.description = init.description;
     }
 
-    entries(): IterableIterator<
-        Entry<FormValues, Extract<keyof FormValues, string>>
-    > {
-        return this._entryMap.values();
+    childEntries(): IterableIterator<Entry<V>> {
+        return this._childEntries.values();
     }
 
-    getEntry(
-        entryName: string
-    ): Entry<FormValues, Extract<keyof FormValues, string>> {
-        return this._entryMap.getRequired(entryName);
+    allEntries(): IterableIterator<Entry<V>> {
+        return this._allEntries.values();
     }
 
-    param<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName,
+    getEntry(entryName: string): Entry<V> | undefined {
+        return this._allEntries.get(entryName);
+    }
+
+    param(
+        name: Extract<keyof V, string>,
         type: string,
-        init?: ParameterInit<FormValues, EntryName>
-    ): Parameter<FormValues, EntryName> {
+        init?: ParameterInit<V>
+    ): Parameter<V> {
         return new Parameter(this, name, type, init);
     }
 
-    getParam<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName
-    ): Parameter<FormValues, EntryName> {
+    getParam(name: Extract<keyof V, string>): Parameter<V> {
         const entry = this.getEntry(name);
         if (!(entry instanceof Parameter)) {
             throw new Error(`Entry "${name}" is not a parameter`);
@@ -265,16 +237,11 @@ class FormImpl<FormValues extends Record<string, unknown>>
         return entry;
     }
 
-    section<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName,
-        init?: SectionInit
-    ): Section<FormValues, EntryName> {
+    section(name: string, init?: SectionInit<V>): Section<V> {
         return new Section(this, name, init);
     }
 
-    getSection<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName
-    ): Section<FormValues, EntryName> {
+    getSection(name: string): Section<V> {
         const entry = this.getEntry(name);
         if (!(entry instanceof Section)) {
             throw new Error(`Entry "${name}" is not a section`);
@@ -282,20 +249,17 @@ class FormImpl<FormValues extends Record<string, unknown>>
         return entry;
     }
 
-    subForm<
-        EntryName extends Extract<keyof FormValues, string>,
-        SubFormValues extends FormValues[EntryName] & Record<string, unknown>
-    >(
-        name: EntryName,
-        form: Form<SubFormValues>
-    ): SubForm<FormValues, EntryName, SubFormValues> {
-        return new SubForm(this, name, form);
+    subForm<S extends V[Extract<keyof V, string>] & FormValues>(
+        name: Extract<keyof V, string>,
+        form: Form<S>,
+        init?: SubFormInit<V>
+    ): SubForm<V, S> {
+        return new SubForm(this, name, form, init);
     }
 
-    getSubForm<
-        EntryName extends Extract<keyof FormValues, string>,
-        SubFormValues extends FormValues[EntryName] & Record<string, unknown>
-    >(name: EntryName): SubForm<FormValues, EntryName, SubFormValues> {
+    getSubForm<S extends V[Extract<keyof V, string>] & FormValues>(
+        name: Extract<keyof V, string>
+    ): SubForm<V, S> {
         const entry = this.getEntry(name);
         if (!(entry instanceof SubForm)) {
             throw new Error(`Entry "${name}" is not a sub-form`);
@@ -303,7 +267,7 @@ class FormImpl<FormValues extends Record<string, unknown>>
         return entry;
     }
 
-    private _emitChangeEvent(newValues: FormValues, oldValues: FormValues) {
+    private _emitChangeEvent(newValues: V, oldValues: V) {
         this._emitter.emit("change", newValues, oldValues);
     }
 
@@ -313,39 +277,50 @@ class FormImpl<FormValues extends Record<string, unknown>>
      * @param name The name of the entry to update values for
      * @param value The new value
      */
-    updateValue<EntryName extends keyof FormValues>(
-        name: EntryName,
-        value: FormValues[EntryName]
+    updateValue(
+        name: Extract<keyof V, string>,
+        value: V[Extract<keyof V, string>]
     ): void {
         const newValues = cloneDeep(this.values);
         newValues[name] = value;
         this.values = newValues;
     }
 
-    // KLUDGE: This isn't truly private because it is called by form entries
-    _addChild<EntryName extends Extract<keyof FormValues, string>>(
-        entry: Entry<FormValues, EntryName>
-    ): void {
-        if (this._entryMap.has(entry.name)) {
+    /**
+     * Internal method to register a new entry in this form.
+     *
+     * Note this isn't truly private because it is called by form entries
+     * when they are created, but because it only exists on the implementation,
+     * not the Form interface, it is effectively private to this file.
+     *
+     * @param entry The entry to register
+     */
+    _registerEntry(entry: Entry<V>): void {
+        if (this._allEntries.has(entry.name)) {
             throw new Error(
                 `An entry named "${entry.name}" already exists in the form`
             );
         }
-        this._entryMap.set(entry.name, entry);
+        this._allEntries.set(entry.name, entry);
+        if (!entry.parentSection) {
+            // This isn't inside a section, so it's a direct child of the form
+            this._childEntries.set(entry.name, entry);
+        }
     }
 }
 
 export class SubForm<
-    ParentFormValues extends Record<string, unknown>,
-    EntryName extends Extract<keyof ParentFormValues, string>,
-    FormValues extends ParentFormValues[EntryName] & Record<string, unknown>
-> implements Entry<ParentFormValues, EntryName>, Form<FormValues>
+    P extends FormValues,
+    S extends P[Extract<keyof P, string>] & FormValues
+> implements Entry<P>, Form<S>
 {
-    readonly parentForm: Form<ParentFormValues>;
-    name: EntryName;
-    form: Form<FormValues>;
+    readonly parentForm: Form<P>;
+    readonly parentSection?: Section<P>;
 
-    title?: string;
+    name: Extract<keyof P, string>;
+    form: Form<S>;
+
+    _title?: string;
     description?: string;
     disabled?: boolean;
     hidden?: boolean;
@@ -354,33 +329,46 @@ export class SubForm<
     expanded?: boolean;
 
     _emitter = new EventEmitter() as TypedEmitter<{
-        change: (newValues: FormValues, oldValues: FormValues) => void;
+        change: (newValues: S, oldValues: S) => void;
     }>;
 
-    get entryCount(): number {
-        return this.form.entryCount;
+    get title(): string {
+        return this._title ?? this.name;
     }
 
-    get values(): FormValues {
+    set title(title: string) {
+        this._title = title;
+    }
+
+    get childEntriesCount(): number {
+        return this.form.childEntriesCount;
+    }
+
+    get allEntriesCount(): number {
+        return this.form.allEntriesCount;
+    }
+
+    get values(): S {
         return this.form.values;
     }
 
-    set values(newValues: FormValues) {
+    set values(newValues: S) {
         this.form.values = newValues;
     }
 
     constructor(
-        parentForm: Form<ParentFormValues>,
-        name: EntryName,
-        form: Form<FormValues>,
-        init?: SubFormInit
+        parentForm: Form<P>,
+        name: Extract<keyof P, string>,
+        form: Form<S>,
+        init?: SubFormInit<P>
     ) {
         this.parentForm = parentForm;
+        this.parentSection = init?.parentSection;
 
         this.name = name;
         this.form = form;
 
-        this.title = init?.title;
+        this._title = init?.title;
         this.description = init?.description;
         this.disabled = init?.disabled;
         this.hidden = init?.hidden;
@@ -390,83 +378,69 @@ export class SubForm<
 
         this.parentForm.values[name] = this.form.values;
 
-        (this.parentForm as FormImpl<ParentFormValues>)._addChild(this);
+        (this.parentForm as FormImpl<P>)._registerEntry(this);
     }
 
-    entries(): IterableIterator<
-        Entry<FormValues, Extract<keyof FormValues, string>>
-    > {
-        return this.form.entries();
+    childEntries(): IterableIterator<Entry<S>> {
+        return this.form.childEntries();
     }
 
-    getEntry(
-        entryName: string
-    ): Entry<FormValues, Extract<keyof FormValues, string>> {
+    allEntries(): IterableIterator<Entry<S>> {
+        return this.form.allEntries();
+    }
+
+    getEntry(entryName: string): Entry<S> | undefined {
         return this.form.getEntry(entryName);
     }
 
-    param<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName,
+    param(
+        name: Extract<keyof S, string>,
         type: string,
-        init?: ParameterInit<FormValues, EntryName>
-    ): Parameter<FormValues, EntryName> {
+        init?: ParameterInit<S>
+    ): Parameter<S> {
         return this.form.param(name, type, init);
     }
 
-    getParam<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName
-    ): Parameter<FormValues, EntryName> {
+    getParam(name: Extract<keyof S, string>): Parameter<S> {
         return this.form.getParam(name);
     }
 
-    section<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName,
-        init?: SectionInit
-    ): Section<FormValues, EntryName> {
+    section(name: string, init?: SectionInit<S>): Section<S> {
         return this.form.section(name, init);
     }
 
-    getSection<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName
-    ): Section<FormValues, EntryName> {
+    getSection(name: string): Section<S> {
         return this.form.getSection(name);
     }
 
-    subForm<
-        EntryName extends Extract<keyof FormValues, string>,
-        SubFormValues extends FormValues[EntryName] & Record<string, unknown>
-    >(
-        name: EntryName,
-        form: Form<SubFormValues>
-    ): SubForm<FormValues, EntryName, SubFormValues> {
+    subForm<S2 extends S[Extract<keyof S, string>] & FormValues>(
+        name: Extract<keyof S, string>,
+        form: Form<S2>
+    ): SubForm<S, S2> {
         return new SubForm(this.form, name, form);
     }
 
-    getSubForm<
-        EntryName extends Extract<keyof FormValues, string>,
-        SubFormValues extends FormValues[EntryName] & Record<string, unknown>
-    >(name: EntryName): SubForm<FormValues, EntryName, SubFormValues> {
+    getSubForm<S2 extends S[Extract<keyof S, string>] & FormValues>(
+        name: Extract<keyof S, string>
+    ): SubForm<S, S2> {
         return this.form.getSubForm(name);
     }
 
-    updateValue<EntryName extends keyof FormValues>(
-        name: EntryName,
-        value: FormValues[EntryName]
+    updateValue(
+        name: Extract<keyof S, string>,
+        value: S[Extract<keyof S, string>]
     ): void {
         this.form.updateValue(name, value);
     }
 }
 
-export class Parameter<
-    FormValues extends Record<string, unknown>,
-    EntryName extends Extract<keyof FormValues, string>
-> implements ValuedEntry<FormValues, EntryName>
-{
-    readonly parentForm: Form<FormValues>;
+export class Parameter<V extends FormValues> implements ValuedEntry<V> {
+    readonly parentForm: Form<V>;
+    readonly parentSection?: Section<V>;
 
-    name: EntryName;
+    name: Extract<keyof V, string>;
     type: string;
-    title?: string;
+    _label?: string;
     description?: string;
     disabled?: boolean;
     hidden?: boolean;
@@ -479,11 +453,19 @@ export class Parameter<
      */
     placeholder?: string;
 
-    get value(): FormValues[EntryName] {
+    get label(): string {
+        return this._label ?? this.name;
+    }
+
+    set label(label: string) {
+        this._label = label;
+    }
+
+    get value(): V[Extract<keyof V, string>] {
         return this.parentForm.values[this.name];
     }
 
-    set value(newValue: FormValues[EntryName]) {
+    set value(newValue: V[Extract<keyof V, string>]) {
         if (this.parentForm.values[this.name] !== newValue) {
             const oldValue = this.parentForm.values[this.name];
             if (oldValue !== newValue) {
@@ -493,16 +475,17 @@ export class Parameter<
     }
 
     constructor(
-        parentForm: Form<FormValues>,
-        name: EntryName,
+        parentForm: Form<V>,
+        name: Extract<keyof V, string>,
         type: string,
-        init?: ParameterInit<FormValues, EntryName>
+        init?: ParameterInit<V>
     ) {
         this.parentForm = parentForm;
+        this.parentSection = init?.parentSection;
 
         this.name = name;
         this.type = type;
-        this.title = init?.title;
+        this._label = init?.label;
         this.description = init?.description;
         this.disabled = init?.disabled;
         this.hidden = init?.hidden;
@@ -513,19 +496,16 @@ export class Parameter<
             this.value = init.value;
         }
 
-        (this.parentForm as FormImpl<FormValues>)._addChild(this);
+        (this.parentForm as FormImpl<V>)._registerEntry(this);
     }
 }
 
-export class Section<
-    FormValues extends Record<string, unknown>,
-    EntryName extends Extract<keyof FormValues, string>
-> implements ContainerEntry<FormValues, EntryName>
-{
-    readonly parentForm: Form<FormValues>;
+export class Section<V extends FormValues> {
+    readonly parentForm: Form<V>;
+    readonly parentSection?: Section<V>;
 
-    name: EntryName;
-    title?: string;
+    name: string;
+    _title?: string;
     description?: string;
     disabled?: boolean;
     hidden?: boolean;
@@ -533,15 +513,26 @@ export class Section<
     errorMessage?: string;
     expanded?: boolean;
 
-    constructor(
-        parentForm: Form<FormValues>,
-        name: EntryName,
-        init?: SectionInit
-    ) {
+    private _childEntries: OrderedMap<string, Entry<V>> = new OrderedMap();
+
+    get childEntriesCount(): number {
+        return this._childEntries.size;
+    }
+
+    get title(): string {
+        return this._title ?? this.name;
+    }
+
+    set title(title: string) {
+        this._title = title;
+    }
+
+    constructor(parentForm: Form<V>, name: string, init?: SectionInit<V>) {
         this.parentForm = parentForm;
+        this.parentSection = init?.parentSection;
 
         this.name = name;
-        this.title = init?.title;
+        this._title = init?.title;
         this.description = init?.description;
         this.disabled = init?.disabled;
         this.hidden = init?.hidden;
@@ -549,21 +540,52 @@ export class Section<
         this.errorMessage = init?.errorMessage;
         this.expanded = init?.expanded;
 
-        (this.parentForm as FormImpl<FormValues>)._addChild(this);
+        (this.parentForm as FormImpl<V>)._registerEntry(this);
     }
 
-    param<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName,
+    childEntries(): IterableIterator<Entry<V>> {
+        return this._childEntries.values();
+    }
+
+    getEntry(entryName: string): Entry<V> | undefined {
+        return this._childEntries.get(entryName);
+    }
+
+    param(
+        name: Extract<keyof V, string>,
         type: string,
-        init?: ParameterInit<FormValues, EntryName>
-    ): Parameter<FormValues, EntryName> {
-        return new Parameter(this.parentForm, name, type, init);
+        init?: ParameterInit<V>
+    ): Parameter<V> {
+        const paramInit = init ?? {};
+        paramInit.parentSection = this;
+
+        const param = new Parameter(this.parentForm, name, type, paramInit);
+        this._childEntries.set(name, param);
+
+        return param;
     }
 
-    section<EntryName extends Extract<keyof FormValues, string>>(
-        name: EntryName,
-        init?: SectionInit
-    ): Section<FormValues, EntryName> {
-        return new Section(this.parentForm, name, init);
+    section(name: string, init?: SectionInit<V>): Section<V> {
+        const sectionInit = init ?? {};
+        sectionInit.parentSection = this;
+
+        const section = new Section(this.parentForm, name, sectionInit);
+        this._childEntries.set(name, section);
+
+        return section;
+    }
+
+    subForm<S extends V[Extract<keyof V, string>] & FormValues>(
+        name: Extract<keyof V, string>,
+        form: Form<S>,
+        init?: SubFormInit<V>
+    ): SubForm<V, S> {
+        const subFormInit = init ?? {};
+        subFormInit.parentSection = this;
+
+        const subForm = new SubForm(this.parentForm, name, form, subFormInit);
+        this._childEntries.set(name, subForm);
+
+        return subForm;
     }
 }
