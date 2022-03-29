@@ -75,6 +75,7 @@ export class MainWindow extends GenericWindow {
                 webSecurity: false,
                 allowRunningInsecureContent: false,
                 nodeIntegration: true,
+                contextIsolation: false,
                 enableRemoteModule: true,
             },
         });

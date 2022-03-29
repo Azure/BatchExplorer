@@ -80,7 +80,7 @@ export class BreadcrumbService {
     }
 
     public navigateTo(crumb: Breadcrumb) {
-        this.router.navigateByUrl(crumb.url, {
+        this.router.navigate([crumb.url], {
             relativeTo: this.activatedRoute,
             queryParams: crumb.queryParams,
         });

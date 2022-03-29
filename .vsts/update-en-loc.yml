@@ -2,11 +2,11 @@ variables:
   locdir: $(Build.ArtifactStagingDirectory)/BatchExplorer
 
 pool:
-  vmImage: ubuntu-20.04
+  name: Azure-Pipelines-EO-Batch-Explorer
+  demands:
+  - ImageOverride -equals BatchExplorerBuildImage-Linux
 steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '16.x.x'
+  - template: ./node-setup.yml
 
   - script: npm ci
     displayName: Install dependencies

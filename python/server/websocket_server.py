@@ -1,8 +1,9 @@
 import asyncio
 import traceback
-import websockets
 import logging
 from jsonrpc import JsonRpcRequest, JsonRpcResponse, error
+from websockets import server
+from websockets.exceptions import ConnectionClosed
 from .response_stream import ResponseStream
 from .app import app
 from controllers import *
@@ -14,17 +15,17 @@ class WebsocketServer:
 
     def __init__(self, port):
         self.port = port
-        self.start_server = websockets.serve(
-            self.handler, "localhost", self.port)
+        self.start_server = server.serve(
+            self.handler, "127.0.0.1", self.port)
 
-    def run_forever(self):
+    async def run_forever(self):
         """
             Start to serve the server forever.
         """
         print("Starting websocket server...")
-        asyncio.get_event_loop().run_until_complete(self.start_server)
-        print("Started server")
-        asyncio.get_event_loop().run_forever()
+        async with server.serve(self.handler, "127.0.0.1", self.port):
+            print("Started server")
+            await asyncio.Future()
 
     async def handler(self, websocket, _):
         """
@@ -33,7 +34,7 @@ class WebsocketServer:
         connection = WebsocketConnection(websocket)
         try:
             await connection.listen()
-        except websockets.exceptions.ConnectionClosed:
+        except ConnectionClosed:
             logging.info("Websocket connection closed.")
 
 
@@ -54,7 +55,7 @@ class WebsocketConnection:
                     error=parse_error,
                 )
                 await self.send_response(response)
-            except websockets.exceptions.ConnectionClosed:
+            except ConnectionClosed:
                 logging.info("Websocket connection closed.")
             else:
                 await self.process_request(request)

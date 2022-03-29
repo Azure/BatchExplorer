@@ -28,6 +28,7 @@ export class ProxyCredentialsWindow extends UniqueWindow {
             center: true,
             webPreferences: {
                 nodeIntegration: true,
+                contextIsolation: false,
                 enableRemoteModule: true,
             },
         });

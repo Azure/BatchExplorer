@@ -2,27 +2,38 @@ name: $(SourceBranch)$(Rev:.r)
 jobs:
   - job: Linux
     pool:
-      vmImage: ubuntu-18.04
+      name: Azure-Pipelines-EO-Batch-Explorer
+      demands:
+        - ImageOverride -equals BatchExplorerBuildImage-Linux
     steps:
-       - template: ./linux/ci.yml
+      - template: ./linux/ci.yml
 
   - job: MacOS
     pool:
       vmImage: macOS-10.15
       demands: xcode
+    variables:
+      - name: EOCompliance-Mac
+        value: true
     steps:
-       - template: ./darwin/ci.yml
+      - template: ./darwin/ci.yml
 
   - job: Windows
     pool:
-      vmImage: windows-2019
+      name: Azure-Pipelines-EO-Batch-Explorer
+      demands:
+        - ImageOverride -equals BatchExplorerBuildImage-Windows
+    variables:
+      Packaging.EnableSBOMSigning: true
     steps:
       - template: ./win/ci.yml
 
   - job: RegisterDependencies
     displayName: Register dependencies
     pool:
-      vmImage: vs2017-win2016
+      name: Azure-Pipelines-EO-Batch-Explorer
+      demands:
+        - ImageOverride -equals BatchExplorerBuildImage-Windows
     condition: ne(variables['Build.Reason'], 'PullRequest')
     variables:
       EnableDetectorPip: true
@@ -30,4 +41,4 @@ jobs:
     steps:
       - template: ./win/win-dependencies.yml
       - task: ComponentGovernanceComponentDetection@0
-        displayName: 'Component Detection'
+        displayName: "Component Detection"

@@ -22,8 +22,8 @@ describe("GithubDataService", () => {
                 HttpClientTestingModule,
             ],
         });
-        githubDataService = new GithubDataService(TestBed.get(HttpClient), settingsSpy);
-        httpMock = TestBed.get(HttpTestingController);
+        githubDataService = new GithubDataService(TestBed.inject(HttpClient), settingsSpy);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
     afterEach(() => {

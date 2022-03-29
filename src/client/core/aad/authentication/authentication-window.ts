@@ -12,7 +12,6 @@ export class AuthenticationWindow extends UniqueWindow {
             show: false,
             center: true,
             webPreferences: {
-                nodeIntegration: false,
                 enableRemoteModule: true,
                 preload: ClientConstants.urls.preloadInsecureTest,
             },
