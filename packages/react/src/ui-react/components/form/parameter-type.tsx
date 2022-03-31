@@ -7,10 +7,11 @@ import { useAsyncEffect } from "../../hooks";
 import { FormValues } from "@batch/ui-common/lib/form";
 
 enum ExtendedParameterType {
-    SubscriptionId = "SubscriptionId",
-    ResourceGroupId = "ResourceGroupId",
-    LocationId = "LocationId",
     BatchAccountName = "BatchAccountName",
+    LocationId = "LocationId",
+    ResourceGroupId = "ResourceGroupId",
+    StorageAccountId = "StorageAccountId",
+    SubscriptionId = "SubscriptionId",
 }
 
 export const ParameterType = {
@@ -25,7 +26,24 @@ export interface ParameterTypeResolver {
 export class DefaultParameterTypeResolver implements ParameterTypeResolver {
     getFormControl<V extends FormValues>(param: Parameter<V>): JSX.Element {
         switch (param.type) {
+            // Common types
             case ParameterType.String:
+                return <StringParamTextField key={param.name} param={param} />;
+            case ParameterType.StringList:
+                return <StringParamTextField key={param.name} param={param} />;
+            case ParameterType.Number:
+                return <StringParamTextField key={param.name} param={param} />;
+            case ParameterType.Boolean:
+                return <StringParamTextField key={param.name} param={param} />;
+
+            // Extended types
+            case ParameterType.BatchAccountName:
+                return <StringParamTextField key={param.name} param={param} />;
+            case ParameterType.LocationId:
+                return <StringParamTextField key={param.name} param={param} />;
+            case ParameterType.ResourceGroupId:
+                return <StringParamTextField key={param.name} param={param} />;
+            case ParameterType.StorageAccountId:
                 return <StringParamTextField key={param.name} param={param} />;
             case ParameterType.SubscriptionId:
                 return (
@@ -34,12 +52,6 @@ export class DefaultParameterTypeResolver implements ParameterTypeResolver {
                         param={param}
                     />
                 );
-            case ParameterType.ResourceGroupId:
-                return <StringParamTextField key={param.name} param={param} />;
-            case ParameterType.LocationId:
-                return <StringParamTextField key={param.name} param={param} />;
-            case ParameterType.BatchAccountName:
-                return <StringParamTextField key={param.name} param={param} />;
             default:
                 throw new Error(`Unknown parameter type: ${param.type}`);
         }

@@ -6,6 +6,11 @@ export type CreateAccountFormValues = {
     subscriptionId?: string;
     resourceGroupId?: string;
     location?: string;
+    storageAccountId?: string;
+    identityType?: string;
+    publicNetworkAccess?: string;
+    poolAllocationMode?: string;
+    allowedAuthenticationModes?: string[];
 };
 
 export const createAccountForm = createForm<CreateAccountFormValues>({
@@ -29,6 +34,28 @@ createAccountForm.param("accountName", ParameterType.BatchAccountName, {
 
 createAccountForm.param("location", ParameterType.LocationId, {
     label: "Location",
+});
+
+createAccountForm.param("storageAccountId", ParameterType.StorageAccountId, {
+    label: "Location",
+});
+
+const advancedSection = createAccountForm.section("Advanced");
+
+advancedSection.param("identityType", ParameterType.String, {
+    label: "Identity type",
+});
+
+advancedSection.param("publicNetworkAccess", ParameterType.String, {
+    label: "Public network access",
+});
+
+advancedSection.param("poolAllocationMode", ParameterType.String, {
+    label: "Pool alocation mode",
+});
+
+advancedSection.param("allowedAuthenticationModes", ParameterType.StringList, {
+    label: "Authentication modes",
 });
 
 createAccountForm.section("Tags");
