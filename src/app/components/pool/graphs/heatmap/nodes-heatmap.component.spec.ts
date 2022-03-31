@@ -16,6 +16,8 @@ import { NodesHeatmapComponent, NodesHeatmapLegendComponent } from ".";
 
 const legendWidth = 160;
 const svgMargin = 4; // 2x2
+const defaultRunningTasksCount = 2;
+const defaultRunningTaskSlotsCount = 2;
 
 @Component({
     template: `
@@ -135,7 +137,9 @@ describe("NodesHeatmapComponent", () => {
     });
 
     it("should have title with number of tasks running on node", () => {
+        const testTaskSlotsPerNode = 2;
         testComponent.nodes = createNodes(2);
+        testComponent.pool = new Pool({ id: "pool-2", taskSlotsPerNode: testTaskSlotsPerNode });
         fixture.detectChanges();
         const tiles = svg.selectAll("g.node-group");
         tiles.each((d, i, groups) => {
@@ -144,12 +148,14 @@ describe("NodesHeatmapComponent", () => {
             const title = group.select("title");
 
             expect(title).not.toBeFalsy("Should have a rect in bg");
-            expect(title.text()).toContain("2 tasks running on node");
+            expect(title.text()).toContain(
+                `${defaultRunningTasksCount} tasks (${defaultRunningTaskSlotsCount}/${testTaskSlotsPerNode} slots) running on node (node-${i + 1})`
+            );
         });
     });
 
     describe("Running task overlay", () => {
-        it("when there is space should show 2 green sripes", () => {
+        it("when there is space should show 2 green stripes", () => {
             testComponent.nodes = createNodes(2);
             testComponent.pool = new Pool({ id: "pool-4", taskSlotsPerNode: 4 });
             fixture.detectChanges();
@@ -157,7 +163,7 @@ describe("NodesHeatmapComponent", () => {
             expect(tiles.size()).toBe(2);
             tiles.each((d, i, groups) => {
                 const group = d3.select(groups[i]);
-                const bg = group.select("g.tasks");
+                const bg = group.select("g.taskslots");
                 const taskRects = bg.selectAll("rect");
                 expect(taskRects.size()).toBe(2, "Should have 2 rect");
                 taskRects.each((d, i, rects) => {
@@ -168,7 +174,7 @@ describe("NodesHeatmapComponent", () => {
             });
         });
 
-        it("when there is no space should combine green sripes", () => {
+        it("when there is no space should combine green stripes", () => {
             testComponent.nodes = createNodes(2);
             testComponent.pool = new Pool({ id: "pool-100", taskSlotsPerNode: 300 });
             fixture.detectChanges();
@@ -176,7 +182,7 @@ describe("NodesHeatmapComponent", () => {
             expect(tiles.size()).toBe(2);
             tiles.each((d, i, groups) => {
                 const group = d3.select(groups[i]);
-                const bg = group.select("g.tasks");
+                const bg = group.select("g.taskslots");
                 const taskRects = bg.selectAll("rect");
                 expect(taskRects.size()).toBe(1, "Should have only 1 rect");
                 taskRects.each((d, i, rects) => {
@@ -344,7 +350,8 @@ function createNodes(count: number, dedicated = true) {
             id: `node-${i + 1}`,
             state: NodeState.running,
             isDedicated: dedicated,
-            runningTasksCount: 2,
+            runningTasksCount: defaultRunningTasksCount,
+            runningTaskSlotsCount: defaultRunningTaskSlotsCount,
         }));
     }
     return List(nodes);

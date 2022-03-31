@@ -271,7 +271,7 @@ export class BlobStorageClientProxy {
      * @param {StorageRequestOptions} options - Optional request parameters
      */
     public deleteContainer(container: string, options?: StorageRequestOptions)
-        : Promise<BlobStorageResult> {
+        : Promise<void> {
 
         return new Promise((resolve, reject) => {
             this.client.deleteContainer(container, options, (error, response) => {
@@ -292,7 +292,7 @@ export class BlobStorageClientProxy {
      * @param {string} container - Name of the storage container
      */
     public createContainer(containerName: string)
-        : Promise<BlobStorageResult> {
+        : Promise<void> {
 
         return new Promise((resolve, reject) => {
             this.client.createContainer(containerName, (error, response) => {
@@ -311,7 +311,7 @@ export class BlobStorageClientProxy {
      * @param {string} container - Name of the storage container
      */
     public createContainerIfNotExists(containerName: string)
-        : Promise<BlobStorageResult> {
+        : Promise<void> {
 
         return new Promise((resolve, reject) => {
             this.client.createContainerIfNotExists(containerName, (error, response) => {

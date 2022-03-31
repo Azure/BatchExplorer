@@ -28,6 +28,7 @@ steps:
     displayName: Build dmg
   - script: npm run package darwin-manifest
     displayName: Create manifest
+  - template: ../common/generate-sbom.yml
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: darwin

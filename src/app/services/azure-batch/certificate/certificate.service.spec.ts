@@ -17,7 +17,7 @@ describe("CertificateService", () => {
             ],
         });
         certificateService = new CertificateService(TestBed.get(HttpClient));
-        httpMock = TestBed.get(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
     it("get a certificate", (done) => {

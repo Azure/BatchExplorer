@@ -2,7 +2,9 @@
 jobs:
   - job: Linux
     pool:
-      vmImage: ubuntu-18.04
+      name: Azure-Pipelines-EO-Batch-Explorer
+      demands:
+      - ImageOverride -equals BatchExplorerBuildImage-Linux
     steps:
        - template: ./linux/distribution.yml
 
@@ -10,11 +12,16 @@ jobs:
     pool:
       vmImage: macOS-10.15
       demands: xcode
+    variables:
+      - name: EOCompliance-Mac
+        value: true
     steps:
        - template: ./darwin/distribution.yml
 
   - job: Windows
     pool:
-      vmImage: vs2017-win2016
+      name: Azure-Pipelines-EO-Batch-Explorer
+      demands:
+      - ImageOverride -equals BatchExplorerBuildImage-Windows
     steps:
       - template: ./win/distribution.yml

@@ -1,14 +1,18 @@
 steps:
+  - template: ./credscan.yml
   - template: ./win-dependencies.yml
   - powershell: ./scripts/azpipelines/update-build-name.ps1
     displayName: Resolve version
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
+      $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
       exec { npm run build:prod }
       exec { npm run build-python }
       exec { npm run package win-exe }
     displayName: Build executable
+
+  - template: ./security-analysis.yml
 
   - template: ./sign.yml
     parameters:
@@ -27,6 +31,7 @@ steps:
         **/BatchExplorer*Setup*.exe
   - powershell: npm run package win-manifest
     displayName: Create manifest
+  - template: ../common/generate-sbom.yml
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: windows

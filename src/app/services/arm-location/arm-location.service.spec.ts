@@ -100,9 +100,9 @@ describe("ArmLocationService", () => {
             ],
         });
 
-        httpMock = TestBed.get(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
 
-        service = new ArmLocationService(TestBed.get(AzureHttpService), armProviderServiceSpy);
+        service = new ArmLocationService(TestBed.inject(AzureHttpService), armProviderServiceSpy);
     });
 
     it("list locations for the subscription", (done) => {

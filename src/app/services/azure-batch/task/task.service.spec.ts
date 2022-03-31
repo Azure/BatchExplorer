@@ -17,7 +17,7 @@ describe("TaskService", () => {
             ],
         });
         taskService = new TaskService(TestBed.get(HttpClient));
-        httpMock = TestBed.get(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
     it("get a task", (done) => {

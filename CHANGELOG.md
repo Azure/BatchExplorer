@@ -1,3 +1,20 @@
+# 2.13.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/47?closed=1)
+
+### Features
+
+* Restore SKU API support for displaying VM information in Pools [\#2462](https://github.com/Azure/BatchExplorer/issues/2462)
+
+### Bugs
+
+* Accessibility fixes and improvements  [\#2471](https://github.com/Azure/BatchExplorer/issues/2471)
+* Heatmaps did not display task slot information correctly [\#2461](https://github.com/Azure/BatchExplorer/issues/2461)
+
+### Other
+
+* Cyber Executive Order Compliance [\#2457](https://github.com/Azure/BatchExplorer/issues/2457)
+
 # 2.12.1
 
 ### Hot Fixes

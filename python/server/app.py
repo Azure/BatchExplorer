@@ -1,6 +1,7 @@
 import inspect
 import traceback
 import azext.batch
+from azext.batch.errors import MissingParameterValue
 import azure.batch.models as batch_models
 import azure.common
 import logging
@@ -59,7 +60,7 @@ class BatchExplorerApp:
             except batch_models.BatchErrorException as e:
                 # pylint: disable=E1101
                 raise JsonRpcError(e.response.status_code, e.message.value, e.response.json())
-            except azext.batch.errors.MissingParameterValue as e:
+            except MissingParameterValue as e:
                 raise JsonRpcInvalidParamsError(str(e), {
                     'paramName': e.parameter_name,
                     'paramDescription': e.parameter_description,

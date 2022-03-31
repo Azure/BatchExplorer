@@ -1,4 +1,5 @@
 import json
+from typing import Any, Optional
 from .error import JsonRpcError
 from .request import JsonRpcRequest
 
@@ -8,7 +9,7 @@ class JsonRpcResponse:
         Class for a json rpc response.
     """
 
-    def __init__(self, request: JsonRpcRequest, result: any=None, stream=False, error: JsonRpcError=None):
+    def __init__(self, request: Optional[JsonRpcRequest], result: Any=None, stream=False, error: JsonRpcError=None):
         self.jsonrpc = "2.0"
         self.result = result
         self.error = error

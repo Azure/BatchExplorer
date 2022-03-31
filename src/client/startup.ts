@@ -28,7 +28,7 @@ function setupSingleInstance(batchExplorerApp: BatchExplorerApplication) {
         log.info("There is already an instance of BatchExplorer open. Closing this one.");
         batchExplorerApp.quit();
     } else {
-        app.on("second-instance", (event, commandLine, workingDirectory) => {
+        app.on("second-instance", (event, commandLine) => {
             log.info("Try to open labs again", commandLine);
             batchExplorerApp.openFromArguments(commandLine);
         });
@@ -40,7 +40,7 @@ function registerAuthProtocol() {
     // This call needs to be done after electron app is ready.
     protocol.registerStringProtocol("urn", (request, callback) => {
         // Doesn't matter how the protocol is handled; error is fine
-        callback();
+        callback("");
     });
 }
 
@@ -116,19 +116,18 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
 }
 
 function secureRemoteContentLoading() {
-    app.on("web-contents-created", (event, contents) => {
-        contents.on("new-window", (event, navigationUrl) => {
+    app.on("web-contents-created", (_, contents) => {
+        contents.setWindowOpenHandler((details) => {
             // In this example, we'll ask the operating system
             // to open this event's url in the default browser.
-            event.preventDefault();
-
-            shell.openExternal(navigationUrl);
+            shell.openExternal(details.url);
+            return { action: "deny" };
         });
     });
 
     // This reject any permissions requested by remove websites(Like asking for location).
     // This should never get called as the above call shouldn't open any remote links
-    session.defaultSession!.setPermissionRequestHandler((webContents, permission, callback) => {
+    session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
         return callback(false);
     });
 }

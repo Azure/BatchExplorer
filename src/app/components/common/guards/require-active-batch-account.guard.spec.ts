@@ -37,8 +37,8 @@ describe("RequireActiveBatchAccountGuard", () => {
             ],
         });
 
-        guard = TestBed.get(RequireActiveBatchAccountGuard);
-        router = TestBed.get(Router);
+        guard = TestBed.inject(RequireActiveBatchAccountGuard);
+        router = TestBed.inject(Router);
     });
 
     it("resolve to true if account id is already picked", async () => {

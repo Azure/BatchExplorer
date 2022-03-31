@@ -49,6 +49,14 @@ button:hover {
     margin-right: 10px;
 }
 
+.clear:focus {
+    outline: #3d85c6 auto 1px;
+}
+
+.save-button:focus {
+    outline: #3d85c6 auto 1px;
+}
+
 .subtitle {
     display: flex;
 }

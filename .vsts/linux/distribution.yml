@@ -10,6 +10,7 @@ steps:
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run package linux-manifest
     displayName: Create manifest
+  - template: ../common/generate-sbom.yml
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: linux
