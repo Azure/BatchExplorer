@@ -12,6 +12,7 @@ enum ExtendedParameterType {
     ResourceGroupId = "ResourceGroupId",
     StorageAccountId = "StorageAccountId",
     SubscriptionId = "SubscriptionId",
+    Tags = "Tags",
 }
 
 export const ParameterType = {
@@ -52,6 +53,8 @@ export class DefaultParameterTypeResolver implements ParameterTypeResolver {
                         param={param}
                     />
                 );
+            case ParameterType.Tags:
+                return <StringParamTextField key={param.name} param={param} />;
             default:
                 throw new Error(`Unknown parameter type: ${param.type}`);
         }

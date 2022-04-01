@@ -109,7 +109,7 @@ const ParameterRow = <V extends FormValues>(props: ParameterRowProps<V>) => {
     return (
         <div>
             <Label>
-                {param.label}
+                {param.hideLabel !== true && param.label}
                 {param.description != null && (
                     <TooltipHost id={toolTipId} content={param.description}>
                         <Icon

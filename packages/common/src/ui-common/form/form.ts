@@ -88,6 +88,7 @@ export interface ParameterInit<V extends FormValues>
     description?: string;
     disabled?: boolean;
     hidden?: boolean;
+    hideLabel?: boolean;
     inactive?: boolean;
     errorMessage?: string;
 }
@@ -444,6 +445,7 @@ export class Parameter<V extends FormValues> implements ValuedEntry<V> {
     description?: string;
     disabled?: boolean;
     hidden?: boolean;
+    hideLabel?: boolean;
     inactive?: boolean;
     errorMessage?: string;
 
@@ -489,6 +491,7 @@ export class Parameter<V extends FormValues> implements ValuedEntry<V> {
         this.description = init?.description;
         this.disabled = init?.disabled;
         this.hidden = init?.hidden;
+        this.hideLabel = init?.hideLabel;
         this.inactive = init?.inactive;
         this.errorMessage = init?.errorMessage;
 

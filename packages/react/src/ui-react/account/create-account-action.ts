@@ -12,6 +12,7 @@ export type CreateAccountFormValues = {
     publicNetworkAccess?: string;
     poolAllocationMode?: string;
     allowedAuthenticationModes?: string[];
+    tags?: Record<string, string>;
 };
 
 // TODO: Make this a public interface and put it in the common package
@@ -64,9 +65,10 @@ export class CreateAccountAction implements Action<CreateAccountFormValues> {
             }
         );
 
-        form.section("Tags");
-
-        form.section("Review + Create");
+        const tagsSection = form.section("Tags");
+        tagsSection.param("tags", ParameterType.Tags, {
+            hideLabel: true,
+        });
 
         return form;
     }
