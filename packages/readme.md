@@ -6,21 +6,23 @@ This directory contains Typescript libraries intended for use across various Bat
 
 These libraries consist of various NPM packages which are meant to be distributed (in the `packages/` directory), along with private utility packages which are for development only (in the `util/` directory).
 
-- `packages/common` - A common package intended to be able to run in a Node.js environment as well as a web browser environment. Has minimal external dependencies, and provides various core functions and interfaces such as:
+- `common` - A common package intended to be able to run in a Node.js environment as well as a web browser environment. Has minimal external dependencies, and provides various core functions and interfaces such as:
 
     - A common HTTP layer which wraps specific implementations of HTTP auth and transport (such as the Azure Portal's `batch()` API for sending/receiving multiple logical HTTP requests in a single request/response)
     - A reactive data layer for forms, intended to act as a view model for a form UI
 
-- `packages/react` - A React-based component package specifically designed to be deployed in an Azure Portal ReactView blade. Its peerDependencies are tailored toward a specific version of the Azure Portal SDK, and should be kept up to date with the version of the SDK that we are targeting. This packages builds a small AMD-compatible file which excludes any dependencies which the Azure Portal already provides such as React, FluentUI and Redux.
+- `service` - A package intended to act as a decoupled data access & business logic layer.
 
-- `packages/standalone` - A package targeted for deployment in a web browser. Builds a single Javascript bundle which contains all of its required dependencies, and includes any UI components which do not make sense in the portal, such as those for top-level navigation, authentication, etc.
+- `react` - A React-based component package specifically designed to be deployed in an Azure Portal ReactView blade. Its peerDependencies are tailored toward a specific version of the Azure Portal SDK, and should be kept up to date with the version of the SDK that we are targeting. This packages builds a small AMD-compatible file which excludes any dependencies which the Azure Portal already provides such as React, FluentUI and Redux.
+
+- `playground` - A package containing the code to render a UI component playground for developing components in isolation and testing edge cases.
 
 ## Development Prerequisites
 
 Before developing against these libraries, make sure you have installed:
 
-- [Node.js](https://nodejs.org) 14 or higher
-- [Yarn](https://classic.yarnpkg.com) 1.2 stable (**not** Yarn 2.x)
+- [Node.js](https://nodejs.org) Most recent LTS version
+- [Yarn](https://classic.yarnpkg.com) Latest 1.x stable (**not** Yarn 2.x)
 
 ## Building and Running Tests
 
@@ -32,7 +34,7 @@ yarn install && yarn build:clean
 
 ## Unit Tests
 
-Unit tests are automatically run via [Jest](https://jestjs.io/) when invoking any `build` script. To develop tests live, `cd` to the package's directory (for example `packages/common`) then run the command:
+Unit tests are automatically run via [Jest](https://jestjs.io/) when invoking any `build` script. To develop tests live, `cd` to the package's directory then run the command:
 
 ```shell
 yarn test:watch
@@ -44,10 +46,10 @@ To set breakpoints and debug tests, run `yarn test:debug`, then open Edge or Chr
 
 ## Developing in a Local Web Server
 
-To start a development server and watch for changes, `cd` to the `packages/standalone` directory and run the following command:
+To start a development server and watch for changes, `cd` to the root directory of the repository and run the following command:
 
 ```shell
-yarn start
+yarn start:web
 ```
 
 This will start a webpack dev server at <http://127.0.0.1:9000> and watch for any changes to the `standalone` package. To pick up live changes from other packages, run `yarn watch` either from the same directory as this README.md, or from the individual package directory.
