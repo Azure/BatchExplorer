@@ -1,7 +1,7 @@
 import { Form } from "@batch/ui-common";
 import { FormValues } from "@batch/ui-common/lib/form";
 
-export type FormLayoutType = "list";
+export type FormLayoutType = "list" | "steps";
 
 export interface FormLayoutProvider {
     getLayout(layout: FormLayoutType): FormLayout;
