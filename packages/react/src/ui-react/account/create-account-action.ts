@@ -41,7 +41,9 @@ export class CreateAccountAction implements Action<CreateAccountFormValues> {
             label: "Location",
         });
         form.param("storageAccountId", ParameterType.StorageAccountId, {
-            label: "Location",
+            label: "Storage account",
+            description:
+                "Optional. For best performance we recommend a storage account (general purpose v2) located in the same region as the associated Batch account.",
         });
 
         const advancedSection = form.section("Advanced");

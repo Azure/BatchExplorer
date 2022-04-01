@@ -10,18 +10,13 @@ import { useAppTheme } from "../../theme";
 import { FormLayout } from "./form-layout";
 
 /**
- * Render forms as a flat list.
+ * Render a form as a flat list.
  */
 export class ListFormLayout implements FormLayout {
     render<V extends FormValues>(form: Form<V>): JSX.Element {
         const rows: JSX.Element[] = [];
-        for (const entry of form.allEntries()) {
-            if (entry instanceof Parameter) {
-                rows.push(<ParameterRow key={entry.name} param={entry} />);
-            } else if (entry instanceof Section) {
-                rows.push(<SectionTitle key={entry.name} section={entry} />);
-            }
-        }
+
+        this._renderChildEntries(form.childEntries(), rows);
 
         return (
             <div style={{ maxWidth: "480px" }}>
@@ -33,7 +28,7 @@ export class ListFormLayout implements FormLayout {
         );
     }
 
-    _renderChildEntries<V extends FormValues>(
+    private _renderChildEntries<V extends FormValues>(
         entries: IterableIterator<Entry<V>>,
         rows: JSX.Element[]
     ) {
@@ -42,6 +37,9 @@ export class ListFormLayout implements FormLayout {
                 rows.push(<ParameterRow key={entry.name} param={entry} />);
             } else if (entry instanceof Section) {
                 rows.push(<SectionTitle key={entry.name} section={entry} />);
+                if (entry.childEntriesCount > 0) {
+                    this._renderChildEntries(entry.childEntries(), rows);
+                }
             } else if (entry instanceof SubForm) {
                 rows.push(<SubFormTitle key={entry.name} subForm={entry} />);
                 if (entry.childEntriesCount > 0) {
@@ -52,25 +50,23 @@ export class ListFormLayout implements FormLayout {
     }
 }
 
-export interface SectionTitleProps<V extends FormValues> {
+interface SectionTitleProps<V extends FormValues> {
     section: Section<V>;
 }
 
-export const SectionTitle = <V extends FormValues>(
-    props: SectionTitleProps<V>
-) => {
+const SectionTitle = <V extends FormValues>(props: SectionTitleProps<V>) => {
     const { section } = props;
     return <TitleRow title={section.title} description={section.description} />;
 };
 
-export interface SubFormTitleProps<
+interface SubFormTitleProps<
     P extends FormValues,
     S extends P[Extract<keyof P, string>] & FormValues
 > {
     subForm: SubForm<P, S>;
 }
 
-export const SubFormTitle = <
+const SubFormTitle = <
     P extends FormValues,
     S extends P[Extract<keyof P, string>] & FormValues
 >(
@@ -80,7 +76,7 @@ export const SubFormTitle = <
     return <TitleRow title={subForm.title} description={subForm.description} />;
 };
 
-export const TitleRow = (props: { title: string; description?: string }) => {
+const TitleRow = (props: { title: string; description?: string }) => {
     const theme = useAppTheme();
     return (
         <div>
@@ -100,13 +96,11 @@ export const TitleRow = (props: { title: string; description?: string }) => {
     );
 };
 
-export interface ParameterRowProps<V extends FormValues> {
+interface ParameterRowProps<V extends FormValues> {
     param: Parameter<V>;
 }
 
-export const ParameterRow = <V extends FormValues>(
-    props: ParameterRowProps<V>
-) => {
+const ParameterRow = <V extends FormValues>(props: ParameterRowProps<V>) => {
     const { param } = props;
 
     const env = getBrowserEnvironment();
