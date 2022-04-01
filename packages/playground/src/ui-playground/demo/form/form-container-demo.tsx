@@ -2,7 +2,7 @@ import * as React from "react";
 import { DemoPane } from "../../layout/demo-pane";
 import { DemoComponentContainer } from "../../layout/demo-component-container";
 import { DemoControlContainer } from "../../layout/demo-control-container";
-import { createAccountForm } from "@batch/ui-react/lib/account/create-account";
+import { CreateAccountAction } from "@batch/ui-react/lib/account/create-account-action";
 import { createForm, Form } from "@batch/ui-common";
 import { ParameterType } from "@batch/ui-react/lib/components/form/parameter-type";
 import { FormContainer } from "@batch/ui-react/lib/components/form";
@@ -17,6 +17,8 @@ type ExampleFormValues = {
     description?: string;
     milesPerChange?: number;
 };
+
+const createAccountForm = new CreateAccountAction().createForm();
 
 const carForm = createForm<ExampleFormValues>({
     title: "Example Form",
