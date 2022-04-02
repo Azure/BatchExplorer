@@ -1,35 +1,12 @@
-let clipboardElement: HTMLTextAreaElement | null = null;
-export const clipboardElementId = "be-global-clipboard";
-
-function initializeClipboard() {
-    if (clipboardElement) {
-        // Early out - already initialized
-        return;
-    }
-    const el = document.createElement("textarea");
-    el.id = clipboardElementId;
-    el.style.position = "absolute";
-    el.style.left = "-9999px";
-    el.style.top = "-9999px";
-    el.style.opacity = "0";
-    document.body.appendChild(el);
-    clipboardElement = el;
-}
-
 /**
- * Copies a given string to the clipboard
+ * Copies a given string to the clipboard. Due to browser security features,
+ * this *must* be called within a user-initiated event handler callback.
  *
- * @param value The string value to copy
+ * @param text The text to copy
+ *
+ * @return A promise which resolves when the clipboard has been
+ *         successfully updated and rejects on any failure.
  */
-export function copyToClipboard(value: string): void {
-    if (!clipboardElement) {
-        initializeClipboard();
-    }
-    if (!clipboardElement) {
-        console.error("Could not find global clipboard element");
-        return;
-    }
-    clipboardElement.value = value;
-    clipboardElement.select();
-    document.execCommand("copy");
+export function copyToClipboard(text: string): Promise<void> {
+    return navigator.clipboard.writeText(text);
 }
