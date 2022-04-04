@@ -3,7 +3,6 @@ import { Form, FormValues } from "../form";
 export interface Action<V extends FormValues> {
     form: Form<V>;
     validate(): Promise<void>;
-    onValidate(): Promise<void>;
     execute(formValues: V): Promise<void>;
 }
 
