@@ -55,7 +55,7 @@ export class CreateAccountAction implements Action<CreateAccountFormValues> {
             label: "Public network access",
         });
         advancedSection.param("poolAllocationMode", ParameterType.String, {
-            label: "Pool alocation mode",
+            label: "Pool allocation mode",
         });
         advancedSection.param(
             "allowedAuthenticationModes",
