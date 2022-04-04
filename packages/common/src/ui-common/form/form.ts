@@ -66,7 +66,9 @@ export interface Entry<V extends FormValues> {
 }
 
 export interface ValuedEntry<V extends FormValues> extends Entry<V> {
+    required?: boolean;
     value?: V[Extract<keyof V, string>];
+    validate(): Promise<ValidationStatus>;
 }
 
 export interface EntryInit<V extends FormValues> {
@@ -79,18 +81,17 @@ export interface EntryInit<V extends FormValues> {
 }
 
 export interface ValuedEntryInit<V extends FormValues> extends EntryInit<V> {
+    required?: boolean;
     value?: V[Extract<keyof V, string>];
+    onValidate?: (
+        value: V[Extract<keyof V, string>]
+    ) => Promise<ValidationStatus>;
 }
 
 export interface ParameterInit<V extends FormValues>
     extends ValuedEntryInit<V> {
     label?: string;
-    description?: string;
-    disabled?: boolean;
-    hidden?: boolean;
     hideLabel?: boolean;
-    inactive?: boolean;
-    errorMessage?: string;
 }
 
 export interface SubFormInit<V extends FormValues> extends EntryInit<V> {
@@ -109,6 +110,16 @@ export interface FormInit<V extends FormValues> {
     description?: string;
 }
 
+export class ValidationStatus {
+    level: "ok" | "warn" | "error";
+    message: string;
+
+    constructor(level: "ok" | "warn" | "error", message: string) {
+        this.level = level;
+        this.message = message;
+    }
+}
+
 /**
  * A form which may contain child entries, and may be nested inside an entry itself
  * A form's value is an object with key/value pairs representing parameter names
@@ -116,6 +127,9 @@ export interface FormInit<V extends FormValues> {
  */
 export interface Form<V extends FormValues> {
     values: V;
+
+    readonly validationStatus: ValidationStatus | undefined;
+    readonly entryValidationStatus: { [name in keyof V]?: ValidationStatus };
 
     title?: string;
     description?: string;
@@ -158,11 +172,34 @@ export interface Form<V extends FormValues> {
         name: Extract<keyof V, string>,
         value: V[Extract<keyof V, string>]
     ): void;
+
+    validate(): Promise<ValidationStatus>;
+
+    ok(entryName: keyof V, message?: string): void;
+
+    error(entryName: keyof V, message: string): void;
+
+    warn(entryName: keyof V, message: string): void;
 }
 
 class FormImpl<V extends FormValues> implements Form<V> {
     title?: string;
     description?: string;
+
+    _validationStatus: ValidationStatus | undefined;
+    get validationStatus(): ValidationStatus | undefined {
+        return this._validationStatus;
+    }
+
+    _entryValidationStatus: { [name in keyof V]?: ValidationStatus } = {};
+    get entryValidationStatus(): { [name in keyof V]?: ValidationStatus } {
+        return this._entryValidationStatus;
+    }
+
+    // Because validation can be async, this is used to keep track of
+    // the current validation that is in progress, so that the latest
+    // one always 'wins'
+    _currentValidationPromise: Promise<ValidationStatus[]> | undefined;
 
     _emitter = new EventEmitter() as TypedEmitter<{
         change: (newValues: V, oldValues: V) => void;
@@ -287,6 +324,127 @@ class FormImpl<V extends FormValues> implements Form<V> {
         this.values = newValues;
     }
 
+    async validate(): Promise<ValidationStatus> {
+        const validatingEntries = [];
+        const validationPromises = [];
+        const newValidationStatuses: { [name in keyof V]?: ValidationStatus } =
+            {};
+
+        // Call validate() for each entry but don't block
+        // on completion
+        for (const entry of this.allEntries()) {
+            if (entry instanceof Parameter || entry instanceof SubForm) {
+                validatingEntries.push(entry);
+                validationPromises.push(
+                    entry.validate().then((status) => {
+                        newValidationStatuses[entry.name as keyof V] = status;
+                        return status;
+                    })
+                );
+            }
+        }
+
+        const validationPromise = Promise.all(validationPromises);
+        this._currentValidationPromise = validationPromise;
+
+        await validationPromise;
+
+        // Check to make sure this is still the most recent validation
+        // attempt. If it is not, return the most recent validation status
+        // which has completed. Note that if there hasn't been a validation
+        // completed yet, this will run validation even if there is a pending
+        // one, and the pending validation will overwrite this validation
+        // status when it finishes.
+        if (
+            this._validationStatus &&
+            this._currentValidationPromise !== validationPromise
+        ) {
+            return this._validationStatus;
+        }
+
+        // Clear old validation statuses
+        this._validationStatus = undefined;
+        this._entryValidationStatus = {};
+
+        // All entries have validated. Update status
+        for (const entry of validatingEntries) {
+            const entryName = entry.name as keyof V;
+            this._entryValidationStatus[entryName] =
+                newValidationStatuses[entryName];
+        }
+
+        if (this._currentValidationPromise === validationPromise) {
+            // Only clear the current validation promise if this is the
+            // most recent one
+            this._currentValidationPromise = undefined;
+        }
+
+        const overallStatus = this._computeOverallValidationStatus();
+        this._validationStatus = overallStatus;
+
+        return overallStatus;
+    }
+
+    ok(entryName: keyof V, message?: string): void {
+        this._entryValidationStatus[entryName] = new ValidationStatus(
+            "ok",
+            message ?? ""
+        );
+        this._validationStatus = this._computeOverallValidationStatus();
+    }
+
+    error(entryName: keyof V, message: string): void {
+        this._entryValidationStatus[entryName] = new ValidationStatus(
+            "error",
+            message
+        );
+        this._validationStatus = this._computeOverallValidationStatus();
+    }
+
+    warn(entryName: keyof V, message: string): void {
+        const currentEntry = this._entryValidationStatus[entryName];
+        if (currentEntry && currentEntry.level === "error") {
+            // Don't overwrite error messages with warning messages
+            return;
+        }
+        this._entryValidationStatus[entryName] = new ValidationStatus(
+            "warn",
+            message
+        );
+        this._validationStatus = this._computeOverallValidationStatus();
+    }
+
+    private _computeOverallValidationStatus(): ValidationStatus {
+        let warningCount = 0;
+        let errorCount = 0;
+        for (const entry of Object.values(this._entryValidationStatus)) {
+            if (entry) {
+                if (entry.level === "warn") {
+                    warningCount++;
+                } else if (entry.level === "error") {
+                    errorCount++;
+                }
+            }
+        }
+
+        let overallStatus: ValidationStatus;
+        if (errorCount > 0) {
+            overallStatus = new ValidationStatus(
+                "error",
+                `${errorCount} ${errorCount === 1 ? "error" : "errors"} found`
+            );
+        } else if (warningCount > 0) {
+            overallStatus = new ValidationStatus(
+                "warn",
+                `${warningCount} warnings found`
+            );
+        } else {
+            overallStatus = new ValidationStatus("ok", "Validation passed");
+        }
+
+        return overallStatus;
+    }
+
     /**
      * Internal method to register a new entry in this form.
      *
@@ -332,6 +490,16 @@ export class SubForm<
     _emitter = new EventEmitter() as TypedEmitter<{
         change: (newValues: S, oldValues: S) => void;
     }>;
+
+    get validationStatus(): ValidationStatus | undefined {
+        return this.form.validationStatus;
+    }
+
+    get entryValidationStatus(): {
+        [name in keyof S]?: ValidationStatus;
+    } {
+        return this.form.entryValidationStatus;
+    }
 
     get title(): string {
         return this._title ?? this.name;
@@ -433,6 +601,22 @@ export class SubForm<
     ): void {
         this.form.updateValue(name, value);
     }
+
+    async validate(): Promise<ValidationStatus> {
+        return this.form.validate();
+    }
+
+    ok(entryName: keyof S): void {
+        this.form.ok(entryName);
+    }
+
+    error(entryName: keyof S, message: string): void {
+        this.form.error(entryName, message);
+    }
+
+    warn(entryName: keyof S, message: string): void {
+        this.form.warn(entryName, message);
+    }
 }
 
 export class Parameter<V extends FormValues> implements ValuedEntry<V> {
@@ -444,10 +628,15 @@ export class Parameter<V extends FormValues> implements ValuedEntry<V> {
     _label?: string;
     description?: string;
     disabled?: boolean;
+    errorMessage?: string;
     hidden?: boolean;
     hideLabel?: boolean;
     inactive?: boolean;
-    errorMessage?: string;
+    required?: boolean;
+
+    onValidate?: (
+        value: V[Extract<keyof V, string>]
+    ) => Promise<ValidationStatus>;
 
     /**
      * A user-visible bit of text which is shown in place of a value when
@@ -490,16 +679,39 @@ export class Parameter<V extends FormValues> implements ValuedEntry<V> {
         this._label = init?.label;
         this.description = init?.description;
         this.disabled = init?.disabled;
+        this.errorMessage = init?.errorMessage;
         this.hidden = init?.hidden;
         this.hideLabel = init?.hideLabel;
         this.inactive = init?.inactive;
-        this.errorMessage = init?.errorMessage;
+        this.required = init?.required;
 
         if (init?.value !== undefined) {
             this.value = init.value;
         }
 
+        if (init?.onValidate) {
+            this.onValidate = init.onValidate;
+        }
+
         (this.parentForm as FormImpl<V>)._registerEntry(this);
+    }
+
+    async validate(): Promise<ValidationStatus> {
+        let status: ValidationStatus | undefined;
+
+        if (this.required && this.value == null) {
+            status = new ValidationStatus("error", "Value must not be empty");
+        }
+
+        if (!status && this.onValidate) {
+            status = await this.onValidate(this.value);
+        }
+
+        if (!status) {
+            status = new ValidationStatus("ok", "Validation passed");
+        }
+
+        return status;
     }
 }
 
