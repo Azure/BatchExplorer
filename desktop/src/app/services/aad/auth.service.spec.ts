@@ -3,7 +3,7 @@ import { AccessToken, I18nService, ServerError, TenantSettingsService } from "@b
 import { AuthService } from "app/services/aad";
 import { IpcEvent } from "common/constants";
 import { DateTime } from "luxon";
-import { BehaviorSubject, combineLatest } from "rxjs";
+import { BehaviorSubject, combineLatest, Observable } from "rxjs";
 import { TenantErrorService } from ".";
 
 const tenant1 = "tenant-1";
@@ -124,6 +124,16 @@ describe("AuthService spec", () => {
             expect(remoteSpy.send).toHaveBeenCalledOnce();
             expect(token).toEqual(token1.accessToken);
             done();
+        });
+    });
+
+    describe("getAccessToken()", () => {
+        it("should call accessTokenData with defaults", () => {
+            spyOn(service, "accessTokenData").and.returnValue(new Observable());
+            const promise = service.getAccessToken("someTenant");
+            expect(service.accessTokenData)
+                .toHaveBeenCalledWith("someTenant", null, false);
+            expect(promise).toBeDefined();
         });
     });
 
