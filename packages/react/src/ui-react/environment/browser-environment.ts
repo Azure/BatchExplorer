@@ -13,7 +13,10 @@ import {
     FormLayoutProvider,
     FormLayoutType,
 } from "../components/form/form-layout";
-import { ParameterTypeResolver } from "../components/form/parameter-type";
+import {
+    ParameterTypeResolver,
+    FormControlOptions,
+} from "../components/form/parameter-type";
 import { initFluentIcons } from "./environment-util";
 import { MockBrowserEnvironment } from "./mock-browser-environment";
 
@@ -24,7 +27,10 @@ export enum BrowserDependencyName {
 
 export interface BrowserEnvironment
     extends Environment<BrowserEnvironmentConfig> {
-    getFormControl<V extends FormValues>(param: Parameter<V>): JSX.Element;
+    getFormControl<V extends FormValues, K extends Extract<keyof V, string>>(
+        param: Parameter<V, K>,
+        opts?: FormControlOptions
+    ): JSX.Element;
 
     getFormLayout(layoutType?: FormLayoutType): FormLayout;
 }
@@ -61,7 +67,10 @@ export class DefaultBrowserEnvironment
     /**
      * Get the form control for a given parameter
      */
-    getFormControl<V extends FormValues>(param: Parameter<V>): JSX.Element {
+    getFormControl<V extends FormValues, K extends Extract<keyof V, string>>(
+        param: Parameter<V, K>,
+        opts?: FormControlOptions
+    ): JSX.Element {
         const resolver = this.getInjectable<ParameterTypeResolver>(
             BrowserDependencyName.ParameterTypeResolver
         );
@@ -70,7 +79,7 @@ export class DefaultBrowserEnvironment
                 "No parameter type resolver configured for the current environment"
             );
         }
-        return resolver.getFormControl(param);
+        return resolver.getFormControl(param, opts);
     }
 
     /**

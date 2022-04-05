@@ -3,14 +3,16 @@ import { DemoPane } from "../../layout/demo-pane";
 import { DemoComponentContainer } from "../../layout/demo-component-container";
 import { DemoControlContainer } from "../../layout/demo-control-container";
 import { CreateAccountAction } from "@batch/ui-react/lib/account/create-account-action";
-import { createForm, Form } from "@batch/ui-common";
+import { createForm, Form, getEnvironment } from "@batch/ui-common";
 import { ParameterType } from "@batch/ui-react/lib/components/form/parameter-type";
-import { FormContainer } from "@batch/ui-react/lib/components/form";
+import { ActionForm } from "@batch/ui-react/lib/components/form";
 import { MonacoEditor } from "@batch/ui-react/lib/components";
 import { EditorController } from "@batch/ui-react/lib/components/editor";
 import { Dropdown } from "@batch/ui-react/lib/components/form/dropdown";
+import { AbstractAction, Action } from "@batch/ui-common/lib/action";
+import { FormValues } from "@batch/ui-common/lib/form";
 
-type ExampleFormValues = {
+type CarFormValues = {
     subscriptionId?: string;
     make?: string;
     model?: string;
@@ -18,48 +20,67 @@ type ExampleFormValues = {
     milesPerChange?: number;
 };
 
-const createAccountForm = new CreateAccountAction().createForm();
+class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
+    buildForm(initialValues: CarFormValues): Form<CarFormValues> {
+        const form = createForm<CarFormValues>({
+            title: "Example Form",
+            values: initialValues,
+        });
 
-const carForm = createForm<ExampleFormValues>({
-    title: "Example Form",
-    values: {
+        form.param("subscriptionId", ParameterType.SubscriptionId, {
+            label: "Subscription",
+            value: "/fake/sub2",
+        });
+
+        const carSection = form.section("Car Info", {
+            description: "Information about the car's make, model, etc.",
+        });
+
+        carSection.param("make", ParameterType.String, {
+            label: "Make",
+            description: "The brand of the vehicle",
+        });
+
+        carSection.param("model", ParameterType.String, {
+            label: "Model",
+            value: "Model Y",
+        });
+
+        carSection.param("description", ParameterType.String, {
+            label: "Description",
+        });
+
+        return form;
+    }
+
+    async onValidate(): Promise<void> {
+        // no-op
+    }
+
+    async execute(formValues: CarFormValues): Promise<void> {
+        getEnvironment()
+            .getLogger()
+            .info("Execute called with values:" + formValues);
+    }
+}
+
+const actions: { [name: string]: Action<FormValues> } = {
+    createAccount: new CreateAccountAction({}),
+    createOrUpdateCar: new CreateOrUpdateCarAction({
         make: "Tesla",
         model: "Model 3",
         milesPerChange: 300,
-    },
-});
+    }),
+};
 
-carForm.param("subscriptionId", ParameterType.SubscriptionId, {
-    label: "Subscription",
-    value: "/fake/sub2",
-});
-
-const carSection = carForm.section("Car Info", {
-    description: "Information about the car's make, model, etc.",
-});
-
-carSection.param("make", ParameterType.String, {
-    label: "Make",
-    description: "The brand of the vehicle",
-});
-
-carSection.param("model", ParameterType.String, {
-    label: "Model",
-    value: "Model Y",
-});
-
-carSection.param("description", ParameterType.String, {
-    label: "Description",
-});
-
-export const FormContainerDemo: React.FC = () => {
+export const ActionFormDemo: React.FC = () => {
     const controllerRef = React.useRef<EditorController>();
 
-    const [form, setForm] = React.useState(createAccountForm);
+    const [action, setAction] = React.useState("createAccount");
     const [editorError, setEditorError] = React.useState<string>("");
 
     const formChangeHandler = React.useCallback(
-        (newValues: ExampleFormValues) => {
+        (newValues: CarFormValues) => {
             const newEditorContents = JSON.stringify(newValues, undefined, 4);
             if (
                 editorError === "" &&
@@ -74,47 +95,46 @@ export const FormContainerDemo: React.FC = () => {
     const editorChangeHandler = React.useCallback(
         (textContent: string) => {
             try {
-                if (JSON.stringify(form.values, undefined, 4) !== textContent) {
-                    form.values = JSON.parse(textContent);
+                if (
+                    JSON.stringify(
+                        actions[action].form.values,
+                        undefined,
+                        4
+                    ) !== textContent
+                ) {
+                    actions[action].form.values = JSON.parse(textContent);
                 }
                 setEditorError("");
             } catch (e) {
                 setEditorError("Invalid JSON");
             }
         },
-        [form]
+        [action]
     );
 
     return (
-        <DemoPane title="FormContainer">
+        <DemoPane title="ActionForm">
             <DemoComponentContainer>
-                <FormContainer form={form} onFormChange={formChangeHandler} />
+                <ActionForm
+                    action={actions[action]}
+                    onFormChange={formChangeHandler}
+                />
             </DemoComponentContainer>
 
             <DemoControlContainer>
                 <Dropdown
                     style={{ minWidth: "160px" }}
-                    label="Form"
-                    value={form}
+                    label="Action"
+                    value={action}
                     options={[
-                        // TODO: Rework the dropdown and/or form to remove any
-                        //       requirement to cast to any unknown
-                        { label: "Car Form", value: carForm as unknown },
-                        { label: "Account Form", value: createAccountForm },
+                        {
+                            label: "Create or Update Car",
+                            value: "createOrUpdateCar",
+                        },
+                        { label: "Create Account", value: "createAccount" },
                     ]}
                     onChange={(value) => {
-                        // TODO: Rework the dropdown and/or form to remove any
-                        //       requirement to cast to any here
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        setForm(value as Form<any>);
-                    }}
-                    valueToKey={(value) => {
-                        if (value === carForm) {
-                            return "carForm";
-                        } else if (value === createAccountForm) {
-                            return "accountForm";
-                        }
-                        throw new Error(`Unknown form in dropdown: ${value}`);
+                        setAction(value);
                     }}
                 />
             </DemoControlContainer>
@@ -131,7 +151,7 @@ export const FormContainerDemo: React.FC = () => {
             >
                 <MonacoEditor
                     controllerRef={controllerRef}
-                    value={JSON.stringify(form.values)}
+                    value={JSON.stringify(actions[action].form.values)}
                     onChange={editorChangeHandler}
                     onChangeDelay={20}
                     language="json"

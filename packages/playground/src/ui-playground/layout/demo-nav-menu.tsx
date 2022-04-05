@@ -13,6 +13,11 @@ export const DemoNavMenu: React.FC = () => {
             collapseAriaLabel: "Collapse Form section",
             links: [
                 {
+                    key: "ActionForm",
+                    name: "ActionForm",
+                    url: "#/playground/actionform",
+                },
+                {
                     key: "Button",
                     name: "Button",
                     url: "#/playground/button",
@@ -31,11 +36,6 @@ export const DemoNavMenu: React.FC = () => {
                     key: "Dropdown",
                     name: "Dropdown",
                     url: "#/playground/dropdown",
-                },
-                {
-                    key: "FormContainer",
-                    name: "FormContainer",
-                    url: "#/playground/formcontainer",
                 },
                 {
                     key: "SearchBox",

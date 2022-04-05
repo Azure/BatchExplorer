@@ -3,6 +3,11 @@
  */
 export interface FormControlProps<V> {
     /**
+     * The unique HTML ID of the input element
+     */
+    id?: string;
+
+    /**
      * The accessible label for the form control. Only needed if the accessible
      * label should be different from the visible label
      */

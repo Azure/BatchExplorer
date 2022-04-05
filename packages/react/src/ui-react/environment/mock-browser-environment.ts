@@ -1,7 +1,7 @@
 import { Parameter } from "@batch/ui-common";
 import { MockEnvironment } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
-import { ParameterTypeResolver } from "../components/form";
+import { FormControlOptions, ParameterTypeResolver } from "../components/form";
 import {
     FormLayout,
     FormLayoutProvider,
@@ -37,7 +37,10 @@ export class MockBrowserEnvironment
     }
 
     // TODO: This code shouldn't need to be duplicated from DefaultBrowserEnvironment
-    getFormControl<V extends FormValues>(param: Parameter<V>): JSX.Element {
+    getFormControl<V extends FormValues, K extends Extract<keyof V, string>>(
+        param: Parameter<V, K>,
+        opts?: FormControlOptions
+    ): JSX.Element {
         const resolver = this.getInjectable<ParameterTypeResolver>(
             BrowserDependencyName.ParameterTypeResolver
         );
@@ -46,7 +49,7 @@ export class MockBrowserEnvironment
                 "No parameter type resolver configured for the current environment"
             );
         }
-        return resolver.getFormControl(param);
+        return resolver.getFormControl(param, opts);
     }
 
     // TODO: This code shouldn't need to be duplicated from DefaultBrowserEnvironment

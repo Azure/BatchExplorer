@@ -65,7 +65,11 @@ export interface Entry<V extends FormValues> {
     errorMessage?: string;
 }
 
-export interface ValuedEntry<V extends FormValues> extends Entry<V> {
+export interface ValuedEntry<
+    V extends FormValues,
+    K extends Extract<keyof V, string>
+> extends Entry<V> {
+    name: K;
     required?: boolean;
     value?: V[Extract<keyof V, string>];
     validate(): Promise<ValidationStatus>;
@@ -80,21 +84,27 @@ export interface EntryInit<V extends FormValues> {
     errorMessage?: string;
 }
 
-export interface ValuedEntryInit<V extends FormValues> extends EntryInit<V> {
+export interface ValuedEntryInit<
+    V extends FormValues,
+    K extends Extract<keyof V, string>
+> extends EntryInit<V> {
     required?: boolean;
-    value?: V[Extract<keyof V, string>];
-    onValidate?: (
-        value: V[Extract<keyof V, string>]
-    ) => Promise<ValidationStatus>;
+    value?: V[K];
+    onValidate?: (value: V[K]) => Promise<ValidationStatus>;
 }
 
-export interface ParameterInit<V extends FormValues>
-    extends ValuedEntryInit<V> {
+export interface ParameterInit<
+    V extends FormValues,
+    K extends Extract<keyof V, string>
+> extends ValuedEntryInit<V, K> {
     label?: string;
     hideLabel?: boolean;
 }
 
-export interface SubFormInit<V extends FormValues> extends EntryInit<V> {
+export interface SubFormInit<
+    V extends FormValues,
+    K extends Extract<keyof V, string>
+> extends ValuedEntryInit<V, K> {
     title?: string;
     expanded?: boolean;
 }
@@ -129,7 +139,9 @@ export interface Form<V extends FormValues> {
     values: V;
 
     readonly validationStatus: ValidationStatus | undefined;
-    readonly entryValidationStatus: { [name in keyof V]?: ValidationStatus };
+    readonly entryValidationStatus: {
+        [name in Extract<keyof V, string>]?: ValidationStatus;
+    };
 
     title?: string;
     description?: string;
@@ -147,26 +159,27 @@ export interface Form<V extends FormValues> {
 
     getEntry(entryName: string): Entry<V> | undefined;
 
-    param(
-        name: Extract<keyof V, string>,
+    param<K extends Extract<keyof V, string>>(
+        name: K,
         type: string,
-        init?: ParameterInit<V>
-    ): Parameter<V>;
+        init?: ParameterInit<V, K>
+    ): Parameter<V, K>;
 
-    getParam(name: Extract<keyof V, string>): Parameter<V>;
+    getParam<K extends Extract<keyof V, string>>(name: K): Parameter<V, K>;
 
     section(name: string, init?: SectionInit<V>): Section<V>;
 
     getSection(name: string): Section<V>;
 
-    subForm<S extends V[Extract<keyof V, string>] & FormValues>(
-        name: Extract<keyof V, string>,
-        form: Form<S>
-    ): SubForm<V, S>;
+    subForm<K extends Extract<keyof V, string>, S extends V[K] & FormValues>(
+        name: K,
+        form: Form<S>,
+        init?: SubFormInit<V, K>
+    ): SubForm<V, K, S>;
 
-    getSubForm<S extends V[Extract<keyof V, string>] & FormValues>(
-        name: Extract<keyof V, string>
-    ): SubForm<V, S>;
+    getSubForm<K extends Extract<keyof V, string>, S extends V[K] & FormValues>(
+        name: K
+    ): SubForm<V, K, S>;
 
     updateValue(
         name: Extract<keyof V, string>,
@@ -175,11 +188,11 @@ export interface Form<V extends FormValues> {
 
     validate(): Promise<ValidationStatus>;
 
-    ok(entryName: keyof V, message?: string): void;
+    ok(entryName: Extract<keyof V, string>, message?: string): void;
 
-    error(entryName: keyof V, message: string): void;
+    error(entryName: Extract<keyof V, string>, message: string): void;
 
-    warn(entryName: keyof V, message: string): void;
+    warn(entryName: Extract<keyof V, string>, message: string): void;
 }
 
 class FormImpl<V extends FormValues> implements Form<V> {
@@ -191,8 +204,12 @@ class FormImpl<V extends FormValues> implements Form<V> {
         return this._validationStatus;
     }
 
-    _entryValidationStatus: { [name in keyof V]?: ValidationStatus } = {};
-    get entryValidationStatus(): { [name in keyof V]?: ValidationStatus } {
+    _entryValidationStatus: {
+        [name in Extract<keyof V, string>]?: ValidationStatus;
+    } = {};
+    get entryValidationStatus(): {
+        [name in Extract<keyof V, string>]?: ValidationStatus;
+    } {
         return this._entryValidationStatus;
     }
 
@@ -259,15 +276,15 @@ class FormImpl<V extends FormValues> implements Form<V> {
         return this._allEntries.get(entryName);
     }
 
-    param(
-        name: Extract<keyof V, string>,
+    param<K extends Extract<keyof V, string>>(
+        name: K,
         type: string,
-        init?: ParameterInit<V>
-    ): Parameter<V> {
+        init?: ParameterInit<V, K>
+    ): Parameter<V, K> {
         return new Parameter(this, name, type, init);
     }
 
-    getParam(name: Extract<keyof V, string>): Parameter<V> {
+    getParam<K extends Extract<keyof V, string>>(name: K): Parameter<V, K> {
         const entry = this.getEntry(name);
         if (!(entry instanceof Parameter)) {
             throw new Error(`Entry "${name}" is not a parameter`);
@@ -287,17 +304,17 @@ class FormImpl<V extends FormValues> implements Form<V> {
         return entry;
     }
 
-    subForm<S extends V[Extract<keyof V, string>] & FormValues>(
-        name: Extract<keyof V, string>,
+    subForm<K extends Extract<keyof V, string>, S extends V[K] & FormValues>(
+        name: K,
         form: Form<S>,
-        init?: SubFormInit<V>
-    ): SubForm<V, S> {
+        init?: SubFormInit<V, K>
+    ): SubForm<V, K, S> {
         return new SubForm(this, name, form, init);
     }
 
-    getSubForm<S extends V[Extract<keyof V, string>] & FormValues>(
-        name: Extract<keyof V, string>
-    ): SubForm<V, S> {
+    getSubForm<K extends Extract<keyof V, string>, S extends V[K] & FormValues>(
+        name: K
+    ): SubForm<V, K, S> {
         const entry = this.getEntry(name);
         if (!(entry instanceof SubForm)) {
             throw new Error(`Entry "${name}" is not a sub-form`);
@@ -315,9 +332,9 @@ class FormImpl<V extends FormValues> implements Form<V> {
      * @param name The name of the entry to update values for
      * @param value The new value
      */
-    updateValue(
-        name: Extract<keyof V, string>,
-        value: V[Extract<keyof V, string>]
+    updateValue<K extends Extract<keyof V, string>>(
+        name: K,
+        value: V[K]
     ): void {
         const newValues = cloneDeep(this.values);
         newValues[name] = value;
@@ -368,7 +385,7 @@ class FormImpl<V extends FormValues> implements Form<V> {
 
         // All entries have validated. Update status
         for (const entry of validatingEntries) {
-            const entryName = entry.name as keyof V;
+            const entryName = entry.name as Extract<keyof V, string>;
             this._entryValidationStatus[entryName] =
                 newValidationStatuses[entryName];
         }
@@ -385,7 +402,7 @@ class FormImpl<V extends FormValues> implements Form<V> {
         return overallStatus;
     }
 
-    ok(entryName: keyof V, message?: string): void {
+    ok(entryName: Extract<keyof V, string>, message?: string): void {
         this._entryValidationStatus[entryName] = new ValidationStatus(
             "ok",
             message ?? ""
@@ -393,7 +410,7 @@ class FormImpl<V extends FormValues> implements Form<V> {
         this._validationStatus = this._computeOverallValidationStatus();
     }
 
-    error(entryName: keyof V, message: string): void {
+    error(entryName: Extract<keyof V, string>, message: string): void {
         this._entryValidationStatus[entryName] = new ValidationStatus(
             "error",
             message
@@ -401,7 +418,7 @@ class FormImpl<V extends FormValues> implements Form<V> {
         this._validationStatus = this._computeOverallValidationStatus();
     }
 
-    warn(entryName: keyof V, message: string): void {
+    warn(entryName: Extract<keyof V, string>, message: string): void {
         const currentEntry = this._entryValidationStatus[entryName];
         if (currentEntry && currentEntry.level === "error") {
             // Don't overwrite error messages with warning messages
@@ -470,13 +487,14 @@ class FormImpl<V extends FormValues> implements Form<V> {
 
 export class SubForm<
     P extends FormValues,
-    S extends P[Extract<keyof P, string>] & FormValues
+    PK extends Extract<keyof P, string>,
+    S extends P[PK] & FormValues
 > implements Entry<P>, Form<S>
 {
     readonly parentForm: Form<P>;
     readonly parentSection?: Section<P>;
 
-    name: Extract<keyof P, string>;
+    name: PK;
     form: Form<S>;
 
     _title?: string;
@@ -496,7 +514,7 @@ export class SubForm<
     }
 
     get entryValidationStatus(): {
-        [name in keyof S]?: ValidationStatus;
+        [name in Extract<keyof S, string>]?: ValidationStatus;
     } {
         return this.form.entryValidationStatus;
     }
@@ -527,9 +545,9 @@ export class SubForm<
 
     constructor(
         parentForm: Form<P>,
-        name: Extract<keyof P, string>,
+        name: PK,
         form: Form<S>,
-        init?: SubFormInit<P>
+        init?: SubFormInit<P, PK>
     ) {
         this.parentForm = parentForm;
         this.parentSection = init?.parentSection;
@@ -562,15 +580,15 @@ export class SubForm<
         return this.form.getEntry(entryName);
     }
 
-    param(
-        name: Extract<keyof S, string>,
+    param<SK extends Extract<keyof S, string>>(
+        name: SK,
         type: string,
-        init?: ParameterInit<S>
-    ): Parameter<S> {
+        init?: ParameterInit<S, SK>
+    ): Parameter<S, SK> {
         return this.form.param(name, type, init);
     }
 
-    getParam(name: Extract<keyof S, string>): Parameter<S> {
+    getParam<SK extends Extract<keyof S, string>>(name: SK): Parameter<S, SK> {
         return this.form.getParam(name);
     }
 
@@ -582,16 +600,17 @@ export class SubForm<
         return this.form.getSection(name);
     }
 
-    subForm<S2 extends S[Extract<keyof S, string>] & FormValues>(
-        name: Extract<keyof S, string>,
+    subForm<SK extends Extract<keyof S, string>, S2 extends S[SK] & FormValues>(
+        name: SK,
         form: Form<S2>
-    ): SubForm<S, S2> {
+    ): SubForm<S, SK, S2> {
         return new SubForm(this.form, name, form);
     }
 
-    getSubForm<S2 extends S[Extract<keyof S, string>] & FormValues>(
-        name: Extract<keyof S, string>
-    ): SubForm<S, S2> {
+    getSubForm<
+        SK extends Extract<keyof S, string>,
+        S2 extends S[SK] & FormValues
+    >(name: SK): SubForm<S, SK, S2> {
         return this.form.getSubForm(name);
     }
 
@@ -606,24 +625,26 @@ export class SubForm<
         return this.form.validate();
     }
 
-    ok(entryName: keyof S): void {
+    ok(entryName: Extract<keyof S, string>): void {
         this.form.ok(entryName);
     }
 
-    error(entryName: keyof S, message: string): void {
+    error(entryName: Extract<keyof S, string>, message: string): void {
         this.form.error(entryName, message);
     }
 
-    warn(entryName: keyof S, message: string): void {
+    warn(entryName: Extract<keyof S, string>, message: string): void {
         this.form.warn(entryName, message);
     }
 }
 
-export class Parameter<V extends FormValues> implements ValuedEntry<V> {
+export class Parameter<V extends FormValues, K extends Extract<keyof V, string>>
+    implements ValuedEntry<V, K>
+{
     readonly parentForm: Form<V>;
     readonly parentSection?: Section<V>;
 
-    name: Extract<keyof V, string>;
+    name: K;
     type: string;
     _label?: string;
     description?: string;
@@ -634,9 +655,7 @@ export class Parameter<V extends FormValues> implements ValuedEntry<V> {
     inactive?: boolean;
     required?: boolean;
 
-    onValidate?: (
-        value: V[Extract<keyof V, string>]
-    ) => Promise<ValidationStatus>;
+    onValidate?: (value: V[K]) => Promise<ValidationStatus>;
 
     /**
      * A user-visible bit of text which is shown in place of a value when
@@ -652,11 +671,11 @@ export class Parameter<V extends FormValues> implements ValuedEntry<V> {
         this._label = label;
     }
 
-    get value(): V[Extract<keyof V, string>] {
+    get value(): V[K] {
         return this.parentForm.values[this.name];
     }
 
-    set value(newValue: V[Extract<keyof V, string>]) {
+    set value(newValue: V[K]) {
         if (this.parentForm.values[this.name] !== newValue) {
             const oldValue = this.parentForm.values[this.name];
             if (oldValue !== newValue) {
@@ -667,9 +686,9 @@ export class Parameter<V extends FormValues> implements ValuedEntry<V> {
 
     constructor(
         parentForm: Form<V>,
-        name: Extract<keyof V, string>,
+        name: K,
         type: string,
-        init?: ParameterInit<V>
+        init?: ParameterInit<V, K>
     ) {
         this.parentForm = parentForm;
         this.parentSection = init?.parentSection;
@@ -766,11 +785,11 @@ export class Section<V extends FormValues> {
         return this._childEntries.get(entryName);
     }
 
-    param(
-        name: Extract<keyof V, string>,
+    param<K extends Extract<keyof V, string>>(
+        name: K,
         type: string,
-        init?: ParameterInit<V>
-    ): Parameter<V> {
+        init?: ParameterInit<V, K>
+    ): Parameter<V, K> {
         const paramInit = init ?? {};
         paramInit.parentSection = this;
 
@@ -790,11 +809,11 @@ export class Section<V extends FormValues> {
         return section;
     }
 
-    subForm<S extends V[Extract<keyof V, string>] & FormValues>(
-        name: Extract<keyof V, string>,
+    subForm<K extends Extract<keyof V, string>, S extends V[K] & FormValues>(
+        name: K,
         form: Form<S>,
-        init?: SubFormInit<V>
-    ): SubForm<V, S> {
+        init?: SubFormInit<V, K>
+    ): SubForm<V, K, S> {
         const subFormInit = init ?? {};
         subFormInit.parentSection = this;
 

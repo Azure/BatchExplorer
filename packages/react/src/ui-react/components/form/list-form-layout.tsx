@@ -1,4 +1,4 @@
-import { Form, Parameter, Section, uniqueId } from "@batch/ui-common";
+import { Form, Parameter, Section } from "@batch/ui-common";
 import { Entry, FormValues, SubForm } from "@batch/ui-common/lib/form";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { Label } from "@fluentui/react/lib/Label";
@@ -6,16 +6,20 @@ import { Stack } from "@fluentui/react/lib/Stack";
 import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import * as React from "react";
 import { getBrowserEnvironment } from "../../environment";
+import { useUniqueId } from "../../hooks";
 import { useAppTheme } from "../../theme";
+import { FormButton } from "./form-container";
 import { FormLayout } from "./form-layout";
 
 /**
  * Render a form as a flat list.
  */
 export class ListFormLayout implements FormLayout {
-    render<V extends FormValues>(form: Form<V>): JSX.Element {
+    render<V extends FormValues>(
+        form: Form<V>,
+        buttons?: FormButton[]
+    ): JSX.Element {
         const rows: JSX.Element[] = [];
-
         this._renderChildEntries(form.childEntries(), rows);
 
         return (
@@ -24,6 +28,9 @@ export class ListFormLayout implements FormLayout {
                     {form.title ?? "Untitled form"}
                 </h2>
                 <Stack tokens={{ childrenGap: 8 }}>{rows}</Stack>
+                <Stack tokens={{ childrenGap: 8 }}>
+                    <ButtonContainer buttons={buttons} />
+                </Stack>
             </div>
         );
     }
@@ -61,16 +68,18 @@ const SectionTitle = <V extends FormValues>(props: SectionTitleProps<V>) => {
 
 interface SubFormTitleProps<
     P extends FormValues,
-    S extends P[Extract<keyof P, string>] & FormValues
+    PK extends Extract<keyof P, string>,
+    S extends P[PK] & FormValues
 > {
-    subForm: SubForm<P, S>;
+    subForm: SubForm<P, PK, S>;
 }
 
 const SubFormTitle = <
     P extends FormValues,
-    S extends P[Extract<keyof P, string>] & FormValues
+    PK extends Extract<keyof P, string>,
+    S extends P[PK] & FormValues
 >(
-    props: SubFormTitleProps<P, S>
+    props: SubFormTitleProps<P, PK, S>
 ) => {
     const { subForm } = props;
     return <TitleRow title={subForm.title} description={subForm.description} />;
@@ -96,19 +105,25 @@ const TitleRow = (props: { title: string; description?: string }) => {
     );
 };
 
-interface ParameterRowProps<V extends FormValues> {
-    param: Parameter<V>;
+interface ParameterRowProps<
+    V extends FormValues,
+    K extends Extract<keyof V, string>
+> {
+    param: Parameter<V, K>;
 }
 
-const ParameterRow = <V extends FormValues>(props: ParameterRowProps<V>) => {
+const ParameterRow = <V extends FormValues, K extends Extract<keyof V, string>>(
+    props: ParameterRowProps<V, K>
+) => {
     const { param } = props;
 
     const env = getBrowserEnvironment();
-    const toolTipId = uniqueId("tooltip");
+    const toolTipId = useUniqueId("tooltip");
+    const formControlId = useUniqueId("form-control");
 
     return (
         <div>
-            <Label>
+            <Label htmlFor={formControlId}>
                 {param.hideLabel !== true && param.label}
                 {param.description != null && (
                     <TooltipHost id={toolTipId} content={param.description}>
@@ -125,7 +140,29 @@ const ParameterRow = <V extends FormValues>(props: ParameterRowProps<V>) => {
                     </TooltipHost>
                 )}
             </Label>
-            {env.getFormControl(param)}
+            {env.getFormControl(param, { id: formControlId })}
+        </div>
+    );
+};
+
+interface ButtonContainerProps {
+    buttons?: FormButton[];
+}
+
+const ButtonContainer = (props: ButtonContainerProps) => {
+    return (
+        <div>
+            {props.buttons?.map((btn) => {
+                // TODO: Use fluent UI buttons
+                return (
+                    <button
+                        key={btn.label}
+                        name={btn.label}
+                        aria-label={btn.label}
+                        onClick={btn.onClick}
+                    ></button>
+                );
+            })}
         </div>
     );
 };

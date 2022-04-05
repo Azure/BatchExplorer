@@ -29,6 +29,7 @@ export function Dropdown<V>(props: DropdownProps<V>): JSX.Element {
     const toKey = props.valueToKey ?? defaultValueToKey;
     return (
         <FluentDropdown
+            id={props.id}
             style={props.style}
             ariaLabel={props.ariaLabel}
             className={props.className}

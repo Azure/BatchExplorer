@@ -14,6 +14,7 @@ export function TextField(
 
     return (
         <FluentTextField
+            id={props.id}
             ariaLabel={props.ariaLabel}
             className={props.className}
             disabled={props.disabled}

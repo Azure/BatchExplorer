@@ -80,7 +80,7 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
         const detailsListCols: IColumn[] = [];
         if (props.columns) {
             let i = 1;
-            for (const c of props?.columns) {
+            for (const c of props.columns) {
                 if (typeof c === "string") {
                     // Simple column names
                     detailsListCols.push({

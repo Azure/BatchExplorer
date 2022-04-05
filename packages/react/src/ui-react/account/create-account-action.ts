@@ -1,5 +1,5 @@
 import { createForm, Form } from "@batch/ui-common";
-import { FormValues } from "@batch/ui-common/lib/form";
+import { AbstractAction } from "@batch/ui-common/lib/action";
 import { ParameterType } from "../components/form";
 
 export type CreateAccountFormValues = {
@@ -15,14 +15,8 @@ export type CreateAccountFormValues = {
     tags?: Record<string, string>;
 };
 
-// TODO: Make this a public interface and put it in the common package
-//       Still needs to support validation, action execution.
-interface Action<V extends FormValues> {
-    createForm(): Form<V>;
-}
-
-export class CreateAccountAction implements Action<CreateAccountFormValues> {
-    createForm(): Form<CreateAccountFormValues> {
+export class CreateAccountAction extends AbstractAction<CreateAccountFormValues> {
+    buildForm(): Form<CreateAccountFormValues> {
         const form = createForm<CreateAccountFormValues>({
             title: "Create Account",
             values: {},
@@ -71,5 +65,13 @@ export class CreateAccountAction implements Action<CreateAccountFormValues> {
         });
 
         return form;
+    }
+
+    async onValidate(): Promise<void> {
+        return super.validate();
+    }
+
+    async execute(formValues: CreateAccountFormValues): Promise<void> {
+        alert("Would write form values: " + formValues);
     }
 }
