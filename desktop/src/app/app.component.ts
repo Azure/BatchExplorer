@@ -3,18 +3,21 @@ import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { KeyBindingsService, TelemetryService, UserConfigurationService } from "@batch-flask/core";
+import BatchExplorerHttpClient from "@batch-flask/core/batch-explorer-http-client";
 import { ElectronRemote, IpcService } from "@batch-flask/electron";
 import { Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { EnvironmentMode, initEnvironment } from "@batch/ui-common";
 import { DependencyName } from "@batch/ui-common/lib/environment";
-import { DefaultFormLayoutProvider, DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
 import { ConsoleLogger } from "@batch/ui-common/lib/logging";
-import { FetchHttpClient } from "@batch/ui-common/lib/http";
 import { BrowserDependencyName } from "@batch/ui-react";
+import { DefaultFormLayoutProvider, DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
+import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
+import { StorageAccountServiceImpl } from "@batch/ui-service";
 import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
+    AuthService,
     BatchAccountService,
     NavigatorService,
     NcjTemplateService,
@@ -22,13 +25,12 @@ import {
     PricingService,
     PythonRpcService,
     SubscriptionService,
-    ThemeService,
+    ThemeService
 } from "app/services";
 import { BEUserConfiguration } from "common";
 import { Environment } from "common/constants";
-import { Subject, combineLatest } from "rxjs";
+import { combineLatest, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
 
 @Component({
     selector: "bl-app",
@@ -56,6 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         permissionService: PermissionService,
         authHttpService: AuthorizationHttpService,
+        authService: AuthService,
         ipc: IpcService,
         keybindingService: KeyBindingsService,
         private telemetryService: TelemetryService,
@@ -72,14 +75,14 @@ export class AppComponent implements OnInit, OnDestroy {
             {
                 // TODO: Create an adapter which hooks up to the desktop logger
                 [DependencyName.Logger]: () => new ConsoleLogger(),
-                // TODO: Create an HTTP client which hooks up to the desktop one
-                [DependencyName.HttpClient]: () => new FetchHttpClient(),
-                [BrowserDependencyName.ParameterTypeResolver]: () => {
-                    return new DefaultParameterTypeResolver();
-                },
-                [BrowserDependencyName.FormLayoutProvider]: () => {
-                    return new DefaultFormLayoutProvider();
-                },
+                [DependencyName.HttpClient]:
+                    () => new BatchExplorerHttpClient(authService, this.subscriptionService),
+                [DependencyName.StorageAccountService]:
+                    () => new StorageAccountServiceImpl(),
+                [BrowserDependencyName.ParameterTypeResolver]:
+                    () =>new DefaultParameterTypeResolver(),
+                [BrowserDependencyName.FormLayoutProvider]:
+                    () => new DefaultFormLayoutProvider(),
             }
         ));
 
