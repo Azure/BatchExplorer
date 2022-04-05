@@ -28,6 +28,11 @@ export interface Environment<C extends EnvironmentConfig> {
     getLocalizer(): Localizer;
 
     /**
+     * Gets the HTTP client for the current environment
+     */
+    getHttpClient<T extends HttpClient>(): T;
+
+    /**
      * Returns a unique (for this environment), auto-incremented ID number
      */
     uniqueId(): number;

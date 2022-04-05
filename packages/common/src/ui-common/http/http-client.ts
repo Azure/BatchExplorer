@@ -1,16 +1,18 @@
 import { HttpRequestMethod } from "./constants";
 
+export type UrlOrRequestType = string | HttpRequest;
+
 /**
  * Base class for HTTP clients
  */
 export abstract class AbstractHttpClient implements HttpClient {
     abstract fetch(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
 
     get(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         return AbstractHttpClient._fetchWithMethod(
@@ -22,7 +24,7 @@ export abstract class AbstractHttpClient implements HttpClient {
     }
 
     post(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         return AbstractHttpClient._fetchWithMethod(
@@ -34,7 +36,7 @@ export abstract class AbstractHttpClient implements HttpClient {
     }
 
     put(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         return AbstractHttpClient._fetchWithMethod(
@@ -46,7 +48,7 @@ export abstract class AbstractHttpClient implements HttpClient {
     }
 
     delete(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         return AbstractHttpClient._fetchWithMethod(
@@ -58,7 +60,7 @@ export abstract class AbstractHttpClient implements HttpClient {
     }
 
     patch(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         return AbstractHttpClient._fetchWithMethod(
@@ -72,7 +74,7 @@ export abstract class AbstractHttpClient implements HttpClient {
     private static _fetchWithMethod(
         client: HttpClient,
         method: string,
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         if (!requestProps) {
@@ -109,27 +111,27 @@ export abstract class AbstractHttpResponse implements HttpResponse {
  */
 export interface HttpClient {
     fetch(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
     get(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
     post(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
     put(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
     delete(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
     patch(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: UrlOrRequestType,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
 }
