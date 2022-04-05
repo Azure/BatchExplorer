@@ -9,6 +9,13 @@ export {
     EnvironmentMode,
     DependencyName,
 } from "./environment";
+export {
+    AbstractHttpClient,
+    FetchHttpClient,
+    HttpClient,
+    HttpRequestInit,
+    UrlOrRequestType,
+} from "./http";
 export { getLogger } from "./logging/logging-util";
 export {
     cloneDeep,

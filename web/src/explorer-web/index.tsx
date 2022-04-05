@@ -30,12 +30,10 @@ export function init(rootEl: HTMLElement): void {
                 [DependencyName.Logger]: () => new ConsoleLogger(),
                 [DependencyName.Localizer]: () => new StandardLocalizer(),
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
-                [BrowserDependencyName.ParameterTypeResolver]: () => {
-                    return new DefaultParameterTypeResolver();
-                },
-                [BrowserDependencyName.FormLayoutProvider]: () => {
-                    return new DefaultFormLayoutProvider();
-                },
+                [BrowserDependencyName.ParameterTypeResolver]: () =>
+                    new DefaultParameterTypeResolver(),
+                [BrowserDependencyName.FormLayoutProvider]: () =>
+                    new DefaultFormLayoutProvider(),
             }
         )
     );
