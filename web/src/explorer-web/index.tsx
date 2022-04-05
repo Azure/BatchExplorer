@@ -1,18 +1,18 @@
 import { EnvironmentMode, initEnvironment } from "@batch/ui-common";
 import { DependencyName } from "@batch/ui-common/lib/environment";
-import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import { MockHttpClient } from "@batch/ui-common/lib/http";
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { Application } from "./components";
-import {
-    BrowserDependencyName,
-    DefaultBrowserEnvironment,
-} from "@batch/ui-react/lib/environment";
+import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import {
     DefaultFormLayoutProvider,
     DefaultParameterTypeResolver,
 } from "@batch/ui-react/lib/components/form";
+import {
+    BrowserDependencyName,
+    DefaultBrowserEnvironment,
+} from "@batch/ui-react/lib/environment";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Application } from "./components";
 
 // Defined by webpack
 declare const ENV: {
@@ -28,12 +28,10 @@ export function init(rootEl: HTMLElement): void {
             {
                 [DependencyName.Logger]: () => new ConsoleLogger(),
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
-                [BrowserDependencyName.ParameterTypeResolver]: () => {
-                    return new DefaultParameterTypeResolver();
-                },
-                [BrowserDependencyName.FormLayoutProvider]: () => {
-                    return new DefaultFormLayoutProvider();
-                },
+                [BrowserDependencyName.ParameterTypeResolver]: () =>
+                    new DefaultParameterTypeResolver(),
+                [BrowserDependencyName.FormLayoutProvider]: () =>
+                    new DefaultFormLayoutProvider(),
             }
         )
     );

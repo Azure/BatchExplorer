@@ -1,4 +1,5 @@
 import { DependencyFactories } from ".";
+import { HttpClient } from "../http";
 import type { Logger } from "../logging";
 import { DiContainer } from "./di-container";
 import {
@@ -31,6 +32,18 @@ export abstract class AbstractEnvironment<
             throw new Error("No logger configured for the current environment");
         }
         return logger;
+    }
+
+    getHttpClient<T extends HttpClient>(): T {
+        const httpClient = this.getInjectable<HttpClient>(
+            DependencyName.HttpClient
+        );
+        if (!httpClient) {
+            throw new Error(
+                "No HTTP client configured for the current environment"
+            );
+        }
+        return httpClient as T;
     }
 
     protected _globalIdCounter: number = 0;

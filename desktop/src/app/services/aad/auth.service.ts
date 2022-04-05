@@ -211,6 +211,15 @@ export class AuthService implements OnDestroy {
         return tokenObservable;
     }
 
+    public getAccessToken(
+        tenantId: string,
+        resourceName: AADResourceName = null,
+        forceRefresh = false
+    ): Promise<AccessToken> {
+        return this.accessTokenData(tenantId, resourceName, forceRefresh)
+            .toPromise();
+    }
+
     // Caches current authorization state to avoid reauthenticating failed
     // tenants without user request.
     private cacheAuthorization(authorization: TenantAuthorization):
