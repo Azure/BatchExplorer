@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
 import { runAxe } from "../../../test-util/a11y";
@@ -22,6 +23,20 @@ describe("Dropdown form control", () => {
 
         const ddEl = screen.getByRole("combobox");
         expect(ddEl).toBeDefined();
+
+        const user = userEvent.setup();
+        user.click(ddEl);
+        await waitFor(() =>
+            expect(ddEl.getAttribute("aria-expanded")).toBe("true")
+        );
+
+        const options = screen.getAllByRole("option");
+        expect(options.length).toEqual(3);
+        expect(options.map((option) => option.textContent)).toEqual([
+            "ace",
+            "king",
+            "queen",
+        ]);
 
         expect(
             await runAxe(container, {

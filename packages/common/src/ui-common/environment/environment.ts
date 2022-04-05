@@ -66,6 +66,7 @@ export interface Environment<C extends EnvironmentConfig> {
 export enum DependencyName {
     Logger = "logger",
     HttpClient = "httpClient",
+    StorageAccountService = "storageAccount",
 }
 
 /**

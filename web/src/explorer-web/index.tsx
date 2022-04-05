@@ -10,6 +10,7 @@ import {
     BrowserDependencyName,
     DefaultBrowserEnvironment,
 } from "@batch/ui-react/lib/environment";
+import { FakeStorageAccountService } from "@batch/ui-service";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Application } from "./components";
@@ -28,6 +29,8 @@ export function init(rootEl: HTMLElement): void {
             {
                 [DependencyName.Logger]: () => new ConsoleLogger(),
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
+                [DependencyName.StorageAccountService]: () =>
+                    new FakeStorageAccountService(),
                 [BrowserDependencyName.ParameterTypeResolver]: () =>
                     new DefaultParameterTypeResolver(),
                 [BrowserDependencyName.FormLayoutProvider]: () =>

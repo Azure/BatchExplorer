@@ -15,6 +15,7 @@ export {
 export {
     destroyEnvironment,
     getEnvironment,
+    getMockEnvironment,
     initEnvironment,
     initMockEnvironment,
 } from "./environment/environment-util";
@@ -32,6 +33,8 @@ export {
     FetchHttpClient,
     HttpClient,
     HttpRequestInit,
+    MockHttpClient,
+    MockHttpResponse,
     UrlOrRequestType,
 } from "./http";
 export { getLogger } from "./logging/logging-util";
