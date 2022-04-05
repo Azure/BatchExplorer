@@ -2,12 +2,14 @@ import { Parameter } from "@batch/ui-common";
 import {
     AbstractEnvironment,
     DependencyFactories,
+    DependencyName,
     Environment,
     EnvironmentConfig,
     EnvironmentName,
     getEnvironment,
 } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
+import { StorageAccountService } from "@batch/ui-service";
 import {
     FormLayout,
     FormLayoutProvider,
@@ -42,6 +44,7 @@ export interface BrowserEnvironmentConfig extends EnvironmentConfig {
 export interface BrowserDependencyFactories extends DependencyFactories {
     [BrowserDependencyName.ParameterTypeResolver]: () => ParameterTypeResolver;
     [BrowserDependencyName.FormLayoutProvider]: () => FormLayoutProvider;
+    [DependencyName.StorageAccountService]: () => StorageAccountService;
 }
 
 /**
