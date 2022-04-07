@@ -1,7 +1,6 @@
-import * as React from "react";
-import { isPromiseLike } from "@batch/ui-common";
+import { DependencyList, useEffect } from "react";
 
-export type AsyncEffectCallback = () => Promise<unknown>;
+export type AsyncEffectCallback = () => Promise<void | (() => void)>;
 
 /**
  * A hook which is functionally the same as useEffect(), but accepts a callback
@@ -32,16 +31,23 @@ export type AsyncEffectCallback = () => Promise<unknown>;
  */
 export function useAsyncEffect(
     effect: AsyncEffectCallback,
-    deps?: React.DependencyList
+    deps?: DependencyList
 ): void {
-    React.useEffect(
+    useEffect(
         () => {
             const ret = effect();
-            if (!isPromiseLike(ret) && typeof ret === "function") {
-                // Cleanup functions should be returned
+
+            // If the returned value is not an async function, just treat it
+            // like useEffect
+            if (typeof ret === "function") {
                 return ret;
             }
-            // Void otherwise
+
+            ret.then((cleanup) => {
+                if (cleanup) {
+                    cleanup();
+                }
+            });
             return;
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
