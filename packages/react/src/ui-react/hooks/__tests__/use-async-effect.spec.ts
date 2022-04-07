@@ -13,7 +13,6 @@ describe("useAsyncEffect hook", () => {
                 if (counter > 1) {
                     value = "bar";
                 }
-                return "this should be ignored";
             }, [counter]);
         });
 
@@ -35,5 +34,24 @@ describe("useAsyncEffect hook", () => {
         rerender();
         expect(callCount).toBe(2);
         expect(value).toBe("bar");
+    });
+
+    test("calls cleanup function", async () => {
+        let cleanupCalled = false;
+        let count = 0;
+        const { result, unmount } = renderHook(() =>
+            useAsyncEffect(async () => {
+                count++;
+                return () => (cleanupCalled = true);
+            })
+        );
+
+        expect(result).toBeDefined();
+        expect(result.current).toBeUndefined();
+        expect(count).toBe(1);
+        expect(cleanupCalled).toBe(false);
+
+        await unmount();
+        expect(cleanupCalled).toBe(true);
     });
 });
