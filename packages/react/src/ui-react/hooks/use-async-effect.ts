@@ -1,5 +1,4 @@
 import * as React from "react";
-import { isPromiseLike } from "@batch/ui-common";
 
 export type AsyncEffectCallback = () => Promise<unknown>;
 
@@ -37,14 +36,9 @@ export function useAsyncEffect(
     React.useEffect(
         () => {
             const ret = effect();
-            if (!isPromiseLike(ret) && typeof ret === "function") {
-                // Cleanup functions should be returned
-                return ret;
-            }
-            // Void otherwise
-            return;
+            Promise.resolve(ret);
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        deps
+        deps ?? []
     );
 }
