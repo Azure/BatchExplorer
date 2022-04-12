@@ -1,0 +1,101 @@
+@import "app/styles/variables";
+@import "./tenant-picker";
+
+$tenant-card-padding: 1em;
+$tenant-card-width: $tenant-picker-max-width;
+$tenant-logo-width: 100px;
+be-tenant-card {
+    display: block;
+    .container {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        > div {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        > .left, > .right {
+            padding: $tenant-card-padding;
+        }
+        > .left {
+            width: 50px;
+        }
+        > .right {
+            display: flex;
+            justify-content: flex-end;
+            width: 60px;
+        }
+        > .main {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        background: $card-background;
+        border: 1px solid #ccc;
+        border-radius: $tenant-card-padding;
+
+        &.home-tenant, &.home-tenant .main-tile {
+            background: $main-background;
+        }
+
+        .tenant-error {
+            padding: $tenant-card-padding;
+            .error-title {
+                color: $danger-color;
+                font-weight: bold;
+            }
+            .error-details {
+                font-size: 85%;
+                white-space: pre-wrap;
+            }
+        }
+    }
+
+    max-width: $tenant-card-width;
+    margin: 1em 0;
+    padding: 0;
+
+    .tenant-summary {
+        display: block;
+    }
+    .tenant-logo-container {
+        padding: $tenant-card-padding;
+        .tenant-logo {
+            max-width: $tenant-logo-width;
+        }
+    }
+
+    .main-tile {
+        padding: 10px;
+        > .summary-footer {
+            display: none;
+        }
+    }
+
+    [summaryDetails] {
+        .label {
+            margin-right: 3px;
+            font-weight: bold;
+        }
+    }
+
+    .right {
+        .fa-exclamation-circle { color: $danger-color; }
+        .fa-question-circle { color: $secondary-text; }
+    }
+
+    .left {
+        > .fa { color: $primary-color; }
+    }
+
+    .badge {
+        margin: 0 0 auto;
+        padding: 0.15em 0.25em;
+    }
+}
+
+.mat-tooltip.tenant-card-tooltip-failed {
+    background: $danger-color;
+}

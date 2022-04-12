@@ -21,7 +21,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public enableAutoScale: string;
     public enableInterNodeCommunication: string;
     public lastModified: string;
-    public maxTasksPerNode: string;
+    public taskSlotsPerNode: string;
     public resizeError: any;
     public resizeTimeout: string;
     public state: string;
@@ -55,7 +55,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.currentLowPriorityNodes = this.stringField(pool.currentLowPriorityNodes);
         this.enableAutoScale = this.booleanField(pool.enableAutoScale);
         this.enableInterNodeCommunication = this.booleanField(pool.enableInterNodeCommunication);
-        this.maxTasksPerNode = this.stringField(pool.maxTasksPerNode);
+        this.taskSlotsPerNode = this.stringField(pool.taskSlotsPerNode);
         this.resizeTimeout = this.timespanField(pool.resizeTimeout);
         this.state = this.stateField(pool.state);
         this.targetDedicatedNodes = this.stringField(pool.targetDedicatedNodes);

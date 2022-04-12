@@ -1,11 +1,13 @@
 # Test in Batch Explorer
 
-## Test the browser code(99% of the code should be there)
+## Test the browser code (99% of the code should be there)
 
 Start the browser test watch
-```
+
+```shell
 npm run test-app-watch
 ```
+
 This will now run the test whenever a change is made to the browser code or the test.
 
 If you want to focus on a test/module you can add a `f` in front of `describe` or `it` to only run this section/test. For example:
@@ -21,10 +23,12 @@ fdescribe("MyModuleB", () => {
 });
 ```
 
-**Note: TSLint will scan for `fdescribe` and `fit` so you don't forget one when creating a PR**
+**Note: ESLint will scan for `fdescribe` and `fit` so you don't forget one when creating a PR**
 
 ## Test the client
+
 You should not really have to run those unless changing some client code. CI will catch any error it throws anyway.
+
 ```bash
 # For just running once to check
 npm run test-client
@@ -33,6 +37,7 @@ npm run test-client
 npm run test-client-watch
 ```
 
+By default, all output logged by Batch Explorer is silenced. To enable console logging, set a `TEST_LOGGING` environment variable to a truthy value (e.g., `1`).
 
 ## Summary
 

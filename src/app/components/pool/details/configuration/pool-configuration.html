@@ -5,8 +5,8 @@
             <bl-text-property label="Node size" [value]="decorator.vmSize"></bl-text-property>
             <bl-text-property label="Current dedicated" [value]="decorator.currentDedicatedNodes"></bl-text-property>
             <bl-text-property label="Target dedicated" [value]="decorator.targetDedicatedNodes"></bl-text-property>
-            <bl-text-property label="Current low priority" [value]="decorator.currentLowPriorityNodes"></bl-text-property>
-            <bl-text-property label="Target low priority" [value]="decorator.targetLowPriorityNodes"></bl-text-property>
+            <bl-text-property label="Current Spot/low-priority" [value]="decorator.currentLowPriorityNodes"></bl-text-property>
+            <bl-text-property label="Target Spot/low-priority" [value]="decorator.targetLowPriorityNodes"></bl-text-property>
             <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
             <bl-date-property label="State transistion Time" [value]="pool.stateTransitionTime"></bl-date-property>
             <bl-text-property label="Allocation state" [value]="decorator.allocationState"></bl-text-property>
@@ -18,7 +18,7 @@
             <bl-text-property label="Autoscale formula" [value]="decorator.autoScaleFormula"></bl-text-property>
             <bl-bool-property label="Inter-node communication" [value]="pool.enableInterNodeCommunication"></bl-bool-property>
             <bl-text-property label="Last modified" [value]="decorator.lastModified"></bl-text-property>
-            <bl-text-property label="Max tasks per node" [value]="decorator.maxTasksPerNode"></bl-text-property>
+            <bl-text-property label="Task slots per node" [value]="decorator.taskSlotsPerNode"></bl-text-property>
             <bl-text-property label="Resize timeout" [value]="decorator.resizeTimeout"></bl-text-property>
             <bl-text-property label="Task scheduling policy" [value]="pool.taskSchedulingPolicy.nodeFillType"></bl-text-property>
             <bl-text-property label="URL" [value]="decorator.url"></bl-text-property>

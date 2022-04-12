@@ -1,8 +1,10 @@
 {
   "recommendations": [
-    "ms-vscode.vscode-typescript-tslint-plugin",
-    "shinnn.stylelint",
+    "stylelint.vscode-stylelint",
     "EditorConfig.EditorConfig",
-    "msjsdiag.debugger-for-chrome"
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "rvest.vs-code-prettier-eslint",
+    "davidanson.vscode-markdownlint"
   ]
 }

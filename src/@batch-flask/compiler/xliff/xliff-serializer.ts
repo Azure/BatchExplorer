@@ -3,14 +3,14 @@ import * as xml2js from "xml2js";
 
 const parseString: any = promisify(xml2js.parseString);
 
-// tslint:disable:max-line-length
+/* eslint-disable max-len */
 const rootAttributes = {
     "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
     "xsi:schemaLocation": "urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd",
     "xmlns": "urn:oasis:names:tc:xliff:document:1.2",
     "version": "1.2",
 };
-// tslint:enable:max-line-length
+/* eslint-enable max-len */
 
 export interface XLiffDecodeResult {
     translations: StringMap<string>;

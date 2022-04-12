@@ -1,2 +1,2 @@
 @echo off
-PowerShell.exe -ExecutionPolicy Bypass -Command "%~dp0\install-windows.ps1 %*"
+PowerShell.exe -ExecutionPolicy Bypass -Command "& '%~dp0/install-windows.ps1' %*"

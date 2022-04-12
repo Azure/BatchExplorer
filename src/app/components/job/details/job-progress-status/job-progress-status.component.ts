@@ -58,7 +58,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
 
         this.poolData.item.subscribe((pool) => {
             this.pool = pool;
-            this.maxRunningTasks = pool ? pool.currentNodes * pool.maxTasksPerNode : 1;
+            this.maxRunningTasks = pool ? pool.currentNodes * pool.taskSlotsPerNode : 1;
             this.updateGaugeOptions();
         });
 
@@ -134,7 +134,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         const obs = this.jobService.getTaskCounts(this.job.id);
 
         obs.subscribe((x) => {
-            this.jobTaskCounts = x;
+            this.jobTaskCounts = x.taskCounts;
             this.countRunningTasks();
             this._computeProgress();
             this.changeDetectorRef.markForCheck();

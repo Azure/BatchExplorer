@@ -23,7 +23,7 @@ import { SettingsModule } from "app/components/settings";
 import { BatchExplorerErrorHandler } from "app/error-handler";
 import { routes } from "./app.routes";
 import {
-    AdalService,
+    AuthService,
     AppLocaleService,
     AppTranslationsLoaderService,
     RendererConfigurationStore,
@@ -60,6 +60,7 @@ const modules = [
             useHash: false,
             paramsInheritanceStrategy: "always",
             preloadingStrategy: PreloadAllModules,
+            relativeLinkResolution: "legacy"
         }),
         BaseModule,
         KeyBindingsModule,
@@ -72,7 +73,7 @@ const modules = [
         { provide: LocaleService, useClass: AppLocaleService },
         { provide: USER_CONFIGURATION_STORE, useClass: RendererConfigurationStore },
         { provide: ErrorHandler, useClass: BatchExplorerErrorHandler },
-        { provide: USER_SERVICE, useExisting: AdalService },
+        { provide: USER_SERVICE, useExisting: AuthService },
     ],
 })
 export class AppModule { }

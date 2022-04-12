@@ -47,8 +47,8 @@
         "targetLowPriorityNodes": {
           "type": "integer",
           "format": "int32",
-          "title": "The desired number of low-priority compute nodes in the pool.",
-          "description": "The desired number of low-priority compute nodes in the pool."
+          "title": "The desired number of Spot/low-priority compute nodes in the pool.",
+          "description": "The desired number of Spot/low-priority compute nodes in the pool."
         },
         "enableAutoScale": {
           "type": "boolean",

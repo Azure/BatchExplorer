@@ -2,11 +2,11 @@ variables:
   locdir: $(Build.ArtifactStagingDirectory)/BatchExplorer
 
 pool:
-  vmImage: ubuntu-16.04
+  name: Azure-Pipelines-EO-Batch-Explorer
+  demands:
+  - ImageOverride -equals BatchExplorerBuildImage-Linux
 steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '12.18.x'
+  - template: ./node-setup.yml
 
   - script: npm ci
     displayName: Install dependencies
@@ -53,8 +53,8 @@ steps:
       fi
 
       today=`date +%Y-%m-%d`
-      git -c user.email=batch-ex@microsoft.com -c user.name='Batch Explorer Automated' commit -am "Updating english translations $today"
+      git -c user.email=batchexplorer@microsoft.com -c user.name='Batch Explorer Automated' commit -am "Updating english translations $today"
       git status -s
-      git push https://timotheeguerin:$(GH_TOKEN)@github.com/Azure/BatchExplorer loc
+      git push https://dpwatrous:$(GH_TOKEN)@github.com/Azure/BatchExplorer loc
     workingDirectory: $(locdir)
     displayName: Commit and push changes if any

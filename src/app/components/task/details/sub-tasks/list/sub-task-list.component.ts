@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, Output,
 } from "@angular/core";
 import { ListBaseComponent } from "@batch-flask/ui";
-import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { FailureInfoDecorator } from "app/decorators";
 import { SubtaskInformation, TaskState } from "app/models";
@@ -15,8 +14,6 @@ import { List } from "immutable";
 })
 export class SubTaskListComponent extends ListBaseComponent {
     @Input() public subTasks: List<SubtaskInformation>;
-
-    @Input() public status: LoadingStatus;
 
     @Output() public scrollBottom = new EventEmitter();
 

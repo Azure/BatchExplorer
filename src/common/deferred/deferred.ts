@@ -10,7 +10,7 @@ export class Deferred<T> {
                 this.hasCompleted = true;
                 reject(x);
             };
-            this.resolve = (x) => {
+            this.resolve = (x: T) => {
                 this.hasCompleted = true;
                 resolve(x);
             };

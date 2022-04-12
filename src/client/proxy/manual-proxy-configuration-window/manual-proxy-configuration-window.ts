@@ -29,6 +29,7 @@ export class ManualProxyConfigurationWindow extends GenericWindow {
             center: true,
             webPreferences: {
                 nodeIntegration: true,
+                contextIsolation: false,
                 enableRemoteModule: true,
             },
         });

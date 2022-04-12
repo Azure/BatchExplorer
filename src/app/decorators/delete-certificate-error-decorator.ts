@@ -34,7 +34,8 @@ export class DeleteCertificateErrorDecorator extends DecoratorBase<DeleteCertifi
         if (values && values.length > 0) {
             return values.map(value => {
                 return `${value.name}: ${value.value}`;
-            }).join("<br />");        }
+            }).join("<br />");
+        }
 
         return "";
     }

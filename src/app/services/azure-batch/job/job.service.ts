@@ -7,7 +7,7 @@ import {
     ListResponse,
     ListView,
 } from "@batch-flask/core";
-import { Job, JobTaskCounts } from "app/models";
+import { Job, JobTaskCountsResult } from "app/models";
 import { JobCreateDto, JobPatchDto } from "app/models/dtos";
 import { ModelUtils } from "app/utils";
 import { Constants } from "common";
@@ -23,8 +23,7 @@ export interface JobParams {
     id?: string;
 }
 
-export interface JobListOptions extends ListOptionsAttributes {
-}
+export type JobListOptions = ListOptionsAttributes;
 
 @Injectable({providedIn: "root"})
 export class JobService {
@@ -133,9 +132,9 @@ export class JobService {
         return this.patch(job.id, attributes);
     }
 
-    public getTaskCounts(jobId: string): Observable<JobTaskCounts> {
+    public getTaskCounts(jobId: string): Observable<JobTaskCountsResult> {
         return this.http.get(`/jobs/${jobId}/taskcounts`).pipe(
-            map(data => new JobTaskCounts(data)),
+            map(data => new JobTaskCountsResult(data)),
             share(),
         );
     }

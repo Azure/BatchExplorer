@@ -2,6 +2,7 @@ import { Inject, Injectable, OnDestroy } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { distinctUntilChanged, filter, map, take, takeUntil } from "rxjs/operators";
 import { isNotNullOrUndefined } from "../rxjs-operators";
+import { TenantSettings } from "../tenant-settings";
 
 export const USER_CONFIGURATION_STORE = "USER_CONFIGURATION_STORE";
 
@@ -16,6 +17,8 @@ export interface BatchFlaskUserConfiguration {
     entityConfiguration?: {
         defaultView?: EntityConfigurationView,
     };
+
+    tenants?: TenantSettings,
 
     fileAssociations?: Array<{extension: string, type: string}>;
 }

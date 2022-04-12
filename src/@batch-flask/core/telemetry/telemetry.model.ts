@@ -17,7 +17,7 @@ export interface Telemetry {
 }
 
 export interface ExceptionTelemetry extends Telemetry {
-    // tslint:disable-next-line:ban-types
+    // eslint-disable-next-line @typescript-eslint/ban-types
     exception: Error;
 }
 

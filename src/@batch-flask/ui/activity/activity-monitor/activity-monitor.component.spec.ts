@@ -41,7 +41,7 @@ describe("ActivityMonitorComponent", () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
 
-        activityService = TestBed.get(ActivityService);
+        activityService = TestBed.inject(ActivityService);
     });
 
     it("should receive a new activity and display it", () => {

@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { first, map } from "rxjs/operators";
+import { log } from "@batch-flask/utils/logging";
+import { Observable, of } from "rxjs";
+import { catchError, first, map } from "rxjs/operators";
 import { ArmHttpService } from "../arm-http.service";
 import { ArmListResponse } from "../core";
 
@@ -47,6 +48,10 @@ export class NetworkConfigurationService {
                 }
                 return this._filterByLocation(response.value, location, type);
             }),
+            catchError((error) => {
+                log.error("Unable to list ARM vnets", error);
+                return of([]);
+            }),
             first(),
         );
     }
@@ -65,6 +70,10 @@ export class NetworkConfigurationService {
                     return [];
                 }
                 return this._filterByLocation(response.value, location, type);
+            }),
+            catchError((error) => {
+                log.error("Unable to list classic vnets", error);
+                return of([]);
             }),
             first(),
         );

@@ -11,7 +11,7 @@ import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 import { filter, takeUntil } from "rxjs/operators";
 import { Theme } from "./theme.model";
 
-// tslint:disable-next-line:no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
 export class ThemeNotFoundError extends Error {

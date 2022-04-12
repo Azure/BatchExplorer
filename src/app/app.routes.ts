@@ -4,12 +4,12 @@ import { ActivityMonitorComponent } from "@batch-flask/ui/activity/activity-moni
 import { RequireActiveBatchAccountGuard } from "app/components/common/guards";
 import { ThemeColorsComponent } from "app/components/misc";
 import { PoolStandaloneGraphsComponent } from "app/components/pool/graphs/standalone";
-import { SettingsComponent } from "app/components/settings";
+import { AuthSettingsComponent, SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { AccountMonitoringHomeComponent } from "./components/account/monitoring";
 
-// set up the routing table
+
 export const routes: Routes = [
     { path: "", redirectTo: "accounts", pathMatch: "full" },
     {
@@ -24,6 +24,10 @@ export const routes: Routes = [
     {
         component: SettingsComponent,
         path: "settings",
+    },
+    {
+        component: AuthSettingsComponent,
+        path: "auth-settings",
     },
     {
         component: ActivityMonitorComponent,

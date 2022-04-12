@@ -66,11 +66,11 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private poolNodeCountSerivce: PoolNodeCountService,
+        private poolNodeCountService: PoolNodeCountService,
         private contextMenuService: ContextMenuService) {
         this._updateDataSets();
         this._updateOptions();
-        this._sub = poolNodeCountSerivce.counts.subscribe((counts) => {
+        this._sub = poolNodeCountService.counts.subscribe((counts) => {
             this._counts = counts;
             this._updateDataSets();
         });
@@ -93,7 +93,7 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
     @HostListener("contextmenu")
     public showContextMenu() {
         this.contextMenuService.openMenu(new ContextMenu([
-            new ContextMenuItem({ label: "Refresh", click: () => this.poolNodeCountSerivce.refresh().subscribe() }),
+            new ContextMenuItem({ label: "Refresh", click: () => this.poolNodeCountService.refresh().subscribe() }),
         ]));
     }
 

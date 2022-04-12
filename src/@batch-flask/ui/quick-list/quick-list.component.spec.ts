@@ -28,7 +28,7 @@ interface TestItem {
     id: string;
     name: string;
 }
-// tslint:disable:template-use-track-by-function
+/* eslint-disable  */
 @Component({
     template: `
         <div style="height: 1000px">
@@ -97,10 +97,6 @@ describe("QuickListComponent", () => {
 
     it("has the multi selectable role", () => {
         expect(de.attributes["aria-multiselectable"]).toEqual("true");
-    });
-
-    it("has tabindex", () => {
-        expect(de.attributes["tabindex"]).toEqual("0");
     });
 
     it("sets aria-setsize on each of the items", () => {

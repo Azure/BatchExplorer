@@ -4,7 +4,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobConfigurationComponent } from "app/components/job/details";
 import { JobService } from "app/services";
 
-// tslint:disable:template-use-track-by-function
+/* eslint-disable  */
 @Component({
     selector: "bl-job-schedule-job-specification",
     templateUrl: "job-schedule-job-specification.html",

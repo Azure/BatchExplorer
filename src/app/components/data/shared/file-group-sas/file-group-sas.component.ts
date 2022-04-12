@@ -13,7 +13,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import "./file-group-sas.scss";
 
-// tslint:disable:no-forward-ref
+/* eslint-disable @angular-eslint/no-forward-ref */
 @Component({
     selector: "bl-file-group-sas",
     templateUrl: "file-group-sas.html",

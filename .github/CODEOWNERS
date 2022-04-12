@@ -3,7 +3,4 @@
 # they will be requested for review when someone opens a 
 # pull request.
 
-*       @bgklein  @cRui861  @dpwatrous  @paterasMSFT  @gingi
-
-# Builds
-/.vsts/ @bgklein  @cRui861  @dpwatrous
+*       @cRui861  @dpwatrous  @gingi  @zfengms  @paterasMSFT  @seth-barshay  @wiboris

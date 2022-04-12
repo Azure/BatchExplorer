@@ -1,4 +1,4 @@
-// tslint:disable:no-bitwise
+/* eslint-disable no-bitwise */
 export class ColorUtils {
     public static shadeColor(color, percent) {
         const f = parseInt(color.slice(1), 16);

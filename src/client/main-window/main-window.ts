@@ -31,11 +31,11 @@ export class MainWindow extends GenericWindow {
     public state: Observable<WindowState>;
 
     public get webContents() {
-        return this._window!.webContents;
+        return this._window.webContents;
     }
 
     private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
-    private _resolveAppReady: () => void;
+    private _resolveAppReady: (value?: any) => void;
 
     constructor(batchExplorerApp: BatchExplorerApplication, private telemetryManager: TelemetryManager) {
         super(batchExplorerApp);
@@ -57,7 +57,7 @@ export class MainWindow extends GenericWindow {
     }
 
     public once(event: any, callback: (...args) => void) {
-        return this._window!.once(event, callback);
+        return this._window.once(event, callback);
     }
 
     protected createWindow() {
@@ -75,6 +75,7 @@ export class MainWindow extends GenericWindow {
                 webSecurity: false,
                 allowRunningInsecureContent: false,
                 nodeIntegration: true,
+                contextIsolation: false,
                 enableRemoteModule: true,
             },
         });
@@ -98,7 +99,7 @@ export class MainWindow extends GenericWindow {
 
         // Open the DevTools.
         if (process.env.NODE_ENV !== "production") {
-            window.webContents.openDevTools();
+            window.webContents.openDevTools({ mode: 'undocked' });
         }
 
         return window;
@@ -122,12 +123,12 @@ export class MainWindow extends GenericWindow {
             }
         });
 
-        window.webContents.on("did-fail-load", (error) => {
+        window.webContents.on("did-fail-load", (event, errorCode, errorDescription) => {
             this._state.next(WindowState.FailedLoad);
-            log.error("Fail to load", error);
+            log.error(`Failed to load main window: ${errorDescription} (Error code ${errorCode})`);
         });
 
-        // tslint:disable-next-line:ban-types
+        // eslint-disable-next-line @typescript-eslint/ban-types
         window.on("unresponsive", (error: Error) => {
             log.error("There was a crash", error);
             this.batchExplorerApp.recoverWindow.createWithError(error.message);

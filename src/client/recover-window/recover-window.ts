@@ -37,6 +37,7 @@ export class RecoverWindow extends UniqueWindow {
             frame: false,
             webPreferences: {
                 nodeIntegration: true,
+                contextIsolation: false,
                 enableRemoteModule: true,
             },
         });

@@ -22,6 +22,10 @@ bl-toggle-filter-button {
             background: $button-basic-hover-bg-color;
         }
 
+        &.focus-outline.focus-visible {
+            outline-color: $primary-color;
+        }
+
         > .filtering {
             position: absolute;
             top: 3px;

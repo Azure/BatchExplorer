@@ -12,7 +12,7 @@ import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
 import { BatchExplorerLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
-import { app, dialog, ipcMain, session } from "electron";
+import { app, dialog, ipcMain, protocol, session } from "electron";
 import { UpdateCheckResult } from "electron-updater";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
 import * as os from "os";
@@ -79,6 +79,7 @@ export class BatchExplorerApplication {
         await this.aadService.init();
         this._registerProtocol();
         this._setupProcessEvents();
+        this._registerFileProtocol();
         await this.proxySettings.init();
     }
 
@@ -258,6 +259,8 @@ export class BatchExplorerApplication {
 
     private _setupProcessEvents() {
         ipcMain.on("reload", () => {
+            this.pythonServer.restart();
+
             // Destroy window and error window if applicable
             this.windows.closeAll();
             this.recoverWindow.destroy();
@@ -279,7 +282,7 @@ export class BatchExplorerApplication {
             process.exit(1);
         });
 
-        // tslint:disable-next-line:ban-types
+        // eslint-disable-next-line @typescript-eslint/ban-types
         process.on("uncaughtException" as any, (error: Error) => {
             log.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
@@ -287,7 +290,7 @@ export class BatchExplorerApplication {
             this.telemetryService.flush(true);
         });
 
-        // tslint:disable-next-line: ban-types
+        // eslint-disable-next-line @typescript-eslint/ban-types
         process.on("unhandledRejection", (r: Error) => {
             log.error("Unhandled promise error:", r);
             this.telemetryService.trackError(r);
@@ -325,6 +328,13 @@ export class BatchExplorerApplication {
         } else {
             log.error(`Failed to register ${Constants.legacyProtocolName}:// as a protocol for Batch Explorer`);
         }
+    }
+
+    private _registerFileProtocol() {
+        protocol.registerFileProtocol("file", (request,  callback) => {
+            const pathName = decodeURI(request.url.replace("file:///", ""));
+            callback(pathName);
+        });
     }
 
     private _setCommonHeaders(window: MainWindow) {

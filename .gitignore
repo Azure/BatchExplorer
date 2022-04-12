@@ -3,6 +3,7 @@ build/
 dll/
 typings/
 logs/
+env/
 *.log*
 *.mem.csv
 release/
@@ -12,6 +13,7 @@ coverage/
 .nyc_output/
 coverage.lcov
 documentation/
+.python-version
 
 # Ignore the english compiled file
 i18n/resources.en.json

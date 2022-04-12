@@ -15,7 +15,7 @@
   "hover-bg": "#d5d5d5",
   "selection": "var(--color-primary)",
   "outline": "#528bff",
-  "border": "#d5d5d5",
+  "border": "#919191",
   "editor": "vs",
   "text": {
     "primary": "#333333",
@@ -46,15 +46,16 @@
   },
   "button": {
     "basic-text": "#2865bf",
-    "basic-bg": "#e5e5e5",
+    "basic-bg": "#ebebeb",
     "basic-hover-bg": "#d5d5d5",
     "disabled-text": "#d5d5d5",
+    "focus-text": "var(--color-primary)",
     "disabled-bg": "#ededed"
   },
   "monitorChart": {
     "core-count": "#1c3f95",
-    "low-priority-core-count": "#ffa90d",
-    "task-start-event": "#ffa90d",
+    "low-priority-core-count": "#a36a00",
+    "task-start-event": "#a36a00",
     "task-complete-event": "#388e3c",
     "task-fail-event": "#aa3939",
     "starting-node-count": "#1c3f95",
@@ -64,7 +65,11 @@
     "rebooting-node-count": "#ff755c"
   },
   "input": {
+<<<<<<< HEAD
     "border": "#949494",
+=======
+    "border": "#919191",
+>>>>>>> master
     "focus-border": "var(--color-primary)",
     "placeholder": "var(--color-text-secondary)",
     "text": "var(--color-text-primary)",

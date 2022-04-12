@@ -94,6 +94,17 @@ mat-checkbox[small] {
     }
 }
 
+mat-checkbox.cdk-keyboard-focused {
+    & > label {
+        outline: 1px solid $outline-color;
+        outline-offset: 2px;
+    }
+
+    .mat-focus-indicator {
+        display: none;
+    }
+}
+
 mat-dialog-container.mat-dialog-container {
     padding: 0;
     width: auto !important;
@@ -150,6 +161,12 @@ mat-button-toggle-group {
 
         &:last-child {
             border: 1px solid $primary-color;
+        }
+        &.mat-button-toggle-appearance-standard.cdk-keyboard-focused:not(.mat-button-toggle-disabled) {
+            .mat-button-toggle-focus-overlay {
+                opacity: 0.2;
+            }
+            border: 1px solid $primary-text;
         }
     }
 }

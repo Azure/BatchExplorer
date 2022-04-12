@@ -78,6 +78,7 @@ export class Task extends Record<TaskAttributes> {
     @Prop() public stats: TaskStatistics;
     @Prop() public dependsOn: TaskDependencies;
     @Prop() public authenticationTokenSettings: AuthenticationTokenSettings;
+    @Prop() public requiredSlots: number;
 
     @ListProp(ApplicationPackageReference)
     public applicationPackageReferences: List<ApplicationPackageReference> = List([]);

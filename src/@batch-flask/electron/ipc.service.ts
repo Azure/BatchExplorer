@@ -8,7 +8,7 @@ import { willUnload } from "./utils";
 /**
  * Internal events used by the ipc promise utility to be able to use promise
  */
-// tslint:disable-next-line:variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 export const IpcPromiseEvent = {
     request: "ipc-promise-request",
     successSuffix: "-success",

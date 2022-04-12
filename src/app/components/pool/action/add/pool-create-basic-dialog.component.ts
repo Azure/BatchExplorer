@@ -1,22 +1,43 @@
 import { ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, ValidationErrors, Validators } from "@angular/forms";
 import { DynamicForm, autobind } from "@batch-flask/core";
+import { ElectronShell } from "@batch-flask/electron";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { BatchAccountService, PoolService, PricingService } from "app/services";
+import { BatchAccountService, PoolService, PricingService, VmSizeService } from "app/services";
 import { NumberUtils } from "app/utils";
 import { Constants } from "common";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
+import { map } from "rxjs/operators";
+
+import "./pool-create-basic-dialog.scss";
 
 @Component({
     selector: "bl-pool-create-basic-dialog",
     templateUrl: "pool-create-basic-dialog.html",
 })
 export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreateDto> implements OnDestroy {
+
+    public get startTask() {
+        return this.form.controls.startTask.value;
+    }
+
+    public get renderingSkuSelected(): boolean {
+        return this._renderingSkuSelected;
+    }
+
+    public get virtualMachineConfiguration() {
+        return this._osControl.value && this._osControl.value.virtualMachineConfiguration;
+    }
+
+    public get cloudServiceConfiguration() {
+        return this._osControl.value && this._osControl.value.cloudServiceConfiguration;
+    }
+
     public osSource: PoolOsSources = PoolOsSources.IaaS;
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
@@ -38,8 +59,10 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private poolService: PoolService,
         private accountService: BatchAccountService,
         private pricingService: PricingService,
+        private vmSizeService: VmSizeService,
         changeDetector: ChangeDetectorRef,
-        private notificationService: NotificationService) {
+        private notificationService: NotificationService,
+        private electronShell: ElectronShell) {
 
         super(PoolCreateDto);
         this._setComplexFormConfig();
@@ -61,7 +84,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             os: this._osControl,
             // note: probably not advisable to default vmSize value
             vmSize: ["", Validators.required],
-            maxTasksPerNode: 1,
+            taskSlotsPerNode: [1, Validators.min(1)],
             enableInterNodeCommunication: false,
             taskSchedulingPolicy: [NodeFillType.pack],
             startTask: null,
@@ -73,6 +96,14 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             certificateReferences: [[]],
             metadata: [null],
         });
+
+        this.form.controls["vmSize"].valueChanges.subscribe({
+            next: (value) => {
+                this.form.controls["taskSlotsPerNode"].updateValueAndValidity();
+            },
+        });
+
+        this.form.controls["taskSlotsPerNode"].setAsyncValidators([this.slotValidator()]);
 
         this._subs.push(this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
@@ -147,16 +178,19 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         return createPoolToData(data);
     }
 
-    public get startTask() {
-        return this.form.controls.startTask.value;
-    }
-
-    public get renderingSkuSelected(): boolean {
-        return this._renderingSkuSelected;
-    }
-
-    public get virtualMachineConfiguration() {
-        return this._osControl.value && this._osControl.value.virtualMachineConfiguration;
+    private slotValidator(): AsyncValidatorFn {
+        return (formControl: AbstractControl): Observable<ValidationErrors> => {
+            const valueInput = this.form.controls["taskSlotsPerNode"].value;
+            if (this.form.controls["vmSize"].value === "") {
+                return of(valueInput > 256 ? { max: 256 } : null);
+            }
+            return this.vmSizeService.get(this.form.controls["vmSize"].value).pipe(
+                map(res => {
+                    const maxCores = Math.min(res.numberOfCores * 4, 256);
+                    return valueInput > maxCores ? { max: maxCores } : null;
+                }),
+            );
+        };
     }
 
     private _canShowLicensePicker(config: any): boolean {
@@ -189,5 +223,9 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 fromDto: (value) => this.dtoToForm(value),
             },
         };
+    }
+
+    public openLink(link: string) {
+        this.electronShell.openExternal(link, {activate: true});
     }
 }

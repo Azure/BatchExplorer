@@ -40,7 +40,6 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
 
         // Prevent application insights from recording the device name
         const context = this._client.context;
-        // @ts-ignore
         context.tags[context.keys.cloudRoleInstance] = null;
 
         // Add a session Id
@@ -111,7 +110,7 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
         log.error("Trying to trace telemetry before the telemetry service was initialized.");
     }
 
-    // tslint:disable-next-line:ban-types
+    // eslint-disable-next-line @typescript-eslint/ban-types
     private _sanitizeError(error: Error): any {
         // Message could contain user information
         if (!(error instanceof SanitizedError)) {

@@ -1,3 +1,3 @@
 import { version } from "./package-utils";
-// tslint:disable-next-line:no-console
+// eslint-disable no-console
 console.log(version);

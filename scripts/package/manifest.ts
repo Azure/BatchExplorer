@@ -20,7 +20,7 @@ function saveManifest(content: Manifest) {
 
     const filename = getLocalPath(`manifest.json`);
     fs.writeFileSync(filename, str);
-    // tslint:disable-next-line:no-console
+    // eslint-disable no-console
     console.log(`Created ${filename} manifest file for version ${version}`);
     return filename;
 }

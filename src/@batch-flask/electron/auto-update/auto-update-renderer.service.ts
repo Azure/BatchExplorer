@@ -28,6 +28,8 @@ export class AutoUpdateRendererService extends AutoUpdateService implements OnDe
         this._main.autoInstallOnAppQuit = value;
     }
 
+    // eslint-disable-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     public get updateInfo() {
         return this._main.updateInfo;
     }

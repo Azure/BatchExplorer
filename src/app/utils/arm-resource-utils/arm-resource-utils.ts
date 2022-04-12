@@ -1,10 +1,11 @@
-import { log } from "@batch-flask/utils";
+import { log, SanitizedError } from "@batch-flask/utils";
 import { ResourceDescriptor } from "app/models";
+import { Constants, providersApiVersion } from "common/constants";
 
 export class InvalidArmResourceIdError extends Error {
 
 }
-// tslint:disable:max-line-length
+/* eslint-disable max-len */
 /**
  * Class for parsing and testing Batch and ARM resource ID's.
  * From: MsPortalFx.ViewModels.Services.ResourceTypes.ts
@@ -14,6 +15,7 @@ export class ArmResourceUtils {
     /**
      * Parse the arm resource id uri to retrieve the subscription id inside.
      * This could also be used for any arm url depending on subscriptions
+     *
      * @param id Arm resource id
      */
     public static getSubscriptionIdFromResourceId(id: string): string | null {
@@ -32,6 +34,7 @@ export class ArmResourceUtils {
     /**
      * Parse the arm resource id uri to retrieve the subscription id inside.
      * This could also be used for any arm url depending on subscriptions
+     *
      * @param id Arm resource id
      */
     public static getResourceGroupFromResourceId(id: string): string | undefined | null {
@@ -100,6 +103,24 @@ export class ArmResourceUtils {
     public static isResourceGroupId(id: string): boolean {
         return ArmResourceUtils.regExpResourceGroupId.test(id);
     }
+
+    public static getApiVersionForUri(uri: string): string {
+        const providerSpecific = /.*\/providers\/([a-zA-Z.]*)\/([a-zA-Z.]*)/i;
+        const match = providerSpecific.exec(uri);
+        if (match && match.length > 1) {
+            const provider = match[1].toLowerCase();
+            const resource = `${provider}/${match[2].toLowerCase()}`;
+            if (resource in providersApiVersion) {
+                return providersApiVersion[resource];
+            } else if (provider in providersApiVersion) {
+                return providersApiVersion[provider];
+            } else {
+                throw new SanitizedError(`Unkown provider '${provider}'`);
+            }
+        }
+        return Constants.ApiVersion.arm;
+    }
+
     // - matches (/{type}/{instance})+
     private static regExpResourceTypeExtractor = /\/([^\/]+)\/([^\/]+)/ig;
 
@@ -120,6 +141,7 @@ export class ArmResourceUtils {
 
     /**
      * Parse a resource ID into a ResourceDescriptor object with all the parts split out.
+     *
      * @param id: Batch or ARM resource ID
      */
     private static _resourceDescriptorParser(id: string): ResourceDescriptor {
@@ -155,7 +177,7 @@ export class ArmResourceUtils {
         result.resources = [];
         result.resourceMap = {};
 
-        // tslint:disable-next-line
+        // eslint-disable-next-line
         while (tokens = ArmResourceUtils.regExpResourceTypeExtractor.exec(resources)) {
             if (!tokens) {
                 throw new InvalidArmResourceIdError("Invalid resource id: " + id);

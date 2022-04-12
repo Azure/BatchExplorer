@@ -1,11 +1,7 @@
 steps:
   - template: ../dependencies.yml
-  - template: ../pyenv.yml
   - script: |
       set -e
-      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      python --version
-      pip install -r python/requirements.txt
       echo "Node.js version $(node --version)"
       echo "NPM version $(npm --version)"
       npm ci

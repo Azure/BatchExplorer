@@ -4,7 +4,7 @@
 
 Banner is a box used to notifiy the user something is wrong with their app. It provide some quick fix functionalities
 
-![](banner.png)
+![Banner](banner.png)
 
 Example for the image above
 
@@ -31,9 +31,10 @@ export class MyComponent {
 ```
 
 ## Gauge
+
 Gauge is a custom graphical representation that can show a min, max and a value.
 
-![](gauge.png)
+![Gauge](gauge.png)
 
 Example for the image above
 
@@ -50,6 +51,7 @@ export class MyComponent {
     }
 }
 ```
+
 | Attr    | Description                                                                                                                  |
 |---------|------------------------------------------------------------------------------------------------------------------------------|
 | size    | Size can be one of the presets `xsmall` `small` `medium` `large` or any number.                                              |

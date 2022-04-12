@@ -29,7 +29,7 @@ const INVALID_RESPONSE = {
     selector: "bl-job-preparation-task-picker",
     templateUrl: "job-preparation-task-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
+        /* eslint-disable @angular-eslint/no-forward-ref */
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => JobPreparationTaskPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => JobPreparationTaskPickerComponent), multi: true },
     ],

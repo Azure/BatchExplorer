@@ -6,7 +6,7 @@ import {
 import { I18nService } from "@batch-flask/core";
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: "[i18nParam]",
 })
 export class I18nParameterDirective {

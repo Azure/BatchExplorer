@@ -12,9 +12,10 @@ constructor(private dialog: DialogService) {}
 
 ## Common dialogs
 
-**1. Confirmation dialog**
+### 1. Confirmation dialog
 
 Simplest confirmation dialog that do some action when user confirm.
+
 ```ts
 this.dialog.confirm("Are you sure?", {
     yes: () => this.otherService.doSomething(),
@@ -22,13 +23,13 @@ this.dialog.confirm("Are you sure?", {
 ```
 
 You can also have a description to detail a bit more what the user is about to confirm
+
 ```ts
 this.dialog.confirm("Are you sure?", {
     description: "This cannot be reverted.",
     yes: () => this.otherService.doSomething(),
 })
 ```
-
 
 ## Custom dialogs
 

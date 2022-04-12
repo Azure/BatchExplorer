@@ -124,8 +124,8 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     }
 
     private _updateTaskCount() {
-        this.jobService.getTaskCounts(this.jobId).subscribe((taskCount) => {
-            this.taskCount = taskCount.completed;
+        this.jobService.getTaskCounts(this.jobId).subscribe((taskCountResult) => {
+            this.taskCount = taskCountResult.taskCounts.completed;
             this.changeDetector.markForCheck();
         });
     }

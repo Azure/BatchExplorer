@@ -1,6 +1,7 @@
 import { Icon, IconSources } from "@batch-flask/ui/icon";
 import { CloudServiceOsFamily, OSType, Pool, PoolAllocationState, VmSize } from "app/models";
 import { SoftwarePricing, VMPrices } from "app/services/pricing";
+import { List } from "immutable";
 import * as Icons from "./icons";
 
 export interface PoolPrice {
@@ -26,13 +27,16 @@ const iconMapping = {
     "centos-hpc": Icons.centos,
     "windowsserver": Icons.windows,
     "debian": Icons.debian,
+    "debian-10": Icons.debian,
     "oracle-linux": Icons.oracle,
     "linux-data-science-vm": Icons.linux,
+    "ubuntu-1804": Icons.ubuntu,
     "linux-data-science-vm-ubuntu": Icons.ubuntu,
     "opensuse-Leap": Icons.openSUSE,
     "sles": Icons.openSUSE,
     "sles-hpc": Icons.openSUSE,
     "standard-data-science-vm": Icons.windows,
+    "dsvm-win-2019": Icons.windows,
     "rendering-windows2016": Icons.windows,
     "autodesk-maya-arnold-centos73": Icons.centos,
     "rendering-centos73": Icons.centos,
@@ -200,9 +204,14 @@ export class PoolUtils {
         let dedicatedPrice = nodeCost.regular * dedicatedCount;
         let lowPriPrice = nodeCost.lowpri * lowPriCount;
 
-        pool.applicationLicenses.forEach((license: string) => {
-            dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * dedicatedCount;
-            lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * lowPriCount;
+        let licenses = List<string>(pool.applicationLicenses.slice());
+        if (licenses.contains("vray")) {
+            licenses = licenses.push("vrayrt");
+        }
+
+       licenses.forEach((license: string) => {
+            dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores, vmSpec.numberOfGpus) * dedicatedCount;
+            lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores, vmSpec.numberOfGpus) * lowPriCount;
         });
 
         return {

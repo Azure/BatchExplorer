@@ -63,10 +63,10 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
                 this.changeDetector.markForCheck();
             }),
             switchMap(() => {
-                return forkJoin(
+                return forkJoin([
                     this.networkService.listArmVirtualNetworks(this.subscriptionId, this.location),
                     this.networkService.listClassicVirtualNetworks(this.subscriptionId, this.location),
-                );
+                ]);
             }),
         );
 

@@ -7,7 +7,7 @@
             <span title="{{resizeError.message}} ({{dedicatedQuota | async}} cores)" message>{{resizeError.message}} ({{dedicatedQuota | async}} cores)</span>
             <div details *ngIf="resizeError.values.size !== 0">
                 <div *ngFor="let entry of resizeError.values;trackBy: trackErrorValue">
-                    <div>{{entry.key}}: {{entry.value}}</div>
+                    <div>{{entry.name}}: {{entry.value}}</div>
                 </div>
             </div>
         </bl-banner>
@@ -18,7 +18,7 @@
             <span title="{{resizeError.message}} ({{lowPriorityQuota | async}} cores)" message>{{resizeError.message}} ({{lowPriorityQuota | async}} cores)</span>
             <div details *ngIf="resizeError.values.size !== 0">
                 <div *ngFor="let entry of resizeError.values;trackBy: trackErrorValue">
-                    <div>{{entry.key}}: {{entry.value}}</div>
+                    <div>{{entry.name}}: {{entry.value}}</div>
                 </div>
             </div>
         </bl-banner>
@@ -27,7 +27,7 @@
             <span title="{{resizeError.message}}" message>{{resizeError.message}}</span>
             <div details *ngIf="resizeError.values.size !== 0">
                 <div *ngFor="let entry of resizeError.values;trackBy: trackErrorValue">
-                    <div>{{entry.key}}: {{entry.value}}</div>
+                    <div>{{entry.name}}: {{entry.value}}</div>
                 </div>
             </div>
         </bl-banner>

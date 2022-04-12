@@ -19,9 +19,9 @@ import { IpcService } from "./ipc.service";
  */
 @Injectable()
 export class ElectronRemote {
-    // tslint:disable-next-line:variable-name
+    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
     public Menu: typeof Electron.Menu;
-    // tslint:disable-next-line:variable-name
+    // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
     public MenuItem: typeof Electron.MenuItem;
 
     public _remote: Electron.Remote;

@@ -1,6 +1,6 @@
 # Writting a component
 
-Official documentation from angular https://angular.io/docs/ts/latest/api/core/index/Component-decorator.html
+Official documentation from angular <https://angular.io/docs/ts/latest/api/core/index/Component-decorator.html>
 
 ## Naming convention
 
@@ -9,10 +9,12 @@ Official documentation from angular https://angular.io/docs/ts/latest/api/core/i
 3. Name the compoennt selector `bl-do-something`
 4. Name the template and the css file the same as the component `do-something.html` and `do-something.scss`
 
-Note: TSLint will complain if you don't follow the format for #2 and 3
+Note: Linting will complain if you don't follow the format for #2 and 3
 
 ## Component template
+
 You can either have the template be inline(Only use this if the template is extremely simple - 3 lines max)
+
 ```typescript
 @Component({
   ...
@@ -34,6 +36,7 @@ Or in a sperated file. If so name the file with the same name as the component `
 ```
 
 ## Style your component
+
 Prefer use of the angular2 `styleUrls` attribute on the component decorator.
 Add a style file in the same folder as your component(If the folder is getting to crowded maybe move each component in its own sub folder)
 
@@ -46,6 +49,7 @@ import "./do-something.scss";
 ```
 
 Then in `do-something.scss`
+
 ```scss
 @import "app/styles/variables"; // Import variables
 
@@ -58,45 +62,48 @@ bl-do-something {
 ```
 
 ## Do something on input
+
 Maybe unclear in the offical angular2 doc you have 2 options here, given the following input:
+
 ```typescript
 @Input()
 public task: Task;
 ```
+
 1. Make the input a setter and add any code needed there
 
-```typescript
-@Input()
-public set task(task: Task) {
-  this._task = task;
-  this.doSomething();
-}
-public get task() { return this._task; };
+    ```typescript
+    @Input()
+    public set task(task: Task) {
+      this._task = task;
+      this.doSomething();
+    }
+    public get task() { return this._task; };
 
-private _task: Task;
-```
+    private _task: Task;
+    ```
 
 2. Implement `OnChanges`
 
-```typescript
-import { Component, Input, OnChanges } from "@angular/core"
+    ```typescript
+    import { Component, Input, OnChanges } from "@angular/core"
 
-export class DoSomethingComponent implements OnChanges {
-  @Input()
-  public task: Task;
+    export class DoSomethingComponent implements OnChanges {
+      @Input()
+      public task: Task;
 
-  public onChanges(inputs) {
-    if(inputs.task) { // Means the input was changed
-      this.doSomething();
+      public onChanges(inputs) {
+        if(inputs.task) { // Means the input was changed
+          this.doSomething();
+        }
+      }
     }
-  }
-}
-
-```
+    ```
 
 Option 2 is the best choice if you want to listen to multiple input (e.g. Both `job` and `task`) and in most case would make the code cleaner
 
 ## Change detection
+
 You can make the component to only detect changes when one of the input is changed which will improve performance.
 If possible try to design components stateless(i.e. depending only on the inputs), if a component is getting quite big maybe consider spliting it into multiple stateless components.
 
@@ -110,6 +117,7 @@ If possible try to design components stateless(i.e. depending only on the inputs
 **Testing On push components:**
 Angular2 currently has a [bug/missing feature](https://github.com/angular/angular/issues/12313) where component won't be able to detect change if created directly.
 The workaround is to create a TestComponent containing the compoennt you want to test.
+
 ```typescript
 @Component({
     template: `<bl-do-something [task]="task"></bl-do-something>`,
@@ -120,13 +128,13 @@ class TestJobErrorDisplayComponent {
 
 ```
 
-
 ## Testing a component
 
 Create a file named with the component name `do-something.component.spec.ts` in the `test/app` folder and following the same structure you have in the `app` folder.
 
-** IMPORTANT: in `configureTestingModule` don't import any of our modules as it makes the test use a significant larger amount of memory and time.(For JobErrorDisplayComponent it is 10x slower) Just declare the component you want to test and mock others**
+**IMPORTANT: in `configureTestingModule` don't import any of our modules as it makes the test use a significant larger amount of memory and time.(For JobErrorDisplayComponent it is 10x slower) Just declare the component you want to test and mock others**
 Here is a snippet of a test component test
+
 ```typescript
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";

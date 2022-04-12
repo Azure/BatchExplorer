@@ -1,0 +1,28 @@
+@import "app/styles/variables";
+
+bl-pool-create-basic-dialog {
+    // static colors for deprecation warnings
+    .cloud-services-deprecation-warning {
+        > .warning {
+            background-color: var(--color-warn-50);
+            // using the color from var(--color-text-primary)
+            color: #333333;
+
+            > .summary-container {
+
+                &.standard {
+                    height: unset;
+                }
+
+                > .message {
+                    white-space: normal;
+                }
+            }
+        }
+    }
+
+    .cloud-services-warning-alternative-link {
+        // using the color from var(--color-primary-800);
+        color: #1d54af;
+    }
+}

@@ -25,11 +25,11 @@ const sizeB = { id: "size_b", name: "Size B", numberOfCores: 8, resourceDiskSize
 const sizeC = { id: "size_c", name: "Size C", numberOfCores: 4, resourceDiskSizeInMB: 80000 };
 const sizeD = { id: "size_d", name: "Size D", numberOfCores: 2, resourceDiskSizeInMB: 4000 };
 
-// tslint:disable:component-class-suffix
-// tslint:disable:template-use-track-by-function
+/* eslint-disable @angular-eslint/component-class-suffix */
+/* eslint-disable  */
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 class BaseTestComponent {
     public sizes: any[] = [];
     public pickedSize: string;
@@ -114,7 +114,7 @@ describe("TableComponent", () => {
         });
 
         it("has tabindex", () => {
-            expect(de.attributes["tabindex"]).toEqual("0");
+            expect(de.componentInstance.getListContainer().tabIndex).toEqual(0);
         });
 
         it("sets aria-rowcount with the number of items", () => {
@@ -134,22 +134,29 @@ describe("TableComponent", () => {
             expect(rows[3].id).toEqual("mytable-1-row-size_d");
         });
 
-        it("should focus the first item when triggering focus for the first time", () => {
-            de.componentInstance.focus();
+        it("should focus the first item when triggering focus for the first time", async () => {
+
+            await fixture.whenStable();
+            const listContainer =
+                fixture.debugElement.query(By.css(".table-body")).nativeElement;
+            de.componentInstance.focusList();
             fixture.detectChanges();
-            expect(document.activeElement).toEqual(de.nativeElement);
+            expect(document.activeElement).toEqual(listContainer);
             const rows = getRows();
 
             expect(rows[0].classList).toContain("focused");
         });
 
-        it("should focus the active item and ensure it is visible if exists", () => {
+        it("should focus the active item and ensure it is visible if exists", async () => {
+            await fixture.whenStable();
             testComponent.pickedSize = sizeC.id;
             fixture.detectChanges();
 
-            de.componentInstance.focus();
+            de.componentInstance.focusList();
             fixture.detectChanges();
-            expect(document.activeElement).toEqual(de.nativeElement);
+            const listContainer =
+                fixture.debugElement.query(By.css(".table-body")).nativeElement;
+            expect(document.activeElement).toEqual(listContainer);
             expect(virtualScrollComponent.ensureItemVisible).toHaveBeenCalledOnce();
             const rows = getRows();
 
@@ -157,57 +164,83 @@ describe("TableComponent", () => {
             expect(rows[2].classList).toContain("focused");
         });
 
-        it("it navigate with the keyboard", () => {
-            de.componentInstance.focus();
+        it("should be navigable with the keyboard", async () => {
+            await fixture.whenStable();
+            de.componentInstance.focusList();
+            const listContainer = de.componentInstance.getListContainer();
+            const pressKey = key => keydown(listContainer, key, key);
+
             fixture.detectChanges();
             const rows = getRows();
-            expect(rows[0].classList).toContain("focused");
+            expect(rows[0].classList).toContain("focused",
+                "first row should have been focused on list focus");
 
-            keydown(de, KeyCode.ArrowDown, KeyCode.ArrowDown);
+            pressKey(KeyCode.ArrowDown);
             fixture.detectChanges();
-            expect(rows[0].classList).not.toContain("focused");
-            expect(rows[1].classList).toContain("focused");
+            expect(rows[0].classList).not.toContain("focused",
+                "first row should not have been focused on 'Down' arrow");
+            expect(rows[1].classList).toContain("focused",
+                "second row should have been focused on 'Down' arrow");
 
-            keydown(de, KeyCode.ArrowDown, KeyCode.ArrowDown);
+            pressKey(KeyCode.ArrowDown);
             fixture.detectChanges();
-            expect(rows[1].classList).not.toContain("focused");
-            expect(rows[2].classList).toContain("focused");
+            expect(rows[1].classList).not.toContain("focused",
+                "second row should not have been focused on 'Down' arrow");
+            expect(rows[2].classList).toContain("focused",
+                "third row should have been focused on 'Down' arrow");
 
-            keydown(de, KeyCode.Space, KeyCode.Space);
+            pressKey(KeyCode.Space);
             fixture.detectChanges();
-            expect(testComponent.pickedSize).toEqual("size_c");
+            expect(testComponent.pickedSize).toEqual("size_c",
+                "should have picked 'size_c' on 'Space'");
 
-            keydown(de, KeyCode.ArrowUp, KeyCode.ArrowUp);
+            pressKey(KeyCode.ArrowUp);
             fixture.detectChanges();
-            expect(rows[0].classList).not.toContain("focused");
-            expect(rows[1].classList).toContain("focused");
+            expect(rows[0].classList).not.toContain("focused",
+                "first row should have not been focused on 'Up' arrow");
+            expect(rows[1].classList).toContain("focused",
+                "second row should have been focused on 'Up' arrow");
 
-            keydown(de, KeyCode.Enter, KeyCode.Enter);
+            pressKey(KeyCode.Enter);
             fixture.detectChanges();
-            expect(testComponent.pickedSize).toEqual("size_b");
+            expect(testComponent.pickedSize).toEqual("size_b",
+                "should have picked 'size_b' on 'Enter'");
 
-            keydown(de, KeyCode.ArrowRight, KeyCode.ArrowRight);
+            pressKey(KeyCode.ArrowRight);
             fixture.detectChanges();
-            expect(rows[0].classList).not.toContain("focused");
-            expect(rows[1].classList).not.toContain("focused");
+            expect(rows[0].classList).not.toContain("focused",
+                "first row should not have been focused on 'Right' arrow");
+            expect(rows[1].classList).not.toContain("focused",
+                "second row should not have been focused on 'Right' arrow");
             const cells = rows[1].querySelectorAll(".bl-table-cell");
-            expect(cells[0].classList).toContain("focused");
-            expect(cells[1].classList).not.toContain("focused");
+            expect(cells[0].classList).toContain("focused",
+                "first cell of second row should have been focused on 'Right'" +
+                " arrow");
+            expect(cells[1].classList).not.toContain("focused",
+                "second cell of second row should not have been focused on " + "'Right' arrow");
 
-            keydown(de, KeyCode.ArrowRight, KeyCode.ArrowRight);
+            pressKey(KeyCode.ArrowRight);
             fixture.detectChanges();
+            expect(cells[0].classList).not.toContain("focused",
+                "first cell of second row should not have been focused on " +
+                " 'Right' arrow");
+            expect(cells[1].classList).toContain("focused",
+                "second cell of second row should have been focused on " +
+                "'Right' arrow");
 
-            expect(cells[0].classList).not.toContain("focused");
-            expect(cells[1].classList).toContain("focused");
-
-            keydown(de, KeyCode.ArrowLeft, KeyCode.ArrowLeft);
-            keydown(de, KeyCode.ArrowLeft, KeyCode.ArrowLeft);
+            pressKey(KeyCode.ArrowLeft);
+            pressKey(KeyCode.ArrowLeft);
             fixture.detectChanges();
-
-            expect(rows[0].classList).not.toContain("focused");
-            expect(rows[1].classList).toContain("focused");
-            expect(cells[0].classList).not.toContain("focused");
-            expect(cells[1].classList).not.toContain("focused");
+            expect(rows[0].classList).not.toContain("focused",
+                "first row should not have been focused on 'Left' arrow");
+            expect(rows[1].classList).toContain("focused",
+                "second row should not have been focused on 'Left' arrow");
+            expect(cells[0].classList).not.toContain("focused",
+                "first cell of second row should not have been focused on " +
+                "'Left' arrow");
+            expect(cells[1].classList).not.toContain("focused",
+                "second cell of second row should not have been focused on " +
+                "'Left' arrow");
         });
     });
 

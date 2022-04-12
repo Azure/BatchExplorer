@@ -14,9 +14,10 @@ export interface NotificationAction {
 
 export interface NotificationConfig {
     /**
-     * Time(in milliseconds) it take for the notification to disapear automatically.
-     * This is independent from the persist setting.
-     * @default 3000ms
+     * Time (in milliseconds) it take for the notification to disapear
+     * automatically. Setting this value to 0 prevents the notification from
+     * auto-dismissing. This is independent of the persist setting.
+     * @default 3000
      */
     autoDismiss?: number;
     /**

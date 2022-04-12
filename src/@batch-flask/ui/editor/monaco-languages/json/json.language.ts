@@ -3,7 +3,7 @@
  * All schema templates are defined in same directory and they are used in create resource json editor.
  */
 
-// tslint:disable:no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
 const poolTemplate = JSON.parse(require("./pool.template.json"));
 const jobTemplate = JSON.parse(require("./job.template.json"));
 const taskTemplate = JSON.parse(require("./task.template.json"));

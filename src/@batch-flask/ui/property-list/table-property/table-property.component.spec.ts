@@ -10,7 +10,7 @@ import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "./table-property.component";
 
-// tslint:disable:template-use-track-by-function
+/* eslint-disable  */
 @Component({
     template: `
         <bl-table-property label="Files">
@@ -78,7 +78,7 @@ describe("TablePropertyComponent", () => {
         });
     });
 
-    describe("when there is more than 2 files", () => {
+    describe("when there are more than 2 files", () => {
         beforeEach(() => {
             component.files.push({ path: "file3.txt", source: "http://github.com/repo/file3.txt" });
             fixture.detectChanges();
@@ -88,10 +88,10 @@ describe("TablePropertyComponent", () => {
             const expandContainer = de.query(By.css(".expand-container"));
             expect(expandContainer).not.toBeNull();
             const expandBtn = expandContainer.query(By.css(".expand"));
-            const collapseBtn = expandContainer.query(By.css(".collapse"));
 
             expect(expandBtn).not.toBeNull();
-            expect(collapseBtn).toBeNull();
+            expect(expandBtn.nativeElement.getAttribute("aria-expanded"))
+                .toBe("false");
         });
 
         it("should only show the first 2 files", () => {
@@ -117,10 +117,9 @@ describe("TablePropertyComponent", () => {
             expect(de.nativeElement.textContent).toContain("http://github.com/repo/file2.txt");
             expect(de.nativeElement.textContent).toContain("http://github.com/repo/file3.txt");
 
-            const collapseBtn = de.query(By.css(".collapse"));
-            expect(collapseBtn).not.toBeNull();
-            click(collapseBtn);
+            click(expandBtn);
             fixture.detectChanges();
+
             expect(de.nativeElement.textContent).not.toContain("file3.txt");
             expect(de.nativeElement.textContent).not.toContain("http://github.com/repo/file3.txt");
         });

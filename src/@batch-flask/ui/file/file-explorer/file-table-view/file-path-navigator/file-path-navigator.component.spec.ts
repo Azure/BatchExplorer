@@ -2,7 +2,7 @@ import { DOWN_ARROW } from "@angular/cdk/keycodes";
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
-import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteTrigger } from "@angular/material/autocomplete";
+import { MatAutocompleteModule, MatAutocompleteTrigger, _MatAutocompleteBase } from "@angular/material/autocomplete";
 import { By } from "@angular/platform-browser";
 import { KeyCode } from "@batch-flask/core/keys";
 import { I18nTestingModule } from "@batch-flask/core/testing";
@@ -41,7 +41,10 @@ describe("FilePathNavigatorComponent", () => {
     let component: FilePathNavigatorComponent;
     let de: DebugElement;
     let inputEl: DebugElement;
-    let autocomplete: MatAutocomplete;
+
+    // Using the abstract base class here looks odd, but it matches the typings of
+    // MatAutocompleteTrigger.autocomplete. In reality this is an instance of MatAutocomplete.
+    let autocomplete: _MatAutocompleteBase;
 
     function setup() {
 

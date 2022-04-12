@@ -9,7 +9,6 @@
  *   5. Call startBatchExplorer from startup.ts
  */
 
-// tslint:disable: ordered-imports
 // 1. Add the src/ folder to the NODE_PATH to be able to do absolute import(Relative to src folder)
 import * as path from "path";
 import "./init";

@@ -16,6 +16,8 @@ task-configuration:
     label: Last modified
   userIdentity:
     label: User identity
+  requiredSlots:
+    label: Required slots
   stateTransitionTime:
     label: State transition time
   previousStateTransitionTime:
