@@ -65,11 +65,7 @@
     "rebooting-node-count": "#ff755c"
   },
   "input": {
-<<<<<<< HEAD
-    "border": "#949494",
-=======
     "border": "#919191",
->>>>>>> master
     "focus-border": "var(--color-primary)",
     "placeholder": "var(--color-text-secondary)",
     "text": "var(--color-text-primary)",
