@@ -18,7 +18,7 @@
                                 [rowValue]="item.value"></bl-editable-table-select-cell>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
-                            <input [formControl]="item.controls[column.name]" [attr.type]="column.type">
+                            <input [formControl]="item.controls[column.name]" [attr.type]="column.type" [attr.aria-placeholder]="column.name">
                         </ng-container>
                     </ng-container>
                 </td>
