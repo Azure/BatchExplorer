@@ -16,6 +16,7 @@ import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
 
 import "./nodes-heatmap.scss";
+import { node } from "test/fixture";
 
 interface HeatmapTile {
     index: number;
@@ -27,7 +28,25 @@ const runningColor = "#388e3c";
 
 const stateTree: StateTree = [
     { state: NodeState.idle, color: idleColor },
-    { state: NodeState.running, color: runningColor },
+    // { state: NodeState.running, color: runningColor },
+    { state: NodeState.running25, color: "#99D69C"},
+    { state: NodeState.running50, color: "#6DC572"},
+    { state: NodeState.running75, color: "#46AF4B"},
+    { state: NodeState.running, color: runningColor},
+    // {
+    //     category: "running",
+    //     label: "Task slot states",
+    //     color: runningColor,
+    //     states: [
+    //         // TODO: change colors to be more accessible
+    //         // The server won't return these states (running25, 50, and 75)
+    //         // This is only for populating the heatmap for the task slot gradient
+    //         { state: NodeState.running25, color: "#99D69C"},
+    //         { state: NodeState.running50, color: "#6DC572"},
+    //         { state: NodeState.running75, color: "#46AF4B"},
+    //         { state: NodeState.running, color: runningColor},
+    //     ],
+    // },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
     { state: NodeState.offline, color: "#305796" },
     { state: NodeState.preempted, color: "#606060" },
@@ -224,7 +243,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .attr("height", z);
 
         const backgroundGroup = nodeEnter.append("g").classed("bg", true).merge(groups.select("g.bg"));
-        // const runningTaskGroup = nodeEnter.append("g").classed("tasks", true).merge(groups.select("g.tasks"));
         // tslint:disable-next-line: max-line-length
         const runningTaskSlotsGroup = nodeEnter.append("g").classed("taskslots", true).merge(groups.select("g.taskslots"));
         const lowPriOverlayGroup = nodeEnter.append("g").classed("lowpri", true).merge(groups.select("g.lowpri"));
@@ -294,44 +312,35 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
         const runningTaskSlotRects = taskSlotGroup.selectAll("rect").data((d) => {
             const node: Node = d.node;
-            return this._computeRunningTaskSlotsTilesDimensions(node, z);
+            if (node.state !== NodeState.running) {
+                return [];
+            };
+            const percentageUsed = this._getTaskSlotsUsagePercent(node);
+            console.log("IMMA PERCENT: ", percentageUsed);
+            if (percentageUsed <= 25) {
+                return [this.colors.get(NodeState.running25)];
+            } else if (percentageUsed <= 50) {
+                console.log("heyoooooooo");
+                return [this.colors.get(NodeState.running50)];
+            } else if (percentageUsed <= 75) {
+                return [this.colors.get(NodeState.running75)];
+            } else {
+                return [this.colors.get(NodeState.running)];
+            }
         });
 
-        runningTaskSlotRects.enter().append("rect").merge(runningTaskSlotRects)
-            .attr("transform", (data) => {
-                // const index = data.index;
-                const x = z - data.position;
-                return `translate(0,${x})`;
-            })
-            .attr("width", z)
-            .attr("height", (data) => data.taskSlotsHeight)
-            .style("fill", runningColor);
 
+        runningTaskSlotRects.enter().append("rect").merge(runningTaskSlotRects)
+            .attr("width", z)
+            .attr("height", z)
+            .style("fill", (data) => {
+                console.log(data);
+                return data;
+            });
         runningTaskSlotRects.exit().remove();
     }
 
-    private _computeRunningTaskSlotsTilesDimensions(node: Node, tileSize: number) {
-        if (node.state !== NodeState.running) {
-            return [];
-        }
-        const { taskSlotsHeight, combine, remaining } = this._getTaskSlotsHeight(tileSize, node);
-        if (combine) {
-            return [{ node, index: 0, taskSlotsHeight, position: taskSlotsHeight }];
-        }
-        const count = Math.max(node.runningTasksCount, 0);
-        let extra = remaining;
-        let position = 0;
-        const array = new Array(count).fill(0).map((task, index) => {
-            let height = taskSlotsHeight;
-            if (extra > 0) {
-                extra--;
-                height++;
-            }
-            position += height + 1;
-            return { node, index, taskSlotsHeight: height, position };
-        });
-        return array;
-    }
+
 
     /**
      * Display either how many tasks are running on a given node or an error code if the node errors.
@@ -357,20 +366,29 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
        });
     }
 
-    private _getTaskSlotsHeight(tileSize: number, node: Node) {
+    private _getTaskSlotsUsagePercent(node: Node): number {
         const taskSlotsPerNode = this.pool.taskSlotsPerNode;
         const taskSlotsCount = node.runningTaskSlotsCount;
-        const taskSlotsHeight = Math.floor((taskSlotsCount / taskSlotsPerNode) * tileSize);
-        const remaining = tileSize % taskSlotsPerNode;
+        const taskSlotPercentUsed = Math.floor((taskSlotsCount / taskSlotsPerNode) * 100);
+        // console.log("PERCENT ", taskSlotPercentUsed);
+        return taskSlotPercentUsed;
+    }
+
+    private _getTaskSlotsHeight(tileSize: number, node: Node) {
+        const taskSlotsPerNode = this.pool.taskSlotsPerNode; // total amount of task slots on that node
+        const taskSlotsCount = node.runningTaskSlotsCount; // number of running task slots on that node
+        const taskSlotsHeight = Math.floor((taskSlotsCount / taskSlotsPerNode) * tileSize); // running task slots / total task slots percetage multipled by size of tile
+        const remaining = tileSize % taskSlotsPerNode; // whatever is still left over
         let height;
-        const combine = taskSlotsHeight < 2;
+        const combine = taskSlotsHeight < 2; // the height is 2 or more then it doesn't need to be combined ?
         if (combine) {
-            height = Math.floor(tileSize / taskSlotsPerNode * node.runningTaskSlotsCount);
+            height = Math.floor(tileSize / taskSlotsPerNode * taskSlotsCount);
         } else {
             height = taskSlotsHeight - 1;
         }
         return { taskSlotsHeight: Math.max(1, height), combine, remaining };
     }
+
     /**
      * Compute the dimension of the heatmap.
      *  - rows
