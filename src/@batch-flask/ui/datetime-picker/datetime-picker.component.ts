@@ -106,7 +106,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         const datetime = this._getDate(value).setZone(this.currentTimeZone.name);
         this.datetime.patchValue({
             date: datetime.toJSDate(),
-            time: `${datetime.hour}:${datetime.minute}`,
+            time: datetime.toFormat("HH:mm")
         });
         this.changeDetector.markForCheck();
     }
