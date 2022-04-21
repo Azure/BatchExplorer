@@ -4,7 +4,8 @@
             <div class="name">{{action.name}}</div>
             <div class="description">{{action.description}}</div>
         </bl-clickable>
-        <bl-clickable class="view-on-github" (do)="viewOnGithub(action)" matTooltip="View template on GitHub" aria-label="View template on GitHub">
+        <bl-clickable class="view-on-github" (do)="viewOnGithub(action)"
+                      title="View template on GitHub">
             <i class="fa fa-external-link"></i>
         </bl-clickable>
     </bl-card>
