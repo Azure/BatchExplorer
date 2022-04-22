@@ -88,7 +88,7 @@ export class PoolUtils {
     }
 
     public static iconForOffer(offerName: string) {
-        const icon = iconMapping[offerName.toLowerCase()];
+        const icon = iconMapping[offerName?.toLowerCase()];
         if (icon) {
             return icon;
         }
