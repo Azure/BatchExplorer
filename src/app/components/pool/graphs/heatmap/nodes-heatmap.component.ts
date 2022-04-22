@@ -16,7 +16,6 @@ import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
 
 import "./nodes-heatmap.scss";
-import { node } from "test/fixture";
 
 interface HeatmapTile {
     index: number;
@@ -28,25 +27,24 @@ const runningColor = "#388e3c";
 
 const stateTree: StateTree = [
     { state: NodeState.idle, color: idleColor },
-    // { state: NodeState.running, color: runningColor },
-    { state: NodeState.running25, color: "#99D69C"},
-    { state: NodeState.running50, color: "#6DC572"},
-    { state: NodeState.running75, color: "#46AF4B"},
-    { state: NodeState.running, color: runningColor},
-    // {
-    //     category: "running",
-    //     label: "Task slot states",
-    //     color: runningColor,
-    //     states: [
-    //         // TODO: change colors to be more accessible
-    //         // The server won't return these states (running25, 50, and 75)
-    //         // This is only for populating the heatmap for the task slot gradient
-    //         { state: NodeState.running25, color: "#99D69C"},
-    //         { state: NodeState.running50, color: "#6DC572"},
-    //         { state: NodeState.running75, color: "#46AF4B"},
-    //         { state: NodeState.running, color: runningColor},
-    //     ],
-    // },
+    // { state: NodeState.running25, color: "#99D69C"},
+    // { state: NodeState.running50, color: "#6DC572"},
+    // { state: NodeState.running75, color: "#46AF4B"},
+    // { state: NodeState.running, color: runningColor},
+    {
+        category: "running",
+        label: "Running states",
+        color: runningColor,
+        states: [
+            // TODO: change colors to be more accessible
+            // The server won't return these states (running25, 50, and 75)
+            // This is only for populating the heatmap for the task slot gradient
+            { state: NodeState.running25, color: "#99D69C"},
+            { state: NodeState.running50, color: "#6DC572"},
+            { state: NodeState.running75, color: "#46AF4B"},
+            { state: NodeState.running, color: runningColor},
+        ],
+    },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
     { state: NodeState.offline, color: "#305796" },
     { state: NodeState.preempted, color: "#606060" },
@@ -107,6 +105,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public selectedNodeId = new BehaviorSubject<string>(null);
     public selectedNode = new BehaviorSubject<Node>(null);
     public highlightedState: string;
+    public expandedCategory: string;
 
     public dimensions = {
         tileSize: 0,
@@ -193,9 +192,26 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this.redraw();
     }
 
+    // checking if this state is a category
+    // public isCategory(state: string): boolean {
+    //     for (const item of stateTree as any) {
+    //         if (item.category && item.category === state) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+
     public selectState(state: string) {
         this.highlightedState = state;
         this.colors.updateColors(this.highlightedState);
+        // if (this.isCategory(state)) {
+        //     if (this.expandedCategory === state) {
+        //         this.expandedCategory = "";
+        //     } else {
+        //         this.expandedCategory = state;
+        //     }
+        // }
         this.redraw();
     }
 
@@ -316,11 +332,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 return [];
             };
             const percentageUsed = this._getTaskSlotsUsagePercent(node);
-            console.log("IMMA PERCENT: ", percentageUsed);
             if (percentageUsed <= 25) {
                 return [this.colors.get(NodeState.running25)];
             } else if (percentageUsed <= 50) {
-                console.log("heyoooooooo");
                 return [this.colors.get(NodeState.running50)];
             } else if (percentageUsed <= 75) {
                 return [this.colors.get(NodeState.running75)];

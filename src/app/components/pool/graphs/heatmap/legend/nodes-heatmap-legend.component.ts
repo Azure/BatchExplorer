@@ -24,6 +24,7 @@ export class NodesHeatmapLegendComponent {
     @Input()
     public colors: any;
 
+    public expandedCategory: string;
     public stateCounter: StateCounter;
     public highlightedState: string = null;
 
@@ -45,6 +46,32 @@ export class NodesHeatmapLegendComponent {
         }
         this.selectedStateChange.emit(this.highlightedState);
     }
+
+    public selectCategory(category: string) {
+        if (category === this.expandedCategory) {
+            this.expandedCategory = "";
+        } else {
+            this.expandedCategory = category;
+        }
+        this.selectState(category);
+    }
+
+    // add for HTML in legend-item category
+    // (click)="showSubItems(item.category)"
+
+    // public showSubItems(state: string) {
+    //     console.log("hi it went into the correct function");
+    //     const subItems = document.getElementsByClassName('legend-subitem') as HTMLCollectionOf<HTMLElement>;
+    //     console.log("PENGUIN", subItems);
+    //     for (let i = 0; i < subItems.length; i++) {
+    //         const displaySetting = subItems[i].style.display;
+    //         if (displaySetting == "flex") {
+    //             subItems[i].style.display = "none";
+    //         } else {
+    //             subItems[i].style.display = "flex";
+    //         }
+    //     }
+    // }
 
     public openContextMenu(item: StateNode | CategoryNode) {
         const state = (item as StateNode).state;
