@@ -22,95 +22,99 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-dark" style="background-color:#333333">
-        <span class="navbar-brand mb-0 h1"> <i class="fa fa-flask"></i> Batch Explorer insider</span>
-    </nav>
-    <div class="navbar navbar-light" style="display: block; background-color:#e3e3e3">
-        <div class="text-center">Latest insider version is <span id="batch-labs-version">Loading...</span></div>
-    </div>
-    <div class="jumbotron">
-        <div class="row">
-            <div style="width: 800px;margin: auto">
-                <h1 class="text-center">Batch Explorer insider</h1>
-                <h2 class="heading-sm text-center">Get the latest release each day.</h4>
-                <p class="text-center warning">Insiders have the most recent code pushes and may lead to the occasional broken build.</p>
-                <p class="text-center warning">Use at your own risk.</p>
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-md-5 col-lg-12 text-center">
-                        <a
-                            class="btn btn-link" 
-                            id="primary-download-btn">
-                            Download
-                        </a>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-7 col-lg-12 text-center">
-                        <a class="btn btn-success btn-link" 
-                            style="background-color:#595959 !important; border-color:#595959 !important;"
-                            href="https://github.com/Azure/BatchExplorer">
-                            View on GitHub
-                        </a>
-                    </div>
-                </div>
-                <p class="text-center" style="font-size: small; padding-top:8px; color:#595959">
-                    By using Batch Explorer, you agree to its <a class="text-link" href="#licenseandprivacy" >license and privacy statement</a>
-                </p>
-            </div>
+    <header>
+        <nav class="navbar navbar-dark" style="background-color:#333333">
+            <span class="navbar-brand mb-0 h1"> <i class="fa fa-flask"></i> Batch Explorer insider</span>
+        </nav>
+        <div class="navbar navbar-light" style="display: block; background-color:#e3e3e3">
+            <div class="text-center">Latest insider version is <span id="batch-labs-version">Loading...</span></div>
         </div>
-    </div>
-    <div class="download-content">
-        <div class="downloads">
-            <div class="os-download">
-                <div class="type">
-                    <i class="fa fa-windows"></i>
-                </div>
-                <a
-                    class="btn btn-success btn-link os-download-btn" 
-                    id="download-windows-installer-btn">
-                    Windows
-                </a>
-                <div class="alternate-downloads">
-                    <span><a href="#" id="download-windows-installer">Installer</a> | <a href="#" id="download-windows-zip">zip</a></span>
-                </div>
-            </div>
-
-            <div class="os-download">
-                <div class="type">
-                    <i class="fa fa-apple"></i>
-                </div>
-                <a 
-                    class="btn btn-success btn-link btn-link os-download-btn"
-                    id="download-osx-app-btn">
-                        OSX
-                </a>
-                <div class="alternate-downloads">
-                    <span><a href="#" id="download-osx-dmg">dmg</a></span>
-                    | <span><a href="#" id="download-osx-zip">zip</a></span>
-                </div>
-                    
-            </div>
-
-            <div class="os-download">
-                <div class="type">
-                    <i class="fa fa-linux"></i>
-                </div>
-                <a class="btn btn-success btn-link btn-link os-download-btn" 
-                    id="download-linux-deb-btn">
-                        Linux
-                </a>
-                <div class="alternate-downloads">
-                    <span><a href="#" id="download-linux-deb">deb</a> 
-                        | <a href="#" id="download-linux-rpm">rpm</a> 
-                        | <a href="#" id="download-linux-appimage">AppImage</a></span>
+    </header>
+    <main>
+        <div class="jumbotron">
+            <div class="row">
+                <div style="width: 800px;margin: auto">
+                    <h1 class="text-center">Batch Explorer insider</h1>
+                    <h2 class="heading-sm text-center">Get the latest release each day.</h4>
+                    <p class="text-center warning">Insiders have the most recent code pushes and may lead to the occasional broken build.</p>
+                    <p class="text-center warning">Use at your own risk.</p>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-5 col-lg-12 text-center">
+                            <a
+                                class="btn btn-link" 
+                                id="primary-download-btn">
+                                Download
+                            </a>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-7 col-lg-12 text-center">
+                            <a class="btn btn-success btn-link" 
+                                style="background-color:#595959 !important; border-color:#595959 !important;"
+                                href="https://github.com/Azure/BatchExplorer">
+                                View on GitHub
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-center" style="font-size: small; padding-top:8px; color:#595959">
+                        By using Batch Explorer, you agree to its <a class="text-link" href="#licenseandprivacy" >license and privacy statement</a>
+                    </p>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="download-content">
+            <div class="downloads">
+                <div class="os-download">
+                    <div class="type">
+                        <i class="fa fa-windows"></i>
+                    </div>
+                    <a
+                        class="btn btn-success btn-link os-download-btn" 
+                        id="download-windows-installer-btn">
+                        Windows
+                    </a>
+                    <div class="alternate-downloads">
+                        <span><a href="#" id="download-windows-installer">Installer</a> | <a href="#" id="download-windows-zip">zip</a></span>
+                    </div>
+                </div>
 
-    <div class="license-and-privacy">
-        <h2 id="licenseandprivacy" class="heading-sm"> LICENSE AND PRIVACY TERMS</h4>
-         By downloading and using Batch Explorer, you agree to the <a class="text-link" href="EULA.html" >license</a> and 
-         <a class="text-link" href="https://privacy.microsoft.com/en-us/privacystatement">privacy statement</a>. Batch Explorer automatically sends telemetry data and crash dumps to help us improve the product. If you would prefer not to have this data sent please go see <a class="text-link" href="https://github.com/Azure/BatchExplorer/wiki/Crash-reporting-and-telemetry#how-to-disable-crash-reporting-and-telemetry">How to Disable Crash Reporting</a> to learn how to disable it.
-     </div>
+                <div class="os-download">
+                    <div class="type">
+                        <i class="fa fa-apple"></i>
+                    </div>
+                    <a 
+                        class="btn btn-success btn-link btn-link os-download-btn"
+                        id="download-osx-app-btn">
+                            OSX
+                    </a>
+                    <div class="alternate-downloads">
+                        <span><a href="#" id="download-osx-dmg">dmg</a></span>
+                        | <span><a href="#" id="download-osx-zip">zip</a></span>
+                    </div>
+                        
+                </div>
+
+                <div class="os-download">
+                    <div class="type">
+                        <i class="fa fa-linux"></i>
+                    </div>
+                    <a class="btn btn-success btn-link btn-link os-download-btn" 
+                        id="download-linux-deb-btn">
+                            Linux
+                    </a>
+                    <div class="alternate-downloads">
+                        <span><a href="#" id="download-linux-deb">deb</a> 
+                            | <a href="#" id="download-linux-rpm">rpm</a> 
+                            | <a href="#" id="download-linux-appimage">AppImage</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="license-and-privacy">
+            <h2 id="licenseandprivacy" class="heading-sm"> LICENSE AND PRIVACY TERMS</h4>
+            By downloading and using Batch Explorer, you agree to the <a class="text-link" href="EULA.html" >license</a> and 
+            <a class="text-link" href="https://privacy.microsoft.com/en-us/privacystatement">privacy statement</a>. Batch Explorer automatically sends telemetry data and crash dumps to help us improve the product. If you would prefer not to have this data sent please go see <a class="text-link" href="https://github.com/Azure/BatchExplorer/wiki/Crash-reporting-and-telemetry#how-to-disable-crash-reporting-and-telemetry">How to Disable Crash Reporting</a> to learn how to disable it.
+        </div>
+    </main>
      
     <footer class="footer">
         <div class="container">
