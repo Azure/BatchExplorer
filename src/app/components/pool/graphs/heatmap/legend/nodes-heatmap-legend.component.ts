@@ -3,6 +3,7 @@ import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/u
 import { Node, Pool } from "app/models";
 import { NodeService } from "app/services";
 import { List } from "immutable";
+import { expand } from "rxjs/operators";
 import { StateCounter } from "../state-counter";
 import { CategoryNode, StateNode, StateTree } from "../state-tree";
 
@@ -26,7 +27,7 @@ export class NodesHeatmapLegendComponent {
 
     public expandedCategory: string;
     public stateCounter: StateCounter;
-    public highlightedState: string = null;
+    public highlightedState: string;
 
     @Output()
     public selectedStateChange = new EventEmitter();
@@ -38,40 +39,18 @@ export class NodesHeatmapLegendComponent {
         this.stateCounter = new StateCounter();
     }
 
-    public selectState(state: string) {
-        if (state === this.highlightedState) {
-            this.highlightedState = null;
+    public selectState(state: string, categoryParent: string = "") {
+        if (state === this.expandedCategory) {
+            this.expandedCategory = "";
+            this.highlightedState = "";
+        } else if (state === this.highlightedState) {
+            this.highlightedState = "";
         } else {
+            this.expandedCategory = categoryParent;
             this.highlightedState = state;
         }
         this.selectedStateChange.emit(this.highlightedState);
     }
-
-    public selectCategory(category: string) {
-        if (category === this.expandedCategory) {
-            this.expandedCategory = "";
-        } else {
-            this.expandedCategory = category;
-        }
-        this.selectState(category);
-    }
-
-    // add for HTML in legend-item category
-    // (click)="showSubItems(item.category)"
-
-    // public showSubItems(state: string) {
-    //     console.log("hi it went into the correct function");
-    //     const subItems = document.getElementsByClassName('legend-subitem') as HTMLCollectionOf<HTMLElement>;
-    //     console.log("PENGUIN", subItems);
-    //     for (let i = 0; i < subItems.length; i++) {
-    //         const displaySetting = subItems[i].style.display;
-    //         if (displaySetting == "flex") {
-    //             subItems[i].style.display = "none";
-    //         } else {
-    //             subItems[i].style.display = "flex";
-    //         }
-    //     }
-    // }
 
     public openContextMenu(item: StateNode | CategoryNode) {
         const state = (item as StateNode).state;
