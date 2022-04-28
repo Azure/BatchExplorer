@@ -3,6 +3,7 @@
 /**/lib-cjs/
 /**/lib-umd/
 /**/test-results/
+/**/bin/
 
 *.md
 *.html

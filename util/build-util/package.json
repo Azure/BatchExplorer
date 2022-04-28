@@ -12,14 +12,32 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "main": "./cli.js",
+  "main": "./bin/cli.js",
   "bin": {
-    "butil": "./cli.js"
+    "butil": "./bin/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p . && chmod +x ./bin/cli.js",
+    "butil": "npm run build && node ./bin/cli.js",
+    "clean": "rimraf bin/",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint --fix",
+    "build:clean": "run-s clean build",
+    "prepack": "npm run build:clean"
   },
   "dependencies": {
-    "shelljs": "^0.8.4"
-  },
-  "files": [
-    "cli.js"
-  ]
+    "@types/cli-color": "^2.0.2",
+    "@types/inquirer": "^8.2.1",
+    "@types/node": "^17.0.29",
+    "@types/shelljs": "^0.8.11",
+    "@types/yargs": "^17.0.10",
+    "cli-color": "^2.0.2",
+    "editorconfig": "^0.15.3",
+    "inquirer": "^8.2.3",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "shelljs": "^0.8.4",
+    "typescript": "^4.6.3",
+    "yargs": "^17.4.1"
+  }
 }
