@@ -19,6 +19,10 @@ bl-nodes-heatmap-legend {
         cursor: pointer;
     }
 
+    .subtitle {
+        padding-left: 12%;
+    }
+
     .legend-item, .legend-subitem {
         display: flex;
         align-items: center;

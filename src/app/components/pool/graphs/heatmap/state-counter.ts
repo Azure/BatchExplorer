@@ -1,5 +1,6 @@
 import { ObjectUtils, log } from "@batch-flask/utils";
-import { Node, NodeState } from "app/models";
+import { Node, NodeState, Pool } from "app/models";
+import { NodeUtils } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
@@ -19,13 +20,27 @@ export class StateCounter {
         return this._data[state];
     }
 
-    public updateCount(nodes: List<Node>) {
+    public updateCount(nodes: List<Node>, pool: Pool) {
         const counts: CountMap = {};
         for (const state of ObjectUtils.values(NodeState)) {
             counts[state] = 0;
         }
         nodes.forEach((node) => {
             if (node.state in counts) {
+
+                // TODO: comment why we have this
+                if (node.state === NodeState.running) {
+                   const percentTaskSlotUsage = NodeUtils.getTaskSlotsUsagePercent(node, pool);
+                   if (percentTaskSlotUsage <= 25) {
+                        counts[NodeState.running25]++;
+                    } else if (percentTaskSlotUsage <= 50) {
+                        counts[NodeState.running50]++;
+                    } else if (percentTaskSlotUsage <= 75) {
+                        counts[NodeState.running75]++;
+                    } else {
+                        counts[NodeState.running100]++;
+                    }
+                }
                 counts[node.state]++;
             } else {
                 log.error(`Node '${node.id}' has an unknown state '${node.state}'`);
@@ -35,4 +50,13 @@ export class StateCounter {
             (this._data[state] as BehaviorSubject<number>).next(counts[state]);
         }
     }
+
+    public getCountforCategory(category: string): number {
+        const subStates = NodeUtils.getSubStatesforCategory(category);
+        const totalCount = subStates.reduce(
+            (result, curState) => result + this.get(curState).value, 0);
+        return totalCount;
+    }
+
+
 }

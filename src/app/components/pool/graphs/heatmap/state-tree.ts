@@ -8,6 +8,7 @@ export interface StateNode {
 export interface CategoryNode {
     category: string;
     label: string;
+    subtitle?: string;
     color: string;
     states: StateNode[];
 }

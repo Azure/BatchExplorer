@@ -8,6 +8,7 @@ export * from "./number-utils";
 export * from "./pool-utils";
 export * from "./arm-resource-utils";
 export * from "./storage-utils";
+export * from "./node-utils";
 
 import * as icons from "./icons";
 export const Icons = icons;

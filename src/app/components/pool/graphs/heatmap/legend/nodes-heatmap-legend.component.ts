@@ -3,7 +3,6 @@ import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/u
 import { Node, Pool } from "app/models";
 import { NodeService } from "app/services";
 import { List } from "immutable";
-import { expand } from "rxjs/operators";
 import { StateCounter } from "../state-counter";
 import { CategoryNode, StateNode, StateTree } from "../state-tree";
 
@@ -19,7 +18,7 @@ export class NodesHeatmapLegendComponent {
 
     @Input()
     public set nodes(nodes: List<Node>) {
-        this.stateCounter.updateCount(nodes);
+        this.stateCounter.updateCount(nodes, this.pool);
     }
 
     @Input()

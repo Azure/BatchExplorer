@@ -8,12 +8,13 @@
         <bl-clickable class="legend-item category" (do)="selectState(item.category, item.category)" [attr.aria-selected]="item.category === highlightedState" [class.highlighted]="item.category === highlightedState"
             (contextmenu)="openContextMenu(item)">
             <div [style.backgroundColor]="item.color" class="color"></div>
-            <div class="label">{{item.label}}</div>
+            <div class="label">{{item.label}} ({{stateCounter.getCountforCategory(item.category)}})</div>
             <div class="category-expansion">
                 <i class="fa" [class.fa-caret-down]="item.category === expandedCategory" [class.fa-caret-left]="item.category !== expandedCategory"></i>
             </div>
         </bl-clickable>
         <div *ngIf="item.category === expandedCategory">
+            <div *ngIf="item.subtitle" class="subtitle">{{item.subtitle}}</div>
             <bl-clickable *ngFor="let subitem of item.states;trackBy: trackState" class="legend-subitem state" (do)="selectState(subitem.state, item.category)"  [attr.aria-selected]="subitem.state === highlightedState" [class.highlighted]="subitem.state === highlightedState"
                 (contextmenu)="openContextMenu(item)">
                 <div [style.backgroundColor]="colors.get(subitem.state)" class="color"></div>

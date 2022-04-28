@@ -7,7 +7,7 @@ import { ContextMenuItem, ContextMenuSeparator, ContextMenuService } from "@batc
 import { log } from "@batch-flask/utils";
 import { NodeCommands } from "app/components/node/action";
 import { Node, NodeState, Pool } from "app/models";
-import { ComponentUtils } from "app/utils";
+import { ComponentUtils, NodeUtils } from "app/utils";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
@@ -27,22 +27,19 @@ const runningColor = "#388e3c";
 
 const stateTree: StateTree = [
     { state: NodeState.idle, color: idleColor },
-    // { state: NodeState.running25, color: "#99D69C"},
-    // { state: NodeState.running50, color: "#6DC572"},
-    // { state: NodeState.running75, color: "#46AF4B"},
-    // { state: NodeState.running, color: runningColor},
     {
         category: "running",
         label: "Running states",
+        subtitle: "Task Slots Usage",
         color: runningColor,
         states: [
             // TODO: change colors to be more accessible
             // The server won't return these states (running25, 50, and 75)
             // This is only for populating the heatmap for the task slot gradient
-            { state: NodeState.running25, color: "#99D69C"},
-            { state: NodeState.running50, color: "#6DC572"},
-            { state: NodeState.running75, color: "#46AF4B"},
-            { state: NodeState.running, color: runningColor},
+            { state: NodeState.running25, color: "#00A372"},
+            { state: NodeState.running50, color: runningColor},
+            { state: NodeState.running75, color: "#687A00"},
+            { state: NodeState.running100, color: "#004b23"},
         ],
     },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
@@ -331,7 +328,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             if (node.state !== NodeState.running) {
                 return [];
             };
-            const percentageUsed = this._getTaskSlotsUsagePercent(node);
+            const percentageUsed = NodeUtils.getTaskSlotsUsagePercent(node, this.pool);
             if (percentageUsed <= 25) {
                 return [this.colors.get(NodeState.running25)];
             } else if (percentageUsed <= 50) {
@@ -339,22 +336,18 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             } else if (percentageUsed <= 75) {
                 return [this.colors.get(NodeState.running75)];
             } else {
-                return [this.colors.get(NodeState.running)];
+                return [this.colors.get(NodeState.running100)];
             }
         });
-
 
         runningTaskSlotRects.enter().append("rect").merge(runningTaskSlotRects)
             .attr("width", z)
             .attr("height", z)
             .style("fill", (data) => {
-                console.log(data);
                 return data;
             });
         runningTaskSlotRects.exit().remove();
     }
-
-
 
     /**
      * Display either how many tasks are running on a given node or an error code if the node errors.
@@ -378,29 +371,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 return `${taskCount} tasks (${taskSlotsCount}/${this.pool.taskSlotsPerNode} slots) running on node (${tile.node.id})`;
             }
        });
-    }
-
-    private _getTaskSlotsUsagePercent(node: Node): number {
-        const taskSlotsPerNode = this.pool.taskSlotsPerNode;
-        const taskSlotsCount = node.runningTaskSlotsCount;
-        const taskSlotPercentUsed = Math.floor((taskSlotsCount / taskSlotsPerNode) * 100);
-        // console.log("PERCENT ", taskSlotPercentUsed);
-        return taskSlotPercentUsed;
-    }
-
-    private _getTaskSlotsHeight(tileSize: number, node: Node) {
-        const taskSlotsPerNode = this.pool.taskSlotsPerNode; // total amount of task slots on that node
-        const taskSlotsCount = node.runningTaskSlotsCount; // number of running task slots on that node
-        const taskSlotsHeight = Math.floor((taskSlotsCount / taskSlotsPerNode) * tileSize); // running task slots / total task slots percetage multipled by size of tile
-        const remaining = tileSize % taskSlotsPerNode; // whatever is still left over
-        let height;
-        const combine = taskSlotsHeight < 2; // the height is 2 or more then it doesn't need to be combined ?
-        if (combine) {
-            height = Math.floor(tileSize / taskSlotsPerNode * taskSlotsCount);
-        } else {
-            height = taskSlotsHeight - 1;
-        }
-        return { taskSlotsHeight: Math.max(1, height), combine, remaining };
     }
 
     /**
