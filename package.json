@@ -16,7 +16,6 @@
     "node": ">=16.0.0"
   },
   "devDependencies": {
-    "@batch/build-util": "file:./util/build-util",
     "@octokit/core": "^3.5.1",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
@@ -59,6 +58,7 @@
     "test:all": "lerna run workspace:test:all --stream && npm run gather-build-results",
     "test:web": "lerna run workspace:test:web --stream && npm run gather-build-results",
     "test:web:all": "lerna run workspace:test:web:all --stream && npm run gather-build-results",
-    "postinstall": "lerna bootstrap"
+    "postinstall": "lerna bootstrap",
+    "dev-setup": "cd ./util/build-util && npm install && npm run build:clean && npm install -g ."
   }
 }
