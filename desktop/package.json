@@ -87,11 +87,10 @@
     "node": ">=10.0.0"
   },
   "devDependencies": {
-    "@angular-eslint/eslint-plugin": "^4.0.0",
-    "@angular-eslint/eslint-plugin-template": "^4.0.0",
-    "@angular-eslint/template-parser": "^4.0.0",
+    "@angular-eslint/eslint-plugin": "^13.2.1",
+    "@angular-eslint/eslint-plugin-template": "^13.2.1",
+    "@angular-eslint/template-parser": "^13.2.1",
     "@angular/compiler-cli": "^11.0.0",
-    "@batch/build-util": "^1.0.0",
     "@batch/common-config": "^1.0.0",
     "@batch/ui-common": "^1.0.0",
     "@batch/ui-playground": "^1.0.0",

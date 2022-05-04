@@ -33,7 +33,7 @@
         </div>
         <i class="caret fa" [class.fa-caret-left]="!showDetails" [class.fa-caret-down]="showDetails" *ngIf="details.children.length !== 0"></i>
     </bl-clickable>
-    <div class="details-container" [hidden]="!showDetails || details.children.length == 0" #details>
+    <div class="details-container" [hidden]="!showDetails || details.children.length === 0" #details>
         <ng-content select="[details]"></ng-content>
     </div>
 </bl-card>
