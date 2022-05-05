@@ -8,10 +8,10 @@ import { Button } from "../button";
 describe("Button component", () => {
     beforeEach(() => initMockBrowserEnvironment());
 
-    test("Empty button", async () => {
-        const { container } = render(<Button />);
+    test("Simple button", async () => {
+        const { container } = render(<Button label="I am a button" />);
         const buttonEl = screen.getByRole("button");
-        expect(buttonEl.textContent).toEqual("");
+        expect(buttonEl.textContent).toEqual("I am a button");
         expect(await runAxe(container)).toHaveNoViolations();
     });
 

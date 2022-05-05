@@ -31,7 +31,7 @@ export function Dropdown<V>(props: DropdownProps<V>): JSX.Element {
         <FluentDropdown
             id={props.id}
             style={props.style}
-            ariaLabel={props.ariaLabel}
+            ariaLabel={props.label ?? props.ariaLabel}
             className={props.className}
             disabled={props.disabled}
             errorMessage={props.errorMessage}
