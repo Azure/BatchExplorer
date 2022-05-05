@@ -43,6 +43,17 @@ This will start Jest in an interactive mode and watch the source code for change
 
 To set breakpoints and debug tests, run `npm run test:debug`, then open Edge or Chrome and go to [edge://inspect](edge://inspect) or [chrome://inspect](edge://inspect) respectively. This should auto-detect the running Node.js debugger port, and allow you to connect the Chromium dev tools. Note that when the debugger connects, execution will have already been paused. To resume, click the play button in your debugger.
 
+### Accessibility Tests
+
+The `react` package includes support for automated accessibility (a11y) testing with [axe](https://www.deque.com/axe/). Accessibility tests are automatically run in continuous integration (CI) pipelines, but they're not run by most test scripts in development. The accessibility tests can be run explicitly through one of the following methods:
+
+```shell
+cd react
+yarn test:a11y       # Run all accessibility tests
+yarn test:a11y:watch # Run all accessibility tests in watch mode
+yarn test:all        # Run all React tests including accessibility tests
+```
+
 ## Developing in a Local Web Server
 
 To start a development server and watch for changes, `cd` to the root directory of the repository and run the following command:
