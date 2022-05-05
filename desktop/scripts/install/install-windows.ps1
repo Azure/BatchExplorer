@@ -102,7 +102,7 @@ function confirm-node-version() {
 function install-node-dependencies() {
 
     Remove-Item -path .\node_modules -recurse -Force
-    yarn install
+    npm ci
 
     if($lastExitCode -eq 0) {
         add-success "Installed dependencies correctly" -foreground "green";
@@ -113,7 +113,7 @@ function install-node-dependencies() {
 
 
 function install-python-dependencies() {
-    $python = [string](yarn ts .\scripts\install\get-python.ts)
+    $python = [string](npm run ts .\scripts\install\get-python.ts)
 
     if($lastExitCode -eq 0) {
         Write-Host "Python path is $python"
@@ -133,7 +133,7 @@ function install-python-dependencies() {
 }
 
 function build-batch-explorer() {
-    yarn build:package
+    npm run build:package
 
     if($lastExitCode -eq 0) {
         add-success "Built the app successfully. Check ${root}\desktop\release\win-unpacked for the executable" -foreground "green";

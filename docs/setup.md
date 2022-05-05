@@ -7,14 +7,14 @@ Follow the **Building Batch Explorer yourself** instruction of the [wiki](https:
 Start the dev server
 
 ```bash
-yarn dev-server
+npm run dev-server
 ```
 
 Start electron
 
 ```bash
 # In the command line
-yarn dev-electron
+npm run dev-electron
 
 # In VSCode just press F5
 ```
@@ -38,35 +38,35 @@ If you're using VSCode (recommended) we suggest you use the following extensions
 **Magic command** (starts the server and electron in dev mode)
 
 ```shell
-yarn dev
+npm run dev
 ```
 
 Build project
 
 ```shell
-yarn build
+npm run build
 ```
 
 Run app
 
 ```shell
-yarn electron
+npm run electron
 ```
 
 Run watch (this will build files on save)
 
 ```shell
-yarn watch
+npm run watch
 ```
 
 Run dev server (this will handle the refresh of files and later should have live reload)
 
 ```shell
-yarn dev-server
+npm run dev-server
 ```
 
 Run dev electron (to use the dev server you need to run this)
 
 ```shell
-yarn dev-electron
+npm run dev-electron
 ```

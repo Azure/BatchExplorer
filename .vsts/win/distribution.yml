@@ -9,11 +9,11 @@ steps:
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
-      exec { yarn build:prod }
-      exec { yarn build-python }
-      exec { yarn package win-exe }
+      exec { npm run build:prod }
+      exec { npm run build-python }
+      exec { npm run package win-exe }
     workingDirectory: desktop
-      exec { yarn build:prod }
+      exec { npm run build:prod }
     displayName: Build all packages
 
   - template: ./security-analysis.yml
@@ -26,7 +26,7 @@ steps:
         **/*.dll
         !**/python36.dll
 
-  - powershell: yarn package win-installer
+  - powershell: npm run package win-installer
     workingDirectory: desktop
     displayName: Build installer
 
@@ -36,7 +36,7 @@ steps:
       pattern: |
         **/BatchExplorer*Setup*.exe
 
-  - powershell: yarn package win-manifest
+  - powershell: npm run package win-manifest
     workingDirectory: desktop
     displayName: Create manifest
   - template: ../common/generate-sbom.yml

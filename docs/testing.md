@@ -6,7 +6,7 @@ Start the browser test watch
 
 ```shell
 cd desktop
-yarn test-app-watch
+npm run test-app-watch
 ```
 
 This will now run the test whenever a change is made to the browser code or the test.
@@ -34,10 +34,10 @@ You should not really have to run those unless changing some client code. CI wil
 cd desktop
 
 # For just running once to check
-yarn test-client
+npm run test-client
 
 # For working on test
-yarn test-client-watch
+npm run test-client-watch
 ```
 
 By default, all output logged by Batch Explorer is silenced. To enable console logging, set a `TEST_LOGGING` environment variable to a truthy value (e.g., `1`).
@@ -46,7 +46,7 @@ By default, all output logged by Batch Explorer is silenced. To enable console l
 
 | Description                              | Single run             | Watch                        |
 |------------------------------------------|------------------------|------------------------------|
-| Run the test for the browser environment | `yarn test-app`        | `yarn test-app-watch`        |
-| Run the test for the node environemnt    | `yarn test-client`     | `yarn test-client-watch`     |
-| Run all the tests                        | `yarn test`            |                              |
-| Run the lint                             | `yarn lint`            |                              |
+| Run the test for the browser environment | `npm run test-app`        | `npm run test-app-watch`        |
+| Run the test for the node environemnt    | `npm run test-client`     | `npm run test-client-watch`     |
+| Run all the tests                        | `npm run test`            |                              |
+| Run the lint                             | `npm run lint`            |                              |

@@ -12,7 +12,6 @@ steps:
       set -e
       echo "Node.js version $(node --version)"
       echo "NPM version $(npm --version)"
-      echo "Yarn version $(yarn --version)"
       npm install -g codecov
-      yarn install
+      npm ci
     displayName: Install Linux dependencies

@@ -15,18 +15,6 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "workspaces": {
-    "packages": [
-      "desktop",
-      "packages/*",
-      "util/*",
-      "web"
-    ],
-    "nohoist": [
-      "**/@types/**"
-    ]
-  },
-  "dependencies": {},
   "devDependencies": {
     "@octokit/core": "^3.5.1",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
@@ -56,20 +44,20 @@
     "build:test": "lerna run workspace:build:test --stream",
     "clean": "lerna run --parallel workspace:clean --stream",
     "gather-build-results": "butil gather-build-results .",
-    "launch": "yarn launch:web",
+    "launch": "npm run launch:web",
     "launch:desktop": "lerna run --parallel workspace:launch:desktop --stream",
     "launch:web": "lerna run --parallel workspace:launch:web --stream",
-    "lint": "prettier -c . && lerna run --parallel workspace:lint --stream && yarn lint:markdown",
-    "lint:fix": "prettier -w . && lerna run --parallel workspace:lint:fix --stream && yarn lint:markdown",
+    "lint": "prettier -c . && lerna run --parallel workspace:lint --stream && npm run lint:markdown",
+    "lint:fix": "prettier -w . && lerna run --parallel workspace:lint:fix --stream && npm run lint:markdown",
     "lint:markdown": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules/**/*\"",
-    "start": "yarn start:web",
+    "start": "npm run start:web",
     "start:desktop": "lerna run --parallel workspace:start:desktop --stream",
     "start:web": "lerna run --parallel workspace:start:web --stream",
-    "test": "lerna run workspace:test --stream && yarn gather-build-results",
-    "test:desktop": "lerna run workspace:test:desktop --stream && yarn gather-build-results",
-    "test:all": "lerna run workspace:test:all --stream && yarn gather-build-results",
-    "test:web": "lerna run workspace:test:web --stream && yarn gather-build-results",
-    "test:web:all": "lerna run workspace:test:web:all --stream && yarn gather-build-results",
-    "postinstall": "cd desktop && yarn rebuild:app-deps"
+    "test": "lerna run workspace:test --stream && npm run gather-build-results",
+    "test:desktop": "lerna run workspace:test:desktop --stream && npm run gather-build-results",
+    "test:all": "lerna run workspace:test:all --stream && npm run gather-build-results",
+    "test:web": "lerna run workspace:test:web --stream && npm run gather-build-results",
+    "test:web:all": "lerna run workspace:test:web:all --stream && npm run gather-build-results",
+    "postinstall": "lerna bootstrap"
   }
 }

@@ -27,8 +27,8 @@ const baseConfig = {
         alias: {
             // Prevent duplicate copies of react from being resolved
             // (See https://github.com/facebook/react/issues/13991)
-            react: path.resolve("../node_modules/react"),
-            "react-dom": path.resolve('../node_modules/react-dom'),
+            react: path.resolve("node_modules/react"),
+            "react-dom": path.resolve('node_modules/react-dom'),
         },
     },
 

@@ -1,19 +1,19 @@
 steps:
   - template: ./linux-dependencies.yml
 
-  - script: yarn lint
+  - script: npm run lint
     displayName: Lint
 
-  - script: yarn build:clean
+  - script: npm run build:clean
     displayName: Build packages
 
-  - script: yarn test-models
+  - script: npm run test-models
     workingDirectory: desktop
     displayName: Test models against swagger
 
   - script: |
       export DISPLAY=:99
-      xvfb-run --server-args '-screen 0 1024x768x24' yarn test:all
+      xvfb-run --server-args '-screen 0 1024x768x24' npm run test:all
     displayName: Run tests
 
   - task: PublishTestResults@2

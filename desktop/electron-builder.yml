@@ -8,7 +8,7 @@ files:
   - "build/"
   - "package.json"
   - "dev-app-update.yml"
-  - "!../node_modules/jschardet/"
+  - "!node_modules/jschardet/"
 
 extraResources:
   - from: "python/dist/main"
@@ -18,7 +18,7 @@ extraResources:
   - "ThirdPartyNotices.txt"
   - "data"
   - "i18n"
-  - "../node_modules/jschardet/"
+  - "node_modules/jschardet/"
 
 protocols:
   - name: "BatchExplorer protocol"

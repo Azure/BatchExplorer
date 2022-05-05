@@ -4,7 +4,7 @@ steps:
 
   - powershell: |
       $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
-      yarn build:package
+      npm run build:package
     displayName: Build and package
 
   - powershell: |
@@ -12,7 +12,7 @@ steps:
       $ErrorActionPreference = "Stop"
       $env:BE_TEST_AAD_USER_EMAIL = "$(uiTestingAccountEmail)"
       $env:BE_TEST_AAD_USER_PASSWORD = "$(uiTestingAccountPassword)"
-      yarn test-e2e
+      npm run test-e2e
     workingDirectory: desktop
     displayName: End to end tests
 

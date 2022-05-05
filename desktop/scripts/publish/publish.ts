@@ -112,7 +112,7 @@ async function bumpVersion(version) {
     await gotoMainBranch();
     await run (`git branch --set-upstream-to=origin/${bumpBranch} ${bumpBranch}`);
     await switchToNewBranch(bumpBranch);
-    await run(`yarn version --no-git-tag-version --allow-same-version ${nextVersion}`);
+    await run(`npm run version --no-git-tag-version --allow-same-version ${nextVersion}`);
 
     await run(`git commit -am "Bump version to ${nextVersion}"`);
     await run(`git push origin ${bumpBranch}`);
@@ -134,7 +134,7 @@ async function updateChangeLog(version, milestoneId) {
 }
 
 async function updateThirdParty() {
-    await run(`yarn ts scripts/lca/generate-third-party`);
+    await run(`npm run ts scripts/lca/generate-third-party`);
     success("Updated ThirdPartyNotices.txt");
 }
 
@@ -175,8 +175,8 @@ async function createPullrequestIfNot(version, releaseBranch, issue) {
 
 async function buildApp() {
     // eslint-disable no-console
-    console.log("Building the app with yarn build:package...");
-    await run("yarn build:package");
+    console.log("Building the app with npm run build:package...");
+    await run("npm run build:package");
     success("Build the app successfully. Starting it now, double check it is working correctly");
     await run(path.join(root, "release/win-unpacked/BatchExplorer.exe"));
 }

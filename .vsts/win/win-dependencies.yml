@@ -1,11 +1,9 @@
 steps:
   - template: ../dependencies.yml
-
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       exec { Write-Host "Node.js version" $(node --version) }
       exec { Write-Host "NPM version" $(npm --version) }
-      exec { Write-Host "Yarn version" $(yarn --version) }
-      exec { yarn install }
+      exec { npm ci }
     displayName: Install Windows dependencies

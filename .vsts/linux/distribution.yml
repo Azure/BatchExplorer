@@ -3,12 +3,12 @@ steps:
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      yarn build:package
+      npm run build:package
     displayName: Build and pack
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      yarn package linux-manifest
+      npm run package linux-manifest
     workingDirectory: desktop
     displayName: Create manifest
   - template: ../common/generate-sbom.yml

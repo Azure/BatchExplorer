@@ -22,14 +22,13 @@ These libraries consist of various NPM packages which are meant to be distribute
 Before developing against these libraries, make sure you have installed:
 
 - [Node.js](https://nodejs.org) Most recent LTS version
-- [Yarn](https://classic.yarnpkg.com) Latest 1.x stable (**not** Yarn 2.x)
 
 ## Building and Running Tests
 
 To build the shared libraries, run the following from the same directory as this README.md:
 
 ```shell
-yarn install && yarn build:clean
+npm run install && npm run build:clean
 ```
 
 ## Unit Tests
@@ -37,19 +36,19 @@ yarn install && yarn build:clean
 Unit tests are automatically run via [Jest](https://jestjs.io/) when invoking any `build` script. To develop tests live, `cd` to the package's directory then run the command:
 
 ```shell
-yarn test:watch
+npm run test:watch
 ```
 
 This will start Jest in an interactive mode and watch the source code for changes, rebuilding and rerunning tests automatically.
 
-To set breakpoints and debug tests, run `yarn test:debug`, then open Edge or Chrome and go to [edge://inspect](edge://inspect) or [chrome://inspect](edge://inspect) respectively. This should auto-detect the running Node.js debugger port, and allow you to connect the Chromium dev tools. Note that when the debugger connects, execution will have already been paused. To resume, click the play button in your debugger.
+To set breakpoints and debug tests, run `npm run test:debug`, then open Edge or Chrome and go to [edge://inspect](edge://inspect) or [chrome://inspect](edge://inspect) respectively. This should auto-detect the running Node.js debugger port, and allow you to connect the Chromium dev tools. Note that when the debugger connects, execution will have already been paused. To resume, click the play button in your debugger.
 
 ## Developing in a Local Web Server
 
 To start a development server and watch for changes, `cd` to the root directory of the repository and run the following command:
 
 ```shell
-yarn start:web
+npm run start:web
 ```
 
-This will start a webpack dev server at <http://127.0.0.1:9000> and watch for any changes to the `standalone` package. To pick up live changes from other packages, run `yarn watch` either from the same directory as this README.md, or from the individual package directory.
+This will start a webpack dev server at <http://127.0.0.1:9000> and watch for any changes to the `standalone` package. To pick up live changes from other packages, run `npm run watch` either from the same directory as this README.md, or from the individual package directory.
