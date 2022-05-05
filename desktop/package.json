@@ -84,7 +84,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=16.0.0"
   },
   "devDependencies": {
     "@angular-eslint/eslint-plugin": "^13.2.1",
