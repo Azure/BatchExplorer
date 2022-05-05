@@ -9,9 +9,16 @@ describe("Button component", () => {
     beforeEach(() => initMockBrowserEnvironment());
 
     test("Simple button", async () => {
-        const { container } = render(<Button label="I am a button" />);
+        const { container } = render(<Button />);
         const buttonEl = screen.getByRole("button");
-        expect(buttonEl.textContent).toEqual("I am a button");
+        expect(buttonEl.textContent).toEqual("");
+        const axeResult = await runAxe(container);
+        expect(axeResult.violations.length).toEqual(1);
+        expect(axeResult.violations[0].id).toEqual("button-name");
+    });
+
+    test("Empty button with label has no a11y violations", async () => {
+        const { container } = render(<Button label="Press Me!" />);
         expect(await runAxe(container)).toHaveNoViolations();
     });
 
