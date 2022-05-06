@@ -16,6 +16,7 @@
     "node": ">=16.0.0"
   },
   "devDependencies": {
+    "@batch/build-util": "file:./util/build-util",
     "@octokit/core": "^3.5.1",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",

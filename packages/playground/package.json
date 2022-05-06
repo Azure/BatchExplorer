@@ -68,7 +68,6 @@
     "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@batch/build-util": "^1.0.0",
     "@batch/common-config": "^1.0.0",
     "@batch/ui-common": "^1.0.0",
     "@batch/ui-react": "^1.0.0",
