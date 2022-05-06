@@ -11,3 +11,5 @@ desktop
 docs
 .vsts
 .vscode
+
+package-lock.json

@@ -4,6 +4,5 @@ steps:
       set -e
       echo "Node.js version $(node --version)"
       echo "NPM version $(npm --version)"
-      echo "Yarn version $(yarn --version)"
-      yarn install
+      npm ci
     displayName: Install MacOS dependencies

@@ -118,28 +118,24 @@ describe("CertificateService", () => {
         httpMock.verify();
     });
 
-    it("parse a pfx certificate", async (done) => {
+    it("parse a pfx certificate", async () => {
         const file = await loadCertificate("batchtest.pfx");
-        certificateService.parseCertificate(file, "batchtest").subscribe((certificate) => {
-            expect(certificate.thumbprint).toBe("bd7c0d29efad85c5174364c330db1698b14f7f55");
-            expect(certificate.thumbprintAlgorithm).toBe("sha1");
-            expect(certificate.certificateFormat).toBe("pfx");
-            expect(certificate.password).toBe("batchtest");
-            done();
-        });
+        const certificate = await certificateService.parseCertificate(file, "batchtest").toPromise();
+        expect(certificate.thumbprint).toBe("bd7c0d29efad85c5174364c330db1698b14f7f55");
+        expect(certificate.thumbprintAlgorithm).toBe("sha1");
+        expect(certificate.certificateFormat).toBe("pfx");
+        expect(certificate.password).toBe("batchtest");
     });
 
-    it("parse a cer certificate", async (done) => {
+    it("parse a cer certificate", async () => {
         const file = await loadCertificate("batchtest2.cer");
-        certificateService.parseCertificate(file, "batchtest").subscribe((certificate) => {
-            // TODO: Forge actually calculates this thumbprint incorrectly. Replace
-            //       with the correct thumbprint when this is fixed
-            expect(certificate.thumbprint).toBe("6da50c0bf5100da7cf63f390da15af6569c2dff7");
-            expect(certificate.thumbprintAlgorithm).toBe("sha1");
-            expect(certificate.certificateFormat).toBe("cer");
-            expect(certificate.password).toBeUndefined();
-            done();
-        });
+        const certificate = await certificateService.parseCertificate(file, "batchtest").toPromise();
+        // TODO: Forge actually calculates this thumbprint incorrectly. Replace
+        //       with the correct thumbprint when this is fixed
+        expect(certificate.thumbprint).toBe("6da50c0bf5100da7cf63f390da15af6569c2dff7");
+        expect(certificate.thumbprintAlgorithm).toBe("sha1");
+        expect(certificate.certificateFormat).toBe("cer");
+        expect(certificate.password).toBeUndefined();
     });
 });
 

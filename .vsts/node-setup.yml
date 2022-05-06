@@ -4,14 +4,58 @@ steps:
       versionSpec: '16.x.x'
 
   - script: |
-      corepack enable
-    displayName: Install Yarn via Corepack
-
-  - script: |
       cp .vsts/pipelines.npmrc .npmrc
+      cp .vsts/pipelines.npmrc desktop/.npmrc
+      cp .vsts/pipelines.npmrc packages/common/.npmrc
+      cp .vsts/pipelines.npmrc packages/playground/.npmrc
+      cp .vsts/pipelines.npmrc packages/react/.npmrc
+      cp .vsts/pipelines.npmrc packages/service/.npmrc
+      cp .vsts/pipelines.npmrc util/build-util/.npmrc
+      cp .vsts/pipelines.npmrc util/common-config/.npmrc
+      cp .vsts/pipelines.npmrc web/.npmrc
     displayName: Stage .npmrc configuration
 
   - task: npmAuthenticate@0
-    displayName: Authenticate with NPM private feed
+    displayName: NPM auth - root
     inputs:
       workingFile: .npmrc
+
+  - task: npmAuthenticate@0
+    displayName: NPM auth - desktop
+    inputs:
+      workingFile: desktop/.npmrc
+
+  - task: npmAuthenticate@0
+    displayName: NPM auth - common
+    inputs:
+      workingFile: packages/common/.npmrc
+
+  - task: npmAuthenticate@0
+    displayName: NPM auth - playground
+    inputs:
+      workingFile: packages/playground/.npmrc
+
+  - task: npmAuthenticate@0
+    displayName: NPM auth - react
+    inputs:
+      workingFile: packages/react/.npmrc
+
+  - task: npmAuthenticate@0
+    displayName: NPM auth - service
+    inputs:
+      workingFile: packages/service/.npmrc
+
+  - task: npmAuthenticate@0
+    displayName: NPM auth - build-util
+    inputs:
+      workingFile: util/build-util/.npmrc
+
+  - task: npmAuthenticate@0
+    displayName: NPM auth - common-config
+    inputs:
+      workingFile: util/common-config/.npmrc
+
+  - task: npmAuthenticate@0
+    displayName: NPM auth - web
+    inputs:
+      workingFile: web/.npmrc

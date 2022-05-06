@@ -20,11 +20,11 @@ Fortunately there is a tool that will generate this file for you.
 To generate the file run
 
 ```shell
-yarn ts scripts/lca/generate-third-party
+npm run ts scripts/lca/generate-third-party
 ```
 
 To check the current file is up to date(This is run on travis before mergin to stable)
 
 ```shell
-yarn ts scripts/lca/generate-third-party -- --check
+npm run ts scripts/lca/generate-third-party -- --check
 ```

@@ -3,9 +3,9 @@ steps:
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      yarn build:prod
-      yarn build-python
-      yarn package darwin-app
+      npm run build:prod
+      npm run build-python
+      npm run package darwin-app
       cd ./desktop/release/mac
       zip -y -r ../BatchExplorer-mac.zip ./BatchExplorer.app
       cd ../..
@@ -23,12 +23,12 @@ steps:
       rm -f ./release/mac/*.pkg
       # rm -rf ./release/*.zip
       mv ./release/*.zip ./release/code-sign-results.zip
-      yarn package darwin-dmg
+      npm run package darwin-dmg
       rm -rf ./release/mac/*
     workingDirectory: desktop
     displayName: Build dmg
 
-  - script: yarn package darwin-manifest
+  - script: npm run package darwin-manifest
     workingDirectory: desktop
     displayName: Create manifest
   - template: ../common/generate-sbom.yml

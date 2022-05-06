@@ -183,7 +183,9 @@ export class CertificateService {
         switch (format) {
             case CertificateFormat.pfx:
                 const p12Der = forge.util.decode64(data);
-                const p12Asn1 = forge.asn1.fromDer(p12Der);
+                // Set parseAllBytes to false to avoid regression.
+                // See: https://github.com/digitalbazaar/forge/issues/975
+                const p12Asn1 = forge.asn1.fromDer(p12Der, {parseAllBytes: false});
                 const outCert = forge.pkcs12.pkcs12FromAsn1(p12Asn1, false, password);
                 const keyBags = outCert.getBags({ bagType: forge.pki.oids.certBag });
                 const bag = keyBags[forge.pki.oids.certBag][0];
@@ -191,7 +193,9 @@ export class CertificateService {
                 certDer = forge.asn1.toDer(certAsn1).getBytes();
                 break;
             case CertificateFormat.cer:
-                const outAsn1 = forge.asn1.fromDer(data);
+                // Set parseAllBytes to false to avoid regression.
+                // See: https://github.com/digitalbazaar/forge/issues/975
+                const outAsn1 = forge.asn1.fromDer(data, {parseAllBytes: false});
                 certDer = forge.asn1.toDer(outAsn1).getBytes();
                 break;
             default:

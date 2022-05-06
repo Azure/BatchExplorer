@@ -13,7 +13,7 @@ This is the steps to create a major release
 
 Every release should have a millestone with the list of issues fixed in that new version.
 
-You can use the command `yarn publish -- <millestoneid>` to do step 1&2 and skip to step 3
+You can use the command `npm run publish -- <millestoneid>` to do step 1&2 and skip to step 3
 
 ### Step 1: Create a release issue
 
@@ -64,7 +64,7 @@ Example:
 Running the following command will update any required third party notices.
 
 ```shell
-yarn ts scripts/lca/generate-third-party
+npm run ts scripts/lca/generate-third-party
 ```
 
 **Important:** Make sure you have an environment variable called GH_TOKEN set that contains a valid GitHub API auth token.
@@ -83,11 +83,11 @@ You will need to modify '\scripts\lca\generate-third-party.ts' in order to get i
 
 #### Double check the prod build is working
 
-Travis should check on master that the build itself it not failing. However there could still be runtime errors that happens.
+CI should check on master that the build itself it not failing. However there could still be runtime errors that happens.
 Do the following and test the application.
 
 ```shell
-yarn build:package
+npm run build:package
 ```
 
 ### Step: 3 Merge those changes

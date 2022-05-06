@@ -169,7 +169,7 @@ function checkNoticeUpToDate(notices: string) {
         process.exit(0);
     } else {
         console.error("ThirdPartyNotice.txt is not up to date."
-            + " Please run 'yarn ts scripts/lca/generate-third-party'");
+            + " Please run 'npm run ts scripts/lca/generate-third-party'");
         process.exit(1);
     }
 }

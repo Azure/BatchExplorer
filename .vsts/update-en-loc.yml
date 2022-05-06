@@ -8,10 +8,10 @@ pool:
 steps:
   - template: ./node-setup.yml
 
-  - script: yarn install
+  - script: npm install
     displayName: Install dependencies
 
-  - script: yarn build-i18n-xliff
+  - script: npm run build-i18n-xliff
     workingDirectory: desktop
     displayName: Build english XLIFF file
 
