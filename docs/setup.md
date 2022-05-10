@@ -4,7 +4,7 @@ The following are instructions for building and running Batch Explorer and the S
 
 1. Install dependencies:
 
-    ```bash
+    ```shell
     npm run dev-setup
     npm install
     pip3 install -r python/requirements.txt
@@ -12,19 +12,19 @@ The following are instructions for building and running Batch Explorer and the S
 
 2. Build the libraries:
 
-    ```bash
+    ```shell
     npm run build
     ```
 
 ## Running Batch Shared Libraries Web
 
-```bash
+```shell
 npm run start:web
 ```
 
 ## Running Batch Explorer Desktop
 
-```bash
+```shell
 npm run dev-server # Start the dev server (in one shell)
 npm run dev-electron # Start Electron (in another shell)
 ```
@@ -47,37 +47,37 @@ If you're using VSCode (recommended) we suggest you use the following extensions
 
 **Magic command** (starts the server and electron in dev mode)
 
-```bash
+```shell
 npm run dev
 ```
 
 Build project
 
-```bash
+```shell
 npm run build
 ```
 
 Run app
 
-```bash
+```shell
 npm run electron
 ```
 
 Run watch (this will build files on save)
 
-```bash
+```shell
 npm run watch
 ```
 
 Run dev server (this will handle the refresh of files and later should have live reload)
 
-```bash
+```shell
 npm run dev-server
 ```
 
 Run dev electron (to use the dev server you need to run this)
 
-```bash
+```shell
 npm run dev-electron
 ```
 
@@ -87,19 +87,19 @@ The Portal Extension relies on packages provided by the shared libraries. The po
 
 1. Install the Batch Utility CLI:
 
-    ```bash
+    ```shell
     npm run dev-setup
     ```
 
 2. Configure paths to relevant repos:
 
-    ```bash
+    ```shell
     butil configure
     ```
 
 3. Run the link command:
 
-    ```bash
+    ```shell
     butil link
     ```
 
