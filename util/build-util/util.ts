@@ -16,6 +16,7 @@ export const configFile = path.resolve(
 );
 
 const portalReactPath = "src/src/BatchExtension/Client/ReactViews";
+const defaultJsonIndentSize = 2;
 
 export interface Configuration {
     paths: {
@@ -36,7 +37,9 @@ export function readJsonOrDefault(filename: string, defaultJson = {}) {
 }
 
 export async function saveJson(filename: string, json: unknown) {
-    const indent = await exports.getEditorConfig("indent_size", filename);
+    const indent =
+        ((await getEditorConfig("indent_size", filename)) as number) ??
+        defaultJsonIndentSize;
     const confPath = path.dirname(filename);
     if (!fs.existsSync(confPath)) {
         mkdirp(confPath);
