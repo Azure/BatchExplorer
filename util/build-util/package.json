@@ -23,7 +23,10 @@
     "lint": "eslint .",
     "lint:fix": "npm run lint --fix",
     "build:clean": "run-s clean build",
-    "prepack": "npm run build:clean"
+    "prepack": "npm run build:clean",
+    "test": "jest",
+    "test:watch": "npm test -- --watch",
+    "workspace:test:all": "npm run build:clean && npm test"
   },
   "dependencies": {
     "cli-color": "^2.0.2",
@@ -35,11 +38,15 @@
   "devDependencies": {
     "@types/cli-color": "^2.0.2",
     "@types/inquirer": "^8.2.1",
+    "@types/jest": "^27.5.0",
     "@types/node": "^17.0.29",
     "@types/shelljs": "^0.8.11",
     "@types/yargs": "^17.0.10",
+    "jest": "^28.1.0",
+    "jest-junit": "^13.2.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
+    "ts-jest": "^28.0.2",
     "typescript": "^4.6.3",
     "which": "^2.0.2"
   }

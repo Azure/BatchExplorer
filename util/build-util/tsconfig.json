@@ -1,5 +1,6 @@
 {
   "extends": "../common-config/tsconfig-base.json",
+  "exclude": ["__mocks__", "__tests__"],
   "compilerOptions": {
     "module": "CommonJS",
     "outDir": "bin",
