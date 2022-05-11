@@ -34,7 +34,7 @@ const stateTree: StateTree = [
         color: runningColor,
         states: [
             /*
-                The server will not return these states. These are soley for populating
+                The server will not return these states. These are solely for populating
                 the heatmap for task slot usage.
             */
             { state: NodeState.running25, color: "#B1D5D4"},
