@@ -29,14 +29,6 @@ describe("Statecounter", () => {
         expect(colors.get("running")).toEqual("#888888");
     });
 
-    it("substate should have category color by default", () => {
-        expect(colors.get("starting")).toEqual("#777777");
-        expect(colors.get("rebooting")).toEqual("#777777");
-
-        expect(colors.get("startTaskFailed")).toEqual("#5555555");
-        expect(colors.get("unusable")).toEqual("#5555555");
-    });
-
     describe("when highlighting a state", () => {
         beforeEach(() => {
             colors.updateColors("idle");

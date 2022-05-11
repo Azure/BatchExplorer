@@ -54,27 +54,23 @@ describe("NodesHeatmapLegendComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should show all states", () => {
+    it("should show all states initially", () => {
         const stateEls = fixture.debugElement.queryAll(By.css(".legend-item.state"));
         expect(stateEls.length).toBe(2);
         expect(stateEls[0].nativeElement.textContent).toContain("idle");
         expect(stateEls[1].nativeElement.textContent).toContain("running");
     });
 
-    it("should show all categories", () => {
+    it("should not show substates initially", () => {
+        const substates = fixture.debugElement.queryAll(By.css(".legend-subitem.state"));
+        expect(substates.length).toBe(0);
+    });
+
+    it("should show all categories initially", () => {
         const categories = fixture.debugElement.queryAll(By.css(".legend-item.category"));
         expect(categories.length).toBe(2);
         expect(categories[0].nativeElement.textContent).toContain("Transition states");
         expect(categories[1].nativeElement.textContent).toContain("Error states");
-    });
-
-    it("should show all substates", () => {
-        const categories = fixture.debugElement.queryAll(By.css(".legend-subitem.state"));
-        expect(categories.length).toBe(4);
-        expect(categories[0].nativeElement.textContent).toContain("rebooting");
-        expect(categories[1].nativeElement.textContent).toContain("starting");
-        expect(categories[2].nativeElement.textContent).toContain("starttaskfailed");
-        expect(categories[3].nativeElement.textContent).toContain("unusable");
     });
 
     it("should set the colors correctly", () => {
@@ -104,7 +100,7 @@ describe("NodesHeatmapLegendComponent", () => {
 
         click(stateEls[0]);
         expect(selectedStateSpy).toHaveBeenCalledOnce();
-        expect(selectedStateSpy).toHaveBeenCalledWith(null);
+        expect(selectedStateSpy).toHaveBeenCalledWith('');
         fixture.detectChanges();
         expect(stateEls[0].classes["highlighted"]).toBe(false, "Should not be highlighted anymore");
     });
