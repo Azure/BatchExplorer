@@ -38,6 +38,12 @@ export class NodesHeatmapLegendComponent {
         this.stateCounter = new StateCounter();
     }
 
+    /**
+     * Emits state changes for when a state, category, or sub-state is selected.
+     *
+     * @param state
+     * @param categoryParent categories and sub-states will have one
+     */
     public selectState(state: string, categoryParent: string = "") {
         if (state === this.expandedCategory) {
             this.expandedCategory = "";

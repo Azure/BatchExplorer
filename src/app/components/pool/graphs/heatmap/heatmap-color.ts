@@ -18,7 +18,6 @@ export class HeatmapColor {
         this.updateColors();
     }
 
-    // ================= HERE =================
     public get(key: string) {
         if (key in this._colors) {
             return this._colors[key];
@@ -31,7 +30,6 @@ export class HeatmapColor {
         if (this._lastHighlightedState === highlightedState) {
             return;
         }
-        // add category logic for highlight state here
         if (!highlightedState) {
             this._colors = this._initialColors();
         } else {

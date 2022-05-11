@@ -23,7 +23,7 @@ interface HeatmapTile {
 }
 
 const idleColor = "#edeef2";
-const runningColor = "#388e3c";
+const runningColor = "#178D17";
 
 const stateTree: StateTree = [
     { state: NodeState.idle, color: idleColor },
@@ -33,13 +33,15 @@ const stateTree: StateTree = [
         subtitle: "Task Slots Usage",
         color: runningColor,
         states: [
-            // TODO: change colors to be more accessible
-            // The server won't return these states (running25, 50, and 75)
-            // This is only for populating the heatmap for the task slot gradient
-            { state: NodeState.running25, color: "#00A372"},
-            { state: NodeState.running50, color: runningColor},
-            { state: NodeState.running75, color: "#687A00"},
-            { state: NodeState.running100, color: "#004b23"},
+            /*
+                The server will not return these states. These are soley for populating
+                the heatmap for task slot usage.
+            */
+            { state: NodeState.running25, color: "#B1D5D4"},
+            { state: NodeState.running50, color: "#8CC3B0"},
+            { state: NodeState.running75, color: "#4EB17C"},
+            { state: NodeState.running99, color: "#22A042"},
+            { state: NodeState.running100, color: runningColor},
         ],
     },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
@@ -189,26 +191,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this.redraw();
     }
 
-    // checking if this state is a category
-    // public isCategory(state: string): boolean {
-    //     for (const item of stateTree as any) {
-    //         if (item.category && item.category === state) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
     public selectState(state: string) {
         this.highlightedState = state;
         this.colors.updateColors(this.highlightedState);
-        // if (this.isCategory(state)) {
-        //     if (this.expandedCategory === state) {
-        //         this.expandedCategory = "";
-        //     } else {
-        //         this.expandedCategory = state;
-        //     }
-        // }
         this.redraw();
     }
 
@@ -335,6 +320,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 return [this.colors.get(NodeState.running50)];
             } else if (percentageUsed <= 75) {
                 return [this.colors.get(NodeState.running75)];
+            } else if (percentageUsed <= 99) {
+                return [this.colors.get(NodeState.running99)];
             } else {
                 return [this.colors.get(NodeState.running100)];
             }
@@ -343,9 +330,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         runningTaskSlotRects.enter().append("rect").merge(runningTaskSlotRects)
             .attr("width", z)
             .attr("height", z)
-            .style("fill", (data) => {
-                return data;
-            });
+            .style("fill", (data) => data);
         runningTaskSlotRects.exit().remove();
     }
 

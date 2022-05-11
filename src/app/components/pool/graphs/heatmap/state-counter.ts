@@ -37,6 +37,8 @@ export class StateCounter {
                         counts[NodeState.running50]++;
                     } else if (percentTaskSlotUsage <= 75) {
                         counts[NodeState.running75]++;
+                    } else if (percentTaskSlotUsage <= 99) {
+                        counts[NodeState.running99]++;
                     } else {
                         counts[NodeState.running100]++;
                     }

@@ -8,7 +8,7 @@ export class NodeUtils {
         } else if (category === "transition") {
             return [NodeState.creating, NodeState.starting, NodeState.rebooting, NodeState.reimaging, NodeState.leavingPool];
         } else if (category === "running") {
-            return [NodeState.running25, NodeState.running50, NodeState.running75, NodeState.running100];
+            return [NodeState.running25, NodeState.running50, NodeState.running75, NodeState.running99, NodeState.running100];
         }
         return [];
     }

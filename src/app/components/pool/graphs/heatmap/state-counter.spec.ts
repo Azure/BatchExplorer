@@ -7,7 +7,7 @@ import { List } from "immutable";
 import * as Fixtures from "test/fixture";
 import { StateCounter } from "./state-counter";
 
-fdescribe("Statecounter", () => {
+describe("Statecounter", () => {
     let counter: StateCounter;
     let nodes: Node[];
     const poolService: PoolService = new PoolService(TestBed.get(HttpClient));;
