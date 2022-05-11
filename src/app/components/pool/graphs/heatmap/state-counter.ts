@@ -27,8 +27,11 @@ export class StateCounter {
         }
         nodes.forEach((node) => {
             if (node.state in counts) {
-
-                // TODO: comment why we have this
+                /**
+                 * Only NodeState.running is a valid state from the service. The rest of the
+                 * running states are for displaying task usage info on the UI side, not states
+                 * from the service.
+                 */
                 if (node.state === NodeState.running) {
                    const percentTaskSlotUsage = NodeUtils.getTaskSlotsUsagePercent(node, pool);
                    if (percentTaskSlotUsage <= 25) {
