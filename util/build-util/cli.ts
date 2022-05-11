@@ -7,6 +7,7 @@
 import * as yargs from "yargs";
 import {
     batchExplorerHome,
+    chmodx,
     configure,
     copyFiles,
     gatherBuildResults,
@@ -95,5 +96,14 @@ yargs
         command: "unlink",
         describe: "Unlink local projects (and replace with remote)",
         handler: () => unlinkLocalProjects(),
+    })
+    .command({
+        command: "chmodx [path..]",
+        describe: "Make a file executable",
+        builder: (yargs: yargs.Argv) =>
+            yargs.positional("path", {
+                describe: "File or files to make executable",
+            }),
+        handler: (argv) => chmodx(argv.path),
     })
     .help().argv;

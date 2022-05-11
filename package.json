@@ -70,8 +70,7 @@
     "test:all": "lerna run workspace:test:all --stream && npm run gather-build-results",
     "test:web": "lerna run workspace:test:web --stream && npm run gather-build-results",
     "test:web:all": "lerna run workspace:test:web:all --stream && npm run gather-build-results",
-    "postinstall": "lerna bootstrap -- --legacy-peer-deps",
-    "preinstall": "node ./util/build-util/check-cli-path",
+    "postinstall": "lerna bootstrap -- --legacy-peer-deps && node ./util/build-util/check-cli-path",
     "dev-setup": "cd ./util/build-util && npm install && npm run build:clean && npm install -g ."
   }
 }
