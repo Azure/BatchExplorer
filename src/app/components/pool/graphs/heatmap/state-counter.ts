@@ -62,6 +62,4 @@ export class StateCounter {
             (result, curState) => result + this.get(curState).value, 0);
         return totalCount;
     }
-
-
 }
