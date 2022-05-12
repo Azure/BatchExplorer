@@ -154,43 +154,29 @@ describe("NodesHeatmapComponent", () => {
         });
     });
 
-    describe("Running task overlay", () => {
+    describe("Running task slot usage overlay", () => {
+        const params = [
+            { usagePercent: "0-25%", runningTaskSlotsCount: 25, fill: "fill: rgb(177, 213, 212);" },
+            { usagePercent: "26-50%", runningTaskSlotsCount: 50, fill: "fill: rgb(140, 195, 176);" },
+            { usagePercent: "51-75%", runningTaskSlotsCount: 75, fill: "fill: rgb(78, 177, 124);" },
+            { usagePercent: "76-99%", runningTaskSlotsCount: 99, fill: "fill: rgb(34, 160, 66);" },
+            { usagePercent: "100%", runningTaskSlotsCount: 100, fill: "fill: rgb(23, 141, 23);" },
+        ];
+        params.forEach((param) => {
+            it(`should be ${ param.usagePercent } task slot usage color`, () => {
+                testComponent.nodes = createNodes(1, true, 100, param.runningTaskSlotsCount);
+                testComponent.pool = new Pool({ id: "pool-1", taskSlotsPerNode: 100 });
+                fixture.detectChanges();
+                const tiles = svg.selectAll("g.node-group");
+                expect(tiles.size()).toBe(1);
+                tiles.each((d, i, groups) => {
+                    const group = d3.select(groups[i]);
+                    const bg = group.select("g.taskslots");
+                    const taskRects = bg.selectAll("rect");
+                    expect(taskRects.size()).toBe(1, "Should have 1 rect");
 
-        //TODO: FIX THESE TESTS (DIFFERENT RUNNING TASK LOGIC)
-        it("when there is space should show 2 green stripes", () => {
-            testComponent.nodes = createNodes(2);
-            testComponent.pool = new Pool({ id: "pool-4", taskSlotsPerNode: 4 });
-            fixture.detectChanges();
-            const tiles = svg.selectAll("g.node-group");
-            expect(tiles.size()).toBe(2);
-            tiles.each((d, i, groups) => {
-                const group = d3.select(groups[i]);
-                const bg = group.select("g.taskslots");
-                const taskRects = bg.selectAll("rect");
-                expect(taskRects.size()).toBe(1, "Should have 1 rect");
-                taskRects.each((d, i, rects) => {
-                    const rect = d3.select(rects[i]);
-                    expect(rect.attr("height")).not.toBe("0");
-                    expect(rect.attr("style")).toContain("fill: rgb(140, 195, 176);");
-                });
-            });
-        });
-
-        it("when there is no space should combine green stripes", () => {
-            testComponent.nodes = createNodes(2);
-            testComponent.pool = new Pool({ id: "pool-100", taskSlotsPerNode: 300 });
-            fixture.detectChanges();
-            const tiles = svg.selectAll("g.node-group");
-            expect(tiles.size()).toBe(2);
-            tiles.each((d, i, groups) => {
-                const group = d3.select(groups[i]);
-                const bg = group.select("g.taskslots");
-                const taskRects = bg.selectAll("rect");
-                expect(taskRects.size()).toBe(1, "Should have only 1 rect");
-                taskRects.each((d, i, rects) => {
-                    const rect = d3.select(rects[i]);
-                    expect(rect.attr("height")).not.toBe("0");
-                    expect(rect.attr("style")).toContain("fill: rgb(177, 213, 212);");
+                    expect(taskRects).not.toBeFalsy("Should have a rect in taskslots group");
+                    expect(taskRects.attr("style")).toContain(param.fill);
                 });
             });
         });
@@ -345,15 +331,19 @@ describe("NodesHeatmapComponent", () => {
     });
 });
 
-function createNodes(count: number, dedicated = true) {
+function createNodes(
+        count: number,
+        dedicated = true,
+        runningTasksCount = defaultRunningTasksCount,
+        runningTaskSlotsCount = defaultRunningTaskSlotsCount) {
     const nodes: Node[] = [];
     for (let i = 0; i < count; i++) {
         nodes.push(Fixture.node.create({
             id: `node-${i + 1}`,
             state: NodeState.running,
             isDedicated: dedicated,
-            runningTasksCount: defaultRunningTasksCount,
-            runningTaskSlotsCount: defaultRunningTaskSlotsCount,
+            runningTasksCount: runningTasksCount,
+            runningTaskSlotsCount: runningTaskSlotsCount,
         }));
     }
     return List(nodes);
