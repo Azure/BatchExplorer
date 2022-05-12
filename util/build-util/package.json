@@ -17,7 +17,7 @@
     "butil": "./bin/cli.js"
   },
   "scripts": {
-    "build": "tsc -p .",
+    "build": "tsc -p . && node ./bin/cli.js chmodx ./bin/cli.js",
     "butil": "npm run build && node ./bin/cli.js",
     "clean": "rimraf bin/",
     "lint": "eslint .",

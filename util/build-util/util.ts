@@ -134,6 +134,15 @@ export function rmrf(targetPath: string) {
     });
 }
 
+export function chmodx(paths: string[] | unknown) {
+    if (!paths || !Array.isArray(paths)) {
+        return;
+    }
+    for (const path of paths) {
+        shell.chmod("+x", path);
+    }
+}
+
 // integrations have one place to look for things like coverage reports
 export function gatherBuildResults(basePath: string) {
     const baseBuildDir = path.join(basePath, "build");
