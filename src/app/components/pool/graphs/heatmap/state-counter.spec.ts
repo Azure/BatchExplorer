@@ -1,23 +1,19 @@
-import { HttpClient } from "@angular/common/http";
-import { TestBed } from "@angular/core/testing";
 import { Node, NodeState, Pool } from "app/models";
-import { PoolResizeDto } from "app/models/dtos";
-import { PoolService } from "app/services";
 import { List } from "immutable";
 import * as Fixtures from "test/fixture";
 import { StateCounter } from "./state-counter";
 
-describe("Statecounter", () => {
+fdescribe("Statecounter", () => {
     let counter: StateCounter;
     let nodes: Node[];
-    const poolService: PoolService = new PoolService(TestBed.get(HttpClient));;
-    const pool1 = new Pool({
-        id: "pool-1", vmSize: "standard_a2",
-        targetDedicatedNodes: 8,
-    });
+    let pool1: Pool;
 
     beforeEach(() => {
         counter = new StateCounter();
+        pool1 = new Pool({
+            id: "pool-1", vmSize: "standard_a2",
+            targetDedicatedNodes: 8,
+        });
         nodes = [
             Fixtures.node.create({ state: NodeState.idle }),
             Fixtures.node.create({ state: NodeState.running }),
@@ -41,18 +37,15 @@ describe("Statecounter", () => {
         expect(counter.get(NodeState.rebooting).getValue()).toBe(0);
     });
 
-    it("should update the count when updating the nodes", (done) => {
+    it("should update the count when updating the nodes", () => {
         nodes.shift();
         nodes.push(Fixtures.node.create({ state: NodeState.rebooting }));
         nodes.push(Fixtures.node.create({ state: NodeState.running }));
-        const resizeDto = new PoolResizeDto({
+        const pool2 = new Pool({
+            id: "pool-2", vmSize: "standard_a2",
             targetDedicatedNodes: 10,
-            targetLowPriorityNodes: 0,
         });
-        poolService.resize("pool-1", resizeDto).subscribe((res) => {
-            done();
-        });
-        counter.updateCount(List(nodes), pool1);
+        counter.updateCount(List(nodes), pool2);
 
         expect(counter.get(NodeState.idle).getValue()).toBe(2);
         expect(counter.get(NodeState.running).getValue()).toBe(3);
