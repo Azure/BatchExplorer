@@ -156,9 +156,13 @@ describe("NodesHeatmapComponent", () => {
 
     describe("Running task slot usage overlay", () => {
         const params = [
+            { usagePercent: "0-25%", runningTaskSlotsCount: 0, fill: "fill: rgb(177, 213, 212);" },
             { usagePercent: "0-25%", runningTaskSlotsCount: 25, fill: "fill: rgb(177, 213, 212);" },
+            { usagePercent: "26-50%", runningTaskSlotsCount: 26, fill: "fill: rgb(140, 195, 176);" },
             { usagePercent: "26-50%", runningTaskSlotsCount: 50, fill: "fill: rgb(140, 195, 176);" },
+            { usagePercent: "51-75%", runningTaskSlotsCount: 51, fill: "fill: rgb(78, 177, 124);" },
             { usagePercent: "51-75%", runningTaskSlotsCount: 75, fill: "fill: rgb(78, 177, 124);" },
+            { usagePercent: "76-99%", runningTaskSlotsCount: 76, fill: "fill: rgb(34, 160, 66);" },
             { usagePercent: "76-99%", runningTaskSlotsCount: 99, fill: "fill: rgb(34, 160, 66);" },
             { usagePercent: "100%", runningTaskSlotsCount: 100, fill: "fill: rgb(23, 141, 23);" },
         ];
