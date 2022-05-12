@@ -15,7 +15,21 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "dependencies": {
+    "@fluentui/react": "7.147.1",
+    "@fluentui/react-theme-provider": "0.16.2",
+    "mobx": "^6.3.2",
+    "mobx-react-lite": "^3.2.0",
+    "monaco-editor": "^0.25.1",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-router-dom": "^5.2.0",
+    "tslib": "^2.3.1"
+  },
   "devDependencies": {
+    "@types/react": "16.9.35",
+    "@types/react-dom": "16.9.8",
+    "@types/react-router-dom": "^5.1.7",
     "@octokit/core": "^3.5.1",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
@@ -26,13 +40,10 @@
     "lerna": "^4.0.0",
     "markdownlint": "^0.25.1",
     "markdownlint-cli2": "^0.4.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.5.1",
     "typescript": "~4.6.2",
     "which": "^2.0.2"
-  },
-  "resolutions": {
-    "**/@types/react": "16.9.35",
-    "**/@types/react-dom": "16.9.8"
   },
   "scripts": {
     "build": "lerna run workspace:build --stream",
@@ -59,7 +70,7 @@
     "test:all": "lerna run workspace:test:all --stream && npm run gather-build-results",
     "test:web": "lerna run workspace:test:web --stream && npm run gather-build-results",
     "test:web:all": "lerna run workspace:test:web:all --stream && npm run gather-build-results",
-    "postinstall": "lerna bootstrap",
+    "postinstall": "lerna bootstrap -- --legacy-peer-deps",
     "preinstall": "node ./util/build-util/check-cli-path",
     "dev-setup": "cd ./util/build-util && npm install && npm run build:clean && npm install -g ."
   }
