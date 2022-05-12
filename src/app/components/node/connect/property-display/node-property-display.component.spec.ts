@@ -286,7 +286,7 @@ describe("NodePropertyDisplay", () => {
             click(checkboxEl.query(By.css("input")));
 
             expect(checkboxEl.componentInstance.checked).toBe(false);
-            await new Promise(r => setTimeout(() => r(), 1000));
+            await new Promise<void>(r => setTimeout(() => r(), 1000));
             expect(component.userConfig.isAdmin).toEqual(false);
         });
     });

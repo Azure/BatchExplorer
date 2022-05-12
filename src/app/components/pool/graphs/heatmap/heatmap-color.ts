@@ -49,7 +49,7 @@ export class HeatmapColor {
                 colors[item.state] = item.color;
             } else {
                 for (const subitem of item.states) {
-                    colors[subitem.state] = item.color;
+                    colors[subitem.state] = subitem.color;
                 }
             }
         }
