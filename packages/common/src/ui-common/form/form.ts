@@ -103,6 +103,7 @@ export interface ParameterInit<
     dirty?: boolean;
     onValidateSync?(value: V[K]): ValidationStatus;
     onValidateAsync?(value: V[K]): Promise<ValidationStatus>;
+    dependencies?: [keyof V];
 }
 
 export interface SubFormInit<
@@ -433,6 +434,12 @@ class FormImpl<V extends FormValues> implements Form<V> {
      */
     private _childEntries: OrderedMap<string, Entry<V>> = new OrderedMap();
 
+    /**
+     * Collection for looking up other entries whose value this entry depends
+     * on.
+     */
+    private _entryDependencies: Map<string, string[]> = new Map();
+
     constructor(init: FormInit<V>) {
         this._values = init.values;
         this.title = init.title;
@@ -734,8 +741,9 @@ class FormImpl<V extends FormValues> implements Form<V> {
      * not the Form interface, it is effectively private to this file.
      *
      * @param entry The entry to register
+     * @param dependencies Names of other parameters this entry depends on
      */
-    _registerEntry(entry: Entry<V>): void {
+    _registerEntry(entry: Entry<V>, dependencies?: [keyof V]): void {
         if (this._allEntries.has(entry.name)) {
             throw new Error(
                 `An entry named "${entry.name}" already exists in the form`
@@ -746,6 +754,18 @@ class FormImpl<V extends FormValues> implements Form<V> {
             // This isn't inside a section, so it's a direct child of the form
             this._childEntries.set(entry.name, entry);
         }
+
+        if (dependencies) {
+            this.addDependencies(entry, dependencies);
+        }
+    }
+
+    private addDependencies(entry: Entry<V>, dependencies: [keyof V]): void {
+        const entryDeps = this._entryDependencies.get(entry.name) ?? [];
+        for (const dep in dependencies) {
+            entryDeps.push(dep);
+        }
+        this._entryDependencies.set(entry.name, entryDeps);
     }
 }
 
@@ -994,7 +1014,10 @@ export class Parameter<V extends FormValues, K extends Extract<keyof V, string>>
             this.onValidateAsync = init.onValidateAsync;
         }
 
-        (this.parentForm as FormImpl<V>)._registerEntry(this);
+        (this.parentForm as FormImpl<V>)._registerEntry(
+            this,
+            init?.dependencies
+        );
     }
 
     validateSync(): ValidationStatus {

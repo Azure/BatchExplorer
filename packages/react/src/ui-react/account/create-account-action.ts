@@ -30,6 +30,7 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
         });
         form.param("resourceGroupId", ParameterType.ResourceGroupId, {
             label: "Resource group",
+            dependencies: ["subscriptionId"],
         });
         form.param("accountName", ParameterType.BatchAccountName, {
             label: "Account name",
@@ -53,6 +54,7 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
             label: "Storage account",
             description:
                 "Optional. For best performance we recommend a storage account (general purpose v2) located in the same region as the associated Batch account.",
+            dependencies: ["subscriptionId"],
         });
 
         const advancedSection = form.section("Advanced");
