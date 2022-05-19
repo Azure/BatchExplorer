@@ -16,10 +16,12 @@ export type CreateAccountFormValues = {
 };
 
 export class CreateAccountAction extends AbstractAction<CreateAccountFormValues> {
-    buildForm(): Form<CreateAccountFormValues> {
+    buildForm(
+        initialValues: CreateAccountFormValues
+    ): Form<CreateAccountFormValues> {
         const form = createForm<CreateAccountFormValues>({
             title: "Create Account",
-            values: {},
+            values: initialValues,
         });
         form.param("subscriptionId", ParameterType.SubscriptionId, {
             label: "Subscription",
@@ -68,10 +70,38 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
     }
 
     async onValidate(): Promise<void> {
-        return super.validate();
+        const accountName = this.form.values.accountName;
+        if (accountName) {
+            const nameAvailable = await isAccountNameAvailable(accountName);
+            if (!nameAvailable) {
+                this.form.error(
+                    "accountName",
+                    `An account named ${accountName} already exists`
+                );
+            }
+        }
     }
 
     async execute(formValues: CreateAccountFormValues): Promise<void> {
         alert("Would write form values: " + formValues);
     }
+}
+
+async function isAccountNameAvailable(accountName: string): Promise<boolean> {
+    // TODO: Replace this with a real implementation
+    const existingAccountNames = new Set<string>([
+        "one",
+        "two",
+        "three",
+        "test",
+    ]);
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            let isAvailable = true;
+            if (accountName && existingAccountNames.has(accountName)) {
+                isAvailable = false;
+            }
+            resolve(isAvailable);
+        }, 0);
+    });
 }

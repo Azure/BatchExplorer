@@ -15,14 +15,16 @@ export abstract class AbstractAction<V extends FormValues>
         this.form = this.buildForm(initialValues);
     }
 
-    abstract buildForm(initialValues: V): Form<V>;
-
     async validate(): Promise<void> {
         await this.form.validate();
-        this.onValidate();
+        if (this.onValidate) {
+            await this.onValidate();
+        }
     }
 
-    abstract onValidate(): Promise<void>;
+    abstract buildForm(initialValues: V): Form<V>;
+
+    abstract onValidate?(): Promise<void>;
 
     abstract execute(formValues: V): Promise<void>;
 }

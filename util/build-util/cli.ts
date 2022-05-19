@@ -4,6 +4,7 @@
 // Cross-platform utilities //
 //////////////////////////////
 
+import * as path from "path";
 import * as yargs from "yargs";
 import {
     batchExplorerHome,
@@ -78,14 +79,14 @@ yargs
         handler: (argv) => rmrf(argv.directory),
     })
     .command({
-        command: "gather-build-results <path>",
+        command: "gather-build-results <basePath>",
         describe: "Collects build/test output into a top-level build directory",
         builder: (yargs: yargs.Argv) =>
             yargs.positional("basePath", {
                 describe: "The directory from which to gather build results",
                 default: batchExplorerHome,
             }),
-        handler: (argv) => gatherBuildResults(argv.basePath),
+        handler: (argv) => gatherBuildResults(path.resolve(argv.basePath)),
     })
     .command({
         command: "link",
