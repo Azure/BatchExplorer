@@ -5,7 +5,6 @@
       "name": "Debug: Main",
       "type": "node",
       "request": "launch",
-      "protocol": "inspector",
       "program": "${workspaceRoot}/src/client/main.ts",
       "stopOnEntry": false,
       "args": [
@@ -44,7 +43,6 @@
       "request": "attach",
       "port": 9222,
       "sourceMaps": true,
-      "trace": "verbose",
       "webRoot": "${workspaceRoot}/build",
       "timeout": 30000,
       "presentation": {
@@ -61,7 +59,6 @@
       "name": "Test: Client",
       "type": "node",
       "request": "launch",
-      "protocol": "inspector",
       "program": "${workspaceRoot}/test/client/run-jasmine.js",
       "cwd": "${workspaceRoot}",
       "runtimeExecutable": "node",
