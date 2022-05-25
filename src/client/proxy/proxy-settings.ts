@@ -15,10 +15,6 @@ export interface ProxySettingConfiguration {
     credentials: ProxyCredentials | null;
 }
 
-function allowInsecureRequest() {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-}
-
 @Injectable()
 export class ProxySettingsManager {
     private _settings = new BehaviorSubject<ProxySettingConfiguration | null>(null);
@@ -36,7 +32,7 @@ export class ProxySettingsManager {
         return this._settings.pipe(
             filter(x => x !== null),
             take(1),
-            map(x => x!.settings),
+            map(x => x?.settings),
         ).toPromise();
     }
 
