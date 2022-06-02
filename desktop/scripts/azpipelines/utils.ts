@@ -22,6 +22,8 @@ export function getContainerName(buildType: string): string {
             return "stable";
         case "insider":
             return "insider";
+        case "vnext":
+            return "vnext";
         default:
             return "test";
     }

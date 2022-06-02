@@ -1,6 +1,6 @@
 {
   "name": "@batch/ui-service",
-  "private": true,
+  "private": false,
   "version": "1.0.0",
   "description": "Library for communicating with the Azure Batch service",
   "repository": {

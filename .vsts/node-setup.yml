@@ -2,60 +2,16 @@ steps:
   - task: NodeTool@0
     inputs:
       versionSpec: '16.x.x'
+    displayName: Set NodeJS version
+
+  - script: cp .vsts/pipelines.npmrc $(Agent.TempDirectory)/.npmrc
+    displayName: Stage .npmrc file
+
+  - task: npmAuthenticate@0
+    displayName: NPM auth
+    inputs:
+      workingFile: $(Agent.TempDirectory)/.npmrc
 
   - script: |
-      cp .vsts/pipelines.npmrc .npmrc
-      cp .vsts/pipelines.npmrc desktop/.npmrc
-      cp .vsts/pipelines.npmrc packages/common/.npmrc
-      cp .vsts/pipelines.npmrc packages/playground/.npmrc
-      cp .vsts/pipelines.npmrc packages/react/.npmrc
-      cp .vsts/pipelines.npmrc packages/service/.npmrc
-      cp .vsts/pipelines.npmrc util/bux/.npmrc
-      cp .vsts/pipelines.npmrc util/common-config/.npmrc
-      cp .vsts/pipelines.npmrc web/.npmrc
-    displayName: Stage .npmrc configuration
-
-  - task: npmAuthenticate@0
-    displayName: NPM auth - root
-    inputs:
-      workingFile: .npmrc
-
-  - task: npmAuthenticate@0
-    displayName: NPM auth - desktop
-    inputs:
-      workingFile: desktop/.npmrc
-
-  - task: npmAuthenticate@0
-    displayName: NPM auth - common
-    inputs:
-      workingFile: packages/common/.npmrc
-
-  - task: npmAuthenticate@0
-    displayName: NPM auth - playground
-    inputs:
-      workingFile: packages/playground/.npmrc
-
-  - task: npmAuthenticate@0
-    displayName: NPM auth - react
-    inputs:
-      workingFile: packages/react/.npmrc
-
-  - task: npmAuthenticate@0
-    displayName: NPM auth - service
-    inputs:
-      workingFile: packages/service/.npmrc
-
-  - task: npmAuthenticate@0
-    displayName: NPM auth - bux
-    inputs:
-      workingFile: util/bux/.npmrc
-
-  - task: npmAuthenticate@0
-    displayName: NPM auth - common-config
-    inputs:
-      workingFile: util/common-config/.npmrc
-
-  - task: npmAuthenticate@0
-    displayName: NPM auth - web
-    inputs:
-      workingFile: web/.npmrc
+      echo "##vso[task.setvariable variable=NPM_CONFIG_USERCONFIG]$(Agent.TempDirectory)/.npmrc"
+    displayName: Set NPM configuration environment variable

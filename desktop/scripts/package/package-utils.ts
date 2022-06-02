@@ -15,6 +15,8 @@ export enum BuildType {
     Stable = "stable",
     // Build off master
     Insider = "insider",
+    // Temporary until shared-libraries are merged
+    Vnext = "vnext"
 }
 
 export const version = computeVersion();
