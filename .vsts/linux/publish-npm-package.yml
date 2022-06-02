@@ -1,0 +1,14 @@
+parameters:
+  packagePath: ''
+  packageName: ''
+
+steps:
+  - bash: |
+      set -e
+      ver=$(npm pkg get version | sed 's/"//g')
+      package_version=$(echo "$ver-$DIST_TAG.$BUILD_BUILDNUMBER" | sed 's/_//g')
+      echo "Publishing package ${{parameters.packageName}}@$package_version"
+      npm version --no-git-tag-version $package_version
+      npm publish --tag $DIST_TAG
+    displayName: "Publish package: ${{parameters.packageName}}"
+    workingDirectory: ${{parameters.packagePath}}

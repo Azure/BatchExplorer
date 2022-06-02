@@ -5,13 +5,36 @@ steps:
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run build:package
     displayName: Build and pack
+
+  - template: ./publish-npm-package.yml
+    parameters:
+      packagePath: ./packages/common
+      packageName: "@batch/ui-common"
+
+  - template: ./publish-npm-package.yml
+    parameters:
+      packagePath: ./packages/react
+      packageName: "@batch/ui-react"
+
+  - template: ./publish-npm-package.yml
+    parameters:
+      packagePath: ./packages/service
+      packageName: "@batch/ui-service"
+
+  - template: ./publish-npm-package.yml
+    parameters:
+      packagePath: ./packages/playground
+      packageName: "@batch/ui-playground"
+
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run package linux-manifest
     workingDirectory: desktop
     displayName: Create manifest
+
   - template: ../common/generate-sbom.yml
+
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: linux

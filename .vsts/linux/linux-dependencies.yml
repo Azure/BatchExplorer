@@ -14,7 +14,7 @@ steps:
       echo "NPM version $(npm --version)"
       npm install -g codecov
       npm ci
-    displayName: Install Linux dependencies
+    displayName: Install NPM dependencies
   - script: |
       cd util/bux
       npm pack
