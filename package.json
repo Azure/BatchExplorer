@@ -55,7 +55,7 @@
     "eslint": "eslint -c .eslintrc.json --quiet .",
     "eslint:verbose": "eslint -c .eslintrc.json .",
     "stylelint": "stylelint --syntax scss \"src/app/**/*.scss\"",
-    "markdownlint": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules/**/*\"",
+    "markdownlint": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules/**/*\" \"#SECURITY.md\"",
     "lint": "npm run -s eslint && npm run -s stylelint && npm run -s markdownlint",
     "package": "npm run -s ts scripts/package/package.ts",
     "start-publish": "npm run -s ts scripts/publish/publish.ts",
