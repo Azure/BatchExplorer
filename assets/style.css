@@ -125,6 +125,7 @@ a {
     justify-content: center;
     background-color: #333333;
     padding: 1em;
+    flex-wrap: wrap;
 }
 
 .os-download {
@@ -190,7 +191,8 @@ h2.heading-sm {
 }
 
 .swimlane .screenshot {
-    height: 380px;
+    max-height: 380px;
+    max-width: 100%;
 }
 
 .dark {
@@ -229,5 +231,5 @@ footer .links li:not(:last-child) {
     padding: 30px;
     margin: auto;
     text-align: center;
-    width: 800px;
+    max-width: 800px;
 }
