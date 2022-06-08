@@ -5,6 +5,7 @@ import { ComboBoxDemo } from "../demo/form/combobox/combobox-demo";
 import { SearchBoxDemo } from "../demo/form/searchbox/searchbox-demo";
 import { TextFieldDemo } from "../demo/form/textfield/textfield-demo";
 import { NewCheckboxDemo } from "../demo/form/checkbox/new-checkbox-demo";
+import { RadioButtonDemo } from "../demo/form/radiobutton/radiobutton-demo";
 import { CertificateDisplayDemo } from "../demo/display/certificate/certificate-display-demo";
 import { DropdownDemo } from "../demo/form/dropdown-demo";
 import { ActionFormDemo } from "../demo/form/action-form-demo";
@@ -20,6 +21,9 @@ export const DemoMainContent: React.FC = () => {
             </Route>
             <Route path="/playground/checkbox">
                 <NewCheckboxDemo />
+            </Route>
+            <Route path="/playground/radiobutton">
+                <RadioButtonDemo />
             </Route>
             <Route path="/playground/combobox">
                 <ComboBoxDemo />
