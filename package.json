@@ -176,7 +176,7 @@
     "@azure/msal-node": "^1.9.0",
     "@azure/storage-blob": "^10.5.0",
     "applicationinsights": "^1.8.5",
-    "azure-storage": "^2.10.4",
+    "azure-storage": "^2.10.7",
     "chart.js": "^2.9.3",
     "chokidar": "^3.4.3",
     "commander": "^8.0.0",
