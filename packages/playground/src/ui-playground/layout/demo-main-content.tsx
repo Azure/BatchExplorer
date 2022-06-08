@@ -4,7 +4,7 @@ import { ButtonDemo } from "../demo/form/button/button-demo";
 import { ComboBoxDemo } from "../demo/form/combobox/combobox-demo";
 import { SearchBoxDemo } from "../demo/form/searchbox/searchbox-demo";
 import { TextFieldDemo } from "../demo/form/textfield/textfield-demo";
-import { CheckboxDemo } from "../demo/form/checkbox/checkbox-demo";
+import { NewCheckboxDemo } from "../demo/form/checkbox/new-checkbox-demo";
 import { CertificateDisplayDemo } from "../demo/display/certificate/certificate-display-demo";
 import { DropdownDemo } from "../demo/form/dropdown-demo";
 import { ActionFormDemo } from "../demo/form/action-form-demo";
@@ -19,7 +19,7 @@ export const DemoMainContent: React.FC = () => {
                 <ButtonDemo />
             </Route>
             <Route path="/playground/checkbox">
-                <CheckboxDemo />
+                <NewCheckboxDemo />
             </Route>
             <Route path="/playground/combobox">
                 <ComboBoxDemo />
