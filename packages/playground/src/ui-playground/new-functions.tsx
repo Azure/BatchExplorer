@@ -6,7 +6,7 @@ import { RadioButtonOption } from "@batch/ui-react/lib/components/form/radio-but
 /*
  * Syncs the updated value of a shared libraries text field with a playground component
  */
-export function _newTextfieldOnChange(
+export function newTextfieldOnChange(
     setValue: React.Dispatch<React.SetStateAction<string>>
 ): (newValue?: string | undefined) => void {
     function Result(newValue?: string | undefined): void {
@@ -20,7 +20,7 @@ export function _newTextfieldOnChange(
 /*
  * Syncs the updated value of a shared libraries radio button group with a playground component
  */
-export function _radioButtonOnChange(
+export function radioButtonOnChange(
     setValue: React.Dispatch<React.SetStateAction<string>>
 ): () => void {
     function Result(

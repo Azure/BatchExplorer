@@ -4,8 +4,8 @@ import { TextField } from "@batch/ui-react/lib/components/form/text-field";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { RadioButton } from "@batch/ui-react/lib/components/form/radio-button";
 import {
-    _newTextfieldOnChange,
-    _radioButtonOnChange,
+    newTextfieldOnChange,
+    radioButtonOnChange,
 } from "../../../new-functions";
 //Rewritten version of checkbox-demo.tsx using shared libraries wrapped control instead of Fluent UI control directly
 
@@ -34,7 +34,7 @@ export const NewCheckboxDemo: React.FC = () => {
                 <TextField
                     label="Checkbox Label"
                     value={labelValue}
-                    onChange={_newTextfieldOnChange(setLabelValue)}
+                    onChange={newTextfieldOnChange(setLabelValue)}
                 ></TextField>
                 <RadioButton
                     label="Disabled status"
@@ -43,7 +43,7 @@ export const NewCheckboxDemo: React.FC = () => {
                         { key: "nondisabled", text: "Not disabled" },
                         { key: "disabled", text: "Disabled" },
                     ]}
-                    onChange={_radioButtonOnChange(setDisabledKey)}
+                    onChange={radioButtonOnChange(setDisabledKey)}
                 ></RadioButton>
                 <RadioButton
                     label="Checkbox placement"
@@ -52,7 +52,7 @@ export const NewCheckboxDemo: React.FC = () => {
                         { key: "start", text: "Before text (default)" },
                         { key: "end", text: "After text" },
                     ]}
-                    onChange={_radioButtonOnChange(setBoxSideKey)}
+                    onChange={radioButtonOnChange(setBoxSideKey)}
                 ></RadioButton>
             </Stack>
         </>

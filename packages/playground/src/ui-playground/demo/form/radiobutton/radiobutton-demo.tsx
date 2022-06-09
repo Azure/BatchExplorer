@@ -2,7 +2,7 @@ import * as React from "react";
 import { RadioButton } from "@batch/ui-react/lib/components/form/radio-button";
 import { TextField } from "@batch/ui-react/lib/components/form/text-field";
 import { Stack } from "@fluentui/react/lib/Stack";
-import { _newTextfieldOnChange } from "../../../new-functions";
+import { newTextfieldOnChange } from "../../../new-functions";
 //Rewritten version of checkbox-demo.tsx using shared libraries wrapped control instead of Fluent UI control directly
 
 export const RadioButtonDemo: React.FC = () => {
@@ -29,7 +29,7 @@ export const RadioButtonDemo: React.FC = () => {
                 <TextField
                     label="Radio Button Label"
                     value={labelValue}
-                    onChange={_newTextfieldOnChange(setLabelValue)}
+                    onChange={newTextfieldOnChange(setLabelValue)}
                 ></TextField>
             </Stack>
         </>
