@@ -17,18 +17,22 @@ export function Checkbox<V>(props: CheckboxProps<V>): JSX.Element {
         return <></>;
     }
 
+    const properties = {
+        id: props.id,
+        ariaLabel: props.ariaLabel,
+        className: props.className,
+        disabled: props.disabled,
+        label: props.label,
+        checked: props.checked,
+        defaultChecked: props.defaultChecked,
+        indeterminate: props.indeterminate,
+        defaultIndeterminate: props.defaultIndeterminate,
+        boxSide: props.boxSide,
+    };
+
     return (
         <FluentCheckbox
-            id={props.id}
-            ariaLabel={props.ariaLabel}
-            className={props.className}
-            disabled={props.disabled}
-            label={props.label}
-            checked={props.checked}
-            defaultChecked={props.defaultChecked}
-            indeterminate={props.indeterminate}
-            defaultIndeterminate={props.defaultIndeterminate}
-            boxSide={props.boxSide}
+            {...properties}
             onChange={(_, checked) => {
                 if (props.onChange) {
                     props.onChange(!!checked);

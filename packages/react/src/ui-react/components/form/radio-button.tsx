@@ -24,17 +24,17 @@ export function RadioButton<V>(props: RadioButtonProps<V>): JSX.Element {
         return <></>;
     }
 
-    return (
-        <FluentRadioButton
-            id={props.id}
-            className={props.className}
-            disabled={props.disabled}
-            label={props.label}
-            placeholder={props.placeholder}
-            defaultSelectedKey={props.defaultSelectedKey}
-            selectedKey={props.selectedKey}
-            options={props.options}
-            onChange={props.onChange}
-        ></FluentRadioButton>
-    );
+    const properties = {
+        id: props.id,
+        className: props.className,
+        disabled: props.disabled,
+        label: props.label,
+        placeholder: props.placeholder,
+        defaultSelectedKey: props.defaultSelectedKey,
+        selectedKey: props.selectedKey,
+        options: props.options,
+        onChange: props.onChange,
+    };
+
+    return <FluentRadioButton {...properties}></FluentRadioButton>;
 }
