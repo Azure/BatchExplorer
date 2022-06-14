@@ -28,6 +28,11 @@ export const DemoNavMenu: React.FC = () => {
                     url: "#/playground/checkbox",
                 },
                 {
+                    key: "RadioButton",
+                    name: "Radio Button",
+                    url: "#/playground/radiobutton",
+                },
+                {
                     key: "ComboBox",
                     name: "ComboBox",
                     url: "#/playground/combobox",
