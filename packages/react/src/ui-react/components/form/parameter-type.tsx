@@ -195,6 +195,17 @@ export function StorageAccountDropdown<
         setLoading(false);
     }, [subscriptionId]);
 
+    React.useEffect(() => {
+        const form = param.parentForm;
+        const handler = form.onChange((values: FormValues) => {
+            if ("subscriptionId" in values) {
+                console.log("Setting sub ID");
+                setSubscriptionId(values.subscriptionId as string);
+            }
+        });
+        return () => form.removeOnChange(handler);
+    });
+
     const options = storageAccounts.map((sub) => {
         return { value: sub.id, label: sub.name };
     });

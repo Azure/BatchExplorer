@@ -131,6 +131,8 @@ export class ValidationStatus {
     }
 }
 
+export type FormChangeHandler<V> = (newValues: V, oldValues: V) => void;
+
 /**
  * A form which may contain child entries, and may be nested inside an entry itself
  * A form's value is an object with key/value pairs representing parameter names
@@ -194,6 +196,9 @@ export interface Form<V extends FormValues> {
     error(entryName: Extract<keyof V, string>, message: string): void;
 
     warn(entryName: Extract<keyof V, string>, message: string): void;
+
+    onChange(handler: FormChangeHandler<V>): FormChangeHandler<V>;
+    removeOnChange(handler: FormChangeHandler<V>): void;
 }
 
 class FormImpl<V extends FormValues> implements Form<V> {
@@ -438,6 +443,15 @@ class FormImpl<V extends FormValues> implements Form<V> {
         this._validationStatus = this._computeOverallValidationStatus();
     }
 
+    onChange(handler: FormChangeHandler<V>): FormChangeHandler<V> {
+        this._emitter.addListener("change", handler);
+        return handler;
+    }
+
+    removeOnChange(handler: FormChangeHandler<V>): void {
+        this._emitter.removeListener("change", handler);
+    }
+
     private _computeOverallValidationStatus(): ValidationStatus {
         let warningCount = 0;
         let errorCount = 0;
@@ -655,6 +669,14 @@ export class SubForm<
 
     warn(entryName: Extract<keyof S, string>, message: string): void {
         this.form.warn(entryName, message);
+    }
+
+    onChange(handler: FormChangeHandler<S>): FormChangeHandler<S> {
+        return this.form.onChange(handler);
+    }
+
+    removeOnChange(handler: FormChangeHandler<S>): void {
+        this.form.removeOnChange(handler);
     }
 }
 
