@@ -74,8 +74,8 @@ bl-job-graphs-home {
         display: flex;
         align-items: center;
         justify-content: center;
-        top: calc(50% - #{$loading-overlay-height/2});
-        left: calc(50% - #{$loading-overlay-width/2});
+        top: calc(50% - #{$loading-overlay-height}/2);
+        left: calc(50% - #{$loading-overlay-width}/2);
         margin: auto;
         font-size: 16px;
         width: $loading-overlay-width;

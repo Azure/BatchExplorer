@@ -4,7 +4,7 @@ bl-breadcrumb-group {
     $header-margin: 4px;
     $separation: 3px;
     $height: $header-height - 2 * $header-margin;
-    $half-height: $height / 2;
+    $half-height: calc($height / 2);
     $color: map-get($breadcrumb-color, bg);
     $hover-color: map-get($breadcrumb-color, hover-bg);
     display: block;
@@ -23,7 +23,7 @@ bl-breadcrumb-group {
         background: $color;
         padding: 0 2px;
         position: relative;
-        margin: 0 ($half-height + $separation) 0 0;
+        margin: 0 calc($half-height + $separation) 0 0;
         text-decoration: none;
         min-width: 40px;
         max-width: 140px;

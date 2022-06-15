@@ -25,7 +25,7 @@ bl-task-timeline {
                 flex-direction: column;
                 width: $tile-size;
                 height: $tile-size;
-                border-radius: $tile-size / 2;
+                border-radius: calc($tile-size / 2);
 
                 > .fa {
                     color: $main-background;
@@ -87,7 +87,7 @@ bl-task-timeline {
             width: $separator-width;
             background: $state-reached-color;
             margin: 0 5px;
-            margin-top: ($tile-size - $separator-height )/ 2;
+            margin-top: calc(($tile-size - $separator-height) / 2);
 
             &.locked {
                 background: $secondary-text;
