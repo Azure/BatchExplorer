@@ -14,7 +14,7 @@ body {
 
 p {
     font-size: $font-size-base;
-    margin: 0 0 $baseLineHeight / 2;
+    margin: 0 0 calc($baseLineHeight / 2);
 }
 
 // Links

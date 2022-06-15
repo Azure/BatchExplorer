@@ -26,8 +26,8 @@
     $loading-overlay-height: 70px;
     width: $loading-overlay-width;
     position: absolute;
-    top: calc(50% - #{$loading-overlay-height/2});
-    left: calc(50% - #{$loading-overlay-width/2});
+    top: calc(50% - #{$loading-overlay-height}/2);
+    left: calc(50% - #{$loading-overlay-width}/2);
 
     text-align: center;
     vertical-align: middle;
