@@ -198,6 +198,7 @@ export interface Form<V extends FormValues> {
     warn(entryName: Extract<keyof V, string>, message: string): void;
 
     onChange(handler: FormChangeHandler<V>): FormChangeHandler<V>;
+
     removeOnChange(handler: FormChangeHandler<V>): void;
 }
 

@@ -5,7 +5,11 @@ import {
 } from "@batch/ui-common";
 import { inject } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
-import { StorageAccount, StorageAccountService } from "@batch/ui-service";
+import {
+    StorageAccount,
+    StorageAccountService,
+    SubscriptionService,
+} from "@batch/ui-service";
 import * as React from "react";
 import { useState } from "react";
 import { useAsyncEffect, useUniqueId } from "../../hooks";
@@ -196,10 +200,9 @@ export function StorageAccountDropdown<
     }, [subscriptionId]);
 
     React.useEffect(() => {
-        const form = param.parentForm;
         const handler = form.onChange((values: FormValues) => {
             if ("subscriptionId" in values) {
-                console.log("Setting sub ID");
+                console.log("Setting sub ID", values.subscriptionId);
                 setSubscriptionId(values.subscriptionId as string);
             }
         });
@@ -236,19 +239,19 @@ export function SubscriptionIdParamDropdown<
         { id: string; displayName: string }[]
     >([]);
 
+    const service: SubscriptionService = inject(
+        DependencyName.SubscriptionService
+    );
+
     useAsyncEffect(async () => {
-        // TODO: Make this a real HTTP request
-        return new Promise<void>((resolve) => {
-            setTimeout(() => {
-                setSubscriptions([
-                    { id: "/fake/sub1", displayName: "Subscription One" },
-                    { id: "/fake/sub2", displayName: "Subscription Two" },
-                    { id: "/fake/sub3", displayName: "Subscription Three" },
-                ]);
-                setLoading(false);
-                resolve();
-            }, 1000);
-        });
+        try {
+            setSubscriptions(await service.list());
+            setLoading(false);
+        } catch (error) {
+            console.warn("ERROR", error);
+            setSubscriptions([]);
+            setLoading(false);
+        }
     }, []);
 
     const options = subscriptions.map((sub) => {
