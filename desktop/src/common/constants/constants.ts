@@ -229,8 +229,6 @@ export const rendererEvents = {
     navigateTo: "navigate-to",
 };
 
-export const isRenderer = (process && process.type === "renderer");
-
 export const ncjFileGroupPrefix = "fgrp-";
 
 export const ListPageSizes = {
