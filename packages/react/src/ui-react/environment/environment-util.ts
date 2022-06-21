@@ -6,7 +6,10 @@ import {
     mockDependencyFactories,
     mockEnvironmentConfig,
 } from "@batch/ui-common/lib/environment";
-import { FakeStorageAccountService } from "@batch/ui-service";
+import {
+    FakeStorageAccountService,
+    FakeSubscriptionService,
+} from "@batch/ui-service";
 import { initializeIcons } from "@fluentui/react/lib/Icons";
 import { BrowserEnvironmentConfig } from ".";
 import {
@@ -23,6 +26,7 @@ export const mockBrowserDepFactories: Partial<BrowserDependencyFactories> = {
     formLayoutProvider: () => new DefaultFormLayoutProvider(),
     [DependencyName.StorageAccountService]: () =>
         new FakeStorageAccountService(),
+    [DependencyName.SubscriptionService]: () => new FakeSubscriptionService(),
 };
 
 /**
