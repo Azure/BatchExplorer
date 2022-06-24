@@ -4,7 +4,7 @@ import {
     MockHttpClient,
     MockHttpResponse,
 } from "@batch/ui-common";
-import { FakeSubscriptionService } from "../fake-subscription-service";
+import { SubscriptionServiceImpl } from "..";
 
 describe("SubscriptionService", () => {
     let httpClient: MockHttpClient;
@@ -15,12 +15,23 @@ describe("SubscriptionService", () => {
     });
 
     test("list()", async () => {
-        const service = new FakeSubscriptionService();
+        const service = new SubscriptionServiceImpl();
 
         httpClient.addExpected(
-            new MockHttpResponse("/subscriptions", 200, `["A", "B", "C", "D"]`)
+            new MockHttpResponse(
+                "https://management.azure.com/subscriptions?api-version=2021-04-01",
+                200,
+                JSON.stringify({
+                    value: [{ id: "A" }, { id: "B" }, { id: "C" }, { id: "D" }],
+                })
+            )
         );
         const subs = await service.list();
-        expect(subs.length).toEqual(4);
+        expect(subs).toEqual([
+            { id: "A" },
+            { id: "B" },
+            { id: "C" },
+            { id: "D" },
+        ]);
     });
 });
