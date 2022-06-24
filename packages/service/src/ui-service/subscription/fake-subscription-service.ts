@@ -6,6 +6,7 @@ const subscriptions = [
     { id: "/fake/sub2", displayName: "Subscription Two" },
     { id: "/fake/sub3", displayName: "Subscription Three" },
     { id: "/fake/sub4", displayName: "Subscription Four" },
+    { id: "/fake/badsub", displayName: "Bad Subscription" },
 ];
 
 export class FakeSubscriptionService implements SubscriptionService {

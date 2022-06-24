@@ -20,13 +20,15 @@ const subscriptionAccounts: { [key: string]: StorageAccount[] } = {
 };
 
 export class FakeStorageAccountService implements StorageAccountService {
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     public list(subscriptionId: string): Promise<StorageAccount[]> {
-        return Promise.resolve(
-            subscriptionId in subscriptionAccounts
-                ? subscriptionAccounts[subscriptionId]
-                : []
-        );
+        if (subscriptionId in subscriptionAccounts) {
+            return Promise.resolve(subscriptionAccounts[subscriptionId]);
+        } else if (subscriptionId === "/fake/badsub") {
+            // Simulates a network error.
+            return Promise.reject("No storage accounts in subscription.");
+        } else {
+            return Promise.resolve([]);
+        }
     }
 
     public async get(id: string): Promise<StorageAccount | null> {

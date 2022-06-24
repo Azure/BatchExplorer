@@ -11,7 +11,7 @@ import {
     SubscriptionService,
 } from "@batch/ui-service";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAsyncEffect, useUniqueId } from "../../hooks";
 import { Dropdown } from "./dropdown";
 import { TextField } from "./text-field";
@@ -117,7 +117,7 @@ export class DefaultParameterTypeResolver implements ParameterTypeResolver {
                 );
             case ParameterType.SubscriptionId:
                 return (
-                    <SubscriptionIdParamDropdown
+                    <SubscriptionDropdown
                         id={id}
                         key={param.name}
                         param={param}
@@ -172,9 +172,9 @@ export function StorageAccountDropdown<
     const value = param.value == null ? undefined : String(param.value);
 
     const [loading, setLoading] = useState<boolean>(true);
-    const [storageAccounts, setStorageAccounts] = React.useState<
-        StorageAccount[]
-    >([]);
+    const [storageAccounts, setStorageAccounts] = useState<StorageAccount[]>(
+        []
+    );
     const id = useUniqueId("form-control", props.id);
     const service: StorageAccountService = inject(
         DependencyName.StorageAccountService
@@ -183,29 +183,27 @@ export function StorageAccountDropdown<
     const [subscriptionId, setSubscriptionId] = useState<string>(
         form.values.subscriptionId as string
     );
+    const [errorMessage, setErrorMessage] = useState<string>();
 
     useAsyncEffect(async () => {
+        let accounts: StorageAccount[] = [];
         try {
             if (subscriptionId) {
-                const accounts = await service.list(subscriptionId);
-                setStorageAccounts(accounts);
-            } else {
-                setStorageAccounts([]);
+                accounts = await service.list(subscriptionId);
             }
+            setErrorMessage("");
         } catch (error) {
-            console.warn("ERROR", error);
-            setStorageAccounts([]);
+            setErrorMessage(error + "");
+        } finally {
+            setStorageAccounts(accounts);
+            setLoading(false);
         }
-        setLoading(false);
     }, [subscriptionId]);
 
-    React.useEffect(() => {
-        const handler = form.onChange((values: FormValues) => {
-            if ("subscriptionId" in values) {
-                console.log("Setting sub ID", values.subscriptionId);
-                setSubscriptionId(values.subscriptionId as string);
-            }
-        });
+    useEffect(() => {
+        const handler = form.onChange((values: FormValues) =>
+            setSubscriptionId(values.subscriptionId as string)
+        );
         return () => form.removeOnChange(handler);
     });
 
@@ -221,12 +219,13 @@ export function StorageAccountDropdown<
             options={options}
             placeholder={param.placeholder}
             value={value}
+            errorMessage={errorMessage}
             onChange={(value: string) => (param.value = value as V[K])}
         />
     );
 }
 
-export function SubscriptionIdParamDropdown<
+export function SubscriptionDropdown<
     V extends FormValues,
     K extends Extract<keyof V, string>
 >(props: ParamControlProps<V, K>): JSX.Element {
@@ -234,10 +233,11 @@ export function SubscriptionIdParamDropdown<
     const value = param.value == null ? undefined : String(param.value);
     const id = useUniqueId("form-control", props.id);
 
-    const [loading, setLoading] = React.useState<boolean>(true);
-    const [subscriptions, setSubscriptions] = React.useState<
+    const [loading, setLoading] = useState<boolean>(true);
+    const [subscriptions, setSubscriptions] = useState<
         { id: string; displayName: string }[]
     >([]);
+    const [errorMessage, setErrorMessage] = useState<string>();
 
     const service: SubscriptionService = inject(
         DependencyName.SubscriptionService
@@ -246,10 +246,11 @@ export function SubscriptionIdParamDropdown<
     useAsyncEffect(async () => {
         try {
             setSubscriptions(await service.list());
-            setLoading(false);
+            setErrorMessage("");
         } catch (error) {
-            console.warn("ERROR", error);
             setSubscriptions([]);
+            setErrorMessage(error + "");
+        } finally {
             setLoading(false);
         }
     }, []);
@@ -266,6 +267,7 @@ export function SubscriptionIdParamDropdown<
             options={options}
             placeholder={param.placeholder}
             value={value}
+            errorMessage={errorMessage}
             onChange={(newValue: string) => (param.value = newValue as V[K])}
         />
     );
