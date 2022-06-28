@@ -29,6 +29,8 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
         form.param("resourceGroupId", ParameterType.ResourceGroupId, {
             label: "Resource group",
             dependencies: ["subscriptionId"],
+            description:
+                "After choosing a subscription, select an existing resource group from the dropdown menu OR create a new one by typing in the new resource group name.",
         });
         form.param("accountName", ParameterType.BatchAccountName, {
             label: "Account name",

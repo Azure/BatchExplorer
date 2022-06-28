@@ -68,6 +68,7 @@ export enum DependencyName {
     HttpClient = "httpClient",
     StorageAccountService = "storageAccount",
     SubscriptionService = "subscription",
+    ResourceGroupService = "resourceGroup",
 }
 
 /**

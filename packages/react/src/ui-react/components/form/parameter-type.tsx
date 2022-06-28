@@ -6,6 +6,7 @@ import {
 import { inject } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
 import {
+    ResourceGroupService,
     StorageAccount,
     StorageAccountService,
     SubscriptionService,
@@ -13,6 +14,7 @@ import {
 import * as React from "react";
 import { useState } from "react";
 import { useAsyncEffect, useUniqueId } from "../../hooks";
+import { ComboBox } from "./combobox";
 import { Dropdown } from "./dropdown";
 import { TextField } from "./text-field";
 
@@ -101,7 +103,7 @@ export class DefaultParameterTypeResolver implements ParameterTypeResolver {
                 );
             case ParameterType.ResourceGroupId:
                 return (
-                    <StringParamTextField
+                    <ResourceGroupComboBox
                         id={id}
                         key={param.name}
                         param={param}
@@ -267,6 +269,91 @@ export function SubscriptionIdParamDropdown<
             placeholder={param.placeholder}
             value={value}
             onChange={(newValue: string) => (param.value = newValue as V[K])}
+        />
+    );
+}
+
+export function ResourceGroupComboBox<
+    V extends FormValues,
+    K extends Extract<keyof V, string>
+>(props: ParamControlProps<V, K>): JSX.Element {
+    const { param } = props;
+    const value = param.value == null ? undefined : String(param.value);
+    const id = useUniqueId("form-control", props.id);
+    const [loading, setLoading] = React.useState<boolean>(true);
+    const [options, setOptions] = React.useState<
+        { key: string; text: string }[]
+    >([]);
+    const form = param.parentForm;
+    const [subscriptionId, setSubscriptionId] = useState<string>(
+        form.values.subscriptionId as string
+    );
+    const [selectedKey, setSelectedKey] = React.useState<string>("");
+
+    const service: ResourceGroupService = inject(
+        DependencyName.ResourceGroupService
+    );
+
+    useAsyncEffect(async () => {
+        try {
+            if (subscriptionId) {
+                const resourceGroups = await service.list(subscriptionId);
+                setOptions(
+                    resourceGroups.map((sub) => {
+                        return { key: sub.id, text: sub.name };
+                    })
+                );
+            } else {
+                setOptions([]);
+            }
+            setLoading(false);
+        } catch (error) {
+            console.warn("ERROR", error);
+            setOptions([]);
+            setLoading(false);
+        }
+    }, [subscriptionId]);
+
+    React.useEffect(() => {
+        const handler = form.onChange((values: FormValues) => {
+            if ("subscriptionId" in values) {
+                setSubscriptionId(values.subscriptionId as string);
+            }
+        });
+        return () => form.removeOnChange(handler);
+    });
+
+    const onChange = React.useCallback(
+        (event, option?, index?: number, value?: string): void => {
+            let key = option?.key;
+            if (!option && value) {
+                // If the user types in their own resource group, we must add it to the list of resource group options since it does not exist in there yet
+                const valueWithoutSpaces = value.replace(/ +/g, "");
+                key = `/fake/${valueWithoutSpaces}`;
+                setOptions((prevOptions) => [
+                    ...prevOptions,
+                    { key: key, text: value },
+                ]);
+            }
+
+            setSelectedKey(key);
+            param.value = key as V[K];
+
+            console.log("Setting Resource Group Key: " + key);
+        },
+        [param]
+    );
+
+    return (
+        <ComboBox
+            id={id}
+            disabled={loading || param.disabled}
+            options={options}
+            allowFreeform={true}
+            selectedKey={selectedKey}
+            placeholder={param.placeholder}
+            value={value}
+            onChange={onChange}
         />
     );
 }

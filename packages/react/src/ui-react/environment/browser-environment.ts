@@ -9,7 +9,11 @@ import {
     getEnvironment,
 } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
-import { StorageAccountService, SubscriptionService } from "@batch/ui-service";
+import {
+    ResourceGroupService,
+    StorageAccountService,
+    SubscriptionService,
+} from "@batch/ui-service";
 import {
     FormLayout,
     FormLayoutProvider,
@@ -46,6 +50,7 @@ export interface BrowserDependencyFactories extends DependencyFactories {
     [BrowserDependencyName.FormLayoutProvider]: () => FormLayoutProvider;
     [DependencyName.StorageAccountService]: () => StorageAccountService;
     [DependencyName.SubscriptionService]: () => SubscriptionService;
+    [DependencyName.ResourceGroupService]: () => ResourceGroupService;
 }
 
 /**
