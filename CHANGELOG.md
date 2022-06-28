@@ -1,3 +1,23 @@
+# 2.14.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/48?closed=1)
+
+### feature:
+
+
+### bug:
+
+
+### other:
+
+* April and May Accessibility bug fixes [\#2531](https://github.com/Azure/BatchExplorer/issues/2531)
+* Update dependencies for better security [\#2530](https://github.com/Azure/BatchExplorer/issues/2530)
+* Menubar not appearing on Windows Insider build [\#2529](https://github.com/Azure/BatchExplorer/issues/2529)
+* Improved proxy support with MSAL authentication [\#2528](https://github.com/Azure/BatchExplorer/issues/2528)
+* Add new heatmap node display [\#2527](https://github.com/Azure/BatchExplorer/issues/2527)
+* Upgrade to Electron 13 [\#2526](https://github.com/Azure/BatchExplorer/issues/2526)
+* Re-land API call for List Supported Virtual Machine and Cloud Service SKUs [\#2525](https://github.com/Azure/BatchExplorer/issues/2525)
+* Fix issue with failed silent auth [\#2524](https://github.com/Azure/BatchExplorer/issues/2524)
+
 # 2.13.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/47?closed=1)
