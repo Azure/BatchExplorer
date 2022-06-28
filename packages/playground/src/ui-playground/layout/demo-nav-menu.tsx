@@ -1,5 +1,5 @@
+import { INavLinkGroup, INavStyles, Nav } from "@fluentui/react/lib/Nav";
 import * as React from "react";
-import { Nav, INavStyles, INavLinkGroup } from "@fluentui/react/lib/Nav";
 
 export const DemoNavMenu: React.FC = () => {
     const navStyles: Partial<INavStyles> = {
@@ -36,6 +36,11 @@ export const DemoNavMenu: React.FC = () => {
                     key: "ComboBox",
                     name: "ComboBox",
                     url: "#/playground/combobox",
+                },
+                {
+                    key: "NewComboBox",
+                    name: "New ComboBox",
+                    url: "#/playground/newcombobox",
                 },
                 {
                     key: "Dropdown",

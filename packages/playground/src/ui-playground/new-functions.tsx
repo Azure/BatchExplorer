@@ -33,3 +33,15 @@ export function radioButtonOnChange(
     }
     return Result;
 }
+
+/*
+ * Syncs the updated value of a shared libraries checkbox with a playground component
+ */
+export function checkboxOnChange(
+    setValue: React.Dispatch<React.SetStateAction<boolean>>
+): () => void {
+    function Result(checked?: boolean): void {
+        setValue(!!checked);
+    }
+    return Result;
+}
