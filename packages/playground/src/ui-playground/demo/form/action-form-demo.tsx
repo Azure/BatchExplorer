@@ -10,7 +10,7 @@ import { MonacoEditor } from "@batch/ui-react/lib/components";
 import { EditorController } from "@batch/ui-react/lib/components/editor";
 import { Dropdown } from "@batch/ui-react/lib/components/form/dropdown";
 import { AbstractAction, Action } from "@batch/ui-common/lib/action";
-import { FormValues } from "@batch/ui-common/lib/form";
+import { FormValues, ValidationStatus } from "@batch/ui-common/lib/form";
 
 type CarFormValues = {
     subscriptionId?: string;
@@ -53,11 +53,15 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
         return form;
     }
 
-    async onValidate(): Promise<void> {
-        // no-op
+    onValidateSync(): ValidationStatus {
+        return new ValidationStatus("ok");
     }
 
-    async execute(formValues: CarFormValues): Promise<void> {
+    async onValidateAsync(): Promise<ValidationStatus> {
+        return new ValidationStatus("ok");
+    }
+
+    async onExecute(formValues: CarFormValues): Promise<void> {
         getEnvironment()
             .getLogger()
             .info("Execute called with values:" + formValues);

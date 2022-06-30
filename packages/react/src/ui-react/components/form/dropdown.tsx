@@ -26,6 +26,12 @@ export function Dropdown<V>(props: DropdownProps<V>): JSX.Element {
     if (props.hidden) {
         return <></>;
     }
+
+    const errorMessage =
+        props.validationStatus?.level === "error"
+            ? props.validationStatus?.message
+            : undefined;
+
     const toKey = props.valueToKey ?? defaultValueToKey;
     return (
         <FluentDropdown
@@ -34,7 +40,7 @@ export function Dropdown<V>(props: DropdownProps<V>): JSX.Element {
             ariaLabel={props.label ?? props.ariaLabel}
             className={props.className}
             disabled={props.disabled}
-            errorMessage={props.errorMessage}
+            errorMessage={errorMessage}
             selectedKey={props.value == null ? undefined : toKey(props.value)}
             options={_transformOptions(props)}
             onChange={(event, option, index) => {

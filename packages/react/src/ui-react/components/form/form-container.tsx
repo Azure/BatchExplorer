@@ -1,5 +1,10 @@
 import * as React from "react";
-import { Form, FormValues } from "@batch/ui-common/lib/form";
+import {
+    Form,
+    FormValues,
+    ValidationSnapshot,
+    ValidationStatus,
+} from "@batch/ui-common/lib/form";
 import { getBrowserEnvironment } from "../../environment";
 import { FormLayoutType } from "./form-layout";
 
@@ -13,6 +18,10 @@ export interface FormContainerProps<V extends FormValues> {
     buttons?: FormButton[];
     layout?: FormLayoutType;
     onFormChange?: (newValues: V, oldValues: V) => void;
+    onValidationStatusChange?: (
+        oldStatus: ValidationStatus | undefined,
+        newStatus: ValidationStatus | undefined
+    ) => void;
 }
 
 export const FormContainer = <V extends FormValues>(
@@ -20,8 +29,10 @@ export const FormContainer = <V extends FormValues>(
 ): JSX.Element => {
     const { form, layout, onFormChange, buttons } = props;
 
-    // KLUDGE: This is really here only to trigger a rerender
+    // KLUDGE: These exist simply to trigger a rerender. The data is not
+    //         actually used, as the components read the form directly
     const [, setFormValues] = React.useState(form.values);
+    const [, setValidationStatus] = React.useState(form.validationStatus);
 
     const formChangeHandler = React.useCallback(
         (newValues: V, oldValues: V) => {
@@ -29,8 +40,9 @@ export const FormContainer = <V extends FormValues>(
             if (onFormChange) {
                 onFormChange(newValues, oldValues);
             }
+            form.validate();
         },
-        [onFormChange]
+        [form, onFormChange]
     );
 
     React.useEffect(() => {
@@ -39,6 +51,24 @@ export const FormContainer = <V extends FormValues>(
             form._emitter.off("change", formChangeHandler);
         };
     }, [form, formChangeHandler]);
+
+    const formValidateHandler = React.useCallback(
+        async (snapshot?: ValidationSnapshot<V>) => {
+            // Note this will set the validation status to undefined
+            // when a validation event is seen without a snapshot, indicating a
+            // new validation round has begun, and any previous displayed
+            // validation data should be cleared.
+            setValidationStatus(snapshot?.overallStatus);
+        },
+        []
+    );
+
+    React.useEffect(() => {
+        form._emitter.on("validate", formValidateHandler);
+        return () => {
+            form._emitter.off("validate", formValidateHandler);
+        };
+    }, [form, formValidateHandler]);
 
     return getBrowserEnvironment().getFormLayout(layout).render(form, buttons);
 };

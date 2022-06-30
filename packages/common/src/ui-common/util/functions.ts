@@ -106,11 +106,27 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 
 /**
  * Return a promise which resolves after a certain number of milliseconds
- * @param ms The number of milliseconds to delay
+ * @param ms The number of milliseconds to delay. Defaults to zero.
  * @returns A promise which resolves when the delay is finished
  */
-export function delay(ms: number): Promise<void> {
+export function delay(ms: number = 0): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
+    });
+}
+
+/**
+ * Call a given callback function after a specified number of milliseconds
+ * @param ms The number of milliseconds to delay
+ * @returns A promise which resolves when the delay is finished and the function has been called
+ */
+export function delayedCallback<T>(
+    callback: () => T,
+    ms: number = 0
+): Promise<T> {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(callback());
+        }, ms);
     });
 }

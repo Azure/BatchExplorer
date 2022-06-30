@@ -27,6 +27,7 @@ describe("Form container tests", () => {
         });
 
         const { container } = render(<FormContainer form={form} />);
+        expect(await screen.findByRole("form")).toBeDefined();
         expect(await screen.findByText("Make")).toBeDefined();
         expect(await screen.findByText("Model")).toBeDefined();
         expect(await screen.findByText("Description")).toBeDefined();

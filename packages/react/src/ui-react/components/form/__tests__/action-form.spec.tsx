@@ -70,7 +70,7 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
         form.param("numberOfPets", ParameterType.String, {
             label: "Pet how many times?",
             value: 100,
-            onValidate: async (value) => {
+            onValidateSync: (value) => {
                 if (value == null) {
                     return new ValidationStatus(
                         "error",
@@ -83,7 +83,7 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
                         "Number of pets cannot be less than 1"
                     );
                 }
-                return new ValidationStatus("ok", "Validation passed");
+                return new ValidationStatus("ok");
             },
         });
 
@@ -94,11 +94,15 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
         return form;
     }
 
-    async onValidate(): Promise<void> {
-        // no-op
+    onValidateSync(): ValidationStatus {
+        return new ValidationStatus("ok");
     }
 
-    async execute(formValues: PetDogFormValues): Promise<void> {
+    async onValidateAsync(): Promise<ValidationStatus> {
+        return new ValidationStatus("ok");
+    }
+
+    async onExecute(formValues: PetDogFormValues): Promise<void> {
         if (this.onPet && formValues.numberOfPets != undefined) {
             this.onPet(formValues.numberOfPets);
         }

@@ -17,13 +17,12 @@ export const ActionForm = <V extends FormValues>(
 
     const handleFormChange: (newValues: V, oldValues: V) => void =
         React.useCallback(
-            (oldValues, newValues) => {
-                action.validate();
+            async (oldValues, newValues) => {
                 if (onFormChange) {
                     onFormChange(oldValues, newValues);
                 }
             },
-            [action, onFormChange]
+            [onFormChange]
         );
 
     return (
