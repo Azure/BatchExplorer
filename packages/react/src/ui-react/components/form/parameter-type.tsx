@@ -6,6 +6,7 @@ import {
 import { inject } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
 import {
+    LocationService,
     ResourceGroupService,
     StorageAccount,
     StorageAccountService,
@@ -95,11 +96,7 @@ export class DefaultParameterTypeResolver implements ParameterTypeResolver {
                 );
             case ParameterType.LocationId:
                 return (
-                    <StringParamTextField
-                        id={id}
-                        key={param.name}
-                        param={param}
-                    />
+                    <LocationComboBox id={id} key={param.name} param={param} />
                 );
             case ParameterType.ResourceGroupId:
                 return (
@@ -338,8 +335,77 @@ export function ResourceGroupComboBox<
 
             setSelectedKey(key);
             param.value = key as V[K];
+        },
+        [param]
+    );
 
-            console.log("Setting Resource Group Key: " + key);
+    return (
+        <ComboBox
+            id={id}
+            disabled={loading || param.disabled}
+            options={options}
+            allowFreeform={true}
+            selectedKey={selectedKey}
+            placeholder={param.placeholder}
+            value={value}
+            onChange={onChange}
+        />
+    );
+}
+
+export function LocationComboBox<
+    V extends FormValues,
+    K extends Extract<keyof V, string>
+>(props: ParamControlProps<V, K>): JSX.Element {
+    const { param } = props;
+    const value = param.value == null ? undefined : String(param.value);
+    const id = useUniqueId("form-control", props.id);
+    const [loading, setLoading] = React.useState<boolean>(true);
+    const [options, setOptions] = React.useState<
+        { key: string; text: string }[]
+    >([]);
+    const form = param.parentForm;
+    const [subscriptionId, setSubscriptionId] = useState<string>(
+        form.values.subscriptionId as string
+    );
+    const [selectedKey, setSelectedKey] = React.useState<string>("");
+
+    const service: LocationService = inject(DependencyName.LocationService);
+
+    useAsyncEffect(async () => {
+        try {
+            if (subscriptionId) {
+                const locations = await service.list(subscriptionId);
+                setOptions(
+                    locations.map((sub) => {
+                        return { key: sub.name, text: sub.displayName };
+                    })
+                );
+            } else {
+                setOptions([]);
+            }
+            setLoading(false);
+        } catch (error) {
+            console.warn("ERROR", error);
+            setOptions([]);
+            setLoading(false);
+        }
+    }, [subscriptionId]);
+
+    React.useEffect(() => {
+        const handler = form.onChange((values: FormValues) => {
+            if ("subscriptionId" in values) {
+                setSubscriptionId(values.subscriptionId as string);
+            }
+        });
+        return () => form.removeOnChange(handler);
+    });
+
+    const onChange = React.useCallback(
+        (event, option?, index?: number, value?: string): void => {
+            const key = option?.key;
+            setSelectedKey(key);
+            param.value = key as V[K];
         },
         [param]
     );

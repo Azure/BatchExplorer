@@ -7,6 +7,7 @@ import {
     mockEnvironmentConfig,
 } from "@batch/ui-common/lib/environment";
 import {
+    FakeLocationService,
     FakeResourceGroupService,
     FakeStorageAccountService,
     FakeSubscriptionService,
@@ -29,6 +30,7 @@ export const mockBrowserDepFactories: Partial<BrowserDependencyFactories> = {
         new FakeStorageAccountService(),
     [DependencyName.SubscriptionService]: () => new FakeSubscriptionService(),
     [DependencyName.ResourceGroupService]: () => new FakeResourceGroupService(),
+    [DependencyName.LocationService]: () => new FakeLocationService(),
 };
 
 /**

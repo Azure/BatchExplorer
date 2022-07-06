@@ -13,7 +13,7 @@ import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import { BrowserDependencyName } from "@batch/ui-react";
 import { DefaultFormLayoutProvider, DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
 import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
-import { StorageAccountServiceImpl, SubscriptionServiceImpl } from "@batch/ui-service";
+import { LocationServiceImpl, ResourceGroupServiceImpl, StorageAccountServiceImpl, SubscriptionServiceImpl } from "@batch/ui-service";
 import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
@@ -81,6 +81,10 @@ export class AppComponent implements OnInit, OnDestroy {
                     () => new StorageAccountServiceImpl(),
                 [DependencyName.SubscriptionService]:
                     () => new SubscriptionServiceImpl(),
+                [DependencyName.ResourceGroupService]:
+                    () => new ResourceGroupServiceImpl(),
+                [DependencyName.LocationService]:
+                    () => new LocationServiceImpl(),
                 [BrowserDependencyName.ParameterTypeResolver]:
                     () =>new DefaultParameterTypeResolver(),
                 [BrowserDependencyName.FormLayoutProvider]:

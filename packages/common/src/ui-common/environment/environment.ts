@@ -69,6 +69,7 @@ export enum DependencyName {
     StorageAccountService = "storageAccount",
     SubscriptionService = "subscription",
     ResourceGroupService = "resourceGroup",
+    LocationService = "location",
 }
 
 /**

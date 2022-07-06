@@ -11,6 +11,7 @@ import {
     DefaultBrowserEnvironment,
 } from "@batch/ui-react/lib/environment";
 import {
+    FakeLocationService,
     FakeResourceGroupService,
     FakeStorageAccountService,
     FakeSubscriptionService,
@@ -39,6 +40,8 @@ export function init(rootEl: HTMLElement): void {
                     new FakeSubscriptionService(),
                 [DependencyName.ResourceGroupService]: () =>
                     new FakeResourceGroupService(),
+                [DependencyName.LocationService]: () =>
+                    new FakeLocationService(),
                 [BrowserDependencyName.ParameterTypeResolver]: () =>
                     new DefaultParameterTypeResolver(),
                 [BrowserDependencyName.FormLayoutProvider]: () =>

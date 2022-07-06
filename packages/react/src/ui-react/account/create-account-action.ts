@@ -39,6 +39,8 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
         });
         form.param("location", ParameterType.LocationId, {
             label: "Location",
+            description:
+                "Default limit of Batch accounts per location per subscription vary depending on the type of subscription you use to create a Batch account.",
         });
         form.param("storageAccountId", ParameterType.StorageAccountId, {
             label: "Storage account",

@@ -10,6 +10,7 @@ import {
 } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
 import {
+    LocationService,
     ResourceGroupService,
     StorageAccountService,
     SubscriptionService,
@@ -51,6 +52,7 @@ export interface BrowserDependencyFactories extends DependencyFactories {
     [DependencyName.StorageAccountService]: () => StorageAccountService;
     [DependencyName.SubscriptionService]: () => SubscriptionService;
     [DependencyName.ResourceGroupService]: () => ResourceGroupService;
+    [DependencyName.LocationService]: () => LocationService;
 }
 
 /**
