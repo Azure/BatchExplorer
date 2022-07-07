@@ -23,7 +23,8 @@
       "extends": [
         ".eslintrc.common.json",
         "prettier",
-        "prettier/@typescript-eslint"
+        "prettier/@typescript-eslint",
+        "plugin:security/recommended"
       ],
       "plugins": [
         "@angular-eslint/eslint-plugin",
