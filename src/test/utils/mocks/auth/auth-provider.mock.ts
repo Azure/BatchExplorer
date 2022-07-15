@@ -72,7 +72,6 @@ export const createMockClientApplication = () => {
         tenant: null,
         clientId: null,
         redirectUri: null,
-        logoutRedirectUri: null
     });
     return new MockClientApplication(fakeAuthProvider);
 };
