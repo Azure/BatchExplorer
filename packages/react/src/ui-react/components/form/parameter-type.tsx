@@ -249,8 +249,9 @@ export function SubscriptionParamDropdown<
         } catch (error) {
             setSubscriptions([]);
             setErrorMessage(error + "");
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, []);
 
     const options = subscriptions.map((sub) => {
