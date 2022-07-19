@@ -18,12 +18,48 @@ export function isForm<V extends FormValues>(obj: unknown): obj is Form<V> {
     return obj instanceof FormImpl;
 }
 
-export enum ParameterType {
-    String = "String",
-    StringList = "StringList",
-    Number = "Number",
-    Boolean = "Boolean",
+// export const ParameterType = {
+//     String = "String",
+//     StringList = "StringList",
+//     Number = "Number",
+//     Boolean = "Boolean",
+// }
+export interface ParameterType<T> {
+    name: string;
+    dependencies: T;
 }
+
+export abstract class AbstractParameterType<T = Record<string, string>>
+    implements ParameterType<T>
+{
+    abstract name: string;
+    constructor(public dependencies: T) {}
+}
+
+export class StringParamType extends AbstractParameterType {
+    name = "String";
+}
+
+export class NumberParamType extends AbstractParameterType {
+    name = "Number";
+}
+
+export class BooleanParamType extends AbstractParameterType {
+    name = "Boolean";
+}
+
+export interface StorageAccountIdDependencies {
+    subscriptionId: string;
+    location?: string;
+    includePremiumStorage?: string;
+}
+export class StorageAccountIdParamType extends AbstractParameterType<StorageAccountIdDependencies> {
+    name = "StorageAccountId";
+}
+
+type ParameterTypeConstructor = new (
+    dependencies: unknown
+) => ParameterType<unknown>;
 
 export interface Entry<V extends FormValues> {
     name: string;
@@ -164,7 +200,7 @@ export interface Form<V extends FormValues> {
 
     param<K extends Extract<keyof V, string>>(
         name: K,
-        type: string,
+        type: ParameterTypeConstructor,
         init?: ParameterInit<V, K>
     ): Parameter<V, K>;
 
@@ -291,7 +327,7 @@ class FormImpl<V extends FormValues> implements Form<V> {
 
     param<K extends Extract<keyof V, string>>(
         name: K,
-        type: string,
+        type: ParameterTypeConstructor,
         init?: ParameterInit<V, K>
     ): Parameter<V, K> {
         return new Parameter(this, name, type, init);
@@ -617,7 +653,7 @@ export class SubForm<
 
     param<SK extends Extract<keyof S, string>>(
         name: SK,
-        type: string,
+        type: ParameterTypeConstructor,
         init?: ParameterInit<S, SK>
     ): Parameter<S, SK> {
         return this.form.param(name, type, init);
@@ -688,7 +724,7 @@ export class Parameter<V extends FormValues, K extends Extract<keyof V, string>>
     readonly parentSection?: Section<V>;
 
     name: K;
-    type: string;
+    type: ParameterType<unknown>;
     _label?: string;
     description?: string;
     disabled?: boolean;
@@ -730,14 +766,14 @@ export class Parameter<V extends FormValues, K extends Extract<keyof V, string>>
     constructor(
         parentForm: Form<V>,
         name: K,
-        type: string,
+        type: ParameterTypeConstructor,
         init?: ParameterInit<V, K>
     ) {
         this.parentForm = parentForm;
         this.parentSection = init?.parentSection;
 
         this.name = name;
-        this.type = type;
+        this.type = new type(init?.dependencies ?? {});
         this._label = init?.label;
         this.description = init?.description;
         this.disabled = init?.disabled;
@@ -833,7 +869,7 @@ export class Section<V extends FormValues> {
 
     param<K extends Extract<keyof V, string>>(
         name: K,
-        type: string,
+        type: ParameterTypeConstructor,
         init?: ParameterInit<V, K>
     ): Parameter<V, K> {
         const paramInit = init ?? {};

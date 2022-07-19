@@ -1,14 +1,13 @@
 import {
     DependencyName,
-    Parameter,
-    ParameterType as CommonParameterType,
+    Parameter
 } from "@batch/ui-common";
 import { inject } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
 import {
     StorageAccount,
     StorageAccountService,
-    SubscriptionService,
+    SubscriptionService
 } from "@batch/ui-service";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -181,6 +180,7 @@ export function StorageAccountDropdown<
     );
     const form = param.parentForm;
     const [subscriptionId, setSubscriptionId] = useState<string>(
+        param.getDependencyValue("subscriptionId");
         form.values.subscriptionId as string
     );
     const [errorMessage, setErrorMessage] = useState<string>();
@@ -201,7 +201,7 @@ export function StorageAccountDropdown<
 
     useEffect(() => {
         const handler = form.onChange((values: FormValues) => {
-            setSubscriptionId(values.subscriptionId as string);
+            setSubscriptionId(param.getDependencyValue("subscriptionId"));
         });
         return () => form.removeOnChange(handler);
     });

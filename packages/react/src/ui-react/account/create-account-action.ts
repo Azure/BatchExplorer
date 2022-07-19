@@ -38,11 +38,13 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
         form.param("location", ParameterType.LocationId, {
             label: "Location",
         });
-        form.param("storageAccountId", ParameterType.StorageAccountId, {
+        form.param("storageAccountId", StorageAccountIdParameterType, {
             label: "Storage account",
             description:
                 "Optional. For best performance we recommend a storage account (general purpose v2) located in the same region as the associated Batch account.",
-            dependencies: ["subscriptionId"],
+            dependencies: {
+                subscriptionId: "someBooleanParameter",
+            },
         });
 
         const advancedSection = form.section("Advanced");
