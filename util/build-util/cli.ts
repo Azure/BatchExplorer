@@ -7,7 +7,6 @@
 import * as path from "path";
 import * as yargs from "yargs";
 import {
-    batchExplorerHome,
     chmodx,
     configure,
     copyFiles,
@@ -23,8 +22,26 @@ yargs
     .command({
         command: "configure",
         aliases: ["config"],
-        describe: "Configure CLI properties",
-        handler: () => configure(),
+        describe:
+            "Configure CLI properties. If at least one configuration option " +
+            "is specified, the configuration file is set or updated, without " +
+            "a prompt",
+        builder: (yargs: yargs.Argv) =>
+            yargs
+                .option("paths.batchExplorer", {
+                    type: "string",
+                    describe: "The path to Batch Explorer/Shared Libraries",
+                })
+                .option("paths.batchPortalExtension", {
+                    type: "string",
+                    describe: "The path to the Batch portal extension",
+                })
+                .option("print", {
+                    type: "boolean",
+                    describe: "Print the resultant configuration object",
+                    default: false,
+                }),
+        handler: (argv) => configure(argv),
     })
     .command({
         command: "cp <src> <dest>",
@@ -79,12 +96,12 @@ yargs
         handler: (argv) => rmrf(argv.directory),
     })
     .command({
-        command: "gather-build-results <basePath>",
+        command: "gather-build-results [basePath]",
         describe: "Collects build/test output into a top-level build directory",
         builder: (yargs: yargs.Argv) =>
             yargs.positional("basePath", {
                 describe: "The directory from which to gather build results",
-                default: batchExplorerHome,
+                default: "",
             }),
         handler: (argv) => gatherBuildResults(path.resolve(argv.basePath)),
     })
