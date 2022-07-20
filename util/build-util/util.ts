@@ -9,7 +9,7 @@ import * as os from "os";
 import * as path from "path";
 import * as shell from "shelljs";
 
-export const batchExplorerHome = path.resolve("../../");
+export const defaultBatchExplorerHome = path.resolve(__dirname, "../../");
 export const configFile = path.resolve(
     os.homedir(),
     ".config/batch/butil.json"
@@ -17,6 +17,7 @@ export const configFile = path.resolve(
 
 const portalReactPath = "src/src/BatchExtension/Client/ReactViews";
 const defaultJsonIndentSize = 2;
+const printJsonIndentSize = 4;
 
 export interface Configuration {
     paths: {
@@ -24,6 +25,8 @@ export interface Configuration {
         batchPortalExtension?: string;
     };
 }
+
+type ConfigPath = keyof Configuration["paths"];
 
 export const info = (...args: string[]) => console.log(color.blue(...args));
 export const warn = (...args: string[]) => console.warn(color.yellow(...args));
@@ -56,11 +59,9 @@ export function validateDirectory(path: string) {
     return "Not a valid directory";
 }
 
-export function resolvePath(...paths: string[]) {
-    if (paths.length > 0 && paths[0]) {
-        paths[0] = paths[0].replace(/^~/, os.homedir());
-    }
-    return path.resolve(...paths);
+export function resolvePath(aPath: string) {
+    aPath = aPath?.replace(/^~/, os.homedir());
+    return path.resolve(aPath);
 }
 
 export async function loadConfiguration(): Promise<Configuration> {
@@ -77,7 +78,7 @@ export async function getEditorConfig(
     option: keyof editorconfig.KnownProps,
     filePattern?: string
 ) {
-    let configPath = `${batchExplorerHome}/.editorconfig`;
+    let configPath = `${defaultBatchExplorerHome}/.editorconfig`;
     if (filePattern) {
         configPath += "/" + filePattern;
     }
@@ -144,7 +145,13 @@ export function chmodx(paths: string[] | unknown) {
 }
 
 // integrations have one place to look for things like coverage reports
-export function gatherBuildResults(basePath: string) {
+export async function gatherBuildResults(basePath: string) {
+    if (!basePath) {
+        basePath =
+            (await loadConfiguration()).paths?.batchExplorer ??
+            defaultBatchExplorerHome;
+    }
+    console.log("BasePth", basePath);
     const baseBuildDir = path.join(basePath, "build");
 
     const doCopy = (src: string, dst: string) => {
@@ -196,32 +203,54 @@ export async function unlinkLocalProjects() {
     });
 }
 
+export type ConfigureCommandOptions = {
+    "paths.batchExplorer"?: string;
+    "paths.batchPortalExtension"?: string;
+    print: boolean;
+};
+
 /**
  * Configure CLI properties
  */
-export async function configure() {
-    const config = readJsonOrDefault(configFile);
+export async function configure(options: ConfigureCommandOptions) {
+    const config = await loadConfiguration();
     config.paths ||= {};
-    const answers = await inquirer.prompt([
-        {
-            name: "batchPortalExtension",
-            message: "Path to Batch Portal Extension",
-            default: config.paths.batchPortalExtension,
-            validate: validateDirectory,
-        },
-        {
-            name: "batchExplorer",
-            message: "Path to Batch Explorer",
-            default: config.paths.batchExplorer || batchExplorerHome,
-            validate: validateDirectory,
-        },
-    ]);
 
-    for (const [key, value] of Object.entries(answers)) {
-        config.paths[key] = resolvePath(value as string);
+    // If valid configuration options are passed in the command-line, set or
+    // update the config object and skip prompting.
+    if (isConfigurationObject(options)) {
+        for (const [key, configPath] of Object.entries(options.paths)) {
+            if (isConfigPathKey(key)) {
+                config.paths[key] = resolvePath(configPath);
+            }
+        }
+    } else {
+        const answers = await inquirer.prompt([
+            {
+                name: "batchPortalExtension",
+                message: "Path to Batch Portal Extension",
+                default: config.paths.batchPortalExtension,
+                validate: validateDirectory,
+                type: "string",
+            },
+            {
+                name: "batchExplorer",
+                message: "Path to Batch Explorer",
+                default: config.paths.batchExplorer || defaultBatchExplorerHome,
+                validate: validateDirectory,
+                type: "string",
+            },
+        ]);
+        for (const [key, value] of Object.entries(answers)) {
+            config.paths[key as ConfigPath] = resolvePath(value as string);
+        }
     }
+
     await saveJson(configFile, config);
     info(`Configuration saved to ${configFile}`);
+    if (options.print) {
+        printJson(config);
+    }
 }
 
 interface LinkOptions {
@@ -256,7 +285,7 @@ async function runLinkageTask(callback: (opts: LinkOptions) => void) {
     const targetConf = readJsonOrDefault(targetPackageJson);
 
     const packageRoot = path.join(
-        config.paths.batchExplorer || batchExplorerHome,
+        config.paths.batchExplorer || defaultBatchExplorerHome,
         "packages"
     );
 
@@ -288,4 +317,19 @@ async function runLinkageTask(callback: (opts: LinkOptions) => void) {
             info(`Package ${packageName} not in dependencies - skipping`);
         }
     });
+}
+
+function isConfigurationObject(object: unknown): object is Configuration {
+    if (!object || typeof object !== "object") {
+        return false;
+    }
+    return "paths" in object;
+}
+
+function isConfigPathKey(key: string): key is ConfigPath {
+    return ["batchExplorer", "batchPortalExtension"].includes(key);
+}
+
+function printJson(json: object) {
+    info(JSON.stringify(json, null, printJsonIndentSize));
 }
