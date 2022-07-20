@@ -5,3 +5,7 @@ export interface ResourceService<T> {
     remove(resource: T): Promise<void>;
     update(resource: T): Promise<void>;
 }
+
+export interface ResourceListResponse<T> {
+    value: T[];
+}

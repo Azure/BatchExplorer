@@ -1,6 +1,6 @@
 import { ApiVersion, Endpoints } from "../constants";
 import { AbstractHttpService } from "../http-service";
-import { ResourceService } from "../resource-service";
+import { ResourceListResponse, ResourceService } from "../resource-service";
 import { StorageAccount } from "./storage-account-models";
 
 export interface StorageAccountService extends ResourceService<StorageAccount> {
@@ -24,22 +24,22 @@ export class StorageAccountServiceImpl
             }`,
             {}
         );
-        const json = await response.json();
-        console.log("JSON", json);
-        return (json as any).value as StorageAccount[];
+        const json =
+            (await response.json()) as ResourceListResponse<StorageAccount>;
+        return json.value;
     }
 
-    public async get(accountId: string): Promise<StorageAccount | null> {
+    public async get(): Promise<StorageAccount | null> {
         return null;
     }
 
-    public async create(account: StorageAccount): Promise<void> {
+    public async create(): Promise<void> {
         return;
     }
-    public async remove(account: StorageAccount): Promise<void> {
+    public async remove(): Promise<void> {
         return;
     }
-    public async update(account: StorageAccount): Promise<void> {
+    public async update(): Promise<void> {
         return;
     }
 }

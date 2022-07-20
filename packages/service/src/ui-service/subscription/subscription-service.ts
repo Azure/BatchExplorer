@@ -1,6 +1,6 @@
 import { ApiVersion, Endpoints } from "../constants";
 import { AbstractHttpService } from "../http-service";
-import { ResourceService } from "../resource-service";
+import { ResourceListResponse, ResourceService } from "../resource-service";
 import { Subscription } from "./subscription-models";
 
 export interface SubscriptionService extends ResourceService<Subscription> {
@@ -19,21 +19,22 @@ export class SubscriptionServiceImpl
         const response = await this.httpClient.get(
             `${Endpoints.arm}/subscriptions?api-version=${ApiVersion.arm}`
         );
-        const json = await response.json();
-        return (json as any).value as Subscription[];
+        const json =
+            (await response.json()) as ResourceListResponse<Subscription>;
+        return json.value;
     }
 
-    public async get(accountId: string): Promise<Subscription | null> {
+    public async get(): Promise<Subscription | null> {
         return null;
     }
 
-    public async create(account: Subscription): Promise<void> {
+    public async create(): Promise<void> {
         return;
     }
-    public async remove(account: Subscription): Promise<void> {
+    public async remove(): Promise<void> {
         return;
     }
-    public async update(account: Subscription): Promise<void> {
+    public async update(): Promise<void> {
         return;
     }
 }

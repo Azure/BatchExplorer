@@ -14,17 +14,17 @@ export class FakeSubscriptionService implements SubscriptionService {
         return Promise.resolve(subscriptions as Subscription[]);
     }
 
-    public async get(id: string): Promise<Subscription | null> {
+    public async get(): Promise<Subscription | null> {
         return null;
     }
 
-    public async create(account: Subscription): Promise<void> {
+    public async create(): Promise<void> {
         return;
     }
-    public async remove(account: Subscription): Promise<void> {
+    public async remove(): Promise<void> {
         return;
     }
-    public async update(account: Subscription): Promise<void> {
+    public async update(): Promise<void> {
         return;
     }
 }

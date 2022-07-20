@@ -31,17 +31,17 @@ export class FakeStorageAccountService implements StorageAccountService {
         }
     }
 
-    public async get(id: string): Promise<StorageAccount | null> {
+    public async get(): Promise<StorageAccount | null> {
         return null;
     }
 
-    public async create(account: StorageAccount): Promise<void> {
+    public async create(): Promise<void> {
         return;
     }
-    public async remove(account: StorageAccount): Promise<void> {
+    public async remove(): Promise<void> {
         return;
     }
-    public async update(account: StorageAccount): Promise<void> {
+    public async update(): Promise<void> {
         return;
     }
 }
