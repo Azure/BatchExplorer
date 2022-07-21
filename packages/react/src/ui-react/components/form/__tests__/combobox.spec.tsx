@@ -11,6 +11,7 @@ describe("Combobox control", () => {
         const { container } = render(
             <>
                 <ComboBox
+                    label="Batch Features"
                     options={[
                         { key: "job", text: "Job" },
                         { key: "schedule", text: "Job Schedule" },
@@ -20,6 +21,7 @@ describe("Combobox control", () => {
                     ]}
                 ></ComboBox>
                 <ComboBox
+                    label="Resources"
                     options={[
                         { key: "vm", text: "Virtual Machine" },
                         { key: "ks", text: "Kubernetes Service" },

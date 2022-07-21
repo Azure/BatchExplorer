@@ -4,52 +4,52 @@ import { ResourceGroupService } from "./resourcegroup-service";
 const resourceGroups: { [key: string]: ResourceGroup[] } = {
     "/fake/sub1": [
         {
-            id: "/fake/resourcegroupA",
-            name: "Resource Group A",
+            id: "Resource_Group_A",
+            name: "Resource_Group_A",
             location: "centralIndia",
         },
         {
-            id: "/fake/resourcegroupB",
-            name: "Resource Group B",
+            id: "Resource_Group_B",
+            name: "Resource_Group_B",
             location: "eastUS",
         },
         {
-            id: "/fake/resourcegroupC",
-            name: "Resource Group C",
+            id: "Resource_Group_C",
+            name: "Resource_Group_C",
             location: "northEurope",
         },
     ],
     "/fake/sub2": [
         {
-            id: "/fake/resourcegroupD",
-            name: "Resource Group D",
+            id: "Resource_Group_D",
+            name: "Resource_Group_D",
             location: "eastUS",
         },
         {
-            id: "/fake/resourcegroupE",
-            name: "Resource Group E",
+            id: "Resource_Group_E",
+            name: "Resource_Group_E",
             location: "westUS",
         },
     ],
     "/fake/sub3": [
         {
-            id: "/fake/resourcegroupF",
-            name: "Resource Group F",
+            id: "Resource_Group_F",
+            name: "Resource_Group_F",
             location: "brazilSouth",
         },
         {
-            id: "/fake/resourcegroupG",
-            name: "Resource Group G",
+            id: "Resource_Group_G",
+            name: "Resource_Group_G",
             location: "eastUS",
         },
         {
-            id: "/fake/resourcegroupH",
-            name: "Resource Group H",
+            id: "Resource_Group_H",
+            name: "Resource_Group_H",
             location: "eastAsia",
         },
         {
-            id: "/fake/resourcegroupI",
-            name: "Resource Group I",
+            id: "Resource_Group_I",
+            name: "Resource_Group_I",
             location: "koreaSouth",
         },
     ],

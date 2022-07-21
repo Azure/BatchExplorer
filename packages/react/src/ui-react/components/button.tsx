@@ -1,10 +1,10 @@
-import * as React from "react";
 import {
     BaseButton,
     Button as FluentButton,
     DefaultButton,
     PrimaryButton,
 } from "@fluentui/react/lib/Button";
+import * as React from "react";
 
 type FluentOnClickElement =
     | HTMLAnchorElement
@@ -19,10 +19,11 @@ export interface ButtonProps {
     label?: string;
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
     primary?: boolean;
+    id?: string;
 }
 
 export const Button: React.FC<ButtonProps> = (props) => {
-    const { disabled, label, onClick, primary } = props;
+    const { disabled, label, onClick, primary, id } = props;
 
     const clickHandler: React.MouseEventHandler<FluentOnClickElement> =
         React.useCallback(
@@ -38,6 +39,11 @@ export const Button: React.FC<ButtonProps> = (props) => {
 
     const FluentButton = primary ? PrimaryButton : DefaultButton;
     return (
-        <FluentButton disabled={disabled} text={label} onClick={clickHandler} />
+        <FluentButton
+            disabled={disabled}
+            text={label}
+            onClick={clickHandler}
+            id={id}
+        />
     );
 };
