@@ -1,3 +1,9 @@
+# 2.14.2
+
+### Bugs
+
+* Fixes login failures when proxy is misconfigured [\#2551]
+
 # 2.14.1
 
 ### Bugs
