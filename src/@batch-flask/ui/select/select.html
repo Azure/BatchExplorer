@@ -2,7 +2,7 @@
    <div #selectButton class="select-button"
         (click)="clickSelectButton($event)"
         [tabindex]="disabled ? -1 : 0"
-        role="textbox"
+        role="combobox"
         [attr.aria-label]="ariaLabel"
         [attr.aria-controls]="dropdownId"
         [attr.aria-activedescendant]="focusedOption?.id"

@@ -2,7 +2,12 @@ steps:
   - template: ../dependencies.yml
   - script: |
       set -e
+      echo "Homebrew version $(brew --version)"
+      brew install openssl readline sqlite3 xz zlib tcl-tk
+    displayName: Install MacOS Python dependencies
+  - script: |
+      set -e
       echo "Node.js version $(node --version)"
       echo "NPM version $(npm --version)"
       npm ci
-    displayName: Install MacOS dependencies
+    displayName: Install MacOS JavaScript dependencies
