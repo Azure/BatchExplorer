@@ -1,8 +1,12 @@
 {
-  "version": "1.0.0",
+  "version": "0.0.1",
   "npmClient": "npm",
   "useWorkspaces": false,
-  "packages": ["packages/*", "util/*", "web"],
+  "packages": [
+    "packages/*",
+    "util/*",
+    "web"
+  ],
   "command": {
     "publish": {
       "registry": "https://azurebatch.pkgs.visualstudio.com/_packaging/BatchExplorer/npm/registry/"
