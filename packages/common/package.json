@@ -1,6 +1,6 @@
 {
   "name": "@batch/ui-common",
-  "private": true,
+  "private": false,
   "version": "0.0.1",
   "description": "Common library for Azure Batch user interfaces",
   "repository": {
