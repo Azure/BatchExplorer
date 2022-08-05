@@ -1,6 +1,6 @@
 {
   "name": "@batch/ui-playground",
-  "private": true,
+  "private": false,
   "version": "0.0.1",
   "description": "Playground for Azure Batch Shared Component Library",
   "repository": {
