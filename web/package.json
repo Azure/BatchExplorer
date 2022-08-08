@@ -1,7 +1,7 @@
 {
   "name": "@batch/explorer-web",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Test library for use in the Batch portal extension",
   "repository": {
     "type": "git",
@@ -68,11 +68,11 @@
     "tslib": "~2.3.1"
   },
   "dependencies": {
-    "@batch/common-config": "^0.0.1",
-    "@batch/ui-common": "^0.0.1",
-    "@batch/ui-playground": "^0.0.1",
-    "@batch/ui-react": "^0.0.1",
-    "@batch/ui-service": "^0.0.1",
+    "@batch/common-config": "^0.0.2",
+    "@batch/ui-common": "^0.0.2",
+    "@batch/ui-playground": "^0.0.2",
+    "@batch/ui-react": "^0.0.2",
+    "@batch/ui-service": "^0.0.2",
     "@uifabric/azure-themes": "7.5.19"
   },
   "devDependencies": {
