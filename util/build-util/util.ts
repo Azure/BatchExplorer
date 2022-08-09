@@ -8,6 +8,7 @@ import inquirer from "inquirer";
 import * as os from "os";
 import * as path from "path";
 import * as shell from "shelljs";
+import * as semver from "semver";
 
 export const defaultBatchExplorerHome = path.resolve(__dirname, "../../");
 export const configFile = path.resolve(
@@ -27,6 +28,48 @@ export interface Configuration {
 }
 
 type ConfigPath = keyof Configuration["paths"];
+
+interface PackageJson {
+    name: string;
+    version: string;
+    dependencies: {
+        [name: string]: string;
+    };
+    devDependencies: {
+        [name: string]: string;
+    };
+}
+
+export const VersionReleaseTypes = {
+    major: "major",
+    minor: "minor",
+    patch: "patch",
+    premajor: "premajor",
+    preminor: "preminor",
+    prepatch: "prepatch",
+    prerelease: "prerelease",
+} as const;
+
+export type ReleaseType = semver.ReleaseType;
+
+// Packages published to an artifact feed
+export const publicPackages = [
+    "packages/common",
+    "packages/service",
+    "packages/react",
+    "packages/playground",
+];
+
+// Packages that share the fixed version
+export const fixedVersionPackages = [
+    ...publicPackages,
+    "web",
+    "util/build-util",
+    "util/common-config",
+];
+
+// All packages
+export const allPackages = [...fixedVersionPackages, "desktop"];
 
 export const info = (...args: string[]) => console.log(color.blue(...args));
 export const warn = (...args: string[]) => console.warn(color.yellow(...args));
@@ -48,7 +91,11 @@ export async function saveJson(filename: string, json: unknown) {
         mkdirp(confPath);
     }
     return new Promise((resolve) =>
-        fs.writeFile(filename, JSON.stringify(json, null, indent), resolve)
+        fs.writeFile(
+            filename,
+            JSON.stringify(json, null, indent) + "\n",
+            resolve
+        )
     );
 }
 
@@ -147,11 +194,8 @@ export function chmodx(paths: string[] | unknown) {
 // integrations have one place to look for things like coverage reports
 export async function gatherBuildResults(basePath: string) {
     if (!basePath) {
-        basePath =
-            (await loadConfiguration()).paths?.batchExplorer ??
-            defaultBatchExplorerHome;
+        basePath = await getBasePath();
     }
-    console.log("BasePth", basePath);
     const baseBuildDir = path.join(basePath, "build");
 
     const doCopy = (src: string, dst: string) => {
@@ -253,6 +297,62 @@ export async function configure(options: ConfigureCommandOptions) {
     }
 }
 
+export async function bumpVersion(releaseType: ReleaseType) {
+    const basePath = await getBasePath();
+    const packageConfigs = await loadPackageConfigs();
+    const currentVersion = getCurrentVersion(packageConfigs);
+    const targetVersion = semver.inc(currentVersion, releaseType);
+    if (!targetVersion) {
+        error(
+            `Unable to determine next ${releaseType} version of ` +
+                currentVersion
+        );
+        process.exit(1);
+    }
+    console.log(`Bumping ${currentVersion} to ${targetVersion}`);
+
+    // Update the package version
+    const fixedVersionPackageNames: string[] = [];
+    for (const packagePath of fixedVersionPackages) {
+        const config = packageConfigs[packagePath];
+        config.version = targetVersion;
+        fixedVersionPackageNames.push(config.name);
+    }
+
+    const updateDependencies = (
+        config: PackageJson,
+        type: "dependencies" | "devDependencies"
+    ) => {
+        if (config[type]) {
+            for (const dependency of fixedVersionPackageNames) {
+                if (dependency in config[type]) {
+                    config[type][dependency] = `^${targetVersion}`;
+                }
+            }
+        }
+    };
+
+    // Update dependency and devDependency versions
+    info("Updating dependencies...");
+    for (const packagePath of allPackages) {
+        const config = packageConfigs[packagePath];
+        updateDependencies(config, "dependencies");
+        updateDependencies(config, "devDependencies");
+    }
+
+    const saveOperations = [];
+    for (const packagePath of allPackages) {
+        const config = packageConfigs[packagePath];
+        const filename = path.join(basePath, packagePath, "package.json");
+        saveOperations.push(saveJson(filename, config));
+    }
+
+    info("Saving files...");
+    await saveOperations;
+
+    info("Done.");
+}
+
 interface LinkOptions {
     versionedPackageName?: string;
     packageName?: string;
@@ -332,4 +432,42 @@ function isConfigPathKey(key: string): key is ConfigPath {
 
 function printJson(json: object) {
     info(JSON.stringify(json, null, printJsonIndentSize));
+}
+
+type PackageConfigMapType = { [path: string]: PackageJson };
+
+async function loadPackageConfigs(): Promise<PackageConfigMapType> {
+    const basePath = await getBasePath();
+
+    const configs: PackageConfigMapType = {};
+
+    for (const packagePath of allPackages) {
+        const json = readJsonOrDefault(
+            path.join(basePath, packagePath, "package.json")
+        );
+        configs[packagePath] = json;
+    }
+    return configs;
+}
+
+const getBasePath = async () =>
+    (await loadConfiguration()).paths?.batchExplorer ??
+    defaultBatchExplorerHome;
+
+function getCurrentVersion(configs: PackageConfigMapType): string {
+    let version = "";
+    for (const packagePath of fixedVersionPackages) {
+        const packageVersion = configs[packagePath].version;
+        if (version === "") {
+            version = packageVersion;
+        } else if (packageVersion !== version) {
+            error("Versions in public packages do not match");
+            for (const p of fixedVersionPackages) {
+                const json = configs[p];
+                info(json.name + ": " + json.version);
+            }
+            process.exit(1);
+        }
+    }
+    return version;
 }

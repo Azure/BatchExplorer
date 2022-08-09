@@ -7,6 +7,7 @@
 import * as path from "path";
 import * as yargs from "yargs";
 import {
+    bumpVersion,
     chmodx,
     configure,
     copyFiles,
@@ -16,6 +17,8 @@ import {
     moveFiles,
     rmrf,
     unlinkLocalProjects,
+    ReleaseType,
+    VersionReleaseTypes,
 } from "./util";
 
 yargs
@@ -123,5 +126,16 @@ yargs
                 describe: "File or files to make executable",
             }),
         handler: (argv) => chmodx(argv.path),
+    })
+    .command({
+        command: "bump <type>",
+        describe: "Increment the version of all packages",
+        builder: (yargs: yargs.Argv) =>
+            yargs.positional("type", {
+                describe: "The version type to increment",
+                type: "string",
+                choices: Object.keys(VersionReleaseTypes),
+            }),
+        handler: (argv) => bumpVersion(argv.type as ReleaseType),
     })
     .help().argv;
