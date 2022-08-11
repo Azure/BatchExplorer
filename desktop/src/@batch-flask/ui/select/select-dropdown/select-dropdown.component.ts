@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
     HostBinding, Inject, forwardRef,
 } from "@angular/core";
+import { ListKeyNavigator } from "@batch-flask/core";
 import { SelectOptionComponent } from "@batch-flask/ui/select/option";
 import { SelectComponent } from "../select.component";
 
@@ -64,6 +65,8 @@ export class SelectDropdownComponent {
     }
 
     public rows: any;
+    public keyNavigator: ListKeyNavigator<SelectOptionComponent>;
+
     private _displayedOptions: SelectOptionComponent[] = [];
     private _focusedOption: any;
     private _multiple: any;
@@ -110,9 +113,15 @@ export class SelectDropdownComponent {
     private _computeOptions() {
         let fixedOptions = [];
         if (this.multiple) {
-            fixedOptions = [{ value: unselectAllOptionId, label: "Unselect all", cssClass: "unselect-all-option" }];
+            fixedOptions = [{
+                id: unselectAllOptionId,
+                value: unselectAllOptionId,
+                label: "Unselect all",
+                cssClass: "unselect-all-option"
+            }];
         }
         this.rows = fixedOptions.concat(this._displayedOptions);
+        this.keyNavigator.items = this.rows;
         this.changeDetector.markForCheck();
     }
 }

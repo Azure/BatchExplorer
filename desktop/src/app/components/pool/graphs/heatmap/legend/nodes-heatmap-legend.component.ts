@@ -18,14 +18,15 @@ export class NodesHeatmapLegendComponent {
 
     @Input()
     public set nodes(nodes: List<Node>) {
-        this.stateCounter.updateCount(nodes);
+        this.stateCounter.updateCount(nodes, this.pool);
     }
 
     @Input()
     public colors: any;
 
+    public expandedCategory: string;
     public stateCounter: StateCounter;
-    public highlightedState: string = null;
+    public highlightedState: string;
 
     @Output()
     public selectedStateChange = new EventEmitter();
@@ -37,10 +38,20 @@ export class NodesHeatmapLegendComponent {
         this.stateCounter = new StateCounter();
     }
 
-    public selectState(state: string) {
-        if (state === this.highlightedState) {
-            this.highlightedState = null;
+    /**
+     * Emits state changes for when a state, category, or sub-state is selected.
+     *
+     * @param state
+     * @param categoryParent categories and sub-states will have one
+     */
+    public selectState(state: string, categoryParent: string = "") {
+        if (state === this.expandedCategory) {
+            this.expandedCategory = "";
+            this.highlightedState = "";
+        } else if (state === this.highlightedState) {
+            this.highlightedState = "";
         } else {
+            this.expandedCategory = categoryParent;
             this.highlightedState = state;
         }
         this.selectedStateChange.emit(this.highlightedState);

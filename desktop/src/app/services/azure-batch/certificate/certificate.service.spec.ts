@@ -127,15 +127,15 @@ describe("CertificateService", () => {
         expect(certificate.password).toBe("batchtest");
     });
 
-    it("parse a cer certificate", async () => {
+    it("parse a cer certificate", async (done) => {
         const file = await loadCertificate("batchtest2.cer");
-        const certificate = await certificateService.parseCertificate(file, "batchtest").toPromise();
-        // TODO: Forge actually calculates this thumbprint incorrectly. Replace
-        //       with the correct thumbprint when this is fixed
-        expect(certificate.thumbprint).toBe("6da50c0bf5100da7cf63f390da15af6569c2dff7");
-        expect(certificate.thumbprintAlgorithm).toBe("sha1");
-        expect(certificate.certificateFormat).toBe("cer");
-        expect(certificate.password).toBeUndefined();
+        certificateService.parseCertificate(file, "batchtest").subscribe((certificate) => {
+            expect(certificate.thumbprint).toBe("227341ea44f8deffb6972532818fccf797f7339e");
+            expect(certificate.thumbprintAlgorithm).toBe("sha1");
+            expect(certificate.certificateFormat).toBe("cer");
+            expect(certificate.password).toBeUndefined();
+            done();
+        });
     });
 });
 

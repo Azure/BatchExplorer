@@ -26,8 +26,7 @@ import { UserDecoder } from "./user-decoder";
 const aadConfig: AADConfig = {
     tenant: "common",
     clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
-    redirectUri: "urn:ietf:wg:oauth:2.0:oob",
-    logoutRedirectUri: "urn:ietf:wg:oauth:2.0:oob/logout",
+    redirectUri: "https://login.microsoftonline.com/common/oauth2/nativeclient",
 };
 
 @Injectable()
