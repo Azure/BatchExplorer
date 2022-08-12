@@ -59,11 +59,11 @@ bl-toast {
     > .dismiss-btn {
         cursor: pointer;
         .fa-times {
-            color: rgba(0, 0, 0, 0.2);
+            color: $primary-contrast-color;
         }
         &:hover {
             .fa-times {
-                color: rgba(255, 255, 255, 0.3);
+                color: $hover-bg-color;
             }
         }
     }
