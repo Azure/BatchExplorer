@@ -1,5 +1,5 @@
 <bl-dropdown [footer]="false" align="right">
-    <div bl-dropdown-btn>
+    <div bl-dropdown-btn  attr.aria-label="{{references.length}}-forms in progress">
         <i class="fa fa-wpforms"></i>
         <span class="count" *ngIf="references.length > 0">{{references.length}}</span>
     </div>

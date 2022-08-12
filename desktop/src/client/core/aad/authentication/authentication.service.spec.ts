@@ -12,7 +12,6 @@ const CONFIG = {
     tenant: "common",
     clientId: "abc",
     redirectUri: "http://localhost",
-    logoutRedirectUri: "http://localhost",
 };
 
 const FAKE_TOKEN = {

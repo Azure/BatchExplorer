@@ -7,7 +7,7 @@ import { ContextMenuItem, ContextMenuSeparator, ContextMenuService } from "@batc
 import { log } from "@batch-flask/utils";
 import { NodeCommands } from "app/components/node/action";
 import { Node, NodeState, Pool } from "app/models";
-import { ComponentUtils } from "app/utils";
+import { ComponentUtils, NodeUtils } from "app/utils";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
@@ -23,11 +23,27 @@ interface HeatmapTile {
 }
 
 const idleColor = "#edeef2";
-const runningColor = "#388e3c";
+const runningColor = "#178D17";
 
 const stateTree: StateTree = [
     { state: NodeState.idle, color: idleColor },
-    { state: NodeState.running, color: runningColor },
+    {
+        category: "running",
+        label: "Running states",
+        subtitle: "Task Slots Usage",
+        color: runningColor,
+        states: [
+            /*
+                The server will not return these states. These are solely for populating
+                the heatmap for task slot usage.
+            */
+            { state: NodeState.running25, color: "#B1D5D4"},
+            { state: NodeState.running50, color: "#8CC3B0"},
+            { state: NodeState.running75, color: "#4EB17C"},
+            { state: NodeState.running99, color: "#22A042"},
+            { state: NodeState.running100, color: runningColor},
+        ],
+    },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
     { state: NodeState.offline, color: "#305796" },
     { state: NodeState.preempted, color: "#606060" },
@@ -88,6 +104,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public selectedNodeId = new BehaviorSubject<string>(null);
     public selectedNode = new BehaviorSubject<Node>(null);
     public highlightedState: string;
+    public expandedCategory: string;
 
     public dimensions = {
         tileSize: 0,
@@ -224,12 +241,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .attr("height", z);
 
         const backgroundGroup = nodeEnter.append("g").classed("bg", true).merge(groups.select("g.bg"));
-        const runningTaskGroup = nodeEnter.append("g").classed("tasks", true).merge(groups.select("g.tasks"));
+        // tslint:disable-next-line: max-line-length
+        const runningTaskSlotsGroup = nodeEnter.append("g").classed("taskslots", true).merge(groups.select("g.taskslots"));
         const lowPriOverlayGroup = nodeEnter.append("g").classed("lowpri", true).merge(groups.select("g.lowpri"));
         const title = nodeEnter.append("title").merge(groups.select("title"));
 
         this._displayNodeBackground(backgroundGroup, z);
-        this._displayRunningTasks(runningTaskGroup, z);
+        this._displayRunningTaskSlots(runningTaskSlotsGroup, z);
         this._displayLowPriOverlay(lowPriOverlayGroup, z);
         this._displayTileTooltip(title);
     }
@@ -285,50 +303,35 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         return d3.color(color) as any;
     }
 
-    private _displayRunningTasks(taskGroup, z) {
+    private _displayRunningTaskSlots(taskSlotGroup, z) {
         if (z === 0) { // When switching between the graphs there is a moment where the width/height is 0
             return;
         }
 
-        const runningTaskRects = taskGroup.selectAll("rect").data((d) => {
+        const runningTaskSlotRects = taskSlotGroup.selectAll("rect").data((d) => {
             const node: Node = d.node;
-            return this._computeRunningTaskTilesDimensions(node, z);
-        });
-
-        runningTaskRects.enter().append("rect").merge(runningTaskRects)
-            .attr("transform", (data) => {
-                // const index = data.index;
-                const x = z - data.position;
-                return `translate(0,${x})`;
-            })
-            .attr("width", z)
-            .attr("height", (data) => data.taskHeight)
-            .style("fill", runningColor);
-
-        runningTaskRects.exit().remove();
-    }
-
-    private _computeRunningTaskTilesDimensions(node: Node, tileSize: number) {
-        if (node.state !== NodeState.running) {
-            return [];
-        }
-        const { taskHeight, combine, remaining } = this._getTaskHeight(tileSize, node);
-        if (combine) {
-            return [{ node, index: 0, taskHeight, position: taskHeight }];
-        }
-        const count = Math.max(node.runningTasksCount, 0);
-        let extra = remaining;
-        let position = 0;
-        const array = new Array(count).fill(0).map((task, index) => {
-            let height = taskHeight;
-            if (extra > 0) {
-                extra--;
-                height++;
+            if (node.state !== NodeState.running) {
+                return [];
+            };
+            const percentageUsed = NodeUtils.getTaskSlotsUsagePercent(node, this.pool);
+            if (percentageUsed <= 25) {
+                return [this.colors.get(NodeState.running25)];
+            } else if (percentageUsed <= 50) {
+                return [this.colors.get(NodeState.running50)];
+            } else if (percentageUsed <= 75) {
+                return [this.colors.get(NodeState.running75)];
+            } else if (percentageUsed <= 99) {
+                return [this.colors.get(NodeState.running99)];
+            } else {
+                return [this.colors.get(NodeState.running100)];
             }
-            position += height + 1;
-            return { node, index, taskHeight: height, position };
         });
-        return array;
+
+        runningTaskSlotRects.enter().append("rect").merge(runningTaskSlotRects)
+            .attr("width", z)
+            .attr("height", z)
+            .style("fill", (data) => data);
+        runningTaskSlotRects.exit().remove();
     }
 
     /**
@@ -341,7 +344,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
      */
     private _displayTileTooltip(titleNode) {
         titleNode.text((tile) => {
-            const count = tile.node.runningTasksCount;
+            const taskCount = tile.node.runningTasksCount;
+            const taskSlotsCount = tile.node.runningTaskSlotsCount;
             if (tile.node.state === NodeState.unusable) {
                 return `Error: Unusable state on node (${tile.node.id})`;
             } else if (tile.node.state === NodeState.startTaskFailed) {
@@ -349,24 +353,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             } else if (tile.node.state === NodeState.unknown) {
                 return `Error: Unknown state on node (${tile.node.id})`;
             } else {
-                return `${count} tasks running on node (${tile.node.id})`;
+                return `${taskCount} tasks (${taskSlotsCount}/${this.pool.taskSlotsPerNode} slots) running on node (${tile.node.id})`;
             }
        });
     }
 
-    private _getTaskHeight(tileSize: number, node: Node) {
-        const taskSlotsPerNode = this.pool.taskSlotsPerNode;
-        const taskHeight = Math.floor(tileSize / taskSlotsPerNode);
-        const remaining = tileSize % taskSlotsPerNode;
-        let height;
-        const combine = taskHeight < 2;
-        if (combine) {
-            height = Math.floor(tileSize / taskSlotsPerNode * node.runningTasksCount);
-        } else {
-            height = taskHeight - 1;
-        }
-        return { taskHeight: Math.max(1, height), combine, remaining };
-    }
     /**
      * Compute the dimension of the heatmap.
      *  - rows

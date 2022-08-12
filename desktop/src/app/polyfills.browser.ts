@@ -1,3 +1,4 @@
+// Polyfills
 import "reflect-metadata";
 
 // eslint-disable-next-line

@@ -8,15 +8,11 @@ import {
     ProxyCredentials, ProxySetting, ProxySettings,
 } from "get-proxy-settings";
 import { BehaviorSubject } from "rxjs";
-import { filter, map, take } from "rxjs/operators";
+import { map, take } from "rxjs/operators";
 
 export interface ProxySettingConfiguration {
     settings: ProxySettings | null;
     credentials: ProxyCredentials | null;
-}
-
-function allowInsecureRequest() {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
 @Injectable()
@@ -34,9 +30,8 @@ export class ProxySettingsManager {
 
     public get settings(): Promise<ProxySettings | null> {
         return this._settings.pipe(
-            filter(x => x !== null),
             take(1),
-            map(x => x!.settings),
+            map(x => x?.settings),
         ).toPromise();
     }
 

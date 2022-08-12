@@ -9,21 +9,22 @@ if [ "$AGENT_OS" == "Windows_NT" ]; then
     conf_file="$pyroot/pip.ini"
 else
     conf_file="$pyroot/pip.conf"
-    python_version=3.8.5
+    pyenv_version=2.3.2
+    python_version=3.9.4
 
     echo "Installing pyenv..."
     export PYENV_ROOT="$AGENT_WORKFOLDER/.pyenv"
     archive="$PYENV_ROOT/pyenv.tar.gz"
     mkdir -p "$PYENV_ROOT"
-    curl -s -S -L "https://github.com/pyenv/pyenv/archive/v1.2.20.tar.gz" > "$archive"
-    echo "5ecd10d3ec502ce9b7d8109fbe8cb2e4a8af8b73ce5c216b8e268452724a65f3  $archive" | shasum -c
+    curl -s -S -L "https://github.com/pyenv/pyenv/archive/v${pyenv_version}.tar.gz" > "$archive"
+    echo "f4347e6740e6cd47badc302491b105615a74fbf2  $archive" | shasum -c
     tar xzf "$archive" -C "$PYENV_ROOT" --strip-components=1
     export PATH="$PYENV_ROOT/bin:$PATH"
     pyenv --version
 
     echo "Installing Python $python_version..."
     env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $python_version
-    pyenv global 3.8.5
+    pyenv global "$python_version"
     eval "$(pyenv init -)"
     echo "##vso[task.prependpath]$PYENV_ROOT/bin"
     echo "##vso[task.prependpath]$PYENV_ROOT/shims"

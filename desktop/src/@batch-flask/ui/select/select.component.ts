@@ -132,8 +132,9 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
 
     public set displayedOptions(displayedOptions: SelectOptionComponent[]) {
         this._displayedOptions = displayedOptions;
-        if (this._dropdownRef) { this._dropdownRef.instance.displayedOptions = displayedOptions; }
-        this._keyNavigator.items = displayedOptions;
+        if (this._dropdownRef) {
+            this._dropdownRef.instance.displayedOptions = displayedOptions;
+        }
     }
     public get displayedOptions() { return this._displayedOptions; }
 
@@ -295,6 +296,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
         const injector = new SelectInjector(this, this.injector);
         const portal = new ComponentPortal(SelectDropdownComponent, null, injector);
         const ref = this._dropdownRef = this._overlayRef.attach(portal);
+        ref.instance.keyNavigator = this._keyNavigator;
         ref.instance.id = this.dropdownId;
         ref.instance.displayedOptions = this.displayedOptions;
         ref.instance.focusedOption = this.focusedOption;
@@ -318,6 +320,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
                 this._filterInputEl.nativeElement.focus();
             });
         }
+
         this.changeDetector.markForCheck();
     }
 
@@ -455,6 +458,8 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
         // If the filter makes it that we don't see the currently focusesd option fallback to focussing the first item
         if (!focusedOptionIncluded && this.dropdownOpen && this.filterable && this.filter) {
             this.focusFirstOption();
+        } else {
+            this._keyNavigator.items = options;
         }
         this.changeDetector.markForCheck();
     }

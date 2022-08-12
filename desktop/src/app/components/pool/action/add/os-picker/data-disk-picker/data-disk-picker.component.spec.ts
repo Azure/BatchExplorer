@@ -89,7 +89,7 @@ describe("DataDiskPickerComponent", () => {
         });
     });
 
-    it("udpates the editable table with changes", () => {
+    it("updates the editable table with changes", () => {
         testComponent.disks.setValue([new DataDiskDto({
             caching: CachingType.Readonly,
             diskSizeGB: 1024,
