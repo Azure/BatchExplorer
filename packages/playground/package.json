@@ -1,7 +1,7 @@
 {
   "name": "@batch/ui-playground",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Playground for Azure Batch Shared Component Library",
   "repository": {
     "type": "git",
@@ -62,12 +62,11 @@
     "react-dom": ">=16.13.1 <17.0.0",
     "tslib": "~2.3.1"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@batch/common-config": "^1.0.0",
-    "@batch/ui-common": "^1.0.0",
-    "@batch/ui-react": "^1.0.0",
-    "@batch/ui-service": "^1.0.0",
+    "@batch/common-config": "^0.0.1",
+    "@batch/ui-common": "^0.0.1",
+    "@batch/ui-react": "^0.0.1",
+    "@batch/ui-service": "^0.0.1",
     "@testing-library/dom": "^8.0.0",
     "@testing-library/react": "^12.0.0",
     "@testing-library/react-hooks": "^7.0.0",

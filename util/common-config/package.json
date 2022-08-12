@@ -1,7 +1,7 @@
 {
   "name": "@batch/common-config",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Common configuration for Batch UI libraries",
   "repository": {
     "type": "git",
