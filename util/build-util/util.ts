@@ -16,6 +16,8 @@ export const configFile = path.resolve(
     ".config/batch/butil.json"
 );
 
+export const defaultPrereleaseTag = "dev";
+
 const portalReactPath = "src/src/BatchExtension/Client/ReactViews";
 const defaultJsonIndentSize = 2;
 const printJsonIndentSize = 4;
@@ -39,6 +41,8 @@ interface PackageJson {
         [name: string]: string;
     };
 }
+
+type PackageConfigMapType = { [path: string]: PackageJson };
 
 export const VersionReleaseTypes = {
     major: "major",
@@ -297,11 +301,11 @@ export async function configure(options: ConfigureCommandOptions) {
     }
 }
 
-export async function bumpVersion(releaseType: ReleaseType) {
+export async function bumpVersion(releaseType: ReleaseType, tag: string) {
     const basePath = await getBasePath();
     const packageConfigs = await loadPackageConfigs();
     const currentVersion = getCurrentVersion(packageConfigs);
-    const targetVersion = semver.inc(currentVersion, releaseType);
+    const targetVersion = semver.inc(currentVersion, releaseType, tag);
     if (!targetVersion) {
         error(
             `Unable to determine next ${releaseType} version of ` +
@@ -309,7 +313,11 @@ export async function bumpVersion(releaseType: ReleaseType) {
         );
         process.exit(1);
     }
-    console.log(`Bumping ${currentVersion} to ${targetVersion}`);
+
+    const operations = [];
+    const ppn = color.bold;
+    const pcv = color.yellow;
+    const ptv = color.green;
 
     // Update the package version
     const fixedVersionPackageNames: string[] = [];
@@ -317,40 +325,166 @@ export async function bumpVersion(releaseType: ReleaseType) {
         const config = packageConfigs[packagePath];
         config.version = targetVersion;
         fixedVersionPackageNames.push(config.name);
+        operations.push(
+            `${ppn(config.name)}: ${pcv(currentVersion)} ` +
+                `=> ${ptv(targetVersion)}`
+        );
     }
 
-    const updateDependencies = (
+    console.log("Summary of changes:\n\n", operations.join("\n"));
+    const { confirmSave } = await inquirer.prompt([
+        { type: "confirm", name: "confirmSave", message: "Proceed?" },
+    ]);
+
+    if (confirmSave) {
+        const saveOperations = [];
+        for (const packagePath of allPackages) {
+            const filename = path.join(basePath, packagePath, "package.json");
+            saveOperations.push(
+                saveJson(filename, packageConfigs[packagePath])
+            );
+        }
+        await saveOperations;
+        info("Done.");
+    }
+}
+
+/**
+ * [WIP]
+ *
+ * Update dependencies and devDependencies.
+ *
+ * @param targetVersion The target version to update to
+ */
+export async function updateDependencies(targetVersion: string) {
+    const operations = [];
+    const ppn = color.bold;
+    const pcv = color.yellow;
+    const ptv = color.green;
+
+    const packageConfigs = await loadPackageConfigs();
+
+    const fixedVersionPackageNames: string[] = [];
+    for (const packagePath of fixedVersionPackages) {
+        fixedVersionPackageNames.push(packageConfigs[packagePath].name);
+    }
+
+    const runUpdate = (
         config: PackageJson,
         type: "dependencies" | "devDependencies"
     ) => {
         if (config[type]) {
+            let printedHeader = false;
             for (const dependency of fixedVersionPackageNames) {
                 if (dependency in config[type]) {
+                    const currentVersion = config[type][dependency];
                     config[type][dependency] = `^${targetVersion}`;
+                    if (!printedHeader) {
+                        operations.push(`${ppn(config.name)}.${type}:`);
+                        printedHeader = true;
+                    }
+                    operations.push(
+                        `  ${dependency}@${pcv(currentVersion)} => ` +
+                            `${ptv("^" + targetVersion)}`
+                    );
                 }
             }
         }
     };
 
     // Update dependency and devDependency versions
-    info("Updating dependencies...");
     for (const packagePath of allPackages) {
         const config = packageConfigs[packagePath];
-        updateDependencies(config, "dependencies");
-        updateDependencies(config, "devDependencies");
+        runUpdate(config, "dependencies");
+        runUpdate(config, "devDependencies");
     }
+}
 
-    const saveOperations = [];
-    for (const packagePath of allPackages) {
+interface PublishCommandOptions {
+    tag?: string;
+    confirm?: boolean;
+    npmconfig?: string;
+}
+
+export async function publishPackages(options: PublishCommandOptions) {
+    const { tag, confirm = true, npmconfig } = options;
+    const basePath = await getBasePath();
+    const packageConfigs = await loadPackageConfigs(publicPackages);
+    const npm = npmconfig ? `npm --userconfig ${npmconfig}` : `npm`;
+    const confirmLines = [""];
+    for (const packagePath in packageConfigs) {
         const config = packageConfigs[packagePath];
-        const filename = path.join(basePath, packagePath, "package.json");
-        saveOperations.push(saveJson(filename, config));
+
+        info(`Building ${config.name}`);
+        shell.exec(`${npm} run -s build -- --scope ${config.name}`, {
+            silent: true,
+        });
+        if (confirm) {
+            const { version, numFiles, registry } = publishPreview(
+                npm,
+                path.join(basePath, packagePath)
+            );
+            confirmLines.push(
+                color.blue(config.name),
+                `Version: ${color.yellow(version)}`,
+                `Files: ${color.yellow(numFiles)}`,
+                `Registry ${color.yellow(registry)}`
+            );
+        }
     }
 
-    info("Saving files...");
-    await saveOperations;
+    let publish = false;
+    if (confirm) {
+        console.log(confirmLines.join("\n"), "\n");
+        const { confirmPublish } = await inquirer.prompt([
+            {
+                type: "confirm",
+                name: "confirmPublish",
+                message: "Publish?",
+                default: false,
+            },
+        ]);
 
-    info("Done.");
+        publish = confirmPublish;
+    } else {
+        publish = true;
+    }
+
+    if (publish) {
+        info("");
+        for (const packagePath in packageConfigs) {
+            info(`Publishing ${packageConfigs[packagePath].name} with ${tag}`);
+            const absPath = path.join(basePath, packagePath);
+            shell.exec(
+                `${npm} publish ${absPath} ${tag ? "--tag " + tag : ""}`
+            );
+        }
+    }
+}
+
+function publishPreview(
+    npm: string,
+    packagePath: string
+): {
+    version: string;
+    numFiles: string;
+    registry: string;
+} {
+    const { stdout } = shell.exec(
+        `${npm} publish --dry-run ${packagePath} 2>&1`,
+        {
+            silent: true,
+        }
+    );
+    const extract = (regex: RegExp) => {
+        const m = stdout.match(regex);
+        return m ? m[1] : "N/A";
+    };
+    return {
+        version: extract(/npm notice version:\s+(\S+)/),
+        numFiles: extract(/npm notice total files:\s+(\d+)/),
+        registry: extract(/npm notice Publishing to\s+(\S+)/),
+    };
 }
 
 interface LinkOptions {
@@ -434,14 +568,14 @@ function printJson(json: object) {
     info(JSON.stringify(json, null, printJsonIndentSize));
 }
 
-type PackageConfigMapType = { [path: string]: PackageJson };
-
-async function loadPackageConfigs(): Promise<PackageConfigMapType> {
+async function loadPackageConfigs(
+    packages = allPackages
+): Promise<PackageConfigMapType> {
     const basePath = await getBasePath();
 
     const configs: PackageConfigMapType = {};
 
-    for (const packagePath of allPackages) {
+    for (const packagePath of packages) {
         const json = readJsonOrDefault(
             path.join(basePath, packagePath, "package.json")
         );

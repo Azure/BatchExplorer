@@ -19,6 +19,8 @@ import {
     unlinkLocalProjects,
     ReleaseType,
     VersionReleaseTypes,
+    defaultPrereleaseTag,
+    publishPackages,
 } from "./util";
 
 yargs
@@ -131,11 +133,36 @@ yargs
         command: "bump <type>",
         describe: "Increment the version of all packages",
         builder: (yargs: yargs.Argv) =>
-            yargs.positional("type", {
-                describe: "The version type to increment",
-                type: "string",
-                choices: Object.keys(VersionReleaseTypes),
-            }),
-        handler: (argv) => bumpVersion(argv.type as ReleaseType),
+            yargs
+                .positional("type", {
+                    describe: "The version type to increment",
+                    type: "string",
+                    choices: Object.keys(VersionReleaseTypes),
+                })
+                .option("tag", {
+                    describe: "Tag for prereleases",
+                    default: defaultPrereleaseTag,
+                    type: "string",
+                }),
+        handler: (argv) => bumpVersion(argv.type as ReleaseType, argv.tag),
+    })
+    .command({
+        command: "publish",
+        describe: "Publish public packages to the registry",
+        builder: (yargs: yargs.Argv) =>
+            yargs
+                .option("tag", {
+                    describe: "Which distribution tag to apply",
+                    type: "string",
+                })
+                .option("confirm", {
+                    describe: "Confirm details before publishing?",
+                    default: true,
+                })
+                .option("npmconfig", {
+                    describe: "Custom NPM user configuration file (.npmrc)",
+                    type: "string",
+                }),
+        handler: (argv) => publishPackages(argv),
     })
     .help().argv;
