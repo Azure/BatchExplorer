@@ -3,8 +3,7 @@ import { FormControlProps } from "./form-control";
 
 import { Checkbox as FluentCheckbox } from "@fluentui/react/lib/Checkbox";
 
-export interface CheckboxProps<V>
-    extends FormControlProps<boolean | undefined> {
+export interface CheckboxProps extends FormControlProps<boolean | undefined> {
     checked?: boolean;
     defaultChecked?: boolean;
     indeterminate?: boolean;
@@ -12,7 +11,7 @@ export interface CheckboxProps<V>
     boxSide?: "start" | "end";
 }
 
-export function Checkbox<V>(props: CheckboxProps<V>): JSX.Element {
+export function Checkbox(props: CheckboxProps): JSX.Element {
     if (props.hidden) {
         return <></>;
     }
