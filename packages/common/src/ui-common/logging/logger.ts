@@ -1,12 +1,11 @@
 export type LogLevel = "info" | "debug" | "warn" | "error";
 
 export interface Logger {
-    info(message: string): void;
+    info(message: string, ...args: unknown[]): void;
 
-    debug(message: string): void;
+    debug(message: string, ...args: unknown[]): void;
 
-    warn(message: string): void;
+    warn(message: string, ...args: unknown[]): void;
 
-    error(message: string): void;
-    error<T extends Error>(message: string, error: T): void;
+    error(message: string, ...args: unknown[]): void;
 }
