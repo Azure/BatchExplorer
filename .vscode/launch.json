@@ -7,7 +7,7 @@
   "configurations": [
     {
       "name": "Web: Launch",
-      "type": "pwa-chrome",
+      "type": "chrome",
       "request": "launch",
       "preLaunchTask": "Start web dev server",
       "url": "http://127.0.0.1:9000",
@@ -31,12 +31,12 @@
         "--inspect-brk",
         "./node_modules/.bin/jest",
         "--runInBand",
+        "--testTimeout=3600000",
         "--watch"
       ],
       "cwd": "${workspaceRoot}/web",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "port": 9229,
       "presentation": {
         "group": "Web",
         "order": 20
@@ -50,12 +50,12 @@
         "--inspect-brk",
         "./node_modules/.bin/jest",
         "--runInBand",
+        "--testTimeout=3600000",
         "--watch"
       ],
       "cwd": "${workspaceRoot}/packages/common",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "port": 9229,
       "presentation": {
         "group": "Packages",
         "order": 10
@@ -69,12 +69,12 @@
         "--inspect-brk",
         "./node_modules/.bin/jest",
         "--runInBand",
+        "--testTimeout=3600000",
         "--watch"
       ],
       "cwd": "${workspaceRoot}/packages/react",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "port": 9229,
       "presentation": {
         "group": "Packages",
         "order": 20
@@ -88,12 +88,12 @@
         "--inspect-brk",
         "./node_modules/.bin/jest",
         "--runInBand",
+        "--testTimeout=3600000",
         "--watch"
       ],
       "cwd": "${workspaceRoot}/packages/service",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "port": 9229,
       "presentation": {
         "group": "Packages",
         "order": 20
@@ -133,7 +133,7 @@
     },
     {
       "name": "Desktop: Attach Debugger to Render Process",
-      "type": "pwa-chrome",
+      "type": "chrome",
       "request": "attach",
       "port": 9222,
       "sourceMaps": true,
