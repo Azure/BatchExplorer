@@ -1,3 +1,5 @@
+import { ValidationStatus } from "@batch/ui-common/lib/form";
+
 /**
  * Shared properties for all form controls
  */
@@ -29,6 +31,12 @@ export interface FormControlProps<V> {
     disabled?: boolean;
 
     /**
+     * If true, the form value has been modified by the user and validation
+     * messages should be displayed.
+     */
+    dirty?: boolean;
+
+    /**
      * If true, the form control will be visibly hidden
      */
     hidden?: boolean;
@@ -42,7 +50,12 @@ export interface FormControlProps<V> {
     /**
      * The currently displayed error message
      */
-    errorMessage?: string;
+    validationStatus?: ValidationStatus;
+
+    /**
+     * If true, will always display validation errors/warnings
+     */
+    validationForced?: boolean;
 
     /**
      * A user-visible label associated with the form control

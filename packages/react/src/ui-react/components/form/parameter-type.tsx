@@ -145,10 +145,13 @@ export function StringParamTextField<
     return (
         <TextField
             id={id}
+            dirty={param.dirty}
             label={param.label}
             value={value}
+            validationStatus={param.validationStatus}
             onChange={(newValue: string | undefined) => {
                 param.value = newValue as V[K];
+                param.dirty = true;
             }}
         />
     );

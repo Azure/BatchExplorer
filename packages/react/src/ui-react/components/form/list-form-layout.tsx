@@ -23,7 +23,7 @@ export class ListFormLayout implements FormLayout {
         this._renderChildEntries(form.childEntries(), rows);
 
         return (
-            <div style={{ maxWidth: "480px" }}>
+            <div role="form" style={{ maxWidth: "480px" }}>
                 <h2 style={{ marginBottom: "16px" }}>
                     {form.title ?? "Untitled form"}
                 </h2>

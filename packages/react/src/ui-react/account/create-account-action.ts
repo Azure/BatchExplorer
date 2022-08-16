@@ -1,5 +1,7 @@
 import { createForm, Form } from "@batch/ui-common";
 import { AbstractAction } from "@batch/ui-common/lib/action";
+import { ValidationStatus } from "@batch/ui-common/lib/form";
+import { delayedCallback } from "@batch/ui-common/lib/util";
 import { ParameterType } from "../components/form";
 
 export type CreateAccountFormValues = {
@@ -31,8 +33,18 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
         });
         form.param("accountName", ParameterType.BatchAccountName, {
             label: "Account name",
+            required: true,
             description:
                 "This is how you identify your Batch account. It must be unique.",
+            onValidateAsync: async (value) => {
+                if (value && !(await isAccountNameAvailable(value))) {
+                    return new ValidationStatus(
+                        "error",
+                        `An account named ${value} already exists`
+                    );
+                }
+                return new ValidationStatus("ok");
+            },
         });
         form.param("location", ParameterType.LocationId, {
             label: "Location",
@@ -69,39 +81,34 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
         return form;
     }
 
-    async onValidate(): Promise<void> {
-        const accountName = this.form.values.accountName;
-        if (accountName) {
-            const nameAvailable = await isAccountNameAvailable(accountName);
-            if (!nameAvailable) {
-                this.form.error(
-                    "accountName",
-                    `An account named ${accountName} already exists`
-                );
-            }
-        }
+    onValidateSync(): ValidationStatus {
+        return new ValidationStatus("ok");
     }
 
-    async execute(formValues: CreateAccountFormValues): Promise<void> {
+    async onValidateAsync(): Promise<ValidationStatus> {
+        return new ValidationStatus("ok");
+    }
+
+    async onExecute(formValues: CreateAccountFormValues): Promise<void> {
         alert("Would write form values: " + formValues);
     }
 }
 
 async function isAccountNameAvailable(accountName: string): Promise<boolean> {
-    // TODO: Replace this with a real implementation
+    // TODO: Replace this with a real implementation and create a
+    //       parameter type for account name
     const existingAccountNames = new Set<string>([
         "one",
         "two",
         "three",
         "test",
     ]);
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            let isAvailable = true;
-            if (accountName && existingAccountNames.has(accountName)) {
-                isAvailable = false;
-            }
-            resolve(isAvailable);
-        }, 0);
-    });
+
+    return delayedCallback(() => {
+        let isAvailable = true;
+        if (accountName && existingAccountNames.has(accountName)) {
+            isAvailable = false;
+        }
+        return isAvailable;
+    }, 200);
 }

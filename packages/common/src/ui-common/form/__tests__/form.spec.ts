@@ -1,4 +1,10 @@
-import { createForm, ParameterType, FormValues } from "../form";
+import { delayedCallback } from "../../util";
+import {
+    createForm,
+    ParameterType,
+    FormValues,
+    ValidationStatus,
+} from "../form";
 
 describe("Form tests", () => {
     test("Single parameter form", () => {
@@ -148,4 +154,215 @@ describe("Form tests", () => {
             },
         });
     });
+
+    test("Form validation", async () => {
+        const form = createNationalParkForm();
+
+        const validationPromise = form.validate();
+
+        // Validation is async, so status will not be defined until
+        // all validation promises resolve
+        expect(form.validationStatus).toBeUndefined();
+
+        await validationPromise;
+
+        // When there are multiple errors, the message includes the
+        // error count
+        expect(form.validationStatus?.level).toEqual("error");
+        expect(form.validationStatus?.message).toEqual("2 errors found");
+        expect(form.entryValidationStatus.parkName?.level).toEqual("error");
+        expect(form.entryValidationStatus.parkName?.message).toEqual(
+            "Park name is required"
+        );
+        expect(form.entryValidationStatus.state?.level).toEqual("error");
+        expect(form.entryValidationStatus.state?.message).toEqual(
+            "State is required"
+        );
+
+        form.values.parkName = "Yosemite";
+        await form.validate();
+        // Required validation takes precedence over onValidate()
+        expect(form.validationStatus?.level).toEqual("error");
+        expect(form.validationStatus?.message).toEqual("State is required");
+
+        form.values.state = "California";
+        await form.validate();
+        // The state is now defined, but still invalid due to onValidate()
+        expect(form.validationStatus?.level).toEqual("error");
+        expect(form.validationStatus?.message).toEqual(
+            "State must be exactly 2 characters"
+        );
+
+        form.values.state = "CA";
+        await form.validate();
+        // Good
+        expect(form.validationStatus?.level).toEqual("ok");
+        expect(form.validationStatus?.message).toBeUndefined();
+
+        // Add a parameter with async validation
+        form.param("squareMiles", ParameterType.Number, {
+            onValidateAsync: async (value) => {
+                return delayedCallback(() => {
+                    if (value != null) {
+                        if (typeof value !== "number") {
+                            return new ValidationStatus(
+                                "error",
+                                "Mileage must be a number"
+                            );
+                        }
+                        if (value <= 0) {
+                            return new ValidationStatus(
+                                "error",
+                                "Mileage must be a positive number"
+                            );
+                        }
+                    }
+                    return new ValidationStatus("ok");
+                }, 0);
+            },
+        });
+
+        // Still valid when squareMiles is undefined
+        await form.validate();
+        expect(form.validationStatus?.level).toEqual("ok");
+        expect(form.validationStatus?.message).toBeUndefined();
+
+        // Invalid square mileage
+        form.values.squareMiles = -123;
+        await form.validate();
+        expect(form.validationStatus?.level).toEqual("error");
+        expect(form.validationStatus?.message).toEqual(
+            "Mileage must be a positive number"
+        );
+
+        form.values.squareMiles = 1187;
+        // Good
+        await form.validate();
+        expect(form.validationStatus?.level).toEqual("ok");
+        expect(form.validationStatus?.message).toBeUndefined();
+
+        // When calling validate() multiple times in rapid succession,
+        // the last call always wins
+        form.values.squareMiles = -1;
+        form.validate();
+        form.values.squareMiles = 1;
+        form.validate();
+        form.values.squareMiles = "not-a-number" as unknown as number;
+        await form.validate();
+        expect(form.validationStatus?.level).toEqual("error");
+        expect(form.validationStatus?.message).toEqual(
+            "Mileage must be a number"
+        );
+
+        // Make the form valid again
+        form.values.squareMiles = 1;
+
+        // Subsequence calls to validate() will cancel snapshots which
+        // are in progress, but not if force is true
+        const validateAndPreempt = (force: boolean = false) => {
+            const promise = form.validate({ force });
+            form.validate();
+            return promise;
+        };
+        expect((await validateAndPreempt()).overallStatus?.level).toEqual(
+            "canceled"
+        );
+        expect((await validateAndPreempt(true)).overallStatus?.level).toEqual(
+            "ok"
+        );
+    });
+
+    test("Form waitForValidation() function", async () => {
+        const form = createNationalParkForm();
+
+        // Add a parameter with async validation
+        form.param("squareMiles", ParameterType.Number, {
+            required: true,
+            onValidateAsync: async (value) => {
+                return delayedCallback(() => {
+                    if (value != null) {
+                        if (typeof value !== "number") {
+                            return new ValidationStatus(
+                                "error",
+                                "Mileage must be a number"
+                            );
+                        }
+                        if (value <= 0) {
+                            return new ValidationStatus(
+                                "error",
+                                "Mileage must be a positive number"
+                            );
+                        }
+                    }
+                    return new ValidationStatus("ok");
+                }, 0);
+            },
+        });
+
+        // Begin in an error state
+        await form.validate();
+        expect(form.validationStatus?.level).toEqual("error");
+        expect(form.entryValidationStatus.parkName?.level).toEqual("error");
+        expect(form.entryValidationStatus.state?.level).toEqual("error");
+        expect(form.entryValidationStatus.squareMiles?.level).toEqual("error");
+
+        // Because waitForValidation() is always non-blocking, calling
+        // it first here will still wait for subsequent blocking
+        // calls to validate() to finish
+        const validationPromise = form.waitForValidation();
+
+        // Trigger many validations in a row, importantly including an async
+        // validation so that the promise returned by waitForValidation() will
+        // not immediately resolve. The form starts out in an invalid state
+        // due to squareMiles and state.
+        form.values.parkName = "Yosemite";
+        form.validate();
+        form.values.squareMiles = -123;
+        form.validate();
+        form.values.state = "invalid";
+        form.validate();
+        form.values.squareMiles = 1187;
+        form.validate();
+        form.values.state = "CA";
+        form.validate(); // Only this call actually makes the form valid
+
+        const validationStatus = await validationPromise;
+        expect(form.validationStatus?.level).toEqual("ok");
+
+        // Form's validation status and the one returned by waitForValidation()
+        // should be the exact same object reference
+        expect(validationStatus).toBe(form.validationStatus);
+    });
 });
+
+function createNationalParkForm() {
+    type NationalParkFormValues = {
+        parkName?: string;
+        state?: string;
+        squareMiles?: number;
+    };
+
+    const form = createForm<NationalParkFormValues>({
+        values: {},
+    });
+
+    form.param("parkName", ParameterType.String, {
+        label: "Park name",
+        required: true,
+    });
+
+    form.param("state", ParameterType.String, {
+        required: true,
+        onValidateAsync: async (value) => {
+            if (value && value.length === 2) {
+                return new ValidationStatus("ok");
+            }
+            return new ValidationStatus(
+                "error",
+                "State must be exactly 2 characters"
+            );
+        },
+    });
+
+    return form;
+}

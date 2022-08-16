@@ -8,9 +8,16 @@ import { TextField as FluentTextField } from "@fluentui/react/lib/TextField";
 export function TextField(
     props: FormControlProps<string | undefined>
 ): JSX.Element {
+    const { dirty, validationForced, validationStatus } = props;
+
     if (props.hidden) {
         return <></>;
     }
+
+    const errorMessage =
+        (dirty || validationForced) && validationStatus?.level === "error"
+            ? validationStatus?.message
+            : undefined;
 
     return (
         <FluentTextField
@@ -18,7 +25,7 @@ export function TextField(
             ariaLabel={props.ariaLabel}
             className={props.className}
             disabled={props.disabled}
-            errorMessage={props.errorMessage}
+            errorMessage={errorMessage}
             value={props.value == null ? "" : props.value}
             onChange={(_, newValue) => {
                 if (props.onChange) {
