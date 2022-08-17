@@ -27,7 +27,7 @@
     "compile": "tsc -b ./config/tsconfig.build.json",
     "clean": "run-p clean:*",
     "clean:build": "butil rmrf ./build",
-    "clean:lib": "butil rmrf ./lib",
+    "clean:esm": "butil rmrf ./lib",
     "clean:umd": "butil rmrf ./lib-umd",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
