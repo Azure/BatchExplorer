@@ -1,0 +1,6 @@
+{
+  "plugins": ["jest"],
+  "rules": {
+    "jest/no-focused-tests": "error"
+  }
+}

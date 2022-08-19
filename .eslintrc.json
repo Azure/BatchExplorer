@@ -1,4 +1,8 @@
 {
   "root": true,
-  "extends": ["./util/common-config/.eslintrc-common.json", "prettier"]
+  "extends": [
+    "./util/common-config/.eslintrc-common.json",
+    "./util/common-config/.eslintrc-tests.json",
+    "prettier"
+  ]
 }
