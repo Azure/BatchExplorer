@@ -201,11 +201,11 @@ export function StorageAccountDropdown<
     }, [subscriptionId]);
 
     useEffect(() => {
-        const handler = form.onChange((values: FormValues) =>
+        const handler = form.on("change", (values: FormValues) =>
             setSubscriptionId(values.subscriptionId as string)
         );
-        return () => form.removeOnChange(handler);
-    });
+        return () => form.off("change", handler);
+    }, [form]);
 
     const options = storageAccounts.map((sub) => {
         return { value: sub.id, label: sub.name };

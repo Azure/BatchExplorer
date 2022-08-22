@@ -153,6 +153,11 @@ export type ValidationOpts = {
 
 const defaultValidationOpts = { force: false };
 
+export type FormEventMap<V extends FormValues> = {
+    change: (newValues: V, oldValues: V) => void;
+    validate: (snapshot: ValidationSnapshot<V>) => void;
+};
+
 /**
  * A form which may contain child entries, and may be nested inside an entry itself
  * A form's value is an object with key/value pairs representing parameter names
@@ -249,6 +254,30 @@ export interface Form<V extends FormValues> {
      * current validation status.
      */
     waitForValidation(): Promise<ValidationStatus | undefined>;
+
+    /**
+     * Subscribe to form events. When the form event is triggered, the handler
+     * is called. This method returns the handler as a convenience to allow for
+     * easy cleanup.
+     * @param event The type of event to listen to
+     * @param handler The callback invoked when the event is triggered
+     * @see off()
+     */
+    on<E extends keyof FormEventMap<V>>(
+        event: E,
+        handler: FormEventMap<V>[E]
+    ): FormEventMap<V>[E];
+
+    /**
+     * Unsubscribe from form events
+     * @param event The type of event to unsubscribe from
+     * @param handler The handler to remove
+     * @see on()
+     */
+    off<E extends keyof FormEventMap<V>>(
+        event: E,
+        handler: FormEventMap<V>[E]
+    ): void;
 }
 
 export class ValidationSnapshot<V extends FormValues> {
@@ -726,6 +755,21 @@ class FormImpl<V extends FormValues> implements Form<V> {
         return this.validationStatus;
     }
 
+    on<E extends keyof FormEventMap<V>>(
+        event: E,
+        handler: FormEventMap<V>[E]
+    ): FormEventMap<V>[E] {
+        this._emitter.addListener(event, handler);
+        return handler;
+    }
+
+    off<E extends keyof FormEventMap<V>>(
+        event: E,
+        handler: FormEventMap<V>[E]
+    ): void {
+        this._emitter.removeListener(event, handler);
+    }
+
     /**
      * Internal method to register a new entry in this form.
      *
@@ -882,10 +926,10 @@ export class SubForm<
         return this.form.getSubForm(name);
     }
 
-    updateValue<
-        SK extends Extract<keyof S, string>,
-        S2 extends S[SK] & FormValues
-    >(name: SK, value: S2): void {
+    updateValue<SK extends Extract<keyof S, string>, SV extends S[SK]>(
+        name: SK,
+        value: SV
+    ): void {
         this.form.updateValue(name, value);
     }
 
@@ -909,6 +953,20 @@ export class SubForm<
 
     async waitForValidation(): Promise<ValidationStatus | undefined> {
         return this.form.waitForValidation();
+    }
+
+    on<E extends keyof FormEventMap<S>>(
+        event: E,
+        handler: FormEventMap<S>[E]
+    ): FormEventMap<S>[E] {
+        return this.form.on(event, handler);
+    }
+
+    off<E extends keyof FormEventMap<S>>(
+        event: E,
+        handler: FormEventMap<S>[E]
+    ): void {
+        this.form.off(event, handler);
     }
 }
 
