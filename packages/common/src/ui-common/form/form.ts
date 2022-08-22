@@ -5,7 +5,7 @@ import {
     cloneDeep,
     Deferred,
     delay,
-    OrderedMap,
+    OrderedMap
 } from "../util";
 
 export type FormValues = Record<string, unknown>;
@@ -154,6 +154,8 @@ export type ValidationOpts = {
 
 const defaultValidationOpts = { force: false };
 
+export type FormChangeHandler<V> = (newValues: V, oldValues: V) => void;
+
 /**
  * A form which may contain child entries, and may be nested inside an entry itself
  * A form's value is an object with key/value pairs representing parameter names
@@ -250,6 +252,9 @@ export interface Form<V extends FormValues> {
      * current validation status.
      */
     waitForValidation(): Promise<ValidationStatus | undefined>;
+
+    onChange(handler: FormChangeHandler<V>): FormChangeHandler<V>;
+    removeOnChange(handler: FormChangeHandler<V>): void;
 }
 
 export class ValidationSnapshot<V extends FormValues> {
@@ -733,6 +738,15 @@ class FormImpl<V extends FormValues> implements Form<V> {
         return this.validationStatus;
     }
 
+    onChange(handler: FormChangeHandler<V>): FormChangeHandler<V> {
+        this._emitter.addListener("change", handler);
+        return handler;
+    }
+
+    removeOnChange(handler: FormChangeHandler<V>): void {
+        this._emitter.removeListener("change", handler);
+    }
+
     /**
      * Internal method to register a new entry in this form.
      *
@@ -904,7 +918,7 @@ export class SubForm<
 
     updateValue<
         SK extends Extract<keyof S, string>,
-        S2 extends S[SK] & FormValues
+        S2 extends S[SK]
     >(name: SK, value: S2): void {
         this.form.updateValue(name, value);
     }
@@ -929,6 +943,14 @@ export class SubForm<
 
     async waitForValidation(): Promise<ValidationStatus | undefined> {
         return this.form.waitForValidation();
+    }
+
+    onChange(handler: FormChangeHandler<S>): FormChangeHandler<S> {
+        return this.form.onChange(handler);
+    }
+
+    removeOnChange(handler: FormChangeHandler<S>): void {
+        this.form.removeOnChange(handler);
     }
 }
 

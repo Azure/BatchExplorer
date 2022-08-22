@@ -1,9 +1,6 @@
 import { delayedCallback } from "../../util";
 import {
-    createForm,
-    ParameterType,
-    FormValues,
-    ValidationStatus,
+    createForm, FormValues, ParameterType, ValidationStatus
 } from "../form";
 
 describe("Form tests", () => {
@@ -332,6 +329,77 @@ describe("Form tests", () => {
         // Form's validation status and the one returned by waitForValidation()
         // should be the exact same object reference
         expect(validationStatus).toBe(form.validationStatus);
+    });
+
+
+    test("onChange()", () => {
+        type ElfType = {
+            name: string;
+            type: "Valyar" | "Noldor" | "Telerin";
+        };
+        const form = createForm<{
+            hobbit: string;
+            dwarf: string;
+            elf?: ElfType;
+        }>({
+            values: {
+                hobbit: "Bilbo",
+                dwarf: "Gimli",
+            },
+        });
+
+        form.param("hobbit", ParameterType.String);
+
+        const onChangeSpy = jest.fn();
+        const listener = form.onChange(onChangeSpy);
+
+        form.updateValue("hobbit", "Frodo");
+
+        expect(onChangeSpy).toHaveBeenCalledWith(
+            {
+                hobbit: "Frodo",
+                dwarf: "Gimli",
+            },
+            {
+                hobbit: "Bilbo",
+                dwarf: "Gimli",
+            }
+        );
+        form.removeOnChange(listener);
+        onChangeSpy.mockClear();
+
+        form.updateValue("dwarf", "Thorin");
+        expect(onChangeSpy).not.toHaveBeenCalled();
+
+        const elfForm = form.subForm(
+            "elf",
+            createForm<ElfType>({
+                values: {
+                    type: "Noldor",
+                    name: "Gil-Galad",
+                },
+            })
+        );
+
+        const elfChangeSpy = jest.fn();
+        const elfListener = elfForm.onChange(elfChangeSpy);
+        elfForm.updateValue("name", "Galadriel");
+
+        expect(elfChangeSpy).toHaveBeenCalledWith(
+            {
+                type: "Noldor",
+                name: "Galadriel",
+            },
+            {
+                type: "Noldor",
+                name: "Gil-Galad",
+            }
+        );
+        elfForm.removeOnChange(elfListener);
+        elfChangeSpy.mockClear();
+
+        elfForm.updateValue("name", "Feanor");
+        expect(elfChangeSpy).not.toHaveBeenCalled();
     });
 });
 
