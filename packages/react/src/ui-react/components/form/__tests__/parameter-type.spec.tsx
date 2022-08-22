@@ -8,6 +8,7 @@ import { initMockBrowserEnvironment } from "../../../environment";
 import { runAxe } from "../../../test-util/a11y";
 import {
     StorageAccountDropdown,
+    SubscriptionDropdown,
 } from "../parameter-type";
 
 /**
@@ -43,6 +44,30 @@ describe("Parameter type tests", () => {
         subParam = form.param("subscriptionId", "string");
     });
 
+    describe("SubscriptionParamDropdown", () => {
+        test("simple dropdown is accessible", async () => {
+            const { container } = render(
+                <SubscriptionDropdown param={subParam} />
+            );
+            screen.getByRole("combobox");
+            expect(
+                await runAxe(container, {
+                    rules: {
+                        // See: https://github.com/microsoft/fluentui/issues/19090
+                        "aria-required-children": { enabled: false },
+                    },
+                })
+            ).toHaveNoViolations();
+        });
+        test("dropdown options", async () => {
+            render(<SubscriptionDropdown param={subParam} />);
+            const element = screen.getByRole("combobox");
+            await user.click(element);
+            await waitFor(() => expect(element).not.toContain("is-disabled"));
+            const options = screen.getAllByRole("option");
+            expect(options.length).toEqual(5);
+        });
+    });
     describe("StorageAccountDropdown", () => {
         let storageParam: Parameter<FakeFormValues, "storageAccountId">;
         beforeEach(() => {

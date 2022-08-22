@@ -1,6 +1,9 @@
 import { delayedCallback } from "../../util";
 import {
-    createForm, FormValues, ParameterType, ValidationStatus
+    createForm,
+    FormValues,
+    ParameterType,
+    ValidationStatus,
 } from "../form";
 
 describe("Form tests", () => {
@@ -330,7 +333,6 @@ describe("Form tests", () => {
         // should be the exact same object reference
         expect(validationStatus).toBe(form.validationStatus);
     });
-
 
     test("onChange()", () => {
         type ElfType = {

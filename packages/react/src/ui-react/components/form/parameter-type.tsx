@@ -5,7 +5,11 @@ import {
 } from "@batch/ui-common";
 import { inject } from "@batch/ui-common/lib/environment";
 import { FormValues, ValidationStatus } from "@batch/ui-common/lib/form";
-import { StorageAccount, StorageAccountService } from "@batch/ui-service";
+import {
+    StorageAccount,
+    StorageAccountService,
+    SubscriptionService,
+} from "@batch/ui-service";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useAsyncEffect, useUniqueId } from "../../hooks";
@@ -225,7 +229,7 @@ export function StorageAccountDropdown<
     );
 }
 
-export function SubscriptionIdParamDropdown<
+export function SubscriptionDropdown<
     V extends FormValues,
     K extends Extract<keyof V, string>
 >(props: ParamControlProps<V, K>): JSX.Element {
@@ -233,24 +237,27 @@ export function SubscriptionIdParamDropdown<
     const value = param.value == null ? undefined : String(param.value);
     const id = useUniqueId("form-control", props.id);
 
-    const [loading, setLoading] = React.useState<boolean>(true);
-    const [subscriptions, setSubscriptions] = React.useState<
+    const [loading, setLoading] = useState<boolean>(true);
+    const [subscriptions, setSubscriptions] = useState<
         { id: string; displayName: string }[]
     >([]);
+    const [validationStatus, setValidationStatus] =
+        useState<ValidationStatus | null>();
+
+    const service: SubscriptionService = inject(
+        DependencyName.SubscriptionService
+    );
 
     useAsyncEffect(async () => {
-        // TODO: Make this a real HTTP request
-        return new Promise<void>((resolve) => {
-            setTimeout(() => {
-                setSubscriptions([
-                    { id: "/fake/sub1", displayName: "Subscription One" },
-                    { id: "/fake/sub2", displayName: "Subscription Two" },
-                    { id: "/fake/sub3", displayName: "Subscription Three" },
-                ]);
-                setLoading(false);
-                resolve();
-            }, 1000);
-        });
+        try {
+            setSubscriptions(await service.list());
+            setValidationStatus(null);
+        } catch (error) {
+            setSubscriptions([]);
+            setValidationStatus(new ValidationStatus("error", error + ""));
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     const options = subscriptions.map((sub) => {
@@ -265,6 +272,7 @@ export function SubscriptionIdParamDropdown<
             options={options}
             placeholder={param.placeholder}
             value={value}
+            validationStatus={validationStatus ?? param.validationStatus}
             onChange={(newValue: string) => (param.value = newValue as V[K])}
         />
     );

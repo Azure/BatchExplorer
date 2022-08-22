@@ -13,7 +13,7 @@ import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import { BrowserDependencyName } from "@batch/ui-react";
 import { DefaultFormLayoutProvider, DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
 import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
-import { StorageAccountServiceImpl } from "@batch/ui-service";
+import { StorageAccountServiceImpl, SubscriptionServiceImpl } from "@batch/ui-service";
 import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
@@ -79,6 +79,8 @@ export class AppComponent implements OnInit, OnDestroy {
                     () => new BatchExplorerHttpClient(authService, this.subscriptionService),
                 [DependencyName.StorageAccountService]:
                     () => new StorageAccountServiceImpl(),
+                [DependencyName.SubscriptionService]:
+                    () => new SubscriptionServiceImpl(),
                 [BrowserDependencyName.ParameterTypeResolver]:
                     () =>new DefaultParameterTypeResolver(),
                 [BrowserDependencyName.FormLayoutProvider]:

@@ -5,7 +5,7 @@ import {
     cloneDeep,
     Deferred,
     delay,
-    OrderedMap
+    OrderedMap,
 } from "../util";
 
 export type FormValues = Record<string, unknown>;
@@ -254,6 +254,7 @@ export interface Form<V extends FormValues> {
     waitForValidation(): Promise<ValidationStatus | undefined>;
 
     onChange(handler: FormChangeHandler<V>): FormChangeHandler<V>;
+
     removeOnChange(handler: FormChangeHandler<V>): void;
 }
 
@@ -916,10 +917,10 @@ export class SubForm<
         return this.form.getSubForm(name);
     }
 
-    updateValue<
-        SK extends Extract<keyof S, string>,
-        S2 extends S[SK]
-    >(name: SK, value: S2): void {
+    updateValue<SK extends Extract<keyof S, string>, S2 extends S[SK]>(
+        name: SK,
+        value: S2
+    ): void {
         this.form.updateValue(name, value);
     }
 
