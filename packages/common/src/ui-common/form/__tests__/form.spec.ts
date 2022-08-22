@@ -333,6 +333,76 @@ describe("Form tests", () => {
         // should be the exact same object reference
         expect(validationStatus).toBe(form.validationStatus);
     });
+
+    test("events", () => {
+        type ElfType = {
+            name: string;
+            type: "Valyar" | "Noldor" | "Telerin";
+        };
+        const form = createForm<{
+            hobbit: string;
+            dwarf: string;
+            elf?: ElfType;
+        }>({
+            values: {
+                hobbit: "Bilbo",
+                dwarf: "Gimli",
+            },
+        });
+
+        form.param("hobbit", ParameterType.String);
+
+        const onChangeSpy = jest.fn();
+        const listener = form.on("change", onChangeSpy);
+
+        form.updateValue("hobbit", "Frodo");
+
+        expect(onChangeSpy).toHaveBeenCalledWith(
+            {
+                hobbit: "Frodo",
+                dwarf: "Gimli",
+            },
+            {
+                hobbit: "Bilbo",
+                dwarf: "Gimli",
+            }
+        );
+        form.off("change", listener);
+        onChangeSpy.mockClear();
+
+        form.updateValue("dwarf", "Thorin");
+        expect(onChangeSpy).not.toHaveBeenCalled();
+
+        const elfForm = form.subForm(
+            "elf",
+            createForm<ElfType>({
+                values: {
+                    type: "Noldor",
+                    name: "Gil-Galad",
+                },
+            })
+        );
+
+        const elfChangeSpy = jest.fn();
+        const elfListener = elfForm.on("change", elfChangeSpy);
+        elfForm.updateValue("name", "Galadriel");
+
+        expect(elfChangeSpy).toHaveBeenCalledWith(
+            {
+                type: "Noldor",
+                name: "Galadriel",
+            },
+            {
+                type: "Noldor",
+                name: "Gil-Galad",
+            }
+        );
+        elfForm.off("change", elfListener);
+        elfChangeSpy.mockClear();
+
+        elfForm.updateValue("name", "Feanor");
+        expect(elfChangeSpy).not.toHaveBeenCalled();
+    });
 });
 
 function createNationalParkForm() {
