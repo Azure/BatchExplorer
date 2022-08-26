@@ -56,7 +56,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     // Aria
     @Input() @HostBinding("attr.role") public role = "button";
     @HostBinding("attr.aria-disabled") public get ariaDisabled() { return this.disabled; }
- 
+
     public subtitle = "";
 
     private permissionService: PermissionService | null;
@@ -78,7 +78,10 @@ export class ClickableComponent implements OnChanges, OnDestroy {
             this._clearSubscription();
             if (this.permissionService && this.permission) {
                 this._sub = this.permissionService.hasPermission(this.permission).subscribe((hasPermission) => {
-                    this._permissionDisabled = !hasPermission;
+                    // TODO: Reenable this line when permissions checking is able to handle custom roles
+                    //       Also uncomment the test in entity-command-button.component.spec.ts
+                    // this._permissionDisabled = !hasPermission;
+                    this._permissionDisabled = false;
                     if (hasPermission) {
                         this.subtitle = "";
                     } else {
