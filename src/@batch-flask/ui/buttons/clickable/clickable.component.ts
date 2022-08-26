@@ -79,6 +79,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
             if (this.permissionService && this.permission) {
                 this._sub = this.permissionService.hasPermission(this.permission).subscribe((hasPermission) => {
                     // TODO: Reenable this line when permissions checking is able to handle custom roles
+                    //       Also uncomment the test in entity-command-button.component.spec.ts
                     // this._permissionDisabled = !hasPermission;
                     this._permissionDisabled = false;
                     if (hasPermission) {
