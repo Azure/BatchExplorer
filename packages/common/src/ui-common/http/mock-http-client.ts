@@ -55,7 +55,7 @@ export class MockHttpClient extends AbstractHttpClient {
     addExpected(
         response: MockHttpResponse,
         requestProps: HttpRequestInit = {}
-    ): void {
+    ): MockHttpClient {
         const key = MockHttpClient._getKeyFromRequest(
             response.url,
             requestProps
@@ -63,6 +63,7 @@ export class MockHttpClient extends AbstractHttpClient {
         const expected = this._expectedResponses[key] ?? [];
         expected.push(response);
         this._expectedResponses[key] = expected;
+        return this;
     }
 
     private static _getKeyFromRequest(
@@ -71,6 +72,12 @@ export class MockHttpClient extends AbstractHttpClient {
     ): string {
         const method = requestProps.method ?? HttpRequestMethod.Get;
         return `${method}::${url}`;
+    }
+
+    remainingAssertions(): string[] {
+        return Object.keys(this._expectedResponses).map(
+            (key) => key.split("::")[1]
+        );
     }
 }
 
