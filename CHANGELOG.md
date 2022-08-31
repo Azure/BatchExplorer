@@ -1,3 +1,16 @@
+# 2.15.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/49?closed=1)
+
+### feature:
+
+
+### bug:
+
+
+### other:
+
+* Custom role for Batch account is not interpreted by Batch explorer correctly. [\#2077](https://github.com/Azure/BatchExplorer/issues/2077)
+
 # 2.14.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/48?closed=1)
