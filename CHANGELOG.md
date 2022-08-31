@@ -6,6 +6,12 @@
 
 * Users with custom permissions were not able to create pools or jobs [\#2077](https://github.com/Azure/BatchExplorer/issues/2077)
 
+# 2.14.2
+
+### Bugs
+
+* Fixes login failures when proxy is misconfigured [\#2551]
+
 # 2.14.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/48?closed=1)
