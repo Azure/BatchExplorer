@@ -1,3 +1,11 @@
+# 2.15.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/49?closed=1)
+
+### Bugs
+
+* Users with custom permissions were not able to create pools or jobs [\#2077](https://github.com/Azure/BatchExplorer/issues/2077)
+
 # 2.14.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/48?closed=1)
