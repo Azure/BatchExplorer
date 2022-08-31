@@ -4,7 +4,7 @@
 
 ### Bugs
 
-* Custom role for Batch account is not interpreted by Batch explorer correctly. [\#2077](https://github.com/Azure/BatchExplorer/issues/2077)
+* Users with custom permissions were not able to create pools or jobs [\#2077](https://github.com/Azure/BatchExplorer/issues/2077)
 
 # 2.14.0
 
