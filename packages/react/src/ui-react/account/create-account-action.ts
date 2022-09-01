@@ -2,6 +2,7 @@ import { createForm, Form } from "@batch/ui-common";
 import { AbstractAction } from "@batch/ui-common/lib/action";
 import { ValidationStatus } from "@batch/ui-common/lib/form";
 import { delayedCallback } from "@batch/ui-common/lib/util";
+import { translate } from "@batch/ui-common/lib/localization";
 import { ParameterType } from "../components/form";
 
 export type CreateAccountFormValues = {
@@ -26,13 +27,13 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
             values: initialValues,
         });
         form.param("subscriptionId", ParameterType.SubscriptionId, {
-            label: "Subscription",
+            label: translate("subscription"),
         });
         form.param("resourceGroupId", ParameterType.ResourceGroupId, {
-            label: "Resource group",
+            label: translate("resourceGroup"),
         });
         form.param("accountName", ParameterType.BatchAccountName, {
-            label: "Account name",
+            label: translate("accountName"),
             required: true,
             description:
                 "This is how you identify your Batch account. It must be unique.",

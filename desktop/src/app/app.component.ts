@@ -29,7 +29,7 @@ import { Environment } from "common/constants";
 import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
-
+import {MockLocalizer} from "@batch/ui-common/lib/localization/mock-localizer";
 @Component({
     selector: "bl-app",
     templateUrl: "app.layout.html",
@@ -72,6 +72,7 @@ export class AppComponent implements OnInit, OnDestroy {
             {
                 // TODO: Create an adapter which hooks up to the desktop logger
                 [DependencyName.Logger]: () => new ConsoleLogger(),
+                [DependencyName.Localizer]: () => new MockLocalizer(),
                 // TODO: Create an HTTP client which hooks up to the desktop one
                 [DependencyName.HttpClient]: () => new FetchHttpClient(),
                 [BrowserDependencyName.ParameterTypeResolver]: () => {

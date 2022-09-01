@@ -1,4 +1,5 @@
 import { DependencyFactories } from ".";
+import { Localizer } from "../localization";
 import type { Logger } from "../logging";
 import { DiContainer } from "./di-container";
 import {
@@ -31,6 +32,21 @@ export abstract class AbstractEnvironment<
             throw new Error("No logger configured for the current environment");
         }
         return logger;
+    }
+
+    /**
+     * Get an instance of the global localizer
+     */
+    getLocalizer(): Localizer {
+        const localizer = this.getInjectable<Localizer>(
+            DependencyName.Localizer
+        );
+        if (!localizer) {
+            throw new Error(
+                "No localizer configured for the current environment"
+            );
+        }
+        return localizer;
     }
 
     protected _globalIdCounter: number = 0;

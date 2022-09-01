@@ -1,6 +1,7 @@
 import { DependencyFactories } from ".";
 import { setLocalTimeZoneOffset } from "../datetime";
 import { MockHttpClient } from "../http/mock-http-client";
+import { MockLocalizer } from "../localization/mock-localizer";
 import { MockLogger } from "../logging";
 import { AbstractEnvironment } from "./abstract-environment";
 import {
@@ -15,6 +16,7 @@ export const mockEnvironmentConfig: EnvironmentConfig = {
 
 export const mockDependencyFactories: DependencyFactories = {
     logger: () => new MockLogger(),
+    localizer: () => new MockLocalizer(),
     httpClient: () => new MockHttpClient(),
 };
 

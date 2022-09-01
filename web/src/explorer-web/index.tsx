@@ -13,6 +13,7 @@ import {
     DefaultFormLayoutProvider,
     DefaultParameterTypeResolver,
 } from "@batch/ui-react/lib/components/form";
+import { MockLocalizer } from "@batch/ui-common/lib/localization";
 
 // Defined by webpack
 declare const ENV: {
@@ -27,6 +28,7 @@ export function init(rootEl: HTMLElement): void {
             },
             {
                 [DependencyName.Logger]: () => new ConsoleLogger(),
+                [DependencyName.Localizer]: () => new MockLocalizer(),
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
                 [BrowserDependencyName.ParameterTypeResolver]: () => {
                     return new DefaultParameterTypeResolver();
