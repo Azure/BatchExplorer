@@ -48,10 +48,10 @@ To set breakpoints and debug tests, run `npm run test:debug`, then open Edge or 
 The `react` package includes support for automated accessibility (a11y) testing with [axe](https://www.deque.com/axe/). Accessibility tests are automatically run in continuous integration (CI) pipelines, but they're not run by most test scripts in development. The accessibility tests can be run explicitly through one of the following methods:
 
 ```shell
-cd react
-yarn test:a11y       # Run all accessibility tests
-yarn test:a11y:watch # Run all accessibility tests in watch mode
-yarn test:all        # Run all React tests including accessibility tests
+cd packages/react
+npm run test:a11y       # Run all accessibility tests
+npm run test:a11y:watch # Run all accessibility tests in watch mode
+npm run test:all        # Run all React tests including accessibility tests
 ```
 
 ## Developing in a Local Web Server
@@ -59,7 +59,7 @@ yarn test:all        # Run all React tests including accessibility tests
 To start a development server and watch for changes, `cd` to the root directory of the repository and run the following command:
 
 ```shell
-npm run start:web
+npm run start
 ```
 
 This will start a webpack dev server at <http://127.0.0.1:9000> and watch for any changes to the `standalone` package. To pick up live changes from other packages, run `npm run watch` either from the same directory as this README.md, or from the individual package directory.
