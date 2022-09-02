@@ -185,3 +185,7 @@ mat-button-toggle-group {
         border: 1px solid $outline-color;
     }
 }
+
+.cdk-high-contrast-active .mat-drawer.mat-drawer-end {
+    border-left: none;
+}
