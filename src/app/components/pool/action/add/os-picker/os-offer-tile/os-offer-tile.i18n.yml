@@ -1,0 +1,3 @@
+os-offer-tile:
+  select-version-button:
+    tooltip: Select version
