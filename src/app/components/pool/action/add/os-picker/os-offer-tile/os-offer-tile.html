@@ -12,7 +12,11 @@
         </div>
     </div>
 </div>
-<button class="select-version" [matMenuTriggerFor]="menu" title="Select version">
+<button
+    class="select-version"
+    [matMenuTriggerFor]="menu"
+    matTooltip="{{'os-offer-tile.select-version-button.tooltip' | i18n}}"
+    title="{{'os-offer-tile.select-version-button.tooltip' | i18n}}">
     <i class="fa fa-cog"></i>
 </button>
 <mat-menu #menu="matMenu">
