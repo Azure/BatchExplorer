@@ -712,6 +712,15 @@
       <trans-unit id="node-configuration.url">
         <source>URL</source>
       </trans-unit>
+      <trans-unit id="os-offer-tile">
+        <source/>
+      </trans-unit>
+      <trans-unit id="os-offer-tile.select-version-button">
+        <source/>
+      </trans-unit>
+      <trans-unit id="os-offer-tile.select-version-button.tooltip">
+        <source>Select version</source>
+      </trans-unit>
       <trans-unit id="partial-sort-warning">
         <source/>
       </trans-unit>
