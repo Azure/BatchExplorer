@@ -25,16 +25,25 @@ export type ActionExecutionResult = {
 export abstract class AbstractAction<V extends FormValues>
     implements Action<V>
 {
-    form: Form<V>;
+    private _initialValues: V;
+    private _form?: Form<V>;
+
+    get form(): Form<V> {
+        // Lazily create the form the first time it's accessed
+        if (!this._form) {
+            this._form = this.buildForm(this._initialValues);
+            this.form.onValidateSync = (snapshot) => {
+                return this._validateSync(snapshot);
+            };
+            this.form.onValidateAsync = (snapshot) => {
+                return this._validateAsync(snapshot);
+            };
+        }
+        return this._form;
+    }
 
     constructor(initialValues: V) {
-        this.form = this.buildForm(initialValues);
-        this.form.onValidateSync = (snapshot) => {
-            return this._validateSync(snapshot);
-        };
-        this.form.onValidateAsync = (snapshot) => {
-            return this._validateAsync(snapshot);
-        };
+        this._initialValues = initialValues;
     }
 
     private _validateSync(snapshot: ValidationSnapshot<V>): ValidationStatus {

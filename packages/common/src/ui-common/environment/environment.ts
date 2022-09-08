@@ -1,4 +1,5 @@
 import { HttpClient } from "../http";
+import { Localizer } from "../localization";
 import type { Logger } from "../logging";
 
 /**
@@ -20,6 +21,11 @@ export interface Environment<C extends EnvironmentConfig> {
      * Gets the logger for the current environment
      */
     getLogger(): Logger;
+
+    /**
+     * Gets the localizer for the current environment
+     */
+    getLocalizer(): Localizer;
 
     /**
      * Returns a unique (for this environment), auto-incremented ID number
@@ -60,6 +66,7 @@ export interface Environment<C extends EnvironmentConfig> {
 
 export enum DependencyName {
     Logger = "logger",
+    Localizer = "localizer",
     HttpClient = "httpClient",
 }
 
@@ -69,6 +76,7 @@ export enum DependencyName {
  */
 export interface DependencyFactories {
     [DependencyName.Logger]: () => Logger;
+    [DependencyName.Localizer]: () => Localizer;
     [DependencyName.HttpClient]: () => HttpClient;
 }
 

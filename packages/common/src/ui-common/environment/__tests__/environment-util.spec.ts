@@ -1,4 +1,5 @@
 import { MockHttpClient } from "../../http";
+import { StandardLocalizer } from "../../localization/standard-localizer";
 import { MockLogger } from "../../logging";
 import { AbstractEnvironment } from "../abstract-environment";
 import {
@@ -131,6 +132,7 @@ describe("Environment tests", () => {
         constructor(config: EnvironmentConfig) {
             super(config, {
                 logger: () => new MockLogger(),
+                localizer: () => new StandardLocalizer(),
                 httpClient: () => new MockHttpClient(),
                 animal: () => new Dog(),
             });
@@ -154,6 +156,7 @@ describe("Environment tests", () => {
         constructor(config: EnvironmentConfig) {
             super(config, {
                 logger: () => new MockLogger(),
+                localizer: () => new StandardLocalizer(),
                 httpClient: () => new MockHttpClient(),
                 animal: () => new Cat(),
             });
