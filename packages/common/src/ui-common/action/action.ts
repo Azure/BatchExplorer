@@ -41,6 +41,7 @@ export abstract class AbstractAction<V extends FormValues>
         }
         return this._form;
     }
+
     constructor(initialValues: V) {
         this._initialValues = initialValues;
     }

@@ -1,3 +1,3 @@
 export * from "./localization-util";
 export * from "./localizer";
-export * from "./mock-localizer";
+export * from "./standard-localizer";

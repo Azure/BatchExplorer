@@ -1,6 +1,6 @@
 import { Localizer } from "./localizer";
 
-export class MockLocalizer implements Localizer {
+export class StandardLocalizer implements Localizer {
     translate(message: string): string {
         switch (message) {
             case "subscription":
