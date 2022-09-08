@@ -5,13 +5,6 @@ import { initMockBrowserEnvironment } from "../../environment";
 import { DataGrid } from "../data-grid";
 import { fromIso } from "@batch/ui-common";
 
-const ignoredA11yRules = {
-    rules: {
-        // TODO: Re-enable this when DetailsList fixes this issue
-        "aria-toggle-field-name": { enabled: false },
-    },
-};
-
 describe("DataGrid component", () => {
     beforeEach(() => initMockBrowserEnvironment());
 
@@ -65,7 +58,7 @@ describe("DataGrid component", () => {
             "2021-05-31T21:12:00.000-03:00"
         );
 
-        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+        expect(await runAxe(container)).toHaveNoViolations();
     });
 
     test("Custom grid columns", async () => {
@@ -128,7 +121,7 @@ describe("DataGrid component", () => {
         expect(thirdRowCells[2].textContent).toBe("black");
         expect(thirdRowCells[3].textContent).toBe("");
 
-        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+        expect(await runAxe(container)).toHaveNoViolations();
     });
 });
 

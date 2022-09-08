@@ -23,13 +23,6 @@ describe("Dropdown form control", () => {
         const ddEl = screen.getByRole("combobox");
         expect(ddEl).toBeDefined();
 
-        expect(
-            await runAxe(container, {
-                rules: {
-                    // See: https://github.com/microsoft/fluentui/issues/19090
-                    "aria-required-children": { enabled: false },
-                },
-            })
-        ).toHaveNoViolations();
+        expect(await runAxe(container)).toHaveNoViolations();
     });
 });
