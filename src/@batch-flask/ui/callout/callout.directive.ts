@@ -1,9 +1,10 @@
 import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { TemplatePortal } from "@angular/cdk/portal";
-import { Directive, ElementRef,  HostListener, Input, ViewContainerRef } from "@angular/core";
+import { Directive, ElementRef, HostListener, Input, ViewContainerRef } from "@angular/core";
+import { focusWithin } from "@batch-flask/core";
+import { KeyCode } from "@batch-flask/core/keys";
 import { Subscription } from "rxjs";
 import { CalloutComponent } from "./callout.component";
-import { ENTER, SPACE } from "@batch-flask/core/keys";
 
 @Directive({
     selector: "[blCallout]",
@@ -18,7 +19,9 @@ export class CalloutDirective {
 
     }
 
-    @HostListener("click") public handleClick() {
+    @HostListener("click", ["$event"])
+    public handleClick(event: Event) {
+        event.preventDefault();
         if (this._overlayRef) {
             this.close();
         } else {
@@ -27,13 +30,9 @@ export class CalloutDirective {
     }
 
     @HostListener("keydown", ["$event"])
-    public onkeydown(event: KeyboardEvent) {
-        if (event.key === SPACE || event.key === ENTER) {
-            if (this._overlayRef) {
-                this.close();
-            } else {
-                this.open();
-            }
+    public onKeyDown(event: KeyboardEvent) {
+        if (event.key === KeyCode.Enter || event.key === KeyCode.Space) {
+            this.handleClick(event);
         }
     }
 
@@ -45,6 +44,13 @@ export class CalloutDirective {
 
         const portal = new TemplatePortal(this.component.template, this.viewContainerRef);
         this._overlayRef.attach(portal);
+        this._overlayRef.overlayElement.onkeydown = (event: KeyboardEvent) => {
+            if (event.key === KeyCode.Escape) {
+                this.close();
+                this.elementRef.nativeElement.focus();
+            }
+        }
+        focusWithin(this._overlayRef.overlayElement);
     }
 
     public close() {
