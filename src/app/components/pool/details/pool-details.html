@@ -30,7 +30,7 @@
         <ng-container *ngIf="isDeprecatedContainerImage">
             <bl-banner class="pool-details-summary-deprecation-warning" type="warning">
                 <div message>
-                    The selected Windows container image will be removed from marketplace starting on September 22, 2022. After this date, pools using this image may not be created or used from the Azure Batch Explorer.
+                    This pool is using a deprecated Windows Server container image. On September 22, 2022 pools using this image will no longer work properly and may not be created from Azure Batch Explorer.
                     <a class="pool-details-summary-warning-alternative-link" (click)="openLink('https://github.com/Azure/Batch/issues/136')" href="javascript:void(0)">Learn more </a>
                 </div>
             </bl-banner>
