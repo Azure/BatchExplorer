@@ -4,12 +4,11 @@ import { EntityView, autobind } from "@batch-flask/core";
 import { PoolDecorator } from "app/decorators";
 import { Pool } from "app/models";
 import { BatchExplorerService, PoolParams, PoolService, PricingService } from "app/services";
-import { NumberUtils } from "app/utils";
+import { deprecatedContainerImages, NumberUtils } from "app/utils";
 import { List } from "immutable";
 import { Subscription, from } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { PoolCommands } from "../action";
-import { DeprecatedContainerImages } from "common/constants";
 import { ElectronShell } from "@batch-flask/electron";
 
 import "./pool-details.scss";
@@ -38,7 +37,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     }
     public get pool() { return this._pool; }
     public get isDeprecatedContainerImage() {
-        return DeprecatedContainerImages.some(containerImage => this.poolDecorator.poolOs.includes(containerImage));
+        return deprecatedContainerImages.some(containerImage => this.poolDecorator.poolOs.includes(containerImage));
     }
     public data: EntityView<Pool, PoolParams>;
     public estimatedCost = "-";

@@ -19,6 +19,24 @@ export interface PoolPriceOptions {
     target?: boolean;
 }
 
+export const deprecatedContainerImages = [
+    "2016-datacenter-with-containers",
+    "2016-datacenter-with-containers-g2",
+    "2016-datacenter-with-containers-gs",
+    "2019-datacenter-core-with-containers",
+    "2019-datacenter-core-with-containers-g2",
+    "2019-datacenter-core-with-containers-smalldisk",
+    "2019-datacenter-core-with-containers-smalldisk-g2",
+    "2019-datacenter-with-containers",
+    "2019-datacenter-with-containers-g2",
+    "2019-datacenter-with-containers-gs",
+    "2019-datacenter-with-containers-smalldisk",
+    "2019-datacenter-with-containers-smalldisk-g2",
+    "datacenter-core-20h2-with-containers-smalldisk",
+    "datacenter-core-20h2-with-containers-smalldisk-gs",
+    "datacenter-core-20h2-with-containers-smalldisk-g2",
+];
+
 const iconMapping = {
     "ubuntuserver": Icons.ubuntu,
     "ubuntu-server-container": Icons.ubuntu,
@@ -172,6 +190,10 @@ export class PoolUtils {
         }
 
         return "cloud";
+    }
+
+    public static isDeprecatedContainerImage(imageSku: string): boolean {
+        return deprecatedContainerImages.includes(imageSku.toLowerCase());
     }
 
     /**

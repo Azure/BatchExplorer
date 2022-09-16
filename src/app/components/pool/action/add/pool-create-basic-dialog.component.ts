@@ -13,7 +13,7 @@ import { NumberUtils } from "app/utils";
 import { Constants } from "common";
 import { Observable, Subscription, of } from "rxjs";
 import { map } from "rxjs/operators";
-import { DeprecatedContainerImages } from "common/constants";
+import { PoolUtils } from "app/utils";
 
 import "./pool-create-basic-dialog.scss";
 
@@ -41,8 +41,8 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public get isSelectedContainerImageDeprecated() {
         if (this._osControl.value && this._osControl.value.virtualMachineConfiguration) {
-            const selectedImage = this._osControl.value.virtualMachineConfiguration.imageReference.sku;
-            return DeprecatedContainerImages.includes(selectedImage);
+            const imageSku = this._osControl.value.virtualMachineConfiguration.imageReference.sku;
+            return PoolUtils.isDeprecatedContainerImage(imageSku);
         }
         return false;
     }
