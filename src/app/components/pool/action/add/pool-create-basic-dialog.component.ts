@@ -36,7 +36,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     public get cloudServiceConfiguration() {
-        console.log(this._osControl.value);
         return this._osControl.value && this._osControl.value.cloudServiceConfiguration;
     }
 
@@ -196,8 +195,8 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             }
             return this.vmSizeService.get(this.form.controls["vmSize"].value).pipe(
                 map(res => {
-                    const maxcores = Math.min(res.numberOfcores * 4, 256);
-                    return valueInput > maxcores ? { max: maxcores } : null;
+                    const maxCores = Math.min(res.numberOfCores * 4, 256);
+                    return valueInput > maxCores ? { max: maxCores } : null;
                 }),
             );
         };

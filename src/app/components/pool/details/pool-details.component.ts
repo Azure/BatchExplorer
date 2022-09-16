@@ -10,6 +10,7 @@ import { Subscription, from } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { PoolCommands } from "../action";
 import { DeprecatedContainerImages } from "common/constants";
+import { ElectronShell } from "@batch-flask/electron";
 
 import "./pool-details.scss";
 
@@ -52,7 +53,8 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private batchExplorer: BatchExplorerService,
         private pricingService: PricingService,
-        private poolService: PoolService) {
+        private poolService: PoolService,
+        private electronShell: ElectronShell) {
 
         this.data = this.poolService.view();
         this.data.item.subscribe((pool) => {
@@ -103,6 +105,10 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         const window = this.batchExplorer.openNewWindow(link);
 
         return from(window.appReady);
+    }
+
+    public openLink(link: string) {
+        this.electronShell.openExternal(link, {activate: true});
     }
 
     private _updatePrice() {
