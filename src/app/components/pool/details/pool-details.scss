@@ -21,4 +21,29 @@ bl-pool-details {
     div[summaryTile] > bl-pool-cost-card {
         padding: 5px;
     }
+
+    // static colors for deprecation warnings
+    .pool-details-summary-deprecation-warning {
+        > .warning {
+            background-color: var(--color-warn-50);
+            // using the color from var(--color-text-primary)
+            color: #333333;
+
+            > .summary-container {
+
+                &.standard {
+                    height: unset;
+                }
+
+                > .message {
+                    white-space: normal;
+                }
+            }
+        }
+    }
+
+    .pool-details-summary-alternative-link {
+        // using the color from var(--color-primary-800);
+        color: #1d54af;
+    }
 }

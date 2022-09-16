@@ -9,6 +9,7 @@ import { List } from "immutable";
 import { Subscription, from } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { PoolCommands } from "../action";
+import { DeprecatedContainerImages } from "common/constants";
 
 import "./pool-details.scss";
 
@@ -35,6 +36,9 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         this.poolDecorator = pool && new PoolDecorator(pool);
     }
     public get pool() { return this._pool; }
+    public get isDeprecatedContainerImage() {
+        return DeprecatedContainerImages.some(containerImage => this.poolDecorator.poolOs.includes(containerImage));
+    }
     public data: EntityView<Pool, PoolParams>;
     public estimatedCost = "-";
 

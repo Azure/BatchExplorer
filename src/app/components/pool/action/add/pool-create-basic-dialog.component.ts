@@ -13,6 +13,7 @@ import { NumberUtils } from "app/utils";
 import { Constants } from "common";
 import { Observable, Subscription, of } from "rxjs";
 import { map } from "rxjs/operators";
+import { DeprecatedContainerImages } from "common/constants";
 
 import "./pool-create-basic-dialog.scss";
 
@@ -35,7 +36,16 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     public get cloudServiceConfiguration() {
+        console.log(this._osControl.value);
         return this._osControl.value && this._osControl.value.cloudServiceConfiguration;
+    }
+
+    public get isSelectedContainerImageDeprecated() {
+        if (this._osControl.value && this._osControl.value.virtualMachineConfiguration) {
+            const selectedImage = this._osControl.value.virtualMachineConfiguration.imageReference.sku;
+            return DeprecatedContainerImages.includes(selectedImage);
+        }
+        return false;
     }
 
     public osSource: PoolOsSources = PoolOsSources.IaaS;
@@ -186,8 +196,8 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             }
             return this.vmSizeService.get(this.form.controls["vmSize"].value).pipe(
                 map(res => {
-                    const maxCores = Math.min(res.numberOfCores * 4, 256);
-                    return valueInput > maxCores ? { max: maxCores } : null;
+                    const maxcores = Math.min(res.numberOfcores * 4, 256);
+                    return valueInput > maxcores ? { max: maxcores } : null;
                 }),
             );
         };
