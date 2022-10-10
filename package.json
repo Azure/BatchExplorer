@@ -180,7 +180,7 @@
     "chart.js": "^2.9.3",
     "chokidar": "^3.4.3",
     "commander": "^8.0.0",
-    "d3": "^5.16.0",
+    "d3": "^7.6.1",
     "decode-uri-component": "^0.2.0",
     "download": "^8.0.0",
     "electron-updater": "^4.3.4",
