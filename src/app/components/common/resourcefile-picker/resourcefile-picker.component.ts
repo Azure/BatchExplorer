@@ -11,7 +11,6 @@ import { CloudPathUtils, DragUtils, SecureUtils, UrlUtils } from "@batch-flask/u
 import { ResourceFileAttributes } from "app/models";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { SharedAccessPolicy } from "app/services/storage/models";
-import { BlobUtilities } from "azure-storage";
 import { BEUserConfiguration } from "common";
 import { DateTime } from "luxon";
 import * as path from "path";
@@ -202,7 +201,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
                         this.changeDetector.detectChanges();
                         const sas: SharedAccessPolicy = {
                             AccessPolicy: {
-                                Permissions: BlobUtilities.SharedAccessPermissions.READ,
+                                Permissions: ["r"],
                                 Start: new Date(),
                                 Expiry: DateTime.local().plus({ weeks: 1 }).toJSDate(),
                             },

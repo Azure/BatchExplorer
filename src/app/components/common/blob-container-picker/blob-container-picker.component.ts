@@ -10,6 +10,7 @@ import { BlobContainer } from "app/models";
 import {
     AutoStorageService, ListContainerParams, StorageContainerService,
 } from "app/services/storage";
+import { PermissionType } from "app/services/storage/models";
 import { List } from "immutable";
 import { DateTime } from "luxon";
 import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
@@ -47,7 +48,7 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnCha
     /**
      * Permission for the sas url if having output as sas url
      */
-    @Input() public sasPermissions: string = "rl";
+    @Input() public sasPermissions: PermissionType[] = ["r"];
 
     public containers: List<BlobContainer>;
     public container = new FormControl();

@@ -8,7 +8,7 @@ import { BatchApplication, BatchApplicationPackage } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
 import { BatchApplicationPackageService, BatchApplicationService } from "app/services";
 import { StorageBlobService } from "app/services/storage";
-import * as storage from "azure-storage";
+import { UploadFileResult } from "app/services/storage/models/storage-blob";
 import { Constants } from "common";
 import { Observable, of, throwError } from "rxjs";
 import { catchError, share, switchMap, tap } from "rxjs/operators";
@@ -103,7 +103,8 @@ export class ApplicationCreateDialogComponent {
         );
     }
 
-    private _uploadAppPackage(file: File, sasUrl: string): Observable<storage.BlobService.BlobResult> {
+    private _uploadAppPackage(file: File, sasUrl: string):
+        Observable<UploadFileResult> {
         if (!this.hasValidFile()) {
             return throwError("Valid file not selected");
         }
