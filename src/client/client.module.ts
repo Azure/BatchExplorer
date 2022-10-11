@@ -19,6 +19,7 @@ import { BatchExplorerApplication } from "./core/batch-explorer-application";
 import { BatchExplorerInitializer } from "./core/batch-explorer-initializer";
 import { BatchExplorerProcess } from "./core/batch-explorer-process";
 import { BlIpcMain } from "./core/bl-ipc-main";
+import { StorageBlobAdapter } from "./core/storage";
 import { LocalDataStore } from "./core/local-data-store";
 import { BatchExplorerProperties } from "./core/properties";
 import { ClientTelemetryModule } from "./core/telemetry";
@@ -68,6 +69,7 @@ export function initializeServices(injector) {
         BatchExplorerProperties,
         AADService,
         BlIpcMain,
+        StorageBlobAdapter,
         AzureEnvironmentService,
         ...servicesToInitialize,
     ],

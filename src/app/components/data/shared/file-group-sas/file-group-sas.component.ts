@@ -5,6 +5,7 @@ import {
 import { ListView, autobind } from "@batch-flask/core";
 import { BlobContainer } from "app/models";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
+import { SharedAccessPolicy } from "app/services/storage/models";
 import { Constants } from "common";
 import { List } from "immutable";
 import { DateTime } from "luxon";
@@ -113,9 +114,9 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
          * Blob Container read/write/list access policy that is valid for 7 days, The maximum
          * lifetime of a task in Batch.
          */
-        const accessPolicy = {
+        const accessPolicy: SharedAccessPolicy = {
             AccessPolicy: {
-                Permissions: this.allowWrite ? "rwl" : "rl",
+                Permissions: (this.allowWrite ? ["r", "w", "l"] : ["r", "l"]),
                 ResourceTypes: "CONTAINER",
                 Services: "BLOB",
                 Start: DateTime.utc().minus({ minutes: 15 }).toJSDate(),

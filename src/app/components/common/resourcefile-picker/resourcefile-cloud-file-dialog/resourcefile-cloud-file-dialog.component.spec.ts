@@ -11,7 +11,6 @@ import { File, FileExplorerConfig, FormModule } from "@batch-flask/ui";
 import { ArmBatchAccount, ArmSubscription, StorageAccount } from "app/models";
 import { BatchAccountService, StorageAccountService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
-import { BlobUtilities } from "azure-storage";
 import { List } from "immutable";
 import { of } from "rxjs";
 import { ResourceFileCloudFileDialogComponent } from "./resourcefile-cloud-file-dialog.component";
@@ -219,7 +218,7 @@ describe("ResourceFileCloudFileDialogComponent", () => {
                 expect(blobServiceSpy.list).toHaveBeenCalledOnce();
                 expect(blobServiceSpy.list).toHaveBeenCalledWith("auto-storage-id", "foobar", {
                     folder: "path/to/folder",
-                    limit: 1,
+                    maxPages: 1,
                 }, true);
 
                 expect(containerServiceSpy.generateSharedAccessUrl).not.toHaveBeenCalledOnce();
@@ -255,15 +254,15 @@ describe("ResourceFileCloudFileDialogComponent", () => {
                 expect(blobServiceSpy.list).toHaveBeenCalledOnce();
                 expect(blobServiceSpy.list).toHaveBeenCalledWith("auto-storage-id", "foobar", {
                     folder: "path/to/file.sh",
-                    limit: 1,
+                    maxPages: 1,
                 }, true);
                 expect(blobServiceSpy.generateSharedAccessBlobUrl).toHaveBeenCalledOnce();
                 expect(blobServiceSpy.generateSharedAccessBlobUrl).toHaveBeenCalledWith(
                     "auto-storage-id", "foobar", "path/to/file.sh", {
-                        AccessPolicy: jasmine.objectContaining({
-                            Permissions: BlobUtilities.SharedAccessPermissions.READ,
-                        }),
-                    });
+                    AccessPolicy: jasmine.objectContaining({
+                        Permissions: ["r"],
+                    }),
+                });
             });
 
             it("updated the current selection", () => {
@@ -304,16 +303,16 @@ describe("ResourceFileCloudFileDialogComponent", () => {
                 expect(blobServiceSpy.list).toHaveBeenCalledOnce();
                 expect(blobServiceSpy.list).toHaveBeenCalledWith("new-storage-acc-1", "foobar", {
                     folder: "path/to/folder",
-                    limit: 1,
+                    maxPages: 1,
                 }, true);
 
                 expect(containerServiceSpy.generateSharedAccessUrl).toHaveBeenCalled();
                 expect(containerServiceSpy.generateSharedAccessUrl).toHaveBeenCalledWith(
                     "new-storage-acc-1", "foobar", {
-                        AccessPolicy: jasmine.objectContaining({
-                            Permissions: BlobUtilities.SharedAccessPermissions.READ,
-                        }),
-                    });
+                    AccessPolicy: jasmine.objectContaining({
+                        Permissions: ["r"],
+                    }),
+                });
             });
 
             it("updated the current selection", () => {
