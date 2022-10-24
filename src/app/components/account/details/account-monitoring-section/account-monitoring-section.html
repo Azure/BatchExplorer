@@ -22,9 +22,9 @@
         role="application">
         <bl-monitor-chart [metrics]="metricType" [timeRange]="currentRange" [chartType]="chartType"></bl-monitor-chart>
     </a>
-    <div class="monitor-chart current-node-counts">
-        <h2>{{'account-monitoring.currentNodeStates' | i18n }}</h2>
-        <bl-pool-state-graph></bl-pool-state-graph>
+    <div class="monitor-chart current-node-counts" tabindex="0">
+        <h2 tabindex="0">{{'account-monitoring.currentNodeStates' | i18n }}</h2>
+        <bl-pool-state-graph tabindex="0" aria-label="graph"></bl-pool-state-graph>
     </div>
 </div>
 <div  *ngIf="!isArmAccount">
