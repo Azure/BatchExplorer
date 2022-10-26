@@ -3,4 +3,5 @@ main-menu:
     label: Help
     viewLicense: View license
     privacyStatement: Privacy statement
+    italyAccessibility: Italy Accessibility Declarations
     reportIssue: Report issue
