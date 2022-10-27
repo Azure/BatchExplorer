@@ -571,6 +571,9 @@
       <trans-unit id="main-menu.help">
         <source/>
       </trans-unit>
+      <trans-unit id="main-menu.help.italyAccessibility">
+        <source>Italy Accessibility Declarations</source>
+      </trans-unit>
       <trans-unit id="main-menu.help.label">
         <source>Help</source>
       </trans-unit>
