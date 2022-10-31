@@ -20,9 +20,6 @@
         </ng-container>
     </div>
 </div>
-<div class="no-option" *ngIf="displayedOptions.length === 0 && select.filter">
-    No match
-</div>
-<div class="no-option" *ngIf="displayedOptions.length === 0 && !select.filter">
-    No options available
+<div class="no-option" *ngIf="displayedOptions.length === 0">
+    {{noMatchText}}
 </div>
