@@ -29,11 +29,11 @@
         </bl-form-section>
 
         <bl-form-section title="Select an operating system configuration" subtitle="Choose the operating system to be installed on all the nodes in the pool">
-            <ng-container *ngIf="isSelectedContainerImageDeprecated">
+            <ng-container *ngIf="isSelectedImageDeprecated">
                 <bl-banner class="create-pool-deprecation-warning" type="warning">
                     <div message>
-                        Microsoft Windows Server container images are deprecated. Pools using this image will no longer work properly in Azure Batch Explorer after September 22, 2022.
-                        <a class="create-pool-warning-alternative-link" (click)="openLink('https://github.com/Azure/Batch/issues/136')" href="javascript:void(0)">Learn more </a>
+                        The selected image is nearing its end of life date. API calls to create new pools using this image may continue to be supported for up to 60 days after the end of life date.
+                        <a class="create-pool-warning-alternative-link" (click)="openDeprecationLink()" href="javascript:void(0)">Learn more </a>
                     </div>
                 </bl-banner>
             </ng-container>

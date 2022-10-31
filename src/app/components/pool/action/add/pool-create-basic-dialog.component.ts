@@ -39,12 +39,18 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         return this._osControl.value && this._osControl.value.cloudServiceConfiguration;
     }
 
-    public get isSelectedContainerImageDeprecated() {
+    public get isSelectedImageDeprecated() {
         if (this._osControl.value && this._osControl.value.virtualMachineConfiguration) {
-            const imageSku = this._osControl.value.virtualMachineConfiguration.imageReference.sku;
-            return PoolUtils.isDeprecatedContainerImage(imageSku);
+            const config = this._osControl.value.virtualMachineConfiguration;
+            const batchSupportedEOL = config && config.batchSupportedEOL;
+
+            return batchSupportedEOL;
         }
         return false;
+    }
+
+    public get selectedVirtualMachineImageName(): string {
+        return this._osControl.value.virtualMachineConfiguration.imageReference.sku;
     }
 
     public osSource: PoolOsSources = PoolOsSources.IaaS;
@@ -232,6 +238,11 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 fromDto: (value) => this.dtoToForm(value),
             },
         };
+    }
+
+    public openDeprecationLink() {
+        const link = PoolUtils.getEndOfLifeHyperlink(this.selectedVirtualMachineImageName);
+        this.electronShell.openExternal(link, {activate: true});
     }
 
     public openLink(link: string) {

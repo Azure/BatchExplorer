@@ -27,11 +27,11 @@
             </div>
         </bl-summary-card>
 
-        <ng-container *ngIf="isDeprecatedContainerImage">
+        <ng-container *ngIf="isImageDeprecated">
             <bl-banner class="pool-details-summary-deprecation-warning" type="warning">
                 <div message>
-                    This pool is using a deprecated Windows Server container image. On September 22, 2022 pools using this image will no longer work properly and may not be created from Azure Batch Explorer.
-                    <a class="pool-details-summary-warning-alternative-link" (click)="openLink('https://github.com/Azure/Batch/issues/136')" href="javascript:void(0)">Learn more </a>
+                    The selected image is nearing its end of life date. API calls to create new pools using this image may continue to be supported for up to 60 days after the end of life date.
+                    <a class="pool-details-summary-warning-alternative-link" (click)="openDeprecationLink()" href="javascript:void(0)">Learn more </a>
                 </div>
             </bl-banner>
         </ng-container>
