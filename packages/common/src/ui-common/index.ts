@@ -1,7 +1,6 @@
 export {
     getEnvironment,
     initEnvironment,
-    initMockEnvironment,
     destroyEnvironment,
 } from "./environment/environment-util";
 export {

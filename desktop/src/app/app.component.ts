@@ -12,6 +12,7 @@ import { DependencyName } from "@batch/ui-common/lib/environment";
 import { DefaultFormLayoutProvider, DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
 import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import { BrowserDependencyName } from "@batch/ui-react";
+import { StorageAccountServiceImpl } from "@batch/ui-service";
 import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
@@ -75,6 +76,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 [DependencyName.Localizer]: () => new StandardLocalizer(),
                 [DependencyName.HttpClient]:
                     () => new BatchExplorerHttpClient(authService),
+                [BrowserDependencyName.StorageAccountService]:
+                    () => new StorageAccountServiceImpl(),
                 [BrowserDependencyName.ParameterTypeResolver]:
                     () => new DefaultParameterTypeResolver(),
                 [BrowserDependencyName.FormLayoutProvider]:

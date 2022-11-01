@@ -8,6 +8,7 @@ import {
     getEnvironment,
 } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
+import { StorageAccountService } from "@batch/ui-service";
 import {
     FormLayout,
     FormLayoutProvider,
@@ -23,6 +24,7 @@ import { MockBrowserEnvironment } from "./mock-browser-environment";
 export enum BrowserDependencyName {
     ParameterTypeResolver = "parameterTypeResolver",
     FormLayoutProvider = "formLayoutProvider",
+    StorageAccountService = "storageAccount",
 }
 
 export interface BrowserEnvironment
@@ -42,6 +44,7 @@ export interface BrowserEnvironmentConfig extends EnvironmentConfig {
 export interface BrowserDependencyFactories extends DependencyFactories {
     [BrowserDependencyName.ParameterTypeResolver]: () => ParameterTypeResolver;
     [BrowserDependencyName.FormLayoutProvider]: () => FormLayoutProvider;
+    [BrowserDependencyName.StorageAccountService]: () => StorageAccountService;
 }
 
 /**
