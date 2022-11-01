@@ -282,6 +282,7 @@ describe("OSImagePickerComponent", () => {
                     sku: "7.1",
                 },
                 nodeAgentSKUId: "batch.node.centos 7",
+                batchSupportedEndOfLife: null,
             },
         });
     });

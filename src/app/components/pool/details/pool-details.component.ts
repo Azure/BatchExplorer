@@ -39,6 +39,9 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     public get isImageDeprecated() {
         return this._isImageDeprecated;
     }
+    public get selectedImageEndOfLifeDate() {
+        return this._selectedImageEndOfLifeDate.toDateString();
+    }
 
     public data: EntityView<Pool, PoolParams>;
     public estimatedCost = "-";
@@ -47,6 +50,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     private _pool: Pool;
     private _isImageDeprecated: boolean;
     private _supportedImages: ImageInformation[];
+    private _selectedImageEndOfLifeDate: Date;
 
     constructor(
         public commands: PoolCommands,
@@ -151,6 +155,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
                 && this.poolDecorator.poolOs.includes(selectedImage.imageReference.sku)
                 && selectedImage.batchSupportEndOfLife) {
                 this._isImageDeprecated = true;
+                this._selectedImageEndOfLifeDate = selectedImage.batchSupportEndOfLife;
             }
         }
     }

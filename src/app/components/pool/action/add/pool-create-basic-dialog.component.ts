@@ -42,15 +42,21 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public get isSelectedImageDeprecated() {
         if (this._osControl.value && this._osControl.value.virtualMachineConfiguration) {
             const config = this._osControl.value.virtualMachineConfiguration;
-            const batchSupportedEOL = config && config.batchSupportedEOL;
-
-            return batchSupportedEOL;
+            const isDeprecatedImage = config && config.batchSupportedEOL;
+            if (isDeprecatedImage) {
+                this._selectedDeprecatedImageEndOfLife = config.batchSupportedEOL;
+            }
+            return isDeprecatedImage;
         }
         return false;
     }
 
     public get selectedVirtualMachineImageName(): string {
         return this._osControl.value.virtualMachineConfiguration.imageReference.sku;
+    }
+
+    public get selectedVirtualMachineImageEndOfLifeDate(): string {
+        return this._selectedDeprecatedImageEndOfLife.toDateString();
     }
 
     public osSource: PoolOsSources = PoolOsSources.IaaS;
@@ -67,6 +73,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     private _renderingSkuSelected: boolean = false;
     private _subs: Subscription[] = [];
     private _lastFormValue: CreatePoolModel;
+    private _selectedDeprecatedImageEndOfLife: Date;
 
     constructor(
         private formBuilder: FormBuilder,
