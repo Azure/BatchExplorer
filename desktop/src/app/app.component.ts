@@ -12,7 +12,7 @@ import { DependencyName } from "@batch/ui-common/lib/environment";
 import { DefaultFormLayoutProvider, DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
 import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import { BrowserDependencyName } from "@batch/ui-react";
-import { StorageAccountServiceImpl } from "@batch/ui-service";
+import { StorageAccountServiceImpl, SubscriptionServiceImpl } from "@batch/ui-service";
 import { registerIcons } from "app/config";
 import {
     AuthorizationHttpService,
@@ -31,6 +31,7 @@ import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
 import {StandardLocalizer} from "@batch/ui-common/lib/localization/standard-localizer";
+
 @Component({
     selector: "bl-app",
     templateUrl: "app.layout.html",
@@ -78,6 +79,8 @@ export class AppComponent implements OnInit, OnDestroy {
                     () => new BatchExplorerHttpClient(authService),
                 [BrowserDependencyName.StorageAccountService]:
                     () => new StorageAccountServiceImpl(),
+                [BrowserDependencyName.SubscriptionService]:
+                    () => new SubscriptionServiceImpl(),
                 [BrowserDependencyName.ParameterTypeResolver]:
                     () => new DefaultParameterTypeResolver(),
                 [BrowserDependencyName.FormLayoutProvider]:
