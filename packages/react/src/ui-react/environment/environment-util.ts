@@ -5,6 +5,7 @@ import {
     mockDependencyFactories,
     mockEnvironmentConfig,
 } from "@batch/ui-common/lib/environment";
+import { FakeStorageAccountService } from "@batch/ui-service";
 import { initializeIcons } from "@fluentui/react/lib/Icons";
 import { BrowserEnvironmentConfig } from ".";
 import {
@@ -17,12 +18,9 @@ import { MockBrowserEnvironment } from "./mock-browser-environment";
 let _fluentIconsInitialized = false;
 
 export const mockBrowserDepFactories: Partial<BrowserDependencyFactories> = {
-    parameterTypeResolver: () => {
-        return new DefaultParameterTypeResolver();
-    },
-    formLayoutProvider: () => {
-        return new DefaultFormLayoutProvider();
-    },
+    parameterTypeResolver: () => new DefaultParameterTypeResolver(),
+    formLayoutProvider: () => new DefaultFormLayoutProvider(),
+    storageAccount: () => new FakeStorageAccountService(),
 };
 
 /**

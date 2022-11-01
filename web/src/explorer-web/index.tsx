@@ -14,6 +14,7 @@ import {
     DefaultParameterTypeResolver,
 } from "@batch/ui-react/lib/components/form";
 import { StandardLocalizer } from "@batch/ui-common/lib/localization";
+import { FakeStorageAccountService } from "@batch/ui-service";
 
 // Defined by webpack
 declare const ENV: {
@@ -30,6 +31,8 @@ export function init(rootEl: HTMLElement): void {
                 [DependencyName.Logger]: () => new ConsoleLogger(),
                 [DependencyName.Localizer]: () => new StandardLocalizer(),
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
+                [BrowserDependencyName.StorageAccountService]: () =>
+                    new FakeStorageAccountService(),
                 [BrowserDependencyName.ParameterTypeResolver]: () =>
                     new DefaultParameterTypeResolver(),
                 [BrowserDependencyName.FormLayoutProvider]: () =>

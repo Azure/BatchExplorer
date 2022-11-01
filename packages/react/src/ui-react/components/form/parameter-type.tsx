@@ -1,10 +1,16 @@
-import { ParameterType as CommonParameterType } from "@batch/ui-common";
+import {
+    Parameter,
+    ParameterType as CommonParameterType,
+} from "@batch/ui-common";
+import { inject } from "@batch/ui-common/lib/environment";
+import { FormValues, ValidationStatus } from "@batch/ui-common/lib/form";
+import { StorageAccount, StorageAccountService } from "@batch/ui-service";
 import * as React from "react";
-import { Parameter } from "@batch/ui-common";
-import { TextField } from "./text-field";
-import { Dropdown } from "./dropdown";
+import { useEffect, useState } from "react";
+import { BrowserDependencyName } from "../..";
 import { useAsyncEffect, useUniqueId } from "../../hooks";
-import { FormValues } from "@batch/ui-common/lib/form";
+import { Dropdown } from "./dropdown";
+import { TextField } from "./text-field";
 
 enum ExtendedParameterType {
     BatchAccountName = "BatchAccountName",
@@ -99,7 +105,7 @@ export class DefaultParameterTypeResolver implements ParameterTypeResolver {
                 );
             case ParameterType.StorageAccountId:
                 return (
-                    <StringParamTextField
+                    <StorageAccountDropdown
                         id={id}
                         key={param.name}
                         param={param}
@@ -107,7 +113,7 @@ export class DefaultParameterTypeResolver implements ParameterTypeResolver {
                 );
             case ParameterType.SubscriptionId:
                 return (
-                    <SubscriptionIdParamDropdown
+                    <SubscriptionDropdown
                         id={id}
                         key={param.name}
                         param={param}
@@ -157,6 +163,68 @@ export function StringParamTextField<
     );
 }
 
+export function StorageAccountDropdown<
+    V extends FormValues,
+    K extends Extract<keyof V, string>
+>(props: ParamControlProps<V, K>): JSX.Element {
+    const { param } = props;
+    const value = param.value == null ? undefined : String(param.value);
+
+    const [loading, setLoading] = useState<boolean>(true);
+    const [storageAccounts, setStorageAccounts] = useState<StorageAccount[]>(
+        []
+    );
+    const id = useUniqueId("form-control", props.id);
+    const service: StorageAccountService = inject(
+        BrowserDependencyName.StorageAccountService
+    );
+    const form = param.parentForm;
+    const [subscriptionId, setSubscriptionId] = useState<string>(
+        form.values.subscriptionId as string
+    );
+    const [validationStatus, setValidationStatus] =
+        useState<ValidationStatus | null>();
+
+    useAsyncEffect(async () => {
+        let accounts: StorageAccount[] = [];
+        try {
+            if (subscriptionId) {
+                accounts = await service.list(subscriptionId);
+            }
+            setValidationStatus(null);
+        } catch (error) {
+            setValidationStatus(new ValidationStatus("error", error + ""));
+        } finally {
+            setStorageAccounts(accounts);
+            setLoading(false);
+        }
+    }, [subscriptionId]);
+
+    useEffect(() => {
+        const handler = form.onChange((values: FormValues) =>
+            setSubscriptionId(values.subscriptionId as string)
+        );
+        return () => form.removeOnChange(handler);
+    });
+
+    const options = storageAccounts.map((sub) => {
+        return { value: sub.id, label: sub.name };
+    });
+
+    return (
+        <Dropdown
+            id={id}
+            label={param.label}
+            disabled={loading || param.disabled}
+            options={options}
+            placeholder={param.placeholder}
+            value={value}
+            validationStatus={validationStatus ?? param.validationStatus}
+            onChange={(value: string) => (param.value = value as V[K])}
+        />
+    );
+}
+
 export function SubscriptionIdParamDropdown<
     V extends FormValues,
     K extends Extract<keyof V, string>
@@ -183,7 +251,7 @@ export function SubscriptionIdParamDropdown<
                 resolve();
             }, 1000);
         });
-    });
+    }, []);
 
     const options = subscriptions.map((sub) => {
         return { value: sub.id, label: sub.displayName };
@@ -197,9 +265,7 @@ export function SubscriptionIdParamDropdown<
             options={options}
             placeholder={param.placeholder}
             value={value}
-            onChange={(newValue: string) => {
-                param.value = newValue as V[K];
-            }}
+            onChange={(newValue: string) => (param.value = newValue as V[K])}
         />
     );
 }
