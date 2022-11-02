@@ -264,7 +264,7 @@ describe("OSImagePickerComponent", () => {
         });
     });
 
-    fit("picks the latest virtual machine sku of given offer when clicking on the tile", () => {
+    it("picks the latest virtual machine sku of given offer when clicking on the tile", () => {
         const tiles = getTiles(0);
 
         click(tiles[1].query(By.css(".main")));
