@@ -17,7 +17,7 @@ export interface OSImageSelection {
             virtualMachineImageId?: string;
         },
         nodeAgentSKUId?: string;
-        batchSupportedEndOfLife?: Date;
+        batchSupportEndOfLife?: Date;
     };
     cloudServiceConfiguration?: {
         osFamily: string,
@@ -60,7 +60,7 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
     public selectedOffer: string;
     public selectedSku: string;
     public selectedNodeAgentId: string;
-    public selectedbatchSupportedEOL: Date;
+    public selectedbatchSupportEndOfLife: Date;
 
     // Cloud service
     public selectedFamilyName: string;
@@ -106,14 +106,14 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
                 this.selectedOffer = null;
                 this.selectedSku = null;
                 this.selectedFamilyName = null;
-                this.selectedbatchSupportedEOL = null;
+                this.selectedbatchSupportEndOfLife = null;
 
                 if (vmConfig) {
                     const ref = vmConfig.imageReference;
                     this.selectedOffer = ref && ref.offer;
                     this.selectedSku = ref && ref.sku;
                     this.selectedNodeAgentId = vmConfig && vmConfig.nodeAgentSKUId;
-                    this.selectedbatchSupportedEOL = vmConfig.batchSupportedEndOfLife;
+                    this.selectedbatchSupportEndOfLife = vmConfig.batchSupportEndOfLife;
                 } else if (value.cloudServiceConfiguration) {
                     const familyId = value.cloudServiceConfiguration.osFamily;
                     const item = cloudServiceOsFamilies.filter(x => x.id === familyId).first();
@@ -149,13 +149,13 @@ export class OSImagePickerComponent implements OnChanges, OnDestroy {
         if (this.selectedOffer === offer.name &&
             this.selectedSku === sku.name &&
             this.selectedNodeAgentId === sku.nodeAgentId &&
-            this.selectedbatchSupportedEOL === sku.batchSupportEndOfLife) {
+            this.selectedbatchSupportEndOfLife === sku.batchSupportEndOfLife) {
             return;
         }
         this.formGroup.patchValue({
             virtualMachineConfiguration: {
                 nodeAgentSKUId: sku.nodeAgentId,
-                batchSupportedEOL: sku.batchSupportEndOfLife,
+                batchSupportEndOfLife: sku.batchSupportEndOfLife,
                 imageReference: {
                     publisher: offer.publisher,
                     offer: offer.name,

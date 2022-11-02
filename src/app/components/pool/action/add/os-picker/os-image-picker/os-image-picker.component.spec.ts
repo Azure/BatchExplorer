@@ -264,7 +264,7 @@ describe("OSImagePickerComponent", () => {
         });
     });
 
-    it("picks the latest virtual machine sku of given offer when cliking on the tile", () => {
+    fit("picks the latest virtual machine sku of given offer when clicking on the tile", () => {
         const tiles = getTiles(0);
 
         click(tiles[1].query(By.css(".main")));
@@ -282,7 +282,7 @@ describe("OSImagePickerComponent", () => {
                     sku: "7.1",
                 },
                 nodeAgentSKUId: "batch.node.centos 7",
-                batchSupportedEndOfLife: null,
+                batchSupportEndOfLife: null,
             },
         });
     });
