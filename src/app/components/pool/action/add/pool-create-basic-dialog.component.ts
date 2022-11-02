@@ -51,6 +51,10 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         return false;
     }
 
+    public get hasDeprecationLink() {
+        return this.isSelectedImageDeprecated && PoolUtils.getEndOfLifeHyperlink(this.selectedVirtualMachineImageName) !== "";
+    }
+
     public get selectedVirtualMachineImageName(): string {
         return this._osControl.value.virtualMachineConfiguration.imageReference.sku;
     }

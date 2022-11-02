@@ -174,11 +174,11 @@ export class PoolUtils {
         return "cloud";
     }
 
-    public static getEndOfLifeHyperlink(imageName: string): string | null {
+    public static getEndOfLifeHyperlink(imageName: string): string {
         if (imageName.toLowerCase().includes("with-containers")) {
             return 'https://github.com/Azure/Batch/issues/136';
         } else {
-            return "https://microsoft.com";
+            return "";
         }
     }
 
