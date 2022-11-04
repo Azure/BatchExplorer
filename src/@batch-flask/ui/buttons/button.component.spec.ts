@@ -27,7 +27,7 @@ class TestComponent {
     }
 }
 
-fdescribe("ButtonComponent", () => {
+describe("ButtonComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -98,9 +98,8 @@ fdescribe("ButtonComponent", () => {
         expect(describedbyId).toBeBlank();
     });
 
-    fit("should pass accessibility test", async () => {
+    it("should pass accessibility test", async () => {
         expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
-        // , { rules:{ "aria-command-name":{ enabled:false } } }
     });
 
     describe("when disabled", () => {
@@ -118,6 +117,10 @@ fdescribe("ButtonComponent", () => {
             fixture.detectChanges();
             expect(testComponent.onAction).not.toHaveBeenCalled();
         });
+
+        it("should pass accessibility test", async () => {
+            expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
+        });
     });
 
     describe("when enabled", () => {
@@ -134,6 +137,10 @@ fdescribe("ButtonComponent", () => {
             click(de);
             fixture.detectChanges();
             expect(testComponent.onAction).toHaveBeenCalledOnce();
+        });
+
+        it("should pass accessibility test", async () => {
+            expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
         });
     });
 });

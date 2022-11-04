@@ -10,6 +10,7 @@ import {
     ActivityService,
 } from "@batch-flask/ui/activity";
 import { AsyncSubject } from "rxjs";
+import { runAxe } from "test/utils/helpers/axe-helpers";
 
 describe("ActivityMonitorFooterComponent", () => {
     let fixture: ComponentFixture<ActivityMonitorFooterComponent>;
@@ -88,5 +89,9 @@ describe("ActivityMonitorFooterComponent", () => {
 
         expect(routerSpy.navigate).toHaveBeenCalledOnce();
         expect(routerSpy.navigate).toHaveBeenCalledWith(["/activitymonitor", 3]);
+    });
+
+    it("should pass accessibility test", async () => {
+        expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
     });
 });
