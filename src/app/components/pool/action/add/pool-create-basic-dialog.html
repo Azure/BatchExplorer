@@ -3,7 +3,7 @@
         <bl-form-section title="Pool details" subtitle="Basic information about the pool">
             <div class="grow">
                 <div class="gcol">
-                    <bl-form-field class="form-element">
+                    <bl-form-field class="form-element required">
                         <input blInput #idInput formControlName="id" placeholder="ID" maxlength="64">
 
                         <bl-hint align="end" attr.aria-label="{{idInput.value.length}} characters out of 64">{{idInput.value.length}} / 64</bl-hint>
