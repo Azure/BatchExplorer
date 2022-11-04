@@ -1,5 +1,5 @@
 <bl-toolbar class="tree-view-header">
-    <bl-clickable toolbarAction class="caret" (do)="toggleExpandTreeView()" [attr.aria-expanded]="expanded" attr.aria-owns="{{id}}-content" attr.aria-labelledby="{{id}}_name">
+    <bl-clickable toolbarAction class="caret" (do)="toggleExpandTreeView()" [attr.aria-expanded]="expanded" attr.aria-owns="{{id}}-content" aria-label="Toggle tree view">
         <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded"></i>
     </bl-clickable>
     <bl-clickable toolbarLabel id="{{id}}_name" class="name" (do)="handleClickTreeViewHeader()">{{name}}</bl-clickable>

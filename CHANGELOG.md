@@ -1,3 +1,44 @@
+# 2.15.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/49?closed=1)
+
+### Bugs
+
+* Users with custom permissions were not able to create pools or jobs [\#2077](https://github.com/Azure/BatchExplorer/issues/2077)
+
+# 2.14.2
+
+### Bugs
+
+* Fixes login failures when proxy is misconfigured [\#2551]
+
+# 2.14.1
+
+### Bugs
+
+* Fixes login failures due to AADSTS50011 error [\#2543]
+
+# 2.14.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/48?closed=1)
+
+### Features
+
+* Improve proxy support with MSAL authentication [\#2528](https://github.com/Azure/BatchExplorer/issues/2528)
+* Add new heatmap node display for better running task visualization and made improvements to the heatmap legend [\#2527](https://github.com/Azure/BatchExplorer/issues/2527)
+* Re-land API call for List Supported Virtual Machine and Cloud Service SKUs [\#2525](https://github.com/Azure/BatchExplorer/issues/2525)
+
+### Bugs
+
+* April and May accessibility bug fixes and improvements [\#2531](https://github.com/Azure/BatchExplorer/issues/2531)
+* Fix issue with menubar not appearing on Windows Insider build [\#2529](https://github.com/Azure/BatchExplorer/issues/2529)
+* Fix issue with failed silent auth [\#2524](https://github.com/Azure/BatchExplorer/issues/2524)
+
+### Other
+
+* Update dependencies for better security [\#2530](https://github.com/Azure/BatchExplorer/issues/2530)
+* Upgrade to Electron 13 [\#2526](https://github.com/Azure/BatchExplorer/issues/2526)
+
 # 2.13.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/47?closed=1)

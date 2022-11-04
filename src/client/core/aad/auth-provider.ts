@@ -172,8 +172,8 @@ export default class AuthProvider {
 
     private async _createClient(tenantId: string):
         Promise<PublicClientApplication> {
-        const proxySettings = await this.app.proxySettings.settings;
-        const proxyUrl = proxySettings?.http.toString();
+        const proxyUrl = await this._loadProxyUrl();
+
         if (proxyUrl) {
             log.info(`[${tenantId}] Proxying auth endpoints through ` +
                 proxyUrl);
@@ -195,6 +195,12 @@ export default class AuthProvider {
                 cachePlugin: this._cachePlugin
             }
         });
+    }
+
+    private async _loadProxyUrl() {
+        const proxySettings = await this.app.proxySettings.settings;
+        const protocolUrl = proxySettings?.https ?? proxySettings?.http;
+        return protocolUrl?.toString();
     }
 
     private async _getAccount(tenantId: string): Promise<AccountInfo> {

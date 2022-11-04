@@ -3,7 +3,7 @@
         <bl-form-section title="Pool details" subtitle="Basic information about the pool">
             <div class="grow">
                 <div class="gcol">
-                    <bl-form-field class="form-element">
+                    <bl-form-field class="form-element required">
                         <input blInput #idInput formControlName="id" placeholder="ID" maxlength="64">
 
                         <bl-hint align="end" attr.aria-label="{{idInput.value.length}} characters out of 64">{{idInput.value.length}} / 64</bl-hint>
@@ -29,6 +29,13 @@
         </bl-form-section>
 
         <bl-form-section title="Select an operating system configuration" subtitle="Choose the operating system to be installed on all the nodes in the pool">
+            <bl-banner class="cloud-services-deprecation-warning" type="warning">
+                <div message>
+                    The Windows container images below will be removed from marketplace starting on September 22, 2022. After this date, new pools using it may not be created from the Azure Batch Explorer.
+                    <a (click)="openLink('https://github.com/Azure/Batch/issues/136')" href="javascript:void(0)">Click here </a>
+                    for more information.
+                </div>
+            </bl-banner>
             <ng-container *ngIf="cloudServiceConfiguration">
                 <bl-banner class="cloud-services-deprecation-warning" type="warning">
                     <div message>

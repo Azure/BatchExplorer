@@ -3,6 +3,7 @@ import { TemplatePortal } from "@angular/cdk/portal";
 import { Directive, ElementRef,  HostListener, Input, ViewContainerRef } from "@angular/core";
 import { Subscription } from "rxjs";
 import { CalloutComponent } from "./callout.component";
+import { ENTER, SPACE } from "@batch-flask/core/keys";
 
 @Directive({
     selector: "[blCallout]",
@@ -22,6 +23,17 @@ export class CalloutDirective {
             this.close();
         } else {
             this.open();
+        }
+    }
+
+    @HostListener("keydown", ["$event"])
+    public onkeydown(event: KeyboardEvent) {
+        if (event.key === SPACE || event.key === ENTER) {
+            if (this._overlayRef) {
+                this.close();
+            } else {
+                this.open();
+            }
         }
     }
 

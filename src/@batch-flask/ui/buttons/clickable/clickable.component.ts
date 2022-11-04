@@ -12,7 +12,6 @@ import {
     Self,
     SimpleChanges,
 } from "@angular/core";
-import { MatMenuTrigger } from "@angular/material/menu";
 import { RouterLink } from "@angular/router";
 import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { Permission, PermissionService } from "@batch-flask/ui/permission";
@@ -56,11 +55,10 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     // Aria
     @Input() @HostBinding("attr.role") public role = "button";
     @HostBinding("attr.aria-disabled") public get ariaDisabled() { return this.disabled; }
- 
+
     public subtitle = "";
 
     private permissionService: PermissionService | null;
-    private _matMenuTrigger: MatMenuTrigger | null;
     // Router link directive if any
     private _routerLink?: RouterLink;
     private _sub: Subscription;
@@ -69,7 +67,6 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     constructor(injector: Injector, @Self() @Optional() routerLink: RouterLink) {
         this._routerLink = routerLink;
-        this._matMenuTrigger = injector.get<MatMenuTrigger | null>(MatMenuTrigger, null, 2);
         this.permissionService = injector.get<PermissionService | null>(PermissionService, null);
     }
 
@@ -78,7 +75,10 @@ export class ClickableComponent implements OnChanges, OnDestroy {
             this._clearSubscription();
             if (this.permissionService && this.permission) {
                 this._sub = this.permissionService.hasPermission(this.permission).subscribe((hasPermission) => {
-                    this._permissionDisabled = !hasPermission;
+                    // TODO: Reenable this line when permissions checking is able to handle custom roles
+                    //       Also uncomment the test in entity-command-button.component.spec.ts
+                    // this._permissionDisabled = !hasPermission;
+                    this._permissionDisabled = false;
                     if (hasPermission) {
                         this.subtitle = "";
                     } else {
@@ -117,9 +117,6 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
         if (this._routerLink) {
             this._routerLink.onClick();
-        }
-        if (this._matMenuTrigger) {
-            this._matMenuTrigger.openMenu();
         }
     }
 

@@ -83,3 +83,11 @@ bl-toast {
         }
     }
 }
+
+@media (forced-colors: active) {
+    bl-toast {
+        &.success, &.info, &.warn, &.error {
+            border: 1px solid Highlight;
+        }
+    }
+}

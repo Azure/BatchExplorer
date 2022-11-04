@@ -9,7 +9,7 @@
         <bl-account-cost-card></bl-account-cost-card>
         <h1 class="section-title">{{'account-details.resources' | i18n }}</h1>
         <div class="account-cards">
-            <bl-card class="account-card">
+            <bl-card class="account-card" routerLink="/jobs" (click)="selectAccount(account.id)">
                 <div class="title">
                     <h2>Job status</h2>
                 </div>
