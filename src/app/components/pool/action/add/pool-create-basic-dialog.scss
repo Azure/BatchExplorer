@@ -26,3 +26,8 @@ bl-pool-create-basic-dialog {
         color: #1d54af;
     }
 }
+
+.required label:after {
+    content: "*";
+    color: $validation-error-color;
+}

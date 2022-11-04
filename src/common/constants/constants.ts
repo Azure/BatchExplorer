@@ -138,6 +138,7 @@ export const ExternalLinks = {
     setupStorageAccount: "https://portal.azure.com/#resource{0}/storageAccount",
     license: "https://azure.github.io/BatchExplorer/EULA.html",
     privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
+    italyAccessibility: "https://www.microsoft.com/it-it/accessibility/accessibilita/dichiarazioni",
     submitIssue: "https://github.com/Azure/BatchExplorer/issues",
     subscriptionUrl: "https://portal.azure.com/#resource/subscriptions/{0}/overview",
     costManagementUrl: "https://ms.portal.azure.com/#resource/subscriptions/{0}/costByResource",
