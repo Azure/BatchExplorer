@@ -6,6 +6,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 import { ClickableComponent } from "@batch-flask/ui/buttons/clickable";
 import { PermissionService } from "@batch-flask/ui/permission";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { click, mousedown, updateInput } from "test/utils/helpers";
 import { SelectOptionComponent } from "./option";
 import { OptionTemplateDirective } from "./option-template.directive";
@@ -79,7 +80,7 @@ describe("SelectComponent", () => {
 
     function setup(component) {
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, OverlayModule],
+            imports: [FormsModule, ReactiveFormsModule, OverlayModule, I18nTestingModule],
             declarations: [SelectComponent,
                 SelectOptionComponent, SelectDropdownComponent,
                 OptionTemplateDirective,
