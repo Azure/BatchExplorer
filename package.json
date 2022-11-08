@@ -130,7 +130,7 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-sourcemap-loader": "^0.3.8",
     "karma-webpack": "^4.0.2",
-    "loader-utils": "^1.4.0",
+    "loader-utils": "^1.4.1",
     "markdownlint": "^0.23.1",
     "markdownlint-cli2": "^0.0.14",
     "merge2": "^1.4.1",
