@@ -30,7 +30,9 @@
         <ng-container *ngIf="isImageDeprecated">
             <bl-banner class="pool-details-summary-deprecation-warning" type="warning">
                 <div message>
-                    This pool's image is nearing its end-of-life date. After {{selectedImageEndOfLifeDate}}, new nodes may not function properly.
+                    <bl-i18n key="pool-details.deprecationWarning.imageEndOfLife">
+                        <b *i18nParam="'imageEndOfLifeDate'">{{selectedImageEndOfLifeDate}}</b>
+                    </bl-i18n>
                     <a class="pool-details-summary-warning-alternative-link" *ngIf="hasDeprecationLink" (click)="openDeprecationLink()" href="javascript:void(0)">Learn more </a>
                 </div>
             </bl-banner>

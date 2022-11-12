@@ -40,7 +40,8 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     public get isSelectedImageDeprecated() {
-        if (this._osControl.value && this._osControl.value.virtualMachineConfiguration) {
+        const config = this._osControl.value?.virtualMachineConfiguration;
+        if (config) {
             const config = this._osControl.value.virtualMachineConfiguration;
             const isDeprecatedImage = config && config.batchSupportEndOfLife;
             if (isDeprecatedImage) {
@@ -52,7 +53,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     public get hasDeprecationLink() {
-        return this.isSelectedImageDeprecated && PoolUtils.getEndOfLifeHyperlink(this.selectedVirtualMachineImageName) !== "";
+        return this.isSelectedImageDeprecated && PoolUtils.getEndOfLifeHyperlink(this.selectedVirtualMachineImageName);
     }
 
     public get selectedVirtualMachineImageName(): string {

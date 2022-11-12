@@ -1,0 +1,3 @@
+pool-create-basic-dialog:
+  deprecationWarning:
+    imageEndOfLife: The selected image is nearing its end of life date on {imageEndOfLifeDate}. API calls to create new pools using this image may continue to be supported for up to 60 days after the end of life date.

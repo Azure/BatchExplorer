@@ -40,7 +40,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return this._isImageDeprecated;
     }
     public get hasDeprecationLink() {
-        return this.isImageDeprecated && PoolUtils.getEndOfLifeHyperlink(this.poolDecorator.poolOs) !== "";
+        return this.isImageDeprecated && PoolUtils.getEndOfLifeHyperlink(this.poolDecorator.poolOs);
     }
     public get selectedImageEndOfLifeDate() {
         return this._selectedImageEndOfLifeDate.toDateString();

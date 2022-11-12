@@ -32,7 +32,9 @@
             <ng-container *ngIf="isSelectedImageDeprecated">
                 <bl-banner class="create-pool-deprecation-warning" type="warning">
                     <div message>
-                        The selected image is nearing its end of life date on {{selectedVirtualMachineImageEndOfLifeDate}}. API calls to create new pools using this image may continue to be supported for up to 60 days after the end of life date.
+                        <bl-i18n key="pool-create-basic-dialog.deprecationWarning.imageEndOfLife">
+                            <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
+                        </bl-i18n>
                         <a class="create-pool-warning-alternative-link" *ngIf="hasDeprecationLink" (click)="openDeprecationLink()" href="javascript:void(0)">Learn more </a>
                     </div>
                 </bl-banner>

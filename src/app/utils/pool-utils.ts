@@ -19,6 +19,24 @@ export interface PoolPriceOptions {
     target?: boolean;
 }
 
+const deprecatedContainerImages = {
+    "2016-datacenter-with-containers": 0,
+    "2016-datacenter-with-containers-g2": 0,
+    "2016-datacenter-with-containers-gs": 0,
+    "2019-datacenter-containers-with-containers": 0,
+    "2019-datacenter-core-with-containers-g2": 0,
+    "2019-datacenter-containers-with-containers-smalldisk": 0,
+    "2019-datacenter-core-with-containers-smalldisk-g2": 0,
+    "2019-datacenter-with-containers": 0,
+    "2019-datacenter-with-containers-g2": 0,
+    "2019-datacenter-with-containers-gs": 0,
+    "2019-datacenter-with-containers-smalldisk": 0,
+    "2019-datacenter-with-containers-smalldisk-g2": 0,
+    "datacenter-core-20h2-with-containers-smalldisk": 0,
+    "datacenter-core-20h2-with-containers-smalldisk-gs": 0,
+    "datacenter-core-20h2-with-containers-smalldisk-g2": 0,
+}
+
 const iconMapping = {
     "ubuntuserver": Icons.ubuntu,
     "ubuntu-server-container": Icons.ubuntu,
@@ -174,12 +192,11 @@ export class PoolUtils {
         return "cloud";
     }
 
-    public static getEndOfLifeHyperlink(imageName: string): string {
-        if (imageName.toLowerCase().includes("with-containers")) {
+    public static getEndOfLifeHyperlink(imageName: string): string | null {
+        if (imageName.toLowerCase() in deprecatedContainerImages) {
             return 'https://github.com/Azure/Batch/issues/136';
-        } else {
-            return "";
         }
+        return null;
     }
 
     /**
