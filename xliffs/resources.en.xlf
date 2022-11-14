@@ -1000,6 +1000,18 @@
       <trans-unit id="resourcefile-picker.cloudFileDialog.title">
         <source>Pick file(s) from storage account</source>
       </trans-unit>
+      <trans-unit id="select-dropdown">
+        <source/>
+      </trans-unit>
+      <trans-unit id="select-dropdown.noMatch">
+        <source>No match</source>
+      </trans-unit>
+      <trans-unit id="select-dropdown.noOptions">
+        <source>No options available</source>
+      </trans-unit>
+      <trans-unit id="select-dropdown.showItems">
+        <source>Showing {num} items</source>
+      </trans-unit>
       <trans-unit id="settings">
         <source/>
       </trans-unit>
