@@ -2,7 +2,7 @@ steps:
   - template: ./linux-dependencies.yml
 
   - script: |
-      butil configure --paths.batchExplorer=$(System.DefaultWorkingDirectory) --print
+      bux configure --paths.batchExplorer=$(System.DefaultWorkingDirectory) --print
     displayName: Configure local paths
 
   - script: npm run lint

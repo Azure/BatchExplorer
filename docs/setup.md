@@ -94,13 +94,13 @@ The Portal Extension relies on packages provided by the shared libraries. The po
 2. Configure paths to relevant repos:
 
     ```shell
-    butil configure
+    bux configure
     ```
 
 3. Run the link command:
 
     ```shell
-    butil link
+    bux link
     ```
 
 The Portal Extension will now use the shared libraries directly from this repo.

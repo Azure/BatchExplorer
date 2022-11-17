@@ -10,10 +10,7 @@ import * as path from "path";
 import * as shell from "shelljs";
 
 export const defaultBatchExplorerHome = path.resolve(__dirname, "../../");
-export const configFile = path.resolve(
-    os.homedir(),
-    ".config/batch/butil.json"
-);
+export const configFile = path.resolve(os.homedir(), ".config/batch/bux.json");
 
 const portalReactPath = "src/src/BatchExtension/Client/ReactViews";
 const defaultJsonIndentSize = 2;

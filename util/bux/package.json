@@ -1,5 +1,5 @@
 {
-  "name": "@batch/build-util",
+  "name": "@batch/bux",
   "version": "1.0.0",
   "description": "Cross platform CLI containing helpers for NPM tasks",
   "private": true,
@@ -14,11 +14,11 @@
   },
   "main": "./bin/cli.js",
   "bin": {
-    "butil": "./bin/cli.js"
+    "bux": "./bin/cli.js"
   },
   "scripts": {
     "build": "tsc -p . && node ./bin/cli.js chmodx ./bin/cli.js",
-    "butil": "npm run build && node ./bin/cli.js",
+    "bux": "npm run build && node ./bin/cli.js",
     "clean": "rimraf bin/",
     "lint": "eslint .",
     "lint:fix": "npm run lint --fix",
