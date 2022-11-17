@@ -10,7 +10,7 @@ steps:
       cp .vsts/pipelines.npmrc packages/playground/.npmrc
       cp .vsts/pipelines.npmrc packages/react/.npmrc
       cp .vsts/pipelines.npmrc packages/service/.npmrc
-      cp .vsts/pipelines.npmrc util/build-util/.npmrc
+      cp .vsts/pipelines.npmrc util/bux/.npmrc
       cp .vsts/pipelines.npmrc util/common-config/.npmrc
       cp .vsts/pipelines.npmrc web/.npmrc
     displayName: Stage .npmrc configuration
@@ -46,9 +46,9 @@ steps:
       workingFile: packages/service/.npmrc
 
   - task: npmAuthenticate@0
-    displayName: NPM auth - build-util
+    displayName: NPM auth - bux
     inputs:
-      workingFile: util/build-util/.npmrc
+      workingFile: util/bux/.npmrc
 
   - task: npmAuthenticate@0
     displayName: NPM auth - common-config
@@ -62,4 +62,4 @@ steps:
 
   - script: |
       npm run dev-setup
-    displayName: Install Batch Utility CLI (butil)
+    displayName: Install Batch Utility CLI (bux)

@@ -56,7 +56,7 @@
     "build:prod": "lerna run workspace:build:prod --stream",
     "build:test": "lerna run workspace:build:test --stream",
     "clean": "lerna run --parallel workspace:clean --stream",
-    "gather-build-results": "butil gather-build-results",
+    "gather-build-results": "bux gather-build-results",
     "launch": "npm run -s launch:web",
     "launch:desktop": "lerna run --parallel workspace:launch:desktop --stream",
     "launch:web": "lerna run --parallel workspace:launch:web --stream",
@@ -73,7 +73,7 @@
     "test:lib:all": "lerna run workspace:test:lib:all --stream && npm run gather-build-results",
     "test:web": "lerna run workspace:test:web --stream && npm run gather-build-results",
     "test:web:all": "lerna run workspace:test:web:all --stream && npm run gather-build-results",
-    "postinstall": "lerna bootstrap -- --legacy-peer-deps && node ./util/build-util/check-cli-path",
-    "dev-setup": "cd ./util/build-util && npm install && npm run -s build:clean && npm install -g ."
+    "postinstall": "lerna bootstrap -- --legacy-peer-deps && node ./util/bux/check-cli-path",
+    "dev-setup": "cd ./util/bux && npm install && npm run -s build:clean && npm install -g ."
   }
 }
