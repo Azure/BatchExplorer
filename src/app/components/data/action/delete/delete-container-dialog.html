@@ -1,18 +1,15 @@
 <bl-simple-form [submit]="ok" [containerRef]="dialogRef" actionColor="warn" actionName="Delete" [stickyFooter]="false" [multiUse]="false"
-    size="small" title="Delete file group">
+    size="small" title="{{'delete-container-dialog.title' | i18n}}">
     <div class="message">
-        <p>Do you want to permantly delete file group(s):</p>
-        <table style="width: 100%; margin: 10px 0;">
-            <tr style="text-align: left;">
-                <th>Name</th>
-            </tr>
-            <tr *ngFor="let container of containers;trackBy: trackContainer">
-                <td>{{container.name}}</td>
-            </tr>
-        </table>
-        <p>
-            Warning! Deleting the file group listed above is irreversible.
-            The action you are about to take cannot be undone.
-        </p>
+        <p>{{"delete-container-dialog.message" | i18n}}</p>
+        <ul class="storage-container-list">
+            <li *ngFor="let container of containers;trackBy: trackContainer">
+                {{ container.name}}
+            </li>
+        </ul>
+        <div class="warning-message">
+            <i class="fa fa-warning"></i>&nbsp;
+            <span>{{"delete-container-dialog.warning" | i18n}}</span>
+        </div>
     </div>
 </bl-simple-form>
