@@ -4,32 +4,50 @@
         background: #00416f;
         width: 100vw;
         height: 100vh;
-        font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif
+        font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #d5d5d5;
     }
 
     body {
         overflow: hidden;
-        user-select: none;
     }
 
-    .bubbles {
-        width: 100px;
-        height: 100px;
-        margin: auto;
+    #splash-animation {
+        width: 96%;
         position: relative;
+        text-align: center;
+        top: 0;
+    }
+    #splash-animation #honeycomb {
+        width: 300px;
+        opacity: 70%;
+    }
+    #magnifier {
+        width: 80px;
+        position: absolute;
+        left: 150px;
+        top: 25%;
+        animation: circle 20s linear infinite;
     }
 
-    .flask {
-        width: 100px;
-        height: 100px;
-        margin: auto;
+    #magnifier .magnifier-glass {
+        background-color: #00416f;
+        position: absolute;
+        top: 9px;
+        left: 9px;
+        width: 61px;
+        height: 61px;
+        border-radius: 50%;
+        box-sizing: border-box;
     }
 
     .title {
+        position: absolute;
+        bottom: 120px;
         color: #d5d5d5;
         margin: auto;
-        width: 120px;
-        font-size: 20px;
+        font-size: 24px;
+        width: 100%;
         text-align: center;
     }
 
@@ -40,100 +58,95 @@
         bottom: 5px;
     }
 
-    .bubble {
-        width: 20px;
-        height: 20px;
-        background: #d5d5d5;
-        border-radius: 10px;
+    #brand {
         position: absolute;
+        right: 0;
+        bottom: 0;
     }
 
-    .x1 {
-        left: 35px;
-        transform: scale(0.9);
-        opacity: 0.2;
-        animation: moveclouds 7s linear infinite, sideWays 4s ease-in-out infinite alternate;
+    #brand .logo {
+        width: 120px;
     }
 
-    .x2 {
-        left: 30px;
-        transform: scale(0.6);
-        opacity: 0.5;
-        animation: moveclouds 15s linear infinite, sideWays 5s ease-in-out infinite alternate;
+    @keyframes movehandle {
+        0%  { transform: rotate(25deg);  }
+        25% { transform: rotate(-10deg); }
+        50% { transform: rotate(25deg);  }
+        75% { transform: rotate(60deg);  }
     }
 
-    .x3 {
-        left: 50px;
-        transform: scale(0.8);
-        opacity: 0.3;
-        animation: moveclouds 12s linear infinite, sideWays 4s ease-in-out infinite alternate;
-    }
-
-    .x4 {
-        left: 40px;
-        transform: scale(0.75);
-        opacity: 0.35;
-        animation: moveclouds 10s linear infinite, sideWays 2s ease-in-out infinite alternate;
-    }
-
-    .x5 {
-        left: 45px;
-        transform: scale(0.8);
-        opacity: 0.3;
-        animation: moveclouds 5s linear infinite, sideWays 1s ease-in-out infinite alternate;
-    }
-
-    @keyframes moveclouds {
-        0% {
-            top: 100px;
-            transform: scale(0.6);
-        }
-        100% {
-            top: -50px;
-            transform: scale(1.5);
-        }
-    }
-
-    @keyframes sideWays {
-        0% {
-            margin-left: 0px;
-        }
-        100% {
-            margin-left: 10px;
-        }
+    @keyframes circle {
+        0%   { transform: rotate(0deg)   translate(30px) rotate(-0deg)   }
+        8%   { transform: rotate(30deg)  translate(30px) rotate(-30deg)  }
+        17%  { transform: rotate(60deg)  translate(30px) rotate(-60deg)  }
+        25%  { transform: rotate(90deg)  translate(30px) rotate(-90deg)  }
+        33%  { transform: rotate(120deg) translate(30px) rotate(-120deg) }
+        42%  { transform: rotate(150deg) translate(30px) rotate(-150deg) }
+        50%  { transform: rotate(180deg) translate(30px) rotate(-180deg) }
+        58%  { transform: rotate(210deg) translate(30px) rotate(-210deg) }
+        67%  { transform: rotate(240deg) translate(30px) rotate(-240deg) }
+        75%  { transform: rotate(270deg) translate(30px) rotate(-270deg) }
+        83%  { transform: rotate(300deg) translate(30px) rotate(-300deg) }
+        92%  { transform: rotate(330deg) translate(30px) rotate(-330deg) }
+        100% { transform: rotate(360deg) translate(30px) rotate(-360deg) }
     }
 </style>
 <html>
 
 <script>
+    const UPDATE_INTERVAL = 30;
+    const ZOOM_FACTOR = 2;
+    const BW = 3;
     document.addEventListener("DOMContentLoaded", () => {
         const message = document.getElementById("message");
         const {ipcRenderer} = require("electron");
         ipcRenderer.on("update-message", (event, arg) => {
             message.innerHTML = arg;
-        })
+        });
+        magnify("honeycomb", ZOOM_FACTOR);
     })
+
+    function magnify(imgID, zoom) {
+        const img = document.getElementById(imgID);
+        const glass = document.querySelector("#magnifier .magnifier-glass");
+        glass.style.backgroundImage = `url(${img.src})`;
+        glass.style.backgroundRepeat = "no-repeat";
+        glass.style.backgroundSize =
+            `${img.width * zoom}px ${img.height * zoom}px`;
+        const w = glass.offsetWidth / 2;
+        const h = glass.offsetHeight / 2;
+
+        setInterval(() => {
+            const pos = glass.getBoundingClientRect();
+            const x = pos.left;
+            const y = pos.top;
+            glass.style.backgroundPosition =
+                `-${(x * zoom) - w + BW}px -${(y * zoom) - h + BW}px`;
+
+        }, UPDATE_INTERVAL);
+    }
+
+    window.onload = () => magnify("honeycomb", ZOOM_FACTOR);
 
 </script>
 
 <body>
-    <div class="bubbles">
-        <div class="bubble x1"></div>
-        <div class="bubble x2"></div>
-        <div class="bubble x3"></div>
-        <div class="bubble x4"></div>
-        <div class="bubble x5"></div>
-    </div>
-
-    <div class="flask">
-        <img src="./flask.svg" role="presentation"></img>
+    <div id="splash-animation">
+        <img id="honeycomb" src="./honeycomb.png" title="Splash window background"/>
+        <div id="magnifier">
+            <img class="magnifier-frame" src="./magnifying-glass.png" title="magnifier"/>
+            <div class="magnifier-glass"></div>
+        </div>
     </div>
 
     <div class="title">
-        Batch Explorer
+        Azure Batch Explorer
     </div>
 
     <div id="message">
+    </div>
+    <div id="brand">
+        <img class="logo" src="./microsoft-logo.png" title="Microsoft logo"/>
     </div>
 </body>
 

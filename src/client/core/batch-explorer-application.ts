@@ -21,7 +21,7 @@ import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
-import { AADService, AuthenticationState, AuthenticationWindow, LogoutError } from "./aad";
+import { AADService, AuthenticationState, AuthenticationWindow } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
 import { StorageBlobAdapter } from "./storage";
@@ -99,20 +99,20 @@ export class BatchExplorerApplication {
         if (!window) { return; }
 
         this._setCommonHeaders(window);
-        const loginResponse = this.aadService.login();
-        loginResponse.done.catch((e) => {
-            if (e instanceof LogoutError) {
-                return;
-            }
-            log.error("Error while login", e);
-            dialog.showMessageBox({
-                title: "Error during login",
-                type: "error",
-                message: e.toString(),
-            });
-            this.logoutAndLogin();
-        });
-        await loginResponse.started;
+        // const loginResponse = this.aadService.login();
+        // loginResponse.done.catch((e) => {
+        //     if (e instanceof LogoutError) {
+        //         return;
+        //     }
+        //     log.error("Error while login", e);
+        //     dialog.showMessageBox({
+        //         title: "Error during login",
+        //         type: "error",
+        //         message: e.toString(),
+        //     });
+        //     this.logoutAndLogin();
+        // });
+        // await loginResponse.started;
 
         this._initializer.setTaskStatus("window", "Loading application");
 

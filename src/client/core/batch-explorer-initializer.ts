@@ -68,8 +68,6 @@ export class BatchExplorerInitializer {
         if (message) {
             this.splashScreen.show();
             this.splashScreen.updateMessage(message);
-        } else {
-            this.splashScreen.destroy();
         }
     }
 
