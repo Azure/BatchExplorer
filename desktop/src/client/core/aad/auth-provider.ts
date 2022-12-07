@@ -1,8 +1,8 @@
 import {
     AccountInfo,
     AuthenticationResult,
+    InteractiveRequest,
     PublicClientApplication,
-    SilentFlowRequest
 } from "@azure/msal-node";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "..";
@@ -11,24 +11,19 @@ import { AADConfig } from "./aad-config";
 import { defaultTenant, unretryableAuthCodeErrors, TenantPlaceholders } from "./aad-constants";
 import { AuthorizeError } from "./authentication";
 import MSALCachePlugin from "./msal-cache-plugin";
+import { AuthObserver } from "./auth-observer";
+import { shell } from "electron";
+import { AuthLoopbackClient } from "./auth-loopback-client";
 
 const MSAL_SCOPES = ["user_impersonation"];
 
 export type AuthorizationResult = AuthenticationResult;
 
-/**
- * A callback which performs interactive auth using an external
- * web browser
- */
-export type BrowserAuthCallback =
-    (client: PublicClientApplication, tokenRequest: SilentFlowRequest, url: string, tenant: string) => Promise<AuthorizationResult>;
-
-/**
- * A callback which peforms silent or interactive auth using a built-in
- * Electron window
- */
-export type BuiltInAuthCodeCallback =
-    (url: string, tenant: string, silent?: boolean) => Promise<string>;
+interface MSALAuthRequest  {
+    scopes: string[];
+    redirectUri: string;
+    authority: string;
+}
 
 /**
  * Provides authentication services
@@ -40,6 +35,8 @@ export default class AuthProvider {
     private _logoutPromise?: Promise<void>;
     private _primaryClient?: PublicClientApplication;
 
+    private authObserver: AuthObserver;
+
     // Used for reauthentication to associated tenants
     private _primaryUsername?: string;
 
@@ -49,6 +46,10 @@ export default class AuthProvider {
     ) {
         this._cachePlugin =
             new MSALCachePlugin(app.injector.get(SecureDataStore));
+    }
+
+    public setAuthObserver(observer: AuthObserver) {
+        this.authObserver = observer;
     }
 
     /**
@@ -64,19 +65,13 @@ export default class AuthProvider {
      */
     public async getToken(options: {
         resourceURI: string,
-        browser: "external" | "builtin",
         tenantId?: string,
         forceRefresh?: boolean,
-        browserAuthCallback: BrowserAuthCallback,
-        builtInAuthCodeCallback: BuiltInAuthCodeCallback,
     }): Promise<AuthorizationResult> {
         const {
             resourceURI,
-            browser,
             tenantId = defaultTenant,
             forceRefresh = false,
-            browserAuthCallback,
-            builtInAuthCodeCallback
         } = options;
 
         if (this._logoutPromise) {
@@ -109,18 +104,23 @@ export default class AuthProvider {
             });
             return result;
         } catch (silentTokenException) {
+            log.debug(`[${tenantId}] Silent token acquisition failed: ${silentTokenException}`);
             let result: AuthorizationResult;
 
-            if (browser === "external") {
+            const { externalBrowserAuth } = await this.authObserver.selectUserAuthMethod(tenantId);
+
+            if (externalBrowserAuth) {
                 log.debug(`[${tenantId}] Trying browser interactive auth code flow (${silentTokenException})`);
 
-                const url = await client.getAuthCodeUrl({
-                    ...authRequest,
-                    domainHint: tenantId,
-                    loginHint: this._primaryUsername
-                });
+                try {
+                    const interactiveRequest =
+                        await this._createExternalBrowserRequest(authRequest);
 
-                result = await browserAuthCallback(client, {...authRequest, account, forceRefresh}, url, tenantId);
+                    result = await client.acquireTokenInteractive(interactiveRequest);
+                } catch (error) {
+                    log.warn(`[${tenantId}] Failed to authenticate using browser auth: ${error}`);
+                    this.authObserver.onAuthFailure(error);
+                }
             } else {
                 log.debug(`[${tenantId}] Trying silent auth code flow (${silentTokenException})`);
 
@@ -130,31 +130,44 @@ export default class AuthProvider {
                     const url = await client.getAuthCodeUrl(
                         { ...authRequest, prompt: "none" }
                     );
-                    code = await builtInAuthCodeCallback(url, tenantId, true);
+                    code = await this.authObserver.fetchAuthCode(url, tenantId);
                 } catch (silentAuthException) {
                     log.debug(`[${tenantId}] Silent auth failed (${silentAuthException})`);
                     if (silentAuthException instanceof AuthorizeError &&
                         !this._isTenantAuthRetryable(silentAuthException)) {
-                        log.warn(`Fatal authentication exception for ${tenantId}:` +
-                            ` ${silentAuthException} (non-retryable error code ` +
-                            silentAuthException.errorCodes.join(";") + `)`);
-                        throw silentAuthException;
+                            log.warn(`Fatal authentication exception for ${tenantId}:` +
+                                ` ${silentAuthException} (non-retryable error code ` +
+                                silentAuthException.errorCodes.join(";") + `)`);
+                            throw silentAuthException;
                     }
                     log.debug(
                         `[${tenantId}] Trying built-in interactive auth code flow (${silentAuthException})`);
-                    const url = await client.getAuthCodeUrl({
-                        ...authRequest,
-                        domainHint: tenantId,
-                        loginHint: this._primaryUsername
-                    });
+                    let url;
+                    try {
+                        url = await client.getAuthCodeUrl({
+                            ...authRequest,
+                            domainHint: tenantId,
+                            loginHint: this._primaryUsername
+                        });
+                    } catch (error) {
+                        log.warn(`[${tenantId}] Failed to get auth code URL: ${error}`);
+                        this.authObserver.onAuthFailure(error);
+                        throw error;
+                    }
 
-                    code = await builtInAuthCodeCallback(url, tenantId);
+                    try {
+                        code = await this.authObserver.fetchAuthCode(url, tenantId);
+                    } catch (error) {
+                        log.warn(`[${tenantId}] Failed to authenticate using built-in auth code: ${error}`);
+                        this.authObserver.onAuthFailure(error);
+                        throw error;
+                    }
                 }
 
                 result = await client.acquireTokenByCode({ ...authRequest, code });
             }
 
-            if (result.account) {
+            if (result?.account) {
                 this._accounts[tenantId] = result.account;
                 if (!this._primaryUsername) {
                     this._primaryUsername = result.account.username;
@@ -165,6 +178,22 @@ export default class AuthProvider {
 
             return result;
         }
+    }
+
+    private async _createExternalBrowserRequest(authRequest: MSALAuthRequest):
+        Promise<InteractiveRequest> {
+        const loopbackClient = await AuthLoopbackClient.initialize(3874);
+
+        // opens a browser instance via Electron shell API
+        const openBrowser = async (url: string) => {
+            await shell.openExternal(url);
+        };
+        const interactiveRequest: InteractiveRequest = {
+            ...authRequest,
+            openBrowser,
+            loopbackClient
+        };
+        return interactiveRequest;
     }
 
     public async logout(tenantId?: string): Promise<void> {
@@ -290,7 +319,7 @@ export default class AuthProvider {
         }
     }
 
-    private _authRequest(resourceURI: string, tenantId?: string) {
+    private _authRequest(resourceURI: string, tenantId?: string): MSALAuthRequest {
         return {
             scopes: this._getScopes(resourceURI),
             redirectUri: this.config.redirectUri,

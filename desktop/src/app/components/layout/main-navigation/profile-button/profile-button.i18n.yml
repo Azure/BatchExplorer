@@ -9,4 +9,5 @@ profile-button:
   viewLogs: View logs
   report: Report a bug or feature request
   viewTheme: View theme colors
-  logout: Logout
+  sign-out: Sign out
+  sign-in: Sign in

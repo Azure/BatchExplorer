@@ -1,0 +1,9 @@
+<div>
+    <be-slide-toggle [checked]="externalBrowserAuth"
+        (toggleChange)="toggleExternalBrowserAuth($event)">
+        {{"settings.external-browser-auth" | i18n }}
+    </be-slide-toggle>
+    <p class="description">
+        {{"settings.external-browser-auth-hint" | i18n }}
+    </p>
+</div>

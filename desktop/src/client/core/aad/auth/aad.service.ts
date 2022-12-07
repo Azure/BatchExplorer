@@ -18,7 +18,7 @@ import { AADConfig } from "../aad-config";
 import { defaultTenant } from "../aad-constants";
 import AuthProvider from "../auth-provider";
 import {
-    AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError
+    AuthenticationService, AuthenticationState, AuthorizeResult, AuthCancelException, SignOutException
 } from "../authentication";
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
@@ -28,6 +28,19 @@ const aadConfig: AADConfig = {
     clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
     redirectUri: "https://login.microsoftonline.com/common/oauth2/nativeclient",
 };
+
+interface AuthEvent {
+    type: "signout" | "cancel";
+    message?: string;
+}
+
+interface RetrieveAccessTokenOptions {
+    tenantId?: string,
+    resource?: AADResourceName,
+    forceRefresh?: boolean,
+    selectAuthMode?: boolean
+}
+
 
 @Injectable()
 export class AADService {
@@ -40,7 +53,7 @@ export class AADService {
 
     private _authenticationState = new BehaviorSubject<AuthenticationState | null>(null);
     private _userDecoder: UserDecoder;
-    private _newAccessTokenSubject: StringMap<Deferred<AccessToken>> = {};
+    private _newAccessTokenSubject: StringMap<Deferred<AccessToken | AuthEvent>> = {};
 
     private _currentUser = new BehaviorSubject<AADUser | null>(null);
     private _tenants = new BehaviorSubject<TenantDetails[]>([]);
@@ -60,8 +73,8 @@ export class AADService {
         this.authenticationState = this._authenticationState.asObservable();
 
         ipcMain.on(IpcEvent.AAD.accessTokenData,
-            async ({ tenantId, resource, forceRefresh }) =>
-                await this.accessTokenData(tenantId, resource, forceRefresh));
+            ({ tenantId, resource, forceRefresh }) =>
+                this.retrieveAccessToken({ tenantId, resource, forceRefresh }));
 
         this.userAuthorization.state.subscribe((state) => {
             this._authenticationState.next(state);
@@ -84,21 +97,15 @@ export class AADService {
         };
     }
 
-    public async logout(closeWindows = true) {
+    public async logout() {
         await this.localStorage.removeItem(Constants.localStorageKey.currentUser);
         this._tenants.next([]);
         await this._clearUserSpecificCache();
         for (const [, window] of this.app.windows) {
             window.webContents.session.clearStorageData({ storages: ["localstorage"] });
         }
-        if (closeWindows) {
-            this.app.windows.closeAll();
-        }
-        await this.userAuthorization.logout();
-    }
-
-    public async accessTokenFor(tenantId: string, resource?: AADResourceName) {
-        return this.accessTokenData(tenantId, resource).then(x => x.accessToken);
+        await this.userAuthorization.logout(null);
+        this._currentUser.next(null);
     }
 
     /**
@@ -106,28 +113,29 @@ export class AADService {
      * @param tenantId
      * @param resource
      */
-    public async accessTokenData(
-        tenantId: string, resource?: AADResourceName, forceRefresh = false
-    ): Promise<AccessToken> {
-        return this._retrieveNewAccessToken(tenantId, resource || "arm",
-            forceRefresh);
+    private async retrieveAccessToken(options?: RetrieveAccessTokenOptions):
+    Promise<AccessToken | AuthEvent> {
+        options = (options ?? {});
+        const {
+            tenantId = defaultTenant,
+            forceRefresh = false,
+            selectAuthMode = true
+        } = options;
+        const resource = options.resource ?? "arm";
+        const defer = new Deferred<AccessToken | AuthEvent>();
+
+        this._newAccessTokenSubject[
+            this._tenantResourceKey(tenantId, resource)] = defer;
+        this._redeemNewAccessToken({ tenantId, resource, forceRefresh,
+            selectAuthMode });
+        return defer.promise;
     }
 
     private async _loginInCurrentCloud() {
-        try {
-            await this.accessTokenData(defaultTenant);
-            this._authenticationState.next(AuthenticationState.Authenticated);
-        } catch (error) {
-            if (error instanceof LogoutError) {
-                throw error;
-            } else {
-                log.error("Error login in ", error);
-                throw error;
-            }
-        }
+        await this.retrieveAccessToken({ selectAuthMode: false });
+        this._authenticationState.next(AuthenticationState.Authenticated);
         try {
             const tenants = await this._loadTenants();
-
             this._tenants.next(tenants);
         } catch (error) {
             log.error("Error retrieving tenants", error);
@@ -150,20 +158,6 @@ export class AADService {
         }
     }
 
-    /**
-     * Retrieve a new access token.
-     * @return Observable with access token object
-     */
-    private async _retrieveNewAccessToken(
-        tenantId: string, resource: AADResourceName, forceRefresh: boolean
-    ): Promise<AccessToken> {
-        const defer = new Deferred<AccessToken>();
-        this._newAccessTokenSubject[
-            this._tenantResourceKey(tenantId, resource)] = defer;
-        this._redeemNewAccessToken(tenantId, resource, forceRefresh);
-        return defer.promise;
-    }
-
     private _tenantResourceKey(tenantId: string, resource: string) {
         return `${tenantId}|${resource}`;
     }
@@ -171,20 +165,19 @@ export class AADService {
     /**
      * Load a new access token from the authorization code given at login
      */
-    private async _redeemNewAccessToken(
-        tenantId: string, resource: AADResourceName, forceRefresh: boolean
-    ) {
+    private async _redeemNewAccessToken(options: RetrieveAccessTokenOptions) {
+        const { tenantId, resource, forceRefresh, selectAuthMode } = options;
         const subjectKey = this._tenantResourceKey(tenantId, resource);
         const defer = this._newAccessTokenSubject[subjectKey];
         delete this._newAccessTokenSubject[subjectKey];
         try {
-            console.log("Authorize resource", tenantId, this.properties.azureEnvironment[resource as string], forceRefresh);
             const result: AuthorizeResult =
-                await this.userAuthorization.authorizeResource(
+                await this.userAuthorization.authorizeResource({
                     tenantId,
-                    this.properties.azureEnvironment[resource as string],
-                    forceRefresh
-                );
+                    resourceURI: this.properties.azureEnvironment[resource as string],
+                    forceRefresh,
+                    selectAuthMode
+                });
             this._processUserToken(result.idToken);
 
             defer.resolve(new AccessToken({
@@ -195,10 +188,18 @@ export class AADService {
                 homeTenantId: result.account?.homeAccountId?.split(".")[1],
                 resource
             }));
-        } catch (e) {
-            log.error(`Error redeeming auth code for a token for resource ` +
-                `${resource}: ${e}`);
-            defer.reject(e);
+        } catch (error) {
+            if (error instanceof SignOutException) {
+                defer.resolve({ type: "signout" });
+                this._authenticationState.next(AuthenticationState.SignedOut);
+            } else if (error instanceof AuthCancelException) {
+                defer.resolve({ type: "cancel" });
+                log.info("User cancelled login");
+            } else {
+                log.error(`Error redeeming auth code for a token for resource ` +
+                    `${resource}: ${error.message}`);
+                defer.reject(error);
+            }
         }
     }
 
@@ -216,7 +217,10 @@ export class AADService {
     }
 
     private async _loadTenants(): Promise<TenantDetails[]> {
-        const token = await this.accessTokenData(defaultTenant);
+        const token = await this.retrieveAccessToken();
+        if (!(token instanceof AccessToken)) {
+            return;
+        }
 
         const headers = {
             Authorization: `${token.tokenType} ${token.accessToken}`,

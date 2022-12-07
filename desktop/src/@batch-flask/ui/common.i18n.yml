@@ -33,3 +33,5 @@ common:
   value: Value
   version: Version
   yes: "Yes"
+  welcome: Welcome to Batch Explorer
+  copyright: Copyright

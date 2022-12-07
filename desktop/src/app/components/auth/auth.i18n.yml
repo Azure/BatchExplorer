@@ -1,0 +1,8 @@
+auth:
+  welcome: Welcome to Azure Batch Explorer
+  not-logged-in: You are not logged in. Please log in to continue.
+  tenant-sign-in-title: Sign in to {tenant}
+  signin-button:
+    label: Sign in
+  cancel-button:
+    label: Cancel
