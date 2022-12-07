@@ -176,6 +176,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     private _propagateChange: (value: any) => void;
     private _touchedFn: () => void;
     private _optionsMap: Map<any, SelectOptionComponent> = new Map();
+
     public get dropdownId() {
         return this.id + "-dropdown";
     }
