@@ -22,6 +22,7 @@ import { MiscModule } from "app/components/misc";
 import { SettingsModule } from "app/components/settings";
 import { BatchExplorerErrorHandler } from "app/error-handler";
 import { routes } from "./app.routes";
+import { LoginModule } from "./components/login";
 import {
     AuthService,
     AppLocaleService,
@@ -33,6 +34,7 @@ import { RendererTelemetryModule } from "./services/telemetry";
 const modules = [
     AccountModule,
     FileModule,
+    LoginModule,
     SettingsModule,
     LayoutModule,
     MiscModule,

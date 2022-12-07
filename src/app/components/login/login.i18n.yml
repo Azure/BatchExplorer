@@ -1,0 +1,5 @@
+login:
+  welcome: Welcome to Azure Batch Explorer
+  button-labels:
+    primary: Log in to Azure
+    external-browser: Log in to Azure (external browser)
