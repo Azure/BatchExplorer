@@ -1,0 +1,18 @@
+<div class="central-panel">
+    <div class="central-panel-content">
+        <h1>{{"auth.tenant-sign-in-title" | i18n: { tenant: tenantName } }}</h1>
+        <p class="caption">{{"common.id" | i18n}} {{tenantId}}</p>
+        <div class="central-button-group">
+            <bl-button type="wide" class="central-button"
+                    [action]="selectAuth">
+                {{"auth.signin-button.label" | i18n }}
+            </bl-button>
+            <bl-button type="wide" class="central-button" color="light"
+                    [action]="cancel">
+                {{"auth.cancel-button.label" | i18n }}
+            </bl-button>
+        </div>
+        <be-external-browser-auth-toggle #authToggle>
+        </be-external-browser-auth-toggle>
+    </div>
+</div>

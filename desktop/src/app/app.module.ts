@@ -20,7 +20,9 @@ import { FileModule } from "app/components/file/file.module";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
 import { SettingsModule } from "app/components/settings";
+import { WelcomeModule } from "app/components/welcome";
 import { BatchExplorerErrorHandler } from "app/error-handler";
+import { AuthModule } from "app/components/auth";
 import { routes } from "./app.routes";
 import {
     AuthService,
@@ -33,8 +35,10 @@ import { RendererTelemetryModule } from "./services/telemetry";
 const modules = [
     AccountModule,
     FileModule,
+    AuthModule,
     SettingsModule,
     LayoutModule,
+    WelcomeModule,
     MiscModule,
 ];
 

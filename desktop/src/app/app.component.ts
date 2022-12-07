@@ -9,6 +9,8 @@ import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
     AppTranslationsLoaderService,
+    AuthSelectRequest,
+    AuthSelectResult,
     AuthService,
     AuthorizationHttpService,
     BatchAccountService,
@@ -24,6 +26,7 @@ import { BEUserConfiguration } from "common";
 import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { initDesktopEnvironment } from "./environment/desktop-environment";
+import { IpcEvent } from "common/constants";
 
 @Component({
     selector: "bl-app",
@@ -32,6 +35,10 @@ import { initDesktopEnvironment } from "./environment/desktop-environment";
 export class AppComponent implements OnInit, OnDestroy {
     public isAppReady = false;
     public fullscreen = false;
+    public showAuthOverlay = false;
+
+    public authTenantId: string;
+    public authRequestId: string;
 
     @HostBinding("class.batch-explorer") public readonly beCls = true;
     @HostBinding("class.high-contrast") public isHighContrast = false;
@@ -45,13 +52,13 @@ export class AppComponent implements OnInit, OnDestroy {
         private accountService: BatchAccountService,
         private navigatorService: NavigatorService,
         userConfigurationService: UserConfigurationService<BEUserConfiguration>,
-        remote: ElectronRemote,
+        private remote: ElectronRemote,
         pythonRpcService: PythonRpcService,
         themeService: ThemeService,
         private route: ActivatedRoute,
         permissionService: PermissionService,
         authHttpService: AuthorizationHttpService,
-        authService: AuthService,
+        private authService: AuthService,
         ipc: IpcService,
         keybindingService: KeyBindingsService,
         private telemetryService: TelemetryService,
@@ -102,6 +109,21 @@ export class AppComponent implements OnInit, OnDestroy {
         themeService.currentTheme.pipe(takeUntil(this._destroy)).subscribe((theme) => {
             this.isHighContrast = theme.isHighContrast;
         });
+
+        this.registerAuthEvents();
+        let initialNav = false;
+        this.authService.isLoggedIn().pipe(takeUntil(this._destroy))
+            .subscribe((isLoggedIn) => {
+            if (!isLoggedIn) {
+                // Always navigate to welcome page if not logged in
+                this.navigatorService.goto("/welcome");
+            } else {
+                if (!initialNav) {
+                    initialNav = true;
+                    this.navigatorService.goto("/accounts");
+                }
+            }
+        });
     }
 
     public ngOnInit() {
@@ -122,5 +144,29 @@ export class AppComponent implements OnInit, OnDestroy {
             new Workspace({ ...adminWorkspace }),
             new Workspace({ ...endUserWorkspace }),
         ]);
+    }
+
+    private registerAuthEvents() {
+        this.authService.on("AuthSelect", (request: AuthSelectRequest) => {
+            this.showAuthOverlay = true;
+            this.authTenantId = request.tenantId;
+            this.authRequestId = request.requestId;
+        });
+        this.authService.on("AuthSelectResult", (result: AuthSelectResult) => {
+            this.remote.send(
+                IpcEvent.userAuthSelectResponse(result.requestId),
+                result
+            );
+            if (result.result === "cancel") {
+                this.showAuthOverlay = false;
+            }
+        });
+        this.authService.on("AuthComplete", (result) => {
+            // Dismiss the overlay only if auth completed
+            this.showAuthOverlay = false;
+        });
+        this.authService.on("Logout", () => {
+            this.accountService.clear();
+        });
     }
 }

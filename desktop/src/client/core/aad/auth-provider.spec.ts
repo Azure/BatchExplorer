@@ -1,10 +1,9 @@
 import { instrumentAuthProvider, instrumentForAuth, MockAuthorizeError } from "test/utils/mocks/auth";
 import AuthProvider from "./auth-provider";
+import { AuthObserver } from "./auth-observer";
 
 describe("AuthProvider", () => {
     let authProvider: AuthProvider;
-    const authCodeSpy = jasmine.createSpy("authCodeCallback")
-        .and.returnValue("some-code");
     const appSpy: any = {
         properties: {
             azureEnvironment: {
@@ -14,6 +13,9 @@ describe("AuthProvider", () => {
             }
         }
     };
+    let mockAuthCode;
+    let authObserver: jasmine.SpyObj<AuthObserver>;
+
     instrumentForAuth(appSpy);
     const config: any = {
         tenant: "common",
@@ -23,36 +25,38 @@ describe("AuthProvider", () => {
 
     beforeEach(() => {
         authProvider = new AuthProvider(appSpy, config);
+        authObserver = {
+            selectUserAuthMethod: jasmine.createSpy("selectUserAuthMethod")
+                .and.returnValue(Promise.resolve({ externalBrowserAuth: false })),
+            onAuthFailure: jasmine.createSpy("mock-auth-failure"),
+            fetchAuthCode: jasmine.createSpy("fetchAuthCode")
+        };
+        authProvider.setAuthObserver(authObserver);
+        mockAuthCode = "some-code";
     });
 
     it("authenticates interactively first, then silently", async () => {
+        authObserver.fetchAuthCode.and.returnValue(Promise.resolve(mockAuthCode));
+
         const call = async () => await authProvider.getToken({
             resourceURI: "resourceURI1",
-            browser: "builtin",
             tenantId: "tenant1",
-            browserAuthCallback: authCodeSpy,
-            builtInAuthCodeCallback: authCodeSpy
         });
-        const clientSpy = makeClientApplicationSpy();
-        spyOn<any>(authProvider, "_getClient").and.returnValue(clientSpy);
+        const clientSpy = createClientSpy();
         instrumentAuthProvider(authProvider);
 
-        returnToken(clientSpy.acquireTokenByCode, "interactive-token-1");
         returnToken(clientSpy.acquireTokenSilent, "silent-token-1");
 
         const result1 = await call();
-        expect(authCodeSpy).toHaveBeenCalled();
         expect(clientSpy.getAuthCodeUrl).toHaveBeenCalled();
         expect(clientSpy.acquireTokenByCode).toHaveBeenCalled();
         expect(clientSpy.acquireTokenSilent).not.toHaveBeenCalled();
-        expect(result1.accessToken).toEqual("interactive-token-1");
+        expect(result1.accessToken).toEqual("tenant1-token");
 
         clientSpy.getAuthCodeUrl.calls.reset();
         clientSpy.acquireTokenByCode.calls.reset();
-        authCodeSpy.calls.reset();
 
         const result2 = await call();
-        expect(authCodeSpy).not.toHaveBeenCalled();
         expect(clientSpy.getAuthCodeUrl).not.toHaveBeenCalled();
         expect(clientSpy.acquireTokenByCode).not.toHaveBeenCalled();
         expect(clientSpy.acquireTokenSilent).toHaveBeenCalled();
@@ -60,80 +64,50 @@ describe("AuthProvider", () => {
     });
 
     it("should return a per-tenant access token", async () => {
-        spyOn<any>(authProvider, "_createClient").and.callFake(tenantId => {
-            const spy = makeClientApplicationSpy();
-            returnToken(spy.acquireTokenByCode, `${tenantId}-token`);
-            return spy;
-        });
+        createClientSpy();
 
         const result1 = await authProvider.getToken({
             resourceURI: "resourceURI1",
-            browser: "builtin",
-            tenantId: "tenant1",
-            browserAuthCallback: authCodeSpy,
-            builtInAuthCodeCallback: authCodeSpy
+            tenantId: "tenant1"
         });
 
         const result2 = await authProvider.getToken({
             resourceURI: "resourceURI1",
-            browser: "builtin",
             tenantId: "tenant2",
-            browserAuthCallback: authCodeSpy,
-            builtInAuthCodeCallback: authCodeSpy
         });
 
         expect(result1.accessToken).toEqual("tenant1-token");
         expect(result2.accessToken).toEqual("tenant2-token");
     });
 
-    it("should retry interactive auth only for certain error codes",
-    async () => {
-        spyOn<any>(authProvider, "_createClient").and.callFake(tenantId => {
-            const spy = makeClientApplicationSpy();
-            returnToken(spy.acquireTokenByCode, `${tenantId}-token`);
-            return spy;
-        });
-
-        async function expectRetryable(code: string | string[], retryable) {
-            const authCodeSpy =
-                jasmine.createSpy("authCodeCallback").and.returnValues(
-                    Promise.reject(new MockAuthorizeError({
-                        error: (retryable ? "Retryable" : "Unretryable") +
-                            " error",
-                        errorCodes: [].concat(code) // convert scalar or array
-                                                    // into flat array
-                    })),
-                    // Second call for interactive auth
-                    jasmine.anything
-                );
-
-            try {
-                await authProvider.getToken({
-                    tenantId: "tenant1",
-                    browser: "builtin",
-                    resourceURI: "resourceURI1",
-                    browserAuthCallback: authCodeSpy,
-                    builtInAuthCodeCallback: authCodeSpy
-                });
-                if (!retryable) {
-                    fail(`Should have thrown an error on code ${code}`);
-                }
-            } catch (e) {
-                if (retryable) {
-                    fail(`Should not have thrown an error on code ${code}: ` +
-                        e);
-                }
-            }
-        }
-
-        await [
+    describe("AuthProvider.getToken() auth failures", () => {
+        beforeEach(() => createClientSpy());
+        const retryableErrorCodes = [
             "16000", "16001", "50013", "50027", "50050", "50056", "50058",
             "50061", "50064", "50071", "50072", "50074", "50076", "50079",
             "50085", "50089", "50097", "50125", "50126", "54005", "65004",
-            "70008", "700084", "70019", "90012", "90013"
-        ].forEach(code => expectRetryable(code, true));
+            "70008", "700084", "70019", "90012", "90013", null,
+            "16000 50071", // Two retryable error codes
+        ];
+        retryableErrorCodes.forEach(code => {
+            it(`should retry on error code ${code}`, async () => {
+                authObserver.fetchAuthCode.and.returnValues(
+                    Promise.reject(new MockAuthorizeError({
+                        error: "Retryable error",
+                        errorCodes: [code]
+                    })),
 
-        await [
+                    // Second attempt after retry
+                    Promise.resolve(mockAuthCode)
+                );
+                await expectAsync(authProvider.getToken({
+                    tenantId: "tenant1",
+                    resourceURI: "resourceURI1",
+                })).toBeResolved();
+            });
+        });
+
+        const unretryableAuthCodeErrors = [
             "1000000", "1000031", "100007", "120012", "120013", "120014",
             "120015", "120016", "120021", "130004", "130005", "130006",
             "130007", "130008", "135010", "135011", "16003", "20001", "20012",
@@ -156,39 +130,67 @@ describe("AuthProvider", () => {
             "90038", "900382", "90043", "900432", "90051", "90055", "90056",
             "90072", "90081", "90082", "90084", "90085", "90092", "90093",
             "90094", "90095", "900971", "90099", "901002", "90107", "90123",
-            "90124", "90125", "90126", "90130"
-        ].forEach(code => expectRetryable(code, false));
+            "90124", "90125", "90126", "90130",
+            "90094 50133", // Two unretryable error codes
+            "50071 50133", // One retryable, one not
+        ];
 
-        expectRetryable([], true);
-        expectRetryable(["16000", "50071"], true); // Both retryable
-        expectRetryable(["90094", "50133"], false); // Both unretryable
-        expectRetryable(["50071", "50133"], false); // One retryable, one not
-
+        unretryableAuthCodeErrors.forEach(code =>
+            it(`should not retry on error code ${code}`, async () => {
+                authObserver.fetchAuthCode.and.returnValue(
+                    Promise.reject(new MockAuthorizeError({
+                        error: "Unretryable error",
+                        errorCodes: [code]
+                    }))
+                );
+                await expectAsync(authProvider.getToken({
+                    tenantId: "tenant1",
+                    resourceURI: "resourceURI1",
+                })).toBeRejected();
+            })
+        );
     });
 
     it("shouldn't fail with non-auth exception", async () => {
-        spyOn<any>(authProvider, "_createClient").and.callFake(tenantId => {
-            const spy = makeClientApplicationSpy();
-            returnToken(spy.acquireTokenByCode, `${tenantId}-token`);
-            return spy;
-        });
-        const authCodeSpy =
-            jasmine.createSpy("authCodeCallback").and.returnValues(
-                Promise.reject(new Error("Non-auth error")),
-            );
+        createClientSpy();
+        authObserver.fetchAuthCode.and.returnValues(
+            Promise.reject(new Error("Non-auth error")),
+            Promise.resolve(mockAuthCode)
+        );
 
         try {
             await authProvider.getToken({
                 tenantId: "tenant1",
-                browser: "builtin",
                 resourceURI: "resourceURI1",
-                browserAuthCallback: authCodeSpy,
-                builtInAuthCodeCallback: authCodeSpy
             });
         } catch (e) {
             fail(`Should not have thrown error: ${e}`);
         }
     });
+
+    it("should use external browser when externalBrowserAuth is true", async () => {
+        createClientSpy();
+        authObserver.selectUserAuthMethod.and.returnValue(
+            Promise.resolve({ externalBrowserAuth: true })
+        );
+
+        const browserSpy =
+            spyOn<any>(authProvider, "_createExternalBrowserRequest");
+        await authProvider.getToken({
+            resourceURI: "resourceURI1",
+            tenantId: "tenant1",
+        });
+        expect(browserSpy).toHaveBeenCalled();
+    });
+
+    function createClientSpy() {
+        const spy = makeClientApplicationSpy();
+        spyOn<any>(authProvider, "_createClient").and.callFake(tenantId => {
+            returnToken(spy.acquireTokenByCode, `${tenantId}-token`);
+            return spy;
+        });
+        return spy;
+    }
 });
 
 const makeTokenCacheSpy = () => jasmine.createSpyObj(

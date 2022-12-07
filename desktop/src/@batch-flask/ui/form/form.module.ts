@@ -24,6 +24,7 @@ import { InputDirective } from "./input";
 import { KeyValuePickerComponent } from "./key-value-picker";
 import { SimpleFormComponent } from "./simple-form";
 import { SingleLineTextareaDirective } from "./single-line-textarea";
+import { SlideToggleComponent } from "./slide-toggle";
 
 // components
 // Add submodules there
@@ -47,6 +48,7 @@ const components = [
     FormPickerItemTemplateDirective,
     FormSectionComponent,
     HintComponent,
+    SlideToggleComponent,
     InputDirective,
     KeyValuePickerComponent,
     SimpleFormComponent,

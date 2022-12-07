@@ -1,4 +1,4 @@
-<div class="tenants-editor">
+<div class="tenants-editor" *ngIf="loaded && loggedIn">
     <div class="tenant-picker-header">
         <h2 tabindex="0" autofocus>{{'tenant-picker.title' | i18n}}</h2>
         <div class="saved" *ngIf="saved" attr.aria-live="assertive">
@@ -20,3 +20,6 @@
         </be-tenant-card>
     </div>
 </div>
+<bl-banner type="warning" *ngIf="loaded && !loggedIn">
+    <div message><bl-i18n key="auth.not-logged-in"></bl-i18n></div>
+</bl-banner>
