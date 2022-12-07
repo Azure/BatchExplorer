@@ -49,7 +49,6 @@ export class AuthLoopbackClient implements ILoopbackClient {
 
         const authCodeListener = new Promise<ServerAuthorizationCodeResponse>((resolve, reject) => {
             this.server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
-                console.log("[Loopback] Handling loopback request at", req.url);
                 const url = req.url;
                 if (!url) {
                     res.end(errorTemplate || "Login failed: Error occurred loading redirectUrl");
@@ -62,7 +61,6 @@ export class AuthLoopbackClient implements ILoopbackClient {
 
                 const authCodeResponse = AuthLoopbackClient.getDeserializedQueryString(url);
                 if (authCodeResponse.code) {
-                    console.log("[Loopback] Has auth code");
                     const redirectUri = await this.getRedirectUri();
                     res.writeHead(302, { location: redirectUri }); // Prevent auth code from being saved in the browser history
                     res.end();
@@ -102,7 +100,6 @@ export class AuthLoopbackClient implements ILoopbackClient {
         }
 
         const addressInfo = this.server.address();
-        console.log("[Loopback] Address info:", addressInfo);
         if (addressInfo == null || typeof addressInfo === "string") {
             this.closeServer();
             throw new Error("Failed to read auth code listener port");
@@ -115,7 +112,6 @@ export class AuthLoopbackClient implements ILoopbackClient {
      * Close the loopback server
      */
     closeServer(): void {
-        console.log("Closing server");
         if (!!this.server) {
             this.server.close();
         }

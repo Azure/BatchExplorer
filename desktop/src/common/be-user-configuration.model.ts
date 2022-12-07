@@ -6,6 +6,8 @@ import { BatchFlaskUserConfiguration, EntityConfigurationView } from "@batch-fla
 export interface BEUserConfiguration extends BatchFlaskUserConfiguration {
     theme: string;
 
+    externalBrowserAuth: boolean;
+
     subscriptions: {
         ignore: string[],
     };
@@ -97,4 +99,5 @@ export const DEFAULT_BE_USER_CONFIGURATION: BEUserDesktopConfiguration = {
         defaultOutputFileGroup: null,
     },
     theme: "classic",
+    externalBrowserAuth: true
 };

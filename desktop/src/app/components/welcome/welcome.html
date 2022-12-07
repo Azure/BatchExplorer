@@ -1,0 +1,13 @@
+<div class="central-panel">
+    <div class="central-panel-content">
+        <h1>{{"common.welcome" | i18n}}</h1>
+        <div class="central-button-group">
+            <bl-button type="wide" class="central-button"
+                [action]="signIn">
+                {{"auth.tenant-sign-in-title" | i18n: { tenant: "Azure" } }}
+            </bl-button>
+        </div>
+        <be-external-browser-auth-toggle id="auth-toggle"></be-external-browser-auth-toggle>
+        <div class="footer">{{"common.copyright" | i18n}} &copy; Microsoft</div>
+    </div>
+</div>

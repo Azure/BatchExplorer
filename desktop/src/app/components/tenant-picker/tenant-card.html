@@ -42,9 +42,11 @@
                 {{authorization.message}}
             </span>
             <pre class="error-details">{{authorization.messageDetails}}</pre>
+        </div>
+        <div class="tenant-reauth" *ngIf="canReauthenticate">
             <bl-button type="plain"
-                *ngIf="active"
                 attr.aria-label="{{'tenant-card.reauthenticate-button' | i18n}}"
+                icon="fa fa-refresh"
                 (do)="refresh(true)"
             >
                 {{"tenant-card.reauthenticate-button" | i18n}}

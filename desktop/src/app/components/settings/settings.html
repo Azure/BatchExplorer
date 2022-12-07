@@ -19,6 +19,15 @@
             <bl-option value="high-contrast" label="High contrast"></bl-option>
         </bl-select>
     </bl-form-field>
+    <div>
+        <be-slide-toggle formControlName="externalBrowserAuth"
+            (toggleChange)="updateExternalBrowserAuth($event)">
+            {{"settings.external-browser-auth" | i18n}}
+        </be-slide-toggle>
+        <p>
+            <bl-hint>{{"settings.external-browser-auth-hint" | i18n}}</bl-hint>
+        </p>
+    </div>
     <bl-form-field>
         <bl-select placeholder="Entity configuration default view" formControlName="entityConfigurationDefaultView">
             <bl-option value="pretty" label="Pretty"></bl-option>

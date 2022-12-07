@@ -61,3 +61,8 @@ export class AccessToken {
         return `${this.tokenType} ${this.accessToken}`;
     }
 }
+
+export interface AuthEvent {
+    type: "signout" | "cancel";
+    message?: string;
+}
