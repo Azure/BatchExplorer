@@ -51,6 +51,9 @@ be-tenant-card {
                 white-space: pre-wrap;
             }
         }
+        .tenant-reauth {
+            text-align: right;
+        }
     }
 
     max-width: $tenant-card-width;

@@ -164,7 +164,7 @@ describe("ProfileButtonComponent", () => {
             expectMenuItem(ContextMenuSeparator);
             expectMenuItem(MultiContextMenuItem, "Developer");
             expectMenuItem(ContextMenuSeparator);
-            expectMenuItem(ContextMenuItem, "profile-button.logout");
+            expectMenuItem(ContextMenuItem, "profile-button.sign-in");
         });
 
         it("check for updates and show update notification when there is one", fakeAsync(() => {

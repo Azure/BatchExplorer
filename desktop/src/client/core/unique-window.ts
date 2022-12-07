@@ -50,6 +50,10 @@ export abstract class GenericWindow {
         return Boolean(this._window && this._window.isVisible());
     }
 
+    public isDestroyed(): boolean {
+        return !this._window;
+    }
+
     /**
      * Display the window only if not already visible
      * @param focus If we should focus on the window if it is already visible. @default false

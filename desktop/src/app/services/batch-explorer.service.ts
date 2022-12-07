@@ -61,10 +61,6 @@ export class BatchExplorerService implements OnDestroy {
         return this._app.openNewWindow(link);
     }
 
-    public async logoutAndLogin() {
-        return this.remote.send(IpcEvent.logoutAndLogin);
-    }
-
     public async launchApplication(name: string, args: any): Promise<any> {
         return this.remote.send(IpcEvent.launchApplication, { name, args });
     }
