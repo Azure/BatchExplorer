@@ -36,7 +36,7 @@ describe("Create account action", () => {
         );
 
         // Fix the account name issue and rerun validation
-        form.values.accountName = "myaccount";
+        form.updateValue("accountName", "myaccount");
 
         await action.form.validate();
 

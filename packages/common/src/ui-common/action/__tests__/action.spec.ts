@@ -20,7 +20,7 @@ describe("Action tests", () => {
         // Action hasn't been executed, message is the default
         expect(action.message).toEqual("Hello world");
 
-        action.form.values = { subject: "universe" };
+        action.form.setValues({ subject: "universe" });
 
         await action.execute();
 
@@ -66,16 +66,16 @@ describe("Action tests", () => {
         );
 
         // Override parameter validation in form onValidate() to force success
-        action.form.values.skipSubjectValidation = true;
+        action.form.updateValue("skipSubjectValidation", true);
         await action.form.validate();
         expect(action.onValidateCallCount).toEqual(3);
         expect(action.subjectOnValidateCallCount).toEqual(0);
         expect(action.form.validationStatus?.level).toEqual("ok");
 
         // Parameter onValidate failure
-        action.form.values = {
+        action.form.setValues({
             subject: "world",
-        };
+        });
         await action.form.validate();
         expect(action.onValidateCallCount).toEqual(4);
         // Subject onValidate() was called now that the required check passed
@@ -92,9 +92,9 @@ describe("Action tests", () => {
         );
 
         // Normal success
-        action.form.values = {
+        action.form.setValues({
             subject: "universe",
-        };
+        });
         await action.form.validate();
         expect(action.onValidateCallCount).toEqual(5);
         expect(action.subjectOnValidateCallCount).toEqual(2);
