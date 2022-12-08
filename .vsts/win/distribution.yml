@@ -2,7 +2,7 @@ steps:
   - template: ./credscan.yml
   - template: ./win-dependencies.yml
 
-  - powershell: ./scripts/azpipelines/update-build-name.ps1
+  - powershell: ./desktop/scripts/azpipelines/update-build-name.ps1
     displayName: Resolve version
 
   - powershell: |
@@ -10,11 +10,16 @@ steps:
       $ErrorActionPreference = "Stop"
       $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
       exec { npm run build:prod }
+    displayName: Build all packages
+
+  - powershell: |
+      . ../.vsts/win/exec.ps1
+      $ErrorActionPreference = "Stop"
+      $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
       exec { npm run build-python }
       exec { npm run package win-exe }
     workingDirectory: desktop
-      exec { npm run build:prod }
-    displayName: Build all packages
+    displayName: Build .exe
 
   - template: ./security-analysis.yml
 
