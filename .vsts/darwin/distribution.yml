@@ -4,14 +4,18 @@ steps:
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run build:prod
+    displayName: Build packages
+
+  - script: |
       npm run build-python
       npm run package darwin-app
-      cd ./desktop/release/mac
+      cd ./release/mac
       zip -y -r ../BatchExplorer-mac.zip ./BatchExplorer.app
       cd ../..
-      rm -rf ./desktop/release/mac/*.app
-      mkdir ./desktop/release/keep
-      cp ./desktop/release/*.zip ./desktop/release/keep/before-code-sign.zip
+      rm -rf ./release/mac/*.app
+      mkdir ./release/keep
+      cp ./release/*.zip ./release/keep/before-code-sign.zip
+    workingDirectory: desktop
     displayName: Build .app
 
   - template: ./sign.yml
