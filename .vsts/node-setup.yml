@@ -59,7 +59,3 @@ steps:
     displayName: NPM auth - web
     inputs:
       workingFile: web/.npmrc
-
-  - script: |
-      npm run dev-setup
-    displayName: Install Batch Utility CLI (bux)
