@@ -3,6 +3,6 @@
   "compilerOptions": {
     "tsBuildInfoFile": "../build/cache/ts.build.buildinfo"
   },
-  "exclude": ["__tests__"],
+  "exclude": ["../**/__mocks__/**/*", "../**/__tests__/**/*"],
   "references": [{ "path": "../../common/config/tsconfig.build.json" }]
 }

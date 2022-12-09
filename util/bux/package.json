@@ -12,14 +12,14 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "main": "./bin/cli.js",
+  "main": "./lib/cli.js",
   "bin": {
-    "bux": "./bin/cli.js"
+    "bux": "./bin/bux"
   },
   "scripts": {
-    "build": "tsc -p . && node ./bin/cli.js chmodx ./bin/cli.js",
-    "bux": "npm run build && node ./bin/cli.js",
-    "clean": "rimraf bin/",
+    "build": "tsc -p ./config/tsconfig.build.json && node ./bin/bux chmodx ./bin/bux",
+    "bux": "npm run build && node ./bin/bux",
+    "clean": "rimraf ./lib && rimraf ./build",
     "lint": "eslint .",
     "lint:fix": "npm run lint --fix",
     "build:clean": "run-s clean build",
@@ -49,5 +49,9 @@
     "ts-jest": "^28.0.2",
     "typescript": "^4.6.3",
     "which": "^2.0.2"
-  }
+  },
+  "files": [
+    "bin",
+    "lib"
+  ]
 }

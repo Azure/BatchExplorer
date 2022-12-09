@@ -15,3 +15,8 @@ steps:
       npm install -g codecov
       npm ci
     displayName: Install Linux dependencies
+  - script: |
+      cd util/bux
+      npm pack
+      npm install -g batch-bux-1.0.0.tgz
+    displayName: Install Batch Utility CLI (bux)

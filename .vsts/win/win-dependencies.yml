@@ -7,3 +7,10 @@ steps:
       exec { Write-Host "NPM version" $(npm --version) }
       exec { npm ci }
     displayName: Install Windows dependencies
+  - powershell: |
+      . ../../.vsts/win/exec.ps1
+      $ErrorActionPreference = "Stop"
+      exec { npm pack }
+      exec { npm install -g batch-bux-1.0.0.tgz }
+    workingDirectory: util/bux
+    displayName: Install Batch Utility CLI (bux)
