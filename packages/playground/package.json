@@ -75,6 +75,8 @@
     "@types/jest": "^27.0.1",
     "@types/jest-axe": "^3.5.1",
     "@types/node": "^14.14.37",
+    "@types/react": "16.9.35",
+    "@types/react-dom": "16.9.8",
     "@uifabric/azure-themes": "7.5.19",
     "jest": "^27.1.0",
     "jest-axe": "^5.0.1",
