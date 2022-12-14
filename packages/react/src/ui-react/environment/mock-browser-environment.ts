@@ -1,11 +1,13 @@
 import { Parameter } from "@batch/ui-common";
 import { MockEnvironment } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
+import React from "react";
 import { FormControlOptions, ParameterTypeResolver } from "../components/form";
 import {
-    FormLayout,
+    // FormLayout,
     FormLayoutProvider,
     FormLayoutType,
+    LayoutProps,
 } from "../components/form/form-layout";
 import {
     BrowserDependencyName,
@@ -19,8 +21,7 @@ import { initFluentIcons } from "./environment-util";
  */
 export class MockBrowserEnvironment
     extends MockEnvironment<BrowserEnvironmentConfig>
-    implements BrowserEnvironment
-{
+    implements BrowserEnvironment {
     isMockBrowserEnvironment: boolean = true;
 
     async beforeInit(): Promise<void> {
@@ -53,7 +54,7 @@ export class MockBrowserEnvironment
     }
 
     // TODO: This code shouldn't need to be duplicated from DefaultBrowserEnvironment
-    getFormLayout(layoutType: FormLayoutType = "list"): FormLayout {
+    getFormLayout<V extends FormValues>(layoutType: FormLayoutType = "list"): React.FC<LayoutProps<V>> {
         const provider = this.getInjectable<FormLayoutProvider>(
             BrowserDependencyName.FormLayoutProvider
         );
