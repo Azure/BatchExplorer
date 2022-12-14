@@ -70,5 +70,9 @@ export const FormContainer = <V extends FormValues>(
         };
     }, [form, formValidateHandler]);
 
-    return getBrowserEnvironment().getFormLayout(layout).render(form, buttons);
+    const LayoutComp = getBrowserEnvironment().getFormLayout<V>(layout);
+
+    return <LayoutComp form={form} button={buttons} />;
+
+    // getBrowserEnvironment().getFormLayout(layout).render(form, buttons);
 };
