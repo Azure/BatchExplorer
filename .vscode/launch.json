@@ -11,7 +11,7 @@
       "request": "launch",
       "preLaunchTask": "Start web dev server",
       "url": "http://127.0.0.1:9000",
-      "webRoot": "${workspaceFolder}",
+      "webRoot": "${workspaceFolder}/web",
       "sourceMaps": true,
       "trace": true,
       "outFiles": [

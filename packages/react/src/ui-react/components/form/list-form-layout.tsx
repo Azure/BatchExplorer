@@ -9,49 +9,48 @@ import { getBrowserEnvironment } from "../../environment";
 import { useUniqueId } from "../../hooks";
 import { useAppTheme } from "../../theme";
 import { FormButton } from "./form-container";
-import { FormLayout } from "./form-layout";
 
 /**
- * Render a form as a flat list.
+ * React Component to render a form as a flat list.
  */
-export class ListFormLayout implements FormLayout {
-    render<V extends FormValues>(
-        form: Form<V>,
-        buttons?: FormButton[]
-    ): JSX.Element {
-        const rows: JSX.Element[] = [];
-        this._renderChildEntries(form.childEntries(), rows);
 
-        return (
-            <div role="form" style={{ maxWidth: "480px" }}>
-                <h2 style={{ marginBottom: "16px" }}>
-                    {form.title ?? "Untitled form"}
-                </h2>
-                <Stack tokens={{ childrenGap: 8 }}>{rows}</Stack>
-                <Stack tokens={{ childrenGap: 8 }}>
-                    <ButtonContainer buttons={buttons} />
-                </Stack>
-            </div>
-        );
-    }
+export function ListFormLayoutComp<V extends FormValues>(props: {
+    form: Form<V>;
+    buttons?: FormButton[];
+}): JSX.Element {
+    const { form, buttons } = props;
+    const rows: JSX.Element[] = [];
+    _renderChildEntries(form.childEntries(), rows);
 
-    private _renderChildEntries<V extends FormValues>(
-        entries: IterableIterator<Entry<V>>,
-        rows: JSX.Element[]
-    ) {
-        for (const entry of entries) {
-            if (entry instanceof Parameter) {
-                rows.push(<ParameterRow key={entry.name} param={entry} />);
-            } else if (entry instanceof Section) {
-                rows.push(<SectionTitle key={entry.name} section={entry} />);
-                if (entry.childEntriesCount > 0) {
-                    this._renderChildEntries(entry.childEntries(), rows);
-                }
-            } else if (entry instanceof SubForm) {
-                rows.push(<SubFormTitle key={entry.name} subForm={entry} />);
-                if (entry.childEntriesCount > 0) {
-                    this._renderChildEntries(entry.childEntries(), rows);
-                }
+    return (
+        <div role="form" style={{ maxWidth: "480px" }}>
+            <h2 style={{ marginBottom: "16px" }}>
+                {form.title ?? "Untitled form"}
+            </h2>
+            <Stack tokens={{ childrenGap: 8 }}>{rows}</Stack>
+            <Stack tokens={{ childrenGap: 8 }}>
+                <ButtonContainer buttons={buttons} />
+            </Stack>
+        </div>
+    );
+}
+
+function _renderChildEntries<V extends FormValues>(
+    entries: IterableIterator<Entry<V>>,
+    rows: JSX.Element[]
+) {
+    for (const entry of entries) {
+        if (entry instanceof Parameter) {
+            rows.push(<ParameterRow key={entry.name} param={entry} />);
+        } else if (entry instanceof Section) {
+            rows.push(<SectionTitle key={entry.name} section={entry} />);
+            if (entry.childEntriesCount > 0) {
+                _renderChildEntries(entry.childEntries(), rows);
+            }
+        } else if (entry instanceof SubForm) {
+            rows.push(<SubFormTitle key={entry.name} subForm={entry} />);
+            if (entry.childEntriesCount > 0) {
+                _renderChildEntries(entry.childEntries(), rows);
             }
         }
     }
