@@ -1,7 +1,6 @@
 import { FormValues } from "@batch/ui-common/lib/form";
 import React from "react";
 import {
-    // FormLayout,
     FormLayoutProvider, FormLayoutType, LayoutProps
 } from "./form-layout";
 import { ListFormLayoutComp } from "./list-form-layout";
