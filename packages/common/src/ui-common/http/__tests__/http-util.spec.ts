@@ -1,5 +1,5 @@
 import { isHttpHeaders } from "../http-util";
-import { MockHttpHeaders } from "../mock-http-client";
+import { MapHttpHeaders } from "../map-http-headers";
 
 describe("HTTP utilities", () => {
     test("isHttpHeaders() type guard", () => {
@@ -9,6 +9,6 @@ describe("HTTP utilities", () => {
             })
         ).toBeFalsy();
 
-        expect(isHttpHeaders(new MockHttpHeaders())).toBeTruthy();
+        expect(isHttpHeaders(new MapHttpHeaders())).toBeTruthy();
     });
 });

@@ -1,4 +1,4 @@
-import { AbstractHttpClient, FetchHttpClient, HttpRequestInit, UrlOrRequestType } from "@batch/ui-common/lib-cjs/http";
+import { AbstractHttpClient, FetchHttpClient, HttpRequestInit, UrlOrRequestInit } from "@batch/ui-common/lib-cjs/http";
 import { TenantPlaceholders } from "client/core/aad/aad-constants";
 import { AuthService } from "../../app/services";
 import { AccessToken } from "./aad";
@@ -15,7 +15,7 @@ export default class BatchExplorerHttpClient extends AbstractHttpClient {
     }
 
     public async fetch(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<Response> {
 

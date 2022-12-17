@@ -29,14 +29,16 @@ describe("StorageAccountService", () => {
         httpClient.addExpected(
             new MockHttpResponse(
                 `${Endpoints.arm}/subscriptions//fake/sub1/providers/Microsoft.Storage/storageAccounts?api-version=${ApiVersion.storage.arm}`,
-                200,
-                JSON.stringify({
-                    value: [
-                        { id: "1", name: "One" },
-                        { id: "2", name: "Two" },
-                        { id: "3", name: "Three" },
-                    ],
-                })
+                {
+                    status: 200,
+                    body: JSON.stringify({
+                        value: [
+                            { id: "1", name: "One" },
+                            { id: "2", name: "Two" },
+                            { id: "3", name: "Three" },
+                        ],
+                    }),
+                }
             )
         );
         const accounts = await service.list("/fake/sub1");
