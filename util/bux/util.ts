@@ -184,20 +184,68 @@ export async function gatherBuildResults(basePath: string) {
 export async function linkLocalProjects() {
     runLinkageTask((opts: LinkOptions) => {
         info(`Linking ${opts.versionedPackageName}`);
-        shell.cd(opts.packagePath);
-        shell.exec(`npm -s link`);
-        shell.cd(opts.targetPath);
-        shell.exec(`npm link ${opts.packageName}`);
+
+        const nodeModulePath = path.join(
+            opts.targetPath,
+            "node_modules",
+            opts.packageName
+        );
+
+        if (!fs.existsSync(nodeModulePath)) {
+            throw new Error(
+                `Failed to link ${opts.packageName}: ${nodeModulePath} doesn't exist`
+            );
+        }
+
+        const stats = fs.lstatSync(nodeModulePath);
+        if (!stats.isDirectory()) {
+            throw new Error(
+                `Failed to link ${opts.packageName}: ${nodeModulePath} is not a directory`
+            );
+        }
+        if (stats.isSymbolicLink()) {
+            throw new Error(
+                `Failed to link ${opts.packageName}: ${nodeModulePath} is already a symlink`
+            );
+        }
+
+        shell.rm("-rf", nodeModulePath);
+        shell.ln("-s", opts.packagePath, nodeModulePath);
     });
 }
 
 export async function unlinkLocalProjects() {
-    runLinkageTask((opts: LinkOptions) => {
-        info(`Unlinking ${opts.versionedPackageName}`);
-        shell.cd(opts.targetPath);
-        shell.rm(`node_modules/${opts.packageName}`);
-        shell.exec(`npm install ${opts.versionedPackageName}`);
-    });
+    runLinkageTask(
+        (opts: LinkOptions) => {
+            info(`Unlinking ${opts.versionedPackageName}`);
+
+            const nodeModulePath = path.join(
+                opts.targetPath,
+                "node_modules",
+                opts.packageName
+            );
+
+            if (!fs.existsSync(nodeModulePath)) {
+                throw new Error(
+                    `Failed to unlink ${opts.packageName}: ${nodeModulePath} doesn't exist`
+                );
+            }
+
+            const stats = fs.lstatSync(nodeModulePath);
+            if (!stats.isSymbolicLink()) {
+                throw new Error(
+                    `Failed to unlink ${opts.packageName}: ${nodeModulePath} is not a symlink`
+                );
+            }
+
+            shell.rm(nodeModulePath);
+        },
+        (targetPath: string) => {
+            info("Running `npm install` to restore packages...");
+            shell.cd(targetPath);
+            shell.exec(`npm install`);
+        }
+    );
 }
 
 export type ConfigureCommandOptions = {
@@ -250,17 +298,41 @@ export async function configure(options: ConfigureCommandOptions) {
     }
 }
 
+const versionRegExp = /^[\^~]?([0-9.]+)/;
+
+/**
+ * Loosely compare two different package versions, ignoring anything but
+ * major/minor/patch version numbers.
+ *
+ * Examples:
+ *     "^1.2.3-foo.9" and "1.2.3" match
+ *     "^1.2.3" and "1.2.5" do not match"
+ */
+export function versionsLooselyMatch(v1: string, v2: string) {
+    const normalize = (version: string) => {
+        const matches = version.match(versionRegExp);
+        if (matches?.length !== 2) {
+            throw new Error(`Invalid version: ${version}`);
+        }
+        return matches[1];
+    };
+    return normalize(v1) === normalize(v2);
+}
+
 interface LinkOptions {
-    versionedPackageName?: string;
-    packageName?: string;
-    packagePath?: string;
-    targetPath?: string;
+    versionedPackageName: string;
+    packageName: string;
+    packagePath: string;
+    targetPath: string;
 }
 
 /**
  * Links or unlinks local NPM projects as dependencies
  */
-async function runLinkageTask(callback: (opts: LinkOptions) => void) {
+async function runLinkageTask(
+    perPackageCallback: (opts: LinkOptions) => void,
+    cleanupCallback?: (targetPath: string) => void
+) {
     const config = await loadConfiguration();
     if (!config.paths || !config.paths.batchPortalExtension) {
         error(
@@ -298,13 +370,13 @@ async function runLinkageTask(callback: (opts: LinkOptions) => void) {
             targetVersion = targetConf.devDependencies?.[packageName];
         }
         if (targetVersion) {
-            if (targetVersion !== sourceVersion) {
+            if (!versionsLooselyMatch(targetVersion, sourceVersion)) {
                 warn(
                     `Target version ${targetVersion} different ` +
                         `than source version ${sourceVersion}`
                 );
             }
-            callback({
+            perPackageCallback({
                 packageName,
                 versionedPackageName: `${packageName}@${sourceVersion}`,
                 packagePath,
@@ -314,6 +386,10 @@ async function runLinkageTask(callback: (opts: LinkOptions) => void) {
             info(`Package ${packageName} not in dependencies - skipping`);
         }
     });
+
+    if (cleanupCallback) {
+        cleanupCallback(targetPath);
+    }
 }
 
 function isConfigurationObject(object: unknown): object is Configuration {
