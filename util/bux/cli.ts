@@ -124,4 +124,7 @@ yargs
             }),
         handler: (argv) => chmodx(argv.path),
     })
-    .help().argv;
+    .help()
+    .alias("h", "help")
+    .alias("v", "version")
+    .demandCommand().argv;
