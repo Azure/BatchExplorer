@@ -1,8 +1,4 @@
-import {
-    AbstractHttpClient,
-    HttpRequest,
-    HttpRequestInit,
-} from "./http-client";
+import { AbstractHttpClient, HttpRequestInit } from "./http-client";
 
 /**
  * An HTTP client which is a thin wrapper around the browser's Fetch API.
@@ -11,15 +7,11 @@ import {
  */
 export class FetchHttpClient extends AbstractHttpClient {
     async fetch(
-        urlOrRequest: string | HttpRequest | Request,
+        urlOrRequest: string | HttpRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<Response> {
-        if (!urlOrRequest) {
-            throw new Error("Fetch failed: At least one argument is required");
-        }
-
         let url: string;
-        let req: HttpRequestInit | HttpRequest | undefined;
+        let req: HttpRequestInit | undefined;
         if (typeof urlOrRequest === "string") {
             url = urlOrRequest;
             if (requestProps) {
@@ -59,12 +51,11 @@ export class FetchHttpClient extends AbstractHttpClient {
                 headers = new Headers(headersInit);
             }
 
-            responsePromise = fetch(
-                new Request(url, {
-                    method: req.method,
-                    headers: headers ?? undefined,
-                })
-            );
+            responsePromise = fetch(url, {
+                method: req.method,
+                headers: headers,
+                body: req.body,
+            });
         }
 
         return responsePromise;

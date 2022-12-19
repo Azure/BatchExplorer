@@ -1,13 +1,12 @@
 import { HttpRequestMethod } from "./constants";
-import { isHttpHeaders } from "./http-util";
 import {
     AbstractHttpClient,
     AbstractHttpResponse,
     HttpHeaders,
-    HttpRequest,
     HttpRequestInit,
     HttpResponse,
 } from "./http-client";
+import { MapHttpHeaders } from "./map-http-headers";
 
 /**
  * Mock implementation of an HTTP client which throws an exception if an
@@ -15,19 +14,28 @@ import {
  */
 export class MockHttpClient extends AbstractHttpClient {
     private _expectedResponses: Record<string, MockHttpResponse[]> = {};
+    private _expectedRequestBodies: Record<
+        string,
+        { refCount: number; bodyId: string }
+    > = {};
+    private _bodyIdCounter = 0;
 
     async fetch(
-        urlOrRequest: string | HttpRequest,
+        urlOrRequest: string | HttpRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
-        let key: string;
         const props = requestProps ?? {};
+        let url: string;
         if (typeof urlOrRequest === "string") {
-            key = MockHttpClient._getKeyFromRequest(urlOrRequest, props);
+            url = urlOrRequest;
         } else {
-            key = MockHttpClient._getKeyFromRequest(urlOrRequest.url, props);
+            if (!urlOrRequest.url) {
+                throw new Error("Fetch failed: Must specify a URL");
+            }
+            url = urlOrRequest.url;
         }
 
+        const key = this._getKeyFromRequest(url, props);
         const expected = this._expectedResponses[key];
         if (expected && expected.length > 0) {
             const response = expected.shift();
@@ -38,6 +46,18 @@ export class MockHttpClient extends AbstractHttpClient {
             }
             if (expected.length === 0) {
                 delete this._expectedResponses[key];
+            }
+            if (
+                props.body &&
+                typeof props.body === "string" &&
+                this._expectedRequestBodies[props.body]
+            ) {
+                const expectedBody = this._expectedRequestBodies[props.body];
+                expectedBody.refCount--;
+                if (expectedBody.refCount === 0) {
+                    // Nothing references this request body anymore so we can clear it
+                    delete this._expectedRequestBodies[props.body];
+                }
             }
             return response;
         }
@@ -56,22 +76,53 @@ export class MockHttpClient extends AbstractHttpClient {
         response: MockHttpResponse,
         requestProps: HttpRequestInit = {}
     ): MockHttpClient {
-        const key = MockHttpClient._getKeyFromRequest(
-            response.url,
-            requestProps
-        );
+        const key = this._getKeyFromRequest(response.url, requestProps, true);
         const expected = this._expectedResponses[key] ?? [];
         expected.push(response);
         this._expectedResponses[key] = expected;
         return this;
     }
 
-    private static _getKeyFromRequest(
+    private _getKeyFromRequest(
         url: string,
-        requestProps: HttpRequestInit
+        requestProps: HttpRequestInit,
+        // If true, allow storing bodies for future retreival
+        updateBodyIds: boolean = false
     ): string {
         const method = requestProps.method ?? HttpRequestMethod.Get;
-        return `${method}::${url}`;
+
+        let bodyId: string = "";
+        const reqBody = requestProps.body;
+        if (reqBody) {
+            if (typeof reqBody !== "string") {
+                throw new Error(
+                    "MockHttpClient only supports string request bodies"
+                );
+            }
+            if (this._expectedRequestBodies[reqBody]) {
+                // Existing body identifier
+                const expectedBody = this._expectedRequestBodies[reqBody];
+                if (updateBodyIds) {
+                    expectedBody.refCount++;
+                }
+                bodyId = expectedBody.bodyId;
+            } else if (updateBodyIds) {
+                // New body identifier
+                bodyId = `body${this._bodyIdCounter++}`;
+                this._expectedRequestBodies[reqBody] = {
+                    refCount: 1,
+                    bodyId: bodyId,
+                };
+            } else {
+                throw new Error(`Unexpected request body: ${reqBody}`);
+            }
+        }
+
+        if (bodyId !== "") {
+            return `${method}::${url}::${bodyId}`;
+        } else {
+            return `${method}::${url}`;
+        }
     }
 
     remainingAssertions(): string[] {
@@ -90,6 +141,8 @@ export class MockHttpResponse extends AbstractHttpResponse {
     private _url: string;
     private _body: string;
 
+    protected streamConsumed: boolean = false;
+
     get headers(): HttpHeaders {
         return this._headers;
     }
@@ -104,18 +157,30 @@ export class MockHttpResponse extends AbstractHttpResponse {
 
     constructor(
         url: string,
-        status?: number,
-        body?: string,
-        headers?: HttpHeaders | Record<string, string>
+        opts?: {
+            status?: number;
+            requestBody?: string;
+            body?: string;
+            headers?: HttpHeaders | Record<string, string>;
+        }
     ) {
         super();
         this._url = url;
-        this._status = status ?? 200;
-        this._body = body ?? "";
-        this._headers = new MockHttpHeaders(headers);
+        this._status = opts?.status ?? 200;
+        this._body = opts?.body ?? "";
+        this._headers = new MapHttpHeaders(opts?.headers);
     }
 
     async text(): Promise<string> {
+        if (this.streamConsumed) {
+            // Since some real implementations (ie: fetch) don't allow
+            // the response body to be read twice, we need to throw
+            // an exception here too.
+            throw new TypeError(
+                "Failed to get response text: body stream already read"
+            );
+        }
+        this.streamConsumed = true;
         return this._body;
     }
 }
@@ -127,64 +192,5 @@ export class MockHttpResponseError extends Error {
     constructor(message?: string) {
         super(message);
         Object.setPrototypeOf(this, new.target.prototype);
-    }
-}
-
-/**
- * Mock HTTP headers
- */
-export class MockHttpHeaders implements HttpHeaders {
-    private _map: Record<string, string[]> = {};
-
-    constructor(headers?: HttpHeaders | Record<string, string>) {
-        if (isHttpHeaders(headers)) {
-            headers.forEach((value, key) => {
-                this.append(key, value);
-            });
-        } else if (headers) {
-            for (const [key, value] of Object.entries(headers)) {
-                this.append(key, value);
-            }
-        }
-    }
-
-    append(name: string, value: string): void {
-        const values = this._map[name] ?? [];
-        values.push(value);
-        this._map[name] = values;
-    }
-
-    delete(name: string): void {
-        delete this._map[name];
-    }
-
-    get(name: string): string | null {
-        const values = this._map[name];
-        if (values === null || values === undefined) {
-            return null;
-        }
-        if (values.length > 1) {
-            return values.join(", ");
-        }
-        return values[0];
-    }
-
-    has(name: string): boolean {
-        return this._map[name] !== null && this._map[name] !== undefined;
-    }
-
-    set(name: string, value: string): void {
-        this._map[name] = [value];
-    }
-
-    forEach(
-        callback: (value: string, key: string, parent: HttpHeaders) => void
-    ): void {
-        for (const key of Object.keys(this._map)) {
-            const value = this.get(key);
-            if (value !== null && value !== undefined) {
-                callback(value, key, this);
-            }
-        }
     }
 }

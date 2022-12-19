@@ -1,18 +1,18 @@
 import { HttpRequestMethod } from "./constants";
 
-export type UrlOrRequestType = string | HttpRequest;
+export type UrlOrRequestInit = string | HttpRequestInit;
 
 /**
  * Base class for HTTP clients
  */
 export abstract class AbstractHttpClient implements HttpClient {
     abstract fetch(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
 
     get(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         return AbstractHttpClient._fetchWithMethod(
@@ -24,7 +24,7 @@ export abstract class AbstractHttpClient implements HttpClient {
     }
 
     post(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         return AbstractHttpClient._fetchWithMethod(
@@ -36,7 +36,7 @@ export abstract class AbstractHttpClient implements HttpClient {
     }
 
     put(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         return AbstractHttpClient._fetchWithMethod(
@@ -48,7 +48,7 @@ export abstract class AbstractHttpClient implements HttpClient {
     }
 
     delete(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         return AbstractHttpClient._fetchWithMethod(
@@ -60,7 +60,7 @@ export abstract class AbstractHttpClient implements HttpClient {
     }
 
     patch(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         return AbstractHttpClient._fetchWithMethod(
@@ -74,7 +74,7 @@ export abstract class AbstractHttpClient implements HttpClient {
     private static _fetchWithMethod(
         client: HttpClient,
         method: string,
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse> {
         if (!requestProps) {
@@ -103,6 +103,18 @@ export abstract class AbstractHttpResponse implements HttpResponse {
         const body = await this.text();
         return JSON.parse(body);
     }
+
+    async blob(): Promise<Blob> {
+        const body = await this.text();
+        return new Blob([body], {
+            type: this.headers.get("Content-Type") ?? undefined,
+        });
+    }
+
+    async arrayBuffer(): Promise<ArrayBuffer> {
+        const body = await this.blob();
+        return body.arrayBuffer();
+    }
 }
 
 /**
@@ -111,38 +123,33 @@ export abstract class AbstractHttpResponse implements HttpResponse {
  */
 export interface HttpClient {
     fetch(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
     get(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
     post(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
     put(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
     delete(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
     patch(
-        urlOrRequest: UrlOrRequestType,
+        urlOrRequest: UrlOrRequestInit,
         requestProps?: HttpRequestInit
     ): Promise<HttpResponse>;
 }
 
-export interface HttpRequest {
-    readonly headers: HttpHeaders;
-    readonly method: string;
-    readonly url: string;
-}
-
 export interface HttpRequestInit {
+    body?: Blob | ArrayBuffer | ArrayBufferView | string;
     headers?: HttpHeaders | Record<string, string>;
     method?: string;
     url?: string;
@@ -155,6 +162,8 @@ export interface HttpResponse {
     readonly status: number;
     readonly url: string;
 
+    arrayBuffer(): Promise<ArrayBuffer>;
+    blob(): Promise<Blob>;
     json(): Promise<unknown>;
     text(): Promise<string>;
 }

@@ -13,7 +13,7 @@ export {
     FetchHttpClient,
     HttpClient,
     HttpRequestInit,
-    UrlOrRequestType,
+    UrlOrRequestInit,
 } from "./http";
 export { getLogger } from "./logging/logging-util";
 export {

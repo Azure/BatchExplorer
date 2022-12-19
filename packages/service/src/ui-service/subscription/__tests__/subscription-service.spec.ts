@@ -20,10 +20,17 @@ describe("SubscriptionService", () => {
         httpClient.addExpected(
             new MockHttpResponse(
                 `${Endpoints.arm}/subscriptions?api-version=${ApiVersion.arm}`,
-                200,
-                JSON.stringify({
-                    value: [{ id: "A" }, { id: "B" }, { id: "C" }, { id: "D" }],
-                })
+                {
+                    status: 200,
+                    body: JSON.stringify({
+                        value: [
+                            { id: "A" },
+                            { id: "B" },
+                            { id: "C" },
+                            { id: "D" },
+                        ],
+                    }),
+                }
             )
         );
         const subs = await service.list();
