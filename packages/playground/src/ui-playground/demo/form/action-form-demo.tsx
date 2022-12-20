@@ -155,7 +155,11 @@ export const ActionFormDemo: React.FC = () => {
             >
                 <MonacoEditor
                     controllerRef={controllerRef}
-                    value={JSON.stringify(actions[action].form.values)}
+                    value={JSON.stringify(
+                        actions[action].form.values,
+                        undefined,
+                        4
+                    )}
                     onChange={editorChangeHandler}
                     onChangeDelay={20}
                     language="json"
