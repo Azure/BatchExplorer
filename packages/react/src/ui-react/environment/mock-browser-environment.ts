@@ -20,7 +20,8 @@ import { initFluentIcons } from "./environment-util";
  */
 export class MockBrowserEnvironment
     extends MockEnvironment<BrowserEnvironmentConfig>
-    implements BrowserEnvironment {
+    implements BrowserEnvironment
+{
     isMockBrowserEnvironment: boolean = true;
 
     async beforeInit(): Promise<void> {
@@ -53,7 +54,9 @@ export class MockBrowserEnvironment
     }
 
     // TODO: This code shouldn't need to be duplicated from DefaultBrowserEnvironment
-    getFormLayout<V extends FormValues>(layoutType: FormLayoutType = "list"): React.FC<LayoutProps<V>> {
+    getFormLayout<V extends FormValues>(
+        layoutType: FormLayoutType = "list"
+    ): React.FC<LayoutProps<V>> {
         const provider = this.getInjectable<FormLayoutProvider>(
             BrowserDependencyName.FormLayoutProvider
         );

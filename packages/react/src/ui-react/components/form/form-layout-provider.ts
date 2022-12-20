@@ -1,12 +1,12 @@
 import { FormValues } from "@batch/ui-common/lib/form";
 import React from "react";
-import {
-    FormLayoutProvider, FormLayoutType, LayoutProps
-} from "./form-layout";
+import { FormLayoutProvider, FormLayoutType, LayoutProps } from "./form-layout";
 import { ListFormLayoutComp } from "./list-form-layout";
 
 export class DefaultFormLayoutProvider implements FormLayoutProvider {
-    getLayout<V extends FormValues>(layout: FormLayoutType): React.FC<LayoutProps<V>> {
+    getLayout<V extends FormValues>(
+        layout: FormLayoutType
+    ): React.FC<LayoutProps<V>> {
         if (layout === "list") {
             return ListFormLayoutComp;
         } else if (layout === "steps") {
