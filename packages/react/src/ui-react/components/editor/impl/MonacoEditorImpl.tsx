@@ -104,6 +104,8 @@ export const MonacoEditor: React.FC<MonacoEditorImplProps> = (props) => {
     if (props.controllerRef) {
         controllerRef = props.controllerRef;
     }
+    const onChangeRef = React.useRef(props.onChange);
+    onChangeRef.current = props.onChange;
 
     const { value = "" } = props;
 
@@ -121,7 +123,12 @@ export const MonacoEditor: React.FC<MonacoEditorImplProps> = (props) => {
 
             const model = controllerRef.current.model;
 
-            editor = _createEditor(model, props, containerRef.current);
+            editor = _createEditor(
+                model,
+                props,
+                containerRef.current,
+                onChangeRef
+            );
             onWindowResize = () => {
                 if (editor) {
                     editor.layout();
@@ -160,7 +167,8 @@ export const MonacoEditor: React.FC<MonacoEditorImplProps> = (props) => {
 function _createEditor(
     model: monaco.editor.ITextModel,
     props: MonacoEditorImplProps,
-    containerEl: HTMLElement
+    containerEl: HTMLElement,
+    onChangeRef: React.MutableRefObject<((value: string) => void) | undefined>
 ): monaco.editor.IStandaloneCodeEditor {
     const editor = monaco.editor.create(containerEl, {
         theme: props.theme,
@@ -169,11 +177,11 @@ function _createEditor(
     });
 
     let debouncedOnChange: DebouncedFunction<() => void> | undefined;
-    if (props.onChange) {
+    if (onChangeRef.current) {
         debouncedOnChange = debounce(
             () => {
-                if (props.onChange) {
-                    props.onChange(model.getValue());
+                if (onChangeRef.current) {
+                    onChangeRef.current(model.getValue());
                 }
             },
             props.onChangeDelay ?? defaultOnChangeDelay,
