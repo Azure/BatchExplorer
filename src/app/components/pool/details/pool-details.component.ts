@@ -13,6 +13,12 @@ import { ElectronShell } from "@batch-flask/electron";
 
 import "./pool-details.scss";
 
+export enum ImageEOLState {
+    PassedEndOfLife,
+    NearingEndOfLife,
+    FarAwayFromEndOfLife,
+};
+
 @Component({
     selector: "bl-pool-details",
     templateUrl: "pool-details.html",
@@ -40,7 +46,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return this._isImageDeprecated;
     }
     public get hasDeprecationLink() {
-        return this.isImageDeprecated && PoolUtils.getEndOfLifeHyperlink(this.poolDecorator.poolOs);
+        return this.isImageDeprecated && PoolUtils.getEndOfLifeHyperlinkforPoolDetails(this.poolDecorator.poolOs);
     }
     public get selectedImageEndOfLifeDate() {
         return this._selectedImageEndOfLifeDate.toDateString();
@@ -48,6 +54,9 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     public data: EntityView<Pool, PoolParams>;
     public estimatedCost = "-";
+
+    public imageEOLState = ImageEOLState;
+    public endOfLifeProximity: ImageEOLState;
 
     private _paramsSubscriber: Subscription;
     private _pool: Pool;
@@ -123,7 +132,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     }
 
     public openDeprecationLink() {
-        const link = PoolUtils.getEndOfLifeHyperlink(this.poolDecorator.poolOs);
+        const link = PoolUtils.getEndOfLifeHyperlinkforPoolDetails(this.poolDecorator.poolOs);
         this.electronShell.openExternal(link, {activate: true});
     }
 
@@ -159,7 +168,20 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
                 && selectedImage.batchSupportEndOfLife) {
                 this._isImageDeprecated = true;
                 this._selectedImageEndOfLifeDate = selectedImage.batchSupportEndOfLife;
+                this._updateImageEOLState();
             }
+        }
+    }
+
+    private _updateImageEOLState() {
+        const diff = this._selectedImageEndOfLifeDate.getTime() - Date.now();
+        const days = diff / (1000 * 3600 * 24);
+        if (days < 0) {
+            this.endOfLifeProximity = ImageEOLState.PassedEndOfLife;
+        } else if (days >= 0 && days <= 365) {
+            this.endOfLifeProximity = ImageEOLState.NearingEndOfLife;
+        } else {
+            this.endOfLifeProximity = ImageEOLState.FarAwayFromEndOfLife;
         }
     }
 }

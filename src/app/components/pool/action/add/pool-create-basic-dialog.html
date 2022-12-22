@@ -29,12 +29,17 @@
         </bl-form-section>
 
         <bl-form-section title="Select an operating system configuration" subtitle="Choose the operating system to be installed on all the nodes in the pool">
-            <ng-container *ngIf="isSelectedImageDeprecated">
+            <ng-container *ngIf="selectedImageWillDeprecate">
                 <bl-banner class="create-pool-deprecation-warning" type="warning">
                     <div message>
-                        <bl-i18n key="pool-create-basic-dialog.deprecationWarning.imageEndOfLife">
-                            <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
-                        </bl-i18n>
+                        <span [ngSwitch]="endOfLifeProximity">
+                            <bl-i18n *ngSwitchCase="imageEOLState.FarAwayFromEndOfLife" key="pool-create-basic-dialog.deprecationWarning.imageFarFromEndOfLife">
+                                <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
+                            </bl-i18n>
+                            <bl-i18n *ngSwitchCase="imageEOLState.NearingEndOfLife" key="pool-create-basic-dialog.deprecationWarning.imageNearingEndOfLife">
+                                <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
+                            </bl-i18n>
+                        </span>
                         <a class="create-pool-warning-alternative-link" *ngIf="hasDeprecationLink" (click)="openDeprecationLink()" href="javascript:void(0)">Learn more </a>
                     </div>
                 </bl-banner>

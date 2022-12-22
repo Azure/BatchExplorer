@@ -17,6 +17,13 @@ import { PoolUtils } from "app/utils";
 
 import "./pool-create-basic-dialog.scss";
 
+export enum ImageEOLState {
+    None,
+    PassedEndOfLife,
+    NearingEndOfLife,
+    FarAwayFromEndOfLife,
+}
+
 @Component({
     selector: "bl-pool-create-basic-dialog",
     templateUrl: "pool-create-basic-dialog.html",
@@ -39,21 +46,16 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         return this._osControl.value && this._osControl.value.cloudServiceConfiguration;
     }
 
-    public get isSelectedImageDeprecated() {
-        const config = this._osControl.value?.virtualMachineConfiguration;
-        if (config) {
-            const config = this._osControl.value.virtualMachineConfiguration;
-            const isDeprecatedImage = config && config.batchSupportEndOfLife;
-            if (isDeprecatedImage) {
-                this._selectedDeprecatedImageEndOfLife = config.batchSupportEndOfLife;
-            }
-            return isDeprecatedImage;
-        }
-        return false;
+    public get selectedDeprecatedImageEndOfLife() {
+        return this.virtualMachineConfiguration && this.virtualMachineConfiguration.batchSupportEndOfLife;
+    }
+
+    public get selectedImageWillDeprecate() {
+        return this.endOfLifeProximity != ImageEOLState.PassedEndOfLife && this.endOfLifeProximity != ImageEOLState.None;
     }
 
     public get hasDeprecationLink() {
-        return this.isSelectedImageDeprecated && PoolUtils.getEndOfLifeHyperlink(this.selectedVirtualMachineImageName);
+        return this.selectedImageWillDeprecate && PoolUtils.getEndOfLifeHyperlinkforPoolCreate(this.selectedVirtualMachineImageName);
     }
 
     public get selectedVirtualMachineImageName(): string {
@@ -61,7 +63,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     public get selectedVirtualMachineImageEndOfLifeDate(): string {
-        return this._selectedDeprecatedImageEndOfLife.toDateString();
+        return this.selectedDeprecatedImageEndOfLife.toDateString();
     }
 
     public osSource: PoolOsSources = PoolOsSources.IaaS;
@@ -74,11 +76,13 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public armNetworkOnly = true;
     public title = "Add pool";
 
+    public imageEOLState = ImageEOLState;
+    public endOfLifeProximity: ImageEOLState = ImageEOLState.None;
+
     private _osControl: FormControl;
     private _renderingSkuSelected: boolean = false;
     private _subs: Subscription[] = [];
     private _lastFormValue: CreatePoolModel;
-    private _selectedDeprecatedImageEndOfLife: Date;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -173,6 +177,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 || value.vmSize !== this._lastFormValue.vmSize
                 || this._lastFormValue.scale !== value.scale) {
                 this._updateEstimatedPrice();
+                this._updateImageEOLState();
             }
             this._lastFormValue = value;
         });
@@ -253,11 +258,27 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     public openDeprecationLink() {
-        const link = PoolUtils.getEndOfLifeHyperlink(this.selectedVirtualMachineImageName);
+        const link = PoolUtils.getEndOfLifeHyperlinkforPoolCreate(this.selectedVirtualMachineImageName);
         this.electronShell.openExternal(link, {activate: true});
     }
 
     public openLink(link: string) {
         this.electronShell.openExternal(link, {activate: true});
+    }
+
+    private _updateImageEOLState() {
+        if (!this.selectedDeprecatedImageEndOfLife) {
+            this.endOfLifeProximity = ImageEOLState.None;
+            return;
+        }
+        const diff = this.selectedDeprecatedImageEndOfLife.getTime() - Date.now();
+        const days = diff / (1000 * 3600 * 24);
+        if (days >= 0 && days <= 365) {
+            this.endOfLifeProximity = ImageEOLState.NearingEndOfLife;
+        } else if (days > 365) {
+            this.endOfLifeProximity = ImageEOLState.FarAwayFromEndOfLife;
+        } else {
+            this.endOfLifeProximity = ImageEOLState.PassedEndOfLife;
+        }
     }
 }

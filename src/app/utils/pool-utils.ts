@@ -19,23 +19,23 @@ export interface PoolPriceOptions {
     target?: boolean;
 }
 
-const deprecatedContainerImages = {
-    "2016-datacenter-with-containers": 0,
-    "2016-datacenter-with-containers-g2": 0,
-    "2016-datacenter-with-containers-gs": 0,
-    "2019-datacenter-containers-with-containers": 0,
-    "2019-datacenter-core-with-containers-g2": 0,
-    "2019-datacenter-containers-with-containers-smalldisk": 0,
-    "2019-datacenter-core-with-containers-smalldisk-g2": 0,
-    "2019-datacenter-with-containers": 0,
-    "2019-datacenter-with-containers-g2": 0,
-    "2019-datacenter-with-containers-gs": 0,
-    "2019-datacenter-with-containers-smalldisk": 0,
-    "2019-datacenter-with-containers-smalldisk-g2": 0,
-    "datacenter-core-20h2-with-containers-smalldisk": 0,
-    "datacenter-core-20h2-with-containers-smalldisk-gs": 0,
-    "datacenter-core-20h2-with-containers-smalldisk-g2": 0,
-}
+const deprecatedContainerImages = [
+    "2016-datacenter-with-containers",
+    "2016-datacenter-with-containers-g2",
+    "2016-datacenter-with-containers-gs",
+    "2019-datacenter-containers-with-containers",
+    "2019-datacenter-core-with-containers-g2",
+    "2019-datacenter-containers-with-containers-smalldisk",
+    "2019-datacenter-core-with-containers-smalldisk-g2",
+    "2019-datacenter-with-containers",
+    "2019-datacenter-with-containers-g2",
+    "2019-datacenter-with-containers-gs",
+    "2019-datacenter-with-containers-smalldisk",
+    "2019-datacenter-with-containers-smalldisk-g2",
+    "datacenter-core-20h2-with-containers-smalldisk",
+    "datacenter-core-20h2-with-containers-smalldisk-gs",
+    "datacenter-core-20h2-with-containers-smalldisk-g2",
+]
 
 const iconMapping = {
     "ubuntuserver": Icons.ubuntu,
@@ -192,8 +192,17 @@ export class PoolUtils {
         return "cloud";
     }
 
-    public static getEndOfLifeHyperlink(imageName: string): string | null {
-        if (imageName.toLowerCase() in deprecatedContainerImages) {
+    // Pool Details gives OS name and image name so we have to split to just get the matching image name
+    public static getEndOfLifeHyperlinkforPoolDetails(imageName: string): string | null {
+        const imageDetails = imageName.split(" ");
+        if (deprecatedContainerImages.includes(imageDetails[1].toLowerCase())) {
+            return 'https://github.com/Azure/Batch/issues/136';
+        }
+        return null;
+    }
+
+    public static getEndOfLifeHyperlinkforPoolCreate(imageName: string): string | null {
+        if (deprecatedContainerImages.includes(imageName.toLowerCase())) {
             return 'https://github.com/Azure/Batch/issues/136';
         }
         return null;
