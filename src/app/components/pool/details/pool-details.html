@@ -27,6 +27,25 @@
             </div>
         </bl-summary-card>
 
+        <ng-container *ngIf="isImageDeprecated">
+            <bl-banner class="pool-details-summary-deprecation-warning" type="warning">
+                <div message>
+                    <span [ngSwitch]="endOfLifeProximity">
+                        <bl-i18n *ngSwitchCase="imageEOLState.NearingEndOfLife" key="pool-details.deprecationWarning.imageNearingEndOfLife">
+                            <b *i18nParam="'imageEndOfLifeDate'">{{selectedImageEndOfLifeDate}}</b>
+                        </bl-i18n>
+                        <bl-i18n *ngSwitchCase="imageEOLState.FarAwayFromEndOfLife" key="pool-details.deprecationWarning.imageFarAwayFromEndOfLife">
+                            <b *i18nParam="'imageEndOfLifeDate'">{{selectedImageEndOfLifeDate}}</b>
+                        </bl-i18n>
+                        <bl-i18n *ngSwitchCase="imageEOLState.PassedEndOfLife" key="pool-details.deprecationWarning.imagePassedEndOfLife">
+                            <b *i18nParam="'imageEndOfLifeDate'">{{selectedImageEndOfLifeDate}}</b>
+                        </bl-i18n>
+                    </span>
+                    <a class="pool-details-summary-warning-alternative-link" *ngIf="hasDeprecationLink" (click)="openDeprecationLink()" href="javascript:void(0)">Learn more </a>
+                </div>
+            </bl-banner>
+        </ng-container>
+
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>
         <bl-card class="details">
             <bl-tab-group>

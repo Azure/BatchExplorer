@@ -13,8 +13,16 @@ import { NumberUtils } from "app/utils";
 import { Constants } from "common";
 import { Observable, Subscription, of } from "rxjs";
 import { map } from "rxjs/operators";
+import { PoolUtils } from "app/utils";
 
 import "./pool-create-basic-dialog.scss";
+
+export enum ImageEOLState {
+    None,
+    PassedEndOfLife,
+    NearingEndOfLife,
+    FarAwayFromEndOfLife,
+}
 
 @Component({
     selector: "bl-pool-create-basic-dialog",
@@ -38,6 +46,26 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         return this._osControl.value && this._osControl.value.cloudServiceConfiguration;
     }
 
+    public get selectedDeprecatedImageEndOfLife() {
+        return this.virtualMachineConfiguration && this.virtualMachineConfiguration.batchSupportEndOfLife;
+    }
+
+    public get selectedImageWillDeprecate() {
+        return this.endOfLifeProximity != ImageEOLState.PassedEndOfLife && this.endOfLifeProximity != ImageEOLState.None;
+    }
+
+    public get hasDeprecationLink() {
+        return this.selectedImageWillDeprecate && PoolUtils.getEndOfLifeHyperlinkforPoolCreate(this.selectedVirtualMachineImageName);
+    }
+
+    public get selectedVirtualMachineImageName(): string {
+        return this._osControl.value.virtualMachineConfiguration.imageReference.sku;
+    }
+
+    public get selectedVirtualMachineImageEndOfLifeDate(): string {
+        return this.selectedDeprecatedImageEndOfLife.toDateString();
+    }
+
     public osSource: PoolOsSources = PoolOsSources.IaaS;
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
@@ -47,6 +75,9 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public fileUri = "create.pool.batch.json";
     public armNetworkOnly = true;
     public title = "Add pool";
+
+    public imageEOLState = ImageEOLState;
+    public endOfLifeProximity: ImageEOLState = ImageEOLState.None;
 
     private _osControl: FormControl;
     private _renderingSkuSelected: boolean = false;
@@ -146,6 +177,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 || value.vmSize !== this._lastFormValue.vmSize
                 || this._lastFormValue.scale !== value.scale) {
                 this._updateEstimatedPrice();
+                this._updateImageEOLState();
             }
             this._lastFormValue = value;
         });
@@ -225,7 +257,28 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         };
     }
 
+    public openDeprecationLink() {
+        const link = PoolUtils.getEndOfLifeHyperlinkforPoolCreate(this.selectedVirtualMachineImageName);
+        this.electronShell.openExternal(link, {activate: true});
+    }
+
     public openLink(link: string) {
         this.electronShell.openExternal(link, {activate: true});
+    }
+
+    private _updateImageEOLState() {
+        if (!this.selectedDeprecatedImageEndOfLife) {
+            this.endOfLifeProximity = ImageEOLState.None;
+            return;
+        }
+        const diff = this.selectedDeprecatedImageEndOfLife.getTime() - Date.now();
+        const days = diff / (1000 * 3600 * 24);
+        if (days >= 0 && days <= 365) {
+            this.endOfLifeProximity = ImageEOLState.NearingEndOfLife;
+        } else if (days > 365) {
+            this.endOfLifeProximity = ImageEOLState.FarAwayFromEndOfLife;
+        } else {
+            this.endOfLifeProximity = ImageEOLState.PassedEndOfLife;
+        }
     }
 }
