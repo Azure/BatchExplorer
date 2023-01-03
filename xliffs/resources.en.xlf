@@ -751,8 +751,32 @@
       <trans-unit id="pool-commands.stopResize">
         <source>Stop resize</source>
       </trans-unit>
+      <trans-unit id="pool-create-basic-dialog">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-create-basic-dialog.deprecationWarning">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-create-basic-dialog.deprecationWarning.imageFarFromEndOfLife">
+        <source>The selected image has an end-of-life date of {imageEndOfLifeDate}. After this date, it will not appear as an option when creating new pools. API calls using the image may continue to function for up to 60 days afterwards.</source>
+      </trans-unit>
+      <trans-unit id="pool-create-basic-dialog.deprecationWarning.imageNearingEndOfLife">
+        <source>The selected image is nearing its end of life date of {imageEndOfLifeDate}. After this date, it will not appear as an option when creating new pools. API calls using the image may continue to function for up to 60 days afterwards.</source>
+      </trans-unit>
       <trans-unit id="pool-details">
         <source/>
+      </trans-unit>
+      <trans-unit id="pool-details.deprecationWarning">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-details.deprecationWarning.imageFarAwayFromEndOfLife">
+        <source>This pool's image has an end-of-life date of {imageEndOfLifeDate}. After this date, it will not appear as an option when creating new pools. API calls to create or scale pools using the image may continue to function for up to 60 days afterwards.</source>
+      </trans-unit>
+      <trans-unit id="pool-details.deprecationWarning.imageNearingEndOfLife">
+        <source>This pool's image is nearing its end-of-life date of {imageEndOfLifeDate}. After this date, it will not appear as an option when creating new pools. API calls to create or scale pools using the image may continue to function for up to 60 days afterwards.</source>
+      </trans-unit>
+      <trans-unit id="pool-details.deprecationWarning.imagePassedEndOfLife">
+        <source>This pool's image is past its end-of-life date of {imageEndOfLifeDate}. Please recreate this pool using a different image afterwards.</source>
       </trans-unit>
       <trans-unit id="pool-details.estimatedCost">
         <source>Estimated cost of this pool at this current state</source>
