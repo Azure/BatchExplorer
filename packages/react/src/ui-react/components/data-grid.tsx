@@ -6,6 +6,9 @@ import {
 } from "@fluentui/react/lib/DetailsList";
 import { useAppTheme } from "../theme";
 import { autoFormat } from "@batch/ui-common";
+import { Observer } from "mobx-react-lite";
+import { ISelection } from "@fluentui/react/lib/selection";
+import { lodashGet } from "@batch/ui-common";
 
 export interface DataGridProps {
     /**
@@ -39,6 +42,10 @@ export interface DataGridProps {
      * checkboxes will not appear.
      */
     selectionMode?: "single" | "multiple" | "none";
+    /**
+     * Selection instance to control selection
+     */
+    selection?: ISelection<any>;
 }
 
 /**
@@ -65,6 +72,11 @@ export interface DataGridColumn {
      * Maximum width (in pixels) of the column
      */
     maxWidth?: number;
+
+    /**
+     * Optional onRender function. If not provided, will use @autoFormat on prop
+     */
+    onRender?: (item?: any, index?: number, column?: IColumn) => any;
 }
 
 const defaultColumnMinWidth = 48;
@@ -87,7 +99,12 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
                         key: `column${i++}`,
                         name: c,
                         fieldName: c,
-                        onRender: (item) => autoFormat(item[c]),
+                        onRender: (item) => (
+                            <Observer>
+                                {() => <>{autoFormat(lodashGet(item, c))}</>}
+                            </Observer>
+                        ),
+
                         minWidth: defaultColumnMinWidth,
                         maxWidth: props.columnDefaultMaxWidth,
                         isResizable: true,
@@ -98,8 +115,21 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
                         key: `column${i++}`,
                         name: c.label ?? c.prop,
                         fieldName: c.prop,
-                        onRender: (item) =>
-                            autoFormat(c.prop ? item[c.prop] : null),
+                        onRender: (item, ...rest) => (
+                            <Observer>
+                                {() => (
+                                    <>
+                                        {c.onRender
+                                            ? c.onRender(item, ...rest)
+                                            : autoFormat(
+                                                  c.prop
+                                                      ? lodashGet(item, c.prop)
+                                                      : null
+                                              )}
+                                    </>
+                                )}
+                            </Observer>
+                        ),
                         minWidth: defaultColumnMinWidth,
                         maxWidth: c.maxWidth ?? props.columnDefaultMaxWidth,
                         isResizable: true,
@@ -130,6 +160,7 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
             }
             columns={detailsListColumns}
             items={props.items ?? []}
+            selection={props.selection}
         />
     );
 };

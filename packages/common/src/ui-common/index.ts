@@ -24,6 +24,7 @@ export {
     isPromiseLike,
     isArray,
     uniqueId,
+    lodashGet,
 } from "./util";
 export {
     fromIso,

@@ -56,7 +56,7 @@ export class CertificateDetailsComponent implements OnInit, OnDestroy {
             if (certificate) {
                 this.decorator = new CertificateDecorator(certificate);
                 this.certificateDisplayProps = {
-                    view: new CertificateView(certificate)
+                    view: new CertificateView({model: certificate})
                 };
             }
         });

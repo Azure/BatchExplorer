@@ -4,7 +4,7 @@ import { MonacoEditor } from "@batch/ui-react/lib/components";
 import { parseCertificateJson, certificateToJson } from "@batch/ui-service";
 import { CertificateView } from "@batch/ui-service";
 import { CertificateDisplay } from "@batch/ui-react/lib/components";
-import { Certificate } from "@batch/ui-service";
+import { Certificate, CertificateService } from "@batch/ui-service";
 import { HeightAndWidth } from "../../../functions";
 import { Label } from "@fluentui/react/lib/Label";
 import { ILabelStyles } from "@fluentui/react/lib/Label";
@@ -42,7 +42,14 @@ export const CertificateDisplayDemo: React.FC = () => {
 
     return (
         <DemoPane title="Certificate">
-            <CertificateDisplay view={new CertificateView(myCert)} />
+            <CertificateDisplay
+                view={
+                    new CertificateView({
+                        service: new CertificateService(),
+                        model: myCert,
+                    })
+                }
+            />
 
             <br></br>
 

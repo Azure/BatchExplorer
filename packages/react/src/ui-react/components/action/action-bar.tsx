@@ -4,6 +4,8 @@ import {
     ICommandBarItemProps,
 } from "@fluentui/react/lib/CommandBar";
 import { useAppTheme } from "../../theme";
+// eslint-disable-next-line no-restricted-imports
+import type { IComponentAs } from "@fluentui/react";
 
 export interface ActionBarItem {
     /**
@@ -26,6 +28,10 @@ export interface ActionBarItem {
             | React.KeyboardEvent<HTMLElement>,
         item?: ActionBarItem
     ) => boolean | void;
+
+    disabled?: boolean;
+
+    commandBarButtonAs?: IComponentAs<ICommandBarItemProps>;
 }
 
 export interface ActionBarProps {
@@ -84,6 +90,14 @@ function _toCommandBarItem(
         commandBarItem.iconProps = {
             ...item.icon,
         };
+    }
+
+    if (item.disabled) {
+        commandBarItem.disabled = true;
+    }
+
+    if (item.commandBarButtonAs) {
+        commandBarItem.commandBarButtonAs = item.commandBarButtonAs;
     }
 
     if (props.iconsOnly) {

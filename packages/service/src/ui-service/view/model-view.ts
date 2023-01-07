@@ -1,22 +1,28 @@
 import type { HttpResponse } from "@batch/ui-common/lib/http";
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 import { View } from "./view";
 
-export interface ModelView<T> extends View {
+export interface ModelView<S, T> extends View {
     model?: T;
+    service?: S;
     update(model?: T): void;
 }
 
-export abstract class AbstractModelView<T> implements ModelView<T> {
+export abstract class AbstractModelView<S, T> implements ModelView<S, T> {
     @observable model?: T;
     @observable httpResponse?: HttpResponse;
     @observable loading: boolean;
 
-    constructor(model?: T, httpResponse?: HttpResponse) {
-        this.httpResponse = httpResponse;
+    service?: S;
+
+    constructor(service?: S, model?: T) {
         this.loading = false;
+        this.service = service;
         this.update(model);
     }
 
-    abstract update(model?: T): void;
+    @action
+    update(model?: T): void {
+        this.model = model;
+    }
 }

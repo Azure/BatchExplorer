@@ -1,23 +1,29 @@
 import { DependencyName, getEnvironment, getLogger } from "@batch/ui-common";
 import { MockHttpClient, MockHttpResponse } from "@batch/ui-common/lib/http";
-import { action, IObservableArray, makeObservable, observable } from "mobx";
+import {
+    action,
+    IObservableArray,
+    makeObservable,
+    observable,
+    computed,
+} from "mobx";
 import { AbstractModelListView, SelectableListView } from "../view";
-import { Certificate } from "./certificate-models";
+import { CertificateView } from "./certificate-view";
 import type { CertificateService } from "./certificate-service";
 
 /**
  * Observable data store for lists of certificates
  */
 export class CertificateListView
-    extends AbstractModelListView<CertificateService, Certificate>
-    implements SelectableListView<Certificate>
+    extends AbstractModelListView<CertificateService, CertificateView>
+    implements SelectableListView<CertificateView>
 {
-    @observable selectedItems: IObservableArray<Certificate>;
+    @observable selectedItems: IObservableArray<CertificateView>;
     @observable batchAccount: string;
 
     private logger = getLogger();
 
-    constructor(service: CertificateService, models: Certificate[] = []) {
+    constructor(service: CertificateService, models: CertificateView[] = []) {
         super(service, models);
         this.selectedItems = observable([]);
         // TODO: Get Batch account either from the URL or the context
@@ -26,18 +32,16 @@ export class CertificateListView
     }
 
     @action
-    update(items: Certificate[]): void {
+    update(items: CertificateView[]): void {
         this.clear();
         for (const cert of items) {
             this.items.push(cert);
         }
     }
 
-    firstSelection(): Certificate | null {
-        if (this.selectedItems.length > 0) {
-            return this.selectedItems[0];
-        }
-        return null;
+    @computed
+    get firstSelection(): CertificateView | undefined {
+        return this.selectedItems[0];
     }
 
     @action
@@ -52,6 +56,15 @@ export class CertificateListView
     @action
     clearSelection(): void {
         this.selectedItems.clear();
+    }
+
+    @action
+    onDeleteItem(cert: CertificateView) {
+        this.items.splice(this.items.indexOf(cert), 1);
+        const selectedIndex = this.selectedItems.indexOf(cert);
+        if (selectedIndex > -1) {
+            this.selectedItems.splice(selectedIndex, 1);
+        }
     }
 
     /**
@@ -86,6 +99,7 @@ export class CertificateListView
                             state: "deleting",
                             stateTransitionTime: "2021-05-21T15:41:27.189Z",
                             publicData: "fake-data",
+                            deleteCertificateError: {},
                         },
                         {
                             thumbprint: "some-fake-thumbprint2",
@@ -102,6 +116,15 @@ export class CertificateListView
         );
 
         const result = await this.service.listAll();
-        this.update(result.models);
+        this.update(
+            result.models.map(
+                (cert) =>
+                    new CertificateView({
+                        service: this.service,
+                        model: cert,
+                        listView: this,
+                    })
+            )
+        );
     }
 }
