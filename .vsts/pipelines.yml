@@ -13,8 +13,7 @@ jobs:
       vmImage: macOS-11
       demands: xcode
     variables:
-      - name: EOCompliance-Mac
-        value: true
+      BUILDSECMON_OPT_IN: true
     steps:
       - template: ./darwin/ci.yml
 
