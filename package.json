@@ -10,12 +10,9 @@
   "description": "Batch Explorer is a tool to manage your Azure Batch accounts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Azure/BatchExplorer"
+    "url": "git+https://github.com/Azure/BatchExplorer.git"
   },
-  "author": {
-    "name": "Microsoft Corporation",
-    "email": "batchexplorer@microsoft.com"
-  },
+  "author": "Microsoft Corporation <batchexplorer@microsoft.com>",
   "version": "2.16.0",
   "main": "build/client/main.prod.js",
   "scripts": {
@@ -212,5 +209,13 @@
     "write-file-webpack-plugin": "^4.5.1",
     "xml2js": "^0.4.23",
     "zone.js": "^0.11.0"
+  },
+  "bugs": {
+    "url": "https://github.com/Azure/BatchExplorer/issues"
+  },
+  "homepage": "https://github.com/Azure/BatchExplorer#readme",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
   }
 }
