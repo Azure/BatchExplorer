@@ -29,18 +29,26 @@
         </bl-form-section>
 
         <bl-form-section title="Select an operating system configuration" subtitle="Choose the operating system to be installed on all the nodes in the pool">
-            <bl-banner class="cloud-services-deprecation-warning" type="warning">
-                <div message>
-                    The Windows container images below will be removed from marketplace starting on September 22, 2022. After this date, new pools using it may not be created from the Azure Batch Explorer.
-                    <a (click)="openLink('https://github.com/Azure/Batch/issues/136')" href="javascript:void(0)">Click here </a>
-                    for more information.
-                </div>
-            </bl-banner>
+            <ng-container *ngIf="selectedImageWillDeprecate">
+                <bl-banner class="create-pool-deprecation-warning" type="warning">
+                    <div message>
+                        <span [ngSwitch]="endOfLifeProximity">
+                            <bl-i18n *ngSwitchCase="imageEOLState.FarAwayFromEndOfLife" key="pool-create-basic-dialog.deprecationWarning.imageFarFromEndOfLife">
+                                <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
+                            </bl-i18n>
+                            <bl-i18n *ngSwitchCase="imageEOLState.NearingEndOfLife" key="pool-create-basic-dialog.deprecationWarning.imageNearingEndOfLife">
+                                <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
+                            </bl-i18n>
+                        </span>
+                        <a class="create-pool-warning-alternative-link" *ngIf="hasDeprecationLink" (click)="openDeprecationLink()" href="javascript:void(0)">Learn more </a>
+                    </div>
+                </bl-banner>
+            </ng-container>
             <ng-container *ngIf="cloudServiceConfiguration">
-                <bl-banner class="cloud-services-deprecation-warning" type="warning">
+                <bl-banner class="create-pool-deprecation-warning" type="warning">
                     <div message>
                         Cloud Services pools are deprecated and will be retired on 29 February 2024. Existing ‘CloudServiceConfiguration’ pools will need to be deleted and new
-                        <a class="cloud-services-warning-alternative-link" (click)="openLink('https://docs.microsoft.com/en-us/azure/batch/batch-pool-cloud-service-to-virtual-machine-configuration?WT.mc_id=Portal-Microsoft_Azure_Batch')" href="javascript:void(0)">‘VirtualMachineConfiguration’ pools created. </a>
+                        <a class="create-pool-warning-alternative-link" (click)="openLink('https://docs.microsoft.com/azure/batch/batch-pool-cloud-service-to-virtual-machine-configuration?WT.mc_id=Portal-Microsoft_Azure_Batch')" href="javascript:void(0)">‘VirtualMachineConfiguration’ pools created. </a>
                         For new pools, select either a different ‘Distributions‘ or ‘Custom Image’ option.
                     </div>
                 </bl-banner>

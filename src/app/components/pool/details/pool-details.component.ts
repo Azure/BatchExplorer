@@ -2,15 +2,22 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, autobind } from "@batch-flask/core";
 import { PoolDecorator } from "app/decorators";
-import { Pool } from "app/models";
-import { BatchExplorerService, PoolParams, PoolService, PricingService } from "app/services";
-import { NumberUtils } from "app/utils";
+import { ImageInformation, Pool } from "app/models";
+import { BatchExplorerService, PoolOsService, PoolParams, PoolService, PricingService } from "app/services";
+import { NumberUtils, PoolUtils } from "app/utils";
 import { List } from "immutable";
 import { Subscription, from } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { PoolCommands } from "../action";
+import { ElectronShell } from "@batch-flask/electron";
 
 import "./pool-details.scss";
+
+export enum ImageEOLState {
+    PassedEndOfLife,
+    NearingEndOfLife,
+    FarAwayFromEndOfLife,
+};
 
 @Component({
     selector: "bl-pool-details",
@@ -35,26 +42,45 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         this.poolDecorator = pool && new PoolDecorator(pool);
     }
     public get pool() { return this._pool; }
+    public get isImageDeprecated() {
+        return this._isImageDeprecated;
+    }
+    public get hasDeprecationLink() {
+        return this.isImageDeprecated && PoolUtils.getEndOfLifeHyperlinkforPoolDetails(this.poolDecorator.poolOs);
+    }
+    public get selectedImageEndOfLifeDate() {
+        return this._selectedImageEndOfLifeDate.toDateString();
+    }
+
     public data: EntityView<Pool, PoolParams>;
     public estimatedCost = "-";
 
+    public imageEOLState = ImageEOLState;
+    public endOfLifeProximity: ImageEOLState;
+
     private _paramsSubscriber: Subscription;
     private _pool: Pool;
+    private _isImageDeprecated: boolean;
+    private _supportedImages: ImageInformation[];
+    private _selectedImageEndOfLifeDate: Date;
 
     constructor(
         public commands: PoolCommands,
         private changeDetector: ChangeDetectorRef,
         private router: Router,
         private activatedRoute: ActivatedRoute,
+        private poolOsService: PoolOsService,
         private batchExplorer: BatchExplorerService,
         private pricingService: PricingService,
-        private poolService: PoolService) {
+        private poolService: PoolService,
+        private electronShell: ElectronShell) {
 
         this.data = this.poolService.view();
         this.data.item.subscribe((pool) => {
             this.pool = pool;
             this.changeDetector.markForCheck();
             this._updatePrice();
+            this._updatePoolDeprecationWarning();
         });
 
         this.data.deleted.subscribe((key) => {
@@ -69,6 +95,10 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
             this.poolId = params["id"];
             this.data.params = { id: this.poolId };
             this.data.fetch();
+        });
+        this.poolOsService.supportedImages.subscribe(val => {
+            this._supportedImages = val.toArray();
+            this._updatePoolDeprecationWarning();
         });
     }
 
@@ -101,6 +131,15 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return from(window.appReady);
     }
 
+    public openDeprecationLink() {
+        const link = PoolUtils.getEndOfLifeHyperlinkforPoolDetails(this.poolDecorator.poolOs);
+        this.electronShell.openExternal(link, {activate: true});
+    }
+
+    public openLink(link: string) {
+        this.electronShell.openExternal(link, {activate: true});
+    }
+
     private _updatePrice() {
         if (!this.pool) {
             this.estimatedCost = "-";
@@ -115,5 +154,34 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
             }
             this.changeDetector.markForCheck();
         });
+    }
+
+    private _updatePoolDeprecationWarning() {
+        this._isImageDeprecated = false;
+        if (!this._supportedImages) {
+            return;
+        }
+        for (let i = 0; i < this._supportedImages.length; i++) {
+            const selectedImage = this._supportedImages[i];
+            if (this.poolDecorator
+                && this.poolDecorator.poolOs.includes(selectedImage.imageReference.sku)
+                && selectedImage.batchSupportEndOfLife) {
+                this._isImageDeprecated = true;
+                this._selectedImageEndOfLifeDate = selectedImage.batchSupportEndOfLife;
+                this._updateImageEOLState();
+            }
+        }
+    }
+
+    private _updateImageEOLState() {
+        const diff = this._selectedImageEndOfLifeDate.getTime() - Date.now();
+        const days = diff / (1000 * 3600 * 24);
+        if (days < 0) {
+            this.endOfLifeProximity = ImageEOLState.PassedEndOfLife;
+        } else if (days >= 0 && days <= 365) {
+            this.endOfLifeProximity = ImageEOLState.NearingEndOfLife;
+        } else {
+            this.endOfLifeProximity = ImageEOLState.FarAwayFromEndOfLife;
+        }
     }
 }

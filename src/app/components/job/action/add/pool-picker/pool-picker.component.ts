@@ -95,10 +95,10 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
             this.changeDetector.markForCheck();
         });
 
-        combineLatest(
+        combineLatest([
             this.poolOsService.offers,
             ciFilteredPools,
-        ).pipe(
+        ]).pipe(
             takeUntil(this._destroy),
         ).subscribe(([offers, pools]) => {
             this._updateOffers(offers.allOffers, pools);
