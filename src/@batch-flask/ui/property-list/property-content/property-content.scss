@@ -9,7 +9,7 @@ bl-property-content {
     display: block;
     width: 100%;
     min-height: 24px;
-    border: 1px black solid;
+    border: 1px #000000 solid;
 
     &:not(.wrap) {
         white-space: nowrap;
