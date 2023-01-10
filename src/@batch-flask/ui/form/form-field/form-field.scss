@@ -41,6 +41,7 @@ bl-form-field {
         width: 100%;
         flex: 1;
         min-width: 0;
+        border: 1px #000000 solid;
 
         &::placeholder {
             color: transparent;
