@@ -62,5 +62,6 @@ bl-monitor-chart {
     > .monitor-chart-preview {
         height: 100%;
         width: 100%;
+        pointer-events: none;
     }
 }
