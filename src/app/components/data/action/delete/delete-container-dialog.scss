@@ -1,0 +1,15 @@
+@import "app/styles/variables";
+
+bl-simple-form .message {
+    padding: 1em;
+    .storage-container-list {
+        padding: 1em;
+        li {
+            font-weight: bold;
+        }
+    }
+    .warning-message {
+        color: $danger-color;
+        font-weight: bold;
+    }
+}

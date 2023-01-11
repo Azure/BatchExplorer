@@ -1,0 +1,7 @@
+steps:
+
+  - powershell: $(Build.SourcesDirectory)/scripts/azpipelines/build-type.ps1 "$(Build.SourceBranch)" "$(Build.BuildNumber)"
+    displayName: Resolve build type
+
+  - powershell: $(Build.SourcesDirectory)/scripts/azpipelines/update-build-name.ps1
+    displayName: Resolve version

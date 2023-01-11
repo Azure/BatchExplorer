@@ -4,3 +4,4 @@ export * from "./subprocess";
 export * from "./batch-explorer-application";
 export * from "./smart-card-certificate";
 export * from "./client-locale.service";
+export * from "./storage";

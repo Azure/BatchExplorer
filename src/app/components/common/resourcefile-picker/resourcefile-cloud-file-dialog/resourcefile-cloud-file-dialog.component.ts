@@ -8,7 +8,6 @@ import { BatchAccountService, StorageAccountService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { ArmResourceUtils, StorageUtils } from "app/utils";
-import { BlobUtilities } from "azure-storage";
 import { DateTime } from "luxon";
 import { BehaviorSubject, Observable, Subject, of } from "rxjs";
 import {
@@ -178,7 +177,7 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
         return this.blobService.list(storageAccountId, containerName,
             {
                 folder: path,
-                limit: 1,
+                maxPages: 1,
             },
             true,
         ).pipe(
@@ -203,7 +202,7 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
 
         const sas: SharedAccessPolicy = {
             AccessPolicy: {
-                Permissions: BlobUtilities.SharedAccessPermissions.READ,
+                Permissions: ["r"],
                 Start: new Date(),
                 Expiry: DateTime.local().plus({ weeks: 1 }).toJSDate(),
             },
@@ -226,7 +225,7 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
 
         const sas: SharedAccessPolicy = {
             AccessPolicy: {
-                Permissions: BlobUtilities.SharedAccessPermissions.READ,
+                Permissions: ["r"],
                 Start: new Date(),
                 Expiry: DateTime.local().plus({ weeks: 1 }).toJSDate(),
             },

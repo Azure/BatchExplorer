@@ -1,4 +1,5 @@
 steps:
+  - template: ../common/set-dist-vars.yml
   - template: ./linux-dependencies.yml
   - script: |
       set -e
