@@ -1,8 +1,8 @@
 steps:
+  - template: ../common/set-dist-vars.yml
   - template: ./credscan.yml
   - template: ./win-dependencies.yml
-  - powershell: ./scripts/azpipelines/update-build-name.ps1
-    displayName: Resolve version
+
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
