@@ -11,7 +11,6 @@ import { log } from "@batch-flask/utils";
 import { BlobContainer } from "app/models";
 import { StorageEntityGetter, StorageListGetter } from "app/services/core";
 import { SharedAccessPolicy } from "app/services/storage/models";
-import { Constants } from "common";
 import { Observable, Subject, from, throwError } from "rxjs";
 import { catchError, flatMap, share } from "rxjs/operators";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
@@ -32,7 +31,9 @@ const storageIgnoredErrors = [
     HttpCode.Conflict,
 ];
 
-@Injectable({providedIn: "root"})
+const storageAccountPollRate = 30_000;
+
+@Injectable({ providedIn: "root" })
 export class StorageContainerService {
     /**
      * Triggered only when a file group is added through this app.
@@ -112,7 +113,7 @@ export class StorageContainerService {
         return new EntityView({
             cache: params => this._containerCache.getCache(params),
             getter: this._containerGetter,
-            poll: Constants.PollRate.entity,
+            poll: storageAccountPollRate,
         });
     }
 
@@ -121,8 +122,7 @@ export class StorageContainerService {
         container: string,
         sharedAccessPolicy: SharedAccessPolicy): Observable<string> {
         return this._callStorageClient(storageAccountId, (client) => {
-            const sasToken = client.generateSharedAccessSignature(container, null, sharedAccessPolicy);
-            return Promise.resolve(client.getUrl(container, null, sasToken));
+            return client.generateSasUrl(container, null, sharedAccessPolicy);
         }, (error) => {
             log.error(`Error generating container SAS: ${container}`, { ...error });
         });

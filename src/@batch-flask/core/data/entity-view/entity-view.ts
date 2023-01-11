@@ -47,7 +47,7 @@ export class EntityView<TEntity extends Record<any>, TParams> extends GenericVie
         );
 
         if (config.poll) {
-            this._pollTracker = this.startPoll(5000);
+            this._pollTracker = this.startPoll(config.poll);
         }
     }
 

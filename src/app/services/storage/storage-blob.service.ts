@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from "@angular/core";
+import { ContainerClient, ContainerProperties } from "@azure/storage-blob";
 import {
     DataCache,
     EntityView,
@@ -10,15 +11,14 @@ import {
     enterZone,
 } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
-import { File, FileLoadOptions, FileLoader, FileNavigator } from "@batch-flask/ui";
+import { File, FileLoadOptions, FileLoader, FileNavigator, FileLoadResult } from "@batch-flask/ui";
 import { CloudPathUtils, log } from "@batch-flask/utils";
 import { StorageEntityGetter, StorageListGetter } from "app/services/core";
-import { SharedAccessPolicy } from "app/services/storage/models";
-import { BlobService, createBlobServiceWithSas } from "azure-storage";
+import { ListBlobOptions, SharedAccessPolicy, StorageBlobResult, UploadFileResult } from "app/services/storage/models";
 import { Constants } from "common";
 import { AsyncSubject, Observable, from, of, throwError } from "rxjs";
-import { catchError, concat, concatMap, flatMap, map, share, take } from "rxjs/operators";
-import { BlobStorageClientProxy, ListBlobOptions } from "./blob-storage-client-proxy";
+import { catchError, concat, concatMap, map, share, switchMap, take } from "rxjs/operators";
+import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 import { StorageClientService } from "./storage-client.service";
 
 export interface ListBlobParams {
@@ -27,14 +27,22 @@ export interface ListBlobParams {
 }
 
 export interface BlobFileParams extends ListBlobParams {
-    storageAccountId: string;
     blobPrefix?: string;
     blobName?: string;
+}
+
+export interface CreateBlobParams {
+    accountUrl: string;
+    container: string;
+    blob: string;
+    sasToken: string;
 }
 
 export interface BlobContentResult {
     content: string;
 }
+
+export type StorageContainerProperties = ContainerProperties;
 
 export interface NavigateBlobsOptions {
     /**
@@ -78,10 +86,18 @@ export class InvalidSasUrlError extends Error {
 // Regex to extract the host, container and blob from a sasUrl
 const storageBlobUrlRegex = /^(https:\/\/[\w\._\-]+)\/([\w\-_]+)\/([\w\-_.]+)\?(.*)$/i;
 
+function createBlobClient(params: CreateBlobParams) {
+    const containerClient = new ContainerClient(
+        params.accountUrl + params.sasToken,
+        params.container
+    );
+    return containerClient.getBlockBlobClient(params.blob);
+}
+
 @Injectable({ providedIn: "root" })
 export class StorageBlobService {
-    public maxBlobPageSize: number = 100; // 500 slows down the UI too much.
-    public maxContainerPageSize: number = 50;
+    public maxBlobPageSize: number = 200; // 500 slows down the UI too much.
+    public maxContainerPageSize: number = 100;
 
     private _blobListCache = new TargetedDataCache<ListBlobParams, File>({
         key: ({ storageAccountId, container }) => `${storageAccountId}/${container}`,
@@ -104,12 +120,21 @@ export class StorageBlobService {
 
         this._blobListGetter = new StorageListGetter(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
-            getData: (client, params, options, continuationToken) => {
+            getData: (client: BlobStorageClientProxy,
+                params, options, continuationToken) => {
+                const blobOptions: ListBlobOptions = {
+                    folder: options.original.folder,
+                    recursive: options.original.recursive,
+                    maxPages: options.original.limit,
+                    maxPageSize: this.maxBlobPageSize
+                };
+
+                // N.B. `BlobItem` and `File` are nearly identical
                 return client.listBlobs(
                     params.container,
-                    options.original,
+                    blobOptions,
                     continuationToken,
-                );
+                ) as Promise<StorageBlobResult<File[]>>;
             },
             logIgnoreError: storageIgnoredErrors,
         });
@@ -199,12 +224,12 @@ export class StorageBlobService {
             properties: () => {
                 return this.get(storageAccountId, container, blobName, blobPrefix);
             },
-            content: (options: FileLoadOptions) => {
-                return this._callStorageClient(storageAccountId, (client) => {
+            content: (options: FileLoadOptions): Observable<FileLoadResult> =>
+                this._callStorageClient(storageAccountId, (client) => {
                     const pathToBlob = `${blobPrefix || ""}${blobName}`;
-                    return client.getBlobContent(container, pathToBlob, options);
-                });
-            },
+                    return client.getBlobContent(container, pathToBlob,
+                        options);
+                }),
             download: (dest: string) => {
                 return this._callStorageClient(storageAccountId, (client) => {
                     const pathToBlob = `${blobPrefix || ""}${blobName}`;
@@ -263,8 +288,7 @@ export class StorageBlobService {
         sharedAccessPolicy: SharedAccessPolicy): Observable<string> {
 
         return this._callStorageClient(storageAccountId, (client) => {
-            const sasToken = client.generateSharedAccessSignature(container, blob, sharedAccessPolicy);
-            return Promise.resolve(client.getUrl(container, blob, sasToken));
+            return client.generateSasUrl(container, blob, sharedAccessPolicy);
         }, (error) => {
             // TODO-Andrew: test that errors are caught
             log.error(`Error generating container SAS: ${container}`, { ...error });
@@ -272,22 +296,17 @@ export class StorageBlobService {
     }
 
     public uploadToSasUrl(sasUrl: string, filePath: string): Observable<any> {
-        const subject = new AsyncSubject<BlobService.BlobResult>();
+        const subject = new AsyncSubject<UploadFileResult>();
 
-        const { accountUrl, sasToken, container, blob } = this._parseSasUrl(sasUrl);
-        const service = createBlobServiceWithSas(accountUrl, sasToken);
-        service.createBlockBlobFromLocalFile(container, blob, filePath,
-            (error: any, result: BlobService.BlobResult) => {
-                this.zone.run(() => {
-
-                    if (error) {
-                        subject.error(ServerError.fromStorage(error));
-                        subject.complete();
-                    }
+        const blobParams = this._parseSasUrl(sasUrl);
+        const blobClient = createBlobClient(blobParams);
+        this.zone.run(() => {
+            blobClient.uploadFile(filePath)
+                .then(result => {
                     subject.next(result);
-                    subject.complete();
-                });
-            });
+                }).catch(error => subject.error(ServerError.fromStorage(error))
+                ).finally(() => subject.complete());
+        });
 
         return subject.asObservable();
     }
@@ -296,16 +315,17 @@ export class StorageBlobService {
      * Upload a single file to storage.
      * @param container Container Id
      * @param file Absolute path to the local file
-     * @param remotePath Blob name
+     * @param blobName Blob name
      */
     public uploadFile(
         storageAccountId: string,
         container: string,
         file: string,
-        remotePath: string): Observable<BlobService.BlobResult> {
+        blobName: string
+    ): Observable<UploadFileResult> {
 
         return this._callStorageClient(storageAccountId,
-            (client) => client.uploadFile(container, file, remotePath), (error) => {
+            (client) => client.uploadFile(container, file, blobName), (error) => {
                 log.error(`Error upload file ${file} to container ${container}`, error);
             });
     }
@@ -338,7 +358,7 @@ export class StorageBlobService {
                 };
                 const blob = remotePath ? CloudPathUtils.join(remotePath, file.remotePath) : file.remotePath;
                 const uploadObs = this.uploadFile(storageAccountId, container, file.localPath, blob).pipe(
-                    map(x => ({
+                    map(() => ({
                         uploaded: index + 1,
                         total,
                         current: file,
@@ -384,9 +404,7 @@ export class StorageBlobService {
 
         return this.storageClient.getFor(storageAccountId).pipe(
             take(1),
-            flatMap((client) => {
-                return from<Promise<T>>(promise(client));
-            }),
+            switchMap(client => from<Promise<T>>(promise(client))),
             catchError((err) => {
                 const serverError = ServerError.fromStorage(err);
                 if (errorCallback) {
@@ -400,7 +418,7 @@ export class StorageBlobService {
         );
     }
 
-    private _parseSasUrl(sasUrl: string) {
+    private _parseSasUrl(sasUrl: string): CreateBlobParams {
         const match = storageBlobUrlRegex.exec(sasUrl);
 
         if (match.length < 5) {

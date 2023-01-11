@@ -1,8 +1,7 @@
 // eslint-disable no-console
 import * as fs from "fs";
 import * as path from "path";
-import * as AzureStorage from "azure-storage";
-import { getManifest, getContainerName } from "./utils";
+import { getManifest, getContainerName, BlobStorageClient } from "./utils";
 import * as crypto from "crypto";
 
 const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT;
@@ -11,50 +10,32 @@ const attemptNumber = Number(process.env.Release_AttemptNumber);
 
 console.log(`This is the ${attemptNumber} try to release`);
 
+if (!storageAccountName) {
+    console.error(`No storage account name found in AZURE_STORAGE_ACCOUNT`);
+    process.exit(-1);
+}
+
 if (!storageAccountKey) {
     console.error("No storage account key passed");
     process.exit(-1);
 }
 
 console.log("Uploading to storage account:", storageAccountName);
-const blobService = AzureStorage.createBlobService(storageAccountName, storageAccountKey);
 
 function computeFileMd5(filename) {
     const data = fs.readFileSync(filename);
     return crypto.createHash("md5").update(data).digest("base64");
 }
 
-async function getBlob(container, blobName): Promise<AzureStorage.BlobService.BlobResult> {
-    return new Promise((resolve, reject) => {
-        blobService.getBlobProperties(container, blobName, (error, result) => {
-            if (error) {
-                return reject(error);
-            }
-
-            resolve(result);
-        });
-    });
-}
+const storageClient = new BlobStorageClient(storageAccountName,
+    storageAccountKey);
 
 async function createBlobFromLocalFile(container, filename, blobName, override = false) {
-    const options: AzureStorage.BlobService.CreateBlockBlobRequestOptions = {};
-    if (!override) {
-        options.accessConditions = AzureStorage.AccessCondition.generateIfNotExistsCondition();
-    }
+    const response = await storageClient.createBlob(container, blobName,
+        filename, override);
 
-    return new Promise((resolve, reject) => {
-        blobService.createBlockBlobFromLocalFile(container, blobName, filename, options,
-            (error, result, response) => {
-
-                if (error) {
-                    reject(error);
-                    return;
-                }
-
-                console.log("Uploaded", result, response);
-                resolve(result);
-            });
-    });
+    console.log("Uploaded", response);
+    return response;
 }
 
 async function uploadToBlob(container, filename, blobName, override = false) {
@@ -62,10 +43,10 @@ async function uploadToBlob(container, filename, blobName, override = false) {
     try {
         return await createBlobFromLocalFile(container, filename, blobName, override);
     } catch (error) {
-        if (error.code === "BlobAlreadyExists") {
-            const blob = await getBlob(container, blobName);
+        if (error.details.errorCode === "BlobAlreadyExists") {
+            const blob = await storageClient.getBlob(container, blobName);
             const md5 = computeFileMd5(filename);
-            const blobMd5 = blob.contentSettings && blob.contentSettings.contentMD5;
+            const blobMd5 = blob.blobContentMD5?.toString();
             if (md5 === blobMd5) {
                 console.log(`Already uploaded ${filename} skipping(Md5 hash matched)`);
             } else {
@@ -79,10 +60,22 @@ async function uploadToBlob(container, filename, blobName, override = false) {
 
 async function uploadFiles(os) {
     const manifest = getManifest(os);
-    console.log(`Uploading ${manifest.files.length} files for os: ${os}`);
-    const container = getContainerName(manifest.buildType);
-    for (const file of manifest.files) {
-        await uploadToBlob(container, path.join(os, file.path), file.remotePath);
+    if (manifest.files) {
+        console.log(`Uploading ${manifest.files?.length} files for os: ${os}`);
+        if (!manifest.buildType) {
+            throw new Error(
+                "Manifest does not contain required value for buildType"
+            );
+        }
+        const container = getContainerName(manifest.buildType);
+        for (const file of manifest.files) {
+            if (file.path) {
+                await uploadToBlob(container, path.join(os, file.path),
+                    file.remotePath);
+            }
+        }
+    } else {
+        console.error(`Cannot get manifest for ${os}`);
     }
 }
 
