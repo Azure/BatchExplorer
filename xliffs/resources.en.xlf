@@ -304,6 +304,18 @@
       <trans-unit id="datetime-picker.time">
         <source>time</source>
       </trans-unit>
+      <trans-unit id="delete-container-dialog">
+        <source/>
+      </trans-unit>
+      <trans-unit id="delete-container-dialog.message">
+        <source>Are you sure you want to permanently delete the following container(s)?</source>
+      </trans-unit>
+      <trans-unit id="delete-container-dialog.title">
+        <source>Delete Containers</source>
+      </trans-unit>
+      <trans-unit id="delete-container-dialog.warning">
+        <source>Deleting the container(s) listed above is irreversible. The action you are about to take cannot be undone.</source>
+      </trans-unit>
       <trans-unit id="duration-picker">
         <source/>
       </trans-unit>
