@@ -73,7 +73,7 @@
     "test:lib:all": "lerna run workspace:test:lib:all --stream && npm run gather-build-results",
     "test:web": "lerna run workspace:test:web --stream && npm run gather-build-results",
     "test:web:all": "lerna run workspace:test:web:all --stream && npm run gather-build-results",
-    "postinstall": "lerna bootstrap && node ./util/bux/check-cli-path",
+    "postinstall": "lerna bootstrap -- --legacy-peer-deps && node ./util/bux/check-cli-path",
     "dev-setup": "cd ./util/bux && npm pack --pack-destination ./build && npm install -g ./build/batch-bux-1.0.0.tgz && echo 'bux CLI tool installed'"
   }
 }
