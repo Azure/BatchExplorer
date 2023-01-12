@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostListener, Input } from "@angular/core";
+import { ENTER, SPACE } from "@batch-flask/core/keys";
 
 @Component({
     selector: "bl-link-property",
@@ -11,4 +12,12 @@ export class LinkPropertyComponent {
     @Input() public value: string;
 
     @Input() public link: string;
+
+    @HostListener("keyup", ["$event"])
+    keyPressed($event: KeyboardEvent) {
+        $event.stopImmediatePropagation();
+        if ($event.code === ENTER || $event.code === SPACE) {
+            ($event.target as HTMLElement).click();
+        }
+    }
 }
