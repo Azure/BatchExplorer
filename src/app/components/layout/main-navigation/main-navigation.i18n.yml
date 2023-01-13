@@ -1,5 +1,5 @@
 main-navigation:
-  label: Main navigation
+  label: Main sidebar
   dashboard: Dash
   jobs: Jobs
   jobschedules: Job schedules
