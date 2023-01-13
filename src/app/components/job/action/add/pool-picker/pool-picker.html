@@ -24,11 +24,11 @@
             <div class="title" [title]="pool.id">{{pool.id}}</div >
             <div class="details">
                 <div title="Pool has {{pool.targetNodes}} nodes" class="metric">
-                    <i class="fa fa-tv"></i>
+                    <i class="fa fa-tv" aria-hidden="true"></i>
                     <span attr.aria-label="{{pool.targetNodes}} nodes">{{pool.targetNodes}}</span>
                 </div>
                 <div title="Pool has {{poolCoreCount(pool)}} cores" class="metric">
-                    <i class="fa fa-microchip"></i>
+                    <i class="fa fa-microchip" aria-hidden="true"></i>
                     <span attr.aria-label="{{pool.targetNodes}} cores">{{poolCoreCount(pool)}}</span>
                 </div>
                 <div class="pool-tags">

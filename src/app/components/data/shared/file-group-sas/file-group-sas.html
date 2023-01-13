@@ -1,6 +1,6 @@
 <bl-form-field>
     <input type="text" blInput  [formControl]="value" [placeholder]="label">
-    <bl-button type="round" [action]="generateSasToken" [disabled]="!containerId" title="Generate SAS"><i class="fa fa-refresh"></i></bl-button>
+    <bl-button type="round" [action]="generateSasToken" [disabled]="!containerId" title="Generate SAS"><i class="fa fa-refresh" aria-hidden="true"></i></bl-button>
     <bl-hint *ngIf="hint" align="end">
         {{hint}}
     </bl-hint>

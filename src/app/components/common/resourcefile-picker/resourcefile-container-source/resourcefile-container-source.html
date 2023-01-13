@@ -2,5 +2,5 @@
 <span class="container" [title]="'models.container' | i18n">{{containerName}}</span>
 <span class="prefix" title="Prefix" *ngIf="prefix">({{'resourcefile-picker.blobPrefix' | i18n }}: {{prefix}})</span>
 <bl-clickable (do)="openEditDialog()">
-    <i class="fa fa-pencil"></i>
+    <i class="fa fa-pencil" aria-hidden="true"></i>
 </bl-clickable>

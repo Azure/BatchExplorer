@@ -5,7 +5,7 @@
     [disabled]="loading"
     attr.aria-labelledby="{{labelledBy}} {{id}}-label">
     <ng-container *ngIf="loading">
-        <i class="fa fa-spinner fa-spin"></i> {{'common.loading' | i18n}}
+        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i> {{'common.loading' | i18n}}
     </ng-container>
     <ng-container *ngIf="!loading">
         {{currentRole?.properties.roleName || 'resource-permission-button.none' | i18n}}
@@ -20,7 +20,7 @@
     </button>
     <button mat-menu-item (click)="changeRole(null)">
         <span class="danger">
-            <i class="fa fa-warning"></i> {{'resource-permission-button.removeAccess' | i18n}}
+            <i class="fa fa-warning" aria-hidden="true"></i> {{'resource-permission-button.removeAccess' | i18n}}
         </span>
     </button>
 </mat-menu>

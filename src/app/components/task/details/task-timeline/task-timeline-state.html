@@ -1,7 +1,7 @@
 <div class="tile" [title]="title">
-    <i class="fa fa-check" *ngIf="done && !error"></i>
-    <i class="fa fa-play" *ngIf="active && !error"></i>
-    <i class="fa fa-exclamation-triangle" *ngIf="error"></i>
+    <i class="fa fa-check" *ngIf="done && !error" aria-hidden="true"></i>
+    <i class="fa fa-play" *ngIf="active && !error" aria-hidden="true"></i>
+    <i class="fa fa-exclamation-triangle" *ngIf="error" aria-hidden="true"></i>
 </div>
 <div class="details">
     <div class="state-name"> {{stateName}} </div>

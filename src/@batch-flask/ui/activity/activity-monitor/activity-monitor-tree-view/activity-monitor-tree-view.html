@@ -1,7 +1,7 @@
 <bl-toolbar>
     <div toolbarLabel>{{name}}</div>
     <bl-clickable toolbarAction class="clear-all" [title]="xButtonTitle" (do)="xButtonClicked()">
-        <i class="fa fa-times"></i>
+        <i class="fa fa-times" aria-hidden="true"></i>
     </bl-clickable>
 </bl-toolbar>
 <bl-focus-section *ngIf="activities.length > 0"

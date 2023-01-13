@@ -1,13 +1,13 @@
 <button #button class="form-picker" (click)="openPicker()" [class.has-value]="hasValue">
     <div *ngIf="!hasValue" class="no-value-content">
-        <i class="fa fa-plus"></i> <ng-content select="[no-value-title]"></ng-content>
+        <i class="fa fa-plus" aria-hidden="true"></i> <ng-content select="[no-value-title]"></ng-content>
     </div>
     <div *ngIf="hasValue" class="content">
         <div class="details">
             <div class="title"><ng-content select="[value-title]"></ng-content></div>
             <div class="subtitle"><ng-content select="[value-subtitle]"></ng-content></div>
         </div>
-        <bl-button class="clear-btn"  type="round" color="light" (click)="clearPicker($event)"><i class="fa fa-times"></i></bl-button>
+        <bl-button class="clear-btn"  type="round" color="light" (click)="clearPicker($event)"><i class="fa fa-times" aria-hidden="true"></i></bl-button>
     </div>
 </button>
 <bl-form-page #page [title]="name" [formGroup]="nestedValue" (submit)="nestedFormSubmit()" (cancel)="nestedFormCanceled()">

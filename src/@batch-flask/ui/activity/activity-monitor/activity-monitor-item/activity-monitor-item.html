@@ -1,16 +1,16 @@
 <div class="activity-monitor-item-container" [ngClass]="{'focused': focused, 'hovered': !focused && hovered, 'flash': flash}">
     <div class="item-container" [ngStyle]="{'padding-left': paddingLeft}">
         <div class="icon-container progress-icon">
-            <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending" title="Pending"></i>
-            <i class="fa fa-spinner fa-pulse" *ngIf="status===statusOptions.InProgress" title="Running"></i>
-            <i class="fa fa-check" *ngIf="status===statusOptions.Completed" title="Completed"></i>
-            <i class="fa fa-times" *ngIf="status===statusOptions.Cancelled" title="Cancelled"></i>
-            <i class="fa fa-exclamation-triangle" *ngIf="status===statusOptions.Failed" title="Failed" (click)="toggleShowError()"></i>
+            <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending" title="Pending" aria-hidden="true"></i>
+            <i class="fa fa-spinner fa-pulse" *ngIf="status===statusOptions.InProgress" title="Running" aria-hidden="true"></i>
+            <i class="fa fa-check" *ngIf="status===statusOptions.Completed" title="Completed" aria-hidden="true"></i>
+            <i class="fa fa-times" *ngIf="status===statusOptions.Cancelled" title="Cancelled" aria-hidden="true"></i>
+            <i class="fa fa-exclamation-triangle" *ngIf="status===statusOptions.Failed" title="Failed" (click)="toggleShowError()" aria-hidden="true"></i>
         </div>
         <div class="icon-container">
             <div class="expand-icon" *ngIf="activity.subactivities.length" (click)="toggleExpand()">
-                <i class="fa fa-angle-right" title="Expand" *ngIf="!expanded"></i>
-                <i class="fa fa-angle-down" title="Collapse" *ngIf="expanded"></i>
+                <i class="fa fa-angle-right" title="Expand" *ngIf="!expanded" aria-hidden="true"></i>
+                <i class="fa fa-angle-down" title="Collapse" *ngIf="expanded" aria-hidden="true"></i>
             </div>
         </div>
         <div class="activity-info">
