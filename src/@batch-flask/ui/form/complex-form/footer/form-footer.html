@@ -1,5 +1,6 @@
 <div class="toggle-mode" *ngIf="config.jsonEditor">
     <bl-button type="square"
+        role="tab"
         [attr.aria-pressed]="classicFormDisabled"
         [disabled]="classicFormDisabled"
         [title]="'form-footer.buttons.normalForm' |i18n"
@@ -7,6 +8,7 @@
         <i class="fa fa-commenting" aria-hidden="true"></i>
     </bl-button>
     <bl-button type="square"
+        role="tab"
         [attr.aria-pressed]="showJsonEditor"
         [disabled]="showJsonEditor"
         [title]="'form-footer.buttons.jsonEditor' |i18n"
