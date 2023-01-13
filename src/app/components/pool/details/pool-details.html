@@ -53,7 +53,7 @@
                     <bl-tab-label>
                         {{'pool-details.graphs' | i18n}}
                         <bl-button class="open-pool-graphs-new-window" [title]="'pool-details.openInNewWindow' | i18n" [action]="openInNewWindow" type="plain">
-                            <i class="fa fa-window-restore"></i>
+                            <i class="fa fa-window-restore" aria-hidden="true"></i>
                         </bl-button>
                     </bl-tab-label>
                     <bl-pool-graphs [pool]="pool"></bl-pool-graphs>

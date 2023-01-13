@@ -3,7 +3,7 @@
         <bl-summary-card>
             <div summaryTitle>{{jobSchedule.id}}</div>
             <div summarySubtitle>
-                <i class="fa" [ngClass]="decorator.stateIcon"></i> {{jobSchedule.state}}
+                <i class="fa" [ngClass]="decorator.stateIcon" aria-hidden="true"></i> {{jobSchedule.state}}
             </div>
             <bl-tags summaryTags [tags]="jobSchedule.tags" [editable]="jobSchedule.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>

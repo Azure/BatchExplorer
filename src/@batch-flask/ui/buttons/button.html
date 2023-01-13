@@ -1,13 +1,13 @@
 <div class="action-btn" [ngClass]="type" title="{{tooltipTitle}}">
     <div [class.hide]="status !== SubmitStatus.Idle" class="label">
-        <i [class]="icon"></i>
+        <i [class]="icon" aria-hidden="true"></i>
         <ng-content></ng-content>
     </div>
     <div class="overlay" [ngSwitch]="status">
-        <i class="fa fa-spinner fa-spin" *ngSwitchCase="SubmitStatus.Submitting"></i>
-        <i class="fa fa-warning" *ngSwitchCase="SubmitStatus.Failed"></i>
+        <i class="fa fa-spinner fa-spin" *ngSwitchCase="SubmitStatus.Submitting" aria-hidden="true"></i>
+        <i class="fa fa-warning" *ngSwitchCase="SubmitStatus.Failed" aria-hidden="true"></i>
         <span class="success-container" *ngSwitchCase="SubmitStatus.Succeeded">
-            <i class="fa fa-check" [@animateSucessIcon]="status === SubmitStatus.Succeeded"></i>
+            <i class="fa fa-check" [@animateSucessIcon]="status === SubmitStatus.Succeeded" aria-hidden="true"></i>
         </span>
     </div>
 </div>

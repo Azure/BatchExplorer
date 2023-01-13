@@ -7,7 +7,7 @@
         <div blFormFieldSuffix>
             <bl-clickable (do)="toggleKeybindingSearch()" class="keybinding-listener-btn"
                 [class.active]="searchByKeyBinding" title="Record keys">
-                <i class="fa fa-keyboard-o"></i>
+                <i class="fa fa-keyboard-o" aria-hidden="true"></i>
             </bl-clickable>
         </div>
     </bl-form-field>
@@ -32,7 +32,7 @@
                     Default
                 </ng-container>
                 <ng-template #userBinding>
-                    User <bl-clickable (do)="removeUserBinding(command.id)" title="Reset to default"><i class="fa fa-undo"></i></bl-clickable>
+                    User <bl-clickable (do)="removeUserBinding(command.id)" title="Reset to default"><i class="fa fa-undo" aria-hidden="true"></i></bl-clickable>
                 </ng-template>
             </div>
         </bl-column>

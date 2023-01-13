@@ -21,7 +21,7 @@
                 [ngSwitch]="expanded"
                 (click)="toggleExpand($event)"
                 (keydown)="toggleExpand($event)">
-                <span *ngSwitchCase="true"><i class='fa fa-caret-up'></i></span>
+                <span *ngSwitchCase="true"><i class='fa fa-caret-up' aria-hidden="true"></i></span>
                 <span *ngSwitchCase="false">{{
                     "Show " + (rows.length - defaultDisplay) + " more"
                 }}</span>

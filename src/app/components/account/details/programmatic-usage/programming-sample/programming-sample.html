@@ -1,6 +1,6 @@
 <div class="description">
     <div *ngIf="credentialType === CredentialType.AAD && !aadCredentials" class="aad-needs-setup-creds" aria-live="polite">
-        <i class="fa fa-warning"></i>
+        <i class="fa fa-warning" aria-hidden="true"></i>
         {{'programming-sample.aad-setup-warning' | i18n}}
     </div>
     <bl-property-group label="" class="wide" class="prerequisites">

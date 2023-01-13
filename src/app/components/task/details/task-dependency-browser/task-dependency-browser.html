@@ -8,7 +8,7 @@
         <div *blHeadCellDef>State</div>
         <div *blCellDef="let dependency">
             <bl-task-state *ngIf="!dependency.loading && dependency.task" [task]="dependency.task"></bl-task-state>
-            <i *ngIf="dependency.loading" class="fa fa-spinner fa-spin cell-spinner"></i>
+            <i *ngIf="dependency.loading" class="fa fa-spinner fa-spin cell-spinner" aria-hidden="true"></i>
         </div>
     </bl-column>
 

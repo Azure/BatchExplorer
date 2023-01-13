@@ -14,19 +14,19 @@
             <bl-toolbar>
                 <div toolbarLabel> Saved formulas </div>
                 <bl-clickable toolbarAction (do)="addFormula()" class="save-btn action">
-                    <i class="fa fa-save" title="Save"></i>
+                    <i class="fa fa-save" title="Save" aria-hidden="true"></i>
                 </bl-clickable>
             </bl-toolbar>
             <div class="formula-list">
                 <bl-clickable class="formula" *ngFor="let formula of savedAutoscaleFormulas;trackBy: trackFormula" (do)="selectFormula(formula)">
                     <span class="label">{{formula.name}}</span>
                     <bl-clickable (do)="deleteFormula(formula)" class="delete-btn" title="Delete" >
-                        <i class="fa fa-times"></i>
+                        <i class="fa fa-times" aria-hidden="true"></i>
                     </bl-clickable>
                 </bl-clickable>
                 <div class="no-formula" *ngIf="savedAutoscaleFormulas.size === 0">
                     <div>
-                        <i class="fa fa-file-code-o"></i>
+                        <i class="fa fa-file-code-o" aria-hidden="true"></i>
                     </div>
                     No saved autoscale formulas
                 </div>
@@ -42,7 +42,7 @@
                 </bl-clickable>
                 <div class="no-formula" *ngIf="predefinedFormula.length === 0">
                     <div>
-                        <i class="fa fa-file-code-o"></i>
+                        <i class="fa fa-file-code-o" aria-hidden="true"></i>
                     </div>
                     No sample formulas
                 </div>

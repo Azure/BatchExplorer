@@ -19,7 +19,7 @@
             </div>
             <div *ngIf="pickedCredentialType === CredentialType.AAD && !aadCredentials" class="aad-needs-setup-creds" aria-live="polite"
                 matTooltip="Pick an application and generate a key to have the templates filled with the correct informations">
-                <i class="fa fa-warning"></i>{{'programmatic-usage.setup' | i18n}}
+                <i class="fa fa-warning" aria-hidden="true"></i>{{'programmatic-usage.setup' | i18n}}
             </div>
 
         </div>

@@ -9,7 +9,7 @@ import { BatchAccountCreateComponent } from "../action/create";
     selector: "bl-account-details-home",
     template: `
         <div class="no-entity-home">
-            <i class="fa fa-user"></i>
+            <i class="fa fa-user" aria-hidden="true"></i>
             <p>Please select an account from the list</p>
 
             <bl-button type="wide" class="add-account-btn" (do)="addBatchAccount()">

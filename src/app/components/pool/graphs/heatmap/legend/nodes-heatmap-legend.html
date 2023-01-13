@@ -10,7 +10,7 @@
             <div [style.backgroundColor]="item.color" class="color"></div>
             <div class="label">{{item.label}} ({{stateCounter.getCountforCategory(item.category)}})</div>
             <div class="category-expansion">
-                <i class="fa" [class.fa-caret-down]="item.category === expandedCategory" [class.fa-caret-left]="item.category !== expandedCategory"></i>
+                <i class="fa" [class.fa-caret-down]="item.category === expandedCategory" [class.fa-caret-left]="item.category !== expandedCategory" aria-hidden="true"></i>
             </div>
         </bl-clickable>
         <div *ngIf="item.category === expandedCategory">

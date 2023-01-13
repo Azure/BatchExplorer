@@ -38,17 +38,17 @@
             <div blFormFieldPrefix>
                 <ng-container *ngIf="currentSelection">
                     <ng-container *ngIf="currentSelection.httpUrl">
-                        <i class="fa fa-file"></i>
+                        <i class="fa fa-file" aria-hidden="true"></i>
                     </ng-container>
                     <ng-container *ngIf="currentSelection.autoStorageContainerName">
-                        <i class="fa fa-folder"></i>
+                        <i class="fa fa-folder" aria-hidden="true"></i>
                     </ng-container>
                     <ng-container *ngIf="currentSelection.storageContainerUrl">
-                        <i class="fa fa-folder"></i>>
+                        <i class="fa fa-folder" aria-hidden="true"></i>>
                     </ng-container>
                 </ng-container>
                 <ng-container *ngIf="!currentSelection">
-                    <i class="fa fa-spin fa-spinner"></i>
+                    <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>
                 </ng-container>
             </div>
             <input blInput formControlName="path">
