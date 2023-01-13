@@ -19,7 +19,7 @@
                 <span class="progress-percent">{{progressString}}</span>
             </div>
             <div class="progress-bar" *ngIf="!activity.isComplete">
-                <mat-progress-bar mode="determinate" [value]="progress" *ngIf="progress !== -1"></mat-progress-bar>
+                <mat-progress-bar aria-label="progress bar" mode="determinate" [value]="progress" *ngIf="progress !== -1"></mat-progress-bar>
             </div>
         </div>
         <div class="icon-container action-icon" *ngFor="let action of actions; let i = index; trackBy: actionTrackBy">
