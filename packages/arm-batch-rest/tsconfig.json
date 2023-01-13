@@ -1,17 +1,7 @@
 {
+  "extends": "./config/tsconfig.common.json",
   "compilerOptions": {
-    "outDir": "./dist-esm",
-    "module": "es6",
-    "target": "es2015",
-    "moduleResolution": "node",
-    "declaration": true,
-    "declarationMap": true,
-    "allowSyntheticDefaultImports": true,
-    "declarationDir": "./types",
-    "skipLibCheck": true,
-    "paths": {
-      "@batch/arm-batch-rest": ["./src/generated/index.ts"]
-    }
-  },
-  "include": ["src/**/*.ts", "./test/**/*.ts"]
+    "tsBuildInfoFile": "./build/cache/ts.buildinfo",
+    "lib": ["dom", "DOM.Iterable"]
+  }
 }

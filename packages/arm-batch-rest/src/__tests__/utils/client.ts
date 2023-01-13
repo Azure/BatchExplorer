@@ -1,5 +1,5 @@
 import { ClientOptions } from "@azure-rest/core-client";
-import batchClient, { BatchManagementClient } from "../../src/generated";
+import batchClient, { BatchManagementClient } from "../../../src/generated";
 import { ClientSecretCredential } from "@azure/identity";
 import {
     HttpClient,

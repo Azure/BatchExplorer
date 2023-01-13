@@ -58,4 +58,20 @@ export class MapHttpHeaders implements HttpHeaders {
             }
         }
     }
+
+    /**
+     * Iterate over tuples of header [name, value] pairs.
+     */
+    [Symbol.iterator](): Iterator<[string, string]> {
+        return this.headerIterator();
+    }
+
+    *headerIterator(): IterableIterator<[string, string]> {
+        for (const entry in this._map) {
+            const value = this.get(entry);
+            if (value) {
+                yield [entry, value];
+            }
+        }
+    }
 }
