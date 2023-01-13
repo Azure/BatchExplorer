@@ -43,6 +43,8 @@ export class QuickListComponent extends AbstractListBase {
 
     @HostBinding("attr.role") public readonly role = "listbox";
 
+    @HostBinding("attr.aria-label") public readonly label = "listbox";
+
     constructor(
         contextMenuService: ContextMenuService,
         router: Router,

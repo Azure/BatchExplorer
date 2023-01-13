@@ -54,6 +54,8 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     // Aria
     @Input() @HostBinding("attr.role") public role = "button";
+    @HostBinding("attr.aria-label") public readonly label = "button";
+
     @HostBinding("attr.aria-disabled") public get ariaDisabled() { return this.disabled; }
 
     public subtitle = "";
