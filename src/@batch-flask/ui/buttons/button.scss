@@ -6,7 +6,6 @@ bl-button-group {
 
 bl-button {
     display: inline-block;
-    height: $action-btn-size;
     outline: none;
     cursor: pointer;
     text-align: center;
@@ -42,12 +41,16 @@ bl-button {
     }
 
     &[type="wide"] {
+        border: 2px solid transparent;
+
         &.focus-outline.focus-visible, &.focus-visible {
-            outline-color: rgb(39, 185, 211);
+            border-color: $primary-color-dark;
+            outline-color: white;
             outline-width: 2.5px;
             outline-style: solid;
-            outline-offset: -1px;
+            outline-offset: -4.5px;
             opacity: 1;
+            text-align: center;
         }
     }
 
