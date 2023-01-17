@@ -17,7 +17,7 @@
             <div>
                 {{'programatic-usage.credentials' | i18n}}
             </div>
-            <div *ngIf="pickedCredentialType === CredentialType.AAD && !aadCredentials" class="aad-needs-setup-creds"
+            <div *ngIf="pickedCredentialType === CredentialType.AAD && !aadCredentials" class="aad-needs-setup-creds" aria-live="polite"
                 matTooltip="Pick an application and generate a key to have the templates filled with the correct informations">
                 <i class="fa fa-warning"></i>{{'programatic-usage.setup' | i18n}}
             </div>
