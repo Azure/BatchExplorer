@@ -34,6 +34,16 @@ describe("Batch Management Client With Custom Http Client Test", () => {
     const resourceGroupName = process.env.MABOM_BatchAccountResourceGroupName!;
     const batchAccountName = process.env.MABOM_BatchAccountName!;
 
+    if (
+        subscriptionId == undefined ||
+        resourceGroupName == undefined ||
+        batchAccountName == undefined
+    ) {
+        throw Error(
+            "MABOM_BatchAccountSubscriptionId, MABOM_BatchAccountResourceGroupName, and MABOM_BatchAccountName need to be defined environment variables"
+        );
+    }
+
     beforeEach(() => {
         initMockEnvironment(
             {},
@@ -102,20 +112,6 @@ describe("Batch Management Client With Custom Http Client Test", () => {
         });
 
         test("Get pool", async () => {
-            // const mockClient: MockHttpClient = new MockHttpClient(
-            //     200,
-            //     JSON.stringify({
-            //         name: "linuxperfpool",
-            //         properties: {
-            //             allocationState: "steady",
-            //             vmSize: "standard_d1_v2",
-            //             currentDedicatedNodes: 4,
-            //             currentLowPriorityNodes: 0,
-            //             provisioningState: "Succeeded",
-            //         },
-            //     })
-            // );
-
             const getResult = await batchClient
                 .path(
                     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/pools/{poolName}",

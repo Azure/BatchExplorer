@@ -1,7 +1,6 @@
 {
   "extends": "./config/tsconfig.common.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "./build/cache/ts.buildinfo",
-    "lib": ["dom", "DOM.Iterable"]
+    "tsBuildInfoFile": "./build/cache/ts.buildinfo"
   }
 }

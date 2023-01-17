@@ -3,16 +3,6 @@ import { PipelineHttpHeadersImpl } from "../http/PipelineHttpHeaders";
 import { MapHttpHeaders } from "@batch/ui-common/lib/http";
 
 describe("PipelineHttpHeadersImpl", () => {
-    test("Default constructor", () => {
-        const headers = new PipelineHttpHeadersImpl();
-        expect(countHeaders(headers)).toBe(0);
-        expect(headers.get("doesntexist")).toBeUndefined();
-        expect(headers.has("doesntexist")).toBe(false);
-
-        // Shouldn't throw
-        headers.delete("doesntexist");
-    });
-
     test("Pipeline Initialization with MapHttpHeaders", () => {
         const headers = new PipelineHttpHeadersImpl(
             new MapHttpHeaders({
@@ -25,30 +15,7 @@ describe("PipelineHttpHeadersImpl", () => {
         expect(headers.has("foo")).toBe(true);
     });
 
-    test("Can append/delete/set on empty headers", () => {
-        const headers = new PipelineHttpHeadersImpl();
-        expect(countHeaders(headers)).toBe(0);
-
-        headers.set("foo", "bar");
-        headers.set("foo", "baz");
-        expect(headers.get("foo")).toBe("baz");
-        expect(countHeaders(headers)).toBe(1);
-
-        headers.delete("foo");
-        expect(countHeaders(headers)).toBe(0);
-        expect(headers.get("foo")).toBeUndefined();
-        expect(headers.has("foo")).toBe(false);
-
-        headers.set("foo", 5);
-        expect(countHeaders(headers)).toBe(1);
-        expect(headers.get("foo")).toBe("5");
-
-        headers.append("foo", "baz");
-        expect(countHeaders(headers)).toBe(1);
-        expect(headers.get("foo")).toBe("5, baz");
-    });
-
-    test("Can append/delete/set on non empty headers", () => {
+    test("Can append/delete/set headers", () => {
         const headers = new PipelineHttpHeadersImpl(
             new MapHttpHeaders({
                 foo: "bar",
@@ -76,6 +43,10 @@ describe("PipelineHttpHeadersImpl", () => {
         headers.set("foo", "baz");
         headers.set("foo", true);
         expect(headers.get("foo")).toBe("true");
+        expect(countHeaders(headers)).toBe(2);
+
+        headers.set("foo", 5);
+        expect(headers.get("foo")).toBe("5");
         expect(countHeaders(headers)).toBe(2);
     });
 

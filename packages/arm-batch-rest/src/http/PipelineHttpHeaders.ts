@@ -2,22 +2,23 @@ import {
     HttpHeaders as PipelineHttpHeaders,
     RawHttpHeaders,
 } from "@azure/core-rest-pipeline";
-import { MapHttpHeaders } from "@batch/ui-common/lib/http";
+import {
+    MapHttpHeaders,
+    HttpHeaders as CommonHttpHeaders,
+} from "@batch/ui-common/lib/http";
 
 /**
  * HTTP Header implementation that adapts the Shared Library Http Headers
  * to the core-rest-pipeline header interface
  */
 export class PipelineHttpHeadersImpl implements PipelineHttpHeaders {
-    private _headers: MapHttpHeaders;
+    private _headers: CommonHttpHeaders;
 
-    constructor(httpHeaders?: MapHttpHeaders) {
+    constructor(httpHeaders: CommonHttpHeaders) {
         this._headers = new MapHttpHeaders();
-        if (httpHeaders) {
-            httpHeaders.forEach((value, key) => {
-                this.append(key, value);
-            });
-        }
+        httpHeaders.forEach((value: string, key: string) => {
+            this.append(key, value);
+        });
     }
 
     append(name: string, value: string): void {
@@ -45,7 +46,13 @@ export class PipelineHttpHeadersImpl implements PipelineHttpHeaders {
      * Iterate over tuples of header [name, value] pairs.
      */
     [Symbol.iterator](): Iterator<[string, string]> {
-        return this._headers.headerIterator();
+        return this.headerIterator();
+    }
+
+    *headerIterator(): IterableIterator<[string, string]> {
+        for (const [name, value] of this._headers) {
+            yield [name, value];
+        }
     }
 
     /**

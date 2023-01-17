@@ -3,7 +3,6 @@ import {
     PipelineRequest,
     PipelineResponse,
     HttpHeaders as PipelineHeaders,
-    RestError,
 } from "@azure/core-rest-pipeline";
 import { PipelineHttpHeadersImpl } from "./PipelineHttpHeaders";
 import { HttpHeaders as FetchHttpHeaders } from "@batch/ui-common";
@@ -13,7 +12,13 @@ import {
     HttpResponse,
     MapHttpHeaders,
 } from "@batch/ui-common/lib/http";
+import { RestError } from "./restError";
 
+/**
+ * Adapter class that acts as our custom http client
+ * that accepts a request and returns a response using
+ * the Shared Library Http Client interface
+ */
 export class BatchHttpClient implements PipelineHttpClient {
     private internalClient: HttpClient = inject(DependencyName.HttpClient);
 
@@ -65,17 +70,7 @@ function buildFetchHeaders(request: PipelineRequest): FetchHttpHeaders {
 }
 
 function buildPipelineHeaders(httpResponse: HttpResponse): PipelineHeaders {
-    //return new PipelineHttpHeadersImpl(httpResponse.headers);
-    const responseHeaders = new PipelineHttpHeadersImpl();
-    httpResponse.headers.forEach((value: string, key: string) => {
-        if (Array.isArray(value)) {
-            if (value.length > 0) {
-                responseHeaders.set(key, value[0]);
-            }
-        } else if (value) {
-            responseHeaders.set(key, value);
-        }
-    });
+    const responseHeaders = new PipelineHttpHeadersImpl(httpResponse.headers);
     return responseHeaders;
 }
 
