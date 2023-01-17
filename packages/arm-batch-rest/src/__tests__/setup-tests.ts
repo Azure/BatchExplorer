@@ -8,3 +8,5 @@ if (!("fetch" in globalThis)) {
 afterEach(() => {
     destroyEnvironment();
 });
+
+jest.setTimeout(10000);

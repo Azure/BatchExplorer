@@ -8,7 +8,7 @@ import { PipelineHttpHeadersImpl } from "./PipelineHttpHeaders";
 import { HttpHeaders as FetchHttpHeaders } from "@batch/ui-common";
 import { DependencyName, inject } from "@batch/ui-common/lib/environment";
 import {
-    HttpClient,
+    HttpClient as CommonHttpClient,
     HttpResponse,
     MapHttpHeaders,
 } from "@batch/ui-common/lib/http";
@@ -20,7 +20,9 @@ import { RestError } from "./restError";
  * the Shared Library Http Client interface
  */
 export class BatchHttpClient implements PipelineHttpClient {
-    private internalClient: HttpClient = inject(DependencyName.HttpClient);
+    private internalClient: CommonHttpClient = inject(
+        DependencyName.HttpClient
+    );
 
     public async sendRequest(
         request: PipelineRequest
@@ -34,10 +36,8 @@ export class BatchHttpClient implements PipelineHttpClient {
                 body: request.body as string,
             });
 
-            const pipelineResponse: PipelineResponse = await buildPipelineResponse(
-                httpResponse,
-                request
-            );
+            const pipelineResponse: PipelineResponse =
+                await buildPipelineResponse(httpResponse, request);
 
             return pipelineResponse;
         } catch (e: any) {

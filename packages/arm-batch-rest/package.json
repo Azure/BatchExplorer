@@ -80,6 +80,7 @@
     "@batch/ui-common": "^1.0.0"
   },
   "devDependencies": {
+    "@batch/common-config": "^1.0.0",
     "@azure/identity": "^2.0.1",
     "@types/chai": "^4.2.8",
     "@types/jest": "^29.2.4",
