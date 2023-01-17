@@ -82,7 +82,7 @@ class WebsocketConnection:
             print(traceback.format_exc())
             response = JsonRpcResponse(
                 request=request,
-                error=error.JsonRpcError(500, "Server internal error", str(e)),
+                error=error.JsonRpcError(500, "Internal server error", str(e)),
             )
             await self.send_response(response)
 
