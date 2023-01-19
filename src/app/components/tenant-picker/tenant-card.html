@@ -58,12 +58,13 @@
             tabIndex="0"
             matTooltip="{{statusText()}}"
             matTooltipClass="tenant-card-tooltip-{{status}}"
-            matTooltipPosition="after">
+            matTooltipPosition="after"
+            aria-hidden="true">
             <i *ngSwitchCase="tenantStatus.authorized"
-                class="fa fa-2x fa-check-circle" aria-hidden="true"></i>
+                class="fa fa-2x fa-check-circle"></i>
             <i *ngSwitchCase="tenantStatus.failed"
-                class="fa fa-2x fa-exclamation-circle" aria-hidden="true"></i>
-            <i *ngSwitchDefault class="fa fa-2x fa-question-circle" aria-hidden="true"></i>
+                class="fa fa-2x fa-exclamation-circle"></i>
+            <i *ngSwitchDefault class="fa fa-2x fa-question-circle"></i>
         </div>
     </div>
 </div>

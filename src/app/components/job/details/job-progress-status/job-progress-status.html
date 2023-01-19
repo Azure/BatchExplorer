@@ -28,7 +28,7 @@
 </div>
 <div class="progress-container">
     <div class="progress" *ngIf="progress" title="Job completion progress">
-        <mat-progress-bar aria-label="progress bar" class="progress-bar" color="primary" mode="buffer" [value]="progress.completed" [bufferValue]="progress.buffer">
+        <mat-progress-bar role="progressbar" title="{{'job-progress-status.progressBar' | i18n}}" class="progress-bar" color="primary" mode="buffer" [value]="progress.completed" [bufferValue]="progress.buffer">
         </mat-progress-bar>
         <span class="progress-label">{{progress.completed}}%</span>
     </div>
