@@ -1,2 +1,3 @@
 job-progress-status:
   inaccurate: Task count might not be accurate in real time
+  progressBar: Job progress

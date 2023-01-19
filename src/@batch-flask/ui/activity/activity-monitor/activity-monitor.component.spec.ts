@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
-import { MaterialModule } from "@batch-flask/core";
-import { ButtonsModule, ToolbarModule } from "@batch-flask/ui";
+import { I18nService, MaterialModule } from "@batch-flask/core";
+import { ButtonsModule, I18nUIModule, ToolbarModule } from "@batch-flask/ui";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { VirtualScrollModule } from "@batch-flask/ui/virtual-scroll";
 import { AsyncSubject, BehaviorSubject } from "rxjs";
@@ -17,7 +17,7 @@ describe("ActivityMonitorComponent", () => {
     let component: ActivityMonitorComponent;
     let activityService: ActivityService;
     let activatedRouteSpy;
-    const activatedRouteSubject = new BehaviorSubject({id: 0});
+    const activatedRouteSubject = new BehaviorSubject({ id: 0 });
 
     beforeEach(() => {
         activatedRouteSpy = {
@@ -25,7 +25,7 @@ describe("ActivityMonitorComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ButtonsModule, MaterialModule, FocusSectionModule, VirtualScrollModule, ToolbarModule],
+            imports: [ButtonsModule, MaterialModule, FocusSectionModule, VirtualScrollModule, ToolbarModule, I18nUIModule],
             declarations: [
                 ActivityMonitorComponent, ActivityMonitorTreeViewComponent,
                 ActivityMonitorItemComponent, ActivityMonitorItemActionComponent,
@@ -33,6 +33,7 @@ describe("ActivityMonitorComponent", () => {
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
                 ActivityService,
+                I18nService
             ],
         });
 

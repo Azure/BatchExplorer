@@ -1,7 +1,7 @@
 <bl-clickable class="group-header" (do)="toogleCollapsed()" *ngIf="label" [attr.aria-expanded]="!collapsed" [attr.aria-controls]="contentId">
     <div class="collapse-icon" *ngIf="collapsable" aria-hidden="true">
-        <i class="fa fa-caret-right" *ngIf="collapsed" aria-hidden="true"></i>
-        <i class="fa fa-caret-down" *ngIf="!collapsed" aria-hidden="true"></i>
+        <i class="fa fa-caret-right" *ngIf="collapsed"></i>
+        <i class="fa fa-caret-down" *ngIf="!collapsed"></i>
     </div>
     <h4 class="noselect">{{label}}</h4>
     <span *ngIf="collapsed">

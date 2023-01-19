@@ -11,11 +11,11 @@
             (contextmenu)="onContextMenu(favorite)">
 
             <bl-clickable class="dropdown-item favorite-item" (do)="gotoFavorite(favorite)">
-                <span>
+                <span aria-hidden="true">
                     <i class="entity-type fa" [ngClass]="entityIcon(favorite)"
-                    [title]="entityType(favorite)" aria-hidden="true"></i>
+                    [title]="entityType(favorite)"></i>
                     {{favorite.name || favorite.id}}
-                    <i *ngIf="favorite.url === currentUrl" class="extra fa fa-check" aria-hidden="true"></i>
+                    <i *ngIf="favorite.url === currentUrl" class="extra fa fa-check"></i>
                 </span>
             </bl-clickable>
             <bl-clickable class="dropdown-item delete" (do)="removeFavorite(favorite)">

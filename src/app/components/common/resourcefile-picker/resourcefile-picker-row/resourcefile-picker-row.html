@@ -1,8 +1,8 @@
 <ng-container [formGroup]="form">
-    <div class="type" [ngSwitch]="type">
-        <i class="fa fa-file" *ngSwitchCase="ResourceFileType.Url" aria-hidden="true"></i>
-        <i class="fa fa-folder" *ngSwitchCase="ResourceFileType.Container" aria-hidden="true"></i>
-        <i class="fa fa-question-circle" *ngSwitchDefault aria-hidden="true"></i>
+    <div class="type" [ngSwitch]="type" aria-hidden="true">
+        <i class="fa fa-file" *ngSwitchCase="ResourceFileType.Url"></i>
+        <i class="fa fa-folder" *ngSwitchCase="ResourceFileType.Container"></i>
+        <i class="fa fa-question-circle" *ngSwitchDefault></i>
     </div>
     <div class="source" [ngSwitch]="type">
         <input blInput placeholder="Url" formControlName="httpUrl" *ngSwitchCase="ResourceFileType.Url">

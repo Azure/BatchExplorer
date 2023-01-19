@@ -20,6 +20,7 @@ import {
     QuickListRowStatusDirective,
     QuickListRowTitleDirective,
 } from "./quick-list-row-def";
+import { I18nService } from "@batch-flask/core";
 
 import "./quick-list.scss";
 
@@ -43,7 +44,9 @@ export class QuickListComponent extends AbstractListBase {
 
     @HostBinding("attr.role") public readonly role = "listbox";
 
-    @HostBinding("attr.aria-label") public readonly label = "listbox";
+    @HostBinding("attr.aria-label") public get ariaLabel() {
+        return this.i18n.translate("common.listbox");
+    }
 
     constructor(
         contextMenuService: ContextMenuService,
@@ -51,7 +54,8 @@ export class QuickListComponent extends AbstractListBase {
         elementRef: ElementRef,
         breadcrumbService: BreadcrumbService,
         contextService: ContextService,
-        changeDetector: ChangeDetectorRef) {
+        changeDetector: ChangeDetectorRef,
+        private i18n: I18nService) {
         super(contextMenuService, router, breadcrumbService, elementRef, contextService, changeDetector);
     }
 }

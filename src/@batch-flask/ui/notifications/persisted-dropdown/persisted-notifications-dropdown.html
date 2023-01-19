@@ -5,11 +5,11 @@
     </div>
     <div bl-dropdown-content>
         <div *ngFor="let notification of notifications;trackBy: trackNotification" class="dropdown-item">
-            <div class="icon" [ngSwitch]="notification.level">
-                <i class="fa fa-info-circle" *ngSwitchCase="NotificationLevel.info" aria-hidden="true"></i>
-                <i class="fa fa-times" *ngSwitchCase="NotificationLevel.error" aria-hidden="true"></i>
-                <i class="fa fa-check" *ngSwitchCase="NotificationLevel.success" aria-hidden="true"></i>
-                <i class="fa fa-exclamation-triangle" *ngSwitchCase="NotificationLevel.warn" aria-hidden="true"></i>
+            <div class="icon" [ngSwitch]="notification.level" aria-hidden="true">
+                <i class="fa fa-info-circle" *ngSwitchCase="NotificationLevel.info"></i>
+                <i class="fa fa-times" *ngSwitchCase="NotificationLevel.error"></i>
+                <i class="fa fa-check" *ngSwitchCase="NotificationLevel.success"></i>
+                <i class="fa fa-exclamation-triangle" *ngSwitchCase="NotificationLevel.warn"></i>
             </div>
             <div class="details">
                 <div class="title">{{notification.title}}</div>

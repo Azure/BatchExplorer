@@ -1,8 +1,8 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { MaterialModule } from "@batch-flask/core";
-import { ActivityService, ActivityStatus, ButtonsModule } from "@batch-flask/ui";
+import { I18nService, MaterialModule } from "@batch-flask/core";
+import { ActivityService, ActivityStatus, ButtonsModule, I18nUIModule } from "@batch-flask/ui";
 import { BehaviorSubject, Observable } from "rxjs";
 import { ActivityMonitorItemActionComponent } from "./activity-monitor-item-action";
 import { ActivityMonitorItemComponent } from "./activity-monitor-item.component";
@@ -74,12 +74,13 @@ describe("ActivityMonitorItemComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ButtonsModule, MaterialModule],
+            imports: [ButtonsModule, MaterialModule, I18nUIModule],
             declarations: [
-                ActivityMonitorItemComponent, ActivityMonitorItemActionComponent, TestComponent,
+                ActivityMonitorItemComponent, ActivityMonitorItemActionComponent, TestComponent
             ],
             providers: [
                 { provide: ActivityService, useValue: activityServiceSpy },
+                { provide: I18nService, useValue: { translate: () => "" } },
             ],
         });
 
