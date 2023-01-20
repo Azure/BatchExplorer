@@ -10,7 +10,7 @@
     <bl-button color="light" type="round" [action]="triggerEdit" *ngIf="edit" title="Edit"><i class="fa fa-pencil"></i></bl-button>
 </bl-clickable>
 <div class="group-content" *ngIf="!collapsed" [id]="contentId">
-    <div class="warning-message" *ngIf="warningMessage">
+    <div class="warning-message" *ngIf="warningMessage" aria-live="polite">
         <i class="fa fa-warning"></i>
         <span>{{warningMessage}}</span>
     </div>

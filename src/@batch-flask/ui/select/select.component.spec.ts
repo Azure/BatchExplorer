@@ -120,12 +120,14 @@ describe("SelectComponent", () => {
 
         it("Should show placeholder when no value", () => {
             expect(labelEl.nativeElement.textContent).toContain("Myselect");
+            expect(de.nativeElement.getAttribute("aria-label")).toContain("Myselect");
         });
 
         it("Should show value when picked", () => {
             testComponent.value.setValue("opt-3");
             fixture.detectChanges();
             expect(labelEl.nativeElement.textContent).toContain("Carrot");
+            expect(de.nativeElement.getAttribute("aria-label")).toEqual("Myselect: Carrot");
         });
 
         it("list all options when clicking on button", async () => {
