@@ -10,7 +10,6 @@ import "./property-content.scss";
 export class PropertyContentComponent {
     @Input() @HostBinding("class.wrap") public wrap = false;
 
-    @HostBinding("attr.role") public readonly role = "textbox";
     @HostBinding("attr.aria-readonly") public readonly ariaReadonly = true;
     @HostBinding("attr.aria-labelledby") public ariaLablledby = null;
     @HostBinding("attr.aria-describedby") public ariaDescribedBy = null;
