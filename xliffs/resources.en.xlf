@@ -367,6 +367,15 @@
       <trans-unit id="editable-table.deleteRow">
         <source>Delete row</source>
       </trans-unit>
+      <trans-unit id="enable-app-insights-doc">
+        <source/>
+      </trans-unit>
+      <trans-unit id="enable-app-insights-doc.doc-title">
+        <source>Instructions on enabling Batch Insights</source>
+      </trans-unit>
+      <trans-unit id="enable-app-insights-doc.doc-title-os-specific">
+        <source>OS-specific instructions on adding Batch Insights to start task</source>
+      </trans-unit>
       <trans-unit id="entity-command">
         <source/>
       </trans-unit>
@@ -802,6 +811,12 @@
       <trans-unit id="pool-graphs">
         <source/>
       </trans-unit>
+      <trans-unit id="pool-graphs.application-insights">
+        <source>Application Insights</source>
+      </trans-unit>
+      <trans-unit id="pool-graphs.available-nodes">
+        <source>Available nodes</source>
+      </trans-unit>
       <trans-unit id="pool-graphs.cpu">
         <source>CPU</source>
       </trans-unit>
@@ -810,6 +825,36 @@
       </trans-unit>
       <trans-unit id="pool-graphs.diskUsage">
         <source>Disk usage</source>
+      </trans-unit>
+      <trans-unit id="pool-graphs.errors">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-graphs.errors.start-task-failed">
+        <source>The start task has failed on {failed} out of {total} nodes.</source>
+      </trans-unit>
+      <trans-unit id="pool-graphs.errors.unusable-nodes">
+        <source>{failed} out of {total} nodes are in an unusable state. Please click the nodes for more details.</source>
+      </trans-unit>
+      <trans-unit id="pool-graphs.fixes">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-graphs.fixes.edit-start-task">
+        <source>Edit the start task</source>
+      </trans-unit>
+      <trans-unit id="pool-graphs.fixes.reboot-failed-nodes">
+        <source>Reboot failed nodes</source>
+      </trans-unit>
+      <trans-unit id="pool-graphs.fixes.reimage-failed-nodes">
+        <source>Reimage failed nodes</source>
+      </trans-unit>
+      <trans-unit id="pool-graphs.gpu-memory">
+        <source>Gpu memory</source>
+      </trans-unit>
+      <trans-unit id="pool-graphs.gpu-usage">
+        <source>Gpu usage</source>
+      </trans-unit>
+      <trans-unit id="pool-graphs.heatmap">
+        <source>Heatmap</source>
       </trans-unit>
       <trans-unit id="pool-graphs.last">
         <source>Last</source>
@@ -820,8 +865,11 @@
       <trans-unit id="pool-graphs.network">
         <source>Network</source>
       </trans-unit>
-      <trans-unit id="pool-graphs.notEnabled">
+      <trans-unit id="pool-graphs.not-enabled">
         <source>Cpu, memory, disk, etc.</source>
+      </trans-unit>
+      <trans-unit id="pool-graphs.running-tasks">
+        <source>Running tasks</source>
       </trans-unit>
       <trans-unit id="pool-graphs.timespan">
         <source/>
