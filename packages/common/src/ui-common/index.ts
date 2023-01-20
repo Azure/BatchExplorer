@@ -14,6 +14,8 @@ export {
     HttpClient,
     HttpRequestInit,
     UrlOrRequestInit,
+    HttpResponse,
+    HttpHeaders,
 } from "./http";
 export { getLogger } from "./logging/logging-util";
 export {

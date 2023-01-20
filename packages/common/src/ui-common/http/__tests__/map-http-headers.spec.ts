@@ -60,6 +60,23 @@ describe("MapHttpHeaders", () => {
         headers.set("foo", "baz");
         expect(headers.get("foo")).toBe("baz");
     });
+
+    test("Can iterate through a MapHttpHeaders instance", () => {
+        const headers = new MapHttpHeaders({
+            foo: "bar",
+            "x-foo": "x-bar",
+        });
+        expect(countHeaders(headers)).toBe(2);
+        expect(headers.get("foo")).toBe("bar");
+
+        headers.append("foo", "baz");
+        expect(countHeaders(headers)).toBe(2);
+        expect(headers.get("foo")).toBe("bar, baz");
+
+        for (const [name, value] of headers) {
+            expect(value).toBe(headers.get(name));
+        }
+    });
 });
 
 function countHeaders(headers: MapHttpHeaders): number {

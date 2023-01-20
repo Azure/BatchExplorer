@@ -168,7 +168,7 @@ export interface HttpResponse {
     text(): Promise<string>;
 }
 
-export interface HttpHeaders {
+export interface HttpHeaders extends Iterable<[string, string]> {
     append(name: string, value: string): void;
     delete(name: string): void;
     get(name: string): string | null;
