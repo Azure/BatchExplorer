@@ -11,7 +11,7 @@
                         <bl-button icon="fa fa-trash" type="plain" color="light" *ngIf="deleteSelectionIsEnabled && selection.hasAny()" [skipSuccess]="true"
                             [action]="deleteSelection" title="Delete">
                         </bl-button>
-                        <bl-refresh-btn [refresh]="refresh" *ngIf="refreshEnabled" type="plain" color="light"></bl-refresh-btn>
+                        <bl-refresh-btn [refresh]="refresh" title="Refresh Batch account list" *ngIf="refreshEnabled" type="plain" color="light"></bl-refresh-btn>
                         <ng-content select="[blBrowseLayoutButtons]"></ng-content>
                     </div>
                 </div>

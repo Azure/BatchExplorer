@@ -12,7 +12,7 @@ import "./inbound-nat-pool-picker.scss";
     selector: "bl-inbound-nat-pool-picker",
     templateUrl: "inbound-nat-pool-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
+        /* eslint-disable @angular-eslint/no-forward-ref */
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => InboundNATPoolPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => InboundNATPoolPickerComponent), multi: true },
     ],

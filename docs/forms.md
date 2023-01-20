@@ -2,7 +2,7 @@
 
 ## Complex form
 
-![](images/form.png)
+![Example form](images/form.png)
 
 You first need to use the `bl-complex-form` component. You will need to pass the formGroup as an input and the submit method(Don't forget to autobind the submit)
 
@@ -56,9 +56,10 @@ Each page is composed of multiple section(If only have 1 section do not provide 
 
 For complex forms that needs to add multiple complex items the form picker might suit the needs.
 
-![](images/form-multi-picker.png)
+![Multi picker example](images/form-multi-picker.png)
 
 Attributes:
+
 * `addTitle`: This is text that will be displayed on the button to add a new element
 * `max`: This is the maximum number of items to allow. By default it is unlimited(Value -1)
 

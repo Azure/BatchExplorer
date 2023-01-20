@@ -18,7 +18,7 @@ describe("JobService", () => {
             ],
         });
         jobService = new JobService(TestBed.get(HttpClient));
-        httpMock = TestBed.get(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
     it("get a job", (done) => {

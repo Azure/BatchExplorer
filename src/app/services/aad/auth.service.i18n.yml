@@ -1,0 +1,3 @@
+auth-service:
+  activate-tenant: Activate tenant to authorize
+  tenant-error: Cannot access resources for tenant {tenantName}

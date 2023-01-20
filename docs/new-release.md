@@ -1,13 +1,16 @@
 # New release
 
 There is 2 types of releases:
+
 * **Major releases**: This is for a release that contains new features
 * **Hot fix releases**: This should **ONLY** be for patching major bugs that prevent usage
 
 ## Major release process
+
 This is the steps to create a major release
 
 ### Prerequistie: Millestone
+
 Every release should have a millestone with the list of issues fixed in that new version.
 
 You can use the command `npm run publish -- <millestoneid>` to do step 1&2 and skip to step 3
@@ -27,7 +30,7 @@ This will help with tracking the required task for a new release.
 
 ### Step 2: Update repo
 
-Create a branch called release/prepare-<milestone>, i.e. release/prepare-0.10.0
+Create a branch called `release/prepare-<milestone>`, i.e. `release/prepare-0.10.0`
 
 #### Update version in package.json
 
@@ -48,6 +51,7 @@ This should be targeted at user and not developper which means there is no need 
 Describe what functionality changed in the app with a link to the issue.
 
 Example:
+
 ```md
 * Added this awesome thing in the pool details [\#123](https://github.com/Azure/BatchExplorer/issues/123)
 ```
@@ -55,10 +59,11 @@ Example:
 **Note:** There is now a utility to generate the change log for a millestone also so you don't have to write it manually.
 [https://www.npmjs.com/package/github-changelog-gen](https://www.npmjs.com/package/github-changelog-gen)
 
-
 #### Update third party notices
+
 Running the following command will update any required third party notices.
-```
+
+```shell
 npm run ts scripts/lca/generate-third-party
 ```
 
@@ -66,7 +71,8 @@ npm run ts scripts/lca/generate-third-party
 You can manage and setup personal access tokens here: [https://github.com/settings/tokens](https://github.com/settings/tokens)
 
 If you see an error like the following while executing the 'generate-third-party' script:
-```
+
+```shell
 const value = match[1];
                     ^
 TypeError: Cannot read property '1' of null
@@ -79,26 +85,26 @@ You will need to modify '\scripts\lca\generate-third-party.ts' in order to get i
 
 Travis should check on master that the build itself it not failing. However there could still be runtime errors that happens.
 Do the following and test the application.
-```
+
+```shell
 npm run build-and-pack
 ```
 
-
 ### Step: 3 Merge those changes
+
 Create a PR against master with the changelog, package.json changes and reference the issue created in step 1(.i.e fix \#123).
 
+### Step 4: Create a PR against stable
 
-### Step 4: Create a PR against stable.
 Now create a pull request against stable. Wait for the CI to pass.
 
 **Important:** DO NOT squash merge the changes.(Go in BatchExplorer [settings](https://github.com/Azure/BatchExplorer/settings) and renenable "Allow merge commits")
 Then click on merge commit(Make sure it is not squash merge)
 
-![](images/merge-commit.png)
+![Merge commit](images/merge-commit.png)
 
 All the commits in master should now be in stable with the merge commit.
 Now disable the "Allow merge commit" again to prevent mistake when merging to master.
-
 
 ## Hot fix release
 
@@ -108,7 +114,6 @@ Update `Changelog.md` with the list of the fixes.
 
 When ready squash merge your PR in stable.
 
-
 ## Deploy the release
 
-Check the wiki in msazure VSTS https://msazure.visualstudio.com/AzureBatch/_wiki/wikis/AzureBatch.wiki?wikiVersion=GBwikiMaster&pagePath=%2FBatch%20Explorer%2FDeploy%20new%20version%20of%20Batch%20Explorer
+Check the wiki in msazure VSTS <https://msazure.visualstudio.com/AzureBatch/_wiki/wikis/AzureBatch.wiki?wikiVersion=GBwikiMaster&pagePath=%2FBatch%20Explorer%2FDeploy%20new%20version%20of%20Batch%20Explorer>

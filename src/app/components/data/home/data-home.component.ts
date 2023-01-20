@@ -115,7 +115,7 @@ export class DataHomeComponent implements OnInit {
                 { code: "minLength", message: `The ${type} name has a minimum length of 3 characters` },
                 { code: "maxlength", message: `The ${type} name has a maximum length of 63 characters` },
                 { code: "duplicateContainer", message: `A ${type} with this name already exist.` },
-                // tslint:disable-next-line:max-line-length
+                // eslint-disable-next-line max-len
                 { code: "pattern", message: `The ${type} can contain any combination of lowercase alphanumeric characters including single hyphens` },
             ],
         });

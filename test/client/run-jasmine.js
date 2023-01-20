@@ -1,6 +1,5 @@
 const path = require("path");
 process.env.NODE_PATH = path.join(__dirname, "../../src");
-// tslint:disable-next-line:no-var-requires
 require("module").Module._initPaths();
 
 const Jasmine = require("jasmine");

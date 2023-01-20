@@ -8,7 +8,7 @@ bl-quick-list-row-render {
     white-space: nowrap;
 
     &.selected {
-        background-color: $primary-color-light;
+        background-color: map-get($primary, 400);
 
         .quick-list-row-title {
             font-size: 14px;

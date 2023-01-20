@@ -7,14 +7,18 @@ bl-pinned-dropdown {
         max-width: 350px;
     }
 
-    .dropdown-item.favorite {
-        position: relative;
-        min-width: 250px;
-        cursor: pointer;
-        padding: 0;
+    .dropdown-favorite-container {
         display: flex;
         align-items: stretch;
         justify-content: stretch;
+        padding: 0;
+    }
+
+    .dropdown-favorite-container > .favorite-item {
+        flex-grow: 2;
+        min-width: 250px;
+        cursor: pointer;
+        padding: 0;
 
         &:hover {
             i.fa {
@@ -37,7 +41,6 @@ bl-pinned-dropdown {
             min-width: 20px;
             text-overflow: ellipsis;
             overflow-x: hidden;
-            border-right: 1px solid $border-color;
             padding: 5px 10px;
 
             &:hover {
@@ -54,24 +57,25 @@ bl-pinned-dropdown {
                 }
             }
         }
+    }
 
-        > .delete {
-            flex: 0 0 30px;
-            background-color: $card-background;
-            color: $primary-color-dark;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+    .dropdown-favorite-container > .delete {
+        flex: 0 0 30px;
+        background-color: $card-background;
+        color: $primary-color-dark;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-left: 1px solid $border-color;
+        min-width: unset;
 
-            &:hover {
-                color: $card-background;
-                background-color: $danger-color;
-            }
+        &:hover {
+            background-color: $danger-color;
+        }
 
-            &:active {
-                background-color:  $danger-color;
-            }
+        &:active {
+            background-color:  $danger-color;
         }
     }
 }

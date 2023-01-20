@@ -1,4 +1,4 @@
-// tslint:disable:variable-name
+/* eslint-disable @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match */
 
 export const badHttpCodeMaxRetryCount = 5;
 
@@ -99,11 +99,14 @@ export const localStorageKey = {
 };
 
 export const ApiVersion = {
-    arm: "2016-09-01",
+    arm: "2020-01-01",
     armClassicStorage: "2016-11-01",
     armStorage: "2016-12-01",
     armBatch: "2019-08-01",
-    compute: "2019-03-01",
+    compute: {
+        default: "2019-03-01",
+        skus: "2019-04-01",
+    },
     commerce: "2016-08-31-preview",
     authorization: "2017-05-01",
     aadGraph: "1.6",
@@ -115,11 +118,27 @@ export const ApiVersion = {
     costManagement: "2019-01-01",
 };
 
+export const providersApiVersion: { [resourceProvider: string]: string } = {
+    "microsoft.batch": ApiVersion.armBatch,
+    "microsoft.classicstorage": ApiVersion.armClassicStorage,
+    "microsoft.storage": ApiVersion.armStorage,
+    "microsoft.compute": ApiVersion.compute.default,
+    "microsoft.compute/skus": ApiVersion.compute.skus,
+    "microsoft.commerce": ApiVersion.commerce,
+    "microsoft.authorization": ApiVersion.authorization,
+    "microsoft.insights": ApiVersion.monitor,
+    "microsoft.network": ApiVersion.network,
+    "microsoft.classicnetwork": ApiVersion.classicNetwork,
+    "microsoft.consumption": ApiVersion.consumption,
+    "microsoft.costmanagement": ApiVersion.costManagement,
+};
+
 export const ExternalLinks = {
     supportRequest: "https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest",
     setupStorageAccount: "https://portal.azure.com/#resource{0}/storageAccount",
     license: "https://azure.github.io/BatchExplorer/EULA.html",
     privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
+    italyAccessibility: "https://www.microsoft.com/it-it/accessibility/accessibilita/dichiarazioni",
     submitIssue: "https://github.com/Azure/BatchExplorer/issues",
     subscriptionUrl: "https://portal.azure.com/#resource/subscriptions/{0}/overview",
     costManagementUrl: "https://ms.portal.azure.com/#resource/subscriptions/{0}/costByResource",
@@ -188,11 +207,26 @@ export const AAD = {
 export const IpcEvent = {
     AAD: {
         accessTokenData: "AAD_ACCESS_TOKEN_DATA",
+        clearTenantAuth: "AAD_CLEAR_TENANT_AUTH"
     },
     launchApplication: "LAUNCH_APPLICATION",
     logoutAndLogin: "LOGOUT_AND_LOGIN",
     sendTelemetry: "SEND_TELEMETRY",
     log: "SEND_LOG",
+    storageBlob: {
+        listContainers: "STORAGE_BLOB_LIST_CONTAINERS",
+        getContainerProperties: "STORAGE_BLOB_GET_CONTAINER_PROPERTIES",
+        deleteContainer: "STORAGE_BLOB_GET_DELETE_CONTAINER",
+        createContainer: "STORAGE_BLOB_CREATE_CONTAINER",
+
+        listBlobs: "STORAGE_BLOB_LIST_BLOBS",
+        getBlobProperties: "STORAGE_BLOB_GET_BLOB_PROPERTIES",
+        getBlobContent: "STORAGE_BLOB_GET_BLOB_CONTENT",
+        generateSasUrl: "STORAGE_BLOB_GENERATE_SAS_URL",
+        downloadBlob: "STORAGE_BLOB_DOWNLOAD_BLOB",
+        uploadFile: "STORAGE_BLOB_UPLOAD_FILE",
+        deleteBlob: "STORAGE_BLOB_DELETE_BLOB",
+    }
 };
 
 export const ExternalApplication = {

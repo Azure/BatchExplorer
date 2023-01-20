@@ -165,7 +165,7 @@ async function watchContentAndCallback(service: MainGlobalStorage, key: string, 
     await new Promise(resolve => {
         sub = service.watchContent(key).subscribe((...args) => {
             callback(...args);
-            resolve();
+            resolve(null);
         });
     });
     sub?.unsubscribe();
@@ -180,7 +180,7 @@ async function watchAndCallback(service: MainGlobalStorage, key: string, callbac
     await new Promise(resolve => {
         sub = service.watch(key).subscribe((...args) => {
             callback(...args);
-            resolve();
+            resolve(null);
         });
     });
     sub?.unsubscribe();

@@ -4,6 +4,17 @@
     {
       "file": "batchtest.pfx",
       "_justification": "Certificate used for tests"
+    },
+    {
+      "file": "batch-shared-key-authenticator.spec.ts",
+      "_justification": "Contains tests for generating various authentication headers using a fake key"
+    },
+    {
+      "placeholder": [
+        "pass123!",
+        "pass456!"
+      ],
+      "_justification": "Fake secrets used by tests"
     }
   ]
 }

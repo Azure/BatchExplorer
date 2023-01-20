@@ -43,6 +43,7 @@ export interface Sku {
     name: string;
     nodeAgentId: string;
     osType: string;
+    batchSupportEndOfLife?: Date;
 }
 
 export interface Offer {
@@ -88,6 +89,7 @@ export class PoolOsSkus {
                 name: imageReference.sku,
                 nodeAgentId: image.nodeAgentSKUId,
                 osType: image.osType,
+                batchSupportEndOfLife: image.batchSupportEndOfLife,
             });
         });
 

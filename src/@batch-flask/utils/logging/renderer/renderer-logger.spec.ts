@@ -1,6 +1,6 @@
 import { RendererLogger } from "./renderer-logger";
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 describe("RendererLogger", () => {
     let logger: RendererLogger;

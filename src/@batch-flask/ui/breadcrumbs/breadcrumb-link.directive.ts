@@ -5,7 +5,7 @@ import { Router } from "@angular/router";
     selector: "[blBreadcrumbLink]",
 })
 export class BreadcrumbLinkDirective {
-    // tslint:disable-next-line:no-input-rename
+    // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input("blBreadcrumbLink")
     public link: any[];
 

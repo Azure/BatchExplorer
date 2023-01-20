@@ -5,6 +5,7 @@ import { LogLevel, Logger } from "../base-logger";
  */
 export class BrowserLogger implements Logger {
     public log(level: LogLevel, message: string, ...params: any[]) {
+        /* eslint-disable no-console */
         console[level](message, ...params);
     }
 

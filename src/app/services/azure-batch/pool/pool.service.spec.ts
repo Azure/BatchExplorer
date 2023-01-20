@@ -19,7 +19,7 @@ describe("PoolService", () => {
             ],
         });
         poolService = new PoolService(TestBed.get(HttpClient));
-        httpMock = TestBed.get(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
     afterEach(() => {

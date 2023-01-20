@@ -14,4 +14,8 @@ bl-programing-sample {
     > bl-editor {
         flex: 1;
     }
+
+    bl-tp-cell {
+        border: 1px solid var(--color-input-border);
+    }
 }

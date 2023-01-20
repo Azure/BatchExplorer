@@ -1,4 +1,3 @@
-// tslint:disable:only-arrow-functions
 interface Array<T> {
     /**
      * @returns the first element in an array

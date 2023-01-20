@@ -3,10 +3,12 @@
 There is a rpc server that starts automaticaly when you start the app that allows you to run python code from the browser.
 
 ## Step 0: Setup python
+
 Install python > 3.6 **Important: Batch Explorer will look for python and check the version is more than 3.6 before starting the server**
 It will scan for executable in the path called `python3` or `python`. If your python is not in your path you can set the environment variable `BL_PYTHON_PATH` with the path to python 3.6.
 
 ## Step 1: Write the python controller
+
 In `python/controllers` open/create a controller file(It will be loaded automatically).
 
 ```python
@@ -19,7 +21,7 @@ def foo(request, param1, param2):
     return {"what": "it works!"}
 ```
 
-## Step 2: Call the python procedure from the javascript.
+## Step 2: Call the python procedure from the javascript
 
 ```ts
 import {PythonRpcService} from "app/services";
@@ -41,13 +43,13 @@ pythonRpcService.call("other", ["abc", "def"]).subscribe({
 });
 ```
 
-
 ## Throw an error from the python server
 
 You need to raise an error that is a child of `JsonRpcError` or `JsonRpcError` itself to get the best result.
 Any other exception will act as a Server internal error and also get logged in the python
 
 ## Authenticate with the python
+
 ```ts
 pythonService.callWithAuth("foo", [1, 2]).subscribe(...)
 ```
@@ -58,7 +60,6 @@ def foo(request, param1, param2):
     request.client #=> This is the NCJ client you can use. It automatically retrieved the AAD tokens
     return {"what": "it works!"}
 ```
-
 
 ## Stream data from the python
 
@@ -77,6 +78,7 @@ async def foo(request, param1, param2):
 ```
 
 In the typescript
+
 ```ts
 pythonService.call("foo", [1, 2]).subscribe({
     next: (data) => {

@@ -48,7 +48,7 @@ describe("EntityCommand", () => {
             ],
         });
 
-        injector = TestBed.get(Injector);
+        injector = TestBed.inject(Injector);
         telemetryServiceSpy = TestBed.get(TelemetryService);
     });
 

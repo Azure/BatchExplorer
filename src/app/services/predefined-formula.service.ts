@@ -24,7 +24,7 @@ export class PredefinedFormulaService {
     public init() {
         this.githubData.get(`${predefinedFormulaPath}${indexFile}`).subscribe({
             next: (response: string) => {
-                const result: AutoscaleFormula[] = new Array();
+                const result: AutoscaleFormula[] = [];
                 const data: SampleFormulaIndex[] = JSON.parse(response);
                 for (const file of data) {
                     const filePath = `${predefinedFormulaPath}${file.value}`;

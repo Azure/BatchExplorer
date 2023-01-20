@@ -8,7 +8,7 @@ pool-scale-picker:
     label: Dedicated nodes
 
   targetLowPriorityNodes:
-    label:  Low priority nodes
+    label:  Spot/low-priority nodes
 
   resizeTimeout:
     label: Resize timeout

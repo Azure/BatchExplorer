@@ -15,7 +15,7 @@ export class CoreCountMetrics extends MonitoringMetricDefinition {
                 },
                 {
                     name: MonitorChartMetrics.LowPriorityCoreCount,
-                    label: "Low priority",
+                    label: "Spot/low-priority",
                 },
             ],
         });

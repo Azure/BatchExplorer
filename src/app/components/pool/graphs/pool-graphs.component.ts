@@ -90,7 +90,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this.changeDetector.markForCheck();
 
             if (nodes.size !== 0) {
-                this._stateCounter.updateCount(nodes);
+                this._stateCounter.updateCount(nodes, this.pool);
                 this.runningNodesHistory.update(this.nodes);
                 this.runningTaskHistory.update(this.nodes);
             }
@@ -156,6 +156,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     @autobind()
     public openEditStartTask() {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         const ref = this.sidebarManager.open(`edit-start-task-${this.pool.id}`, StartTaskEditFormComponent);
         ref.component.pool = this.pool;
     }

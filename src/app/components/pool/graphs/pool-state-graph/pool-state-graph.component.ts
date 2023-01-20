@@ -16,7 +16,7 @@ import { Subscription } from "rxjs";
 import "./pool-state-graph.scss";
 
 const idleColor = "#edeef2";
-const runningColor = "#388e3c";
+const runningColor = "#328000";
 const waitingForStartTaskColor = "#be93d9";
 const offlineColor = "#305796";
 const preemptedColor = "#606060";
@@ -66,11 +66,11 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private poolNodeCountSerivce: PoolNodeCountService,
+        private poolNodeCountService: PoolNodeCountService,
         private contextMenuService: ContextMenuService) {
         this._updateDataSets();
         this._updateOptions();
-        this._sub = poolNodeCountSerivce.counts.subscribe((counts) => {
+        this._sub = poolNodeCountService.counts.subscribe((counts) => {
             this._counts = counts;
             this._updateDataSets();
         });
@@ -93,7 +93,7 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
     @HostListener("contextmenu")
     public showContextMenu() {
         this.contextMenuService.openMenu(new ContextMenu([
-            new ContextMenuItem({ label: "Refresh", click: () => this.poolNodeCountSerivce.refresh().subscribe() }),
+            new ContextMenuItem({ label: "Refresh", click: () => this.poolNodeCountService.refresh().subscribe() }),
         ]));
     }
 
@@ -133,8 +133,8 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
             return this._counts.get(this.pool.id);
         }
 
-        const dedicatedCounts: NodeCountsAttributes = {...emptyNodeCount};
-        const lowPriorityCounts: NodeCountsAttributes = {...emptyNodeCount};
+        const dedicatedCounts: NodeCountsAttributes = { ...emptyNodeCount };
+        const lowPriorityCounts: NodeCountsAttributes = { ...emptyNodeCount };
 
         for (const count of this._counts.values()) {
             this._addToSum(dedicatedCounts, count.dedicated);

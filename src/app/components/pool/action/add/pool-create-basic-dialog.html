@@ -4,7 +4,7 @@
             <div class="grow">
                 <div class="gcol">
                     <bl-form-field class="form-element">
-                        <input blInput #idInput formControlName="id" placeholder="ID" maxlength="64">
+                        <input blInput #idInput formControlName="id" placeholder="ID" maxlength="64" required>
 
                         <bl-hint align="end" attr.aria-label="{{idInput.value.length}} characters out of 64">{{idInput.value.length}} / 64</bl-hint>
 
@@ -21,13 +21,38 @@
             </div>
         </bl-form-section>
 
-        <bl-form-section title="Scale" subtitle="Number of nodes in your pool using a fixed number or an auto scaling forumla">
+        <bl-form-section title="Scale" subtitle="Number of nodes in your pool using a fixed number or an auto scaling formula">
+            <a (click)="openLink('https://docs.microsoft.com/azure/batch/batch-low-pri-vms')" href="javascript:void(0)">Learn more about Spot/low-priority nodes</a>
             <div class="form-element">
                 <bl-pool-scale-picker formControlName="scale"></bl-pool-scale-picker>
             </div>
         </bl-form-section>
 
         <bl-form-section title="Select an operating system configuration" subtitle="Choose the operating system to be installed on all the nodes in the pool">
+            <ng-container *ngIf="selectedImageWillDeprecate">
+                <bl-banner class="create-pool-deprecation-warning" type="warning">
+                    <div message>
+                        <span [ngSwitch]="endOfLifeProximity">
+                            <bl-i18n *ngSwitchCase="imageEOLState.FarAwayFromEndOfLife" key="pool-create-basic-dialog.deprecationWarning.imageFarFromEndOfLife">
+                                <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
+                            </bl-i18n>
+                            <bl-i18n *ngSwitchCase="imageEOLState.NearingEndOfLife" key="pool-create-basic-dialog.deprecationWarning.imageNearingEndOfLife">
+                                <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
+                            </bl-i18n>
+                        </span>
+                        <a class="create-pool-warning-alternative-link" *ngIf="hasDeprecationLink" (click)="openDeprecationLink()" href="javascript:void(0)">Learn more </a>
+                    </div>
+                </bl-banner>
+            </ng-container>
+            <ng-container *ngIf="cloudServiceConfiguration">
+                <bl-banner class="create-pool-deprecation-warning" type="warning">
+                    <div message>
+                        Cloud Services pools are deprecated and will be retired on 29 February 2024. Existing ‘CloudServiceConfiguration’ pools will need to be deleted and new
+                        <a class="create-pool-warning-alternative-link" (click)="openLink('https://docs.microsoft.com/azure/batch/batch-pool-cloud-service-to-virtual-machine-configuration?WT.mc_id=Portal-Microsoft_Azure_Batch')" href="javascript:void(0)">‘VirtualMachineConfiguration’ pools created. </a>
+                        For new pools, select either a different ‘Distributions‘ or ‘Custom Image’ option.
+                    </div>
+                </bl-banner>
+            </ng-container>
             <div class="form-element">
                 <bl-pool-os-picker formControlName="os"></bl-pool-os-picker>
             </div>

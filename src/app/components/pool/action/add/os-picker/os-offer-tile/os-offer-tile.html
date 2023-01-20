@@ -12,8 +12,13 @@
         </div>
     </div>
 </div>
-<button class="select-version" [matMenuTriggerFor]="menu" title="Select version">
-    <i class="fa fa-cog"></i>
+<button
+    class="select-version"
+    [matMenuTriggerFor]="menu"
+    name="button-version-select-{{prettyName}}"
+    matTooltip="{{'os-offer-tile.select-version-button.tooltip' | i18n}}"
+    title="{{'os-offer-tile.select-version-button.tooltip' | i18n}} ({{prettyName}})">
+    <i class="fa fa-cog" aria-hidden="true"></i>
 </button>
 <mat-menu #menu="matMenu">
     <button mat-menu-item *ngFor="let sku of skus;trackBy: trackSku" (click)="onClickSku(sku)">{{sku.name}}</button>

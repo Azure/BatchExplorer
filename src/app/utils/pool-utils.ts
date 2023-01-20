@@ -1,6 +1,7 @@
 import { Icon, IconSources } from "@batch-flask/ui/icon";
 import { CloudServiceOsFamily, OSType, Pool, PoolAllocationState, VmSize } from "app/models";
 import { SoftwarePricing, VMPrices } from "app/services/pricing";
+import { List } from "immutable";
 import * as Icons from "./icons";
 
 export interface PoolPrice {
@@ -17,6 +18,24 @@ export interface PoolPriceOptions {
      */
     target?: boolean;
 }
+
+const deprecatedContainerImages = [
+    "2016-datacenter-with-containers",
+    "2016-datacenter-with-containers-g2",
+    "2016-datacenter-with-containers-gs",
+    "2019-datacenter-containers-with-containers",
+    "2019-datacenter-core-with-containers-g2",
+    "2019-datacenter-containers-with-containers-smalldisk",
+    "2019-datacenter-core-with-containers-smalldisk-g2",
+    "2019-datacenter-with-containers",
+    "2019-datacenter-with-containers-g2",
+    "2019-datacenter-with-containers-gs",
+    "2019-datacenter-with-containers-smalldisk",
+    "2019-datacenter-with-containers-smalldisk-g2",
+    "datacenter-core-20h2-with-containers-smalldisk",
+    "datacenter-core-20h2-with-containers-smalldisk-gs",
+    "datacenter-core-20h2-with-containers-smalldisk-g2",
+]
 
 const iconMapping = {
     "ubuntuserver": Icons.ubuntu,
@@ -87,7 +106,7 @@ export class PoolUtils {
     }
 
     public static iconForOffer(offerName: string) {
-        const icon = iconMapping[offerName.toLowerCase()];
+        const icon = iconMapping[offerName?.toLowerCase()];
         if (icon) {
             return icon;
         }
@@ -173,6 +192,22 @@ export class PoolUtils {
         return "cloud";
     }
 
+    // Pool Details gives OS name and image name so we have to split to just get the matching image name
+    public static getEndOfLifeHyperlinkforPoolDetails(imageName: string): string | null {
+        const imageDetails = imageName.split(" ");
+        if (deprecatedContainerImages.includes(imageDetails[1].toLowerCase())) {
+            return 'https://github.com/Azure/Batch/issues/136';
+        }
+        return null;
+    }
+
+    public static getEndOfLifeHyperlinkforPoolCreate(imageName: string): string | null {
+        if (deprecatedContainerImages.includes(imageName.toLowerCase())) {
+            return 'https://github.com/Azure/Batch/issues/136';
+        }
+        return null;
+    }
+
     /**
      * Display the status of the pool nodes nicely.
      * @param pool Pool
@@ -203,9 +238,14 @@ export class PoolUtils {
         let dedicatedPrice = nodeCost.regular * dedicatedCount;
         let lowPriPrice = nodeCost.lowpri * lowPriCount;
 
-        pool.applicationLicenses.forEach((license: string) => {
-            dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * dedicatedCount;
-            lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * lowPriCount;
+        let licenses = List<string>(pool.applicationLicenses.slice());
+        if (licenses.contains("vray")) {
+            licenses = licenses.push("vrayrt");
+        }
+
+       licenses.forEach((license: string) => {
+            dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores, vmSpec.numberOfGpus) * dedicatedCount;
+            lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores, vmSpec.numberOfGpus) * lowPriCount;
         });
 
         return {

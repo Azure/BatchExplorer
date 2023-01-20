@@ -13,9 +13,7 @@ export class Record<TInput> {
     private _defaultValues = {};
     // Stringify version of the properties to use to compare efficiently
     private _originalStr: string;
-    // @ts-ignore
     private _initialized = false;
-    // @ts-ignore
     private _keys: Set<string>;
 
     constructor(data: Partial<TInput> = {}) {

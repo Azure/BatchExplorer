@@ -1,7 +1,7 @@
 const invalidTokenRegex = /[^\^_`a-zA-Z\-0-9!#$%&'*+.|~]/;
 const invalidHeaderCharRegex = /[^\t\x20-\x7e\x80-\xff]/;
 
-// tslint:disable:variable-name
+/* eslint-disable @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match */
 
 function validateName(name) {
     name = `${name}`;

@@ -5,6 +5,7 @@ import {
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { ListSelection } from "@batch-flask/core/list";
+import { ElectronShell } from "@batch-flask/electron";
 import { TableConfig } from "@batch-flask/ui/table";
 import { ApplicationLicense } from "app/models";
 import { PricingService } from "app/services";
@@ -29,11 +30,7 @@ const softwares = [
     },
     {
         id: "vray",
-        description: "Chaos Group V-Ray",
-    },
-    {
-        id: "vrayrt",
-        description: "Chaos Group V-Ray RT",
+        description: "Chaos Group V-Ray & V-Ray RT",
     },
 ];
 
@@ -63,7 +60,8 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     constructor(
         private pricingService: PricingService,
         private changeDetector: ChangeDetectorRef,
-        private dialog: MatDialog) {
+        private dialog: MatDialog,
+        private electronShell: ElectronShell) {
     }
 
     public ngOnInit() {
@@ -138,14 +136,24 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
         this.licenses = List(softwares.map((software) => {
             const cost = this._pricing && this._pricing.get(software.id);
             let costStr = "-";
-            if (cost) {
+
+            if (cost && cost.name === "vray") {
+                const vrayrtCost = this._pricing && this._pricing.get("vrayrt");
+                costStr = `$${cost.price}/${cost.billingUnit as string}/hour & ` +
+                          `$${vrayrtCost.price}/${vrayrtCost.billingUnit as string}/hour`;
+            } else if (cost) {
                 costStr = `$${cost.price}/${cost.billingUnit as string}/hour`;
             }
+
             return new ApplicationLicense({
                 ...software,
                 cost: costStr,
             });
         }));
         this.changeDetector.markForCheck();
+    }
+
+    public openLink(link: string) {
+        this.electronShell.openExternal(link, {activate: true});
     }
 }

@@ -37,20 +37,20 @@ describe("RequireActiveBatchAccountGuard", () => {
             ],
         });
 
-        guard = TestBed.get(RequireActiveBatchAccountGuard);
-        router = TestBed.get(Router);
+        guard = TestBed.inject(RequireActiveBatchAccountGuard);
+        router = TestBed.inject(Router);
     });
 
     it("resolve to true if account id is already picked", async () => {
         accountServiceSpy.currentAccountId.next("/accounts/acc-1");
-        const result = await guard.canActivate(null, null).toPromise();
+        const result = await guard.canActivate().toPromise();
         expect(result).toBe(true);
         expect(dialogServiceSpy.open).not.toHaveBeenCalled();
     });
 
     it("prompt the user with an account selection dialog if no account selected", () => {
         const callback = jasmine.createSpy("canActivate");
-        guard.canActivate(null, null).subscribe(callback);
+        guard.canActivate().subscribe(callback);
         expect(dialogServiceSpy.open).toHaveBeenCalledOnce();
         expect(dialogServiceSpy.open).toHaveBeenCalledWith(SelectAccountDialogComponent);
 
@@ -63,7 +63,7 @@ describe("RequireActiveBatchAccountGuard", () => {
 
     it("redirect to the account page if user click out of the dialog", () => {
         const callback = jasmine.createSpy("canActivate");
-        guard.canActivate(null, null).subscribe(callback);
+        guard.canActivate().subscribe(callback);
         expect(dialogServiceSpy.open).toHaveBeenCalledOnce();
         expect(dialogServiceSpy.open).toHaveBeenCalledWith(SelectAccountDialogComponent);
 

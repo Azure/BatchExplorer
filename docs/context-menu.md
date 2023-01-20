@@ -2,8 +2,8 @@
 
 You can add a context menu on right click(or any other trigger if needed).
 
-
 Example of usage.
+
 ```typescript
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
@@ -24,10 +24,12 @@ export class MyComponent {
 }
 ```
 
-## Context menu in quick list or table.
+## Context menu in quick list or table
+
 Table and quicklist support the context menu you just have to pass the menu as input to the quick list item/row.
 
 In the template
+
 ```html
     <bl-quick-list [commands]="commands">
         ...
@@ -38,12 +40,14 @@ In the template
 ```
 
 In the model
+
 ```typescript
     constructor(public commands: JobCommands) {
     }
 ```
 
 In `job-commands.ts`
+
 ```ts
     export class JobCommands extends EntityCommands<Job> {
     public edit: EntityCommand<Job, void>;

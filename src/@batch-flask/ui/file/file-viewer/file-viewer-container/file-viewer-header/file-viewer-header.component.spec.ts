@@ -135,8 +135,8 @@ describe("FileViewerHeaderComponent", () => {
         expect(cacheSpy).toHaveBeenCalledOnce();
 
         // Show the item
-        expect(TestBed.get(ElectronShell).openItem).toHaveBeenCalledOnce();
-        expect(TestBed.get(ElectronShell).openItem).toHaveBeenCalledWith("/some/local/path/foo.ts");
+        expect(TestBed.inject(ElectronShell).openItem).toHaveBeenCalledOnce();
+        expect(TestBed.inject(ElectronShell).openItem).toHaveBeenCalledWith("/some/local/path/foo.ts");
     });
 
 });

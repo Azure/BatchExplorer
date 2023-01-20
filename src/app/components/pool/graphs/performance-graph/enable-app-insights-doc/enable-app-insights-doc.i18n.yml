@@ -1,0 +1,3 @@
+enable-app-insights-doc:
+  doc-title: Instructions on enabling Batch Insights
+  doc-title-os-specific: OS-specific instructions on adding Batch Insights to start task

@@ -18,7 +18,7 @@ describe("NodeUserService", () => {
             ],
         });
         nodeUserService = new NodeUserService(TestBed.get(HttpClient));
-        httpMock = TestBed.get(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
     it("add a node user", (done) => {

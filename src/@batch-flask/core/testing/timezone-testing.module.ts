@@ -9,9 +9,7 @@ export class TestTimeZoneService {
         offsetNameShort: "UTC",
         offsetNameLong: "UTC",
     });
-    public setTimezone = jasmine.createSpy("setTimezone").and.callFake(this._setTimezone.bind(this));
-
-    private _setTimezone(name: string) {
+    public setTimezone = jasmine.createSpy("setTimezone").and.callFake((name: string) => {
         name = name || "local";
         const date = DateTime.local().setZone(name);
         if (date.isValid) {
@@ -23,7 +21,7 @@ export class TestTimeZoneService {
         } else {
             return this.current.next(DEFAULT_TIMEZONE);
         }
-    }
+    });
 
 }
 

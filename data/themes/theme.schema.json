@@ -56,6 +56,7 @@
         "basic-bg": {"$ref": "#/definitions/color"},
         "basic-hover-bg": {"$ref": "#/definitions/color"},
         "disabled-text": {"$ref": "#/definitions/color"},
+        "focus-text": {"$ref": "#/definitions/color"},
         "disabled-bg": {"$ref": "#/definitions/color"}
       }
     },

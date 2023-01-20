@@ -15,7 +15,7 @@
   "hover-bg": "#d5d5d5",
   "selection": "var(--color-primary)",
   "outline": "#528bff",
-  "border": "#d5d5d5",
+  "border": "#919191",
   "editor": "vs",
   "text": {
     "primary": "#333333",
@@ -46,25 +46,26 @@
   },
   "button": {
     "basic-text": "#2865bf",
-    "basic-bg": "#e5e5e5",
+    "basic-bg": "#ebebeb",
     "basic-hover-bg": "#d5d5d5",
     "disabled-text": "#d5d5d5",
+    "focus-text": "var(--color-primary)",
     "disabled-bg": "#ededed"
   },
   "monitorChart": {
     "core-count": "#1c3f95",
     "low-priority-core-count": "#a36a00",
     "task-start-event": "#a36a00",
-    "task-complete-event": "#388e3c",
+    "task-complete-event": "#428000",
     "task-fail-event": "#aa3939",
     "starting-node-count": "#1c3f95",
     "idle-node-count": "#be93d9",
-    "running-node-count": "#388e3c",
+    "running-node-count": "#428000",
     "start-task-failed-node-count": "#aa3939",
     "rebooting-node-count": "#ff755c"
   },
   "input": {
-    "border": "#d5d5d5",
+    "border": "#919191",
     "focus-border": "var(--color-primary)",
     "placeholder": "var(--color-text-secondary)",
     "text": "var(--color-text-primary)",
@@ -73,10 +74,5 @@
     "disabled-text": "var(--color-text-primary)",
     "disabled-background": "#e5e5e5"
   },
-  "chart-colors": [
-    "#003f5c",
-    "#aa3939",
-    "#4caf50",
-    "#ffa600"
-  ]
+  "chart-colors": ["#003f5c", "#aa3939", "#4caf50", "#ffa600"]
 }

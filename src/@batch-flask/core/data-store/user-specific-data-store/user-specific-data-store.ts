@@ -8,7 +8,7 @@ import { GlobalStorage } from "../global-storage";
 export const USER_SERVICE = "USER_SERVICE";
 
 export interface User {
-    unique_name: string;
+    username: string;
 }
 
 export interface UserService {
@@ -34,7 +34,7 @@ export class UserSpecificDataStore implements DataStore, OnDestroy {
         this._currentUser = this.userService.currentUser.pipe(
             takeUntil(this._destroy),
             filter(isNotNullOrUndefined),
-            map(x => x.unique_name),
+            map(x => x.username),
             publishReplay(1),
             refCount(),
         );

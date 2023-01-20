@@ -22,7 +22,7 @@ import { TableComponent, TableConfig } from "../table.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowRenderComponent implements OnInit, OnChanges, OnDestroy {
-    // tslint:disable-next-line:no-input-rename
+    // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input("id") @HostBinding("attr.id") public idAttr: string;
     @Input() public item: any;
     @Input() public columns: TableColumnRef[];

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot, CanActivate, CanLoad, Router, RouterStateSnapshot } from "@angular/router";
+import { CanActivate, CanLoad, Router } from "@angular/router";
 import { DialogService } from "@batch-flask/ui";
 import { BatchAccountService } from "app/services";
 import { of } from "rxjs";
@@ -15,7 +15,7 @@ export class RequireActiveBatchAccountGuard implements CanActivate, CanLoad {
     ) {
     }
 
-    public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    public canActivate() {
         return this.accountService.currentAccountId.pipe(
             take(1),
             switchMap((accountId) => {

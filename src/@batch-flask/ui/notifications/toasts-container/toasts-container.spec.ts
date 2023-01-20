@@ -32,7 +32,7 @@ describe("Notification", () => {
                 { provide: PermissionService, useValue: null },
             ],
         });
-        notificationService = TestBed.get(NotificationService);
+        notificationService = TestBed.inject(NotificationService);
         notificationService.notifications.subscribe((x) => currentNotifications = x);
         notificationService.persistedNotifications.subscribe((x) => currentPersistedNotifications = x);
         fixture = TestBed.createComponent(FakeAppComponent);

@@ -21,7 +21,7 @@ export class ActivityMonitorItemActionComponent {
 
     public hovered: boolean = false;
 
-    // tslint:disable-next-line:no-empty
+    // eslint-disable-next-line no-empty,@typescript-eslint/no-empty-function
     constructor() {}
 
     public hover() {
@@ -32,3 +32,4 @@ export class ActivityMonitorItemActionComponent {
         this.hovered = false;
     }
 }
+

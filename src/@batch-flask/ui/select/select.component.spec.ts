@@ -6,6 +6,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 import { ClickableComponent } from "@batch-flask/ui/buttons/clickable";
 import { PermissionService } from "@batch-flask/ui/permission";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { click, mousedown, updateInput } from "test/utils/helpers";
 import { SelectOptionComponent } from "./option";
 import { OptionTemplateDirective } from "./option-template.directive";
@@ -21,7 +22,7 @@ const baseOptions = [
 ];
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix trackBy-function
+// eslint-disable-next-line @angular-eslint/directive-class-suffix,
 class TestComponent {
     public options: any[] = baseOptions;
     public value = new FormControl(null);
@@ -50,7 +51,7 @@ class TestComponent {
 class SelectWithLabelComponent extends TestComponent {
 }
 
-// tslint:disable:template-use-track-by-function
+/* eslint-disable  */
 @Component({
     template: `
         <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
@@ -79,7 +80,7 @@ describe("SelectComponent", () => {
 
     function setup(component) {
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, OverlayModule],
+            imports: [FormsModule, ReactiveFormsModule, OverlayModule, I18nTestingModule],
             declarations: [SelectComponent,
                 SelectOptionComponent, SelectDropdownComponent,
                 OptionTemplateDirective,
@@ -119,12 +120,14 @@ describe("SelectComponent", () => {
 
         it("Should show placeholder when no value", () => {
             expect(labelEl.nativeElement.textContent).toContain("Myselect");
+            expect(de.nativeElement.getAttribute("aria-label")).toContain("Myselect");
         });
 
         it("Should show value when picked", () => {
             testComponent.value.setValue("opt-3");
             fixture.detectChanges();
             expect(labelEl.nativeElement.textContent).toContain("Carrot");
+            expect(de.nativeElement.getAttribute("aria-label")).toEqual("Myselect: Carrot");
         });
 
         it("list all options when clicking on button", async () => {

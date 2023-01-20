@@ -53,7 +53,7 @@ export interface MultiContextMenuItemConfig {
 }
 
 export interface ContextMenuEntry {
-
+    id: string;
 }
 
 export class ContextMenuItem implements ContextMenuEntry {
@@ -112,5 +112,5 @@ export class MultiContextMenuItem implements ContextMenuEntry {
 }
 
 export class ContextMenuSeparator implements ContextMenuEntry {
-
+    public id: string;
 }

@@ -1,4 +1,4 @@
-// tslint:disable:no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
 export const sampleTemplates = {
     sharedKey: {
         python: require("raw-loader!./shared-key/python.py.template"),

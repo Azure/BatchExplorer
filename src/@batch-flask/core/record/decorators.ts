@@ -3,8 +3,6 @@ import { RecordMissingExtendsError } from "./errors";
 import { setProp, updateTypeMetadata } from "./helpers";
 import { Record } from "./record";
 
-// tslint:disable:only-arrow-functions
-
 /**
  * Model attribute decorator.
  *

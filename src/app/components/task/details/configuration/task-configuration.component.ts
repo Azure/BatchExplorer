@@ -5,7 +5,7 @@ import { ApplicationPackageReference, ExitOptions, Job, NameValuePair, Task } fr
 import { JobAction, TaskFailureAction } from "app/models/job-action";
 import { List } from "immutable";
 
-// tslint:disable:template-use-track-by-function
+/* eslint-disable  */
 @Component({
     selector: "bl-task-configuration",
     templateUrl: "task-configuration.html",
@@ -39,7 +39,7 @@ export class TaskConfigurationComponent {
 
     public get exitConditionWarningMessage() {
         const disabled = this.job.onTaskFailure === TaskFailureAction.noaction;
-        // tslint:disable-next-line
+        // eslint-disable-next-line
         const message = `To enable exit conditions you need to set onTaskFailure on the job to 'performexitoptionsjobaction'`;
         return disabled ? message : "";
     }

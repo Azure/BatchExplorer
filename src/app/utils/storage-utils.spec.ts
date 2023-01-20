@@ -26,7 +26,7 @@ describe("StorageUtils", () => {
         await assertName("_", "job-job-53a0acfad59379b3e050338bf9f23cfc172ee787");
         await assertName(":", "job-job-05a79f06cf3f67f726dae68d18a2290f6c9a50c9");
 
-        // tslint:disable-next-line
+        // eslint-disable-next-line
         await assertName("myverylongjobnameallinonewordreallystartingtogetreallysillynow", "job-myverylongjobna-a8700e4947d0c8c621e53b24246aa0349d830e41");
     });
 
@@ -42,7 +42,7 @@ describe("StorageUtils", () => {
                 account: "my-acc-1",
                 container: "my-container-1",
             });
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             expect(StorageUtils.getContainerFromUrl("https://my-acc-2.blob.core.windows.net/foo?st=2018-10-05T16%3A32%3A38Z&se=2018-10-06T16%3A47%3A38Z&sp=w&sv=2018-03-28&sr=c&sig=auiowghoaghwoiagw")).toEqual({
                 account: "my-acc-2",
                 container: "foo",
@@ -56,7 +56,7 @@ describe("StorageUtils", () => {
                 account: "my-acc-1",
                 container: "my-container-1",
             });
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             expect(StorageUtils.getContainerFromUrl("https://my-acc-2.blob.core.chinacloudapi.cn/foo?st=2018-10-05T16%3A32%3A38Z&se=2018-10-06T16%3A47%3A38Z&sp=w&sv=2018-03-28&sr=c&sig=auiowghoaghwoiagw")).toEqual({
                 account: "my-acc-2",
                 container: "foo",
@@ -69,7 +69,7 @@ describe("StorageUtils", () => {
                 account: "my-acc-1",
                 container: "my-container-1",
             });
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             expect(StorageUtils.getContainerFromUrl("https://my-acc-2.blob.core.usgovcloudapi.net/foo?st=2018-10-05T16%3A32%3A38Z&se=2018-10-06T16%3A47%3A38Z&sp=w&sv=2018-03-28&sr=c&sig=auiowghoaghwoiagw")).toEqual({
                 account: "my-acc-2",
                 container: "foo",
@@ -82,7 +82,7 @@ describe("StorageUtils", () => {
                 account: "my-acc-1",
                 container: "my-container-1",
             });
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             expect(StorageUtils.getContainerFromUrl("https://my-acc-2.blob.core.cloudapi.de/foo?st=2018-10-05T16%3A32%3A38Z&se=2018-10-06T16%3A47%3A38Z&sp=w&sv=2018-03-28&sr=c&sig=auiowghoaghwoiagw")).toEqual({
                 account: "my-acc-2",
                 container: "foo",

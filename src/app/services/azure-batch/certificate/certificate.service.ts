@@ -23,11 +23,10 @@ export interface CertificateParams {
     thumbprintAlgorithm?: string;
 }
 
-export interface CertificateListOptions extends ListOptionsAttributes {
-}
+export type CertificateListOptions = ListOptionsAttributes;
 
 export interface NewCertificateDto {
-    password: string;
+    password?: string;
     certificateFormat: string;
     thumbprintAlgorithm: string;
     thumbprint: string;
@@ -159,7 +158,7 @@ export class CertificateService {
                     thumbprint: thumbprint,
                     data: base64EncodedData,
                     certificateFormat: certificateFormat,
-                    password: !isCer ? password : null,
+                    password: !isCer ? password : undefined,
                 });
                 subject.complete();
             } catch (err) {

@@ -1,19 +1,11 @@
 steps:
   - template: ../dependencies.yml
 
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.8.x'
-    displayName: Install python 3.8 for BatchExplorer
-
   # KLUDGE: Use `npm i` instead of `npm ci` due to this issue:
   #         https://github.com/npm/cli/issues/558#issuecomment-580392554
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
-      exec { python -m pip install --upgrade pip }
-      exec { python --version }
-      exec { pip install -r python/requirements.txt }
       exec { Write-Host "Node.js version" $(node --version) }
       exec { Write-Host "NPM version" $(npm --version) }
       exec { npm install --loglevel=error }

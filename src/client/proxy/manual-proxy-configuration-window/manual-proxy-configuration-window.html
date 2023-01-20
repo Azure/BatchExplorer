@@ -43,26 +43,27 @@
     <h1>Enter proxy configuration for BatchExplorer</h1>
     <div class="subtitle">
         Leave blank for no proxy configuration
-        <button class="clear" onclick="clearConfig()">Clear</button>
+        <button type="reset" class="clear" onclick="clearConfig()"
+            autofocus>Clear</button>
     </div>
     <div class="form-element">
         <label for="url">Url</label>
-        <input id="url">
+        <input id="url" placeholder="ex: https://proxy.contoso.com">
     </div>
     <div class="form-element">
         <label for="port">Port</label>
-        <input id="port">
+        <input id="port" placeholder="ex: 80">
     </div>
     <div class="form-element">
         <label for="username">Username</label>
-        <input id="username">
+        <input id="username" placeholder="ex: sample_username">
     </div>
     <div class="form-element">
         <label for="password">Password</label>
-        <input id="password" type="password">
+        <input id="password" type="password" placeholder="ex: samplepassword">
     </div>
     <br>
-    <button onclick="submit()">Save</button>
+    <button class="save-button" onclick="submit()">Save</button>
 </body>
 
 </html>

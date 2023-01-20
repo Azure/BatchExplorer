@@ -57,13 +57,13 @@ export class NavigatorService implements OnDestroy {
      * @param value Full string starting with ms-batch-explorer://
      */
     public openBatchExplorerLink(link: string | BatchExplorerLink) {
-        const labsLink = new BatchExplorerLink(link);
-        switch (labsLink.action) {
+        const beLink = new BatchExplorerLink(link);
+        switch (beLink.action) {
             case BatchExplorerLinkAction.route:
-                const params = new URLSearchParams(labsLink.queryParams);
+                const params = new URLSearchParams(beLink.queryParams);
                 const decodedParams = decodeUriComponent(params.toString());
-                this.goto(`${labsLink.path}?${decodedParams}`, {
-                    accountId: labsLink.accountId,
+                this.goto(`${beLink.path}?${decodedParams}`, {
+                    accountId: beLink.accountId,
                 });
         }
     }

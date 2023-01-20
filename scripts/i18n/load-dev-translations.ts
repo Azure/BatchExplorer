@@ -1,4 +1,4 @@
-// tslint:disable:no-console
+// eslint-disable no-console
 import { DevTranslationsLoader } from "../../src/@batch-flask/compiler";
 
 export async function loadDevTranslations(): Promise<{ [key: string]: string }> {

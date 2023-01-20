@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
-import { AdalService } from "app/services/adal";
+import { AuthService } from "app/services/aad";
 import { BatchAccountService } from "app/services/batch-account";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { Constants } from "common";
@@ -19,7 +19,7 @@ export class AADGraphHttpService extends HttpService {
 
     constructor(
         httpHandler: HttpHandler,
-        private adal: AdalService,
+        private auth: AuthService,
         private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
         super(httpHandler);
@@ -39,7 +39,7 @@ export class AADGraphHttpService extends HttpService {
             }),
             flatMap((account: ArmBatchAccount) => {
                 const tenantId = account.subscription.tenantId;
-                return this.adal.accessTokenData(tenantId, "aadGraph").pipe(
+                return this.auth.accessTokenData(tenantId, "aadGraph").pipe(
                     flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
                         options = this._addApiVersion(options);

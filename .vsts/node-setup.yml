@@ -1,0 +1,13 @@
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '16.x.x'
+
+  - script: |
+      cp .vsts/pipelines.npmrc .npmrc
+    displayName: Stage .npmrc configuration
+
+  - task: npmAuthenticate@0
+    displayName: Authenticate with NPM private feed
+    inputs:
+      workingFile: .npmrc

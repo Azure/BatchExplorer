@@ -8,7 +8,7 @@ ENV PYTHON_PIP_VERSION 9.0.1
 
 ENV GIT_VERSION 2.17.1
 
-LABEL Description="BatchLabs image for building for windows" Maintainer="tiguerin@microsoft.com" Version="${node_version}"
+LABEL Description="BatchLabs image for building for windows" Maintainer="batchexplorer@microsoft.com" Version="${node_version}"
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 

@@ -9,7 +9,7 @@ import { Constants } from "common";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-// tslint:disable:no-forward-ref
+/* eslint-disable @angular-eslint/no-forward-ref */
 @Component({
     selector: "bl-file-groups-picker",
     templateUrl: "file-groups-picker.html",

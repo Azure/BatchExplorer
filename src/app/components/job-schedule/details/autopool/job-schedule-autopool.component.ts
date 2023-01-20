@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/c
 import { PoolConfigurationComponent } from "app/components/pool/details";
 import { AutoPoolSpecification, Pool } from "app/models";
 
-// tslint:disable:template-use-track-by-function
+/* eslint-disable  */
 @Component({
     selector: "bl-job-schedule-autopool",
     templateUrl: "job-schedule-autopool.html",

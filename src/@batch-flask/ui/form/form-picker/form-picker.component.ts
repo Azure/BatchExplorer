@@ -8,7 +8,7 @@ import "./form-picker.scss";
     selector: "bl-form-picker",
     templateUrl: "form-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
+        /* eslint-disable @angular-eslint/no-forward-ref */
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FormPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => FormPickerComponent), multi: true },
     ],

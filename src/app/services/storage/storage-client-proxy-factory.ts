@@ -1,4 +1,4 @@
-import * as storage from "azure-storage";
+import { ElectronRemote } from "@batch-flask/electron";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 
 export interface StorageAccountSharedKeyOptions {
@@ -16,19 +16,17 @@ export class StorageClientProxyFactory {
     private _sharedKeyOptions: StorageAccountSharedKeyOptions = {} as any;
     private _blobSharedKeyClient: BlobStorageClientProxy = null;
 
-    public getBlobServiceForSharedKey(options: StorageAccountSharedKeyOptions) {
+    constructor(private remote: ElectronRemote) { }
+
+    public async getBlobServiceForSharedKey(options: StorageAccountSharedKeyOptions) {
         if (!this._compareSharedKeyOptions(options)) {
             this._sharedKeyOptions = options;
-            const connectionString = [
-                `DefaultEndpointsProtocol=https;`,
-                `AccountName=${options.account};`,
-                `AccountKey=${options.key};`,
-                `EndpointSuffix=${options.endpoint};`,
-            ].join("");
-            const blobService = storage.createBlobService(connectionString)
-                .withFilter(new storage.ExponentialRetryPolicyFilter());
 
-            this._blobSharedKeyClient = new BlobStorageClientProxy(blobService);
+            this._blobSharedKeyClient = new BlobStorageClientProxy(
+                this.remote,
+                options.account, options.key,
+                `blob.${options.endpoint}`
+            );
         }
 
         return this._blobSharedKeyClient;

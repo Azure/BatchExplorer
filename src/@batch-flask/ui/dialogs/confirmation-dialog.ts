@@ -2,7 +2,7 @@ import { Directive } from "@angular/core";
 import { AsyncSubject, Observable } from "rxjs";
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class ConfirmationDialog<TOutput> {
     public onSubmit: Observable<TOutput>;
     private _onSubmit = new AsyncSubject<TOutput>();

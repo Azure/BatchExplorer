@@ -47,7 +47,7 @@ describe("EntityView", () => {
         view.fetch();
         tick();
         expect(dataSpy).toHaveBeenCalledTimes(1);
-        expect(item!.toJS()).toEqual(fake1);
+        expect(item.toJS()).toEqual(fake1);
         expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "1" });
     }));
 
@@ -57,35 +57,59 @@ describe("EntityView", () => {
         view.item.subscribe(x => item = x);
         view.fetch();
         expect(item).not.toBeFalsy();
-        expect(item!.toJS()).toEqual({ id: "1", parentId: "parent-1", state: "creating", name: "Fake1" });
+        expect(item.toJS()).toEqual({ id: "1", parentId: "parent-1", state: "creating", name: "Fake1" });
 
         tick(); // This should be the return from the fetched data
-        expect(item!.toJS()).toEqual(fake1);
+        expect(item.toJS()).toEqual(fake1);
     }));
 
     it("Update the data when refreshing", fakeAsync(() => {
         view.item.subscribe(x => item = x);
         view.fetch();
         tick();
-        expect(item!.toJS()).toEqual(fake1);
+        expect(item.toJS()).toEqual(fake1);
 
         view.refresh();
         tick();
-        expect(item!.toJS()).toEqual(fake2);
+        expect(item.toJS()).toEqual(fake2);
 
         view.refresh();
         tick();
-        expect(item!.toJS()).toEqual(fake3);
+        expect(item.toJS()).toEqual(fake3);
         expect(dataSpy).toHaveBeenCalledTimes(3);
     }));
 
-    it("Update the params", fakeAsync(() => {
+    it("updates at the poll rate", fakeAsync(() => {
+        const cache2 = new DataCache<FakeModel>();
+        const dataSpy2 = jasmine.createSpy("supplyDataSpy")
+            .and.returnValues(...data.map(x => from(Promise.resolve(x))));
+        const getter2 = new BasicEntityGetter(FakeModel, {
+            cache: () => cache2,
+            supplyData: dataSpy2,
+        });
+
+        const view2 = new EntityView({
+            cache: () => cache2,
+            getter: getter2,
+            poll: 1000
+        });
+        view2.params = { parentId: "parent-1", id: "2" };
+
+        let item2: FakeModel;
+
         view.item.subscribe(x => item = x);
-        view.params = { parentId: "parent-1", id: "2" };
+        view2.item.subscribe(x => item2 = x);
         view.fetch();
+        view2.fetch();
         tick();
-        expect(item!.toJS()).toEqual(fake1);
-        expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "2" });
+        expect(item.toJS()).toEqual(fake1);
+        expect(item2.toJS()).toEqual(fake1);
+
+        tick(1000);
+        expect(item.toJS()).toEqual(fake1);
+        expect(item2.toJS()).toEqual(fake2);
+
+        view2.dispose();
     }));
 
     it("Update the params", fakeAsync(() => {
@@ -93,21 +117,21 @@ describe("EntityView", () => {
         view.params = { parentId: "parent-1", id: "2" };
         view.fetch();
         tick();
-        expect(item!.toJS()).toEqual(fake1);
-        expect(dataSpy).toHaveBeenCalledWith({parentId: "parent-1",  id: "2" });
+        expect(item.toJS()).toEqual(fake1);
+        expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "2" });
     }));
 
     it("Update the cache should update the item", fakeAsync(() => {
         view.item.subscribe(x => item = x);
         view.fetch();
         tick();
-        expect(item!.toJS()).toEqual(fake1);
+        expect(item.toJS()).toEqual(fake1);
         expect(dataSpy).toHaveBeenCalledTimes(1);
-        expect(dataSpy).toHaveBeenCalledWith({parentId: "parent-1",  id: "1" });
+        expect(dataSpy).toHaveBeenCalledWith({ parentId: "parent-1", id: "1" });
 
-        cache.addItem(new FakeModel({...data[2], parentId: "parent-1"}));
+        cache.addItem(new FakeModel({ ...data[2], parentId: "parent-1" }));
         tick();
-        expect(item!.toJS()).toEqual(fake3);
+        expect(item.toJS()).toEqual(fake3);
     }));
 
     describe("When it return a 404 error", () => {

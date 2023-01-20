@@ -89,5 +89,4 @@ export interface DataFeatures extends CommonFeatures {
     };
 }
 
-export interface GalleryFeatures extends CommonFeatures {
-}
+export type GalleryFeatures = CommonFeatures;

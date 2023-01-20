@@ -25,6 +25,7 @@ bl-header {
             display:  inline-block;
             width: 34px;
             height: $header-height;
+            background-color: transparent;
             color: map-get($header-color, text);
             cursor: pointer;
             text-align: center;

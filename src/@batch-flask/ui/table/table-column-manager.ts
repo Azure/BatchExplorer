@@ -103,6 +103,13 @@ export class TableColumnManager {
 
     private _computeColumns() {
         this._columns = this.columnOrder.map(x => this.columnMap.get(x)!);
+        const sortConfig = this.dataPresenter.config =
+            (this.dataPresenter.config || {});
+        for (const column of this._columns) {
+            if (!(column.name in sortConfig)) {
+                sortConfig[column.name] = column.sortable;
+            }
+        }
     }
 
     private _setColumnWidth(name: string, width: number) {

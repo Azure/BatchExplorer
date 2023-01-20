@@ -1,2 +1,4 @@
 export * from "./authentication";
-export * from "./adal";
+export * from "./auth";
+
+export * from "./auth-provider";

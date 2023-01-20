@@ -1,0 +1,5 @@
+tenant-picker:
+  title: Azure Active Directory Tenants
+  saved: Saved
+  refresh: Refresh tenants
+  microcopy: Select which Azure AD tenants associated with the user credentials to log into for Azure Batch workflows. The home tenant cannot be deactivated.

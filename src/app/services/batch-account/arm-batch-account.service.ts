@@ -8,7 +8,7 @@ import { ArmResourceUtils } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, empty, forkJoin, of } from "rxjs";
-import { catchError, expand, filter, flatMap, map, reduce, share, shareReplay, switchMap, take } from "rxjs/operators";
+import { catchError, expand, filter, flatMap, map, mergeMap, reduce, share, shareReplay, switchMap, take } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { ArmListResponse } from "../core";
 import { SubscriptionService } from "../subscription";
@@ -203,12 +203,13 @@ export class ArmBatchAccountService implements OnDestroy {
         this._loadCachedAccounts();
         const obs = this.subscriptionService.subscriptions.pipe(
             take(1),
-            flatMap((subscriptions) => {
-                const accountObs = subscriptions.map((subscription) => {
+            map(subs => subs.filter(s => s instanceof ArmSubscription)),
+            mergeMap((subscriptions) => {
+                const accountObs = subscriptions.map(subscription => {
                     return this.list(subscription.subscriptionId).pipe(
                         catchError((error) => {
                             const sub = `${subscription.displayName}(${subscription.subscriptionId})`;
-                            log.error(`Error to list batch accounts in ${sub}`, error);
+                            log.error(`Error listing batch accounts in ${sub}`, error);
                             return of(List([]));
                         }),
                     );

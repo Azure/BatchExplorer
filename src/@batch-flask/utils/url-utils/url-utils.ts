@@ -1,5 +1,5 @@
 export class UrlUtils {
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-len
     public static readonly URL_REGEX = new RegExp("^(https?:\\/\\/)?" + // protocol
         "(localhost|" + // localhost
         "(([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // OR domain name and extension

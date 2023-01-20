@@ -3,6 +3,7 @@ build/
 dll/
 typings/
 logs/
+env/
 *.log*
 *.mem.csv
 release/

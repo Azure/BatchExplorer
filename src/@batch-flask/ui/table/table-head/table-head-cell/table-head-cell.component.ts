@@ -50,6 +50,12 @@ export class TableHeadCellComponent extends ClickableComponent implements OnInit
         return this.column.id;
     }
 
+    @HostBinding("attr.tabindex")
+    public get tabIndex() {
+        // Remove column from tab order if it has no content
+        return this.elementRef.nativeElement.innerText.trim() === "" ? -1 : 0;
+    }
+
     public sortDirection: SortDirection;
 
     @HostBinding("class.sorting")

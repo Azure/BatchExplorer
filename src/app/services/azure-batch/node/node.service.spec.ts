@@ -17,7 +17,7 @@ describe("NodeService", () => {
             ],
         });
         nodeService = new NodeService(null, TestBed.get(HttpClient));
-        httpMock = TestBed.get(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
     it("get a node", (done) => {

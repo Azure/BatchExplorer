@@ -30,9 +30,7 @@ export interface NodeParams extends NodeListParams {
     id?: string;
 }
 
-export interface PoolListOptions extends ListOptionsAttributes {
-
-}
+export type PoolListOptions = ListOptionsAttributes;
 
 @Injectable({ providedIn: "root" })
 export class NodeService {

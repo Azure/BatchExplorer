@@ -26,7 +26,7 @@ export interface FileViewerConfig {
  * Generic file viewer
  */
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class FileViewer implements OnDestroy {
     /**
      * Max file size this viewer support

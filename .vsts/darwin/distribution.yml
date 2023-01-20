@@ -1,4 +1,5 @@
 steps:
+  - template: ../common/set-dist-vars.yml
   - template: ./darwin-dependencies.yml
   - script: |
       set -e
@@ -28,6 +29,7 @@ steps:
     displayName: Build dmg
   - script: npm run package darwin-manifest
     displayName: Create manifest
+  - template: ../common/generate-sbom.yml
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: darwin

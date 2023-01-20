@@ -15,7 +15,7 @@ import {
     ContextMenuSeparator,
     MultiContextMenuItem,
 } from "@batch-flask/ui";
-import { AdalService, BatchExplorerService } from "app/services";
+import { AuthService, BatchExplorerService } from "app/services";
 import { ProgressInfo } from "builder-util-runtime";
 import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
@@ -32,7 +32,7 @@ describe("ProfileButtonComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let de: DebugElement;
     let clickableEl: DebugElement;
-    let adalServiceSpy;
+    let authServiceSpy;
     let autoUpdateServiceSpy;
     let batchExplorerServiceSpy;
     let contextMenuServiceSpy: ContextMenuServiceMock;
@@ -43,7 +43,7 @@ describe("ProfileButtonComponent", () => {
         checkForUpdatesResponse = Promise.resolve({ updateInfo: { version: "1.2.4" } });
         contextMenuServiceSpy = new ContextMenuServiceMock();
         notificationServiceSpy = new NotificationServiceMock();
-        adalServiceSpy = {
+        authServiceSpy = {
             currentUser: new BehaviorSubject(null),
         };
 
@@ -58,7 +58,7 @@ describe("ProfileButtonComponent", () => {
             imports: [MatTooltipModule, RouterTestingModule, I18nTestingModule, MatProgressSpinnerModule],
             declarations: [ProfileButtonComponent, ClickableComponent, TestComponent],
             providers: [
-                { provide: AdalService, useValue: adalServiceSpy },
+                { provide: AuthService, useValue: authServiceSpy },
                 { provide: AutoUpdateService, useValue: autoUpdateServiceSpy },
                 { provide: BatchExplorerService, useValue: batchExplorerServiceSpy },
                 { provide: ElectronShell, useValue: null },
@@ -77,9 +77,9 @@ describe("ProfileButtonComponent", () => {
     });
 
     it("shows the current user info in tooltip", () => {
-        adalServiceSpy.currentUser.next({
+        authServiceSpy.currentUser.next({
             name: "Some Name",
-            unique_name: "some.name@example.com",
+            username: "some.name@example.com",
         });
         fixture.detectChanges();
         const tooltip: MatTooltip = clickableEl.injector.get(MatTooltip);
@@ -130,7 +130,7 @@ describe("ProfileButtonComponent", () => {
         fixture.detectChanges();
         expect(contextMenuServiceSpy.openMenu).toHaveBeenCalledOnce();
         const items = contextMenuServiceSpy.lastMenu.items;
-        expect(items.length).toBe(13);
+        expect(items.length).toBe(14);
     });
 
     describe("Clicking on the profile", () => {
@@ -138,43 +138,31 @@ describe("ProfileButtonComponent", () => {
             click(clickableEl);
             expect(contextMenuServiceSpy.openMenu).toHaveBeenCalled();
             const items = contextMenuServiceSpy.lastMenu.items;
-            expect(items.length).toEqual(13);
+            expect(items.length).toEqual(14);
 
-            expect(items[0] instanceof ContextMenuItem).toBe(true);
-            expect((items[0] as ContextMenuItem).label).toEqual("Check for updates");
+            let i = 0;
+            const expectMenuItem= (menuItemType, label?) => {
+                const menuItem = items[i++];
+                expect(menuItem instanceof menuItemType).toBe(true);
+                if (label) {
+                    expect((menuItem as any).label).toEqual(label);
+                }
+            }
 
-            expect(items[1] instanceof ContextMenuSeparator).toBe(true);
-
-            expect(items[2] instanceof ContextMenuItem).toBe(true);
-            expect((items[2] as ContextMenuItem).label).toEqual("profile-button.settings");
-
-            expect(items[3] instanceof ContextMenuItem).toBe(true);
-            expect((items[3] as ContextMenuItem).label).toEqual("profile-button.keybindings");
-
-            expect(items[4] instanceof MultiContextMenuItem).toBe(true);
-            expect((items[4] as MultiContextMenuItem).label).toEqual("Language (Preview)");
-
-            expect(items[5] instanceof ContextMenuItem).toBe(true);
-            expect((items[5] as ContextMenuItem).label).toEqual("profile-button.thirdPartyNotices");
-
-            expect(items[6] instanceof ContextMenuItem).toBe(true);
-            expect((items[6] as ContextMenuItem).label).toEqual("profile-button.viewLogs");
-
-            expect(items[7] instanceof ContextMenuItem).toBe(true);
-            expect((items[7] as ContextMenuItem).label).toEqual("profile-button.report");
-
-            expect(items[8] instanceof ContextMenuItem).toBe(true);
-            expect((items[8] as ContextMenuItem).label).toEqual("profile-button.about");
-
-            expect(items[9] instanceof ContextMenuSeparator).toBe(true);
-
-            expect(items[10] instanceof ContextMenuItem).toBe(true);
-            expect((items[10] as ContextMenuItem).label).toEqual("profile-button.viewTheme");
-
-            expect(items[11] instanceof ContextMenuSeparator).toBe(true);
-
-            expect(items[12] instanceof ContextMenuItem).toBe(true);
-            expect((items[12] as ContextMenuItem).label).toEqual("profile-button.logout");
+            expectMenuItem(ContextMenuItem, "Check for updates")
+            expectMenuItem(ContextMenuSeparator)
+            expectMenuItem(ContextMenuItem, "profile-button.settings");
+            expectMenuItem(ContextMenuItem, "profile-button.authentication");
+            expectMenuItem(ContextMenuItem, "profile-button.keybindings");
+            expectMenuItem(MultiContextMenuItem, "Language (Preview)");
+            expectMenuItem(ContextMenuItem, "profile-button.thirdPartyNotices");
+            expectMenuItem(ContextMenuItem, "profile-button.viewLogs");
+            expectMenuItem(ContextMenuItem, "profile-button.report");
+            expectMenuItem(ContextMenuItem, "profile-button.about");
+            expectMenuItem(ContextMenuSeparator);
+            expectMenuItem(ContextMenuItem, "profile-button.viewTheme");
+            expectMenuItem(ContextMenuSeparator);
+            expectMenuItem(ContextMenuItem, "profile-button.logout");
         });
 
         it("check for updates and show update notification when there is one", fakeAsync(() => {

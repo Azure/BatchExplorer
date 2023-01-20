@@ -1,4 +1,4 @@
-import * as commander from "commander";
+import { program } from "commander";
 import * as fs from "fs";
 import fetch from "node-fetch";
 import * as path from "path";
@@ -15,14 +15,14 @@ const defaultThirdPartyNoticeOptions: ThirdPartyNoticeOptions = {
 const thirdPartyNoticeFile = path.join(Constants.root, "ThirdPartyNotices.txt");
 
 const output: string[] = [];
-const gitUrlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/[-\w.]+\/)?(.*?)(\.git)?(\/?|\#[-\d\w._]+?)$/;
+const gitUrlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/[-\w@.]+\/)?(.*?)(\.git)?(\/?|\#[-\d\w._]+?)$/;
 const repoNameRegex = /https?:\/\/github\.com\/(.*)/;
 const innerSeparator = "-".repeat(60);
 const outerSeparator = "=".repeat(60);
 
 const defaultLicenseRoot = path.join(Constants.root, "scripts/lca/default-licenses");
 
-// tslint:disable:no-console
+// eslint-disable no-console
 const defaultLicenses = {
     "mit": fs.readFileSync(path.join(defaultLicenseRoot, "mit.txt")).toString(),
     "bsd-2-clause": fs.readFileSync(path.join(defaultLicenseRoot, "bsd-2-clause.txt")).toString(),
@@ -86,7 +86,6 @@ function listDependencies(): string[] {
 function loadDependency(name: string) {
     const contents = fs.readFileSync(`node_modules/${name}/package.json`).toString();
     const dependency = JSON.parse(contents);
-
     const repoUrl = getRepoUrl(dependency);
     const url = dependency.homepage || repoUrl;
     return {
@@ -120,16 +119,23 @@ function getRepoName(repoUrl: string | null): string | null {
     return value.split("/").slice(0, 2).join("/");
 }
 
-function loadLicense(repoUrl: string | null): Promise<any> {
+function loadLicense(repoUrl: string | null, anonymous = false): Promise<any> {
     const repoName = getRepoName(repoUrl);
-    return fetch(`https://api.github.com/repos/${repoName}/license`, {
-        headers: {
-            Authorization: `token ${process.env.GH_TOKEN}`,
-        },
-    }).then((res) => {
+    const licenseUrl = `https://api.github.com/repos/${repoName}/license`;
+    const headers = anonymous ? {} : { Authorization: `token ${process.env.GH_TOKEN}`}
+
+    return fetch(licenseUrl, {headers}).then((res) => {
+        /** Will look up default license if cannot find a license */
+        if (!anonymous && res.status === 403) {
+            console.warn(`Access denied, retrying request anonymously. Url: ${licenseUrl}`);
+            return loadLicense(repoUrl, anonymous = true);
+        } else if (res.status >= 300 && res.status != 404) {
+            throw new Error(`Response status ${res.status} ${res.statusText} with url: ${licenseUrl}`);
+        }
         return res.json();
     }).catch((error) => {
         console.error(`Error loading license for ${repoName}`, error);
+        process.exit(1)
     });
 }
 
@@ -217,7 +223,7 @@ function run(options: ThirdPartyNoticeOptions = {}) {
     });
 }
 
-const options = commander
+const options = program
     .option("-c, --check", "Check the current third party notice file is valid.")
     .parse(process.argv);
 

@@ -14,7 +14,7 @@ import {
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { OS, log } from "@batch-flask/utils";
 import {
-    AdalService, BatchExplorerService,
+    AuthService, BatchExplorerService,
 } from "app/services";
 import { Constants } from "common";
 import * as path from "path";
@@ -39,7 +39,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     private _destroy = new Subject();
 
     constructor(
-        adalService: AdalService,
+        private authService: AuthService,
         private i18n: I18nService,
         private localeService: LocaleService,
         private changeDetector: ChangeDetectorRef,
@@ -53,9 +53,9 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
         private fs: FileSystemService,
         private router: Router) {
 
-        adalService.currentUser.pipe(takeUntil(this._destroy)).subscribe((user) => {
+        authService.currentUser.pipe(takeUntil(this._destroy)).subscribe(user => {
             if (user) {
-                this.currentUserName = `${user.name} (${user.unique_name})`;
+                this.currentUserName = `${user.name} (${user.username})`;
             } else {
                 this.currentUserName = "";
             }
@@ -88,7 +88,14 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     public openSettingsContextMenu() {
         const items = [
             new ContextMenuSeparator(),
-            new ContextMenuItem({ label: this.i18n.t("profile-button.settings"), click: () => this._goToSettings() }),
+            new ContextMenuItem({
+                label: this.i18n.t("profile-button.settings"),
+                click: () => this._goToSettings()
+            }),
+            new ContextMenuItem({
+                label: this.i18n.t("profile-button.authentication"),
+                click: () => this._goToAuthSettings()
+            }),
             new ContextMenuItem({
                 label: this.i18n.t("profile-button.keybindings"), click: () => this._goToKeyBindings(),
             }),
@@ -119,6 +126,10 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
     private _goToSettings() {
         this.router.navigate(["/settings"]);
+    }
+
+    private _goToAuthSettings() {
+        this.router.navigate(["/auth-settings"]);
     }
 
     private _goToKeyBindings() {
@@ -184,8 +195,9 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
     private _update() {
         if (!OS.isLinux()) {
-            setImmediate(() => {
+            setImmediate(async () => {
                 this.remote.electronApp.removeAllListeners("window-all-closed");
+                await this.authService.logout(false);
                 this.autoUpdateService.quitAndInstall();
                 this.remote.getCurrentWindow().close();
             });

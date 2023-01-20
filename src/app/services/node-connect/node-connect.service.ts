@@ -108,7 +108,7 @@ export class NodeConnectService implements OnDestroy {
         );
     }
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-len
     private _getRemoteLoginSettings(poolId: string, nodeId: string, options = {}): Observable < IaasNodeConnectionSettings> {
         return this.http.get(`/pools/${poolId}/nodes/${nodeId}/remoteloginsettings`).pipe(
             map(data => new IaasNodeConnectionSettings(data)),

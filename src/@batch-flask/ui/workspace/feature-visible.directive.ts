@@ -16,7 +16,7 @@ import { WorkspaceService } from "./workspace.service";
     selector: "[blFeatureOn]",
 })
 export class FeatureVisibleDirective implements OnInit, OnDestroy, OnChanges  {
-    // tslint:disable-next-line:no-input-rename
+    // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input("blFeatureOn") public feature: string;
 
     private _subscription: Subscription;

@@ -18,7 +18,7 @@ export interface ListBaseComponent {
 }
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class ListBaseComponent extends SelectableList implements OnDestroy {
     @Input() public set quicklist(quicklist: boolean) {
         this._quicklist = quicklist;
@@ -52,7 +52,7 @@ export abstract class ListBaseComponent extends SelectableList implements OnDest
     @ViewChild(AbstractListBase, { static: false })
     public list: AbstractListBase;
 
-    private i18n: I18nService;
+    protected i18n: I18nService;
 
     private liveAnnouncer: LiveAnnouncer;
 

@@ -1,4 +1,5 @@
 import json
+from typing import Union
 
 
 class JsonRpcErrorCodes:
@@ -25,7 +26,7 @@ class JsonRpcError(BaseException):
         Class representing a JSON rpc error
     """
 
-    def __init__(self, code: str, message: str, data: object = None):
+    def __init__(self, code: Union[str, int], message: str, data: object = None):
         super().__init__()
         self.code = code
         self.message = message

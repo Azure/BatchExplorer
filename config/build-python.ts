@@ -1,4 +1,4 @@
-// tslint:disable:no-console
+// eslint-disable no-console
 /**
  * This script will run the command "python setup.py build" to build the python
  * but ensure it is using a valid version of python to do so.

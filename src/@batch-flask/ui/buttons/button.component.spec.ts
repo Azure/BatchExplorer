@@ -1,6 +1,5 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatTooltip } from "@angular/material/tooltip";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "@batch-flask/core";
@@ -54,8 +53,7 @@ describe("ButtonComponent", () => {
 
     it("Should have the tooltip specified with title", () => {
         const el = de.query(By.css(".action-btn"));
-        const tooltip = el.injector.get(MatTooltip);
-        expect(tooltip.message).toBe("Stop");
+        expect(el.nativeElement.title).toBe("Stop");
     });
 
     it("should change color", () => {

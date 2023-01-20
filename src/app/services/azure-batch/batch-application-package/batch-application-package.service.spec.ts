@@ -26,8 +26,8 @@ describe("BatchApplicationPackageService", () => {
             currentAccountId: new BehaviorSubject("/subs/sub-1/batchaccounts/acc-1"),
         };
 
-        packageService = new BatchApplicationPackageService(TestBed.get(HttpClient) as any, accountServiceSpy);
-        httpMock = TestBed.get(HttpTestingController);
+        packageService = new BatchApplicationPackageService(TestBed.inject(HttpClient) as any, accountServiceSpy);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
     it("get an application", (done) => {

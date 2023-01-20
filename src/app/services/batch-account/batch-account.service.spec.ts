@@ -70,6 +70,9 @@ describe("BatchAccountService", () => {
     let localAccountSpy;
     let subscriptionServiceSpy;
     let userSpecificStoreSpy;
+    let routerSpy;
+    let notificationServiceSpy;
+    let i18nServiceSpy;
     let accounts: BatchAccount[];
     let subs: Subscription[];
     let favoritesSavedData: BehaviorSubject<any[]>;
@@ -110,8 +113,14 @@ describe("BatchAccountService", () => {
                 return of(null);
             }),
         };
+
+        i18nServiceSpy = { t: jasmine.createSpy("i18n.t") };
+        notificationServiceSpy = {};
+        routerSpy = {};
+
         service = new BatchAccountService(
-            armAccountSpy, localAccountSpy, userSpecificStoreSpy, null, subscriptionServiceSpy);
+            armAccountSpy, localAccountSpy, userSpecificStoreSpy, null, subscriptionServiceSpy, notificationServiceSpy,
+            routerSpy, i18nServiceSpy);
         subs.push(service.accounts.subscribe(x => accounts = x.toArray()));
         service.loadInitialData();
     });

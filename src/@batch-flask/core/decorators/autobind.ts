@@ -24,7 +24,8 @@ function boundMethod(target, key, descriptor) {
     return {
         configurable: true,
         get() {
-            if (definingProperty || this === target.prototype || this.hasOwnProperty(key)
+            if (definingProperty || this === target.prototype
+                || Object.prototype.hasOwnProperty.call(this, key)
                 || typeof fn !== "function") {
                 return fn;
             }

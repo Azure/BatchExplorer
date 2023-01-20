@@ -53,8 +53,8 @@ import { WorkspaceModule } from "./workspace";
 
 // Add submodules there
 const modules = [
-    ActivityModule,
     AbstractListModule,
+    ActivityModule,
     AdvancedFilterModule,
     AutoFocusModule,
     BreadcrumbModule,
@@ -63,48 +63,48 @@ const modules = [
     CardModule,
     ChartsModule,
     DateModule,
+    DatetimePickerModule,
     DialogsModule,
     DropdownModule,
     DurationPickerModule,
     EditorModule,
     EntityCommandsListModule,
+    FileModule,
     FocusSectionModule,
+    FormModule,
+    GraphsModule,
     I18nUIModule,
     InfoBoxModule,
     LoadingModule,
     MetricsMonitorModule,
     NotificationModule,
     PermissionModule,
-    FileModule,
     PropertyListModule,
-    GraphsModule,
     QuickListModule,
+    QuotasModule,
+    ScrollableModule,
+    SelectModule,
+    ServerErrorModule,
     SidebarModule,
+    SplitPaneModule,
+    SummaryCardModule,
     TableModule,
     TabsModule,
     TagsModule,
     ToolbarModule,
-    FormModule,
-    QuotasModule,
-    ServerErrorModule,
-    ScrollableModule,
-    SelectModule,
-    SplitPaneModule,
-    SummaryCardModule,
-    VirtualScrollModule,
     VTabsModule,
+    VirtualScrollModule,
     WorkspaceModule,
-    DatetimePickerModule,
 ];
 
-// Add subcomponnent not in a module here
+// Add subcomponent not in a module here
 const components = [
     BannerComponent,
     BannerOtherFixDirective,
-    TimespanComponent,
     EntityDetailsListComponent,
     IconComponent,
     SimpleDialogComponent,
+    TimespanComponent
 ];
 
 @NgModule({

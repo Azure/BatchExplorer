@@ -19,10 +19,10 @@
 </div>
 <div *ngIf="jobs" class="graph-content">
     <div class="job-graph">
-        <bl-jobs-running-time-graph [jobs]="jobs"></bl-jobs-running-time-graph>
+        <bl-jobs-running-time-graph [jobs]="jobs" tabindex="0"></bl-jobs-running-time-graph>
     </div>
     <div class="job-graph">
-        <bl-jobs-cpu-wait-time-graph [jobs]="jobs"></bl-jobs-cpu-wait-time-graph>
+        <bl-jobs-cpu-wait-time-graph [jobs]="jobs" tabindex="0"></bl-jobs-cpu-wait-time-graph>
     </div>
 </div>
 

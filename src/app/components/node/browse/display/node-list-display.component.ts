@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Injector, Input, Output, ViewChild } from "@angular/core";
 import {
-    EntityCommands, ListBaseComponent, LoadingStatus, QuickListComponent, TableComponent,
+    EntityCommands, ListBaseComponent, QuickListComponent, TableComponent,
 } from "@batch-flask/ui";
 import { Node } from "app/models";
 import { List } from "immutable";
@@ -18,8 +18,6 @@ export class NodeListDisplayComponent extends ListBaseComponent {
      * If set to true it will display the quick list view, if false will use the table view
      */
     @Input() public nodes: List<Node>;
-
-    @Input() public status: LoadingStatus;
 
     @Input() public commands: EntityCommands<any>;
 

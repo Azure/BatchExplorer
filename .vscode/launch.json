@@ -5,7 +5,6 @@
       "name": "Debug: Main",
       "type": "node",
       "request": "launch",
-      "protocol": "inspector",
       "program": "${workspaceRoot}/src/client/main.ts",
       "stopOnEntry": false,
       "args": [
@@ -32,7 +31,11 @@
           "hidden": false,
           "group": "Debug",
           "order": 20
-      }
+      },
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**"
+      ]
     },
     {
       "name": "Attach: Renderer",
@@ -40,21 +43,22 @@
       "request": "attach",
       "port": 9222,
       "sourceMaps": true,
-      "trace": "verbose",
-      "url": "file://*",
-      "webRoot": "${workspaceRoot}/build",
+      "webRoot": "${workspaceRoot}",
       "timeout": 30000,
       "presentation": {
         "hidden": false,
         "group": "Debug",
         "order": 30
-      }
+      },
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**"
+      ]
     },
     {
       "name": "Test: Client",
       "type": "node",
       "request": "launch",
-      "protocol": "inspector",
       "program": "${workspaceRoot}/test/client/run-jasmine.js",
       "cwd": "${workspaceRoot}",
       "runtimeExecutable": "node",
@@ -68,7 +72,11 @@
         "hidden": false,
         "group": "Test",
         "order": 10
-      }
+      },
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**"
+      ]
     }
   ],
   "compounds": [

@@ -1,3 +1,9 @@
+<bl-banner class="licenses-deprecation-warning" type="warning">
+    <div message>
+        Graphics and rendering pools are deprecated and will be retired on 29 February 2024.
+        <a class="licenses-warning-alternative-link" (click)="openLink('https://docs.microsoft.com/en-us/azure/batch/batch-rendering-functionality?WT.mc_id=Portal-Microsoft_Azure_Batch#batch-pools-using-custom-vm-images-and-standard-application-licensing')" href="javascript:void(0)">Use a custom image that has the required applications installed together with a license server.</a>
+    </div>
+</bl-banner>
 <bl-table [data]="licenses" [config]="tableConfig" [selection]="pickedLicenses" (selectionChange)="updateSelection($event)">
     <bl-column name="description" [defaultWidth]="200">
         <div *blHeadCellDef>Software license name</div>

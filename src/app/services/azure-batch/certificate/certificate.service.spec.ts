@@ -17,7 +17,7 @@ describe("CertificateService", () => {
             ],
         });
         certificateService = new CertificateService(TestBed.get(HttpClient));
-        httpMock = TestBed.get(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
     it("get a certificate", (done) => {
@@ -118,13 +118,24 @@ describe("CertificateService", () => {
         httpMock.verify();
     });
 
-    it("parse the certificate", async (done) => {
+    it("parse a pfx certificate", async (done) => {
         const file = await loadCertificate("batchtest.pfx");
         certificateService.parseCertificate(file, "batchtest").subscribe((certificate) => {
             expect(certificate.thumbprint).toBe("bd7c0d29efad85c5174364c330db1698b14f7f55");
             expect(certificate.thumbprintAlgorithm).toBe("sha1");
             expect(certificate.certificateFormat).toBe("pfx");
             expect(certificate.password).toBe("batchtest");
+            done();
+        });
+    });
+
+    it("parse a cer certificate", async (done) => {
+        const file = await loadCertificate("batchtest2.cer");
+        certificateService.parseCertificate(file, "batchtest").subscribe((certificate) => {
+            expect(certificate.thumbprint).toBe("227341ea44f8deffb6972532818fccf797f7339e");
+            expect(certificate.thumbprintAlgorithm).toBe("sha1");
+            expect(certificate.certificateFormat).toBe("cer");
+            expect(certificate.password).toBeUndefined();
             done();
         });
     });

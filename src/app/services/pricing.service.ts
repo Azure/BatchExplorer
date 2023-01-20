@@ -132,7 +132,7 @@ export class PricingService {
         const os = PoolUtils.isWindows(pool) ? "windows" : "linux";
         const vmSizeObs = this.vmSizeService.get(pool.vmSize);
         const priceObs = this.getVmPrices(os, pool.vmSize);
-        return forkJoin(vmSizeObs, priceObs).pipe(map(([vmSpec, cost]) => {
+        return forkJoin([vmSizeObs, priceObs]).pipe(map(([vmSpec, cost]) => {
             const softwarePricing = this._pricingMap.value.softwares;
             return PoolUtils.computePoolPrice(pool, vmSpec, cost, softwarePricing, options);
         }));

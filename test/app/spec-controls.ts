@@ -1,5 +1,5 @@
-// tslint:disable:only-arrow-functions
-// tslint:disable:no-console
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
+/* eslint-disable no-console */
 import { DataCacheTracker, GenericView } from "@batch-flask/core";
 import { Observable } from "rxjs";
 import { MockEntityView, MockListView } from "test/utils/mocks";

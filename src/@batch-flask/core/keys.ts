@@ -1,6 +1,6 @@
-// tslint:disable:variable-name
+/* eslint-disable @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match */
 export const ENTER = "Enter";
-export const SPACE = " ";
+export const SPACE = "Space";
 
 /**
  * Mapping of the key to keyCode

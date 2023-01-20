@@ -7,7 +7,7 @@ import "./expanding-textarea.scss";
     selector: "bl-expanding-textarea",
     templateUrl: "expanding-textarea.html",
     providers: [
-        // tslint:disable-next-line:no-forward-ref
+        // eslint-disable-next-line @angular-eslint/no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ExpandingTextareaComponent), multi: true },
     ],
 })

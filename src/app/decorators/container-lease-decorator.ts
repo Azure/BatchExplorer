@@ -16,12 +16,10 @@ export class ContainerLeaseDecorator extends DecoratorBase<ContainerLease> {
 
     private _leaseStatusField(status: LeaseStatus): string {
         switch (status) {
-            case LeaseStatus.locked:
+            case "locked":
                 return "Locked";
-            case LeaseStatus.unlocked:
+            case "unlocked":
                 return "Unlocked";
-            case LeaseStatus.unspecified:
-                return "Unspecified";
 
             default:
                 return this.stringField(status);
@@ -30,18 +28,16 @@ export class ContainerLeaseDecorator extends DecoratorBase<ContainerLease> {
 
     private _leaseStateField(state: LeaseState): string {
         switch (state) {
-            case LeaseState.available:
+            case "available":
                 return "Available";
-            case LeaseState.breaking:
+            case "breaking":
                 return "Breaking";
-            case LeaseState.broken:
+            case "broken":
                 return "Broken";
-            case LeaseState.expired:
+            case "expired":
                 return "Expired";
-            case LeaseState.leased:
+            case "leased":
                 return "Leased";
-            case LeaseState.unspecified:
-                return "Unspecified";
 
             default:
                 return this.stringField(state);

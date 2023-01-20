@@ -1,7 +1,7 @@
 import { Map, Record } from "immutable";
 import { DataCache } from "./data-cache";
 
-// tslint:disable-next-line:variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 const FakeRecord = Record({
     id: null,
     state: null,

@@ -1,5 +1,5 @@
 
-// tslint:disable
+/* eslint-disable */
 
 declare type Environment = "production" | "development" | "test";
 declare const ELECTRON_ENV: "renderer" | "main";

@@ -21,7 +21,7 @@ describe("FileService", () => {
             ],
         });
         fileService = new FileService(TestBed.get(HttpClient), null as any);
-        httpMock = TestBed.get(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
     it("get a node file properties", (done) => {

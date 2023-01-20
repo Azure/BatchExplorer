@@ -59,11 +59,11 @@ bl-toast {
     > .dismiss-btn {
         cursor: pointer;
         .fa-times {
-            color: rgba(0, 0, 0, 0.2);
+            color: $primary-contrast-color;
         }
         &:hover {
             .fa-times {
-                color: rgba(255, 255, 255, 0.3);
+                color: $hover-bg-color;
             }
         }
     }
@@ -80,6 +80,14 @@ bl-toast {
             &:hover {
                 background: rgba(0, 0, 0, 0.3);
             }
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    bl-toast {
+        &.success, &.info, &.warn, &.error {
+            border: 1px solid Highlight;
         }
     }
 }

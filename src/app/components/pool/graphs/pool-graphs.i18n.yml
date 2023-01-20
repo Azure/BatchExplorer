@@ -1,11 +1,24 @@
 pool-graphs:
+  application-insights: Application Insights
+  available-nodes: Available nodes
   cpu: CPU
-  memory: Memory
   diskIO: Disk IO
   diskUsage: Disk usage
-  network: Network
-  notEnabled: Cpu, memory, disk, etc.
+  errors:
+    start-task-failed: The start task has failed on {failed} out of {total} nodes.
+    unusable-nodes: "{failed} out of {total} nodes are in an unusable state. Please click the nodes for more details."
+  fixes:
+    edit-start-task: Edit the start task
+    reboot-failed-nodes: Reboot failed nodes
+    reimage-failed-nodes: Reimage failed nodes
+  gpu-memory: Gpu memory
+  gpu-usage: Gpu usage
+  heatmap: Heatmap
   last: Last
+  memory: Memory
+  network: Network
+  not-enabled: Cpu, memory, disk, etc.
+  running-tasks: Running tasks
   timespan:
     label: Graphs timespan
     10min: 10 minutes

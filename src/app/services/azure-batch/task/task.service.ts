@@ -32,8 +32,7 @@ export interface SubtaskListParams {
     taskId?: string;
 }
 
-export interface TaskListOptions extends ListOptionsAttributes {
-}
+export type TaskListOptions = ListOptionsAttributes;
 
 @Injectable({providedIn: "root"})
 export class TaskService {

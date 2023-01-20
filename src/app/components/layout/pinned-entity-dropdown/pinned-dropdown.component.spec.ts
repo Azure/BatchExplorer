@@ -125,7 +125,7 @@ describe("PinnedDropDownComponent", () => {
         });
 
         it("drop down should have 1 item", () => {
-            const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
+            const items = fixture.debugElement.queryAll(By.css(".favorite-item"));
             expect(items.length).toBe(1);
             expect(items[0].nativeElement.textContent).toContain("my-job-fred");
 
@@ -164,12 +164,12 @@ describe("PinnedDropDownComponent", () => {
         });
 
         it("drop down should have 2 items", () => {
-            const items = debugElement.queryAll(By.css(".dropdown-item"));
+            const items = debugElement.queryAll(By.css(".favorite-item"));
             expect(items.length).toBe(2);
         });
 
         it("pool should show name over id", () => {
-            const items = debugElement.queryAll(By.css(".dropdown-item"));
+            const items = debugElement.queryAll(By.css(".favorite-item"));
             expect(items[0].nativeElement.textContent).toContain("my-job-matt");
             expect(items[1].nativeElement.textContent).toContain("my-name-is-bob");
             expect(items[1].nativeElement.textContent).not.toContain("my-pool-bob");

@@ -1,4 +1,4 @@
-import { Input } from "@angular/core";
+import { Directive, Input } from "@angular/core";
 import {
     ControlValueAccessor,
     FormBuilder,
@@ -11,6 +11,7 @@ import { UserAccount, VirtualMachineConfiguration } from "app/models";
 import { Constants } from "common";
 import { List } from "immutable";
 
+@Directive()
 export class JobTaskBaseComponent implements ControlValueAccessor {
     @Input() public userAccounts: List<UserAccount> | UserAccount[];
     @Input() public virtualMachineConfiguration: VirtualMachineConfiguration;

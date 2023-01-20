@@ -3,7 +3,7 @@ import { HttpInterface, HttpMethod, HttpRequestOptions, ServerError } from "@bat
 import { Observable } from "rxjs";
 import { first, share, switchMap, tap } from "rxjs/operators";
 import { ArmBatchAccount } from "../models";
-import { AdalService } from "./adal";
+import { AuthService } from "./aad";
 import { AzureHttpService } from "./azure-http.service";
 import { BatchAccountService } from "./batch-account";
 
@@ -21,7 +21,7 @@ function mergeOptions(original: HttpRequestOptions, body?: any): HttpRequestOpti
  */
 @Injectable({ providedIn: "root" })
 export class ArmHttpService implements HttpInterface {
-    constructor(private http: AzureHttpService, adal: AdalService, private accountService: BatchAccountService) {
+    constructor(private http: AzureHttpService, auth: AuthService, private accountService: BatchAccountService) {
     }
 
     public request(method: HttpMethod, uri: string, options: HttpRequestOptions): Observable<any> {

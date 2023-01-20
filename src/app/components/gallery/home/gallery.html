@@ -11,6 +11,12 @@
             <div class="filter">
                 <input autofocus blInput [formControl]="quicksearch" placeholder="Search">
             </div>
+            <bl-banner class="gallery-deprecation-warning" type="warning">
+                <div message>
+                    Graphics and rendering pools are deprecated and will be retired on 29 February 2024.
+                    <a class="gallery-warning-alternative-link" (click)="openLink('https://docs.microsoft.com/en-us/azure/batch/batch-rendering-functionality?WT.mc_id=Portal-Microsoft_Azure_Batch#batch-pools-using-custom-vm-images-and-standard-application-licensing')" href="javascript:void(0)">Use a custom image that has the required applications installed together with a license server.</a>
+                </div>
+            </bl-banner>
             <div class="gallery-content">
                 <bl-gallery-application-list [filter]="query" [active]="activeApplication" (activeChange)="selectApplication($event)"></bl-gallery-application-list>
             </div>

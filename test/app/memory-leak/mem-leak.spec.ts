@@ -1,10 +1,10 @@
-// tslint:disable:no-unused-variable
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Component } from "@angular/core";
 import { TestBed, async } from "@angular/core/testing";
 import { TaskDetailsModule } from "app/components/task/details";
 
 export function main() {
-    // tslint:disable-next-line:ban
+    // eslint-disable-next-line
     fdescribe("Memory leak Testing", () => {
         for (let i = 0; i < 100000; i++) {
             describe(`${i}`, () => {
@@ -35,7 +35,6 @@ export function main() {
 
         for (let i = 0; i < 200; i++) {
             it(`cleanup ${i}`, () => {
-                // @ts-ignore
                 let a = 0;
                 a++;
             });

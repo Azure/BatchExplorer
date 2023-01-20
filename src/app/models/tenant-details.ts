@@ -1,8 +1,9 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface TenantDetailsAttributes {
-    objectId: string;
+    id: string;
     displayName: string;
+    tenantId: string;
 }
 
 /**
@@ -10,10 +11,14 @@ export interface TenantDetailsAttributes {
  */
 @Model()
 export class TenantDetails extends Record<TenantDetailsAttributes> {
-    @Prop() public objectId: string;
     @Prop() public displayName: string;
-
-    public get id() {
-        return this.objectId;
-    }
+    @Prop() public countryCode: string;
+    @Prop() public defaultDomain: string;
+    @Prop() public domains: string[];
+    @Prop() public id: string;
+    @Prop() public tenantBrandingLogoUrl: string;
+    @Prop() public tenantCategory: string;
+    @Prop() public tenantId: string;
+    @Prop() public tenantType: string;
+    @Prop() public homeTenantId: string;
 }

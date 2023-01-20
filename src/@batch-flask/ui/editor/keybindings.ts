@@ -180,10 +180,10 @@ export enum KeyCode {
 }
 
 export class KeyMod {
-    // tslint:disable:variable-name
+    /* eslint-disable @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match */
     public static readonly CtrlCmd: number = 2048;
     public static readonly Shift: number = 1024;
     public static readonly Alt: number = 256;
     public static readonly WinCtrl: number = 255;
-    // tslint:enable:variable-name
+    /* eslint-enable @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match */
 }

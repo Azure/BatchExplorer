@@ -29,12 +29,12 @@ describe("UserSpecificDataStore", () => {
 
         expect(spy).not.toHaveBeenCalled();
 
-        userServiceSpy.currentUser.next({ unique_name: "foo@example.com" });
+        userServiceSpy.currentUser.next({ username: "foo@example.com" });
     });
 
     describe("when the user is loaded", () => {
         beforeEach(() => {
-            userServiceSpy.currentUser.next({ unique_name: "foo@example.com" });
+            userServiceSpy.currentUser.next({ username: "foo@example.com" });
         });
 
         it("defaults to null when there is no value", async () => {
@@ -85,7 +85,7 @@ describe("UserSpecificDataStore", () => {
             });
 
             it("it gets value for the new user when switching", async () => {
-                userServiceSpy.currentUser.next({ unique_name: "other@example.com" });
+                userServiceSpy.currentUser.next({ username: "other@example.com" });
 
                 expect(await store.getItem("key-1")).toEqual("my-value-2");
                 expect(await store.getItem("key-2")).toEqual(null);

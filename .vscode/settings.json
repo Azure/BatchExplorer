@@ -26,6 +26,6 @@
   "scss.validate": false,
   "python.formatting.provider": "yapf",
   "editor.codeActionsOnSave": {
-    "source.fixAll.tslint": true
+    "source.fixAll": true
   }
 }

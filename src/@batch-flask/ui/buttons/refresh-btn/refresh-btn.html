@@ -1,4 +1,4 @@
-<bl-button color="light" [type]="type" title="Refresh" [action]="onClick" [disabled]="status !== statuses.Idle" [skipSuccess]="true"
+<bl-button color="light" [type]="type" [title]="title" [action]="onClick" [disabled]="status !== statuses.Idle" [skipSuccess]="true"
     [tooltipPosition]="tooltipPosition">
     <span class="icon-container" [ngSwitch]="status">
         <i class="fa fa-refresh shake-hover"    *ngSwitchCase="statuses.Idle"></i>

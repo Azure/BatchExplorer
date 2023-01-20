@@ -92,8 +92,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.subscriptionService.load();
-        this.accountService.load().subscribe();
+        this.accountService.loadSubscriptionsAndAccounts();
     }
 
     public ngOnDestroy() {

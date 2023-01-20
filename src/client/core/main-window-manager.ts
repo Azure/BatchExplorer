@@ -22,11 +22,11 @@ export class MainWindowManager {
      * @param link ms-batch-explorer://...
      */
     public openLink(link: string | BatchExplorerLink | BatchExplorerLinkAttributes, showWhenReady = true): MainWindow {
-        const labsLink = new BatchExplorerLink(link);
-        const windowId = labsLink.session || SecureUtils.uuid();
+        const beLink = new BatchExplorerLink(link);
+        const windowId = beLink.session || SecureUtils.uuid();
         let window: MainWindow;
         if (this.windows.has(windowId)) {
-            window = this.windows.get(windowId)!;
+            window = this.windows.get(windowId);
             window.show();
         } else {
             window = this._createNewWindow(windowId, showWhenReady);
@@ -43,7 +43,6 @@ export class MainWindowManager {
         link?: string | BatchExplorerLink | BatchExplorerLinkAttributes,
         showWhenReady = true): MainWindow {
         const window = this._createNewWindow(undefined, showWhenReady);
-
         this.goTo(link || null, window);
 
         return window;
@@ -51,8 +50,8 @@ export class MainWindowManager {
 
     public goTo(link: null | string | BatchExplorerLink | BatchExplorerLinkAttributes, window: MainWindow) {
         if (!link) { return; }
-        const labsLink = new BatchExplorerLink(link);
-        window.send(Constants.rendererEvents.batchExplorerLink, labsLink.toString());
+        const beLink = new BatchExplorerLink(link);
+        window.send(Constants.rendererEvents.batchExplorerLink, beLink.toString());
     }
     /**
      * @returns number of opened windows
@@ -123,7 +122,7 @@ export class MainWindowManager {
         if (visibileWindows.length > 0) { return; }
 
         // If no visible window quit the app
-        log.info(`Main Window ${this.constructor.name} closed. Quiting the app.`);
+        log.info(`Main Window ${this.constructor.name} closed. Quitting the app.`);
         this.batchExplorerApp.quit();
     }
 }

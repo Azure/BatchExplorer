@@ -25,7 +25,7 @@ function getPort(port = portrange): Promise<number> {
     });
 }
 
-// tslint:disable-next-line:no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageConfig = require(`${root}/package.json`);
 
 export function clientFileUrl(path: string, protocol = true): { dev: string, prod: string } {
@@ -68,7 +68,7 @@ const pythonServerPort = {
     prod: getPort(),
 };
 
-// tslint:disable-next-line:variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 export const Constants = {
     isAsar,
     isDev: !isAsar,
@@ -80,5 +80,5 @@ export const Constants = {
     version: packageConfig.version,
 };
 
-// tslint:disable-next-line:variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 export const ClientConstants = Constants;

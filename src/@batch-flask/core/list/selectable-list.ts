@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Directive, EventEmitter, Input, Output } from "@angu
 import { ListSelection } from "./list-selection";
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class SelectableList {
     @Input() public set activeItem(activeItem: string | null) {
         this.selection = new ListSelection({

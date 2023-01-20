@@ -1,4 +1,5 @@
 import { ArmResourceUtils } from "app/utils";
+import { Constants } from "common";
 
 const prefix = "/subscriptions/sub-123/resourcegroups/rg-123";
 const resource1 = `${prefix}/providers/pro123/type123/res123`;
@@ -47,6 +48,22 @@ describe("ArmResourceUtils", () => {
             expect(ArmResourceUtils.getAccountNameFromResourceId(undefined)).toBe(null);
             expect(ArmResourceUtils.getAccountNameFromResourceId("1234-5678")).toBe(null);
             expect(ArmResourceUtils.getAccountNameFromResourceId("invalid/resource/id")).toBe(null);
+        });
+    });
+
+    describe("#getApiVersionForUri()", () => {
+        // https://management.azure.com/subscriptions/1234abc/providers/Microsoft.Compute/skus
+        it("defaults to the global ARM api version if there is no match", () => {
+            expect(ArmResourceUtils.getApiVersionForUri("https://management.azure.com/subscriptions")).toBe(Constants.ApiVersion.arm);
+        });
+
+        it("picks the correct version for an entire resource provider", () => {
+            expect(ArmResourceUtils.getApiVersionForUri("https://management.azure.com/subscriptions/1234abc/providers/Microsoft.Storage/storageAccounts")).toBe("2016-12-01");
+        });
+
+        it("picks the correct version for a resource", () => {
+            expect(ArmResourceUtils.getApiVersionForUri("https://management.azure.com/subscriptions/1234abc/providers/Microsoft.Compute/virtualMachines")).toBe("2019-03-01");
+            expect(ArmResourceUtils.getApiVersionForUri("https://management.azure.com/subscriptions/1234abc/providers/Microsoft.Compute/skus")).toBe("2019-04-01");
         });
     });
 });
