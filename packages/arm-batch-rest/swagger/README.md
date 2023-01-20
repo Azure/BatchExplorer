@@ -1,6 +1,6 @@
 # Azure Batch TypeScript Protocol Layer
 
-> see https://aka.ms/autorest
+> see <https://aka.ms/autorest>
 
 ## Configuration
 
