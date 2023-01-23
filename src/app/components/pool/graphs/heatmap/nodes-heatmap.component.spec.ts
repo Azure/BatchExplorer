@@ -167,7 +167,7 @@ describe("NodesHeatmapComponent", () => {
             { usagePercent: "100%", runningTaskSlotsCount: 100, fill: "fill: rgb(23, 141, 23);" },
         ];
         params.forEach((param) => {
-            it(`should be ${ param.usagePercent } task slot usage color`, () => {
+            it(`should be ${param.usagePercent} task slot usage color`, () => {
                 testComponent.nodes = createNodes(1, true, 100, param.runningTaskSlotsCount);
                 testComponent.pool = new Pool({ id: "pool-1", taskSlotsPerNode: 100 });
                 fixture.detectChanges();
@@ -336,10 +336,10 @@ describe("NodesHeatmapComponent", () => {
 });
 
 function createNodes(
-        count: number,
-        dedicated = true,
-        runningTasksCount = defaultRunningTasksCount,
-        runningTaskSlotsCount = defaultRunningTaskSlotsCount) {
+    count: number,
+    dedicated = true,
+    runningTasksCount = defaultRunningTasksCount,
+    runningTaskSlotsCount = defaultRunningTaskSlotsCount) {
     const nodes: Node[] = [];
     for (let i = 0; i < count; i++) {
         nodes.push(Fixture.node.create({
