@@ -9,6 +9,7 @@ import { NodeCommands } from "app/components/node/action";
 import { Node, NodeState, Pool } from "app/models";
 import { ComponentUtils, NodeUtils } from "app/utils";
 import * as d3 from "d3";
+import { BaseType, Selection } from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
@@ -21,6 +22,8 @@ interface HeatmapTile {
     index: number;
     node: Node;
 }
+
+type NodeSelection = Selection<SVGGElement, HeatmapTile, BaseType, unknown>;
 
 const idleColor = "#edeef2";
 const runningColor = "#178D17";
@@ -37,11 +40,11 @@ const stateTree: StateTree = [
                 The server will not return these states. These are solely for populating
                 the heatmap for task slot usage.
             */
-            { state: NodeState.running25, color: "#B1D5D4"},
-            { state: NodeState.running50, color: "#8CC3B0"},
-            { state: NodeState.running75, color: "#4EB17C"},
-            { state: NodeState.running99, color: "#22A042"},
-            { state: NodeState.running100, color: runningColor},
+            { state: NodeState.running25, color: "#B1D5D4" },
+            { state: NodeState.running50, color: "#8CC3B0" },
+            { state: NodeState.running75, color: "#4EB17C" },
+            { state: NodeState.running99, color: "#22A042" },
+            { state: NodeState.running100, color: runningColor },
         ],
     },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
@@ -113,7 +116,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     };
 
     private _erd: any;
-    private _svg: d3.Selection<any, any, any, any>;
+    private _svg: Selection<BaseType, unknown, BaseType, unknown>;
     private _width: number = 0;
     private _height: number = 0;
     private _nodes: List<Node>;
@@ -200,7 +203,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public redraw() {
         this._computeDimensions();
         const tiles = this._nodes.map((node, index) => ({ node, index }));
-        const groups = this._svg.selectAll("g.node-group").data(tiles.toJS());
+        const groups = this._svg
+            .selectAll<SVGSVGElement, HeatmapTile[]>("g.node-group")
+            .data(tiles.toJS() as HeatmapTile[]);
         groups.exit().remove();
         this._updateSvg(groups);
     }
@@ -212,23 +217,23 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this.redraw();
     }
 
-    private _updateSvg(groups: any) {
+    private _updateSvg(groups: NodeSelection) {
         const spaceInBetweenNode = Math.ceil(this.dimensions.tileSize / 20);
         const z = Math.max(this.dimensions.tileSize - spaceInBetweenNode, 0);
         const nodeEnter = groups.enter().append("g")
             .attr("class", "node-group")
-            .on("click", (tile) => {
+            .on("click", (_event: MouseEvent, tile: HeatmapTile) => {
                 if (!this.interactive) {
                     return;
                 }
                 this.selectedNodeId.next(tile.node.id);
                 this._updateSvg(this._svg.selectAll("g.node-group"));
-            }).on("dblclick", (tile) => {
+            }).on("dblclick", (_event: MouseEvent, tile: HeatmapTile) => {
                 if (!this.interactive) {
                     return;
                 }
                 this._gotoNode(tile.node);
-            }).on("contextmenu", (tile) => {
+            }).on("contextmenu", (_event: Event, tile: HeatmapTile) => {
                 if (!this.interactive) {
                     return;
                 }
@@ -355,7 +360,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             } else {
                 return `${taskCount} tasks (${taskSlotsCount}/${this.pool.taskSlotsPerNode} slots) running on node (${tile.node.id})`;
             }
-       });
+        });
     }
 
     /**
