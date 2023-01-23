@@ -106,7 +106,7 @@ export const ActionFormDemo: React.FC = () => {
                         4
                     ) !== textContent
                 ) {
-                    actions[action].form.values = JSON.parse(textContent);
+                    actions[action].form.setValues(JSON.parse(textContent));
                 }
                 setEditorError("");
             } catch (e) {

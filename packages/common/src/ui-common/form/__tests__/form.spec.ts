@@ -80,12 +80,12 @@ describe("Form tests", () => {
         expect(driversSection.childEntriesCount).toEqual(2);
         expect(advancedSection.childEntriesCount).toEqual(1);
 
-        form.values = {
+        form.setValues({
             make: "Ford",
             model: "Mustang Mach E",
             milesPerCharge: 300,
             registeredDrivers: ["George", "Abe"],
-        };
+        });
         expect(form.values.registeredDrivers).toEqual(["George", "Abe"]);
 
         // Add a driver by changing the parameter
@@ -179,13 +179,13 @@ describe("Form tests", () => {
             "State is required"
         );
 
-        form.values.parkName = "Yosemite";
+        form.updateValue("parkName", "Yosemite");
         await form.validate();
         // Required validation takes precedence over onValidate()
         expect(form.validationStatus?.level).toEqual("error");
         expect(form.validationStatus?.message).toEqual("State is required");
 
-        form.values.state = "California";
+        form.updateValue("state", "California");
         await form.validate();
         // The state is now defined, but still invalid due to onValidate()
         expect(form.validationStatus?.level).toEqual("error");
@@ -193,7 +193,7 @@ describe("Form tests", () => {
             "State must be exactly 2 characters"
         );
 
-        form.values.state = "CA";
+        form.updateValue("state", "CA");
         await form.validate();
         // Good
         expect(form.validationStatus?.level).toEqual("ok");
@@ -228,14 +228,14 @@ describe("Form tests", () => {
         expect(form.validationStatus?.message).toBeUndefined();
 
         // Invalid square mileage
-        form.values.squareMiles = -123;
+        form.updateValue("squareMiles", -123);
         await form.validate();
         expect(form.validationStatus?.level).toEqual("error");
         expect(form.validationStatus?.message).toEqual(
             "Mileage must be a positive number"
         );
 
-        form.values.squareMiles = 1187;
+        form.updateValue("squareMiles", 1187);
         // Good
         await form.validate();
         expect(form.validationStatus?.level).toEqual("ok");
@@ -243,11 +243,11 @@ describe("Form tests", () => {
 
         // When calling validate() multiple times in rapid succession,
         // the last call always wins
-        form.values.squareMiles = -1;
+        form.updateValue("squareMiles", -1);
         form.validate();
-        form.values.squareMiles = 1;
+        form.updateValue("squareMiles", 1);
         form.validate();
-        form.values.squareMiles = "not-a-number" as unknown as number;
+        form.updateValue("squareMiles", "not-a-number" as unknown as number);
         await form.validate();
         expect(form.validationStatus?.level).toEqual("error");
         expect(form.validationStatus?.message).toEqual(
@@ -255,7 +255,7 @@ describe("Form tests", () => {
         );
 
         // Make the form valid again
-        form.values.squareMiles = 1;
+        form.updateValue("squareMiles", 1);
 
         // Subsequence calls to validate() will cancel snapshots which
         // are in progress, but not if force is true
@@ -315,15 +315,15 @@ describe("Form tests", () => {
         // validation so that the promise returned by waitForValidation() will
         // not immediately resolve. The form starts out in an invalid state
         // due to squareMiles and state.
-        form.values.parkName = "Yosemite";
+        form.updateValue("parkName", "Yosemite");
         form.validate();
-        form.values.squareMiles = -123;
+        form.updateValue("squareMiles", -123);
         form.validate();
-        form.values.state = "invalid";
+        form.updateValue("state", "invalid");
         form.validate();
-        form.values.squareMiles = 1187;
+        form.updateValue("squareMiles", 1187);
         form.validate();
-        form.values.state = "CA";
+        form.updateValue("state", "CA");
         form.validate(); // Only this call actually makes the form valid
 
         const validationStatus = await validationPromise;
@@ -402,6 +402,50 @@ describe("Form tests", () => {
 
         elfForm.updateValue("name", "Feanor");
         expect(elfChangeSpy).not.toHaveBeenCalled();
+    });
+
+    test("Computed values using 'change' event", () => {
+        let onChangeCount = 0;
+
+        const form = createForm<{
+            number: number;
+            numberPlusOne?: number;
+            numberPlusTwo?: number;
+        }>({
+            values: {
+                number: 0,
+            },
+        });
+
+        form.param("number", ParameterType.Number, {
+            value: 1,
+        });
+        form.param("numberPlusOne", ParameterType.Number);
+        form.param("numberPlusTwo", ParameterType.Number);
+
+        form.on("change", (newValues) => {
+            onChangeCount++;
+
+            // Both setting the parameter value and calling updateValue
+            // should fire change events
+            form.getParam("numberPlusOne").value = newValues.number + 1;
+            form.updateValue("numberPlusTwo", newValues.number + 2);
+        });
+
+        expect(onChangeCount).toBe(0);
+
+        expect(form.values.number).toBe(1);
+        expect(form.values.numberPlusOne).toBeUndefined();
+
+        form.getParam("number").value = 2;
+
+        // Fired three times: once for "number" and once for each computed value
+        // inside the change handler
+        expect(onChangeCount).toBe(3);
+
+        expect(form.values.number).toBe(2);
+        expect(form.values.numberPlusOne).toBe(3);
+        expect(form.values.numberPlusTwo).toBe(4);
     });
 });
 

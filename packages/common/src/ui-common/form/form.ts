@@ -164,7 +164,7 @@ export type FormEventMap<V extends FormValues> = {
  * and values or subform names and values
  */
 export interface Form<V extends FormValues> {
-    values: V;
+    readonly values: Readonly<V>;
 
     readonly validationSnapshot: ValidationSnapshot<V>;
     readonly validationStatus?: ValidationStatus;
@@ -211,6 +211,19 @@ export interface Form<V extends FormValues> {
         name: K
     ): SubForm<V, K, S>;
 
+    /**
+     * Set all form values
+     *
+     * @param values The new values
+     */
+    setValues(values: V): void;
+
+    /**
+     * Update a single form value
+     *
+     * @param name The name of the entry to update the value for
+     * @param value The new value
+     */
     updateValue<K extends Extract<keyof V, string>>(name: K, value: V[K]): void;
 
     onValidateSync?: (
@@ -281,7 +294,7 @@ export interface Form<V extends FormValues> {
 }
 
 export class ValidationSnapshot<V extends FormValues> {
-    values: V;
+    readonly values: V;
 
     overallStatus: ValidationStatus | undefined;
     onValidateSyncStatus: ValidationStatus | undefined;
@@ -436,17 +449,8 @@ class FormImpl<V extends FormValues> implements Form<V> {
 
     private _values: V;
 
-    get values(): V {
+    get values(): Readonly<V> {
         return this._values;
-    }
-
-    set values(newValues: V) {
-        const oldValues = this._values;
-        this._values = newValues;
-
-        if (oldValues !== newValues) {
-            this._emitChangeEvent(newValues, oldValues);
-        }
     }
 
     /**
@@ -541,19 +545,27 @@ class FormImpl<V extends FormValues> implements Form<V> {
         this._emitter.emit("validate", snapshot);
     }
 
-    /**
-     * Update form values by creating a copy and setting the new values object
-     *
-     * @param name The name of the entry to update values for
-     * @param value The new value
-     */
+    setValues(values: V): void {
+        const oldValues = this._values;
+        if (oldValues === values) {
+            // No-op if values haven't changed
+            return;
+        }
+        this._values = values;
+        this._emitChangeEvent(values, oldValues);
+    }
+
     updateValue<K extends Extract<keyof V, string>>(
         name: K,
         value: V[K]
     ): void {
-        const newValues = cloneDeep(this.values);
+        if (this.values[name] === value) {
+            // No-op if the value hasn't changed
+            return;
+        }
+        const newValues = cloneDeep(this.values) as V;
         newValues[name] = value;
-        this.values = newValues;
+        this.setValues(newValues);
     }
 
     async validate(opts?: ValidationOpts): Promise<ValidationSnapshot<V>> {
@@ -848,12 +860,8 @@ export class SubForm<
         return this.form.allEntriesCount;
     }
 
-    get values(): S {
+    get values(): Readonly<S> {
         return this.form.values;
-    }
-
-    set values(newValues: S) {
-        this.form.values = newValues;
     }
 
     constructor(
@@ -875,7 +883,7 @@ export class SubForm<
         this.inactive = init?.inactive;
         this.expanded = init?.expanded;
 
-        this.parentForm.values[name] = this.form.values;
+        this.parentForm.updateValue(name, this.values as S);
 
         (this.parentForm as FormImpl<P>)._registerEntry(this);
     }
@@ -924,6 +932,10 @@ export class SubForm<
         S2 extends S[SK] & FormValues
     >(name: SK): SubForm<S, SK, S2> {
         return this.form.getSubForm(name);
+    }
+
+    setValues(values: S): void {
+        this.form.setValues(values);
     }
 
     updateValue<SK extends Extract<keyof S, string>, SV extends S[SK]>(
@@ -1009,12 +1021,7 @@ export class Parameter<V extends FormValues, K extends Extract<keyof V, string>>
     }
 
     set value(newValue: V[K]) {
-        if (this.parentForm.values[this.name] !== newValue) {
-            const oldValue = this.parentForm.values[this.name];
-            if (oldValue !== newValue) {
-                this.parentForm.updateValue(this.name, newValue);
-            }
-        }
+        this.parentForm.updateValue(this.name, newValue);
     }
 
     get validationStatus(): ValidationStatus | undefined {
