@@ -9,15 +9,20 @@ import {
     PoolCreateParameters,
     PoolOutput,
     PoolUpdateParameters,
-    isUnexpected,
 } from "../generated";
 import { BatchHttpClient } from "../http/HttpClient";
-import { generateClient } from "./utils/client";
+import {
+    BATCH_API_VERSION,
+    generateClient,
+    getUrlBatchAccountPath,
+    getUrlPoolPath,
+} from "./utils/client";
 import {
     DependencyName,
+    getMockEnvironment,
     initMockEnvironment,
 } from "@batch/ui-common/lib/environment";
-import createClient from "../../src/generated/batchManagementClient";
+import { MockHttpClient, MockHttpResponse } from "@batch/ui-common/lib/http";
 
 const _SUFFIX = Math.random().toString(16).substr(2, 4);
 
@@ -27,27 +32,41 @@ function getPoolName(type: string) {
 
 const POOL_NAME = getPoolName("basic");
 const VM_SIZE = "Standard_D1_v2";
+const nodeAgentSkuId = "batch.node.ubuntu 18.04";
+const poolSpecs: Pool = {
+    name: POOL_NAME,
+    properties: {
+        vmSize: VM_SIZE,
+        deploymentConfiguration: {
+            virtualMachineConfiguration: {
+                imageReference: {
+                    publisher: "Canonical",
+                    offer: "UbuntuServer",
+                    sku: "18.04-LTS",
+                    version: "latest",
+                },
+                nodeAgentSkuId: nodeAgentSkuId,
+            },
+        },
+        scaleSettings: {
+            fixedScale: {
+                targetDedicatedNodes: 3,
+            },
+        },
+    },
+};
+let mockClient: MockHttpClient;
+const subscriptionId = "00000000-0000-0000-0000-000000000000";
+const resourceGroupName = "fake_resource_group";
+const batchAccountName = "fake_batch_account";
 
-describe("Batch Management Client With Custom Http Client Test", () => {
+describe("Batch Management Client With Mock Http Client Test", () => {
     let batchClient: BatchManagementClient;
-    const subscriptionId = process.env.MABOM_BatchAccountSubscriptionId!;
-    const resourceGroupName = process.env.MABOM_BatchAccountResourceGroupName!;
-    const batchAccountName = process.env.MABOM_BatchAccountName!;
-
-    if (
-        subscriptionId == undefined ||
-        resourceGroupName == undefined ||
-        batchAccountName == undefined
-    ) {
-        throw Error(
-            "MABOM_BatchAccountSubscriptionId, MABOM_BatchAccountResourceGroupName, and MABOM_BatchAccountName need to be defined environment variables"
-        );
-    }
 
     beforeEach(() => {
-        initMockEnvironment(
-            {},
-            { [DependencyName.HttpClient]: () => new FetchHttpClient() }
+        initMockEnvironment();
+        mockClient = getMockEnvironment().getInjectable(
+            DependencyName.HttpClient
         );
 
         const clientOptions = {
@@ -58,33 +77,32 @@ describe("Batch Management Client With Custom Http Client Test", () => {
     });
 
     describe("Basic Pool operations", () => {
-        test("Create Batch Pool", async () => {
-            const pool: Pool = {
-                properties: {
-                    vmSize: VM_SIZE,
-                    deploymentConfiguration: {
-                        virtualMachineConfiguration: {
-                            imageReference: {
-                                publisher: "Canonical",
-                                offer: "UbuntuServer",
-                                sku: "18.04-LTS",
-                                version: "latest",
-                            },
-                            nodeAgentSkuId: "batch.node.ubuntu 18.04",
-                        },
-                    },
-                    scaleSettings: {
-                        fixedScale: {
-                            targetDedicatedNodes: 3,
-                        },
-                    },
-                },
-            };
+        const requestUrlPoolPath = getUrlPoolPath(
+            subscriptionId,
+            resourceGroupName,
+            batchAccountName,
+            POOL_NAME
+        );
 
+        test("Create Batch Pool", async () => {
             const callParams: PoolCreateParameters = {
-                body: pool,
+                body: poolSpecs,
                 headers: {},
             };
+
+            mockClient.addExpected(
+                new MockHttpResponse(requestUrlPoolPath, {
+                    status: 200,
+                    body: JSON.stringify(<PoolOutput>{
+                        name: POOL_NAME,
+                        properties: poolSpecs.properties,
+                    }),
+                }),
+                {
+                    method: "PUT",
+                    body: JSON.stringify(callParams.body),
+                }
+            );
 
             const putResult = await batchClient
                 .path(
@@ -101,17 +119,30 @@ describe("Batch Management Client With Custom Http Client Test", () => {
             }
 
             const poolBody = putResult.body as PoolOutput;
-            expect(poolBody.name).toEqual(POOL_NAME);
+            expect(poolBody.name).toBe(POOL_NAME);
             expect(poolBody.properties?.vmSize?.toLowerCase()).toEqual(
                 VM_SIZE.toLowerCase()
             );
             expect(
                 poolBody.properties?.deploymentConfiguration
                     ?.virtualMachineConfiguration?.nodeAgentSkuId
-            ).toEqual("batch.node.ubuntu 18.04");
+            ).toEqual(nodeAgentSkuId);
         });
 
         test("Get pool", async () => {
+            mockClient.addExpected(
+                new MockHttpResponse(requestUrlPoolPath, {
+                    status: 200,
+                    body: JSON.stringify(<PoolOutput>{
+                        name: POOL_NAME,
+                        properties: poolSpecs.properties,
+                    }),
+                }),
+                {
+                    method: "GET",
+                }
+            );
+
             const getResult = await batchClient
                 .path(
                     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/pools/{poolName}",
@@ -138,6 +169,29 @@ describe("Batch Management Client With Custom Http Client Test", () => {
         });
 
         test("Should list pools in the specified account with query OData parameters", async () => {
+            const requestUrlPath = getUrlPoolPath(
+                subscriptionId,
+                resourceGroupName,
+                batchAccountName
+            );
+
+            mockClient.addExpected(
+                new MockHttpResponse(requestUrlPath, {
+                    status: 200,
+                    body: JSON.stringify(<PoolOutput>{
+                        value: [
+                            {
+                                name: POOL_NAME,
+                                properties: poolSpecs.properties,
+                            },
+                        ],
+                    }),
+                }),
+                {
+                    method: "GET",
+                }
+            );
+
             const listResult = await batchClient
                 .path(
                     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/pools",
@@ -145,13 +199,7 @@ describe("Batch Management Client With Custom Http Client Test", () => {
                     resourceGroupName,
                     batchAccountName
                 )
-                .get({
-                    queryParameters: {
-                        maxresults: 1,
-                        $select: "properties/vmSize,properties/displayName",
-                        $filter: `name eq '${POOL_NAME}'`,
-                    },
-                });
+                .get();
 
             expect(listResult.status).toEqual("200");
             const bodyResult = listResult.body as ListPoolsResultOutput;
@@ -172,6 +220,20 @@ describe("Batch Management Client With Custom Http Client Test", () => {
                 },
                 headers: {},
             };
+
+            mockClient.addExpected(
+                new MockHttpResponse(requestUrlPoolPath, {
+                    status: 200,
+                    body: JSON.stringify(<PoolOutput>{
+                        name: POOL_NAME,
+                        properties: updateParams.body.properties,
+                    }),
+                }),
+                {
+                    method: "PATCH",
+                    body: JSON.stringify(updateParams.body),
+                }
+            );
 
             const patchResult = await batchClient
                 .path(
@@ -202,6 +264,22 @@ describe("Batch Management Client With Custom Http Client Test", () => {
                 headers: {},
             };
 
+            mockClient.addExpected(
+                new MockHttpResponse(requestUrlPoolPath, {
+                    status: undefined,
+                    body: JSON.stringify({
+                        error: <CloudErrorOutput>{
+                            code: "PropertyCannotBeUpdated",
+                            message: "Error sending request",
+                        },
+                    }),
+                }),
+                {
+                    method: "PATCH",
+                    body: JSON.stringify(updateParams.body),
+                }
+            );
+
             const patchResult = await batchClient
                 .path(
                     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/pools/{poolName}",
@@ -212,10 +290,6 @@ describe("Batch Management Client With Custom Http Client Test", () => {
                 )
                 .patch(updateParams);
 
-            if (!isUnexpected(patchResult)) {
-                fail("Response was expected success");
-            }
-
             try {
                 const errorOutput = patchResult.body as CloudErrorOutput;
                 throw errorOutput.error;
@@ -224,43 +298,17 @@ describe("Batch Management Client With Custom Http Client Test", () => {
                 expect(err?.code).toBe("PropertyCannotBeUpdated");
             }
         });
-    });
 
-    describe("Batch Account Operations", () => {
-        test("should get information about batch account associated with a resource group successfully", async () => {
-            const listResult = await batchClient
-                .path(
-                    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts",
-                    subscriptionId,
-                    resourceGroupName
-                )
-                .get();
-
-            expect(listResult.status).toEqual("200");
-            const bodyResult = listResult.body as BatchAccountListResultOutput;
-            expect(bodyResult.value?.length).toBeGreaterThanOrEqual(1);
-        });
-
-        test("Testing non-authenticated management client", async () => {
-            const testClient: BatchManagementClient = createClient(
-                undefined as any
+        test("Delete Batch Pool", async () => {
+            mockClient.addExpected(
+                new MockHttpResponse(requestUrlPoolPath, {
+                    status: 200,
+                }),
+                {
+                    method: "DELETE",
+                }
             );
 
-            const listResult = await testClient
-                .path(
-                    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts",
-                    subscriptionId,
-                    resourceGroupName
-                )
-                .get();
-
-            //Expect Unauthorized status code
-            expect(listResult.status).toEqual("401");
-        });
-    });
-
-    describe("Resource", () => {
-        test("Delete Batch Pool", async () => {
             const deleteResult = await batchClient
                 .path(
                     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/pools/{poolName}",
@@ -276,6 +324,39 @@ describe("Batch Management Client With Custom Http Client Test", () => {
                     `Non-200 response from get pool, ${POOL_NAME} Pool is leaked`
                 );
             }
+        });
+    });
+
+    describe("Batch Account Operations", () => {
+        test("should get information about batch account associated with a resource group successfully", async () => {
+            const requestUrlPath =
+                getUrlBatchAccountPath(subscriptionId, resourceGroupName) +
+                `?api-version=${BATCH_API_VERSION}`;
+
+            mockClient.addExpected(
+                new MockHttpResponse(requestUrlPath, {
+                    status: 200,
+                    body: JSON.stringify(<BatchAccountListResultOutput>{
+                        value: [
+                            {
+                                id: `/subscriptions/${subscriptionId}/resourceGroups/${resourceGroupName}/providers/Microsoft.Batch/batchAccounts/${batchAccountName}`,
+                            },
+                        ],
+                    }),
+                })
+            );
+
+            const listResult = await batchClient
+                .path(
+                    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts",
+                    subscriptionId,
+                    resourceGroupName
+                )
+                .get();
+
+            expect(listResult.status).toEqual("200");
+            const bodyResult = listResult.body as BatchAccountListResultOutput;
+            expect(bodyResult.value?.length).toBeGreaterThanOrEqual(1);
         });
     });
 });

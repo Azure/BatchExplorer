@@ -44,6 +44,7 @@
     "test": "jest",
     "test:all": "npm run test:coverage",
     "test:coverage": "jest --collect-coverage",
+    "test:watch": "jest --watch",
     "watch": "npm run compile:esm -- --watch --preserveWatchOutput",
     "workspace:build": "npm run build",
     "workspace:build:clean": "npm run build:clean",

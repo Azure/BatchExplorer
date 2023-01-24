@@ -36,10 +36,4 @@ npm install && npm run build:clean
 
 Invoking `npm test` will directly invoke Jest and run all the test suites as exists under src/\_\__tests\_\_. If you would like to test a particular test file, you can pass the test file relative path to the command i.e. `npm test -- .\src\__tests__\batch-management-client.spec.ts`.
 
-The tests defined in the `batch-management-client.spec.ts` file tests a live BatchManagementClient instance that makes direct REST API calls to the management plane. In order to run that particular test file, you will need an active Batch account along with an Azure Active Directory Service Principal with RBAC access configured for your Batch Account. More information on authenticating a service principal for your Batch account can be found at <https://learn.microsoft.com/en-us/azure/batch/batch-aad-auth#use-a-service-principal>. Once you have a Batch account with a service principal assigned RBAC access, configure the following environment variables:
-    - __MABOM_BatchAccountSubscriptionId__
-    - __MABOM_BatchAccountResourceGroupName__
-    - __MABOM_BatchAccountName__
-    - __AZURE_TENANT_ID__
-    - __AZURE_CLIENT_ID__
-    - __AZURE_CLIENT_SECRET__
+The tests defined in the `batch-management-client.spec.ts` file utilizes the MockHttpClient and MockEnvironment defined within the common/ui-common sub-module to test a BatchManagementClient instance. Rather than making direct REST API calls to the management plane, the API responses will be mocked.
