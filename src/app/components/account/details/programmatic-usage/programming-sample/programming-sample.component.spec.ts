@@ -7,13 +7,13 @@ import { PropertyListModule } from "@batch-flask/ui/property-list";
 import { EditorMockComponent, EditorTestingModule } from "@batch-flask/ui/testing";
 import { BatchExplorerService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { ProgramingSampleComponent } from "./programing-sample.component";
+import { ProgrammingSampleComponent } from "./programming-sample.component";
 
 const account1 = Fixtures.account.create();
 @Component({
     template: `
-        <bl-programing-sample [target]="target" [sharedKeyCredentials]="sharedKeyCredentials" [account]="account">
-        </bl-programing-sample>`,
+        <bl-programming-sample [target]="target" [sharedKeyCredentials]="sharedKeyCredentials" [account]="account">
+        </bl-programming-sample>`,
 })
 class TestComponent {
     public target = null;
@@ -27,10 +27,10 @@ class TestComponent {
     public account = account1;
 }
 
-describe("ProgramingSampleComponent", () => {
+describe("ProgrammingSampleComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: ProgramingSampleComponent;
+    let component: ProgrammingSampleComponent;
     let de: DebugElement;
     let codeEl: DebugElement;
     let code: EditorMockComponent;
@@ -38,7 +38,7 @@ describe("ProgramingSampleComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [PropertyListModule, FormsModule, ReactiveFormsModule, EditorTestingModule],
-            declarations: [ProgramingSampleComponent, TestComponent],
+            declarations: [ProgrammingSampleComponent, TestComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 { provide: ClipboardService, useValue: {} },
@@ -47,7 +47,7 @@ describe("ProgramingSampleComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bl-programing-sample"));
+        de = fixture.debugElement.query(By.css("bl-programming-sample"));
         component = de.componentInstance;
         fixture.detectChanges();
         codeEl = de.query(By.css("bl-editor"));

@@ -7,8 +7,8 @@ import {
     GenerateAADAppSecretComponent,
     ResourcePermissionButtonComponent,
 } from "./aad-credentials-picker";
-import { ProgramaticUsageComponent } from "./programatic-usage.component";
-import { ProgramingSampleComponent } from "./programing-sample";
+import { ProgrammaticUsageComponent } from "./programmatic-usage.component";
+import { ProgrammingSampleComponent } from "./programming-sample";
 
 const privateComponents = [
     AADCredentialsPickerComponent,
@@ -17,11 +17,11 @@ const privateComponents = [
     ResourcePermissionButtonComponent,
     AADAppSecretPickerComponent,
     CreateNewAadAppComponent,
-    ProgramingSampleComponent,
+    ProgrammingSampleComponent,
 ];
 
 const publicComponents = [
-    ProgramaticUsageComponent,
+    ProgrammaticUsageComponent,
 ];
 
 const modules = [
@@ -38,10 +38,10 @@ const modules = [
         ...publicComponents,
     ],
     entryComponents: [
-        ProgramaticUsageComponent,
+        ProgrammaticUsageComponent,
     ],
     imports: modules,
 })
-export class ProgramaticUsageModule {
+export class ProgrammaticUsageModule {
 
 }

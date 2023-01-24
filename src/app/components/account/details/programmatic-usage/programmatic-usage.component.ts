@@ -5,7 +5,7 @@ import { BatchAccountService, StorageAccountService } from "app/services";
 import { StorageAccountKeysService } from "app/services/storage";
 import { SharedKeyCredentials } from "./shared-key-credentials.model";
 
-import "./programatic-usage.scss";
+import "./programmatic-usage.scss";
 
 export enum CredentialType {
     SharedKey = "shared-key",
@@ -19,11 +19,11 @@ export interface AADCredential {
 }
 
 @Component({
-    selector: "bl-programatic-usage",
-    templateUrl: "programatic-usage.html",
+    selector: "bl-programmatic-usage",
+    templateUrl: "programmatic-usage.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProgramaticUsageComponent {
+export class ProgrammaticUsageComponent {
     @ViewChild("tabs", { static: false }) public tabs: VTabGroupComponent;
     public CredentialType = CredentialType;
     public account: BatchAccount;

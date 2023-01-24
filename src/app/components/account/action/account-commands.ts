@@ -2,7 +2,7 @@ import { Injectable, Injector } from "@angular/core";
 import {
     COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission, SidebarManager,
 } from "@batch-flask/ui";
-import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
+import { ProgrammaticUsageComponent } from "app/components/account/details/programmatic-usage";
 import { BatchAccount, BatchAccountProvisingState, LocalBatchAccount } from "app/models";
 import { BatchAccountService } from "app/services";
 import { EditLocalBatchAccountComponent } from "./add";
@@ -83,7 +83,7 @@ export class BatchAccountCommands extends EntityCommands<BatchAccount> {
     }
 
     private _showKeys(account: BatchAccount) {
-        const ref = this.dialogService.open(ProgramaticUsageComponent);
+        const ref = this.dialogService.open(ProgrammaticUsageComponent);
         ref.componentInstance.accountId = account.id;
     }
 
