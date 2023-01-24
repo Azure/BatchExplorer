@@ -1,0 +1,3 @@
+programming-sample:
+  copy-title: Copy {prerequisite} to clipboard
+  aad-setup-warning: You haven't picked an Azure AD application yet. The sample below will not have all the information filled.

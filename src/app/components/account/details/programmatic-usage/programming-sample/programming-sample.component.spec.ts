@@ -2,6 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ClipboardService } from "@batch-flask/electron";
 import { PropertyListModule } from "@batch-flask/ui/property-list";
 import { EditorMockComponent, EditorTestingModule } from "@batch-flask/ui/testing";
@@ -12,7 +13,8 @@ import { ProgrammingSampleComponent } from "./programming-sample.component";
 const account1 = Fixtures.account.create();
 @Component({
     template: `
-        <bl-programming-sample [target]="target" [sharedKeyCredentials]="sharedKeyCredentials" [account]="account">
+        <bl-programming-sample [target]="target"
+            [sharedKeyCredentials]="sharedKeyCredentials" [account]="account">
         </bl-programming-sample>`,
 })
 class TestComponent {
@@ -37,7 +39,8 @@ describe("ProgrammingSampleComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [PropertyListModule, FormsModule, ReactiveFormsModule, EditorTestingModule],
+            imports: [PropertyListModule, FormsModule, ReactiveFormsModule,
+                EditorTestingModule, I18nTestingModule],
             declarations: [ProgrammingSampleComponent, TestComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
