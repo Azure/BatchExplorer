@@ -125,9 +125,9 @@ bl-button {
 
         &[color="light"] {
             color: $button-basic-text-color;
-            background: $button-basic-bg-color;
+            background: transparent;
 
-            &:hover, &:focus {
+            &:hover {
                 background: $button-basic-hover-bg-color;
             }
         }
