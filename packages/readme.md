@@ -25,10 +25,10 @@ Before developing against these libraries, make sure you have installed:
 
 ## Building and Running Tests
 
-To build the shared libraries, run the following from the same directory as this README.md:
+To build the shared libraries, run the following from the root directory of the repo:
 
 ```shell
-npm run install && npm run build:clean
+npm install && npm run dev-setup && npm run build
 ```
 
 ## Unit Tests

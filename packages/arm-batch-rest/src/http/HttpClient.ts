@@ -5,7 +5,7 @@ import {
     HttpHeaders as PipelineHeaders,
 } from "@azure/core-rest-pipeline";
 import { PipelineHttpHeadersImpl } from "./PipelineHttpHeaders";
-import { HttpHeaders as FetchHttpHeaders } from "@batch/ui-common";
+import { HttpHeaders as CommonHttpHeaders } from "@batch/ui-common";
 import { DependencyName, inject } from "@batch/ui-common/lib/environment";
 import {
     HttpClient as CommonHttpClient,
@@ -28,7 +28,7 @@ export class BatchHttpClient implements PipelineHttpClient {
         request: PipelineRequest
     ): Promise<PipelineResponse> {
         try {
-            const fetchHeaders = buildFetchHeaders(request);
+            const fetchHeaders = buildMapHeaders(request);
 
             const httpResponse = await this.internalClient.fetch(request.url, {
                 method: request.method,
@@ -40,8 +40,11 @@ export class BatchHttpClient implements PipelineHttpClient {
                 await buildPipelineResponse(httpResponse, request);
 
             return pipelineResponse;
-        } catch (e: any) {
-            throw getError(e, request);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                throw getError(e, request);
+            }
+            throw e;
         }
     }
 }
@@ -49,18 +52,18 @@ export class BatchHttpClient implements PipelineHttpClient {
 /**
  * Gets the specific error
  */
-function getError(e: RestError, request: PipelineRequest): RestError {
+function getError(e: Error, request: PipelineRequest): RestError {
     if (e && e?.name === "AbortError") {
         return e;
     } else {
         return new RestError(`Error sending request: ${e.message}`, {
-            code: e?.code ?? RestError.REQUEST_SEND_ERROR,
+            code: RestError.REQUEST_SEND_ERROR,
             request,
         });
     }
 }
 
-function buildFetchHeaders(request: PipelineRequest): FetchHttpHeaders {
+function buildMapHeaders(request: PipelineRequest): CommonHttpHeaders {
     const headers: MapHttpHeaders = new MapHttpHeaders();
     for (const [name, value] of request.headers) {
         headers.append(name, value);

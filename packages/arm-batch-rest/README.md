@@ -1,10 +1,10 @@
 # BatchManagement REST client library
 
-This directory contains the Batch Management plane RLC (Rest Level Client) library intended for use within the Shared Library for Batch Explorer and the Portal. This package will act as a data and service communication layer for invoking REST API calls for the Batch Management plane and return modeless results. Currently, there is a lot of code duplication between the Portal and Batch Explorer, so this package will act as an environment agnostic library to be used in both the Portal and Batch Explorer to eliminate custom code duplication between the two environments. In this context, a RLC (Rest Level Client) is an Azure specific SDK flavor that emphasizes seamless developer experience by acting as a layer above raw HTTP calls. One of the major benefits of this SDK type is that they provide a compact, browser friendly bundle size footprint by relying on an abstract REST client and contains Batch specific Typescript type definitions as oppose to exportable classes. More information about RLCs can be found [here](https://devblogs.microsoft.com/azure-sdk/azure-rest-libraries-for-javascript/).
+This directory contains the Batch Management plane RLC (Rest Level Client) library intended for use within the Shared Library for Batch Explorer and the Portal. This package acts as a data and service communication layer for invoking REST API calls for the Batch Management plane. Currently, there is a lot of code duplication between the Portal and Batch Explorer, so this package acts as an environment agnostic library to be used in both the Portal and Batch Explorer to eliminate custom code duplication between the two environments. In this context, a RLC (Rest Level Client) is an Azure specific SDK flavor that emphasizes seamless developer experience by acting as a layer above raw HTTP calls. One of the major benefits of this SDK type is that they provide a compact, browser friendly bundle size footprint by relying on an abstract REST client and contains Batch specific Typescript type definitions as oppose to exportable classes. More information about RLCs can be found [here](https://devblogs.microsoft.com/azure-sdk/azure-rest-libraries-for-javascript/).
 
 ## Development Prerequisites
 
-Before developing against this library, make sure you run the following commands from the root directory of the repo to build the shared libraries```npm install && npm run dev-setup && npm run build:clean```.
+Before developing against this library, please consult the __Developer Prerequisites__ section of the README under the <ROOT_DIR>/packages/ directory.
 
 ## Package Layout
 
@@ -26,14 +26,16 @@ This will parse the command options from the README and regenerate the SDK code 
 
 ## Building and Running Tests
 
-To build the Batch Management plane client, run the following from the same directory as this README.md:
+If this is the first time building the Batch Management plane client, then please consult the __Building and Running Tests__ section of the README under the <ROOT_DIR>/packages/ directory to install local dependencies and build common tools needed to build the Batch Management plane client.
+
+Otherwise, you can run the following from the same directory as this README.md:
 
 ```shell
-npm install && npm run build:clean
+npm run build
 ```
 
 ## Unit Tests
 
-Invoking `npm test` will directly invoke Jest and run all the test suites as exists under src/\_\__tests\_\_. If you would like to test a particular test file, you can pass the test file relative path to the command i.e. `npm test -- .\src\__tests__\batch-management-client.spec.ts`.
+Invoking `npm test` will directly invoke Jest and run all the test suites as exists under __src/__. If you would like to test a particular test file, you can pass the test file relative path to the command i.e. `npm test -- .\src\__tests__\batch-management-client.spec.ts`.
 
 The tests defined in the `batch-management-client.spec.ts` file utilizes the MockHttpClient and MockEnvironment defined within the common/ui-common sub-module to test a BatchManagementClient instance. Rather than making direct REST API calls to the management plane, the API responses will be mocked.

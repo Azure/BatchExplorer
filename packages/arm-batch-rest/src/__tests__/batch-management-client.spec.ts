@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { FetchHttpClient } from "@batch/ui-common";
 import {
     BatchAccountListResultOutput,
     BatchManagementClient,

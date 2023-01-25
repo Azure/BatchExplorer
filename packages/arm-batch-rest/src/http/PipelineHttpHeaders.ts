@@ -27,7 +27,7 @@ export class PipelineHttpHeadersImpl implements PipelineHttpHeaders {
 
     get(name: string): string | undefined {
         const headerValue = this._headers.get(name);
-        return headerValue == null ? undefined : headerValue;
+        return headerValue ?? undefined;
     }
 
     has(name: string): boolean {
