@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
+import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { ScrollableModule } from "../scrollable";
 import { DropdownComponent } from "./dropdown.component";
 
@@ -19,6 +20,7 @@ import { DropdownComponent } from "./dropdown.component";
         MaterialModule,
         ScrollableModule,
         ButtonsModule,
+        I18nUIModule
     ],
 })
 export class DropdownModule {

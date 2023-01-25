@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ContextMenuService } from "@batch-flask/ui";
 import { DropdownModule } from "@batch-flask/ui/dropdown";
 import { BatchAccountService, PinnedEntityService } from "app/services";
@@ -54,7 +55,7 @@ describe("PinnedDropDownComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [DropdownModule, RouterTestingModule],
+            imports: [DropdownModule, RouterTestingModule, I18nTestingModule],
             declarations: [PinnedDropDownComponent, TestComponent],
             providers: [
                 { provide: BatchAccountService, useValue: accountServiceSpy },
