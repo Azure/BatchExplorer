@@ -33,7 +33,11 @@
     <bl-table
         [data]="accounts"
         [activeItem]="pickedStorageAccountId"
-        (activeItemChange)="pickStorageAccount($event)">
+        (keydown)="onKeydown($event)"
+        (activeItemChange)="pickStorageAccount($event)"
+        (blur)="classicTooltip.hide()"
+        (mousemove)="classicTooltip.hide()"
+        (selectionChange)="setStorageAccountSelection($event)">
         <bl-column [sortable]="true" name="name">
             <div *blHeadCellDef>
                 {{'auto-storage-account-picker.fields.name' | i18n}}
@@ -48,7 +52,11 @@
         </bl-column>
         <bl-column [sortable]="false" name="isClassic">
             <div *blCellDef="let account">
-                <span class="classic-warning" [matTooltip]="'auto-storage-account-picker.warnings.classic-incompatible' | i18n" *ngIf="account.isClassic">
+                <span class="classic-warning"
+                    [matTooltip]="'auto-storage-account-picker.warnings.classic-incompatible' | i18n"
+                    *ngIf="account.isClassic"
+                    #classicTooltip="matTooltip"
+                >
                     <span class="fa fa-warning"></span> {{'auto-storage-account-picker.fields.classic' | i18n}}
                 </span>
             </div>

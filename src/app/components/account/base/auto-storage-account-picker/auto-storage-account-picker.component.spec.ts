@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
+import { MaterialModule } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
@@ -51,7 +52,7 @@ describe("AutoStorageAccountPickerComponent", () => {
         };
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, FormsModule, TableTestingModule,
-                ElectronTestingModule, I18nTestingModule],
+                ElectronTestingModule, I18nTestingModule, MaterialModule],
             declarations: [
                 AutoStorageAccountPickerComponent,
                 LoadingMockComponent, TestComponent,
