@@ -85,6 +85,8 @@ module.exports = {
             "@fluentui/react/lib-commonjs/$1";
 
         // Local packages
+        baseConfig.moduleNameMapper["@batch/arm-batch-rest/lib/(.*)$"] =
+            "@batch/arm-batch-rest/lib-cjs/$1";
         baseConfig.moduleNameMapper["@batch/ui-common/lib/(.*)$"] =
             "@batch/ui-common/lib-cjs/$1";
         baseConfig.moduleNameMapper["@batch/ui-react/lib/(.*)$"] =
