@@ -148,6 +148,42 @@
       <trans-unit id="auth-settings.title">
         <source>Authentication Settings</source>
       </trans-unit>
+      <trans-unit id="auto-storage-account-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.clear-button-label">
+        <source>Clear</source>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.fields">
+        <source/>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.fields.classic">
+        <source>Classic</source>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.fields.location">
+        <source>Location</source>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.fields.name">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.other-regions-title">
+        <source>Other regions</source>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.same-region-title">
+        <source>Storage accounts in the same region as your batch account ({location})</source>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.warnings">
+        <source/>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.warnings.classic-incompatible">
+        <source>Classic storage accounts are not compatible with data and gallery</source>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.warnings.no-accounts-other">
+        <source>You have no accounts in other regions</source>
+      </trans-unit>
+      <trans-unit id="auto-storage-account-picker.warnings.no-accounts-same">
+        <source>You have no accounts in the same region</source>
+      </trans-unit>
       <trans-unit id="batch-account-create">
         <source/>
       </trans-unit>
@@ -315,6 +351,12 @@
       </trans-unit>
       <trans-unit id="delete-container-dialog.warning">
         <source>Deleting the container(s) listed above is irreversible. The action you are about to take cannot be undone.</source>
+      </trans-unit>
+      <trans-unit id="dropdown">
+        <source/>
+      </trans-unit>
+      <trans-unit id="dropdown.button-title">
+        <source>Dropdown button</source>
       </trans-unit>
       <trans-unit id="duration-picker">
         <source/>
@@ -1000,20 +1042,29 @@
       <trans-unit id="profile-button.viewTheme">
         <source>View theme colors</source>
       </trans-unit>
-      <trans-unit id="programatic-usage">
+      <trans-unit id="programmatic-usage">
         <source/>
       </trans-unit>
-      <trans-unit id="programatic-usage.authenticationType">
+      <trans-unit id="programmatic-usage.authenticationType">
         <source>Authentication type</source>
       </trans-unit>
-      <trans-unit id="programatic-usage.credentials">
+      <trans-unit id="programmatic-usage.credentials">
         <source>Credentials</source>
       </trans-unit>
-      <trans-unit id="programatic-usage.setup">
+      <trans-unit id="programmatic-usage.setup">
         <source>setup</source>
       </trans-unit>
-      <trans-unit id="programatic-usage.title">
+      <trans-unit id="programmatic-usage.title">
         <source>Credentials and code samples for this Batch account</source>
+      </trans-unit>
+      <trans-unit id="programming-sample">
+        <source/>
+      </trans-unit>
+      <trans-unit id="programming-sample.aad-setup-warning">
+        <source>You haven't picked an Azure AD application yet. The sample below will not have all the information filled.</source>
+      </trans-unit>
+      <trans-unit id="programming-sample.copy-title">
+        <source>Copy {prerequisite} to clipboard</source>
       </trans-unit>
       <trans-unit id="rerun-task-form">
         <source/>
@@ -1096,6 +1147,12 @@
       <trans-unit id="select-dropdown.showItems">
         <source>Showing {num} items</source>
       </trans-unit>
+      <trans-unit id="server-error">
+        <source/>
+      </trans-unit>
+      <trans-unit id="server-error.debug-button-label">
+        <source>Toggle troubleshooting info</source>
+      </trans-unit>
       <trans-unit id="settings">
         <source/>
       </trans-unit>
@@ -1116,6 +1173,15 @@
       </trans-unit>
       <trans-unit id="settings.title">
         <source>Settings</source>
+      </trans-unit>
+      <trans-unit id="sidebar-bookmarks">
+        <source/>
+      </trans-unit>
+      <trans-unit id="sidebar-bookmarks.dropdown-button-title">
+        <source>Toggle bookmarks menu</source>
+      </trans-unit>
+      <trans-unit id="sidebar-bookmarks.no-references">
+        <source>No bookmark references</source>
       </trans-unit>
       <trans-unit id="sig-image-picker">
         <source/>
