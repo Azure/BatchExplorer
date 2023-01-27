@@ -2,6 +2,7 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { MaterialModule, ServerError } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { click } from "test/utils/helpers";
 import { ServerErrorComponent } from "./server-error.component";
@@ -43,7 +44,7 @@ describe("ServerErrorComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, I18nTestingModule],
             declarations: [
                 ClickableComponent,
                 ServerErrorComponent,
@@ -84,12 +85,16 @@ describe("ServerErrorComponent", () => {
         });
 
         it("should show the request id and time after clicking on the debug button", () => {
+            expect(troubleshootBtn.nativeElement.getAttribute("aria-expanded"))
+                .toBe("false");
             click(troubleshootBtn);
             fixture.detectChanges();
 
             expect(de.nativeElement.textContent).toContain("abc-def");
             expect(de.nativeElement.textContent)
                 .toContain(date.toString());
+            expect(troubleshootBtn.nativeElement.getAttribute("aria-expanded"))
+                .toBe("true");
         });
     });
 

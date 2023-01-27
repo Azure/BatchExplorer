@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/c
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { BatchAccount } from "app/models";
 import { BatchExplorerService } from "app/services";
-import { AADCredential, CredentialType } from "../programatic-usage.component";
+import { AADCredential, CredentialType } from "../programmatic-usage.component";
 import { SharedKeyCredentials } from "../shared-key-credentials.model";
 import { prerequisites, sampleTemplates } from "./samples";
 
-import "./programing-sample.scss";
+import "./programming-sample.scss";
 
 export enum SampleTarget {
     python = "python",
@@ -23,11 +23,11 @@ const engineLanguages = {
 };
 
 @Component({
-    selector: "bl-programing-sample",
-    templateUrl: "programing-sample.html",
+    selector: "bl-programming-sample",
+    templateUrl: "programming-sample.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProgramingSampleComponent implements OnChanges {
+export class ProgrammingSampleComponent implements OnChanges {
     public CredentialType = CredentialType;
     @Input() public target: SampleTarget;
     @Input() public account: BatchAccount;
@@ -39,7 +39,7 @@ export class ProgramingSampleComponent implements OnChanges {
     public content: string;
     public editorConfig: EditorConfig;
 
-    constructor(private batchExplorer: BatchExplorerService) {}
+    constructor(private batchExplorer: BatchExplorerService) { }
 
     public ngOnChanges(changes) {
         this._updateContent();

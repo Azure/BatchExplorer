@@ -1,11 +1,12 @@
 <div class="description">
     <div *ngIf="credentialType === CredentialType.AAD && !aadCredentials" class="aad-needs-setup-creds" aria-live="polite">
-        <i class="fa fa-warning"></i>You haven't picked an Azure AD application yet. The sample below will not have all the information filled.
+        <i class="fa fa-warning"></i>
+        {{'programming-sample.aad-setup-warning' | i18n}}
     </div>
     <bl-property-group label="" class="wide" class="prerequisites">
         <bl-table-property label="Prerequisites" *ngIf="prerequisites">
             <bl-table-property-row *ngFor="let prerequisite of prerequisites;trackBy: trackPrerequisite">
-                <bl-tp-cell [value]="prerequisite" role="button" attr.aria-label="Copy {{prerequisite}} to clipboard"></bl-tp-cell>
+                <bl-tp-cell [value]="prerequisite" role="button" attr.aria-label="{{'programming-sample.copy-title' | i18n: { 'prerequisite': prerequisite } }}"></bl-tp-cell>
             </bl-table-property-row>
         </bl-table-property>
     </bl-property-group>

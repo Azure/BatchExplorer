@@ -1,4 +1,4 @@
-<div class="error-banner" *ngIf="error" [attr.aria-expanded]="showDebugInformation" role="alert">
+<div class="error-banner" *ngIf="error" role="alert">
     <div class="content">
         <div class="main-content">
             <div class="main-info">
@@ -7,8 +7,11 @@
             </div>
             <div class="troubleshoot-btn">
                 <bl-clickable (do)="toggleDebugInformation()"
-                        aria-label="Troubleshoot details"
-                        matTooltip="Troubleshoot details">
+                    [attr.aria-expanded]="showDebugInformation"
+                    aria-controls="troubleshoot-debug-info"
+                    role="button"
+                    title="{{'server-error.debug-button-label' | i18n}}"
+                >
                     <i class="fa fa-bug"></i>
                 </bl-clickable>
             </div>
@@ -19,7 +22,8 @@
             </div>
         </div>
     </div>
-    <div class="troubleshoot-info" *ngIf="showDebugInformation">
+    <div class="troubleshoot-info" *ngIf="showDebugInformation"
+        id="troubleshoot-debug-info">
         <table>
             <tr *ngIf="error.requestId">
                 <td><b>Request ID</b></td>

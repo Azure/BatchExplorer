@@ -1,5 +1,6 @@
 <bl-dropdown [footer]="false" align="right">
-    <div bl-dropdown-btn  attr.aria-label="{{references.length}}-forms in progress">
+    <div bl-dropdown-btn
+        [attr.button-title]="'sidebar-bookmarks.dropdown-button-title' | i18n">
         <i class="fa fa-wpforms"></i>
         <span class="count" *ngIf="references.length > 0">{{references.length}}</span>
     </div>
@@ -15,7 +16,7 @@
         </div>
 
         <div *ngIf="references.length === 0" class="dropdown-item no-bookmarks">
-            <div> No forms in progress</div>
+            <div>{{'sidebar-bookmarks.no-references' | i18n }}</div>
         </div>
     </div>
 </bl-dropdown>

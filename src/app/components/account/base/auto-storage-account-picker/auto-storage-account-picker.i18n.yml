@@ -1,0 +1,12 @@
+auto-storage-account-picker:
+  clear-button-label: Clear
+  same-region-title: Storage accounts in the same region as your batch account ({location})
+  other-regions-title: Other regions
+  warnings:
+    no-accounts-same: You have no accounts in the same region
+    no-accounts-other: You have no accounts in other regions
+    classic-incompatible: Classic storage accounts are not compatible with data and gallery
+  fields:
+    name: Name
+    location: Location
+    classic: Classic

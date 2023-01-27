@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, inject, tick } from "@angular/cor
 import { By } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import {
     Activity,
     ActivityModule,
@@ -22,7 +23,7 @@ describe("ActivityMonitorFooterComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, ActivityModule],
+            imports: [MaterialModule, ActivityModule, I18nTestingModule],
             declarations: [
             ],
             providers: [
