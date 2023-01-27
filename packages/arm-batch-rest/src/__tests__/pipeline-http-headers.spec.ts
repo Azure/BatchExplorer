@@ -1,5 +1,5 @@
 import { RawHttpHeaders } from "@azure/core-rest-pipeline";
-import { PipelineHttpHeadersImpl } from "../http/PipelineHttpHeaders";
+import { PipelineHttpHeadersImpl } from "../http/pipeline-http-headers";
 import { MapHttpHeaders } from "@batch/ui-common/lib/http";
 
 describe("PipelineHttpHeadersImpl", () => {
@@ -85,7 +85,7 @@ describe("PipelineHttpHeadersImpl", () => {
 
 function countHeaders(headers: PipelineHttpHeadersImpl): number {
     let i = 0;
-    for (const [name, value] of headers) {
+    for (const [_name, _value] of headers) {
         ++i;
     }
     return i;

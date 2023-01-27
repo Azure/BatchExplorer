@@ -4,7 +4,7 @@ import {
     PipelineResponse,
     HttpHeaders as PipelineHeaders,
 } from "@azure/core-rest-pipeline";
-import { PipelineHttpHeadersImpl } from "./PipelineHttpHeaders";
+import { PipelineHttpHeadersImpl } from "./pipeline-http-headers";
 import { HttpHeaders as CommonHttpHeaders } from "@batch/ui-common";
 import { DependencyName, inject } from "@batch/ui-common/lib/environment";
 import {
@@ -12,7 +12,7 @@ import {
     HttpResponse,
     MapHttpHeaders,
 } from "@batch/ui-common/lib/http";
-import { RestError } from "./restError";
+import { RestError } from "./rest-error";
 
 /**
  * Adapter class that acts as our custom http client

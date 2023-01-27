@@ -2,6 +2,7 @@
 import {
     BatchAccountListResultOutput,
     BatchManagementClient,
+    CloudErrorBodyOutput,
     CloudErrorOutput,
     ListPoolsResultOutput,
     Pool,
@@ -9,7 +10,7 @@ import {
     PoolOutput,
     PoolUpdateParameters,
 } from "../generated";
-import { BatchHttpClient } from "../http/HttpClient";
+import { BatchHttpClient } from "../http/batch-http-client";
 import {
     BATCH_API_VERSION,
     generateClient,
@@ -267,9 +268,10 @@ describe("Batch Management Client With Mock Http Client Test", () => {
                 new MockHttpResponse(requestUrlPoolPath, {
                     status: undefined,
                     body: JSON.stringify({
-                        error: <CloudErrorOutput>{
+                        error: <CloudErrorBodyOutput>{
                             code: "PropertyCannotBeUpdated",
                             message: "Error sending request",
+                            name: "Error",
                         },
                     }),
                 }),
@@ -289,13 +291,9 @@ describe("Batch Management Client With Mock Http Client Test", () => {
                 )
                 .patch(updateParams);
 
-            try {
-                const errorOutput = patchResult.body as CloudErrorOutput;
-                throw errorOutput.error;
-            } catch (err: any) {
-                expect(err?.message).toBeDefined();
-                expect(err?.code).toBe("PropertyCannotBeUpdated");
-            }
+            const errorOutput = patchResult.body as CloudErrorOutput;
+            expect(errorOutput?.error?.message).toBeDefined();
+            expect(errorOutput?.error?.code).toBe("PropertyCannotBeUpdated");
         });
 
         test("Delete Batch Pool", async () => {
