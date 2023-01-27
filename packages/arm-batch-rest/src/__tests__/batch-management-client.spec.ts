@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import generateBatchManagementClient from "../client";
 import {
     BatchAccountListResultOutput,
     BatchManagementClient,
@@ -10,10 +11,8 @@ import {
     PoolOutput,
     PoolUpdateParameters,
 } from "../generated";
-import { BatchHttpClient } from "../http/batch-http-client";
 import {
     BATCH_API_VERSION,
-    generateClient,
     getUrlBatchAccountPath,
     getUrlPoolPath,
 } from "./utils/client";
@@ -69,11 +68,7 @@ describe("Batch Management Client With Mock Http Client Test", () => {
             DependencyName.HttpClient
         );
 
-        const clientOptions = {
-            httpClient: new BatchHttpClient(),
-        };
-
-        batchClient = generateClient(clientOptions);
+        batchClient = generateBatchManagementClient();
     });
 
     describe("Basic Pool operations", () => {

@@ -73,9 +73,17 @@ describe("MapHttpHeaders", () => {
         expect(countHeaders(headers)).toBe(2);
         expect(headers.get("foo")).toBe("bar, baz");
 
-        for (const [name, value] of headers) {
-            expect(value).toBe(headers.get(name));
-        }
+        const iterator = headers.headerIterator();
+        let iteratorValue = iterator.next().value;
+        expect(iteratorValue[0]).toEqual("foo");
+        expect(iteratorValue[1]).toEqual("bar, baz");
+
+        iteratorValue = iterator.next().value;
+        expect(iteratorValue[0]).toEqual("x-foo");
+        expect(iteratorValue[1]).toEqual("x-bar");
+
+        iteratorValue = iterator.next().value;
+        expect(iteratorValue).toBeUndefined();
     });
 });
 
