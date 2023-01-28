@@ -88,6 +88,12 @@
       <trans-unit id="account-summary-card.url">
         <source>Url</source>
       </trans-unit>
+      <trans-unit id="activity-monitor-item">
+        <source/>
+      </trans-unit>
+      <trans-unit id="activity-monitor-item.progressBar">
+        <source>Item progress</source>
+      </trans-unit>
       <trans-unit id="add-certificate-form">
         <source/>
       </trans-unit>
@@ -282,6 +288,9 @@
       </trans-unit>
       <trans-unit id="common.confirm">
         <source>Confirm</source>
+      </trans-unit>
+      <trans-unit id="common.listbox">
+        <source>Listbox</source>
       </trans-unit>
       <trans-unit id="common.loading">
         <source>Loading</source>
@@ -538,6 +547,9 @@
       <trans-unit id="job-progress-status.inaccurate">
         <source>Task count might not be accurate in real time</source>
       </trans-unit>
+      <trans-unit id="job-progress-status.progressBar">
+        <source>Job progress</source>
+      </trans-unit>
       <trans-unit id="job-state">
         <source/>
       </trans-unit>
@@ -671,7 +683,7 @@
         <source>Job schedules</source>
       </trans-unit>
       <trans-unit id="main-navigation.label">
-        <source>Main navigation</source>
+        <source>Main sidebar</source>
       </trans-unit>
       <trans-unit id="main-navigation.packages">
         <source>Packages</source>
@@ -1065,6 +1077,12 @@
       </trans-unit>
       <trans-unit id="programming-sample.copy-title">
         <source>Copy {prerequisite} to clipboard</source>
+      </trans-unit>
+      <trans-unit id="quota-display">
+        <source/>
+      </trans-unit>
+      <trans-unit id="quota-display.progressBar">
+        <source>Quota usage</source>
       </trans-unit>
       <trans-unit id="rerun-task-form">
         <source/>
