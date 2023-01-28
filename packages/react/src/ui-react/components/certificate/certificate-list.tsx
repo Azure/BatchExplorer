@@ -3,7 +3,11 @@ import * as React from "react";
 import { observer } from "mobx-react-lite";
 import { DataGrid } from "../data-grid";
 import { IconButton } from "@fluentui/react/lib/Button";
-import { Selection, SelectionMode } from "@fluentui/react/lib/selection";
+import {
+    ISelection,
+    Selection,
+    SelectionMode,
+} from "@fluentui/react/lib/selection";
 import { Spinner } from "@fluentui/react/lib/Spinner";
 import { IObservableArray } from "mobx";
 import { IContextualMenuProps } from "@fluentui/react/lib/ContextualMenu";
@@ -80,7 +84,7 @@ export const CertificateList = observer((props: CertificateListProps) => {
                 },
             ]}
             items={view.items}
-            selection={selection}
+            selection={selection as ISelection<any>}
         />
     );
 });

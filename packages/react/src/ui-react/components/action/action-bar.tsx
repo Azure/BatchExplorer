@@ -4,10 +4,8 @@ import {
     ICommandBarItemProps,
 } from "@fluentui/react/lib/CommandBar";
 import { useAppTheme } from "../../theme";
-// eslint-disable-next-line no-restricted-imports
-import type { IComponentAs } from "@fluentui/react";
 
-export interface ActionBarItem {
+export interface ActionBarItem extends Omit<ICommandBarItemProps, "onClick"> {
     /**
      * User friendly label of the menu item
      */
@@ -28,10 +26,6 @@ export interface ActionBarItem {
             | React.KeyboardEvent<HTMLElement>,
         item?: ActionBarItem
     ) => boolean | void;
-
-    disabled?: boolean;
-
-    commandBarButtonAs?: IComponentAs<ICommandBarItemProps>;
 }
 
 export interface ActionBarProps {
@@ -66,43 +60,37 @@ function _toCommandBarItem(
     item: ActionBarItem,
     index: number
 ): ICommandBarItemProps {
-    const commandBarItem: ICommandBarItemProps = {
+    const { text, onClick, icon, ...restItem } = item;
+
+    let commandBarItem: ICommandBarItemProps = {
         key: "bl-action-bar-item-" + index,
         // Use emdash instead of dash to avoid the fluentui behavior
         // of interpreting dashes as a divider item
-        text: item.text === "-" ? "—" : item.text,
+        text: text === "-" ? "—" : text,
     };
 
     // Map events
-    if (item.onClick) {
+    if (onClick) {
         commandBarItem.onClick = (event) => {
-            if (item.onClick) {
-                item.onClick(event, item);
+            if (onClick) {
+                onClick(event, item);
             }
         };
     }
 
-    if (typeof item.icon === "string") {
+    if (typeof icon === "string") {
         commandBarItem.iconProps = {
-            iconName: item.icon,
+            iconName: icon,
         };
-    } else if (item.icon) {
+    } else if (icon) {
         commandBarItem.iconProps = {
-            ...item.icon,
+            ...icon,
         };
     }
-
-    if (item.disabled) {
-        commandBarItem.disabled = true;
-    }
-
-    if (item.commandBarButtonAs) {
-        commandBarItem.commandBarButtonAs = item.commandBarButtonAs;
-    }
-
     if (props.iconsOnly) {
         commandBarItem.iconOnly = true;
     }
 
+    commandBarItem = { ...commandBarItem, ...restItem };
     return commandBarItem;
 }
