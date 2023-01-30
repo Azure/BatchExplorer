@@ -25,10 +25,16 @@ Before developing against these libraries, make sure you have installed:
 
 ## Building and Running Tests
 
-To build the shared libraries, run the following from the same directory as this README.md:
+Install bux first from the root directory by running:
 
 ```shell
-npm run install && npm run build:clean
+npm run dev-setup
+```
+
+Then, to build the shared libraries, run the following from the same directory as this README.md:
+
+```shell
+npm install && npm run build:clean
 ```
 
 ## Unit Tests
