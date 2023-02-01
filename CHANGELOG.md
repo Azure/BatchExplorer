@@ -1,3 +1,19 @@
+# 2.16.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/50?closed=1)
+
+### Features
+
+* Usability and accessibility improvements [\#2634](https://github.com/Azure/BatchExplorer/issues/2634)
+* Link to Italy Accessibility Declarations [\#2638](https://github.com/Azure/BatchExplorer/issues/2638)
+* Deprecation warnings for certain images [\#2635](https://github.com/Azure/BatchExplorer/issues/2635)
+* Migrates to new Azure Storage SDK [\#2637](https://github.com/Azure/BatchExplorer/issues/2637)
+* Security updates [\#2639](https://github.com/Azure/BatchExplorer/issues/2639)
+
+### Bugs
+
+* Storage container Create button in the data menu was broken [\#2636](https://github.com/Azure/BatchExplorer/issues/2636)
+
 # 2.15.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/49?closed=1)
