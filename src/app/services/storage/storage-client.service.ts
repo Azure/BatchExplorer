@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
+import { ElectronRemote } from "@batch-flask/electron";
 import { StorageKeys } from "app/models";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { ArmResourceUtils } from "app/utils";
 import { Observable, throwError } from "rxjs";
-import { first, flatMap, map, share } from "rxjs/operators";
+import { first, flatMap, map, share, switchMap } from "rxjs/operators";
 import { BatchAccountService } from "../batch-account";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 import { StorageAccountKeysService } from "./storage-account-keys.service";
@@ -22,7 +23,7 @@ export interface StorageKeyCachedItem {
     keys: StorageKeys;
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class StorageClientService {
     public hasAutoStorage: Observable<boolean>;
     public hasArmAutoStorage: Observable<boolean>;
@@ -33,9 +34,11 @@ export class StorageClientService {
     constructor(
         private batchExplorer: BatchExplorerService,
         private accountService: BatchAccountService,
-        private storageKeysService: StorageAccountKeysService) {
+        private storageKeysService: StorageAccountKeysService,
+        remote: ElectronRemote
+    ) {
 
-        this._storageClientFactory = new StorageClientProxyFactory();
+        this._storageClientFactory = new StorageClientProxyFactory(remote);
 
         this.hasAutoStorage = this.accountService.currentAccount.pipe(map((account) => {
             return Boolean(account.autoStorage);
@@ -65,13 +68,17 @@ export class StorageClientService {
     }
 
     public getFor(storageAccountId: string): Observable<BlobStorageClientProxy> {
-        return this.storageKeysService.getFor(storageAccountId).pipe(map((keys) => {
-            return this._storageClientFactory.getBlobServiceForSharedKey({
-                account: ArmResourceUtils.getAccountNameFromResourceId(storageAccountId),
-                key: keys.primaryKey,
-                endpoint: this.batchExplorer.azureEnvironment.storageEndpoint,
-            });
-        }));
+        return this.storageKeysService.getFor(storageAccountId).pipe(
+            switchMap((keys) =>
+                this._storageClientFactory.getBlobServiceForSharedKey({
+                    account: ArmResourceUtils
+                        .getAccountNameFromResourceId(storageAccountId),
+                    key: keys.primaryKey,
+                    endpoint:
+                        this.batchExplorer.azureEnvironment.storageEndpoint,
+                })
+            )
+        );
     }
 
     public clearCurrentStorageKeys() {

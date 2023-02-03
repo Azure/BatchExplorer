@@ -156,6 +156,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     @autobind()
     public openEditStartTask() {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         const ref = this.sidebarManager.open(`edit-start-task-${this.pool.id}`, StartTaskEditFormComponent);
         ref.component.pool = this.pool;
     }

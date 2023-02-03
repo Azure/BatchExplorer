@@ -1,6 +1,6 @@
 <bl-dropdown [footer]="false" align="right">
     <div bl-dropdown-btn>
-        <i class="fa fa-star"></i> {{title}}
+        <i class="fa fa-star" aria-hidden="true"></i> {{title}}
     </div>
     <div bl-dropdown-content>
         <div *ngFor="let favorite of favorites | async;trackBy: trackPinnned"
@@ -11,7 +11,7 @@
             (contextmenu)="onContextMenu(favorite)">
 
             <bl-clickable class="dropdown-item favorite-item" (do)="gotoFavorite(favorite)">
-                <span>
+                <span aria-hidden="true">
                     <i class="entity-type fa" [ngClass]="entityIcon(favorite)"
                     [title]="entityType(favorite)"></i>
                     {{favorite.name || favorite.id}}
@@ -19,7 +19,7 @@
                 </span>
             </bl-clickable>
             <bl-clickable class="dropdown-item delete" (do)="removeFavorite(favorite)">
-                <i class="fa fa-times" ></i>
+                <i class="fa fa-times"  aria-hidden="true"></i>
             </bl-clickable>
         </div>
     </div>

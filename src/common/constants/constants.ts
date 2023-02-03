@@ -118,7 +118,7 @@ export const ApiVersion = {
     costManagement: "2019-01-01",
 };
 
-export const providersApiVersion: {[resourceProvider: string]: string} = {
+export const providersApiVersion: { [resourceProvider: string]: string } = {
     "microsoft.batch": ApiVersion.armBatch,
     "microsoft.classicstorage": ApiVersion.armClassicStorage,
     "microsoft.storage": ApiVersion.armStorage,
@@ -138,6 +138,7 @@ export const ExternalLinks = {
     setupStorageAccount: "https://portal.azure.com/#resource{0}/storageAccount",
     license: "https://azure.github.io/BatchExplorer/EULA.html",
     privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
+    italyAccessibility: "https://www.microsoft.com/it-it/accessibility/accessibilita/dichiarazioni",
     submitIssue: "https://github.com/Azure/BatchExplorer/issues",
     subscriptionUrl: "https://portal.azure.com/#resource/subscriptions/{0}/overview",
     costManagementUrl: "https://ms.portal.azure.com/#resource/subscriptions/{0}/costByResource",
@@ -212,6 +213,20 @@ export const IpcEvent = {
     logoutAndLogin: "LOGOUT_AND_LOGIN",
     sendTelemetry: "SEND_TELEMETRY",
     log: "SEND_LOG",
+    storageBlob: {
+        listContainers: "STORAGE_BLOB_LIST_CONTAINERS",
+        getContainerProperties: "STORAGE_BLOB_GET_CONTAINER_PROPERTIES",
+        deleteContainer: "STORAGE_BLOB_GET_DELETE_CONTAINER",
+        createContainer: "STORAGE_BLOB_CREATE_CONTAINER",
+
+        listBlobs: "STORAGE_BLOB_LIST_BLOBS",
+        getBlobProperties: "STORAGE_BLOB_GET_BLOB_PROPERTIES",
+        getBlobContent: "STORAGE_BLOB_GET_BLOB_CONTENT",
+        generateSasUrl: "STORAGE_BLOB_GENERATE_SAS_URL",
+        downloadBlob: "STORAGE_BLOB_DOWNLOAD_BLOB",
+        uploadFile: "STORAGE_BLOB_UPLOAD_FILE",
+        deleteBlob: "STORAGE_BLOB_DELETE_BLOB",
+    }
 };
 
 export const ExternalApplication = {

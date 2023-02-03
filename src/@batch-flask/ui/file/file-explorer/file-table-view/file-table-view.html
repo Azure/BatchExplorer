@@ -1,6 +1,6 @@
 <div class="file-table-view-header">
     <bl-clickable (do)="goBack()" title="Go back" aria-label="Go back" class="go-back">
-        <i class="fa fa-arrow-circle-left"></i>
+        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
     </bl-clickable>
 
     <div class="current-path">
@@ -15,7 +15,7 @@
                     <div *blHeadCellDef>Name</div>
                     <div *blCellDef="let treeNode">
                         <span class="icon">
-                            <i class="fa" [class.fa-folder]="treeNode.isDirectory" [class.fa-file]="!treeNode.isDirectory"></i>
+                            <i class="fa" [class.fa-folder]="treeNode.isDirectory" [class.fa-file]="!treeNode.isDirectory" aria-hidden="true"></i>
                         </span>
                         <span>{{treeNode.name}}</span>
                     </div>
@@ -31,13 +31,13 @@
             </bl-table>
 
             <bl-no-item [itemCount]="treeNode.children.size">
-                <i icon class="fa fa-file small"></i>
+                <i icon class="fa fa-file small" aria-hidden="true"></i>
                 <span no-filter>There are no files in this directory</span>
             </bl-no-item>
         </div>
     </bl-loading>
     <div class="flex-separator"></div>
     <div class="drop-hint" *ngIf="canDropExternalFiles">
-        <i class="fa fa-cloud-upload"></i> Drag and drop local files here to upload.
+        <i class="fa fa-cloud-upload" aria-hidden="true"></i> Drag and drop local files here to upload.
     </div>
 </div>

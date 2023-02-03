@@ -3,9 +3,9 @@
         [class.invalid]="currentAccountValid === status.Invalid">
         {{selectedAccountAlias}}
 
-        <i *ngIf="currentAccountValid === status.Invalid" class="fa fa-warning"></i>
+        <i *ngIf="currentAccountValid === status.Invalid" class="fa fa-warning" aria-hidden="true"></i>
 
-        <i *ngIf="currentAccountValid === status.Loading" class="fa fa-spinner fa-spin"></i>
+        <i *ngIf="currentAccountValid === status.Loading" class="fa fa-spinner fa-spin" aria-hidden="true"></i>
     </div>
     <div bl-dropdown-content>
         <bl-clickable *ngFor="let account of accountService.accountFavorites | async; trackBy: trackByFn"
@@ -24,11 +24,11 @@
                 <div class="url">{{account.url}}</div>
             </div>
             <div *ngIf="account.id === selectedId" class="extra">
-                <i class="fa fa-check"></i>
+                <i class="fa fa-check" aria-hidden="true"></i>
             </div>
         </bl-clickable>
         <bl-clickable *ngIf="selectedId" class="dropdown-item" routerLink="accounts">
-            <i class="fa fa-cog fa-2x"></i>Manage accounts
+            <i class="fa fa-cog fa-2x" aria-hidden="true"></i>Manage accounts
         </bl-clickable>
     </div>
 </bl-dropdown>

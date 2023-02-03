@@ -1,11 +1,11 @@
 <bl-dropdown [footer]="true" align="right">
     <div bl-dropdown-btn>
-        <i class="fa fa-envelope-o"></i>
+        <i class="fa fa-envelope-o" aria-hidden="true"></i>
         <span class="count" *ngIf="notifications.size > 0">{{notifications.size}}</span>
     </div>
     <div bl-dropdown-content>
         <div *ngFor="let notification of notifications;trackBy: trackNotification" class="dropdown-item">
-            <div class="icon" [ngSwitch]="notification.level">
+            <div class="icon" [ngSwitch]="notification.level" aria-hidden="true">
                 <i class="fa fa-info-circle" *ngSwitchCase="NotificationLevel.info"></i>
                 <i class="fa fa-times" *ngSwitchCase="NotificationLevel.error"></i>
                 <i class="fa fa-check" *ngSwitchCase="NotificationLevel.success"></i>
@@ -21,16 +21,16 @@
                 </bl-clickable>
             </div>
             <bl-clickable (do)="dismiss($event, notification)">
-                <i class="dismiss fa fa-times"></i>
+                <i class="dismiss fa fa-times" aria-hidden="true"></i>
             </bl-clickable>
         </div>
         <bl-clickable class="dropdown-item clear-all" *ngIf="notifications.size > 0" (click)="dismissAll()">
-            <i class="fa fa-trash"></i>
+            <i class="fa fa-trash" aria-hidden="true"></i>
             <span>Clear all</span>
         </bl-clickable>
         <div class="dropdown-item" *ngIf="notifications.size === 0">
             <div class="no-notifications">
-                <i class="fa fa-envelope-o"></i>
+                <i class="fa fa-envelope-o" aria-hidden="true"></i>
                 <span>No new notifications</span>
             </div>
         </div>

@@ -1,8 +1,9 @@
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
-    HostBinding, Inject, forwardRef,
+    HostBinding, Inject, forwardRef
 } from "@angular/core";
-import { ListKeyNavigator } from "@batch-flask/core";
+import { ListKeyNavigator, I18nService } from "@batch-flask/core";
 import { SelectOptionComponent } from "@batch-flask/ui/select/option";
 import { SelectComponent } from "../select.component";
 
@@ -30,6 +31,7 @@ export class SelectDropdownComponent {
     public set displayedOptions(options: SelectOptionComponent[]) {
         this._displayedOptions = options;
         this._computeOptions();
+        this._announceItems();
         this.changeDetector.markForCheck();
     }
 
@@ -66,6 +68,7 @@ export class SelectDropdownComponent {
 
     public rows: any;
     public keyNavigator: ListKeyNavigator<SelectOptionComponent>;
+    public noMatchText = '';
 
     private _displayedOptions: SelectOptionComponent[] = [];
     private _focusedOption: any;
@@ -75,7 +78,9 @@ export class SelectDropdownComponent {
     constructor(
         @Inject(forwardRef(() => SelectComponent)) public select: any,
         private elementRef: ElementRef,
-        private changeDetector: ChangeDetectorRef) {
+        private changeDetector: ChangeDetectorRef,
+        private liveAnnouncer: LiveAnnouncer,
+        private i18n: I18nService) {
     }
     /**
      * Scroll to the option at the given index
@@ -123,5 +128,18 @@ export class SelectDropdownComponent {
         this.rows = fixedOptions.concat(this._displayedOptions);
         this.keyNavigator.items = this.rows;
         this.changeDetector.markForCheck();
+    }
+
+    private _announceItems() {
+        if (!this.displayedOptions.length) {
+            this.noMatchText = this.select.filter
+                ? this.i18n.t('select-dropdown.noMatch')
+                : this.i18n.t('select-dropdown.noOptions');
+            this.liveAnnouncer.announce(this.noMatchText);
+        } else {
+            this.liveAnnouncer.announce(
+                this.i18n.t('select-dropdown.showItems', {num: this.displayedOptions.length})
+            );
+        }
     }
 }

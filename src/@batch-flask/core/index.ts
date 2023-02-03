@@ -20,3 +20,4 @@ export * from "./telemetry";
 export * from "./timezone";
 export * from "./tenant-settings";
 export * from "./user-configuration";
+export * from "./html-util";

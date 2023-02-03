@@ -1,6 +1,7 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, Output,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, Output,
 } from "@angular/core";
+import { I18nService } from "@batch-flask/core";
 
 import "./dropdown.scss";
 
@@ -18,7 +19,11 @@ export class DropdownComponent {
     public forcedOpen = false;
     public showDropdown = false;
 
-    constructor(private changeDetector: ChangeDetectorRef) { }
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private elementRef: ElementRef,
+        private i18n: I18nService,
+    ) { }
 
     public mouseEnter() {
         this.showDropdown = true;
@@ -49,6 +54,12 @@ export class DropdownComponent {
             event.stopImmediatePropagation();
             this.changeDetector.markForCheck();
         }
+    }
+
+    public dropdownButtonTitle() {
+        const hostTitle = this.elementRef.nativeElement
+            .querySelector("[bl-dropdown-btn")?.getAttribute("button-title");
+        return hostTitle || this.i18n.t("dropdown.button-title");
     }
 
     public close() {

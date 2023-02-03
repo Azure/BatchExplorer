@@ -12,6 +12,9 @@ bl-form-footer {
     > .toggle-error-btn {
         button {
             font-size: 26px;
+            mat-icon {
+                color: $danger-color;
+            }
         }
     }
 

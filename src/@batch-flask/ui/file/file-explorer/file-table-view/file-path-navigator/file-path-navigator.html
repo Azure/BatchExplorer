@@ -7,7 +7,7 @@
         <span class="file-icon">
             <i class="fa"
                 [class.fa-folder]="path.isDirectory"
-                [class.fa-file]="!path.isDirectory"></i>
+                [class.fa-file]="!path.isDirectory" aria-hidden="true"></i>
         </span>
         {{path.name}}
     </mat-option>

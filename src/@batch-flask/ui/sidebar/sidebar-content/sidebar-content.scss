@@ -5,3 +5,11 @@ bl-sidebar-content {
         background-color: $card-background;
     }
 }
+
+@media (forced-colors: active) {
+    bl-sidebar-content {
+        .right-sidebar-content {
+            border-left: 1px solid currentColor;
+        }
+    }
+}

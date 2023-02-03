@@ -1,7 +1,7 @@
 <bl-toolbar class="basic-header">
     <div toolbarLabel> Evaluate formula </div>
     <bl-clickable toolbarAction (do)="evaluateFormula()" class="evaluate-btn action" [disabled]="!canEvaluateFormula" [class.flash-opacity]="evaluating">
-        <i class="fa fa-calculator" title="Evaluate autoscale formula"></i>
+        <i class="fa fa-calculator" title="Evaluate autoscale formula" aria-hidden="true"></i>
     </bl-clickable>
 </bl-toolbar>
 <div>

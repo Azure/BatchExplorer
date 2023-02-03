@@ -5,6 +5,13 @@ bl-form-field {
     .label-container {
         display: block;
         color: $primary-text;
+        sup.required {
+            line-height: 1em;
+            .fa-asterisk {
+                color: var(--color-danger);
+                font-size: 8px;
+            }
+        }
     }
 
     .input-container {

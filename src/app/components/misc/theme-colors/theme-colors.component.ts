@@ -32,7 +32,7 @@ export class ThemeColorsComponent implements OnDestroy {
                 return {
                     key,
                     value: actualColor,
-                    text: tinycolor.mostReadable(actualColor, [color, contrast]).toHexString(),
+                    text: tinycolor.mostReadable(actualColor, [color, contrast, "#000", "#fff"]).toHexString(),
                 };
             });
             this.changeDetector.markForCheck();

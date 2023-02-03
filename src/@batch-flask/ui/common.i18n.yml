@@ -13,3 +13,4 @@ common:
   required: Required
   updated: Updated
   yes: "Yes"
+  listbox: Listbox

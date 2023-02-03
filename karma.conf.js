@@ -95,7 +95,6 @@ module.exports = function(config) {
                 { type: "cobertura", subdir: ".", file: "cobertura.xml" },
             ]
         },
-        // Can't enable yet has a conflict in dependency with azure-storage
         junitReporter: {
             outputDir: "./coverage"
         }

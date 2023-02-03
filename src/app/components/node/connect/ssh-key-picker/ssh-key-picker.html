@@ -6,7 +6,7 @@
         <bl-toolbar>
             <div toolbarLabel> Saved public keys </div>
             <bl-clickable toolbarAction (do)="addKey()" class="action add-key-btn">
-                <i class="fa fa-save" title="Save"></i>
+                <i class="fa fa-save" title="Save" aria-hidden="true"></i>
             </bl-clickable>
         </bl-toolbar>
         <div class="saved-key-list">
@@ -15,12 +15,12 @@
             </div>
             <div class="saved-key" *ngFor="let key of savedSSHKeys;trackBy: trackSavedKey" (click)="selectKey(key)">
                 <span class="label">{{key.name}}</span>
-                <i class="fa fa-times" title="Delete" (click)="deleteKey(key)"></i>
+                <i class="fa fa-times" title="Delete" (click)="deleteKey(key)" aria-hidden="true"></i>
             </div>
 
             <div class="no-saved-key" *ngIf="savedSSHKeys.size === 0">
                 <div>
-                    <i class="fa fa-key"></i>
+                    <i class="fa fa-key" aria-hidden="true"></i>
                 </div>
                 No saved public keys
             </div>

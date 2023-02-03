@@ -22,7 +22,7 @@
 </bl-loading>
 
 <bl-no-item [itemCount]="displayedPackages.size" [filter]="filter" [status]="data.status | async">
-    <i icon class="fa fa-file-archive-o"></i>
+    <i icon class="fa fa-file-archive-o" aria-hidden="true"></i>
     <span no-filter>This application contains no package versions</span>
     <span with-filter>Current filter returned no matches</span>
 </bl-no-item>

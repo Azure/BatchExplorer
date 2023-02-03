@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatTabsModule } from "@angular/material/tabs";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { BaseModule, FormModule, I18nUIModule, SelectModule } from "@batch-flask/ui";
 import { DataDiskPickerComponent, OsOfferTileComponent, PoolOsPickerComponent, SigImagePickerComponent } from ".";
 import { ContainerConfigurationPickerModule } from "../container-configuration-picker";
@@ -29,6 +30,7 @@ const privateComponents = [
         FormModule,
         BaseModule,
         MatMenuModule,
+        MatTooltipModule,
         MatTabsModule,
     ],
     declarations: [...publicComponents, ...privateComponents],

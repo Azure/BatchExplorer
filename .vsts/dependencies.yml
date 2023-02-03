@@ -1,6 +1,3 @@
 steps:
-  - powershell: ./scripts/azpipelines/build-type.ps1 "$(Build.SourceBranch)" "$(Build.BuildNumber)"
-    displayName: Resolve build type
-
   - template: ./node-setup.yml
   - template: ./python-setup.yml

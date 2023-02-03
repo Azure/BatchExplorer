@@ -43,7 +43,7 @@
       "request": "attach",
       "port": 9222,
       "sourceMaps": true,
-      "webRoot": "${workspaceRoot}/build",
+      "webRoot": "${workspaceRoot}",
       "timeout": 30000,
       "presentation": {
         "hidden": false,

@@ -15,7 +15,7 @@ import { AccountCostCardComponent } from "./details/account-cost-card";
 import { AccountMonitoringSectionComponent } from "./details/account-monitoring-section";
 import { AccountQuotasCardComponent } from "./details/account-quotas-card";
 import { AccountSummaryCardComponent } from "./details/account-summary-card";
-import { ProgramaticUsageModule } from "./details/programatic-usage";
+import { ProgrammaticUsageModule } from "./details/programmatic-usage";
 import { StorageAccountCardComponent } from "./details/storage-account-card";
 import { AccountHomeComponent } from "./home";
 import { AccountMonitoringModule } from "./monitoring";
@@ -33,7 +33,7 @@ const modules = [
     AccountBrowseModule,
     AccountMonitoringModule,
     PoolBaseModule,
-    ProgramaticUsageModule,
+    ProgrammaticUsageModule,
     PoolGraphsModule,
 ];
 

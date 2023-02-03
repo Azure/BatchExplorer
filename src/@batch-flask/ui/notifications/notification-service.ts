@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core";
+import { LiveAnnouncer } from "@angular/cdk/a11y";
+import { Injectable, Injector } from "@angular/core";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Notification, NotificationConfig, NotificationLevel, NotificationTimer } from "./notification";
@@ -16,9 +17,12 @@ export class NotificationService {
     private _persistedNotifications = new BehaviorSubject(List<Notification>([]));
     private _dismissTimers: StringMap<NotificationTimer> = {};
 
-    constructor() {
+    private liveAnnouncer: LiveAnnouncer;
+
+    constructor(injector: Injector) {
         this.notifications = this._notifications.asObservable();
         this.persistedNotifications = this._persistedNotifications.asObservable();
+        this.liveAnnouncer = injector.get(LiveAnnouncer);
     }
 
     public notify(
@@ -32,6 +36,7 @@ export class NotificationService {
         if (config.autoDismiss > 0) {
             this._registerForDismiss(notification);
         }
+        this.liveAnnouncer.announce(`${title} ${message}`, "polite");
         return notification;
     }
 

@@ -1,4 +1,5 @@
 import { Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import { StorageContainerProperties } from "app/services/storage";
 import { Constants } from "common";
 import { ContainerLease, ContainerLeaseAttributes } from "./container-lease";
 
@@ -27,6 +28,16 @@ export class BlobContainer extends Record<BlobContainerAttributes> implements Na
     @Prop() public lastModified: Date;
     @Prop() public lease: ContainerLease;
     @Prop() public storageAccountId: string;
+
+    constructor(container: StorageContainerProperties) {
+        super(container);
+        this.lease = new ContainerLease({
+            state: container.leaseState,
+            status: container.leaseStatus,
+            duration: container.leaseDuration
+        });
+        this.publicAccessLevel = container.publicAccess;
+    }
 
     public get routerLink(): string[] {
         if (this.isFileGroup) {

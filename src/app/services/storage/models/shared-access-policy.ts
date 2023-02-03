@@ -15,11 +15,14 @@ export interface SharedAccessPolicy {
     AccessPolicy: AccessPolicy;
 }
 
+export type PermissionType = "r" | "a" | "c" | "w" | "d" | "x" | "t" | "m" |
+    "e" | "i" | "y" | "l";
+
 export interface AccessPolicy {
     /**
      * The permission type
      */
-    Permissions: string;
+    Permissions: PermissionType[];
 
     /**
      * The time at which the Shared Access Signature becomes valid (The UTC value will be used).
