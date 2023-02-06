@@ -18,6 +18,14 @@ export interface Environment<C extends EnvironmentConfig> {
     config: C;
 
     /**
+     * True if this environment has been initialized, false otherwise.
+     *
+     * Note that `initialized = true` does not mean that initialization
+     * has finished, only that it has been started.
+     */
+    readonly initialized: boolean;
+
+    /**
      * Gets the logger for the current environment
      */
     getLogger(): Logger;
