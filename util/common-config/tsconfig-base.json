@@ -4,6 +4,7 @@
     "incremental": true,
     "strict": true,
     "target": "ES5",
+    "lib": ["DOM", "DOM.Iterable", "ES2018"],
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
