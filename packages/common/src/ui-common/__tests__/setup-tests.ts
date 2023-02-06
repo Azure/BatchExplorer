@@ -12,5 +12,10 @@ globalThis.fetch = () => {
 };
 
 afterEach(() => {
+    jest.resetAllMocks();
     destroyEnvironment();
+});
+
+afterAll(() => {
+    jest.restoreAllMocks();
 });

@@ -1,7 +1,12 @@
 import { destroyEnvironment } from "@batch/ui-common";
 
 afterEach(() => {
+    jest.resetAllMocks();
     destroyEnvironment();
+});
+
+afterAll(() => {
+    jest.restoreAllMocks();
 });
 
 // KLUDGE: Mock out the monaco API so that imports to MonacoEditor do not error.
