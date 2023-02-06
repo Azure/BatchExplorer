@@ -16,7 +16,7 @@ import { Subscription } from "rxjs";
 import "./pool-state-graph.scss";
 
 const idleColor = "#edeef2";
-const runningColor = "#388e3c";
+const runningColor = "#328000";
 const waitingForStartTaskColor = "#be93d9";
 const offlineColor = "#305796";
 const preemptedColor = "#606060";
@@ -133,8 +133,8 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
             return this._counts.get(this.pool.id);
         }
 
-        const dedicatedCounts: NodeCountsAttributes = {...emptyNodeCount};
-        const lowPriorityCounts: NodeCountsAttributes = {...emptyNodeCount};
+        const dedicatedCounts: NodeCountsAttributes = { ...emptyNodeCount };
+        const lowPriorityCounts: NodeCountsAttributes = { ...emptyNodeCount };
 
         for (const count of this._counts.values()) {
             this._addToSum(dedicatedCounts, count.dedicated);

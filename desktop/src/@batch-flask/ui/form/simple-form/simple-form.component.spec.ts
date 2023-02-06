@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { SimpleFormComponent } from "@batch-flask/ui/form/simple-form";
 import { ServerErrorComponent } from "@batch-flask/ui/server-error";
@@ -50,7 +51,7 @@ describe("SimpleFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, MaterialModule],
+            imports: [ReactiveFormsModule, MaterialModule, I18nTestingModule],
             declarations: [
                 ButtonComponent,
                 FormTestComponent,

@@ -1,3 +1,4 @@
+import { LeaseStateType, LeaseStatusType } from "@azure/storage-blob";
 import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface ContainerLeaseAttributes {
@@ -16,17 +17,6 @@ export class ContainerLease extends Record<ContainerLeaseAttributes> {
     @Prop() public duration: string;
 }
 
-export enum LeaseStatus {
-    locked = "locked",
-    unlocked = "unlocked",
-    unspecified = "unspecified",
-}
+export type LeaseStatus = LeaseStatusType;
 
-export enum LeaseState {
-    available = "available",
-    breaking = "breaking",
-    broken = "broken",
-    expired = "expired",
-    leased = "leased",
-    unspecified = "unspecified",
-}
+export type LeaseState = LeaseStateType;

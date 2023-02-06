@@ -138,16 +138,18 @@ describe("EntityCommandButtonComponent", () => {
         expect(button.disabled).toBe(true);
     });
 
-    it("should disable button when not having permission", () => {
-        testComponent.command = newMockCommand({
-            permission: "admin",
-        });
-        fixture.detectChanges();
+    // TODO: Uncomment this test when permissions checking for buttons
+    //       is re-enabled
+    // it("should disable button when not having permission", () => {
+    //     testComponent.command = newMockCommand({
+    //         permission: "admin",
+    //     });
+    //     fixture.detectChanges();
 
-        const button = getButton();
-        expect(button).not.toBeFalsy();
-        expect(button.isDisabled).toBe(true);
-    });
+    //     const button = getButton();
+    //     expect(button).not.toBeFalsy();
+    //     expect(button.isDisabled).toBe(true);
+    // });
 
     it("click on button should trigger execute", () => {
         const command = testComponent.command = newMockCommand({});

@@ -1,11 +1,25 @@
+// eslint-disable no-console
+
 import { program } from "commander";
 import * as fs from "fs";
-import fetch from "node-fetch";
+import fetch, { HeaderInit } from "node-fetch";
 import * as path from "path";
 import { Constants } from "../../src/client/client-constants";
 
-export interface ThirdPartyNoticeOptions {
+interface ThirdPartyNoticeOptions {
     check?: boolean;
+}
+
+interface Dependency {
+    name: string;
+    version: string;
+    url: string;
+    repoUrl?: string | null;
+    licenseType: string;
+}
+
+interface License {
+    content: string;
 }
 
 const defaultThirdPartyNoticeOptions: ThirdPartyNoticeOptions = {
@@ -20,18 +34,17 @@ const repoNameRegex = /https?:\/\/github\.com\/(.*)/;
 const innerSeparator = "-".repeat(60);
 const outerSeparator = "=".repeat(60);
 
-const defaultLicenseRoot = path.join(Constants.root, "scripts/lca/default-licenses");
+const defaultLicenseRoot = path.join(__dirname, "default-licenses");
 
-// eslint-disable no-console
 const defaultLicenses = {
-    "mit": fs.readFileSync(path.join(defaultLicenseRoot, "mit.txt")).toString(),
-    "bsd-2-clause": fs.readFileSync(path.join(defaultLicenseRoot, "bsd-2-clause.txt")).toString(),
-    "(ofl-1.1 and mit)": fs.readFileSync(path.join(defaultLicenseRoot, "ofl-1.1-and-mit.txt")).toString(),
-    "apache-2.0": fs.readFileSync(path.join(defaultLicenseRoot, "apache-2.0.txt")).toString(),
-    "electron": fs.readFileSync(path.join(defaultLicenseRoot, "electron.txt")).toString(),
+    "mit": "mit.txt",
+    "bsd-2-clause": "bsd-2-clause.txt",
+    "(ofl-1.1 and mit)": "ofl-1.1-and-mit.txt",
+    "apache-2.0": "apache-2.0.txt",
+    "electron": "electron.txt",
 };
 
-const additionalDependencies = [
+const additionalDependencies: Dependency[] = [
     {
         name: "websockets",
         version: "3.3",
@@ -83,7 +96,7 @@ function listDependencies(): string[] {
     });
 }
 
-function loadDependency(name: string) {
+function loadDependency(name: string): Dependency {
     const contents = fs.readFileSync(`node_modules/${name}/package.json`).toString();
     const dependency = JSON.parse(contents);
     const repoUrl = getRepoUrl(dependency);
@@ -91,8 +104,8 @@ function loadDependency(name: string) {
     return {
         name: dependency.name,
         version: dependency.version,
-        url: url,
-        repoUrl: repoUrl,
+        url,
+        repoUrl,
         licenseType: dependency.license,
     };
 }
@@ -101,7 +114,10 @@ function getRepoUrl(dependency) {
     const repo = dependency.repository;
     if (!repo) { return null; }
     if (typeof repo === "string") {
-        return `https://github.com/${repo}`;
+        if (repo.startsWith(`https://github.com/`)) {
+            return repo;
+        }
+        return `https://github.com/${repo.replace(/^github:/, "")}`;
     }
     const match = gitUrlRegex.exec(repo.url);
     if (!match) { return null; }
@@ -119,20 +135,25 @@ function getRepoName(repoUrl: string | null): string | null {
     return value.split("/").slice(0, 2).join("/");
 }
 
-function loadLicense(repoUrl: string | null, anonymous = false): Promise<any> {
+async function loadLicense(dependency: Dependency, anonymous = false):
+    Promise<License> {
+    const { repoUrl = null } = dependency;
     const repoName = getRepoName(repoUrl);
     const licenseUrl = `https://api.github.com/repos/${repoName}/license`;
-    const headers = anonymous ? {} : { Authorization: `token ${process.env.GH_TOKEN}`}
+    const headers: HeaderInit = anonymous ? {} :
+        { Authorization: `token ${process.env.GH_TOKEN}` }
 
-    return fetch(licenseUrl, {headers}).then((res) => {
+    return fetch(licenseUrl, { headers }).then(async (res) => {
         /** Will look up default license if cannot find a license */
         if (!anonymous && res.status === 403) {
             console.warn(`Access denied, retrying request anonymously. Url: ${licenseUrl}`);
-            return loadLicense(repoUrl, anonymous = true);
+            return loadLicense(dependency, anonymous = true);
         } else if (res.status >= 300 && res.status != 404) {
             throw new Error(`Response status ${res.status} ${res.statusText} with url: ${licenseUrl}`);
+        } else if (res.status === 404) {
+            console.warn(`No license found for ${repoName}. Using default license ${dependency.licenseType} instead.`);
         }
-        return res.json();
+        return await res.json();
     }).catch((error) => {
         console.error(`Error loading license for ${repoName}`, error);
         process.exit(1)
@@ -144,14 +165,17 @@ function decode64(content: string) {
 }
 
 function getHeader() {
-    return fs.readFileSync(path.join(Constants.root, "scripts/lca/header.txt")).toString();
+    return fs.readFileSync(path.join(__dirname, "header.txt")).toString();
 }
 
-function getLicenseContent(dependency, license) {
+function getLicenseContent(dependency, license): string | null {
     if (!license.content) {
-        const licenseType = dependency.licenseType && dependency.licenseType.toLowerCase();
-        if (licenseType in defaultLicenses) {
-            return defaultLicenses[licenseType];
+        const licenseType = dependency?.licenseType.toLowerCase();
+        if (Object.keys(defaultLicenses).includes(licenseType)) {
+            const licenseFilePath =
+                path.join(defaultLicenseRoot, defaultLicenses[licenseType]);
+            const licenseContent = fs.readFileSync(licenseFilePath).toString();
+            return licenseContent;
         } else {
             console.warn(`Repo ${dependency.name} doesn't have a license file`
                 + ` for ${licenseType} and no default provided`);
@@ -179,20 +203,20 @@ function run(options: ThirdPartyNoticeOptions = {}) {
     output.push(getHeader());
     output.push("");
 
-    const depenencyNames = listDependencies();
-    const dependencies = depenencyNames.map((dep) => {
-        return loadDependency(dep);
-    }).concat(additionalDependencies);
+    const dependencyNames = listDependencies();
+    const dependencies = dependencyNames
+        .map(dep => loadDependency(dep))
+        .concat(additionalDependencies);
     console.log("Loading dependencies...");
 
     const toc = dependencies.map((dependency, index) => {
-        return `${index}. ${dependency.name}(${dependency.url}) - ${dependency.licenseType}`;
+        return `${index + 1}. ${dependency.name} (${dependency.url}) - ${dependency.licenseType}`;
     });
     output.push(toc.join("\n"));
     output.push("");
 
     const licensePromises = dependencies.map((dependency) => {
-        return loadLicense(dependency.repoUrl);
+        return loadLicense(dependency);
     });
     console.log("Loading licenses...");
 
@@ -204,9 +228,8 @@ function run(options: ThirdPartyNoticeOptions = {}) {
             output.push(innerSeparator);
 
             const licenseContent = getLicenseContent(dependency, license);
-            if (!licenseContent) { continue; }
 
-            output.push(licenseContent);
+            output.push(licenseContent || "[NO LICENSE]");
             output.push(innerSeparator);
             output.push(`    End license for ${dependency.name}`);
             output.push(outerSeparator);
@@ -224,7 +247,8 @@ function run(options: ThirdPartyNoticeOptions = {}) {
 }
 
 const options = program
-    .option("-c, --check", "Check the current third party notice file is valid.")
+    .option("-c, --check",
+        "Check the current third party notice file is valid.")
     .parse(process.argv);
 
-run(options as any);
+run({ check: options.getOptionValue("check") });

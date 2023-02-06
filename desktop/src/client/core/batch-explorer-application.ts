@@ -24,6 +24,7 @@ import { RecoverWindow } from "../recover-window";
 import { AADService, AuthenticationState, AuthenticationWindow, LogoutError } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
+import { StorageBlobAdapter } from "./storage";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = ClientConstants.isDev ? "-dev" : "";
@@ -56,7 +57,8 @@ export class BatchExplorerApplication {
         public properties: BatchExplorerProperties,
         private telemetryService: TelemetryService,
         private telemetryManager: TelemetryManager,
-        private ipcMain: BlIpcMain) {
+        private ipcMain: BlIpcMain,
+        private storageBlobAdapter: StorageBlobAdapter) {
         this.windows = new MainWindowManager(this, this.telemetryManager);
         this.state = this._state.asObservable();
 
@@ -81,6 +83,7 @@ export class BatchExplorerApplication {
         this._setupProcessEvents();
         this._registerFileProtocol();
         await this.proxySettings.init();
+        this.storageBlobAdapter.init();
     }
 
     /**
@@ -331,7 +334,7 @@ export class BatchExplorerApplication {
     }
 
     private _registerFileProtocol() {
-        protocol.registerFileProtocol("file", (request,  callback) => {
+        protocol.registerFileProtocol("file", (request, callback) => {
             const pathName = decodeURI(request.url.replace("file:///", ""));
             callback(pathName);
         });

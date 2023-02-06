@@ -8,6 +8,7 @@ import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { NotificationModule } from "@batch-flask/ui/notifications";
 import { ToolbarModule } from "@batch-flask/ui/toolbar";
 import { VirtualScrollModule } from "@batch-flask/ui/virtual-scroll";
+import { I18nUIModule } from "@batch-flask/ui/i18n";
 import {
     ActivityMonitorComponent,
     ActivityMonitorItemActionComponent,
@@ -28,6 +29,7 @@ import { ActivityMonitorFooterItemComponent } from "./activity-monitor-footer-it
         NotificationModule,
         VirtualScrollModule,
         ToolbarModule,
+        I18nUIModule
     ],
     declarations: [
         ActivityMonitorFooterComponent,

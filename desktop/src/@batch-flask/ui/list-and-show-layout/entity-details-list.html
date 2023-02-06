@@ -10,7 +10,7 @@
             matTooltipPosition="above"
             [routerLink]="baseLink"
             [queryParams]="{filter: true}">
-            <i class="fa fa-filter"></i>
+            <i class="fa fa-filter" aria-hidden="true"></i>
         </bl-clickable>
     </div>
     <div class="actions">
@@ -21,6 +21,6 @@
         <ng-content select="[bl-list-buttons]"></ng-content>
     </div>
 </div>
-<div class="entity-details-list-content">
+<div class="entity-details-list-content" aria-live="polite">
     <ng-content></ng-content>
 </div>

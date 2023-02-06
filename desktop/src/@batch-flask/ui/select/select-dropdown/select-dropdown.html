@@ -9,7 +9,7 @@
     (mousedown)="handleClickOption($event, option)">
 
     <div class="checkbox" *ngIf="multiple" aria-hidden="true">
-        <i class="fa fa-check" *ngIf="selected.has(option.value)"></i>
+        <i class="fa fa-check" *ngIf="selected.has(option.value)" aria-hidden="true"></i>
     </div>
     <div class="option-content">
         <ng-container *ngIf="select.optionTemplate">
@@ -20,9 +20,6 @@
         </ng-container>
     </div>
 </div>
-<div class="no-option" *ngIf="displayedOptions.length === 0 && select.filter">
-    No match
-</div>
-<div class="no-option" *ngIf="displayedOptions.length === 0 && !select.filter">
-    No options available
+<div class="no-option" *ngIf="displayedOptions.length === 0">
+    {{noMatchText}}
 </div>

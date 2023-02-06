@@ -1,10 +1,10 @@
 <bl-toolbar class="tree-view-header">
     <bl-clickable toolbarAction class="caret" (do)="toggleExpandTreeView()" [attr.aria-expanded]="expanded" attr.aria-owns="{{id}}-content" aria-label="Toggle tree view">
-        <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded"></i>
+        <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded" aria-hidden="true"></i>
     </bl-clickable>
     <bl-clickable toolbarLabel id="{{id}}_name" class="name" (do)="handleClickTreeViewHeader()">{{name}}</bl-clickable>
     <span toolbarError *ngIf="fileNavigator.error" [title]="fileNavigator.error.code">
-        <i class="fa fa-warning"></i>
+        <i class="fa fa-warning" aria-hidden="true"></i>
     </span>
     <bl-clickable toolbarAction (do)="refresh()" [disabled]="refreshing" class="refresh" [attr.aria-label]="'common.refresh' | i18n">
         <i class="fa fa-refresh action" [attr.title]="'common.refresh' | i18n" *ngIf="!refreshing" aria-hidden="true"></i>
@@ -27,14 +27,15 @@
     (keydown)="handleKeyboardNavigation($event)"
     (contextmenu)="showContextMenu($event)">
 
+    <p *ngIf="treeRows.length === 0" tabindex="0" class="tree-view-empty">{{'file-explorer.noFiles' | i18n }}</p>
+    <p *ngIf="fileNavigator.error" tabindex="0" class="tree-view-error">{{fileNavigator.error.message}}</p>
+
     <div class="tree-rows-container"
         [class.drop-target]="dropTargetPath === ''"
         (dragenter)="dragEnterRow($event)"
         (dragleave)="dragLeaveRow($event)"
         (dragover)="handleDragHover($event)"
         (drop)="handleDropOnRow($event)">
-        <div *ngIf="treeRows.length === 0" class="tree-view-empty">{{'file-explorer.noFiles' | i18n }}</div>
-        <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
 
         <bl-file-tree-view-row *ngFor="let treeRow of treeRows; let  i = index; trackBy: treeRowTrackBy"
             id="{{id}}-row-{{i}}"

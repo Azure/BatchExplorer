@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { InputDirective } from "./input.directive";
 
@@ -13,7 +13,7 @@ describe("InputDirective", () => {
 
     function createComponent(comp) {
         TestBed.configureTestingModule({
-            imports: [ FormsModule, ReactiveFormsModule],
+            imports: [FormsModule, ReactiveFormsModule],
             declarations: [InputDirective, comp],
         });
         fixture = TestBed.createComponent(comp);
@@ -64,6 +64,45 @@ describe("InputDirective", () => {
         });
     });
 
+    describe("when setting required", () => {
+        it("should mark as required based on form control validation", () => {
+            createComponent(BlInputWithFormControl);
+            const testComponent = fixture.componentInstance;
+
+            fixture.detectChanges();
+            expect(de.nativeElement.required).toBeFalsy();
+
+            testComponent.formControl.setValidators(Validators.required);
+            testComponent.formControl.updateValueAndValidity();
+            fixture.detectChanges();
+            expect(de.nativeElement.required).toBe(true);
+            expect(de.nativeElement.getAttribute("aria-required")).toBe("true");
+
+            testComponent.formControl.clearValidators();
+            fixture.detectChanges();
+            expect(de.nativeElement.required).toBe(false);
+            expect(de.nativeElement.getAttribute("aria-required"))
+                .toBeFalsy();
+        });
+        it("should mark as required based on attribute", () => {
+            createComponent(BlInputWithRequired);
+            const testComponent = fixture.componentInstance;
+
+            testComponent.required = true;
+            fixture.detectChanges();
+            expect(de.nativeElement.required).toBe(true);
+
+            // Attribute overrides form control validation
+            testComponent.required = false;
+            testComponent.formControl.setValidators(Validators.required);
+            testComponent.formControl.updateValueAndValidity();
+            fixture.detectChanges();
+            expect(de.nativeElement.required).toBe(false);
+            expect(de.nativeElement.getAttribute("aria-required"))
+                .toBeFalsy();
+        });
+    });
+
     describe("when using a form control", () => {
         let testComponent: BlInputWithFormControl;
 
@@ -97,6 +136,14 @@ class BlInputWithPlaceholder {
 })
 class BlInputWithDisabled {
     public disabled: boolean;
+}
+
+@Component({
+    template: `<input blInput [required]="required">`,
+})
+class BlInputWithRequired {
+    public required: boolean;
+    public formControl = new FormControl();
 }
 
 @Component({

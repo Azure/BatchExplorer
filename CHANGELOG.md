@@ -1,3 +1,39 @@
+# 2.16.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/50?closed=1)
+
+### Features
+
+* Usability and accessibility improvements [\#2634](https://github.com/Azure/BatchExplorer/issues/2634)
+* Link to Italy Accessibility Declarations [\#2638](https://github.com/Azure/BatchExplorer/issues/2638)
+* Deprecation warnings for certain images [\#2635](https://github.com/Azure/BatchExplorer/issues/2635)
+* Migrates to new Azure Storage SDK [\#2637](https://github.com/Azure/BatchExplorer/issues/2637)
+* Security updates [\#2639](https://github.com/Azure/BatchExplorer/issues/2639)
+
+### Bugs
+
+* Storage container Create button in the data menu was broken [\#2636](https://github.com/Azure/BatchExplorer/issues/2636)
+
+# 2.15.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/49?closed=1)
+
+### Bugs
+
+* Users with custom permissions were not able to create pools or jobs [\#2077](https://github.com/Azure/BatchExplorer/issues/2077)
+
+# 2.14.2
+
+### Bugs
+
+* Fixes login failures when proxy is misconfigured [\#2551]
+
+# 2.14.1
+
+### Bugs
+
+* Fixes login failures due to AADSTS50011 error [\#2543]
+
 # 2.14.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/48?closed=1)

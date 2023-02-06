@@ -1,25 +1,39 @@
 <div>
-    <bl-banner *ngIf="startTaskFailedError" fixMessage="Edit the start task" [fix]="openEditStartTask">
-        <div message>The start task has failed on {{startTaskFailedError.failedStartTaskNodes}} out of {{startTaskFailedError.nodeCount}} nodes.</div>
-        <div [other-fix]="rebootFailedNodes" fixMessage="Reboot failed nodes"></div>
-        <div *ngIf="isPaasPool" [other-fix]="reimageFailedNodes" fixMessage="Reimage failed nodes"></div>
+    <bl-banner *ngIf="startTaskFailedError"
+        [fixMessage]="'pool-graphs.fixes.edit-start-task' | i18n"
+        [fix]="openEditStartTask">
+        <div message>
+            {{'pool-graphs.errors.start-task-failed' | i18n: {
+                failed: startTaskFailedError.failedStartTaskNodes,
+                total: startTaskFailedError.nodeCount
+            } }}
+        </div>
+        <div [other-fix]="rebootFailedNodes"
+            [fixMessage]="'pool-graphs.fixes.reboot-failed-nodes' | i18n">
+        </div>
+        <div *ngIf="isPaasPool" [other-fix]="reimageFailedNodes"
+            [fixMessage]="'pool-graphs.fixes.reimage-failed-nodes' | i18n">
+        </div>
     </bl-banner>
     <bl-banner *ngIf="unusableNodeError">
-        <div message>{{unusableNodeError.failedUnusableNodes}} out of {{unusableNodeError.nodeCount}} nodes are in an unusable state.
-            Please click the nodes for more details.
+        <div message>
+            {{'pool-graphs.errors.unusable-nodes' | i18n: {
+                failed: unusableNodeError.failedUnusableNodes,
+                total: unusableNodeError.nodeCount
+            } }}
         </div>
     </bl-banner>
 </div>
 <bl-metrics-monitor class="graphs-container">
     <!-- Only show the heatmap, available nodes and running tasks on the pool -->
     <ng-container *ngIf="!node">
-        <bl-metrics-monitor-metric label="Heatmap">
+        <bl-metrics-monitor-metric [label]="'pool-graphs.heatmap' | i18n">
             <bl-nodes-heatmap blMonitorGraphPreview [pool]="pool" [nodes]="nodes" [showRunningTasks]="false"
                 [showLegend]="false" [interactive]="false" [limitNode]="10"></bl-nodes-heatmap>
 
             <bl-nodes-heatmap blMonitorGraphChart [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
         </bl-metrics-monitor-metric>
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.nodes'" label="Available nodes">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.nodes'" [label]="'pool-graphs.available-nodes' | i18n">
             <bl-history-graph blMonitorGraphPreview [max]="pool.targetNodes" [history]="runningNodesHistory.history"
                 [interactive]="false" [historySize]="selectedHistoryLength.value">
             </bl-history-graph>
@@ -28,7 +42,7 @@
                 [historySize]="selectedHistoryLength.value">
             </bl-history-graph>
         </bl-metrics-monitor-metric>
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.tasks'" label="Running tasks">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.tasks'" [label]="'pool-graphs.running-tasks' | i18n">
             <bl-history-graph blMonitorGraphPreview [max]="maxRunningTasks" [history]="runningTaskHistory.history"
                 [interactive]="false" [historySize]="selectedHistoryLength.value">
             </bl-history-graph>
@@ -70,12 +84,12 @@
 
                 <bl-network-usage-graph blMonitorGraphChart metric="network" [data]="performanceMetrics" [pool]="pool" class="full-display"></bl-network-usage-graph>
             </bl-metrics-monitor-metric>
-            <bl-metrics-monitor-metric label="Gpu usage" *ngIf="hasGPU">
+            <bl-metrics-monitor-metric [label]="'pool-graphs.gpu-usage' | i18n" *ngIf="hasGPU">
                 <bl-gpu-usage-graph blMonitorGraphPreview #gpuUsage [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-gpu-usage-graph>
                 <div blMetricsStatus>{{gpuUsage.status | async}}</div>
                 <bl-gpu-usage-graph blMonitorGraphChart [data]="performanceMetrics" [pool]="pool" [showIndividualGpu]="node" class="full-display"></bl-gpu-usage-graph>
             </bl-metrics-monitor-metric>
-            <bl-metrics-monitor-metric label="Gpu memory" *ngIf="hasGPU">
+            <bl-metrics-monitor-metric [label]="'pool-graphs.gpu-memory' | i18n" *ngIf="hasGPU">
                 <bl-gpu-memory-usage-graph blMonitorGraphPreview #gpuUsage [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-gpu-memory-usage-graph>
                 <div blMetricsStatus>{{gpuUsage.status | async}}</div>
                 <bl-gpu-memory-usage-graph blMonitorGraphChart [data]="performanceMetrics" [pool]="pool" [showIndividualGpu]="node"
@@ -84,9 +98,9 @@
         </ng-container>
     </ng-container>
     <ng-container *ngIf="!appInsightsEnabled">
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Application Insights">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" [label]="'pool-graphs.application-insights' | i18n">
             <bl-cpu-usage-graph blMonitorGraphPreview [data]="performanceMetrics" [pool]="pool" [interactive]="false"></bl-cpu-usage-graph>
-            <div blMetricsStatus>{{'pool-graphs.notEnabled' | i18n}}</div>
+            <div blMetricsStatus>{{'pool-graphs.not-enabled' | i18n}}</div>
 
             <bl-enable-app-insights-doc blMonitorGraphChart></bl-enable-app-insights-doc>
         </bl-metrics-monitor-metric>

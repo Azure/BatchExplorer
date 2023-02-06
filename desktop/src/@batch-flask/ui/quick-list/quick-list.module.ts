@@ -6,6 +6,7 @@ import { MaterialModule } from "@batch-flask/core";
 import { AbstractListModule } from "@batch-flask/ui/abstract-list";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import { VirtualScrollModule } from "@batch-flask/ui/virtual-scroll";
+import { I18nUIModule } from "../i18n";
 import { NoItemComponent } from "./no-item.component";
 import { QuickListItemStatusComponent } from "./quick-list-item-status";
 import {
@@ -39,6 +40,7 @@ const publicComponents = [
         VirtualScrollModule,
         LoadingModule,
         AbstractListModule,
+        I18nUIModule
     ],
 })
 export class QuickListModule {

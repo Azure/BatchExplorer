@@ -4,6 +4,8 @@ import { autobind } from "@batch-flask/core";
 import { ConfirmationDialog } from "@batch-flask/ui";
 import { BlobContainer } from "app/models";
 
+import "./delete-container-dialog.scss";
+
 @Component({
     selector: "bl-delete-container-dialog",
     templateUrl: "delete-container-dialog.html",

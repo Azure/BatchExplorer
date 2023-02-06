@@ -1,5 +1,5 @@
 <div class="state-container" [matTooltip]="message">
-    <div class="state-icon" [ngSwitch]="job.state">
+    <div class="state-icon" [ngSwitch]="job.state" aria-hidden="true">
             <i  *ngSwitchCase="JobState.active" class="fa fa-play-circle"></i>
             <i  *ngSwitchCase="JobState.deleting" class="fa fa-trash flash-opacity"></i>
             <i  *ngSwitchCase="JobState.terminating" class="fa fa-stop-circle flash-opacity"></i>

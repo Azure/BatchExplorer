@@ -3,7 +3,7 @@
         <bl-summary-card>
             <div summaryTitle>{{decorator.thumbprint}}</div>
             <div summarySubtitle>
-                <i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}
+                <i class="fa" [ngClass]="decorator.stateIcon" aria-hidden="true"></i> {{decorator.state}}
             </div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>

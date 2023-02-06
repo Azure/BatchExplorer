@@ -13,17 +13,17 @@
             <bl-clickable class="btn" (do)="triggerFix()" [ngSwitch]="state" [class.disabled]="state !== errorStates.Error">
                 <span *ngSwitchCase="errorStates.Error">Fix: {{ fixMessage }}</span>
                 <span *ngSwitchCase="errorStates.Fixing">
-                    <i class="fa fa-spinner fa-spin"></i>Fixing
+                    <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Fixing
                 </span>
                 <span *ngSwitchCase="errorStates.Fixed">
-                    <i class="fa fa-check"></i>Fixed
+                    <i class="fa fa-check" aria-hidden="true"></i>Fixed
                 </span>
             </bl-clickable>
             <bl-clickable class="other-fixes-btn" *ngIf="otherFixes.length !== 0"
                 (mouseenter)="state === errorStates.Error && showOtherFixes = true"
                 (do)="state === errorStates.Error && showOtherFixes = !showOtherFixes"
                 [class.disabled]="state !== errorStates.Error">
-                <i class="fa fa-plus"></i>
+                <i class="fa fa-plus" aria-hidden="true"></i>
             </bl-clickable>
             <div *ngIf="showOtherFixes" class="other-fixes">
                 <bl-clickable *ngFor="let otherFix of otherFixes;trackBy: trackByFn" class="other-fix" (do)="triggerFix(otherFix)">
@@ -31,7 +31,7 @@
                 </bl-clickable>
             </div>
         </div>
-        <i class="caret fa" [class.fa-caret-left]="!showDetails" [class.fa-caret-down]="showDetails" *ngIf="details.children.length !== 0"></i>
+        <i class="caret fa" [class.fa-caret-left]="!showDetails" [class.fa-caret-down]="showDetails" *ngIf="details.children.length !== 0" aria-hidden="true"></i>
     </bl-clickable>
     <div class="details-container" [hidden]="!showDetails || details.children.length === 0" #details>
         <ng-content select="[details]"></ng-content>

@@ -2,7 +2,7 @@
     <div bl-dropdown-btn>
         <!-- add a default here for while it's loading? -->
         {{selectButtonText}}
-        <i *ngIf="loaded === false" class="fa fa-spinner fa-spin"></i>
+        <i *ngIf="loaded === false" class="fa fa-spinner fa-spin" aria-hidden="true"></i>
     </div>
     <div bl-dropdown-content>
         <div *ngFor="let workspace of workspaces | async; trackBy: trackByFn"
@@ -15,11 +15,11 @@
                 {{workspace.name}}
             </div>
             <div *ngIf="workspace.id === selectedWorkspaceId" class="extra">
-                <i class="fa fa-check"></i>
+                <i class="fa fa-check" aria-hidden="true"></i>
             </div>
         </div>
         <!-- <bl-clickable class="dropdown-item manage">
-            <i class="fa fa-cog fa-2x"></i> Manage workspaces
+            <i class="fa fa-cog fa-2x" aria-hidden="true"></i> Manage workspaces
         </bl-clickable> -->
     </div>
 </bl-dropdown>

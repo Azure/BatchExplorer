@@ -2,13 +2,17 @@
     <div style="padding: 10px; flex: 1">
         <mat-checkbox [formControl]="onlyFailedControl" color="primary">Only failed</mat-checkbox>
     </div>
-    <div class="type-toggle">
+    <div role="radiogroup" aria-required="true" class="type-toggle">
         <bl-clickable class="option" (do)="updateType(HookTaskType.PreparationTask)"
+            role="radio"
+            [attr.aria-checked]="type === HookTaskType.PreparationTask"
             [attr.aria-selected]="type === HookTaskType.PreparationTask"
             [class.active]="type === HookTaskType.PreparationTask">
             Preparation tasks
         </bl-clickable>
         <bl-clickable class="option" (do)="updateType(HookTaskType.ReleaseTask)"
+            role="radio"
+            [attr.aria-checked]="type === HookTaskType.ReleaseTask"
             [attr.aria-selected]="type === HookTaskType.ReleaseTask"
             [class.active]="type === HookTaskType.ReleaseTask"
             [attr.aria-disabled]="!hasReleaseTask"

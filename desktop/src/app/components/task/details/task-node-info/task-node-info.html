@@ -4,7 +4,7 @@
     role="link"
     [title]="poolDescription"
     [routerLink]="poolStatus === EntityStatus.NotFound ? null : ['/pools', nodeInfo.poolId]">
-    <i class="fa fa-database"></i> {{nodeInfo.poolId}}
+    <i class="fa fa-database" aria-hidden="true"></i> {{nodeInfo.poolId}}
 </bl-button>
 <bl-button type="wide"
     class="node-link"
@@ -12,5 +12,5 @@
     role="link"
     [title]="nodeDescription"
     [routerLink]="nodeStatus === EntityStatus.NotFound ? null : ['/pools', nodeInfo.poolId, 'nodes', nodeInfo.nodeId] ">
-    <i class="fa fa-tv"></i> {{nodeInfo.nodeId}}
+    <i class="fa fa-tv" aria-hidden="true"></i> {{nodeInfo.nodeId}}
 </bl-button>

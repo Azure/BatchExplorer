@@ -1,4 +1,4 @@
-<div class="tile" [title]="title">
+<div class="tile" [title]="title" aria-hidden="true">
     <i class="fa fa-check" *ngIf="done && !error"></i>
     <i class="fa fa-play" *ngIf="active && !error"></i>
     <i class="fa fa-exclamation-triangle" *ngIf="error"></i>

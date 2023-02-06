@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { Workspace, WorkspaceService } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DropdownModule } from "@batch-flask/ui/dropdown";
@@ -40,7 +41,8 @@ describe("WorkspaceDropDownComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ButtonsModule, DropdownModule, RouterTestingModule],
+            imports: [ButtonsModule, DropdownModule, RouterTestingModule,
+                I18nTestingModule],
             declarations: [WorkspaceDropDownComponent, TestComponent],
             providers: [
                 { provide: ChangeDetectorRef, useValue: null },

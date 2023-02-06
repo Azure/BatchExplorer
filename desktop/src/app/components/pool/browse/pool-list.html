@@ -53,12 +53,12 @@
     </bl-column>
 
     <bl-column name="targetDedicatedNodes">
-        <div *blHeadCellDef>Dedicated <i class="fa fa-tv"></i></div>
+        <div *blHeadCellDef>Dedicated <i class="fa fa-tv" aria-hidden="true"></i></div>
         <div *blCellDef="let pool">{{pool.targetDedicatedNodes}}</div>
     </bl-column>
 
     <bl-column name="targetLowPriorityNodes">
-        <div *blHeadCellDef>Low pri <i class="fa fa-tv"></i></div>
+        <div *blHeadCellDef>Low pri <i class="fa fa-tv" aria-hidden="true"></i></div>
         <div *blCellDef="let pool">{{pool.targetLowPriorityNodes}}</div>
     </bl-column>
 
@@ -69,7 +69,7 @@
 </bl-table>
 
 <bl-no-item [itemCount]="pools.size" [filter]="filter" [status]="status">
-    <i icon class="fa fa-database small"></i>
+    <i icon class="fa fa-database small" aria-hidden="true"></i>
     <span no-filter>No pools</span>
     <span with-filter>No pools match this filter</span>
 </bl-no-item>

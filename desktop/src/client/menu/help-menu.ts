@@ -20,6 +20,10 @@ export class HelpMenu {
                     label: this.i18n.translate("main-menu.help.privacyStatement"),
                     click: () => this.openPrivacyStatement(),
                 },
+                {
+                    label: this.i18n.translate("main-menu.help.italyAccessibility"),
+                    click: () => this.openItalyAccessibility(),
+                },
                 { type: "separator" },
                 {
                     label: this.i18n.translate("main-menu.help.reportIssue"),
@@ -35,6 +39,10 @@ export class HelpMenu {
 
     public openPrivacyStatement() {
         shell.openExternal(Constants.ExternalLinks.privacyStatement);
+    }
+
+    public openItalyAccessibility() {
+        shell.openExternal(Constants.ExternalLinks.italyAccessibility);
     }
 
     public submitIssue() {

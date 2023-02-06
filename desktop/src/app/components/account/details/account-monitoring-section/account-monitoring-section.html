@@ -4,10 +4,10 @@
     <div>
         <mat-button-toggle-group formControlName="chartType">
             <mat-button-toggle [value]="ChartType.Line">
-                <i class="fa fa-line-chart"></i> Line
+                <i class="fa fa-line-chart" aria-hidden="true"></i> Line
             </mat-button-toggle>
             <mat-button-toggle [value]="ChartType.Bar">
-                <i class="fa fa-bar-chart"></i> Bar
+                <i class="fa fa-bar-chart" aria-hidden="true"></i> Bar
             </mat-button-toggle>
         </mat-button-toggle-group>
 
@@ -18,12 +18,13 @@
 <div class="monitor-charts" *ngIf="isArmAccount">
     <a class="monitor-chart"
         [title]="'account-monitoring.expandLabel' | i18n"
-        [routerLink]="['/accounts', account.id, 'monitor']" *ngFor="let metricType of chartTypes;trackBy: trackMetric">
+        [routerLink]="['/accounts', account.id, 'monitor']" *ngFor="let metricType of chartTypes;trackBy: trackMetric"
+        role="application">
         <bl-monitor-chart [metrics]="metricType" [timeRange]="currentRange" [chartType]="chartType"></bl-monitor-chart>
     </a>
-    <div class="monitor-chart current-node-counts">
-        <h2>{{'account-monitoring.currentNodeStates' | i18n }}</h2>
-        <bl-pool-state-graph></bl-pool-state-graph>
+    <div class="monitor-chart current-node-counts" tabindex="0">
+        <h2 tabindex="0">{{'account-monitoring.currentNodeStates' | i18n }}</h2>
+        <bl-pool-state-graph tabindex="0" aria-label="graph"></bl-pool-state-graph>
     </div>
 </div>
 <div  *ngIf="!isArmAccount">

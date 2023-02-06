@@ -4,7 +4,7 @@ import { ArmResourceUtils } from "app/utils";
     selector: "bl-application-default",
     template: `
         <div class="no-entity-home">
-            <i class="fa fa-cloud-upload large"></i>
+            <i class="fa fa-cloud-upload large" aria-hidden="true"></i>
             <p>Please select a file group from the list</p>
         </div>
     `,

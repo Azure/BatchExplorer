@@ -1,0 +1,6 @@
+delete-container-dialog:
+  title: Delete Containers
+  message: Are you sure you want to permanently delete the following
+    container(s)?
+  warning: Deleting the container(s) listed above is irreversible. The action
+    you are about to take cannot be undone.

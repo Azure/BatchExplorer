@@ -2,7 +2,7 @@ steps:
   - task: UsePythonVersion@0
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     inputs:
-      versionSpec: '3.9.x'
+      versionSpec: '3.9'
     displayName: Install Python 3.9 for Batch Explorer
 
   - bash: ./.vsts/common/setup-python.sh

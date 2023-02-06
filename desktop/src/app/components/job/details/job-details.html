@@ -13,8 +13,8 @@
             </bl-button-group>
             <div summaryTile *blFeatureOn="'job.statistics'">
                 <a class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">
-                    <i class="fa fa-line-chart"></i>
-                    <i class="fa fa-area-chart"></i>
+                    <i class="fa fa-line-chart" aria-hidden="true"></i>
+                    <i class="fa fa-area-chart" aria-hidden="true"></i>
                     <div>Job statistics</div>
                 </a>
             </div>

@@ -18,7 +18,7 @@
         </div>
         <div class="credentials-source">
             <bl-button type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!connectionSettings">
-                <div class="button-icon-frame">
+                <div class="button-icon-frame" aria-hidden="true">
                     <i *ngIf="!loading" class="fa fa-plug"></i>
                     <i *ngIf="loading" class="fa fa-spinner fa-pulse"></i>
                 </div>
@@ -26,12 +26,12 @@
             </bl-button>
             <bl-button type="wide" [action]="addOrUpdateUser">
                 <div class="button-icon-frame">
-                    <i class="fa fa-plus"></i>
+                    <i class="fa fa-plus" aria-hidden="true"></i>
                 </div>
                 <div class="button-label">Add/update user</div>
             </bl-button>
         </div>
     </div>
     <bl-server-error *ngIf="error" [error]="error"></bl-server-error>
-    <bl-clickable class="close-button" type="plain" (do)="close()"><i class="fa fa-times fa-lg"></i></bl-clickable>
+    <bl-clickable class="close-button" type="plain" (do)="close()"><i class="fa fa-times fa-lg" aria-hidden="true"></i></bl-clickable>
 </div>

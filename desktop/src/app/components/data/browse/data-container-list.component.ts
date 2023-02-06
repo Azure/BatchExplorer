@@ -5,7 +5,7 @@ import {
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListSelection, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, LoadingStatus, QuickListItemStatus } from "@batch-flask/ui";
-import { BlobContainer, LeaseStatus } from "app/models";
+import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageContainerService } from "app/services/storage";
 import { ComponentUtils } from "app/utils";
 import { Constants } from "common";
@@ -114,8 +114,8 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     }
 
     public containerStatus(container: BlobContainer): QuickListItemStatus {
-        switch (container.lease && container.lease.status) {
-            case LeaseStatus.locked:
+        switch (container.lease?.status) {
+            case "locked":
                 return QuickListItemStatus.warning;
             default:
                 return QuickListItemStatus.normal;
