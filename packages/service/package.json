@@ -14,9 +14,10 @@
   "types": "./lib/index.d.ts",
   "test": "jest",
   "scripts": {
-    "build": "npm run compile",
+    "build": "npm run compile && npm run build-translations",
     "build:clean": "run-s clean compile",
     "build:test": "run-s build test",
+    "build-translations": "bux build-translations --src src/ui-service --destJSON build/i18n-json --destRESJSON i18n --packageName lib.service",
     "compile": "run-p compile:*",
     "compile:esm": "tsc -b ./config/tsconfig.build.json",
     "compile:cjs": "tsc -b ./config/tsconfig.cjs.json",

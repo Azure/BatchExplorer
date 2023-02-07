@@ -1,0 +1,3 @@
+create-account-action:
+  location: Location
+  storageAccount: Storage Account
