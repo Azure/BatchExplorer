@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { DialogService } from "@batch-flask/ui/dialogs";
-import { CredentialType, ProgramaticUsageComponent } from "../programatic-usage";
+import { CredentialType, ProgrammaticUsageComponent } from "../programmatic-usage";
 
 import "./getting-started-card.scss";
 
@@ -20,7 +20,7 @@ export class GettingStartedCardComponent {
     }
 
     public openPage(src: string, credType: CredentialType) {
-        const ref = this.dialogService.open(ProgramaticUsageComponent);
+        const ref = this.dialogService.open(ProgrammaticUsageComponent);
         ref.componentInstance.accountId = this.accountId;
         ref.componentInstance.pickCredentialType(credType);
         ref.componentInstance.pickType(src);

@@ -5,6 +5,13 @@ bl-form-field {
     .label-container {
         display: block;
         color: $primary-text;
+        sup.required {
+            line-height: 1em;
+            .fa-asterisk {
+                color: var(--color-danger);
+                font-size: 8px;
+            }
+        }
     }
 
     .input-container {
@@ -27,11 +34,6 @@ bl-form-field {
     &.bl-disabled {
         // Having this opacity make contrast ratio too loos
         // opacity: 0.5;
-    }
-
-    .fa-asterisk {
-        color: var(--color-danger);
-        font-size: 8px;
     }
 }
 

@@ -15,7 +15,7 @@ export class BaseButton {
     template: `
         <bl-button color="light" type="wide" [action]="action">
             <ng-content *ngIf="!loading"></ng-content>
-            <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+            <i class="fa fa-spinner fa-spin" *ngIf="loading" aria-hidden="true"></i>
         </bl-button>
     `,
 })
@@ -28,7 +28,7 @@ export class LoadingButtonComponent extends BaseButton {
     selector: "bl-clear-list-selection",
     template: `
         <bl-button color="accent" [action]="onClick" matTooltip="Clear selection">
-            <i class="fa fa-check-square-o"></i>
+            <i class="fa fa-check-square-o" aria-hidden="true"></i>
         </bl-button>
     `,
 })

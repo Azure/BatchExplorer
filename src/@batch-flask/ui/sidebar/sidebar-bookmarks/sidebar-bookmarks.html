@@ -1,6 +1,7 @@
 <bl-dropdown [footer]="false" align="right">
-    <div bl-dropdown-btn  attr.aria-label="{{references.length}}-forms in progress">
-        <i class="fa fa-wpforms"></i>
+    <div bl-dropdown-btn
+        [attr.button-title]="'sidebar-bookmarks.dropdown-button-title' | i18n">
+        <i class="fa fa-wpforms" aria-hidden="true"></i>
         <span class="count" *ngIf="references.length > 0">{{references.length}}</span>
     </div>
     <div bl-dropdown-content class="bookmarks-container">
@@ -11,11 +12,11 @@
             (contextmenu)="onContextMenu(reference)">
 
             <span>{{referenceTitle(reference)}}</span>
-            <i class="fa fa-times" (click)="destroyBookmark(reference)"></i>
+            <i class="fa fa-times" (click)="destroyBookmark(reference)" aria-hidden="true"></i>
         </div>
 
         <div *ngIf="references.length === 0" class="dropdown-item no-bookmarks">
-            <div> No forms in progress</div>
+            <div>{{'sidebar-bookmarks.no-references' | i18n }}</div>
         </div>
     </div>
 </bl-dropdown>

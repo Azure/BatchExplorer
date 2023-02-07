@@ -1,7 +1,7 @@
 <div class="display" *ngIf="!isEditing && !saving" >
     <bl-tag-list [tags]="tags" [maxTags]="maxTags" [noTagsMessage]="noTagsMessage"></bl-tag-list>
     <bl-clickable #editButton class="edit" matTooltip="Edit tags" (do)="edit()" *ngIf="editable">
-        <i class="fa fa-pencil"></i>
+        <i class="fa fa-pencil" aria-hidden="true"></i>
     </bl-clickable>
 </div>
 <div class="editor" *ngIf="isEditing || saving">
@@ -10,13 +10,13 @@
             <input blInput #editInput placeholder="Tags(Comma separated)" [(ngModel)]="tagEditString" [ngModelOptions]="{standalone: true}">
             <div blFormFieldSuffix>
                 <bl-clickable class="save" matTooltip="Save" (do)="triggerSave()" *ngIf="isEditing">
-                    <i class="fa fa-check"></i>
+                    <i class="fa fa-check" aria-hidden="true"></i>
                 </bl-clickable>
                 <bl-clickable class="cancel" matTooltip="Cancel" (do)="cancel()" *ngIf="isEditing">
-                    <i class="fa fa-times"></i>
+                    <i class="fa fa-times" aria-hidden="true"></i>
                 </bl-clickable>
                 <span class="saving" *ngIf="saving">
-                    <i class="fa fa-spinner fa-spin"></i>
+                    <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                 </span>
             </div>
         </bl-form-field>

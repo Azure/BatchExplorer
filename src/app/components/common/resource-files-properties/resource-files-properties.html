@@ -8,23 +8,23 @@
         <bl-tp-cell [value]="file.httpUrl || file.storageContainerUrl || file.autoStorageContainerName"
             [useContent]="true">
             <ng-container *ngIf="file.httpUrl">
-                <i class="fa fa-file"></i>
+                <i class="fa fa-file" aria-hidden="true"></i>
                 {{file.httpUrl}}
             </ng-container>
             <div *ngIf="file.autoStorageContainerName" title="Auto storage container">
-                <i class="fa fa-folder"></i>
+                <i class="fa fa-folder" aria-hidden="true"></i>
                 {{file.storageContainerUrl || file.autoStorageContainerName}}
                 <ng-container *ngIf="file.blobPrefix">({{file.blobPrefix}}/**/*)</ng-container>
             </div>
             <div *ngIf="file.storageContainerUrl" title="Storage container url">
-                <i class="fa fa-folder"></i>
+                <i class="fa fa-folder" aria-hidden="true"></i>
                 {{file.storageContainerUrl || file.autoStorageContainerName}}
                 <ng-container *ngIf="file.blobPrefix">({{file.blobPrefix}}/**/*)</ng-container>
             </div>
         </bl-tp-cell>
         <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
         <bl-tp-plain-cell class="open-file-cell" (do)="openResourceFile(file)" *ngIf="file.httpUrl">
-            <i class="fa fa-external-link"></i>
+            <i class="fa fa-external-link" aria-hidden="true"></i>
         </bl-tp-plain-cell>
     </bl-table-property-row>
 </bl-table-property>

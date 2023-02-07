@@ -1,6 +1,6 @@
 <div class="activity-monitor-item-container" [ngClass]="{'focused': focused, 'hovered': !focused && hovered, 'flash': flash}">
     <div class="item-container" [ngStyle]="{'padding-left': paddingLeft}">
-        <div class="icon-container progress-icon">
+        <div class="icon-container progress-icon" aria-hidden="true">
             <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending" title="Pending"></i>
             <i class="fa fa-spinner fa-pulse" *ngIf="status===statusOptions.InProgress" title="Running"></i>
             <i class="fa fa-check" *ngIf="status===statusOptions.Completed" title="Completed"></i>
@@ -8,7 +8,7 @@
             <i class="fa fa-exclamation-triangle" *ngIf="status===statusOptions.Failed" title="Failed" (click)="toggleShowError()"></i>
         </div>
         <div class="icon-container">
-            <div class="expand-icon" *ngIf="activity.subactivities.length" (click)="toggleExpand()">
+            <div class="expand-icon" *ngIf="activity.subactivities.length" (click)="toggleExpand()" aria-hidden="true">
                 <i class="fa fa-angle-right" title="Expand" *ngIf="!expanded"></i>
                 <i class="fa fa-angle-down" title="Collapse" *ngIf="expanded"></i>
             </div>
@@ -19,7 +19,7 @@
                 <span class="progress-percent">{{progressString}}</span>
             </div>
             <div class="progress-bar" *ngIf="!activity.isComplete">
-                <mat-progress-bar mode="determinate" [value]="progress" *ngIf="progress !== -1"></mat-progress-bar>
+                <mat-progress-bar role="progressbar" title="{{'activity-monitor-item.progressBar' | i18n}}" mode="determinate" [value]="progress" *ngIf="progress !== -1"></mat-progress-bar>
             </div>
         </div>
         <div class="icon-container action-icon" *ngFor="let action of actions; let i = index; trackBy: actionTrackBy">

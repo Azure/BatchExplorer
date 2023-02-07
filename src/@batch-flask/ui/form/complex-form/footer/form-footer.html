@@ -1,17 +1,19 @@
 <div class="toggle-mode" *ngIf="config.jsonEditor">
     <bl-button type="square"
+        role="tab"
         [attr.aria-pressed]="classicFormDisabled"
         [disabled]="classicFormDisabled"
         [title]="'form-footer.buttons.normalForm' |i18n"
         (do)="toggleJsonEditor(false)">
-        <i class="fa fa-commenting"></i>
+        <i class="fa fa-commenting" aria-hidden="true"></i>
     </bl-button>
     <bl-button type="square"
+        role="tab"
         [attr.aria-pressed]="showJsonEditor"
         [disabled]="showJsonEditor"
         [title]="'form-footer.buttons.jsonEditor' |i18n"
         (do)="toggleJsonEditor(true)">
-        <i class="fa fa-code"></i>
+        <i class="fa fa-code" aria-hidden="true"></i>
     </bl-button>
 </div>
 <div class="toggle-error-btn" *ngIf="error">
@@ -24,7 +26,7 @@
 </div>
 <div class="summary">
     <div *ngIf="waitingForAsyncTask && asyncTasks" class="waiting-for-async-task-message">
-        <i class="fa fa-spinner fa-spin"></i>
+        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
         <span class="main">Waiting for </span>
         <span class="task">{{asyncTasks[0].name}}</span>
         <span class="main" *ngIf="asyncTasks.length > 1" [matTooltip]="asyncTaskTooltip">and {{asyncTasks.length - 1}} tasks</span>

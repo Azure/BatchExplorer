@@ -3,7 +3,7 @@
         <bl-summary-card>
             <div summaryTitle>{{application.name}}</div>
             <div summarySubtitle>
-                <i class="fa" [ngClass]="application.properties.allowUpdates ? 'fa-unlock-alt' : 'fa-lock'"></i>
+                <i class="fa" [ngClass]="application.properties.allowUpdates ? 'fa-unlock-alt' : 'fa-lock'" aria-hidden="true"></i>
                 {{application.properties.displayName}}
                 <span *ngIf="application.properties.allowUpdates">
                     <b>(unlocked)</b>

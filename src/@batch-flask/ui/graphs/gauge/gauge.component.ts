@@ -5,6 +5,8 @@ import * as d3 from "d3";
 import { GaugeConfig, GaugeLabel, defaultOptions } from "./gauge-config";
 import { degToRad, getLabelFor, invalidSizeMessage, percToRad, presetSizes } from "./gauge-utils";
 
+type D3Selection = d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>;
+
 const margin = {
     top: 0,
     right: 0,
@@ -60,8 +62,8 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
 
     public percent = 0;
 
-    private _svg: d3.Selection<any, any, any, any>;
-    private _chart: d3.Selection<any, any, any, any>;
+    private _svg: D3Selection;
+    private _chart: D3Selection;
     /**
      * Arc representing the filled part of the gauge
      */

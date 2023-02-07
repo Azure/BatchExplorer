@@ -116,7 +116,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     @HostBinding("attr.aria-haspopup") public readonly ariaHasPopup = "listbox";
     @Input("attr.aria-label") @HostBinding("attr.aria-label")
     public set ariaLabel(label: string) { this._ariaLabel = label; }
-    public get ariaLabel() { return this._ariaLabel || this.placeholder; }
+    public get ariaLabel() { return this._ariaLabel || this.title; }
     @HostBinding("attr.aria-expanded") public get ariaExpanded() { return this.dropdownOpen; }
     @HostBinding("attr.aria-owns") public get ariaOwns() { return this.dropdownId; }
     @HostBinding("attr.tabindex") public readonly tabindex = -1;

@@ -1,10 +1,10 @@
 <div [formGroup]="settings" class="chart-settings">
     <mat-button-toggle-group formControlName="chartType">
         <mat-button-toggle [value]="ChartType.Line">
-            <i class="fa fa-line-chart"></i> Line
+            <i class="fa fa-line-chart" aria-hidden="true"></i> Line
         </mat-button-toggle>
         <mat-button-toggle [value]="ChartType.Bar">
-            <i class="fa fa-bar-chart"></i> Bar
+            <i class="fa fa-bar-chart" aria-hidden="true"></i> Bar
         </mat-button-toggle>
     </mat-button-toggle-group>
 

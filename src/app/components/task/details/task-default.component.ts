@@ -4,7 +4,7 @@ import { Component } from "@angular/core";
     selector: "bl-no-task-selected",
     template: `
         <div class="no-entity-home">
-            <i class="fa fa-database"></i>
+            <i class="fa fa-database" aria-hidden="true"></i>
             <p>Please select a task from the list</p>
         </div>
     `,

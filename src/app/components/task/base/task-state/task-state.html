@@ -1,8 +1,8 @@
-<span [matTooltip]="errorMessage" matTooltipPosition="right">
+<span [matTooltip]="errorMessage" matTooltipPosition="right" aria-live="polite">
     <i class="fa"
         aria-hidden="true"
         [class.fa-warning]="hasError"
-        [class.fa-check]="isSuccess"></i>
+        [class.fa-check]="isSuccess" aria-hidden="true"></i>
     <span class="state">{{task.state}}</span>
     <span *ngIf="errorCode">
         ({{errorCode}})

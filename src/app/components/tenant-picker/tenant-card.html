@@ -38,7 +38,7 @@
         <div *ngIf="status === tenantStatus.failed" class="tenant-error"
             role="status">
             <span class="error-title">
-                <i class="fa fa-exclamation-triangle"></i>&nbsp;
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;
                 {{authorization.message}}
             </span>
             <pre class="error-details">{{authorization.messageDetails}}</pre>
@@ -58,7 +58,8 @@
             tabIndex="0"
             matTooltip="{{statusText()}}"
             matTooltipClass="tenant-card-tooltip-{{status}}"
-            matTooltipPosition="after">
+            matTooltipPosition="after"
+            aria-hidden="true">
             <i *ngSwitchCase="tenantStatus.authorized"
                 class="fa fa-2x fa-check-circle"></i>
             <i *ngSwitchCase="tenantStatus.failed"

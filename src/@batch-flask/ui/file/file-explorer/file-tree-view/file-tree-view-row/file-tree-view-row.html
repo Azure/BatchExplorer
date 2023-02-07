@@ -1,10 +1,10 @@
 <span class="caret" (click)="handleCaretClick($event)">
-    <i class="fa" [class.fa-caret-down]="treeRow.expanded" [class.fa-caret-right]="!treeRow.expanded" *ngIf="treeRow.isDirectory"></i>
+    <i class="fa" [class.fa-caret-down]="treeRow.expanded" [class.fa-caret-right]="!treeRow.expanded" *ngIf="treeRow.isDirectory" aria-hidden="true"></i>
 </span>
 <span class="file-icon">
     <i class="fa"
         [class.fa-folder]="treeRow.isDirectory && !treeRow.expanded"
         [class.fa-folder-open]="treeRow.isDirectory &&treeRow.expanded"
-        [class.fa-file]="!treeRow.isDirectory"></i>
+        [class.fa-file]="!treeRow.isDirectory" aria-hidden="true"></i>
 </span>
 <span class="label" [title]="title">{{treeRow.name}}</span>

@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
     selector: "bl-certificate-details-home",
     template: `
         <div class="no-entity-home">
-            <i class="fa fa-certificate large"></i>
+            <i class="fa fa-certificate large" aria-hidden="true"></i>
             <p>Please select a certificate from the list</p>
         </div>
     `,

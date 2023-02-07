@@ -48,6 +48,8 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
 
     public readonly stateChanges = new Subject<void>();
     public readonly controlType: string = "bl-input";
+    private _required: boolean;
+    private _requiredAttribute = false;
 
     @Input()
     @HostBinding("disabled")
@@ -70,7 +72,34 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     @HostBinding("attr.placeholder")
     public placeholder: string;
 
-    @Input() @FlagInput() @HostBinding("required") public required = false;
+    @Input() @FlagInput()
+    @HostBinding("required")
+    public get required(): boolean {
+        if (this._requiredAttribute) {
+            return this._required;
+        }
+        if (this.ngControl?.control?.validator) {
+            return this.ngControl.control
+                .validator({} as FormControl)?.required;
+        }
+        return false;
+    }
+
+    /* By default, the `blInput` directive uses the validator on the attached
+     * control to determine if the input element is required. However, if a
+     * template specifies a `required` attribute directly, e.g.
+     *
+     *      <input blInput type="text" required>,
+     *
+     * the directive will use it instead.
+     */
+    public set required(value: boolean) {
+        this._required = coerceBooleanProperty(value);
+        this._requiredAttribute = true;
+    }
+
+    @HostBinding("attr.aria-required")
+    public get ariaRequired(): string { return this.required ? "true" : null; }
 
     /** Input type of the element. */
     @Input()
