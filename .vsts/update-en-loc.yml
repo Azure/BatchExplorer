@@ -1,61 +1,24 @@
-variables:
-  locdir: $(Build.ArtifactStagingDirectory)/BatchExplorer
-
 pool:
   name: Azure-Pipelines-EO-Batch-Explorer
   demands:
-  - ImageOverride -equals BatchExplorerBuildImage-Linux
+  - ImageOverride -equals BatchExplorerBuildImage-Windows
 steps:
-  - template: ./node-setup.yml
 
-  - script: npm install
-    displayName: Install dependencies
+  - task: OneLocBuild@2
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    inputs:
+      locProj: 'Localize/LocProject.json'
+      outDir: '$(Build.ArtifactStagingDirectory)'
+      isCreatePrSelected: true
+      prSourceBranchPrefix: 'locfiles'
+      dependencyPackageSource: 'https://azurebatch.pkgs.visualstudio.com/_packaging/BatchExplorer/nuget/v3/index.json'
+      repoType: 'gitHub'
+      packageSourceAuth: 'patAuth'
+      gitHubPatVariable: '$(GH_TOKEN)'
 
-  - script: npm run build-i18n-xliff
-    workingDirectory: desktop
-    displayName: Build english XLIFF file
-
-  - script: |
-      cd $(Build.ArtifactStagingDirectory)
-      git clone https://github.com/Azure/BatchExplorer -b loc
-    displayName: Clone loc branch
-
-  - script: cp $(Build.SourcesDirectory)/i18n/xliffs/resources.en.xlf $(locdir)/xliffs/resources.en.xlf
-    displayName: Copy xliffs to loc branch
-
-  - script: |
-      set -e
-      changed=`git status | grep 'modified:' | wc -l`
-      if [ "$changed" -eq "0" ]; then
-        echo "No changes. Nothing to do"
-        exit 0
-      elif [ "$changed" -ne "1" ]; then
-        exit 1
-      fi
-
-      englishxliff=`git status -s | grep "xliffs/resources.en.xlf" | wc -l`
-
-      if [ "$englishxliff" -ne "1" ]; then
-        exit 1
-      fi
-
-    workingDirectory: $(locdir)
-    displayName: Validate only one file changed
-
-  - script: |
-      set -e
-
-      changed=`git status | grep 'modified:' | wc -l`
-      if [ "$changed" -eq "0" ]; then
-        echo "No changes. Nothing to do"
-        v="$BUILD_BUILDNUMBER-NOCHANGES"
-        echo  "##vso[build.updatebuildnumber]$v"
-        exit 0
-      fi
-
-      today=`date +%Y-%m-%d`
-      git -c user.email=batchexplorer@microsoft.com -c user.name='Batch Explorer Automated' commit -am "Updating english translations $today"
-      git status -s
-      git push https://dpwatrous:$(GH_TOKEN)@github.com/Azure/BatchExplorer loc
-    workingDirectory: $(locdir)
-    displayName: Commit and push changes if any
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'

@@ -1,0 +1,29 @@
+{
+  "Projects": [
+    {
+      "LanguageSet": "Azure_LanguagesExt",
+      "LocItems": [
+        {
+          "SourceFile": "packages\\common\\i18n\\resources.resjson",
+          "OutputPath": "packages\\common\\i18n"
+        },
+        {
+          "SourceFile": "packages\\playground\\i18n\\resources.resjson",
+          "OutputPath": "packages\\playground\\i18n"
+        },
+        {
+          "SourceFile": "packages\\react\\i18n\\resources.resjson",
+          "OutputPath": "packages\\react\\i18n"
+        },
+        {
+          "SourceFile": "packages\\service\\i18n\\resources.resjson",
+          "OutputPath": "packages\\service\\i18n"
+        },
+        {
+          "SourceFile": "desktop\\i18n-updated\\resources.resjson",
+          "OutputPath": "desktop\\i18n-updated"
+        }
+      ]
+    }
+  ]
+}
