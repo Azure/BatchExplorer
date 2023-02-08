@@ -49,10 +49,13 @@ describe("Environment tests", () => {
         );
     });
 
-    test("When a non-mock environment is loaded, no others may be initialized", () => {
-        initEnvironment(
-            new FakeBrowserEnvironment(cfg, mockDependencyFactories)
-        );
+    test("When a non-mock environment is loaded, no others may be initialized", async () => {
+        const env = new FakeBrowserEnvironment(cfg, mockDependencyFactories);
+        expect(env.initialized).toBe(false);
+        const initPromise = initEnvironment(env);
+        expect(env.initialized).toBe(true);
+
+        await initPromise;
 
         const browserEnv = getEnvironment() as FakeBrowserEnvironment;
         expect(browserEnv.config.browserName).toBe(
@@ -72,6 +75,7 @@ describe("Environment tests", () => {
     test("Can initialize mock environment many times", () => {
         initMockEnvironment();
         const envOne = getMockEnvironment();
+        expect(envOne.initialized).toBe(true);
         expect(envOne.uniqueId()).toEqual(0);
         expect(envOne.uniqueId()).toEqual(1);
 

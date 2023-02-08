@@ -22,6 +22,12 @@ export abstract class AbstractEnvironment<
     abstract readonly name: EnvironmentName;
     readonly mode: EnvironmentMode;
 
+    private _initialized: boolean = false;
+
+    get initialized(): boolean {
+        return this._initialized;
+    }
+
     private _diContainer: DiContainer<D>;
 
     /**
@@ -101,6 +107,7 @@ export abstract class AbstractEnvironment<
     abstract beforeDestroy(): Promise<void>;
 
     async init(): Promise<void> {
+        this._initialized = true;
         this._assertNotDestroyed();
         this.beforeInit();
     }
