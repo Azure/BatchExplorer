@@ -6,7 +6,12 @@ beforeAll(async () => {
 });
 
 afterEach(() => {
+    jest.resetAllMocks();
     destroyEnvironment();
+});
+
+afterAll(() => {
+    jest.restoreAllMocks();
 });
 
 // UI tests can be slow, especially with a11y tests enabled
