@@ -16,10 +16,20 @@ import {
     mkdirp,
     moveFiles,
     rmrf,
+    printStatus,
     unlinkLocalProjects,
 } from "./util";
 
 yargs
+    .command({
+        command: "status",
+        describe:
+            "Display information about the repositories managed through bux, " +
+            "including paths, link status, and Git information.",
+        handler: async () => {
+            await printStatus();
+        },
+    })
     .command({
         command: "build-translations",
         aliases: ["translate"],
