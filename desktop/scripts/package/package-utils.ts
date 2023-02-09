@@ -16,6 +16,7 @@ export enum BuildType {
     // Build off master
     Insider = "insider",
     // Temporary until shared-libraries are merged
+    // (see comment in .vsts/common/build-vars.ps1)
     Vnext = "vnext"
 }
 

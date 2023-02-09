@@ -25,6 +25,20 @@ If ($branch -like "refs/heads/vnext") {
     $distTag = "next"
 }
 
+# TEMPORARY (2023-02-09): This is to support the transition from vnext to main.
+# Eventually, the distribution pipeline on the main branch will create:
+#
+# - A BatchExplorer insider build (buildType = "insider")
+# - NPM packages with the latest tag (distTag = "latest")
+#
+# In the next phase, the `vnext` branch will be removed and the above condition
+# can be removed as well. In a subsequent phase, the `master` branch will be
+# deprecated, at which point the `master` condition above will also be removed.
+If ($branch -like "refs/heads/main") {
+    $buildType = "vnext"
+    $distTag = "next"
+}
+
 # Change to curent branch for testing
 If ($branch -like "refs/heads/feature/signing-vsts") {
     $buildType = "testing"
