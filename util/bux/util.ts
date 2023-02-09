@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+import { execSync } from "child_process";
 import color from "cli-color";
 import * as editorconfig from "editorconfig";
 import * as fs from "fs";
@@ -189,6 +190,114 @@ export function chmodx(paths: string[] | unknown) {
     }
 }
 
+type GitInfo = {
+    branch: string;
+    stagedChanges: string[];
+    unstagedChanges: string[];
+};
+
+function getGitInfo(path: string): GitInfo {
+    const info: GitInfo = {
+        branch: "unknown",
+        stagedChanges: [],
+        unstagedChanges: [],
+    };
+    try {
+        info.branch = execSync("git branch --show-current", {
+            cwd: path,
+            encoding: "utf-8",
+        }).trim();
+
+        execSync("git status --porcelain=v1", {
+            cwd: path,
+            encoding: "utf-8",
+        })
+            .split(/\r?\n/) // Handle CRLF & LF line endings
+            .forEach((line) => {
+                if (line.startsWith(" ")) {
+                    info.unstagedChanges.push(line.trim());
+                } else if (line.trim() !== "") {
+                    info.stagedChanges.push(line.trim());
+                }
+            });
+    } catch (e) {
+        if (e instanceof Error) {
+            error(`Error retreiving Git info: ${e.message}`);
+        }
+        throw e;
+    }
+
+    return info;
+}
+
+function printInfo(name: string, repoPath?: string): void {
+    if (!repoPath) {
+        throw new Error(`No ${name} path configured`);
+    }
+
+    if (fs.existsSync(repoPath)) {
+        const gitInfo = getGitInfo(repoPath);
+        info(`${name} (${gitInfo.branch})`);
+        info(`  - Path: ${repoPath}`);
+        if (gitInfo.stagedChanges.length > 0) {
+            info("  - Staged changes:");
+            info(`      ${gitInfo.stagedChanges.join("\n      ")}`);
+        }
+        if (gitInfo.unstagedChanges.length > 0) {
+            info("  - Unstaged changes:");
+            info(`      ${gitInfo.unstagedChanges.join("\n      ")}`);
+        }
+    } else {
+        throw new Error(`${name} not found at ${repoPath}`);
+    }
+}
+
+async function printLinkStatus(): Promise<void> {
+    let linkChecks: boolean[] = [];
+    await runLinkageTask((opts: LinkOptions) => {
+        let isLinked = false;
+
+        const nodeModulePath = path.join(
+            opts.targetPath,
+            "node_modules",
+            opts.packageName
+        );
+
+        if (fs.existsSync(nodeModulePath)) {
+            const stats = fs.lstatSync(nodeModulePath);
+            if (stats.isSymbolicLink()) {
+                isLinked = true;
+            }
+        }
+
+        linkChecks.push(isLinked);
+    });
+
+    const allPackagesLinked = linkChecks.reduce((prev, curr) => prev && curr);
+    let linkStatus;
+    if (allPackagesLinked) {
+        linkStatus = color.green("active");
+    } else {
+        linkStatus = color.blue("inactive");
+    }
+    console.log(`${color.blue("Link is")} ${linkStatus}`);
+}
+
+export async function printStatus() {
+    const config = await loadConfiguration();
+
+    try {
+        printInfo("Batch Explorer", config.paths.batchExplorer);
+        info("");
+        printInfo("Batch portal extension", config.paths.batchPortalExtension);
+        info("");
+        await printLinkStatus();
+    } catch (e) {
+        error("Config errors found. Run `bux configure` to re-configure.");
+        throw e;
+    }
+}
+
 // integrations have one place to look for things like coverage reports
 export async function gatherBuildResults(basePath: string) {
     if (!basePath) {
@@ -196,7 +305,6 @@ export async function gatherBuildResults(basePath: string) {
             (await loadConfiguration()).paths?.batchExplorer ??
             defaultBatchExplorerHome;
     }
-    console.log("BasePth", basePath);
     const baseBuildDir = path.join(basePath, "build");
 
     const doCopy = (src: string, dst: string) => {
@@ -291,7 +399,7 @@ export async function unlinkLocalProjects() {
         (targetPath: string) => {
             info("Running `npm install` to restore packages...");
             shell.cd(targetPath);
-            shell.exec(`npm install`);
+            shell.exec(`npm install -s`);
         }
     );
 }
@@ -430,8 +538,6 @@ async function runLinkageTask(
                 packagePath,
                 targetPath,
             });
-        } else {
-            info(`Package ${packageName} not in dependencies - skipping`);
         }
     });
 
