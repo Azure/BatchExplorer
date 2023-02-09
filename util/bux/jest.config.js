@@ -5,5 +5,7 @@ module.exports = require("../common-config/jest-common").createConfig(
     require("./tsconfig.json"),
     {
         testMatch: ["<rootDir>/__tests__/**/*.spec.ts"],
+        modulePathIgnorePatterns: ["<rootDir>/build/"],
+        moduleFileExtensions: ["js", "ts", "yml", "yaml", "json"],
     }
 );

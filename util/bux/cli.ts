@@ -10,6 +10,7 @@ import {
     chmodx,
     configure,
     copyFiles,
+    buildTranslations,
     gatherBuildResults,
     linkLocalProjects,
     mkdirp,
@@ -19,6 +20,43 @@ import {
 } from "./util";
 
 yargs
+    .command({
+        command: "build-translations",
+        aliases: ["translate"],
+        describe:
+            "Localize YAML files in src and convert them to RESJSON in dest",
+        builder: (yargs: yargs.Argv) =>
+            yargs
+                .option("src", {
+                    describe: "The source directory containing YAML files",
+                    default: "",
+                    demandOption: true,
+                })
+                .option("destJSON", {
+                    describe: "The destination directory for JSON output files",
+                    default: "",
+                    demandOption: true,
+                })
+                .option("destRESJSON", {
+                    describe:
+                        "The destination directory for RESJSON output files",
+                    default: "",
+                    demandOption: true,
+                })
+                .option("packageName", {
+                    describe:
+                        "The name of the module (e.g. lib.common) that translations will be built for",
+                    default: "",
+                    demandOption: false,
+                }),
+        handler: (argv) =>
+            buildTranslations(
+                argv.src,
+                argv.destJSON,
+                argv.destRESJSON,
+                argv.packageName
+            ),
+    })
     .command({
         command: "configure",
         aliases: ["config"],
