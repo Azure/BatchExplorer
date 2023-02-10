@@ -1,17 +1,16 @@
+import { BasicFakeSet, FakeSet } from "../test-util/fakes";
 import { Subscription } from "./subscription-models";
 import { SubscriptionService } from "./subscription-service";
 
-const subscriptions = [
-    { id: "/fake/sub1", displayName: "Subscription One" },
-    { id: "/fake/sub2", displayName: "Subscription Two" },
-    { id: "/fake/sub3", displayName: "Subscription Three" },
-    { id: "/fake/sub4", displayName: "Subscription Four" },
-    { id: "/fake/badsub", displayName: "Bad Subscription" },
-];
-
 export class FakeSubscriptionService implements SubscriptionService {
+    fakeSet: FakeSet = new BasicFakeSet();
+
+    public useFakeSet(fakeSet: FakeSet): void {
+        this.fakeSet = fakeSet;
+    }
+
     public async list(): Promise<Subscription[]> {
-        return subscriptions as Subscription[];
+        return Object.values(this.fakeSet.subscriptions);
     }
 
     public async get(): Promise<Subscription | null> {

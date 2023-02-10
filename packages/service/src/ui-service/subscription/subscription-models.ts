@@ -3,5 +3,6 @@ export interface Subscription {
     subscriptionId: string;
     tenantId: string;
     displayName: string;
-    state: string;
+    state: "Deleted" | "Disabled" | "Enabled" | "PastDue" | "Warned";
+    tags?: Record<string, string>;
 }
