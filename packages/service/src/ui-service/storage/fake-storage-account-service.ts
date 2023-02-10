@@ -1,21 +1,16 @@
 import { StorageAccount } from "./storage-account-models";
 import { StorageAccountService } from "./storage-account-service";
 
+// TODO: Move this into a FakeSet
 const subscriptionAccounts: { [key: string]: StorageAccount[] } = {
-    "/fake/sub1": [
+    "/subscriptions/00000000-0000-0000-0000-000000000000": [
         { id: "/fake/storageA", name: "Storage A" },
         { id: "/fake/storageB", name: "Storage B" },
         { id: "/fake/storageC", name: "Storage C" },
     ],
-    "/fake/sub2": [
+    "/subscriptions/11111111-1111-1111-1111-111111111111": [
         { id: "/fake/storageD", name: "Storage D" },
         { id: "/fake/storageE", name: "Storage E" },
-    ],
-    "/fake/sub3": [
-        { id: "/fake/storageF", name: "Storage F" },
-        { id: "/fake/storageG", name: "Storage G" },
-        { id: "/fake/storageH", name: "Storage H" },
-        { id: "/fake/storageI", name: "Storage I" },
     ],
 };
 

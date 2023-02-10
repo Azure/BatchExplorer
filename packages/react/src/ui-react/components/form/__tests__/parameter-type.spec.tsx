@@ -1,10 +1,16 @@
 import { Parameter } from "@batch/ui-common";
 import { createForm, Form } from "@batch/ui-common/lib/form";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { inject } from "@batch/ui-common/lib/environment";
+import { FakeSubscriptionService } from "@batch/ui-service";
+import { BasicFakeSet } from "@batch/ui-service/lib/test-util/fakes";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup";
 import * as React from "react";
-import { initMockBrowserEnvironment } from "../../../environment";
+import {
+    BrowserDependencyName,
+    initMockBrowserEnvironment,
+} from "../../../environment";
 import { runAxe } from "../../../test-util/a11y";
 import {
     StorageAccountDropdown,
@@ -23,6 +29,7 @@ describe("Parameter type tests", () => {
     let user: UserEvent;
     let form: Form<FakeFormValues>;
     let subParam: Parameter<FakeFormValues, "subscriptionId">;
+
     beforeEach(() => {
         initMockBrowserEnvironment();
         user = userEvent.setup();
@@ -48,17 +55,24 @@ describe("Parameter type tests", () => {
                 })
             ).toHaveNoViolations();
         });
+
         test("dropdown options", async () => {
             render(<SubscriptionDropdown param={subParam} />);
             const element = screen.getByRole("combobox");
             await user.click(element);
             await waitFor(() => expect(element).not.toContain("is-disabled"));
             const options = screen.getAllByRole("option");
-            expect(options.length).toEqual(5);
+            expect(options.length).toEqual(2);
+            expect(options.map((option) => option.textContent)).toEqual([
+                "tanuki",
+                "nekomata",
+            ]);
         });
     });
+
     describe("StorageAccountDropdown", () => {
         let storageParam: Parameter<FakeFormValues, "storageAccountId">;
+
         beforeEach(() => {
             storageParam = form.param("storageAccountId", "string");
         });
@@ -89,7 +103,8 @@ describe("Parameter type tests", () => {
                 expectElementEnabled(subDropdown);
                 expectElementEnabled(storageDropdown);
             });
-            selectOption(0);
+
+            await selectOption(0);
             await user.click(storageDropdown);
 
             let storageAccounts = await screen.findAllByRole("option");
@@ -99,16 +114,31 @@ describe("Parameter type tests", () => {
             expect(storageAccounts[0].textContent).toEqual("Storage A");
 
             await user.click(subDropdown); // Reopen sub dropdown
-            selectOption(2);
+            await selectOption(1);
             await user.click(storageDropdown);
 
             storageAccounts = await screen.findAllByRole("option");
 
-            expect(storageAccounts.length).toEqual(4);
-            expect(storageAccounts[0].textContent).toEqual("Storage F");
+            expect(storageAccounts.length).toEqual(2);
+            expect(storageAccounts[0].textContent).toEqual("Storage D");
         });
 
         test("bad subscription shows error", async () => {
+            const subService: FakeSubscriptionService = inject(
+                BrowserDependencyName.SubscriptionService
+            );
+
+            // Add a bad subscription
+            const fakeSet = new BasicFakeSet();
+            fakeSet.subscriptions["/fake/badsub"] = {
+                id: "/fake/badsub",
+                subscriptionId: "badsub",
+                tenantId: "99999999-9999-9999-9999-999999999999",
+                displayName: "Bad Subscription",
+                state: "PastDue",
+            };
+            subService.useFakeSet(fakeSet);
+
             render(
                 <>
                     <SubscriptionDropdown param={subParam} />
@@ -126,7 +156,7 @@ describe("Parameter type tests", () => {
                 expectElementEnabled(subDropdown);
                 expectElementEnabled(storageDropdown);
             });
-            selectOption(4); // Bad subscription
+            await selectOption(2); // Bad subscription
             expect(screen.getByText("Bad Subscription")).toBeDefined();
 
             await user.click(storageDropdown);
@@ -137,10 +167,10 @@ describe("Parameter type tests", () => {
             ).toBeDefined();
         });
     });
+
+    const expectElementEnabled = (element: HTMLElement) =>
+        expect(element.className).not.toContain("is-disabled");
+
+    const selectOption = async (index: number) =>
+        await user.click(screen.getAllByRole("option")[index]);
 });
-
-const expectElementEnabled = (element: HTMLElement) =>
-    expect(element.className).not.toContain("is-disabled");
-
-const selectOption = (index: number) =>
-    fireEvent.click(screen.getAllByRole("option")[index]);
