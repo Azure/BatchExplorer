@@ -59,10 +59,12 @@
     "mobx": "^6.3.2",
     "tslib": "~2.3.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@batch/arm-batch-rest": "^1.0.0",
+    "@batch/ui-common": "^1.0.0"
+  },
   "devDependencies": {
     "@batch/common-config": "^1.0.0",
-    "@batch/ui-common": "^1.0.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^14.14.37",
     "jest": "^27.1.0",

@@ -4,6 +4,7 @@
 /**/lib-umd/
 /**/test-results/
 /**/bin/
+/**/build/
 
 *.md
 *.html
