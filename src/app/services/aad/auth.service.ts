@@ -91,18 +91,21 @@ export class AuthService implements OnDestroy {
             this.tenants,
             this.tenantSettingsService.current,
         ]).pipe(
-            map(([tenants, settings]: [TenantDetails[], TenantSettings]) =>
-                tenants.map((tenant: TenantDetails) => ({
+            map(([tenants, settings]: [TenantDetails[], TenantSettings]) => {
+                return tenants.map((tenant: TenantDetails) => ({
                     tenant,
-                    active: !(tenant.tenantId in settings) ||
+
+                    // A tenant is active if it is the home tenant or if it is
+                    // explicitly set to active in the settings.
+                    active: tenant.homeTenantId === tenant.tenantId ||
                         settings[tenant.tenantId] === "active",
                     status: TenantStatus.unknown
                 } as TenantAuthorization))
-            ),
+            }),
             switchMap(authorizations => forkJoin(authorizations.map(
                 authorization =>
                     this.authorizeTenant(authorization, authOptions)
-                ))
+            ))
             ),
             share()
         );
@@ -178,7 +181,7 @@ export class AuthService implements OnDestroy {
     public accessTokenData(
         tenantId: string, resource: AADResourceName = null, forceRefresh = false
     ):
-    Observable<AccessToken> {
+        Observable<AccessToken> {
         const key = [tenantId, resource].join("|");
         if (key in this.tokenObservableCache) {
             return this.tokenObservableCache[key];
@@ -214,7 +217,7 @@ export class AuthService implements OnDestroy {
     // Caches current authorization state to avoid reauthenticating failed
     // tenants without user request.
     private cacheAuthorization(authorization: TenantAuthorization):
-    Observable<TenantAuthorization> {
+        Observable<TenantAuthorization> {
         this.previousTenantState[authorization.tenant.tenantId] =
             authorization;
         return of(authorization);
