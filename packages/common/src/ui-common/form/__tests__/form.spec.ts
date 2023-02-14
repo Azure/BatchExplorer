@@ -1,10 +1,8 @@
 import { delayedCallback } from "../../util";
-import {
-    createForm,
-    ParameterType,
-    FormValues,
-    ValidationStatus,
-} from "../form";
+import { FormValues } from "../form";
+import { createForm } from "../form-util";
+import { ParameterType } from "../parameter";
+import { ValidationStatus } from "../validation-status";
 
 describe("Form tests", () => {
     test("Single parameter form", () => {
