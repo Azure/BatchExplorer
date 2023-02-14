@@ -11,7 +11,7 @@ import {
 } from "@batch/ui-react/lib/environment";
 import {
     DefaultFormLayoutProvider,
-    DefaultParameterTypeResolver,
+    DefaultFormControlResolver,
 } from "@batch/ui-react/lib/components/form";
 import { StandardLocalizer } from "@batch/ui-common/lib/localization";
 import {
@@ -38,8 +38,8 @@ export function init(rootEl: HTMLElement): void {
                     new FakeStorageAccountService(),
                 [BrowserDependencyName.SubscriptionService]: () =>
                     new FakeSubscriptionService(),
-                [BrowserDependencyName.ParameterTypeResolver]: () =>
-                    new DefaultParameterTypeResolver(),
+                [BrowserDependencyName.FormControlResolver]: () =>
+                    new DefaultFormControlResolver(),
                 [BrowserDependencyName.FormLayoutProvider]: () =>
                     new DefaultFormLayoutProvider(),
             }

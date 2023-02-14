@@ -1,14 +1,18 @@
 import { delayedCallback } from "../../util";
 import { FormValues } from "../form";
 import { createForm } from "../form-util";
-import { ParameterType } from "../parameter";
+import { NumberParameter } from "../number-parameter";
+import { StringListParameter } from "../string-list-parameter";
+import { StringParameter } from "../string-parameter";
 import { ValidationStatus } from "../validation-status";
 
 describe("Form tests", () => {
     test("Single parameter form", () => {
-        const form = createForm<{
+        type HelloWorldFormValues = {
             message: string;
-        }>({
+        };
+
+        const form = createForm<HelloWorldFormValues>({
             values: {
                 message: "Hello world!",
             },
@@ -16,7 +20,7 @@ describe("Form tests", () => {
         expect(form.allEntriesCount).toEqual(0);
         expect(form.values).toEqual({ message: "Hello world!" });
 
-        const messageParam = form.param("message", ParameterType.String, {
+        const messageParam = form.param("message", StringParameter, {
             value: "Hello galaxy!",
         });
         expect(form.allEntriesCount).toEqual(1);
@@ -26,7 +30,7 @@ describe("Form tests", () => {
         expect(form.values).toEqual({ message: "Hello universe!" });
 
         // Can't add duplicate parameters
-        expect(() => form.param("message", ParameterType.String)).toThrow();
+        expect(() => form.param("message", StringParameter)).toThrow();
     });
 
     test("Multi-parameter form with nested sections", () => {
@@ -43,20 +47,20 @@ describe("Form tests", () => {
                 make: "Tesla",
             },
         });
-        form.param("make", ParameterType.String, {
+        form.param("make", StringParameter, {
             label: "Make",
         });
-        form.param("model", ParameterType.String, {
+        form.param("model", StringParameter, {
             label: "Model",
             value: "Model Y",
         });
-        form.param("milesPerCharge", ParameterType.Number, {
+        form.param("milesPerCharge", NumberParameter, {
             label: "Miles per charge",
         });
 
         // Top-level section
         const driversSection = form.section("Drivers");
-        driversSection.param("registeredDrivers", ParameterType.StringList, {
+        driversSection.param("registeredDrivers", StringListParameter, {
             label: "Drivers",
         });
         expect(form.values).toEqual({ make: "Tesla", model: "Model Y" });
@@ -70,7 +74,7 @@ describe("Form tests", () => {
 
         // Nested section
         const advancedSection = driversSection.section("Advanced");
-        advancedSection.param("maxRegisteredDrivers", ParameterType.Number);
+        advancedSection.param("maxRegisteredDrivers", NumberParameter);
 
         // Check that counts were updated correctly
         expect(form.allEntriesCount).toEqual(7);
@@ -120,12 +124,12 @@ describe("Form tests", () => {
 
         const applicantSection = form.section("Applicant Info");
 
-        applicantSection.param("applicant", ParameterType.String, {
+        applicantSection.param("applicant", StringParameter, {
             value: "Sir Lancelot",
         });
         expect(form.values).toEqual({ applicant: "Sir Lancelot" });
 
-        applicantSection.param("applicantHouseholdSize", ParameterType.Number, {
+        applicantSection.param("applicantHouseholdSize", NumberParameter, {
             value: 2,
         });
         expect(form.values).toEqual({
@@ -198,14 +202,14 @@ describe("Form tests", () => {
         expect(form.validationStatus?.message).toBeUndefined();
 
         // Add a parameter with async validation
-        form.param("squareMiles", ParameterType.Number, {
+        form.param("squareMiles", NumberParameter, {
             onValidateAsync: async (value) => {
                 return delayedCallback(() => {
                     if (value != null) {
                         if (typeof value !== "number") {
                             return new ValidationStatus(
                                 "error",
-                                "Mileage must be a number"
+                                "Value must be a number"
                             );
                         }
                         if (value <= 0) {
@@ -249,7 +253,7 @@ describe("Form tests", () => {
         await form.validate();
         expect(form.validationStatus?.level).toEqual("error");
         expect(form.validationStatus?.message).toEqual(
-            "Mileage must be a number"
+            "Value must be a number"
         );
 
         // Make the form valid again
@@ -274,17 +278,11 @@ describe("Form tests", () => {
         const form = createNationalParkForm();
 
         // Add a parameter with async validation
-        form.param("squareMiles", ParameterType.Number, {
+        form.param("squareMiles", NumberParameter, {
             required: true,
             onValidateAsync: async (value) => {
                 return delayedCallback(() => {
                     if (value != null) {
-                        if (typeof value !== "number") {
-                            return new ValidationStatus(
-                                "error",
-                                "Mileage must be a number"
-                            );
-                        }
                         if (value <= 0) {
                             return new ValidationStatus(
                                 "error",
@@ -348,7 +346,7 @@ describe("Form tests", () => {
             },
         });
 
-        form.param("hobbit", ParameterType.String);
+        form.param("hobbit", StringParameter);
 
         const onChangeSpy = jest.fn();
         const listener = form.on("change", onChangeSpy);
@@ -415,11 +413,11 @@ describe("Form tests", () => {
             },
         });
 
-        form.param("number", ParameterType.Number, {
+        form.param("number", NumberParameter, {
             value: 1,
         });
-        form.param("numberPlusOne", ParameterType.Number);
-        form.param("numberPlusTwo", ParameterType.Number);
+        form.param("numberPlusOne", NumberParameter);
+        form.param("numberPlusTwo", NumberParameter);
 
         form.on("change", (newValues) => {
             onChangeCount++;
@@ -458,12 +456,12 @@ function createNationalParkForm() {
         values: {},
     });
 
-    form.param("parkName", ParameterType.String, {
+    form.param("parkName", StringParameter, {
         label: "Park name",
         required: true,
     });
 
-    form.param("state", ParameterType.String, {
+    form.param("state", StringParameter, {
         required: true,
         onValidateAsync: async (value) => {
             if (value && value.length === 2) {

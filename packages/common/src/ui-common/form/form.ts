@@ -1,6 +1,6 @@
 import TypedEmitter from "typed-emitter";
 import { Entry } from "./entry";
-import { Parameter, ParameterInit } from "./parameter";
+import { Parameter, ParameterInit, ParameterName } from "./parameter";
 import { Section, SectionInit } from "./section";
 import { SubForm, SubFormInit } from "./subform";
 import { ValidationSnapshot } from "./validation-snapshot";
@@ -47,7 +47,7 @@ export interface Form<V extends FormValues> {
     readonly validationSnapshot: ValidationSnapshot<V>;
     readonly validationStatus?: ValidationStatus;
     readonly entryValidationStatus: {
-        [name in Extract<keyof V, string>]?: ValidationStatus;
+        [name in ParameterName<V>]?: ValidationStatus;
     };
 
     title?: string;
@@ -67,25 +67,29 @@ export interface Form<V extends FormValues> {
 
     getEntry(entryName: string): Entry<V> | undefined;
 
-    param<K extends Extract<keyof V, string>>(
+    param<K extends ParameterName<V>>(
         name: K,
-        type: string,
+        parameterConstructor: new (
+            form: Form<V>,
+            name: K,
+            init?: ParameterInit<V, K>
+        ) => Parameter<V, K>,
         init?: ParameterInit<V, K>
     ): Parameter<V, K>;
 
-    getParam<K extends Extract<keyof V, string>>(name: K): Parameter<V, K>;
+    getParam<K extends ParameterName<V>>(name: K): Parameter<V, K>;
 
     section(name: string, init?: SectionInit<V>): Section<V>;
 
     getSection(name: string): Section<V>;
 
-    subForm<K extends Extract<keyof V, string>, S extends V[K] & FormValues>(
+    subForm<K extends ParameterName<V>, S extends V[K] & FormValues>(
         name: K,
         form: Form<S>,
         init?: SubFormInit<V, K>
     ): SubForm<V, K, S>;
 
-    getSubForm<K extends Extract<keyof V, string>, S extends V[K] & FormValues>(
+    getSubForm<K extends ParameterName<V>, S extends V[K] & FormValues>(
         name: K
     ): SubForm<V, K, S>;
 
@@ -102,7 +106,7 @@ export interface Form<V extends FormValues> {
      * @param name The name of the entry to update the value for
      * @param value The new value
      */
-    updateValue<K extends Extract<keyof V, string>>(name: K, value: V[K]): void;
+    updateValue<K extends ParameterName<V>>(name: K, value: V[K]): void;
 
     onValidateSync?: (
         snapshot: ValidationSnapshot<V>,

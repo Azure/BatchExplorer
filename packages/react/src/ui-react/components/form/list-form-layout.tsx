@@ -1,5 +1,11 @@
 import { Form, Parameter, Section } from "@batch/ui-common";
-import { Entry, FormValues, SubForm } from "@batch/ui-common/lib/form";
+import {
+    AbstractParameter,
+    Entry,
+    FormValues,
+    ParameterName,
+    SubForm,
+} from "@batch/ui-common/lib/form";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { Label } from "@fluentui/react/lib/Label";
 import { Stack } from "@fluentui/react/lib/Stack";
@@ -40,7 +46,7 @@ export class ListFormLayout implements FormLayout {
         rows: JSX.Element[]
     ) {
         for (const entry of entries) {
-            if (entry instanceof Parameter) {
+            if (entry instanceof AbstractParameter) {
                 rows.push(<ParameterRow key={entry.name} param={entry} />);
             } else if (entry instanceof Section) {
                 rows.push(<SectionTitle key={entry.name} section={entry} />);
@@ -68,7 +74,7 @@ const SectionTitle = <V extends FormValues>(props: SectionTitleProps<V>) => {
 
 interface SubFormTitleProps<
     P extends FormValues,
-    PK extends Extract<keyof P, string>,
+    PK extends ParameterName<P>,
     S extends P[PK] & FormValues
 > {
     subForm: SubForm<P, PK, S>;
@@ -76,7 +82,7 @@ interface SubFormTitleProps<
 
 const SubFormTitle = <
     P extends FormValues,
-    PK extends Extract<keyof P, string>,
+    PK extends ParameterName<P>,
     S extends P[PK] & FormValues
 >(
     props: SubFormTitleProps<P, PK, S>
@@ -105,14 +111,11 @@ const TitleRow = (props: { title: string; description?: string }) => {
     );
 };
 
-interface ParameterRowProps<
-    V extends FormValues,
-    K extends Extract<keyof V, string>
-> {
+interface ParameterRowProps<V extends FormValues, K extends ParameterName<V>> {
     param: Parameter<V, K>;
 }
 
-const ParameterRow = <V extends FormValues, K extends Extract<keyof V, string>>(
+const ParameterRow = <V extends FormValues, K extends ParameterName<V>>(
     props: ParameterRowProps<V, K>
 ) => {
     const { param } = props;

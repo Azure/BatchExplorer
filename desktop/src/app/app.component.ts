@@ -9,7 +9,7 @@ import { Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { EnvironmentMode, initEnvironment } from "@batch/ui-common";
 import { DependencyName } from "@batch/ui-common/lib/environment";
-import { DefaultFormLayoutProvider, DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
+import { DefaultFormControlResolver, DefaultFormLayoutProvider, FormControlResolver } from "@batch/ui-react/lib/components/form";
 import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import { BrowserDependencyName } from "@batch/ui-react";
 import { StorageAccountServiceImpl, SubscriptionServiceImpl } from "@batch/ui-service";
@@ -81,8 +81,8 @@ export class AppComponent implements OnInit, OnDestroy {
                     () => new StorageAccountServiceImpl(),
                 [BrowserDependencyName.SubscriptionService]:
                     () => new SubscriptionServiceImpl(),
-                [BrowserDependencyName.ParameterTypeResolver]:
-                    () => new DefaultParameterTypeResolver(),
+                [BrowserDependencyName.FormControlResolver]:
+                    () => new DefaultFormControlResolver(),
                 [BrowserDependencyName.FormLayoutProvider]:
                     () => new DefaultFormLayoutProvider(),
             }

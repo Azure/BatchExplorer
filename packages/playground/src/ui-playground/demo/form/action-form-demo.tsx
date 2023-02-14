@@ -4,13 +4,16 @@ import { DemoComponentContainer } from "../../layout/demo-component-container";
 import { DemoControlContainer } from "../../layout/demo-control-container";
 import { CreateAccountAction } from "@batch/ui-react/lib/account/create-account-action";
 import { createForm, Form, getEnvironment } from "@batch/ui-common";
-import { ParameterType } from "@batch/ui-react/lib/components/form/parameter-type";
 import { ActionForm } from "@batch/ui-react/lib/components/form";
 import { MonacoEditor } from "@batch/ui-react/lib/components";
 import { EditorController } from "@batch/ui-react/lib/components/editor";
 import { Dropdown } from "@batch/ui-react/lib/components/form/dropdown";
 import { AbstractAction, Action } from "@batch/ui-common/lib/action";
-import { FormValues, ValidationStatus } from "@batch/ui-common/lib/form";
+import {
+    FormValues,
+    StringParameter,
+    ValidationStatus,
+} from "@batch/ui-common/lib/form";
 
 type CarFormValues = {
     subscriptionId?: string;
@@ -27,7 +30,7 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
             values: initialValues,
         });
 
-        form.param("subscriptionId", ParameterType.SubscriptionId, {
+        form.param("subscriptionId", StringParameter, {
             label: "Subscription",
             value: "/fake/sub2",
         });
@@ -36,17 +39,17 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
             description: "Information about the car's make, model, etc.",
         });
 
-        carSection.param("make", ParameterType.String, {
+        carSection.param("make", StringParameter, {
             label: "Make",
             description: "The brand of the vehicle",
         });
 
-        carSection.param("model", ParameterType.String, {
+        carSection.param("model", StringParameter, {
             label: "Model",
             value: "Model Y",
         });
 
-        carSection.param("description", ParameterType.String, {
+        carSection.param("description", StringParameter, {
             label: "Description",
         });
 

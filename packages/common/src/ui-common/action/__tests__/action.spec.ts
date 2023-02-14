@@ -1,10 +1,10 @@
 import {
     createForm,
     Form,
-    ParameterType,
     ValidationSnapshot,
     ValidationStatus,
 } from "../../form";
+import { StringParameter } from "../../form/string-parameter";
 import { delay } from "../../util";
 import { AbstractAction } from "../action";
 
@@ -123,7 +123,7 @@ describe("Action tests", () => {
                 values: initialValues,
             });
 
-            form.param("subject", ParameterType.String, {
+            form.param("subject", StringParameter, {
                 label: "Subject",
                 required: true,
                 onValidateAsync: async (value) => {

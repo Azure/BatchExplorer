@@ -1,4 +1,5 @@
-import { createForm, ParameterType } from "@batch/ui-common";
+import { createForm } from "@batch/ui-common";
+import { StringParameter } from "@batch/ui-common/lib/form";
 import { render, screen } from "@testing-library/react";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
@@ -16,13 +17,13 @@ describe("Form container tests", () => {
         }>({
             values: {},
         });
-        form.param("make", ParameterType.String, {
+        form.param("make", StringParameter, {
             label: "Make",
         });
-        form.param("model", ParameterType.String, {
+        form.param("model", StringParameter, {
             label: "Model",
         });
-        form.param("description", ParameterType.String, {
+        form.param("description", StringParameter, {
             label: "Description",
         });
 

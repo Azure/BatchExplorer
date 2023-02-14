@@ -7,22 +7,19 @@ import {
     EnvironmentName,
     getEnvironment,
 } from "@batch/ui-common/lib/environment";
-import { FormValues } from "@batch/ui-common/lib/form";
+import { FormValues, ParameterName } from "@batch/ui-common/lib/form";
 import { StorageAccountService, SubscriptionService } from "@batch/ui-service";
 import {
     FormLayout,
     FormLayoutProvider,
     FormLayoutType,
 } from "../components/form/form-layout";
-import {
-    FormControlOptions,
-    ParameterTypeResolver,
-} from "../components/form/parameter-type";
+import { FormControlOptions, FormControlResolver } from "../components/form";
 import { initFluentIcons } from "./environment-util";
 import { MockBrowserEnvironment } from "./mock-browser-environment";
 
 export enum BrowserDependencyName {
-    ParameterTypeResolver = "parameterTypeResolver",
+    FormControlResolver = "formControlResolver",
     FormLayoutProvider = "formLayoutProvider",
     StorageAccountService = "storageAccount",
     SubscriptionService = "subscription",
@@ -30,7 +27,7 @@ export enum BrowserDependencyName {
 
 export interface BrowserEnvironment
     extends Environment<BrowserEnvironmentConfig> {
-    getFormControl<V extends FormValues, K extends Extract<keyof V, string>>(
+    getFormControl<V extends FormValues, K extends ParameterName<V>>(
         param: Parameter<V, K>,
         opts?: FormControlOptions
     ): JSX.Element;
@@ -43,7 +40,7 @@ export interface BrowserEnvironmentConfig extends EnvironmentConfig {
 }
 
 export interface BrowserDependencyFactories extends DependencyFactories {
-    [BrowserDependencyName.ParameterTypeResolver]: () => ParameterTypeResolver;
+    [BrowserDependencyName.FormControlResolver]: () => FormControlResolver;
     [BrowserDependencyName.FormLayoutProvider]: () => FormLayoutProvider;
     [BrowserDependencyName.StorageAccountService]: () => StorageAccountService;
     [BrowserDependencyName.SubscriptionService]: () => SubscriptionService;
@@ -72,12 +69,12 @@ export class DefaultBrowserEnvironment
     /**
      * Get the form control for a given parameter
      */
-    getFormControl<V extends FormValues, K extends Extract<keyof V, string>>(
+    getFormControl<V extends FormValues, K extends ParameterName<V>>(
         param: Parameter<V, K>,
         opts?: FormControlOptions
     ): JSX.Element {
-        const resolver = this.getInjectable<ParameterTypeResolver>(
-            BrowserDependencyName.ParameterTypeResolver
+        const resolver = this.getInjectable<FormControlResolver>(
+            BrowserDependencyName.FormControlResolver
         );
         if (!resolver) {
             throw new Error(

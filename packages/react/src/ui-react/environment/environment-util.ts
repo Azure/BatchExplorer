@@ -13,7 +13,7 @@ import { initializeIcons } from "@fluentui/react/lib/Icons";
 import { BrowserEnvironmentConfig } from ".";
 import {
     DefaultFormLayoutProvider,
-    DefaultParameterTypeResolver,
+    DefaultFormControlResolver,
 } from "../components/form";
 import { BrowserDependencyFactories } from "./browser-environment";
 import { MockBrowserEnvironment } from "./mock-browser-environment";
@@ -21,7 +21,7 @@ import { MockBrowserEnvironment } from "./mock-browser-environment";
 let _fluentIconsInitialized = false;
 
 export const mockBrowserDepFactories: Partial<BrowserDependencyFactories> = {
-    parameterTypeResolver: () => new DefaultParameterTypeResolver(),
+    formControlResolver: () => new DefaultFormControlResolver(),
     formLayoutProvider: () => new DefaultFormLayoutProvider(),
     storageAccount: () => new FakeStorageAccountService(),
     subscription: () => new FakeSubscriptionService(),

@@ -1,4 +1,4 @@
-import { Parameter, ParameterInit } from "./parameter";
+import { Parameter, ParameterInit, ParameterName } from "./parameter";
 import { OrderedMap } from "../util";
 import type { Entry, EntryInit } from "./entry";
 import type { Form, FormValues } from "./form";
@@ -19,7 +19,6 @@ export class Section<V extends FormValues> implements Entry<V> {
     description?: string;
     disabled?: boolean;
     hidden?: boolean;
-    inactive?: boolean;
     expanded?: boolean;
 
     private _childEntries: OrderedMap<string, Entry<V>> = new OrderedMap();
@@ -45,7 +44,6 @@ export class Section<V extends FormValues> implements Entry<V> {
         this.description = init?.description;
         this.disabled = init?.disabled;
         this.hidden = init?.hidden;
-        this.inactive = init?.inactive;
         this.expanded = init?.expanded;
 
         (this.parentForm as FormImpl<V>)._registerEntry(this);
@@ -59,15 +57,23 @@ export class Section<V extends FormValues> implements Entry<V> {
         return this._childEntries.get(entryName);
     }
 
-    param<K extends Extract<keyof V, string>>(
+    param<K extends ParameterName<V>>(
         name: K,
-        type: string,
+        parameterConstructor: new (
+            form: Form<V>,
+            name: K,
+            init?: ParameterInit<V, K>
+        ) => Parameter<V, K>,
         init?: ParameterInit<V, K>
     ): Parameter<V, K> {
         const paramInit = init ?? {};
         paramInit.parentSection = this;
 
-        const param = new Parameter(this.parentForm, name, type, paramInit);
+        const param = new parameterConstructor(
+            this.parentForm,
+            name,
+            paramInit
+        );
         this._childEntries.set(name, param);
 
         return param;
@@ -83,7 +89,7 @@ export class Section<V extends FormValues> implements Entry<V> {
         return section;
     }
 
-    subForm<K extends Extract<keyof V, string>, S extends V[K] & FormValues>(
+    subForm<K extends ParameterName<V>, S extends V[K] & FormValues>(
         name: K,
         form: Form<S>,
         init?: SubFormInit<V, K>

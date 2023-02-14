@@ -1,6 +1,6 @@
-import { createForm, Form, ParameterType } from "@batch/ui-common";
+import { createForm, Form } from "@batch/ui-common";
 import { AbstractAction } from "@batch/ui-common/lib/action";
-import { ValidationStatus } from "@batch/ui-common/lib/form";
+import { StringParameter, ValidationStatus } from "@batch/ui-common/lib/form";
 import { render, screen } from "@testing-library/react";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
@@ -18,13 +18,13 @@ describe("Action form tests", () => {
         }>({
             values: {},
         });
-        form.param("make", ParameterType.String, {
+        form.param("make", StringParameter, {
             label: "Make",
         });
-        form.param("model", ParameterType.String, {
+        form.param("model", StringParameter, {
             label: "Model",
         });
-        form.param("description", ParameterType.String, {
+        form.param("description", StringParameter, {
             label: "Description",
         });
 
@@ -63,11 +63,11 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
             },
         });
 
-        form.param("dogName", ParameterType.String, {
+        form.param("dogName", StringParameter, {
             label: "Dog name",
         });
 
-        form.param("numberOfPets", ParameterType.String, {
+        form.param("numberOfPets", StringParameter, {
             label: "Pet how many times?",
             value: 100,
             onValidateSync: (value) => {
@@ -87,7 +87,7 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
             },
         });
 
-        form.param("giveTreat", ParameterType.String, {
+        form.param("giveTreat", StringParameter, {
             label: "Give a treat?",
         });
 

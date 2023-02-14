@@ -1,4 +1,9 @@
-import { ValidationStatus } from "@batch/ui-common/lib/form";
+import {
+    FormValues,
+    Parameter,
+    ParameterName,
+    ValidationStatus,
+} from "@batch/ui-common/lib/form";
 
 /**
  * Shared properties for all form controls
@@ -42,12 +47,6 @@ export interface FormControlProps<V> {
     hidden?: boolean;
 
     /**
-     * While true, the form control's value will be ignored by the form and
-     * will not react to changes.
-     */
-    inactive?: boolean;
-
-    /**
      * The currently displayed error message
      */
     validationStatus?: ValidationStatus;
@@ -78,4 +77,12 @@ export interface FormControlProps<V> {
      * The current value associated with this control
      */
     value?: V;
+}
+
+export interface ParamControlProps<
+    V extends FormValues,
+    K extends ParameterName<V>
+> {
+    id?: string;
+    param: Parameter<V, K>;
 }

@@ -36,12 +36,5 @@ export {
 } from "./datetime";
 export { uniqueElementId } from "./dom";
 export { autoFormat } from "./format";
-export {
-    createForm,
-    ParameterType,
-    Form,
-    Parameter,
-    Section,
-    SubForm,
-} from "./form";
+export { createForm, Form, Parameter, Section, SubForm } from "./form";
 export { copyToClipboard } from "./clipboard";

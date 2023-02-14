@@ -1,7 +1,7 @@
 import { Parameter } from "@batch/ui-common";
 import { MockEnvironment } from "@batch/ui-common/lib/environment";
-import { FormValues } from "@batch/ui-common/lib/form";
-import { FormControlOptions, ParameterTypeResolver } from "../components/form";
+import { FormValues, ParameterName } from "@batch/ui-common/lib/form";
+import { FormControlOptions, FormControlResolver } from "../components/form";
 import {
     FormLayout,
     FormLayoutProvider,
@@ -37,12 +37,12 @@ export class MockBrowserEnvironment
     }
 
     // TODO: This code shouldn't need to be duplicated from DefaultBrowserEnvironment
-    getFormControl<V extends FormValues, K extends Extract<keyof V, string>>(
+    getFormControl<V extends FormValues, K extends ParameterName<V>>(
         param: Parameter<V, K>,
         opts?: FormControlOptions
     ): JSX.Element {
-        const resolver = this.getInjectable<ParameterTypeResolver>(
-            BrowserDependencyName.ParameterTypeResolver
+        const resolver = this.getInjectable<FormControlResolver>(
+            BrowserDependencyName.FormControlResolver
         );
         if (!resolver) {
             throw new Error(
