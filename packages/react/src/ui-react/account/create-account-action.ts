@@ -1,9 +1,19 @@
-import { createForm, Form } from "@batch/ui-common";
+import { createForm } from "@batch/ui-common";
 import { AbstractAction } from "@batch/ui-common/lib/action";
-import { ValidationStatus } from "@batch/ui-common/lib/form";
+import {
+    Form,
+    StringListParameter,
+    StringParameter,
+    ValidationStatus,
+} from "@batch/ui-common/lib/form";
 import { delayedCallback } from "@batch/ui-common/lib/util";
 import { translate } from "@batch/ui-common/lib/localization";
-import { ParameterType } from "../components/form";
+import {
+    LocationParameter,
+    StorageAccountParameter,
+    SubscriptionParameter,
+} from "../form";
+import { ResourceGroupParameter } from "../form/resource-group-parameter";
 
 export type CreateAccountFormValues = {
     accountName?: string;
@@ -19,6 +29,22 @@ export type CreateAccountFormValues = {
 };
 
 export class CreateAccountAction extends AbstractAction<CreateAccountFormValues> {
+    private _defaultValues: CreateAccountFormValues = {};
+
+    async onInitialize(): Promise<CreateAccountFormValues> {
+        // TODO: Default some of these values. We'll probably want to make
+        //       this a CreateOrUpdate action and support loading an existing
+        //       account too.
+        return this._defaultValues;
+    }
+
+    constructor(defaultValues: CreateAccountFormValues) {
+        super();
+        if (defaultValues) {
+            this._defaultValues = defaultValues;
+        }
+    }
+
     buildForm(
         initialValues: CreateAccountFormValues
     ): Form<CreateAccountFormValues> {
@@ -26,17 +52,37 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
             title: "Create Account",
             values: initialValues,
         });
-        form.param("subscriptionId", ParameterType.SubscriptionId, {
+        form.param("subscriptionId", SubscriptionParameter, {
             label: translate("subscription"),
+            required: true,
         });
-        form.param("resourceGroupId", ParameterType.ResourceGroupId, {
+        form.param("resourceGroupId", ResourceGroupParameter, {
+            dependencies: {
+                subscriptionId: "subscriptionId",
+            },
             label: translate("resourceGroup"),
+            required: true,
         });
-        form.param("accountName", ParameterType.BatchAccountName, {
+        form.param("accountName", StringParameter, {
             label: translate("accountName"),
             required: true,
             description:
                 "This is how you identify your Batch account. It must be unique.",
+            dynamic: {
+                placeholder: (values) => {
+                    // TODO: Probably better to use a custom control here like
+                    //       we do in the existing account creation form.
+                    //       Also needs to handle other clouds (and i18n)
+                    const locationId = values.location;
+                    if (locationId) {
+                        const locationName = locationId.slice(
+                            locationId.lastIndexOf("/") + 1
+                        );
+                        return `{account}.${locationName}.batch.azure.com`;
+                    }
+                    return "";
+                },
+            },
             onValidateAsync: async (value) => {
                 if (value && !(await isAccountNameAvailable(value))) {
                     return new ValidationStatus(
@@ -47,35 +93,42 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
                 return new ValidationStatus("ok");
             },
         });
-        form.param("location", ParameterType.LocationId, {
+        form.param("location", LocationParameter, {
+            dependencies: {
+                subscriptionId: "subscriptionId",
+            },
             label: "Location",
+            required: true,
         });
-        form.param("storageAccountId", ParameterType.StorageAccountId, {
+        form.param("storageAccountId", StorageAccountParameter, {
+            dependencies: {
+                subscriptionId: "subscriptionId",
+            },
             label: "Storage account",
             description:
                 "Optional. For best performance we recommend a storage account (general purpose v2) located in the same region as the associated Batch account.",
         });
 
         const advancedSection = form.section("Advanced");
-        advancedSection.param("identityType", ParameterType.String, {
+        advancedSection.param("identityType", StringParameter, {
             label: "Identity type",
         });
-        advancedSection.param("publicNetworkAccess", ParameterType.String, {
+        advancedSection.param("publicNetworkAccess", StringParameter, {
             label: "Public network access",
         });
-        advancedSection.param("poolAllocationMode", ParameterType.String, {
+        advancedSection.param("poolAllocationMode", StringParameter, {
             label: "Pool allocation mode",
         });
         advancedSection.param(
             "allowedAuthenticationModes",
-            ParameterType.StringList,
+            StringListParameter,
             {
                 label: "Authentication modes",
             }
         );
 
         const tagsSection = form.section("Tags");
-        tagsSection.param("tags", ParameterType.Tags, {
+        tagsSection.param("tags", StringParameter, {
             hideLabel: true,
         });
 
@@ -91,7 +144,10 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
     }
 
     async onExecute(formValues: CreateAccountFormValues): Promise<void> {
-        alert("Would write form values: " + formValues);
+        alert(
+            "Would write form values:\n" +
+                JSON.stringify(formValues, undefined, 4)
+        );
     }
 }
 

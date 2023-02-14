@@ -1,6 +1,10 @@
-import { createForm, Form, ParameterType } from "@batch/ui-common";
+import { createForm } from "@batch/ui-common";
 import { AbstractAction } from "@batch/ui-common/lib/action";
-import { ValidationStatus } from "@batch/ui-common/lib/form";
+import {
+    Form,
+    StringParameter,
+    ValidationStatus,
+} from "@batch/ui-common/lib/form";
 import { render, screen } from "@testing-library/react";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
@@ -18,13 +22,13 @@ describe("Action form tests", () => {
         }>({
             values: {},
         });
-        form.param("make", ParameterType.String, {
+        form.param("make", StringParameter, {
             label: "Make",
         });
-        form.param("model", ParameterType.String, {
+        form.param("model", StringParameter, {
             label: "Model",
         });
-        form.param("description", ParameterType.String, {
+        form.param("description", StringParameter, {
             label: "Description",
         });
 
@@ -47,13 +51,21 @@ type PetDogFormValues = {
 
 class PetDogAction extends AbstractAction<PetDogFormValues> {
     onPet?: (count: number) => void;
+    private _defaultValues: PetDogFormValues = {};
 
     constructor(
         initialValues: PetDogFormValues,
         onPet?: (count: number) => void
     ) {
-        super(initialValues);
+        super();
         this.onPet = onPet;
+    }
+
+    async onInitialize(): Promise<PetDogFormValues> {
+        // TODO: Default some of these values. We'll probably want to make
+        //       this a CreateOrUpdate action and support loading an existing
+        //       account too.
+        return this._defaultValues;
     }
 
     buildForm(): Form<PetDogFormValues> {
@@ -63,11 +75,11 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
             },
         });
 
-        form.param("dogName", ParameterType.String, {
+        form.param("dogName", StringParameter, {
             label: "Dog name",
         });
 
-        form.param("numberOfPets", ParameterType.String, {
+        form.param("numberOfPets", StringParameter, {
             label: "Pet how many times?",
             value: 100,
             onValidateSync: (value) => {
@@ -87,7 +99,7 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
             },
         });
 
-        form.param("giveTreat", ParameterType.String, {
+        form.param("giveTreat", StringParameter, {
             label: "Give a treat?",
         });
 

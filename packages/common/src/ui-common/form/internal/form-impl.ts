@@ -1,15 +1,23 @@
 import EventEmitter from "events";
 import TypedEventEmitter from "typed-emitter";
 import { cloneDeep, delay, OrderedMap } from "../../util";
-import { Entry } from "../entry";
-import {
+import { Entry, EntryInit } from "../entry";
+import type {
     Form,
     FormEventMap,
     FormInit,
     FormValues,
     ValidationOpts,
 } from "../form";
-import { Parameter, ParameterInit } from "../parameter";
+import { Item } from "../item";
+import {
+    AbstractParameter,
+    Parameter,
+    ParameterConstructor,
+    ParameterDependencies,
+    ParameterInit,
+    ParameterName,
+} from "../parameter";
 import { Section, SectionInit } from "../section";
 import { SubForm, SubFormInit } from "../subform";
 import { ValidationSnapshot } from "../validation-snapshot";
@@ -28,15 +36,9 @@ export class FormImpl<V extends FormValues> implements Form<V> {
     title?: string;
     description?: string;
 
-    onValidateSync?: (
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ) => ValidationStatus;
+    onValidateSync?: (values: V) => ValidationStatus;
 
-    onValidateAsync?: (
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ) => Promise<ValidationStatus>;
+    onValidateAsync?: (values: V) => Promise<ValidationStatus>;
 
     get validationSnapshot(): ValidationSnapshot<V> {
         return this._validationSnapshot;
@@ -47,7 +49,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
     }
 
     get entryValidationStatus(): {
-        [name in Extract<keyof V, string>]?: ValidationStatus;
+        [name in ParameterName<V>]?: ValidationStatus;
     } {
         return this._validationSnapshot.entryStatus;
     }
@@ -117,17 +119,25 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         return this._allEntries.get(entryName);
     }
 
-    param<K extends Extract<keyof V, string>>(
-        name: K,
-        type: string,
-        init?: ParameterInit<V, K>
-    ): Parameter<V, K> {
-        return new Parameter(this, name, type, init);
+    item(name: string, init?: EntryInit<V>): Item<V> {
+        return new Item(this, name, init);
     }
 
-    getParam<K extends Extract<keyof V, string>>(name: K): Parameter<V, K> {
+    param<
+        K extends ParameterName<V>,
+        D extends ParameterDependencies<V> = ParameterDependencies<V>,
+        T extends Parameter<V, K, D> = Parameter<V, K, D>
+    >(
+        name: K,
+        parameterConstructor: ParameterConstructor<V, K, D, T>,
+        init?: ParameterInit<V, K, D>
+    ): T {
+        return new parameterConstructor(this, name, init);
+    }
+
+    getParam<K extends ParameterName<V>>(name: K): Parameter<V, K> {
         const entry = this.getEntry(name);
-        if (!(entry instanceof Parameter)) {
+        if (!(entry instanceof AbstractParameter)) {
             throw new Error(`Entry "${name}" is not a parameter`);
         }
         return entry;
@@ -145,7 +155,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         return entry;
     }
 
-    subForm<K extends Extract<keyof V, string>, S extends V[K] & FormValues>(
+    subForm<K extends ParameterName<V>, S extends V[K] & FormValues>(
         name: K,
         form: Form<S>,
         init?: SubFormInit<V, K>
@@ -153,7 +163,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         return new SubForm(this, name, form, init);
     }
 
-    getSubForm<K extends Extract<keyof V, string>, S extends V[K] & FormValues>(
+    getSubForm<K extends ParameterName<V>, S extends V[K] & FormValues>(
         name: K
     ): SubForm<V, K, S> {
         const entry = this.getEntry(name);
@@ -161,6 +171,52 @@ export class FormImpl<V extends FormValues> implements Form<V> {
             throw new Error(`Entry "${name}" is not a sub-form`);
         }
         return entry;
+    }
+
+    evaluate(): boolean {
+        const propsChanged = this._updateDynamicProperties(this.values);
+        if (propsChanged) {
+            this._emitChangeEvent(this.values, this.values);
+        }
+        return propsChanged;
+    }
+
+    /**
+     * Updates all dynamic properties across the form.
+     *
+     * @param values The current form values
+     * @returns True if any properties were changed, false otherwise.
+     */
+    private _updateDynamicProperties(values: V): boolean {
+        let propsChanged = false;
+        for (const e of this.allEntries()) {
+            if (e.dynamic) {
+                // Get around type checking to make it easier to handle any type
+                // of dynamic properties
+                const entry: Record<string, unknown> = e as unknown as Record<
+                    string,
+                    unknown
+                >;
+                for (const pair of Object.entries(e.dynamic)) {
+                    const prop = pair[0];
+                    const evalFunc = pair[1];
+                    const oldPropValue = entry[prop];
+                    const newPropValue = evalFunc(values);
+                    if (oldPropValue !== newPropValue) {
+                        if (!propsChanged) {
+                            propsChanged = true;
+                        }
+                        entry[prop] = newPropValue;
+                    }
+                }
+            }
+        }
+        return propsChanged;
+    }
+
+    private _formValuesChanged(newValues: V, oldValues: V) {
+        this._updateDynamicProperties(newValues);
+        this._emitChangeEvent(newValues, oldValues);
     }
 
     private _emitChangeEvent(newValues: V, oldValues: V) {
@@ -178,13 +234,10 @@ export class FormImpl<V extends FormValues> implements Form<V> {
             return;
         }
         this._values = values;
-        this._emitChangeEvent(values, oldValues);
+        this._formValuesChanged(values, oldValues);
     }
 
-    updateValue<K extends Extract<keyof V, string>>(
-        name: K,
-        value: V[K]
-    ): void {
+    updateValue<K extends ParameterName<V>>(name: K, value: V[K]): void {
         if (this.values[name] === value) {
             // No-op if the value hasn't changed
             return;
@@ -257,13 +310,13 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         // Call validateAsync() for each entry but don't block
         // on completion
         for (const entry of this.allEntries()) {
-            if (entry instanceof Parameter) {
-                const entryName = entry.name as Extract<keyof V, string>;
+            if (entry instanceof AbstractParameter) {
+                const entryName = entry.name as ParameterName<V>;
                 snapshot.entryStatus[entryName] = entry.validateSync();
             } else if (entry instanceof SubForm) {
                 entry.validateSync(entry.form.validationSnapshot, opts);
 
-                const entryName = entry.name as Extract<keyof V, string>;
+                const entryName = entry.name as ParameterName<V>;
                 // Note: this will often be undefined because full
                 //       validation hasn't run
                 snapshot.entryStatus[entryName] =
@@ -273,8 +326,12 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
         // Run overall form onValidateSync callback
         if (this.onValidateSync) {
-            snapshot.onValidateSyncStatus = this.onValidateSync(snapshot, opts);
+            snapshot.onValidateSyncStatus = this.onValidateSync(
+                snapshot.values
+            );
         }
+
+        snapshot.syncValidationComplete = true;
 
         return snapshot;
     }
@@ -291,8 +348,8 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         // Call validateAsync() for each entry but don't block
         // on completion
         for (const entry of this.allEntries()) {
-            const entryName = entry.name as Extract<keyof V, string>;
-            if (entry instanceof Parameter) {
+            const entryName = entry.name as ParameterName<V>;
+            if (entry instanceof AbstractParameter) {
                 if (snapshot.entryStatus[entryName]?.level === "error") {
                     // Don't run async validation if sync validation
                     // has already failed for this parameter
@@ -328,7 +385,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
         // All entries have validated
         for (const entry of validatingEntries) {
-            const entryName = entry.name as Extract<keyof V, string>;
+            const entryName = entry.name as ParameterName<V>;
             if (snapshot.entryStatus[entryName]?.level !== "error") {
                 snapshot.entryStatus[entryName] =
                     newValidationStatuses[entryName];
@@ -338,10 +395,11 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         // Run overall form onValidateAsync callback
         if (this.onValidateAsync) {
             snapshot.onValidateAsyncStatus = await this.onValidateAsync(
-                snapshot,
-                opts
+                snapshot.values
             );
         }
+
+        snapshot.asyncValidationComplete = true;
 
         return snapshot;
     }

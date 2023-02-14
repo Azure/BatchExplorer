@@ -32,9 +32,9 @@ export function Checkbox(props: CheckboxProps): JSX.Element {
     return (
         <FluentCheckbox
             {...properties}
-            onChange={(_, checked) => {
-                if (props.onChange) {
-                    props.onChange(!!checked);
+            onChange={(event, checked) => {
+                if (event && props.onChange) {
+                    props.onChange(event, !!checked);
                 }
             }}
         ></FluentCheckbox>

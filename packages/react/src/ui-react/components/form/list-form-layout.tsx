@@ -1,15 +1,27 @@
-import { Form, Parameter, Section } from "@batch/ui-common";
-import { Entry, FormValues, SubForm } from "@batch/ui-common/lib/form";
+import {
+    AbstractParameter,
+    Entry,
+    Form,
+    FormValues,
+    Parameter,
+    ParameterName,
+    Section,
+    SubForm,
+    ValidationSnapshot,
+} from "@batch/ui-common/lib/form";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { Label } from "@fluentui/react/lib/Label";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import * as React from "react";
 import { getBrowserEnvironment } from "../../environment";
+import { ReactItem } from "../../form/react-item";
 import { useUniqueId } from "../../hooks";
+import { useForm } from "../../hooks/use-form";
 import { useAppTheme } from "../../theme";
+import { Button } from "../button";
 import { FormButton } from "./form-container";
-import { FormLayout } from "./form-layout";
+import { FormLayout, FormLayoutRenderOptions } from "./form-layout";
 
 /**
  * Render a form as a flat list.
@@ -17,45 +29,109 @@ import { FormLayout } from "./form-layout";
 export class ListFormLayout implements FormLayout {
     render<V extends FormValues>(
         form: Form<V>,
-        buttons?: FormButton[]
+        opts?: FormLayoutRenderOptions<V>
     ): JSX.Element {
-        const rows: JSX.Element[] = [];
-        this._renderChildEntries(form.childEntries(), rows);
-
         return (
-            <div role="form" style={{ maxWidth: "480px" }}>
+            <ListForm
+                form={form}
+                buttons={opts?.buttons}
+                onFormChange={opts?.onFormChange}
+                onValidate={opts?.onValidate}
+            />
+        );
+    }
+}
+
+interface ListFormProps<V extends FormValues> {
+    form: Form<V>;
+    buttons?: FormButton[];
+    onFormChange?: (newValues: V, oldValues: V) => void;
+    onValidate?: (snapshot?: ValidationSnapshot<V>) => void;
+}
+
+const ListForm = <V extends FormValues>(props: ListFormProps<V>) => {
+    const { form, buttons, onFormChange, onValidate } = props;
+
+    const theme = useAppTheme();
+
+    useForm(form, {
+        onFormChange: onFormChange,
+        onValidate: onValidate,
+    });
+
+    const rows: JSX.Element[] = [];
+    renderChildEntries(form.childEntries(), rows);
+
+    return (
+        <div role="form" style={{ maxWidth: "480px" }}>
+            {form.title != null && (
                 <h2 style={{ marginBottom: "16px" }}>
                     {form.title ?? "Untitled form"}
                 </h2>
-                <Stack tokens={{ childrenGap: 8 }}>{rows}</Stack>
-                <Stack tokens={{ childrenGap: 8 }}>
-                    <ButtonContainer buttons={buttons} />
-                </Stack>
-            </div>
-        );
-    }
+            )}
+            <Stack tokens={{ childrenGap: 8 }}>
+                {rows}
+                <ButtonContainer buttons={buttons} />
+                <span
+                    data-validationlevel={form.validationStatus?.level}
+                    style={{
+                        color: theme.semanticColors.errorText,
+                        visibility:
+                            form.validationStatus?.level === "ok" ?? "ok"
+                                ? "hidden"
+                                : "visible",
+                    }}
+                >
+                    {form.validationStatus?.message}
+                </span>
+            </Stack>
+        </div>
+    );
+};
 
-    private _renderChildEntries<V extends FormValues>(
-        entries: IterableIterator<Entry<V>>,
-        rows: JSX.Element[]
-    ) {
-        for (const entry of entries) {
-            if (entry instanceof Parameter) {
-                rows.push(<ParameterRow key={entry.name} param={entry} />);
-            } else if (entry instanceof Section) {
-                rows.push(<SectionTitle key={entry.name} section={entry} />);
-                if (entry.childEntriesCount > 0) {
-                    this._renderChildEntries(entry.childEntries(), rows);
-                }
-            } else if (entry instanceof SubForm) {
-                rows.push(<SubFormTitle key={entry.name} subForm={entry} />);
-                if (entry.childEntriesCount > 0) {
-                    this._renderChildEntries(entry.childEntries(), rows);
-                }
+function renderChildEntries<V extends FormValues>(
+    entries: IterableIterator<Entry<V>>,
+    rows: JSX.Element[]
+) {
+    for (const entry of entries) {
+        if (entry instanceof AbstractParameter) {
+            rows.push(<ParameterRow key={entry.name} param={entry} />);
+        } else if (entry instanceof ReactItem) {
+            rows.push(<ItemRow key={entry.name} item={entry} />);
+        } else if (entry instanceof Section) {
+            rows.push(<SectionTitle key={entry.name} section={entry} />);
+            if (entry.childEntriesCount > 0) {
+                renderChildEntries(entry.childEntries(), rows);
+            }
+        } else if (entry instanceof SubForm) {
+            rows.push(<SubFormTitle key={entry.name} subForm={entry} />);
+            if (entry.childEntriesCount > 0) {
+                renderChildEntries(entry.childEntries(), rows);
             }
         }
     }
 }
+
+interface ItemRowProps<V extends FormValues> {
+    item: ReactItem<V>;
+}
+
+const ItemRow = <V extends FormValues>(props: ItemRowProps<V>) => {
+    const { item } = props;
+    if (!item.render) {
+        return <></>;
+    }
+    return (
+        <div
+            className="form-item-row"
+            style={{
+                display: item.hidden === true ? "none" : undefined,
+            }}
+        >
+            {item.render({ item: item, values: item.parentForm.values })}
+        </div>
+    );
+};
 
 interface SectionTitleProps<V extends FormValues> {
     section: Section<V>;
@@ -68,7 +144,7 @@ const SectionTitle = <V extends FormValues>(props: SectionTitleProps<V>) => {
 
 interface SubFormTitleProps<
     P extends FormValues,
-    PK extends Extract<keyof P, string>,
+    PK extends ParameterName<P>,
     S extends P[PK] & FormValues
 > {
     subForm: SubForm<P, PK, S>;
@@ -76,7 +152,7 @@ interface SubFormTitleProps<
 
 const SubFormTitle = <
     P extends FormValues,
-    PK extends Extract<keyof P, string>,
+    PK extends ParameterName<P>,
     S extends P[PK] & FormValues
 >(
     props: SubFormTitleProps<P, PK, S>
@@ -88,7 +164,7 @@ const SubFormTitle = <
 const TitleRow = (props: { title: string; description?: string }) => {
     const theme = useAppTheme();
     return (
-        <div>
+        <div className="form-title-row">
             <h3
                 style={{
                     fontWeight: 600,
@@ -105,14 +181,11 @@ const TitleRow = (props: { title: string; description?: string }) => {
     );
 };
 
-interface ParameterRowProps<
-    V extends FormValues,
-    K extends Extract<keyof V, string>
-> {
+interface ParameterRowProps<V extends FormValues, K extends ParameterName<V>> {
     param: Parameter<V, K>;
 }
 
-const ParameterRow = <V extends FormValues, K extends Extract<keyof V, string>>(
+const ParameterRow = <V extends FormValues, K extends ParameterName<V>>(
     props: ParameterRowProps<V, K>
 ) => {
     const { param } = props;
@@ -122,7 +195,12 @@ const ParameterRow = <V extends FormValues, K extends Extract<keyof V, string>>(
     const formControlId = useUniqueId("form-control");
 
     return (
-        <div>
+        <div
+            className="form-parameter-row"
+            style={{
+                display: param.hidden === true ? "none" : undefined,
+            }}
+        >
             <Label htmlFor={formControlId}>
                 {param.hideLabel !== true && param.label}
                 {param.description != null && (
@@ -140,7 +218,7 @@ const ParameterRow = <V extends FormValues, K extends Extract<keyof V, string>>(
                     </TooltipHost>
                 )}
             </Label>
-            {env.getFormControl(param, { id: formControlId })}
+            {env.getFormControl({ param, id: formControlId })}
         </div>
     );
 };
@@ -151,16 +229,16 @@ interface ButtonContainerProps {
 
 const ButtonContainer = (props: ButtonContainerProps) => {
     return (
-        <div>
+        <div style={{ padding: "16px 0 0 0" }}>
             {props.buttons?.map((btn) => {
-                // TODO: Use fluent UI buttons
                 return (
-                    <button
+                    <Button
                         key={btn.label}
-                        name={btn.label}
-                        aria-label={btn.label}
+                        label={btn.label}
                         onClick={btn.onClick}
-                    ></button>
+                        disabled={btn.disabled}
+                        primary
+                    />
                 );
             })}
         </div>

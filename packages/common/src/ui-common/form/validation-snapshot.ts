@@ -1,5 +1,6 @@
 import { Deferred } from "../util";
 import type { FormValues } from "./form";
+import { ParameterName } from "./parameter";
 import { ValidationStatus } from "./validation-status";
 
 export class ValidationSnapshot<V extends FormValues> {
@@ -10,7 +11,7 @@ export class ValidationSnapshot<V extends FormValues> {
     onValidateAsyncStatus: ValidationStatus | undefined;
 
     entryStatus: {
-        [name in Extract<keyof V, string>]?: ValidationStatus;
+        [name in ParameterName<V>]?: ValidationStatus;
     } = {};
 
     syncValidationComplete: boolean = false;
@@ -30,27 +31,6 @@ export class ValidationSnapshot<V extends FormValues> {
     constructor(formValues: V, isFirstSnapshot: boolean = false) {
         this.values = formValues;
         this.isInitialSnapshot = isFirstSnapshot;
-    }
-
-    ok<K extends Extract<keyof V, string>>(
-        entryName: K,
-        message?: string
-    ): void {
-        this.entryStatus[entryName] = new ValidationStatus("ok", message ?? "");
-    }
-
-    error<K extends Extract<keyof V, string>>(
-        entryName: K,
-        message: string
-    ): void {
-        this.entryStatus[entryName] = new ValidationStatus("error", message);
-    }
-
-    warn<K extends Extract<keyof V, string>>(
-        entryName: K,
-        message: string
-    ): void {
-        this.entryStatus[entryName] = new ValidationStatus("warn", message);
     }
 
     updateOverallStatus(): void {

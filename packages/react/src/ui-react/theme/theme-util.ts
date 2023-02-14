@@ -13,6 +13,7 @@ import {
 } from "./explorer-theme";
 import { AppTheme } from "./app-theme";
 import { useTheme } from "@fluentui/react-theme-provider";
+import { getLogger } from "@batch/ui-common";
 
 export const BaseThemeLight = AzureThemeLight;
 export const BaseThemeDark = AzureThemeDark;
@@ -69,7 +70,7 @@ export function listThemes(): ThemeInfo[] {
 export function getTheme(themeName: string): ThemeInfo {
     let mapInfo = _themeMap[themeName];
     if (!mapInfo) {
-        console.error(
+        getLogger().error(
             `Unable to load theme ${themeName}: Falling back to default`
         );
         mapInfo = _themeMap[defaultTheme];

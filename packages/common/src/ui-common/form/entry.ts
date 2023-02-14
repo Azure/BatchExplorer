@@ -1,5 +1,6 @@
 import type { FormValues, Form } from "./form";
-import { Section } from "./section";
+import type { ParameterName } from "./parameter";
+import type { Section } from "./section";
 
 export interface Entry<V extends FormValues> {
     name: string;
@@ -22,39 +23,45 @@ export interface Entry<V extends FormValues> {
      * If true, the associated control will be greyed out and
      * non-interactive.
      */
-    disabled?: boolean;
+    disabled: boolean;
 
     /**
      * If true, the associated control will be visibly hidden
      */
-    hidden?: boolean;
+    hidden: boolean;
 
     /**
-     * While true, the associated control's value will be ignored by the
-     * form and will not react to changes.
+     * Callbacks to evaluate when the form changes which will dynamically
+     * change entry properties
      */
-    inactive?: boolean;
+    dynamic?: DynamicEntryProperties<V>;
 }
 
-export interface ValuedEntry<
-    V extends FormValues,
-    K extends Extract<keyof V, string>
-> extends Entry<V> {
+export type DynamicEntryProperties<V extends FormValues> = Partial<{
+    [P in keyof Omit<
+        Entry<V>,
+        "name" | "dynamic" | "parentForm" | "parentSection"
+    >]: (values: V) => V[P];
+}>;
+
+export interface ValuedEntry<V extends FormValues, K extends ParameterName<V>>
+    extends Entry<V> {
     name: K;
     value?: V[K];
 }
 
 export interface EntryInit<V extends FormValues> {
     parentSection?: Section<V>;
+    title?: string;
     description?: string;
     disabled?: boolean;
     hidden?: boolean;
-    inactive?: boolean;
+    dynamic?: DynamicEntryProperties<V>;
 }
 
 export interface ValuedEntryInit<
     V extends FormValues,
-    K extends Extract<keyof V, string>
+    K extends ParameterName<V>
 > extends EntryInit<V> {
     value?: V[K];
 }

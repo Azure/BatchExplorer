@@ -1,5 +1,6 @@
-import { createForm, ParameterType } from "@batch/ui-common";
-import { render, screen } from "@testing-library/react";
+import { createForm } from "@batch/ui-common";
+import { BooleanParameter, StringParameter } from "@batch/ui-common/lib/form";
+import { act, render, screen } from "@testing-library/react";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
 import { runAxe } from "../../../test-util/a11y";
@@ -16,13 +17,13 @@ describe("Form container tests", () => {
         }>({
             values: {},
         });
-        form.param("make", ParameterType.String, {
+        form.param("make", StringParameter, {
             label: "Make",
         });
-        form.param("model", ParameterType.String, {
+        form.param("model", StringParameter, {
             label: "Model",
         });
-        form.param("description", ParameterType.String, {
+        form.param("description", StringParameter, {
             label: "Description",
         });
 
@@ -33,5 +34,54 @@ describe("Form container tests", () => {
         expect(await screen.findByText("Description")).toBeDefined();
 
         expect(await runAxe(container)).toHaveNoViolations();
+    });
+
+    test("Dynamic entry evaluation", async () => {
+        const form = createForm<{
+            hideMessage: boolean;
+            message: string;
+        }>({
+            values: {
+                hideMessage: false,
+                message: "Hello world!",
+            },
+        });
+        form.param("hideMessage", BooleanParameter);
+        form.param("message", StringParameter, {
+            dynamic: {
+                hidden: (values) => values.hideMessage === true,
+            },
+        });
+
+        render(<FormContainer form={form} />);
+        expect(await screen.findByRole("form")).toBeDefined();
+
+        expect(
+            await screen.findByText("hideMessage", {
+                selector: "label",
+            })
+        ).toBeDefined();
+        expect(
+            (
+                await screen.findByText("message", {
+                    selector: "label",
+                })
+            ).parentElement?.style.display
+        ).toEqual("");
+
+        act(() => form.updateValue("hideMessage", true));
+
+        expect(
+            await screen.findByText("hideMessage", {
+                selector: "label",
+            })
+        ).toBeDefined();
+        expect(
+            (
+                await screen.findByText("message", {
+                    selector: "label",
+                })
+            ).parentElement?.style.display
+        ).toEqual("none");
     });
 });

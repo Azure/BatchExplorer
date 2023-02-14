@@ -9,7 +9,7 @@ import { Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { EnvironmentMode, initEnvironment } from "@batch/ui-common";
 import { DependencyName } from "@batch/ui-common/lib/environment";
-import { DefaultFormLayoutProvider, DefaultParameterTypeResolver } from "@batch/ui-react/lib/components/form";
+import { DefaultFormControlResolver, DefaultFormLayoutProvider, FormControlResolver } from "@batch/ui-react/lib/components/form";
 import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import { BrowserDependencyName } from "@batch/ui-react";
 import { StorageAccountServiceImpl, SubscriptionServiceImpl } from "@batch/ui-service";
@@ -31,6 +31,8 @@ import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
 import {StandardLocalizer} from "@batch/ui-common/lib/localization/standard-localizer";
+import { LiveLocationService } from "@batch/ui-service/lib/location";
+import { LiveResourceGroupService } from "@batch/ui-service/lib/resource-group";
 
 @Component({
     selector: "bl-app",
@@ -77,12 +79,16 @@ export class AppComponent implements OnInit, OnDestroy {
                 [DependencyName.Localizer]: () => new StandardLocalizer(),
                 [DependencyName.HttpClient]:
                     () => new BatchExplorerHttpClient(authService),
+                [BrowserDependencyName.LocationService]: () =>
+                    new LiveLocationService(),
+                [BrowserDependencyName.ResourceGroupService]: () =>
+                    new LiveResourceGroupService(),
                 [BrowserDependencyName.StorageAccountService]:
                     () => new StorageAccountServiceImpl(),
                 [BrowserDependencyName.SubscriptionService]:
                     () => new SubscriptionServiceImpl(),
-                [BrowserDependencyName.ParameterTypeResolver]:
-                    () => new DefaultParameterTypeResolver(),
+                [BrowserDependencyName.FormControlResolver]:
+                    () => new DefaultFormControlResolver(),
                 [BrowserDependencyName.FormLayoutProvider]:
                     () => new DefaultFormLayoutProvider(),
             }

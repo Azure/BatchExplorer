@@ -1,8 +1,9 @@
-import { createForm, ParameterType } from "@batch/ui-common";
+import { StringParameter } from "@batch/ui-common/lib/form";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
+import { createReactForm } from "../../../form";
 import { runAxe } from "../../../test-util/a11y";
 import { FormContainer } from "../form-container";
 
@@ -12,20 +13,25 @@ describe("Form container tests", () => {
     test("Can render a simple form", async () => {
         const user = userEvent.setup();
 
-        const form = createForm<{
+        const form = createReactForm<{
             make?: string;
             model?: string;
             description?: string;
         }>({
             values: {},
         });
-        form.param("make", ParameterType.String, {
+        form.item("banner", {
+            render: (props) => {
+                return <div>Please enter the information below</div>;
+            },
+        });
+        form.param("make", StringParameter, {
             label: "Make",
         });
-        form.param("model", ParameterType.String, {
+        form.param("model", StringParameter, {
             label: "Model",
         });
-        form.param("description", ParameterType.String, {
+        form.param("description", StringParameter, {
             label: "Description",
         });
 
@@ -46,6 +52,9 @@ describe("Form container tests", () => {
                 ]}
             />
         );
+
+        const bannerEl = screen.getByText("Please enter the information below");
+        expect(bannerEl).toBeDefined();
 
         const makeInput = screen.getByLabelText<HTMLInputElement>("Make");
         expect(makeInput).toBeDefined();

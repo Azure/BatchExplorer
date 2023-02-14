@@ -11,13 +11,15 @@ import {
 } from "@batch/ui-react/lib/environment";
 import {
     DefaultFormLayoutProvider,
-    DefaultParameterTypeResolver,
+    DefaultFormControlResolver,
 } from "@batch/ui-react/lib/components/form";
 import { StandardLocalizer } from "@batch/ui-common/lib/localization";
 import {
     FakeStorageAccountService,
     FakeSubscriptionService,
 } from "@batch/ui-service";
+import { FakeResourceGroupService } from "@batch/ui-service/lib/resource-group";
+import { FakeLocationService } from "@batch/ui-service/lib/location";
 
 // Defined by webpack
 declare const ENV: {
@@ -34,12 +36,16 @@ export function init(rootEl: HTMLElement): void {
                 [DependencyName.Logger]: () => new ConsoleLogger(),
                 [DependencyName.Localizer]: () => new StandardLocalizer(),
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
+                [BrowserDependencyName.LocationService]: () =>
+                    new FakeLocationService(),
+                [BrowserDependencyName.ResourceGroupService]: () =>
+                    new FakeResourceGroupService(),
                 [BrowserDependencyName.StorageAccountService]: () =>
                     new FakeStorageAccountService(),
                 [BrowserDependencyName.SubscriptionService]: () =>
                     new FakeSubscriptionService(),
-                [BrowserDependencyName.ParameterTypeResolver]: () =>
-                    new DefaultParameterTypeResolver(),
+                [BrowserDependencyName.FormControlResolver]: () =>
+                    new DefaultFormControlResolver(),
                 [BrowserDependencyName.FormLayoutProvider]: () =>
                     new DefaultFormLayoutProvider(),
             }

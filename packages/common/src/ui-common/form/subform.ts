@@ -1,24 +1,43 @@
 import EventEmitter from "events";
 import TypedEventEmitter from "typed-emitter";
-import type { Entry, ValuedEntry, ValuedEntryInit } from "./entry";
+import type {
+    DynamicEntryProperties,
+    Entry,
+    EntryInit,
+    ValuedEntry,
+    ValuedEntryInit,
+} from "./entry";
 import type { Form, FormEventMap, FormValues, ValidationOpts } from "./form";
 import type { FormImpl } from "./internal/form-impl";
-import type { Parameter, ParameterInit } from "./parameter";
+import { Item } from "./item";
+import type {
+    Parameter,
+    ParameterConstructor,
+    ParameterDependencies,
+    ParameterInit,
+    ParameterName,
+} from "./parameter";
 import type { Section, SectionInit } from "./section";
 import { ValidationSnapshot } from "./validation-snapshot";
 import type { ValidationStatus } from "./validation-status";
 
-export interface SubFormInit<
-    V extends FormValues,
-    K extends Extract<keyof V, string>
-> extends ValuedEntryInit<V, K> {
+export interface SubFormInit<V extends FormValues, K extends ParameterName<V>>
+    extends ValuedEntryInit<V, K> {
     title?: string;
     expanded?: boolean;
 }
 
+export interface DynamicSubformProperties<
+    V extends FormValues,
+    K extends ParameterName<V>
+> extends DynamicEntryProperties<V> {
+    expanded?: (values: V) => boolean;
+    value?: (values: V) => V[K];
+}
+
 export class SubForm<
     P extends FormValues,
-    PK extends Extract<keyof P, string>,
+    PK extends ParameterName<P>,
     S extends P[PK] & FormValues
 > implements ValuedEntry<P, PK>, Form<S>
 {
@@ -26,40 +45,58 @@ export class SubForm<
     readonly parentSection?: Section<P>;
 
     name: PK;
-    form: Form<S>;
-
-    _title?: string;
     description?: string;
-    dirty?: boolean;
-    disabled?: boolean;
-    hidden?: boolean;
-    inactive?: boolean;
-    expanded?: boolean;
+    dynamic?: DynamicSubformProperties<P, PK>;
+    form: Form<S>;
 
     _emitter = new EventEmitter() as TypedEventEmitter<{
         change: (newValues: S, oldValues: S) => void;
         validate: (snapshot: ValidationSnapshot<S>) => void;
     }>;
 
-    get validationSnapshot(): ValidationSnapshot<S> {
-        return this.form.validationSnapshot;
+    private _dirty?: boolean;
+    get dirty(): boolean {
+        return this._dirty ?? false;
+    }
+    set dirty(value: boolean | undefined) {
+        this._dirty = value;
     }
 
-    get validationStatus(): ValidationStatus | undefined {
-        return this.form.validationStatus;
+    private _disabled?: boolean;
+    get disabled(): boolean {
+        return this._disabled ?? false;
+    }
+    set disabled(value: boolean | undefined) {
+        this._disabled = value;
     }
 
     get entryValidationStatus(): {
-        [name in Extract<keyof S, string>]?: ValidationStatus;
+        [name in ParameterName<S>]?: ValidationStatus;
     } {
         return this.form.entryValidationStatus;
     }
 
+    private _expanded?: boolean;
+    get expanded(): boolean {
+        return this._expanded ?? false;
+    }
+    set expanded(value: boolean | undefined) {
+        this._expanded = value;
+    }
+
+    private _hidden?: boolean;
+    get hidden(): boolean {
+        return this._hidden ?? false;
+    }
+    set hidden(value: boolean | undefined) {
+        this._hidden = value;
+    }
+
+    private _title?: string;
     get title(): string {
         return this._title ?? this.name;
     }
-
-    set title(title: string) {
+    set title(title: string | undefined) {
         this._title = title;
     }
 
@@ -69,6 +106,21 @@ export class SubForm<
 
     get allEntriesCount(): number {
         return this.form.allEntriesCount;
+    }
+
+    get validationSnapshot(): ValidationSnapshot<S> {
+        return this.form.validationSnapshot;
+    }
+
+    get validationStatus(): ValidationStatus | undefined {
+        return this.form.validationStatus;
+    }
+
+    get value(): P[PK] {
+        return this.parentForm.values[this.name];
+    }
+    set value(newValue: P[PK]) {
+        this.parentForm.updateValue(this.name, newValue);
     }
 
     get values(): Readonly<S> {
@@ -90,13 +142,13 @@ export class SubForm<
         this._title = init?.title;
         this.description = init?.description;
         this.disabled = init?.disabled;
+        this.dynamic = init?.dynamic;
         this.hidden = init?.hidden;
-        this.inactive = init?.inactive;
         this.expanded = init?.expanded;
 
         this.parentForm.updateValue(name, this.values as S);
 
-        (this.parentForm as FormImpl<P>)._registerEntry(this);
+        (this.parentForm as unknown as FormImpl<P>)._registerEntry(this);
     }
 
     childEntries(): IterableIterator<Entry<S>> {
@@ -111,15 +163,23 @@ export class SubForm<
         return this.form.getEntry(entryName);
     }
 
-    param<SK extends Extract<keyof S, string>>(
-        name: SK,
-        type: string,
-        init?: ParameterInit<S, SK>
-    ): Parameter<S, SK> {
-        return this.form.param(name, type, init);
+    item(name: string, init?: EntryInit<S>): Item<S> {
+        return this.form.item(name, init);
     }
 
-    getParam<SK extends Extract<keyof S, string>>(name: SK): Parameter<S, SK> {
+    param<
+        SK extends ParameterName<S>,
+        D extends ParameterDependencies<S> = ParameterDependencies<S>,
+        T extends Parameter<S, SK, D> = Parameter<S, SK, D>
+    >(
+        name: SK,
+        parameterConstructor: ParameterConstructor<S, SK, D, T>,
+        init?: ParameterInit<S, SK, D>
+    ): T {
+        return this.form.param(name, parameterConstructor, init);
+    }
+
+    getParam<SK extends ParameterName<S>>(name: SK): Parameter<S, SK> {
         return this.form.getParam(name);
     }
 
@@ -131,17 +191,16 @@ export class SubForm<
         return this.form.getSection(name);
     }
 
-    subForm<SK extends Extract<keyof S, string>, S2 extends S[SK] & FormValues>(
+    subForm<SK extends ParameterName<S>, S2 extends S[SK] & FormValues>(
         name: SK,
         form: Form<S2>
     ): SubForm<S, SK, S2> {
         return new SubForm(this.form, name, form);
     }
 
-    getSubForm<
-        SK extends Extract<keyof S, string>,
-        S2 extends S[SK] & FormValues
-    >(name: SK): SubForm<S, SK, S2> {
+    getSubForm<SK extends ParameterName<S>, S2 extends S[SK] & FormValues>(
+        name: SK
+    ): SubForm<S, SK, S2> {
         return this.form.getSubForm(name);
     }
 
@@ -149,7 +208,7 @@ export class SubForm<
         this.form.setValues(values);
     }
 
-    updateValue<SK extends Extract<keyof S, string>, SV extends S[SK]>(
+    updateValue<SK extends ParameterName<S>, SV extends S[SK]>(
         name: SK,
         value: SV
     ): void {
@@ -190,5 +249,9 @@ export class SubForm<
         handler: FormEventMap<S>[E]
     ): void {
         this.form.off(event, handler);
+    }
+
+    evaluate(): boolean {
+        return this.form.evaluate();
     }
 }

@@ -8,8 +8,8 @@ import { RadioButtonOption } from "@batch/ui-react/lib/components/form/radio-but
  */
 export function newTextfieldOnChange(
     setValue: React.Dispatch<React.SetStateAction<string>>
-): (newValue?: string | undefined) => void {
-    function Result(newValue?: string | undefined): void {
+): (event: React.FormEvent, newValue?: string | undefined) => void {
+    function Result(_: React.FormEvent, newValue?: string | undefined): void {
         if (newValue) {
             setValue(newValue);
         }

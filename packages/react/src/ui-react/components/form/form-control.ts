@@ -1,4 +1,11 @@
-import { ValidationStatus } from "@batch/ui-common/lib/form";
+import {
+    FormValues,
+    Parameter,
+    ParameterDependencies,
+    ParameterName,
+    ValidationStatus,
+} from "@batch/ui-common/lib/form";
+import { ReactParameter } from "../../form/react-parameter";
 
 /**
  * Shared properties for all form controls
@@ -42,12 +49,6 @@ export interface FormControlProps<V> {
     hidden?: boolean;
 
     /**
-     * While true, the form control's value will be ignored by the form and
-     * will not react to changes.
-     */
-    inactive?: boolean;
-
-    /**
      * The currently displayed error message
      */
     validationStatus?: ValidationStatus;
@@ -65,7 +66,7 @@ export interface FormControlProps<V> {
     /**
      * Callback for when the value of the control changes
      */
-    onChange?: (value: V) => void;
+    onChange?: (event: React.FormEvent, value: V) => void;
 
     /**
      * A user-visible bit of text which is shown in place of a value when
@@ -78,4 +79,17 @@ export interface FormControlProps<V> {
      * The current value associated with this control
      */
     value?: V;
+}
+
+export interface ParamControlProps<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
+    T extends ReactParameter<V, K, D> | Parameter<V, K, D> =
+        | ReactParameter<V, K, D>
+        | Parameter<V, K, D>
+> {
+    param: T;
+    id?: string;
+    onChange?: (event: React.FormEvent, value: V[K]) => void;
 }
