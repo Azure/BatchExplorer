@@ -76,6 +76,10 @@
           {
             "group": ["@batch/*/src/*"],
             "message": "Import from @batch/*/lib instead of @batch/*/src"
+          },
+          {
+            "group": ["@batch/**/internal/*"],
+            "message": "Importing from package internals is not allowed"
           }
         ]
       }
