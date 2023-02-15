@@ -3,6 +3,23 @@ import { BasicFakeSet } from "../fakes";
 describe("Fake data sets", () => {
     const basicFakeSet = new BasicFakeSet();
 
+    test("List tenants", () => {
+        expect(basicFakeSet.defaultTenantArmId).toEqual(
+            "/tenants/99999999-9999-9999-9999-999999999999"
+        );
+        expect(
+            basicFakeSet.listTenants().map((value) => value.displayName)
+        ).toEqual(["contoso"]);
+    });
+
+    test("List subscriptions by default tenant", () => {
+        expect(
+            basicFakeSet
+                .listSubscriptionsByDefaultTenant()
+                .map((value) => value.displayName)
+        ).toEqual(["tanuki", "nekomata"]);
+    });
+
     test("List subscriptions by tenant ID", () => {
         // Short ID
         expect(

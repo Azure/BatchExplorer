@@ -1,4 +1,3 @@
-import { Parameter } from "@batch/ui-common";
 import { createForm, Form } from "@batch/ui-common/lib/form";
 import { inject } from "@batch/ui-common/lib/environment";
 import { FakeSubscriptionService } from "@batch/ui-service";
@@ -11,31 +10,41 @@ import {
     BrowserDependencyName,
     initMockBrowserEnvironment,
 } from "../../../environment";
-import { StorageAccountParameter, SubscriptionParameter } from "../../../form";
+import {
+    StorageAccountDependencies,
+    StorageAccountParameter,
+    SubscriptionParameter,
+} from "../../../form";
 import { runAxe } from "../../../test-util/a11y";
 import { StorageAccountDropdown } from "../storage-account-dropdown";
 import { SubscriptionDropdown } from "../subscription-dropdown";
+import { act } from "react-dom/test-utils";
 
-/* KLUDGE: the parameter has to be called "subscriptionId" until we can specify
- * dependencies in parameter types
- */
 type FakeFormValues = {
-    subscriptionId?: string;
+    subId?: string;
     storageAccountId?: string;
 };
 
 describe("Storage account dropdown", () => {
     let user: UserEvent;
     let form: Form<FakeFormValues>;
-    let subParam: Parameter<FakeFormValues, "subscriptionId">;
-    let storageParam: Parameter<FakeFormValues, "storageAccountId">;
+    let subParam: SubscriptionParameter<FakeFormValues, "subId">;
+    let storageParam: StorageAccountParameter<
+        FakeFormValues,
+        "storageAccountId",
+        StorageAccountDependencies<FakeFormValues>
+    >;
 
     beforeEach(() => {
         initMockBrowserEnvironment();
         user = userEvent.setup();
         form = createForm<FakeFormValues>({ values: {} });
-        subParam = form.param("subscriptionId", SubscriptionParameter);
-        storageParam = form.param("storageAccountId", StorageAccountParameter);
+        subParam = form.param("subId", SubscriptionParameter);
+        storageParam = form.param("storageAccountId", StorageAccountParameter, {
+            dependencies: {
+                subscriptionId: "subId",
+            },
+        });
     });
 
     test("simple dropdown", async () => {
@@ -72,7 +81,7 @@ describe("Storage account dropdown", () => {
             </>
         );
         const subDropdown = screen.getByRole("combobox", {
-            name: /subscriptionId/,
+            name: /subId/,
         });
         const storageDropdown = screen.getByRole("combobox", {
             name: /storageAccountId/,
@@ -83,23 +92,34 @@ describe("Storage account dropdown", () => {
             expectElementEnabled(storageDropdown);
         });
 
-        await selectOption(0);
-        await user.click(storageDropdown);
-
-        let storageAccounts = await screen.findAllByRole("option");
-
-        // Data served by FakeStorageAccountService
-        expect(storageAccounts.length).toEqual(3);
-        expect(storageAccounts[0].textContent).toEqual("Storage A");
-
-        await user.click(subDropdown); // Reopen sub dropdown
+        // Tanuki sub
         await selectOption(1);
         await user.click(storageDropdown);
 
-        storageAccounts = await screen.findAllByRole("option");
+        let options = await screen.findAllByRole("option");
 
-        expect(storageAccounts.length).toEqual(2);
-        expect(storageAccounts[0].textContent).toEqual("Storage D");
+        // Data served by FakeStorageAccountService
+        expect(options.length).toEqual(3);
+        expect(options.map((option) => option.textContent)).toEqual([
+            // Sorted alphabetically
+            "storageA",
+            "storageB",
+            "storageC",
+        ]);
+
+        await user.click(subDropdown); // Reopen sub dropdown
+
+        // Nekomata sub
+        await selectOption(0);
+        await user.click(storageDropdown);
+
+        options = await screen.findAllByRole("option");
+
+        expect(options.length).toEqual(2);
+        expect(options.map((option) => option.textContent)).toEqual([
+            "storageD",
+            "storageE",
+        ]);
     });
 
     test("bad subscription shows error", async () => {
@@ -115,8 +135,13 @@ describe("Storage account dropdown", () => {
             tenantId: "99999999-9999-9999-9999-999999999999",
             displayName: "Bad Subscription",
             state: "PastDue",
+            authorizationSource: "RoleBased",
+            subscriptionPolicies: {
+                locationPlacementId: "Fake_Placement_Id",
+                quotaId: "Fake_Quota_Id",
+            },
         };
-        subService.useFakeSet(fakeSet);
+        subService.setFakes(fakeSet);
 
         render(
             <>
@@ -125,7 +150,7 @@ describe("Storage account dropdown", () => {
             </>
         );
         const subDropdown = screen.getByRole("combobox", {
-            name: /subscriptionId/,
+            name: /subId/,
         });
         const storageDropdown = screen.getByRole("combobox", {
             name: /storageAccountId/,
@@ -135,14 +160,21 @@ describe("Storage account dropdown", () => {
             expectElementEnabled(subDropdown);
             expectElementEnabled(storageDropdown);
         });
-        await selectOption(2); // Bad subscription
+
+        // Bad subscription
+        await selectOption(0);
         expect(screen.getByText("Bad Subscription")).toBeDefined();
 
         await user.click(storageDropdown);
+        await act(async () => {
+            await form.validate();
+        });
 
         expect(await screen.queryAllByRole("option")).toEqual([]);
         expect(
-            screen.getByText("Error: No storage accounts in subscription.")
+            screen.getByText(
+                "Error loading storage accounts: Fake network error"
+            )
         ).toBeDefined();
     });
 

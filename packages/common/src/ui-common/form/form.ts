@@ -1,10 +1,16 @@
-import TypedEmitter from "typed-emitter";
-import { Entry } from "./entry";
-import { Parameter, ParameterInit, ParameterName } from "./parameter";
-import { Section, SectionInit } from "./section";
-import { SubForm, SubFormInit } from "./subform";
-import { ValidationSnapshot } from "./validation-snapshot";
-import { ValidationStatus } from "./validation-status";
+import type TypedEmitter from "typed-emitter";
+import type { Entry } from "./entry";
+import type {
+    Parameter,
+    ParameterConstructor,
+    ParameterDependencies,
+    ParameterInit,
+    ParameterName,
+} from "./parameter";
+import type { Section, SectionInit } from "./section";
+import type { SubForm, SubFormInit } from "./subform";
+import type { ValidationSnapshot } from "./validation-snapshot";
+import type { ValidationStatus } from "./validation-status";
 
 export type FormValues = Record<string, unknown>;
 
@@ -12,15 +18,11 @@ export interface FormInit<V extends FormValues> {
     values: V;
     title?: string;
     description?: string;
-    onValidateSync?: (
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ) => ValidationStatus;
-    onValidateAsync?: (
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ) => Promise<ValidationStatus>;
+    onValidateSync?: (values: V) => ValidationStatus;
+    onValidateAsync?: (values: V) => Promise<ValidationStatus>;
 }
+
+export type DynamicFormProperty<V extends FormValues, T> = (values: V) => T;
 
 export type ValidationOpts = {
     /**
@@ -67,15 +69,15 @@ export interface Form<V extends FormValues> {
 
     getEntry(entryName: string): Entry<V> | undefined;
 
-    param<K extends ParameterName<V>>(
+    param<
+        K extends ParameterName<V>,
+        D extends ParameterDependencies<V> = ParameterDependencies<V>,
+        T extends Parameter<V, K, D> = Parameter<V, K, D>
+    >(
         name: K,
-        parameterConstructor: new (
-            form: Form<V>,
-            name: K,
-            init?: ParameterInit<V, K>
-        ) => Parameter<V, K>,
-        init?: ParameterInit<V, K>
-    ): Parameter<V, K>;
+        parameterConstructor: ParameterConstructor<V, K, D, T>,
+        init?: ParameterInit<V, K, D>
+    ): T;
 
     getParam<K extends ParameterName<V>>(name: K): Parameter<V, K>;
 
@@ -108,15 +110,9 @@ export interface Form<V extends FormValues> {
      */
     updateValue<K extends ParameterName<V>>(name: K, value: V[K]): void;
 
-    onValidateSync?: (
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ) => ValidationStatus;
+    onValidateSync?: (values: V) => ValidationStatus;
 
-    onValidateAsync?: (
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ) => Promise<ValidationStatus>;
+    onValidateAsync?: (values: V) => Promise<ValidationStatus>;
 
     /**
      * Perform all form validation
@@ -173,4 +169,12 @@ export interface Form<V extends FormValues> {
         event: E,
         handler: FormEventMap<V>[E]
     ): void;
+
+    /**
+     * Evaluate dynamic properties
+     *
+     * @returns True if the evaluation resulted in changes (and a change event
+     *          being fired), false otherwise
+     */
+    evaluate(): boolean;
 }

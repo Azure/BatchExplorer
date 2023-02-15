@@ -8,7 +8,7 @@ export function StringParamTextField<
     V extends FormValues,
     K extends ParameterName<V>
 >(props: ParamControlProps<V, K>): JSX.Element {
-    const { param } = props;
+    const { param, onChange } = props;
     const value = param.value == null ? "" : String(param.value);
     const id = useUniqueId("form-control", props.id);
     return (
@@ -16,11 +16,16 @@ export function StringParamTextField<
             id={id}
             dirty={param.dirty}
             label={param.label}
+            disabled={param.disabled}
+            placeholder={param.placeholder}
             value={value}
             validationStatus={param.validationStatus}
-            onChange={(newValue: string | undefined) => {
-                param.value = newValue as V[K];
+            onChange={(event, value) => {
+                param.value = value as V[K];
                 param.dirty = true;
+                if (onChange) {
+                    onChange(event, param.value);
+                }
             }}
         />
     );

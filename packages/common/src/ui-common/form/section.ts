@@ -1,6 +1,11 @@
-import { Parameter, ParameterInit, ParameterName } from "./parameter";
+import {
+    Parameter,
+    ParameterDependencies,
+    ParameterInit,
+    ParameterName,
+} from "./parameter";
 import { OrderedMap } from "../util";
-import type { Entry, EntryInit } from "./entry";
+import type { DynamicEntryProperties, Entry, EntryInit } from "./entry";
 import type { Form, FormValues } from "./form";
 import type { FormImpl } from "./internal/form-impl";
 import { SubForm, SubFormInit } from "./subform";
@@ -10,16 +15,18 @@ export interface SectionInit<V extends FormValues> extends EntryInit<V> {
     expanded?: boolean;
 }
 
+export interface DynamicSectionProperties<V extends FormValues>
+    extends DynamicEntryProperties<V> {
+    expanded?: (values: V) => boolean;
+}
+
 export class Section<V extends FormValues> implements Entry<V> {
     readonly parentForm: Form<V>;
     readonly parentSection?: Section<V>;
 
     name: string;
-    _title?: string;
     description?: string;
-    disabled?: boolean;
-    hidden?: boolean;
-    expanded?: boolean;
+    dynamic?: DynamicSectionProperties<V>;
 
     private _childEntries: OrderedMap<string, Entry<V>> = new OrderedMap();
 
@@ -27,11 +34,39 @@ export class Section<V extends FormValues> implements Entry<V> {
         return this._childEntries.size;
     }
 
+    private _expanded?: boolean;
+    get expanded(): boolean {
+        return (
+            (this.parentSection?.expanded ?? false) || (this._expanded ?? false)
+        );
+    }
+    set expanded(value: boolean | undefined) {
+        this._expanded = value;
+    }
+
+    private _disabled?: boolean;
+    get disabled(): boolean {
+        return (
+            (this.parentSection?.disabled ?? false) || (this._disabled ?? false)
+        );
+    }
+    set disabled(value: boolean | undefined) {
+        this._disabled = value;
+    }
+
+    private _hidden?: boolean;
+    get hidden(): boolean {
+        return (this.parentSection?.hidden ?? false) || (this._hidden ?? false);
+    }
+    set hidden(value: boolean | undefined) {
+        this._hidden = value;
+    }
+
+    private _title?: string;
     get title(): string {
         return this._title ?? this.name;
     }
-
-    set title(title: string) {
+    set title(title: string | undefined) {
         this._title = title;
     }
 
@@ -57,15 +92,18 @@ export class Section<V extends FormValues> implements Entry<V> {
         return this._childEntries.get(entryName);
     }
 
-    param<K extends ParameterName<V>>(
+    param<
+        K extends ParameterName<V>,
+        D extends ParameterDependencies<V> = ParameterDependencies<V>
+    >(
         name: K,
         parameterConstructor: new (
             form: Form<V>,
             name: K,
-            init?: ParameterInit<V, K>
-        ) => Parameter<V, K>,
-        init?: ParameterInit<V, K>
-    ): Parameter<V, K> {
+            init?: ParameterInit<V, K, D>
+        ) => Parameter<V, K, D>,
+        init?: ParameterInit<V, K, D>
+    ): Parameter<V, K, D> {
         const paramInit = init ?? {};
         paramInit.parentSection = this;
 

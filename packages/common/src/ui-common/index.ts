@@ -1,3 +1,4 @@
+export * from "./types";
 export {
     getEnvironment,
     initEnvironment,
@@ -16,6 +17,7 @@ export {
     UrlOrRequestInit,
     HttpResponse,
     HttpHeaders,
+    getHttpClient,
 } from "./http";
 export { getLogger } from "./logging/logging-util";
 export {
@@ -36,5 +38,5 @@ export {
 } from "./datetime";
 export { uniqueElementId } from "./dom";
 export { autoFormat } from "./format";
-export { createForm, Form, Parameter, Section, SubForm } from "./form";
+export { createForm } from "./form";
 export { copyToClipboard } from "./clipboard";

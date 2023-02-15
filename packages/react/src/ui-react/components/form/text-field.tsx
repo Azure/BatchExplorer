@@ -25,11 +25,13 @@ export function TextField(
             ariaLabel={props.ariaLabel}
             className={props.className}
             disabled={props.disabled}
+            placeholder={props.placeholder}
             errorMessage={errorMessage}
             value={props.value == null ? "" : props.value}
-            onChange={(_, newValue) => {
+            onChange={(event, newValue) => {
                 if (props.onChange) {
                     props.onChange(
+                        event,
                         newValue === "" ? undefined : String(newValue)
                     );
                 }

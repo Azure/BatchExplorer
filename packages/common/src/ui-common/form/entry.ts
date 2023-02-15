@@ -23,13 +23,26 @@ export interface Entry<V extends FormValues> {
      * If true, the associated control will be greyed out and
      * non-interactive.
      */
-    disabled?: boolean;
+    disabled: boolean;
 
     /**
      * If true, the associated control will be visibly hidden
      */
-    hidden?: boolean;
+    hidden: boolean;
+
+    /**
+     * Callbacks to evaluate when the form changes which will dynamically
+     * change entry properties
+     */
+    dynamic?: DynamicEntryProperties<V>;
 }
+
+export type DynamicEntryProperties<V extends FormValues> = Partial<{
+    [P in keyof Omit<
+        Entry<V>,
+        "name" | "dynamic" | "parentForm" | "parentSection"
+    >]: (values: V) => V[P];
+}>;
 
 export interface ValuedEntry<V extends FormValues, K extends ParameterName<V>>
     extends Entry<V> {
@@ -42,6 +55,7 @@ export interface EntryInit<V extends FormValues> {
     description?: string;
     disabled?: boolean;
     hidden?: boolean;
+    dynamic?: DynamicEntryProperties<V>;
 }
 
 export interface ValuedEntryInit<

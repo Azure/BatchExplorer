@@ -1,6 +1,10 @@
-import { createForm, Form } from "@batch/ui-common";
+import { createForm } from "@batch/ui-common";
 import { AbstractAction } from "@batch/ui-common/lib/action";
-import { StringParameter, ValidationStatus } from "@batch/ui-common/lib/form";
+import {
+    Form,
+    StringParameter,
+    ValidationStatus,
+} from "@batch/ui-common/lib/form";
 import { render, screen } from "@testing-library/react";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
@@ -47,13 +51,21 @@ type PetDogFormValues = {
 
 class PetDogAction extends AbstractAction<PetDogFormValues> {
     onPet?: (count: number) => void;
+    private _defaultValues: PetDogFormValues = {};
 
     constructor(
         initialValues: PetDogFormValues,
         onPet?: (count: number) => void
     ) {
-        super(initialValues);
+        super();
         this.onPet = onPet;
+    }
+
+    async onInitialize(): Promise<PetDogFormValues> {
+        // TODO: Default some of these values. We'll probably want to make
+        //       this a CreateOrUpdate action and support loading an existing
+        //       account too.
+        return this._defaultValues;
     }
 
     buildForm(): Form<PetDogFormValues> {

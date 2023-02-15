@@ -1,4 +1,3 @@
-import { Parameter } from "@batch/ui-common";
 import { createForm, Form } from "@batch/ui-common/lib/form";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -16,7 +15,7 @@ type FakeFormValues = {
 describe("Subscription dropdown tests", () => {
     let user: UserEvent;
     let form: Form<FakeFormValues>;
-    let subParam: Parameter<FakeFormValues, "subscriptionId">;
+    let subParam: SubscriptionParameter<FakeFormValues, "subscriptionId">;
 
     beforeEach(() => {
         initMockBrowserEnvironment();
@@ -49,8 +48,9 @@ describe("Subscription dropdown tests", () => {
         const options = screen.getAllByRole("option");
         expect(options.length).toEqual(2);
         expect(options.map((option) => option.textContent)).toEqual([
-            "tanuki",
+            // Sorted alphabetically
             "nekomata",
+            "tanuki",
         ]);
     });
 });

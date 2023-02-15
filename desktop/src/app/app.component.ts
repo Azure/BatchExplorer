@@ -31,6 +31,8 @@ import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
 import {StandardLocalizer} from "@batch/ui-common/lib/localization/standard-localizer";
+import { LiveLocationService } from "@batch/ui-service/lib/location";
+import { LiveResourceGroupService } from "@batch/ui-service/lib/resource-group";
 
 @Component({
     selector: "bl-app",
@@ -77,6 +79,10 @@ export class AppComponent implements OnInit, OnDestroy {
                 [DependencyName.Localizer]: () => new StandardLocalizer(),
                 [DependencyName.HttpClient]:
                     () => new BatchExplorerHttpClient(authService),
+                [BrowserDependencyName.LocationService]: () =>
+                    new LiveLocationService(),
+                [BrowserDependencyName.ResourceGroupService]: () =>
+                    new LiveResourceGroupService(),
                 [BrowserDependencyName.StorageAccountService]:
                     () => new StorageAccountServiceImpl(),
                 [BrowserDependencyName.SubscriptionService]:

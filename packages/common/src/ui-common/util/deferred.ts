@@ -2,7 +2,7 @@
  * A wrapper around a promise which allows resolving or rejecting
  * at a later point in time with a function call.
  */
-export class Deferred<T> {
+export class Deferred<T = void> {
     public promise: Promise<T>;
     public done = false;
     public resolve!: (result: T) => void;

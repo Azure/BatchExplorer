@@ -5,8 +5,8 @@ export const Endpoints = {
 export const ApiVersion = {
     arm: `2022-05-01`,
     batch: {
-        arm: `2022-06-01`,
-        data: `2022-06-01`,
+        arm: `2022-10-01`,
+        data: `2022-10-01.16.0`,
     },
     storage: {
         arm: `2022-05-01`,

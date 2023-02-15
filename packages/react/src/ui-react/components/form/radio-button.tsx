@@ -1,17 +1,12 @@
 import * as React from "react";
 
 import { FormControlProps } from "./form-control";
-import { IChoiceGroupOption } from "@fluentui/react/lib/ChoiceGroup";
 import { ChoiceGroup as FluentRadioButton } from "@fluentui/react/lib/ChoiceGroup";
 
 export interface RadioButtonProps<V> extends FormControlProps<V> {
     options: RadioButtonOption[];
     defaultSelectedKey?: string;
     selectedKey?: string;
-    onChange?: (
-        ev?: V | React.FormEvent<HTMLElement | HTMLInputElement> | undefined,
-        option?: IChoiceGroupOption | undefined
-    ) => void;
 }
 
 export interface RadioButtonOption {
@@ -20,21 +15,34 @@ export interface RadioButtonOption {
 }
 
 export function RadioButton<V>(props: RadioButtonProps<V>): JSX.Element {
-    if (props.hidden) {
-        return <></>;
-    }
+    const {
+        id,
+        className,
+        disabled,
+        label,
+        placeholder,
+        defaultSelectedKey,
+        selectedKey,
+        options,
+        onChange,
+    } = props;
 
-    const properties = {
-        id: props.id,
-        className: props.className,
-        disabled: props.disabled,
-        label: props.label,
-        placeholder: props.placeholder,
-        defaultSelectedKey: props.defaultSelectedKey,
-        selectedKey: props.selectedKey,
-        options: props.options,
-        onChange: props.onChange,
-    };
-
-    return <FluentRadioButton {...properties}></FluentRadioButton>;
+    return (
+        <FluentRadioButton
+            id={id}
+            className={className}
+            disabled={disabled}
+            label={label}
+            placeholder={placeholder}
+            defaultSelectedKey={defaultSelectedKey}
+            selectedKey={selectedKey}
+            options={options}
+            onChange={(event, option) => {
+                if (event && option && onChange) {
+                    // TODO: Key probably isn't right here
+                    onChange(event, option.key as unknown as V);
+                }
+            }}
+        />
+    );
 }

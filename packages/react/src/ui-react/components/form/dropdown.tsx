@@ -45,7 +45,7 @@ export function Dropdown<V>(props: DropdownProps<V>): JSX.Element {
             options={_transformOptions(props)}
             onChange={(event, option, index) => {
                 if (props.onChange && index != null) {
-                    props.onChange(props.options[index].value);
+                    props.onChange(event, props.options[index].value);
                 }
             }}
         ></FluentDropdown>

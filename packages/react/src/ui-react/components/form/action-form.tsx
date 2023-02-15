@@ -4,11 +4,13 @@ import { FormValues, ValidationSnapshot } from "@batch/ui-common/lib/form";
 import { FormLayoutType } from "./form-layout";
 import { FormContainer } from "./form-container";
 import { getLogger } from "@batch/ui-common";
+import { useAsyncEffect } from "../../hooks";
 
 export interface ActionFormProps<V extends FormValues> {
     action: Action<V>;
     layout?: FormLayoutType;
     submitButtonLabel?: string;
+    onActionInitialized?: () => void;
     onFormChange?: (newValues: V, oldValues: V) => void;
     onValidate?: (snapshot?: ValidationSnapshot<V>) => void;
     onSubmit?: () => unknown;
@@ -17,36 +19,38 @@ export interface ActionFormProps<V extends FormValues> {
 export const ActionForm = <V extends FormValues>(
     props: ActionFormProps<V>
 ): JSX.Element => {
-    const { action, layout, onFormChange, onValidate } = props;
-
+    const { action, layout, onFormChange, onValidate, onActionInitialized } =
+        props;
+    const [loading, setLoading] = React.useState<boolean>(true);
     const [submitting, setSubmitting] = React.useState<boolean>(false);
 
-    const handleFormChange: (newValues: V, oldValues: V) => void =
-        React.useCallback(
-            async (oldValues, newValues) => {
-                if (onFormChange) {
-                    onFormChange(oldValues, newValues);
-                }
-            },
-            [onFormChange]
-        );
+    useAsyncEffect(async () => {
+        // TODO: We should make a custom hook for this kind of data loading
+        let isLatestInit = true;
+        setLoading(true);
+        await action.initialize();
+        if (isLatestInit) {
+            setLoading(false);
+            if (onActionInitialized) {
+                onActionInitialized();
+            }
+        }
+        return () => {
+            isLatestInit = false;
+        };
+    }, [action]);
 
-    const handleValidate: (snapshot?: ValidationSnapshot<V>) => void =
-        React.useCallback(
-            (snapshot) => {
-                if (onValidate) {
-                    onValidate(snapshot);
-                }
-            },
-            [onValidate]
-        );
+    if (loading) {
+        // TODO: Need a common loading component
+        return <></>;
+    }
 
     return (
         <FormContainer
             form={action.form}
             layout={layout}
-            onFormChange={handleFormChange}
-            onValidate={handleValidate}
+            onFormChange={onFormChange}
+            onValidate={onValidate}
             buttons={[
                 {
                     label: props.submitButtonLabel ?? "Save",

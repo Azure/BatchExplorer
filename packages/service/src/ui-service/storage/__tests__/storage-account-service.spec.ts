@@ -41,7 +41,7 @@ describe("StorageAccountService", () => {
                 }
             )
         );
-        const accounts = await service.list("/fake/sub1");
+        const accounts = await service.listBySubscriptionId("/fake/sub1");
 
         expect(accounts.length).toEqual(3);
     });

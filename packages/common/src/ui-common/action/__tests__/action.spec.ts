@@ -1,16 +1,26 @@
-import {
-    createForm,
-    Form,
-    ValidationSnapshot,
-    ValidationStatus,
-} from "../../form";
+import { createForm, Form, ValidationStatus } from "../../form";
 import { StringParameter } from "../../form/string-parameter";
-import { delay } from "../../util";
+import { delay, mergeDeep } from "../../util";
 import { AbstractAction } from "../action";
 
 describe("Action tests", () => {
     test("Simple action execution", async () => {
-        const action = new HelloAction({});
+        const action = new HelloAction({
+            subject: "planet",
+        });
+        action.initialize();
+
+        expect(action.isInitialized).toBe(false);
+
+        // This should be the same as waiting for the init promise above
+        await action.waitForInitialization();
+        expect(action.isInitialized).toBe(true);
+
+        // Initial form values from onInitialize function
+        expect(action.form.values).toStrictEqual({
+            subject: "planet",
+            sender: "Contoso",
+        });
 
         // Validation has not yet been run (but it will
         // be run automatically, just asynchronously)
@@ -18,27 +28,32 @@ describe("Action tests", () => {
         expect(action.subjectOnValidateCallCount).toEqual(0);
 
         // Action hasn't been executed, message is the default
-        expect(action.message).toEqual("Hello world");
+        expect(action.message).toEqual("Hola world");
 
-        action.form.setValues({ subject: "universe" });
+        // Executing adds the sender
+        const result = await action.execute();
+        expect(result.formValidationStatus.level).toEqual("ok");
+        expect(action.message).toEqual("Hello planet from Contoso");
 
+        // Can change form values and execute again
+        action.form.updateValue("subject", "universe");
         await action.execute();
+        expect(action.message).toEqual("Hello universe from Contoso");
 
-        // Action was executed, messaged changed
-        expect(action.message).toEqual("Hello universe");
-
-        // Validation should have only happened once
-        expect(action.onValidateCallCount).toEqual(1);
-        expect(action.subjectOnValidateCallCount).toEqual(1);
+        // Validation should have only happened once per execution
+        expect(action.onValidateCallCount).toEqual(2);
+        expect(action.subjectOnValidateCallCount).toEqual(2);
 
         // Check that no additional validations are pending
         await action.form.waitForValidation();
-        expect(action.onValidateCallCount).toEqual(1);
-        expect(action.subjectOnValidateCallCount).toEqual(1);
+        expect(action.onValidateCallCount).toEqual(2);
+        expect(action.subjectOnValidateCallCount).toEqual(2);
     });
 
     test("Action validation", async () => {
         const action = new HelloAction({});
+        await action.initialize();
+
         await action.form.validate();
         expect(action.onValidateCallCount).toEqual(1);
         // Subject parameter's onValidate() was not called
@@ -65,19 +80,12 @@ describe("Action tests", () => {
             "Subject is required"
         );
 
-        // Override parameter validation in form onValidate() to force success
-        action.form.updateValue("skipSubjectValidation", true);
-        await action.form.validate();
-        expect(action.onValidateCallCount).toEqual(3);
-        expect(action.subjectOnValidateCallCount).toEqual(0);
-        expect(action.form.validationStatus?.level).toEqual("ok");
-
         // Parameter onValidate failure
         action.form.setValues({
             subject: "world",
         });
         await action.form.validate();
-        expect(action.onValidateCallCount).toEqual(4);
+        expect(action.onValidateCallCount).toEqual(3);
         // Subject onValidate() was called now that the required check passed
         expect(action.subjectOnValidateCallCount).toEqual(1);
         expect(action.form.entryValidationStatus.subject?.level).toEqual(
@@ -96,7 +104,7 @@ describe("Action tests", () => {
             subject: "universe",
         });
         await action.form.validate();
-        expect(action.onValidateCallCount).toEqual(5);
+        expect(action.onValidateCallCount).toEqual(4);
         expect(action.subjectOnValidateCallCount).toEqual(2);
         expect(action.form.entryValidationStatus.subject?.level).toEqual("ok");
         expect(action.form.validationStatus?.level).toEqual("ok");
@@ -108,13 +116,35 @@ describe("Action tests", () => {
 
     type HelloFormValues = {
         subject?: string;
-        skipSubjectValidation?: boolean;
+        sender?: string;
     };
 
     class HelloAction extends AbstractAction<HelloFormValues> {
-        message = "Hello world";
+        message = "Hola world";
         onValidateCallCount = 0;
         subjectOnValidateCallCount = 0;
+
+        private _initialValues: HelloFormValues;
+
+        constructor(initialValues: HelloFormValues) {
+            super();
+            this._initialValues = initialValues;
+        }
+
+        async onInitialize(): Promise<HelloFormValues> {
+            await delay();
+
+            // Simulate the case where we want to combine
+            // some form values specified at action creation time
+            // and some from loaded data
+            const merged = mergeDeep(
+                {
+                    sender: "Contoso",
+                },
+                this._initialValues
+            );
+            return merged;
+        }
 
         override buildForm(
             initialValues: HelloFormValues
@@ -141,23 +171,18 @@ describe("Action tests", () => {
             return form;
         }
 
-        onValidateSync(
-            snapshot: ValidationSnapshot<HelloFormValues>
-        ): ValidationStatus {
+        onValidateSync(values: HelloFormValues): ValidationStatus {
             return new ValidationStatus("ok");
         }
 
         async onValidateAsync(
-            snapshot: ValidationSnapshot<HelloFormValues>
+            values: HelloFormValues
         ): Promise<ValidationStatus> {
             this.onValidateCallCount++;
 
             // Validate in a non-blocking fashion
             await delay();
 
-            if (snapshot.values.skipSubjectValidation) {
-                snapshot.ok("subject");
-            }
             return new ValidationStatus("ok");
         }
 
@@ -165,6 +190,9 @@ describe("Action tests", () => {
             return new Promise<void>((resolve) => {
                 setTimeout(() => {
                     this.message = `Hello ${formValues.subject}`;
+                    if (formValues.sender) {
+                        this.message += ` from ${formValues.sender}`;
+                    }
                     resolve();
                 }, 0);
             });

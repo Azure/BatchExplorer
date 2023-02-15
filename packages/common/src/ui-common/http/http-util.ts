@@ -1,4 +1,14 @@
-import { HttpHeaders } from "./http-client";
+import { getEnvironment } from "../environment";
+import { HttpClient, HttpHeaders } from "./http-client";
+
+/**
+ * Gets the HttpClient for the current environment
+ *
+ * @returns A logger object
+ */
+export function getHttpClient(): HttpClient {
+    return getEnvironment().getHttpClient();
+}
 
 /**
  * Type guard to check if an object looks like it implements HttpHeaders

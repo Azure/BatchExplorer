@@ -12,6 +12,8 @@ import {
 import {
     AbstractParameter,
     Parameter,
+    ParameterConstructor,
+    ParameterDependencies,
     ParameterInit,
     ParameterName,
 } from "../parameter";
@@ -33,15 +35,9 @@ export class FormImpl<V extends FormValues> implements Form<V> {
     title?: string;
     description?: string;
 
-    onValidateSync?: (
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ) => ValidationStatus;
+    onValidateSync?: (values: V) => ValidationStatus;
 
-    onValidateAsync?: (
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ) => Promise<ValidationStatus>;
+    onValidateAsync?: (values: V) => Promise<ValidationStatus>;
 
     get validationSnapshot(): ValidationSnapshot<V> {
         return this._validationSnapshot;
@@ -122,15 +118,15 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         return this._allEntries.get(entryName);
     }
 
-    param<K extends ParameterName<V>>(
-        name: string,
-        parameterConstructor: new (
-            form: Form<V>,
-            name: string,
-            init?: ParameterInit<V, K>
-        ) => Parameter<V, K>,
-        init?: ParameterInit<V, K>
-    ): Parameter<V, K> {
+    param<
+        K extends ParameterName<V>,
+        D extends ParameterDependencies<V> = ParameterDependencies<V>,
+        T extends Parameter<V, K, D> = Parameter<V, K, D>
+    >(
+        name: K,
+        parameterConstructor: ParameterConstructor<V, K, D, T>,
+        init?: ParameterInit<V, K, D>
+    ): T {
         return new parameterConstructor(this, name, init);
     }
 
@@ -172,6 +168,52 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         return entry;
     }
 
+    evaluate(): boolean {
+        const propsChanged = this._updateDynamicProperties(this.values);
+        if (propsChanged) {
+            this._emitChangeEvent(this.values, this.values);
+        }
+        return propsChanged;
+    }
+
+    /**
+     * Updates all dynamic properties across the form.
+     *
+     * @param values The current form values
+     * @returns True if any properties were changed, false otherwise.
+     */
+    private _updateDynamicProperties(values: V): boolean {
+        let propsChanged = false;
+        for (const e of this.allEntries()) {
+            if (e.dynamic) {
+                // Get around type checking to make it easier to handle any type
+                // of dynamic properties
+                const entry: Record<string, unknown> = e as unknown as Record<
+                    string,
+                    unknown
+                >;
+                for (const pair of Object.entries(e.dynamic)) {
+                    const prop = pair[0];
+                    const evalFunc = pair[1];
+                    const oldPropValue = entry[prop];
+                    const newPropValue = evalFunc(values);
+                    if (oldPropValue !== newPropValue) {
+                        if (!propsChanged) {
+                            propsChanged = true;
+                        }
+                        entry[prop] = newPropValue;
+                    }
+                }
+            }
+        }
+        return propsChanged;
+    }
+
+    private _formValuesChanged(newValues: V, oldValues: V) {
+        this._updateDynamicProperties(newValues);
+        this._emitChangeEvent(newValues, oldValues);
+    }
+
     private _emitChangeEvent(newValues: V, oldValues: V) {
         this._emitter.emit("change", newValues, oldValues);
     }
@@ -187,7 +229,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
             return;
         }
         this._values = values;
-        this._emitChangeEvent(values, oldValues);
+        this._formValuesChanged(values, oldValues);
     }
 
     updateValue<K extends ParameterName<V>>(name: K, value: V[K]): void {
@@ -279,8 +321,12 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
         // Run overall form onValidateSync callback
         if (this.onValidateSync) {
-            snapshot.onValidateSyncStatus = this.onValidateSync(snapshot, opts);
+            snapshot.onValidateSyncStatus = this.onValidateSync(
+                snapshot.values
+            );
         }
+
+        snapshot.syncValidationComplete = true;
 
         return snapshot;
     }
@@ -344,10 +390,11 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         // Run overall form onValidateAsync callback
         if (this.onValidateAsync) {
             snapshot.onValidateAsyncStatus = await this.onValidateAsync(
-                snapshot,
-                opts
+                snapshot.values
             );
         }
+
+        snapshot.asyncValidationComplete = true;
 
         return snapshot;
     }

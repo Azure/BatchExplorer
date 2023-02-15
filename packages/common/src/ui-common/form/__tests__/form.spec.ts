@@ -1,13 +1,23 @@
+import { initMockEnvironment } from "../../environment";
 import { delayedCallback } from "../../util";
+import { BooleanParameter } from "../boolean-parameter";
 import { FormValues } from "../form";
 import { createForm } from "../form-util";
 import { NumberParameter } from "../number-parameter";
+import {
+    AbstractParameter,
+    ParameterDependencies,
+    ParameterName,
+} from "../parameter";
 import { StringListParameter } from "../string-list-parameter";
 import { StringParameter } from "../string-parameter";
+import { ValidationSnapshot } from "../validation-snapshot";
 import { ValidationStatus } from "../validation-status";
 
 describe("Form tests", () => {
-    test("Single parameter form", () => {
+    beforeEach(() => initMockEnvironment());
+
+    test("Single parameter", () => {
         type HelloWorldFormValues = {
             message: string;
         };
@@ -33,7 +43,43 @@ describe("Form tests", () => {
         expect(() => form.param("message", StringParameter)).toThrow();
     });
 
-    test("Multi-parameter form with nested sections", () => {
+    test("Dynamic parameters", () => {
+        type HelloWorldFormValues = {
+            hideMessage: boolean;
+            message: string;
+        };
+
+        const form = createForm<HelloWorldFormValues>({
+            values: {
+                hideMessage: false,
+                message: "Hello world!",
+            },
+        });
+
+        const hideMessageParam = form.param("hideMessage", BooleanParameter);
+        const messageParam = form.param("message", StringParameter, {
+            label: "Not evaluated yet",
+            dynamic: {
+                hidden: (values) => values.hideMessage,
+                label: (values) =>
+                    values.hideMessage == true
+                        ? "Hidden message"
+                        : "Visible message",
+            },
+        });
+
+        // Test dynamic property evaluation
+        expect(messageParam.hidden).toBe(false);
+        expect(messageParam.label).toEqual("Not evaluated yet");
+        form.evaluate();
+        expect(messageParam.hidden).toBe(false);
+        expect(messageParam.label).toEqual("Visible message");
+        hideMessageParam.value = true;
+        expect(messageParam.hidden).toBe(true);
+        expect(messageParam.label).toEqual("Hidden message");
+    });
+
+    test("Multiple parameters with nested sections", async () => {
         type CarFormValues = {
             make?: "Ford" | "Tesla" | "Volkswagen";
             model?: string;
@@ -60,9 +106,13 @@ describe("Form tests", () => {
 
         // Top-level section
         const driversSection = form.section("Drivers");
-        driversSection.param("registeredDrivers", StringListParameter, {
-            label: "Drivers",
-        });
+        const driversParam = driversSection.param(
+            "registeredDrivers",
+            StringListParameter,
+            {
+                label: "Drivers",
+            }
+        );
         expect(form.values).toEqual({ make: "Tesla", model: "Model Y" });
 
         // Global entry count
@@ -74,13 +124,46 @@ describe("Form tests", () => {
 
         // Nested section
         const advancedSection = driversSection.section("Advanced");
-        advancedSection.param("maxRegisteredDrivers", NumberParameter);
+        const maxDriversParam = advancedSection.param(
+            "maxRegisteredDrivers",
+            NumberParameter
+        );
 
         // Check that counts were updated correctly
         expect(form.allEntriesCount).toEqual(7);
         expect(form.childEntriesCount).toEqual(4);
         expect(driversSection.childEntriesCount).toEqual(2);
         expect(advancedSection.childEntriesCount).toEqual(1);
+
+        // Check properties which cascade to child sections & parameters
+        const checkParamCascade = (prop: "hidden" | "disabled") => {
+            expect(driversParam[prop]).toBe(false);
+            expect(advancedSection[prop]).toBe(false);
+            expect(maxDriversParam[prop]).toBe(false);
+            driversSection[prop] = true;
+            expect(driversParam[prop]).toBe(true);
+            expect(advancedSection[prop]).toBe(true);
+            expect(maxDriversParam[prop]).toBe(true);
+            driversSection[prop] = false;
+            expect(driversParam[prop]).toBe(false);
+            expect(advancedSection[prop]).toBe(false);
+            expect(maxDriversParam[prop]).toBe(false);
+        };
+        checkParamCascade("hidden");
+        checkParamCascade("disabled");
+
+        // Check properties which cascade from sections to child sections only
+        const checkSectionCascade = (prop: "expanded") => {
+            expect(advancedSection[prop]).toBe(false);
+            driversSection[prop] = true;
+            expect(advancedSection[prop]).toBe(true);
+            driversSection[prop] = false;
+            expect(advancedSection[prop]).toBe(false);
+        };
+        checkSectionCascade("expanded");
+
+        // Unhide parent section
+        driversSection.hidden = false;
 
         form.setValues({
             make: "Ford",
@@ -91,7 +174,6 @@ describe("Form tests", () => {
         expect(form.values.registeredDrivers).toEqual(["George", "Abe"]);
 
         // Add a driver by changing the parameter
-        const driversParam = form.getParam("registeredDrivers");
         driversParam.value = ["George", "Abe", "Teddy"];
         expect(form.values.registeredDrivers).toEqual([
             "George",
@@ -101,9 +183,12 @@ describe("Form tests", () => {
 
         // Other values are not affected
         expect(form.values.milesPerCharge).toEqual(300);
+
+        await form.validate();
+        expect(form.validationStatus?.level).toBe("ok");
     });
 
-    test("Form with a sub-form", () => {
+    test("Single sub-form", () => {
         interface TrollFormValues extends FormValues {
             applicant?: string;
             applicantHouseholdSize?: number;
@@ -157,20 +242,41 @@ describe("Form tests", () => {
         });
     });
 
-    test("Form validation", async () => {
+    test("Validation", async () => {
         const form = createNationalParkForm();
+
+        // Keep track of the latest validation state
+        const validation: {
+            snapshot: ValidationSnapshot<NationalParkFormValues> | undefined;
+        } = {
+            snapshot: undefined,
+        };
+
+        form.on("validate", (snapshot) => {
+            validation.snapshot = snapshot;
+        });
 
         const validationPromise = form.validate();
 
-        // Validation is async, so status will not be defined until
-        // all validation promises resolve
+        // Sync validation has completed
+        expect(validation.snapshot?.syncValidationComplete).toBe(true);
+        expect(validation.snapshot?.asyncValidationComplete).toBe(false);
+        expect(validation.snapshot?.onValidateSyncStatus?.level).toBe("ok");
+
+        // Status will not be defined until all validation promises resolve
+        expect(validation.snapshot?.overallStatus).toBeUndefined();
         expect(form.validationStatus).toBeUndefined();
 
         await validationPromise;
 
+        // Async validation has completed
+        expect(validation.snapshot?.syncValidationComplete).toBe(true);
+        expect(validation.snapshot?.asyncValidationComplete).toBe(true);
+        expect(validation.snapshot?.overallStatus?.level).toEqual("error");
+        expect(form.validationStatus?.level).toEqual("error");
+
         // When there are multiple errors, the message includes the
         // error count
-        expect(form.validationStatus?.level).toEqual("error");
         expect(form.validationStatus?.message).toEqual("2 errors found");
         expect(form.entryValidationStatus.parkName?.level).toEqual("error");
         expect(form.entryValidationStatus.parkName?.message).toEqual(
@@ -181,11 +287,19 @@ describe("Form tests", () => {
             "State is required"
         );
 
+        // Park name is invalid because of missing dependency
         form.updateValue("parkName", "Yosemite");
         await form.validate();
-        // Required validation takes precedence over onValidate()
         expect(form.validationStatus?.level).toEqual("error");
-        expect(form.validationStatus?.message).toEqual("State is required");
+        expect(form.validationStatus?.message).toEqual("2 errors found");
+        expect(form.entryValidationStatus.parkName?.level).toEqual("error");
+        expect(form.entryValidationStatus.parkName?.message).toEqual(
+            "Cannot validate park name: no state selected"
+        );
+        expect(form.entryValidationStatus.state?.level).toEqual("error");
+        expect(form.entryValidationStatus.state?.message).toEqual(
+            "State is required"
+        );
 
         form.updateValue("state", "California");
         await form.validate();
@@ -193,6 +307,14 @@ describe("Form tests", () => {
         expect(form.validationStatus?.level).toEqual("error");
         expect(form.validationStatus?.message).toEqual(
             "State must be exactly 2 characters"
+        );
+
+        form.updateValue("state", "CO");
+        await form.validate();
+        // Park name parameter validation failure through dependency on state
+        expect(form.validationStatus?.level).toEqual("error");
+        expect(form.validationStatus?.message).toEqual(
+            "Invalid state selected. Valid options are: NY, New York, CA, California"
         );
 
         form.updateValue("state", "CA");
@@ -274,7 +396,7 @@ describe("Form tests", () => {
         );
     });
 
-    test("Form waitForValidation() function", async () => {
+    test("waitForValidation() function", async () => {
         const form = createNationalParkForm();
 
         // Add a parameter with async validation
@@ -330,7 +452,7 @@ describe("Form tests", () => {
         expect(validationStatus).toBe(form.validationStatus);
     });
 
-    test("events", () => {
+    test("Events", () => {
         type ElfType = {
             name: string;
             type: "Valyar" | "Noldor" | "Telerin";
@@ -403,11 +525,13 @@ describe("Form tests", () => {
     test("Computed values using 'change' event", () => {
         let onChangeCount = 0;
 
-        const form = createForm<{
+        type NumberFormValues = {
             number: number;
             numberPlusOne?: number;
             numberPlusTwo?: number;
-        }>({
+        };
+
+        const form = createForm<NumberFormValues>({
             values: {
                 number: 0,
             },
@@ -445,20 +569,43 @@ describe("Form tests", () => {
     });
 });
 
-function createNationalParkForm() {
-    type NationalParkFormValues = {
-        parkName?: string;
-        state?: string;
-        squareMiles?: number;
-    };
+type NationalParkFormValues = {
+    parkName?: string;
+    state?: string;
+    squareMiles?: number;
+};
 
+const PARK_NAME_REGEX = /[A-Za-z\s]/;
+
+function createNationalParkForm() {
     const form = createForm<NationalParkFormValues>({
         values: {},
+        onValidateSync: (values) => {
+            if (values.parkName === "Yosemite" && values.state !== "CA") {
+                return new ValidationStatus(
+                    "error",
+                    "Invalid park/state combination"
+                );
+            }
+            return new ValidationStatus("ok");
+        },
     });
 
-    form.param("parkName", StringParameter, {
+    form.param("parkName", ParkParameter, {
+        dependencies: {
+            state: "state",
+        },
         label: "Park name",
         required: true,
+        onValidateSync: (value) => {
+            if (value && !PARK_NAME_REGEX.test(value)) {
+                return new ValidationStatus(
+                    "error",
+                    "Invalid park name. Only letters and spaces are allowed."
+                );
+            }
+            return new ValidationStatus("ok");
+        },
     });
 
     form.param("state", StringParameter, {
@@ -475,4 +622,48 @@ function createNationalParkForm() {
     });
 
     return form;
+}
+
+const allowedStates = ["NY", "New York", "CA", "California"];
+
+/**
+ * A parameter for national park names which depends on a 'state'
+ * parameter.
+ */
+class ParkParameter<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V, "state">
+> extends AbstractParameter<V, K, D> {
+    validateSync(): ValidationStatus {
+        let status = super.validateSync();
+        if (status.level === "ok") {
+            status = this._validate();
+        }
+        return status;
+    }
+
+    private _validate(): ValidationStatus {
+        if (!this.dependencies || !this.dependencies.state) {
+            return new ValidationStatus("error", "Missing 'state' dependency");
+        }
+
+        const state = this.getDependencyValueAsString("state");
+        if (!state) {
+            return new ValidationStatus(
+                "error",
+                "Cannot validate park name: no state selected"
+            );
+        }
+
+        if (!allowedStates.includes(state)) {
+            return new ValidationStatus(
+                "error",
+                "Invalid state selected. Valid options are: " +
+                    allowedStates.join(", ")
+            );
+        }
+
+        return new ValidationStatus("ok");
+    }
 }

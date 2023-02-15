@@ -1,18 +1,15 @@
-import {
-    Form,
-    FormValues,
-    ValidationSnapshot,
-    ValidationStatus,
-} from "../form";
+import { Form, FormValues, ValidationStatus } from "../form";
 import { getLogger } from "../logging";
+import { Deferred } from "../util";
 
-export interface Action<V extends FormValues> {
+export interface Action<V extends FormValues = FormValues> {
     form: Form<V>;
+    isInitialized: boolean;
+    initialize(): Promise<void>;
+    onInitialize(): Promise<V>;
     execute(formValues: V): Promise<ActionExecutionResult>;
-    onValidateSync?(snapshot: ValidationSnapshot<V>): ValidationStatus;
-    onValidateAsync?(
-        snapshot: ValidationSnapshot<V>
-    ): Promise<ValidationStatus>;
+    onValidateSync?(formValues: V): ValidationStatus;
+    onValidateAsync?(formValues: V): Promise<ValidationStatus>;
     onExecute(formValues: V): Promise<void>;
 }
 
@@ -25,39 +22,61 @@ export type ActionExecutionResult = {
 export abstract class AbstractAction<V extends FormValues>
     implements Action<V>
 {
-    private _initialValues: V;
-    private _form?: Form<V>;
+    protected _form?: Form<V>;
 
+    private _isInitialized: boolean = false;
+    private _initializationDeferred = new Deferred();
+
+    /**
+     * The action's form, built from the buildForm function when the action
+     * is initialized. Note that if the action has not yet been initialized,
+     * trying to access the form will throw an error.
+     */
     get form(): Form<V> {
-        // Lazily create the form the first time it's accessed
         if (!this._form) {
-            this._form = this.buildForm(this._initialValues);
-            this.form.onValidateSync = (snapshot) => {
-                return this._validateSync(snapshot);
-            };
-            this.form.onValidateAsync = (snapshot) => {
-                return this._validateAsync(snapshot);
-            };
+            throw new Error(
+                "Unable to get form: the action is not yet initialized"
+            );
         }
         return this._form;
     }
 
-    constructor(initialValues: V) {
-        this._initialValues = initialValues;
+    get isInitialized(): boolean {
+        return this._isInitialized;
     }
 
-    private _validateSync(snapshot: ValidationSnapshot<V>): ValidationStatus {
+    async initialize(): Promise<void> {
+        const initialValues = await this.onInitialize();
+        this._form = this.buildForm(initialValues);
+        this.form.onValidateSync = (values) => {
+            return this._validateSync(values);
+        };
+        this.form.onValidateAsync = (values) => {
+            return this._validateAsync(values);
+        };
+
+        this._isInitialized = true;
+        this._initializationDeferred.resolve();
+    }
+
+    waitForInitialization(): Promise<void> {
+        if (this._initializationDeferred.done) {
+            return Promise.resolve();
+        } else {
+            return this._initializationDeferred.promise;
+        }
+    }
+
+    private _validateSync(values: V): ValidationStatus {
         if (this.onValidateSync) {
-            return this.onValidateSync(snapshot);
+            return this.onValidateSync(values);
         }
         return new ValidationStatus("ok");
     }
 
-    private async _validateAsync(
-        snapshot: ValidationSnapshot<V>
-    ): Promise<ValidationStatus> {
+    private async _validateAsync(values: V): Promise<ValidationStatus> {
         if (this.onValidateAsync) {
-            return this.onValidateAsync(snapshot);
+            return this.onValidateAsync(values);
         }
         return new ValidationStatus("ok");
     }
@@ -100,13 +119,13 @@ export abstract class AbstractAction<V extends FormValues>
         return executionResult;
     }
 
+    abstract onInitialize(): Promise<V>;
+
     abstract buildForm(initialValues: V): Form<V>;
 
-    abstract onValidateSync?(snapshot: ValidationSnapshot<V>): ValidationStatus;
-
-    abstract onValidateAsync?(
-        snapshot: ValidationSnapshot<V>
-    ): Promise<ValidationStatus>;
-
     abstract onExecute(formValues: V): Promise<void>;
+
+    abstract onValidateSync(values: V): ValidationStatus;
+
+    onValidateAsync?(values: V): Promise<ValidationStatus>;
 }

@@ -1,4 +1,4 @@
-import { fromIso, isArray } from "@batch/ui-common";
+import { fromIso, getLogger, isArray } from "@batch/ui-common";
 import { toODataList } from "../odata";
 import { Certificate } from "./certificate-models";
 
@@ -78,7 +78,7 @@ export function parseCertificateListJson(
         if (obj && obj instanceof Object) {
             certs.push(parseCertificateJson(obj));
         } else {
-            console.warn(
+            getLogger().warn(
                 "Skipping malformed certificate list item: " + String(obj)
             );
         }

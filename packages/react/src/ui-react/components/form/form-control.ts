@@ -1,6 +1,7 @@
 import {
     FormValues,
     Parameter,
+    ParameterDependencies,
     ParameterName,
     ValidationStatus,
 } from "@batch/ui-common/lib/form";
@@ -64,7 +65,7 @@ export interface FormControlProps<V> {
     /**
      * Callback for when the value of the control changes
      */
-    onChange?: (value: V) => void;
+    onChange?: (event: React.FormEvent, value: V) => void;
 
     /**
      * A user-visible bit of text which is shown in place of a value when
@@ -81,8 +82,11 @@ export interface FormControlProps<V> {
 
 export interface ParamControlProps<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
+    T extends Parameter<V, K, D> = Parameter<V, K, D>
 > {
     id?: string;
-    param: Parameter<V, K>;
+    onChange?: (event: React.FormEvent, value: V[K]) => void;
+    param: T;
 }

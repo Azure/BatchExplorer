@@ -33,18 +33,6 @@ export class ValidationSnapshot<V extends FormValues> {
         this.isInitialSnapshot = isFirstSnapshot;
     }
 
-    ok<K extends ParameterName<V>>(entryName: K, message?: string): void {
-        this.entryStatus[entryName] = new ValidationStatus("ok", message ?? "");
-    }
-
-    error<K extends ParameterName<V>>(entryName: K, message: string): void {
-        this.entryStatus[entryName] = new ValidationStatus("error", message);
-    }
-
-    warn<K extends ParameterName<V>>(entryName: K, message: string): void {
-        this.entryStatus[entryName] = new ValidationStatus("warn", message);
-    }
-
     updateOverallStatus(): void {
         let warningCount = 0;
         let errorCount = 0;

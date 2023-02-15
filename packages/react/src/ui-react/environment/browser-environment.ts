@@ -1,35 +1,33 @@
-import { Parameter } from "@batch/ui-common";
 import {
     AbstractEnvironment,
-    DependencyFactories,
     Environment,
     EnvironmentConfig,
     EnvironmentName,
     getEnvironment,
 } from "@batch/ui-common/lib/environment";
-import { FormValues, ParameterName } from "@batch/ui-common/lib/form";
-import { StorageAccountService, SubscriptionService } from "@batch/ui-service";
+import {
+    FormValues,
+    Parameter,
+    ParameterName,
+} from "@batch/ui-common/lib/form";
+import { FormControlOptions, FormControlResolver } from "../components/form";
 import {
     FormLayout,
     FormLayoutProvider,
     FormLayoutType,
 } from "../components/form/form-layout";
-import { FormControlOptions, FormControlResolver } from "../components/form";
+import {
+    BrowserDependencyFactories,
+    BrowserDependencyName,
+} from "./browser-dependencies";
 import { initFluentIcons } from "./environment-util";
 import { MockBrowserEnvironment } from "./mock-browser-environment";
-
-export enum BrowserDependencyName {
-    FormControlResolver = "formControlResolver",
-    FormLayoutProvider = "formLayoutProvider",
-    StorageAccountService = "storageAccount",
-    SubscriptionService = "subscription",
-}
 
 export interface BrowserEnvironment
     extends Environment<BrowserEnvironmentConfig> {
     getFormControl<V extends FormValues, K extends ParameterName<V>>(
         param: Parameter<V, K>,
-        opts?: FormControlOptions
+        opts?: FormControlOptions<V, K>
     ): JSX.Element;
 
     getFormLayout(layoutType?: FormLayoutType): FormLayout;
@@ -37,13 +35,6 @@ export interface BrowserEnvironment
 
 export interface BrowserEnvironmentConfig extends EnvironmentConfig {
     enableA11yTesting?: boolean;
-}
-
-export interface BrowserDependencyFactories extends DependencyFactories {
-    [BrowserDependencyName.FormControlResolver]: () => FormControlResolver;
-    [BrowserDependencyName.FormLayoutProvider]: () => FormLayoutProvider;
-    [BrowserDependencyName.StorageAccountService]: () => StorageAccountService;
-    [BrowserDependencyName.SubscriptionService]: () => SubscriptionService;
 }
 
 /**
@@ -71,7 +62,7 @@ export class DefaultBrowserEnvironment
      */
     getFormControl<V extends FormValues, K extends ParameterName<V>>(
         param: Parameter<V, K>,
-        opts?: FormControlOptions
+        opts?: FormControlOptions<V, K>
     ): JSX.Element {
         const resolver = this.getInjectable<FormControlResolver>(
             BrowserDependencyName.FormControlResolver
