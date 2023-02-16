@@ -86,8 +86,7 @@ export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAc
     private _processStorageAccounts(storageAccounts: List<StorageAccount>) {
         const prefered = [];
         const others = [];
-        storageAccounts.forEach((account, i) => {
-            account.isClassic = i % 2 === 0;
+        storageAccounts.forEach((account) => {
             if (account.location.toLowerCase() === this.account.location.toLowerCase()) {
                 prefered.push(account);
             } else {
