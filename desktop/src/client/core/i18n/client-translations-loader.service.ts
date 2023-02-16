@@ -41,7 +41,7 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
     }
 
     private async _loadProductionTranslations() {
-        const englishTranslationFile = path.join(ClientConstants.resourcesFolder, "./i18n/resources.en.json");
+        const englishTranslationFile = path.join(ClientConstants.resourcesFolder, "./i18n-deprecated/resources.en.json");
         await this._loadProductionTranslationFile(englishTranslationFile);
         await this._loadLocaleTranslations();
     }
