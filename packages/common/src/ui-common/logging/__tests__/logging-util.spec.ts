@@ -8,6 +8,7 @@ describe("Logging Utilities", () => {
     beforeEach(() => {
         initMockEnvironment();
         logger = getLogger() as MockLogger;
+        logger.enableChecking = true;
     });
 
     test("Each logging function works as expected", () => {

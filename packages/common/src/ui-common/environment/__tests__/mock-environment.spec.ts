@@ -22,6 +22,7 @@ describe("Mock environment tests", () => {
         initMockEnvironment();
         const env = getMockEnvironment();
         const mockLogger = env.getLogger() as MockLogger;
+        mockLogger.enableChecking = true;
         mockLogger.expectInfo("This is from a mock logger");
         mockLogger.info("This is from a mock logger");
     });
