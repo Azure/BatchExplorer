@@ -8,6 +8,11 @@ export interface ExpectedMessage {
 }
 
 export class MockLogger extends AbstractLogger {
+    /**
+     * Enable only when specifically testing what messages are logged
+     */
+    enableChecking: boolean = false;
+
     expectedMessages: ExpectedMessage[] = [];
 
     expectInfo(expectedMsg: string, ...args: unknown[]): void {
@@ -31,6 +36,11 @@ export class MockLogger extends AbstractLogger {
         expectedMsg: string,
         ...args: unknown[]
     ): void {
+        if (!this.enableChecking) {
+            throw new Error(
+                "Set `MockLogger.enableChecking = true` to enable log message assertions"
+            );
+        }
         this.expectedMessages.push({
             level: level,
             message: expectedMsg,
@@ -63,6 +73,10 @@ export class MockLogger extends AbstractLogger {
         message: string,
         ...args: unknown[]
     ) {
+        if (!this.enableChecking) {
+            // If checking is not enabled, this is a no-op
+            return;
+        }
         const argsMatch = (
             expectedArgs?: unknown[],
             actualArgs?: unknown[]
