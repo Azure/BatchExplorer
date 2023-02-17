@@ -1,3 +1,7 @@
+# 2.16.1
+
+* Test data caused storage account to show as "classic" [\#2659](https://github.com/Azure/BatchExplorer/issues/2659)
+
 # 2.16.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/50?closed=1)
