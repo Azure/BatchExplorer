@@ -14,6 +14,7 @@ import * as React from "react";
 import { getBrowserEnvironment } from "../../environment";
 import { useUniqueId } from "../../hooks";
 import { useAppTheme } from "../../theme";
+import { Button } from "../button";
 import { FormButton } from "./form-container";
 import { FormLayout } from "./form-layout";
 
@@ -25,39 +26,63 @@ export class ListFormLayout implements FormLayout {
         form: Form<V>,
         buttons?: FormButton[]
     ): JSX.Element {
-        const rows: JSX.Element[] = [];
-        this._renderChildEntries(form.childEntries(), rows);
-
-        return (
-            <div role="form" style={{ maxWidth: "480px" }}>
-                <h2 style={{ marginBottom: "16px" }}>
-                    {form.title ?? "Untitled form"}
-                </h2>
-                <Stack tokens={{ childrenGap: 8 }}>{rows}</Stack>
-                <Stack tokens={{ childrenGap: 8 }}>
-                    <ButtonContainer buttons={buttons} />
-                </Stack>
-            </div>
-        );
+        return <ListForm form={form} buttons={buttons} />;
     }
+}
 
-    private _renderChildEntries<V extends FormValues>(
-        entries: IterableIterator<Entry<V>>,
-        rows: JSX.Element[]
-    ) {
-        for (const entry of entries) {
-            if (entry instanceof AbstractParameter) {
-                rows.push(<ParameterRow key={entry.name} param={entry} />);
-            } else if (entry instanceof Section) {
-                rows.push(<SectionTitle key={entry.name} section={entry} />);
-                if (entry.childEntriesCount > 0) {
-                    this._renderChildEntries(entry.childEntries(), rows);
-                }
-            } else if (entry instanceof SubForm) {
-                rows.push(<SubFormTitle key={entry.name} subForm={entry} />);
-                if (entry.childEntriesCount > 0) {
-                    this._renderChildEntries(entry.childEntries(), rows);
-                }
+interface ListFormProps<V extends FormValues> {
+    form: Form<V>;
+    buttons?: FormButton[];
+}
+
+const ListForm = <V extends FormValues>(props: ListFormProps<V>) => {
+    const { form, buttons } = props;
+
+    const theme = useAppTheme();
+    const rows: JSX.Element[] = [];
+    renderChildEntries(form.childEntries(), rows);
+
+    return (
+        <div role="form" style={{ maxWidth: "480px" }}>
+            <h2 style={{ marginBottom: "16px" }}>
+                {form.title ?? "Untitled form"}
+            </h2>
+            <Stack tokens={{ childrenGap: 8 }}>
+                {rows}
+                <ButtonContainer buttons={buttons} />
+                <span
+                    data-validationlevel={form.validationStatus?.level}
+                    style={{
+                        color: theme.semanticColors.errorText,
+                        visibility:
+                            form.validationStatus?.level === "ok" ?? "ok"
+                                ? "hidden"
+                                : "visible",
+                    }}
+                >
+                    {form.validationStatus?.message}
+                </span>
+            </Stack>
+        </div>
+    );
+};
+
+function renderChildEntries<V extends FormValues>(
+    entries: IterableIterator<Entry<V>>,
+    rows: JSX.Element[]
+) {
+    for (const entry of entries) {
+        if (entry instanceof AbstractParameter) {
+            rows.push(<ParameterRow key={entry.name} param={entry} />);
+        } else if (entry instanceof Section) {
+            rows.push(<SectionTitle key={entry.name} section={entry} />);
+            if (entry.childEntriesCount > 0) {
+                renderChildEntries(entry.childEntries(), rows);
+            }
+        } else if (entry instanceof SubForm) {
+            rows.push(<SubFormTitle key={entry.name} subForm={entry} />);
+            if (entry.childEntriesCount > 0) {
+                renderChildEntries(entry.childEntries(), rows);
             }
         }
     }
@@ -154,16 +179,16 @@ interface ButtonContainerProps {
 
 const ButtonContainer = (props: ButtonContainerProps) => {
     return (
-        <div>
+        <div style={{ padding: "16px 0 0 0" }}>
             {props.buttons?.map((btn) => {
-                // TODO: Use fluent UI buttons
                 return (
-                    <button
+                    <Button
                         key={btn.label}
-                        name={btn.label}
-                        aria-label={btn.label}
+                        label={btn.label}
                         onClick={btn.onClick}
-                    ></button>
+                        disabled={btn.disabled}
+                        primary
+                    />
                 );
             })}
         </div>

@@ -32,9 +32,11 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
         });
         form.param("subscriptionId", SubscriptionParameter, {
             label: translate("subscription"),
+            required: true,
         });
         form.param("resourceGroupId", StringParameter, {
             label: translate("resourceGroup"),
+            required: true,
         });
         form.param("accountName", StringParameter, {
             label: translate("accountName"),
@@ -53,6 +55,7 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
         });
         form.param("location", StringParameter, {
             label: "Location",
+            required: true,
         });
         form.param("storageAccountId", StorageAccountParameter, {
             label: "Storage account",
@@ -95,7 +98,10 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
     }
 
     async onExecute(formValues: CreateAccountFormValues): Promise<void> {
-        alert("Would write form values: " + formValues);
+        alert(
+            "Would write form values:\n" +
+                JSON.stringify(formValues, undefined, 4)
+        );
     }
 }
 
