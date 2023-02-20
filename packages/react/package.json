@@ -56,7 +56,8 @@
     "workspace:test:lib": "npm run test",
     "workspace:test:lib:all": "npm run test:all",
     "workspace:test:web": "npm run test",
-    "workspace:test:web:all": "npm run test:all"
+    "workspace:test:web:all": "npm run test:all",
+    "workspace:watch:lib": "npm run watch"
   },
   "peerDependencies": {
     "@fluentui/react": ">=7.147.1 <8.0.0",
