@@ -7,6 +7,17 @@ steps:
       npm run build:package
     displayName: Build and pack
 
+  - script: |
+      set -e
+      git status
+      changed=`git status | grep 'modified:' | wc -l`
+      if [ "$changed" -ne "0" ]; then
+        echo "Changes detected. Pipeline failed"
+        exit 1
+      fi
+    workingDirectory: desktop
+    displayName: Validate no files changed on build
+
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: linux
