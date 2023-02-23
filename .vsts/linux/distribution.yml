@@ -47,6 +47,7 @@ steps:
 
   - script: |
       set -e
+      git status
       changed=`git status | grep 'modified:' | wc -l`
       if [ "$changed" -ne "0" ]; then
         echo "Changes detected. Pipeline failed"
