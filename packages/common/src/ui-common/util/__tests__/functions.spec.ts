@@ -1,6 +1,13 @@
-import { debounce } from "lodash";
 import { initMockEnvironment } from "../../environment";
-import { cloneDeep, delay, isArray, isPromiseLike, uniqueId } from "../../util";
+import {
+    cloneDeep,
+    debounce,
+    delay,
+    isArray,
+    isPromiseLike,
+    mergeDeep,
+    uniqueId,
+} from "../functions";
 
 describe("Common utility functions", () => {
     beforeEach(() => initMockEnvironment());
@@ -43,6 +50,52 @@ describe("Common utility functions", () => {
                 innerList: ["a", 1, 2, "b"],
             },
             list: [1, 2, "a", "b"],
+        });
+    });
+
+    test("mergeDeep() function", () => {
+        expect(
+            mergeDeep(
+                {
+                    str: "bar",
+                    num: 123,
+                    obj: {
+                        innerStr: "baz",
+                        innerNum: 321,
+                        innerObj: {
+                            emptyList: [],
+                        },
+                        innerList: ["a", 1, 2, "b"],
+                    },
+                    list: [1, 2, "a", "b"],
+                },
+                {
+                    // Overwrite existing prop
+                    str: "foo",
+                    obj: {
+                        // Nested object property merging
+                        innerObj: {
+                            notEmptyList: ["notnull"],
+                        },
+                        // Lists should be overwritten, not merged
+                        innerList: ["c"],
+                    },
+                    list: "notreallyalist",
+                }
+            )
+        ).toStrictEqual({
+            str: "foo",
+            num: 123,
+            obj: {
+                innerStr: "baz",
+                innerNum: 321,
+                innerObj: {
+                    emptyList: [],
+                    notEmptyList: ["notnull"],
+                },
+                innerList: ["c"],
+            },
+            list: "notreallyalist",
         });
     });
 

@@ -1,6 +1,7 @@
 // Importing specific modules instead of importing all of "lodash" gives us
 // better tree shaking and a smaller bundle size
 import lodashCloneDeep from "lodash/cloneDeep";
+import lodashMergeWith from "lodash/mergeWith";
 import lodashIsArray from "lodash/isArray";
 import lodashDebounce from "lodash/debounce";
 
@@ -11,8 +12,32 @@ export function uniqueId(prefix: string = "id"): string {
     return `${prefix}-${env.uniqueId()}`;
 }
 
+/**
+ * Creates a deep copy of the given object
+ *
+ * @param target The object to clone
+ * @returns A copy of the object
+ */
 export function cloneDeep<T>(target: T): T {
     return lodashCloneDeep(target) as T;
+}
+
+/**
+ * Recursively merge two objects and return a new object with the result.
+ * Note that unlike lodash's default merge function, arrays are overwritten
+ * instead of merged.
+ *
+ * @param target The object to merge into
+ * @param source The object to merge properties from
+ * @returns A new object with properties from both objects
+ */
+export function mergeDeep<T>(target: T, source: T): T {
+    return lodashMergeWith(target, source, (targetValue, sourceValue) => {
+        if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
+            // Don't merge arrays, overwrite them
+            return sourceValue;
+        }
+    });
 }
 
 /**
