@@ -10,7 +10,8 @@ steps:
   - script: |
       set -e
       git status --porcelain=v1
-      changed=$(git status --porcelain=v1 | grep '^M' | wc -l)
+      changed=$(git status --porcelain=v1 | grep -c '^ M ')
+      echo "Number of changed files: $changed"
       if [ "$changed" -ne "0" ]; then
         echo "Changes detected. Pipeline failed"
         exit 1
