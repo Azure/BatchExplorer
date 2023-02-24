@@ -10,7 +10,7 @@ steps:
   - script: |
       set -e
       git status --porcelain=v1
-      changed=$(git status --porcelain=v1 | grep -c '^ M ')
+      changed=$(git status --porcelain=v1 | grep -c '^ \{0,1\}M')
       echo "Number of changed files: $changed"
       if [ "$changed" -ne "0" ]; then
         echo "Changes detected. Pipeline failed"
@@ -22,4 +22,3 @@ steps:
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: linux
-
