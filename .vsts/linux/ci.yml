@@ -9,8 +9,8 @@ steps:
 
   - script: |
       set -e
-      git status
-      changed=`git status | grep 'modified:' | wc -l`
+      git status --porcelain=v1
+      changed=$(git status --porcelain=v1 | grep '^M' | wc -l)
       if [ "$changed" -ne "0" ]; then
         echo "Changes detected. Pipeline failed"
         exit 1
@@ -21,3 +21,4 @@ steps:
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: linux
+
