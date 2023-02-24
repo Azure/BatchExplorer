@@ -1,1 +1,5 @@
+# Set default line-ending behavior
 * text=auto
+
+# Set line-ending behavior for RESJSON files
+*.resjson text eol=lf
