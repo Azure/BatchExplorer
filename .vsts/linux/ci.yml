@@ -15,7 +15,7 @@ steps:
       changed=$(git diff --name-only)
       echo "Changed files: $changed"
       for file in $changed; do
-        if [[ $(git diff "$file" --ignore-all-space | tail -n +5 | grep -c '^[+-]') -ne 0 ]]; then
+        if [[ $(git diff --ignore-all-space "$file" | tail -n +5 | grep -c '^[+-]') -ne 0 ]]; then
           echo "Text changes detected in $file. Pipeline failed."
           exit 1
         fi
