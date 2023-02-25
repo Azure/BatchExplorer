@@ -1,44 +1,24 @@
 import { AbstractHttpService } from "../http-service";
-import batchClient, {
-    BatchAccountList200Response,
-    BatchAccountOutput,
-} from "@batch/arm-batch-rest/lib/generated";
-import { BatchHttpClient } from "@batch/arm-batch-rest/lib/http/HttpClient";
-
-export const defaultThumbprintAlgorithm = "sha1";
+import { BatchAccountOutput } from "@batch/arm-batch-rest/lib/generated";
+import { BatchManagementServiceClient } from "@batch/arm-batch-rest/lib/batch-management-client";
+import { isUnexpected } from "@batch/arm-batch-rest/lib/generated";
 
 export class AccountService extends AbstractHttpService {
     async get(resourceId: string): Promise<BatchAccountOutput> {
-        // TODO: Need a helper function to avoid `undefined as any`
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const batchArmClient = batchClient(undefined as any, {
-            httpClient: new BatchHttpClient(),
-        });
+        //Define singleton for Batch Management Client
+        const batchArmClient = new BatchManagementServiceClient();
 
-        // TODO: Need either a helper function for decomposing specific resource
-        //       IDs into their parts, or our client should have a helper function
-        //       such as `batchArmClient.getAccountById(resourceId)`
-        const resourceParts = resourceId.split("/");
+        const accountResponse = await batchArmClient.getAccountById(resourceId);
 
-        const response = await batchArmClient
-            .path(
-                "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}",
-                resourceParts[2],
-                resourceParts[4],
-                resourceParts[8]
-            )
-            .get();
-
-        if (response.status !== "200") {
+        if (isUnexpected(accountResponse)) {
             // TODO: Add better/more standardized error handling.
             //       This throws away the actual error info.
             throw new Error(
-                `Unexpected status code ${response.status} while getting account. Response body: ${response.body}`
+                `Unexpected status code ${accountResponse.status} while getting account. Response body: ${accountResponse.body}`
             );
         }
 
-        // TODO: This cast should NOT be needed
-        return response.body as BatchAccountOutput;
+        return accountResponse.body;
     }
 
     /**
@@ -51,29 +31,23 @@ export class AccountService extends AbstractHttpService {
     ): Promise<BatchAccountOutput[]> {
         // TODO: Need a helper function to avoid `undefined as any`
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const batchArmClient = batchClient(undefined as any);
+        const batchArmClient = new BatchManagementServiceClient();
 
-        const response = await batchArmClient
-            .path(
-                "/subscriptions/{subscriptionId}/providers/Microsoft.Batch/batchAccounts",
-                subscriptionId
-            )
-            .get();
+        const listResponse = await batchArmClient.listAccountsBySubscription(
+            subscriptionId
+        );
 
-        if (response.status !== "200") {
+        if (isUnexpected(listResponse)) {
             // TODO: Add better/more standardized error handling.
             //       This throws away the actual error info.
             throw new Error(
                 `Unexpected status code ${
-                    response.status
+                    listResponse.status
                 } while getting account list. Response body: ${JSON.stringify(
-                    response.body
+                    listResponse.body
                 )}`
             );
         }
-
-        // TODO: This cast should NOT be needed
-        const listResponse = response as BatchAccountList200Response;
 
         // TODO: Should return a list result object which has a method for
         //       getting more results
