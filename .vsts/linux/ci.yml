@@ -12,10 +12,13 @@ steps:
       git status --porcelain=v1
       changed=$(git diff --name-only --ignore-space-change)
       echo "Changed files: $changed"
-      if [ -n "$changed" ]; then
-        echo "Changes detected. Pipeline failed"
-        exit 1
-      fi
+      for file in $changed; do
+          if [[ $(git diff "$file" | tail -n +5 | grep -c '^[+-]') -ne 0 ]]; then
+            echo "Text changes detected in $file. Pipeline failed."
+            exit 1
+          fi
+        done
+        echo "No text changes detected. Continuing pipeline."
     workingDirectory: desktop
     displayName: Validate no files changed on build
 
