@@ -12,7 +12,7 @@ steps:
       cd $BUILD_SOURCESDIRECTORY
       git status --porcelain=v1
       git diff --name-only --color-words
-      changed=$(git diff --name-only)
+      changed=$(git diff --name-only --ignore-all-space)
       echo "Changed files: $changed"
       for file in $changed; do
         if [[ $(git diff --ignore-all-space "$file" | tail -n +5 | grep -c '^[+-]') -ne 0 ]]; then
@@ -23,6 +23,7 @@ steps:
       echo "No text changes detected. Continuing pipeline."
     workingDirectory: desktop
     displayName: Validate no files changed on build
+
 
   - template: ../common/publish-artifacts.yml
     parameters:
