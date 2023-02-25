@@ -40,6 +40,7 @@ export function Dropdown<V>(props: DropdownProps<V>): JSX.Element {
             ariaLabel={props.label ?? props.ariaLabel}
             className={props.className}
             disabled={props.disabled}
+            placeholder={props.placeholder}
             errorMessage={errorMessage}
             selectedKey={props.value == null ? undefined : toKey(props.value)}
             options={_transformOptions(props)}

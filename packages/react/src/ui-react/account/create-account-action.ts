@@ -68,6 +68,21 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
             required: true,
             description:
                 "This is how you identify your Batch account. It must be unique.",
+            dynamic: {
+                placeholder: (values) => {
+                    // TODO: Probably better to use a custom control here like
+                    //       we do in the existing account creation form.
+                    //       Also needs to handle other clouds (and i18n)
+                    const locationId = values.location;
+                    if (locationId) {
+                        const locationName = locationId.slice(
+                            locationId.lastIndexOf("/") + 1
+                        );
+                        return `{account}.${locationName}.batch.azure.com`;
+                    }
+                    return "";
+                },
+            },
             onValidateAsync: async (value) => {
                 if (value && !(await isAccountNameAvailable(value))) {
                     return new ValidationStatus(
