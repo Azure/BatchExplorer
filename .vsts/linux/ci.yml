@@ -9,6 +9,7 @@ steps:
 
   - script: |
       set -e
+      cd $BUILD_SOURCESDIRECTORY
       git status --porcelain=v1
       changed=$(git diff --name-only --ignore-space-change)
       echo "Changed files: $changed"
