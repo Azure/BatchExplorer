@@ -346,10 +346,17 @@ export abstract class AbstractParameter<
     }
 
     async validateAsync(): Promise<ValidationStatus> {
-        if (!this.onValidateAsync) {
-            return new ValidationStatus("ok");
+        let status: ValidationStatus | undefined;
+
+        if (this.onValidateAsync) {
+            status = await this.onValidateAsync(this.value);
         }
-        return await this.onValidateAsync(this.value);
+
+        if (!status) {
+            status = new ValidationStatus("ok");
+        }
+
+        return status;
     }
 
     getDependencyValue(dependencyName: ParameterDependencyName<V, D>): unknown {

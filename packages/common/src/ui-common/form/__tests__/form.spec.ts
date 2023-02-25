@@ -1,5 +1,6 @@
 import { initMockEnvironment } from "../../environment";
 import { delayedCallback } from "../../util";
+import { delay } from "../../util/functions";
 import { BooleanParameter } from "../boolean-parameter";
 import { FormValues } from "../form";
 import { createForm } from "../form-util";
@@ -635,8 +636,9 @@ class ParkParameter<
     K extends ParameterName<V>,
     D extends ParameterDependencies<V, "state">
 > extends AbstractParameter<V, K, D> {
-    validateSync(): ValidationStatus {
-        let status = super.validateSync();
+    async validateAsync(): Promise<ValidationStatus> {
+        let status = await super.validateAsync();
+        await delay();
         if (status.level === "ok") {
             status = this._validate();
         }
