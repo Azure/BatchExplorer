@@ -11,20 +11,17 @@ steps:
       set -e
       cd $BUILD_SOURCESDIRECTORY
       git status --porcelain=v1
-      changed=$(git diff --name-only --ignore-space-change)
+      changed=$(git diff --name-only --ignore-cr-at-eol)
       echo "Changed files: $changed"
-      for file in $changed; do
-        if [[ $(git diff --ignore-all-space -U0 "$file" | tail -n +5 | grep -c '^[+-]') -ne 0 ]]; then
-            echo "Text changes detected in $file. Pipeline failed."
-            git diff --ignore-all-space -U0 "$file"
-            exit 1
-        fi
-      done
-      echo "No text changes detected. Continuing pipeline."
+      if [ "$changed" -eq "0" ]; then
+        echo "No changes. Nothing to do"
+        exit 0
+      else
+        echo "Text changes detected: $changed. Pipeline failed."
+        exit 1
+      fi
     workingDirectory: desktop
     displayName: Validate no files changed on build
-
-
 
   - template: ../common/publish-artifacts.yml
     parameters:
