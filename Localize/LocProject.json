@@ -20,8 +20,8 @@
           "OutputPath": "packages\\service\\i18n"
         },
         {
-          "SourceFile": "desktop\\i18n-updated\\resources.resjson",
-          "OutputPath": "desktop\\i18n-updated"
+          "SourceFile": "desktop\\i18n\\resources.resjson",
+          "OutputPath": "desktop\\i18n"
         }
       ]
     }
