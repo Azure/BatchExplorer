@@ -14,26 +14,26 @@ import {
     SubscriptionParameter,
 } from "../../form";
 import { ResourceGroupParameter } from "../../form/resource-group-parameter";
-import { BooleanParamCheckbox } from "./bool-param-checkbox";
-import { ParamControlProps } from "./form-control";
+import { Checkbox } from "./checkbox";
+import { FormControlProps } from "./form-control";
 import { FormControlResolver } from "./form-control-resolver";
 import { LocationDropdown } from "./location-dropdown";
 import { ResourceGroupDropdown } from "./resource-group-dropdown";
 import { StorageAccountDropdown } from "./storage-account-dropdown";
-import { StringParamTextField } from "./string-param-textfield";
 import { SubscriptionDropdown } from "./subscription-dropdown";
+import { TextField } from "./text-field";
 
 export class DefaultFormControlResolver implements FormControlResolver {
     getFormControl<
         V extends FormValues,
         K extends ParameterName<V>,
         D extends ParameterDependencies<V> = ParameterDependencies<V>
-    >(props: ParamControlProps<V, K, D>): JSX.Element {
+    >(props: FormControlProps<V, K, D>): JSX.Element {
         const { param, id, onChange } = props;
 
         if (param instanceof StringParameter) {
             return (
-                <StringParamTextField
+                <TextField
                     id={id}
                     key={param.name}
                     param={param}
@@ -42,7 +42,7 @@ export class DefaultFormControlResolver implements FormControlResolver {
             );
         } else if (param instanceof StringListParameter) {
             return (
-                <StringParamTextField
+                <TextField
                     id={id}
                     key={param.name}
                     param={param}
@@ -51,7 +51,7 @@ export class DefaultFormControlResolver implements FormControlResolver {
             );
         } else if (param instanceof NumberParameter) {
             return (
-                <StringParamTextField
+                <TextField
                     id={id}
                     key={param.name}
                     param={param}
@@ -60,7 +60,7 @@ export class DefaultFormControlResolver implements FormControlResolver {
             );
         } else if (param instanceof BooleanParameter) {
             return (
-                <BooleanParamCheckbox
+                <Checkbox
                     id={id}
                     key={param.name}
                     param={param}

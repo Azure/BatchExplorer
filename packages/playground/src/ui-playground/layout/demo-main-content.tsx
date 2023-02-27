@@ -4,11 +4,11 @@ import { ButtonDemo } from "../demo/form/button/button-demo";
 import { ComboBoxDemo } from "../demo/form/combobox/combobox-demo";
 import { SearchBoxDemo } from "../demo/form/searchbox/searchbox-demo";
 import { TextFieldDemo } from "../demo/form/textfield/textfield-demo";
-import { NewCheckboxDemo } from "../demo/form/checkbox/new-checkbox-demo";
-import { RadioButtonDemo } from "../demo/form/radiobutton/radiobutton-demo";
 import { CertificateDisplayDemo } from "../demo/display/certificate/certificate-display-demo";
-import { DropdownDemo } from "../demo/form/dropdown-demo";
 import { ActionFormDemo } from "../demo/form/action-form-demo";
+import { DropdownDemo } from "../demo/form/dropdown-demo";
+import { RadioButtonDemo } from "../demo/form/radiobutton/radiobutton-demo";
+import { CheckboxDemo } from "../demo/form/checkbox/checkbox-demo";
 
 export const DemoMainContent: React.FC = () => {
     return (
@@ -20,7 +20,7 @@ export const DemoMainContent: React.FC = () => {
                 <ButtonDemo />
             </Route>
             <Route path="/playground/checkbox">
-                <NewCheckboxDemo />
+                <CheckboxDemo />
             </Route>
             <Route path="/playground/radiobutton">
                 <RadioButtonDemo />

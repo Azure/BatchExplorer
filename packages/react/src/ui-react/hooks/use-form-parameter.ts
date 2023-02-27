@@ -67,6 +67,17 @@ export function useFormParameter<
     const { onParameterChange, onDependencyChange, onFormChange, loadData } =
         opts;
 
+    /**
+     * Mark this parameter as having been modified by user interaction.
+     * This can be useful for determining whether validation should be run
+     * immediately or deferred until either a user modifies the value or
+     * a the form is submitted.
+     */
+    const [dirty, setDirty] = useState<boolean>(false);
+
+    const [validationError, setValidationError] = useState<
+        string | undefined
+    >();
     const [validationStatus, setValidationStatus] = useState<
         ValidationStatus | undefined
     >();
@@ -165,12 +176,26 @@ export function useFormParameter<
             "validate",
             (snapshot) => {
                 setValidationStatus(snapshot.entryStatus[param.name]);
+                if (dirty || param.validationStatus?.forced) {
+                    const msg = param.validationStatus?.message;
+                    // Only set a visible validation error if the user has
+                    // interacted with the form control (ie: the parameter is
+                    // dirty) or validation is forced (usually the result of
+                    // clicking a submit button and validating the entire
+                    // form)
+                    if (param.validationStatus?.level === "error") {
+                        setValidationError(msg);
+                    } else {
+                        setValidationError(undefined);
+                    }
+                    setDirty(true);
+                }
             }
         );
         return () => {
             param.parentForm.off("validate", validationHandler);
         };
-    }, [param]);
+    }, [param, dirty]);
 
     // Initial data loading. Subsequent loads are handled when dependencies
     // change.
@@ -182,8 +207,11 @@ export function useFormParameter<
 
     return {
         data,
+        dirty,
+        setDirty,
         loading,
         loadingPromise,
+        validationError,
         validationStatus,
     };
 }

@@ -7,7 +7,7 @@ import { createReactForm } from "../../../form";
 import { runAxe } from "../../../test-util/a11y";
 import { FormContainer } from "../form-container";
 
-describe("Form container tests", () => {
+describe("ListFormLayout tests", () => {
     beforeEach(() => initMockBrowserEnvironment());
 
     test("Can render a simple form", async () => {

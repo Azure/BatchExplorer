@@ -10,7 +10,7 @@ import {
     ParameterDependencies,
     ParameterName,
 } from "@batch/ui-common/lib/form";
-import { FormControlResolver, ParamControlProps } from "../components/form";
+import { FormControlResolver, FormControlProps } from "../components/form";
 import {
     FormLayout,
     FormLayoutProvider,
@@ -31,7 +31,7 @@ export interface BrowserEnvironment
         K extends ParameterName<V>,
         D extends ParameterDependencies<V> = ParameterDependencies<V>
     >(
-        props: ParamControlProps<V, K, D>
+        props: FormControlProps<V, K, D>
     ): JSX.Element;
 
     getFormLayout(layoutType?: FormLayoutType): FormLayout;
@@ -68,7 +68,7 @@ export class DefaultBrowserEnvironment
         V extends FormValues,
         K extends ParameterName<V>,
         D extends ParameterDependencies<V> = ParameterDependencies<V>
-    >(props: ParamControlProps<V, K, D>): JSX.Element {
+    >(props: FormControlProps<V, K, D>): JSX.Element {
         // If the parameter has a render function, use it. Otherwise
         // look up the form control using a the configured resolver.
         if (isReactParameter(props.param) && props.param.render) {

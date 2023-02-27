@@ -82,16 +82,11 @@ describe("Create account action", () => {
         // Validation error won't be displayed until user interaction
         expect(accountNameInput.getAttribute("aria-invalid")).toEqual("false");
 
-        // No user interaction yet, so parameter hasn't been marked dirty
-        expect(action.form.getParam("accountName").dirty).toBe(false);
-
         await user.click(accountNameInput);
         await user.keyboard("two");
 
-        // Now the parameter is dirty, and the control's validation error will
+        // Now the form control is dirty, the control's validation error will
         // be displayed
-        expect(action.form.getParam("accountName").dirty).toBe(true);
-
         waitFor(() => {
             expect(accountNameInput.getAttribute("aria-invalid")).toEqual(
                 "true"

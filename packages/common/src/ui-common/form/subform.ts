@@ -54,14 +54,6 @@ export class SubForm<
         validate: (snapshot: ValidationSnapshot<S>) => void;
     }>;
 
-    private _dirty?: boolean;
-    get dirty(): boolean {
-        return this._dirty ?? false;
-    }
-    set dirty(value: boolean | undefined) {
-        this._dirty = value;
-    }
-
     private _disabled?: boolean;
     get disabled(): boolean {
         return this._disabled ?? false;

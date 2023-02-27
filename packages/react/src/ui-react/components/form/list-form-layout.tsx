@@ -23,6 +23,9 @@ import { Button } from "../button";
 import { FormButton } from "./form-container";
 import { FormLayout, FormLayoutRenderOptions } from "./form-layout";
 
+// Enable to show debug info
+const DEBUG_MODE = false;
+
 /**
  * Render a form as a flat list.
  */
@@ -219,6 +222,7 @@ const ParameterRow = <V extends FormValues, K extends ParameterName<V>>(
                 )}
             </Label>
             {env.getFormControl({ param, id: formControlId })}
+            {DEBUG_MODE && <EntryDebugInfo entry={param} />}
         </div>
     );
 };
@@ -243,4 +247,37 @@ const ButtonContainer = (props: ButtonContainerProps) => {
             })}
         </div>
     );
+};
+
+export const EntryDebugInfo = <
+    V extends FormValues,
+    K extends ParameterName<V>
+>(props: {
+    entry: Parameter<V, K>;
+}) => {
+    const { entry } = props;
+    const pairs: [string, string][] = [];
+    if (entry instanceof AbstractParameter) {
+        pairs.push([entry.name, entry.value ?? ""]);
+
+        const validationMsg = entry.validationStatus?.message ?? "";
+        pairs.push([
+            `${entry.validationStatus?.level ?? "Not validated"}${
+                entry.validationStatus?.forced === true ? " [Force]" : ""
+            }`,
+            validationMsg,
+        ]);
+    }
+
+    const rows: JSX.Element[] = [];
+    for (const p of pairs) {
+        rows.push(
+            <Stack horizontal={true} tokens={{ childrenGap: "4px" }}>
+                <span>{p[0]}</span>
+                <span>{p[1]}</span>
+            </Stack>
+        );
+    }
+
+    return <Stack>{rows}</Stack>;
 };

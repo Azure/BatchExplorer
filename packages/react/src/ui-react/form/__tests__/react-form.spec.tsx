@@ -1,7 +1,7 @@
 import * as React from "react";
 import { StringParameter } from "@batch/ui-common/lib/form";
 import { initMockBrowserEnvironment } from "../../environment";
-import { createReactForm } from "../react-form";
+import { createReactForm, createParam } from "../react-form";
 import { render, screen } from "@testing-library/react";
 import { FormContainer } from "../../components/form";
 
@@ -48,5 +48,16 @@ describe("ReactForm tests", () => {
         expect(screen.getByTestId("custom-item-render")).toBeDefined();
         expect(bannerEl).toBeDefined();
         expect(bannerEl.textContent).toEqual("Message was Hello world!");
+    });
+
+    test("Standalone parameter creation", () => {
+        const param = createParam(StringParameter, {
+            value: "testing 1 2 3",
+        });
+        expect(param.value).toEqual("testing 1 2 3");
+        expect(param.parentForm).toBeDefined();
+        expect(param.parentForm.values).toStrictEqual({
+            [param.name]: "testing 1 2 3",
+        });
     });
 });

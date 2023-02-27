@@ -5,14 +5,14 @@ import {
     ParameterInit,
     ParameterName,
 } from "@batch/ui-common/lib/form";
-import type { ParamControlProps } from "../components/form";
+import type { FormControlProps } from "../components/form";
 
 export interface ReactParameterInit<
     V extends FormValues,
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = ParameterDependencies<V>
 > extends ParameterInit<V, K, D> {
-    render?: (props: ParamControlProps<V, K, D>) => JSX.Element;
+    render?: (props: FormControlProps<V, K, D>) => JSX.Element;
 }
 
 export interface ReactParameter<
@@ -20,7 +20,7 @@ export interface ReactParameter<
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = ParameterDependencies<V>
 > extends Parameter<V, K, D> {
-    render?: (props: ParamControlProps<V, K, D>) => JSX.Element;
+    render?: (props: FormControlProps<V, K, D>) => JSX.Element;
 }
 
 export function isReactParameter<

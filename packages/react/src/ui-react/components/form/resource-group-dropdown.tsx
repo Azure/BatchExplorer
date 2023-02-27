@@ -6,21 +6,30 @@ import {
 } from "../../form/resource-group-parameter";
 import { useUniqueId } from "../../hooks";
 import { useFormParameter } from "../../hooks/use-form-parameter";
-import { Dropdown } from "./dropdown";
-import { ParamControlProps } from "./form-control";
+import { Dropdown, DropdownOption } from "./dropdown";
+import { FormControlProps } from "./form-control";
 
 export function ResourceGroupDropdown<
     V extends FormValues,
     K extends ParameterName<V>
 >(
-    props: ParamControlProps<
+    props: FormControlProps<
         V,
         K,
         ResourceGroupDependencies<V>,
         ResourceGroupParameter<V, K, ResourceGroupDependencies<V>>
     >
 ): JSX.Element {
-    const { param, onChange } = props;
+    const {
+        ariaLabel,
+        className,
+        disabled,
+        onFocus,
+        onBlur,
+        onChange,
+        param,
+        style,
+    } = props;
 
     const id = useUniqueId("form-control", props.id);
 
@@ -32,28 +41,25 @@ export function ResourceGroupDropdown<
             })
             .sort((a, b) => {
                 return a.label > b.label ? 1 : -1;
-            });
+            }) as DropdownOption<V, K>[];
     }, [param]);
 
-    const { data, loading, validationStatus } = useFormParameter(param, {
+    const { data, loading } = useFormParameter(param, {
         loadData: loadData,
     });
 
     return (
         <Dropdown
             id={id}
-            label={param.label}
-            disabled={loading || param.disabled}
+            ariaLabel={ariaLabel ?? param.label}
+            className={className}
+            style={style}
+            disabled={disabled || loading}
             options={data ?? []}
-            placeholder={param.placeholder}
-            value={param.value == null ? undefined : String(param.value)}
-            validationStatus={validationStatus}
-            onChange={(event, value) => {
-                param.value = value as V[K];
-                if (onChange) {
-                    onChange(event, param.value);
-                }
-            }}
+            param={param}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            onChange={onChange}
         />
     );
 }

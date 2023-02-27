@@ -167,7 +167,9 @@ describe("Storage account dropdown", () => {
 
         await user.click(storageDropdown);
         await act(async () => {
-            await form.validate();
+            // Need to run with force so that errors are displayed (this acts
+            // like an on-submit validation)
+            await form.validate({ force: true });
         });
 
         expect(await screen.queryAllByRole("option")).toEqual([]);

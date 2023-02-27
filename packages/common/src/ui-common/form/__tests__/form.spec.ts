@@ -398,9 +398,13 @@ describe("Form tests", () => {
         expect((await validateAndPreempt()).overallStatus?.level).toEqual(
             "canceled"
         );
-        expect((await validateAndPreempt(true)).overallStatus?.level).toEqual(
-            "ok"
-        );
+        const forcedSnapshot = await validateAndPreempt(true);
+        expect(forcedSnapshot.overallStatus?.level).toEqual("ok");
+
+        // Make sure the 'forced' flag is set, so parameters know whether
+        // they were run with forced validation. This is useful for displaying
+        // all errors on the final form submit validation
+        expect(forcedSnapshot.entryStatus.parkName?.forced).toBe(true);
     });
 
     test("waitForValidation() function", async () => {

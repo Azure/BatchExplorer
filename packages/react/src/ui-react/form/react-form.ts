@@ -36,3 +36,41 @@ export function createReactForm<V extends FormValues>(
 ): ReactForm<V> {
     return new ReactFormImpl(init);
 }
+
+interface StandaloneForm<S> extends FormValues {
+    _standaloneParam?: S;
+    [param: string]: unknown;
+}
+
+/**
+ * Creates a standalone parameter with a backing form. Useful for using
+ * form controls outside the context of an entire form
+ */
+export function createParam<
+    S,
+    D extends ParameterDependencies<StandaloneForm<S>> = ParameterDependencies<
+        StandaloneForm<S>
+    >,
+    T extends Parameter<StandaloneForm<S>, "_standaloneParam", D> = Parameter<
+        StandaloneForm<S>,
+        "_standaloneParam",
+        D
+    >
+>(
+    parameterConstructor: ParameterConstructor<
+        StandaloneForm<S>,
+        "_standaloneParam",
+        D,
+        T
+    >,
+    init?: ReactParameterInit<StandaloneForm<S>, "_standaloneParam", D> & {
+        value?: StandaloneForm<S>["_standaloneParam"];
+    }
+) {
+    const form = createReactForm<StandaloneForm<S>>({
+        values: {
+            _standaloneParam: init?.value,
+        },
+    });
+    return form.param("_standaloneParam", parameterConstructor, init);
+}

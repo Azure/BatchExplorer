@@ -1,12 +1,20 @@
+import {
+    FormValues,
+    ParameterDependencies,
+    ParameterName,
+} from "@batch/ui-common/lib/form";
+import { ChoiceGroup as FluentChoiceGroup } from "@fluentui/react/lib/ChoiceGroup";
 import * as React from "react";
-
+import { useFormParameter, useUniqueId } from "../../hooks";
 import { FormControlProps } from "./form-control";
-import { ChoiceGroup as FluentRadioButton } from "@fluentui/react/lib/ChoiceGroup";
 
-export interface RadioButtonProps<V> extends FormControlProps<V> {
+export interface RadioButtonProps<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V> = ParameterDependencies<V>
+> extends FormControlProps<V, K, D> {
     options: RadioButtonOption[];
     defaultSelectedKey?: string;
-    selectedKey?: string;
 }
 
 export interface RadioButtonOption {
@@ -14,33 +22,52 @@ export interface RadioButtonOption {
     text: string;
 }
 
-export function RadioButton<V>(props: RadioButtonProps<V>): JSX.Element {
+export function RadioButton<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V> = ParameterDependencies<V>
+>(props: RadioButtonProps<V, K, D>): JSX.Element {
     const {
-        id,
         className,
-        disabled,
-        label,
-        placeholder,
         defaultSelectedKey,
-        selectedKey,
-        options,
+        disabled,
+        onFocus,
+        onBlur,
         onChange,
+        options,
+        param,
+        style,
     } = props;
 
+    const id = useUniqueId("form-control", props.id);
+    const { setDirty } = useFormParameter(param);
+
+    const [hasFocused, setHasFocused] = React.useState<boolean>(false);
+
     return (
-        <FluentRadioButton
+        <FluentChoiceGroup
             id={id}
             className={className}
-            disabled={disabled}
-            label={label}
-            placeholder={placeholder}
+            style={style}
+            disabled={disabled || param.disabled}
+            placeholder={param.placeholder}
             defaultSelectedKey={defaultSelectedKey}
-            selectedKey={selectedKey}
+            selectedKey={param.value == null ? undefined : String(param.value)}
             options={options}
+            onFocus={(event) => {
+                setHasFocused(true);
+                if (onFocus) {
+                    onFocus(event);
+                }
+            }}
+            onBlur={onBlur}
             onChange={(event, option) => {
-                if (event && option && onChange) {
+                if (hasFocused) {
+                    setDirty(true);
+                }
+                if (onChange) {
                     // TODO: Key probably isn't right here
-                    onChange(event, option.key as unknown as V);
+                    onChange(event as React.FormEvent, option?.key as V[K]);
                 }
             }}
         />

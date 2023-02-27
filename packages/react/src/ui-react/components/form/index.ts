@@ -11,5 +11,4 @@ export * from "./dropdown";
 export * from "./radio-button";
 export * from "./text-field";
 export * from "./storage-account-dropdown";
-export * from "./string-param-textfield";
 export * from "./subscription-dropdown";

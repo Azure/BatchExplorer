@@ -38,7 +38,6 @@ export interface ParameterInit<
     hideLabel?: boolean;
     required?: boolean;
     placeholder?: string;
-    dirty?: boolean;
     dependencies?: D;
     dynamic?: DynamicParameterProperties<V, K>;
     onValidateSync?(value: V[K]): ValidationStatus;
@@ -118,14 +117,6 @@ export interface Parameter<
      * tooltip or info bubble.
      */
     description?: string;
-
-    /**
-     * Mark this parameter as having been modified by user interaction.
-     * This can be useful for determining whether validation should be run
-     * immediately or deferred until either a user modifies the value or
-     * a the form is submitted.
-     */
-    dirty: boolean;
 
     /**
      * Disable interaction
@@ -228,14 +219,6 @@ export abstract class AbstractParameter<
     dependencies?: D;
     dynamic?: DynamicParameterProperties<V, K>;
 
-    private _dirty?: boolean;
-    get dirty(): boolean {
-        return this._dirty ?? false;
-    }
-    set dirty(value: boolean | undefined) {
-        this._dirty = value;
-    }
-
     private _disabled?: boolean;
     get disabled(): boolean {
         return (
@@ -296,7 +279,6 @@ export abstract class AbstractParameter<
         this.name = name;
         this._label = init?.label;
         this.description = init?.description;
-        this.dirty = init?.dirty;
         this.disabled = init?.disabled;
         this.hidden = init?.hidden;
         this.hideLabel = init?.hideLabel;

@@ -3,7 +3,7 @@ import {
     ParameterDependencies,
     ParameterName,
 } from "@batch/ui-common/lib/form";
-import { ParamControlProps } from "./form-control";
+import { FormControlProps } from "./form-control";
 
 export interface FormControlOptions<
     V extends FormValues,
@@ -24,6 +24,6 @@ export interface FormControlResolver {
         K extends ParameterName<V>,
         D extends ParameterDependencies<V> = ParameterDependencies<V>
     >(
-        props: ParamControlProps<V, K, D>
+        props: FormControlProps<V, K, D>
     ): JSX.Element;
 }

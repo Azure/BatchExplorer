@@ -1,6 +1,8 @@
+import { StringParameter } from "@batch/ui-common/lib/form";
 import { render, screen } from "@testing-library/react";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
+import { createParam } from "../../../form";
 import { runAxe } from "../../../test-util/a11y";
 import { RadioButton } from "../radio-button";
 
@@ -11,15 +13,16 @@ describe("Checkbox control", () => {
         const { container } = render(
             <>
                 <RadioButton
+                    param={createParam(StringParameter, {
+                        label: "First checkbox",
+                        value: "A",
+                    })}
                     id="radiobutton"
-                    label="First checkbox"
-                    disabled={false}
                     options={[
                         { key: "A", text: "Option A" },
                         { key: "B", text: "Option B" },
                         { key: "C", text: "Option C" },
                     ]}
-                    selectedKey="A"
                 ></RadioButton>
             </>
         );

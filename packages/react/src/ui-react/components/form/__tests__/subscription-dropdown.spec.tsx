@@ -1,31 +1,24 @@
-import { createForm, Form } from "@batch/ui-common/lib/form";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
-import { SubscriptionParameter } from "../../../form";
+import { createParam, SubscriptionParameter } from "../../../form";
 import { runAxe } from "../../../test-util/a11y";
 import { SubscriptionDropdown } from "../subscription-dropdown";
 
-type FakeFormValues = {
-    subscriptionId?: string;
-};
-
 describe("Subscription dropdown tests", () => {
     let user: UserEvent;
-    let form: Form<FakeFormValues>;
-    let subParam: SubscriptionParameter<FakeFormValues, "subscriptionId">;
 
     beforeEach(() => {
         initMockBrowserEnvironment();
         user = userEvent.setup();
-        form = createForm<FakeFormValues>({ values: {} });
-        subParam = form.param("subscriptionId", SubscriptionParameter);
     });
 
     test("dropdown is accessible", async () => {
-        const { container } = render(<SubscriptionDropdown param={subParam} />);
+        const { container } = render(
+            <SubscriptionDropdown param={createParam(SubscriptionParameter)} />
+        );
 
         // KLUDGE: Flush the rendering because of async calls in hooks.
         await waitFor(() => null);
@@ -41,7 +34,9 @@ describe("Subscription dropdown tests", () => {
     });
 
     test("dropdown options", async () => {
-        render(<SubscriptionDropdown param={subParam} />);
+        render(
+            <SubscriptionDropdown param={createParam(SubscriptionParameter)} />
+        );
         const element = screen.getByRole("combobox");
         await user.click(element);
         await waitFor(() => expect(element).not.toContain("is-disabled"));

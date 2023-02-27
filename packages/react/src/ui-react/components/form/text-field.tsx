@@ -1,39 +1,62 @@
-import * as React from "react";
-import { FormControlProps } from "./form-control";
+import {
+    FormValues,
+    ParameterDependencies,
+    ParameterName,
+} from "@batch/ui-common/lib/form";
 import { TextField as FluentTextField } from "@fluentui/react/lib/TextField";
+import * as React from "react";
+import { useFormParameter, useUniqueId } from "../../hooks";
+import { FormControlProps } from "./form-control";
 
 /**
  * A simple text input form control
  */
-export function TextField(
-    props: FormControlProps<string | undefined>
-): JSX.Element {
-    const { dirty, validationForced, validationStatus } = props;
+export function TextField<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V> = ParameterDependencies<V>
+>(props: FormControlProps<V, K, D>): JSX.Element {
+    const {
+        ariaLabel,
+        className,
+        disabled,
+        onFocus,
+        onBlur,
+        onChange,
+        param,
+        style,
+    } = props;
 
-    if (props.hidden) {
-        return <></>;
-    }
+    const id = useUniqueId("form-control", props.id);
+    const { validationError, setDirty } = useFormParameter(param);
 
-    const errorMessage =
-        (dirty || validationForced) && validationStatus?.level === "error"
-            ? validationStatus?.message
-            : undefined;
+    const [hasFocused, setHasFocused] = React.useState<boolean>(false);
 
     return (
         <FluentTextField
-            id={props.id}
-            ariaLabel={props.ariaLabel}
-            className={props.className}
-            disabled={props.disabled}
-            placeholder={props.placeholder}
-            errorMessage={errorMessage}
-            value={props.value == null ? "" : props.value}
+            id={id}
+            ariaLabel={ariaLabel ?? param.label}
+            className={className}
+            style={style}
+            disabled={disabled || param.disabled}
+            placeholder={param.placeholder}
+            errorMessage={validationError}
+            value={param.value == null ? "" : String(param.value)}
+            onFocus={(event) => {
+                setHasFocused(true);
+                if (onFocus) {
+                    onFocus(event);
+                }
+            }}
+            onBlur={onBlur}
             onChange={(event, newValue) => {
-                if (props.onChange) {
-                    props.onChange(
-                        event,
-                        newValue === "" ? undefined : String(newValue)
-                    );
+                if (hasFocused) {
+                    setDirty(true);
+                }
+                const value = (newValue === "" ? undefined : newValue) as V[K];
+                param.value = value;
+                if (onChange) {
+                    onChange(event, value);
                 }
             }}
         ></FluentTextField>

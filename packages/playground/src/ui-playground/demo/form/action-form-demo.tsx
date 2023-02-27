@@ -5,7 +5,11 @@ import {
     StringParameter,
     ValidationStatus,
 } from "@batch/ui-common/lib/form";
-import { createReactForm, SubscriptionParameter } from "@batch/ui-react";
+import {
+    createParam,
+    createReactForm,
+    SubscriptionParameter,
+} from "@batch/ui-react";
 import { CreateAccountAction } from "@batch/ui-react/lib/account/create-account-action";
 import { MonacoEditor } from "@batch/ui-react/lib/components";
 import { EditorController } from "@batch/ui-react/lib/components/editor";
@@ -171,9 +175,11 @@ export const ActionFormDemo: React.FC = () => {
 
             <DemoControlContainer>
                 <Dropdown
+                    param={createParam(StringParameter, {
+                        label: "Action",
+                        value: actionName,
+                    })}
                     style={{ minWidth: "160px" }}
-                    label="Action"
-                    value={actionName}
                     options={[
                         {
                             label: "Create or Update Car",

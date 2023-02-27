@@ -251,7 +251,6 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         if (!opts) {
             opts = defaultValidationOpts;
         }
-
         const snapshot = new ValidationSnapshot(this.values);
         const previousValidationInProgress =
             this._validationSnapshot.validationCompleteDeferred.done !== true;
@@ -312,11 +311,14 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         for (const entry of this.allEntries()) {
             if (entry instanceof AbstractParameter) {
                 const entryName = entry.name as ParameterName<V>;
-                snapshot.entryStatus[entryName] = entry.validateSync();
+                const status = entry.validateSync();
+                status.forced = opts.force;
+                snapshot.entryStatus[entryName] = status;
             } else if (entry instanceof SubForm) {
                 entry.validateSync(entry.form.validationSnapshot, opts);
 
                 const entryName = entry.name as ParameterName<V>;
+
                 // Note: this will often be undefined because full
                 //       validation hasn't run
                 snapshot.entryStatus[entryName] =
@@ -329,6 +331,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
             snapshot.onValidateSyncStatus = this.onValidateSync(
                 snapshot.values
             );
+            snapshot.onValidateSyncStatus.forced = opts.force;
         }
 
         snapshot.syncValidationComplete = true;
@@ -359,6 +362,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
                 validatingEntries.push(entry);
                 validationPromises.push(
                     entry.validateAsync().then((status) => {
+                        status.forced = opts.force;
                         newValidationStatuses[entryName] = status;
                         return status;
                     })
@@ -397,6 +401,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
             snapshot.onValidateAsyncStatus = await this.onValidateAsync(
                 snapshot.values
             );
+            snapshot.onValidateAsyncStatus.forced = opts.force;
         }
 
         snapshot.asyncValidationComplete = true;
