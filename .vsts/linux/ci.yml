@@ -7,6 +7,22 @@ steps:
       npm run build:package
     displayName: Build and pack
 
+  - script: |
+      set -e
+      cd $BUILD_SOURCESDIRECTORY
+      git status --porcelain=v1
+      changed=$(git status --porcelain=v1 | grep -E '^(M| M )' | wc -l)
+      echo "Changed files: $changed"
+      if [ "$changed" -eq "0" ]; then
+        echo "No changes. Nothing to do"
+        exit 0
+      else
+        echo "Text changes detected: $changed. Pipeline failed."
+        exit 1
+      fi
+    workingDirectory: desktop
+    displayName: Validate no files changed on build
+
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: linux
