@@ -11,7 +11,7 @@ steps:
       set -e
       cd $BUILD_SOURCESDIRECTORY
       git status --porcelain=v1
-      changed=$(git diff --name-only --ignore-cr-at-eol)
+      changed=$(git status --porcelain=v1 | grep -E '^(M| M )' | wc -l)
       echo "Changed files: $changed"
       if [ "$changed" -eq "0" ]; then
         echo "No changes. Nothing to do"
