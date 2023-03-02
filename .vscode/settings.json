@@ -1,63 +1,61 @@
 {
   // Angular
   "vsicons.presets.angular": true,
-
   // CSS
   "css.validate": false,
   "scss.validate": false,
-
   // Default Formatting
   "editor.tabSize": 4,
   "editor.detectIndentation": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": false,
-
   // Per Language Formatting
   // Keep this up to date with .prettierignore
   // Run Prettier first, followed by ESLint
   "[javascript]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": [
-        "source.formatDocument",
-        "source.fixAll.eslint"
+      "source.formatDocument",
+      "source.fixAll.eslint"
     ]
   },
   "[typescript]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": [
-        "source.formatDocument",
-        "source.fixAll.eslint"
+      "source.formatDocument",
+      "source.fixAll.eslint"
     ]
   },
   "[typescriptreact]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": [
-        "source.formatDocument",
-        "source.fixAll.eslint"
+      "source.formatDocument",
+      "source.fixAll.eslint"
     ]
   },
   "[json]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": [
-        "source.formatDocument",
-        "source.fixAll.eslint"
-    ]
+      "source.formatDocument",
+      "source.fixAll.eslint"
+    ],
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[jsonc]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": [
-        "source.formatDocument",
-        "source.fixAll.eslint"
-    ]
+      "source.formatDocument",
+      "source.fixAll.eslint"
+    ],
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-
   // Python
-  "python.autoComplete.extraPaths": ["${workspaceRoot}/python"],
+  "python.autoComplete.extraPaths": [
+    "${workspaceRoot}/python"
+  ],
   "python.formatting.provider": "yapf",
-
   // Typescript
   "typescript.tsdk": "node_modules/typescript/lib",
-
   // General
   "search.exclude": {
     "**/node_modules": true,
