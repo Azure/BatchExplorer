@@ -3,6 +3,7 @@
 import lodashCloneDeep from "lodash/cloneDeep";
 import lodashIsArray from "lodash/isArray";
 import lodashDebounce from "lodash/debounce";
+export { default as lodashGet } from "lodash/get";
 
 import { getEnvironment } from "../environment";
 

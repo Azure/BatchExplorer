@@ -5,7 +5,14 @@ import { FormButton } from "./form-container";
 export type FormLayoutType = "list" | "steps";
 
 export interface FormLayoutProvider {
-    getLayout(layout: FormLayoutType): FormLayout;
+    getLayout<V extends FormValues>(
+        layout: FormLayoutType
+    ): React.FC<LayoutProps<V>>;
+}
+
+export interface LayoutProps<V extends FormValues> {
+    form: Form<V>;
+    button?: FormButton[];
 }
 
 export interface FormLayout {

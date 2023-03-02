@@ -9,10 +9,11 @@ import {
 } from "@batch/ui-common/lib/environment";
 import { FormValues } from "@batch/ui-common/lib/form";
 import { StorageAccountService, SubscriptionService } from "@batch/ui-service";
+import React from "react";
 import {
-    FormLayout,
     FormLayoutProvider,
     FormLayoutType,
+    LayoutProps,
 } from "../components/form/form-layout";
 import {
     FormControlOptions,
@@ -35,7 +36,9 @@ export interface BrowserEnvironment
         opts?: FormControlOptions
     ): JSX.Element;
 
-    getFormLayout(layoutType?: FormLayoutType): FormLayout;
+    getFormLayout<V extends FormValues>(
+        layoutType?: FormLayoutType
+    ): React.FC<LayoutProps<V>>;
 }
 
 export interface BrowserEnvironmentConfig extends EnvironmentConfig {
@@ -90,7 +93,9 @@ export class DefaultBrowserEnvironment
     /**
      * Get the form control for a given parameter
      */
-    getFormLayout(layoutType: FormLayoutType = "list"): FormLayout {
+    getFormLayout<V extends FormValues>(
+        layoutType: FormLayoutType = "list"
+    ): React.FC<LayoutProps<V>> {
         const provider = this.getInjectable<FormLayoutProvider>(
             BrowserDependencyName.FormLayoutProvider
         );

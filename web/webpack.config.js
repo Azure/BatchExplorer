@@ -125,6 +125,12 @@ module.exports = (env) => {
                     test: /\.ttf$/,
                     use: ["file-loader"],
                 },
+                {
+                    test: /\.js$/,
+                    include: path.resolve(__dirname, "../packages"),
+                    enforce: "pre",
+                    use: ["source-map-loader"],
+                },
             ],
         },
 

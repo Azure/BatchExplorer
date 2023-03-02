@@ -1,7 +1,7 @@
 import {
     CertificateListView,
     CertificateService,
-    CertificateView,
+    // CertificateView,
 } from "@batch/ui-service";
 import { observer } from "mobx-react-lite";
 import { Stack } from "@fluentui/react/lib/Stack";
@@ -36,13 +36,7 @@ export const CertificatePage = observer(() => {
                 title="Certificates"
                 subtitle={certListView.batchAccount}
             >
-                <CertificateDisplay
-                    view={
-                        new CertificateView(
-                            certListView.firstSelection() ?? undefined
-                        )
-                    }
-                />
+                <CertificateDisplay view={certListView.firstSelection} />
             </DisplayPane>
         </Stack>
     );

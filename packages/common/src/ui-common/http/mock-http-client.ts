@@ -8,6 +8,12 @@ import {
 } from "./http-client";
 import { MapHttpHeaders } from "./map-http-headers";
 
+function wait<T>(data: T, ms: number): Promise<T> {
+    return new Promise((res) => {
+        setTimeout(() => res(data), ms);
+    });
+}
+
 /**
  * Mock implementation of an HTTP client which throws an exception if an
  * unexpected request is made.
@@ -59,7 +65,9 @@ export class MockHttpClient extends AbstractHttpClient {
                     delete this._expectedRequestBodies[props.body];
                 }
             }
-            return response;
+            return response.delayInMs
+                ? wait(response, response.delayInMs)
+                : response;
         }
 
         throw new MockHttpResponseError(`Unexpected mock request: ${key}`);
@@ -141,6 +149,8 @@ export class MockHttpResponse extends AbstractHttpResponse {
     private _url: string;
     private _body: string;
 
+    delayInMs?: number;
+
     protected streamConsumed: boolean = false;
 
     get headers(): HttpHeaders {
@@ -162,6 +172,7 @@ export class MockHttpResponse extends AbstractHttpResponse {
             requestBody?: string;
             body?: string;
             headers?: HttpHeaders | Record<string, string>;
+            delayInMs?: number;
         }
     ) {
         super();
@@ -169,6 +180,7 @@ export class MockHttpResponse extends AbstractHttpResponse {
         this._status = opts?.status ?? 200;
         this._body = opts?.body ?? "";
         this._headers = new MapHttpHeaders(opts?.headers);
+        this.delayInMs = opts?.delayInMs;
     }
 
     async text(): Promise<string> {

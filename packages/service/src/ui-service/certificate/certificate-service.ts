@@ -84,4 +84,22 @@ export class CertificateService extends AbstractHttpService {
 
         return new HttpListResult(response, certs);
     }
+
+    async deleteMethod(cert: Certificate) {
+        return this.httpClient.delete(getMockURL(cert));
+    }
+
+    async cancelDeletion(cert: Certificate) {
+        // TODO: to be implemented.
+        // eslint-disable-next-line no-console
+        console.log("cancelDeletion");
+    }
+}
+
+export function getMockURL(cert: Certificate) {
+    return `https://prodtest1.brazilsouth.batch.azure.com/certificates(thumbprintAlgorithm=${encodeURIComponent(
+        cert?.thumbprintAlgorithm || ""
+    )},thumbprint=${encodeURIComponent(
+        cert?.thumbprint || ""
+    )})?api-version=2020-09-01.12.0`;
 }

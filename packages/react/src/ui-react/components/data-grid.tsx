@@ -2,12 +2,16 @@ import * as React from "react";
 import {
     DetailsList,
     IColumn,
+    IDetailsListProps,
     SelectionMode,
 } from "@fluentui/react/lib/DetailsList";
 import { useAppTheme } from "../theme";
 import { autoFormat } from "@batch/ui-common";
+import { Observer } from "mobx-react-lite";
+import { lodashGet } from "@batch/ui-common";
 
-export interface DataGridProps {
+export interface DataGridProps
+    extends Omit<IDetailsListProps, "columns" | "selectionMode"> {
     /**
      * A list of columns to display in the grid
      */
@@ -20,21 +24,6 @@ export interface DataGridProps {
     columnDefaultMaxWidth?: number;
 
     /**
-     * A list of objects to display in the grid
-     */
-    items?: unknown[];
-
-    /**
-     * Callback when a row in the grid becomes active by clicking or navigating
-     * via the keyboard
-     */
-    onActiveItemChanged?: (
-        item?: unknown,
-        index?: number,
-        ev?: React.FocusEvent<HTMLElement>
-    ) => void;
-
-    /**
      * Allow single multiple or no selections. If "none" is specified, selection
      * checkboxes will not appear.
      */
@@ -44,7 +33,8 @@ export interface DataGridProps {
 /**
  * Represents a single column of data in the grid
  */
-export interface DataGridColumn {
+export interface DataGridColumn
+    extends Omit<IColumn, "key" | "name" | "fieldName" | "minWidth"> {
     /**
      * User-friendly column label (if not defined, the property name will be
      * used)
@@ -60,11 +50,6 @@ export interface DataGridColumn {
      * Minimum width (in pixels) of the column
      */
     minWidth?: number;
-
-    /**
-     * Maximum width (in pixels) of the column
-     */
-    maxWidth?: number;
 }
 
 const defaultColumnMinWidth = 48;
@@ -76,33 +61,68 @@ const defaultColumnMinWidth = 48;
 export const DataGrid: React.FC<DataGridProps> = (props) => {
     const theme = useAppTheme();
 
+    const {
+        columns,
+        columnDefaultMaxWidth,
+        items,
+        selectionMode,
+        ...restProps
+    } = props;
+
     const detailsListColumns = React.useMemo(() => {
         const detailsListCols: IColumn[] = [];
-        if (props.columns) {
+        if (columns) {
             let i = 1;
-            for (const c of props.columns) {
+            for (const c of columns) {
                 if (typeof c === "string") {
                     // Simple column names
                     detailsListCols.push({
                         key: `column${i++}`,
                         name: c,
                         fieldName: c,
-                        onRender: (item) => autoFormat(item[c]),
+                        onRender: (item) => (
+                            <Observer>
+                                {() => <>{autoFormat(lodashGet(item, c))}</>}
+                            </Observer>
+                        ),
+
                         minWidth: defaultColumnMinWidth,
-                        maxWidth: props.columnDefaultMaxWidth,
+                        maxWidth: columnDefaultMaxWidth,
                         isResizable: true,
                     });
                 } else if (c.prop) {
+                    const {
+                        label,
+                        prop,
+                        onRender,
+                        minWidth,
+                        maxWidth,
+                        ...rest
+                    } = c;
                     // Column props
                     detailsListCols.push({
                         key: `column${i++}`,
-                        name: c.label ?? c.prop,
-                        fieldName: c.prop,
-                        onRender: (item) =>
-                            autoFormat(c.prop ? item[c.prop] : null),
-                        minWidth: defaultColumnMinWidth,
-                        maxWidth: c.maxWidth ?? props.columnDefaultMaxWidth,
+                        name: label ?? prop,
+                        fieldName: prop,
+                        onRender: (item, ...rest) => (
+                            <Observer>
+                                {() => (
+                                    <>
+                                        {onRender
+                                            ? onRender(item, ...rest)
+                                            : autoFormat(
+                                                  prop
+                                                      ? lodashGet(item, prop)
+                                                      : null
+                                              )}
+                                    </>
+                                )}
+                            </Observer>
+                        ),
+                        minWidth: minWidth ?? defaultColumnMinWidth,
+                        maxWidth: maxWidth ?? columnDefaultMaxWidth,
                         isResizable: true,
+                        ...rest,
                     });
                 } else {
                     throw new Error(
@@ -113,23 +133,23 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
             }
         }
         return detailsListCols;
-    }, [props.columns, props.columnDefaultMaxWidth]);
+    }, [columns, columnDefaultMaxWidth]);
 
     return (
         <DetailsList
             theme={theme}
-            onActiveItemChanged={props.onActiveItemChanged}
             selectionMode={
-                props.selectionMode === "single"
+                selectionMode === "single"
                     ? SelectionMode.single
-                    : props.selectionMode === "multiple"
+                    : selectionMode === "multiple"
                     ? SelectionMode.multiple
-                    : props.selectionMode === "none"
+                    : selectionMode === "none"
                     ? SelectionMode.none
                     : undefined
             }
             columns={detailsListColumns}
-            items={props.items ?? []}
+            items={items ?? []}
+            {...restProps}
         />
     );
 };
