@@ -16,20 +16,20 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "@fluentui/react": "7.147.1",
-    "@fluentui/react-theme-provider": "0.16.2",
+    "@fluentui/react": "8.97.2",
+    "@fluentui/react-theme-provider": "0.19.16",
     "mobx": "^6.3.2",
     "mobx-react-lite": "^3.2.0",
     "monaco-editor": "^0.25.1",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "react-router-dom": "^5.2.0",
     "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@octokit/core": "^3.5.1",
-    "@types/react": "16.9.35",
-    "@types/react-dom": "16.9.8",
+    "@types/react": "^17.0.53",
+    "@types/react-dom": "^17.0.18",
     "@types/react-router-dom": "^5.1.7",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
