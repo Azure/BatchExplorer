@@ -39,6 +39,11 @@ If ($branch -like "refs/heads/main") {
     $distTag = "next"
 }
 
+If ($branch -like "refs/heads/hoppe/update-v1") {
+    $buildType = "hoppe-update-v1"
+    $distTag = "hoppe-update-v1"
+}
+
 # Change to curent branch for testing
 If ($branch -like "refs/heads/feature/signing-vsts") {
     $buildType = "testing"
