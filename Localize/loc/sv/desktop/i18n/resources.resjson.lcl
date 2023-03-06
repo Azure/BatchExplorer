@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="D:\a\_work\1\s\desktop\i18n\resources.resjson" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="sv-SE">
+<LCX SchemaVersion="6.0" Name="C:\vsoGit\ConvertFilesToLCLs\resources\en-US\resources.resjson" PsrId="306" FileType="1" SrcCul="en-US" TgtCul="sv-SE" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
     <Cmt Name="Rccx" />
   </OwnedComments>
+  <Settings Name="@SettingsPath@\default.lss" Type="Lss" />
   <Item ItemId=";String Table" ItemType="0" PsrId="306" Leaf="false">
     <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
     <Item ItemId=";Strings" ItemType="0" PsrId="306" Leaf="false">
@@ -546,12 +547,18 @@
       <Item ItemId=";duration-picker.unit.days" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Days]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Dagar]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.hours" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Hours]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Timmar]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -564,18 +571,27 @@
       <Item ItemId=";duration-picker.unit.minutes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Minutes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Minuter]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.seconds" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Seconds]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Sekunder]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.unlimited" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unlimited]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Obegr??nsad]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -918,6 +934,9 @@
       <Item ItemId=";main-navigation.certificates" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Certificates]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Certifikat]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -930,24 +949,36 @@
       <Item ItemId=";main-navigation.data" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Data]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Data]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.gallery" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Gallery]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Galleri]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.jobs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Jobs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Jobb]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.jobschedules" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job schedules]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Jobbscheman]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -960,18 +991,27 @@
       <Item ItemId=";main-navigation.packages" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Packages]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Paket]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.pools" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pools]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Pooler]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.profile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Profile]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Profil]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1002,12 +1042,18 @@
       <Item ItemId=";models.pools" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pools]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Pooler]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";models.storageAccount" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Storage account]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Lagringskonto]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1524,6 +1570,9 @@
       <Item ItemId=";profile-button.profile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Profile]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Profil]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1752,6 +1801,9 @@
       <Item ItemId=";settings.saved" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Saved]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Sparade]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2232,6 +2284,9 @@
       <Item ItemId=";user-account-picker.password" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Password]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[L??senord]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2256,6 +2311,9 @@
       <Item ItemId=";user-account-picker.username" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Username]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Anv??ndarnamn]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="D:\a\_work\1\s\desktop\i18n\resources.resjson" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="ko-KR">
+<LCX SchemaVersion="6.0" Name="C:\vsoGit\ConvertFilesToLCLs\resources\en-US\resources.resjson" PsrId="306" FileType="1" SrcCul="en-US" TgtCul="ko-KR" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
     <Cmt Name="Rccx" />
   </OwnedComments>
+  <Settings Name="@SettingsPath@\default.lss" Type="Lss" />
   <Item ItemId=";String Table" ItemType="0" PsrId="306" Leaf="false">
     <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
     <Item ItemId=";Strings" ItemType="0" PsrId="306" Leaf="false">
@@ -12,60 +13,90 @@
       <Item ItemId=";aad-app-secret-picker.description.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Description (Optional)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[설명 (옵션)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";aad-app-secret-picker.expireIn.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Exipre in]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[만료]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";aad-app-secret-picker.secret.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Secret. One will be generated automatically if not provided]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[비밀. 하나가 제공되지 않으면 자동으로 생성됩니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-cost-card.subtitle" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This is showing the pre-tax cost reported. Please note that cost might be partial.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[지금 보고 게신 부분은 세금을 제외한 항목입니다. 비용이 달라질수 있음을 확인하시길 바랍니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-cost-card.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Daily cost]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[일일 비용]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-cost-card.total" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Total for period]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[총 청구 기간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-cost-card.unsupportedSubscription" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cannot view cost for this subscription(Unsupported)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 구독에 대한 비용을 확인할 수 없습니다 (지원되지 않음).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-cost-card.usingLocalAccount" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cannot get cost with local batch account]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[로컬 배치 어카운트의 비용을 가져올 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-details.monitoring" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Monitoring]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[모니터링]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-details.resources" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Resources]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[리소스]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -102,6 +133,9 @@
       <Item ItemId=";account-monitoring.nodeStates" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Node states]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[노드 상태]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -114,24 +148,36 @@
       <Item ItemId=";account-monitoring.taskStates" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Task states]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 상태]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-summary-card.resourceGroup" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Resource group]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[리소스 그룹]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-summary-card.subscription" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Subscription]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[구독]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-summary-card.url" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Url]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[URL]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -144,66 +190,99 @@
       <Item ItemId=";add-certificate-form.certificate.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select a certificate (pfx or cer) to upload]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[업로드 할 인증서 (pfx 또는 cer) 선택]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-certificate-form.certificate.invalid" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Certificate need to be valid CER or PFX files only]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[인증서는 유효한 CER 또는 PFX 파일이어야합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-certificate-form.certificate.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Certificate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[인증서]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-certificate-form.certificate.required" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Please select a valid certificate file]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[유효한 인증서 파일을 선택하십시오]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-certificate-form.certificate.select" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select a certificate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[인증서 선택]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-certificate-form.password.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Certificate password]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[인증서 암호]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-certificate-form.password.required" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Password is required if the certificate format is '.pfx']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[인증서 형식이 '.pfx'인 경우 암호가 필요합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-certificate-form.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Create certificate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[인증서 만들기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-task-form.action" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Add]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[추가]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-task-form.subtitle" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Add a task to the selected job]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[선택한 Job에 작업 추가]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-task-form.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Add task]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 추가]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -282,72 +361,108 @@
       <Item ItemId=";batch-account-create.accountName.maxlength" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Account name has a maximum length of 64 characters]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[계정 이름의 최대 길이는 64 자입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.accountName.minLength" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Account name has a minimum length of 3 characters]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[계정 이름에는 최소 3 문자가 필요합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.accountName.pattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Account name can only contain lower case letters and numbers]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[계정이름은 소문자와 숫자만 포함할 수 있습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.accountName.required" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Account name is a required field]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[계정 이름 필드는 필수 필드입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.location.reachedQuota" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[You've already reached your quota {used} out of {quota} accounts for subscription '{subscription}' in this location. You can request a an account quota increase, create the account in another location, or create the account in another subscription.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 위치의 {subscription} 구독에 대해 {quota} 계정 중 할당량 {used}에 도달했습니다. 계정 할당량 증가를 요청하거나, 다른 위치에서 계정을 만들거나, 다른 가입에서 계정을 만들 수 있습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.location.required" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Location is a required field]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[위치는 필수 입력 항목입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.resourceGroup.noneAvailable" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No resources groups available in subscription '{subscription}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[구독 '{subscription}'에서 사용할 수 있는 리소스 그룹이 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.resourceGroup.notAllowed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[You don't have permission to create a batch account under this resource group]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 리소스 그룹에서 배치 계정을 만들 권한이 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.resourceGroup.required" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Resource group is a required field]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[리소스 그룹은 필수 입력 필드입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.resourceGroup.willCreate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This resource group doesn't exist yet, and it will be created before batch account.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 자원 그룹은 아직 존재하지 않으며 배치 계정 전에 작성될 것입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.storageAccount.missingSubscription" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Please specify subscription and location before picking a storage account.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[스토리지 계정을 선택하기 전에 구독 및 위치를 지정하십시오.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";batch-account-create.subscription.required" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Subscription is a required field]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[구독 필드는 필수 입력 필드입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -360,54 +475,81 @@
       <Item ItemId=";blob-container-picker.loading" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Loading containers]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[컨테이너를 불러오는 중입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";browse-layout.openedAdvancedFilter" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Opened advanced filter blade]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[열려진 고급 필터 블레이드]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";certificate-references-picker.addOne" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Add a certificate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[인증서 추가]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";certificate-references-picker.duplicate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cannot reference the same certificate twice {thumbprint}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[동일한 인증서{thumbprint}를 두 번 참조할 수 없습니다]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";certificate-references-picker.noCertificates" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No certificate(s) found for this batch account, please upload your certificate(s) first.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 배치 계정에 대한 인증서가 없으므로, 먼저 인증서를 업로드 하세요.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.apply" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Apply]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[적용]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.back" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Back]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[뒤로]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.configuration" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Configuration]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[CONFIGURATION]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.confirm" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Confirm]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[확인]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -420,84 +562,126 @@
       <Item ItemId=";common.loading" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Loading]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[로드]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.no" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[아니요]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.none" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[None]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[None]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.rebootAll" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Reboot all]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[모두 재 부팅]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.refresh" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Refresh]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[새로 고침]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.refreshing" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Refreshing]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[새로 고침]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.required" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Required]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[필수]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.updated" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Updated]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[업데이트]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.yes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Yes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[예]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";create-new-aad-app.create" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Create]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[만들기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";create-new-aad-app.secret.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Secret]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[암호]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";create-new-aad-app.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Create a new application]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[새 응용 프로그램 만들기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";datetime-picker.currentTimeZone" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Current timezone]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[현재 시간대]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";datetime-picker.date" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[date]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[날짜]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -510,6 +694,9 @@
       <Item ItemId=";datetime-picker.time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -540,72 +727,108 @@
       <Item ItemId=";duration-picker.unit.custom" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Custom (ISO format)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[사용자 정의 (ISO 형식)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.days" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Days]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[일]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.hours" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Hours]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unit]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[단위]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.minutes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Minutes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[분]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.seconds" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Seconds]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[초]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.unlimited" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unlimited]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[제한 없음]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";edit-app-package-form.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Edit application package references for pool {poolId}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[풀{poolId}에 대한 응용 프로그램 패키지 참조를 편집하세요]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";edit-app-package-form.updated" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Application packages for {poolId} were updated]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[{poolId}에 대한 응용프로그램 패키지가 업데이트 되었습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";edit-certificate-references-form.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Edit certificate references for pool {poolId}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[풀{poolId}에 대한 인증서 참조 편집]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";edit-certificate-references-form.updated" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Certificates for {poolId} were updated]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[{poolId}에 대한 인증서가 업데이트 되었습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";editable-table.deleteRow" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Delete row]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[행 삭제]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -624,66 +847,99 @@
       <Item ItemId=";entity-command.confirm.multiple.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Are you sure you want to {action} these {count} {type}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[{count} {type} {action}을 수행하기 원하십니까?]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";entity-command.confirm.single.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[You are about to {action} {entityId}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[{entityId}를 {action}하려고 합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";entity-command.confirm.single.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Are you sure you want to {action} this {type}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 {type}에 {action}을(를) 하시겠습니까?]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";entity-configuration.viewAsJSON" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[View as JSON]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[JSON으로 보기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";entity-configuration.viewClassic" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Classic view]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[클래식 보기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";file-explorer.collapseAll" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Collapse all]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[모두 축소]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";file-explorer.noFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No files]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[파일 없음]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";file-explorer.noPathMatch" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No files found for "{path}"]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA["{path}"에 대한 파일을 찾을 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";file-explorer.path" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[PATH]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";file-explorer.unknownFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cannot find this file. Check the path.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 파일을 찾을 수 없습니다. 경로를 확인해주십시오.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";file-group-picker.create" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Create a new file group]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[새 파일 그룹 만들기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -696,96 +952,144 @@
       <Item ItemId=";file-group-picker.warning" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This file group doesn't seem to exist. It will be created for you when the job is submitted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 파일 그룹이 존재하지 않는 것 같습니다. 작업 제출시 작성됩니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";file-viewer-container.notAllowed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File {filename} cannot be accessed. Server returned forbidden error]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[파일 "{filename}"에 액세스 할 수 없습니다. 서버가 금지 된 오류를 반환했습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";file-viewer-container.notFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File {filename} doesn't exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[파일{filename}이 존재하지 않습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";file-viewer-container.unkownFileType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This file is not a known extension. Do you still want to open it?]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 파일은 알려진 확장자가 아닙니다. 그래도 열어보시겠습니까?]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";form-footer.buttons.andClose" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[{action} and Close]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[{action}과 닫기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";form-footer.buttons.cancel" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cancel]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[취소]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";form-footer.buttons.jsonEditor" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Switch to JSON editor]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[JSON 편집기로 전환]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";form-footer.buttons.normalForm" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Switch to classic form]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[클래식 양식으로 전환]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";form-footer.buttons.save" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Save]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[저장]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";form-footer.buttons.select" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[선택]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";gallery.actions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Actions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[동작]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";gallery.myLibrary" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[My library]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[내 라이브러리]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";gallery.recentTemplates" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Recent templates]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[최근 템플릿]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";gallery.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Gallery applications]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[갤러리 응용 프로그램]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";gallery.viewReadme" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[View readme]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[readme 보기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-progress-status.inaccurate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Task count might not be accurate in real time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 수는 실시간으로 정확하지 않을 수 있습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -798,90 +1102,135 @@
       <Item ItemId=";job-state.active.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job is currently running. Task can be scheduled.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업이 현재 실행 중입니다. 작업을 예약할 수 있습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.completed.allTasksCompleted.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job completed successfully when all task completed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[모든 동작이 완료되면, 작업이 성공적으로 완료됩니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.completed.jmcomplete.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job completed successfully when the job manager task completed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 관리자 작업이 완료되면 작업이 성공적으로 완료되었습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.completed.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job is completed. No more task will be accepted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업이 완료되었습니다. 더 이상 작업이 허용되지 않습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.completed.taskfailed.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job completed with a failure as one of the task failed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 중 하나가 실패하여 작업이 실패로 완료되었습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.completed.timeout.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job timed out. Job has been running for longer than the provided limit.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 시간이 초과되었습니다. 작업이 제공된 제한 시간보다 오래 실행되었습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.completed.userTerminated.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job was completed by the user]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[사용자에 의해 작업이 완료되었습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.deleting.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job is in the process of being deleted]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[삭제하는 과정을 돌리는 작업]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.disabled.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job is disabled. No task will run.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업이 비활성화되었습니다. 작업이 실행되지 않습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.disabling.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job is in the process of being disabled]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업이 비활성화되는 중입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.enabling.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job is returning from disabled stated]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업이 사용 중지 된 상태에서 돌아오는 중입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";job-state.terminating.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job is terminating]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업이 종료 중입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";list-base.filterApplied" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[New filter applied, {count} results]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[새 필터가 적용되었습니다. (결과: {count})]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";list-base.filterCleared" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Filter cleared, {count} results]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[필터가 지워짐, 결과 {count}개]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";location-picker.noLocationInSubscription" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No locations available in subscription '{name}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[구독 '{name}'에 사용 가능한 위치가 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -894,114 +1243,171 @@
       <Item ItemId=";main-menu.help.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Help]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[도움말]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-menu.help.privacyStatement" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Privacy statement]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[개인정보취급방침]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-menu.help.reportIssue" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Report issue]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[문제 신고]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-menu.help.viewLicense" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[View license]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[라이센스 보기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.certificates" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Certificates]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[인증서]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.dashboard" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Dash]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[대시]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.data" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Data]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[데이터]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.gallery" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Gallery]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[갤러리]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.jobs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Jobs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.jobschedules" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job schedules]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 일정]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Main sidebar]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[기본 탐색]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.packages" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Packages]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[패키지]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.pools" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pools]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[풀]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.profile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Profile]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[프로필]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";models.container" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Container]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[컨테이너]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";models.node" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Node]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[노드]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";models.nodes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Nodes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[노드]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";models.pool" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pool]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[풀]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";models.pools" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pools]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[풀]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1014,144 +1420,216 @@
       <Item ItemId=";node-configuration.allocation-time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Allocation time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[할당 시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.end-time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[End time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[종료 시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.exit-code" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Exit code]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[종료 코드]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.external-ip" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[External ip]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[외부 ip]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.id" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[ID]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[ID]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.internal-ip" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Internal ip]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[내부 IP]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.is-dedicated" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Is dedicated]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[전용]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.last-boot-time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Last boot time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[마지막 부팅 시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.node-agent-version" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Node agent version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[노드 에이전트 버전]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.node-size" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Node size]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[노드 크기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.retry-count" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Retry count]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[재시도 횟수]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.run-time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Execution time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[실행 시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.running-tasks-count" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Running tasks]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[실행중인 작업]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.scheduling-state" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Scheduling state]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[스케줄링 상태]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.start-task-completed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Completed in]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[완료]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.start-task-execution" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Start task execution]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 실행 시작]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.start-task-not-started" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Start task execution]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 실행 시작]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.start-task-running" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Running for]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[에 대한 실행]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.start-time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Start time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[시작 시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.state" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[State]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[상태]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.state-transition-time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[State transition time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[상태 전환 시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.total-tasks-run" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Total task run]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[전체 작업 실행]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.total-tasks-succeeded" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Total successful tasks]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[총 성공한 작업]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.url" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[URL]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[URL]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1164,30 +1642,45 @@
       <Item ItemId=";partial-sort-warning.load-all" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Load all (This might take a long time)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[모두 불러오기 (시간이 오래 걸릴 수 있음)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";partial-sort-warning.loading-all" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Loading all entities. Please wait.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[전체 목록을 불러오는 중입니다. 잠시만 기다려주세요.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";partial-sort-warning.manual-update" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[List won't be update automatically while sorting(Performance reason)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[정렬 중에 목록이 자동으로 업데이트되지 않습니다. (성능상의 이유).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";partial-sort-warning.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[All entities have not been loaded, this is showing a partial sorting.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[모드 엔티티가 로드되지 않아서 일부분만 보이고 있습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";partial-sort-warning.update" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Update]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[업데이트]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1236,18 +1729,27 @@
       <Item ItemId=";pool-details.estimatedCost" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Estimated cost of this pool at this current state]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[현재 상태에서 이 풀의 예상 비용]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-details.graphs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Graphs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[그래프]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-details.openInNewWindow" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Open in a new window]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[새 창에서 열기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1266,18 +1768,27 @@
       <Item ItemId=";pool-graphs.cpu" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[CPU]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[CPU]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.diskIO" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Disk IO]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[디스크 I/O]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.diskUsage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Disk usage]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[디스크 사용량]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1332,18 +1843,27 @@
       <Item ItemId=";pool-graphs.last" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Last]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Last]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.memory" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Memory]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[메모리]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.network" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Network]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[네트워크]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1362,138 +1882,207 @@
       <Item ItemId=";pool-graphs.timespan.10min" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[10 minutes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[10 분]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.timespan.1h" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[1 hour]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[1시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.timespan.24h" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[24 hours]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[24시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.timespan.7d" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[7 days]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[7 일]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.timespan.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Graphs timespan]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[그래프 시간 범위]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-os-picker.category.container" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Container]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[컨테이너]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-os-picker.category.dataScience" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Data science]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[데이터 사이언스]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-os-picker.category.distributions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Distributions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[배포판]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-os-picker.category.rendering" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Graphics and rendering]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[그래픽 및 렌더링]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-os-picker.containerConfiguration" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Container configuration]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[컨테이너 구성]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-os-picker.nodeAgentSelection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Based on your selection, node agent '{sku}' will be used]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[선택에 따라 노드 에이전트 '{sku}'가 사용됩니다]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-picker.filterByID" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Search by id]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Id로 검색]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-picker.filterByOS" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Filter by OS]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[OS별로 필터링]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-picker.noneMatching" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[You don't have any pools matching the current filters.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[현재의 필터와 일치하는 어떠한 Pool도 갖고 있지 않습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-picker.reset" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Reset]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[다시 설정]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-scale-picker.evaluationInterval.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Formula evaluation interval]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[수식 평가 간격]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-scale-picker.resizeTimeout.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Resize timeout]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[타임아웃 조정]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-scale-picker.targetDedicatedNodes.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Dedicated nodes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[전용 노드]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-scale-picker.targetLowPriorityNodes.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Spot/low-priority nodes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[우선 순위가 낮은 노드]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-scale-picker.type.autoscale" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Autoscale]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[자동조정]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-scale-picker.type.fixed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Fixed size]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[고정 크기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-scale-picker.type.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Scale type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[확장 유형]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";profile-button.about" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[About]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[에 대한]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1512,6 +2101,9 @@
       <Item ItemId=";profile-button.logout" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Logout]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[로그아웃]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1524,60 +2116,90 @@
       <Item ItemId=";profile-button.profile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Profile]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[프로필]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";profile-button.report" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Report a bug or feature request]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[버그 또는 기능 요청보고]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";profile-button.settings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Settings]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[설정]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";profile-button.thirdPartyNotices" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Third party notices]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[제 3자 통지]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";profile-button.viewLogs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[View logs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[로그 보기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";profile-button.viewTheme" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[View theme colors]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[테마 색상 보기]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";programmatic-usage.authenticationType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Authentication type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[인증 유형]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";programmatic-usage.credentials" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Credentials]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[자격 증명]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";programmatic-usage.setup" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[setup]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[설치]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";programmatic-usage.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Credentials and code samples for this Batch account]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 배치 계정의 자격증명 및 코드샘플]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1602,18 +2224,27 @@
       <Item ItemId=";rerun-task-form.action" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Rerun]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[재실행]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";rerun-task-form.subtitle" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This will delete the task and create a new one with the same id.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이렇게 하면 작업이 삭제되고 동일한 ID로 새 작업이 생성됩니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";rerun-task-form.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Rerun task]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 재실행]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1644,24 +2275,36 @@
       <Item ItemId=";resource-permission-button.giveRole" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Give {role} role]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[{role} 역활부여]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";resource-permission-button.none" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[None]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[None]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";resource-permission-button.permission" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[permission]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[사용 권한]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";resource-permission-button.removeAccess" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Remove access]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[액세스 제거]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1740,6 +2383,9 @@
       <Item ItemId=";settings.general" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[General]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[일반]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1752,12 +2398,18 @@
       <Item ItemId=";settings.saved" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Saved]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[저장됨]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";settings.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Settings]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[설정]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1776,24 +2428,36 @@
       <Item ItemId=";sig-image-picker.errorLoading" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Server encountered an error loading custom images, please try again later.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[서버에서 사용자 정의 이미지를 로드하는 중에 오류가 발생했습니다. 나중에 다시 시도하십시오.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";sig-image-picker.noSigImageAvailable" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No custom images in the region for this account]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 계정의 해당 지역에 사용자 지정 이미지가 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";sig-image-picker.nodeAgentSku.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Node agent]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[노드 에이전트]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";sig-image-picker.sigImage.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Image]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이미지]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1812,204 +2476,306 @@
       <Item ItemId=";task-commands.delete" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Delete]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[삭제]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-commands.rerun" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Rerun]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[재실행]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-commands.terminate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Terminate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[종료]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.affinityId.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Affinity id]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[동일 관심사 ID]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.applicationPackages.application" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Application]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[응용 프로그램]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.applicationPackages.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Application packages]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[응용 프로그램 패키지]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.applicationPackages.none" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This task contains no application package references]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 작업에는 응용 프로그램 패키지 참조가 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.applicationPackages.summary" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[{count} application package reference]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[{count} 애플리케이션 패키지 참조]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.applicationPackages.version" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[버전]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.commandLine.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Command line]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[명령줄]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.computeNode" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Compute node]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[계산된 노드]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.creationTime.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Creation time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[만든 시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.displayName.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Display name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[표시 이름]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.exitConditions.default" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Default]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[기본값]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.exitConditions.fileUploadError" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[On file upload error]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[파일 업로드 오류]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.exitConditions.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Exit conditions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[종료 조건]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.exitConditions.noOpExitCodes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Exit codes that do nothing]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[어떤 작업도 수행하지 않는 종료 코드]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.exitConditions.onSchedulingError" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[On scheduling error]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[스케줄 오류시]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.exitConditions.terminateJobExitCodes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Exit codes that terminate the job]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 종료를 위한 종료 코드]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.general" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[General]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[일반]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.id.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[ID]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[ID]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.lastModified.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Last modified]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[마지막으로 수정한 날짜]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.multiInstanceSettings.coordinationCommandLine.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Coordination command line]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[조정 명령 라인]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.multiInstanceSettings.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Multi instance settings]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[다중 인스턴스 설정]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.multiInstanceSettings.numberOfInstances.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Number of instances]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[인스턴스 갯수]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.nodeId.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Node ID]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[노드 ID]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.nodeUrl.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Node URL]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[노드 URL]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.outputFiles.destination" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Destination]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[대상]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.outputFiles.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Output files]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[출력 파일]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.outputFiles.pattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pattern]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[패턴]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.outputFiles.uploadWhen" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Upload when]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[업로드 시점]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.pool.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pool]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[풀]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.previousState.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Previous state]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이전 상태]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.previousStateTransitionTime.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Previous state transition time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이전 상태 전환 시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2022,60 +2788,90 @@
       <Item ItemId=";task-configuration.state.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[State]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[상태]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.stateTransitionTime.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[State transition time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[상태 전환 시간]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.taskRootDir.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Task root directory]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 루트 디렉터리]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.taskRootDirUrl.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Task root directory URL]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[작업 루트 디렉토리 URL]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.userIdentity.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[User identity]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[사용자 ID]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-dependency-browser.no-dependency" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This task doesn't depend on any other tasks]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[이 작업은 다른 작업에 의존 하지 않습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-node-info.navigateToNode" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Navigate to compute node]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[노드를 계산하기 위해 이동]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-node-info.navigateToPool" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Navigate to pool]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[풀으로 이동]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-node-info.nodeNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Compute node doesn't exist anymore]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[계산된 노드가 더 이상 존재하지 않습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-node-info.poolNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pool doesn't exist anymore]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[풀이 더 이상 존재하지 않습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2178,18 +2974,27 @@
       <Item ItemId=";time-range-picker.customRange" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Custom range]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[사용자 지정 범위]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";time-range-picker.errors.invalidRange" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Start time must be less than end time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[시작 시간은 종료 시간보다 앞서야 합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";time-range-picker.errors.required" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[At least start time or end time must be provided]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[시작 시간과 종료 시간은 필수입니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2202,6 +3007,9 @@
       <Item ItemId=";time-range-picker.timeRange" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Time range]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[시간 범위]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2232,6 +3040,9 @@
       <Item ItemId=";user-account-picker.password" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Password]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[암호]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2256,6 +3067,9 @@
       <Item ItemId=";user-account-picker.username" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Username]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[사용자 이름]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2280,24 +3094,36 @@
       <Item ItemId=";virtual-network-picker.noneAvailable" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[There are no virtual networks available under subscription '{subscriptionId}' and location '{location}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[구독 '{subscriptionId}'및 위치 '{location}'에서 사용 가능한 가상 네트워크가 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";virtual-network-picker.notArm" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Can't use VNET when using a local batch account]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[로컬 배치 계정을 사용할 때 VNET을 사용할 수 없습니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";virtual-network-picker.subnet" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Subnet]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[서브넷]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";virtual-network-picker.virtualNetwork" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Virtual network]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[가상 네트워크]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

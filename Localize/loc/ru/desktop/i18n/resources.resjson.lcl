@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="D:\a\_work\1\s\desktop\i18n\resources.resjson" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="ru-RU">
+<LCX SchemaVersion="6.0" Name="C:\vsoGit\ConvertFilesToLCLs\resources\en-US\resources.resjson" PsrId="306" FileType="1" SrcCul="en-US" TgtCul="ru-RU" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
     <Cmt Name="Rccx" />
   </OwnedComments>
+  <Settings Name="@SettingsPath@\default.lss" Type="Lss" />
   <Item ItemId=";String Table" ItemType="0" PsrId="306" Leaf="false">
     <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
     <Item ItemId=";Strings" ItemType="0" PsrId="306" Leaf="false">
@@ -60,12 +61,18 @@
       <Item ItemId=";account-details.monitoring" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Monitoring]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Мониторинг]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";account-details.resources" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Resources]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Ресурсы]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -132,6 +139,9 @@
       <Item ItemId=";account-summary-card.url" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Url]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[URL-адрес]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -156,6 +166,9 @@
       <Item ItemId=";add-certificate-form.certificate.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Certificate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Сертификат]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -168,6 +181,9 @@
       <Item ItemId=";add-certificate-form.certificate.select" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select a certificate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Выберите сертификат]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -186,12 +202,18 @@
       <Item ItemId=";add-certificate-form.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Create certificate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Создание сертификата]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";add-task-form.action" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Add]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[добавить]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -366,6 +388,9 @@
       <Item ItemId=";browse-layout.openedAdvancedFilter" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Opened advanced filter blade]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Колонка расширенного фильтра открыта]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -390,24 +415,36 @@
       <Item ItemId=";common.apply" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Apply]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Применить]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.back" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Back]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Назад]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.configuration" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Configuration]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[CONFIGURATION]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.confirm" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Confirm]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Подтверждение]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -420,18 +457,27 @@
       <Item ItemId=";common.loading" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Loading]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Загрузка]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.no" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Нет]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.none" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[None]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[NONE]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -444,6 +490,9 @@
       <Item ItemId=";common.refresh" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Refresh]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Обновить]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -456,24 +505,36 @@
       <Item ItemId=";common.required" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Required]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Требуется]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.updated" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Updated]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Обновлен]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";common.yes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Yes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Да]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";create-new-aad-app.create" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Create]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Создать]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -498,6 +559,9 @@
       <Item ItemId=";datetime-picker.date" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[date]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Дата]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -510,6 +574,9 @@
       <Item ItemId=";datetime-picker.time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Время]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -540,42 +607,63 @@
       <Item ItemId=";duration-picker.unit.custom" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Custom (ISO format)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Пользовательский (ISO формат)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.days" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Days]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Дни]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.hours" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Hours]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Часы]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unit]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Единицы]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.minutes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Minutes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Минуты]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.seconds" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Seconds]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Секунды]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";duration-picker.unit.unlimited" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unlimited]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Неограниченно]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -672,6 +760,9 @@
       <Item ItemId=";file-explorer.path" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Путь]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -726,36 +817,54 @@
       <Item ItemId=";form-footer.buttons.cancel" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cancel]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Отмена]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";form-footer.buttons.jsonEditor" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Switch to JSON editor]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Переключиться в редактор JSON]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";form-footer.buttons.normalForm" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Switch to classic form]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Переключиться на классический вид]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";form-footer.buttons.save" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Save]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Сохранить]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";form-footer.buttons.select" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Выбрать]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";gallery.actions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Actions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Действия]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -798,6 +907,9 @@
       <Item ItemId=";job-state.active.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job is currently running. Task can be scheduled.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Задание выполняется. Сейчас можно запланировать задачу.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -894,12 +1006,18 @@
       <Item ItemId=";main-menu.help.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Help]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Справка]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-menu.help.privacyStatement" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Privacy statement]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Заявление о конфиденциальности]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -912,12 +1030,18 @@
       <Item ItemId=";main-menu.help.viewLicense" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[View license]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Просмотр лицензии]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.certificates" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Certificates]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Сертификаты]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -930,24 +1054,36 @@
       <Item ItemId=";main-navigation.data" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Data]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Данные]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.gallery" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Gallery]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Галерея]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.jobs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Jobs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Задания]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.jobschedules" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Job schedules]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Расписания заданий]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -960,30 +1096,45 @@
       <Item ItemId=";main-navigation.packages" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Packages]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Пакеты]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.pools" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pools]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Пулы]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";main-navigation.profile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Profile]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Профиль]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";models.container" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Container]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Контейнер]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";models.node" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Node]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Узел]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1002,24 +1153,36 @@
       <Item ItemId=";models.pools" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pools]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Пулы]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";models.storageAccount" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Storage account]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Учетная запись хранения]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.allocation-time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Allocation time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Время выделения]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.end-time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[End time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Время окончания]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1038,6 +1201,9 @@
       <Item ItemId=";node-configuration.id" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[ID]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Идентификатор]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1122,12 +1288,18 @@
       <Item ItemId=";node-configuration.start-time" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Start time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Время начала]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";node-configuration.state" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[State]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[State]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1152,6 +1324,9 @@
       <Item ItemId=";node-configuration.url" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[URL]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[URL-адрес]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1188,6 +1363,9 @@
       <Item ItemId=";partial-sort-warning.update" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Update]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Обновить]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1266,6 +1444,9 @@
       <Item ItemId=";pool-graphs.cpu" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[CPU]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[ЦП]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1332,18 +1513,27 @@
       <Item ItemId=";pool-graphs.last" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Last]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Последние]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.memory" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Memory]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Память]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.network" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Network]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Сеть]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1368,12 +1558,18 @@
       <Item ItemId=";pool-graphs.timespan.1h" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[1 hour]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[1 час]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.timespan.24h" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[24 hours]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[24 часа]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1392,6 +1588,9 @@
       <Item ItemId=";pool-os-picker.category.container" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Container]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Контейнер]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1446,6 +1645,9 @@
       <Item ItemId=";pool-picker.reset" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Reset]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Сброс]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1524,6 +1726,9 @@
       <Item ItemId=";profile-button.profile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Profile]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Профиль]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1536,6 +1741,9 @@
       <Item ItemId=";profile-button.settings" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Settings]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Параметры]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1560,12 +1768,18 @@
       <Item ItemId=";programmatic-usage.authenticationType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Authentication type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Тип проверки подлинности]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";programmatic-usage.credentials" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Credentials]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Учетные данные]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1650,12 +1864,18 @@
       <Item ItemId=";resource-permission-button.none" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[None]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[NONE]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";resource-permission-button.permission" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[permission]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Разрешение]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1740,6 +1960,9 @@
       <Item ItemId=";settings.general" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[General]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Общее]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1752,12 +1975,18 @@
       <Item ItemId=";settings.saved" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Saved]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Сохранено]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";settings.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Settings]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Параметры]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1794,6 +2023,9 @@
       <Item ItemId=";sig-image-picker.sigImage.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Image]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Образ]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1812,12 +2044,18 @@
       <Item ItemId=";task-commands.delete" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Delete]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Удалить]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-commands.rerun" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Rerun]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Запустить повторно]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1836,6 +2074,9 @@
       <Item ItemId=";task-configuration.applicationPackages.application" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Application]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Приложение]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1848,6 +2089,9 @@
       <Item ItemId=";task-configuration.applicationPackages.none" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This task contains no application package references]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Эта задача не содержит ссылок на пакеты приложений]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1860,12 +2104,18 @@
       <Item ItemId=";task-configuration.applicationPackages.version" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Version]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Версия]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.commandLine.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Command line]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Командная строка]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1878,18 +2128,27 @@
       <Item ItemId=";task-configuration.creationTime.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Creation time]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Время создания]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.displayName.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Display name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Отображаемое имя]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.exitConditions.default" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Default]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[По умолчанию]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1926,18 +2185,27 @@
       <Item ItemId=";task-configuration.general" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[General]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Общее]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.id.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[ID]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Идентификатор]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";task-configuration.lastModified.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Last modified]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Дата изменения]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1962,6 +2230,9 @@
       <Item ItemId=";task-configuration.nodeId.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Node ID]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Идентификатор узла]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1974,6 +2245,9 @@
       <Item ItemId=";task-configuration.outputFiles.destination" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Destination]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Назначение]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1986,6 +2260,9 @@
       <Item ItemId=";task-configuration.outputFiles.pattern" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Pattern]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Шаблон]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2022,6 +2299,9 @@
       <Item ItemId=";task-configuration.state.label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[State]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[State]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2178,6 +2458,9 @@
       <Item ItemId=";time-range-picker.customRange" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Custom range]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Пользовательский диапазон]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2232,6 +2515,9 @@
       <Item ItemId=";user-account-picker.password" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Password]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Пароль]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2256,6 +2542,9 @@
       <Item ItemId=";user-account-picker.username" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Username]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Имя пользователя]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2292,6 +2581,9 @@
       <Item ItemId=";virtual-network-picker.subnet" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Subnet]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Подсеть]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
