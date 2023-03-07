@@ -7,6 +7,9 @@ bl-metrics-monitor {
         > .tab-navigation-item {
             padding: 0;
         }
+        canvas {
+            pointer-events: none;
+        }
     }
 
     .preview {
