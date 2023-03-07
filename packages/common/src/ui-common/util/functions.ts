@@ -2,7 +2,6 @@
 // better tree shaking and a smaller bundle size
 import lodashCloneDeep from "lodash/cloneDeep";
 import lodashMergeWith from "lodash/mergeWith";
-import lodashIsArray from "lodash/isArray";
 import lodashDebounce from "lodash/debounce";
 
 import { getEnvironment } from "../environment";
@@ -59,15 +58,6 @@ export function isPromiseLike(obj: unknown): obj is Promise<unknown> {
         return true;
     }
     return false;
-}
-
-/**
- * Check if the passed-in object is an array
- * @param obj The object to check
- * @returns True if the object is an array, false otherwise
- */
-export function isArray(obj: unknown): obj is Array<unknown> {
-    return lodashIsArray(obj);
 }
 
 export interface DebouncedFunction<T extends (...args: unknown[]) => unknown> {

@@ -3,7 +3,6 @@ import {
     cloneDeep,
     debounce,
     delay,
-    isArray,
     isPromiseLike,
     mergeDeep,
     uniqueId,
@@ -116,17 +115,6 @@ describe("Common utility functions", () => {
                 then: "still nope",
             })
         ).toBe(false);
-    });
-
-    test("isArray() function", () => {
-        // Arrays
-        expect(isArray([])).toBe(true);
-        expect(isArray(["yup"])).toBe(true);
-
-        // Not arrays
-        expect(isArray("nope")).toBe(false);
-        expect(isArray(new Set([]))).toBe(false);
-        expect(isArray({})).toBe(false);
     });
 
     test("debounce() function", async () => {

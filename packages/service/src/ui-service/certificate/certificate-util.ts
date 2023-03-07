@@ -1,4 +1,4 @@
-import { fromIso, isArray } from "@batch/ui-common";
+import { fromIso } from "@batch/ui-common";
 import { toODataList } from "../odata";
 import { Certificate } from "./certificate-models";
 
@@ -69,7 +69,7 @@ export function parseCertificateListJson(
         jsonList = json;
     }
 
-    if (!isArray(jsonList)) {
+    if (!Array.isArray(jsonList)) {
         throw new Error("Failed to parse: string must be a JSON list");
     }
 

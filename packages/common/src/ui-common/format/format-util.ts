@@ -1,5 +1,4 @@
 import { toIsoLocal } from "../datetime";
-import { isArray } from "../util";
 
 /**
  * Automatically formats an object or value type as a friendly string
@@ -21,7 +20,7 @@ export function autoFormat(value: unknown): string {
     } else if (value instanceof Date) {
         // Date
         return toIsoLocal(value);
-    } else if (isArray(value)) {
+    } else if (Array.isArray(value)) {
         // Array
         // NOTE: This will flatten nested arrays which isn't ideal
         return value.map((v) => autoFormat(v)).join(", ");

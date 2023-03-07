@@ -24,7 +24,6 @@ export {
     DebouncedFunction,
     delay,
     isPromiseLike,
-    isArray,
     uniqueId,
 } from "./util";
 export {
