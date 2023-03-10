@@ -5,22 +5,27 @@
       "LocItems": [
         {
           "SourceFile": "packages\\common\\i18n\\resources.resjson",
+          "CopyOption": "LangIDOnName",
           "OutputPath": "packages\\common\\i18n"
         },
         {
           "SourceFile": "packages\\playground\\i18n\\resources.resjson",
+          "CopyOption": "LangIDOnName",
           "OutputPath": "packages\\playground\\i18n"
         },
         {
           "SourceFile": "packages\\react\\i18n\\resources.resjson",
+          "CopyOption": "LangIDOnName",
           "OutputPath": "packages\\react\\i18n"
         },
         {
           "SourceFile": "packages\\service\\i18n\\resources.resjson",
+          "CopyOption": "LangIDOnName",
           "OutputPath": "packages\\service\\i18n"
         },
         {
           "SourceFile": "desktop\\i18n\\resources.resjson",
+          "CopyOption": "LangIDOnName",
           "OutputPath": "desktop\\i18n"
         }
       ]
