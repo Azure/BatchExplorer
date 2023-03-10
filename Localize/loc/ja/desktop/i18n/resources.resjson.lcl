@@ -130,6 +130,9 @@
       <Item ItemId=";account-monitoring.expandLabel" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Expand chart]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[グラフの展開]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -199,6 +202,9 @@
       <Item ItemId=";activity-monitor-item.progressBar" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Item progress]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アイテムの進行状況]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -304,12 +310,18 @@
       <Item ItemId=";auth-service.activate-tenant" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Activate tenant to authorize]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テナントをアクティブにして承認する]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";auth-service.tenant-error" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cannot access resources for tenant {tenantName}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テナント {tenantName} のリソースにアクセスできません]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -370,24 +382,36 @@
       <Item ItemId=";auto-storage-account-picker.same-region-title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Storage accounts in the same region as your batch account ({location})]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Batch アカウント ({location}) と同じリージョンにあるストレージ アカウント]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";auto-storage-account-picker.warnings.classic-incompatible" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Classic storage accounts are not compatible with data and gallery]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[クラシック ストレージ アカウントがデータおよびギャラリーと互換性がありません]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";auto-storage-account-picker.warnings.no-accounts-other" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[You have no accounts in other regions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[他のリージョンにはアカウントがありません]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";auto-storage-account-picker.warnings.no-accounts-same" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[You have no accounts in the same region]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[同じリージョンにアカウントがありません]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -745,24 +769,36 @@
       <Item ItemId=";delete-container-dialog.message" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Are you sure you want to permanently delete the following container(s)?]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[次のコンテナーを完全に削除しますか?]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";delete-container-dialog.title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Delete Containers]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[コンテナーの削除]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";delete-container-dialog.warning" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Deleting the container(s) listed above is irreversible. The action you are about to take cannot be undone.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[上記のコンテナーを削除すると、元に戻すことができません。現在行おうとしている操作は、元に戻すことができません。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";dropdown.button-title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Dropdown button]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ドロップダウン ボタン]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -877,12 +913,18 @@
       <Item ItemId=";enable-app-insights-doc.doc-title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Instructions on enabling Batch Insights]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Batch Insights を有効にする手順]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";enable-app-insights-doc.doc-title-os-specific" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[OS-specific instructions on adding Batch Insights to start task]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Batch Insights を追加してタスクを開始するための OS 固有の手順]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -988,6 +1030,9 @@
       <Item ItemId=";file-group-picker.uploading" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Uploading file group]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイル グループをアップロードしています]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1282,6 +1327,9 @@
       <Item ItemId=";main-menu.help.italyAccessibility" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Italy Accessibility Declarations]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[イタリアのアクセシビリティ宣言]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1756,30 +1804,45 @@
       <Item ItemId=";pool-create-basic-dialog.deprecationWarning.imageFarFromEndOfLife" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The selected image has an end-of-life date of {imageEndOfLifeDate}. After this date, it will not appear as an option when creating new pools. API calls using the image may continue to function for up to 60 days afterwards.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[選択したイメージの有効期限は {imageEndOfLifeDate} です。この日以降は、新しいプールを作成するときに選択肢として表示されません。このイメージを使用した API 呼び出しは、その後最大 60 日間機能し続ける場合があります。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-create-basic-dialog.deprecationWarning.imageNearingEndOfLife" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The selected image is nearing its end of life date of {imageEndOfLifeDate}. After this date, it will not appear as an option when creating new pools. API calls using the image may continue to function for up to 60 days afterwards.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[選択したイメージは、有効期限である {imageEndOfLifeDate} が近づいています。この日以降は、新しいプールを作成するときに選択肢として表示されません。このイメージを使用した API 呼び出しは、その後最大 60 日間機能し続ける場合があります。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-details.deprecationWarning.imageFarAwayFromEndOfLife" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This pool's image has an end-of-life date of {imageEndOfLifeDate}. After this date, it will not appear as an option when creating new pools. API calls to create or scale pools using the image may continue to function for up to 60 days afterwards.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このプールのイメージは、{imageEndOfLifeDate} が有効期限です。この日以降は、新しいプールを作成するときに選択肢として表示されません。このイメージを使用したプールの作成またはスケーリングのための API 呼び出しは、その後最大 60 日間機能し続ける場合があります。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-details.deprecationWarning.imageNearingEndOfLife" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This pool's image is nearing its end-of-life date of {imageEndOfLifeDate}. After this date, it will not appear as an option when creating new pools. API calls to create or scale pools using the image may continue to function for up to 60 days afterwards.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このプールのイメージは、有効期限である {imageEndOfLifeDate} が近づいています。この日以降は、新しいプールを作成するときに選択肢として表示されません。このイメージを使用したプールの作成またはスケーリングのための API 呼び出しは、その後最大 60 日間機能し続ける場合があります。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-details.deprecationWarning.imagePassedEndOfLife" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This pool's image is past its end-of-life date of {imageEndOfLifeDate}. Please recreate this pool using a different image afterwards.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このプールのイメージは、有効期限である {imageEndOfLifeDate} を過ぎています。今後は別のイメージを使用してこのプールを再作成してください。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1858,30 +1921,45 @@
       <Item ItemId=";pool-graphs.errors.start-task-failed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The start task has failed on {failed} out of {total} nodes.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{total} 件のノードのうち {failed} 件で開始タスクが失敗しました。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.errors.unusable-nodes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[{failed} out of {total} nodes are in an unusable state. Please click the nodes for more details.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{total} 件のノードのうち {failed} 件が使用できない状態です。詳細については、ノードをクリックしてください。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.fixes.edit-start-task" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Edit the start task]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[開始タスクの編集]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.fixes.reboot-failed-nodes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Reboot failed nodes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[再起動に失敗したノード]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";pool-graphs.fixes.reimage-failed-nodes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Reimage failed nodes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[失敗したノードの再イメージ化]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1897,6 +1975,9 @@
       <Item ItemId=";pool-graphs.gpu-usage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Gpu usage]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[GPU 使用率]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1939,6 +2020,9 @@
       <Item ItemId=";pool-graphs.not-enabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cpu, memory, disk, etc.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[CPU、メモリ、ディスクなど]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2287,18 +2371,27 @@
       <Item ItemId=";programming-sample.aad-setup-warning" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[You haven't picked an Azure AD application yet. The sample below will not have all the information filled.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure AD アプリケーションをまだ選択していません。以下のサンプルは、一部の情報が入力されていない状態になります。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";programming-sample.copy-title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Copy {prerequisite} to clipboard]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{prerequisite} をクリップボードにコピー]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";quota-display.progressBar" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Quota usage]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[クォータの使用量]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2341,6 +2434,9 @@
       <Item ItemId=";resource-files-properties.filePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Node file path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ノード ファイルのパス]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2474,7 +2570,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Showing {num} items]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[{num} アイテムを表示しています]]></Val>
+            <Val><![CDATA[{num} 件のアイテムを表示しています]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -2482,6 +2578,9 @@
       <Item ItemId=";server-error.debug-button-label" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Toggle troubleshooting info]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[トラブルシューティング情報の切り替え]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2542,12 +2641,18 @@
       <Item ItemId=";sidebar-bookmarks.dropdown-button-title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Toggle bookmarks menu]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ブックマーク メニューの切り替え]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";sidebar-bookmarks.no-references" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No bookmark references]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ブックマーク参照がありません]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3023,7 +3128,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Country Code]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[国コード]]></Val>
+            <Val><![CDATA[国番号]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3031,6 +3136,9 @@
       <Item ItemId=";tenant-card.deactivate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Deactivate tenant]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テナントを非アクティブ化]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3046,12 +3154,18 @@
       <Item ItemId=";tenant-card.home-tenant" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Home tenant]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ホーム テナント]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";tenant-card.logo-alt" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Logo for {name}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{name} のロゴ]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3112,12 +3226,18 @@
       <Item ItemId=";tenant-picker.microcopy" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select which Azure AD tenants associated with the user credentials to log into for Azure Batch workflows. The home tenant cannot be deactivated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Azure Batch ワークフロー用にログインするユーザー資格情報に関連付けられている Azure AD テナントを選択します。ホーム テナントを非アクティブ化することはできません。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";tenant-picker.refresh" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Refresh tenants]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テナントの更新]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

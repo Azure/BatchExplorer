@@ -13,7 +13,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Location]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Standort]]></Val>
+            <Val><![CDATA[Speicherort]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
