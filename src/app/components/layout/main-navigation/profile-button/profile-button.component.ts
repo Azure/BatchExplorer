@@ -16,6 +16,7 @@ import { OS, log } from "@batch-flask/utils";
 import {
     AuthService, BatchExplorerService,
 } from "app/services";
+import { Constants as ClientConstants } from "client/client-constants";
 import { Constants } from "common";
 import * as path from "path";
 import { Subject } from "rxjs";
@@ -112,13 +113,20 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
             new ContextMenuItem({ label: this.i18n.t("profile-button.report"), click: () => this._openGithubIssues() }),
             new ContextMenuItem({ label: this.i18n.t("profile-button.about"), click: () => this._showAboutPage() }),
             new ContextMenuSeparator(),
-            new ContextMenuItem({
-                label: this.i18n.t("profile-button.viewTheme"),
-                click: () => this._gotoThemeColors(),
-            }),
-            new ContextMenuSeparator(),
             new ContextMenuItem({ label: this.i18n.t("profile-button.logout"), click: () => this._logout() }),
         ];
+
+        if (ClientConstants.isDev) {
+            // const itemsCopy = items;
+            // items.forEach(menuItem => itemsCopy.push(menuItem));
+            const devMenuItem = new MultiContextMenuItem({
+                label: "Developer",
+                subitems: [
+                    new ContextMenuItem({ label: this.i18n.t("profile-button.viewTheme"), click: () => this._gotoThemeColors() })
+                ],
+            });
+            items.splice(5, 0, devMenuItem);
+        }
 
         items.unshift(this._getAutoUpdateMenuItem());
         this.contextMenuService.openMenu(new ContextMenu(items));
