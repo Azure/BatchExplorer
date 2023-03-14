@@ -1,38 +1,37 @@
-import { Parameter } from "@batch/ui-common";
 import {
     AbstractEnvironment,
-    DependencyFactories,
     Environment,
     EnvironmentConfig,
     EnvironmentName,
     getEnvironment,
 } from "@batch/ui-common/lib/environment";
-import { FormValues } from "@batch/ui-common/lib/form";
-import { StorageAccountService, SubscriptionService } from "@batch/ui-service";
+import {
+    FormValues,
+    ParameterDependencies,
+    ParameterName,
+} from "@batch/ui-common/lib/form";
+import { FormControlResolver, FormControlProps } from "../components/form";
 import {
     FormLayout,
     FormLayoutProvider,
     FormLayoutType,
 } from "../components/form/form-layout";
+import { isReactParameter } from "../form/react-parameter";
 import {
-    FormControlOptions,
-    ParameterTypeResolver,
-} from "../components/form/parameter-type";
+    BrowserDependencyFactories,
+    BrowserDependencyName,
+} from "./browser-dependencies";
 import { initFluentIcons } from "./environment-util";
 import { MockBrowserEnvironment } from "./mock-browser-environment";
 
-export enum BrowserDependencyName {
-    ParameterTypeResolver = "parameterTypeResolver",
-    FormLayoutProvider = "formLayoutProvider",
-    StorageAccountService = "storageAccount",
-    SubscriptionService = "subscription",
-}
-
 export interface BrowserEnvironment
     extends Environment<BrowserEnvironmentConfig> {
-    getFormControl<V extends FormValues, K extends Extract<keyof V, string>>(
-        param: Parameter<V, K>,
-        opts?: FormControlOptions
+    getFormControl<
+        V extends FormValues,
+        K extends ParameterName<V>,
+        D extends ParameterDependencies<V> = ParameterDependencies<V>
+    >(
+        props: FormControlProps<V, K, D>
     ): JSX.Element;
 
     getFormLayout(layoutType?: FormLayoutType): FormLayout;
@@ -40,13 +39,6 @@ export interface BrowserEnvironment
 
 export interface BrowserEnvironmentConfig extends EnvironmentConfig {
     enableA11yTesting?: boolean;
-}
-
-export interface BrowserDependencyFactories extends DependencyFactories {
-    [BrowserDependencyName.ParameterTypeResolver]: () => ParameterTypeResolver;
-    [BrowserDependencyName.FormLayoutProvider]: () => FormLayoutProvider;
-    [BrowserDependencyName.StorageAccountService]: () => StorageAccountService;
-    [BrowserDependencyName.SubscriptionService]: () => SubscriptionService;
 }
 
 /**
@@ -72,19 +64,26 @@ export class DefaultBrowserEnvironment
     /**
      * Get the form control for a given parameter
      */
-    getFormControl<V extends FormValues, K extends Extract<keyof V, string>>(
-        param: Parameter<V, K>,
-        opts?: FormControlOptions
-    ): JSX.Element {
-        const resolver = this.getInjectable<ParameterTypeResolver>(
-            BrowserDependencyName.ParameterTypeResolver
+    getFormControl<
+        V extends FormValues,
+        K extends ParameterName<V>,
+        D extends ParameterDependencies<V> = ParameterDependencies<V>
+    >(props: FormControlProps<V, K, D>): JSX.Element {
+        // If the parameter has a render function, use it. Otherwise
+        // look up the form control using a the configured resolver.
+        if (isReactParameter(props.param) && props.param.render) {
+            return props.param.render(props);
+        }
+
+        const resolver = this.getInjectable<FormControlResolver>(
+            BrowserDependencyName.FormControlResolver
         );
         if (!resolver) {
             throw new Error(
                 "No parameter type resolver configured for the current environment"
             );
         }
-        return resolver.getFormControl(param, opts);
+        return resolver.getFormControl(props);
     }
 
     /**

@@ -4,7 +4,7 @@ import { ArmResourceListResponse } from "../arm";
 import { StorageAccount } from "./storage-account-models";
 
 export interface StorageAccountService {
-    list(subscriptionId: string): Promise<StorageAccount[]>;
+    listBySubscriptionId(subscriptionId: string): Promise<StorageAccount[]>;
     get(id: string): Promise<StorageAccount | null>;
     create(account: StorageAccount): Promise<void>;
     remove(account: StorageAccount): Promise<void>;
@@ -15,7 +15,9 @@ export class StorageAccountServiceImpl
     extends AbstractHttpService
     implements StorageAccountService
 {
-    public async list(subscriptionId: string): Promise<StorageAccount[]> {
+    public async listBySubscriptionId(
+        subscriptionId: string
+    ): Promise<StorageAccount[]> {
         const response = await this.httpClient.get(
             `${Endpoints.arm}/subscriptions/${subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=${ApiVersion.storage.arm}`,
             {}

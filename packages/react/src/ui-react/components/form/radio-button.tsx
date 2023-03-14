@@ -1,17 +1,20 @@
+import {
+    FormValues,
+    ParameterDependencies,
+    ParameterName,
+} from "@batch/ui-common/lib/form";
+import { ChoiceGroup as FluentChoiceGroup } from "@fluentui/react/lib/ChoiceGroup";
 import * as React from "react";
-
+import { useFormParameter, useUniqueId } from "../../hooks";
 import { FormControlProps } from "./form-control";
-import { IChoiceGroupOption } from "@fluentui/react/lib/ChoiceGroup";
-import { ChoiceGroup as FluentRadioButton } from "@fluentui/react/lib/ChoiceGroup";
 
-export interface RadioButtonProps<V> extends FormControlProps<V> {
+export interface RadioButtonProps<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V> = ParameterDependencies<V>
+> extends FormControlProps<V, K, D> {
     options: RadioButtonOption[];
     defaultSelectedKey?: string;
-    selectedKey?: string;
-    onChange?: (
-        ev?: V | React.FormEvent<HTMLElement | HTMLInputElement> | undefined,
-        option?: IChoiceGroupOption | undefined
-    ) => void;
 }
 
 export interface RadioButtonOption {
@@ -19,22 +22,54 @@ export interface RadioButtonOption {
     text: string;
 }
 
-export function RadioButton<V>(props: RadioButtonProps<V>): JSX.Element {
-    if (props.hidden) {
-        return <></>;
-    }
+export function RadioButton<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V> = ParameterDependencies<V>
+>(props: RadioButtonProps<V, K, D>): JSX.Element {
+    const {
+        className,
+        defaultSelectedKey,
+        disabled,
+        onFocus,
+        onBlur,
+        onChange,
+        options,
+        param,
+        style,
+    } = props;
 
-    const properties = {
-        id: props.id,
-        className: props.className,
-        disabled: props.disabled,
-        label: props.label,
-        placeholder: props.placeholder,
-        defaultSelectedKey: props.defaultSelectedKey,
-        selectedKey: props.selectedKey,
-        options: props.options,
-        onChange: props.onChange,
-    };
+    const id = useUniqueId("form-control", props.id);
+    const { setDirty } = useFormParameter(param);
 
-    return <FluentRadioButton {...properties}></FluentRadioButton>;
+    const [hasFocused, setHasFocused] = React.useState<boolean>(false);
+
+    return (
+        <FluentChoiceGroup
+            id={id}
+            className={className}
+            style={style}
+            disabled={disabled || param.disabled}
+            placeholder={param.placeholder}
+            defaultSelectedKey={defaultSelectedKey}
+            selectedKey={param.value == null ? undefined : String(param.value)}
+            options={options}
+            onFocus={(event) => {
+                setHasFocused(true);
+                if (onFocus) {
+                    onFocus(event);
+                }
+            }}
+            onBlur={onBlur}
+            onChange={(event, option) => {
+                if (hasFocused) {
+                    setDirty(true);
+                }
+                if (onChange) {
+                    // TODO: Key probably isn't right here
+                    onChange(event as React.FormEvent, option?.key as V[K]);
+                }
+            }}
+        />
+    );
 }

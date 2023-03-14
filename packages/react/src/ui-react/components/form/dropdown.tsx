@@ -1,18 +1,32 @@
-import * as React from "react";
-import { FormControlProps } from "./form-control";
+import {
+    FormValues,
+    ParameterDependencies,
+    ParameterName,
+} from "@batch/ui-common/lib/form";
+import { delayedCallback } from "@batch/ui-common/lib/util";
 import {
     Dropdown as FluentDropdown,
     IDropdownOption as FluentDropdownOption,
 } from "@fluentui/react/lib/Dropdown";
+import * as React from "react";
+import { useFormParameter, useUniqueId } from "../../hooks";
+import { FormControlProps } from "./form-control";
 
-export interface DropdownProps<V> extends FormControlProps<V> {
-    options: DropdownOption<V>[];
-    valueToKey?: (value?: V) => string;
+export interface DropdownProps<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V> = ParameterDependencies<V>
+> extends FormControlProps<V, K, D> {
+    options: DropdownOption<V, K>[];
+    valueToKey?: (value?: V[K]) => string;
 }
 
-export interface DropdownOption<V> {
+export interface DropdownOption<
+    V extends FormValues,
+    K extends ParameterName<V>
+> {
     key?: string;
-    value: V;
+    value: V[K];
     label?: string;
 }
 
@@ -22,30 +36,65 @@ const nullKey = "<<<None>>>";
 /**
  * A simple dropdown form control supporting single selection
  */
-export function Dropdown<V>(props: DropdownProps<V>): JSX.Element {
-    if (props.hidden) {
-        return <></>;
+export function Dropdown<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V> = ParameterDependencies<V>
+>(props: DropdownProps<V, K, D>): JSX.Element {
+    const {
+        ariaLabel,
+        className,
+        disabled,
+        onFocus,
+        onBlur,
+        onChange,
+        options,
+        param,
+        style,
+        valueToKey,
+    } = props;
+
+    const id = useUniqueId("form-control", props.id);
+    const { validationError, setDirty } = useFormParameter(param);
+
+    const [hasFocused, setHasFocused] = React.useState<boolean>(false);
+
+    // Default to first option if the parameter is required
+    if (param.required && param.value == null && options.length > 0) {
+        // Do this asynchronously so that the current render finishes first
+        delayedCallback(() => {
+            param.value = options[0].value;
+        });
     }
 
-    const errorMessage =
-        props.validationStatus?.level === "error"
-            ? props.validationStatus?.message
-            : undefined;
-
-    const toKey = props.valueToKey ?? defaultValueToKey;
+    const toKey = valueToKey ?? defaultValueToKey;
     return (
         <FluentDropdown
-            id={props.id}
-            style={props.style}
-            ariaLabel={props.label ?? props.ariaLabel}
-            className={props.className}
-            disabled={props.disabled}
-            errorMessage={errorMessage}
-            selectedKey={props.value == null ? undefined : toKey(props.value)}
-            options={_transformOptions(props)}
-            onChange={(event, option, index) => {
-                if (props.onChange && index != null) {
-                    props.onChange(props.options[index].value);
+            id={id}
+            ariaLabel={ariaLabel ?? param.label}
+            className={className}
+            style={style}
+            disabled={disabled || param.disabled}
+            placeholder={param.placeholder}
+            errorMessage={validationError}
+            selectedKey={param.value == null ? undefined : toKey(param.value)}
+            options={_transformOptions(options, valueToKey)}
+            onFocus={(event) => {
+                setHasFocused(true);
+                if (onFocus) {
+                    onFocus(event);
+                }
+            }}
+            onBlur={onBlur}
+            onChange={(event, _, index) => {
+                if (hasFocused) {
+                    setDirty(true);
+                }
+                if (index != null) {
+                    param.value = options[index].value as V[K];
+                    if (onChange) {
+                        onChange(event, param.value);
+                    }
                 }
             }}
         ></FluentDropdown>
@@ -69,8 +118,10 @@ function defaultValueToKey<V>(value?: V): string {
     return stringValue;
 }
 
-function _transformOptions<V>(props: DropdownProps<V>): FluentDropdownOption[] {
-    const { options, valueToKey } = props;
+function _transformOptions<V extends FormValues, K extends ParameterName<V>>(
+    options: DropdownOption<V, K>[],
+    valueToKey?: (value?: V[K]) => string
+): FluentDropdownOption[] {
     const toKey = valueToKey ?? defaultValueToKey;
     let index = 0;
     return options.map((option) => {

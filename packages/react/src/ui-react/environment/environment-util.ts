@@ -9,22 +9,34 @@ import {
     FakeStorageAccountService,
     FakeSubscriptionService,
 } from "@batch/ui-service";
+import { FakeResourceGroupService } from "@batch/ui-service/lib/resource-group";
+import { FakeLocationService } from "@batch/ui-service/lib/location";
 import { initializeIcons } from "@fluentui/react/lib/Icons";
 import { BrowserEnvironmentConfig } from ".";
 import {
     DefaultFormLayoutProvider,
-    DefaultParameterTypeResolver,
+    DefaultFormControlResolver,
 } from "../components/form";
-import { BrowserDependencyFactories } from "./browser-environment";
+import {
+    BrowserDependencyFactories,
+    BrowserDependencyName,
+} from "./browser-dependencies";
 import { MockBrowserEnvironment } from "./mock-browser-environment";
 
 let _fluentIconsInitialized = false;
 
 export const mockBrowserDepFactories: Partial<BrowserDependencyFactories> = {
-    parameterTypeResolver: () => new DefaultParameterTypeResolver(),
-    formLayoutProvider: () => new DefaultFormLayoutProvider(),
-    storageAccount: () => new FakeStorageAccountService(),
-    subscription: () => new FakeSubscriptionService(),
+    [BrowserDependencyName.FormControlResolver]: () =>
+        new DefaultFormControlResolver(),
+    [BrowserDependencyName.FormLayoutProvider]: () =>
+        new DefaultFormLayoutProvider(),
+    [BrowserDependencyName.LocationService]: () => new FakeLocationService(),
+    [BrowserDependencyName.ResourceGroupService]: () =>
+        new FakeResourceGroupService(),
+    [BrowserDependencyName.StorageAccountService]: () =>
+        new FakeStorageAccountService(),
+    [BrowserDependencyName.SubscriptionService]: () =>
+        new FakeSubscriptionService(),
 };
 
 /**

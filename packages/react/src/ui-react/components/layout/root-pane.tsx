@@ -15,7 +15,11 @@ const themeProviderStyles: React.CSSProperties = {
 
 export const RootPane: React.FC<RootPaneProps> = (props) => {
     const theme = getTheme(props.theme ?? "default");
-    loadTheme(theme.get());
+
+    React.useEffect(() => {
+        loadTheme(theme.get());
+    }, [theme]);
+
     return (
         <ThemeProvider theme={theme.get()} style={themeProviderStyles}>
             {props.children}

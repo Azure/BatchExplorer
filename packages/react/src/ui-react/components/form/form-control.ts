@@ -1,13 +1,31 @@
-import { ValidationStatus } from "@batch/ui-common/lib/form";
+import {
+    FormValues,
+    Parameter,
+    ParameterDependencies,
+    ParameterName,
+} from "@batch/ui-common/lib/form";
+import { ReactParameter } from "../../form";
 
 /**
  * Shared properties for all form controls
  */
-export interface FormControlProps<V> {
+export interface FormControlProps<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
+    T extends ReactParameter<V, K, D> | Parameter<V, K, D> =
+        | ReactParameter<V, K, D>
+        | Parameter<V, K, D>
+> {
     /**
      * The unique HTML ID of the input element
      */
     id?: string;
+
+    /**
+     * The form parameter associated with this control
+     */
+    param: T;
 
     /**
      * The accessible label for the form control. Only needed if the accessible
@@ -21,61 +39,29 @@ export interface FormControlProps<V> {
     className?: string;
 
     /**
+     * Disable the control. Should take precedence over the parameter
+     * disabled property. This can be useful for preventing user interaction
+     * during loading regardless of the parameter's disabled state.
+     */
+    disabled?: boolean;
+
+    /**
      * CSS styles
      */
     style?: React.CSSProperties;
 
     /**
-     * If true, the form control will be greyed out and non-interactive.
+     * Callback for when the control is focused
      */
-    disabled?: boolean;
+    onFocus?: (event: React.FocusEvent) => void;
 
     /**
-     * If true, the form value has been modified by the user and validation
-     * messages should be displayed.
+     * Callback for when the control is unfocused
      */
-    dirty?: boolean;
-
-    /**
-     * If true, the form control will be visibly hidden
-     */
-    hidden?: boolean;
-
-    /**
-     * While true, the form control's value will be ignored by the form and
-     * will not react to changes.
-     */
-    inactive?: boolean;
-
-    /**
-     * The currently displayed error message
-     */
-    validationStatus?: ValidationStatus;
-
-    /**
-     * If true, will always display validation errors/warnings
-     */
-    validationForced?: boolean;
-
-    /**
-     * A user-visible label associated with the form control
-     */
-    label?: string;
+    onBlur?: (event: React.FocusEvent) => void;
 
     /**
      * Callback for when the value of the control changes
      */
-    onChange?: (value: V) => void;
-
-    /**
-     * A user-visible bit of text which is shown in place of a value when
-     * the value is undefined or null. Note that not all controls may implement
-     * a visible placeholder.
-     */
-    placeholder?: string;
-
-    /**
-     * The current value associated with this control
-     */
-    value?: V;
+    onChange?: (event: React.FormEvent, value: V[K]) => void;
 }

@@ -5,7 +5,7 @@ import { SubscriptionService } from "./subscription-service";
 export class FakeSubscriptionService implements SubscriptionService {
     fakeSet: FakeSet = new BasicFakeSet();
 
-    public useFakeSet(fakeSet: FakeSet): void {
+    public setFakes(fakeSet: FakeSet): void {
         this.fakeSet = fakeSet;
     }
 

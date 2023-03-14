@@ -1,7 +1,9 @@
+import { StringParameter } from "@batch/ui-common/lib/form";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
+import { createParam } from "../../../form";
 import { runAxe } from "../../../test-util/a11y";
 import { Dropdown } from "../dropdown";
 
@@ -11,13 +13,15 @@ describe("Dropdown form control", () => {
     test("Render simple dropdown", async () => {
         const { container } = render(
             <Dropdown
-                label="Card"
+                param={createParam(StringParameter, {
+                    label: "Card",
+                    placeholder: "Pick a card",
+                })}
                 options={[
                     { value: "ace" },
                     { value: "king" },
                     { value: "queen" },
                 ]}
-                placeholder="Pick a card"
             ></Dropdown>
         );
 

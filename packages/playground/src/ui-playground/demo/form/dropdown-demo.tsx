@@ -1,22 +1,20 @@
-import * as React from "react";
-import { DemoPane } from "../../layout/demo-pane";
-import { Toggle } from "@fluentui/react/lib/Toggle";
+import { StringParameter } from "@batch/ui-common/lib/form";
+import { createParam } from "@batch/ui-react";
 import { Dropdown } from "@batch/ui-react/lib/components/form/dropdown";
+import { Toggle } from "@fluentui/react/lib/Toggle";
+import * as React from "react";
 import { DemoComponentContainer } from "../../layout/demo-component-container";
 import { DemoControlContainer } from "../../layout/demo-control-container";
+import { DemoPane } from "../../layout/demo-pane";
 
 export const DropdownDemo: React.FC = () => {
     const [disabled, setDisabled] = React.useState(false);
-
-    const onDisabledChange = React.useCallback(
-        (ev, checked?: boolean) => setDisabled(!!checked),
-        []
-    );
 
     return (
         <DemoPane title="Dropdown">
             <DemoComponentContainer minWidth="400px">
                 <Dropdown
+                    param={createParam(StringParameter)}
                     disabled={disabled}
                     options={[
                         {
@@ -33,43 +31,7 @@ export const DropdownDemo: React.FC = () => {
                 <Toggle
                     label="Disabled"
                     inlineLabel
-                    onChange={onDisabledChange}
-                    checked={disabled}
-                />
-                <Toggle
-                    label="Disabled"
-                    inlineLabel
-                    onChange={onDisabledChange}
-                    checked={disabled}
-                />
-                <Toggle
-                    label="Disabled"
-                    inlineLabel
-                    onChange={onDisabledChange}
-                    checked={disabled}
-                />
-                <Toggle
-                    label="Disabled"
-                    inlineLabel
-                    onChange={onDisabledChange}
-                    checked={disabled}
-                />
-                <Toggle
-                    label="Disabled"
-                    inlineLabel
-                    onChange={onDisabledChange}
-                    checked={disabled}
-                />
-                <Toggle
-                    label="Disabled"
-                    inlineLabel
-                    onChange={onDisabledChange}
-                    checked={disabled}
-                />
-                <Toggle
-                    label="Disabled"
-                    inlineLabel
-                    onChange={onDisabledChange}
+                    onChange={(_, checked?: boolean) => setDisabled(!!checked)}
                     checked={disabled}
                 />
             </DemoControlContainer>

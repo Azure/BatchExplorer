@@ -1,29 +1,34 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { BooleanParameter } from "@batch/ui-common/lib/form";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
+import { createReactForm, createParam } from "../../../form";
 import { runAxe } from "../../../test-util/a11y";
 import { Checkbox } from "../checkbox";
-
-let testCount = 0;
 
 describe("Checkbox control", () => {
     beforeEach(() => initMockBrowserEnvironment());
 
     test("Render checkbox control", async () => {
+        const user = userEvent.setup();
+        let changeCount = 0;
         const { container } = render(
             <>
                 <Checkbox
-                    label="First checkbox"
-                    ariaLabel="Accessible checkbox label"
-                    checked={false}
-                    disabled={false}
-                    onChange={defaultCheckboxClicked}
+                    param={createParam(BooleanParameter, {
+                        value: false,
+                        label: "First checkbox",
+                    })}
+                    ariaLabel="First checkbox aria-label"
+                    onChange={() => changeCount++}
                 ></Checkbox>
 
                 <Checkbox
-                    label="Second checkbox"
-                    defaultChecked={true}
-                    boxSide="end"
+                    param={createParam(BooleanParameter, {
+                        value: true,
+                        label: "Second checkbox",
+                    })}
                 ></Checkbox>
             </>
         );
@@ -40,19 +45,23 @@ describe("Checkbox control", () => {
         );
 
         //Expect checkbox's onChange method to work correctly
-        expect(testCount).toBe(0);
-        fireEvent.click(screen.getAllByText(/checkbox/i)[0]);
-        expect(testCount).toBe(1);
+        expect(changeCount).toBe(0);
+        await user.click(screen.getByLabelText("First checkbox aria-label"));
+        expect(changeCount).toBe(1);
     });
 
     test("Simulate the checking of a checkbox", async () => {
-        render(<Checkbox aria-checked={false} />);
+        const user = userEvent.setup();
+        const form = createReactForm({
+            values: {
+                yesOrNo: false,
+            },
+        });
+        const yesOrNoParam = form.param("yesOrNo", BooleanParameter, {});
+        render(<Checkbox param={yesOrNoParam} />);
         const checkbox = screen.getByRole("checkbox");
-        fireEvent.click(checkbox);
+        expect(checkbox.getAttribute("aria-checked")).toEqual("false");
+        await user.click(checkbox);
         expect(checkbox.getAttribute("aria-checked")).toEqual("true");
     });
 });
-
-function defaultCheckboxClicked(): void {
-    testCount++;
-}

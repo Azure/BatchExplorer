@@ -1,4 +1,4 @@
-import { fromIso, isArray } from "@batch/ui-common";
+import { fromIso, getLogger } from "@batch/ui-common";
 import { toODataList } from "../odata";
 import { Certificate } from "./certificate-models";
 
@@ -69,7 +69,7 @@ export function parseCertificateListJson(
         jsonList = json;
     }
 
-    if (!isArray(jsonList)) {
+    if (!Array.isArray(jsonList)) {
         throw new Error("Failed to parse: string must be a JSON list");
     }
 
@@ -78,7 +78,7 @@ export function parseCertificateListJson(
         if (obj && obj instanceof Object) {
             certs.push(parseCertificateJson(obj));
         } else {
-            console.warn(
+            getLogger().warn(
                 "Skipping malformed certificate list item: " + String(obj)
             );
         }

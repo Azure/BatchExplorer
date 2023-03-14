@@ -53,7 +53,8 @@
     "workspace:test:lib": "npm run test",
     "workspace:test:lib:all": "npm run test:all",
     "workspace:test:web": "npm run test",
-    "workspace:test:web:all": "npm run test:all"
+    "workspace:test:web:all": "npm run test:all",
+    "workspace:watch:lib": "npm run watch"
   },
   "dependencies": {
     "@types/lodash": "^4.14.168",

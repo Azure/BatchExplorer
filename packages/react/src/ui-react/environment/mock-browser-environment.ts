@@ -1,14 +1,18 @@
-import { Parameter } from "@batch/ui-common";
 import { MockEnvironment } from "@batch/ui-common/lib/environment";
-import { FormValues } from "@batch/ui-common/lib/form";
-import { FormControlOptions, ParameterTypeResolver } from "../components/form";
+import {
+    FormValues,
+    ParameterDependencies,
+    ParameterName,
+} from "@batch/ui-common/lib/form";
+import { FormControlResolver, FormControlProps } from "../components/form";
 import {
     FormLayout,
     FormLayoutProvider,
     FormLayoutType,
 } from "../components/form/form-layout";
+import { isReactParameter } from "../form/react-parameter";
+import { BrowserDependencyName } from "./browser-dependencies";
 import {
-    BrowserDependencyName,
     BrowserEnvironment,
     BrowserEnvironmentConfig,
 } from "./browser-environment";
@@ -36,23 +40,28 @@ export class MockBrowserEnvironment
         }
     }
 
-    // TODO: This code shouldn't need to be duplicated from DefaultBrowserEnvironment
-    getFormControl<V extends FormValues, K extends Extract<keyof V, string>>(
-        param: Parameter<V, K>,
-        opts?: FormControlOptions
-    ): JSX.Element {
-        const resolver = this.getInjectable<ParameterTypeResolver>(
-            BrowserDependencyName.ParameterTypeResolver
+    getFormControl<
+        V extends FormValues,
+        K extends ParameterName<V>,
+        D extends ParameterDependencies<V> = ParameterDependencies<V>
+    >(props: FormControlProps<V, K, D>): JSX.Element {
+        // If the parameter has a render function, use it. Otherwise
+        // look up the form control using a the configured resolver.
+        if (isReactParameter(props.param) && props.param.render) {
+            return props.param.render(props);
+        }
+
+        const resolver = this.getInjectable<FormControlResolver>(
+            BrowserDependencyName.FormControlResolver
         );
         if (!resolver) {
             throw new Error(
                 "No parameter type resolver configured for the current environment"
             );
         }
-        return resolver.getFormControl(param, opts);
+        return resolver.getFormControl(props);
     }
 
-    // TODO: This code shouldn't need to be duplicated from DefaultBrowserEnvironment
     getFormLayout(layoutType: FormLayoutType = "list"): FormLayout {
         const provider = this.getInjectable<FormLayoutProvider>(
             BrowserDependencyName.FormLayoutProvider

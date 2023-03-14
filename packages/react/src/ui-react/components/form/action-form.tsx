@@ -1,35 +1,111 @@
 import * as React from "react";
 import { Action } from "@batch/ui-common/lib/action";
-import { FormValues } from "@batch/ui-common/lib/form";
+import { FormValues, ValidationSnapshot } from "@batch/ui-common/lib/form";
 import { FormLayoutType } from "./form-layout";
-import { FormContainer } from "./form-container";
+import { FormButton, FormContainer } from "./form-container";
+import { getLogger } from "@batch/ui-common";
 
 export interface ActionFormProps<V extends FormValues> {
     action: Action<V>;
     layout?: FormLayoutType;
+    hideSubmitButton?: boolean;
+    submitButtonLabel?: string;
+    buttons?: FormButton[];
+    onActionInitialized?: () => void;
     onFormChange?: (newValues: V, oldValues: V) => void;
+    onValidate?: (snapshot?: ValidationSnapshot<V>) => void;
+    onSuccess?: () => unknown;
+    onFailure?: (error: unknown) => unknown;
 }
 
 export const ActionForm = <V extends FormValues>(
     props: ActionFormProps<V>
 ): JSX.Element => {
-    const { action, layout, onFormChange } = props;
+    const {
+        action,
+        layout,
+        onFormChange,
+        onValidate,
+        onActionInitialized,
+        buttons,
+        hideSubmitButton,
+    } = props;
+    const [loading, setLoading] = React.useState<boolean>(true);
+    const [submitting, setSubmitting] = React.useState<boolean>(false);
 
-    const handleFormChange: (newValues: V, oldValues: V) => void =
-        React.useCallback(
-            async (oldValues, newValues) => {
-                if (onFormChange) {
-                    onFormChange(oldValues, newValues);
+    React.useEffect(() => {
+        let isMounted = true;
+        setLoading(true);
+
+        action.initialize().then(() => {
+            if (isMounted) {
+                setLoading(false);
+                if (onActionInitialized) {
+                    onActionInitialized();
+                }
+            }
+        });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [onActionInitialized, action]);
+
+    if (!action.isInitialized || loading) {
+        // TODO: Need a common loading component
+        return <></>;
+    }
+
+    let allButtons: FormButton[] = [];
+    if (hideSubmitButton !== true) {
+        // Default submit
+        allButtons.push({
+            label: props.submitButtonLabel ?? "Save",
+            primary: true,
+            submitForm: true,
+            disabled: submitting === true,
+            onClick: async () => {
+                setSubmitting(true);
+                try {
+                    const { success, error } = await action.execute(
+                        action.form.values
+                    );
+
+                    if (success) {
+                        if (props.onSuccess) {
+                            props.onSuccess();
+                        }
+                    }
+
+                    if (error) {
+                        if (props.onFailure) {
+                            props.onFailure(error);
+                        } else {
+                            getLogger().error(
+                                "Error executing action: " +
+                                    (error instanceof Error
+                                        ? error.message
+                                        : String(error))
+                            );
+                        }
+                    }
+                } finally {
+                    setSubmitting(false);
                 }
             },
-            [onFormChange]
-        );
+        });
+    }
+    if (buttons) {
+        allButtons = allButtons.concat(buttons);
+    }
 
     return (
         <FormContainer
             form={action.form}
             layout={layout}
-            onFormChange={handleFormChange}
+            onFormChange={onFormChange}
+            onValidate={onValidate}
+            buttons={allButtons}
         />
     );
 };

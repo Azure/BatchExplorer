@@ -16,6 +16,7 @@ describe("Create account action", () => {
             resourceGroupId: "testrg",
             location: "fakeregion",
         });
+        await action.initialize();
 
         const form = action.form;
         expect(form.values.accountName).toEqual("one");
@@ -54,7 +55,13 @@ describe("Create account action", () => {
             location: "fakeregion",
         });
 
+        expect(action.isInitialized).toBe(false);
+
         render(<ActionForm action={action} />);
+
+        // ActionForm handles initialization
+        await act(() => action.waitForInitialization());
+        expect(action.isInitialized).toBe(true);
 
         const accountNameInput: HTMLInputElement = await screen.findByLabelText(
             "Account name",
@@ -75,16 +82,11 @@ describe("Create account action", () => {
         // Validation error won't be displayed until user interaction
         expect(accountNameInput.getAttribute("aria-invalid")).toEqual("false");
 
-        // No user interaction yet, so parameter hasn't been marked dirty
-        expect(action.form.getParam("accountName").dirty).toBeUndefined();
-
         await user.click(accountNameInput);
         await user.keyboard("two");
 
-        // Now the parameter is dirty, and the control's validation error will
+        // Now the form control is dirty, the control's validation error will
         // be displayed
-        expect(action.form.getParam("accountName").dirty).toBe(true);
-
         waitFor(() => {
             expect(accountNameInput.getAttribute("aria-invalid")).toEqual(
                 "true"

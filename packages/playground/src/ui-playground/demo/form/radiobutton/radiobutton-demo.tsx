@@ -1,23 +1,22 @@
 import * as React from "react";
 import { RadioButton } from "@batch/ui-react/lib/components/form/radio-button";
 import { TextField } from "@batch/ui-react/lib/components/form/text-field";
-import { Stack } from "@fluentui/react/lib/Stack";
-import { newTextfieldOnChange } from "../../../new-functions";
-//Rewritten version of checkbox-demo.tsx using shared libraries wrapped control instead of Fluent UI control directly
+import { createParam } from "@batch/ui-react";
+import { StringParameter } from "@batch/ui-common/lib/form";
+import { DemoPane } from "../../../layout/demo-pane";
+import { DemoComponentContainer } from "../../../layout/demo-component-container";
+import { DemoControlContainer } from "../../../layout/demo-control-container";
 
 export const RadioButtonDemo: React.FC = () => {
-    const stackTokens = { childrenGap: 15 };
-    const [labelValue, setLabelValue] = React.useState("Label");
-
-    /* const _onChange = React.useCallback((newValue?: string) => {
-        setLabelValue(newValue ?? "");
-    }, []); */
+    const [labelValue, setLabelValue] = React.useState<string>("Label");
 
     return (
-        <>
-            <Stack tokens={stackTokens}>
+        <DemoPane title="RadioButton">
+            <DemoComponentContainer>
                 <RadioButton
-                    label={labelValue}
+                    param={createParam(StringParameter, {
+                        label: labelValue,
+                    })}
                     options={[
                         { key: "A", text: "Option A" },
                         { key: "B", text: "Option B" },
@@ -25,13 +24,19 @@ export const RadioButtonDemo: React.FC = () => {
                     ]}
                     defaultSelectedKey="B"
                 ></RadioButton>
+            </DemoComponentContainer>
 
+            <DemoControlContainer>
                 <TextField
-                    label="Radio Button Label"
-                    value={labelValue}
-                    onChange={newTextfieldOnChange(setLabelValue)}
+                    param={createParam(StringParameter, {
+                        label: "Radio Button Label",
+                        value: labelValue,
+                    })}
+                    onChange={(_, value) => {
+                        setLabelValue(value == null ? "" : String(value));
+                    }}
                 ></TextField>
-            </Stack>
-        </>
+            </DemoControlContainer>
+        </DemoPane>
     );
 };

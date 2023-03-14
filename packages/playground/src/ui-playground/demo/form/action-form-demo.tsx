@@ -1,16 +1,24 @@
-import * as React from "react";
-import { DemoPane } from "../../layout/demo-pane";
-import { DemoComponentContainer } from "../../layout/demo-component-container";
-import { DemoControlContainer } from "../../layout/demo-control-container";
+import { getEnvironment } from "@batch/ui-common";
+import { AbstractAction, Action } from "@batch/ui-common/lib/action";
+import {
+    Form,
+    StringParameter,
+    ValidationStatus,
+} from "@batch/ui-common/lib/form";
+import {
+    createParam,
+    createReactForm,
+    SubscriptionParameter,
+} from "@batch/ui-react";
 import { CreateAccountAction } from "@batch/ui-react/lib/account/create-account-action";
-import { createForm, Form, getEnvironment } from "@batch/ui-common";
-import { ParameterType } from "@batch/ui-react/lib/components/form/parameter-type";
-import { ActionForm } from "@batch/ui-react/lib/components/form";
 import { MonacoEditor } from "@batch/ui-react/lib/components";
 import { EditorController } from "@batch/ui-react/lib/components/editor";
+import { ActionForm } from "@batch/ui-react/lib/components/form";
 import { Dropdown } from "@batch/ui-react/lib/components/form/dropdown";
-import { AbstractAction, Action } from "@batch/ui-common/lib/action";
-import { FormValues, ValidationStatus } from "@batch/ui-common/lib/form";
+import * as React from "react";
+import { DemoComponentContainer } from "../../layout/demo-component-container";
+import { DemoControlContainer } from "../../layout/demo-control-container";
+import { DemoPane } from "../../layout/demo-pane";
 
 type CarFormValues = {
     subscriptionId?: string;
@@ -21,33 +29,81 @@ type CarFormValues = {
 };
 
 class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
+    async onInitialize(): Promise<CarFormValues> {
+        return {
+            milesPerChange: 300,
+        };
+    }
+
     buildForm(initialValues: CarFormValues): Form<CarFormValues> {
-        const form = createForm<CarFormValues>({
+        const form = createReactForm<CarFormValues>({
             title: "Example Form",
             values: initialValues,
         });
 
-        form.param("subscriptionId", ParameterType.SubscriptionId, {
+        form.param("subscriptionId", SubscriptionParameter, {
             label: "Subscription",
-            value: "/fake/sub2",
         });
 
         const carSection = form.section("Car Info", {
             description: "Information about the car's make, model, etc.",
         });
 
-        carSection.param("make", ParameterType.String, {
+        carSection.param("make", StringParameter, {
             label: "Make",
             description: "The brand of the vehicle",
+            onValidateSync: (value) => {
+                if (value === "foo") {
+                    return new ValidationStatus(
+                        "error",
+                        "Make 'foo' isn't allowed"
+                    );
+                }
+                return new ValidationStatus("ok");
+            },
         });
 
-        carSection.param("model", ParameterType.String, {
+        carSection.param("model", StringParameter, {
             label: "Model",
-            value: "Model Y",
+            dynamic: {
+                hidden: (values) => (values.make ?? "") === "",
+            },
         });
 
-        carSection.param("description", ParameterType.String, {
+        carSection.param("description", StringParameter, {
             label: "Description",
+            dynamic: {
+                disabled: (values) => {
+                    return (
+                        (values.make ?? "") === "" ||
+                        (values.model ?? "") === ""
+                    );
+                },
+                placeholder: (values) => {
+                    if (values.make && values.model) {
+                        return `A brief description of your ${values.make} ${values.model}`;
+                    } else {
+                        return "Please enter a make and a model";
+                    }
+                },
+            },
+        });
+
+        form.item("summary", {
+            dynamic: {
+                hidden: (values) => values.make == null || values.model == null,
+            },
+            render: (props) => {
+                const { values } = props;
+                return (
+                    <>
+                        <h2>Summary:</h2>
+                        <span>
+                            Your car is a {values.make} {values.model}
+                        </span>
+                    </>
+                );
+            },
         });
 
         return form;
@@ -68,19 +124,16 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
     }
 }
 
-const actions: { [name: string]: Action<FormValues> } = {
-    createAccount: new CreateAccountAction({}),
-    createOrUpdateCar: new CreateOrUpdateCarAction({
-        make: "Tesla",
-        model: "Model 3",
-        milesPerChange: 300,
-    }),
+const actions: { [name: string]: () => Action } = {
+    createAccount: () => new CreateAccountAction({}),
+    createOrUpdateCar: () => new CreateOrUpdateCarAction(),
 };
 
 export const ActionFormDemo: React.FC = () => {
     const controllerRef = React.useRef<EditorController>();
 
-    const [action, setAction] = React.useState("createAccount");
+    const [actionName, setActionName] = React.useState("createAccount");
+    const [action, setAction] = React.useState(actions[actionName]());
     const [editorError, setEditorError] = React.useState<string>("");
 
     const formChangeHandler = React.useCallback(
@@ -100,13 +153,11 @@ export const ActionFormDemo: React.FC = () => {
         (textContent: string) => {
             try {
                 if (
-                    JSON.stringify(
-                        actions[action].form.values,
-                        undefined,
-                        4
-                    ) !== textContent
+                    action.isInitialized &&
+                    JSON.stringify(action.form.values, undefined, 4) !==
+                        textContent
                 ) {
-                    actions[action].form.setValues(JSON.parse(textContent));
+                    action.form.setValues(JSON.parse(textContent));
                 }
                 setEditorError("");
             } catch (e) {
@@ -119,17 +170,16 @@ export const ActionFormDemo: React.FC = () => {
     return (
         <DemoPane title="ActionForm">
             <DemoComponentContainer>
-                <ActionForm
-                    action={actions[action]}
-                    onFormChange={formChangeHandler}
-                />
+                <ActionForm action={action} onFormChange={formChangeHandler} />
             </DemoComponentContainer>
 
             <DemoControlContainer>
                 <Dropdown
+                    param={createParam(StringParameter, {
+                        label: "Action",
+                        value: actionName,
+                    })}
                     style={{ minWidth: "160px" }}
-                    label="Action"
-                    value={action}
                     options={[
                         {
                             label: "Create or Update Car",
@@ -137,8 +187,10 @@ export const ActionFormDemo: React.FC = () => {
                         },
                         { label: "Create Account", value: "createAccount" },
                     ]}
-                    onChange={(value) => {
-                        setAction(value);
+                    onChange={(_, value) => {
+                        const name = value ?? "";
+                        setActionName(name);
+                        setAction(actions[name]());
                     }}
                 />
             </DemoControlContainer>
@@ -155,11 +207,11 @@ export const ActionFormDemo: React.FC = () => {
             >
                 <MonacoEditor
                     controllerRef={controllerRef}
-                    value={JSON.stringify(
-                        actions[action].form.values,
-                        undefined,
-                        4
-                    )}
+                    value={
+                        action.isInitialized
+                            ? JSON.stringify(action.form.values, undefined, 4)
+                            : "Initializing action..."
+                    }
                     onChange={editorChangeHandler}
                     onChangeDelay={20}
                     language="json"

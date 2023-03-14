@@ -62,7 +62,16 @@ export class MockHttpClient extends AbstractHttpClient {
             return response;
         }
 
-        throw new MockHttpResponseError(`Unexpected mock request: ${key}`);
+        const expectedKeys = Object.keys(this._expectedResponses);
+        let expectedMessage: string;
+        if (expectedKeys.length > 0) {
+            expectedMessage = `Expected one of:\n${expectedKeys.join("\n")}`;
+        } else {
+            expectedMessage = "There are no more expected requests.";
+        }
+        throw new MockHttpResponseError(
+            `Unexpected mock request: ${key}. ${expectedMessage}`
+        );
     }
 
     /**
