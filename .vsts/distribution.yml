@@ -89,6 +89,7 @@ stages:
           - template: ./win/distribution.yml
 
       - job: ViewContents
+        dependsOn: CopyResjson
         pool:
           name: Azure-Pipelines-EO-Batch-Explorer
         steps:
