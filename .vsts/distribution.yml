@@ -33,31 +33,31 @@ stages:
               artifact: drop
 
       - job: CopyResjson
-          dependsOn: DownloadArtifacts
-          pool:
-            name: Azure-Pipelines-EO-Batch-Explorer
-          variables:
-            destPath: '$(Build.SourcesDirectory)'
-          steps:
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                $resjsonFiles = Get-ChildItem $(Build.ArtifactStagingDirectory)/loc -Filter 'resources.resjson' -Recurse
-                foreach ($file in $resjsonFiles) {
-                  $packageName = $file.Directory.Parent.Name
-                  $languageCode = $file.Directory.Name
-                  $i18nDir = "$(packageName)/build/i18n"
-                  if ($packageName -eq 'desktop') {
-                    $i18nDir = 'desktop/build/i18n'
-                  }
-                  $destPath = "$(Build.SourcesDirectory)/$i18nDir"
-                  $destPath = $destPath -replace '/i18n$', ''
-                  $destPath = $destPath -replace '/resources.resjson$', "/resources.$languageCode.resjson"
-                  New-Item -ItemType Directory -Path $destPath -Force | Out-Null
-                  Copy-Item -Path $file.FullName -Destination $destPath -Force
+        dependsOn: DownloadArtifacts
+        pool:
+          name: Azure-Pipelines-EO-Batch-Explorer
+        variables:
+          destPath: '$(Build.SourcesDirectory)'
+        steps:
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
+            script: |
+              $resjsonFiles = Get-ChildItem $(Build.ArtifactStagingDirectory)/loc -Filter 'resources.resjson' -Recurse
+              foreach ($file in $resjsonFiles) {
+                $packageName = $file.Directory.Parent.Name
+                $languageCode = $file.Directory.Name
+                $i18nDir = "$(packageName)/build/i18n"
+                if ($packageName -eq 'desktop') {
+                  $i18nDir = 'desktop/build/i18n'
                 }
-            displayName: 'Copy resjson files to build directory'
+                $destPath = "$(Build.SourcesDirectory)/$i18nDir"
+                $destPath = $destPath -replace '/i18n$', ''
+                $destPath = $destPath -replace '/resources.resjson$', "/resources.$languageCode.resjson"
+                New-Item -ItemType Directory -Path $destPath -Force | Out-Null
+                Copy-Item -Path $file.FullName -Destination $destPath -Force
+              }
+          displayName: 'Copy resjson files to build directory'
 
       - job: Linux
         dependsOn: CopyResjson
