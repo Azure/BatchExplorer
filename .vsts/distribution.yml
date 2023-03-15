@@ -87,19 +87,3 @@ stages:
           - ImageOverride -equals BatchExplorerBuildImage-Windows
         steps:
           - template: ./win/distribution.yml
-
-      - job: ViewContents
-        dependsOn: CopyResjson
-        pool:
-          name: Azure-Pipelines-EO-Batch-Explorer
-        steps:
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: 'Get-ChildItem $(Build.SourcesDirectory) -Recurse'
-            displayName: 'View contents of SourceDirectory'
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: 'Get-ChildItem $(Build.SourcesDirectory)/desktop/build/i18n -Recurse'
-            displayName: 'View contents of i18n directory'
