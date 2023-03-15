@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, isDevMode, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { I18nService, Locale, LocaleService, TranslatedLocales } from "@batch-flask/core";
 import {
@@ -16,7 +16,6 @@ import { OS, log } from "@batch-flask/utils";
 import {
     AuthService, BatchExplorerService,
 } from "app/services";
-import { Constants as ClientConstants } from "client/client-constants";
 import { Constants } from "common";
 import * as path from "path";
 import { Subject } from "rxjs";
@@ -116,9 +115,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
             new ContextMenuItem({ label: this.i18n.t("profile-button.logout"), click: () => this._logout() }),
         ];
 
-        if (ClientConstants.isDev) {
-            // const itemsCopy = items;
-            // items.forEach(menuItem => itemsCopy.push(menuItem));
+        if (isDevMode()) {
             const devMenuItem = new MultiContextMenuItem({
                 label: "Developer",
                 subitems: [
