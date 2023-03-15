@@ -44,7 +44,7 @@ stages:
           inputs:
             targetType: 'inline'
             script: |
-              $resjsonFiles = Get-ChildItem $(Build.ArtifactStagingDirectory)/loc -Filter 'resources.resjson' -Recurse
+              $resjsonFiles = Get-ChildItem $(Build.ArtifactStagingDirectory)/drop/loc -Filter 'resources.resjson' -Recurse
               foreach ($file in $resjsonFiles) {
                 $packageName = $file.Directory.Parent.Name
                 $languageCode = $file.Directory.Name
