@@ -38,6 +38,7 @@ stages:
           name: Azure-Pipelines-EO-Batch-Explorer
         variables:
           destPath: '$(Build.SourcesDirectory)'
+          resjsonOutputDir: '$(Build.ArtifactStagingDirectory)/resjson'
         steps:
         - task: PowerShell@2
           inputs:
@@ -56,8 +57,21 @@ stages:
                 $destPath = $destPath -replace '/resources.resjson$', "/resources.$languageCode.resjson"
                 New-Item -ItemType Directory -Path $destPath -Force | Out-Null
                 Copy-Item -Path $file.FullName -Destination $destPath -Force
+
+                $resjsonOutputPath = "$(resjsonOutputDir)/$i18nDir"
+                $resjsonOutputPath = $resjsonOutputPath -replace '/i18n$', ''
+                $resjsonOutputPath = $resjsonOutputPath -replace '/resources.resjson$', "/resources.$languageCode.resjson"
+                New-Item -ItemType Directory -Path $resjsonOutputPath -Force | Out-Null
+                Copy-Item -Path $file.FullName -Destination $resjsonOutputPath -Force
               }
           displayName: 'Copy resjson files to build directory'
+
+        # Publish resjson files as build artifacts
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: '$(resjsonOutputDir)'
+            ArtifactName: 'resjson'
+            publishLocation: 'Container'
 
       - job: Linux
         dependsOn: CopyResjson
