@@ -66,6 +66,14 @@ stages:
               }
           displayName: 'Copy resjson files to build directory'
 
+        # Create the resjson output directory before publishing artifacts
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
+            script: |
+              New-Item -ItemType Directory -Path $(resjsonOutputDir) -Force
+          displayName: 'Create resjson output directory'
+
         # Publish resjson files as build artifacts
         - task: PublishBuildArtifacts@1
           inputs:
