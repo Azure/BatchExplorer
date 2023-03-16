@@ -38,22 +38,12 @@ stages:
           name: Azure-Pipelines-EO-Batch-Explorer
         variables:
           destPath: '$(Build.SourcesDirectory)'
-          resjsonOutputDir: '$(Build.ArtifactStagingDirectory)/resjson'
         steps:
-        - task: DownloadPipelineArtifact@2
-          inputs:
-            artifact: 'drop'
-            targetPath: '$(Pipeline.Workspace)'
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
             script: |
-              $locFolderPath = "$(Pipeline.Workspace)\drop\loc"
-              Write-Host "Listing contents of $(Pipeline.Workspace):"
-              Get-ChildItem "$(Pipeline.Workspace)" -Recurse
-
-              Write-Host "Looking for loc folder in $locFolderPath"
-              $resjsonFiles = Get-ChildItem $locFolderPath -Filter 'resources.resjson' -Recurse
+              $resjsonFiles = Get-ChildItem $(Build.ArtifactStagingDirectory)/loc -Filter 'resources.resjson' -Recurse
               foreach ($file in $resjsonFiles) {
                 $packageName = $file.Directory.Parent.Name
                 $languageCode = $file.Directory.Name
@@ -66,29 +56,8 @@ stages:
                 $destPath = $destPath -replace '/resources.resjson$', "/resources.$languageCode.resjson"
                 New-Item -ItemType Directory -Path $destPath -Force | Out-Null
                 Copy-Item -Path $file.FullName -Destination $destPath -Force
-
-                $resjsonOutputPath = "$(resjsonOutputDir)/$i18nDir"
-                $resjsonOutputPath = $resjsonOutputPath -replace '/i18n$', ''
-                $resjsonOutputPath = $resjsonOutputPath -replace '/resources.resjson$', "/resources.$languageCode.resjson"
-                New-Item -ItemType Directory -Path $resjsonOutputPath -Force | Out-Null
-                Copy-Item -Path $file.FullName -Destination $resjsonOutputPath -Force
               }
           displayName: 'Copy resjson files to build directory'
-
-        # Create the resjson output directory before publishing artifacts
-        - task: PowerShell@2
-          inputs:
-            targetType: 'inline'
-            script: |
-              New-Item -ItemType Directory -Path $(resjsonOutputDir) -Force
-          displayName: 'Create resjson output directory'
-
-        # Publish resjson files as build artifacts
-        - task: PublishBuildArtifacts@1
-          inputs:
-            PathtoPublish: '$(resjsonOutputDir)'
-            ArtifactName: 'resjson'
-            publishLocation: 'Container'
 
       - job: Linux
         dependsOn: CopyResjson
