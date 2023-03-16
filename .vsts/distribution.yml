@@ -40,11 +40,15 @@ stages:
           destPath: '$(Build.SourcesDirectory)'
           resjsonOutputDir: '$(Build.ArtifactStagingDirectory)/resjson'
         steps:
+        - task: DownloadPipelineArtifact@2
+          inputs:
+            artifact: 'drop'
+            targetPath: '$(Pipeline.Workspace)'
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
             script: |
-              $locFolderPath = "$(Pipeline.Workspace)/drop/loc"
+              $locFolderPath = "$(Pipeline.Workspace)\drop\loc"
               Write-Host "Listing contents of $(Pipeline.Workspace):"
               Get-ChildItem "$(Pipeline.Workspace)" -Recurse
 
