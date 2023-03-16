@@ -44,10 +44,11 @@ stages:
           inputs:
             targetType: 'inline'
             script: |
-              Write-Host "Listing contents of $(Build.ArtifactStagingDirectory):"
-              Get-ChildItem "$(Build.ArtifactStagingDirectory)" -Recurse
+              $locFolderPath = "$(Pipeline.Workspace)/drop/loc"
+              Write-Host "Listing contents of $(Pipeline.Workspace):"
+              Get-ChildItem "$(Pipeline.Workspace)" -Recurse
 
-              $locFolderPath = Join-Path "$(Build.ArtifactStagingDirectory)" "drop/loc"
+              Write-Host "Looking for loc folder in $locFolderPath"
               $resjsonFiles = Get-ChildItem $locFolderPath -Filter 'resources.resjson' -Recurse
               foreach ($file in $resjsonFiles) {
                 $packageName = $file.Directory.Parent.Name
