@@ -47,7 +47,8 @@ stages:
               Write-Host "Listing contents of $(Build.ArtifactStagingDirectory):"
               Get-ChildItem "$(Build.ArtifactStagingDirectory)" -Recurse
 
-              $resjsonFiles = Get-ChildItem "$(Build.ArtifactStagingDirectory)/loc" -Filter 'resources.resjson' -Recurse
+              $locFolderPath = Join-Path "$(Build.ArtifactStagingDirectory)" "drop/loc"
+              $resjsonFiles = Get-ChildItem $locFolderPath -Filter 'resources.resjson' -Recurse
               foreach ($file in $resjsonFiles) {
                 $packageName = $file.Directory.Parent.Name
                 $languageCode = $file.Directory.Name
