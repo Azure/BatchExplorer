@@ -60,6 +60,7 @@
     "gather-build-results": "bux gather-build-results",
     "launch": "npm run -s launch:web",
     "launch:desktop": "lerna run --parallel workspace:launch:desktop --stream",
+    "launch:dev-electron": "cd desktop && npm run dev-electron",
     "launch:web": "lerna run --parallel workspace:launch:web --stream",
     "lint": "prettier -c . && lerna run --parallel workspace:lint --stream && npm run -s lint:markdown",
     "lint:fix": "prettier -w . && lerna run --parallel workspace:lint:fix --stream && npm run -s lint:markdown",
