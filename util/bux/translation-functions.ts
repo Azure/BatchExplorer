@@ -1,6 +1,4 @@
-// generate.ts
-// eslint-disable no-console
-//import "../../src/client/init";
+/* eslint-disable no-console */
 
 import * as fs from "fs";
 import { promisify } from "util";
@@ -10,6 +8,7 @@ import * as util from "util";
 import * as path from "path";
 
 type StringMap<V> = { [key: string]: V };
+type NestedStringMap<V> = StringMap<V> | StringMap<StringMap<V>>;
 
 const writeFile = promisify(fs.writeFile);
 
@@ -114,31 +113,34 @@ export class DevTranslationsLoader {
     ) {
         const content = await readFile(path);
         this._mergeTranslations(
-            this._flatten(jsyaml.load(content.toString())),
+            this._flatten(
+                jsyaml.load(content.toString()) as NestedStringMap<string>
+            ),
             path,
             duplicateCallback
         );
     }
 
-    private _flatten(translations: unknown): StringMap<string> {
-        const output: StringMap<any> = {};
+    private _flatten(translations: NestedStringMap<string>): StringMap<string> {
+        const output: StringMap<string> = {};
 
         function step(
-            object: any,
+            object: NestedStringMap<string>,
             prev: string | null = null,
             currentDepth: number = 0
         ) {
             currentDepth = currentDepth || 1;
             for (const key of Object.keys(object)) {
-                const value = object[key];
-                const isString = typeof value === "string";
-
                 const newKey = prev ? prev + "." + key : key;
-
-                if (!isString && Object.keys(value).length) {
-                    output[newKey] = step(value, newKey, currentDepth + 1);
-                } else {
+                const value = object[key];
+                if (typeof value === "string") {
                     output[newKey] = value;
+                } else if (value instanceof Object) {
+                    if (Object.keys(value).length > 0) {
+                        step(value, newKey, currentDepth + 1);
+                    }
+                } else {
+                    throw new Error(`Invalid translation value for ${newKey}`);
                 }
             }
         }
@@ -149,7 +151,7 @@ export class DevTranslationsLoader {
     }
 
     private _mergeTranslations(
-        translations: StringMap<any>,
+        translations: StringMap<string>,
         source: string,
         duplicateCallback: DuplicateCallback
     ) {
