@@ -26,6 +26,9 @@
     "prepack": "npm run build:clean",
     "test": "jest",
     "test:watch": "npm test -- --watch",
+    "workspace:clean": "npm run clean",
+    "workspace:lint": "npm run lint",
+    "workspace:lint:fix": "npm run lint:fix",
     "workspace:test:all": "npm run build:clean && npm test"
   },
   "dependencies": {
