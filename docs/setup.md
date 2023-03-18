@@ -2,7 +2,30 @@
 
 The following are instructions for building and running Batch Explorer in a development environment.
 
-1. Install dependencies:
+1. Check prerequisites
+
+    Make sure the following are installed:
+
+    - Node.js 16 or higher
+    - Python 3.6 or higher
+
+    **On Windows:**
+
+    Make sure Node.js is [configured to use the Visual Studio Build Tools](https://github.com/nodejs/node-gyp#on-windows).
+
+    Next, ensure that long path support is enabled in the registry by running the following command:
+
+    ```shell
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+    ```
+
+    Also enable Git's long path support:
+
+    ```shell
+    git config --global core.longpaths true
+    ```
+
+2. Install dependencies:
 
     ```shell
     npm install
@@ -10,13 +33,13 @@ The following are instructions for building and running Batch Explorer in a deve
     pip install -r python/requirements.txt
     ```
 
-2. Build the repository:
+3. Build the repository:
 
     ```shell
     npm run build
     ```
 
-## Running Batch Explorer Desktop Application
+## Run Batch Explorer in dev mode
 
 ```shell
 npm run launch:desktop # Open the dev server, Electron app and all packages in watch mode
@@ -32,11 +55,11 @@ Please also take a look at the [coding guidelines](coding-guidelines.md) for thi
 
 If you're using VSCode (recommended) we suggest you use the following extensions:
 
-* EditorConfig
-* ESLint
-* Prettier
-* Markdownlint
-* Stylelint
+- EditorConfig
+- ESLint
+- Prettier
+- Markdownlint
+- Stylelint
 
 ## Other useful commands
 
