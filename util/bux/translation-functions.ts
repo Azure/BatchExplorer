@@ -3,6 +3,7 @@
 //import "../../src/client/init";
 
 import * as fs from "fs";
+import { EOL } from "os";
 import { promisify } from "util";
 import { glob as globF } from "glob";
 import * as jsyaml from "js-yaml";
@@ -20,7 +21,7 @@ export async function createEnglishTranslations(
     packageName?: string
 ) {
     const translations = await loadDevTranslations(sourcePath, packageName);
-    const content = JSON.stringify(translations, null, 2);
+    const content = JSON.stringify(translations, null, 2).replace(/\n/g, EOL);
 
     const jsonPath = path.join(destJSONPath, "resources.json");
     await writeFile(jsonPath, content);
