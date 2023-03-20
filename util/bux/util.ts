@@ -33,6 +33,7 @@ export const error = (...args: string[]) => console.error(color.red(...args));
 
 export function readJsonOrDefault(filename: string, defaultJson = {}) {
     if (fs.existsSync(filename)) {
+        // eslint-disable-next-line security/detect-non-literal-require
         return require(filename);
     }
     return defaultJson;
@@ -253,7 +254,7 @@ function printInfo(name: string, repoPath?: string): void {
 }
 
 async function printLinkStatus(): Promise<void> {
-    let linkChecks: boolean[] = [];
+    const linkChecks: boolean[] = [];
     await runLinkageTask((opts: LinkOptions) => {
         let isLinked = false;
 

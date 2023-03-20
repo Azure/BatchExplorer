@@ -86,6 +86,7 @@
     ],
     "security/detect-object-injection": "off",
     "security/detect-unsafe-regex": "off",
+    "security/detect-non-literal-fs-filename": "off",
     "semi": ["error", "always"]
   }
 }

@@ -4,6 +4,15 @@ import { createEnglishTranslations } from "../translation-functions";
 import * as fs from "fs";
 
 describe("CLI", () => {
+    beforeEach(() => {
+        // Suppress expected console warnings
+        jest.spyOn(console, "warn").mockImplementation(() => {
+            // no-op
+        });
+    });
+
+    afterEach(() => jest.resetAllMocks());
+
     /* At present, Jest won't allow us to mock methods for reading and writing
      * JSON files because support of ES modules is lacking.
      */
@@ -75,18 +84,16 @@ describe("CLI", () => {
     // Localization method should throw error due to duplicate keys
     // in files in the source directory
     test("Localization method should throw error", async () => {
-        const throwThis = createEnglishTranslations(
-            "./__tests__/loc-source-2",
-            "./build/test-results/loc-results-3",
-            "./build/test-results/loc-results-3"
-        );
-
-        await expect(throwThis).rejects.toThrow(Error);
+        await expect(
+            createEnglishTranslations(
+                "./__tests__/loc-source-2",
+                "./build/test-results/loc-results-3",
+                "./build/test-results/loc-results-3"
+            )
+        ).rejects.toThrow(Error);
 
         // expect destination directory to be empty due to error
-        fs.readdir("./build/test-results/loc-results-3", (err, files) => {
-            expect(err).toBeFalsy();
-            expect(files.length).toBe(0);
-        });
+        const files = fs.readdirSync("./build/test-results/loc-results-3");
+        expect(files.length).toBe(0);
     });
 });

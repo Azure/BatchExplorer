@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const shelljs = require("shelljs");
 const color = require("cli-color");
 
