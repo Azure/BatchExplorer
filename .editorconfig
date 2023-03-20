@@ -9,3 +9,6 @@ trim_trailing_whitespace = true
 
 [*.{yml,json,bicep}]
 indent_size = 2
+
+[package*.json]
+end_of_line = lf
