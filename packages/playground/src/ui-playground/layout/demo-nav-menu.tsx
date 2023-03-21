@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Nav, INavStyles, INavLinkGroup } from "@fluentui/react/lib/Nav";
+import { getDemoHash } from "../demo-routes";
 
 export const DemoNavMenu: React.FC = () => {
     const navStyles: Partial<INavStyles> = {
@@ -15,42 +16,42 @@ export const DemoNavMenu: React.FC = () => {
                 {
                     key: "ActionForm",
                     name: "ActionForm",
-                    url: "#/playground/actionform",
+                    url: getDemoHash("actionform"),
                 },
                 {
                     key: "Button",
                     name: "Button",
-                    url: "#/playground/button",
+                    url: getDemoHash("button"),
                 },
                 {
                     key: "Checkbox",
                     name: "Checkbox",
-                    url: "#/playground/checkbox",
+                    url: getDemoHash("checkbox"),
                 },
                 {
                     key: "RadioButton",
                     name: "Radio Button",
-                    url: "#/playground/radiobutton",
+                    url: getDemoHash("radiobutton"),
                 },
                 {
                     key: "ComboBox",
                     name: "ComboBox",
-                    url: "#/playground/combobox",
+                    url: getDemoHash("combobox"),
                 },
                 {
                     key: "Dropdown",
                     name: "Dropdown",
-                    url: "#/playground/dropdown",
+                    url: getDemoHash("dropdown"),
                 },
                 {
                     key: "SearchBox",
                     name: "SearchBox",
-                    url: "#/playground/searchbox",
+                    url: getDemoHash("searchbox"),
                 },
                 {
                     key: "TextField",
                     name: "TextField",
-                    url: "#/playground/textfield",
+                    url: getDemoHash("textfield"),
                 },
             ],
         },
@@ -62,7 +63,7 @@ export const DemoNavMenu: React.FC = () => {
                 {
                     key: "CertificateDisplay",
                     name: "Certificate Display",
-                    url: "#/playground/displays/certificate",
+                    url: getDemoHash("certificatedisplay"),
                 },
             ],
         },

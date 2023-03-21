@@ -23,14 +23,12 @@
     "monaco-editor": "^0.25.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-router-dom": "^5.2.0",
     "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@octokit/core": "^3.5.1",
     "@types/react": "16.9.35",
     "@types/react-dom": "16.9.8",
-    "@types/react-router-dom": "^5.1.7",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
     "cross-env": "^7.0.3",

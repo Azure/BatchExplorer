@@ -1,7 +1,7 @@
 import * as React from "react";
-import { HashRouter as Router } from "react-router-dom";
 import { DemoNavMenu } from "./layout/demo-nav-menu";
 import { DemoMainContent } from "./layout/demo-main-content";
+import { DemoName, getDemoFromUrl } from "./demo-routes";
 
 export interface PlaygroundExampleProps {
     /**
@@ -14,6 +14,24 @@ export interface PlaygroundExampleProps {
  * Playground
  */
 export const PlaygroundExample: React.FC<PlaygroundExampleProps> = () => {
+    const [demoName, setDemoName] = React.useState<DemoName | undefined>(
+        getDemoFromUrl()
+    );
+
+    // Listen to hash changes and update the currently selected demo
+    React.useEffect(() => {
+        const onHashChange = () => {
+            const d = getDemoFromUrl();
+            setDemoName(d);
+        };
+
+        addEventListener("hashchange", onHashChange);
+
+        return () => {
+            removeEventListener("hashchange", onHashChange);
+        };
+    }, []);
+
     return (
         <div>
             <h1
@@ -35,14 +53,12 @@ export const PlaygroundExample: React.FC<PlaygroundExampleProps> = () => {
                 }}
             ></div>
 
-            <Router>
-                <div style={{ display: "flex" }}>
-                    <div>
-                        <DemoNavMenu />
-                    </div>
-                    <DemoMainContent />
+            <div style={{ display: "flex" }}>
+                <div>
+                    <DemoNavMenu />
                 </div>
-            </Router>
+                <DemoMainContent demoName={demoName} />
+            </div>
         </div>
     );
 };
