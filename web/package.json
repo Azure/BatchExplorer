@@ -73,13 +73,15 @@
     "@batch/ui-playground": "^1.0.0",
     "@batch/ui-react": "^1.0.0",
     "@batch/ui-service": "^1.0.0",
-    "@uifabric/azure-themes": "7.5.19"
+    "@uifabric/azure-themes": "7.5.19",
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
     "@types/node": "^14.14.37",
     "@types/react": "16.9.35",
     "@types/react-dom": "16.9.8",
+    "@types/react-router-dom": "^5.1.7",
     "css-loader": "^2.1.1",
     "esbuild-loader": "^2.11.1",
     "file-loader": "^3.0.1",
