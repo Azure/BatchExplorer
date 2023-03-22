@@ -1,6 +1,6 @@
 <bl-loading [status]="loadingStatus">
     <div *ngIf="loadingStatus">
-        <bl-button type="wide" (do)="pickStorageAccount(noSelectionKey)">
+        <bl-button type="wide" (do)="pickStorageAccount(noSelectionKey)" autofocus>
             {{'auto-storage-account-picker.clear-button-label' | i18n}}
         </bl-button>
         <h3>{{'auto-storage-account-picker.same-region-title' | i18n: {
