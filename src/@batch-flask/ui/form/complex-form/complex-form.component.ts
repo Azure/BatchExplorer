@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, OnChanges, QueryList, Type,
+    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, ElementRef, HostBinding, Input, OnChanges, QueryList, Type, ViewChild,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { AsyncTask, Dto, ServerError, autobind } from "@batch-flask/core";
@@ -70,6 +70,8 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
     @Input() @HostBinding("class.sticky-footer") public stickyFooter: boolean = true;
 
     @ContentChildren(FormPageComponent) public pages: QueryList<FormPageComponent>;
+
+    @ViewChild('formElement') formElement: ElementRef;
 
     public mainPage: FormPageComponent;
     public currentPage: FormPageComponent;
@@ -168,6 +170,10 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         }
         this._pageStack.push(this.currentPage);
         this.currentPage = page;
+
+        setTimeout(() => {
+            this.focusFirstFocusableElement()
+        });
     }
 
     @autobind()
@@ -267,5 +273,9 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
             cancel: this.cancelText,
             multiUse: this.multiUse,
         };
+    }
+
+    private focusFirstFocusableElement() {
+        this.formElement.nativeElement?.querySelector('[autofocus], button, input, textarea, select')?.focus()
     }
 }
