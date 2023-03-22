@@ -10,7 +10,7 @@
             </div>
         </div>
         <div *ngIf="!showJsonEditor" class="classic-form-container">
-            <form novalidate>
+            <form #formElement novalidate>
                 <ng-template [ngTemplateOutlet]="currentPage.content"></ng-template>
             </form>
         </div>
