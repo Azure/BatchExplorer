@@ -14,6 +14,18 @@
     "primary": "#cccccc",
     "secondary": "#a7a8a9"
   },
+  "monitorChart": {
+    "core-count": "#0A95FF",
+    "low-priority-core-count": "#AE8C00",
+    "task-start-event": "#AE8C00",
+    "task-complete-event": "#0A95FF",
+    "task-fail-event": "#F26363",
+    "starting-node-count": "#0A95FF",
+    "idle-node-count": "#C674D2",
+    "running-node-count": "#44A744",
+    "start-task-failed-node-count": "#F26363",
+    "rebooting-node-count": "#DB7843"
+  },
   "breadcrumb": {
     "text": "white",
     "background": "#5b5b5b",
