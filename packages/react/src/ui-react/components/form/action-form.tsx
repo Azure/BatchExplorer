@@ -3,12 +3,14 @@ import { Action } from "@batch/ui-common/lib/action";
 import { FormValues, ValidationSnapshot } from "@batch/ui-common/lib/form";
 import { FormLayoutType } from "./form-layout";
 import { FormButton, FormContainer } from "./form-container";
-import { getLogger } from "@batch/ui-common";
+import { getLogger, translate } from "@batch/ui-common";
 
 export interface ActionFormProps<V extends FormValues> {
     action: Action<V>;
     layout?: FormLayoutType;
+    hideResetButton?: boolean;
     hideSubmitButton?: boolean;
+    resetButtonLabel?: string;
     submitButtonLabel?: string;
     buttons?: FormButton[];
     onActionInitialized?: () => void;
@@ -29,6 +31,7 @@ export const ActionForm = <V extends FormValues>(
         onActionInitialized,
         buttons,
         hideSubmitButton,
+        hideResetButton,
     } = props;
     const [loading, setLoading] = React.useState<boolean>(true);
     const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -58,9 +61,9 @@ export const ActionForm = <V extends FormValues>(
 
     let allButtons: FormButton[] = [];
     if (hideSubmitButton !== true) {
-        // Default submit
+        // Default submit button
         allButtons.push({
-            label: props.submitButtonLabel ?? "Save",
+            label: props.submitButtonLabel ?? translate("form.buttons.apply"),
             primary: true,
             submitForm: true,
             disabled: submitting === true,
@@ -92,6 +95,18 @@ export const ActionForm = <V extends FormValues>(
                 } finally {
                     setSubmitting(false);
                 }
+            },
+        });
+    }
+    if (hideResetButton !== true) {
+        // Default reset (discard) button
+        allButtons.push({
+            label:
+                props.submitButtonLabel ??
+                translate("form.buttons.discardChanges"),
+            disabled: submitting === true,
+            onClick: () => {
+                action.form.reset();
             },
         });
     }

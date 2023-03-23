@@ -9,6 +9,10 @@ export class StandardLocalizer implements Localizer {
                 return "Resource Group";
             case "accountName":
                 return "Account Name";
+            case "form.buttons.apply":
+                return "Apply";
+            case "form.buttons.discardChanges":
+                return "Discard changes";
         }
 
         throw new Error("Unable to translate string " + message);

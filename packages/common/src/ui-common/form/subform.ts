@@ -207,6 +207,10 @@ export class SubForm<
         this.form.updateValue(name, value);
     }
 
+    reset(): void {
+        this.form.reset();
+    }
+
     async validate(opts?: ValidationOpts): Promise<ValidationSnapshot<S>> {
         return this.form.validate(opts);
     }

@@ -1,11 +1,14 @@
 import { createForm } from "@batch/ui-common";
 import { AbstractAction } from "@batch/ui-common/lib/action";
 import {
+    BooleanParameter,
     Form,
+    NumberParameter,
     StringParameter,
     ValidationStatus,
 } from "@batch/ui-common/lib/form";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
 import { runAxe } from "../../../test-util/a11y";
@@ -15,23 +18,6 @@ describe("Action form tests", () => {
     beforeEach(() => initMockBrowserEnvironment());
 
     test("Can render a simple action", async () => {
-        const form = createForm<{
-            make?: string;
-            model?: string;
-            description?: string;
-        }>({
-            values: {},
-        });
-        form.param("make", StringParameter, {
-            label: "Make",
-        });
-        form.param("model", StringParameter, {
-            label: "Model",
-        });
-        form.param("description", StringParameter, {
-            label: "Description",
-        });
-
         const action = new PetDogAction({});
 
         const { container } = render(<ActionForm action={action} />);
@@ -40,6 +26,51 @@ describe("Action form tests", () => {
         expect(await screen.findByText("Give a treat?")).toBeDefined();
 
         expect(await runAxe(container)).toHaveNoViolations();
+    });
+
+    test("Can submit and reset using the built-in buttons", async () => {
+        userEvent.setup();
+
+        let petCount = 0;
+        const action = new PetDogAction(
+            {
+                numberOfPets: 1,
+            },
+            (count) => {
+                petCount = count;
+            }
+        );
+
+        render(<ActionForm action={action} />);
+
+        const submitButton = await screen.findByRole("button", {
+            name: "Apply",
+        });
+        expect(submitButton).toBeDefined();
+        expect(petCount).toBe(0);
+
+        await act(async () => {
+            action.form.updateValue("numberOfPets", 1);
+            await userEvent.click(submitButton);
+            await action.waitForExecution();
+        });
+        expect(petCount).toBe(1);
+
+        await act(async () => {
+            action.form.updateValue("numberOfPets", 2);
+            await userEvent.click(submitButton);
+            await action.waitForExecution();
+        });
+        expect(petCount).toBe(2);
+
+        // Reset back to initial values
+        const resetButton = await screen.findByRole("button", {
+            name: "Discard changes",
+        });
+        await userEvent.click(resetButton);
+        expect(action.form.values).toStrictEqual({
+            numberOfPets: 1,
+        });
     });
 });
 
@@ -51,35 +82,33 @@ type PetDogFormValues = {
 
 class PetDogAction extends AbstractAction<PetDogFormValues> {
     onPet?: (count: number) => void;
-    private _defaultValues: PetDogFormValues = {};
+    private _initialValues: PetDogFormValues = {};
 
     constructor(
-        initialValues: PetDogFormValues,
+        initialValues?: PetDogFormValues,
         onPet?: (count: number) => void
     ) {
         super();
+        if (initialValues) {
+            this._initialValues = initialValues;
+        }
         this.onPet = onPet;
     }
 
     async onInitialize(): Promise<PetDogFormValues> {
-        // TODO: Default some of these values. We'll probably want to make
-        //       this a CreateOrUpdate action and support loading an existing
-        //       account too.
-        return this._defaultValues;
+        return this._initialValues;
     }
 
     buildForm(): Form<PetDogFormValues> {
         const form = createForm<PetDogFormValues>({
-            values: {
-                giveTreat: true,
-            },
+            values: this._initialValues,
         });
 
         form.param("dogName", StringParameter, {
             label: "Dog name",
         });
 
-        form.param("numberOfPets", StringParameter, {
+        form.param("numberOfPets", NumberParameter, {
             label: "Pet how many times?",
             value: 100,
             onValidateSync: (value) => {
@@ -99,7 +128,7 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
             },
         });
 
-        form.param("giveTreat", StringParameter, {
+        form.param("giveTreat", BooleanParameter, {
             label: "Give a treat?",
         });
 
