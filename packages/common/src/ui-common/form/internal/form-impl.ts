@@ -33,6 +33,9 @@ const asyncValidationDelay = 300;
  * Internal form implementation
  */
 export class FormImpl<V extends FormValues> implements Form<V> {
+    // A copy of the form's initial values used for resetting the form
+    private _initialValuesCopy?: V;
+
     title?: string;
     description?: string;
 
@@ -96,6 +99,10 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
     constructor(init: FormInit<V>) {
         this._values = init.values;
+
+        // Clone a copy of the form's values so we can reset it
+        this._initialValuesCopy = cloneDeep(this.values);
+
         this.title = init.title;
         this.description = init.description;
 
@@ -171,6 +178,12 @@ export class FormImpl<V extends FormValues> implements Form<V> {
             throw new Error(`Entry "${name}" is not a sub-form`);
         }
         return entry;
+    }
+
+    reset(): void {
+        if (this._initialValuesCopy) {
+            this.setValues(this._initialValuesCopy);
+        }
     }
 
     evaluate(): boolean {

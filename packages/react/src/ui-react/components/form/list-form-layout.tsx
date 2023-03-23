@@ -233,7 +233,11 @@ interface ButtonContainerProps {
 
 const ButtonContainer = (props: ButtonContainerProps) => {
     return (
-        <div style={{ padding: "16px 0 0 0" }}>
+        <Stack
+            horizontal={true}
+            tokens={{ childrenGap: "8px" }}
+            style={{ padding: "16px 0 0 0" }}
+        >
             {props.buttons?.map((btn) => {
                 return (
                     <Button
@@ -241,11 +245,11 @@ const ButtonContainer = (props: ButtonContainerProps) => {
                         label={btn.label}
                         onClick={btn.onClick}
                         disabled={btn.disabled}
-                        primary
+                        primary={btn.primary}
                     />
                 );
             })}
-        </div>
+        </Stack>
     );
 };
 

@@ -114,6 +114,11 @@ export interface Form<V extends FormValues> {
      */
     updateValue<K extends ParameterName<V>>(name: K, value: V[K]): void;
 
+    /**
+     * Reset the form to the initial values it was constructed with
+     */
+    reset(): void;
+
     onValidateSync?: (values: V) => ValidationStatus;
 
     onValidateAsync?: (values: V) => Promise<ValidationStatus>;

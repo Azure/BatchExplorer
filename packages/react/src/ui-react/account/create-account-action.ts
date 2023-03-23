@@ -29,19 +29,16 @@ export type CreateAccountFormValues = {
 };
 
 export class CreateAccountAction extends AbstractAction<CreateAccountFormValues> {
-    private _defaultValues: CreateAccountFormValues = {};
+    private _initialValues: CreateAccountFormValues = {};
 
     async onInitialize(): Promise<CreateAccountFormValues> {
-        // TODO: Default some of these values. We'll probably want to make
-        //       this a CreateOrUpdate action and support loading an existing
-        //       account too.
-        return this._defaultValues;
+        return this._initialValues;
     }
 
-    constructor(defaultValues: CreateAccountFormValues) {
+    constructor(initialValues: CreateAccountFormValues) {
         super();
-        if (defaultValues) {
-            this._defaultValues = defaultValues;
+        if (initialValues) {
+            this._initialValues = initialValues;
         }
     }
 

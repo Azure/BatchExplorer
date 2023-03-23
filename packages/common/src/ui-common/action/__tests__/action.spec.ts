@@ -8,6 +8,12 @@ describe("Action tests", () => {
         const action = new HelloAction({
             subject: "planet",
         });
+
+        // Test that we can call waitFor() functions even while execute/initialize
+        // aren't running, and they return immediately
+        await action.waitForInitialization();
+        await action.waitForExecution();
+
         action.initialize();
 
         expect(action.isInitialized).toBe(false);
@@ -37,7 +43,10 @@ describe("Action tests", () => {
 
         // Can change form values and execute again
         action.form.updateValue("subject", "universe");
-        await action.execute();
+        action.execute();
+        // Calling waitForExecution() should be the same as awaiting
+        // the execute() return value
+        await action.waitForExecution();
         expect(action.message).toEqual("Hello universe from Contoso");
 
         // Validation should have only happened once per execution

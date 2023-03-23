@@ -578,6 +578,52 @@ describe("Form tests", () => {
         expect(form.values.numberPlusOne).toBe(3);
         expect(form.values.numberPlusTwo).toBe(4);
     });
+
+    test("Reset to initial values", async () => {
+        type AnimalFormValues = {
+            family?: string;
+            genus?: string;
+            species?: string;
+        };
+
+        const form = createForm<AnimalFormValues>({
+            values: {
+                family: "Canidae",
+                genus: "Canis",
+                species: "Canis familiaris",
+            },
+            onValidateSync: (values) => {
+                if (values.family !== "Canidae") {
+                    return new ValidationStatus("error", "Dogs only!");
+                }
+                return new ValidationStatus("ok");
+            },
+        });
+
+        await form.validate();
+        expect(form.validationStatus?.level).toEqual("ok");
+
+        // Change values and make the form invalid
+        form.setValues({
+            family: "Felidae",
+            genus: "Felis",
+            species: "Felis catus",
+        });
+        await form.validate();
+        expect(form.validationStatus?.level).toEqual("error");
+        expect(form.validationStatus?.message).toEqual("Dogs only!");
+
+        // Resetting the form restores the original values, and makes the
+        // form valid again
+        form.reset();
+        expect(form.values).toStrictEqual({
+            family: "Canidae",
+            genus: "Canis",
+            species: "Canis familiaris",
+        });
+        await form.validate();
+        expect(form.validationStatus?.level).toEqual("ok");
+    });
 });
 
 type NationalParkFormValues = {
