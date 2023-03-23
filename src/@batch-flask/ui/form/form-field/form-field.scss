@@ -20,13 +20,21 @@ bl-form-field {
 
 
         > .input-prefix, > .input-suffix {
-            background: $input-border-color;
+            background: $secondary-background;
             border: 1px solid $input-border-color;
             height: 26px;
             padding: 0 5px;
             line-height: 26px;
             vertical-align: middle;
             color: $primary-text;
+        }
+
+        > .input-prefix {
+            border-right: none;
+        }
+
+        > .input-suffix {
+            border-left: none;
         }
     }
     .bl-form-field-label {}
