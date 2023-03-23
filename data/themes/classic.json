@@ -3,7 +3,7 @@
   "type": "standard",
   "primary": "#2F71C4",
   "primary-contrast": "#ffffff",
-  "danger": "#aa3939",
+  "danger": "#bc2f34",
   "danger-contrast": "#ffffff",
   "warn": "#a46026",
   "warn-contrast": "#ffffff",
@@ -53,16 +53,16 @@
     "disabled-bg": "#ededed"
   },
   "monitorChart": {
-    "core-count": "#1c3f95",
+    "core-count": "#004e8c",
     "low-priority-core-count": "#a36a00",
-    "task-start-event": "#a36a00",
-    "task-complete-event": "#428000",
-    "task-fail-event": "#aa3939",
-    "starting-node-count": "#1c3f95",
-    "idle-node-count": "#be93d9",
-    "running-node-count": "#428000",
-    "start-task-failed-node-count": "#aa3939",
-    "rebooting-node-count": "#ff755c"
+    "task-start-event": "#6d5700",
+    "task-complete-event": "#0f700f",
+    "task-fail-event": "#bc2f34",
+    "starting-node-count": "#004e8c",
+    "idle-node-count": "#8764b8",
+    "running-node-count": "#0f700f",
+    "start-task-failed-node-count": "#bc2f34",
+    "rebooting-node-count": "#d93c20"
   },
   "input": {
     "border": "#919191",
@@ -74,5 +74,5 @@
     "disabled-text": "var(--color-text-primary)",
     "disabled-background": "#e5e5e5"
   },
-  "chart-colors": ["#003f5c", "#aa3939", "#4caf50", "#ffa600"]
+  "chart-colors": ["#003f5c", "#bc2f34", "#4caf50", "#ffa600"]
 }
