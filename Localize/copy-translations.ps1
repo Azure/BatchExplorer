@@ -7,7 +7,7 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 if ($artifactsPath -eq "") {
     $sourceRoot = Join-Path $scriptDir "out/loc"
 } else {
-    $sourceRoot = Join-Path $artifactsPath "drop/loc"
+    $sourceRoot = $artifactsPath
 }
 
 $packageNames = @("common", "service", "playground", "react")

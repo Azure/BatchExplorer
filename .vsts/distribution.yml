@@ -25,15 +25,8 @@ stages:
     dependsOn: Localization
     condition: succeeded('Localization')
     jobs:
-      - job: DownloadArtifacts
-        pool:
-          name: Azure-Pipelines-EO-Batch-Explorer
-          steps:
-            - download: current
-              artifact: drop
 
       - job: Linux
-        dependsOn: DownloadArtifacts
         pool:
           name: Azure-Pipelines-EO-Batch-Explorer
           demands:
@@ -42,7 +35,6 @@ stages:
           - template: ./linux/distribution.yml
 
       - job: MacOS
-        dependsOn: DownloadArtifacts
         pool:
           vmImage: macOS-11
           demands: xcode
@@ -53,7 +45,6 @@ stages:
           - template: ./darwin/distribution.yml
 
       - job: Windows
-        dependsOn: DownloadArtifacts
         pool:
           name: Azure-Pipelines-EO-Batch-Explorer
           demands:
