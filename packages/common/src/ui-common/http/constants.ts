@@ -9,3 +9,7 @@ export enum HttpRequestMethod {
     Options = "OPTIONS",
     Trace = "TRACE",
 }
+
+export enum CustomHttpHeaders {
+    CommandName = "x-ms-command-name",
+}

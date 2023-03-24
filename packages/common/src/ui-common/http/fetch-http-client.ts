@@ -1,3 +1,4 @@
+import { CustomHttpHeaders } from "./constants";
 import { AbstractHttpClient, HttpRequestInit } from "./http-client";
 
 /**
@@ -49,6 +50,17 @@ export class FetchHttpClient extends AbstractHttpClient {
                     }
                 }
                 headers = new Headers(headersInit);
+            }
+
+            const commandName = req.metadata?.commandName;
+            if (commandName) {
+                if (!headers) {
+                    headers = new Headers({
+                        [CustomHttpHeaders.CommandName]: commandName,
+                    });
+                } else {
+                    headers.set(CustomHttpHeaders.CommandName, commandName);
+                }
             }
 
             responsePromise = fetch(url, {
