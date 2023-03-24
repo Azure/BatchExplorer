@@ -148,11 +148,25 @@ export interface HttpClient {
     ): Promise<HttpResponse>;
 }
 
+export interface HttpRequestMetadata {
+    /**
+     * Used to associate a friendly operation name with an HTTP request.
+     */
+    commandName: string;
+}
+
 export interface HttpRequestInit {
     body?: Blob | ArrayBuffer | ArrayBufferView | string;
     headers?: HttpHeaders | Record<string, string>;
     method?: string;
     url?: string;
+
+    /**
+     * Additional data passed to the HTTP Client along with the request.
+     * Different clients may handle this data differently, as it is not part
+     * of the actual HTTP request.
+     */
+    metadata?: HttpRequestMetadata;
 }
 
 export interface HttpResponse {
