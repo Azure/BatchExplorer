@@ -1,7 +1,7 @@
 import { FakeClock } from "../../datetime/fake-clock";
 import { MockHttpClient } from "../../http";
 import { StandardLocalizer } from "../../localization/standard-localizer";
-import { MockLogger } from "../../logging";
+import { createMockLogger } from "../../logging";
 import { AbstractEnvironment } from "../abstract-environment";
 import {
     DependencyFactories,
@@ -100,6 +100,18 @@ describe("Environment tests", () => {
         );
     });
 
+    test("Loading different environments injects different dependencies", () => {
+        // Dog goes woof
+        initEnvironment(new DogEnvironment(cfg));
+        expect(new Room().listen()).toEqual("You hear 'Woof!'");
+
+        destroyEnvironment();
+
+        // Cat goes meow
+        initEnvironment(new CatEnvironment(cfg));
+        expect(new Room().listen()).toEqual("You hear 'Meow!'");
+    });
+
     interface Animal {
         speak(): string;
     }
@@ -136,8 +148,8 @@ describe("Environment tests", () => {
 
         constructor(config: EnvironmentConfig) {
             super(config, {
-                logger: () => new MockLogger(),
                 clock: () => new FakeClock(),
+                loggerFactory: () => createMockLogger,
                 localizer: () => new StandardLocalizer(),
                 httpClient: () => new MockHttpClient(),
                 animal: () => new Dog(),
@@ -161,8 +173,8 @@ describe("Environment tests", () => {
 
         constructor(config: EnvironmentConfig) {
             super(config, {
-                logger: () => new MockLogger(),
                 clock: () => new FakeClock(),
+                loggerFactory: () => createMockLogger,
                 localizer: () => new StandardLocalizer(),
                 httpClient: () => new MockHttpClient(),
                 animal: () => new Cat(),
@@ -177,16 +189,4 @@ describe("Environment tests", () => {
             // No-op
         }
     }
-
-    test("Loading different environments injects different dependencies", () => {
-        // Dog goes woof
-        initEnvironment(new DogEnvironment(cfg));
-        expect(new Room().listen()).toEqual("You hear 'Woof!'");
-
-        destroyEnvironment();
-
-        // Cat goes meow
-        initEnvironment(new CatEnvironment(cfg));
-        expect(new Room().listen()).toEqual("You hear 'Meow!'");
-    });
 });

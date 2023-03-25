@@ -1,4 +1,4 @@
-import { getEnvironment } from "@batch/ui-common";
+import { getLogger } from "@batch/ui-common";
 import { AbstractAction, Action } from "@batch/ui-common/lib/action";
 import {
     Form,
@@ -29,6 +29,8 @@ type CarFormValues = {
 };
 
 class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
+    private _logger = getLogger("CreateOrUpdateCarAction");
+
     async onInitialize(): Promise<CarFormValues> {
         return {
             milesPerChange: 300,
@@ -118,9 +120,7 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
     }
 
     async onExecute(formValues: CarFormValues): Promise<void> {
-        getEnvironment()
-            .getLogger()
-            .info("Execute called with values:" + formValues);
+        this._logger.info("Execute called with values:" + formValues);
     }
 }
 

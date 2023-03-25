@@ -13,64 +13,23 @@ import { useCallback } from "react";
 import { initMockBrowserEnvironment } from "../../environment";
 import { useFormParameter } from "../use-form-parameter";
 
-type BeverageFormValues = {
-    orderNumber: number;
-    temperature?: string;
-    beverageName?: string;
-};
-
-const beverageTestData: Beverage[] = [
-    { name: "hot tea", temperature: "hot" },
-    { name: "coffee", temperature: "hot" },
-    { name: "iced tea", temperature: "cold" },
-    { name: "iced latte", temperature: "cold" },
-];
-
-class BeverageParameter<
-    V extends FormValues,
-    K extends ParameterName<V>,
-    D extends BeverageDependencies<V>
-> extends AbstractParameter<V, K, D> {
-    beverageLoadError: string | undefined = undefined;
-
-    async loadBeverages(): Promise<Beverage[]> {
-        const temp = this.getTemperature();
-        let beverages: Beverage[] = [];
-        if (temp) {
-            try {
-                // Alphabetically sorted beverage names
-                beverages = await listBeverages(temp);
-                this.beverageLoadError = undefined;
-            } catch (e) {
-                this.beverageLoadError =
-                    e instanceof Error ? e.message : String(e);
-            }
-        }
-        return beverages;
-    }
-
-    getTemperature(): string | undefined {
-        return this.getDependencyValueAsString("temperature");
-    }
-}
-
 describe("useFormParameter hook", () => {
-    const form = createForm<BeverageFormValues>({
-        values: {
-            orderNumber: 1,
-        },
-    });
-    const orderNumParam = form.param("orderNumber", NumberParameter);
-    const tempParam = form.param("temperature", StringParameter);
-    const beverageParam = form.param("beverageName", BeverageParameter, {
-        dependencies: {
-            temperature: "temperature",
-        },
-    });
-
     beforeEach(() => initMockBrowserEnvironment());
 
     test("Form parameter with dependencies and data loading", async () => {
+        const form = createForm<BeverageFormValues>({
+            values: {
+                orderNumber: 1,
+            },
+        });
+        const orderNumParam = form.param("orderNumber", NumberParameter);
+        const tempParam = form.param("temperature", StringParameter);
+        const beverageParam = form.param("beverageName", BeverageParameter, {
+            dependencies: {
+                temperature: "temperature",
+            },
+        });
+
         // let value = "foo";
         // let counter = 1;
         // let callCount = 0;
@@ -132,6 +91,47 @@ describe("useFormParameter hook", () => {
         expect(result.current.data).toEqual(["iced latte", "iced tea"]);
     });
 });
+
+type BeverageFormValues = {
+    orderNumber: number;
+    temperature?: string;
+    beverageName?: string;
+};
+
+const beverageTestData: Beverage[] = [
+    { name: "hot tea", temperature: "hot" },
+    { name: "coffee", temperature: "hot" },
+    { name: "iced tea", temperature: "cold" },
+    { name: "iced latte", temperature: "cold" },
+];
+
+class BeverageParameter<
+    V extends FormValues,
+    K extends ParameterName<V>,
+    D extends BeverageDependencies<V>
+> extends AbstractParameter<V, K, D> {
+    beverageLoadError: string | undefined = undefined;
+
+    async loadBeverages(): Promise<Beverage[]> {
+        const temp = this.getTemperature();
+        let beverages: Beverage[] = [];
+        if (temp) {
+            try {
+                // Alphabetically sorted beverage names
+                beverages = await listBeverages(temp);
+                this.beverageLoadError = undefined;
+            } catch (e) {
+                this.beverageLoadError =
+                    e instanceof Error ? e.message : String(e);
+            }
+        }
+        return beverages;
+    }
+
+    getTemperature(): string | undefined {
+        return this.getDependencyValueAsString("temperature");
+    }
+}
 
 type Beverage = { name: string; temperature: string };
 

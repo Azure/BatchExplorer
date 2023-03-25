@@ -20,4 +20,8 @@ export class FakeClock implements Clock {
     setTime(ms: number) {
         this._ms = ms;
     }
+
+    reset() {
+        this._ms = INITIAL_MS;
+    }
 }

@@ -1,11 +1,93 @@
 export type LogLevel = "info" | "debug" | "warn" | "error";
 
+export type LoggerFactory = (context: string | LoggingContext) => Logger;
+
 export interface Logger {
-    info(message: string, ...args: unknown[]): void;
+    readonly context: LoggingContext;
 
-    debug(message: string, ...args: unknown[]): void;
+    /**
+     * Log out a message at info level
+     *
+     * @param message Either a string message or an object which may override
+     *                parts of the logging context
+     * @param params  Extra values to include in the message. Generally these
+     *                will be cast to strings.
+     */
+    info(message: string | LogMessageInContext, ...params: unknown[]): void;
 
-    warn(message: string, ...args: unknown[]): void;
+    debug(message: string | LogMessageInContext, ...params: unknown[]): void;
 
-    error(message: string, ...args: unknown[]): void;
+    warn(message: string | LogMessageInContext, ...params: unknown[]): void;
+
+    error(message: string | LogMessageInContext, ...params: unknown[]): void;
 }
+
+export type LoggingContext = {
+    /**
+     * A named area to log messages under. This could be a class name,
+     * a UI component name, etc.
+     */
+    readonly area: string;
+
+    /**
+     * An optional name to pass which specifically tracks a given invocation of
+     * a function, a specific instance of a class, etc. For example,
+     * this could be used to associate an ID across an HTTP request/response.
+     */
+    readonly instance?: string;
+
+    /**
+     * The timestamp of messages logged under this context.
+     * If undefined, the current system time will be used.
+     */
+    readonly timestamp?: Date;
+
+    /**
+     * A numeric error code accompanying an error or warning log message.
+     */
+    readonly errorCode?: number;
+};
+
+export type LogMessageInContext = Partial<LoggingContext> & {
+    message: string;
+};
+
+// /**
+//  * A log entry.
+//  */
+// export type LogEntry = {
+//     /**
+//      * The timestamp of the entry.
+//      */
+//     readonly timestamp: Date;
+
+//     /**
+//      * The level for the entry.
+//      */
+//     readonly level: LogEntryLevel;
+
+//     /**
+//      * The area for the entry.
+//      */
+//     readonly area: string;
+
+//     /**
+//      * The entry type.
+//      */
+//     readonly entryType?: string;
+
+//     /**
+//      * The message to be logged.
+//      */
+//     readonly message: LogMessage;
+
+//     /**
+//      * Any code accompanying error and warning-style log entries.
+//      */
+//     readonly code?: number;
+
+//     /**
+//      * Any additional arguments to be included in the log entry.
+//      */
+//     readonly args?: ReadonlyArray<any>;
+// };

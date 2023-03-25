@@ -10,8 +10,8 @@ import { PermissionService } from "@batch-flask/ui/permission";
 import { EnvironmentMode, initEnvironment } from "@batch/ui-common";
 import { DependencyName } from "@batch/ui-common/lib/environment";
 import { DefaultFormControlResolver, DefaultFormLayoutProvider, FormControlResolver } from "@batch/ui-react/lib/components/form";
-import { ConsoleLogger } from "@batch/ui-common/lib/logging";
 import { StandardClock } from "@batch/ui-common/lib/datetime";
+import { createConsoleLogger } from "@batch/ui-common/lib/logging";
 import { BrowserDependencyName } from "@batch/ui-react";
 import { StorageAccountServiceImpl, SubscriptionServiceImpl } from "@batch/ui-service";
 import { registerIcons } from "app/config";
@@ -75,8 +75,9 @@ export class AppComponent implements OnInit, OnDestroy {
                 mode: ENV === Environment.prod ? EnvironmentMode.Production : EnvironmentMode.Development
             },
             {
+                [DependencyName.Clock]: () => new StandardClock(),
                 // TODO: Create an adapter which hooks up to the desktop logger
-                [DependencyName.Logger]: () => new ConsoleLogger(),
+                [DependencyName.LoggerFactory]: () => createConsoleLogger,
                 [DependencyName.Localizer]: () => new StandardLocalizer(),
                 [DependencyName.HttpClient]:
                     () => new BatchExplorerHttpClient(authService),

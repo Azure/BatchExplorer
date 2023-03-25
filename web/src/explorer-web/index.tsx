@@ -1,6 +1,6 @@
 import { EnvironmentMode, initEnvironment } from "@batch/ui-common";
 import { DependencyName } from "@batch/ui-common/lib/environment";
-import { ConsoleLogger } from "@batch/ui-common/lib/logging";
+import { createConsoleLogger } from "@batch/ui-common/lib/logging";
 import { MockHttpClient } from "@batch/ui-common/lib/http";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -35,7 +35,7 @@ export function init(rootEl: HTMLElement): void {
             },
             {
                 [DependencyName.Clock]: () => new StandardClock(),
-                [DependencyName.Logger]: () => new ConsoleLogger(),
+                [DependencyName.LoggerFactory]: () => createConsoleLogger,
                 [DependencyName.Localizer]: () => new StandardLocalizer(),
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
                 [BrowserDependencyName.LocationService]: () =>

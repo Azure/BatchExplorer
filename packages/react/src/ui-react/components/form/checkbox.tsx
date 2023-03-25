@@ -74,7 +74,9 @@ function valueToChecked(
     } else if (value === false) {
         checked = false;
     } else {
-        getLogger().warn("Invalid boolean value for parameter " + paramName);
+        getLogger("Checkbox").warn(
+            "Invalid boolean value for parameter " + paramName
+        );
         checked = undefined;
     }
     return checked;

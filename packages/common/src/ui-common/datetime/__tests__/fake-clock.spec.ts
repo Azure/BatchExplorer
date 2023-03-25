@@ -24,5 +24,11 @@ describe("Fake clock", () => {
         expect(clock.now().getTime()).toEqual(
             fromIso("2011-01-01T00:00:00Z").getTime()
         );
+
+        // Reset back to original time
+        clock.reset();
+        expect(clock.now().getTime()).toEqual(
+            fromIso("2022-02-02T00:00:00Z").getTime()
+        );
     });
 });

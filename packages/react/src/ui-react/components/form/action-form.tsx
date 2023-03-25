@@ -3,7 +3,8 @@ import { Action } from "@batch/ui-common/lib/action";
 import { FormValues, ValidationSnapshot } from "@batch/ui-common/lib/form";
 import { FormLayoutType } from "./form-layout";
 import { FormButton, FormContainer } from "./form-container";
-import { getLogger, translate } from "@batch/ui-common";
+import { translate } from "@batch/ui-common";
+import { useLogger } from "../../hooks/use-logger";
 
 export interface ActionFormProps<V extends FormValues> {
     action: Action<V>;
@@ -33,6 +34,8 @@ export const ActionForm = <V extends FormValues>(
         hideSubmitButton,
         hideResetButton,
     } = props;
+
+    const logger = useLogger("ActionForm");
     const [loading, setLoading] = React.useState<boolean>(true);
     const [submitting, setSubmitting] = React.useState<boolean>(false);
 
@@ -84,7 +87,7 @@ export const ActionForm = <V extends FormValues>(
                         if (props.onFailure) {
                             props.onFailure(error);
                         } else {
-                            getLogger().error(
+                            logger.error(
                                 "Error executing action: " +
                                     (error instanceof Error
                                         ? error.message

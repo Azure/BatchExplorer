@@ -157,7 +157,10 @@ export abstract class AbstractAction<V extends FormValues>
                 executionResult.success = true;
             } catch (e) {
                 executionResult.error = e;
-                getLogger().warn("Action failed to execute:", e);
+                getLogger("AbstractAction").warn(
+                    "Action failed to execute:",
+                    e
+                );
             }
 
             this._executionDeferred.resolve();
