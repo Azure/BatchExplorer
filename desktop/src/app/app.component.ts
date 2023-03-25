@@ -11,6 +11,7 @@ import { EnvironmentMode, initEnvironment } from "@batch/ui-common";
 import { DependencyName } from "@batch/ui-common/lib/environment";
 import { DefaultFormControlResolver, DefaultFormLayoutProvider, FormControlResolver } from "@batch/ui-react/lib/components/form";
 import { ConsoleLogger } from "@batch/ui-common/lib/logging";
+import { StandardClock } from "@batch/ui-common/lib/datetime";
 import { BrowserDependencyName } from "@batch/ui-react";
 import { StorageAccountServiceImpl, SubscriptionServiceImpl } from "@batch/ui-service";
 import { registerIcons } from "app/config";

@@ -20,6 +20,7 @@ import {
 } from "@batch/ui-service";
 import { FakeResourceGroupService } from "@batch/ui-service/lib/resource-group";
 import { FakeLocationService } from "@batch/ui-service/lib/location";
+import { StandardClock } from "@batch/ui-common/lib/datetime";
 
 // Defined by webpack
 declare const ENV: {
@@ -33,6 +34,7 @@ export function init(rootEl: HTMLElement): void {
                 mode: ENV.MODE ?? EnvironmentMode.Development,
             },
             {
+                [DependencyName.Clock]: () => new StandardClock(),
                 [DependencyName.Logger]: () => new ConsoleLogger(),
                 [DependencyName.Localizer]: () => new StandardLocalizer(),
                 [DependencyName.HttpClient]: () => new MockHttpClient(),

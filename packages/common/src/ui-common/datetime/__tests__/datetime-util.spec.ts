@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
-import { fromIso, isDate, toIsoLocal, toIsoUtc } from "../datetime";
-import { initMockEnvironment } from "../environment";
+import { fromIso, isDate, toIsoLocal, toIsoUtc } from "../datetime-util";
+import { initMockEnvironment } from "../../environment";
 
 describe("Date/time utilities", () => {
     beforeEach(() => initMockEnvironment());

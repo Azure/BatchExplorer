@@ -1,3 +1,4 @@
+import { FakeClock } from "../../datetime/fake-clock";
 import { MockHttpClient } from "../../http";
 import { StandardLocalizer } from "../../localization/standard-localizer";
 import { MockLogger } from "../../logging";
@@ -136,6 +137,7 @@ describe("Environment tests", () => {
         constructor(config: EnvironmentConfig) {
             super(config, {
                 logger: () => new MockLogger(),
+                clock: () => new FakeClock(),
                 localizer: () => new StandardLocalizer(),
                 httpClient: () => new MockHttpClient(),
                 animal: () => new Dog(),
@@ -160,6 +162,7 @@ describe("Environment tests", () => {
         constructor(config: EnvironmentConfig) {
             super(config, {
                 logger: () => new MockLogger(),
+                clock: () => new FakeClock(),
                 localizer: () => new StandardLocalizer(),
                 httpClient: () => new MockHttpClient(),
                 animal: () => new Cat(),

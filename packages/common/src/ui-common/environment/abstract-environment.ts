@@ -10,6 +10,7 @@ import {
     EnvironmentMode,
     EnvironmentName,
 } from "./environment";
+import { Clock } from "../datetime/clock";
 
 /**
  * Abstract base class for shared functionality across different environments
@@ -29,6 +30,17 @@ export abstract class AbstractEnvironment<
     }
 
     private _diContainer: DiContainer<D>;
+
+    /**
+     * Get the currently configured clock
+     */
+    getClock(): Clock {
+        const clock = this.getInjectable<Clock>(DependencyName.Clock);
+        if (!clock) {
+            throw new Error("No clock configured for the current environment");
+        }
+        return clock;
+    }
 
     /**
      * Get an instance of the global logger

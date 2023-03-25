@@ -1,3 +1,4 @@
+import { Clock } from "../datetime/clock";
 import { HttpClient } from "../http";
 import { Localizer } from "../localization";
 import type { Logger } from "../logging";
@@ -79,6 +80,7 @@ export interface Environment<C extends EnvironmentConfig> {
 
 export enum DependencyName {
     Logger = "logger",
+    Clock = "clock",
     Localizer = "localizer",
     HttpClient = "httpClient",
 }
@@ -89,6 +91,7 @@ export enum DependencyName {
  */
 export interface DependencyFactories {
     [DependencyName.Logger]: () => Logger;
+    [DependencyName.Clock]: () => Clock;
     [DependencyName.Localizer]: () => Localizer;
     [DependencyName.HttpClient]: () => HttpClient;
 }
