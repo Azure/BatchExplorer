@@ -7,7 +7,7 @@ import {
     StringParameter,
     ValidationStatus,
 } from "@batch/ui-common/lib/form";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
@@ -26,6 +26,26 @@ describe("Action form tests", () => {
         expect(await screen.findByText("Give a treat?")).toBeDefined();
 
         expect(await runAxe(container)).toHaveNoViolations();
+    });
+
+    test("Can handle initialization errors", async () => {
+        const action = new PetDogAction({
+            throwInitializationError: true,
+        });
+
+        let err: string | undefined;
+        render(
+            <ActionForm
+                action={action}
+                onError={(e) => {
+                    err = (e as Error).message;
+                }}
+            />
+        );
+
+        await waitFor(() => {
+            expect(err).toEqual("Fake initialization error");
+        });
     });
 
     test("Can submit and reset using the built-in buttons", async () => {
@@ -78,9 +98,12 @@ type PetDogFormValues = {
     dogName?: string;
     numberOfPets?: number;
     giveTreat?: boolean;
+    throwInitializationError?: boolean;
 };
 
 class PetDogAction extends AbstractAction<PetDogFormValues> {
+    actionName = "PetDog";
+
     onPet?: (count: number) => void;
     private _initialValues: PetDogFormValues = {};
 
@@ -96,6 +119,9 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
     }
 
     async onInitialize(): Promise<PetDogFormValues> {
+        if (this._initialValues.throwInitializationError) {
+            throw new Error("Fake initialization error");
+        }
         return this._initialValues;
     }
 

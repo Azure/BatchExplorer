@@ -12,6 +12,9 @@ describe("Action tests", () => {
             subject: "planet",
         });
 
+        expect(action.actionName).toEqual("Hello");
+        expect(action.logger.context.area).toEqual("Action-Hello");
+
         // Test that we can call waitFor() functions even while execute/initialize
         // aren't running, and they return immediately
         await action.waitForInitialization();
@@ -132,6 +135,8 @@ describe("Action tests", () => {
     };
 
     class HelloAction extends AbstractAction<HelloFormValues> {
+        actionName = "Hello";
+
         message = "Hola world";
         onValidateCallCount = 0;
         subjectOnValidateCallCount = 0;
