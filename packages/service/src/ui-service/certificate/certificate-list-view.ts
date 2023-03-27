@@ -15,7 +15,7 @@ export class CertificateListView
     @observable selectedItems: IObservableArray<Certificate>;
     @observable batchAccount: string;
 
-    private logger = getLogger();
+    private _logger = getLogger("CertificateListView");
 
     constructor(service: CertificateService, models: Certificate[] = []) {
         super(service, models);
@@ -45,7 +45,7 @@ export class CertificateListView
         if (this.items[index]) {
             this.selectedItems.push(this.items[index]);
         } else {
-            this.logger.warn("Could not select item at index " + index);
+            this._logger.warn("Could not select item at index " + index);
         }
     }
 

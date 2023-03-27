@@ -1,5 +1,6 @@
 import { AbstractLogger } from "./abstract-logger";
-import { LogLevel } from "./logger";
+import { LoggerFactory, LoggingContext, LogLevel } from "./logger";
+import { formatTextLogMessage } from "./logging-util";
 
 export interface ExpectedMessage {
     level: LogLevel;
@@ -130,20 +131,47 @@ export class MockLogger extends AbstractLogger {
         }
     }
 
-    protected _log(level: LogLevel, message: string, ...args: unknown[]): void {
+    protected _log(
+        level: LogLevel,
+        message: string,
+        context: LoggingContext,
+        ...args: unknown[]
+    ): void {
         switch (level) {
             case "debug":
-                this._popAndAssert("debug", message, ...args);
+                this._popAndAssert(
+                    "debug",
+                    formatTextLogMessage(message, context),
+                    ...args
+                );
                 break;
             case "warn":
-                this._popAndAssert("warn", message, ...args);
+                this._popAndAssert(
+                    "warn",
+                    formatTextLogMessage(message, context),
+                    ...args
+                );
                 break;
             case "error":
-                this._popAndAssert("error", message, ...args);
+                this._popAndAssert(
+                    "error",
+                    formatTextLogMessage(message, context),
+                    ...args
+                );
                 break;
             case "info":
             default:
-                this._popAndAssert("info", message, ...args);
+                this._popAndAssert(
+                    "info",
+                    formatTextLogMessage(message, context),
+                    ...args
+                );
         }
     }
 }
+
+export const createMockLogger: LoggerFactory = (
+    context: string | LoggingContext
+) => {
+    return new MockLogger(context);
+};

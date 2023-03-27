@@ -1,31 +1,41 @@
 import { initMockEnvironment } from "../../environment";
-import { getLogger } from "../logging-util";
+import { formatTextLogMessage, getLogger } from "../logging-util";
 import { MockLogger } from "../mock-logger";
 
-describe("Logging Utilities", () => {
+describe("Logging utilities", () => {
     let logger: MockLogger;
 
     beforeEach(() => {
         initMockEnvironment();
-        logger = getLogger() as MockLogger;
+        logger = getLogger("test") as MockLogger;
         logger.enableChecking = true;
     });
 
     test("Each logging function works as expected", () => {
-        logger.expectInfo("This is an info message");
+        logger.expectInfo("[test] - This is an info message");
         logger.info("This is an info message");
 
-        logger.expectDebug("This is a debug message");
+        logger.expectDebug("[test] - This is a debug message");
         logger.debug("This is a debug message");
 
-        logger.expectWarn("This is a warning message");
+        logger.expectWarn("[test] - This is a warning message");
         logger.warn("This is a warning message");
 
-        logger.expectError("This is an error message with no error obj");
+        // Extra context
+        logger.expectInfo("[top-secret #1234] - This uses some custom context");
+        logger.info({
+            area: "top-secret",
+            instance: "#1234",
+            message: "This uses some custom context",
+        });
+
+        logger.expectError(
+            "[test] - This is an error message with no error obj"
+        );
         logger.error("This is an error message with no error obj");
 
         logger.expectError(
-            "This is an error message with a fake error",
+            "[test] - This is an error message with a fake error",
             new Error("Fake log testing error")
         );
         logger.error(
@@ -37,11 +47,11 @@ describe("Logging Utilities", () => {
     test("Can assert expected messages", () => {
         // Add a few expected messages
         expect(logger.expectedMessages.length).toBe(0);
-        logger.expectInfo("info");
+        logger.expectInfo("[test] - info");
         expect(logger.expectedMessages.length).toBe(1);
-        logger.expectDebug("debug");
+        logger.expectDebug("[test] - debug");
         expect(logger.expectedMessages.length).toBe(2);
-        logger.expectError("error", new Error("Fake error"));
+        logger.expectError("[test] - error", new Error("Fake error"));
         expect(logger.expectedMessages.length).toBe(3);
 
         // Pop one off the stack
@@ -54,15 +64,32 @@ describe("Logging Utilities", () => {
         expect(logger.expectedMessages.length).toBe(1);
 
         // Add a few more, then remove all expected messages
-        logger.expectInfo("one");
-        logger.expectInfo("two");
-        logger.expectInfo("three");
+        logger.expectInfo("[test] - one");
+        logger.expectInfo("[test] - two");
+        logger.expectInfo("[test] - three");
         expect(logger.expectedMessages.length).toBe(4);
         logger.clearExpected();
         expect(logger.expectedMessages.length).toBe(0);
 
         // Can continue to use the logger after clearing expected
-        logger.expectInfo("info");
+        logger.expectInfo("[test] - info");
         logger.info("info");
+    });
+
+    test("Format log message as text", () => {
+        // Area only
+        expect(
+            formatTextLogMessage("hello", {
+                area: "test-area",
+            })
+        ).toEqual("[test-area] - hello");
+
+        // Area + instance
+        expect(
+            formatTextLogMessage("hello", {
+                area: "test-area",
+                instance: "1234",
+            })
+        ).toEqual("[test-area 1234] - hello");
     });
 });

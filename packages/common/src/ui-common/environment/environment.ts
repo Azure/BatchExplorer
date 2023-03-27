@@ -1,6 +1,7 @@
+import { Clock } from "../datetime/clock";
 import { HttpClient } from "../http";
 import { Localizer } from "../localization";
-import type { Logger } from "../logging";
+import type { Logger, LoggerFactory, LoggingContext } from "../logging";
 
 /**
  * Represents the execution environment of the application. Acts as a
@@ -26,9 +27,14 @@ export interface Environment<C extends EnvironmentConfig> {
     readonly initialized: boolean;
 
     /**
+     * Gets the currently configured clock
+     */
+    getClock(): Clock;
+
+    /**
      * Gets the logger for the current environment
      */
-    getLogger(): Logger;
+    getLogger(context: string | LoggingContext): Logger;
 
     /**
      * Gets the localizer for the current environment
@@ -78,7 +84,8 @@ export interface Environment<C extends EnvironmentConfig> {
 }
 
 export enum DependencyName {
-    Logger = "logger",
+    Clock = "clock",
+    LoggerFactory = "loggerFactory",
     Localizer = "localizer",
     HttpClient = "httpClient",
 }
@@ -88,7 +95,8 @@ export enum DependencyName {
  * be defined as strings in the DependencyName enum.
  */
 export interface DependencyFactories {
-    [DependencyName.Logger]: () => Logger;
+    [DependencyName.Clock]: () => Clock;
+    [DependencyName.LoggerFactory]: () => LoggerFactory;
     [DependencyName.Localizer]: () => Localizer;
     [DependencyName.HttpClient]: () => HttpClient;
 }

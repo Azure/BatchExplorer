@@ -4,40 +4,37 @@ import {
     StringParameter,
     ValidationStatus,
 } from "@batch/ui-common/lib/form";
+import { initMockEnvironment } from "@batch/ui-common/lib/environment";
 import { act } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
 import { initMockBrowserEnvironment } from "../../environment";
 import { useForm } from "../use-form";
 
-type BeverageFormValues = {
-    orderNumber: number;
-    temperature?: string;
-    beverageName?: string;
-};
-
 describe("useFormParameter hook", () => {
-    const form = createForm<BeverageFormValues>({
-        values: {
-            orderNumber: 1,
-        },
-    });
-    form.param("orderNumber", NumberParameter);
-    form.param("temperature", StringParameter);
-    form.param("beverageName", StringParameter, {
-        onValidateSync: (value) => {
-            if (value && !value.startsWith("iced")) {
-                throw new ValidationStatus(
-                    "error",
-                    "Only iced beverages are allowed"
-                );
-            }
-            return new ValidationStatus("ok");
-        },
-    });
+    beforeEach(() => initMockEnvironment());
 
     beforeEach(() => initMockBrowserEnvironment());
 
     test("Form with data loading", async () => {
+        const form = createForm<BeverageFormValues>({
+            values: {
+                orderNumber: 1,
+            },
+        });
+        form.param("orderNumber", NumberParameter);
+        form.param("temperature", StringParameter);
+        form.param("beverageName", StringParameter, {
+            onValidateSync: (value) => {
+                if (value && !value.startsWith("iced")) {
+                    throw new ValidationStatus(
+                        "error",
+                        "Only iced beverages are allowed"
+                    );
+                }
+                return new ValidationStatus("ok");
+            },
+        });
+
         let changeCount = 0;
         let validateCount = 0;
 
@@ -82,3 +79,9 @@ describe("useFormParameter hook", () => {
         );
     });
 });
+
+type BeverageFormValues = {
+    orderNumber: number;
+    temperature?: string;
+    beverageName?: string;
+};

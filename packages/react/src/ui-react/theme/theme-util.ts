@@ -70,7 +70,7 @@ export function listThemes(): ThemeInfo[] {
 export function getTheme(themeName: string): ThemeInfo {
     let mapInfo = _themeMap[themeName];
     if (!mapInfo) {
-        getLogger().error(
+        getLogger("getTheme").error(
             `Unable to load theme ${themeName}: Falling back to default`
         );
         mapInfo = _themeMap[defaultTheme];

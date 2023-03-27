@@ -1,4 +1,4 @@
-import { getLogger } from "../logging";
+import { getLogger, Logger } from "../logging";
 import { capitalizeFirst } from "../util";
 import type {
     DynamicEntryProperties,
@@ -210,6 +210,8 @@ export abstract class AbstractParameter<
     D extends ParameterDependencies<V> = ParameterDependencies<V>
 > implements Parameter<V, K, D>
 {
+    private _logger: Logger = getLogger("FormParameter");
+
     readonly parentForm: Form<V>;
     readonly parentSection?: Section<V>;
 
@@ -277,6 +279,7 @@ export abstract class AbstractParameter<
         this.parentSection = init?.parentSection;
 
         this.name = name;
+
         this._label = init?.label;
         this.description = init?.description;
         this.disabled = init?.disabled;
@@ -353,7 +356,7 @@ export abstract class AbstractParameter<
         return this._getDependencyValue(dependencyName, (value) => {
             if (value != null) {
                 if (typeof value !== "string") {
-                    getLogger().warn(
+                    this._logger.warn(
                         `Parameter ${this.name} dependency '${dependencyName}' is not a string`
                     );
                     return String(value);
@@ -369,7 +372,7 @@ export abstract class AbstractParameter<
         transform: (value: unknown) => R | undefined
     ) {
         if (!this.dependencies?.[dependencyName]) {
-            getLogger().error(
+            this._logger.error(
                 `Parameter ${this.name} is missing dependency '${dependencyName}'`
             );
             return;

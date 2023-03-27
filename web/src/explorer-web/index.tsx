@@ -1,6 +1,6 @@
 import { EnvironmentMode, initEnvironment } from "@batch/ui-common";
 import { DependencyName } from "@batch/ui-common/lib/environment";
-import { ConsoleLogger } from "@batch/ui-common/lib/logging";
+import { createConsoleLogger } from "@batch/ui-common/lib/logging";
 import { MockHttpClient } from "@batch/ui-common/lib/http";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -20,6 +20,7 @@ import {
 } from "@batch/ui-service";
 import { FakeResourceGroupService } from "@batch/ui-service/lib/resource-group";
 import { FakeLocationService } from "@batch/ui-service/lib/location";
+import { StandardClock } from "@batch/ui-common/lib/datetime";
 
 // Defined by webpack
 declare const ENV: {
@@ -33,7 +34,8 @@ export function init(rootEl: HTMLElement): void {
                 mode: ENV.MODE ?? EnvironmentMode.Development,
             },
             {
-                [DependencyName.Logger]: () => new ConsoleLogger(),
+                [DependencyName.Clock]: () => new StandardClock(),
+                [DependencyName.LoggerFactory]: () => createConsoleLogger,
                 [DependencyName.Localizer]: () => new StandardLocalizer(),
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
                 [BrowserDependencyName.LocationService]: () =>

@@ -13,6 +13,8 @@ import {
 export const defaultThumbprintAlgorithm = "sha1";
 
 export class CertificateService extends AbstractHttpService {
+    private _logger = getLogger("CertificateService");
+
     async get(
         thumbprint: string,
         thumbprintAlgorithm: string = defaultThumbprintAlgorithm
@@ -30,7 +32,7 @@ export class CertificateService extends AbstractHttpService {
             // Bad or missing
             // TODO: Add better/more standardized error handling
             if (response.status > 500) {
-                getLogger().error(
+                this._logger.error(
                     `${
                         response.status
                     } error getting certificate. Response body: ${await response.text()}`
@@ -65,7 +67,7 @@ export class CertificateService extends AbstractHttpService {
             // Bad or missing
             // TODO: Add better/more standardized error handling
             if (response.status > 500) {
-                getLogger().error(
+                this._logger.error(
                     `${
                         response.status
                     } error getting certificate list. Response body: ${await response.text()}`

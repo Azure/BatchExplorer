@@ -1,7 +1,17 @@
 import { Settings, DateTime, Zone } from "luxon";
+import { getEnvironment } from "../environment";
+import { Clock } from "./clock";
 
 // Stored so that the timezone can be reset to its original value in unit tests
 const initialSystemTimeZone = getSystemTimeZone();
+
+/**
+ * Gets the currently configured clock for the environment
+ * @returns A clock implementation
+ */
+export function getClock(): Clock {
+    return getEnvironment().getClock();
+}
 
 /**
  * Gets the current local time zone.
@@ -17,6 +27,10 @@ function getSystemTimeZone(): Zone {
  * @returns The number of hours of the current timezone offset
  */
 export function getLocalTimeZoneOffset(): number {
+    // KLUDGE: This should really use the fake clock, but there's a
+    //         conflict between this and the mock environment test
+    //         that checks the local timezone offset before the
+    //         environment is initialized
     const offsetMinutes = getSystemTimeZone().offset(new Date().getTime());
     return offsetMinutes / 60;
 }

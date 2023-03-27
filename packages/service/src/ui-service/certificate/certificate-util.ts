@@ -78,7 +78,7 @@ export function parseCertificateListJson(
         if (obj && obj instanceof Object) {
             certs.push(parseCertificateJson(obj));
         } else {
-            getLogger().warn(
+            getLogger("certificate-util").warn(
                 "Skipping malformed certificate list item: " + String(obj)
             );
         }

@@ -21,9 +21,11 @@ describe("Mock environment tests", () => {
     test("Default mock environment uses a mock logger", () => {
         initMockEnvironment();
         const env = getMockEnvironment();
-        const mockLogger = env.getLogger() as MockLogger;
+        const mockLogger = env.getLogger("mock-environment.spec") as MockLogger;
         mockLogger.enableChecking = true;
-        mockLogger.expectInfo("This is from a mock logger");
+        mockLogger.expectInfo(
+            "[mock-environment.spec] - This is from a mock logger"
+        );
         mockLogger.info("This is from a mock logger");
     });
 

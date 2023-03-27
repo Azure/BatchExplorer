@@ -1,9 +1,12 @@
+import { initMockEnvironment } from "../../environment";
 import { createForm, Form, ValidationStatus } from "../../form";
 import { StringParameter } from "../../form/string-parameter";
 import { delay, mergeDeep } from "../../util";
 import { AbstractAction } from "../action";
 
 describe("Action tests", () => {
+    beforeEach(() => initMockEnvironment());
+
     test("Simple action execution", async () => {
         const action = new HelloAction({
             subject: "planet",
