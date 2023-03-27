@@ -210,7 +210,7 @@ export abstract class AbstractParameter<
     D extends ParameterDependencies<V> = ParameterDependencies<V>
 > implements Parameter<V, K, D>
 {
-    private _logger: Logger = getLogger("FormParameter");
+    private _logger: Logger;
 
     readonly parentForm: Form<V>;
     readonly parentSection?: Section<V>;
@@ -279,6 +279,8 @@ export abstract class AbstractParameter<
         this.parentSection = init?.parentSection;
 
         this.name = name;
+
+        this._logger = getLogger(`FormParameter-${name}`);
 
         this._label = init?.label;
         this.description = init?.description;

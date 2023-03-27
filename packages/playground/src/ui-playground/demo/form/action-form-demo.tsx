@@ -1,4 +1,3 @@
-import { getLogger } from "@batch/ui-common";
 import { AbstractAction, Action } from "@batch/ui-common/lib/action";
 import {
     Form,
@@ -29,7 +28,7 @@ type CarFormValues = {
 };
 
 class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
-    private _logger = getLogger("CreateOrUpdateCarAction");
+    actionName = "CreateOrUpdateCar";
 
     async onInitialize(): Promise<CarFormValues> {
         return {
@@ -120,7 +119,7 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
     }
 
     async onExecute(formValues: CarFormValues): Promise<void> {
-        this._logger.info("Execute called with values:" + formValues);
+        this.logger.info("Execute called with values:" + formValues);
     }
 }
 

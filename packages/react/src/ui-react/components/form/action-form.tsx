@@ -4,21 +4,84 @@ import { FormValues, ValidationSnapshot } from "@batch/ui-common/lib/form";
 import { FormLayoutType } from "./form-layout";
 import { FormButton, FormContainer } from "./form-container";
 import { translate } from "@batch/ui-common";
-import { useLogger } from "../../hooks/use-logger";
 
 export interface ActionFormProps<V extends FormValues> {
+    /**
+     * The action associated with the form
+     */
     action: Action<V>;
+
+    /**
+     * Controls how the form is rendered. The exact implementation depends on
+     * the configured environment.
+     */
     layout?: FormLayoutType;
+
+    /**
+     * If true, don't show the default reset button
+     */
     hideResetButton?: boolean;
+
+    /**
+     * If true, don't show the default submit button
+     */
     hideSubmitButton?: boolean;
+
+    /**
+     * The visible label of the form's reset button
+     */
     resetButtonLabel?: string;
+
+    /**
+     * The visible label of the form's submit button
+     */
     submitButtonLabel?: string;
+
+    /**
+     * Additional form buttons to add (beside the defaults)
+     */
     buttons?: FormButton[];
+
+    /**
+     * Callback which is run after successful initialization
+     */
     onActionInitialized?: () => void;
+
+    /**
+     * Callback which is run when there is an unhandled error (either during
+     * initialization or action execution)
+     *
+     * @param error The object which was thrown (generally an error object)
+     */
+    onError?: (error: unknown) => void;
+
+    /**
+     * Callback which is run after successful action execution
+     */
+    onExecuteSucceeded?: () => void;
+
+    /**
+     * Callback which is run when action execution fails
+     *
+     * @param error The object which was thrown (generally an error object)
+     */
+    onExecuteFailed?: (error: unknown) => void;
+
+    /**
+     * Callback which is run on any form value change
+     *
+     * @param newValues The current values
+     * @param oldValues The previous values
+     */
     onFormChange?: (newValues: V, oldValues: V) => void;
+
+    /**
+     * Callback which is run whenever the action's form is validated
+     *
+     * @param snapshot Validation information, including the values of the
+     *                 form as they were when validate() was called.
+     */
     onValidate?: (snapshot?: ValidationSnapshot<V>) => void;
-    onSuccess?: () => unknown;
-    onFailure?: (error: unknown) => unknown;
 }
 
 export const ActionForm = <V extends FormValues>(
@@ -28,14 +91,17 @@ export const ActionForm = <V extends FormValues>(
         action,
         layout,
         onFormChange,
-        onValidate,
         onActionInitialized,
+        onError,
+        onExecuteFailed,
+        onExecuteSucceeded,
+        onValidate,
         buttons,
         hideSubmitButton,
         hideResetButton,
+        submitButtonLabel,
     } = props;
 
-    const logger = useLogger("ActionForm");
     const [loading, setLoading] = React.useState<boolean>(true);
     const [submitting, setSubmitting] = React.useState<boolean>(false);
 
@@ -43,18 +109,34 @@ export const ActionForm = <V extends FormValues>(
         let isMounted = true;
         setLoading(true);
 
-        action.initialize().then(() => {
-            if (isMounted) {
-                setLoading(false);
-                if (onActionInitialized) {
-                    onActionInitialized();
+        action
+            .initialize()
+            .then(() => {
+                // Fulfilled
+                if (isMounted) {
+                    setLoading(false);
+                    if (onActionInitialized) {
+                        onActionInitialized();
+                    }
                 }
-            }
-        });
+            })
+            .catch((e) => {
+                // Rejected
+                action.logger.error(
+                    `Failed to initialize action: ${
+                        e instanceof Error ? e.message : String(e)
+                    }`
+                );
+                if (onError) {
+                    onError(e);
+                }
+            });
 
         return () => {
             isMounted = false;
         };
+        // Purposly don't include onError so the caller doesn't have to use useCallback()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onActionInitialized, action]);
 
     if (!action.isInitialized || loading) {
@@ -78,22 +160,30 @@ export const ActionForm = <V extends FormValues>(
                     );
 
                     if (success) {
-                        if (props.onSuccess) {
-                            props.onSuccess();
+                        if (onExecuteSucceeded) {
+                            onExecuteSucceeded();
                         }
                     }
 
                     if (error) {
-                        if (props.onFailure) {
-                            props.onFailure(error);
-                        } else {
-                            logger.error(
-                                "Error executing action: " +
-                                    (error instanceof Error
-                                        ? error.message
-                                        : String(error))
-                            );
+                        action.logger.error(
+                            "Action execution failed: " +
+                                (error instanceof Error
+                                    ? error.message
+                                    : String(error))
+                        );
+                        if (onExecuteFailed) {
+                            onExecuteFailed(error);
                         }
+                    }
+                } catch (e) {
+                    action.logger.error(
+                        `Unhandled error executing action: ${
+                            e instanceof Error ? e.message : String(e)
+                        }`
+                    );
+                    if (onError) {
+                        onError(e);
                     }
                 } finally {
                     setSubmitting(false);
@@ -105,8 +195,7 @@ export const ActionForm = <V extends FormValues>(
         // Default reset (discard) button
         allButtons.push({
             label:
-                props.submitButtonLabel ??
-                translate("form.buttons.discardChanges"),
+                submitButtonLabel ?? translate("form.buttons.discardChanges"),
             disabled: submitting === true,
             onClick: () => {
                 action.form.reset();

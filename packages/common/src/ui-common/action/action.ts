@@ -1,15 +1,75 @@
 import { Form, FormValues, ValidationStatus } from "../form";
-import { getLogger } from "../logging";
+import { getLogger, Logger } from "../logging";
 import { Deferred } from "../util";
 
 export interface Action<V extends FormValues = FormValues> {
-    form: Form<V>;
-    isInitialized: boolean;
+    /**
+     * A globally unique friendly name for this action. Used for logging, etc.
+     */
+    readonly actionName: string;
+
+    /**
+     * A logger which is pre-configured with the name of the action
+     */
+    readonly logger: Logger;
+
+    /**
+     * The form associated with this action.
+     */
+    readonly form: Form<V>;
+
+    /**
+     * True if initialization has finished.
+     */
+    readonly isInitialized: boolean;
+
+    /**
+     * Load data needed for the action and perform any other initialization.
+     * Calls the onInitialize() callback.
+     */
     initialize(): Promise<void>;
+
+    /**
+     * A callback which performs action initialization.
+     */
     onInitialize(): Promise<V>;
+
+    /**
+     * Constructs the form for the action.
+     *
+     * @param initialValues Initial values to populate the form with.
+     */
+    buildForm(initialValues: V): Form<V>;
+
+    /**
+     * Execute the action and return a result (which may be success or failure)
+     * @param formValues The form values to use to execute the action.
+     */
     execute(formValues: V): Promise<ActionExecutionResult>;
+
+    /**
+     * A callback which performs validation synchronously. Note that both
+     * onValidateSync and onValidateAsync will be called for every validation.
+     * The onValidateSync callback will simply return more quickly.
+     *
+     * @param formValues The form values to validate
+     */
     onValidateSync?(formValues: V): ValidationStatus;
+
+    /**
+     * A callback which performs validation asynchronously. Note that both
+     * onValidateSync and onValidateAsync will be called for every validation.
+     * The onValidateSync callback will simply return more quickly.
+     *
+     * @param formValues The form values to validate
+     */
     onValidateAsync?(formValues: V): Promise<ValidationStatus>;
+
+    /**
+     * A callback which performs action execution.
+     *
+     * @param formValues The form values to use
+     */
     onExecute(formValues: V): Promise<void>;
 
     /**
@@ -36,6 +96,22 @@ export type ActionExecutionResult = {
 export abstract class AbstractAction<V extends FormValues>
     implements Action<V>
 {
+    abstract actionName: string;
+
+    private _logger: Logger | undefined;
+
+    /**
+     * Get a logger for the action
+     */
+    get logger(): Logger {
+        // In practice this should never be undefined
+        const actionName = this.actionName ?? "UnknownAction";
+        if (!this._logger) {
+            this._logger = getLogger(`Action-${actionName}`);
+        }
+        return this._logger;
+    }
+
     protected _form?: Form<V>;
 
     private _isInitialized: boolean = false;
@@ -79,10 +155,11 @@ export abstract class AbstractAction<V extends FormValues>
             };
 
             this._isInitialized = true;
-            this._initializationDeferred.resolve();
-        } catch (e) {
-            this._initializationDeferred.reject(e);
         } finally {
+            // Always resolve rather than reject. Waiting for initialization
+            // isn't the right place to handle errors. Instead, handle rejections
+            // from initialize() itself.
+            this._initializationDeferred.resolve();
             this._isInitializing = false;
         }
     }
@@ -157,20 +234,19 @@ export abstract class AbstractAction<V extends FormValues>
                 executionResult.success = true;
             } catch (e) {
                 executionResult.error = e;
-                getLogger("AbstractAction").warn(
-                    "Action failed to execute:",
-                    e
-                );
+                this.logger.warn("Action failed to execute:", e);
             }
-
-            this._executionDeferred.resolve();
-        } catch (e) {
-            this._executionDeferred.reject(e);
         } finally {
+            this._isExecuting = false;
+
+            // Always resolve rather than reject. Waiting for execution
+            // isn't the right place to handle errors. Instead, handle rejections
+            // from execute() itself.
+            this._executionDeferred.resolve();
+
             // Create a new deferred execution object since execution
             // can happen again and again
             this._executionDeferred = new Deferred();
-            this._isExecuting = false;
         }
         return executionResult;
     }
@@ -181,7 +257,7 @@ export abstract class AbstractAction<V extends FormValues>
 
     abstract onExecute(formValues: V): Promise<void>;
 
-    abstract onValidateSync(values: V): ValidationStatus;
+    onValidateSync?(values: V): ValidationStatus;
 
     onValidateAsync?(values: V): Promise<ValidationStatus>;
 }

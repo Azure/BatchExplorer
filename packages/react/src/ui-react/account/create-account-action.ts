@@ -29,6 +29,8 @@ export type CreateAccountFormValues = {
 };
 
 export class CreateAccountAction extends AbstractAction<CreateAccountFormValues> {
+    actionName = "CreateAccount";
+
     private _initialValues: CreateAccountFormValues = {};
 
     async onInitialize(): Promise<CreateAccountFormValues> {
