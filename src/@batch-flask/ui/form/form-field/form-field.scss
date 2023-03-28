@@ -8,7 +8,7 @@ bl-form-field {
         sup.required {
             line-height: 1em;
             .fa-asterisk {
-                color: var(--color-danger);
+                color: $danger-color;
                 font-size: 8px;
             }
         }
