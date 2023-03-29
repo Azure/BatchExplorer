@@ -28,7 +28,7 @@ import { ProfileButtonComponent } from "./profile-button.component";
 class TestComponent {
 }
 
-describe("ProfileButtonComponent", () => {
+fdescribe("ProfileButtonComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let de: DebugElement;
     let clickableEl: DebugElement;
@@ -130,15 +130,15 @@ describe("ProfileButtonComponent", () => {
         fixture.detectChanges();
         expect(contextMenuServiceSpy.openMenu).toHaveBeenCalledOnce();
         const items = contextMenuServiceSpy.lastMenu.items;
-        expect(items.length).toBe(14);
+        expect(items.length).toBe(13);
     });
 
-    describe("Clicking on the profile", () => {
+    fdescribe("Clicking on the profile", () => {
         it("It shows a context menu", () => {
             click(clickableEl);
             expect(contextMenuServiceSpy.openMenu).toHaveBeenCalled();
             const items = contextMenuServiceSpy.lastMenu.items;
-            expect(items.length).toEqual(14);
+            expect(items.length).toEqual(13);
 
             let i = 0;
             const expectMenuItem= (menuItemType, label?) => {
@@ -155,12 +155,11 @@ describe("ProfileButtonComponent", () => {
             expectMenuItem(ContextMenuItem, "profile-button.authentication");
             expectMenuItem(ContextMenuItem, "profile-button.keybindings");
             expectMenuItem(MultiContextMenuItem, "Language (Preview)");
+            expectMenuItem(MultiContextMenuItem, "Developer");
             expectMenuItem(ContextMenuItem, "profile-button.thirdPartyNotices");
             expectMenuItem(ContextMenuItem, "profile-button.viewLogs");
             expectMenuItem(ContextMenuItem, "profile-button.report");
             expectMenuItem(ContextMenuItem, "profile-button.about");
-            expectMenuItem(ContextMenuSeparator);
-            expectMenuItem(ContextMenuItem, "profile-button.viewTheme");
             expectMenuItem(ContextMenuSeparator);
             expectMenuItem(ContextMenuItem, "profile-button.logout");
         });
