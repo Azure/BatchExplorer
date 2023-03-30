@@ -25,8 +25,8 @@
     .formula-list {
         height: 100%;
         overflow: auto;
-        border-top: 1px solid #d5d5d5;
-        border-bottom: 1px solid #d5d5d5;
+        border-top: 1px solid $input-disabled-border-color;
+        border-bottom: 1px solid $input-disabled-border-color;
 
         > .formula {
             display: flex;
@@ -41,7 +41,7 @@
             }
 
             &:not(:last-child) {
-                border-bottom: 1px solid #d5d5d5;
+                border-bottom: 1px solid $input-disabled-border-color;
             }
 
             &:hover {

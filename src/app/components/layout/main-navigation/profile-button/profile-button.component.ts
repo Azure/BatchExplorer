@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, isDevMode, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { I18nService, Locale, LocaleService, TranslatedLocales } from "@batch-flask/core";
 import {
@@ -112,13 +112,18 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
             new ContextMenuItem({ label: this.i18n.t("profile-button.report"), click: () => this._openGithubIssues() }),
             new ContextMenuItem({ label: this.i18n.t("profile-button.about"), click: () => this._showAboutPage() }),
             new ContextMenuSeparator(),
-            new ContextMenuItem({
-                label: this.i18n.t("profile-button.viewTheme"),
-                click: () => this._gotoThemeColors(),
-            }),
-            new ContextMenuSeparator(),
             new ContextMenuItem({ label: this.i18n.t("profile-button.logout"), click: () => this._logout() }),
         ];
+
+        if (isDevMode()) {
+            const devMenuItem = new MultiContextMenuItem({
+                label: "Developer",
+                subitems: [
+                    new ContextMenuItem({ label: this.i18n.t("profile-button.viewTheme"), click: () => this._gotoThemeColors() })
+                ],
+            });
+            items.splice(5, 0, devMenuItem);
+        }
 
         items.unshift(this._getAutoUpdateMenuItem());
         this.contextMenuService.openMenu(new ContextMenu(items));

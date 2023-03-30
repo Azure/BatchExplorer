@@ -70,7 +70,7 @@ fieldset {
     display: flex;
     flex-flow: row nowrap;
     padding: 0;
-    border: 1px solid #aaa;
+    border: 1px solid $border-color;
     background-color: $main-background;
     margin-top: 16px;
 
