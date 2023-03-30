@@ -4,7 +4,7 @@
 declare type Environment = "production" | "development" | "test";
 declare const ELECTRON_ENV: "renderer" | "main";
 
-// Gloval variables set by webpack
+// Global variables set by webpack
 declare const ENV: Environment;
 
 
