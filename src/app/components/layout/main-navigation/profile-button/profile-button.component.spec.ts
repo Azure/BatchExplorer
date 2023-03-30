@@ -28,7 +28,7 @@ import { ProfileButtonComponent } from "./profile-button.component";
 class TestComponent {
 }
 
-fdescribe("ProfileButtonComponent", () => {
+describe("ProfileButtonComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let de: DebugElement;
     let clickableEl: DebugElement;
@@ -133,7 +133,7 @@ fdescribe("ProfileButtonComponent", () => {
         expect(items.length).toBe(13);
     });
 
-    fdescribe("Clicking on the profile", () => {
+    describe("Clicking on the profile", () => {
         it("It shows a context menu", () => {
             click(clickableEl);
             expect(contextMenuServiceSpy.openMenu).toHaveBeenCalled();
