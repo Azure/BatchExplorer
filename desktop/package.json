@@ -49,7 +49,7 @@
     "build:package": "npm run build:prod && npm run build-python && npm run package",
     "build:prod": "cross-env NODE_ENV=production npm run build",
     "build:test": "npm run build && npm run test",
-    "build-translations": "bux build-translations --src src --destJSON build/i18n-json --destRESJSON i18n",
+    "build-translations": "bux build-translations --src src --destRESJSON i18n",
     "watch": "npm run webpack -- --watch --progress --profile --colors --display-error-details --display-cached",
     "electron": "electron build/client/main.js",
     "electron:prod": "cross-env NODE_ENV=production electron build/client/main.js",

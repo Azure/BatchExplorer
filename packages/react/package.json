@@ -18,7 +18,7 @@
     "build:clean": "run-s clean compile",
     "build:test": "run-s build test",
     "bux": "bux",
-    "build-translations": "bux build-translations --src src/ui-react --destJSON build/i18n-json --destRESJSON i18n --packageName lib.react",
+    "build-translations": "bux build-translations --src src/ui-react --destRESJSON i18n --packageName lib.react",
     "compile": "run-p compile:*",
     "compile:esm": "tsc -b ./config/tsconfig.build.json",
     "compile:cjs": "tsc -b ./config/tsconfig.cjs.json",
@@ -94,6 +94,7 @@
   },
   "files": [
     "lib",
-    "lib-cjs"
+    "lib-cjs",
+    "resources"
   ]
 }
