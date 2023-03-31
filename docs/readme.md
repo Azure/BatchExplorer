@@ -20,6 +20,7 @@
 * [Store user data/Cache data](store-user-data.md)
 * [Use virtual scroll](virtual-scroll.md)
 * [Localize](Localization.md)
+* [Build Localization on Local Machine](build-localization-locally.md)
 
 ## Repo management
 
