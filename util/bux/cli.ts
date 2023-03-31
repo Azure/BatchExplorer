@@ -42,11 +42,6 @@ yargs
                     default: "",
                     demandOption: true,
                 })
-                .option("destJSON", {
-                    describe: "The destination directory for JSON output files",
-                    default: "",
-                    demandOption: true,
-                })
                 .option("destRESJSON", {
                     describe:
                         "The destination directory for RESJSON output files",
@@ -60,12 +55,7 @@ yargs
                     demandOption: false,
                 }),
         handler: (argv) =>
-            buildTranslations(
-                argv.src,
-                argv.destJSON,
-                argv.destRESJSON,
-                argv.packageName
-            ),
+            buildTranslations(argv.src, argv.destRESJSON, argv.packageName),
     })
     .command({
         command: "configure",

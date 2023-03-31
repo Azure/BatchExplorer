@@ -103,7 +103,6 @@ export function copyFiles(sourcePath: string, destPath: string) {
 
 export async function buildTranslations(
     sourcePath: string,
-    destPathJSON: string,
     destPathRESJSON: string,
     packageName?: string
 ) {
@@ -111,20 +110,7 @@ export async function buildTranslations(
         error("Failed to build translations: No source path specified");
         return;
     }
-    if (!destPathJSON) {
-        error(
-            "Failed to build translations: No dest path for JSON output files specified"
-        );
-        return;
-    } else {
-        //Create a new destination directory specified by this parameter if it doesn't already exist
 
-        fs.mkdir(destPathJSON, { recursive: true }, (err) => {
-            if (err) {
-                if (err.code !== "EEXIST") throw err;
-            }
-        });
-    }
     if (!destPathRESJSON) {
         error(
             "Failed to build translations: No dest path for RESJSON output files specified"
@@ -140,12 +126,7 @@ export async function buildTranslations(
         });
     }
 
-    await createEnglishTranslations(
-        sourcePath,
-        destPathJSON,
-        destPathRESJSON,
-        packageName
-    );
+    await createEnglishTranslations(sourcePath, destPathRESJSON, packageName);
 }
 
 export function mkdirp(targetPath: string) {
