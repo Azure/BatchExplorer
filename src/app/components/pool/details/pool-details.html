@@ -46,6 +46,16 @@
             </bl-banner>
         </ng-container>
 
+        <ng-container *ngIf="isCloudServicePool">
+            <bl-banner class="pool-details-summary-deprecation-warning" type="warning">
+                <div message>
+                    Cloud Services pools are deprecated and will be retired on 29 February 2024. Existing ‘CloudServiceConfiguration’ pools will need to be deleted and new
+                    <a class="pool-details-summary-alternative-link" (click)="openLink('https://docs.microsoft.com/azure/batch/batch-pool-cloud-service-to-virtual-machine-configuration?WT.mc_id=Portal-Microsoft_Azure_Batch')" href="javascript:void(0)">‘VirtualMachineConfiguration’ pools created. </a>
+                    For new pools, select either a different ‘Distributions‘ or ‘Custom Image’ option.
+                </div>
+            </bl-banner>
+        </ng-container>
+
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>
         <bl-card class="details">
             <bl-tab-group>
