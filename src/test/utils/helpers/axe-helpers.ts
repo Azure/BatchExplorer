@@ -8,7 +8,6 @@ export async function runAxe(
     html: Element,
     options?: RunOptions
 ): Promise<AxeResults> {
-    console.log(process.env.BE_ENABLE_A11Y_TESTING);
     if (!process.env.BE_ENABLE_A11Y_TESTING) {
         // Accessibility testing is disabled. Return a fake AxeResults object which
         // always has no violations
