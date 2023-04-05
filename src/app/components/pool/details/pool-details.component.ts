@@ -45,6 +45,9 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     public get isImageDeprecated() {
         return this._isImageDeprecated;
     }
+    public get isCloudServicePool() {
+        return this._isCloudServicePool;
+    }
     public get hasDeprecationLink() {
         return this.isImageDeprecated && PoolUtils.getEndOfLifeHyperlinkforPoolDetails(this.poolDecorator.poolOs);
     }
@@ -61,6 +64,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
     private _pool: Pool;
     private _isImageDeprecated: boolean;
+    private _isCloudServicePool: boolean;
     private _supportedImages: ImageInformation[];
     private _selectedImageEndOfLifeDate: Date;
 
@@ -81,6 +85,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
             this.changeDetector.markForCheck();
             this._updatePrice();
             this._updatePoolDeprecationWarning();
+            this._cloudServiceDeprecationWarning();
         });
 
         this.data.deleted.subscribe((key) => {
@@ -99,6 +104,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         this.poolOsService.supportedImages.subscribe(val => {
             this._supportedImages = val.toArray();
             this._updatePoolDeprecationWarning();
+            this._cloudServiceDeprecationWarning();
         });
     }
 
@@ -170,6 +176,13 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
                 this._selectedImageEndOfLifeDate = selectedImage.batchSupportEndOfLife;
                 this._updateImageEOLState();
             }
+        }
+    }
+
+    private _cloudServiceDeprecationWarning() {
+        this._isCloudServicePool = false;
+        if (this.pool && this.pool.cloudServiceConfiguration) {
+            this._isCloudServicePool = true;
         }
     }
 
