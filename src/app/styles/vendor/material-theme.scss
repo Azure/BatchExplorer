@@ -30,6 +30,11 @@ $mat-theme: mat-light-theme($mat-primary, $mat-accent);
 
 mat-tab-group {
     .mat-tab-label {
+        opacity: 1;
+        color: $secondary-text;
+    }
+
+    .mat-tab-label-active {
         color: $primary-text;
     }
 }
@@ -40,9 +45,6 @@ mat-tab-group:not(.form-tabs) {
         border-right: 1px solid #ddd;
         height: 32px;
         line-height: 32px;
-
-        &.mat-tab-label-active {
-        }
 
         &.mat-tab-disabled {
             color: $button-disabled-text-color;
