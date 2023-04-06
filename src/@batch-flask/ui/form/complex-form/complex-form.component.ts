@@ -97,6 +97,9 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         this.currentPage = page;
         this.mainPage = page;
         this.changeDetector.detectChanges();
+        setTimeout(() => {
+            this.focusFirstFocusableElement();
+        })
     }
 
     public ngOnChanges(changes) {
