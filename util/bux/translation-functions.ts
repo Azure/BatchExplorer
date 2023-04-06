@@ -15,13 +15,13 @@ const writeFile = promisify(fs.writeFile);
 
 export async function createEnglishTranslations(
     sourcePath: string,
-    destRESJSONPath: string,
+    destPath: string,
     packageName?: string
 ) {
     const translations = await loadDevTranslations(sourcePath, packageName);
     const content = JSON.stringify(translations, null, 2).replace(/\n/g, EOL);
 
-    const resJsonPath = path.join(destRESJSONPath, "resources.resjson");
+    const resJsonPath = path.join(destPath, "resources.resjson");
     await writeFile(resJsonPath, content);
     console.log(
         `Saved combined english translations to RESJSON file ${resJsonPath}`

@@ -18,9 +18,9 @@ To build the localization translations for all languages besides English:
 * Navigate to the root of the repository
 * Run `npm run loc:restore` to install all dependencies
 * Run `npm run loc:build` to build the translations and move them to their correct directories
-* If needed, run `npm run loc:clean` to clear out all previouslly installed dependencies
+* If needed, run `npm run loc:clean` to clear out all previously built translation files
 
 The output will be in `{packageName}/resources/i18n`
 
-* `{packageName}/resources/i18n/resjson` contains production translations
-* `{packageName}/resources/i18n/json` contains translations for the local development environment
+* `{packageName}/resources/i18n/resjson` contains RESJSON translations
+* `{packageName}/resources/i18n/json` contains JSON translations (RESJSON syntax and comments have been stripped out)

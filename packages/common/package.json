@@ -17,7 +17,7 @@
     "build": "npm run compile && npm run build-translations",
     "build:clean": "run-s clean compile",
     "build:test": "run-s build test",
-    "build-translations": "bux build-translations --src src/ui-common --destRESJSON i18n --packageName lib.common",
+    "build-translations": "bux build-translations --src src/ui-common --dest i18n --packageName lib.common",
     "compile": "run-p compile:*",
     "compile:esm": "tsc -b ./config/tsconfig.build.json",
     "compile:cjs": "tsc -b ./config/tsconfig.cjs.json",

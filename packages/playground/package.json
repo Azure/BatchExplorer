@@ -18,7 +18,7 @@
     "build:clean": "run-s clean compile",
     "build:test": "run-s build test",
     "bux": "bux",
-    "build-translations": "bux build-translations --src src/ui-playground --destRESJSON i18n --packageName lib.playground",
+    "build-translations": "bux build-translations --src src/ui-playground --dest i18n --packageName lib.playground",
     "compile": "run-p compile:*",
     "compile:esm": "tsc -b ./config/tsconfig.build.json",
     "compile:cjs": "tsc -b ./config/tsconfig.cjs.json",

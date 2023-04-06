@@ -43,9 +43,11 @@ function Convert-ResjsonToJson {
     Set-Content -Path $targetPath -Value $cleanedJsonContent
 }
 
+Write-Host "Copying translation files"
+
 foreach ($languageDir in $languageDirs) {
     $languageId = $languageDir.Name
-    Write-Host "Processing language: $languageId"
+    Write-Verbose "Processing language: $languageId"
 
     # Process package directories
     foreach ($packageName in $packageNames) {
@@ -53,27 +55,25 @@ foreach ($languageDir in $languageDirs) {
         $targetDir = (Join-Path $scriptDir ".." -Resolve) | Join-Path -ChildPath "packages/$packageName/resources/i18n/resjson"
         $targetPath = Join-Path $targetDir "resources.$languageId.resjson"
 
-        Write-Host "Checking source path: $sourcePath"
+        Write-Verbose "Checking source path: $sourcePath"
         if (Test-Path $sourcePath) {
-            Write-Host "Source path exists, preparing target directory"
+            Write-Verbose "Source path exists, preparing target directory"
             if (-not (Test-Path $targetDir)) {
                 New-Item -ItemType Directory -Force -Path $targetDir
             }
 
-            Write-Host "Copying file from $sourcePath to $targetPath"
+            Write-Verbose "Copying file from $sourcePath to $targetPath"
             Copy-Item -Path $sourcePath -Destination $targetPath
 
-            if ($artifactsPath -eq "") {
-                $jsonTargetDir = $targetDir.Replace("resjson", "json")
-                $jsonTargetPath = $targetPath.Replace("resjson", "json")
+            $jsonTargetDir = $targetDir.Replace("resjson", "json")
+            $jsonTargetPath = $targetPath.Replace("resjson", "json")
 
-                if (-not (Test-Path $jsonTargetDir)) {
-                    New-Item -ItemType Directory -Force -Path $jsonTargetDir
-                }
-
-                Write-Host "Converting resjson to json: $jsonTargetPath"
-                Convert-ResjsonToJson -sourcePath $sourcePath -targetPath $jsonTargetPath
+            if (-not (Test-Path $jsonTargetDir)) {
+                New-Item -ItemType Directory -Force -Path $jsonTargetDir
             }
+
+            Write-Verbose "Converting resjson to json: $jsonTargetPath"
+            Convert-ResjsonToJson -sourcePath $sourcePath -targetPath $jsonTargetPath
         }
     }
 
@@ -82,26 +82,24 @@ foreach ($languageDir in $languageDirs) {
     $desktopTargetDir = (Join-Path $scriptDir "../desktop/resources/i18n/resjson")
     $desktopTarget = Join-Path $desktopTargetDir "resources.$languageId.resjson"
 
-    Write-Host "Checking desktop source path: $desktopSource"
+    Write-Verbose "Checking desktop source path: $desktopSource"
     if (Test-Path $desktopSource) {
-        Write-Host "Desktop source path exists, preparing target directory"
+        Write-Verbose "Desktop source path exists, preparing target directory"
         if (-not (Test-Path $desktopTargetDir)) {
             New-Item -ItemType Directory -Force -Path $desktopTargetDir
         }
 
-        Write-Host "Copying file from $desktopSource to $desktopTarget"
+        Write-Verbose "Copying file from $desktopSource to $desktopTarget"
         Copy-Item -Path $desktopSource -Destination $desktopTarget
 
-        if ($artifactsPath -eq "") {
-            $jsonDesktopTargetDir = $desktopTargetDir.Replace("resjson", "json")
-            $jsonDesktopTarget = $desktopTarget.Replace("resjson", "json")
+        $jsonDesktopTargetDir = $desktopTargetDir.Replace("resjson", "json")
+        $jsonDesktopTarget = $desktopTarget.Replace("resjson", "json")
 
-            if (-not (Test-Path $jsonDesktopTargetDir)) {
-                New-Item -ItemType Directory -Force -Path $jsonDesktopTargetDir
-            }
-
-            Write-Host "Converting desktop resjson to json: $jsonDesktopTarget"
-            Convert-ResjsonToJson -sourcePath $desktopSource -targetPath $jsonDesktopTarget
+        if (-not (Test-Path $jsonDesktopTargetDir)) {
+            New-Item -ItemType Directory -Force -Path $jsonDesktopTargetDir
         }
+
+        Write-Verbose "Converting desktop resjson to json: $jsonDesktopTarget"
+        Convert-ResjsonToJson -sourcePath $desktopSource -targetPath $jsonDesktopTarget
     }
 }
