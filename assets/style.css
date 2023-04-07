@@ -104,6 +104,7 @@ a {
 
 .text-link {
     color: #0071c7;
+    text-decoration: underline
 }
 
 .os-download-btn {
