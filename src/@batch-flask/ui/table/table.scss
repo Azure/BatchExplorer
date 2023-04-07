@@ -102,6 +102,11 @@ bl-table {
             }
         }
 
+        &.focused {
+            outline: 1px dashed $primary-color;
+            outline-offset: -2px;
+        }
+
         &.focused.selected {
             outline: 1px dashed $primary-contrast-color;
             outline-offset: -2px;
