@@ -9,7 +9,7 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
 $mat-primary: mat-palette($mat-indigo);
-$mat-accent:  mat-palette($mat-grey, A200, A100, A400);
+$mat-accent: mat-palette($mat-grey, A200, A100, A400);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $mat-theme: mat-light-theme($mat-primary, $mat-accent);
@@ -74,13 +74,22 @@ mat-icon.mat-icon {
 mat-radio-button {
     margin-right: 15px;
 
+    &.cdk-keyboard-focused {
+        .mat-focus-indicator {
+            border-radius: 100%;
+            background-color: $primary-color-light;
+            opacity: 0.25;
+            z-index: -1;
+        }
+    }
+
     &.mat-radio-checked {
         .mat-radio-outer-circle {
-            border-color: $primary-color;
+            border-color: $primary-color !important;
         }
 
         .mat-radio-inner-circle {
-            background: $primary-color;
+            background: $primary-color !important;
         }
     }
 }
@@ -130,7 +139,7 @@ bl-form-field.bl-textarea {
 }
 
 .mat-autocomplete-panel {
-    max-width : 30vw;
+    max-width: 30vw;
 
     .mat-option {
         height: 24px;
@@ -173,17 +182,17 @@ mat-button-toggle-group {
     }
 }
 
-
-.mat-drawer-container, .mat-drawer {
+.mat-drawer-container,
+.mat-drawer {
     color: $primary-text;
     background-color: $main-background;
 }
 
-
 .mat-menu-item {
     height: 30px !important;
     line-height: 30px !important;
-    &.cdk-program-focused, &.cdk-keyboard-focused {
+    &.cdk-program-focused,
+    &.cdk-keyboard-focused {
         border: 1px solid $outline-color;
     }
 }
