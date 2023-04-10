@@ -23,6 +23,7 @@
     "ts:fast": "npm run ts -T",
     "start": "npm run electron:prod",
     "clean": "rimraf build/* dll/* python/dist/* python/build/*",
+    "clean:resources": "bux rmrf ./resources",
     "karma": "node --max_old_space_size=4096 node_modules/karma/bin/karma",
     "test": "npm run test-client:coverage && npm run test-app",
     "test-app": "cross-env COVERAGE=1 npm run karma -- start",

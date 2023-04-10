@@ -15,3 +15,7 @@ docs
 .vscode
 
 package-lock.json
+
+Localize/out/
+Localize/packages/
+/**/resources/

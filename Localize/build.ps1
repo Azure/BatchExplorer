@@ -23,7 +23,7 @@ $env:NUGET_PACKAGES = $NUGET_PACKAGES
 if (Test-Path -Path "$OutDir") {
     Remove-Item -Path "$OutDir" -Recurse -Force
 }
-New-Item -ItemType Directory -Path "$OutDir"
+New-Item -ItemType Directory -Path "$OutDir" > $null
 
 & "$XLocPath\tools\netfx\Microsoft.Localization.XLoc.exe" /f "$LocProject"
 $localizationExitCode = $LASTEXITCODE

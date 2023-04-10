@@ -59,7 +59,7 @@ foreach ($languageDir in $languageDirs) {
         if (Test-Path $sourcePath) {
             Write-Verbose "Source path exists, preparing target directory"
             if (-not (Test-Path $targetDir)) {
-                New-Item -ItemType Directory -Force -Path $targetDir
+                New-Item -ItemType Directory -Force -Path $targetDir > $null
             }
 
             Write-Verbose "Copying file from $sourcePath to $targetPath"
@@ -69,7 +69,7 @@ foreach ($languageDir in $languageDirs) {
             $jsonTargetPath = $targetPath.Replace("resjson", "json")
 
             if (-not (Test-Path $jsonTargetDir)) {
-                New-Item -ItemType Directory -Force -Path $jsonTargetDir
+                New-Item -ItemType Directory -Force -Path $jsonTargetDir > $null
             }
 
             Write-Verbose "Converting resjson to json: $jsonTargetPath"
@@ -86,7 +86,7 @@ foreach ($languageDir in $languageDirs) {
     if (Test-Path $desktopSource) {
         Write-Verbose "Desktop source path exists, preparing target directory"
         if (-not (Test-Path $desktopTargetDir)) {
-            New-Item -ItemType Directory -Force -Path $desktopTargetDir
+            New-Item -ItemType Directory -Force -Path $desktopTargetDir > $null
         }
 
         Write-Verbose "Copying file from $desktopSource to $desktopTarget"
@@ -96,7 +96,7 @@ foreach ($languageDir in $languageDirs) {
         $jsonDesktopTarget = $desktopTarget.Replace("resjson", "json")
 
         if (-not (Test-Path $jsonDesktopTargetDir)) {
-            New-Item -ItemType Directory -Force -Path $jsonDesktopTargetDir
+            New-Item -ItemType Directory -Force -Path $jsonDesktopTargetDir > $null
         }
 
         Write-Verbose "Converting desktop resjson to json: $jsonDesktopTarget"

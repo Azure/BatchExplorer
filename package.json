@@ -54,7 +54,7 @@
     "build:package": "lerna run workspace:build:package --stream",
     "build:prod": "lerna run workspace:build:prod --stream",
     "build:test": "lerna run workspace:build:test --stream",
-    "clean": "lerna run --parallel workspace:clean --stream",
+    "clean": "lerna run --parallel workspace:clean --stream && npm run loc:clean",
     "gather-build-results": "bux gather-build-results",
     "launch": "npm run -s launch:web",
     "launch:desktop": "lerna run --parallel workspace:launch:desktop --stream",
