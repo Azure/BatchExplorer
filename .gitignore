@@ -6,3 +6,11 @@
 /desktop/release/
 coverage/
 env/
+Localize/packages/
+Localize/out/
+/desktop/resources/i18n/*
+/packages/common/resources/i18n/*
+/packages/playground/resources/i18n/*
+/packages/react/resources/i18n/*
+/packages/service/resources/i18n/*
+/util/bux/resources/i18n/json

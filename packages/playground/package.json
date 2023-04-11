@@ -18,7 +18,7 @@
     "build:clean": "run-s clean compile",
     "build:test": "run-s build test",
     "bux": "bux",
-    "build-translations": "bux build-translations --src src/ui-playground --destJSON build/i18n-json --destRESJSON i18n --packageName lib.playground",
+    "build-translations": "bux build-translations --src src/ui-playground --dest i18n --packageName lib.playground",
     "compile": "run-p compile:*",
     "compile:esm": "tsc -b ./config/tsconfig.build.json",
     "compile:cjs": "tsc -b ./config/tsconfig.cjs.json",
@@ -26,6 +26,7 @@
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",
     "clean:cjs": "bux rmrf ./lib-cjs",
+    "clean:resources": "bux rmrf ./resources",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
     "test:all": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage",
@@ -87,6 +88,7 @@
   },
   "files": [
     "lib",
-    "lib-cjs"
+    "lib-cjs",
+    "resources"
   ]
 }

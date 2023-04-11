@@ -58,7 +58,6 @@ describe("CLI", () => {
     test("Localization", async () => {
         await util.buildTranslations(
             "./__tests__/loc-source",
-            "./build/test-results/loc-results-1",
             "./build/test-results/loc-results-1"
         );
     });
@@ -68,15 +67,14 @@ describe("CLI", () => {
         await util.buildTranslations(
             "./__tests__/loc-source",
             "./build/test-results/loc-results-2",
-            "./build/test-results/loc-results-2",
             "lib.common"
         );
     });
 
-    //Check that the JSON file with the packageName parameter contains the package name in its contents
-    test("Check if JSON file with packageName parameter contains the package name", () => {
+    //Check that the RESJSON file with the packageName parameter contains the package name in its contents
+    test("Check if RESJSON file with packageName parameter contains the package name", () => {
         const data = fs.readFileSync(
-            "./build/test-results/loc-results-2/resources.json"
+            "./build/test-results/loc-results-2/resources.resjson"
         );
         expect(data.toString()).toContain("lib.common");
     });
@@ -87,7 +85,6 @@ describe("CLI", () => {
         await expect(
             createEnglishTranslations(
                 "./__tests__/loc-source-2",
-                "./build/test-results/loc-results-3",
                 "./build/test-results/loc-results-3"
             )
         ).rejects.toThrow(Error);

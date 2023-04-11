@@ -17,7 +17,7 @@
     "build": "npm run compile && npm run build-translations",
     "build:clean": "run-s clean compile",
     "build:test": "run-s build test",
-    "build-translations": "bux build-translations --src src/ui-service --destJSON build/i18n-json --destRESJSON i18n --packageName lib.service",
+    "build-translations": "bux build-translations --src src/ui-service --dest i18n --packageName lib.service",
     "compile": "run-p compile:*",
     "compile:esm": "tsc -b ./config/tsconfig.build.json",
     "compile:cjs": "tsc -b ./config/tsconfig.cjs.json",
@@ -25,6 +25,7 @@
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",
     "clean:cjs": "bux rmrf ./lib-cjs",
+    "clean:resources": "bux rmrf ./resources",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
     "test:all": "npm run test:coverage",
@@ -74,6 +75,7 @@
   },
   "files": [
     "lib",
-    "lib-cjs"
+    "lib-cjs",
+    "resources"
   ]
 }

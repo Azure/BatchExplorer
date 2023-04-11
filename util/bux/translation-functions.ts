@@ -15,21 +15,60 @@ const writeFile = promisify(fs.writeFile);
 
 export async function createEnglishTranslations(
     sourcePath: string,
-    destJSONPath: string,
-    destRESJSONPath: string,
+    destPath: string,
     packageName?: string
 ) {
     const translations = await loadDevTranslations(sourcePath, packageName);
     const content = JSON.stringify(translations, null, 2).replace(/\n/g, EOL);
 
-    const jsonPath = path.join(destJSONPath, "resources.json");
-    await writeFile(jsonPath, content);
-    console.log(`Saved combined english translations to JSON file ${jsonPath}`);
-
-    const resJsonPath = path.join(destRESJSONPath, "resources.resjson");
+    const resJsonPath = path.join(destPath, "resources.resjson");
     await writeFile(resJsonPath, content);
     console.log(
         `Saved combined english translations to RESJSON file ${resJsonPath}`
+    );
+
+    // Create JSON English file by parsing the RESJSON file and removing RESJSON-specific syntax and formatting
+    const resJsonContent = fs.readFileSync(resJsonPath, "utf-8");
+
+    const strippedResJsonContent = resJsonContent
+        .replace(/\/\/.*$/gm, "") // remove line comments
+        .replace(/\/\*[\s\S]*?\*\//gm, "") // remove block comments
+        .replace(/,\s*}/gm, "}") // remove trailing commas in objects
+        .replace(/,\s*]/gm, "]"); // remove trailing commas in arrays
+
+    const parsedContent = JSON.parse(strippedResJsonContent);
+    const cleanContent: Record<string, unknown> = {};
+
+    // Iterate through the properties of the object and exclude properties with names starting with an underscore
+    for (const key in parsedContent) {
+        if (
+            Object.hasOwnProperty.call(parsedContent, key) &&
+            !key.startsWith("_")
+        ) {
+            cleanContent[key] = parsedContent[key];
+        }
+    }
+
+    const cleanedJsonContent = JSON.stringify(cleanContent, null, 2);
+
+    const resourcesJsonPath = path.join(
+        path.dirname(path.dirname(sourcePath)),
+        "resources",
+        "i18n",
+        "json",
+        "resources.en.json"
+    );
+
+    // Check if the directory exists and create it if it doesn't
+    if (!fs.existsSync(path.dirname(resourcesJsonPath))) {
+        fs.mkdirSync(path.dirname(resourcesJsonPath), { recursive: true });
+    }
+
+    // Write the cleaned content to the file
+    fs.writeFileSync(resourcesJsonPath, cleanedJsonContent);
+
+    console.log(
+        `Saved stripped english translations to JSON file ${resourcesJsonPath}`
     );
 }
 
