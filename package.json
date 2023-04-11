@@ -63,7 +63,7 @@
     "lint": "prettier -c . && lerna run --parallel workspace:lint --stream && npm run -s lint:markdown",
     "lint:fix": "prettier -w . && lerna run --parallel workspace:lint:fix --stream && npm run -s lint:markdown",
     "lint:markdown": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules/**/*\" \"#SECURITY.md\"",
-    "loc:build": "cross-env-shell \"powershell -ExecutionPolicy Bypass -File ./Localize/build.ps1 && powershell -ExecutionPolicy Bypass -File ./Localize/copy-translations.ps1\"",
+    "loc:build": "powershell -ExecutionPolicy Bypass -File ./Localize/build.ps1 && powershell -ExecutionPolicy Bypass -File ./Localize/copy-translations.ps1",
     "loc:clean": "bux rmrf ./Localize/out",
     "loc:restore": "cross-env-shell \"cd Localize && powershell -ExecutionPolicy Bypass -File restore.ps1\"",
     "start": "npm run -s start:web",
