@@ -9,7 +9,7 @@ To build the latest English translation resjson file from the YAML files:
 
 The output will be in `{packageName}/i18n/resources.resjson`
 
-## Building Translations Files for Other Languages
+## Building Translations Files for Other Languages (Windows-Only)
 
 To build the localization translations for all languages besides English:
 

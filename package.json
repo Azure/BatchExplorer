@@ -65,7 +65,7 @@
     "lint:markdown": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules/**/*\" \"#SECURITY.md\"",
     "loc:build": "powershell -ExecutionPolicy Bypass -File ./Localize/build.ps1 && powershell -ExecutionPolicy Bypass -File ./Localize/copy-translations.ps1",
     "loc:clean": "bux rmrf ./Localize/out",
-    "loc:restore": "cross-env-shell \"cd Localize && powershell -ExecutionPolicy Bypass -File restore.ps1\"",
+    "loc:restore": "cd Localize && powershell -ExecutionPolicy Bypass -File restore.ps1",
     "start": "npm run -s start:web",
     "start:desktop": "lerna run --parallel workspace:start:desktop --stream",
     "start:web": "lerna run --parallel workspace:start:web --stream",
