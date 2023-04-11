@@ -156,8 +156,4 @@ describe("ActivityMonitorItemComponent", () => {
         expect(activityServiceSpy.cancel).toHaveBeenCalledOnce();
         expect(activityServiceSpy.cancel).toHaveBeenCalledWith(component.activity);
     });
-
-    // it("should pass accessibility test", async () => {
-    //     expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
-    // });
 });

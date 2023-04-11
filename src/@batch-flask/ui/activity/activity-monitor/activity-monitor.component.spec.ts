@@ -87,8 +87,4 @@ describe("ActivityMonitorComponent", () => {
 
         expect(component.runningActivities.length).toBe(0);
     });
-
-    // it("should pass accessibility test", async () => {
-    //     expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
-    // });
 });
