@@ -64,7 +64,7 @@
     "webpack:stats": "cross-env NODE_ENV=production npm run -s webpack -- --profile --json > coverage/webpack-stats.json",
     "webpack-dev-server": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "rebuild:app-deps": "electron-builder install-app-deps",
-    "postinstall": "npm run -s rebuild:app-deps"
+    "postinstall": "npm run -s rebuild:app-deps && npx patch-package"
   },
   "license": "MIT",
   "engines": {
@@ -139,6 +139,7 @@
     "monaco-editor-webpack-plugin": "^1.9.0",
     "node-fetch": "^2.6.7",
     "nyc": "^14.1.1",
+    "patch-package": "^6.5.1",
     "playwright": "^1.18.1",
     "prettier": "^2.2.1",
     "proxyquire": "^2.1.3",
