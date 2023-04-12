@@ -27,5 +27,8 @@
   "python.formatting.provider": "yapf",
   "editor.codeActionsOnSave": {
     "source.fixAll": true
-  }
+},
+"python.analysis.extraPaths": [
+    "${workspaceRoot}/python"
+]
 }

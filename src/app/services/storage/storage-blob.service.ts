@@ -296,7 +296,9 @@ export class StorageBlobService {
         const subject = new AsyncSubject<UploadFileResult>();
 
         const blobParams = this._parseSasUrl(sasUrl);
-        const blobClient = createBlobClient(sasUrl, blobParams.blob);
+        const { accountUrl, sasToken, container, blob } = blobParams;
+        const urlForClient = `${accountUrl}/${container}?${sasToken}`;
+        const blobClient = createBlobClient(urlForClient, blob);
         this.zone.run(() => {
             blobClient.uploadData(file)
                 .then(result => {

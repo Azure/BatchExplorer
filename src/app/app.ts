@@ -1,6 +1,12 @@
+// KLUDGE: This is a hack to make @azure/core-http think it is running in browser
+import './utils/disable-process'
+import { isNode } from '@azure/core-http'
+// need to use isNode or the import will be discard by webpack
+globalThis._isNode = isNode
+import './utils/enable-process'
+
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { ipcRenderer, remote } from "electron";
-
 import "@batch-flask/extensions";
 
 import { log } from "@batch-flask/utils";
@@ -17,7 +23,6 @@ import "./environment";
 import "./styles/main.scss";
 
 import "app/commands";
-
 interface LoadingTimeResults {
     startup: number;
     loadTranslations: number;
