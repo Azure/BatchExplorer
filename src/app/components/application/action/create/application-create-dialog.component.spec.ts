@@ -17,6 +17,7 @@ import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { MockedFile } from "test/utils/mocks";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
+import { isNode } from '@azure/core-http';
 
 describe("ApplicationCreateDialogComponent ", () => {
     let fixture: ComponentFixture<ApplicationCreateDialogComponent>;
@@ -304,5 +305,11 @@ describe("ApplicationCreateDialogComponent ", () => {
             expect(appAddedSpy).toHaveBeenCalledTimes(1);
             expect(appAddedSpy).toHaveBeenCalledWith("activate-fail");
         });
+
+        it ("isNode from @azure/core should be false", async () => {
+            // see comments on config/webpack.commmon.js L39 for why we need this
+            expect(isNode).toBe(false);
+        });
+
     });
 });

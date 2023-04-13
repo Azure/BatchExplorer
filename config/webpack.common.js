@@ -36,6 +36,13 @@ exports.defineEnv = function(env) {
             "RENDERER": JSON.stringify(true),
             "HOT": helpers.hasProcessFlag("hot"),
         },
+        // KLUDGE: This is a hack to make @azure/core-http thinks it's running in the browser,
+        // which uses process.versions.node to determine the environment.
+        // @azure/storage-blob uses isNode variable exported from @azure/core-http to determine
+        // how it should process data. Since we are using this SDK in the renderer process, it
+        // should get isNode = false.
+        // github issue: https://msazure.visualstudio.com/AzureBatch/_workitems/edit/17956715
+        "process.versions.node": "''",
     });
 };
 
