@@ -306,7 +306,7 @@ describe("ApplicationCreateDialogComponent ", () => {
             expect(appAddedSpy).toHaveBeenCalledWith("activate-fail");
         });
 
-        it ("isNode from @azure/core-http should be false", async () => {
+        it ("isNode from @azure/core-http should be false in the renderer process", async () => {
             // see patches/@azure+core-http+2.2.7.patch
             expect(isNode).toBe(false);
         });
