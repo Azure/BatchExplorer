@@ -27,7 +27,7 @@
     "test": "npm run -s test-client:coverage && npm run -s test-app",
     "test-app": "cross-env BE_ENABLE_A11Y_TESTING=true COVERAGE=1 npm run -s karma -- start",
     "test-app:mem": "cross-env DEBUG_MEM=1 npm run -s test-app",
-    "test-app-watch": "cross-env npm run -s karma -- start --auto-watch --no-single-run",
+    "test-app-watch": "npm run -s karma -- start --auto-watch --no-single-run",
     "test-app-watch:time": "cross-env DEBUG_TIME=1 npm run -s test-app-watch",
     "test-browser": "npm run -s test-app",
     "test-browser-watch": "npm run -s test-app-watch",
