@@ -306,8 +306,8 @@ describe("ApplicationCreateDialogComponent ", () => {
             expect(appAddedSpy).toHaveBeenCalledWith("activate-fail");
         });
 
-        it ("isNode from @azure/core should be false", async () => {
-            // see comments on config/webpack.commmon.js L39 for why we need this
+        it ("isNode from @azure/core-http should be false", async () => {
+            // see patches/@azure+core-http+2.2.7.patch
             expect(isNode).toBe(false);
         });
 

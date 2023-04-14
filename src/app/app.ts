@@ -1,5 +1,6 @@
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { ipcRenderer, remote } from "electron";
+
 import "@batch-flask/extensions";
 
 import { log } from "@batch-flask/utils";
@@ -16,6 +17,7 @@ import "./environment";
 import "./styles/main.scss";
 
 import "app/commands";
+
 interface LoadingTimeResults {
     startup: number;
     loadTranslations: number;
