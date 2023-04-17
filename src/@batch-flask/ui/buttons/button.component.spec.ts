@@ -6,6 +6,7 @@ import { MaterialModule } from "@batch-flask/core";
 import { ButtonComponent } from "@batch-flask/ui/buttons/button.component";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { click } from "test/utils/helpers";
+import { runAxe } from "test/utils/helpers/axe-helpers";
 
 @Component({
     template: `
@@ -97,6 +98,10 @@ describe("ButtonComponent", () => {
         expect(describedbyId).toBeBlank();
     });
 
+    it("should pass accessibility test", async () => {
+        expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
+    });
+
     describe("when disabled", () => {
         beforeEach(() => {
             testComponent.disabled = true;
@@ -111,6 +116,10 @@ describe("ButtonComponent", () => {
             click(de);
             fixture.detectChanges();
             expect(testComponent.onAction).not.toHaveBeenCalled();
+        });
+
+        it("should pass accessibility test", async () => {
+            expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
         });
     });
 
@@ -128,6 +137,10 @@ describe("ButtonComponent", () => {
             click(de);
             fixture.detectChanges();
             expect(testComponent.onAction).toHaveBeenCalledOnce();
+        });
+
+        it("should pass accessibility test", async () => {
+            expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
         });
     });
 });

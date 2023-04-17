@@ -11,7 +11,7 @@ import {
     enterZone,
 } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
-import { File, FileLoadOptions, FileLoader, FileNavigator, FileLoadResult } from "@batch-flask/ui";
+import { File as FileRecord, FileLoadOptions, FileLoader, FileNavigator, FileLoadResult } from "@batch-flask/ui";
 import { CloudPathUtils, log } from "@batch-flask/utils";
 import { StorageEntityGetter, StorageListGetter } from "app/services/core";
 import { ListBlobOptions, SharedAccessPolicy, StorageBlobResult, UploadFileResult } from "app/services/storage/models";
@@ -86,12 +86,9 @@ export class InvalidSasUrlError extends Error {
 // Regex to extract the host, container and blob from a sasUrl
 const storageBlobUrlRegex = /^(https:\/\/[\w\._\-]+)\/([\w\-_]+)\/([\w\-_.]+)\?(.*)$/i;
 
-function createBlobClient(params: CreateBlobParams) {
-    const containerClient = new ContainerClient(
-        params.accountUrl + params.sasToken,
-        params.container
-    );
-    return containerClient.getBlockBlobClient(params.blob);
+function createBlobClient(url: string, blob: string) {
+    const containerClient = new ContainerClient(url);
+    return containerClient.getBlockBlobClient(blob);
 }
 
 @Injectable({ providedIn: "root" })
@@ -99,26 +96,26 @@ export class StorageBlobService {
     public maxBlobPageSize: number = 200; // 500 slows down the UI too much.
     public maxContainerPageSize: number = 100;
 
-    private _blobListCache = new TargetedDataCache<ListBlobParams, File>({
+    private _blobListCache = new TargetedDataCache<ListBlobParams, FileRecord>({
         key: ({ storageAccountId, container }) => `${storageAccountId}/${container}`,
     }, "name");
 
-    private _blobGetter: StorageEntityGetter<File, BlobFileParams>;
+    private _blobGetter: StorageEntityGetter<FileRecord, BlobFileParams>;
 
-    private _blobListGetter: StorageListGetter<File, ListBlobParams>;
+    private _blobListGetter: StorageListGetter<FileRecord, ListBlobParams>;
 
     constructor(
         private storageClient: StorageClientService,
         private fs: FileSystemService,
         private zone: NgZone) {
 
-        this._blobGetter = new StorageEntityGetter(File, this.storageClient, {
+        this._blobGetter = new StorageEntityGetter(FileRecord, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getFn: (client, params: BlobFileParams) =>
                 client.getBlobProperties(params.container, params.blobName, params.blobPrefix),
         });
 
-        this._blobListGetter = new StorageListGetter(File, this.storageClient, {
+        this._blobListGetter = new StorageListGetter(FileRecord, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getData: (client: BlobStorageClientProxy,
                 params, options, continuationToken) => {
@@ -129,23 +126,23 @@ export class StorageBlobService {
                     maxPageSize: this.maxBlobPageSize
                 };
 
-                // N.B. `BlobItem` and `File` are nearly identical
+                // N.B. `BlobItem` and `FileRecord` are nearly identical
                 return client.listBlobs(
                     params.container,
                     blobOptions,
                     continuationToken,
-                ) as Promise<StorageBlobResult<File[]>>;
+                ) as Promise<StorageBlobResult<FileRecord[]>>;
             },
             logIgnoreError: storageIgnoredErrors,
         });
     }
 
-    public getBlobFileCache(params: ListBlobParams): DataCache<File> {
+    public getBlobFileCache(params: ListBlobParams): DataCache<FileRecord> {
         return this._blobListCache.getCache(params);
     }
 
     public listView(storageAccountId: string, container: string, options: ListBlobOptions = {})
-        : ListView<File, ListBlobParams> {
+        : ListView<FileRecord, ListBlobParams> {
 
         const view = new ListView({
             cache: (params) => this.getBlobFileCache(params),
@@ -160,7 +157,7 @@ export class StorageBlobService {
         storageAccountId: string,
         container: string,
         options: ListBlobOptions = {},
-        forceNew = false): Observable<ListResponse<File>> {
+        forceNew = false): Observable<ListResponse<FileRecord>> {
         return this._blobListGetter.fetch({ storageAccountId, container }, options, forceNew);
     }
 
@@ -192,11 +189,11 @@ export class StorageBlobService {
      * @param blobName - Name of the blob, not including prefix
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
-    public get(storageAccountId: string, container: string, blobName: string, blobPrefix?: string): Observable<File> {
+    public get(storageAccountId: string, container: string, blobName: string, blobPrefix?: string): Observable<FileRecord> {
         return this._blobGetter.fetch({ storageAccountId, container, blobName, blobPrefix });
     }
 
-    public blobView(): EntityView<File, BlobFileParams> {
+    public blobView(): EntityView<FileRecord, BlobFileParams> {
         return new EntityView({
             cache: (params) => this.getBlobFileCache(params),
             getter: this._blobGetter,
@@ -295,13 +292,15 @@ export class StorageBlobService {
         });
     }
 
-    public uploadToSasUrl(sasUrl: string, filePath: string): Observable<any> {
+    public uploadToSasUrl(sasUrl: string, file: File): Observable<any> {
         const subject = new AsyncSubject<UploadFileResult>();
 
         const blobParams = this._parseSasUrl(sasUrl);
-        const blobClient = createBlobClient(blobParams);
+        const { accountUrl, sasToken, container, blob } = blobParams;
+        const urlForClient = `${accountUrl}/${container}?${sasToken}`;
+        const blobClient = createBlobClient(urlForClient, blob);
         this.zone.run(() => {
-            blobClient.uploadFile(filePath)
+            blobClient.uploadData(file)
                 .then(result => {
                     subject.next(result);
                 }).catch(error => subject.error(ServerError.fromStorage(error))
