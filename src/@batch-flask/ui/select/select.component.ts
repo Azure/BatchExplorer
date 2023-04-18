@@ -532,6 +532,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
         } else if (isArrowKey && event.altKey || keyCode === ESCAPE) {
             // Close the select on ALT + arrow key to match the native <select>
             event.preventDefault();
+            event.stopPropagation();
             this.closeDropdown();
         } else if ((keyCode === ENTER || keyCode === SPACE) && navigator.focusedItem) {
             event.preventDefault();
