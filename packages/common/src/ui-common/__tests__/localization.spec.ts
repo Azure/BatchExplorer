@@ -7,7 +7,7 @@ describe("Localization utilities", () => {
     });
 
     test("Can return simple english strings", () => {
-        expect(translate("subscription")).toEqual("Subscription");
+        expect(translate("lib.common.localizer.account")).toEqual("Account");
     });
 
     test("Throw error if string is unknown", () => {

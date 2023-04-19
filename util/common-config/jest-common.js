@@ -4,6 +4,11 @@
 
 const { pathsToModuleNameMapper } = require("ts-jest");
 
+const { readFileSync } = require("fs");
+const path = require("path");
+
+const combinedResourceStrings = getCombinedResourceStrings();
+
 module.exports = {
     /**
      * Creates a Jest configuration object with optional overrides.
@@ -50,6 +55,7 @@ module.exports = {
                 ],
             ],
             globals: {
+                __TEST_RESOURCE_STRINGS: combinedResourceStrings,
                 "ts-jest": {
                     diagnostics: {
                         // Squelch a warning with outputting ES6 modules (in tsconfig.json)
@@ -95,3 +101,31 @@ module.exports = {
         return Object.assign({}, baseConfig, overrides);
     },
 };
+
+function getCombinedResourceStrings() {
+    const resourceStrings = [
+        require(path.join(
+            __dirname,
+            "../../packages/common/resources/i18n/json/resources.en.json"
+        )),
+        require(path.join(
+            __dirname,
+            "../../packages/service/resources/i18n/json/resources.en.json"
+        )),
+        require(path.join(
+            __dirname,
+            "../../packages/react/resources/i18n/json/resources.en.json"
+        )),
+        require(path.join(
+            __dirname,
+            "../../packages/playground/resources/i18n/json/resources.en.json"
+        )),
+    ];
+
+    const allResourceStrings = {};
+    resourceStrings.forEach((strings) => {
+        Object.assign(allResourceStrings, strings);
+    });
+
+    return allResourceStrings;
+}

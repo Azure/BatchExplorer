@@ -2,7 +2,7 @@ import { DependencyFactories } from ".";
 import { setLocalTimeZoneOffset } from "../datetime";
 import { FakeClock } from "../datetime/fake-clock";
 import { MockHttpClient } from "../http/mock-http-client";
-import { StandardLocalizer } from "../localization/standard-localizer";
+import { FakeLocalizer } from "../localization/fake-localizer";
 import { createMockLogger } from "../logging";
 import { AbstractEnvironment } from "./abstract-environment";
 import {
@@ -18,7 +18,7 @@ export const mockEnvironmentConfig: EnvironmentConfig = {
 export const mockDependencyFactories: DependencyFactories = {
     clock: () => new FakeClock(),
     loggerFactory: () => createMockLogger,
-    localizer: () => new StandardLocalizer(),
+    localizer: () => new FakeLocalizer(),
     httpClient: () => new MockHttpClient(),
 };
 
