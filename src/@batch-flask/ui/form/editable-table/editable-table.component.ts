@@ -120,6 +120,10 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         return index;
     }
 
+    public getHeaderIdForColumn(column: EditableTableColumnComponent) {
+        return `table-header-${column.name}`
+    }
+
     private _buildControlsFromValue(items: any[], columns: EditableTableColumnComponent[]) {
         if (Array.isArray(items) && items.length > 0) {
             const controls: FormGroup[] = Object.values(this.items.controls).slice(0, items.length) as any;
