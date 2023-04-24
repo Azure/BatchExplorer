@@ -8,6 +8,10 @@ steps:
     displayName: 'Run copy-translations.ps1 with artifacts path (Linux)'
 
   - script: |
+      pwsh -File "$(System.DefaultWorkingDirectory)/Localize/merge-translations.ps1" -repositoryRoot "$(System.DefaultWorkingDirectory)"
+    displayName: 'Run merge-translations.ps1 with artifacts path (Linux)'
+
+  - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run build:package

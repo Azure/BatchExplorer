@@ -1,20 +1,18 @@
 param (
-    [string]$artifactsPath = ""
+    [string]$repositoryRoot = ""
 )
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
-# If artifacts path is empty, then this script is run locally
-# But if artifactsPath is set, then the script is run on the Azure DevOps path
-if ($artifactsPath -eq "") {
+# If repositoryRoot is empty, then this script is run locally
+# But if repositoryRoot is set, then the script is run on the Azure DevOps path
+if ($repositoryRoot -eq "") {
     $rootDir = (Join-Path $scriptDir ".." -Resolve)
 } else {
-    $rootDir = $artifactsPath
+    $rootDir = $repositoryRoot
 }
 
 $localizeFinalDir = Join-Path $rootDir "Localize/final"
-
-Write-Host "The root directory is $rootDir"
 
 # Check if Localize/final directory exists, if not create it
 if (!(Test-Path -Path $localizeFinalDir)) {
