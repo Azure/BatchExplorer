@@ -42,6 +42,7 @@
     "workspace:build:package": "npm run build:clean",
     "workspace:build:prod": "npm run build:clean",
     "workspace:build:test": "npm run build:test",
+    "workspace:build-translations": "npm run build-translations",
     "workspace:clean": "npm run clean",
     "workspace:launch:desktop": "npm run watch",
     "workspace:launch:web": "npm run watch",
