@@ -8,6 +8,7 @@ coverage/
 env/
 Localize/packages/
 Localize/out/
+Localize/final/
 /desktop/resources/i18n/*
 /packages/common/resources/i18n/*
 /packages/playground/resources/i18n/*
