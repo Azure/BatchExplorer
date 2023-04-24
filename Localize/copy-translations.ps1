@@ -17,8 +17,7 @@ $packageNames = @("common", "service", "playground", "react")
 # Get language directories
 $languageDirs = Get-ChildItem -Path $sourceRoot -Directory
 
-# If this script is run locally, in addition to the resjson files, it adds a json directory containing json files for local development
-# If script is run on ADO, it only adds the resjson files used in production
+# Add JSON and RESJSON files
 
 # Strip out resjson comments and resjson-specific formatting before writing the result to json file
 function Convert-ResjsonToJson {
