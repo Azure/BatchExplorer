@@ -18,7 +18,7 @@
                     <i *ngIf="favorite.url === currentUrl" class="extra fa fa-check"></i>
                 </span>
             </bl-clickable>
-            <bl-clickable class="dropdown-item delete" (do)="removeFavorite(favorite)">
+            <bl-clickable class="dropdown-item delete" (do)="removeFavorite(favorite)" title="Remove from favorites" name="remove">
                 <i class="fa fa-times"  aria-hidden="true"></i>
             </bl-clickable>
         </div>
