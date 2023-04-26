@@ -1,20 +1,34 @@
 import { Localizer } from "./localizer";
 
-export class StandardLocalizer implements Localizer {
-    translate(message: string): string {
-        switch (message) {
-            case "subscription":
-                return "Subscription";
-            case "resourceGroup":
-                return "Resource Group";
-            case "accountName":
-                return "Account Name";
-            case "form.buttons.apply":
-                return "Apply";
-            case "form.buttons.discardChanges":
-                return "Discard changes";
-        }
+interface Translations {
+    [key: string]: string;
+}
 
-        throw new Error("Unable to translate string " + message);
+export class StandardLocalizer implements Localizer {
+    private translations?: Translations;
+
+    async loadTranslations(): Promise<void> {
+        const language = navigator.language.split("-")[0];
+        const response = await fetch(
+            `./resources/translations/resources.${language}.json`
+        );
+        if (!response.ok) {
+            throw new Error(
+                `Failed to load translations: ${response.statusText}`
+            );
+        }
+        this.translations = await response.json();
+    }
+
+    translate(message: string): string {
+        if (!this.translations) {
+            throw new Error("Translation strings are not loaded " + message);
+        }
+        const translation = this.translations[message];
+        if (translation != null) {
+            return translation;
+        } else {
+            return message;
+        }
     }
 }

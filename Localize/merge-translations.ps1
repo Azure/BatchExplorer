@@ -13,10 +13,16 @@ if ($repositoryRoot -eq "") {
 }
 
 $localizeFinalDir = Join-Path $rootDir "Localize/final"
+$webServerDir = Join-Path $rootDir "web/dev-server/resources/translations"
 
 # Check if Localize/final directory exists, if not create it
 if (!(Test-Path -Path $localizeFinalDir)) {
     New-Item -ItemType Directory -Path $localizeFinalDir | Out-Null
+}
+
+# Check if web/dev-server/resources/translations directory exists, if not create it
+if (!(Test-Path -Path $webServerDir)) {
+    New-Item -ItemType Directory -Path $webServerDir | Out-Null
 }
 
 # Define resource directories (absolute paths)
@@ -68,13 +74,18 @@ if ($allFilesExist) {
     # Write the merged translations to the output directory
     foreach ($langID in $mergedTranslations.Keys) {
         $outputFile = Join-Path $localizeFinalDir "resources.$langID.json"
+        $webServerOutputFile = Join-Path $webServerDir "resources.$langID.json"
+
         # Sort keys alphabetically and create a new ordered dictionary
         $sortedTranslations = [ordered]@{}
         $mergedTranslations[$langID].Keys | Sort-Object | ForEach-Object { $sortedTranslations[$_] = $mergedTranslations[$langID][$_] }
+
+        # Write the sorted translations to the output files
         $sortedTranslations | ConvertTo-Json -Depth 100 | Set-Content -Path $outputFile
+        $sortedTranslations | ConvertTo-Json -Depth 100 | Set-Content -Path $webServerOutputFile
     }
 
-    Write-Host "Merged translations have been saved in $localizeFinalDir"
+    Write-Host "Merged translations have been saved in $localizeFinalDir and $webServerDir"
 }
 else {
     Write-Error "ERROR: Not all translation files were found. Cannot merge translations."

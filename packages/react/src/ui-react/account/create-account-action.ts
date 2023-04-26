@@ -52,18 +52,18 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
             values: initialValues,
         });
         form.param("subscriptionId", SubscriptionParameter, {
-            label: translate("subscription"),
+            label: translate("lib.common.localizer.subscription"),
             required: true,
         });
         form.param("resourceGroupId", ResourceGroupParameter, {
             dependencies: {
                 subscriptionId: "subscriptionId",
             },
-            label: translate("resourceGroup"),
+            label: translate("lib.common.localizer.resourceGroup"),
             required: true,
         });
         form.param("accountName", StringParameter, {
-            label: translate("accountName"),
+            label: translate("lib.common.localizer.account"),
             required: true,
             description:
                 "This is how you identify your Batch account. It must be unique.",
