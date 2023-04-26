@@ -111,20 +111,35 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
             new ContextMenuItem({ label: this.i18n.t("profile-button.viewLogs"), click: () => this._openLogFolder() }),
             new ContextMenuItem({ label: this.i18n.t("profile-button.report"), click: () => this._openGithubIssues() }),
             new ContextMenuItem({ label: this.i18n.t("profile-button.about"), click: () => this._showAboutPage() }),
-            new ContextMenuSeparator(),
-            new ContextMenuItem({ label: this.i18n.t("profile-button.logout"), click: () => this._logout() }),
-
         ];
 
+        // Add the playground and theme menu items only in dev mode
         if (isDevMode()) {
-            const devMenuItem = new MultiContextMenuItem({
-                label: "Developer",
-                subitems: [
-                    new ContextMenuItem({ label: this.i18n.t("profile-button.viewTheme"), click: () => this._gotoThemeColors() })
-                ],
-            });
-            items.splice(5, 0, devMenuItem);
+            items.push(
+                new ContextMenuSeparator(),
+                new MultiContextMenuItem({
+                    label: "Developer",
+                    subitems: [
+                        new ContextMenuItem({
+                            label: this.i18n.t("profile-button.viewTheme"),
+                            click: () => this._gotoThemeColors()
+                        }),
+                        new ContextMenuItem({
+                            label: this.i18n.t("profile-button.playground"),
+                            click: () => this._gotoPlayground()
+                        }),
+                    ],
+                })
+            );
         }
+
+        items.push(
+            new ContextMenuSeparator(),
+            new ContextMenuItem({
+                label: this.i18n.t("profile-button.logout"),
+                click: () => this._logout()
+            })
+        );
 
         items.unshift(this._getAutoUpdateMenuItem());
         this.contextMenuService.openMenu(new ContextMenu(items));

@@ -130,7 +130,7 @@ describe("ProfileButtonComponent", () => {
         fixture.detectChanges();
         expect(contextMenuServiceSpy.openMenu).toHaveBeenCalledOnce();
         const items = contextMenuServiceSpy.lastMenu.items;
-        expect(items.length).toBe(13);
+        expect(items.length).toBe(14);
     });
 
     describe("Clicking on the profile", () => {
@@ -138,14 +138,16 @@ describe("ProfileButtonComponent", () => {
             click(clickableEl);
             expect(contextMenuServiceSpy.openMenu).toHaveBeenCalled();
             const items = contextMenuServiceSpy.lastMenu.items;
-            expect(items.length).toEqual(13);
+            expect(items.length).toEqual(14);
 
             let i = 0;
-            const expectMenuItem= (menuItemType, label?) => {
-                const menuItem = items[i++];
-                expect(menuItem instanceof menuItemType).toBe(true);
+            const expectMenuItem = (menuItemType, label?) => {
+                const menuItem = items[i++] as any;
+                expect(menuItem instanceof menuItemType)
+                    .withContext(`Item ${i} [${menuItem.label}] is not a ${
+                        menuItemType.name}`).toBe(true);
                 if (label) {
-                    expect((menuItem as any).label).toEqual(label);
+                    expect(menuItem.label).toEqual(label);
                 }
             }
 
@@ -155,11 +157,12 @@ describe("ProfileButtonComponent", () => {
             expectMenuItem(ContextMenuItem, "profile-button.authentication");
             expectMenuItem(ContextMenuItem, "profile-button.keybindings");
             expectMenuItem(MultiContextMenuItem, "Language (Preview)");
-            expectMenuItem(MultiContextMenuItem, "Developer");
             expectMenuItem(ContextMenuItem, "profile-button.thirdPartyNotices");
             expectMenuItem(ContextMenuItem, "profile-button.viewLogs");
             expectMenuItem(ContextMenuItem, "profile-button.report");
             expectMenuItem(ContextMenuItem, "profile-button.about");
+            expectMenuItem(ContextMenuSeparator);
+            expectMenuItem(MultiContextMenuItem, "Developer");
             expectMenuItem(ContextMenuSeparator);
             expectMenuItem(ContextMenuItem, "profile-button.logout");
         });
