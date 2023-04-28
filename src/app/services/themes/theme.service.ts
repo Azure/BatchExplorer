@@ -61,8 +61,7 @@ export class ThemeService implements OnDestroy {
             });
 
         this._themesLoadPath = [
-            path.join(batchExplorer.resourcesFolder, "data", "themes"),
-            path.join(fs.commonFolders.userData, "themes"),
+            path.join(batchExplorer.resourcesFolder, "data", "themes")
         ];
     }
 

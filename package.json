@@ -16,7 +16,7 @@
     "name": "Microsoft Corporation",
     "email": "batchexplorer@microsoft.com"
   },
-  "version": "2.16.1",
+  "version": "2.17.0",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json --files",
@@ -25,7 +25,7 @@
     "clean": "rimraf build/* dll/* python/dist/* python/build/*",
     "karma": "node --max_old_space_size=4096 node_modules/karma/bin/karma",
     "test": "npm run -s test-client:coverage && npm run -s test-app",
-    "test-app": "cross-env COVERAGE=1 npm run -s karma -- start",
+    "test-app": "cross-env BE_ENABLE_A11Y_TESTING=true COVERAGE=1 npm run -s karma -- start",
     "test-app:mem": "cross-env DEBUG_MEM=1 npm run -s test-app",
     "test-app-watch": "npm run -s karma -- start --auto-watch --no-single-run",
     "test-app-watch:time": "cross-env DEBUG_TIME=1 npm run -s test-app-watch",
@@ -64,7 +64,7 @@
     "webpack:stats": "cross-env NODE_ENV=production npm run -s webpack -- --profile --json > coverage/webpack-stats.json",
     "webpack-dev-server": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "rebuild:app-deps": "electron-builder install-app-deps",
-    "postinstall": "npm run -s rebuild:app-deps"
+    "postinstall": "npm run -s rebuild:app-deps && npx patch-package"
   },
   "license": "MIT",
   "engines": {
@@ -118,6 +118,7 @@
     "html-webpack-plugin": "^3.2.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine": "~3.5.0",
+    "jasmine-axe": "^1.1.0",
     "jasmine-core": "^3.6.0",
     "jasmine-spec-reporter": "^4.2.1",
     "karma": "^6.3.16",
@@ -139,6 +140,7 @@
     "monaco-editor-webpack-plugin": "^1.9.0",
     "node-fetch": "^2.6.7",
     "nyc": "^14.1.1",
+    "patch-package": "^6.5.1",
     "playwright": "^1.18.1",
     "prettier": "^2.2.1",
     "proxyquire": "^2.1.3",
@@ -181,7 +183,6 @@
     "commander": "^8.0.0",
     "d3": "^7.8.2",
     "decode-uri-component": "^0.2.1",
-    "download": "^8.0.0",
     "electron-updater": "^4.3.4",
     "element-resize-detector": "^1.2.1",
     "extract-zip": "^1.6.7",
@@ -200,6 +201,7 @@
     "luxon": "^1.28.1",
     "make-dir": "^2.1.0",
     "node-abi": "^2.18.0",
+    "node-downloader-helper": "^2.1.6",
     "node-forge": "^1.3.0",
     "patternomaly": "^1.3.2",
     "reflect-metadata": "^0.1.13",
