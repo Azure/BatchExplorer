@@ -9,6 +9,7 @@ files:
   - "package.json"
   - "dev-app-update.yml"
   - "!node_modules/jschardet/"
+  - "!node_modules/@batch/"
 
 extraResources:
   - from: "python/dist/main"
