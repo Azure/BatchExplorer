@@ -1,4 +1,5 @@
 import { StorageBlobAdapter } from "./storage-blob-adapter";
+import { isNode } from "@azure/core-http";
 
 describe("StorageBlobAdapter", () => {
     let adapter: StorageBlobAdapter;
@@ -113,6 +114,9 @@ describe("StorageBlobAdapter", () => {
                 }))
             );
         });
+    });
+    it("isNode from @azure/core-http should be true in the main process", () => {
+        expect(isNode).toBe(true);
     });
 });
 

@@ -10,7 +10,7 @@
     <bl-form-page [title]="title" main-form-page [formGroup]="form">
         <bl-form-section title="Mode" *ngIf="multipleModes">
             <div class="modes">
-                <bl-button type="wide" [class.selected]="modeState === NcjTemplateMode.NewPoolAndJob" (do)="pickMode(NcjTemplateMode.NewPoolAndJob)">Run job with auto pool</bl-button>
+                <bl-button type="wide" [class.selected]="modeState === NcjTemplateMode.NewPoolAndJob" (do)="pickMode(NcjTemplateMode.NewPoolAndJob)" autofocus>Run job with auto pool</bl-button>
                 <bl-button type="wide" [class.selected]="modeState === NcjTemplateMode.ExistingPoolAndJob" (do)="pickMode(NcjTemplateMode.ExistingPoolAndJob)">Run job with existing pool</bl-button>
                 <bl-button type="wide" [class.selected]="modeState === NcjTemplateMode.NewPool" (do)="pickMode(NcjTemplateMode.NewPool)">Create pool for later use</bl-button>
             </div>

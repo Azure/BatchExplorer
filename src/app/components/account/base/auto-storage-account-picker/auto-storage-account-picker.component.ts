@@ -112,13 +112,13 @@ export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAc
      * to define a custom handler.
      */
     onKeydown(event: KeyboardEvent) {
-        this.classicTooltip.hide();
+        this.classicTooltip?.hide();
         if (event.key === "ArrowDown" || event.key === "ArrowUp" ||
             event.key === "Tab") {
             if (this.selectedStorageAccounts.size === 1) {
                 const id = this.selectedStorageAccounts.values().next().value;
                 if (this.classicAccounts.has(id)) {
-                    this.classicTooltip.show();
+                    this.classicTooltip?.show();
                 }
             }
         }

@@ -108,7 +108,7 @@ export class ApplicationCreateDialogComponent {
         if (!this.hasValidFile()) {
             return throwError("Valid file not selected");
         }
-        return this.storageBlobService.uploadToSasUrl(sasUrl, file.path);
+        return this.storageBlobService.uploadToSasUrl(sasUrl, file);
     }
 
     private _tryActivate(applicationName: string, pkg: BatchApplicationPackage): Observable<any> {
