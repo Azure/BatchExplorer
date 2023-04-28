@@ -16,3 +16,4 @@ Localize/final/
 /packages/service/resources/i18n/*
 /util/bux/resources/i18n/json
 web/dev-server/resources/translations
+web/resources/i18n/*

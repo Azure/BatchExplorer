@@ -17,6 +17,9 @@
         },
         {
           "SourceFile": "desktop\\i18n\\resources.resjson"
+        },
+        {
+          "SourceFile": "web\\i18n\\resources.resjson"
         }
       ]
     }
