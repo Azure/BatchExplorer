@@ -26,25 +26,25 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 17. commander (https://github.com/tj/commander.js) - MIT
 18. d3 (https://d3js.org) - ISC
 19. decode-uri-component (https://github.com/SamVerschueren/decode-uri-component) - MIT
-20. download (https://github.com/kevva/download) - MIT
-21. electron-updater (https://github.com/electron-userland/electron-builder) - MIT
-22. element-resize-detector (https://github.com/wnr/element-resize-detector) - MIT
-23. extract-zip (https://github.com/maxogden/extract-zip) - BSD-2-Clause
-24. focus-visible (https://github.com/WICG/focus-visible) - W3C
-25. font-awesome (http://fontawesome.io/) - (OFL-1.1 AND MIT)
-26. get-proxy-settings (https://github.com/Azure/get-proxy-settings) - MIT
-27. glob (https://github.com/isaacs/node-glob) - ISC
-28. hammerjs (http://hammerjs.github.io/) - MIT
-29. https-proxy-agent (https://github.com/TooTallNate/node-https-proxy-agent) - MIT
-30. immutable (https://facebook.github.com/immutable-js) - MIT
-31. inflection (https://github.com/dreamerslab/node.inflection) - MIT
-32. js-yaml (https://github.com/nodeca/js-yaml) - MIT
-33. jschardet (https://github.com/aadsm/jschardet) - LGPL-2.1+
-34. keytar (http://atom.github.io/node-keytar) - MIT
-35. load-json-file (https://github.com/sindresorhus/load-json-file) - MIT
-36. luxon (https://github.com/moment/luxon) - MIT
-37. make-dir (https://github.com/sindresorhus/make-dir) - MIT
-38. node-abi (https://github.com/lgeiger/node-abi#readme) - MIT
+20. electron-updater (https://github.com/electron-userland/electron-builder) - MIT
+21. element-resize-detector (https://github.com/wnr/element-resize-detector) - MIT
+22. extract-zip (https://github.com/maxogden/extract-zip) - BSD-2-Clause
+23. focus-visible (https://github.com/WICG/focus-visible) - W3C
+24. font-awesome (http://fontawesome.io/) - (OFL-1.1 AND MIT)
+25. get-proxy-settings (https://github.com/Azure/get-proxy-settings) - MIT
+26. glob (https://github.com/isaacs/node-glob) - ISC
+27. hammerjs (http://hammerjs.github.io/) - MIT
+28. https-proxy-agent (https://github.com/TooTallNate/node-https-proxy-agent) - MIT
+29. immutable (https://facebook.github.com/immutable-js) - MIT
+30. inflection (https://github.com/dreamerslab/node.inflection) - MIT
+31. js-yaml (https://github.com/nodeca/js-yaml) - MIT
+32. jschardet (https://github.com/aadsm/jschardet) - LGPL-2.1+
+33. keytar (http://atom.github.io/node-keytar) - MIT
+34. load-json-file (https://github.com/sindresorhus/load-json-file) - MIT
+35. luxon (https://github.com/moment/luxon) - MIT
+36. make-dir (https://github.com/sindresorhus/make-dir) - MIT
+37. node-abi (https://github.com/lgeiger/node-abi#readme) - MIT
+38. node-downloader-helper (https://github.com/hgouveia/node-downloader-helper) - MIT
 39. node-forge (https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
 40. patternomaly (https://github.com/ashiguruma/patternomaly) - MIT
 41. reflect-metadata (http://rbuckton.github.io/reflect-metadata) - Apache-2.0
@@ -67,7 +67,7 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2010-2022 Google LLC. https://angular.io/license
+Copyright (c) 2010-2023 Google LLC. https://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -125,7 +125,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2010-2022 Google LLC. https://angular.io/license
+Copyright (c) 2010-2023 Google LLC. https://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -154,7 +154,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2010-2022 Google LLC. https://angular.io/license
+Copyright (c) 2010-2023 Google LLC. https://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -183,7 +183,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2010-2022 Google LLC. https://angular.io/license
+Copyright (c) 2010-2023 Google LLC. https://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -212,7 +212,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2010-2022 Google LLC. https://angular.io/license
+Copyright (c) 2010-2023 Google LLC. https://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -270,7 +270,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2010-2022 Google LLC. https://angular.io/license
+Copyright (c) 2010-2023 Google LLC. https://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -299,7 +299,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2010-2022 Google LLC. https://angular.io/license
+Copyright (c) 2010-2023 Google LLC. https://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -328,7 +328,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2010-2022 Google LLC. https://angular.io/license
+Copyright (c) 2010-2023 Google LLC. https://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -357,7 +357,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2010-2022 Google LLC. https://angular.io/license
+Copyright (c) 2010-2023 Google LLC. https://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -581,23 +581,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ============================================================
 
 ============================================================
-    Start license for download
-------------------------------------------------------------
-MIT License
-
-Copyright (c) Kevin Mårtensson <kevinmartensson@gmail.com> (github.com/kevva)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-------------------------------------------------------------
-    End license for download
-============================================================
-
-============================================================
     Start license for electron-updater
 ------------------------------------------------------------
 The MIT License (MIT)
@@ -690,7 +673,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ============================================================
     Start license for focus-visible
 ------------------------------------------------------------
-All Reports in this Repository are licensed by Contributors under the 
+All Reports in this Repository are licensed by Contributors under the
 [W3C Software and Document
 License](http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document). Contributions to
 Specifications are made under the [W3C CLA](https://www.w3.org/community/about/agreements/cla/).
@@ -728,7 +711,7 @@ as SVG and JS file types.
 In the Font Awesome Free download, the SIL OFL license applies to all icons
 packaged as web and desktop font files.
 
-Copyright (c) 2022 Fonticons, Inc. (https://fontawesome.com)
+Copyright (c) 2023 Fonticons, Inc. (https://fontawesome.com)
 with Reserved Font Name: "Font Awesome".
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
@@ -828,7 +811,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 In the Font Awesome Free download, the MIT license applies to all non-font and
 non-icon files.
 
-Copyright 2022 Fonticons, Inc.
+Copyright 2023 Fonticons, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in the
@@ -1676,6 +1659,34 @@ SOFTWARE.
 ============================================================
 
 ============================================================
+    Start license for node-downloader-helper
+------------------------------------------------------------
+MIT License
+
+Copyright (c) 2018 Jose De Gouveia
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+------------------------------------------------------------
+    End license for node-downloader-helper
+============================================================
+
+============================================================
     Start license for node-forge
 ------------------------------------------------------------
 You may use the Forge project under the terms of either the BSD License or the
@@ -2050,7 +2061,7 @@ Apache License
 
 Version 2.0, January 2004
 
-http://www.apache.org/licenses/ 
+http://www.apache.org/licenses/
 
 TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
@@ -2309,7 +2320,7 @@ END OF TERMS AND CONDITIONS
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- 
+
 
 ------------------------------------------------------------
     End license for rxjs
@@ -2479,7 +2490,7 @@ IN THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2010-2022 Google LLC. https://angular.io/license
+Copyright (c) 2010-2023 Google LLC. https://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -2542,7 +2553,7 @@ Azure CLI
 
 Copyright (c) Microsoft Corporation
 
-All rights reserved. 
+All rights reserved.
 
 MIT License
 
@@ -2697,7 +2708,7 @@ The externally maintained libraries used by Node.js are:
 
     COPYRIGHT AND PERMISSION NOTICE
 
-    Copyright © 1991-2022 Unicode, Inc. All rights reserved.
+    Copyright © 1991-2023 Unicode, Inc. All rights reserved.
     Distributed under the Terms of Use in https://www.unicode.org/copyright.html.
 
     Permission is hereby granted, free of charge, to any person obtaining
@@ -3125,6 +3136,7 @@ The externally maintained libraries used by Node.js are:
     File: aclocal.m4 (only for ICU4C)
     Section: pkg.m4 - Macros to locate and utilise pkg-config.
 
+
     Copyright © 2004 Scott James Remnant .
     Copyright © 2012-2015 Dan Nicholson
 
@@ -3149,6 +3161,7 @@ The externally maintained libraries used by Node.js are:
     the same distribution terms that you use for the rest of that
     program.
 
+
     (The condition for the exception is fulfilled because
     ICU4C includes a configuration script generated by Autoconf,
     namely the `configure` script.)
@@ -3156,6 +3169,7 @@ The externally maintained libraries used by Node.js are:
     ----------------------------------------------------------------------
 
     File: config.guess (only for ICU4C)
+
 
     This file is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -3177,6 +3191,7 @@ The externally maintained libraries used by Node.js are:
     program.  This Exception is an additional permission under section 7
     of the GNU General Public License, version 3 ("GPLv3").
 
+
     (The condition for the exception is fulfilled because
     ICU4C includes a configuration script generated by Autoconf,
     namely the `configure` script.)
@@ -3184,6 +3199,7 @@ The externally maintained libraries used by Node.js are:
     ----------------------------------------------------------------------
 
     File: install-sh (only for ICU4C)
+
 
     Copyright 1991 by the Massachusetts Institute of Technology
 
@@ -3897,6 +3913,47 @@ The externally maintained libraries used by Node.js are:
     COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
     IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  """
+
+- ada, located at deps/ada, is licensed as follows:
+  """
+    Copyright 2023 Ada authors
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy of
+    this software and associated documentation files (the "Software"), to deal in
+    the Software without restriction, including without limitation the rights to
+    use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+    the Software, and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  """
+
+- minimatch, located at deps/minimatch, is licensed as follows:
+  """
+    The ISC License
+
+    Copyright (c) 2011-2023 Isaac Z. Schlueter and Contributors
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted, provided that the above
+    copyright notice and this permission notice appear in all copies.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+    IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   """
 
 - npm, located at deps/npm, is licensed as follows:

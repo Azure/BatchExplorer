@@ -1,3 +1,18 @@
+# 2.17.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/51?closed=1)
+
+### Features
+
+* Adds cloud service deprecation warning on pool details page [\#2716](https://github.com/Azure/BatchExplorer/issues/2716)
+* Removes custom themes [\#2715](https://github.com/Azure/BatchExplorer/issues/2715)
+* Adds developer menu item for Profiles [\#2714](https://github.com/Azure/BatchExplorer/issues/2714)
+* Accessibility improvements [\#2713](https://github.com/Azure/BatchExplorer/issues/2713)
+
+### Bugs
+
+* User was unable to upload package zip from batch explorer 2.16.1-stable.713 [\#2690](https://github.com/Azure/BatchExplorer/issues/2690)
+
 # 2.16.1
 
 * Test data caused storage account to show as "classic" [\#2659](https://github.com/Azure/BatchExplorer/issues/2659)
@@ -618,7 +633,7 @@
 * Task progress not exposing validity of task count api [\#1475](https://github.com/Azure/BatchExplorer/issues/1475)
 * Ability to override the BatchLabs-data  branch that we pull templates from [\#1474](https://github.com/Azure/BatchExplorer/issues/1474)
 * Use select query for task list to improve performance [\#1468](https://github.com/Azure/BatchExplorer/issues/1468)
-* Batch Account URI should have https:// prefix [\#1435](https://github.com/Azure/BatchExplorer/issues/1435)
+* Batch Account URI should have <https://> prefix [\#1435](https://github.com/Azure/BatchExplorer/issues/1435)
 * Task table column layout a little funky [\#1422](https://github.com/Azure/BatchExplorer/issues/1422)
 * BatchLabs: App splited in features that are can be enabled and disabled [\#1449](https://github.com/Azure/BatchExplorer/issues/1449)
 * BatchLabs one click node connect [\#1452](https://github.com/Azure/BatchExplorer/issues/1452)
