@@ -211,7 +211,7 @@
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^3.10.0",
     "write-file-webpack-plugin": "^4.5.1",
-    "xml2js": "^0.4.23",
+    "xml2js": "^0.5.0",
     "zone.js": "^0.11.0"
   }
 }
