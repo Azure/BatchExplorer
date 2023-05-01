@@ -87,6 +87,15 @@ bl-button {
         width: $action-btn-size;
     }
 
+    &[type=square][color="primary"] {
+         &.focus-outline.focus-visible, &.focus-visible {
+            outline-color: white;
+            outline-width: 2px;
+            outline-style: solid;
+            outline-offset: -4px;
+        }
+    }
+
     &[type="round"] {
         border-radius: 99%;
 

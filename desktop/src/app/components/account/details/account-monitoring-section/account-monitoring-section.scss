@@ -12,4 +12,7 @@ bl-account-monitoring-section {
     bl-time-range-picker {
         margin-right: 10px;
     }
+    canvas {
+        pointer-events: none;
+    }
 }

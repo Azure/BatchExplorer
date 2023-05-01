@@ -35,6 +35,7 @@ exports.defineEnv = function(env) {
             "NODE_ENV": JSON.stringify(env),
             "RENDERER": JSON.stringify(true),
             "HOT": helpers.hasProcessFlag("hot"),
+            "BE_ENABLE_A11Y_TESTING": process.env.BE_ENABLE_A11Y_TESTING,
         },
     });
 };

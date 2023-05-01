@@ -86,8 +86,7 @@ export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAc
     private _processStorageAccounts(storageAccounts: List<StorageAccount>) {
         const prefered = [];
         const others = [];
-        storageAccounts.forEach((account, i) => {
-            account.isClassic = i % 2 === 0;
+        storageAccounts.forEach((account) => {
             if (account.location.toLowerCase() === this.account.location.toLowerCase()) {
                 prefered.push(account);
             } else {
@@ -113,13 +112,13 @@ export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAc
      * to define a custom handler.
      */
     onKeydown(event: KeyboardEvent) {
-        this.classicTooltip.hide();
+        this.classicTooltip?.hide();
         if (event.key === "ArrowDown" || event.key === "ArrowUp" ||
             event.key === "Tab") {
             if (this.selectedStorageAccounts.size === 1) {
                 const id = this.selectedStorageAccounts.values().next().value;
                 if (this.classicAccounts.has(id)) {
-                    this.classicTooltip.show();
+                    this.classicTooltip?.show();
                 }
             }
         }
