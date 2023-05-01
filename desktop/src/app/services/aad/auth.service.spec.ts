@@ -1,13 +1,17 @@
 import { TestBed } from "@angular/core/testing";
 import { AccessToken, I18nService, ServerError, TenantSettingsService } from "@batch-flask/core";
-import { AuthService } from "app/services/aad";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { AuthService, TenantAuthorization } from "app/services/aad";
 import { IpcEvent } from "common/constants";
 import { DateTime } from "luxon";
 import { BehaviorSubject, combineLatest, Observable } from "rxjs";
 import { TenantErrorService } from ".";
 
-const tenant1 = "tenant-1";
-const tenant2 = "tenant-2";
+const FakeTenants = {
+    One: "tenant-1",
+    Two: "tenant-2",
+    Three: "tenant-3",
+}
 const resource1 = "batch";
 const token1 = new AccessToken({
     accessToken: "sometoken",
@@ -32,9 +36,9 @@ describe("AuthService spec", () => {
 
     beforeEach(() => {
         aadServiceSpy = {
-            tenants: new BehaviorSubject([
-                { tenantId: tenant1 }, { tenantId: tenant2 }
-            ]),
+            tenants: new BehaviorSubject(
+                Object.values(FakeTenants).map(t => ({ tenantId: t }))
+            ),
             currentUser: new BehaviorSubject([]),
         };
         remoteSpy = {
@@ -66,13 +70,8 @@ describe("AuthService spec", () => {
         };
 
         TestBed.configureTestingModule({
+            imports: [I18nTestingModule],
             providers: [
-                {
-                    provide: I18nService,
-                    useValue: {
-                        t: jasmine.createSpy()
-                    }
-                },
                 {
                     provide: TenantSettingsService,
                     useValue: tenantSettingsServiceSpy
@@ -120,11 +119,12 @@ describe("AuthService spec", () => {
     });
 
     it("#accessTokenFor returns observable with token string", (done) => {
-        service.accessTokenFor(tenant1, resource1).subscribe((token) => {
-            expect(remoteSpy.send).toHaveBeenCalledOnce();
-            expect(token).toEqual(token1.accessToken);
-            done();
-        });
+        service.accessTokenFor(FakeTenants.One, resource1)
+            .subscribe((token) => {
+                expect(remoteSpy.send).toHaveBeenCalledOnce();
+                expect(token).toEqual(token1.accessToken);
+                done();
+            });
     });
 
     describe("getAccessToken()", () => {
@@ -139,17 +139,18 @@ describe("AuthService spec", () => {
 
     describe("#accessTokenData", () => {
         it("#accessTokenData returns observable with token", done => {
-            service.accessTokenData(tenant1, resource1).subscribe((token) => {
-                expect(remoteSpy.send).toHaveBeenCalledOnce();
-                expect(token).toEqual(token1);
-                done();
-            });
+            service.accessTokenData(FakeTenants.One, resource1)
+                .subscribe((token) => {
+                    expect(remoteSpy.send).toHaveBeenCalledOnce();
+                    expect(token).toEqual(token1);
+                    done();
+                });
         });
 
         it("loads a new token by calling aadService", done => {
             combineLatest([
-                service.accessTokenData(tenant1, resource1),
-                service.accessTokenData(tenant2, resource1)
+                service.accessTokenData(FakeTenants.One, resource1),
+                service.accessTokenData(FakeTenants.Two, resource1)
             ]).subscribe(([tokenA, tokenB]) => {
                 expect(remoteSpy.send).toHaveBeenCalledTimes(2);
                 expect(tokenA).toEqual(token1);
@@ -160,21 +161,25 @@ describe("AuthService spec", () => {
 
         it("reuses remote calls for same tenant", done => {
             combineLatest([
-                service.accessTokenData(tenant1, resource1),
-                service.accessTokenData(tenant2, resource1),
-                service.accessTokenData(tenant1, resource1)
+                service.accessTokenData(FakeTenants.One, resource1),
+                service.accessTokenData(FakeTenants.Two, resource1),
+                service.accessTokenData(FakeTenants.One, resource1)
             ]).subscribe(([tokenA, tokenB, tokenC]) => {
                 expect(remoteSpy.send).toHaveBeenCalledTimes(2);
                 expect(remoteSpy.send.calls.allArgs()).toEqual([
                     [
                         IpcEvent.AAD.accessTokenData,
-                        { tenantId: tenant1, resource: resource1,
-                            forceRefresh: false }
+                        {
+                            tenantId: FakeTenants.One, resource: resource1,
+                            forceRefresh: false
+                        }
                     ],
                     [
                         IpcEvent.AAD.accessTokenData,
-                        { tenantId: tenant2, resource: resource1,
-                            forceRefresh: false }
+                        {
+                            tenantId: FakeTenants.Two, resource: resource1,
+                            forceRefresh: false
+                        }
                     ]
                 ]);
                 expect(tokenA).toEqual(token1);
@@ -185,32 +190,32 @@ describe("AuthService spec", () => {
         });
 
         it("calls again the main process if previous call returned an error",
-        async () => {
-            remoteSpy.send = jasmine.createSpy("send").and.returnValues(
-                Promise.reject("some-error"),
-                Promise.resolve(token1),
-            );
+            async () => {
+                remoteSpy.send = jasmine.createSpy("send").and.returnValues(
+                    Promise.reject("some-error"),
+                    Promise.resolve(token1),
+                );
 
-            await new Promise<void>(resolve => {
-                service.accessTokenData(tenant1, resource1).subscribe({
-                    next: () => fail("Should not have a next() call"),
-                    error: error => {
-                        expect(error).toEqual("some-error");
-                        resolve();
-                    }
+                await new Promise<void>(resolve => {
+                    service.accessTokenData(FakeTenants.One, resource1).subscribe({
+                        next: () => fail("Should not have a next() call"),
+                        error: error => {
+                            expect(error).toEqual("some-error");
+                            resolve();
+                        }
+                    });
                 });
-            });
 
-            await new Promise<void>(resolve => {
-                service.accessTokenData(tenant1, resource1).subscribe({
-                    next: token => {
-                        expect(token).toEqual(token1);
-                        resolve();
-                    }
+                await new Promise<void>(resolve => {
+                    service.accessTokenData(FakeTenants.One, resource1).subscribe({
+                        next: token => {
+                            expect(token).toEqual(token1);
+                            resolve();
+                        }
+                    });
                 });
+                expect(remoteSpy.send).toHaveBeenCalledTimes(2);
             });
-            expect(remoteSpy.send).toHaveBeenCalledTimes(2);
-        });
     });
 
     it("updates the tenants when updated by the auth service", () => {
@@ -223,98 +228,114 @@ describe("AuthService spec", () => {
     });
 
     describe("getTenantAuthorizations", () => {
-        it("notifies on error by default", done => {
+        function auth(opts?): Promise<TenantAuthorization[]> {
+            return new Promise(resolve => {
+                service.getTenantAuthorizations(opts).subscribe(
+                    authorizations => resolve(authorizations)
+                );
+            });
+        }
+        it("notifies on error by default", async () => {
             remoteSpy.send.and.callFake(async (_, { tenantId }) => {
-                if (tenantId === tenant1) {
+                if (tenantId === FakeTenants.One) {
                     throw new Error("Fake error for tenant-1");
                 } else {
                     return token2;
                 }
             });
-            service.getTenantAuthorizations()
-            .subscribe(authorizations => {
-                expect(tenantErrorServiceSpy.showError).toHaveBeenCalledOnce();
-                expect(tenantErrorServiceSpy.showError).toHaveBeenCalledWith(
-                    authorizations[0]
-                )
-                done();
-            });
-        });
-        it("skips inactive tenants", done => {
             tenantSettingsServiceSpy.current.next({
-                "tenant-1": "inactive",
-                "tenant-2": "active"
+                [FakeTenants.One]: "active"
             });
-            service.getTenantAuthorizations()
-            .subscribe(authorizations => {
-                expect(authorizations.length).toEqual(2);
-                expect(authorizations[0].tenant.tenantId).toEqual("tenant-1");
-                expect(authorizations[0].active).toBeFalsy();
-                expect(authorizations[1].tenant.tenantId).toEqual("tenant-2");
-                expect(authorizations[1].active).toBeTruthy();
-                done();
-            })
+            const authorizations = await auth();
+            expect(tenantErrorServiceSpy.showError).toHaveBeenCalledOnce();
+            expect(tenantErrorServiceSpy.showError).toHaveBeenCalledWith(
+                authorizations[0]
+            );
         });
-        it("forces refresh on specific tenant reauthentication", done => {
-            service.getTenantAuthorizations({ reauthenticate: tenant1 })
-            .subscribe(() => {
-                expect(remoteSpy.send).toHaveBeenCalledWith(
-                    IpcEvent.AAD.accessTokenData, {
-                        tenantId: tenant1,
-                        resource: null,
-                        forceRefresh: true
-                    });
-                expect(remoteSpy.send).toHaveBeenCalledWith(
-                    IpcEvent.AAD.accessTokenData, {
-                        tenantId: tenant2,
-                        resource: null,
-                        forceRefresh: false
-                    },
-                );
-                done();
-            })
+        it("skips inactive tenants", async () => {
+            tenantSettingsServiceSpy.current.next({
+                [FakeTenants.One]: "inactive",
+                [FakeTenants.Two]: "active"
+            });
+            const authorizations = await auth();
+            expect(authorizations.length).toEqual(3);
+            expect(authorizations[0].tenant.tenantId)
+                .toEqual(FakeTenants.One);
+            expect(authorizations[0].active).toBeFalsy();
+            expect(authorizations[1].tenant.tenantId)
+                .toEqual(FakeTenants.Two);
+            expect(authorizations[1].active).toBeTruthy();
+            expect(authorizations[2].tenant.tenantId)
+                .toEqual(FakeTenants.Three);
+            expect(authorizations[2].active).toBeFalsy();
         });
-        it("force-refreshes on all tenants", done => {
-            service.getTenantAuthorizations({ reauthenticate: "*" })
-            .subscribe(() => {
-                expect(remoteSpy.send).toHaveBeenCalledWith(
-                    IpcEvent.AAD.accessTokenData, {
-                        tenantId: tenant1,
-                        resource: null,
-                        forceRefresh: true
-                    });
-                expect(remoteSpy.send).toHaveBeenCalledWith(
-                    IpcEvent.AAD.accessTokenData, {
-                        tenantId: tenant2,
-                        resource: null,
-                        forceRefresh: true
-                    },
-                );
-                done();
-            })
+        it("assumes unconfigured tenants are inactive", async () => {
+            tenantSettingsServiceSpy.current.next({});
+            const authorizations = await auth();
+            expect(authorizations.length).toEqual(3);
+            expect(authorizations[0].active).toBeFalsy();
+            expect(authorizations[1].active).toBeFalsy();
+            expect(authorizations[2].active).toBeFalsy();
         });
-        it("doesn't force-refresh previous failure when reauthenticating all tenants", done => {
+        it("forces refresh on specific tenant reauthentication", async () => {
+            tenantSettingsServiceSpy.current.next({
+                [FakeTenants.One]: "active",
+                [FakeTenants.Two]: "active"
+            });
+            await auth({ reauthenticate: FakeTenants.One });
+            expect(remoteSpy.send).toHaveBeenCalledWith(
+                IpcEvent.AAD.accessTokenData, {
+                tenantId: FakeTenants.One,
+                resource: null,
+                forceRefresh: true
+            });
+            expect(remoteSpy.send).toHaveBeenCalledWith(
+                IpcEvent.AAD.accessTokenData, {
+                tenantId: FakeTenants.Two,
+                resource: null,
+                forceRefresh: false
+            });
+        });
+        it("force-refreshes on all tenants", async () => {
+            tenantSettingsServiceSpy.current.next({
+                [FakeTenants.One]: "active",
+                [FakeTenants.Two]: "active"
+            });
+            await auth({ reauthenticate: "*" });
+            expect(remoteSpy.send).toHaveBeenCalledWith(
+                IpcEvent.AAD.accessTokenData, {
+                tenantId: FakeTenants.One,
+                resource: null,
+                forceRefresh: true
+            });
+            expect(remoteSpy.send).toHaveBeenCalledWith(
+                IpcEvent.AAD.accessTokenData, {
+                tenantId: FakeTenants.Two,
+                resource: null,
+                forceRefresh: true
+            });
+        });
+        it("doesn't refresh failure when reauthenticating all", async () => {
+            tenantSettingsServiceSpy.current.next({
+                [FakeTenants.One]: "active",
+                [FakeTenants.Two]: "active"
+            });
             remoteSpy.send.and.callFake(async (_, { tenantId }) => {
-                if (tenantId === tenant1) {
+                if (tenantId === FakeTenants.One) {
                     throw new Error("Fake error for tenant-1");
                 } else {
                     return token2;
                 }
             });
-            service.getTenantAuthorizations().subscribe(() => {
-                remoteSpy.send.calls.reset();
-                service.getTenantAuthorizations({ reauthenticate: "*" })
-                .subscribe(() => {
-                    expect(remoteSpy.send).toHaveBeenCalledOnce();
-                    expect(remoteSpy.send).toHaveBeenCalledWith(
-                        IpcEvent.AAD.accessTokenData, {
-                            tenantId: tenant2,
-                            resource: null,
-                            forceRefresh: true
-                        },
-                    );
-                    done();
-                });
+            await auth(); // First call results in failure
+            remoteSpy.send.calls.reset();
+            await auth({ reauthenticate: "*" });
+            expect(remoteSpy.send).toHaveBeenCalledOnce();
+            expect(remoteSpy.send).toHaveBeenCalledWith(
+                IpcEvent.AAD.accessTokenData, {
+                tenantId: FakeTenants.Two,
+                resource: null,
+                forceRefresh: true
             });
         });
     });

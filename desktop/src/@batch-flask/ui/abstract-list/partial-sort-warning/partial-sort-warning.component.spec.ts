@@ -7,6 +7,7 @@ import { SortingStatus } from "@batch-flask/ui/abstract-list/list-data-sorter";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { BehaviorSubject, Subject, of } from "rxjs";
 import { click } from "test/utils/helpers";
+import { runAxe } from "test/utils/helpers/axe-helpers";
 import { PartialSortWarningComponent } from "./partial-sort-warning.component";
 
 @Component({
@@ -59,6 +60,10 @@ describe("PartialSortWarningComponent", () => {
         expect(de.query(By.css(".auto-update-warning"))).toBeFalsy();
     });
 
+    it("should pass accessibility test", async () => {
+        expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
+    });
+
     describe("when sorting is partial", () => {
         beforeEach(() => {
             testComponent.presenter.sortingStatus.next(SortingStatus.Partial);
@@ -98,6 +103,10 @@ describe("PartialSortWarningComponent", () => {
             expect(de.query(By.css(".partial-sort-warning"))).toBeFalsy();
             expect(de.query(By.css(".auto-update-warning"))).toBeFalsy();
         });
+
+        it("should pass accessibility test", async () => {
+            expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
+        });
     });
 
     describe("when auto upodate", () => {
@@ -117,6 +126,10 @@ describe("PartialSortWarningComponent", () => {
             click(btn);
 
             expect(testComponent.presenter.update).toHaveBeenCalledOnce();
+        });
+
+        it("should pass accessibility test", async () => {
+            expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
         });
     });
 });

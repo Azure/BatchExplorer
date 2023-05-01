@@ -23,7 +23,7 @@ export class FileSystemService {
     private _makeDir: typeof import("make-dir").default;
     private _glob: typeof import("glob");
     private _chokidar: typeof import("chokidar");
-    private _download: typeof import("download");
+    private _download: typeof import("node-downloader-helper");
     private _extractZip: typeof import("extract-zip");
 
     constructor(app: ElectronApp) {
@@ -31,7 +31,7 @@ export class FileSystemService {
         this._makeDir = app.require("make-dir");
         this._glob = app.require("glob");
         this._chokidar = app.require("chokidar");
-        this._download = app.require("download");
+        this._download = app.require("node-downloader-helper");
         this._extractZip = app.require("extract-zip");
 
         this.commonFolders = {
@@ -106,9 +106,12 @@ export class FileSystemService {
 
     public async download(source: string, dest: string): Promise<string> {
         await this.ensureDir(path.dirname(dest));
-        await this._download(source, path.dirname(dest), {
-            filename: path.basename(dest),
-        });
+        const downloader = new this._download.DownloaderHelper(
+            source,
+            path.dirname(dest),
+            { fileName: path.basename(dest) }
+        );
+        await downloader.start();
         return dest;
     }
 

@@ -1,4 +1,4 @@
-import * as download from "download";
+import { DownloaderHelper } from "node-downloader-helper";
 import * as extract from "extract-zip";
 import * as path from "path";
 
@@ -9,9 +9,18 @@ import * as path from "path";
  */
 export class FileUtils {
     public download(source: string, dest: string): Promise<string> {
-        return download(source, path.dirname(dest), {
-            filename: path.basename(dest),
-        }).then(() => dest);
+        const downloader = new DownloaderHelper(source, path.dirname(dest), {
+            fileName: path.basename(dest)
+        });
+        return new Promise((resolve, reject) => {
+            downloader.on("end", () => {
+                resolve(dest);
+            });
+            downloader.on("error", (err) => {
+                reject(err);
+            });
+            downloader.start();
+        });
     }
 
     public unzip(source: string, dest: string): Promise<void> {

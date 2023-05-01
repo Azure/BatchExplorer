@@ -33,7 +33,7 @@ be-tenant-card {
         }
 
         background: $card-background;
-        border: 1px solid #ccc;
+        border: 1px solid $border-color;
         border-radius: $tenant-card-padding;
 
         &.home-tenant, &.home-tenant .main-tile {
