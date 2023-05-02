@@ -100,11 +100,11 @@ function _getCapabilityDetails(capabilities, capabilityName: string, altCapabili
     const vmCapability = capabilities.get(capabilityName);
     const cloudServiceCapability = capabilities.get(altCapabilityName);
     if (vmCapability) {
+        if (capabilityName === "MemoryGB") {
+            return Math.round((vmCapability) * 1024).toString();
+        }
         return vmCapability;
     } else if (cloudServiceCapability) {
-        if (altCapabilityName === "MemoryInMb") {
-            return Math.round(parseInt(cloudServiceCapability) / 1024).toString();
-        }
         return cloudServiceCapability;
     }
 }
