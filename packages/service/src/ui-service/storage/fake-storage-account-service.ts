@@ -19,17 +19,7 @@ export class FakeStorageAccountService implements StorageAccountService {
         return this.fakeSet.listStorageAccountsBySubscription(subscriptionId);
     }
 
-    public async get(): Promise<StorageAccount | null> {
-        return null;
-    }
-
-    public async create(): Promise<void> {
-        return;
-    }
-    public async remove(): Promise<void> {
-        return;
-    }
-    public async update(): Promise<void> {
-        return;
+    public async get(id: string): Promise<StorageAccount | undefined> {
+        return this.fakeSet.getStorageAccount(id);
     }
 }

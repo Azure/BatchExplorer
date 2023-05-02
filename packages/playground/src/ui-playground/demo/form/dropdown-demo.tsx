@@ -14,7 +14,7 @@ export const DropdownDemo: React.FC = () => {
         <DemoPane title="Dropdown">
             <DemoComponentContainer minWidth="400px">
                 <Dropdown
-                    param={createParam(StringParameter)}
+                    param={createParam<string>(StringParameter)}
                     disabled={disabled}
                     options={[
                         {

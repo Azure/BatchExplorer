@@ -18,6 +18,6 @@ export class FakeResourceGroupService implements ResourceGroupService {
     public async get(
         resourceGroupId: string
     ): Promise<ResourceGroup | undefined> {
-        return this.fakeSet.resourceGroups[resourceGroupId] ?? undefined;
+        return this.fakeSet.getResourceGroup(resourceGroupId);
     }
 }

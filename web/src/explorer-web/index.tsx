@@ -20,6 +20,7 @@ import {
 } from "@batch/ui-service";
 import { FakeResourceGroupService } from "@batch/ui-service/lib/resource-group";
 import { FakeLocationService } from "@batch/ui-service/lib/location";
+import { FakePoolService } from "@batch/ui-service/lib/pool";
 import { StandardClock } from "@batch/ui-common/lib/datetime";
 
 // Defined by webpack
@@ -42,6 +43,8 @@ export async function init(rootEl: HTMLElement): Promise<void> {
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
                 [BrowserDependencyName.LocationService]: () =>
                     new FakeLocationService(),
+                [BrowserDependencyName.PoolService]: () =>
+                    new FakePoolService(),
                 [BrowserDependencyName.ResourceGroupService]: () =>
                     new FakeResourceGroupService(),
                 [BrowserDependencyName.StorageAccountService]: () =>

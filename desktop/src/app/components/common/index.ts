@@ -13,3 +13,4 @@ export * from "./common.module";
 export * from "./blob-container-picker";
 export * from "./storage-account-picker";
 export * from "./resource-files-properties";
+export * from "./react-container";

@@ -1,0 +1,3 @@
+edit-node-comms-form:
+  title: "Edit node communication mode for pool: {poolId}"
+  updated: "Updated node communication mode for pool: {poolId}"

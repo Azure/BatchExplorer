@@ -22,14 +22,14 @@ export const NoComponentFound: React.FC = props => {
 };
 
 @Component({
-    selector: "bl-reactcontainer",
+    selector: "be-reactcontainer",
     template: `<ng-container *ngIf="themeInitialized"><div class="react-root" #container></div></ng-container>`,
 })
 export class ReactContainerComponent<P> implements OnChanges, OnDestroy, AfterViewChecked {
 
     @ViewChild('container') rootElement: ElementRef;
 
-    @Input() public component: React.FC<P> | React.ComponentClass<P>
+    @Input() public component: React.FC<P> | React.ComponentClass<P>;
     @Input() public props: P;
     public themeInitialized: boolean = false;
 

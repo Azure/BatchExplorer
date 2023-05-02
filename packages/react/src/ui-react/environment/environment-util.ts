@@ -6,6 +6,7 @@ import {
     mockEnvironmentConfig,
 } from "@batch/ui-common/lib/environment";
 import {
+    FakePoolService,
     FakeStorageAccountService,
     FakeSubscriptionService,
 } from "@batch/ui-service";
@@ -31,6 +32,7 @@ export const mockBrowserDepFactories: Partial<BrowserDependencyFactories> = {
     [BrowserDependencyName.FormLayoutProvider]: () =>
         new DefaultFormLayoutProvider(),
     [BrowserDependencyName.LocationService]: () => new FakeLocationService(),
+    [BrowserDependencyName.PoolService]: () => new FakePoolService(),
     [BrowserDependencyName.ResourceGroupService]: () =>
         new FakeResourceGroupService(),
     [BrowserDependencyName.StorageAccountService]: () =>

@@ -7,9 +7,9 @@ describe("Localization utilities", () => {
     });
 
     test("Can return simple english strings", () => {
-        expect(translate("lib.common.form.validationError")).toEqual(
-            "Value must be a boolean"
-        );
+        expect(
+            translate("lib.common.form.validation.booleanValueError")
+        ).toEqual("Value must be a boolean");
     });
 
     test("Throw error if string is unknown", () => {

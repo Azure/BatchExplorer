@@ -12,7 +12,7 @@ describe("Dropdown form control", () => {
     test("Render simple dropdown", async () => {
         const { container } = render(
             <Dropdown
-                param={createParam(StringParameter, {
+                param={createParam<string>(StringParameter, {
                     label: "Card",
                     placeholder: "Pick a card",
                 })}

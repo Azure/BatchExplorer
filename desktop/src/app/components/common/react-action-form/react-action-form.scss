@@ -1,0 +1,73 @@
+be-react-action-form {
+    display: block;
+    position: relative;
+    $header-height: 60px;
+    $footer-height: 60px;
+    overflow: hidden;
+
+    &.small {
+        width: 500px;
+    }
+
+    &.medium {
+        width: 600px;
+    }
+
+    &.large {
+        width: 800px;
+    }
+
+    .header {
+        display: flex;
+        margin: 10px;
+        flex-shrink: 0;
+
+        > .main {
+            flex: 1;
+
+            h1 {
+                padding: 0 8px;
+            }
+
+            p {
+                padding: 0 10px;
+            }
+        }
+    }
+
+    .form-section {
+        margin-left: 5px;
+    }
+
+    > .react-action-form-container {
+        padding: 5px;
+    }
+
+    .form-row-container {
+        padding: 15px;
+    }
+
+    .form-button-container > button {
+        border-width: 0;
+    }
+
+    &.sticky-footer {
+        height: 100%;
+
+        .form-row-container {
+            overflow-y: auto;
+        }
+
+        .form-button-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: $footer-height;
+            width: 100%;
+            position: absolute;
+            padding: 0 25px;
+            bottom: 0;
+            box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.3);
+        }
+    }
+}
