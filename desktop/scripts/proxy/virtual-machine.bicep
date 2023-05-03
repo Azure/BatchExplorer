@@ -86,7 +86,7 @@ resource windowsVMExtensions 'Microsoft.Compute/virtualMachines/extensions@2020-
     autoUpgradeMinorVersion: true
     protectedSettings: {
       fileUris: [
-        'https://raw.githubusercontent.com/Azure/BatchExplorer/master/scripts/proxy/initVirtualMachine.ps1'
+        'https://raw.githubusercontent.com/Azure/BatchExplorer/main/scripts/proxy/initVirtualMachine.ps1'
       ]
       commandToExecute: 'powershell -ExecutionPolicy Bypass -File initVirtualMachine.ps1 -Address ${proxyServer} -Port ${proxyPort} -Build ${batchExplorerBuild}'
     }

@@ -21,7 +21,7 @@ describe("GithubPortfolio", () => {
             unzip: jasmine.createSpy("download").and.callFake(() => Promise.resolve()),
             saveFile: jasmine.createSpy("saveFile").and.callFake(() => Promise.resolve()),
             readFile: jasmine.createSpy("readFile").and.callFake(() => Promise.resolve(JSON.stringify({
-                lastSync: lastSyncDate, source: "https://github.com/my/portfolio/archive/master.zip",
+                lastSync: lastSyncDate, source: "https://github.com/my/portfolio/archive/main.zip",
             }))),
         };
 
@@ -30,7 +30,7 @@ describe("GithubPortfolio", () => {
     function setup() {
         portfolio = new GithubPortfolio({
             id: "my-portfolio-1",
-            source: "https://github/my/portfolio/tree/master",
+            source: "https://github/my/portfolio/tree/main",
             path: "templates",
             type: PortfolioType.Github,
         }, fsSpy);
@@ -69,7 +69,7 @@ describe("GithubPortfolio", () => {
         const zipPath = path.join("~/temp/portfolios/zips/my-portfolio-1.zip");
         expect(fsSpy.download).toHaveBeenCalledOnce();
         expect(fsSpy.download).toHaveBeenCalledWith(
-            "https://github.com/my/portfolio/archive/master.zip",
+            "https://github.com/my/portfolio/archive/main.zip",
             zipPath,
         );
 
@@ -80,7 +80,7 @@ describe("GithubPortfolio", () => {
 
         expect(fsSpy.saveFile).toHaveBeenCalledOnce();
         expect(fsSpy.saveFile).toHaveBeenCalledWith(path.join("~/temp/portfolios/my-portfolio-1/sync.json"),
-            jasmine.stringMatching(`{"source":"https://github.com/my/portfolio/archive/master.zip","lastSync":".*"}`));
+            jasmine.stringMatching(`{"source":"https://github.com/my/portfolio/archive/main.zip","lastSync":".*"}`));
     });
 
     it("cache the data when data is too old", async () => {
@@ -96,7 +96,7 @@ describe("GithubPortfolio", () => {
         const zipPath = path.join("~/temp/portfolios/zips/my-portfolio-1.zip");
         expect(fsSpy.download).toHaveBeenCalledOnce();
         expect(fsSpy.download).toHaveBeenCalledWith(
-            "https://github.com/my/portfolio/archive/master.zip",
+            "https://github.com/my/portfolio/archive/main.zip",
             zipPath,
         );
 
@@ -107,7 +107,7 @@ describe("GithubPortfolio", () => {
 
         expect(fsSpy.saveFile).toHaveBeenCalledOnce();
         expect(fsSpy.saveFile).toHaveBeenCalledWith(path.join("~/temp/portfolios/my-portfolio-1/sync.json"),
-            jasmine.stringMatching(`{"source":"https://github.com/my/portfolio/archive/master.zip","lastSync":".*"}`));
+            jasmine.stringMatching(`{"source":"https://github.com/my/portfolio/archive/main.zip","lastSync":".*"}`));
     });
 
     it("doesn't do anything if data is newer", async () => {
@@ -143,7 +143,7 @@ describe("GithubPortfolio", () => {
         const zipPath = path.join("~/temp/portfolios/zips/my-portfolio-1.zip");
         expect(fsSpy.download).toHaveBeenCalledOnce();
         expect(fsSpy.download).toHaveBeenCalledWith(
-            "https://github.com/my/portfolio/archive/master.zip",
+            "https://github.com/my/portfolio/archive/main.zip",
             zipPath,
         );
 
@@ -154,6 +154,6 @@ describe("GithubPortfolio", () => {
 
         expect(fsSpy.saveFile).toHaveBeenCalledOnce();
         expect(fsSpy.saveFile).toHaveBeenCalledWith(path.join("~/temp/portfolios/my-portfolio-1/sync.json"),
-            jasmine.stringMatching(`{"source":"https://github.com/my/portfolio/archive/master.zip","lastSync":".*"}`));
+            jasmine.stringMatching(`{"source":"https://github.com/my/portfolio/archive/main.zip","lastSync":".*"}`));
     });
 });

@@ -7,7 +7,7 @@ import {
     createIssue, createPullRequest, getMilestone, githubToken, listMilestoneIssues, listPullRequests,
 } from "./github-api";
 
-const MAIN_BRANCH = "master";
+const MAIN_BRANCH = "main";
 
 const root = path.resolve(path.join(__dirname, "../.."));
 const allMessages: string[] = [];
@@ -54,7 +54,7 @@ function checkGithubToken() {
 }
 
 /**
- * This goes back to master and pull
+ * This goes back to the main branch and pulls the latest
  */
 async function gotoMainBranch() {
     await run(`git checkout ${MAIN_BRANCH}`);

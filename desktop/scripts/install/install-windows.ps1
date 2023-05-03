@@ -52,8 +52,8 @@ function confirm-branch() {
 
     if($current_branch -eq "stable") {
         add-success "Building from stable branch."
-    } elseif ($current_branch -eq "master") {
-        add-success "Building from master branch."
+    } elseif ($current_branch -eq "main") {
+        add-success "Building from main branch."
     } else {
         add-warning "Building from $current_branch branch it might not be stable."
     }
