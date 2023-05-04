@@ -7,7 +7,8 @@
     class="application"
     [class.active]="application.id === active?.applicationId && application.portfolioId === active?.portfolioId"
     [attr.aria-selected]="application.id === active?.applicationId && application.portfolioId === active?.portfolioId"
-    [title]="application.description"
+    [matTooltip]="application.description"
+    matTooltipClass="tooltip"
     (do)="selectApplication(application)">
     <img class="logo" [src]="application.icon" alt="Logo of {{application.name}}">
     <div class="name">{{application.name}}</div>

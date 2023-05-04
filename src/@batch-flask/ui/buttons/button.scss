@@ -173,6 +173,10 @@ bl-button {
     }
 }
 
+.btn-tooltip {
+    font-size: $font-size-small !important
+}
+
 @media (forced-colors: active) {
     bl-button {
         border: 1px solid currentColor;
