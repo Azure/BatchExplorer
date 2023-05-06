@@ -150,6 +150,12 @@
         </bl-form-section>
 
         <bl-form-section title="Certificate" subtitle="Reference to certificates to be installed on compute nodes in a pool.">
+            <bl-banner class="create-pool-deprecation-warning" type="warning">
+                <div message>
+                    The Batch account certificates feature is deprecated and will be retired on February 29, 2024. Please transition to using Azure Key Vault to securely access and install certificates on your Batch pools.
+                    <a class="create-pool-warning-alternative-link" (click)="openLink('https://learn.microsoft.com/en-us/azure/batch/batch-certificate-migration-guide')" href="javascript:void(0)">Learn more</a>
+                </div>
+            </bl-banner>
             <bl-certificate-references-picker formControlName="certificateReferences" [osType]="osType"></bl-certificate-references-picker>
         </bl-form-section>
     </bl-form-page>

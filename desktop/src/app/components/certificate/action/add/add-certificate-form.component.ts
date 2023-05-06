@@ -7,6 +7,7 @@ import { FileUrlUtils } from "@batch-flask/utils";
 import { CertificateFormat, CertificateService } from "app/services";
 import { Constants } from "common";
 import { Observable } from "rxjs";
+import { ElectronShell } from "@batch-flask/electron";
 
 import "./add-certificate-form.scss";
 
@@ -27,7 +28,8 @@ export class AddCertificateFormComponent {
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<AddCertificateFormComponent>,
         private certificateService: CertificateService,
-        private notificationService: NotificationService) {
+        private notificationService: NotificationService,
+        private electronShell: ElectronShell) {
         const validation = Constants.forms.validation;
 
         this.form = this.formBuilder.group({
@@ -96,5 +98,9 @@ export class AddCertificateFormComponent {
             }
             return null;
         };
+    }
+
+    public openLink(link: string) {
+        this.electronShell.openExternal(link, {activate: true});
     }
 }

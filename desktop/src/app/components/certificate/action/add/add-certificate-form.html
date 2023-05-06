@@ -4,6 +4,12 @@
             [title]="'add-certificate-form.certificate.label' | i18n"
             [subtitle]="'add-certificate-form.certificate.description' | i18n">
             <div class="form-element">
+                <bl-banner class="certificate-deprecation-warning" type="warning">
+                    <div message>
+                        The Batch account certificates feature is deprecated and will be retired on February 29, 2024. Please transition to using Azure Key Vault to securely access and install certificates on your Batch pools.
+                        <a class="certificate-warning-alternative-link" (click)="openLink('https://learn.microsoft.com/en-us/azure/batch/batch-certificate-migration-guide')" href="javascript:void(0)">Learn more</a>
+                    </div>
+                </bl-banner>
                 <p>{{ form.controls.certificate.value }}</p>
                 <bl-directory-picker (eventChange)="fileSelected($event)" [canPickFile]="true" attr.aria-describedby="{{id}}-certificate-required {{id}}-certificate-pattern">
                     <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;{{'add-certificate-form.certificate.select' | i18n}}
