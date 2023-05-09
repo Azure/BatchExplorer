@@ -69,11 +69,11 @@ export function mapResourceSkuToVmSize(skuJson: any[]): List<VmSize> {
         const vmSize: Partial<VmSizeAttributes> = {};
         const capabilities = skuToCapabilities[skuName];
         vmSize.name = skuName;
-        vmSize.numberOfCores = _parseIntOrReturnDefault(capabilities.get("vCPUs"));
+        vmSize.numberOfCores = _parseIntOrReturnDefault(_getCapabilityDetails(capabilities, "vCPUs", "Cores"));
         vmSize.numberOfGpus = _parseIntOrReturnDefault(capabilities.get("GPUs"));
         vmSize.osDiskSizeInMB = _parseIntOrReturnDefault(capabilities.get("OSVhdSizeMB"));
-        vmSize.resourceDiskSizeInMB = _parseIntOrReturnDefault(capabilities.get("MaxResourceVolumeMB"));
-        vmSize.memoryInMB = _parseFloatOrReturnDefault(capabilities.get("MemoryGB")) * 1024;
+        vmSize.resourceDiskSizeInMB = _parseIntOrReturnDefault(_getCapabilityDetails(capabilities, "MaxResourceVolumeMB", "WebWorkerResourceDiskSizeInMb"));
+        vmSize.memoryInMB = _parseFloatOrReturnDefault(_getCapabilityDetails(capabilities, "MemoryGB", "MemoryInMb"));
         vmSize.maxDataDiskCount = _parseIntOrReturnDefault(capabilities.get("MaxDataDiskCount"));
         skuToVmSize.push(new VmSize(vmSize as VmSizeAttributes));
     }
@@ -90,6 +90,23 @@ function _getCapabilitiesMap(skuJson: any[]): any {
         }
     }
     return skuToCapabilities;
+}
+
+/**
+ * Gets capability value for either a virtual machine sku capability name or a cloud service sku
+ * capability name.
+ */
+function _getCapabilityDetails(capabilities, capabilityName: string, altCapabilityName: string) {
+    const vmCapability = capabilities.get(capabilityName);
+    const cloudServiceCapability = capabilities.get(altCapabilityName);
+    if (vmCapability) {
+        if (capabilityName === "MemoryGB") {
+            return Math.round((vmCapability) * 1024).toString();
+        }
+        return vmCapability;
+    } else if (cloudServiceCapability) {
+        return cloudServiceCapability;
+    }
 }
 
 function _parseIntOrReturnDefault(skuCapabilityValue : string): number {

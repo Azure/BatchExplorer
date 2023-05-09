@@ -1,6 +1,5 @@
 @import "app/styles/variables";
 
-
 bl-gallery-application-list {
     .application {
         vertical-align: bottom;
@@ -45,5 +44,9 @@ bl-gallery-application-list {
             height: 140px;
             width: 140px;
         }
+    }
+
+    .tooltip {
+        font-size: $font-size-small;
     }
 }

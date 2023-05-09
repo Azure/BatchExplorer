@@ -1,4 +1,4 @@
-<div class="action-btn" [ngClass]="type" title="{{tooltipTitle}}">
+<div class="action-btn" [ngClass]="type" matTooltip="{{tooltipTitle}}" matTooltipClass="btn-tooltip">
     <div [class.hide]="status !== SubmitStatus.Idle" class="label">
         <i [class]="icon" aria-hidden="true"></i>
         <ng-content></ng-content>

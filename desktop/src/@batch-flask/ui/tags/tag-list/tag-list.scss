@@ -5,7 +5,7 @@ bl-tag-list {
     align-items: center;
 
     .tag {
-        font-size: 11px;
+        font-size: $font-size-small;
         color: $primary-contrast-color;
         background: $primary-color;
         padding: 0 5px;

@@ -84,6 +84,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     public prices: OSPricing = null;
     public categoriesDisplayName = categoriesDisplayName;
     public basicInput = new FormControl();
+    public isCloudService = false;
 
     public tableConfig: TableConfig = {
         sorting: {
@@ -135,8 +136,10 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
             let sizes;
             if (this.osSource === PoolOsSources.IaaS) {
                 sizes = this.vmSizeService.virtualMachineSizes;
+                this.isCloudService = false;
             } else {
                 sizes = this.vmSizeService.cloudServiceSizes;
+                this.isCloudService = true;
             }
             this.loadingStatus = LoadingStatus.Loading;
             this._sizeSub = sizes.subscribe((x) => {
