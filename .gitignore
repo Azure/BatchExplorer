@@ -8,12 +8,11 @@ coverage/
 env/
 Localize/packages/
 Localize/out/
-Localize/final/
 /desktop/resources/i18n/*
 /packages/common/resources/i18n/*
 /packages/playground/resources/i18n/*
 /packages/react/resources/i18n/*
 /packages/service/resources/i18n/*
-/util/bux/resources/i18n/json
-web/dev-server/resources/translations
-web/resources/i18n/*
+/util/bux/resources/i18n
+web/dev-server/resources/i18n/*
+desktop/resources/i18n/*
