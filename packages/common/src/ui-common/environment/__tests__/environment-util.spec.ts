@@ -1,6 +1,6 @@
 import { FakeClock } from "../../datetime/fake-clock";
 import { MockHttpClient } from "../../http";
-import { StandardLocalizer } from "../../localization/standard-localizer";
+import { BrowserLocalizer } from "../../localization/browser-localizer";
 import { createMockLogger } from "../../logging";
 import { AbstractEnvironment } from "../abstract-environment";
 import {
@@ -150,7 +150,7 @@ describe("Environment tests", () => {
             super(config, {
                 clock: () => new FakeClock(),
                 loggerFactory: () => createMockLogger,
-                localizer: () => new StandardLocalizer(),
+                localizer: () => new BrowserLocalizer(),
                 httpClient: () => new MockHttpClient(),
                 animal: () => new Dog(),
             });
@@ -175,7 +175,7 @@ describe("Environment tests", () => {
             super(config, {
                 clock: () => new FakeClock(),
                 loggerFactory: () => createMockLogger,
-                localizer: () => new StandardLocalizer(),
+                localizer: () => new BrowserLocalizer(),
                 httpClient: () => new MockHttpClient(),
                 animal: () => new Cat(),
             });

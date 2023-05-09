@@ -1,3 +1,3 @@
 export * from "./localization-util";
 export * from "./localizer";
-export * from "./standard-localizer";
+export * from "./browser-localizer";

@@ -31,7 +31,7 @@ import { Environment } from "common/constants";
 import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
-import {StandardLocalizer} from "@batch/ui-common/lib/localization/standard-localizer";
+import {BrowserLocalizer} from "@batch/ui-common/lib/localization/browser-localizer";
 import { LiveLocationService } from "@batch/ui-service/lib/location";
 import { LiveResourceGroupService } from "@batch/ui-service/lib/resource-group";
 
@@ -78,7 +78,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 [DependencyName.Clock]: () => new StandardClock(),
                 // TODO: Create an adapter which hooks up to the desktop logger
                 [DependencyName.LoggerFactory]: () => createConsoleLogger,
-                [DependencyName.Localizer]: () => new StandardLocalizer(),
+                [DependencyName.Localizer]: () => new BrowserLocalizer(),
                 [DependencyName.HttpClient]:
                     () => new BatchExplorerHttpClient(authService),
                 [BrowserDependencyName.LocationService]: () =>

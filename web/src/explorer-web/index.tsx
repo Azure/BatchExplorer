@@ -13,7 +13,7 @@ import {
     DefaultFormLayoutProvider,
     DefaultFormControlResolver,
 } from "@batch/ui-react/lib/components/form";
-import { StandardLocalizer } from "@batch/ui-common/lib/localization";
+import { BrowserLocalizer } from "@batch/ui-common/lib/localization";
 import {
     FakeStorageAccountService,
     FakeSubscriptionService,
@@ -28,7 +28,7 @@ declare const ENV: {
 };
 
 export async function init(rootEl: HTMLElement): Promise<void> {
-    const localizer = new StandardLocalizer();
+    const localizer = new BrowserLocalizer();
     await localizer.loadTranslations();
     initEnvironment(
         new DefaultBrowserEnvironment(
