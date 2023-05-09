@@ -42,13 +42,52 @@ function Convert-ResjsonToJson {
     Set-Content -Path $targetPath -Value $cleanedJsonContent
 }
 
+# Function to handle directory exceptions for web and desktop
+function Resolve-DirectoryException {
+    param (
+        [string]$directoryName,
+        [string]$languageDirFullName,
+        [string]$languageId
+    )
+
+    $source = Join-Path $languageDirFullName "$directoryName/i18n/resources.resjson"
+
+    if ($directoryName -eq "web") {
+        $targetDir = (Join-Path $scriptDir "../$directoryName/dev-server/resources/i18n")
+    } else {
+        $targetDir = (Join-Path $scriptDir "../$directoryName/resources/i18n")
+    }
+
+    $target = Join-Path $targetDir "resources.$languageId.json"
+
+    Write-Verbose "Checking $directoryName source path: $source"
+    if (Test-Path $source) {
+        Write-Verbose "$directoryName source path exists, preparing target directory"
+        if (-not (Test-Path $targetDir)) {
+            New-Item -ItemType Directory -Force -Path $targetDir > $null
+        }
+
+        if ($directoryName -ne "web") {
+            Write-Verbose "Copying file from $source to $target"
+            Copy-Item -Path $source -Destination $target
+        }
+
+        if (-not (Test-Path $targetDir)) {
+            New-Item -ItemType Directory -Force -Path $targetDir > $null
+        }
+
+        Write-Verbose "Converting $directoryName resjson to json: $target"
+        Convert-ResjsonToJson -sourcePath $source -targetPath $target
+    }
+}
+
 Write-Host "Copying translation files"
 
 foreach ($languageDir in $languageDirs) {
     $languageId = $languageDir.Name
     Write-Verbose "Processing language: $languageId"
 
-    # Process package directories
+    # Copy files to each of the package directories
     foreach ($packageName in $packageNames) {
         $sourcePath = Join-Path $($languageDir.FullName) "packages/$packageName/i18n/resources.resjson"
         $targetDir = (Join-Path $scriptDir ".." -Resolve) | Join-Path -ChildPath "packages/$packageName/resources/i18n/resjson"
@@ -76,29 +115,10 @@ foreach ($languageDir in $languageDirs) {
         }
     }
 
-    # Handle the desktop directory exception
-    $desktopSource = Join-Path $($languageDir.FullName) "desktop/i18n/resources.resjson"
-    $desktopTargetDir = (Join-Path $scriptDir "../desktop/resources/i18n/resjson")
-    $desktopTarget = Join-Path $desktopTargetDir "resources.$languageId.resjson"
+    # Copy files to the desktop directory
+    Resolve-DirectoryException -directoryName "desktop" -languageDirFullName $($languageDir.FullName) -languageId $languageId
 
-    Write-Verbose "Checking desktop source path: $desktopSource"
-    if (Test-Path $desktopSource) {
-        Write-Verbose "Desktop source path exists, preparing target directory"
-        if (-not (Test-Path $desktopTargetDir)) {
-            New-Item -ItemType Directory -Force -Path $desktopTargetDir > $null
-        }
+    # Copy files to the web directory
+    Resolve-DirectoryException -directoryName "web" -languageDirFullName $($languageDir.FullName) -languageId $languageId
 
-        Write-Verbose "Copying file from $desktopSource to $desktopTarget"
-        Copy-Item -Path $desktopSource -Destination $desktopTarget
-
-        $jsonDesktopTargetDir = $desktopTargetDir.Replace("resjson", "json")
-        $jsonDesktopTarget = $desktopTarget.Replace("resjson", "json")
-
-        if (-not (Test-Path $jsonDesktopTargetDir)) {
-            New-Item -ItemType Directory -Force -Path $jsonDesktopTargetDir > $null
-        }
-
-        Write-Verbose "Converting desktop resjson to json: $jsonDesktopTarget"
-        Convert-ResjsonToJson -sourcePath $desktopSource -targetPath $jsonDesktopTarget
-    }
 }
