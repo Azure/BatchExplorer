@@ -37,12 +37,12 @@ export async function createIssue(repo: string, title: string, description: stri
     });
 }
 
-export async function listPullRequests(repo: string, source: string, target = "master"): Promise<Issue[]> {
+export async function listPullRequests(repo: string, source: string, target = "main"): Promise<Issue[]> {
     const url = `${pullRequestsUrl(repo)}?head=Azure:${source}&base=${target}`;
     return get(url);
 }
 
-export async function createPullRequest(repo: string, title: string, body: string, source: string, target = "master") {
+export async function createPullRequest(repo: string, title: string, body: string, source: string, target = "main") {
     return post(pullRequestsUrl(repo), {
         title,
         body,

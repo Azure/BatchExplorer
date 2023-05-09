@@ -96,7 +96,7 @@ resource proxyServerExtensions 'Microsoft.Compute/virtualMachines/extensions@201
     protectedSettings: {
       commandToExecute: 'sh initProxyServer.sh ${proxyPort}'
       fileUris: [
-        'https://raw.githubusercontent.com/Azure/BatchExplorer/master/scripts/proxy/initProxyServer.sh'
+        'https://raw.githubusercontent.com/Azure/BatchExplorer/main/scripts/proxy/initProxyServer.sh'
       ]
     }
   }

@@ -13,11 +13,8 @@ export enum BuildType {
     Dev = "dev",
     // Official build release
     Stable = "stable",
-    // Build off master
-    Insider = "insider",
-    // Temporary until shared-libraries are merged
-    // (see comment in .vsts/common/build-vars.ps1)
-    Vnext = "vnext"
+    // Build off main branch
+    Insider = "insider"
 }
 
 export const version = computeVersion();

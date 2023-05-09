@@ -4,7 +4,7 @@
 
 ## Pull request message format
 
-Use a good description for the title(i.e. not just `Merge feature/awesome-stuff in master`)
+Use a good description for the title(i.e. not just `Merge feature/awesome-stuff in main`)
 If applicable please use the `fix #[issue number]` in the pull request description
 
 e.g.

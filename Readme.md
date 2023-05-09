@@ -1,7 +1,7 @@
 # BatchExplorer
 
 [![VSTS Build Status](https://dev.azure.com/azurebatch/BatchExplorer/_apis/build/status/BatchExplorer%20-%20CI)](https://dev.azure.com/azurebatch/BatchExplorer/_build/latest?definitionId=8)
-[![codecov](https://codecov.io/gh/Azure/BatchExplorer/branch/master/graph/badge.svg)](https://codecov.io/gh/Azure/BatchExplorer)
+[![codecov](https://codecov.io/gh/Azure/BatchExplorer/branch/main/graph/badge.svg)](https://codecov.io/gh/Azure/BatchExplorer)
 
 Batch Explorer is a tool to manage your Azure Batch accounts. The goal is to implement a great user experience that will help you debug, monitor and manage your pools, jobs and tasks.
 It will also include experimental features such as `Batch Templates` in the aim to improve your Batch experience. We are open to any feedback, ideas and contributions you might have.

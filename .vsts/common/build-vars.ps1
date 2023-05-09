@@ -10,33 +10,14 @@ $distTag = "latest"
 
 Write-Host "Branch is $branch"
 
-If ($branch -like "refs/heads/master") {
+If ($branch -like "refs/heads/main") {
     $buildType = "insider"
-    $distTag = "latest"
+    $distTag = "insider"
 }
 
 If ($branch -like "refs/heads/stable") {
     $buildType = "stable"
     $distTag = "stable"
-}
-
-If ($branch -like "refs/heads/vnext") {
-    $buildType = "vnext"
-    $distTag = "next"
-}
-
-# TEMPORARY (2023-02-09): This is to support the transition from vnext to main.
-# Eventually, the distribution pipeline on the main branch will create:
-#
-# - A BatchExplorer insider build (buildType = "insider")
-# - NPM packages with the latest tag (distTag = "latest")
-#
-# In the next phase, the `vnext` branch will be removed and the above condition
-# can be removed as well. In a subsequent phase, the `master` branch will be
-# deprecated, at which point the `master` condition above will also be removed.
-If ($branch -like "refs/heads/main") {
-    $buildType = "vnext"
-    $distTag = "next"
 }
 
 # Change to curent branch for testing

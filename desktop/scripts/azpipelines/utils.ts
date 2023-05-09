@@ -27,8 +27,6 @@ export function getContainerName(buildType: string): string {
             return "stable";
         case "insider":
             return "insider";
-        case "vnext": // See comment in .vsts/common/build-vars.ps1
-            return "vnext";
         default:
             return "test";
     }

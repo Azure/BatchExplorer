@@ -28,9 +28,9 @@ export class ActivityService {
     }
 
     /**
-     * Loads a single activity into the master processor, and runs the processor
+     * Loads a single activity into the main processor, and runs the processor
      * N.B. this method is cascadable, in case it needs to be chained with done()
-     * @param activity the activity to load into the master processor
+     * @param activity the activity to load into the main processor
      */
     public exec(activity: Activity): ActivityService {
         this.processor.exec([activity]);
@@ -46,7 +46,7 @@ export class ActivityService {
     }
 
     /**
-     * Reruns the given activity by creating a clone of it and reexecuting it on the master processor
+     * Reruns the given activity by creating a clone of it and reexecuting it on the main processor
      * @param activity the activity to rerun
      */
     public rerun(activity: Activity): void {
