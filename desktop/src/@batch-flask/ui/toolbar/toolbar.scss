@@ -22,7 +22,7 @@ bl-toolbar {
     > [toolbarLabel] {
         display: inline-block;
         flex: 1;
-        font-size: 11px;
+        font-size: $font-size-small;
         color: $secondary-text;
         font-weight: 700;
         user-select: none;

@@ -32,7 +32,7 @@
                     <div *blCellDef="let size">{{size.prettyRAM}}</div>
                 </bl-column>
 
-                <bl-column name="osdisk" [sortable]="true" [defaultWidth]="70">
+                <bl-column name="osdisk" [sortable]="true" [defaultWidth]="70" *ngIf="!isCloudService">
                     <div *blHeadCellDef>OS Disk</div>
                     <div *blCellDef="let size">{{size.prettyOSDiskSize}}</div>
                 </bl-column>

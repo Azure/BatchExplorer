@@ -3,7 +3,7 @@
     <table class="noselect" cellspacing="0" cellpadding="0" formArrayName="items" [attr.aria-label]="label" role="grid">
         <thead>
             <tr>
-                <th *ngFor="let column of columns;trackBy: trackColumn">
+                <th *ngFor="let column of columns;trackBy: trackColumn" [attr.id]="getHeaderIdForColumn(column)">
                     <ng-template [ngTemplateOutlet]="column.content"></ng-template>
                 </th>
                 <th class="action-column"></th>
@@ -18,7 +18,7 @@
                                 [rowValue]="item.value"></bl-editable-table-select-cell>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
-                            <input [formControl]="item.controls[column.name]" [attr.type]="column.type" [attr.aria-placeholder]="column.name">
+                            <input [formControl]="item.controls[column.name]" [attr.type]="column.type" [attr.aria-describedby]="getHeaderIdForColumn(column)" [attr.aria-labeledby]="getHeaderIdForColumn(column)">
                         </ng-container>
                     </ng-container>
                 </td>

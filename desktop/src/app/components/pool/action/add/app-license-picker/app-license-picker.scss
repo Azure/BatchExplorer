@@ -9,7 +9,6 @@ bl-app-license-picker {
             color: #333333;
 
             > .summary-container {
-
                 &.standard {
                     height: unset;
                 }
@@ -52,7 +51,7 @@ bl-app-license-picker {
     }
 
     .note {
-        font-size: 11px;
+        font-size: $font-size-small;
         font-weight: bold;
         padding-top: 5px;
     }
@@ -81,8 +80,8 @@ bl-app-license-picker {
     }
 
     ol li span {
-        font-weight:bold;
-        margin-right:5px;
+        font-weight: bold;
+        margin-right: 5px;
         border-bottom: 1px solid $primary-text;
     }
 }

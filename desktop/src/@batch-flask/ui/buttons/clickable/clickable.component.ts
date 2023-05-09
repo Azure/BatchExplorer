@@ -35,6 +35,8 @@ export class ClickableComponent implements OnChanges, OnDestroy {
      */
     @Input() public permission?: Permission;
 
+    @Input() public matTooltip?: string;
+
     /**
      * @returns true if either the disabled attribute is set to true or there is no permission for this action
      */
