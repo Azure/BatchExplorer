@@ -53,9 +53,20 @@ yargs
                         "The name of the module (e.g. lib.common) that translations will be built for",
                     default: "",
                     demandOption: false,
+                })
+                .option("platform", {
+                    describe:
+                        "The target platform ('web' or 'desktop') for merged translations",
+                    choices: ["web", "desktop"],
+                    demandOption: false,
                 }),
         handler: (argv) =>
-            buildTranslations(argv.src, argv.dest, argv.packageName),
+            buildTranslations(
+                argv.src,
+                argv.dest,
+                argv.packageName,
+                argv.platform as "web" | "desktop" | undefined
+            ),
     })
     .command({
         command: "configure",

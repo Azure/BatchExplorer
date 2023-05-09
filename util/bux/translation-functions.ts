@@ -13,10 +13,102 @@ type NestedStringMap<V> = StringMap<V> | StringMap<StringMap<V>>;
 
 const writeFile = promisify(fs.writeFile);
 
+const readFileAsync = promisify(fs.readFile);
+const writeFileAsync = promisify(fs.writeFile);
+
+export async function mergeAllTranslations(platform: "web" | "desktop") {
+    const currentDirectory = process.cwd();
+    const rootDir = path.resolve(currentDirectory, "..");
+    console.log(rootDir);
+    const outputDir =
+        platform === "web"
+            ? path.join(rootDir, "web/dev-server/resources/i18n")
+            : path.join(rootDir, "desktop/resources/i18n");
+
+    // Ensure the output directory exists
+    if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+    }
+
+    // Define resource directories (absolute paths)
+    const resourceDirs = [
+        path.join(rootDir, "packages/common/resources/i18n/json"),
+        path.join(rootDir, "packages/playground/resources/i18n/json"),
+        path.join(rootDir, "packages/react/resources/i18n/json"),
+        path.join(rootDir, "packages/service/resources/i18n/json"),
+    ];
+
+    // Initialize an empty object to store the merged translations
+    const mergedTranslations = Object.create(null);
+
+    // Iterate through each resource directory
+    for (const dir of resourceDirs) {
+        // Iterate through each JSON file in the directory
+        for (const file of fs.readdirSync(dir)) {
+            if (file.startsWith("resources.") && file.endsWith(".json")) {
+                const langID = file.split(".")[1];
+
+                // If the language ID is not in the object, add it
+                if (
+                    !Object.prototype.hasOwnProperty.call(
+                        mergedTranslations,
+                        langID
+                    )
+                ) {
+                    mergedTranslations[langID] = {};
+                }
+
+                // Read the JSON content and parse it
+                const content = JSON.parse(
+                    await readFileAsync(path.join(dir, file), "utf-8")
+                );
+
+                // Merge the content into the object
+                Object.assign(mergedTranslations[langID], content);
+            }
+        }
+    }
+
+    // Write the merged translations to the output directory
+    for (const langID of Object.keys(mergedTranslations)) {
+        const outputFile = path.join(outputDir, `resources.${langID}.json`);
+
+        // Read existing translations in the output file if it exists
+        let existingTranslations = {};
+        if (fs.existsSync(outputFile)) {
+            existingTranslations = JSON.parse(
+                await readFileAsync(outputFile, "utf-8")
+            );
+        }
+
+        // Merge existing translations with new translations
+        const combinedTranslations = {
+            ...existingTranslations,
+            ...mergedTranslations[langID],
+        };
+
+        // Sort keys alphabetically
+        const sortedTranslations = Object.fromEntries(
+            Object.entries(combinedTranslations).sort()
+        );
+
+        // Write the sorted translations to the output file
+        await writeFileAsync(
+            outputFile,
+            JSON.stringify(sortedTranslations, null, 2),
+            "utf-8"
+        );
+    }
+
+    console.log(`Merged translations have been saved in ${outputDir}`);
+}
+
+// Function to generate English file for a package from its YAML files
 export async function createEnglishTranslations(
     sourcePath: string,
     destPath: string,
-    packageName?: string
+    packageName?: string,
+    platform?: "web" | "desktop"
 ) {
     const translations = await loadDevTranslations(sourcePath, packageName);
     const content = JSON.stringify(translations, null, 2).replace(/\n/g, EOL);
@@ -50,14 +142,32 @@ export async function createEnglishTranslations(
     }
 
     const cleanedJsonContent = JSON.stringify(cleanContent, null, 2);
+    let resourcesJsonPath = "";
 
-    const resourcesJsonPath = path.join(
-        path.dirname(path.dirname(sourcePath)),
-        "resources",
-        "i18n",
-        "json",
-        "resources.en.json"
-    );
+    if (platform == "web") {
+        resourcesJsonPath = path.join(
+            path.dirname(path.dirname(sourcePath)),
+            "dev-server",
+            "resources",
+            "i18n",
+            "resources.en.json"
+        );
+    } else if (platform == "desktop") {
+        resourcesJsonPath = path.join(
+            path.dirname(path.dirname(sourcePath)),
+            "resources",
+            "i18n",
+            "resources.en.json"
+        );
+    } else {
+        resourcesJsonPath = path.join(
+            path.dirname(path.dirname(sourcePath)),
+            "resources",
+            "i18n",
+            "json",
+            "resources.en.json"
+        );
+    }
 
     // Check if the directory exists and create it if it doesn't
     if (!fs.existsSync(path.dirname(resourcesJsonPath))) {

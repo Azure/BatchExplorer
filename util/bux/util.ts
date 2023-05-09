@@ -9,7 +9,10 @@ import inquirer from "inquirer";
 import * as os from "os";
 import * as path from "path";
 import * as shell from "shelljs";
-import { createEnglishTranslations } from "./translation-functions";
+import {
+    createEnglishTranslations,
+    mergeAllTranslations,
+} from "./translation-functions";
 
 export const defaultBatchExplorerHome = path.resolve(__dirname, "../../");
 export const configFile = path.resolve(os.homedir(), ".config/batch/bux.json");
@@ -104,7 +107,8 @@ export function copyFiles(sourcePath: string, destPath: string) {
 export async function buildTranslations(
     sourcePath: string,
     destPathRESJSON: string,
-    packageName?: string
+    packageName?: string,
+    platform?: "web" | "desktop"
 ) {
     if (!sourcePath) {
         error("Failed to build translations: No source path specified");
@@ -126,7 +130,17 @@ export async function buildTranslations(
         });
     }
 
-    await createEnglishTranslations(sourcePath, destPathRESJSON, packageName);
+    await createEnglishTranslations(
+        sourcePath,
+        destPathRESJSON,
+        packageName,
+        platform
+    );
+
+    // Merge translations if a platform is provided
+    if (platform) {
+        await mergeAllTranslations(platform);
+    }
 }
 
 export function mkdirp(targetPath: string) {

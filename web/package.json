@@ -19,7 +19,7 @@
     "build:clean": "run-s clean compile bundle:dev",
     "build:prod": "run-s clean compile bundle:prod",
     "build:test": "run-s build test",
-    "build-translations": "bux build-translations --src src/explorer-web --dest i18n",
+    "build-translations": "bux build-translations --src src/explorer-web --dest i18n --platform web",
     "bundle": "npm run bundle:dev",
     "bundle:analyze": "webpack --env.analyze",
     "bundle:dev": "webpack --env.dev",
