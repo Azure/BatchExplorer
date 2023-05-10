@@ -63,15 +63,16 @@ describe("Create account action", () => {
         await act(() => action.waitForInitialization());
         expect(action.isInitialized).toBe(true);
 
-        const accountNameInput: HTMLInputElement = await screen.findByLabelText(
-            "Account name",
+        const accountInput: HTMLElement[] = await screen.findAllByLabelText(
+            "Account",
             {
                 exact: false,
             }
         );
-        expect(accountNameInput).toBeDefined();
-        expect(accountNameInput.value).toEqual("one");
-        expect(accountNameInput.getAttribute("aria-invalid")).toEqual("false");
+        const firstAccountLabel = accountInput[0];
+        expect(accountInput).toBeDefined();
+        expect(firstAccountLabel.getAttribute("value")).toEqual("one");
+        expect(firstAccountLabel.getAttribute("aria-invalid")).toEqual("false");
 
         await act(async () => {
             await action.form.validate();
@@ -80,15 +81,15 @@ describe("Create account action", () => {
         expect(action.form.validationStatus?.level).toEqual("error");
 
         // Validation error won't be displayed until user interaction
-        expect(accountNameInput.getAttribute("aria-invalid")).toEqual("false");
+        expect(firstAccountLabel.getAttribute("aria-invalid")).toEqual("false");
 
-        await user.click(accountNameInput);
+        await user.click(firstAccountLabel);
         await user.keyboard("two");
 
         // Now the form control is dirty, the control's validation error will
         // be displayed
         waitFor(() => {
-            expect(accountNameInput.getAttribute("aria-invalid")).toEqual(
+            expect(firstAccountLabel.getAttribute("aria-invalid")).toEqual(
                 "true"
             );
         });

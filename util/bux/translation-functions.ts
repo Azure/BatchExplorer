@@ -19,7 +19,6 @@ const writeFileAsync = promisify(fs.writeFile);
 export async function mergeAllTranslations(platform: "web" | "desktop") {
     const currentDirectory = process.cwd();
     const rootDir = path.resolve(currentDirectory, "..");
-    console.log(rootDir);
     const outputDir =
         platform === "web"
             ? path.join(rootDir, "web/dev-server/resources/i18n")
@@ -38,26 +37,40 @@ export async function mergeAllTranslations(platform: "web" | "desktop") {
         path.join(rootDir, "packages/service/resources/i18n/json"),
     ];
 
-    await createEnglishTranslations(
-        path.join(rootDir, "packages/react/src/ui-react"),
-        path.join(rootDir, "packages/react/i18n"),
-        "lib.react"
+    // Build the English file for each package before building web/desktop translations (it is a prerequisite)
+
+    const buildPackageEnglishPromises = [];
+
+    buildPackageEnglishPromises.push(
+        createEnglishTranslations(
+            path.join(rootDir, "packages/react/src/ui-react"),
+            path.join(rootDir, "packages/react/i18n"),
+            "lib.react"
+        )
     );
-    await createEnglishTranslations(
-        path.join(rootDir, "packages/playground/src/ui-playground"),
-        path.join(rootDir, "packages/playground/i18n"),
-        "lib.playground"
+    buildPackageEnglishPromises.push(
+        createEnglishTranslations(
+            path.join(rootDir, "packages/playground/src/ui-playground"),
+            path.join(rootDir, "packages/playground/i18n"),
+            "lib.playground"
+        )
     );
-    await createEnglishTranslations(
-        path.join(rootDir, "packages/common/src/ui-common"),
-        path.join(rootDir, "packages/common/i18n"),
-        "lib.common"
+    buildPackageEnglishPromises.push(
+        createEnglishTranslations(
+            path.join(rootDir, "packages/common/src/ui-common"),
+            path.join(rootDir, "packages/common/i18n"),
+            "lib.common"
+        )
     );
-    await createEnglishTranslations(
-        path.join(rootDir, "packages/service/src/ui-service"),
-        path.join(rootDir, "packages/service/i18n"),
-        "lib.service"
+    buildPackageEnglishPromises.push(
+        createEnglishTranslations(
+            path.join(rootDir, "packages/service/src/ui-service"),
+            path.join(rootDir, "packages/service/i18n"),
+            "lib.service"
+        )
     );
+
+    await Promise.all(buildPackageEnglishPromises);
 
     // Initialize an empty object to store the merged translations
     const mergedTranslations = Object.create(null);
