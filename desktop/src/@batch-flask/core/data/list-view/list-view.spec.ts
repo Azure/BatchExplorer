@@ -2,7 +2,7 @@ import { BasicEntityGetter, BasicListGetter, DataCache, FilterBuilder, ListView,
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { List, OrderedSet } from "immutable";
 import { from, of } from "rxjs";
-import { flatMap } from "rxjs/operators";
+import { switchMap } from "rxjs/operators";
 import { FakeModel } from "../test/fake-model";
 
 const fake1 = { id: "1", parentId: "parent-1", state: "active", name: "Fake1" };
@@ -62,6 +62,9 @@ describe("ListView", () => {
     let status: LoadingStatus;
     let error: ServerError;
 
+    let setKeysSpy: jasmine.Spy;
+    let appendKeysSpy: jasmine.Spy;
+
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
         dataSpy = jasmine.createSpy("supplyDataSpy").and.callFake((params, options, nextLink) => {
@@ -92,6 +95,9 @@ describe("ListView", () => {
         view.hasMore.subscribe(x => hasMore = x);
         view.status.subscribe(x => status = x);
         view.error.subscribe(x => error = x);
+
+        setKeysSpy = spyOn<any>(view, "_setItemKeys").and.callThrough();
+        appendKeysSpy = spyOn<any>(view, "_appendItemKeys").and.callThrough();
     });
 
     afterEach(() => {
@@ -114,9 +120,11 @@ describe("ListView", () => {
 
     it("It retrieve the next batch of items", (done) => {
         view.fetchNext().pipe(
-            flatMap(() => view.fetchNext()),
+            switchMap(() => view.fetchNext()),
         ).subscribe(() => {
             expect(dataSpy).toHaveBeenCalledTimes(2);
+            expect(setKeysSpy).toHaveBeenCalledTimes(2);
+            expect(appendKeysSpy).toHaveBeenCalledTimes(1);
             expect(items.toJS()).toEqual([fake1, fake2, fake3, fake4, fake5]);
             expect(hasMore).toBe(false);
             done();
@@ -127,6 +135,8 @@ describe("ListView", () => {
         view.fetchAll().subscribe(() => {
             expect(items.toJS()).toEqual([fake1, fake2, fake3, fake4, fake5]);
             expect(dataSpy).toHaveBeenCalledTimes(2);
+            expect(setKeysSpy).toHaveBeenCalledTimes(1);
+            expect(appendKeysSpy).toHaveBeenCalledTimes(0);
             expect(hasMore).toBe(false);
             done();
         });
@@ -136,11 +146,14 @@ describe("ListView", () => {
         view.fetchNext().subscribe(() => {
             expect(dataSpy).toHaveBeenCalledTimes(1);
             const obs = view.refresh(true);
-            expect(items.size).toBe(0, "Should have cleared the items");
+            expect(items.size)
+                .withContext("Should have cleared the items")
+                .toBe(0);
 
             obs.subscribe(() => {
                 expect(dataSpy).toHaveBeenCalledTimes(2);
-
+                expect(setKeysSpy).toHaveBeenCalledTimes(3);
+                expect(appendKeysSpy).toHaveBeenCalledTimes(0);
                 expect(items.toJS()).toEqual([fake1, fake2, fake3]);
                 done();
             });
@@ -151,12 +164,15 @@ describe("ListView", () => {
         view.fetchNext().subscribe(() => {
             expect(dataSpy).toHaveBeenCalledTimes(1);
             const obs = view.refresh(false);
-            expect(items.size).not.toBe(0, "Should NOT have cleared the items");
+            expect(items.size)
+                .withContext("should NOT have cleared the items").not.toBe(0);
 
             items = List(); // Make sure it get the new value
             obs.subscribe(() => {
                 view.items.subscribe(x => items = x);
                 expect(dataSpy).toHaveBeenCalledTimes(2);
+                expect(setKeysSpy).toHaveBeenCalledTimes(2);
+                expect(appendKeysSpy).toHaveBeenCalledTimes(0);
                 expect(items.toJS()).toEqual([fake1, fake2, fake3]);
                 done();
             });
