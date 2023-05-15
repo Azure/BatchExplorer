@@ -36,12 +36,12 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
         this._getter = config.getter;
         this._options = new ListOptions(config.initialOptions || {});
 
-        this.items = combineLatest(
+        this.items = combineLatest([
             this._params.pipe(switchMap(params => this.getCache(params).items)),
             this._itemKeys.pipe(distinctUntilChanged()),
             this._prepend.pipe(distinctUntilChanged()),
             this._params,
-        ).pipe(
+        ]).pipe(
             map(([items, itemKeys, prependKeys, params]) => {
                 prependKeys = prependKeys.filter((x: string) => !itemKeys.has(x)) as any;
 
@@ -76,11 +76,11 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
         this.hasMore = this._hasMore.asObservable();
 
         this.deleted.subscribe((deletedKey) => {
-            this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
+            this._setItemKeys(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
         });
 
         this._cacheCleared.subscribe(() => {
-            this._itemKeys.next(OrderedSet<string>([]));
+            this._setItemKeys(OrderedSet<string>([]));
             this._handleChanges();
             this._hasMore.next(true);
             this.fetchNext();
@@ -103,7 +103,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
         super.setOptions(new ListOptions(options));
         this._handleChanges();
         if (clearItems) {
-            this._itemKeys.next(OrderedSet([]));
+            this._setItemKeys(OrderedSet([]));
         }
         this._hasMore.next(true);
     }
@@ -221,7 +221,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
             return;
         }
 
-        this._itemKeys.next(OrderedSet(OrderedSet([key]).concat(this._itemKeys.value)));
+        this._setItemKeys(OrderedSet(OrderedSet([key]).concat(this._itemKeys.value)));
         this.cache.queryCache.addKeyToQuery(null, key);
     }
 
@@ -229,10 +229,10 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
         const currentKeys = this._itemKeys.value;
 
         const last = this._lastRequest;
-        if (last && (last.params !== this.params || last.options !== this._options)) {
-            this._itemKeys.next(newKeys);
+        if (last?.params !== this.params || last?.options !== this._options) {
+            this._setItemKeys(newKeys);
         } else {
-            this._itemKeys.next(OrderedSet<string>(currentKeys.concat(newKeys)));
+            this._appendItemKeys(newKeys);
         }
 
         this._lastRequest = { params: this.params, options: this._options };
@@ -248,7 +248,7 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
         }
         const response = this._getter.fetchFromCache(this.params, this._options);
         if (!response) { return false; }
-        this._itemKeys.next(this._retrieveKeys(response.items));
+        this._setItemKeys(this._retrieveKeys(response.items));
         // this._lastRequest = { params: this._params, options: this._options };
         // this._hasMore.next(Boolean(response.nextLink));
         this._status.next(LoadingStatus.Ready);
@@ -261,5 +261,13 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
 
     private _handleChanges() {
         this._nextLink = null;
+    }
+
+    private _setItemKeys(keys: OrderedSet<string>) {
+        this._itemKeys.next(keys);
+    }
+
+    private _appendItemKeys(keys: OrderedSet<string>) {
+        this._setItemKeys(OrderedSet(this._itemKeys.value.concat(keys)));
     }
 }
