@@ -13,7 +13,7 @@ The following are instructions for building and running Batch Explorer in a deve
 
     Make sure Node.js is [configured to use the Visual Studio Build Tools](https://github.com/nodejs/node-gyp#on-windows).
 
-    Next, ensure that long path support is enabled in the registry by running the following command:
+    Next, ensure that long path support is enabled in the registry by running the following command as administrator in a PowerShell console:
 
     ```shell
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
@@ -25,12 +25,14 @@ The following are instructions for building and running Batch Explorer in a deve
     git config --global core.longpaths true
     ```
 
+    > **Note:** There are presently a few issues running Batch Explorer with Node 17 or later.
+
 2. Install dependencies:
 
     ```shell
     npm install
     npm run dev-setup
-    pip install -r python/requirements.txt
+    pip install -r desktop/python/requirements.txt
     ```
 
 3. Build the repository:
