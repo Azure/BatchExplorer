@@ -8,6 +8,7 @@ import {
 import { NodeFillType, Pool } from "app/models";
 import { PoolService } from "app/services";
 import { PoolConfigurationComponent } from "./pool-configuration.component";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 
 @Component({
     template: `<bl-pool-configuration [pool]="pool"></bl-pool-configuration>`,
@@ -23,7 +24,7 @@ describe("PoolConfigurationComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [],
+            imports: [I18nTestingModule],
             declarations: [
                 PoolConfigurationComponent, TestComponent, NoItemComponent,
                 TextPropertyComponent, BoolPropertyComponent,
