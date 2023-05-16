@@ -4,6 +4,8 @@ common:
   back: Back
   configuration: Configuration
   confirm: Confirm
+  learnMore: Learn more
+  listbox: Listbox
   loading: Loading
   no: "No"
   none: None
@@ -13,4 +15,3 @@ common:
   required: Required
   updated: Updated
   yes: "Yes"
-  listbox: Listbox

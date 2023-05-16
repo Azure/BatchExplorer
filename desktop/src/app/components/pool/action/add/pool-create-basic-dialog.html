@@ -40,7 +40,7 @@
                                 <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
                             </bl-i18n>
                         </span>
-                        <a class="create-pool-warning-alternative-link" *ngIf="hasDeprecationLink" (click)="openDeprecationLink()" href="javascript:void(0)">Learn more </a>
+                        <a class="create-pool-warning-alternative-link" *ngIf="hasDeprecationLink" (click)="openDeprecationLink()" href="javascript:void(0)">{{'common.learnMore' | i18n}}</a>
                     </div>
                 </bl-banner>
             </ng-container>
@@ -152,8 +152,8 @@
         <bl-form-section title="Certificate" subtitle="Reference to certificates to be installed on compute nodes in a pool.">
             <bl-banner class="create-pool-deprecation-warning" type="warning">
                 <div message>
-                    The Batch account certificates feature is deprecated and will be retired on February 29, 2024. Please transition to using Azure Key Vault to securely access and install certificates on your Batch pools.
-                    <a class="create-pool-warning-alternative-link" (click)="openLink('https://learn.microsoft.com/en-us/azure/batch/batch-certificate-migration-guide')" href="javascript:void(0)">Learn more</a>
+                    {{ 'pool-create-basic-dialog.deprecationWarning.certificates' | i18n }}
+                    <a class="create-pool-warning-alternative-link" (click)="openLink('https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide')" href="javascript:void(0)">{{'common.learnMore' | i18n}}</a>
                 </div>
             </bl-banner>
             <bl-certificate-references-picker formControlName="certificateReferences" [osType]="osType"></bl-certificate-references-picker>
