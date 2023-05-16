@@ -39,7 +39,7 @@ bl-quota-display {
 
     &[type="normal"] {
         > .details > .label {
-            font-size: 11px;
+            font-size: $font-size-small;
             height: 35%;
             margin: 3px 5px 0;
         }

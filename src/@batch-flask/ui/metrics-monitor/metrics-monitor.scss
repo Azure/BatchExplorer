@@ -24,16 +24,15 @@ bl-metrics-monitor {
             margin-left: 5px;
 
             > .label {
-                font-size: 11px;
+                font-size: $font-size-small;
                 line-height: 11px;
                 margin-bottom: 3px;
             }
 
             > .status {
-                font-size: 11px;
+                font-size: $font-size-small;
                 color: $secondary-text;
             }
-
         }
 
         > .graph {

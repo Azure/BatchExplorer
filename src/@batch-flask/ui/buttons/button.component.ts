@@ -77,6 +77,12 @@ export class ButtonComponent extends ClickableComponent {
         }
     }
 
+    // Removing the title attribute from the button because matTooltip is used
+    // to display the title. This is to prevent the user-agent tooltip from
+    // showing up on hover which will cause double tooltips. matTooltip will
+    // also apply an aria-label attribute to the button for accessibilty.
+    @Input() @HostBinding("attr.title") titleAttr: string = ""
+
     @ViewChild(MatTooltip, { static: false }) private _tooltip: MatTooltip;
 
     private _status = SubmitStatus.Idle;

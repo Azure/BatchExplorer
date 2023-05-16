@@ -53,8 +53,9 @@ describe("ButtonComponent", () => {
     });
 
     it("Should have the tooltip specified with title", () => {
-        const el = de.query(By.css(".action-btn"));
-        expect(el.nativeElement.title).toBe("Stop");
+        expect(de.attributes["aria-label"]).toBe("Stop");
+        const tooltipTrigger = de.query(By.css(".mat-tooltip-trigger"));
+        expect(tooltipTrigger).not.toBeFalsy();
     });
 
     it("should change color", () => {
