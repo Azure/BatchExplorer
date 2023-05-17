@@ -1,4 +1,13 @@
-import { BlobBeginCopyFromURLResponse, BlobDownloadResponseParsed, BlobGetPropertiesResponse, BlobUploadCommonResponse, BlockBlobClient, PollerLike, PollOperationState, StorageSharedKeyCredential } from "@azure/storage-blob";
+import {
+    BlobBeginCopyFromURLResponse,
+    BlobDownloadResponseParsed,
+    BlobGetPropertiesResponse,
+    BlobUploadCommonResponse,
+    BlockBlobClient,
+    PollerLike,
+    PollOperationState,
+    StorageSharedKeyCredential
+} from "@azure/storage-blob";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -63,7 +72,7 @@ export class BlobStorageClient {
         return new BlockBlobClient(
             storageURL(this.accountName, container, blob),
             this.credential
-        )
+        );
     }
 
     public getUrl(container: string, blob: string): string {
@@ -101,6 +110,6 @@ export class BlobStorageClient {
             onProgress(state) {
                 console.log(`Copy "${blob}" is pending ${state.copyProgress}`);
             },
-        })
+        });
     }
 }

@@ -12,7 +12,7 @@ import { mapResourceSkuToVmSize } from "../../models/vm-size";
 const includedVmsSizesPath = "data/vm-sizes-list.json";
 
 export function supportedSkusUrl(subscriptionId: string, location: string) {
-    return `/subscriptions/${subscriptionId}/providers/Microsoft.Batch/locations/${location}`
+    return `/subscriptions/${subscriptionId}/providers/Microsoft.Batch/locations/${location}`;
 }
 
 interface VmSizeCategories {
@@ -243,7 +243,7 @@ export class VmSizeService implements OnDestroy {
                 if (!(account instanceof ArmBatchAccount)) {
                     return of(null);
                 } else {
-                    const cloudServiceUrl = `${supportedSkusUrl(account.subscription.subscriptionId, account.location)}/cloudServiceSkus?api-version=2021-06-01`
+                    const cloudServiceUrl = `${supportedSkusUrl(account.subscription.subscriptionId, account.location)}/cloudServiceSkus?api-version=2021-06-01`;
                     return this._fetchVmSkusForAccount(account, cloudServiceUrl);
                 }
             }),
@@ -257,7 +257,7 @@ export class VmSizeService implements OnDestroy {
                 if (!(account instanceof ArmBatchAccount)) {
                     return of(null);
                 } else {
-                    const vmUrl = `${supportedSkusUrl(account.subscription.subscriptionId, account.location)}/virtualMachineSkus?api-version=2021-06-01`
+                    const vmUrl = `${supportedSkusUrl(account.subscription.subscriptionId, account.location)}/virtualMachineSkus?api-version=2021-06-01`;
                     return this._fetchVmSkusForAccount(account, vmUrl);
                 }
             }),

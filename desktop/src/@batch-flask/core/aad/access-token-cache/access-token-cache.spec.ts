@@ -35,7 +35,7 @@ describe("AccessTokenCache", () => {
         expect(cache.hasToken("tenant1", "resource1")).toBeFalsy();
         expect(cache.hasToken("tenant1", "resource2")).toBeFalsy();
 
-        cache.removeToken("tenant2", "resource1")
+        cache.removeToken("tenant2", "resource1");
         expect(cache.hasToken("tenant2", null)).toBeTruthy();
         expect(cache.hasToken("tenant2", "resource1")).toBeFalsy();
         expect(cache.hasToken("tenant2", "resource2")).toBeTruthy();

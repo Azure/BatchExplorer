@@ -185,7 +185,7 @@ const makeTokenCacheSpy = () => jasmine.createSpyObj(
         getAllAccounts: [],
         remove: jasmine.anything
     }
-)
+);
 
 const makeClientApplicationSpy = () => jasmine.createSpyObj(
     "ClientApplication", {

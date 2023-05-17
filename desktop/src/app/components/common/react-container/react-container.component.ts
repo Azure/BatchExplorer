@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {RootPane} from "@batch/ui-react/lib/components/layout"
+import {RootPane} from "@batch/ui-react/lib/components/layout";
 import { Subscription } from "rxjs";
 import { Theme, ThemeService } from "app/services";
 

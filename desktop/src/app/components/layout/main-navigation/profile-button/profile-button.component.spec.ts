@@ -149,10 +149,10 @@ describe("ProfileButtonComponent", () => {
                 if (label) {
                     expect(menuItem.label).toEqual(label);
                 }
-            }
+            };
 
-            expectMenuItem(ContextMenuItem, "Check for updates")
-            expectMenuItem(ContextMenuSeparator)
+            expectMenuItem(ContextMenuItem, "Check for updates");
+            expectMenuItem(ContextMenuSeparator);
             expectMenuItem(ContextMenuItem, "profile-button.settings");
             expectMenuItem(ContextMenuItem, "profile-button.authentication");
             expectMenuItem(ContextMenuItem, "profile-button.keybindings");

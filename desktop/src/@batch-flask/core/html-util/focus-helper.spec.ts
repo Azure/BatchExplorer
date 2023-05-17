@@ -69,6 +69,6 @@ describe("focus-helper", () => {
             children[1].setAttribute("disabled", true);
             children[2].tabIndex = 0;
             expectContainerFocus(children[2]);
-        })
+        });
     });
 });

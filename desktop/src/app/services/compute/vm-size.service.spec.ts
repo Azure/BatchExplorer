@@ -39,8 +39,8 @@ describe("VMSizeService", () => {
     const westusCloudServiceQuery = `/subscriptions/${testWestusAccount.subscription.subscriptionId}/providers/Microsoft.Batch/locations/${testWestusAccount.location}/cloudServiceSkus?api-version=2021-06-01`;
     const westusVMQuery = `/subscriptions/${testWestusAccount.subscription.subscriptionId}/providers/Microsoft.Batch/locations/${testWestusAccount.location}/virtualMachineSkus?api-version=2021-06-01`;
     // brazilsouth account
-    const brazilCloudServiceQuery = `/subscriptions/${testBrazilAccount.subscription.subscriptionId}/providers/Microsoft.Batch/locations/${testBrazilAccount.location}/cloudServiceSkus?api-version=2021-06-01`
-    const brazilVMQuery = `/subscriptions/${testBrazilAccount.subscription.subscriptionId}/providers/Microsoft.Batch/locations/${testBrazilAccount.location}/virtualMachineSkus?api-version=2021-06-01`
+    const brazilCloudServiceQuery = `/subscriptions/${testBrazilAccount.subscription.subscriptionId}/providers/Microsoft.Batch/locations/${testBrazilAccount.location}/cloudServiceSkus?api-version=2021-06-01`;
+    const brazilVMQuery = `/subscriptions/${testBrazilAccount.subscription.subscriptionId}/providers/Microsoft.Batch/locations/${testBrazilAccount.location}/virtualMachineSkus?api-version=2021-06-01`;
 
     beforeEach(() => {
         armSpy = {

@@ -57,7 +57,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
     @autobind()
     public refresh(): Observable<any> {
-        return this.accountService.loadSubscriptionsAndAccounts()
+        return this.accountService.loadSubscriptionsAndAccounts();
     }
 
     public handleFilter(filter: Filter) {

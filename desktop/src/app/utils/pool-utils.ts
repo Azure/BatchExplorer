@@ -35,7 +35,7 @@ const deprecatedContainerImages = [
     "datacenter-core-20h2-with-containers-smalldisk",
     "datacenter-core-20h2-with-containers-smalldisk-gs",
     "datacenter-core-20h2-with-containers-smalldisk-g2",
-]
+];
 
 const iconMapping = {
     "ubuntuserver": Icons.ubuntu,

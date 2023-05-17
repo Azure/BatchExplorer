@@ -100,7 +100,7 @@ export class AuthService implements OnDestroy {
                     active: tenant.homeTenantId === tenant.tenantId ||
                         settings[tenant.tenantId] === "active",
                     status: TenantStatus.unknown
-                } as TenantAuthorization))
+                } as TenantAuthorization));
             }),
             switchMap(authorizations => forkJoin(authorizations.map(
                 authorization =>

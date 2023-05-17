@@ -143,7 +143,7 @@ function blobItem(name) {
             createdOn: null,
             lastModified: null
         }
-    }
+    };
 }
 
 function containerItem(name) {
@@ -196,10 +196,10 @@ function countGenerator<T>(count: number, pageContents: (num: number) => T) {
                 yield {
                     ...pageContents(size),
                     continuationToken: token
-                }
+                };
             }
         }
-    }
+    };
 }
 
 function blobItemGenerator(items: string[], flat = false) {
@@ -223,6 +223,6 @@ function blobItemGenerator(items: string[], flat = false) {
                 blobItems: blobs,
                 blobPrefixes: Object.values(prefixes)
             }
-        }
-    }
+        };
+    };
 }
