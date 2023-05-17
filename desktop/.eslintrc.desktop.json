@@ -2,12 +2,45 @@
   "extends": [
     "../util/common-config/.eslintrc-common.json"
   ],
+  "plugins": [
+    "@angular-eslint/eslint-plugin",
+    "@angular-eslint/eslint-plugin-template",
+    "@typescript-eslint"
+  ],
   "rules": {
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "no-case-declarations": "off",
     "no-extra-boolean-cast": "off",
-    "no-useless-escape": "off"
+    "no-useless-escape": "off",
+    "@angular-eslint/component-selector": [
+      "error",
+      {
+        "type": "element",
+        "prefix": [
+          "bl",
+          "be"
+        ],
+        "style": "kebab-case"
+      }
+    ],
+    "@angular-eslint/directive-selector": [
+      "error",
+      {
+        "type": "attribute",
+        "prefix": [
+          "bl",
+          "be"
+        ],
+        "style": "camelCase"
+      }
+    ],
+    "@angular-eslint/no-forward-ref": "off",
+    "@angular-eslint/no-input-rename": "warn",
+    "@angular-eslint/use-lifecycle-interface": "warn",
+    "@typescript-eslint/no-var-requires": "warn",
+    "@typescript-eslint/no-empty-interface": "warn",
+    "@typescript-eslint/ban-ts-comment": "warn"
   }
 }

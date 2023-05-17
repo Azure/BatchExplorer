@@ -1,58 +1,21 @@
 module.exports = {
     ignorePatterns: [
         "node_modules/**/*",
-        "**/node_modules/**/*",
-        "lib/**/*",
-        "build/**/*",
-        "python/**/*",
-        "docs/**/*",
-        "data/**/*"
+        "/lib/**/*",
+        "/build/**/*",
+        "/python/**/*",
+        "/docs/**/*",
+        "/data/**/*"
     ],
     env: {
         browser: true,
         es6: true,
         node: true
     },
+    extends: [
+        ".eslintrc.desktop.json"
+    ],
     overrides: [
-        /*
-         * TYPESCRIPT FILES
-         */
-        {
-            files: ["src/**/*.ts"],
-            extends: [
-                ".eslintrc.desktop.json",
-                "prettier"
-            ],
-            plugins: [
-                "@angular-eslint/eslint-plugin",
-                "@angular-eslint/eslint-plugin-template",
-                "@typescript-eslint"
-            ],
-            rules: {
-                "@angular-eslint/component-selector": [
-                    "error",
-                    {
-                        type: "element",
-                        prefix: ["bl", "be"],
-                        style: "kebab-case"
-                    }
-                ],
-                "@angular-eslint/directive-selector": [
-                    "error",
-                    {
-                        type: "attribute",
-                        prefix: ["bl", "be"],
-                        style: "camelCase"
-                    }
-                ],
-                "@angular-eslint/no-forward-ref": "off",
-                "@angular-eslint/no-input-rename": "warn",
-                "@angular-eslint/use-lifecycle-interface": "warn",
-                "@typescript-eslint/no-var-requires": "warn",
-                "@typescript-eslint/no-empty-interface": "warn",
-                "@typescript-eslint/ban-ts-comment": "warn"
-            }
-        },
         /*
          * COMPONENT TEMPLATES
          */
@@ -95,10 +58,6 @@ module.exports = {
          */
         {
             files: ["scripts/**/*.ts", "config/**/*.ts"],
-            extends: [
-                ".eslintrc.desktop.json",
-                "prettier"
-            ],
             parserOptions: {
                 project: [
                     "tsconfig.eslint.json"
@@ -119,10 +78,10 @@ module.exports = {
                 "config/**/*.js",
                 "test/client/**/*.js",
                 "test/spectron/run.js",
-                "karma.conf.js"],
+                "karma.conf.js"
+            ],
             extends: [
-                "eslint:recommended",
-                "prettier"
+                "eslint:recommended"
             ],
             rules: {
                 "@typescript-eslint/no-var-requires": "off",
