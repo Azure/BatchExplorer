@@ -99,7 +99,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         this.changeDetector.detectChanges();
         setTimeout(() => {
             this.focusFirstFocusableElement();
-        })
+        });
     }
 
     public ngOnChanges(changes) {
@@ -175,7 +175,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         this.currentPage = page;
 
         setTimeout(() => {
-            this.focusFirstFocusableElement()
+            this.focusFirstFocusableElement();
         });
     }
 
@@ -279,6 +279,6 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
     }
 
     private focusFirstFocusableElement() {
-        this.formElement.nativeElement?.querySelector('[autofocus], button, input, textarea, select')?.focus()
+        this.formElement.nativeElement?.querySelector('[autofocus], button, input, textarea, select')?.focus();
     }
 }

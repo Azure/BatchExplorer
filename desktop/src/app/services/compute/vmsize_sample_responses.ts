@@ -90,7 +90,7 @@ export const cloudServiceResponse = {
             "family": "standardDFamily"
         }
     ]
-}
+};
 
 export const virtualMachineResponse = {
     "value": [
@@ -186,7 +186,7 @@ export const virtualMachineResponse = {
             "family": "standardDFamily"
         }
     ]
-}
+};
 
 export const badResponseIsNaN = {
     "value": [

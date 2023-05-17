@@ -72,7 +72,11 @@ export function mapResourceSkuToVmSize(skuJson: any[]): List<VmSize> {
         vmSize.numberOfCores = _parseIntOrReturnDefault(_getCapabilityDetails(capabilities, "vCPUs", "Cores"));
         vmSize.numberOfGpus = _parseIntOrReturnDefault(capabilities.get("GPUs"));
         vmSize.osDiskSizeInMB = _parseIntOrReturnDefault(capabilities.get("OSVhdSizeMB"));
-        vmSize.resourceDiskSizeInMB = _parseIntOrReturnDefault(_getCapabilityDetails(capabilities, "MaxResourceVolumeMB", "WebWorkerResourceDiskSizeInMb"));
+        vmSize.resourceDiskSizeInMB =
+            _parseIntOrReturnDefault(
+                _getCapabilityDetails(capabilities, "MaxResourceVolumeMB",
+                    "WebWorkerResourceDiskSizeInMb")
+            );
         vmSize.memoryInMB = _parseFloatOrReturnDefault(_getCapabilityDetails(capabilities, "MemoryGB", "MemoryInMb"));
         vmSize.maxDataDiskCount = _parseIntOrReturnDefault(capabilities.get("MaxDataDiskCount"));
         skuToVmSize.push(new VmSize(vmSize as VmSizeAttributes));

@@ -49,7 +49,7 @@ export class CalloutDirective {
                 this.close();
                 this.elementRef.nativeElement.focus();
             }
-        }
+        };
         focusWithin(this._overlayRef.overlayElement);
     }
 

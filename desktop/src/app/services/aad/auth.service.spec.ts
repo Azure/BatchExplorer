@@ -11,7 +11,7 @@ const FakeTenants = {
     One: "tenant-1",
     Two: "tenant-2",
     Three: "tenant-3",
-}
+};
 const resource1 = "batch";
 const token1 = new AccessToken({
     accessToken: "sometoken",

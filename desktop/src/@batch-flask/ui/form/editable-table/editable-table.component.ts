@@ -121,7 +121,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public getHeaderIdForColumn(column: EditableTableColumnComponent) {
-        return `table-header-${column.name}`
+        return `table-header-${column.name}`;
     }
 
     private _buildControlsFromValue(items: any[], columns: EditableTableColumnComponent[]) {

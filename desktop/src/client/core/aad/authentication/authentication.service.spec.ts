@@ -17,7 +17,7 @@ const CONFIG = {
 const FAKE_TOKEN = {
     accessToken: "somecode",
     account: { username: "user@contoso.com" } as AccountInfo
-}
+};
 
 describe("AuthenticationService", () => {
     let userAuthorization: AuthenticationService;
@@ -97,7 +97,7 @@ describe("AuthenticationService", () => {
                 error: "someerror",
                 description: "There was an error",
                 errorCodes: [ unretryableAuthCodeErrors[0] ]
-            }
+            };
             await promise;
 
             expect(result).toBeNull();

@@ -60,7 +60,7 @@ async function signIn(app: ElectronApplication, authWindow: Page) {
     await authWindow.click(`input[type="submit"]`);
 
     // Wait until we see one of the valid next URLs
-    await authWindow.waitForURL(/(https:\/\/login\.microsoftonline\.com\/common\/oauth2\/v2\.0\/authorize|https:\/\/msft\.sts\.microsoft\.com)/)
+    await authWindow.waitForURL(/(https:\/\/login\.microsoftonline\.com\/common\/oauth2\/v2\.0\/authorize|https:\/\/msft\.sts\.microsoft\.com)/);
 
     // Click on "Sign with email or password instead"
     if (authWindow.url().startsWith("https://login.microsoftonline.com")) {

@@ -58,7 +58,7 @@ export class TenantPickerComponent implements ControlValueAccessor, OnDestroy {
             if (data.tenantId) {
                 reauthenticate = data.tenantId;
             } else {
-                reauthenticate = reauthenticateAll
+                reauthenticate = reauthenticateAll;
             }
         }
 

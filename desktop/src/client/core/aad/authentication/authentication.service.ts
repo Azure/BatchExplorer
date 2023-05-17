@@ -290,7 +290,7 @@ export class AuthenticationService {
         const parsedUrl = new URL(url);
         const params = {};
         parsedUrl.searchParams.forEach((value: string, key: string) => {
-            params[key] = value
+            params[key] = value;
         });
         return params as any;
     }
@@ -310,7 +310,7 @@ export class AuthenticationService {
                     matches.length > 0 ? matches[0].displayName : tenantId
                 );
             }
-        )
+        );
     }
 }
 
@@ -371,7 +371,7 @@ class AuthorizeQueue {
         while (index < this.queue.length) {
             auth = this.queue[index];
             if (this.matches(auth, tenantId, resourceURI)) {
-                auth.deferred.reject(new LogoutError())
+                auth.deferred.reject(new LogoutError());
                 break;
             }
             index++;

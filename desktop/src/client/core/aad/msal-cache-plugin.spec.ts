@@ -16,7 +16,7 @@ describe("MSALCachePlugin", () => {
             tokenCache: cacheSpy,
             cacheHasChanged: false
         };
-    })
+    });
     it("should get an item before the cache is called", async () => {
         expect(storeSpy.getItem).not.toHaveBeenCalled();
         await plugin.beforeCacheAccess(cacheContextSpy);

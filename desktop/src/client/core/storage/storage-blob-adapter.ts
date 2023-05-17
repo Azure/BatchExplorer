@@ -1,5 +1,11 @@
 import { Injectable } from "@angular/core";
-import { BlobHierarchyListSegment, BlobSASPermissions, BlobServiceClient, ContainerSASPermissions, StorageSharedKeyCredential } from "@azure/storage-blob";
+import {
+    BlobHierarchyListSegment,
+    BlobSASPermissions,
+    BlobServiceClient,
+    ContainerSASPermissions,
+    StorageSharedKeyCredential
+} from "@azure/storage-blob";
 import { autobind } from "@batch-flask/core";
 import { EncodingUtils } from "@batch-flask/utils";
 import * as blob from "app/services/storage/models/storage-blob";

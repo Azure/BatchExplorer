@@ -80,8 +80,8 @@ export const instrumentForAuth = app => {
     app.injector = {
         get: () => jasmine.createSpyObj("DataStore", ["getItem", "setItem"])
     };
-    app.properties = { azureEnvironment: AzurePublic }
-}
+    app.properties = { azureEnvironment: AzurePublic };
+};
 
 export const instrumentAuthProvider = (authProvider: AuthProvider) => {
     const tenants = {};
@@ -93,4 +93,4 @@ export const instrumentAuthProvider = (authProvider: AuthProvider) => {
             throw new Error("no account");
         }
     });
-}
+};

@@ -5,7 +5,7 @@ import { AuthSettingsComponent } from "./auth-settings.component";
 
 const components = [ AuthSettingsComponent ];
 
-const modules = [ TenantPickerModule ]
+const modules = [ TenantPickerModule ];
 
 @NgModule({
     declarations: components,

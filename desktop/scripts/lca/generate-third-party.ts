@@ -141,7 +141,7 @@ async function loadLicense(dependency: Dependency, anonymous = false):
     const repoName = getRepoName(repoUrl);
     const licenseUrl = `https://api.github.com/repos/${repoName}/license`;
     const headers: HeaderInit = anonymous ? {} :
-        { Authorization: `token ${process.env.GH_TOKEN}` }
+        { Authorization: `token ${process.env.GH_TOKEN}` };
 
     return fetch(licenseUrl, { headers }).then(async (res) => {
         /** Will look up default license if cannot find a license */
@@ -156,7 +156,7 @@ async function loadLicense(dependency: Dependency, anonymous = false):
         return await res.json();
     }).catch((error) => {
         console.error(`Error loading license for ${repoName}`, error);
-        process.exit(1)
+        process.exit(1);
     });
 }
 

@@ -65,6 +65,6 @@ export class TenantCardComponent implements OnDestroy, OnChanges {
         this.refreshTenant.emit({
             tenantId: this.tenant.tenantId,
             reauthenticate
-        })
+        });
     }
 }

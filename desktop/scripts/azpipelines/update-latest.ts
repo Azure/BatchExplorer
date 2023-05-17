@@ -19,11 +19,11 @@ const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT;
 const storageAccountKey = process.argv[2];
 
 console.log("Artifact staging directory is", stagingDir);
-console.log(`##vso[task.setvariable variable=BE_GITHUB_ARTIFACTS_DIR]${stagingDir}`)
+console.log(`##vso[task.setvariable variable=BE_GITHUB_ARTIFACTS_DIR]${stagingDir}`);
 
 if (!storageAccountName) {
     console.error(`No storage account name found in AZURE_STORAGE_ACCOUNT`);
-    process.exit(-1)
+    process.exit(-1);
 }
 
 if (!storageAccountKey) {
@@ -88,7 +88,7 @@ async function copyAllFilesToArtifactStaging() {
 
 async function updateLatest(os) {
     const manifest = getManifest(os);
-    console.log(`##vso[task.setvariable variable=BE_RELEASE_VERSION]${manifest.version}`)
+    console.log(`##vso[task.setvariable variable=BE_RELEASE_VERSION]${manifest.version}`);
     console.log(`Updating latest for os: ${os}`);
     if (!manifest.buildType) {
         throw new Error(
