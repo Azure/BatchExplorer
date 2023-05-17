@@ -43,6 +43,17 @@
         "checkLoops": false
       }
     ],
+    "no-restricted-globals": [
+      "error",
+      {
+        "name": "fdescribe",
+        "message": "Do not commit focused unit test suites"
+      },
+      {
+        "name": "fit",
+        "message": "Do not commit focused unit tests"
+      }
+    ],
     "no-restricted-imports": [
       "error",
       {
