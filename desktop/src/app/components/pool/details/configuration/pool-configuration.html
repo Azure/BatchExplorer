@@ -130,6 +130,12 @@
             <div collapsed-preview>
                 <span>{{certificates?.size}} certificate references</span>
             </div>
+            <bl-banner class="certificate-deprecation-warning" type="warning">
+                <div message>
+                    {{ 'pool-configuration.certificate.deprecationWarning' | i18n }}
+                    <a class="certificate-warning-alternative-link" (click)="openLink('https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide')" href="javascript:void(0)">{{'common.learnMore' | i18n}}</a>
+                </div>
+            </bl-banner>
             <bl-table-property *ngIf="certificates.size > 0" label="Certificate references">
                 <bl-table-property-header>
                     <div tp-column>Thumbprint</div>

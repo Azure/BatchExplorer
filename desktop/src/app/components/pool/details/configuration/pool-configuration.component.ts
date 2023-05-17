@@ -10,6 +10,9 @@ import { PoolService } from "app/services";
 import { List } from "immutable";
 import { flatMap } from "rxjs/operators";
 import { EditAppPackageFormComponent, EditCertificateReferencesComponent } from "../../action/edit";
+import { ElectronShell } from "@batch-flask/electron";
+
+import "./pool-configuration.scss";
 
 /* eslint-disable  */
 @Component({
@@ -31,7 +34,9 @@ export class PoolConfigurationComponent {
 
     private _pool: Pool;
 
-    constructor(private sidebarManager: SidebarManager, private poolService: PoolService) {
+    constructor(private sidebarManager: SidebarManager,
+        private poolService: PoolService,
+        private electronShell: ElectronShell) {
 
     }
 
@@ -84,5 +89,9 @@ export class PoolConfigurationComponent {
             this.metadata = pool.metadata;
             // Quick fix to make sure it stops crashing the UI
         }
+    }
+
+    public openLink(link: string) {
+        this.electronShell.openExternal(link, {activate: true});
     }
 }
