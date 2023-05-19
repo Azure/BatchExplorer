@@ -208,6 +208,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";add-certificate-form.certificate.deprecationWarning" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Batch account certificates feature is deprecated and will be retired on February 29, 2024. Please transition to using Azure Key Vault to securely access and install certificates on your Batch pools.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Batch hesabı sertifikaları özelliği kullanım dışı bırakıldı ve 29 Şubat 2024'te kullanımdan kaldırılacak. Batch havuzlarınızdaki sertifikalara güvenli bir şekilde erişmek ve bunları yüklemek için lütfen Azure Key Vault kullanmaya geçiş yapın.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";add-certificate-form.certificate.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Select a certificate (pfx or cer) to upload]]></Val>
@@ -609,6 +618,15 @@
           <Val><![CDATA[Confirm]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Onayla]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";common.learnMore" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Learn more]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Daha fazla bilgi]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1797,6 +1815,24 @@
           <Val><![CDATA[Stop resize]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Yeniden boyutlandırmayı durdur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";pool-configuration.certificate.deprecationWarning" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Batch account certificates feature is deprecated and will be retired on February 29, 2024. Please transition to using Azure Key Vault to securely access and install certificates on your Batch pools.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Batch hesabı sertifikaları özelliği kullanım dışı bırakıldı ve 29 Şubat 2024'te kullanımdan kaldırılacak. Batch havuzlarınızdaki sertifikalara güvenli bir şekilde erişmek ve bunları yüklemek için lütfen Azure Key Vault kullanmaya geçiş yapın.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";pool-create-basic-dialog.deprecationWarning.certificates" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Batch account certificates feature is deprecated and will be retired on February 29, 2024. Please transition to using Azure Key Vault to securely access and install certificates on your Batch pools.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Batch hesabı sertifikaları özelliği kullanım dışı bırakıldı ve 29 Şubat 2024'te kullanımdan kaldırılacak. Batch havuzlarınızdaki sertifikalara güvenli bir şekilde erişmek ve bunları yüklemek için lütfen Azure Key Vault kullanmaya geçiş yapın.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
