@@ -141,3 +141,10 @@ bl-quick-list-row-render {
         }
     }
 }
+
+@media (forced-colors: active) {
+    bl-quick-list-row-render.selected {
+        outline: 2px solid Highlight;
+        outline-offset: -2px;
+    }
+}
