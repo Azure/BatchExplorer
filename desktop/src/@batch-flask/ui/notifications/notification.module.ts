@@ -8,6 +8,7 @@ import { DropdownModule } from "../dropdown";
 import { PersistedNotificationDropdownComponent } from "./persisted-dropdown";
 import { ToastComponent } from "./toast";
 import { ToastsContainerComponent } from "./toasts-container";
+import { I18nUIModule } from "@batch-flask/ui/i18n";
 
 const privateComponents = [
     ToastComponent,
@@ -27,6 +28,7 @@ const publicComponents = [
         MaterialModule,
         DropdownModule,
         ButtonsModule,
+        I18nUIModule,
     ],
 })
 export class NotificationModule {

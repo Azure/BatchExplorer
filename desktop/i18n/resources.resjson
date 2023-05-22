@@ -370,6 +370,7 @@
   "time-range-picker.quickRange": "Quick range",
   "time-range-picker.timeRange": "Time range",
   "timezone-dropdown.tooltip": "Select the timezone for dates",
+  "toast.dismiss-button.label": "Dismiss",
   "user-account-picker.gid": "User group id",
   "user-account-picker.linuxConfiguration": "Linux specific configuration",
   "user-account-picker.loginMode": "Login mode",
