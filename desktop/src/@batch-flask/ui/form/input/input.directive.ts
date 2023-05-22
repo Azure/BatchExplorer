@@ -64,6 +64,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     }
 
     @Input()
+    @HostBinding("attr.id")
     get id(): string { return this._id; }
     set id(value: string) { this._id = value || this._uid; }
 
