@@ -3,3 +3,5 @@ pool-picker:
   filterByID: Search by id
   reset: Reset
   noneMatching: You don't have any pools matching the current filters.
+  coreCount: core count
+  nodeCount: node count
