@@ -74,6 +74,9 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     @Input()
     public label: string;
 
+    @HostBinding("attr.aria-label")
+    public get ariaLabel() { return `${this.label}: ${this.time} ${this.unit}`; }
+
     @Input() public allowUnlimited: boolean = true;
     @Input() public defaultDuration: string;
 
