@@ -1,4 +1,5 @@
 pool-picker:
+  description: 'Showing pools with a container image matching {filters}'
   filterByOS: Filter by OS
   filterByID: Search by id
   reset: Reset

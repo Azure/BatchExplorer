@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { BaseModule, FileModule } from "@batch-flask/ui";
+import { BaseModule, FileModule, I18nUIModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { ResourceFilesPropertiesModule } from "app/components/common";
 import { FileBrowseModule } from "app/components/file/browse";
@@ -35,6 +35,7 @@ const modules = [
     imports: [
         JobBaseModule,
         ResourceFilesPropertiesModule,
+        I18nUIModule,
         ...commonModules,
         ...modules,
     ],

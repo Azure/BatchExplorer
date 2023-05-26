@@ -1,10 +1,10 @@
 <bl-browse-layout #layout>
     <div blBrowseLayoutTitle>
-        Jobs
+        {{'common.jobs' | i18n}}
     </div>
     <bl-inline-quota blBrowseLayoutQuotas include="jobs"></bl-inline-quota>
     <div blBrowseLayoutButtons>
-        <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="Add a job" [action]="addJob" permission="write">
+        <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="{{'job.labels.addJob' | i18n}}" [action]="addJob" permission="write">
         </bl-button>
     </div>
     <bl-job-list blBrowseLayoutList></bl-job-list>

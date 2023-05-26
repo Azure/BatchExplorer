@@ -2,6 +2,7 @@ import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { JobErrorDisplayComponent } from "app/components/job/details";
 import { Job, JobState, JobTerminateReason } from "app/models";
 import { JobService } from "app/services";
@@ -22,7 +23,7 @@ describe("JobErrorDisplayComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, I18nTestingModule],
             declarations: [JobErrorDisplayComponent, TestJobErrorDisplayComponent, BannerMockComponent],
             providers: [
                 { provide: JobService, useValue: null },
@@ -64,12 +65,12 @@ describe("JobErrorDisplayComponent", () => {
 
         it("Should show task failed message", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner"));
-            expect(banner.nativeElement.textContent).toContain("Job was terminated because a task failed.");
+            expect(banner.nativeElement.textContent).toContain("job.error.failedTask");
         });
 
         it("should propose to list failed task as quickfix", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
-            expect(banner.fixMessage).toContain("View failed tasks");
+            expect(banner.fixMessage).toContain("job.label.viewFailedTasks");
         });
     });
 
@@ -98,7 +99,7 @@ describe("JobErrorDisplayComponent", () => {
 
         it("Should show task failed message", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner"));
-            expect(banner.nativeElement.textContent).toContain("Job timed out after running for 2m 00s.");
+            expect(banner.nativeElement.textContent).toEqual("job.error.timedOut(time:2m 00s)");
         });
     });
 

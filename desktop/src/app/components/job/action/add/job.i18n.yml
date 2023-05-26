@@ -1,0 +1,71 @@
+job:
+  error:
+    belowMin: "Must be greater than or equal to {min}"
+    failedTask: Job was terminated because a task failed.
+    idPattern: Can only contain any combination of alphanumeric characters, including hyphens and underscores
+    maxLength: "Maximum length of {max} characters"
+    notInRange: "Values can range from {min} to {max}"
+    poolRequired: You must select a pool for this job to run on
+    timedOut: "Job timed out after running for {time}."
+  label:
+    addJob: Add a job
+    commandLine: Command line
+    commonEnvVars: Common environment variables
+    completedInTime: "Completed in {time}"
+    constraints: Constraints
+    containerImageName: Container image name
+    containerRunOptions: Container run options
+    containerSettings: Container settings
+    currentlyActiveFor: "Currently active for {time}"
+    displayName: Display name
+    enableTaskDeps: Enable task dependencies
+    endTime: End time
+    environmentSettings: Environment settings
+    environmentVariables: Environment variables
+    envSettingCount: "{count} environment settings"
+    executionInfo: Execution information
+    executionTime: Execution time
+    generalInfo: General info
+    hasNoEnvVars: This job contains no environment settings
+    hasNoTags: No tags
+    hasNoMetadata: This job contains no metadata
+    jobAdvancedSettings: Job advanced settings
+    jobConfigurationTask: Job configuration task
+    jobManagerTask: Job manager task
+    jobNotStarted: Job not started
+    jobPreparationTask: Job preparation task
+    jobReleaseTask: Job release task
+    jobStatistics: Job statistics
+    killJobOnCompletion: Kill job on completion
+    maxTaskRetryCount: Max task retry count
+    maxWallClockTime: Max wall-clock time
+    metadata: Metadata
+    metadataItemCount: "{count} metadata items"
+    onAllTasksComplete: When all tasks complete
+    onTaskFailure: When a task fails
+    packageReferences: Package references
+    poolSelection: Pool selection
+    prepReleaseTasks: Prep/Release tasks
+    previousState: Previous state
+    previousStateTransitionTime: Previous state transition time
+    priority: Priority
+    registryServer: Registry server
+    registryUsername: Registry username
+    requiredSlots: Required slots
+    rerunOnNodeReboot: Rerun on node reboot
+    retentionTime: Retention time
+    runElevated: Run elevated
+    runExclusive: Run exclusive
+    startTime: Start time
+    stateTransitionTime: State transition time
+    taskDependencies: Task dependencies
+    terminationReason: Termination reason
+    viewFailedTasks: View failed tasks
+    waitForSuccess: Wait for success
+  desc:
+    generalInfo: Basic information about the job.
+    jobAdvancedSettings: Specify job advanced settings including constraints, environment settings, etc.
+    jobConfigurationTask: Specify job manager task, job preparation task and job release task. A job release task cannot be specified without a job preparation task.
+    poolSelection: Choose where the job should be running.
+  hint:
+    nOfMaxCharacters: "{num} out of {max} characters"

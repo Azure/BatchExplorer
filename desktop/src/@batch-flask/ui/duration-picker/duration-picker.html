@@ -4,8 +4,7 @@
         <bl-select [ngModel]="unit"
             (ngModelChange)="updateUnit($event)"
             [placeholder]="'duration-picker.unit.label' | i18n"
-            [disabled]="disabled"
-            attr.aria-label="{{label}} {{'duration-picker.unit.label' | i18n}}">
+            [disabled]="disabled">
 
             <bl-option [value]="DurationUnit.Unlimited" [label]="'duration-picker.unit.unlimited' | i18n" *ngIf="allowUnlimited"></bl-option>
             <bl-option [value]="DurationUnit.Days" [label]="'duration-picker.unit.days' | i18n"></bl-option>
