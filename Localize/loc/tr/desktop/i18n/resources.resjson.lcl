@@ -626,7 +626,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Learn more]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Daha fazla bilgi]]></Val>
+            <Val><![CDATA[Daha fazla bilgi edinin]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
