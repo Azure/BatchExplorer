@@ -126,6 +126,7 @@
   "entity-command.confirm.single.title": "Are you sure you want to {action} this {type}",
   "entity-configuration.viewAsJSON": "View as JSON",
   "entity-configuration.viewClassic": "Classic view",
+  "entity-details-list.toggleAdvancedFilter": "Toggle advanced filter",
   "file-explorer.collapseAll": "Collapse all",
   "file-explorer.noFiles": "No files",
   "file-explorer.noPathMatch": "No files found for \"{path}\"",
