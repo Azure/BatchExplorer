@@ -18,6 +18,10 @@ bl-quick-list-row-render {
         .quick-list-row-state {
             color: $card-background;
         }
+
+        .quick-list-row-extra * {
+            color: $card-background;
+        }
     }
 
     &.focused {
