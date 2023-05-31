@@ -1,5 +1,8 @@
 pool-picker:
+  description: 'Showing pools with a container image matching {filters}'
   filterByOS: Filter by OS
   filterByID: Search by id
   reset: Reset
   noneMatching: You don't have any pools matching the current filters.
+  coreCount: core count
+  nodeCount: node count

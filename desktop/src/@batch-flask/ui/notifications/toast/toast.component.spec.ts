@@ -6,6 +6,7 @@ import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { Notification, NotificationLevel, NotificationService } from "@batch-flask/ui/notifications";
 import { click, mouseenter, mouseleave, mouseup } from "test/utils/helpers";
 import { ToastComponent } from "./toast.component";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 
 @Component({
     template: `<bl-toast [notification]="notification"></bl-toast>`,
@@ -28,7 +29,7 @@ describe("ToastComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [],
+            imports: [I18nTestingModule],
             declarations: [ToastComponent, ClickableComponent, TestComponent],
             providers: [
                 { provide: NotificationService, useValue: notificationServiceSpy },

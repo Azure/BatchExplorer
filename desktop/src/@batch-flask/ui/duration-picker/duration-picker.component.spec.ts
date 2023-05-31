@@ -174,6 +174,12 @@ describe("DurationPickerComponent", () => {
                 expect(component.value  instanceof Duration).toBe(true);
                 expect(testComponent.control.value.toISO()).toEqual("P4DT4H");
             });
+
+            it("should set aria-label to include label, time, and duration", () => {
+                testComponent.control.setValue(Duration.fromISO("P50D"));
+                fixture.detectChanges();
+                expect(de.nativeElement.getAttribute("aria-label")).toEqual("My duration picker: 50 days");
+            });
         });
 
         describe("writing value", () => {

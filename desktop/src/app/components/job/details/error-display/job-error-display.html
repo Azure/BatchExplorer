@@ -1,8 +1,8 @@
-<bl-banner *ngIf="jobFailed" fixMessage="View failed tasks" [fix]="gotoFailedTask" type="warning">
-    <div message>Job was terminated because a task failed.</div>
+<bl-banner *ngIf="jobFailed" fixMessage="{{'job.label.viewFailedTasks' | i18n}}" [fix]="gotoFailedTask" type="warning">
+    <div message>{{'job.error.failedTask' | i18n}}</div>
 </bl-banner>
 <bl-banner *ngIf="jobTimeout" type="warning">
-    <div message>Job timed out after running for {{jobRunningTime}}.</div>
+    <div message>{{'job.error.timedOut' | i18n:{'time': jobRunningTime} }}</div>
 </bl-banner>
 <bl-banner *ngIf="failureInfo" type="warning">
     <div message>{{failureInfo.message}}</div>

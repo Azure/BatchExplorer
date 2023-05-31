@@ -1,26 +1,48 @@
 <div [formGroup]="form">
     <div class="form-element">
         <bl-form-field>
-            <input blInput autofocus formControlName="id" placeholder="ID">
+            <input blInput autofocus formControlName="id"
+                placeholder="{{'common.id' | i18n}}">
         </bl-form-field>
-        <bl-error controlName="id" code="required">ID is a required field</bl-error>
+        <bl-error controlName="id" code="required">
+            {{'common.required' | i18n}}
+        </bl-error>
     </div>
     <div class="form-element">
         <bl-form-field>
-            <textarea blInput matTextareaAutosize matAutosizeMinRows="1" blSingleLineTextarea formControlName="commandLine" placeholder="Command line"></textarea>
+            <textarea
+                blInput matTextareaAutosize matAutosizeMinRows="1"
+                blSingleLineTextarea
+                formControlName="commandLine"
+                placeholder="{{'job.label.commandLine' | i18n}}">
+            </textarea>
         </bl-form-field>
-        <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
+        <bl-error controlName="commandLine" code="required">
+            {{'common.required' | i18n}}
+        </bl-error>
     </div>
     <div formGroupName="constraints">
         <bl-form-field>
-            <bl-duration-picker formControlName="maxWallClockTime" label="Max wall-clock time"></bl-duration-picker>
+            <bl-duration-picker
+                formControlName="maxWallClockTime"
+                label="{{'job.label.maxWallClockTime' | i18n}}">
+            </bl-duration-picker>
         </bl-form-field>
         <bl-form-field>
-            <input blInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
-            <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
+            <input blInput
+                formControlName="maxTaskRetryCount"
+                placeholder="{{'job.label.maxTaskRetryCount' | i18n}}"
+                type="number" />
+            <bl-error controlName="maxTaskRetryCount" code="validateRange">
+                {{'job.error.notInRange' | i18n:{'min': -1, 'max': 100} }}
+            </bl-error>
         </bl-form-field>
         <bl-form-field>
-            <bl-duration-picker formControlName="retentionTime" label="Retention time" [allowUnlimited]="false"  required></bl-duration-picker>
+            <bl-duration-picker
+                formControlName="retentionTime"
+                label="{{'job.label.retentionTime' | i18n}}"
+                [allowUnlimited]="false" required>
+            </bl-duration-picker>
         </bl-form-field>
     </div>
     <div class="form-element pad-top">
@@ -31,10 +53,12 @@
         <bl-resourcefile-picker formControlName="resourceFiles"></bl-resourcefile-picker>
     </div>
     <div class="form-element pad-top">
-        <bl-key-value-picker formControlName="environmentSettings" label="Environment variables"></bl-key-value-picker>
+        <bl-key-value-picker formControlName="environmentSettings"
+            label="{{'job.label.environmentVariables' | i18n}}">
+        </bl-key-value-picker>
     </div>
     <div *ngIf="virtualMachineConfiguration?.containerConfiguration" class="form-element pad-top">
-        <h4>Container settings</h4>
+        <h4>{{'job.label.containerSettings' | i18n}}</h4>
         <bl-container-settings-picker
             formControlName="containerSettings"
             [containerConfiguration]="virtualMachineConfiguration.containerConfiguration">

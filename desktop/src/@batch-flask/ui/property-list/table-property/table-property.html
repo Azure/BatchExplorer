@@ -3,7 +3,7 @@
         {{label}}
     </div>
     <div propertyContent>
-        <table>
+        <table [attr.aria-label]="label">
             <tr class="head" *ngIf="header">
                 <ng-template [ngTemplateOutlet]="header.content"></ng-template>
             </tr>

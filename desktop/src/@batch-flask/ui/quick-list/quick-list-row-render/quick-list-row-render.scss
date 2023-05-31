@@ -18,6 +18,10 @@ bl-quick-list-row-render {
         .quick-list-row-state {
             color: $card-background;
         }
+
+        .quick-list-row-extra * {
+            color: $card-background;
+        }
     }
 
     &.focused {
@@ -139,5 +143,12 @@ bl-quick-list-row-render {
             right: 0;
 
         }
+    }
+}
+
+@media (forced-colors: active) {
+    bl-quick-list-row-render.selected {
+        outline: 2px solid Highlight;
+        outline-offset: -2px;
     }
 }

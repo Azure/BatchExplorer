@@ -6,12 +6,13 @@
     [class.disabled]="option.disabled"
     [attr.aria-disabled]="option.disabled"
     [attr.aria-selected]="selected.has(option.value)"
+    [attr.aria-label]="optionAriaLabel(option)"
     (mousedown)="handleClickOption($event, option)">
 
-    <div class="checkbox" *ngIf="multiple" aria-hidden="true">
+    <div class="checkbox" *ngIf="multiple">
         <i class="fa fa-check" *ngIf="selected.has(option.value)" aria-hidden="true"></i>
     </div>
-    <div class="option-content">
+    <div class="option-content" aria-hidden="true">
         <ng-container *ngIf="select.optionTemplate">
             <ng-template [ngTemplateOutlet]="select.optionTemplate" [ngTemplateOutletContext]="{$implicit: option.item}"></ng-template>
         </ng-container>

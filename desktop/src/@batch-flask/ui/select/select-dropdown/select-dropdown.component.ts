@@ -121,7 +121,7 @@ export class SelectDropdownComponent {
             fixedOptions = [{
                 id: unselectAllOptionId,
                 value: unselectAllOptionId,
-                label: "Unselect all",
+                label: this.i18n.t("select-dropdown.unselectAll"),
                 cssClass: "unselect-all-option"
             }];
         }
@@ -141,5 +141,15 @@ export class SelectDropdownComponent {
                 this.i18n.t('select-dropdown.showItems', {num: this.displayedOptions.length})
             );
         }
+    }
+
+    public optionAriaLabel(option: SelectOptionComponent | any): string | null {
+        if (!(option instanceof SelectOptionComponent) || option.disabled) {
+            return null;
+        }
+        const selectLabel = this.selected.has(option.value)
+            ? this.i18n.t("select-dropdown.selected")
+            : this.i18n.t("select-dropdown.unselected");
+        return `${option.label}, ${selectLabel}`;
     }
 }

@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { BaseModule, SidebarModule } from "@batch-flask/ui";
+import { BaseModule, I18nUIModule, SidebarModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { ResourceFilePickerModule } from "app/components/common";
 import { TaskBaseModule } from "app/components/task/base";
@@ -23,7 +23,8 @@ const components = [
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [...commonModules, TaskBaseModule, BaseModule, SidebarModule, ResourceFilePickerModule],
+    imports: [...commonModules, TaskBaseModule, BaseModule, SidebarModule,
+        ResourceFilePickerModule, I18nUIModule],
     entryComponents: [
         AddJobFormComponent, DisableJobDialogComponent, PatchJobComponent,
     ],

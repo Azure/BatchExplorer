@@ -77,6 +77,8 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     get id(): string { return this._id; }
     set id(value: string) { this._id = value; }
 
+    @Input() @HostBinding("attr.label") public label: string;
+
     @Input() @FlagInput() public required = false;
 
     @Input()
@@ -114,9 +116,11 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
     @HostBinding("attr.aria-describedby") public ariaDescribedby: string;
     @HostBinding("attr.role") public readonly role = "combobox";
     @HostBinding("attr.aria-haspopup") public readonly ariaHasPopup = "listbox";
-    @Input("attr.aria-label") @HostBinding("attr.aria-label")
+
+    @Input("aria-label") @HostBinding("attr.aria-label")
     public set ariaLabel(label: string) { this._ariaLabel = label; }
     public get ariaLabel() { return this._ariaLabel || this.title; }
+
     @HostBinding("attr.aria-expanded") public get ariaExpanded() { return this.dropdownOpen; }
     @HostBinding("attr.aria-owns") public get ariaOwns() { return this.dropdownId; }
     @HostBinding("attr.tabindex") public readonly tabindex = -1;
@@ -268,6 +272,7 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
         return this._optionsMap.get([...this.selected].first());
     }
 
+    @HostBinding("title")
     public get title() {
         if (this.hasValueSelected) {
             const values = [...this.selected].map(x => this._optionsMap.get(x)).map(x => x && x.label).join(", ");

@@ -6,6 +6,7 @@
         [attr.aria-label]="ariaLabel"
         [attr.aria-controls]="dropdownId"
         [attr.aria-activedescendant]="focusedOption?.id"
+        [title]="title"
         attr.aria-autocomplete="list"
         [attr.aria-readonly]="true"
         (blur)="onButtonBlur()">

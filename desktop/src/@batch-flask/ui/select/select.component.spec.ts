@@ -128,6 +128,14 @@ describe("SelectComponent", () => {
             fixture.detectChanges();
             expect(labelEl.nativeElement.textContent).toContain("Carrot");
             expect(de.nativeElement.getAttribute("aria-label")).toEqual("Myselect: Carrot");
+            expect(de.nativeElement.title).toEqual("Myselect: Carrot");
+        });
+
+        it("should respect an explicit aria-label attribute", () => {
+            de.nativeElement.setAttribute("aria-label", "foo");
+            fixture.detectChanges();
+            expect(de.nativeElement.getAttribute("aria-label")).toEqual("foo");
+            expect(de.nativeElement.title).toEqual("Myselect: ");
         });
 
         it("list all options when clicking on button", async () => {
