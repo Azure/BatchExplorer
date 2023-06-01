@@ -131,7 +131,7 @@ describe("NodesHeatmapComponent", () => {
             expect(bg.selectAll("rect").size()).toBe(1, "Should only have 1 rect");
             const rect = bg.select("rect");
             expect(rect).not.toBeFalsy("Should have a rect in bg");
-            expect(rect.attr("style")).toContain("fill: rgb(237, 238, 242);");
+            expect(rect.attr("style")).toContain("fill: rgb(145, 145, 145);");
             expect(rect.attr("style")).toContain("stroke-width: 0;");
         });
     });
