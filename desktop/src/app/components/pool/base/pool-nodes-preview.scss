@@ -13,9 +13,17 @@ bl-pool-nodes-preview {
     &.resize-error {
         color: $danger-color;
         font-weight: bold;
+
+        [aria-selected=true] & {
+            color: $danger-contrast-color;
+        }
     }
 
     .fa {
         margin-right: 2px;
+    }
+
+    [aria-selected=true] & {
+        color: $primary-contrast-color;
     }
 }

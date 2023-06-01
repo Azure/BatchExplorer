@@ -18,6 +18,10 @@ bl-job-state {
 
             .fa-play-circle {
                 color: $primary-color;
+
+                [aria-selected=true] & {
+                    color: $primary-contrast-color;
+                }
             }
 
             .fa-trash {
