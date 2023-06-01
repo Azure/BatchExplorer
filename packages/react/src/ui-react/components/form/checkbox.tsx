@@ -5,7 +5,7 @@ import {
     ParameterName,
 } from "@batch/ui-common/lib/form";
 import * as React from "react";
-import { useUniqueId } from "../../hooks";
+import { useFormParameter, useUniqueId } from "../../hooks";
 import { FormControlProps } from "./form-control";
 import { Checkbox as FluentCheckbox } from "@fluentui/react/lib/Checkbox";
 
@@ -20,6 +20,9 @@ export function Checkbox<
     const { ariaLabel, className, disabled, onChange, param } = props;
 
     const id = useUniqueId("form-control", props.id);
+
+    // needed to trigger re-render when the param value changes
+    useFormParameter(param);
 
     return (
         <FluentCheckbox
