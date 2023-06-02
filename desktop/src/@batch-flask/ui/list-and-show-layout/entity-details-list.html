@@ -6,7 +6,8 @@
         <input blInput [formControl]="searchQuery" [placeholder]="filterPlaceholder + ' (Startwith)'"/>
         <bl-clickable *ngIf="enableAdvancedFilter"
             class="toggle-advanced-filter"
-            title="{{'entity-details-list.toggleAdvancedFilter' | i18n}}"
+            matTooltip="{{'entity-details-list.toggleAdvancedFilter' | i18n}}"
+            name="toggle"
             matTooltipPosition="above"
             [routerLink]="baseLink"
             [queryParams]="{filter: true}">
