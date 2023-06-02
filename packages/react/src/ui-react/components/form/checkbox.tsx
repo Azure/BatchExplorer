@@ -17,42 +17,21 @@ export function Checkbox<
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = ParameterDependencies<V>
 >(props: FormControlProps<V, K, D>): JSX.Element {
-    const {
-        ariaLabel,
-        className,
-        disabled,
-        onFocus,
-        onBlur,
-        onChange,
-        param,
-        style,
-    } = props;
+    const { ariaLabel, className, disabled, onChange, param } = props;
 
     const id = useUniqueId("form-control", props.id);
-    const { setDirty } = useFormParameter(param);
 
-    const [hasFocused, setHasFocused] = React.useState<boolean>(false);
+    // needed to trigger re-render when the param value changes
+    useFormParameter(param);
 
     return (
         <FluentCheckbox
             id={id}
             ariaLabel={ariaLabel ?? param.label}
             className={className}
-            style={style}
             disabled={disabled || param.disabled}
-            placeholder={param.placeholder}
             checked={valueToChecked(param.name, param.value)}
-            onFocus={(event) => {
-                setHasFocused(true);
-                if (onFocus) {
-                    onFocus(event);
-                }
-            }}
-            onBlur={onBlur}
             onChange={(event, newValue) => {
-                if (hasFocused) {
-                    setDirty(true);
-                }
                 param.value = newValue as V[K];
                 if (onChange) {
                     onChange(event as React.FormEvent, param.value);

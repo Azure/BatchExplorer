@@ -92,7 +92,8 @@ export abstract class AbstractEnvironment<
     constructor(config: C, dependencyMap: D) {
         this._config = config;
         if (this._config.envVars == null) {
-            this._config.envVars = process?.env ?? {};
+            // webpack 5 does no longer include a polyfill for this Node.js variable
+            this._config.envVars = globalThis?.process?.env ?? {};
         }
         this.mode = config.mode ?? EnvironmentMode.Development;
         this._diContainer = new DiContainer(dependencyMap);

@@ -11,8 +11,8 @@ describe("Checkbox control", () => {
     beforeEach(() => initMockBrowserEnvironment());
 
     test("Render checkbox control", async () => {
+        const spy = jest.fn();
         const user = userEvent.setup();
-        let changeCount = 0;
         const { container } = render(
             <>
                 <Checkbox
@@ -21,7 +21,7 @@ describe("Checkbox control", () => {
                         label: "First checkbox",
                     })}
                     ariaLabel="First checkbox aria-label"
-                    onChange={() => changeCount++}
+                    onChange={spy}
                 ></Checkbox>
 
                 <Checkbox
@@ -45,9 +45,9 @@ describe("Checkbox control", () => {
         );
 
         //Expect checkbox's onChange method to work correctly
-        expect(changeCount).toBe(0);
+        expect(spy).toBeCalledTimes(0);
         await user.click(screen.getByLabelText("First checkbox aria-label"));
-        expect(changeCount).toBe(1);
+        expect(spy).toBeCalledTimes(1);
     });
 
     test("Simulate the checking of a checkbox", async () => {
@@ -59,9 +59,9 @@ describe("Checkbox control", () => {
         });
         const yesOrNoParam = form.param("yesOrNo", BooleanParameter, {});
         render(<Checkbox param={yesOrNoParam} />);
-        const checkbox = screen.getByRole("checkbox");
-        expect(checkbox.getAttribute("aria-checked")).toEqual("false");
+        const checkbox = screen.getByRole("checkbox") as HTMLInputElement;
+        expect(checkbox.checked).toEqual(false);
         await user.click(checkbox);
-        expect(checkbox.getAttribute("aria-checked")).toEqual("true");
+        expect(checkbox.checked).toEqual(true);
     });
 });
