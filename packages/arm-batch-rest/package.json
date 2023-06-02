@@ -2,7 +2,7 @@
   "name": "@batch/arm-batch-rest",
   "sdk-type": "mgmt",
   "author": "Microsoft Corporation",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A generated Rest Level Client SDK for the Batch Management Plane.",
   "keywords": [
     "node",
