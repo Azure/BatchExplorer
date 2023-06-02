@@ -1,7 +1,7 @@
 {
   "name": "@batch/ui-service",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library for communicating with the Azure Batch service",
   "repository": {
     "type": "git",

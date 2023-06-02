@@ -1,7 +1,7 @@
 {
   "name": "@batch/ui-react",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Azure Batch shared React component library",
   "repository": {
     "type": "git",
