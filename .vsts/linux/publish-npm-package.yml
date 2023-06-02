@@ -3,6 +3,8 @@ parameters:
   packageName: ''
 
 steps:
-    - bash: $(Build.SourcesDirectory)/.vsts/common/publish-packages.sh ${{parameters.packageName}}
+    - script: |
+        set -e
+        $(Build.SourcesDirectory)/.vsts/common/publish-packages.sh $(Build.SourceBranch) ${{parameters.packageName}}
       displayName: "Publish package: ${{parameters.packageName}}"
       workingDirectory: ${{parameters.packagePath}}
