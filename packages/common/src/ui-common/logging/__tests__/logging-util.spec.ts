@@ -21,7 +21,11 @@ describe("Logging utilities", () => {
         logger.expectWarn("[test] - This is a warning message");
         logger.warn("This is a warning message");
 
-        // Extra context
+        // Override instance
+        logger.expectInfo("[test abcd] - Overrode instance");
+        logger.info({ instance: "abcd", message: "Overrode instance" });
+
+        // Override whole context
         logger.expectInfo("[top-secret #1234] - This uses some custom context");
         logger.info({
             area: "top-secret",
@@ -74,6 +78,14 @@ describe("Logging utilities", () => {
         // Can continue to use the logger after clearing expected
         logger.expectInfo("[test] - info");
         logger.info("info");
+
+        // Can set up multiple expectations in order
+        logger.expectInfo("[test] - first");
+        logger.expectInfo("[test] - second");
+        logger.expectInfo("[test] - third");
+        logger.info("first");
+        logger.info("second");
+        logger.info("third");
     });
 
     test("Format log message as text", () => {
