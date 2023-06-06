@@ -42,6 +42,8 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     private _loading: boolean = true;
     private _uploadActivity = new BehaviorSubject<Activity | null>(null);
 
+    public filteredOptions = ["banana", "apple", "orange"];
+
     constructor(
         private fileGroupService: NcjFileGroupService,
         private autoStorageService: AutoStorageService,

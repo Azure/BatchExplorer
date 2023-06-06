@@ -1,8 +1,8 @@
 <div class="input-container">
     <span class="prefix">{{name}}:/</span>
-    <input blInput [placeholder]="'file-explorer.path' | i18n" [matAutocomplete]="auto" [formControl]="control">
+    <input blInput [placeholder]="'file-explorer.path' | i18n" [formControl]="control">
 </div>
-<mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleAutocompletePathSelection($event)">
+<!-- <mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleAutocompletePathSelection($event)">
     <mat-option *ngFor="let path of availablePaths;trackBy: trackPath" [value]="path.name">
         <span class="file-icon">
             <i class="fa"
@@ -15,4 +15,19 @@
     <mat-option *ngIf="availablePaths.size === 0" [disabled]="true">
         {{'file-explorer.noPathMatch' | i18n: {path: control.value} }}
     </mat-option>
-</mat-autocomplete>
+</mat-autocomplete> -->
+<bl-select formControlName="availablePaths" (optionSelected)="handleAutocompletePathSelection($event)">
+    <bl-option
+        *ngFor="let path of availablePaths;trackBy: trackPath"
+        [value]="path.name">
+        <span class="file-icon">
+            <i class="fa"
+                [class.fa-folder]="path.isDirectory"
+                [class.fa-file]="!path.isDirectory" aria-hidden="true"></i>
+        </span>
+        {{path.name}}
+    </bl-option>
+    <bl-option *ngIf="availablePaths.size === 0" [disabled]="true">
+        {{'file-explorer.noPathMatch' | i18n: {path: control.value} }}
+    </bl-option>
+</bl-select>

@@ -1,5 +1,5 @@
 <bl-form-field>
-    <input type="text" blInput  [matAutocomplete]="auto" [formControl]="value" [placeholder]="label">
+    <input type="text" blInput [formControl]="value" [placeholder]="label">
     <bl-hint class="warning" *ngIf="warning">
             {{'file-group-picker.warning' | i18n}}
     </bl-hint>
@@ -10,11 +10,19 @@
         {{hint}}
     </bl-hint>
 </bl-form-field>
-<mat-autocomplete #auto="matAutocomplete">
-    <mat-option value="" (onSelectionChange)="createFileGroup($event)" class="new-file-group">
-        + {{'file-group-picker.create' | i18n}}
+<!-- <mat-autocomplete #auto="matAutocomplete">
+    <mat-option value="" class="new-file-group">
+        + {{'file-group-picker.create' | i18n}} potato
     </mat-option>
     <mat-option *ngFor="let fileGroup of fileGroups;trackBy: trackFileGroup" [value]="fileGroup.name">
         {{ fileGroup.name }}
     </mat-option>
-</mat-autocomplete>
+</mat-autocomplete> -->
+<bl-select [ngModel]="" placeholder="File group">
+    <bl-option [value]="CredentialType.SharedKey" label="Shared key"></bl-option>
+    <bl-option
+        *ngFor="let fileGroup of filteredOptions;trackBy: trackFileGroup"
+        [value]="fileGroup"
+        label="{{ fileGroup }}">
+    </bl-option>
+</bl-select>
