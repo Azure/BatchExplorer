@@ -149,6 +149,7 @@
   "gallery.recentTemplates": "Recent templates",
   "gallery.title": "Gallery applications",
   "gallery.viewReadme": "View readme",
+  "info-box.infoIconTitle": "Information",
   "job-progress-status.inaccurate": "Task count might not be accurate in real time",
   "job-progress-status.progressBar": "Job progress",
   "job-state.active.message": "Job is currently running. Task can be scheduled.",
