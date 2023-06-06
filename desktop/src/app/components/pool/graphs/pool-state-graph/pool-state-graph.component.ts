@@ -15,11 +15,11 @@ import { Subscription } from "rxjs";
 
 import "./pool-state-graph.scss";
 
-const idleColor = "#edeef2";
+const idleColor = "#919191";
 const runningColor = "#328000";
 const waitingForStartTaskColor = "#be93d9";
 const offlineColor = "#305796";
-const preemptedColor = "#606060";
+const preemptedColor = "#313131";
 const transitionColor = "#ffcc5c";
 const errorColor = "#aa3939";
 

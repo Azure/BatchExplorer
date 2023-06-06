@@ -11,6 +11,10 @@ bl-account-list {
         .fa-star.favorite {
             text-shadow: -1px 0 $main-background, 0 1px $main-background, 1px 0 $main-background, 0 -1px $main-background;
         }
+
+        .auto-storage.error {
+            color: $danger-contrast-color;
+        }
     }
 
     .fa-star {
@@ -42,11 +46,11 @@ bl-account-list {
 
         .auto-storage {
             margin-right: 7px;
+        }
 
-            &.error {
-                color: $danger-color;
-                font-weight: bold;
-            }
+        .auto-storage.error {
+            color: $danger-color;
+            font-weight: bold;
         }
     }
 }
