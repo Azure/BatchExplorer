@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, SimpleChanges,
 } from "@angular/core";
-import { ServerError, isNotNullOrUndefined } from "@batch-flask/core";
+import { I18nService, ServerError, isNotNullOrUndefined } from "@batch-flask/core";
 import { ChartType, TimeRange } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { log } from "@batch-flask/utils";
@@ -60,7 +60,9 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         themeService: ThemeService,
         private accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef,
-        private metricsService: InsightsMetricsService) {
+        private metricsService: InsightsMetricsService,
+        private i18n: I18nService
+    ) {
         this._setChartOptions();
 
         const chartTheme = themeService.currentTheme.pipe(
@@ -148,6 +150,16 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         return dataset.label;
     }
 
+    public chartLabel() {
+        const tallies = this.datasets.map((set, i) => `${set.label}: ${this.total[i]}`).join(", ");
+        return this.i18n.t("account-monitoring.chartLabel", {
+            name: this.i18n.t(`account-monitoring.${this.metrics}`),
+            chartType: this.i18n.t(`account-monitoring.${this.chartType}Chart`),
+            numDataSets: this.datasets.length,
+            data: tallies
+        });
+    }
+
     private _loadMetrics(metrics: MonitorChartType, timeRange: TimeRange): Observable<MonitoringMetricList> {
         switch (metrics) {
             case MonitorChartType.CoreCount:
@@ -199,9 +211,8 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                 mode: "single",
                 position: "nearest",
                 callbacks: {
-                    title: (tooltipItems, data) => {
-                        return this._computeTooltipTitle(tooltipItems[0], data);
-                    },
+                    title: (tooltipItems, data) =>
+                        this._computeTooltipTitle(tooltipItems[0], data),
                 },
             },
             scales: {

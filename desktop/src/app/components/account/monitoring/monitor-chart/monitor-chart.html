@@ -1,24 +1,24 @@
 <ng-container *ngIf="!preview">
     <div class="header">
-        <h2 tabindex="0" id="{{headerId}}">
+        <h2 id="{{headerId}}">
             {{ 'account-monitoring.' + metrics | i18n }}
         </h2>
-        <div class="aggregation" *ngIf="aggregation" tabindex="0">
-            {{aggregation}}
+        <div class="aggregation" *ngIf="aggregation" role="button"
+        attr.aria-label="{{ 'account-monitoring.aggregationButton' | i18n}}">
+            {{ 'account-monitoring.' + aggregation | i18n }}
         </div>
     </div>
     <ng-container *ngIf="isChartReady">
-        <div class="chart-container" tabindex="0" aria-label="graph">
+        <div class="chart-container" tabindex="0" [attr.aria-label]="chartLabel()">
             <canvas blChart
                 [datasets]="datasets"
                 [options]="options"
                 [chartType]="chartType"
-                [colors]="colors"
-                [attr.aria-labelledby]="headerId">
+                [colors]="colors">
             </canvas>
         </div>
         <div class="legend">
-            <div class="legend-item" *ngFor="let dataset of datasets;trackBy: trackDataSet;let index=index" tabindex="0">
+            <div class="legend-item" *ngFor="let dataset of datasets;trackBy: trackDataSet;let index=index">
                 <div class="value">
                     {{total[index]}}
                 </div>
@@ -32,12 +32,18 @@
         </div>
     </ng-container>
     <div *ngIf="chartError">
-        There is an error occurred when loading this chart
+        {{'account-monitoring.chartError' | i18n}}
         {{chartError.message}}
     </div>
     <bl-loading [status]="loadingStatus"></bl-loading>
 </ng-container>
 
 <div class="monitor-chart-preview" *ngIf="isChartReady && preview">
-    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="chartType" [colors]="colors"></canvas>
+    <canvas blChart
+        [datasets]="datasets"
+        [options]="options"
+        [chartType]="chartType"
+        [colors]="colors"
+        [attr.aria-label]="chartLabel()">
+    </canvas>
 </div>
