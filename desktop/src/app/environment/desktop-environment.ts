@@ -9,6 +9,7 @@ import {
 } from "@azure/bonito-core";
 import { StandardClock } from "@azure/bonito-core/lib/datetime";
 import { createConsoleLogger } from "@azure/bonito-core/lib/logging";
+import { MockNotifier } from "@azure/bonito-core/lib/notification/mock-notification";
 import { DefaultFormLayoutProvider } from "@azure/bonito-ui/lib/components/form";
 import { BrowserDependencyName, BrowserEnvironmentConfig, DefaultBrowserEnvironment } from "@azure/bonito-ui/lib/environment";
 import BatchExplorerHttpClient from "@batch-flask/core/batch-explorer-http-client";
@@ -43,6 +44,8 @@ export function initDesktopEnvironment(
                 new LiveLocationService(),
             [BatchDependencyName.PoolService]: () =>
                 new LivePoolService(),
+            [DependencyName.Notifier]: () =>
+                new MockNotifier(), // TODO: update with real notification implementation
             [DependencyName.ResourceGroupService]: () =>
                 new LiveResourceGroupService(),
             [DependencyName.StorageAccountService]:

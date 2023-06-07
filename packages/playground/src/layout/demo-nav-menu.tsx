@@ -53,6 +53,11 @@ export const DemoNavMenu: React.FC = () => {
                     name: "TextField",
                     url: getDemoHash("textfield"),
                 },
+                {
+                    key: "Notification",
+                    name: "Notification",
+                    url: getDemoHash("notification"),
+                },
             ],
         },
         {

@@ -6,6 +6,7 @@ import { createMockLogger } from "../../logging";
 import { FakeResourceGroupService } from "../../resource-group";
 import { FakeStorageAccountService } from "../../storage";
 import { FakeSubscriptionService } from "../../subscription";
+import { MockNotifier } from "../../notification/mock-notification";
 import { AbstractEnvironment } from "../abstract-environment";
 import {
     DependencyFactories,
@@ -159,6 +160,7 @@ describe("Environment tests", () => {
                 locationService: () => new FakeLocationService(),
                 loggerFactory: () => createMockLogger,
                 localizer: () => new FakeLocalizer(),
+                notifier: () => new MockNotifier(),
                 resourceGroupService: () => new FakeResourceGroupService(),
                 storageAccountService: () => new FakeStorageAccountService(),
                 subscriptionService: () => new FakeSubscriptionService(),
@@ -188,6 +190,7 @@ describe("Environment tests", () => {
                 locationService: () => new FakeLocationService(),
                 loggerFactory: () => createMockLogger,
                 localizer: () => new FakeLocalizer(),
+                notifier: () => new MockNotifier(),
                 resourceGroupService: () => new FakeResourceGroupService(),
                 storageAccountService: () => new FakeStorageAccountService(),
                 subscriptionService: () => new FakeSubscriptionService(),
