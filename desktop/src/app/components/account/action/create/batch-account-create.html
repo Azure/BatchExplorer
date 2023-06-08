@@ -7,13 +7,7 @@
             </div>
             <div class="form-element" *ngIf="selectedSubscription">
                 <bl-form-field>
-                    <!-- <input blInput [matAutocomplete]="auto" formControlName="resourceGroup" placeholder="Resource group" /> -->
-                    <!-- <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResourceGroup">
-                        <mat-option *ngFor="let resourceGroup of resourceGroups;trackBy: trackByResourceGroup" [value]="resourceGroup">
-                            {{resourceGroup.name}} ({{resourceGroup.location}})
-                        </mat-option>
-                    </mat-autocomplete> -->
-                    <bl-select [formControl]="resourceGroup" placeholder="Resource group" [filterable]="true">
+                    <bl-select placeholder="Resource group" [filterable]="true">
                         <bl-option
                             *ngFor="let resourceGroup of resourceGroups;trackBy: trackByResourceGroup"
                             [value]="resourceGroup"
