@@ -42,8 +42,6 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     private _loading: boolean = true;
     private _uploadActivity = new BehaviorSubject<Activity | null>(null);
 
-    public filteredOptions = ["banana", "apple", "orange"];
-
     constructor(
         private fileGroupService: NcjFileGroupService,
         private autoStorageService: AutoStorageService,
@@ -143,9 +141,8 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         return null;
     }
 
-    public createFileGroup(event: MatOptionSelectionChange) {
-        // isUserInput true when selected, false when not
-        if (!event.source.value && event.isUserInput) {
+    public createFileGroup(dropdownValue: string) {
+        if (!dropdownValue) {
             const dialog = this.dialogService.open(FileGroupCreateFormComponent);
             dialog.afterClosed().subscribe((activity?: Activity) => {
                 const newFileGroupName = dialog.componentInstance.getCurrentValue().name;
