@@ -9,10 +9,12 @@ import { MsGraphHttpService } from "./ms-graph-http.service";
 
 export interface MsGraphListConfig<TEntity extends Record<any>, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
+    filter?: (item: TEntity) => boolean;
 }
 
 export class MsGraphListGetter<TEntity extends Record<any>, TParams> extends ListGetter<TEntity, TParams> {
     private _provideUri: (params: TParams, options: any) => string;
+    private _filter: (item: TEntity) => boolean;
 
     constructor(
         type: Type<TEntity>,
@@ -21,6 +23,7 @@ export class MsGraphListGetter<TEntity extends Record<any>, TParams> extends Lis
 
         super(type, config);
         this._provideUri = config.uri;
+        this._filter = config.filter;
     }
 
     protected list(params: TParams, options: ListOptions): Observable<any> {
@@ -40,8 +43,12 @@ export class MsGraphListGetter<TEntity extends Record<any>, TParams> extends Lis
     }
 
     private _processMsGraphResponse(response: { value: TEntity[], "@odata.nextLink": string }) {
+        let data = response.value;
+        if (this._filter) {
+            data = data.filter(this._filter);
+        }
         return {
-            data: response.value,
+            data,
             nextLink: response["@odata.nextLink"],
         };
     }

@@ -15,11 +15,6 @@ export interface AADResources {
     readonly msGraph: string;
 
     /**
-     * Url for aad graph api
-     */
-    readonly aadGraph: string;
-
-    /**
      * Application insights api
      */
     readonly appInsights: string;
@@ -55,7 +50,6 @@ export const AzurePublic: AzureEnvironment = {
     arm: "https://management.azure.com/",
     batch: "https://batch.core.windows.net/",
     msGraph: "https://graph.microsoft.com/",
-    aadGraph: "https://graph.windows.net/",
     appInsights: "https://api.applicationinsights.io/",
     storageEndpoint: "core.windows.net",
     custom: false,
@@ -68,7 +62,6 @@ export const AzureChina: AzureEnvironment = {
     arm: "https://management.chinacloudapi.cn/",
     batch: "https://batch.chinacloudapi.cn/",
     msGraph: "https://graph.microsoft.com/",
-    aadGraph: "https://graph.chinacloudapi.cn/",
     appInsights: "https://api.applicationinsights.io/",
     storageEndpoint: "core.chinacloudapi.cn",
     custom: false,
@@ -81,7 +74,6 @@ export const AzureGermany: AzureEnvironment = {
     arm: "https://management.microsoftazure.de/",
     batch: "https://batch.microsoftazure.de/",
     msGraph: "https://graph.microsoft.com/",
-    aadGraph: "https://graph.cloudapi.de/",
     appInsights: "https://api.applicationinsights.io/",
     storageEndpoint: "core.cloudapi.de",
     custom: false,
@@ -94,7 +86,6 @@ export const AzureUSGov: AzureEnvironment = {
     arm: "https://management.usgovcloudapi.net/",
     batch: "https://batch.core.usgovcloudapi.net/",
     msGraph: "https://graph.microsoft.com/",
-    aadGraph: "https://graph.windows.net/",
     appInsights: "https://api.applicationinsights.io/",
     storageEndpoint: "core.usgovcloudapi.net",
     custom: false,
