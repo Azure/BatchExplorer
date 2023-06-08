@@ -5,7 +5,7 @@ import { AADApplication, PasswordCredential, PasswordCredentialAttributes } from
 import { Observable } from "rxjs";
 import { flatMap, map, shareReplay } from "rxjs/operators";
 import {
-    AADGraphEntityGetter, AADGraphHttpService, AADGraphListGetter,
+    MsGraphEntityGetter, MsGraphHttpService, MsGraphListGetter,
 } from "./core";
 
 export interface AADApplicationListParams {
@@ -41,17 +41,17 @@ export interface SecretParams {
 
 @Injectable({providedIn: "root"})
 export class AADApplicationService {
-    private _getter: AADGraphEntityGetter<AADApplication, AADApplicationParams>;
-    private _listGetter: AADGraphListGetter<AADApplication, AADApplicationListParams>;
+    private _getter: MsGraphEntityGetter<AADApplication, AADApplicationParams>;
+    private _listGetter: MsGraphListGetter<AADApplication, AADApplicationListParams>;
     private _cache = new DataCache<AADApplication>();
 
-    constructor(private aadGraph: AADGraphHttpService) {
-        this._getter = new AADGraphEntityGetter(AADApplication, aadGraph, {
+    constructor(private msGraph: MsGraphHttpService) {
+        this._getter = new MsGraphEntityGetter(AADApplication, msGraph, {
             cache: () => this._cache,
             uri: ({ id }) => `/applicationsByAppId/${id}`,
         });
 
-        this._listGetter = new AADGraphListGetter(AADApplication, aadGraph, {
+        this._listGetter = new MsGraphListGetter(AADApplication, msGraph, {
             cache: () => this._cache,
             uri: ({ owned }) => {
                 if (owned) {
@@ -86,7 +86,7 @@ export class AADApplicationService {
     public create(application: ApplicationCreateParams): Observable<AADApplication> {
         const secretAttributes = this._builtSecret(application.secret);
         const name = application.name.replace(/ /g, "-");
-        return this.aadGraph.post("/applications", {
+        return this.msGraph.post("/applications", {
             displayName: application.name,
             homepage: `https://${name}`,
             identifierUris: [`https://${name}`],
@@ -106,7 +106,7 @@ export class AADApplicationService {
                 const existingKeys = reset ? [] : app.passwordCredentials.map((cred) => {
                     return cred._original;
                 }).toJS();
-                return this.aadGraph.patch(`/applicationsByAppId/${appId}`, {
+                return this.msGraph.patch(`/applicationsByAppId/${appId}`, {
                     passwordCredentials: [...existingKeys, this._secretToParams(secretAttributes)],
                 });
             }),

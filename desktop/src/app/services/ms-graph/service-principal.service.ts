@@ -3,7 +3,7 @@ import { DataCache, ListOptionsAttributes, ListView } from "@batch-flask/core";
 import { ServicePrincipal } from "app/models/ms-graph";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { AADGraphEntityGetter, AADGraphHttpService, AADGraphListGetter } from "./core";
+import { MsGraphEntityGetter, MsGraphHttpService, MsGraphListGetter } from "./core";
 
 export interface ServicePrincipalListParams {
     owned?: boolean;
@@ -19,12 +19,12 @@ export interface ServicePrincipalCreateParams {
 }
 @Injectable({providedIn: "root"})
 export class ServicePrincipalService {
-    private _getter: AADGraphEntityGetter<ServicePrincipal, ServicePrincipalParams>;
-    private _listGetter: AADGraphListGetter<ServicePrincipal, ServicePrincipalListParams>;
+    private _getter: MsGraphEntityGetter<ServicePrincipal, ServicePrincipalParams>;
+    private _listGetter: MsGraphListGetter<ServicePrincipal, ServicePrincipalListParams>;
     private _cache = new DataCache<ServicePrincipal>();
 
-    constructor(private aadGraph: AADGraphHttpService) {
-        this._getter = new AADGraphEntityGetter(ServicePrincipal, aadGraph, {
+    constructor(private msGraph: MsGraphHttpService) {
+        this._getter = new MsGraphEntityGetter(ServicePrincipal, msGraph, {
             cache: () => this._cache,
             uri: ({ id, appId }) => {
                 if (id) {
@@ -35,7 +35,7 @@ export class ServicePrincipalService {
             },
         });
 
-        this._listGetter = new AADGraphListGetter(ServicePrincipal, aadGraph, {
+        this._listGetter = new MsGraphListGetter(ServicePrincipal, msGraph, {
             cache: () => this._cache,
             uri: ({ owned }) => {
                 if (owned) {
@@ -75,7 +75,7 @@ export class ServicePrincipalService {
     }
 
     public create(params: ServicePrincipalCreateParams): Observable<ServicePrincipal> {
-        return this.aadGraph.post("/servicePrincipals", {
+        return this.msGraph.post("/servicePrincipals", {
             appId: params.appId,
             accountEnabled: true,
         }).pipe(map(x => new ServicePrincipal(x)));

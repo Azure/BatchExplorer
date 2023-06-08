@@ -47,7 +47,6 @@ export class AzureEnvironmentService {
             "arm",
             "batch",
             "msGraph",
-            "aadGraph",
             "appInsights",
             "storageEndpoint",
         ];

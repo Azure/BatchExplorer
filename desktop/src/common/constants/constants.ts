@@ -109,7 +109,6 @@ export const ApiVersion = {
     },
     commerce: "2016-08-31-preview",
     authorization: "2017-05-01",
-    aadGraph: "1.6",
     monitor: "2017-05-01-preview",
     network: "2017-10-01",
     classicNetwork: "2015-12-01",
@@ -167,7 +166,6 @@ export const ResourceUrl = {
     arm: "https://management.core.windows.net/",
     appInsights: "https://api.applicationinsights.io",
     msGraph: "https://graph.microsoft.com",
-    aadGraph: "https://graph.windows.net",
 };
 
 export const APIErrorCodes = {
