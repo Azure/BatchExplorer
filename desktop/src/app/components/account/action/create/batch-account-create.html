@@ -7,12 +7,13 @@
             </div>
             <div class="form-element" *ngIf="selectedSubscription">
                 <bl-form-field>
-                    <input blInput [matAutocomplete]="auto" formControlName="resourceGroup" placeholder="Resource group" />
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResourceGroup">
-                        <mat-option *ngFor="let resourceGroup of resourceGroups;trackBy: trackByResourceGroup" [value]="resourceGroup">
-                            {{resourceGroup.name}} ({{resourceGroup.location}})
-                        </mat-option>
-                    </mat-autocomplete>
+                    <bl-select placeholder="Resource group" [filterable]="true">
+                        <bl-option
+                            *ngFor="let resourceGroup of resourceGroups;trackBy: trackByResourceGroup"
+                            [value]="resourceGroup"
+                            label="{{resourceGroup.name}} ({{resourceGroup.location}})">
+                        </bl-option>
+                    </bl-select>
                     <bl-error controlName="resourceGroup" code="required">{{'batch-account-create.resourceGroup.required' | i18n}}</bl-error>
                     <bl-error controlName="resourceGroup" code="noPermission">{{'batch-account-create.resourceGroup.notAllowed' | i18n}}</bl-error>
                     <bl-error controlName="resourceGroup" code="serverError">{{ form.controls.resourceGroup.errors?.serverError }}</bl-error>
