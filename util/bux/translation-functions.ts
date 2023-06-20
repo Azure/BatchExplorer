@@ -73,7 +73,7 @@ export async function mergeAllTranslations(platform: "web" | "desktop") {
     await Promise.all(buildPackageEnglishPromises);
 
     // Initialize an empty object to store the merged translations
-    const mergedTranslations = Object.create(null);
+    const mergedTranslations: Record<string, Record<string, string>> = {};
 
     // Iterate through each resource directory
     for (const dir of resourceDirs) {
@@ -83,12 +83,7 @@ export async function mergeAllTranslations(platform: "web" | "desktop") {
                 const langID = file.split(".")[1];
 
                 // If the language ID is not in the object, add it
-                if (
-                    !Object.prototype.hasOwnProperty.call(
-                        mergedTranslations,
-                        langID
-                    )
-                ) {
+                if (!mergedTranslations[langID]) {
                     mergedTranslations[langID] = {};
                 }
 

@@ -29,6 +29,7 @@
     "clean": "run-p clean:*",
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",
+    "clean:resources": "bux rmrf ./dev-server/resources",
     "clean:umd": "bux rmrf ./lib-umd",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",

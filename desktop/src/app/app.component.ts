@@ -31,9 +31,10 @@ import { Environment } from "common/constants";
 import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
-import {BrowserLocalizer} from "@batch/ui-common/lib/localization/browser-localizer";
 import { LiveLocationService } from "@batch/ui-service/lib/location";
 import { LiveResourceGroupService } from "@batch/ui-service/lib/resource-group";
+import { DesktopLocalizer } from "./localizer/desktop-localizer";
+import { AppLocaleService } from "app/services";
 
 @Component({
     selector: "bl-app",
@@ -68,9 +69,12 @@ export class AppComponent implements OnInit, OnDestroy {
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
         private workspaceService: WorkspaceService,
+        private appLocaleService: AppLocaleService
     ) {
-        // Initialize shared component lib environment
-        initEnvironment(new DefaultBrowserEnvironment(
+        const localizer = new DesktopLocalizer(this.appLocaleService);
+        localizer.loadTranslations().then(() => {
+            // Initialize shared component lib environment
+            initEnvironment(new DefaultBrowserEnvironment(
             {
                 mode: ENV === Environment.prod ? EnvironmentMode.Production : EnvironmentMode.Development
             },
@@ -78,7 +82,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 [DependencyName.Clock]: () => new StandardClock(),
                 // TODO: Create an adapter which hooks up to the desktop logger
                 [DependencyName.LoggerFactory]: () => createConsoleLogger,
-                [DependencyName.Localizer]: () => new BrowserLocalizer(),
+                [DependencyName.Localizer]: () => localizer,
                 [DependencyName.HttpClient]:
                     () => new BatchExplorerHttpClient(authService),
                 [BrowserDependencyName.LocationService]: () =>
@@ -94,7 +98,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 [BrowserDependencyName.FormLayoutProvider]:
                     () => new DefaultFormLayoutProvider(),
             }
-        ));
+            ));
+        });
 
         this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
         this._initWorkspaces();

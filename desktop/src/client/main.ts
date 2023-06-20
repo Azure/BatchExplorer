@@ -16,7 +16,12 @@ import "./init";
 // 2. Update electron user data folder
 import { parseArguments } from "./cli";
 const program = parseArguments(process.argv);
-import { app } from "electron";
+import { app, ipcMain } from "electron";
+
+// IPC Handler to get app path
+ipcMain.handle('get-app-path', async (event) => {
+    return app.getAppPath();
+});
 
 if (program.userDataDir) {
     app.setPath("userData", program.userDataDir);

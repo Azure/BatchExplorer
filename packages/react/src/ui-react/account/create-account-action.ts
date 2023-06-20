@@ -52,18 +52,18 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
             values: initialValues,
         });
         form.param("subscriptionId", SubscriptionParameter, {
-            label: translate("lib.common.localizer.subscription"),
+            label: translate("lib.react.create-account-action.subscription"),
             required: true,
         });
         form.param("resourceGroupId", ResourceGroupParameter, {
             dependencies: {
                 subscriptionId: "subscriptionId",
             },
-            label: translate("lib.common.localizer.resourceGroup"),
+            label: translate("lib.react.create-account-action.resourceGroup"),
             required: true,
         });
         form.param("accountName", StringParameter, {
-            label: translate("lib.common.localizer.account"),
+            label: translate("lib.react.create-account-action.account"),
             required: true,
             description:
                 "This is how you identify your Batch account. It must be unique.",
@@ -96,14 +96,14 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
             dependencies: {
                 subscriptionId: "subscriptionId",
             },
-            label: "Location",
+            label: translate("lib.react.create-account-action.location"),
             required: true,
         });
         form.param("storageAccountId", StorageAccountParameter, {
             dependencies: {
                 subscriptionId: "subscriptionId",
             },
-            label: "Storage account",
+            label: translate("lib.react.create-account-action.storageAccount"),
             description:
                 "Optional. For best performance we recommend a storage account (general purpose v2) located in the same region as the associated Batch account.",
         });

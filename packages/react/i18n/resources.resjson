@@ -1,6 +1,9 @@
 {
+  "lib.react.create-account-action.account": "Account",
   "lib.react.create-account-action.location": "Location",
+  "lib.react.create-account-action.resourceGroup": "Resource Group",
   "lib.react.create-account-action.storageAccount": "Storage Account",
+  "lib.react.create-account-action.subscription": "Subscription",
   "lib.react.form.buttons.apply": "Apply",
   "lib.react.form.buttons.discardChanges": "Discard changes"
 }
