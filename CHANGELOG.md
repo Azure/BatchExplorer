@@ -1,3 +1,19 @@
+# 2.18.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/52?closed=1)
+
+### Bugs
+
+* BatchExplorer could not be opened on macOS Catalina (10.15) and later [\#2182](https://github.com/Azure/BatchExplorer/issues/2182)
+* Cloud service SKU VM picker showed incorrect info [\#2751](https://github.com/Azure/BatchExplorer/issues/2751)
+* Pool list showed pools from previously selected Batch accounts [\#2732](https://github.com/Azure/BatchExplorer/issues/2732)
+* Multiple accessibility bug fixes [\#2754](https://github.com/Azure/BatchExplorer/issues/2754)
+
+### other
+
+* Migrates AADGraph API calls to MSGraph [\#2755](https://github.com/Azure/BatchExplorer/issues/2755)
+* Add deprecation warning for certificates for pool creation, pool details, and certificate creation [\#2753](https://github.com/Azure/BatchExplorer/issues/2753)
+
 # 2.17.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/51?closed=1)

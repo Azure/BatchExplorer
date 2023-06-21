@@ -9,7 +9,7 @@ import {
 
 const MAIN_BRANCH = "main";
 
-const root = path.resolve(path.join(__dirname, "../.."));
+const root = path.resolve(path.join(__dirname, "../../.."));
 const allMessages: string[] = [];
 const repoName = "Azure/BatchExplorer";
 const newIssueBody = `
