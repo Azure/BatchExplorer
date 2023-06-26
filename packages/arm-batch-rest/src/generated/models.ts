@@ -92,7 +92,7 @@ export interface EncryptionProperties {
 /** KeyVault configuration when using an encryption KeySource of Microsoft.KeyVault. */
 export interface KeyVaultProperties {
     /**
-     * Full path to the versioned secret. Example https://mykeyvault.vault.azure.net/keys/testkey/6e34a81fef704045975661e297a4c053. To be usable the following prerequisites must be met:
+     * Full path to the secret with or without version. Example https://mykeyvault.vault.azure.net/keys/testkey/6e34a81fef704045975661e297a4c053. or https://mykeyvault.vault.azure.net/keys/testkey. To be usable the following prerequisites must be met:
      *
      *  The Batch Account has a System Assigned identity
      *  The account identity has been granted Key/Get, Key/Unwrap and Key/Wrap permissions
@@ -511,7 +511,7 @@ export interface DataDisk {
 /** The configuration for container-enabled pools. */
 export interface ContainerConfiguration {
     /** The container technology to be used. */
-    type: "DockerCompatible";
+    type: "DockerCompatible" | "CriCompatible";
     /** This is the full image reference, as would be specified to "docker pull". An image will be sourced from the default Docker registry unless the image is fully qualified with an alternative registry. */
     containerImageNames?: Array<string>;
     /** If any images must be downloaded from a private registry which requires credentials, then those credentials must be provided here. */
@@ -554,6 +554,8 @@ export interface VMExtension {
     typeHandlerVersion?: string;
     /** Indicates whether the extension should use a newer minor version if one is available at deployment time. Once deployed, however, the extension will not upgrade minor versions unless redeployed, even with this property set to true. */
     autoUpgradeMinorVersion?: boolean;
+    /** Indicates whether the extension should be automatically upgraded by the platform if there is a newer version of the extension available. */
+    enableAutomaticUpgrade?: boolean;
     /** JSON formatted public settings for the extension. */
     settings?: Record<string, unknown>;
     /** The extension can contain either protectedSettings or protectedSettingsFromKeyVault or no protected settings at all. */
@@ -636,6 +638,8 @@ export interface NetworkConfiguration {
     endpointConfiguration?: PoolEndpointConfiguration;
     /** This property is only supported on Pools with the virtualMachineConfiguration property. */
     publicIPAddressConfiguration?: PublicIPAddressConfiguration;
+    /** Accelerated networking enables single root I/O virtualization (SR-IOV) to a VM, which may lead to improved networking performance. For more details, see: https://learn.microsoft.com/azure/virtual-network/accelerated-networking-overview. */
+    enableAcceleratedNetworking?: boolean;
 }
 
 /** The endpoint configuration for a pool. */
