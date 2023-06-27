@@ -39,7 +39,7 @@
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",
     "clean:cjs": "bux rmrf ./lib-cjs",
-    "generate:client": "autorest --typescript swagger/README.md && npm run format",
+    "generate:client": "autorest --typescript swagger/README.md",
     "lint": "eslint",
     "test": "jest",
     "test:all": "npm run test:coverage",

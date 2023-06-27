@@ -19,3 +19,4 @@ package-lock.json
 Localize/out/
 Localize/packages/
 /**/resources/
+packages/arm-batch-rest/src/generated/
