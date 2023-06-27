@@ -1,5 +1,5 @@
 const ARM_API_BASE_URI = "https://management.azure.com";
-export const BATCH_API_VERSION = "2022-10-01";
+export const BATCH_API_VERSION = "2023-05-01";
 
 function getUrlBasePath(subscriptionId: string) {
     return `${ARM_API_BASE_URI}/subscriptions/${subscriptionId}`;

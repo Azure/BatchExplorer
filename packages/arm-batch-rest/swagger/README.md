@@ -14,7 +14,7 @@ generate-sample: false
 license-header: MICROSOFT_MIT_NO_VERSION
 output-folder: ../
 source-code-folder-path: ./src/generated
-input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/batch/resource-manager/Microsoft.Batch/stable/2022-10-01/BatchManagement.json
+input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/batch/resource-manager/Microsoft.Batch/stable/2023-05-01/BatchManagement.json
 package-version: 1.0.0-beta.1
 rest-level-client: true
 add-credentials: true
