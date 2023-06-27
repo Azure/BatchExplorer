@@ -1,0 +1,15 @@
+@import "app/styles/variables";
+
+bl-account-monitoring-section {
+    .monitoring-header {
+        display: flex;
+        align-items: center;
+        h1 {
+            flex: 1;
+        }
+    }
+
+    bl-time-range-picker {
+        margin-right: 10px;
+    }
+}

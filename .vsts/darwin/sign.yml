@@ -1,22 +1,18 @@
 steps:
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core sdk'
-    inputs:
-      packageType: sdk
-      version: 2.1.x
-
-  - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+  - task: EsrpCodeSigning@2
     inputs:
       ConnectedServiceName: 'ESRP CodeSign'
-      FolderPath: ./release
-      Pattern: 'BatchExplorer-mac.zip'
+      FolderPath: ./desktop/release
+      Pattern: 'BatchExplorer-mac.zip,*.dmg'
       signConfigType: inlineSignParams
       inlineOperation: |
         [
           {
             "keyCode": "CP-401337-Apple",
-            "operationSetCode": "MacAppDeveloperSign",
-            "parameters": [ ],
+            "operationCode": "MacAppDeveloperSign",
+            "parameters": {
+              "Hardening": "--options=runtime"
+            },
             "toolName": "sign",
             "toolVersion": "1.0"
           }

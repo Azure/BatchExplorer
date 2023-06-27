@@ -1,27 +1,54 @@
-# This contains the steps used when building the app(Include signing)
-jobs:
-  - job: Linux
-    pool:
-      name: Azure-Pipelines-EO-Batch-Explorer
-      demands:
-      - ImageOverride -equals BatchExplorerBuildImage-Linux
-    steps:
-       - template: ./linux/distribution.yml
+stages:
+  - stage: Localization
+    jobs:
+      - job:
+        pool:
+          name: Azure-Pipelines-EO-Batch-Explorer
+          demands:
+          - ImageOverride -equals BatchExplorerBuildImage-Windows
+        steps:
+          - task: OneLocBuild@2
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+            inputs:
+              locProj: 'Localize/LocProject.json'
+              outDir: '$(Build.ArtifactStagingDirectory)'
+              dependencyPackageSource: 'https://azurebatch.pkgs.visualstudio.com/_packaging/BatchExplorer/nuget/v3/index.json'
+              packageSourceAuth: 'patAuth'
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'drop'
+              publishLocation: 'Container'
 
-  - job: MacOS
-    pool:
-      vmImage: macOS-11
-      demands: xcode
-    variables:
-      - name: EOCompliance-Mac
-        value: true
-    steps:
-       - template: ./darwin/distribution.yml
+  - stage: Build
+    dependsOn: Localization
+    condition: succeeded('Localization')
+    jobs:
 
-  - job: Windows
-    pool:
-      name: Azure-Pipelines-EO-Batch-Explorer
-      demands:
-      - ImageOverride -equals BatchExplorerBuildImage-Windows
-    steps:
-      - template: ./win/distribution.yml
+      - job: Linux
+        pool:
+          name: Azure-Pipelines-EO-Batch-Explorer
+          demands:
+          - ImageOverride -equals BatchExplorerBuildImage-Linux
+        steps:
+          - template: ./linux/distribution.yml
+
+      - job: MacOS
+        pool:
+          vmImage: macOS-11
+          demands: xcode
+        variables:
+          - group: BatchExplorer-Signing
+          - name: EOCompliance-Mac
+            value: true
+        steps:
+          - template: ./darwin/distribution.yml
+
+      - job: Windows
+        pool:
+          name: Azure-Pipelines-EO-Batch-Explorer
+          demands:
+          - ImageOverride -equals BatchExplorerBuildImage-Windows
+        steps:
+          - template: ./win/distribution.yml

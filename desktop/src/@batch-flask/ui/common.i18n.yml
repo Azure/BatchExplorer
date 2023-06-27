@@ -1,0 +1,35 @@
+# To put here some common translations that are reused across the app
+common:
+  application: Application
+  apply: Apply
+  back: Back
+  configuration: Configuration
+  creationTime: Creation time
+  confirm: Confirm
+  displayName: Display name
+  done: Done
+  general: General
+  id: ID
+  job: Job
+  jobs: Jobs
+  key: Key
+  lastModified: Last modified
+  learnMore: Learn more
+  listbox: Listbox
+  loading: Loading
+  metadata: Metadata
+  no: "No"
+  none: None
+  pool: Pool
+  pools: Pools
+  rebootAll: Reboot all
+  refresh: Refresh
+  refreshing: Refreshing
+  required: Required
+  state: State
+  task: Task
+  tasks: Tasks
+  updated: Updated
+  value: Value
+  version: Version
+  yes: "Yes"

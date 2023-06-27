@@ -1,0 +1,112 @@
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig" [fileUri]="fileUri">
+    <bl-form-page main-form-page [title]="title" [subtitle]="subtitle" [formGroup]="form">
+        <bl-form-section title="{{'job.label.generalInfo' | i18n}}" subtitle="{{'job.desc.generalInfo' | i18n}}">
+            <div class="grow">
+                <div class="gcol">
+                    <bl-form-field class="form-element required">
+                        <input blInput #idInput formControlName="id" placeholder="{{'common.id' | i18n}}" maxlength="64">
+
+                        <bl-hint align="end" attr.aria-label="{{'job.hint.nOfMaxCharacters'|i18n: { 'num': idInput.value.length, 'max': 64} }}">
+                            {{idInput.value.length}} / 64
+                        </bl-hint>
+
+                        <bl-error controlName="id" code="required">{{'common.required' | i18n }}</bl-error>
+                        <bl-error controlName="id" code="maxlength">{{'job.error.maxLength' | i18n: { 'max': 64 } }}</bl-error>
+                        <bl-error controlName="id" code="pattern">{{'job.error.idPattern' | i18n }}</bl-error>
+                    </bl-form-field>
+                </div>
+                <div class="gcol">
+                    <bl-form-field class="form-element">
+                        <input blInput formControlName="displayName" placeholder="{{'job.label.displayName' | i18n}}">
+                        <bl-error controlName="displayName" code="maxlength">{{'job.error.maxLength' | i18n: { 'max': 1024 } }}</bl-error>
+                    </bl-form-field>
+                </div>
+            </div>
+            <div class="form-element">
+                <bl-key-value-picker label="{{'job.label.commonEnvVars' | i18n}}" formControlName="commonEnvironmentSettings">
+                </bl-key-value-picker>
+                <bl-error controlName="priority" code="validateRange">{{'job.error.notInRange'| i18n: { 'min': -100, 'max': 100 } }}</bl-error>
+            </div>
+            <div class="form-element">
+                <bl-key-value-picker formControlName="metadata" label="{{'job.label.metadata' | i18n}}"></bl-key-value-picker>
+            </div>
+        </bl-form-section>
+        <bl-form-section *ngIf="showPoolPicker" title="{{'job.label.poolSelection' | i18n}}" subtitle="{{'job.desc.poolSelection' | i18n}}">
+            <div class="form-element">
+                <bl-pool-picker formControlName="poolInfo"></bl-pool-picker>
+                <bl-error controlName="poolInfo" code="required">{{'job.error.poolRequired' | i18n}}</bl-error>
+            </div>
+        </bl-form-section>
+        <bl-form-section *ngIf="showJobConfiguration" title="{{'job.label.jobConfigurationTask' | i18n}}" subtitle="{{'job.desc.jobConfigurationTask' | i18n}}">
+            <bl-form-picker formControlName="jobManagerTask" #jobManagerTaskPicker>
+                <div no-value-title>{{'job.label.jobManagerTask' | i18n}}</div>
+                <div value-title>{{jobManagerTask?.id}}</div>
+                <div nested-form>
+                    <bl-job-manager-task-picker
+                        [formControl]="jobManagerTaskPicker.nestedValue"
+                        [userAccounts]="userAccounts"
+                        [virtualMachineConfiguration]="virtualMachineConfiguration">
+                    </bl-job-manager-task-picker>
+                </div>
+            </bl-form-picker>
+            <bl-form-picker formControlName="jobPreparationTask" (clear)="resetJobPreparationTask()" #jobPreparationTaskPicker>
+                <div no-value-title>{{'job.label.jobPreparationTask' | i18n}}</div>
+                <div value-title>{{jobPreparationTask?.id}}</div>
+                <div nested-form>
+                    <bl-job-preparation-task-picker
+                        [formControl]="jobPreparationTaskPicker.nestedValue"
+                        [userAccounts]="userAccounts"
+                        [virtualMachineConfiguration]="virtualMachineConfiguration">
+                    </bl-job-preparation-task-picker>
+                </div>
+            </bl-form-picker>
+            <bl-form-picker *ngIf="showJobReleaseTask" formControlName="jobReleaseTask" #jobReleaseTaskPicker>
+                <div no-value-title>{{'job.label.jobReleaseTask' | i18n}}</div>
+                <div value-title>{{jobReleaseTask?.id}}</div>
+                <div nested-form>
+                    <bl-job-release-task-picker
+                        [formControl]="jobReleaseTaskPicker.nestedValue"
+                        [userAccounts]="userAccounts"
+                        [virtualMachineConfiguration]="virtualMachineConfiguration">
+                    </bl-job-release-task-picker>
+                </div>
+            </bl-form-picker>
+        </bl-form-section>
+        <bl-form-section title="{{'job.label.jobAdvancedSettings' | i18n}}" subtitle="{{'job.desc.jobAdvancedSettings' | i18n}}">
+            <div class="form-element">
+                <bl-form-field>
+                    <input blInput formControlName="priority" placeholder="{{'job.label.priority' | i18n}}" type="number" min="-1000" max="1000">
+                </bl-form-field>
+                <bl-error controlName="priority" code="validateRange">{{'job.error.notInRange' | i18n:{'min': -1000, 'max': 1000} }}</bl-error>
+            </div>
+            <div formGroupName="constraints">
+                <bl-form-field>
+                    <bl-duration-picker formControlName="maxWallClockTime" label="{{'job.label.maxWallClockTime' | i18n}}"></bl-duration-picker>
+                </bl-form-field>
+                <bl-form-field>
+                    <input blInput formControlName="maxTaskRetryCount" placeholder="{{'job.label.maxTaskRetryCount' | i18n}}" type="number" min="-1" max="100">
+                    <bl-error controlName="maxTaskRetryCount" code="validateRange">{{'job.error.notInRange' | i18n:{'min': -1, 'max': 100} }}</bl-error>
+                </bl-form-field>
+            </div>
+            <div class="form-element">
+                <bl-form-field>
+                    <bl-select formControlName="onAllTasksComplete" color="primary" placeholder="{{'job.label.onAllTasksComplete' | i18n}}">
+                        <bl-option [value]="AllTasksCompleteAction.noaction" label="NoAction"></bl-option>
+                        <bl-option [value]="AllTasksCompleteAction.terminatejob" label="TerminateJob"></bl-option>
+                    </bl-select>
+                </bl-form-field>
+            </div>
+            <div class="form-element">
+                <bl-form-field>
+                    <bl-select formControlName="onTaskFailure" color="primary" placeholder="{{'job.label.onTaskFailure' | i18n}}">
+                        <bl-option [value]="TaskFailureAction.noaction" label="NoAction"></bl-option>
+                        <bl-option [value]="TaskFailureAction.performexitoptionsjobaction" label="PerformExitOptionsJobAction"></bl-option>
+                    </bl-select>
+                </bl-form-field>
+            </div>
+            <div class="form-element">
+               <mat-checkbox color="primary" formControlName="usesTaskDependencies">{{'job.label.enableTaskDeps' | i18n}}</mat-checkbox>
+            </div>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

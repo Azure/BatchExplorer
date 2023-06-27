@@ -20,8 +20,9 @@
 * [Store user data/Cache data](store-user-data.md)
 * [Use virtual scroll](virtual-scroll.md)
 * [Localize](Localization.md)
+* [Build Localization on Local Machine](build-localization-locally.md)
 
 ## Repo management
 
-* [Make a new release](new-release.md)
+* [Make a new release (Wiki)](https://msazure.visualstudio.com/AzureBatch/_wiki/wikis/AzureBatch.wiki?wikiVersion=GBwikiMaster&pagePath=%2FBatch%20Explorer%2FDeploy%20new%20version%20of%20Batch%20Explorer)
 * [Third party dependencies](third-party-dependencies.md)

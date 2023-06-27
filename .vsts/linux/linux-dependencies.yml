@@ -13,5 +13,10 @@ steps:
       echo "Node.js version $(node --version)"
       echo "NPM version $(npm --version)"
       npm install -g codecov
-      npm install
-    displayName: Install Linux dependencies
+      npm ci
+    displayName: Install NPM dependencies
+  - script: |
+      cd util/bux
+      npm pack
+      npm install -g batch-bux-1.0.0.tgz
+    displayName: Install Batch Utility CLI (bux)

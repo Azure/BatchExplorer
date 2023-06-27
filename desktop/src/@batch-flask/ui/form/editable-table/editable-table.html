@@ -1,0 +1,34 @@
+<ng-container [formGroup]="form">
+    <div class="caption" [hidden]="hideCaption">{{label}}</div>
+    <table class="noselect" cellspacing="0" cellpadding="0" formArrayName="items" [attr.aria-label]="label" role="grid">
+        <thead>
+            <tr>
+                <th *ngFor="let column of columns;trackBy: trackColumn" [attr.id]="getHeaderIdForColumn(column)">
+                    <ng-template [ngTemplateOutlet]="column.content"></ng-template>
+                </th>
+                <th class="action-column"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of items.controls;trackBy: trackRows; let i=index; let isLast=last">
+                <td *ngFor="let column of columns;trackBy: trackColumn">
+                    <ng-container [ngSwitch]="column.type">
+                        <ng-container *ngSwitchCase="EditableTableColumnType.Select">
+                            <bl-editable-table-select-cell [control]="item.controls[column.name]" [options]="column.options"
+                                [rowValue]="item.value"></bl-editable-table-select-cell>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                            <input [formControl]="item.controls[column.name]" [attr.type]="column.type" [attr.aria-describedby]="getHeaderIdForColumn(column)" [attr.aria-labeledby]="getHeaderIdForColumn(column)">
+                        </ng-container>
+                    </ng-container>
+                </td>
+                <td class="action-column">
+                    <bl-clickable *ngIf="!isLast" class="delete-item-btn" [attr.aria-label]="'editable-table.deleteRow' | i18n"
+                        (do)="deleteItem(i)" title="delete metadata row">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </bl-clickable>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>

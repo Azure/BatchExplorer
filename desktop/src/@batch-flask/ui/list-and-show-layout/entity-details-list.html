@@ -1,0 +1,27 @@
+<div class="entity-details-list-header">
+    <div class="quicksearch">
+        <div class="pre-quicksearch">
+            <ng-content select="[pre-quicksearch]"></ng-content>
+        </div>
+        <input blInput [formControl]="searchQuery" [placeholder]="filterPlaceholder + ' (Startwith)'"/>
+        <bl-clickable *ngIf="enableAdvancedFilter"
+            class="toggle-advanced-filter"
+            matTooltip="{{'entity-details-list.toggleAdvancedFilter' | i18n}}"
+            name="toggle"
+            matTooltipPosition="above"
+            [routerLink]="baseLink"
+            [queryParams]="{filter: true}">
+            <i class="fa fa-filter" aria-hidden="true"></i>
+        </bl-clickable>
+    </div>
+    <div class="actions">
+        <bl-button type="plain" color="light" icon="fa fa-expand spin-hover" *ngIf="showExpandButton" color="light" [routerLink]="baseLink"
+            title="{{expandButtonHoverText}}">
+        </bl-button>
+        <bl-refresh-btn *ngIf="showRefreshButton" type="plain" [refresh]="refresh" title="{{refreshButtonHoverText}}" tooltipPosition="above"></bl-refresh-btn>
+        <ng-content select="[bl-list-buttons]"></ng-content>
+    </div>
+</div>
+<div class="entity-details-list-content" aria-live="polite">
+    <ng-content></ng-content>
+</div>

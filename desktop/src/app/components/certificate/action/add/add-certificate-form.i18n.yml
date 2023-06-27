@@ -1,0 +1,12 @@
+add-certificate-form:
+  title: Create certificate
+  certificate:
+    label: Certificate
+    select: Select a certificate
+    description: Select a certificate (pfx or cer) to upload
+    required: Please select a valid certificate file
+    invalid: Certificate need to be valid CER or PFX files only
+    deprecationWarning: The Batch account certificates feature is deprecated and will be retired on February 29, 2024. Please transition to using Azure Key Vault to securely access and install certificates on your Batch pools.
+  password:
+    label: Certificate password
+    required: Password is required if the certificate format is '.pfx'

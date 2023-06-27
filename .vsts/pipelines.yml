@@ -28,6 +28,14 @@ jobs:
     steps:
       - template: ./win/ci.yml
 
+  - job: Test
+    pool:
+      name: Azure-Pipelines-EO-Batch-Explorer
+      demands:
+        - ImageOverride -equals BatchExplorerBuildImage-Linux
+    steps:
+       - template: ./linux/test.yml
+
   - job: RegisterDependencies
     displayName: Register dependencies
     pool:

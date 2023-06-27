@@ -1,0 +1,10 @@
+{
+  "extends": "../../../util/common-config/tsconfig-base.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "outDir": "../lib",
+    "rootDir": "../src/ui-playground",
+    "typeRoots": ["../node_modules/@types"]
+  },
+  "include": ["../src/ui-playground"]
+}

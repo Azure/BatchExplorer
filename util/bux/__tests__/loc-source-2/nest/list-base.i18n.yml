@@ -1,0 +1,4 @@
+account-summary-card:
+  url: This is a conflict
+  filterApplied: New filter applied, results
+  filterCleared: Filter cleared, results

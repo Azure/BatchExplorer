@@ -1,0 +1,165 @@
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig" [fileUri]="fileUri">
+    <bl-form-page main-form-page title="Add a pool to the account" [formGroup]="form">
+        <bl-form-section title="Pool details" subtitle="Basic information about the pool">
+            <div class="grow">
+                <div class="gcol">
+                    <bl-form-field class="form-element">
+                        <input blInput #idInput formControlName="id" placeholder="ID" maxlength="64" required>
+
+                        <bl-hint align="end" attr.aria-label="{{idInput.value.length}} characters out of 64">{{idInput.value.length}} / 64</bl-hint>
+
+                        <bl-error controlName="id" code="required">ID is a required field</bl-error>
+                        <bl-error controlName="id" code="maxlength">ID has a maximum length of 64 characters</bl-error>
+                        <bl-error controlName="id" code="pattern">ID can contain any combination of alphanumeric characters including hyphens and underscores.</bl-error>
+                    </bl-form-field>
+                </div>
+                <div class="gcol">
+                    <bl-form-field class="form-element">
+                        <input blInput formControlName="displayName" placeholder="Display name">
+                    </bl-form-field>
+                </div>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="Scale" subtitle="Number of nodes in your pool using a fixed number or an auto scaling formula">
+            <a (click)="openLink('https://docs.microsoft.com/azure/batch/batch-low-pri-vms')" href="javascript:void(0)">Learn more about Spot/low-priority nodes</a>
+            <div class="form-element">
+                <bl-pool-scale-picker formControlName="scale"></bl-pool-scale-picker>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="Select an operating system configuration" subtitle="Choose the operating system to be installed on all the nodes in the pool">
+            <ng-container *ngIf="selectedImageWillDeprecate">
+                <bl-banner class="create-pool-deprecation-warning" type="warning">
+                    <div message>
+                        <span [ngSwitch]="endOfLifeProximity">
+                            <bl-i18n *ngSwitchCase="imageEOLState.FarAwayFromEndOfLife" key="pool-create-basic-dialog.deprecationWarning.imageFarFromEndOfLife">
+                                <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
+                            </bl-i18n>
+                            <bl-i18n *ngSwitchCase="imageEOLState.NearingEndOfLife" key="pool-create-basic-dialog.deprecationWarning.imageNearingEndOfLife">
+                                <b *i18nParam="'imageEndOfLifeDate'">{{selectedVirtualMachineImageEndOfLifeDate}}</b>
+                            </bl-i18n>
+                        </span>
+                        <a class="create-pool-warning-alternative-link" *ngIf="hasDeprecationLink" (click)="openDeprecationLink()" href="javascript:void(0)">{{'common.learnMore' | i18n}}</a>
+                    </div>
+                </bl-banner>
+            </ng-container>
+            <ng-container *ngIf="cloudServiceConfiguration">
+                <bl-banner class="create-pool-deprecation-warning" type="warning">
+                    <div message>
+                        Cloud Services pools are deprecated and will be retired on 29 February 2024. Existing ‘CloudServiceConfiguration’ pools will need to be deleted and new
+                        <a class="create-pool-warning-alternative-link" (click)="openLink('https://docs.microsoft.com/azure/batch/batch-pool-cloud-service-to-virtual-machine-configuration')" href="javascript:void(0)">‘VirtualMachineConfiguration’ pools created. </a>
+                        For new pools, select either a different ‘Distributions‘ or ‘Custom Image’ option.
+                    </div>
+                </bl-banner>
+            </ng-container>
+            <div class="form-element">
+                <bl-pool-os-picker formControlName="os"></bl-pool-os-picker>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="Choose one or multiple application licenses" subtitle="Select application licenses to be installed on each compute node in the pool"
+            *ngIf="renderingSkuSelected">
+            <div class="form-element">
+                <bl-app-license-picker formControlName="appLicenses"></bl-app-license-picker>
+                <bl-error controlName="appLicenses" code="required">You must agree to have read each of the end user license agreements by selecting the checkbox</bl-error>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="Choose a virtual machine size" subtitle="Choose the virtual machine based on CPU, RAM and Disk capacity">
+            <div class="form-element element-spacer">
+                <bl-vm-size-picker formControlName="vmSize" [osSource]="osSource" [osType]="osType"></bl-vm-size-picker>
+                <bl-error controlName="vmSize" code="required">You must select a VM size</bl-error>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="Optional settings" subtitle="Optional information about the pool">
+            <bl-form-field>
+                <input blInput type="number" formControlName="taskSlotsPerNode" placeholder="Task slots per node">
+
+                <bl-error controlName="taskSlotsPerNode" code="max">Maximum amount of slots exceeded, choose a value less than: {{form.controls.taskSlotsPerNode.errors?.max}}</bl-error>
+                <bl-error controlName="taskSlotsPerNode" code="min">Slots amount must be greater than or equal to 1</bl-error>
+            </bl-form-field>
+            <div class="form-element">
+                <mat-checkbox formControlName="enableInterNodeCommunication" color="primary">
+                    Enable inter-node communication
+                </mat-checkbox>
+            </div>
+            <div class="form-element">
+                <bl-form-field>
+                    <bl-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
+                        <bl-option [value]="NodeFillType.pack" label="Pack"></bl-option>
+                        <bl-option [value]="NodeFillType.spread" label="Spread"></bl-option>
+                    </bl-select>
+                </bl-form-field>
+            </div>
+            <div class="form-element">
+                <bl-key-value-picker formControlName="metadata" label="Metadata"></bl-key-value-picker>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section *ngIf="hasLinkedStorage" title="Choose one or multiple application packages" subtitle="Select application packages to be downloaded onto each compute node in the pool">
+            <div class="form-element">
+                <bl-app-package-picker formControlName="appPackages"></bl-app-package-picker>
+                <bl-error controlName="appPackages" code="invalid">Please select valid combinations of application package versions</bl-error>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool. By default, pools come with one non-admin user and one admin user. You can add up to 5 specific users for running tasks.">
+            <bl-user-accounts-picker formControlName="userAccounts" [osType]="osType"></bl-user-accounts-picker>
+        </bl-form-section>
+
+        <bl-form-section title="Start Task" subtitle="Additional startup configuration run on each node as it joins the pool">
+            <bl-form-picker formControlName="startTask" #startTaskPicker>
+                <div no-value-title>Add a start task</div>
+                <div value-title>{{startTask?.commandLine}}</div>
+                <div nested-form>
+                    <bl-start-task-picker
+                        [formControl]="startTaskPicker.nestedValue"
+                        [userAccounts]="form.value.userAccounts"
+                        [virtualMachineConfiguration]="form.value.os.virtualMachineConfiguration">
+                    </bl-start-task-picker>
+                </div>
+            </bl-form-picker>
+        </bl-form-section>
+
+        <bl-form-section title="Network configuration" subtitle="The network configuration for a pool.">
+            <ng-container *ngIf="virtualMachineConfiguration">
+                <bl-form-multi-picker formControlName="inboundNATPools" #inboundNATPoolsPicker addTitle="Inbound NAT Pool" [max]="5">
+                    <ng-template blFormPickerItem let-value>
+                        <div title>
+                            {{value?.name}}
+                        </div>
+                        <div subtitle class="unaccent">
+                            {{value?.protocol}}
+                        </div>
+                    </ng-template>
+                    <div nested-form>
+                        <bl-inbound-nat-pool-picker
+                            [formControl]="inboundNATPoolsPicker.currentEditValue"
+                            [inboundNATPools]="form.controls.inboundNATPools.value">
+                        </bl-inbound-nat-pool-picker>
+                    </div>
+                </bl-form-multi-picker>
+                <div>The configuration for endpoints on compute nodes in the Batch pool.</div>
+            </ng-container>
+            <bl-virtual-network-picker
+                formControlName="subnetId"
+                [armNetworkOnly]="armNetworkOnly">
+            </bl-virtual-network-picker>
+        </bl-form-section>
+
+        <bl-form-section title="Certificate" subtitle="Reference to certificates to be installed on compute nodes in a pool.">
+            <bl-banner class="create-pool-deprecation-warning" type="warning">
+                <div message>
+                    {{ 'pool-create-basic-dialog.deprecationWarning.certificates' | i18n }}
+                    <a class="create-pool-warning-alternative-link" (click)="openLink('https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide')" href="javascript:void(0)">{{'common.learnMore' | i18n}}</a>
+                </div>
+            </bl-banner>
+            <bl-certificate-references-picker formControlName="certificateReferences" [osType]="osType"></bl-certificate-references-picker>
+        </bl-form-section>
+    </bl-form-page>
+    <div blFormSummary>
+        <div>Estimated cost: {{estimatedCost}}/h</div>
+    </div>
+</bl-complex-form>

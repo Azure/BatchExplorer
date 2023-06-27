@@ -1,0 +1,13 @@
+<bl-browse-layout #layout>
+    <div blBrowseLayoutTitle>
+        {{'common.jobs' | i18n}}
+    </div>
+    <bl-inline-quota blBrowseLayoutQuotas include="jobs"></bl-inline-quota>
+    <div blBrowseLayoutButtons>
+        <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="{{'job.labels.addJob' | i18n}}" [action]="addJob" permission="write">
+        </bl-button>
+    </div>
+    <bl-job-list blBrowseLayoutList></bl-job-list>
+    <bl-job-advanced-filter blBrowseLayoutAdvancedFilter (filterChange)="layout.advancedFilterChanged($event)">
+    </bl-job-advanced-filter>
+</bl-browse-layout>

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "strict": true,
+    "target": "ES5",
+    "lib": ["DOM", "DOM.Iterable", "ES2018"],
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "noUnusedLocals": true,
+    "declaration": true,
+    "declarationMap": true,
+    "downlevelIteration": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "useDefineForClassFields": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

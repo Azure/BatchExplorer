@@ -1,29 +1,55 @@
 # Setup your environment
 
-## 1. Prerequisites
+The following are instructions for building and running Batch Explorer in a development environment.
 
-Follow the **Building Batch Explorer yourself** instruction of the [wiki](https://github.com/Azure/BatchExplorer/wiki/Build-batch-explorer-yourself) in order to install all require dependencies.
+1. Check prerequisites
 
-**Use `npm` 7 and above. This ensures a consistent build environment with the right set of dependencies**
+    Make sure the following are installed:
 
-Start the dev server
+    - Node.js 16 or higher
+    - Python 3.6 or higher
 
-```bash
-npm run dev-server
+    **On Windows:**
+
+    Make sure Node.js is [configured to use the Visual Studio Build Tools](https://github.com/nodejs/node-gyp#on-windows).
+
+    Next, ensure that long path support is enabled in the registry by running the following command as administrator in a PowerShell console:
+
+    ```shell
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+    ```
+
+    Also enable Git's long path support:
+
+    ```shell
+    git config --global core.longpaths true
+    ```
+
+    > **Note:** There are presently a few issues running Batch Explorer with Node 17 or later.
+
+2. Install dependencies:
+
+    ```shell
+    npm install
+    npm run dev-setup
+    pip install -r desktop/python/requirements.txt
+    ```
+
+3. Build the repository:
+
+    ```shell
+    npm run build
+    ```
+
+## Run Batch Explorer in dev mode
+
+```shell
+npm run launch:desktop # Open the dev server, Electron app and all packages in watch mode
 ```
 
-Start electron
+This command will enable hot reload for a better development experience. Simply saving a file will cause the UI to refresh with your changes.
 
-```bash
-# In the command line
-npm run dev-electron
-
-# In VSCode just press F5
-```
-
-The dev-server and dev-electron support hot reload for a better development experience. Simply saving a file will cause the UI to refresh to your updated changes.
-
-*Note:* Changes to any files in the node client directory ('src/client') require restarting the application.
+*Note:* Changes to any files in the node client directory ('desktop/src/client') require restarting the application.
 
 Please also take a look at the [coding guidelines](coding-guidelines.md) for this repo for best practices.
 
@@ -31,44 +57,28 @@ Please also take a look at the [coding guidelines](coding-guidelines.md) for thi
 
 If you're using VSCode (recommended) we suggest you use the following extensions:
 
-* EditorConfig for VS Code(Important)
-* TSLint
-* Debugger for Chrome
+- EditorConfig
+- ESLint
+- Prettier
+- Markdownlint
+- Stylelint
 
-## Detailed commands
+## Other useful commands
 
-**Magic command** (starts the server and electron in dev mode)
+Run everything except for the Electron shell in watch mode:
 
 ```shell
-npm run dev
+npm run start:desktop
 ```
 
-Build project
+Run **only** the Electron shell in watch mode*:
 
 ```shell
-npm run build
+npm run launch:dev-electron
 ```
 
-Run app
+Start the experimental web UI in watch mode:
 
 ```shell
-npm run electron
-```
-
-Run watch (this will build files on save)
-
-```shell
-npm run watch
-```
-
-Run dev server (this will handle the refresh of files and later should have live reload)
-
-```shell
-npm run dev-server
-```
-
-Run dev electron (to use the dev server you need to run this)
-
-```shell
-npm run dev-electron
+npm run start:web
 ```

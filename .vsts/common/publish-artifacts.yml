@@ -3,8 +3,8 @@ parameters:
 
 steps:
   - task: PublishBuildArtifacts@1
-    displayName: Publish artifacts
+    displayName: Publish application artifacts
     inputs:
-      pathtoPublish: ./release
+      pathtoPublish: ./desktop/release
       artifactName: ${{ parameters.folder }}
       artifactType: Container

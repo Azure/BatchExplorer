@@ -1,0 +1,8 @@
+steps:
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download Localization Build Artifacts'
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: 'drop'
+      downloadPath: '$(Agent.BuildDirectory)'

@@ -2,12 +2,16 @@ steps:
   - task: NodeTool@0
     inputs:
       versionSpec: '16.x.x'
+    displayName: Set NodeJS version
 
-  - script: |
-      cp .vsts/pipelines.npmrc .npmrc
-    displayName: Stage .npmrc configuration
+  - script: cp .vsts/pipelines.npmrc $(Agent.TempDirectory)/.npmrc
+    displayName: Stage .npmrc file
 
   - task: npmAuthenticate@0
-    displayName: Authenticate with NPM private feed
+    displayName: NPM auth
     inputs:
-      workingFile: .npmrc
+      workingFile: $(Agent.TempDirectory)/.npmrc
+
+  - script: |
+      echo "##vso[task.setvariable variable=NPM_CONFIG_USERCONFIG]$(Agent.TempDirectory)/.npmrc"
+    displayName: Set NPM configuration environment variable

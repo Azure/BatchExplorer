@@ -5,6 +5,7 @@
 Start the browser test watch
 
 ```shell
+cd desktop
 npm run test-app-watch
 ```
 
@@ -30,6 +31,8 @@ fdescribe("MyModuleB", () => {
 You should not really have to run those unless changing some client code. CI will catch any error it throws anyway.
 
 ```bash
+cd desktop
+
 # For just running once to check
 npm run test-client
 
@@ -43,7 +46,7 @@ By default, all output logged by Batch Explorer is silenced. To enable console l
 
 | Description                              | Single run             | Watch                        |
 |------------------------------------------|------------------------|------------------------------|
-| Run the test for the browser environment | `npm run test-app`     | `npm run test-app-watch` |
-| Run the test for the node environemnt    | `npm run test-client`  | `npm run test-client-watch`  |
-| Run all the tests                        | `npm run test`         |                              |
-| Run the lint                             | `npm run lint`         |                              |
+| Run the test for the browser environment | `npm run test-app`        | `npm run test-app-watch`        |
+| Run the test for the node environemnt    | `npm run test-client`     | `npm run test-client-watch`     |
+| Run all the tests                        | `npm run test`            |                              |
+| Run the lint                             | `npm run lint`            |                              |

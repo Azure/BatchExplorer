@@ -1,0 +1,9 @@
+{
+  "extends": "../../../util/common-config/tsconfig-base.json",
+  "compilerOptions": {
+    "outDir": "../lib",
+    "rootDir": "../src/ui-common",
+    "typeRoots": ["../node_modules/@types"]
+  },
+  "include": ["../src/ui-common"]
+}

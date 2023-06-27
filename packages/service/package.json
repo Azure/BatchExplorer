@@ -1,0 +1,81 @@
+{
+  "name": "@batch/ui-service",
+  "private": false,
+  "version": "1.0.1",
+  "description": "Library for communicating with the Azure Batch service",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Azure/BatchExplorer"
+  },
+  "author": "Microsoft",
+  "license": "MIT",
+  "main": "./lib-cjs/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "test": "jest",
+  "scripts": {
+    "build": "npm run compile && npm run build-translations",
+    "build:clean": "run-s clean compile",
+    "build:test": "run-s build test",
+    "build-translations": "bux build-translations --src src/ui-service --dest i18n --packageName lib.service",
+    "compile": "run-p compile:*",
+    "compile:esm": "tsc -b ./config/tsconfig.build.json",
+    "compile:cjs": "tsc -b ./config/tsconfig.cjs.json",
+    "clean": "run-p clean:*",
+    "clean:build": "bux rmrf ./build",
+    "clean:esm": "bux rmrf ./lib",
+    "clean:cjs": "bux rmrf ./lib-cjs",
+    "clean:resources": "bux rmrf ./resources",
+    "test": "jest",
+    "test:coverage": "jest --collect-coverage",
+    "test:all": "npm run test:coverage",
+    "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --watch",
+    "test:watch": "jest --watch",
+    "lint": "eslint .",
+    "watch": "npm run compile:esm -- --watch --preserveWatchOutput",
+    "workspace:build": "npm run build",
+    "workspace:build:clean": "npm run build:clean",
+    "workspace:build:desktop": "npm run build",
+    "workspace:build:lib": "npm run build",
+    "workspace:build:web": "npm run build",
+    "workspace:build:package": "npm run build:clean",
+    "workspace:build:prod": "npm run build:clean",
+    "workspace:build:test": "npm run build:test",
+    "workspace:clean": "npm run clean",
+    "workspace:launch:desktop": "npm run watch",
+    "workspace:launch:web": "npm run watch",
+    "workspace:lint": "npm run lint",
+    "workspace:lint:fix": "npm run lint --fix",
+    "workspace:start:desktop": "npm run watch",
+    "workspace:start:web": "npm run watch",
+    "workspace:test": "npm run test",
+    "workspace:test:all": "npm run test:all",
+    "workspace:test:desktop": "npm run test",
+    "workspace:test:lib": "npm run test",
+    "workspace:test:lib:all": "npm run test:all",
+    "workspace:test:web": "npm run test",
+    "workspace:test:web:all": "npm run test:all",
+    "workspace:watch:lib": "npm run watch"
+  },
+  "peerDependencies": {
+    "mobx": "^6.3.2",
+    "tslib": "~2.3.1"
+  },
+  "dependencies": {
+    "@batch/arm-batch-rest": "^1.0.0",
+    "@batch/ui-common": "^1.0.0"
+  },
+  "devDependencies": {
+    "@batch/common-config": "^1.0.0",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^14.14.37",
+    "jest": "^27.1.0",
+    "jest-junit": "^12.2.0",
+    "ts-jest": "^27.0.5"
+  },
+  "files": [
+    "lib",
+    "lib-cjs",
+    "resources"
+  ]
+}

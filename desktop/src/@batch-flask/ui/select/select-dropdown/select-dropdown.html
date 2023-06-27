@@ -1,0 +1,26 @@
+<div class="option {{option.cssClass}}"
+    *ngFor="let option of rows;trackBy: trackOption"
+    role="option"
+    [id]="option.id"
+    [class.focused]="focusedOption === option"
+    [class.disabled]="option.disabled"
+    [attr.aria-disabled]="option.disabled"
+    [attr.aria-selected]="selected.has(option.value)"
+    [attr.aria-label]="optionAriaLabel(option)"
+    (mousedown)="handleClickOption($event, option)">
+
+    <div class="checkbox" *ngIf="multiple">
+        <i class="fa fa-check" *ngIf="selected.has(option.value)" aria-hidden="true"></i>
+    </div>
+    <div class="option-content" aria-hidden="true">
+        <ng-container *ngIf="select.optionTemplate">
+            <ng-template [ngTemplateOutlet]="select.optionTemplate" [ngTemplateOutletContext]="{$implicit: option.item}"></ng-template>
+        </ng-container>
+        <ng-container *ngIf="!select.optionTemplate">
+            {{option.label}}
+        </ng-container>
+    </div>
+</div>
+<div class="no-option" *ngIf="displayedOptions.length === 0">
+    {{noMatchText}}
+</div>

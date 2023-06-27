@@ -1,0 +1,11 @@
+{
+  "extends": "./config/tsconfig.common.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./build/cache/ts.buildinfo"
+  },
+  "references": [
+    { "path": "../packages/common" },
+    { "path": "../packages/react" },
+    { "path": "../packages/service" }
+  ]
+}

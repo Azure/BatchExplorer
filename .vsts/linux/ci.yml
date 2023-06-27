@@ -1,35 +1,27 @@
 steps:
   - template: ./linux-dependencies.yml
 
-  - script: npm run test-models
-    displayName: Test models against swagger
-
-  - script: |
-      export DISPLAY=:99
-      xvfb-run --server-args '-screen 0 1024x768x24' npm run test
-    displayName: Run tests
-
-  - task: PublishTestResults@2
-    inputs:
-      testRunner: 'JUnit'
-      testResultsFiles: $(System.DefaultWorkingDirectory)/coverage/TESTS*.xml
-
-  - task: PublishCodeCoverageResults@1
-    inputs:
-      codeCoverageTool: cobertura
-      summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura.xml
-      reportDirectory: $(System.DefaultWorkingDirectory)/coverage/html
-  - script: codecov -t $(codecov.uploadToken)
-    displayName: Upload code coverage to codecov
-
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      npm run build-and-pack
+      npm run build:package
     displayName: Build and pack
 
-  - script: npm run lint
-    displayName: Lint
+  - script: |
+      set -e
+      cd $BUILD_SOURCESDIRECTORY
+      git status --porcelain=v1
+      changed=$(git status --porcelain=v1 | grep -E '^(M| M )' | wc -l)
+      echo "Changed files: $changed"
+      if [ "$changed" -eq "0" ]; then
+        echo "No changes. Nothing to do"
+        exit 0
+      else
+        echo "Text changes detected: $changed. Pipeline failed."
+        exit 1
+      fi
+    workingDirectory: desktop
+    displayName: Validate no files changed on build
 
   - template: ../common/publish-artifacts.yml
     parameters:

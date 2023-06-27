@@ -1,0 +1,21 @@
+account-monitoring:
+  aggregatedOver: Aggregated over {interval} interval
+  aggregationButton: Toggle aggreggation
+  avg: Average
+  barChart: Bar chart
+  chartError: An error occurred while loading the chart
+  chartLabel: "{chartType} showing {name} with {numDataSets} data sets. {data}"
+  coreCount: Core minutes
+  count: Count
+  currentNodeStates: Current node states
+  doughnutChart: Doughnut chart
+  expandLabel: Expand chart
+  failedTask: Failed task
+  lineChart: Line chart
+  nodeStates: Node states
+  notARM: Account monitoring is only enabled for ARM batch accounts
+  pieChart: Pie chart
+  polarAreaChart: Polar area chart
+  radarChart: Radar chart
+  sum: Sum
+  taskStates: Task states

@@ -1,0 +1,35 @@
+steps:
+  - template: ./linux-dependencies.yml
+
+  - script: |
+      bux configure --paths.batchExplorer=$(System.DefaultWorkingDirectory) --print
+    displayName: Configure local paths
+
+  - script: npm run lint
+    displayName: Lint
+
+  - script: npm run build:clean
+    displayName: Build packages
+
+  - script: npm run test-models
+    workingDirectory: desktop
+    displayName: Test models against swagger
+
+  - script: |
+      export DISPLAY=:99
+      xvfb-run --server-args '-screen 0 1024x768x24' npm run test:all
+    displayName: Run tests
+
+  - task: PublishTestResults@2
+    inputs:
+      testRunner: 'JUnit'
+      testResultsFiles: '**/TEST*-*.xml'
+      searchFolder: $(System.DefaultWorkingDirectory)/build
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: cobertura
+      summaryFileLocation: $(System.DefaultWorkingDirectory)/build/*/coverage/cobertura.xml
+      reportDirectory: $(System.DefaultWorkingDirectory)/build/*/coverage/html
+  - script: codecov -t $(codecov.uploadToken)
+    displayName: Upload code coverage to codecov

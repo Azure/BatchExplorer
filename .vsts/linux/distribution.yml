@@ -1,17 +1,52 @@
 steps:
   - template: ../common/set-dist-vars.yml
   - template: ./linux-dependencies.yml
+  - template: ../common/download-i18n-artifacts.yml
+
+  - script: |
+      pwsh -File "$(System.DefaultWorkingDirectory)/Localize/copy-translations.ps1" -artifactsPath "$(Agent.BuildDirectory)/drop/loc"
+    displayName: 'Run copy-translations.ps1 with artifacts path (Linux)'
+
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      npm run build-and-pack
+      npm run build:package
     displayName: Build and pack
+
+  - template: ./publish-npm-package.yml
+    parameters:
+      packagePath: ./packages/common
+      packageName: "@batch/ui-common"
+
+  - template: ./publish-npm-package.yml
+    parameters:
+      packagePath: ./packages/arm-batch-rest
+      packageName: "@batch/arm-batch-rest"
+
+  - template: ./publish-npm-package.yml
+    parameters:
+      packagePath: ./packages/service
+      packageName: "@batch/ui-service"
+
+  - template: ./publish-npm-package.yml
+    parameters:
+      packagePath: ./packages/react
+      packageName: "@batch/ui-react"
+
+  - template: ./publish-npm-package.yml
+    parameters:
+      packagePath: ./packages/playground
+      packageName: "@batch/ui-playground"
+
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run package linux-manifest
+    workingDirectory: desktop
     displayName: Create manifest
+
   - template: ../common/generate-sbom.yml
+
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: linux

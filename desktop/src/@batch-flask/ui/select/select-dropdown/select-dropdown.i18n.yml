@@ -1,0 +1,7 @@
+select-dropdown:
+  noMatch: No match
+  noOptions: No options available
+  showItems: Showing {num} items
+  unselectAll: Unselect all
+  selected: Selected
+  unselected: Unselected

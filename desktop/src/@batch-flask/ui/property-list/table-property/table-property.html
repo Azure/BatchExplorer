@@ -1,0 +1,31 @@
+<bl-property-field>
+    <div propertyLabel>
+        {{label}}
+    </div>
+    <div propertyContent>
+        <table [attr.aria-label]="label">
+            <tr class="head" *ngIf="header">
+                <ng-template [ngTemplateOutlet]="header.content"></ng-template>
+            </tr>
+
+            <tr *ngFor="let row of displayRows;trackBy: trackRow; let first = first;" class="row">
+                <ng-template [ngTemplateOutlet]="row.content"></ng-template>
+            </tr>
+        </table>
+        <div class="expand-container" *ngIf="canExpand || canCollapse">
+            <bl-button
+                [type]="expanded ? 'round' : 'wide'"
+                color="light"
+                [attr.class]="expanded ? 'collapse' : 'expand'"
+                [attr.aria-expanded]="expanded"
+                [ngSwitch]="expanded"
+                (click)="toggleExpand($event)"
+                (keydown)="toggleExpand($event)">
+                <span *ngSwitchCase="true"><i class='fa fa-caret-up' aria-hidden="true"></i></span>
+                <span *ngSwitchCase="false">{{
+                    "Show " + (rows.length - defaultDisplay) + " more"
+                }}</span>
+            </bl-button>
+        </div>
+    </div>
+</bl-property-field>

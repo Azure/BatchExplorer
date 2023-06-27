@@ -1,0 +1,39 @@
+<div class="error-banner" *ngIf="error" role="alert">
+    <div class="content">
+        <div class="main-content">
+            <div class="main-info">
+                <h4>{{error.code}}</h4>
+                <p>{{error.message}}</p>
+            </div>
+            <div class="troubleshoot-btn">
+                <bl-clickable (do)="toggleDebugInformation()"
+                    [attr.aria-expanded]="showDebugInformation"
+                    aria-controls="troubleshoot-debug-info"
+                    role="button"
+                    name="troubleshoot"
+                    title="{{'server-error.debug-button-label' | i18n}}"
+                >
+                    <i class="fa fa-bug" aria-hidden="true"></i>
+                </bl-clickable>
+            </div>
+        </div>
+        <div class="details" *ngIf="error.details">
+            <div class="detail" *ngFor="let detail of error.details;trackBy: trackDetail">
+                <b>{{detail.key}}</b>: {{detail.value}}
+            </div>
+        </div>
+    </div>
+    <div class="troubleshoot-info" *ngIf="showDebugInformation"
+        id="troubleshoot-debug-info">
+        <table>
+            <tr *ngIf="error.requestId">
+                <td><b>Request ID</b></td>
+                <td>{{error.requestId}}</td>
+            </tr>
+            <tr *ngIf="error.timestamp">
+                <td><b>Time</b> </td>
+                <td>{{error.timestamp}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

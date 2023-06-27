@@ -1,0 +1,160 @@
+<bl-entity-configuration [value]="job" [enableJsonView]="jsonViewEnabled">
+    <bl-property-list>
+        <bl-property-group label="{{'common.general' | i18n}}" class="wide">
+            <bl-text-property label="{{'common.id' | i18n}}" [value]="decorator.id"></bl-text-property>
+            <bl-text-property label="{{'common.displayName' | i18n}}" [value]="decorator.displayName"></bl-text-property>
+            <bl-link-property label="{{'common.pool' | i18n}}" [value]="executionInfo.poolId" [link]="['/pools/', executionInfo.poolId]"></bl-link-property>
+            <bl-text-property label="{{'common.state' | i18n}}" [value]="decorator.state"></bl-text-property>
+            <bl-date-property label="{{'job.label.stateTransitionTime' | i18n}}" [value]="job.stateTransitionTime"></bl-date-property>
+            <bl-date-property label="{{'common.creationTime' | i18n}}" [value]="job.creationTime"></bl-date-property>
+            <bl-date-property label="{{'common.lastModified' | i18n}}" [value]="job.lastModified"></bl-date-property>
+            <bl-text-property label="{{'job.label.previousState' | i18n}}" [value]="decorator.previousState"></bl-text-property>
+            <bl-date-property label="{{'job.label.previousStateTransitionTime' | i18n}}" [value]="job.previousStateTransitionTime"></bl-date-property>
+            <bl-text-property label="{{'job.label.priority' | i18n}}" [value]="decorator.priority"></bl-text-property>
+            <bl-bool-property label="{{'job.label.taskDependencies' | i18n}}" [value]="decorator.usesTaskDependencies"></bl-bool-property>
+            <bl-text-property label="{{'job.label.onAllTasksComplete' | i18n}}" [value]="decorator.onAllTasksComplete"></bl-text-property>
+            <bl-text-property label="{{'job.label.onTaskFailure' | i18n}}" [value]="decorator.onTaskFailure"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group label="{{'job.label.constraints' | i18n}}" class="wide" [collapsed]="true">
+            <bl-text-property label="{{'job.label.maxTaskRetryCount' | i18n}}" [value]="constraints.maxTaskRetryCount"></bl-text-property>
+            <bl-text-property label="{{'job.label.maxWallClockTime' | i18n}}" [value]="constraints.maxWallClockTime"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group label="{{'job.label.environmentSettings' | i18n}}" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span>{{'job.label.envSettingCount' | i18n:{'count': environmentSettings?.size} }}</span>
+            </div>
+            <bl-text-property *ngFor="let setting of environmentSettings" label="{{setting.name}}" [value]="setting.value"></bl-text-property>
+            <bl-no-item [itemCount]="environmentSettings.size" [slimline]="true">
+                <span no-filter>{{'job.label.hasNoEnvVars' | i18n}}</span>
+            </bl-no-item>
+        </bl-property-group>
+
+        <bl-property-group label="{{'job.label.executionInfo' | i18n}}" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span *ngIf="!executionInfo.runtime">{{'job.label.jobNotStarted' | i18n}}</span>
+                <span *ngIf="executionInfo.runtime && !job?.executionInfo?.endTime">
+                    {{'job.label.currentlyActiveFor' | i18n:{'time': executionInfo.runtime} }}
+                </span>
+                <span *ngIf="job?.executionInfo?.endTime">
+                    {{'job.label.completedInTime' | i18n:{'time': executionInfo.runtime} }}
+                </span>
+            </div>
+
+            <bl-date-property label="{{'job.label.startTime' | i18n}}" [value]="job.executionInfo.startTime"></bl-date-property>
+            <bl-date-property label="{{'job.label.endTime' | i18n}}" [value]="job.executionInfo.endTime"></bl-date-property>
+            <bl-text-property label="{{'job.label.executionTime' | i18n}}" [value]="executionInfo.runtime"></bl-text-property>
+            <bl-text-property label="{{'job.label.terminationReason' | i18n}}" [value]="executionInfo.terminateReason"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group *ngIf="job.jobManagerTask;let managerTask" label="{{'job.label.jobManagerTask' | i18n}}" class="wide" [collapsed]="true">
+            <div collapsed-preview></div>
+            <bl-link-property label="{{'common.id' | i18n}}" [value]="managerTask.id" [link]="['/jobs', job.id, 'tasks', managerTask.id]"></bl-link-property>
+            <bl-text-property label="{{'common.displayName' | i18n}}" [value]="managerTask.displayName" *ngIf="managerTask.displayName"></bl-text-property>
+            <bl-text-property label="{{'job.label.commandLine' | i18n}}" [value]="managerTask.commandLine" [wrap]="true"></bl-text-property>
+            <bl-text-property label="{{'job.label.maxTaskRetryCount' | i18n}}" [value]="managerTask.constraints.maxTaskRetryCount"></bl-text-property>
+            <bl-text-property label="{{'job.label.maxWallClockTime' | i18n}}" [value]="managerTask.constraints.maxWallClockTime"></bl-text-property>
+            <bl-text-property label="{{'job.label.retentionTime' | i18n}}" [value]="managerTask.constraints.retentionTime"></bl-text-property>
+            <bl-text-property label="{{'job.label.requiredSlots' | i18n}}" [value]="managerTask.requiredSlots"></bl-text-property>
+            <bl-bool-property label="{{'job.label.killJobOnCompletion' | i18n}}" [value]="managerTask.killJobOnCompletion" yesNo="true"></bl-bool-property>
+            <bl-bool-property label="{{'job.label.runElevated' | i18n}}" [value]="managerTask.runElevated" yesNo="true"></bl-bool-property>
+            <bl-bool-property label="{{'job.label.runExclusive' | i18n}}" [value]="managerTask.runExclusive" yesNo="true"></bl-bool-property>
+            <bl-table-property label="{{'job.label.packageReferences' | i18n}}" *ngIf="managerTask.applicationPackageReferences.length > 0">
+                <bl-table-property-header>
+                    <div tp-column>{{'common.application' | i18n}}</div>
+                    <div tp-column>{{'common.version' | i18n}}</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let package of managerTask.applicationPackageReferences">
+                    <bl-tp-cell [value]="package.applicationId"></bl-tp-cell>
+                    <bl-tp-cell [value]="package.version"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <bl-table-property *ngIf="managerTask.environmentSettings.length > 0" label="{{'job.label.environmentSettings' | i18n}}">
+                <bl-table-property-header>
+                    <div tp-column>{{'common.key' | i18n}}</div>
+                    <div tp-column>{{'common.value' | i18n}}</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let setting of managerTask.environmentSettings">
+                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
+                    <bl-tp-cell [value]="setting.value"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <bl-resource-files-properties [files]="managerTask.resourceFiles"></bl-resource-files-properties>
+
+            <ng-container *ngIf="managerTask.containerSettings">
+                <bl-text-property label="{{'job.label.containerImageName' | i18n}}" [value]="managerTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="{{'job.label.containerRunOption' | i18n}}" [value]="managerTask.containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="{{'job.label.registryServer' | i18n}}" [value]="managerTask.containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="{{'job.label.registryUsername' | i18n}}" [value]="managerTask.containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
+        </bl-property-group>
+
+        <bl-property-group *ngIf="job.jobPreparationTask; let prepTask" label="{{'job.label.jobPreparationTask' | i18n}}" class="wide" [collapsed]="true">
+            <div collapsed-preview></div>
+            <bl-text-property label="{{'common.id' | i18n}}" [value]="prepTask.id"></bl-text-property>
+            <bl-text-property label="{{'job.label.commandLine' | i18n}}" [value]="prepTask.commandLine" [wrap]="true"></bl-text-property>
+            <bl-text-property label="{{'job.label.maxTaskRetryCount' | i18n}}" [value]="prepTask.constraints.maxTaskRetryCount"></bl-text-property>
+            <bl-text-property label="{{'job.label.maxWallClockTime' | i18n}}" [value]="prepTask.constraints.maxWallClockTime"></bl-text-property>
+            <bl-text-property label="{{'job.label.retentionTime' | i18n}}" [value]="prepTask.constraints.retentionTime"></bl-text-property>
+            <bl-bool-property label="{{'job.label.waitForSuccess' | i18n}}" [value]="prepTask.waitForSuccess" yesNo="true"></bl-bool-property>
+            <bl-bool-property label="{{'job.label.runElevated' | i18n}}" [value]="prepTask.runElevated" yesNo="true"></bl-bool-property>
+            <bl-bool-property label="{{'job.label.rerunOnNodeReboot' | i18n}}" [value]="prepTask.rerunOnNodeRebootAfterSuccess" yesNo="true"></bl-bool-property>
+            <bl-resource-files-properties [files]="prepTask.resourceFiles"></bl-resource-files-properties>
+
+            <bl-table-property *ngIf="prepTask.environmentSettings.length > 0" label="{{'job.label.environmentSettings' | i18n}}">
+                <bl-table-property-header>
+                    <div tp-column>{{'common.key' | i18n}}</div>
+                    <div tp-column>{{'common.value' | i18n}}</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let setting of prepTask.environmentSettings">
+                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
+                    <bl-tp-cell [value]="setting.value"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <ng-container *ngIf="prepTask.containerSettings">
+                <bl-text-property label="{{'job.label.containerImageName' | i18n}}" [value]="prepTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="{{'job.label.containerRunOption' | i18n}}" [value]="prepTask.containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="{{'job.label.registryServer' | i18n}}" [value]="prepTask.containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="{{'job.label.registryUsername' | i18n}}" [value]="prepTask.containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
+        </bl-property-group>
+
+        <bl-property-group *ngIf="job.jobReleaseTask; let releaseTask" label="{{'job.label.jobReleaseTask' | i18n}}" class="wide" [collapsed]="true">
+            <div collapsed-preview></div>
+            <bl-text-property label="{{'common.id' | i18n}}" [value]="releaseTask.id"></bl-text-property>
+            <bl-text-property label="{{'job.label.commandLine' | i18n}}" [value]="releaseTask.commandLine" [wrap]="true"></bl-text-property>
+            <bl-text-property label="{{'job.label.maxWallClockTime' | i18n}}" [value]="releaseTask.maxWallClockTime"></bl-text-property>
+            <bl-text-property label="{{'job.label.retentionTime' | i18n}}" [value]="releaseTask.retentionTime"></bl-text-property>
+            <bl-bool-property label="{{'job.label.runElevated' | i18n}}" [value]="releaseTask.runElevated" yesNo="true"></bl-bool-property>
+            <bl-resource-files-properties [files]="releaseTask.resourceFiles"></bl-resource-files-properties>
+
+            <bl-table-property *ngIf="releaseTask.environmentSettings.length > 0" label="{{'job.label.environmentSettings' | i18n}}">
+                <bl-table-property-header>
+                    <div tp-column>{{'common.key' | i18n}}</div>
+                    <div tp-column>{{'common.value' | i18n}}</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let setting of releaseTask.environmentSettings">
+                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
+                    <bl-tp-cell [value]="setting.value"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <ng-container *ngIf="releaseTask.containerSettings">
+                <bl-text-property label="{{'job.label.containerImageName' | i18n}}" [value]="releaseTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="{{'job.label.containerRunOptions' | i18n}}" [value]="releaseTask.containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="{{'job.label.registryServer' | i18n}}" [value]="releaseTask.containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="{{'job.label.registryUsername' | i18n}}" [value]="releaseTask.containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
+        </bl-property-group>
+
+        <bl-property-group label="{{'common.metadata' | i18n}}" class="wide" [collapsed]="true" [edit]="job.editable ? editMetadata : null">
+            <div collapsed-preview>
+                <span>{{'job.label.metadataItemCount' | i18n:{'count': jobMetadata?.size} }}</span>
+            </div>
+            <bl-text-property *ngFor="let metaItem of jobMetadata" label="{{metaItem.name}}" [value]="metaItem.value"></bl-text-property>
+            <bl-no-item [itemCount]="jobMetadata.size" [slimline]="true">
+                <span no-filter>{{'job.label.hasNoMetadata' | i18n}}</span>
+            </bl-no-item>
+        </bl-property-group>
+    </bl-property-list>
+</bl-entity-configuration>

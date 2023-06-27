@@ -1,0 +1,95 @@
+productName: "BatchExplorer"
+appId: "com.microsoft.azure.BatchExplorer"
+
+# Package electron code into a asar archive, except for .node binaries
+# (see https://github.com/electron-userland/electron-builder/issues/4656)
+asar: true
+asarUnpack: "**/*.node"
+
+files:
+  - "build/"
+  - "package.json"
+  - "dev-app-update.yml"
+  - "!node_modules/jschardet/"
+  - "!node_modules/@batch/"
+
+extraResources:
+  - from: "python/dist/main"
+    to: "python-rpc"
+    filter:
+      - "**/*"
+  - "ThirdPartyNotices.txt"
+  - "data"
+  - "i18n-deprecated"
+  - "node_modules/jschardet/"
+
+protocols:
+  - name: "BatchExplorer protocol"
+    role: "Viewer"
+    schemes:
+     - ms-batchlabs
+     - ms-batch-explorer
+
+# Mac OS configuration
+mac:
+  icon: "src/app/assets/images/icon.icns"
+  target:
+    - "dmg"
+    - "zip"
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: "../.vsts/darwin/entitlements.plist"
+  entitlementsInherit: "../.vsts/darwin/entitlements.plist"
+  extendInfo:
+    # Required for hardening via ESRP
+    - CSFlags: 65536
+
+# Config for OSX dmg
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: "link"
+      path: "/Applications"
+
+# Windows configuration
+win:
+  icon: "src/app/assets/images/icon.ico"
+  target:
+    - "zip"
+    - "nsis"
+
+# Config for the windows installer
+nsis:
+  oneClick: true
+  perMachine: true
+
+# Linux configuration
+linux:
+  category: Development
+  target:
+    - "AppImage"
+    - "deb"
+    - "rpm"
+
+deb:
+  depends:
+    # --- Default START
+    - gconf2
+    - gconf-service
+    - libnotify4
+    - libappindicator1
+    - libxtst6
+    - libnss3
+    # --- Default END
+    - libsecret-1-0 # This is needed for keytar on linux
+
+directories:
+  buildResources: "resources"
+  output: "release"
+
+publish:
+  provider: "generic"
+  url: "https://batchlabsdist.blob.core.windows.net/releases"

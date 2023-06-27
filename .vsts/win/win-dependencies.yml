@@ -1,12 +1,16 @@
 steps:
   - template: ../dependencies.yml
-
-  # KLUDGE: Use `npm i` instead of `npm ci` due to this issue:
-  #         https://github.com/npm/cli/issues/558#issuecomment-580392554
   - powershell: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       exec { Write-Host "Node.js version" $(node --version) }
       exec { Write-Host "NPM version" $(npm --version) }
-      exec { npm install --loglevel=error }
+      exec { npm ci }
     displayName: Install Windows dependencies
+  - powershell: |
+      . ../../.vsts/win/exec.ps1
+      $ErrorActionPreference = "Stop"
+      exec { npm pack }
+      exec { npm install -g batch-bux-1.0.0.tgz }
+    workingDirectory: util/bux
+    displayName: Install Batch Utility CLI (bux)

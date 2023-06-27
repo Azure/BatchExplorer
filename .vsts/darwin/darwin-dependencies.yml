@@ -11,3 +11,8 @@ steps:
       echo "NPM version $(npm --version)"
       npm ci
     displayName: Install MacOS JavaScript dependencies
+  - script: |
+      cd util/bux
+      npm pack
+      npm install -g batch-bux-1.0.0.tgz
+    displayName: Install Batch Utility CLI (bux)

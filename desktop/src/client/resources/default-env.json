@@ -1,0 +1,12 @@
+[
+  {
+    "id": "<unique-id>",
+    "name": "<My friendly name>",
+    "aadUrl": "https://login.microsoftonline.com/",
+    "arm": "https://management.azure.com/",
+    "batch": "https://batch.core.windows.net/",
+    "msGraph": "https://graph.microsoft.com/",
+    "appInsights": "https://api.applicationinsights.io/",
+    "storageEndpoint": "core.windows.net"
+  }
+]
