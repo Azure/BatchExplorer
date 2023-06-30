@@ -1,9 +1,9 @@
 {
-  "lib.react.create-account-action.account": "Account",
-  "lib.react.create-account-action.location": "Location",
-  "lib.react.create-account-action.resourceGroup": "Resource Group",
-  "lib.react.create-account-action.storageAccount": "Storage Account",
-  "lib.react.create-account-action.subscription": "Subscription",
+  "lib.react.account.parameter.name.label": "Account name",
+  "lib.react.arm.location": "Location",
+  "lib.react.arm.resourceGroup": "Resource group",
+  "lib.react.arm.storageAccount": "Storage account",
+  "lib.react.arm.subscription": "Subscription",
   "lib.react.form.buttons.apply": "Apply",
   "lib.react.form.buttons.discardChanges": "Discard changes"
 }

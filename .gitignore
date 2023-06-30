@@ -13,6 +13,5 @@ Localize/out/
 /packages/playground/resources/i18n/*
 /packages/react/resources/i18n/*
 /packages/service/resources/i18n/*
-/util/bux/resources/i18n
 web/dev-server/resources/i18n/*
 desktop/resources/i18n/*

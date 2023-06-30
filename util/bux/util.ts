@@ -107,8 +107,8 @@ export function copyFiles(sourcePath: string, destPath: string) {
 export async function buildTranslations(
     sourcePath: string,
     destPathRESJSON: string,
-    packageName?: string,
-    platform?: "web" | "desktop"
+    outputPath: string,
+    packageName?: string
 ) {
     if (!sourcePath) {
         error("Failed to build translations: No source path specified");
@@ -130,16 +130,21 @@ export async function buildTranslations(
         });
     }
 
+    if (!outputPath) {
+        error("Failed to build translations: No output path specified");
+        return;
+    }
+
     await createEnglishTranslations(
         sourcePath,
         destPathRESJSON,
-        packageName,
-        platform
+        outputPath,
+        packageName
     );
 
-    // Merge translations if a platform is provided
-    if (platform) {
-        await mergeAllTranslations(platform);
+    // If no packageName, merge all translations (for web/desktop). packageName indicates package-specific operation.
+    if (!packageName) {
+        await mergeAllTranslations(outputPath);
     }
 }
 

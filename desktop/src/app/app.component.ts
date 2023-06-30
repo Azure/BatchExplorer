@@ -16,6 +16,7 @@ import { BrowserDependencyName } from "@batch/ui-react";
 import { StorageAccountServiceImpl, SubscriptionServiceImpl } from "@batch/ui-service";
 import { registerIcons } from "app/config";
 import {
+    AppTranslationsLoaderService,
     AuthorizationHttpService,
     AuthService,
     BatchAccountService,
@@ -34,7 +35,6 @@ import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
 import { LiveLocationService } from "@batch/ui-service/lib/location";
 import { LiveResourceGroupService } from "@batch/ui-service/lib/resource-group";
 import { DesktopLocalizer } from "./localizer/desktop-localizer";
-import { AppLocaleService } from "app/services";
 
 @Component({
     selector: "bl-app",
@@ -69,10 +69,8 @@ export class AppComponent implements OnInit, OnDestroy {
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
         private workspaceService: WorkspaceService,
-        private appLocaleService: AppLocaleService
+        private translationsLoaderService: AppTranslationsLoaderService
     ) {
-        const localizer = new DesktopLocalizer(this.appLocaleService);
-        localizer.loadTranslations().then(() => {
             // Initialize shared component lib environment
             initEnvironment(new DefaultBrowserEnvironment(
             {
@@ -82,7 +80,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 [DependencyName.Clock]: () => new StandardClock(),
                 // TODO: Create an adapter which hooks up to the desktop logger
                 [DependencyName.LoggerFactory]: () => createConsoleLogger,
-                [DependencyName.Localizer]: () => localizer,
+                [DependencyName.Localizer]: () => new DesktopLocalizer(this.translationsLoaderService),
                 [DependencyName.HttpClient]:
                     () => new BatchExplorerHttpClient(authService),
                 [BrowserDependencyName.LocationService]: () =>
@@ -99,7 +97,6 @@ export class AppComponent implements OnInit, OnDestroy {
                     () => new DefaultFormLayoutProvider(),
             }
             ));
-        });
 
         this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
         this._initWorkspaces();

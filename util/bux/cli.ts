@@ -34,7 +34,7 @@ yargs
         command: "build-translations",
         aliases: ["translate"],
         describe:
-            "Localize YAML files in src and convert them to RESJSON in dest",
+            "Localize YAML files, convert them to RESJSON, and generate English JSON file",
         builder: (yargs: yargs.Argv) =>
             yargs
                 .option("src", {
@@ -44,7 +44,13 @@ yargs
                 })
                 .option("dest", {
                     describe:
-                        "The destination directory for RESJSON output files",
+                        "The destination directory for the English RESJSON file used by the localization team",
+                    default: "",
+                    demandOption: true,
+                })
+                .option("outputPath", {
+                    describe:
+                        "The directory that contains the generated English JSON translation file",
                     default: "",
                     demandOption: true,
                 })
@@ -53,19 +59,13 @@ yargs
                         "The name of the module (e.g. lib.common) that translations will be built for",
                     default: "",
                     demandOption: false,
-                })
-                .option("platform", {
-                    describe:
-                        "The target platform ('web' or 'desktop') for merged translations",
-                    choices: ["web", "desktop"],
-                    demandOption: false,
                 }),
         handler: (argv) =>
             buildTranslations(
                 argv.src,
                 argv.dest,
-                argv.packageName,
-                argv.platform as "web" | "desktop" | undefined
+                argv.outputPath,
+                argv.packageName
             ),
     })
     .command({

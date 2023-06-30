@@ -1,0 +1,5 @@
+arm:
+  location: Location
+  resourceGroup: Resource group
+  storageAccount: Storage account
+  subscription: Subscription

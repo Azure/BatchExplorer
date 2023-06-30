@@ -18,7 +18,7 @@
     "build:clean": "run-s clean compile",
     "build:test": "run-s build test",
     "bux": "bux",
-    "build-translations": "bux build-translations --src src/ui-react --dest i18n --packageName lib.react",
+    "build-translations": "bux build-translations --src src/ui-react --dest i18n --outputPath resources/i18n/json --packageName lib.react",
     "compile": "run-p compile:*",
     "compile:esm": "tsc -b ./config/tsconfig.build.json",
     "compile:cjs": "tsc -b ./config/tsconfig.cjs.json",

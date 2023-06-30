@@ -1,6 +1,0 @@
-create-account-action:
-  account: Account
-  location: Location
-  resourceGroup: Resource Group
-  storageAccount: Storage Account
-  subscription: Subscription

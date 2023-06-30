@@ -16,17 +16,13 @@ const writeFile = promisify(fs.writeFile);
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
-export async function mergeAllTranslations(platform: "web" | "desktop") {
+export async function mergeAllTranslations(outputPath: string) {
     const currentDirectory = process.cwd();
     const rootDir = path.resolve(currentDirectory, "..");
-    const outputDir =
-        platform === "web"
-            ? path.join(rootDir, "web/dev-server/resources/i18n")
-            : path.join(rootDir, "desktop/resources/i18n");
 
     // Ensure the output directory exists
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
+    if (!fs.existsSync(outputPath)) {
+        fs.mkdirSync(outputPath, { recursive: true });
     }
 
     // Define resource directories (absolute paths)
@@ -45,6 +41,7 @@ export async function mergeAllTranslations(platform: "web" | "desktop") {
         createEnglishTranslations(
             path.join(rootDir, "packages/react/src/ui-react"),
             path.join(rootDir, "packages/react/i18n"),
+            path.join(rootDir, "packages/react/resources/i18n/json"),
             "lib.react"
         )
     );
@@ -52,6 +49,7 @@ export async function mergeAllTranslations(platform: "web" | "desktop") {
         createEnglishTranslations(
             path.join(rootDir, "packages/playground/src/ui-playground"),
             path.join(rootDir, "packages/playground/i18n"),
+            path.join(rootDir, "packages/playground/resources/i18n/json"),
             "lib.playground"
         )
     );
@@ -59,6 +57,7 @@ export async function mergeAllTranslations(platform: "web" | "desktop") {
         createEnglishTranslations(
             path.join(rootDir, "packages/common/src/ui-common"),
             path.join(rootDir, "packages/common/i18n"),
+            path.join(rootDir, "packages/common/resources/i18n/json"),
             "lib.common"
         )
     );
@@ -66,6 +65,7 @@ export async function mergeAllTranslations(platform: "web" | "desktop") {
         createEnglishTranslations(
             path.join(rootDir, "packages/service/src/ui-service"),
             path.join(rootDir, "packages/service/i18n"),
+            path.join(rootDir, "packages/service/resources/i18n/json"),
             "lib.service"
         )
     );
@@ -100,7 +100,7 @@ export async function mergeAllTranslations(platform: "web" | "desktop") {
 
     // Write the merged translations to the output directory
     for (const langID of Object.keys(mergedTranslations)) {
-        const outputFile = path.join(outputDir, `resources.${langID}.json`);
+        const outputFile = path.join(outputPath, `resources.${langID}.json`);
 
         // Read existing translations in the output file if it exists
         let existingTranslations = {};
@@ -129,15 +129,15 @@ export async function mergeAllTranslations(platform: "web" | "desktop") {
         );
     }
 
-    console.log(`Merged translations have been saved in ${outputDir}`);
+    console.log(`Merged translations have been saved in ${outputPath}`);
 }
 
 // Function to generate English file for a package from its YAML files
 export async function createEnglishTranslations(
     sourcePath: string,
     destPath: string,
-    packageName?: string,
-    platform?: "web" | "desktop"
+    outputPath: string,
+    packageName?: string
 ) {
     const translations = await loadDevTranslations(sourcePath, packageName);
     const content = JSON.stringify(translations, null, 2).replace(/\n/g, EOL);
@@ -171,32 +171,7 @@ export async function createEnglishTranslations(
     }
 
     const cleanedJsonContent = JSON.stringify(cleanContent, null, 2);
-    let resourcesJsonPath = "";
-
-    if (platform == "web") {
-        resourcesJsonPath = path.join(
-            path.dirname(path.dirname(sourcePath)),
-            "dev-server",
-            "resources",
-            "i18n",
-            "resources.en.json"
-        );
-    } else if (platform == "desktop") {
-        resourcesJsonPath = path.join(
-            path.dirname(path.dirname(sourcePath)),
-            "resources",
-            "i18n",
-            "resources.en.json"
-        );
-    } else {
-        resourcesJsonPath = path.join(
-            path.dirname(path.dirname(sourcePath)),
-            "resources",
-            "i18n",
-            "json",
-            "resources.en.json"
-        );
-    }
+    const resourcesJsonPath = path.join(outputPath, "resources.en.json");
 
     // Check if the directory exists and create it if it doesn't
     if (!fs.existsSync(path.dirname(resourcesJsonPath))) {
@@ -217,13 +192,11 @@ export async function loadDevTranslations(
     packageName?: string
 ): Promise<{ [key: string]: string }> {
     const loader = new DevTranslationsLoader();
-    console.log("Loading dev translations...");
     let hasDuplicate = false;
     const translations = await loader.load(sourcePath, (key, file) => {
         console.warn(`${key} is being duplicated. "${file}"`);
         hasDuplicate = true;
     });
-    console.log(`Loaded dev translations`);
     if (hasDuplicate) {
         throw new Error();
     }
