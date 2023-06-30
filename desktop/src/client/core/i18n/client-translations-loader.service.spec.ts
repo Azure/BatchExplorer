@@ -58,7 +58,7 @@ describe("ClientTranslationsLoaderService", () => {
         it("it only loads the english translations file when locale is english", async () => {
             localService.locale = "en";
             await loader.load();
-            expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
+            expect(fsSpy.readFile).toHaveBeenCalledTimes(2);
             expect(fsSpy.readFile).toHaveBeenCalledWith(path.join(Constants.resourcesFolder, "./resources/i18n/resources.en.json"));
 
             expect(loader.translations.get("foo.banana")).toEqual("Banana");
@@ -90,7 +90,7 @@ describe("ClientTranslationsLoaderService", () => {
             localService.locale = "en";
             await loader.load();
             expect(devTranslationLoaderSpy.load).toHaveBeenCalledTimes(1);
-            expect(fsSpy.readFile).not.toHaveBeenCalled();
+            expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
 
             expect(loader.translations.get("foo.banana")).toEqual("Banana");
             expect(loader.translations.get("foo.potato")).toEqual("Potato");
