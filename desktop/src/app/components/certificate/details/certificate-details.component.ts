@@ -8,7 +8,7 @@ import { Subscription } from "rxjs";
 import { CertificateCommands } from "../action";
 import { CertificateView } from "@batch/ui-service";
 import {
-    CertificateDisplay,
+    CertificatePropertyList,
     CertificateDisplayProps
 } from "@batch/ui-react/lib/components";
 
@@ -36,7 +36,7 @@ export class CertificateDetailsComponent implements OnInit, OnDestroy {
     public data: EntityView<Certificate, CertificateParams>;
     public CertificateState = CertificateState;
 
-    public CertificateDisplay: React.FC<CertificateDisplayProps>;
+    public CertificatePropertyList: React.FC<CertificateDisplayProps>;
     public certificateDisplayProps: CertificateDisplayProps;
 
     private _paramsSubscriber: Subscription;
@@ -47,7 +47,7 @@ export class CertificateDetailsComponent implements OnInit, OnDestroy {
         private certificateService: CertificateService,
         private router: Router) {
 
-        this.CertificateDisplay = CertificateDisplay;
+        this.CertificatePropertyList = CertificatePropertyList;
         this.certificateDisplayProps = {};
 
         this.data = this.certificateService.view();
