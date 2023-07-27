@@ -25,7 +25,7 @@
     "bundle:dev": "webpack --env.dev",
     "bundle:prod": "webpack",
     "bux": "bux",
-    "compile": "run-s build-translations && tsc -b ./config/tsconfig.build.json",
+    "compile": "npm run build-translations && tsc -b ./config/tsconfig.build.json",
     "clean": "run-p clean:*",
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",

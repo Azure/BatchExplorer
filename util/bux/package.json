@@ -19,7 +19,7 @@
   "scripts": {
     "build": "tsc -b ./config/tsconfig.build.json && node ./bin/bux chmodx ./bin/bux",
     "bux": "npm run build && node ./bin/bux",
-    "clean": "rimraf ./lib && rimraf ./build && rimraf ./resources",
+    "clean": "rimraf ./lib && rimraf ./build",
     "lint": "eslint .",
     "lint:fix": "npm run lint --fix",
     "build:clean": "run-s clean build",

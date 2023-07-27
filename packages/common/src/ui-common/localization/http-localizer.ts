@@ -48,18 +48,29 @@ export class HttpLocalizer implements Localizer {
         try {
             this.translations = await this.fetchTranslations(languageToLoad);
         } catch (error) {
-            if (error instanceof Error) {
-                throw new Error(
-                    `Failed to load translations for '${languageToLoad}': ${error.message}`
+            // Fall back to English if translations are not available for the selected locale
+            if (languageToLoad !== "en") {
+                console.error(
+                    `Failed to load translations for '${languageToLoad}', falling back to English: ${
+                        (error as Error).message
+                    }`
+                );
+                languageToLoad = "en";
+                this.translations = await this.fetchTranslations(
+                    languageToLoad
                 );
             } else {
-                throw error;
+                throw new Error(
+                    `Failed to load translations for '${languageToLoad}': ${
+                        (error as Error).message
+                    }`
+                );
             }
         }
     }
 
     private async fetchTranslations(lang: string): Promise<Translations> {
-        const response = await fetch(`./resources/i18n/resources.${lang}.json`);
+        const response = await fetch(`/resources/i18n/resources.${lang}.json`);
 
         if (!response.ok) {
             throw new Error(
