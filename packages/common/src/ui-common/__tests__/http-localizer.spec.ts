@@ -1,19 +1,13 @@
 import { HttpLocalizer } from "../localization/http-localizer";
-import { CustomGlobal } from "./setup-tests";
-
-declare const global: CustomGlobal;
+import { Mutable } from "../types";
 
 describe("HttpLocalizer", () => {
     let httpLocalizer: HttpLocalizer;
     let fetchMock: jest.Mock;
 
-    beforeAll(() => {
-        const globalObject: CustomGlobal = global;
-        globalObject.window = {};
-        globalObject.navigator = {
-            language: "en-US",
-        };
-    });
+    const navigator: Mutable<typeof globalThis.navigator> =
+        globalThis.navigator;
+    const originalLanguage = globalThis.navigator.language;
 
     beforeEach(() => {
         httpLocalizer = new HttpLocalizer();
@@ -21,8 +15,8 @@ describe("HttpLocalizer", () => {
         global.fetch = fetchMock;
     });
 
-    afterEach(() => {
-        fetchMock.mockRestore();
+    afterAll(() => {
+        navigator.language = originalLanguage;
     });
 
     test("Load the correct translation file based on the locale", async () => {
@@ -34,6 +28,7 @@ describe("HttpLocalizer", () => {
             })
         );
 
+        navigator.language = "en-US";
         await httpLocalizer.loadTranslations();
         expect(fetchMock).toHaveBeenCalledWith(
             "/resources/i18n/resources.en.json"
@@ -51,8 +46,7 @@ describe("HttpLocalizer", () => {
         );
 
         // Simulate a French locale
-        const globalObject: CustomGlobal = global;
-        globalObject.navigator.language = "fr-FR";
+        navigator.language = "fr-FR";
         await httpLocalizer.loadTranslations();
         expect(fetchMock).toHaveBeenCalledWith(
             "/resources/i18n/resources.fr.json"
@@ -70,8 +64,7 @@ describe("HttpLocalizer", () => {
         );
 
         // Simulate an invalid locale
-        const globalObject: CustomGlobal = global;
-        globalObject.navigator.language = "abc";
+        navigator.language = "abc";
         await httpLocalizer.loadTranslations();
         expect(fetchMock).toHaveBeenCalledWith(
             "/resources/i18n/resources.en.json"
@@ -79,6 +72,7 @@ describe("HttpLocalizer", () => {
     });
 
     test("Throw error if translations have not been loaded", () => {
+        navigator.language = "en-US";
         expect(() => httpLocalizer.translate("hello")).toThrowError(
             "Translation strings are not loaded hello"
         );
@@ -93,6 +87,7 @@ describe("HttpLocalizer", () => {
             })
         );
 
+        navigator.language = "en-US";
         await httpLocalizer.loadTranslations();
         expect(httpLocalizer.translate("notFound")).toEqual("notFound");
     });
