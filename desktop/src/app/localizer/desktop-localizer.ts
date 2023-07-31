@@ -1,3 +1,4 @@
+import { app } from 'electron';
 import { Localizer } from "@batch/ui-common/lib/localization";
 import { AppTranslationsLoaderService } from "app/services";
 
@@ -18,6 +19,14 @@ export class DesktopLocalizer implements Localizer {
             return translation;
         } else {
             return message;
+        }
+    }
+
+    getLocale(): string {
+        if (process.type === 'renderer') {
+            return navigator.language;
+        } else {
+            return app.getLocale();
         }
     }
 }

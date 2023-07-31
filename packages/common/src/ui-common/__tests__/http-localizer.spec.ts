@@ -1,13 +1,11 @@
 import { HttpLocalizer } from "../localization/http-localizer";
-import { Mutable } from "../types";
 
 describe("HttpLocalizer", () => {
     let httpLocalizer: HttpLocalizer;
     let fetchMock: jest.Mock;
 
-    const navigator: Mutable<typeof globalThis.navigator> =
-        globalThis.navigator;
-    const originalLanguage = globalThis.navigator.language;
+    const testTranslations = { hello: "world" };
+    const frenchTranslations = { bonjour: "monde" };
 
     beforeEach(() => {
         httpLocalizer = new HttpLocalizer();
@@ -15,12 +13,7 @@ describe("HttpLocalizer", () => {
         global.fetch = fetchMock;
     });
 
-    afterAll(() => {
-        navigator.language = originalLanguage;
-    });
-
     test("Load the correct translation file based on the locale", async () => {
-        const testTranslations = { hello: "world" };
         fetchMock.mockImplementationOnce(() =>
             Promise.resolve({
                 ok: true,
@@ -28,7 +21,7 @@ describe("HttpLocalizer", () => {
             })
         );
 
-        navigator.language = "en-US";
+        jest.spyOn(httpLocalizer, "getLocale").mockReturnValue("en-US");
         await httpLocalizer.loadTranslations();
         expect(fetchMock).toHaveBeenCalledWith(
             "/resources/i18n/resources.en.json"
@@ -37,16 +30,15 @@ describe("HttpLocalizer", () => {
     });
 
     test("Load the correct translation file for French locale", async () => {
-        const testTranslations = { bonjour: "monde" };
         fetchMock.mockImplementationOnce(() =>
             Promise.resolve({
                 ok: true,
-                json: () => Promise.resolve(testTranslations),
+                json: () => Promise.resolve(frenchTranslations),
             })
         );
 
         // Simulate a French locale
-        navigator.language = "fr-FR";
+        jest.spyOn(httpLocalizer, "getLocale").mockReturnValue("fr-FR");
         await httpLocalizer.loadTranslations();
         expect(fetchMock).toHaveBeenCalledWith(
             "/resources/i18n/resources.fr.json"
@@ -55,7 +47,6 @@ describe("HttpLocalizer", () => {
     });
 
     test("Default to English if locale not found", async () => {
-        const testTranslations = { hello: "world" };
         fetchMock.mockImplementationOnce(() =>
             Promise.resolve({
                 ok: true,
@@ -64,7 +55,7 @@ describe("HttpLocalizer", () => {
         );
 
         // Simulate an invalid locale
-        navigator.language = "abc";
+        jest.spyOn(httpLocalizer, "getLocale").mockReturnValue("abc");
         await httpLocalizer.loadTranslations();
         expect(fetchMock).toHaveBeenCalledWith(
             "/resources/i18n/resources.en.json"
@@ -72,14 +63,13 @@ describe("HttpLocalizer", () => {
     });
 
     test("Throw error if translations have not been loaded", () => {
-        navigator.language = "en-US";
+        jest.spyOn(httpLocalizer, "getLocale").mockReturnValue("en-US");
         expect(() => httpLocalizer.translate("hello")).toThrowError(
             "Translation strings are not loaded hello"
         );
     });
 
     test("Return original message if no translation found", async () => {
-        const testTranslations = { hello: "world" };
         fetchMock.mockImplementationOnce(() =>
             Promise.resolve({
                 ok: true,
@@ -87,7 +77,7 @@ describe("HttpLocalizer", () => {
             })
         );
 
-        navigator.language = "en-US";
+        jest.spyOn(httpLocalizer, "getLocale").mockReturnValue("en-US");
         await httpLocalizer.loadTranslations();
         expect(httpLocalizer.translate("notFound")).toEqual("notFound");
     });

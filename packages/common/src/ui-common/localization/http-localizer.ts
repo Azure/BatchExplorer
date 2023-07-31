@@ -32,14 +32,11 @@ export class HttpLocalizer implements Localizer {
             "zh-TW": "zh-Hant",
         };
 
-        let languageToLoad;
+        let languageToLoad = languageMap[this.getLocale()];
 
-        if (languageMap[navigator.language]) {
-            // Check for four-digit codes in the map first
-            languageToLoad = languageMap[navigator.language];
-        } else {
+        if (!languageToLoad) {
             // If not found, split and check for two-digit codes
-            const language = navigator.language.split("-")[0];
+            const language = this.getLocale().split("-")[0];
             languageToLoad = languageMap[language]
                 ? languageMap[language]
                 : "en";
@@ -91,5 +88,9 @@ export class HttpLocalizer implements Localizer {
         } else {
             return message;
         }
+    }
+
+    getLocale(): string {
+        return navigator.language;
     }
 }
