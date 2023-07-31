@@ -35,18 +35,3 @@ jobs:
         - ImageOverride -equals BatchExplorerBuildImage-Linux
     steps:
        - template: ./linux/test.yml
-
-  - job: RegisterDependencies
-    displayName: Register dependencies
-    pool:
-      name: Azure-Pipelines-EO-Batch-Explorer
-      demands:
-        - ImageOverride -equals BatchExplorerBuildImage-Windows
-    condition: ne(variables['Build.Reason'], 'PullRequest')
-    variables:
-      EnableDetectorPip: true
-    continueOnError: true
-    steps:
-      - template: ./win/win-dependencies.yml
-      - task: ComponentGovernanceComponentDetection@0
-        displayName: "Component Detection"
