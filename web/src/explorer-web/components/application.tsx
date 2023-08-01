@@ -15,6 +15,7 @@ import { Header } from "./layout/header";
 import { Main } from "./layout/main";
 import { Stack, IStackTokens } from "@fluentui/react/";
 import { PrimaryButton } from "@fluentui/react/lib/Button";
+import { translate } from "@batch/ui-common";
 
 //DefaultButton
 const dropdownStyles: Partial<IDropdownStyles> = {
@@ -51,13 +52,16 @@ export const Application: React.FC = () => {
             <BrowserRouter>
                 <Header>
                     <Stack horizontal tokens={stackTokens}>
-                        <PrimaryButton text="Home" href="/"></PrimaryButton>
                         <PrimaryButton
-                            text="Editor"
+                            text={translate("application.buttons.home")}
+                            href="/"
+                        ></PrimaryButton>
+                        <PrimaryButton
+                            text={translate("application.buttons.editor")}
                             href="/editor"
                         ></PrimaryButton>
                         <PrimaryButton
-                            text="Playground"
+                            text={translate("application.buttons.playground")}
                             href="/playground"
                         ></PrimaryButton>
 

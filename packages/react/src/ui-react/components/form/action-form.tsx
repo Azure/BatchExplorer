@@ -148,7 +148,9 @@ export const ActionForm = <V extends FormValues>(
     if (hideSubmitButton !== true) {
         // Default submit button
         allButtons.push({
-            label: props.submitButtonLabel ?? translate("form.buttons.apply"),
+            label:
+                props.submitButtonLabel ??
+                translate("lib.react.form.buttons.apply"),
             primary: true,
             submitForm: true,
             disabled: submitting === true,
@@ -195,7 +197,8 @@ export const ActionForm = <V extends FormValues>(
         // Default reset (discard) button
         allButtons.push({
             label:
-                submitButtonLabel ?? translate("form.buttons.discardChanges"),
+                submitButtonLabel ??
+                translate("lib.react.form.buttons.discardChanges"),
             disabled: submitting === true,
             onClick: () => {
                 action.form.reset();

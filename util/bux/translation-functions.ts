@@ -13,9 +13,130 @@ type NestedStringMap<V> = StringMap<V> | StringMap<StringMap<V>>;
 
 const writeFile = promisify(fs.writeFile);
 
+const readFileAsync = promisify(fs.readFile);
+const writeFileAsync = promisify(fs.writeFile);
+
+export async function mergeAllTranslations(outputPath: string) {
+    const currentDirectory = process.cwd();
+    const rootDir = path.resolve(currentDirectory, "..");
+
+    // Ensure the output directory exists
+    if (!fs.existsSync(outputPath)) {
+        fs.mkdirSync(outputPath, { recursive: true });
+    }
+
+    // Define resource directories (absolute paths)
+    const resourceDirs = [
+        path.join(rootDir, "packages/common/resources/i18n/json"),
+        path.join(rootDir, "packages/playground/resources/i18n/json"),
+        path.join(rootDir, "packages/react/resources/i18n/json"),
+        path.join(rootDir, "packages/service/resources/i18n/json"),
+    ];
+
+    // Build the English file for each package before building web/desktop translations (it is a prerequisite)
+
+    const buildPackageEnglishPromises = [];
+
+    buildPackageEnglishPromises.push(
+        createEnglishTranslations(
+            path.join(rootDir, "packages/react/src/ui-react"),
+            path.join(rootDir, "packages/react/i18n"),
+            path.join(rootDir, "packages/react/resources/i18n/json"),
+            "lib.react"
+        )
+    );
+    buildPackageEnglishPromises.push(
+        createEnglishTranslations(
+            path.join(rootDir, "packages/playground/src/ui-playground"),
+            path.join(rootDir, "packages/playground/i18n"),
+            path.join(rootDir, "packages/playground/resources/i18n/json"),
+            "lib.playground"
+        )
+    );
+    buildPackageEnglishPromises.push(
+        createEnglishTranslations(
+            path.join(rootDir, "packages/common/src/ui-common"),
+            path.join(rootDir, "packages/common/i18n"),
+            path.join(rootDir, "packages/common/resources/i18n/json"),
+            "lib.common"
+        )
+    );
+    buildPackageEnglishPromises.push(
+        createEnglishTranslations(
+            path.join(rootDir, "packages/service/src/ui-service"),
+            path.join(rootDir, "packages/service/i18n"),
+            path.join(rootDir, "packages/service/resources/i18n/json"),
+            "lib.service"
+        )
+    );
+
+    await Promise.all(buildPackageEnglishPromises);
+
+    // Initialize an empty object to store the merged translations
+    const mergedTranslations: Record<string, Record<string, string>> = {};
+
+    // Iterate through each resource directory
+    for (const dir of resourceDirs) {
+        // Iterate through each JSON file in the directory
+        for (const file of fs.readdirSync(dir)) {
+            if (file.startsWith("resources.") && file.endsWith(".json")) {
+                const langID = file.split(".")[1];
+
+                // If the language ID is not in the object, add it
+                if (!mergedTranslations[langID]) {
+                    mergedTranslations[langID] = {};
+                }
+
+                // Read the JSON content and parse it
+                const content = JSON.parse(
+                    await readFileAsync(path.join(dir, file), "utf-8")
+                );
+
+                // Merge the content into the object
+                Object.assign(mergedTranslations[langID], content);
+            }
+        }
+    }
+
+    // Write the merged translations to the output directory
+    for (const langID of Object.keys(mergedTranslations)) {
+        const outputFile = path.join(outputPath, `resources.${langID}.json`);
+
+        // Read existing translations in the output file if it exists
+        let existingTranslations = {};
+        if (fs.existsSync(outputFile)) {
+            existingTranslations = JSON.parse(
+                await readFileAsync(outputFile, "utf-8")
+            );
+        }
+
+        // Merge existing translations with new translations
+        const combinedTranslations = {
+            ...existingTranslations,
+            ...mergedTranslations[langID],
+        };
+
+        // Sort keys alphabetically
+        const sortedTranslations = Object.fromEntries(
+            Object.entries(combinedTranslations).sort()
+        );
+
+        // Write the sorted translations to the output file
+        await writeFileAsync(
+            outputFile,
+            JSON.stringify(sortedTranslations, null, 2),
+            "utf-8"
+        );
+    }
+
+    console.log(`Merged translations have been saved in ${outputPath}`);
+}
+
+// Function to generate English file for a package from its YAML files
 export async function createEnglishTranslations(
     sourcePath: string,
     destPath: string,
+    outputPath: string,
     packageName?: string
 ) {
     const translations = await loadDevTranslations(sourcePath, packageName);
@@ -50,14 +171,7 @@ export async function createEnglishTranslations(
     }
 
     const cleanedJsonContent = JSON.stringify(cleanContent, null, 2);
-
-    const resourcesJsonPath = path.join(
-        path.dirname(path.dirname(sourcePath)),
-        "resources",
-        "i18n",
-        "json",
-        "resources.en.json"
-    );
+    const resourcesJsonPath = path.join(outputPath, "resources.en.json");
 
     // Check if the directory exists and create it if it doesn't
     if (!fs.existsSync(path.dirname(resourcesJsonPath))) {
@@ -78,13 +192,11 @@ export async function loadDevTranslations(
     packageName?: string
 ): Promise<{ [key: string]: string }> {
     const loader = new DevTranslationsLoader();
-    console.log("Loading dev translations...");
     let hasDuplicate = false;
     const translations = await loader.load(sourcePath, (key, file) => {
         console.warn(`${key} is being duplicated. "${file}"`);
         hasDuplicate = true;
     });
-    console.log(`Loaded dev translations`);
     if (hasDuplicate) {
         throw new Error();
     }
