@@ -1,0 +1,4 @@
+account:
+  parameter:
+    name:
+      label: Account name

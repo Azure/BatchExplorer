@@ -1,0 +1,2 @@
+form:
+  validationError: Value must be a boolean

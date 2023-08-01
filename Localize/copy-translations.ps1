@@ -12,13 +12,10 @@ if ($artifactsPath -eq "") {
     $sourceRoot = $artifactsPath
 }
 
-$packageNames = @("common", "service", "playground", "react")
+$packageNames = @("common", "service", "playground", "react", "web", "desktop")
 
 # Get language directories
 $languageDirs = Get-ChildItem -Path $sourceRoot -Directory
-
-# If this script is run locally, in addition to the resjson files, it adds a json directory containing json files for local development
-# If script is run on ADO, it only adds the resjson files used in production
 
 # Strip out resjson comments and resjson-specific formatting before writing the result to json file
 function Convert-ResjsonToJson {
@@ -43,63 +40,60 @@ function Convert-ResjsonToJson {
     Set-Content -Path $targetPath -Value $cleanedJsonContent
 }
 
+function Copy-Resources {
+    param (
+        [string]$packageName,
+        [string]$languageDirFullName,
+        [string]$languageId
+    )
+
+    if ($packageName -eq "web" -or $packageName -eq "desktop") {
+        $sourcePath = Join-Path $languageDirFullName "$packageName/i18n/resources.resjson"
+        if ($packageName -eq "web") {
+            $targetDir = Join-Path $scriptDir "../$packageName/dev-server/resources/i18n"
+        } else {
+            $targetDir = Join-Path $scriptDir "../$packageName/resources/i18n"
+        }
+        $targetPath = Join-Path $targetDir "resources.$languageId.json"
+    } else {
+        $sourcePath = Join-Path $languageDirFullName "packages/$packageName/i18n/resources.resjson"
+        $targetDir = Join-Path $scriptDir ".." -Resolve | Join-Path -ChildPath "packages/$packageName/resources/i18n/resjson"
+        $targetPath = Join-Path $targetDir "resources.$languageId.resjson"
+    }
+
+    Write-Verbose "Checking $packageName source path: $sourcePath"
+    if (Test-Path $sourcePath) {
+        Write-Verbose "$packageName source path exists, preparing target directory"
+        if (-not (Test-Path $targetDir)) {
+            New-Item -ItemType Directory -Force -Path $targetDir > $null
+        }
+
+        Write-Verbose "Copying file from $sourcePath to $targetPath"
+        Copy-Item -Path $sourcePath -Destination $targetPath
+
+        if ($packageName -ne "web" -and $packageName -ne "desktop") {
+            $jsonTargetDir = $targetDir.Replace("resjson", "json")
+            $jsonTargetPath = Join-Path $jsonTargetDir "resources.$languageId.json"
+            if (-not (Test-Path $jsonTargetDir)) {
+                New-Item -ItemType Directory -Force -Path $jsonTargetDir > $null
+            }
+        } else {
+            $jsonTargetPath = $targetPath
+        }
+
+        Write-Verbose "Converting $packageName resjson to json: $jsonTargetPath"
+        Convert-ResjsonToJson -sourcePath $sourcePath -targetPath $jsonTargetPath
+    }
+}
+
 Write-Host "Copying translation files"
 
 foreach ($languageDir in $languageDirs) {
     $languageId = $languageDir.Name
     Write-Verbose "Processing language: $languageId"
 
-    # Process package directories
+    # Copy files to each of the package directories
     foreach ($packageName in $packageNames) {
-        $sourcePath = Join-Path $($languageDir.FullName) "packages/$packageName/i18n/resources.resjson"
-        $targetDir = (Join-Path $scriptDir ".." -Resolve) | Join-Path -ChildPath "packages/$packageName/resources/i18n/resjson"
-        $targetPath = Join-Path $targetDir "resources.$languageId.resjson"
-
-        Write-Verbose "Checking source path: $sourcePath"
-        if (Test-Path $sourcePath) {
-            Write-Verbose "Source path exists, preparing target directory"
-            if (-not (Test-Path $targetDir)) {
-                New-Item -ItemType Directory -Force -Path $targetDir > $null
-            }
-
-            Write-Verbose "Copying file from $sourcePath to $targetPath"
-            Copy-Item -Path $sourcePath -Destination $targetPath
-
-            $jsonTargetDir = $targetDir.Replace("resjson", "json")
-            $jsonTargetPath = $targetPath.Replace("resjson", "json")
-
-            if (-not (Test-Path $jsonTargetDir)) {
-                New-Item -ItemType Directory -Force -Path $jsonTargetDir > $null
-            }
-
-            Write-Verbose "Converting resjson to json: $jsonTargetPath"
-            Convert-ResjsonToJson -sourcePath $sourcePath -targetPath $jsonTargetPath
-        }
-    }
-
-    # Handle the desktop directory exception
-    $desktopSource = Join-Path $($languageDir.FullName) "desktop/i18n/resources.resjson"
-    $desktopTargetDir = (Join-Path $scriptDir "../desktop/resources/i18n/resjson")
-    $desktopTarget = Join-Path $desktopTargetDir "resources.$languageId.resjson"
-
-    Write-Verbose "Checking desktop source path: $desktopSource"
-    if (Test-Path $desktopSource) {
-        Write-Verbose "Desktop source path exists, preparing target directory"
-        if (-not (Test-Path $desktopTargetDir)) {
-            New-Item -ItemType Directory -Force -Path $desktopTargetDir > $null
-        }
-
-        Write-Verbose "Copying file from $desktopSource to $desktopTarget"
-        Copy-Item -Path $desktopSource -Destination $desktopTarget
-
-        $jsonDesktopTargetDir = $desktopTargetDir.Replace("resjson", "json")
-        $jsonDesktopTarget = $desktopTarget.Replace("resjson", "json")
-
-        if (-not (Test-Path $jsonDesktopTargetDir)) {
-            New-Item -ItemType Directory -Force -Path $jsonDesktopTargetDir > $null
-        }
-
-        Write-Verbose "Converting desktop resjson to json: $jsonDesktopTarget"
-        Convert-ResjsonToJson -sourcePath $desktopSource -targetPath $jsonDesktopTarget
+        Copy-Resources -packageName $packageName -languageDirFullName $($languageDir.FullName) -languageId $languageId
     }
 }

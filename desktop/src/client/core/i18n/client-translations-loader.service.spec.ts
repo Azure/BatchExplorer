@@ -58,8 +58,8 @@ describe("ClientTranslationsLoaderService", () => {
         it("it only loads the english translations file when locale is english", async () => {
             localService.locale = "en";
             await loader.load();
-            expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
-            expect(fsSpy.readFile).toHaveBeenCalledWith(path.join(Constants.resourcesFolder, "i18n-deprecated/resources.en.json"));
+            expect(fsSpy.readFile).toHaveBeenCalledTimes(2);
+            expect(fsSpy.readFile).toHaveBeenCalledWith(path.join(Constants.resourcesFolder, "./resources/i18n/resources.en.json"));
 
             expect(loader.translations.get("foo.banana")).toEqual("Banana");
             expect(loader.translations.get("foo.potato")).toEqual("Potato");
@@ -69,8 +69,8 @@ describe("ClientTranslationsLoaderService", () => {
             localService.locale = "fr";
             await loader.load();
             expect(fsSpy.readFile).toHaveBeenCalledTimes(2);
-            expect(fsSpy.readFile).toHaveBeenCalledWith(path.join(Constants.resourcesFolder, "i18n-deprecated/resources.en.json"));
-            expect(fsSpy.readFile).toHaveBeenCalledWith(path.join(Constants.resourcesFolder, "i18n-deprecated/resources.fr.json"));
+            expect(fsSpy.readFile).toHaveBeenCalledWith(path.join(Constants.resourcesFolder, "./resources/i18n/resources.en.json"));
+            expect(fsSpy.readFile).toHaveBeenCalledWith(path.join(Constants.resourcesFolder, "./resources/i18n/resources.fr.json"));
 
             expect(loader.translations.get("foo.potato")).toEqual("Pomme de terre");
             expect(loader.translations.get("foo.banana")).toEqual("Banana", "Use english translation when not present");
@@ -90,7 +90,7 @@ describe("ClientTranslationsLoaderService", () => {
             localService.locale = "en";
             await loader.load();
             expect(devTranslationLoaderSpy.load).toHaveBeenCalledTimes(1);
-            expect(fsSpy.readFile).not.toHaveBeenCalled();
+            expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
 
             expect(loader.translations.get("foo.banana")).toEqual("Banana");
             expect(loader.translations.get("foo.potato")).toEqual("Potato");
@@ -102,7 +102,7 @@ describe("ClientTranslationsLoaderService", () => {
             await loader.load();
             expect(devTranslationLoaderSpy.load).toHaveBeenCalledTimes(1);
             expect(fsSpy.readFile).toHaveBeenCalledTimes(1);
-            expect(fsSpy.readFile).toHaveBeenCalledWith(path.join(Constants.resourcesFolder, "i18n-deprecated/resources.fr.json"));
+            expect(fsSpy.readFile).toHaveBeenCalledWith(path.join(Constants.resourcesFolder, "./resources/i18n/resources.fr.json"));
 
             expect(loader.translations.get("foo.potato")).toEqual("Pomme de terre");
             expect(loader.translations.get("foo.banana")).toEqual("Banana", "Use english translation when not present");

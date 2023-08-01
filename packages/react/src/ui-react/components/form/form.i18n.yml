@@ -1,0 +1,4 @@
+form:
+  buttons:
+    apply: Apply
+    discardChanges: Discard changes

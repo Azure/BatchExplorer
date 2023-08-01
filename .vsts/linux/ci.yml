@@ -17,7 +17,7 @@ steps:
         echo "No changes. Nothing to do"
         exit 0
       else
-        echo "Text changes detected: $changed. Pipeline failed."
+        echo "Text changes detected: $changed. Pipeline failed. Please run 'npm run build' on your local machine and push the generated files."
         exit 1
       fi
     workingDirectory: desktop

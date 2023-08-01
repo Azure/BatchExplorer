@@ -1,5 +1,3 @@
 {
-  "lib.common.localizer.account": "Account",
-  "lib.common.localizer.resourceGroup": "Resource Group",
-  "lib.common.localizer.subscription": "Subscription"
+  "lib.common.form.validationError": "Value must be a boolean"
 }
