@@ -20,7 +20,7 @@ extraResources:
       - "**/*"
   - "ThirdPartyNotices.txt"
   - "data"
-  - "i18n-deprecated"
+  - "resources"
   - "node_modules/jschardet/"
 
 protocols:
