@@ -16,6 +16,6 @@ export class FakeLocationService implements LocationService {
     }
 
     public async get(locationId: string): Promise<Location | undefined> {
-        return this.fakeSet.locations[locationId] ?? undefined;
+        return this.fakeSet.getLocation(locationId);
     }
 }

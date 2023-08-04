@@ -3,22 +3,14 @@ import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { KeyBindingsService, TelemetryService, UserConfigurationService } from "@batch-flask/core";
-import BatchExplorerHttpClient from "@batch-flask/core/batch-explorer-http-client";
 import { ElectronRemote, IpcService } from "@batch-flask/electron";
 import { Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
-import { EnvironmentMode, initEnvironment } from "@batch/ui-common";
-import { DependencyName } from "@batch/ui-common/lib/environment";
-import { DefaultFormControlResolver, DefaultFormLayoutProvider, FormControlResolver } from "@batch/ui-react/lib/components/form";
-import { StandardClock } from "@batch/ui-common/lib/datetime";
-import { createConsoleLogger } from "@batch/ui-common/lib/logging";
-import { BrowserDependencyName } from "@batch/ui-react";
-import { StorageAccountServiceImpl, SubscriptionServiceImpl } from "@batch/ui-service";
 import { registerIcons } from "app/config";
 import {
     AppTranslationsLoaderService,
-    AuthorizationHttpService,
     AuthService,
+    AuthorizationHttpService,
     BatchAccountService,
     NavigatorService,
     NcjTemplateService,
@@ -28,13 +20,9 @@ import {
     ThemeService,
 } from "app/services";
 import { BEUserConfiguration } from "common";
-import { Environment } from "common/constants";
 import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { DefaultBrowserEnvironment } from "@batch/ui-react/lib/environment";
-import { LiveLocationService } from "@batch/ui-service/lib/location";
-import { LiveResourceGroupService } from "@batch/ui-service/lib/resource-group";
-import { DesktopLocalizer } from "./localizer/desktop-localizer";
+import { initDesktopEnvironment } from "./environment/desktop-environment";
 
 @Component({
     selector: "bl-app",
@@ -71,32 +59,7 @@ export class AppComponent implements OnInit, OnDestroy {
         private workspaceService: WorkspaceService,
         private translationsLoaderService: AppTranslationsLoaderService
     ) {
-            // Initialize shared component lib environment
-            initEnvironment(new DefaultBrowserEnvironment(
-            {
-                mode: ENV === Environment.prod ? EnvironmentMode.Production : EnvironmentMode.Development
-            },
-            {
-                [DependencyName.Clock]: () => new StandardClock(),
-                // TODO: Create an adapter which hooks up to the desktop logger
-                [DependencyName.LoggerFactory]: () => createConsoleLogger,
-                [DependencyName.Localizer]: () => new DesktopLocalizer(this.translationsLoaderService),
-                [DependencyName.HttpClient]:
-                    () => new BatchExplorerHttpClient(authService),
-                [BrowserDependencyName.LocationService]: () =>
-                    new LiveLocationService(),
-                [BrowserDependencyName.ResourceGroupService]: () =>
-                    new LiveResourceGroupService(),
-                [BrowserDependencyName.StorageAccountService]:
-                    () => new StorageAccountServiceImpl(),
-                [BrowserDependencyName.SubscriptionService]:
-                    () => new SubscriptionServiceImpl(),
-                [BrowserDependencyName.FormControlResolver]:
-                    () => new DefaultFormControlResolver(),
-                [BrowserDependencyName.FormLayoutProvider]:
-                    () => new DefaultFormLayoutProvider(),
-            }
-            ));
+        initDesktopEnvironment(translationsLoaderService, authService);
 
         this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
         this._initWorkspaces();
@@ -143,7 +106,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     private async _initWorkspaces() {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const adminWorkspace = JSON.parse(require("app/components/workspace/json-templates/admin-workspace.json"));
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templates/end-user-workspace.json"));
         this.workspaceService.init([
             new Workspace({ ...adminWorkspace }),

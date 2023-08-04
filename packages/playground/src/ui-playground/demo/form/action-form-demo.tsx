@@ -14,6 +14,7 @@ import { MonacoEditor } from "@batch/ui-react/lib/components";
 import { EditorController } from "@batch/ui-react/lib/components/editor";
 import { ActionForm } from "@batch/ui-react/lib/components/form";
 import { Dropdown } from "@batch/ui-react/lib/components/form/dropdown";
+import { UpdateNodeCommsAction } from "@batch/ui-react/lib/pool";
 import * as React from "react";
 import { DemoComponentContainer } from "../../layout/demo-component-container";
 import { DemoControlContainer } from "../../layout/demo-control-container";
@@ -126,6 +127,11 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
 const actions: { [name: string]: () => Action } = {
     createAccount: () => new CreateAccountAction({}),
     createOrUpdateCar: () => new CreateOrUpdateCarAction(),
+    updateNodeComms: () =>
+        new UpdateNodeCommsAction(
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo",
+            "hobopool1"
+        ),
 };
 
 export const ActionFormDemo: React.FC = () => {
@@ -178,13 +184,17 @@ export const ActionFormDemo: React.FC = () => {
                         label: "Action",
                         value: actionName,
                     })}
-                    style={{ minWidth: "160px" }}
+                    style={{ minWidth: "320px" }}
                     options={[
                         {
-                            label: "Create or Update Car",
+                            label: "Create or update car",
                             value: "createOrUpdateCar",
                         },
-                        { label: "Create Account", value: "createAccount" },
+                        { label: "Create account", value: "createAccount" },
+                        {
+                            label: "Update pool node communication mode",
+                            value: "updateNodeComms",
+                        },
                     ]}
                     onChange={(_, value) => {
                         const name = value ?? "";

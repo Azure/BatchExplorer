@@ -126,7 +126,7 @@ describe("Resource group dropdown", () => {
 
         // Add a bad subscription
         const fakeSet = new BasicFakeSet();
-        fakeSet.subscriptions["/fake/has_invalid_characters!"] = {
+        fakeSet.putSubscription({
             id: "/fake/has_invalid_characters!",
             subscriptionId: "has_invalid_characters!",
             tenantId: "99999999-9999-9999-9999-999999999999",
@@ -137,7 +137,7 @@ describe("Resource group dropdown", () => {
                 locationPlacementId: "Fake_Placement_Id",
                 quotaId: "Fake_Quota_Id",
             },
-        };
+        });
         subService.setFakes(fakeSet);
 
         render(

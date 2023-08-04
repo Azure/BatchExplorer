@@ -28,3 +28,22 @@ export function equalsIgnoreCase(str1?: string, str2?: string): boolean {
     }
     return str1.toLowerCase() === str2.toLowerCase();
 }
+
+/**
+ * Case insensitive version of String.startsWith. If both strings are either null,
+ * undefined or empty string they will be considered equal.
+ *
+ * @param str The string to check
+ * @param prefix The prefix to check against
+ * @returns True if the strings are equal, or if both values are null or undefined.
+ *          False otherwise.
+ */
+export function startsWithIgnoreCase(str?: string, prefix?: string): boolean {
+    if (str == null) {
+        str = "";
+    }
+    if (prefix == null) {
+        prefix = "";
+    }
+    return str.toLowerCase().startsWith(prefix.toLowerCase());
+}

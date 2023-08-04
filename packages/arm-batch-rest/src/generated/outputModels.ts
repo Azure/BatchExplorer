@@ -185,14 +185,16 @@ export interface PrivateLinkServiceConnectionStateOutput {
 
 /** A definition of an Azure resource. */
 export interface ProxyResourceOutput {
-  /** The ID of the resource. */
-  id?: string;
-  /** The name of the resource. */
-  name?: string;
-  /** The type of the resource. */
-  type?: string;
-  /** The ETag of the resource, used for concurrency statements. */
-  etag?: string;
+    // KLUDGE (dawatrou): Manually fixed up 'id', 'name' and 'type' to be non-nullable.
+    //                    Need to follow up with the JS SDK team about this.
+    /** The ID of the resource. */
+    id: string;
+    /** The name of the resource. */
+    name: string;
+    /** The type of the resource. */
+    type: string;
+    /** The ETag of the resource, used for concurrency statements. */
+    etag?: string;
 }
 
 /** Contains information about the auto-storage account associated with a Batch account. */
@@ -861,16 +863,20 @@ export interface TaskSchedulingPolicyOutput {
 
 /** Properties used to create a user on an Azure Batch node. */
 export interface UserAccountOutput {
-  /** The name of the user account. Names can contain any Unicode characters up to a maximum length of 20. */
-  name: string;
-  /** The password for the user account. */
-  password: string;
-  /** nonAdmin - The auto user is a standard user without elevated access. admin - The auto user is a user with elevated access and operates with full Administrator permissions. The default value is nonAdmin. */
-  elevationLevel?: "NonAdmin" | "Admin";
-  /** This property is ignored if specified on a Windows pool. If not specified, the user is created with the default options. */
-  linuxUserConfiguration?: LinuxUserConfigurationOutput;
-  /** This property can only be specified if the user is on a Windows pool. If not specified and on a Windows pool, the user is created with the default options. */
-  windowsUserConfiguration?: WindowsUserConfigurationOutput;
+    /** The name of the user account. Names can contain any Unicode characters up to a maximum length of 20. */
+    name: string;
+    /**
+     * KLUDGE (dawatrou): Manually removed incorred "password" property. This is a secret and isn't returned by the service.
+     *                    This should be fixed in the Swagger so x-ms-secret is true.
+     * The password for the user account.
+     * */
+    // password: string;
+    /** nonAdmin - The auto user is a standard user without elevated access. admin - The auto user is a user with elevated access and operates with full Administrator permissions. The default value is nonAdmin. */
+    elevationLevel?: "NonAdmin" | "Admin";
+    /** This property is ignored if specified on a Windows pool. If not specified, the user is created with the default options. */
+    linuxUserConfiguration?: LinuxUserConfigurationOutput;
+    /** This property can only be specified if the user is on a Windows pool. If not specified and on a Windows pool, the user is created with the default options. */
+    windowsUserConfiguration?: WindowsUserConfigurationOutput;
 }
 
 /** Properties used to create a user account on a Linux node. */

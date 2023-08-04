@@ -130,6 +130,8 @@
   "edit-app-package-form.updated": "Application packages for {poolId} were updated",
   "edit-certificate-references-form.title": "Edit certificate references for pool {poolId}",
   "edit-certificate-references-form.updated": "Certificates for {poolId} were updated",
+  "edit-node-comms-form.title": "Edit node communication mode for pool: {poolId}",
+  "edit-node-comms-form.updated": "Updated node communication mode for pool: {poolId}",
   "editable-table.deleteRow": "Delete row",
   "enable-app-insights-doc.doc-title": "Instructions on enabling Batch Insights",
   "enable-app-insights-doc.doc-title-os-specific": "OS-specific instructions on adding Batch Insights to start task",

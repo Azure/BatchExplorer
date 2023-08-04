@@ -14,7 +14,7 @@ export const RadioButtonDemo: React.FC = () => {
         <DemoPane title="RadioButton">
             <DemoComponentContainer>
                 <RadioButton
-                    param={createParam(StringParameter, {
+                    param={createParam<string>(StringParameter, {
                         label: labelValue,
                     })}
                     options={[

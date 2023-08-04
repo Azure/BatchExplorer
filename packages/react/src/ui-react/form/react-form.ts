@@ -39,7 +39,6 @@ export function createReactForm<V extends FormValues>(
 
 interface StandaloneForm<S> extends FormValues {
     _standaloneParam?: S;
-    [param: string]: unknown;
 }
 
 /**
@@ -63,9 +62,7 @@ export function createParam<
         D,
         T
     >,
-    init?: ReactParameterInit<StandaloneForm<S>, "_standaloneParam", D> & {
-        value?: StandaloneForm<S>["_standaloneParam"];
-    }
+    init?: ReactParameterInit<StandaloneForm<S>, "_standaloneParam", D>
 ) {
     const form = createReactForm<StandaloneForm<S>>({
         values: {

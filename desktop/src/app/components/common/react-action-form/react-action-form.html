@@ -1,0 +1,10 @@
+<div class="header">
+    <div class="main">
+        <h1 *ngIf="title">{{title}}</h1>
+        <p *ngIf="subtitle">{{subtitle}}</p>
+    </div>
+</div>
+
+<div class="react-action-form-container">
+    <be-reactcontainer [component]="ActionForm" [props]="actionFormProps"></be-reactcontainer>
+</div>

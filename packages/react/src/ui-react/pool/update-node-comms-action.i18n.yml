@@ -1,0 +1,12 @@
+pool:
+  infoBox:
+    nodeCommsModeDiffers:
+      message: If the target node communication mode differs from the current mode, Batch will attempt to update the mode the next time the pool is resized down to zero compute nodes and back up.
+
+  notFound: No pool found
+
+  parameter:
+    currentNodeCommunicationMode:
+      label: Current node communication mode
+    targetNodeCommunicationMode:
+      label: Target node communication mode

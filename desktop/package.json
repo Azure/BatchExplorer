@@ -108,6 +108,8 @@
     "@batch/common-config": "^1.0.0",
     "@ngtools/webpack": "^11.0.0",
     "@playwright/test": "^1.18.1",
+    "@testing-library/dom": "^9.3.1",
+    "@testing-library/user-event": "^14.4.3",
     "@types/chart.js": "^2.9.24",
     "@types/d3": "^7.4.0",
     "@types/extract-zip": "^1.6.2",

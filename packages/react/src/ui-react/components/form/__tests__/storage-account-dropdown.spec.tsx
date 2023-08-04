@@ -129,7 +129,7 @@ describe("Storage account dropdown", () => {
 
         // Add a bad subscription
         const fakeSet = new BasicFakeSet();
-        fakeSet.subscriptions["/fake/badsub"] = {
+        fakeSet.putSubscription({
             id: "/fake/badsub",
             subscriptionId: "badsub",
             tenantId: "99999999-9999-9999-9999-999999999999",
@@ -140,7 +140,7 @@ describe("Storage account dropdown", () => {
                 locationPlacementId: "Fake_Placement_Id",
                 quotaId: "Fake_Quota_Id",
             },
-        };
+        });
         subService.setFakes(fakeSet);
 
         render(

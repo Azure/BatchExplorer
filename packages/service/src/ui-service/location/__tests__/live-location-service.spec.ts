@@ -93,7 +93,7 @@ describe("LiveLocationService", () => {
                 `${Endpoints.arm}${eastUSId}?api-version=${ApiVersion.arm}`,
                 {
                     status: 200,
-                    body: JSON.stringify(fakeSet.locations[eastUSId]),
+                    body: JSON.stringify(fakeSet.getLocation(eastUSId)),
                 }
             )
         );

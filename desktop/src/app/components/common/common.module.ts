@@ -8,8 +8,9 @@ import { GuardsModule } from "./guards";
 import { InlineQuotaComponent } from "./inline-quota";
 import { LocationModule } from "./location";
 import { LocationPickerModule } from "./location-picker";
-import { ReactContainerComponent } from "./react-container/react-container.component";
+import { ReactContainerComponent } from "./react-container";
 import { SubscriptionPickerComponent } from "./subscription-picker";
+import { ReactActionFormComponent } from "./react-action-form";
 
 const privateComponents = [];
 
@@ -17,6 +18,7 @@ const publicComponents = [
     EditMetadataFormComponent,
     InlineQuotaComponent,
     ReactContainerComponent,
+    ReactActionFormComponent,
     SubscriptionPickerComponent,
 ];
 
