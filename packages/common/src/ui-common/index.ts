@@ -48,4 +48,4 @@ export { uniqueElementId } from "./dom";
 export { autoFormat } from "./format";
 export { createForm } from "./form";
 export { copyToClipboard } from "./clipboard";
-export { translate } from "./localization";
+export { translate, LocalizedStrings } from "./localization";
