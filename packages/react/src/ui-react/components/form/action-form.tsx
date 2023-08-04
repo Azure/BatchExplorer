@@ -9,7 +9,7 @@ export interface ActionFormProps<V extends FormValues> {
     /**
      * The action associated with the form
      */
-    action: Action<V>;
+    action?: Action<V>;
 
     /**
      * Controls how the form is rendered. The exact implementation depends on
@@ -109,28 +109,30 @@ export const ActionForm = <V extends FormValues>(
         let isMounted = true;
         setLoading(true);
 
-        action
-            .initialize()
-            .then(() => {
-                // Fulfilled
-                if (isMounted) {
-                    setLoading(false);
-                    if (onActionInitialized) {
-                        onActionInitialized();
+        if (action) {
+            action
+                .initialize()
+                .then(() => {
+                    // Fulfilled
+                    if (isMounted) {
+                        setLoading(false);
+                        if (onActionInitialized) {
+                            onActionInitialized();
+                        }
                     }
-                }
-            })
-            .catch((e) => {
-                // Rejected
-                action.logger.error(
-                    `Failed to initialize action: ${
-                        e instanceof Error ? e.message : String(e)
-                    }`
-                );
-                if (onError) {
-                    onError(e);
-                }
-            });
+                })
+                .catch((e) => {
+                    // Rejected
+                    action.logger.error(
+                        `Failed to initialize action: ${
+                            e instanceof Error ? e.message : String(e)
+                        }`
+                    );
+                    if (onError) {
+                        onError(e);
+                    }
+                });
+        }
 
         return () => {
             isMounted = false;
@@ -139,7 +141,7 @@ export const ActionForm = <V extends FormValues>(
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onActionInitialized, action]);
 
-    if (!action.isInitialized || loading) {
+    if (!action || !action.isInitialized || loading) {
         // TODO: Need a common loading component
         return <></>;
     }

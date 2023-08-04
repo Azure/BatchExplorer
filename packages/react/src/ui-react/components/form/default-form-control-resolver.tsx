@@ -22,6 +22,8 @@ import { ResourceGroupDropdown } from "./resource-group-dropdown";
 import { StorageAccountDropdown } from "./storage-account-dropdown";
 import { SubscriptionDropdown } from "./subscription-dropdown";
 import { TextField } from "./text-field";
+import { NodeCommsParameter } from "../../pool/node-comms-parameter";
+import { NodeCommsDropdown } from "../../pool/node-comms-dropdown";
 
 export class DefaultFormControlResolver implements FormControlResolver {
     getFormControl<
@@ -97,6 +99,15 @@ export class DefaultFormControlResolver implements FormControlResolver {
         } else if (param instanceof StorageAccountParameter) {
             return (
                 <StorageAccountDropdown
+                    id={id}
+                    key={param.name}
+                    param={param}
+                    onChange={onChange}
+                />
+            );
+        } else if (param instanceof NodeCommsParameter) {
+            return (
+                <NodeCommsDropdown
                     id={id}
                     key={param.name}
                     param={param}

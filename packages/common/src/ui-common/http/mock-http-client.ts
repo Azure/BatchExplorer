@@ -168,7 +168,6 @@ export class MockHttpResponse extends AbstractHttpResponse {
         url: string,
         opts?: {
             status?: number;
-            requestBody?: string;
             body?: string;
             headers?: HttpHeaders | Record<string, string>;
         }

@@ -1,6 +1,7 @@
 export {
     BrowserDependencyName,
     BrowserEnvironment,
+    DefaultBrowserEnvironment,
     MockBrowserEnvironment,
     initMockBrowserEnvironment,
 } from "./environment";

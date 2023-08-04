@@ -1,4 +1,5 @@
 export {
+    ListPoolsResultOutput,
     Pool,
     PoolListByBatchAccountParameters,
     PoolCreateParameters,

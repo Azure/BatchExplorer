@@ -1,2 +1,5 @@
 form:
-  validationError: Value must be a boolean
+  validation:
+    booleanValueError: Value must be a boolean
+    invalidEnumValue: Invalid value
+    stringValueError: Value must be a string

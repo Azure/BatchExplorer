@@ -5,5 +5,9 @@
   "lib.react.arm.storageAccount": "Storage account",
   "lib.react.arm.subscription": "Subscription",
   "lib.react.form.buttons.apply": "Apply",
-  "lib.react.form.buttons.discardChanges": "Discard changes"
+  "lib.react.form.buttons.discardChanges": "Discard changes",
+  "lib.react.pool.infoBox.nodeCommsModeDiffers.message": "If the target node communication mode differs from the current mode, Batch will attempt to update the mode the next time the pool is resized down to zero compute nodes and back up.",
+  "lib.react.pool.notFound": "No pool found",
+  "lib.react.pool.parameter.currentNodeCommunicationMode.label": "Current node communication mode",
+  "lib.react.pool.parameter.targetNodeCommunicationMode.label": "Target node communication mode"
 }

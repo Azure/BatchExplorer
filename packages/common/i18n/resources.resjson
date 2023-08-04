@@ -1,3 +1,9 @@
 {
-  "lib.common.form.validationError": "Value must be a boolean"
+  "lib.common.close": "Close",
+  "lib.common.form.validation.booleanValueError": "Value must be a boolean",
+  "lib.common.form.validation.invalidEnumValue": "Invalid value",
+  "lib.common.form.validation.stringValueError": "Value must be a string",
+  "lib.common.learnMoreLinkText": "Learn more",
+  "lib.common.notApplicable": "N/A",
+  "lib.common.save": "Save"
 }

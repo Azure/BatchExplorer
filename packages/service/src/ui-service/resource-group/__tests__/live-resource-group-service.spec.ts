@@ -97,7 +97,7 @@ describe("LiveResourceGroupService", () => {
                 `${Endpoints.arm}${vizRgId}?api-version=${ApiVersion.arm}`,
                 {
                     status: 200,
-                    body: JSON.stringify(fakeSet.resourceGroups[vizRgId]),
+                    body: JSON.stringify(fakeSet.getResourceGroup(vizRgId)),
                 }
             )
         );
