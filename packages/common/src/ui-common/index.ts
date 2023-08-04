@@ -1,23 +1,31 @@
 export * from "./types";
 export {
+    destroyEnvironment,
     getEnvironment,
     initEnvironment,
-    destroyEnvironment,
+    isEnvironmentInitialized,
 } from "./environment/environment-util";
 export {
+    DependencyName,
+    Environment,
     EnvironmentName,
     EnvironmentMode,
-    DependencyName,
 } from "./environment";
 export {
     AbstractHttpClient,
     FetchHttpClient,
     HttpClient,
     HttpRequestInit,
+    HttpRequestMetadata,
+    HttpRequestMethod,
     UrlOrRequestInit,
     HttpResponse,
     HttpHeaders,
     getHttpClient,
+    StandardHttpHeaders,
+    CustomHttpHeaders,
+    MediaType,
+    CacheControl,
 } from "./http";
 export { getLogger } from "./logging/logging-util";
 export {
@@ -26,6 +34,7 @@ export {
     DebouncedFunction,
     delay,
     isPromiseLike,
+    mergeDeep,
     uniqueId,
 } from "./util";
 export {

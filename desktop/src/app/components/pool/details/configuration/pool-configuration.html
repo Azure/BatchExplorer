@@ -155,6 +155,15 @@
             </bl-no-item>
         </bl-property-group>
 
+        <!-- TODO: Remove ngIf="isDevMode" (and the isDevMode property) when the API version is updated to support node communication mode -->
+        <bl-property-group *ngIf="isDevMode" label="Node communication" class="wide" [collapsed]="true"  [edit]="editNodeComms">
+            <div collapsed-preview>
+                <span>{{decorator.currentNodeCommunicationMode}}</span>
+            </div>
+            <bl-text-property label="Current mode" value="{{decorator.currentNodeCommunicationMode || 'N/A'}}"></bl-text-property>
+            <bl-text-property label="Target mode" value="{{decorator.targetNodeCommunicationMode || 'Default'}}"></bl-text-property>
+        </bl-property-group>
+
         <bl-property-group label="Metadata" class="wide" [collapsed]="true" [edit]="editMetadata">
             <div collapsed-preview>
                 <span>{{metadata?.size}} meta items</span>

@@ -16,7 +16,7 @@ export const CheckboxDemo: React.FC = () => {
         <DemoPane title="Checkbox">
             <DemoComponentContainer>
                 <Checkbox
-                    param={createParam(BooleanParameter, {
+                    param={createParam<boolean>(BooleanParameter, {
                         label: labelValue,
                     })}
                     id="checkboxID"

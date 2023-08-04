@@ -1,4 +1,8 @@
-import { capitalizeFirst, equalsIgnoreCase } from "../../util";
+import {
+    capitalizeFirst,
+    equalsIgnoreCase,
+    startsWithIgnoreCase,
+} from "../../util";
 
 describe("String utility functions", () => {
     test("capitalizeFirst() function", () => {
@@ -21,6 +25,26 @@ describe("String utility functions", () => {
         );
         expect(
             equalsIgnoreCase(
+                null as unknown as undefined,
+                null as unknown as undefined
+            )
+        ).toBe(true);
+    });
+
+    test("startsWithIgnoreCase() function", () => {
+        expect(startsWithIgnoreCase("aBcDEFG", "AbC")).toBe(true);
+        expect(startsWithIgnoreCase("123!aBcDEFG", "123!AbC")).toBe(true);
+        expect(startsWithIgnoreCase("abc", " abc")).toBe(false);
+        expect(startsWithIgnoreCase(" abc", "abc")).toBe(false);
+        expect(startsWithIgnoreCase("", "")).toBe(true);
+        expect(startsWithIgnoreCase(undefined, undefined)).toBe(true);
+        expect(startsWithIgnoreCase(undefined, "")).toBe(true);
+        expect(startsWithIgnoreCase(undefined, " ")).toBe(false);
+        expect(
+            startsWithIgnoreCase(null as unknown as undefined, undefined)
+        ).toBe(true);
+        expect(
+            startsWithIgnoreCase(
                 null as unknown as undefined,
                 null as unknown as undefined
             )

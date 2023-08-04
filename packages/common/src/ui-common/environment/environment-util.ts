@@ -24,6 +24,15 @@ export function getEnvironment(): Environment<EnvironmentConfig> {
 }
 
 /**
+ * Check if there is an initialized environment
+ *
+ * @returns True if there is an initialized environment, false otherwise.
+ */
+export function isEnvironmentInitialized(): boolean {
+    return _currentEnvironment != null && _currentEnvironment.initialized;
+}
+
+/**
  * Tears down the currently loaded environment
  */
 export function destroyEnvironment(): void {

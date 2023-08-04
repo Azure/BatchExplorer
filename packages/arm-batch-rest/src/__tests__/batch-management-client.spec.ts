@@ -173,10 +173,12 @@ describe("Batch Management Client With Mock Http Client Test", () => {
             mockClient.addExpected(
                 new MockHttpResponse(requestUrlPath, {
                     status: 200,
-                    body: JSON.stringify(<PoolOutput>{
+                    body: JSON.stringify(<ListPoolsResultOutput>{
                         value: [
                             {
+                                id: `/subscriptions/${subscriptionId}/resourceGroups/${resourceGroupName}/providers/Microsoft.Batch/batchAccounts/${batchAccountName}/pools/{POOL_NAME}`,
                                 name: POOL_NAME,
+                                type: "Microsoft.Batch/batchAccounts/pools",
                                 properties: poolSpecs.properties,
                             },
                         ],

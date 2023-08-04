@@ -66,14 +66,19 @@ const ListForm = <V extends FormValues>(props: ListFormProps<V>) => {
     renderChildEntries(form.childEntries(), rows);
 
     return (
-        <div role="form" style={{ maxWidth: "480px" }}>
+        <div role="form" className="form-root">
             {form.title != null && (
                 <h2 style={{ marginBottom: "16px" }}>
                     {form.title ?? "Untitled form"}
                 </h2>
             )}
             <Stack tokens={{ childrenGap: 8 }}>
-                {rows}
+                <Stack
+                    className="form-row-container"
+                    tokens={{ childrenGap: 8 }}
+                >
+                    {rows}
+                </Stack>
                 <ButtonContainer buttons={buttons} />
                 <span
                     data-validationlevel={form.validationStatus?.level}
@@ -234,9 +239,9 @@ interface ButtonContainerProps {
 const ButtonContainer = (props: ButtonContainerProps) => {
     return (
         <Stack
+            className="form-button-container"
             horizontal={true}
             tokens={{ childrenGap: "8px" }}
-            style={{ padding: "16px 0 0 0" }}
         >
             {props.buttons?.map((btn) => {
                 return (
