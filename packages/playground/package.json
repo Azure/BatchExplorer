@@ -26,7 +26,6 @@
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",
     "clean:cjs": "bux rmrf ./lib-cjs",
-    "clean:resources": "bux rmrf ./resources",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
     "test:all": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage",
