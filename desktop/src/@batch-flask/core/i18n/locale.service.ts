@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-bidi-characters */
 import { Injectable } from "@angular/core";
 
 export enum Locale {
@@ -7,13 +8,14 @@ export enum Locale {
     Spanish = "es",
     French = "fr",
     Hungarian = "hu",
+    Indonesian = "id",
     Italian = "it",
     Japanese = "ja",
     Korean = "ko",
     Dutch = "nl",
     Polish = "pl",
     BrazilianPortuguese = "pt-BR",
-    Portuguese = "pt",
+    Portuguese = "pt-PT",
     Russian = "ru",
     Swedish = "sv",
     Turkish = "tr",
@@ -29,6 +31,7 @@ export const TranslatedLocales = {
     [Locale.Spanish]: "Español‎",
     [Locale.French]: "Français‎",
     [Locale.Hungarian]: "Magyar‎",
+    [Locale.Indonesian]: "Indonesia",
     [Locale.Italian]: "Italiano",
     [Locale.Japanese]: "日本語‎",
     [Locale.Korean]: "한국어‎",
