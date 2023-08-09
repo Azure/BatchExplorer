@@ -91,8 +91,10 @@ module.exports = {
             "@fluentui/react/lib-commonjs/$1";
 
         // Local packages
-        baseConfig.moduleNameMapper["@batch/ui-common/lib/(.*)$"] =
-            "@batch/ui-common/lib-cjs/$1";
+        baseConfig.moduleNameMapper["@azure/bonito-core/lib/(.*)$"] =
+            "@azure/bonito-core/lib-cjs/$1";
+        baseConfig.moduleNameMapper["@azure/bonito-ui/lib/(.*)$"] =
+            "@azure/bonito-ui/lib-cjs/$1";
         baseConfig.moduleNameMapper["@batch/ui-react/lib/(.*)$"] =
             "@batch/ui-react/lib-cjs/$1";
         baseConfig.moduleNameMapper["@batch/ui-service/lib/(.*)$"] =
@@ -106,7 +108,11 @@ function getCombinedResourceStrings() {
     const resourceStrings = [
         require(path.join(
             __dirname,
-            "../../packages/common/resources/i18n/json/resources.en.json"
+            "../../packages/bonito-core/resources/i18n/json/resources.en.json"
+        )),
+        require(path.join(
+            __dirname,
+            "../../packages/bonito-ui/resources/i18n/json/resources.en.json"
         )),
         require(path.join(
             __dirname,

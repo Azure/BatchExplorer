@@ -5,13 +5,13 @@ import {
     HttpHeaders as PipelineHeaders,
 } from "@azure/core-rest-pipeline";
 import { PipelineHttpHeadersImpl } from "./pipeline-http-headers";
-import { HttpHeaders as CommonHttpHeaders } from "@batch/ui-common";
-import { DependencyName, inject } from "@batch/ui-common/lib/environment";
+import { HttpHeaders as CommonHttpHeaders } from "@azure/bonito-core";
+import { DependencyName, inject } from "@azure/bonito-core/lib/environment";
 import {
     HttpClient as CommonHttpClient,
     HttpResponse,
     MapHttpHeaders,
-} from "@batch/ui-common/lib/http";
+} from "@azure/bonito-core/lib/http";
 import { RestError } from "./rest-error";
 
 /**

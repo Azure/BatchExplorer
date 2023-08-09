@@ -1,4 +1,4 @@
-import { Localizer } from "@batch/ui-common/lib/localization";
+import { Localizer } from "@azure/bonito-core/lib/localization";
 
 export class FakeDesktopLocalizer implements Localizer {
 

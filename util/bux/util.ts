@@ -320,8 +320,8 @@ export async function gatherBuildResults(basePath: string) {
 
     // packages
     doCopy(
-        path.join(basePath, "packages", "common", "build"),
-        path.join(baseBuildDir, "common")
+        path.join(basePath, "packages", "bonito-core", "build"),
+        path.join(baseBuildDir, "bonito-core")
     );
     doCopy(
         path.join(basePath, "packages", "react", "build"),

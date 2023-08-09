@@ -15,8 +15,13 @@ steps:
 
   - template: ./publish-npm-package.yml
     parameters:
-      packagePath: ./packages/common
-      packageName: "@batch/ui-common"
+      packagePath: ./packages/bonito-core
+      packageName: "@azure/bonito-core"
+
+  - template: ./publish-npm-package.yml
+    parameters:
+      packagePath: ./packages/bonito-ui
+      packageName: "@azure/bonito-ui"
 
   - template: ./publish-npm-package.yml
     parameters:

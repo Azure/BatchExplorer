@@ -5,7 +5,7 @@ import {
 import {
     MapHttpHeaders,
     HttpHeaders as CommonHttpHeaders,
-} from "@batch/ui-common/lib/http";
+} from "@azure/bonito-core/lib/http";
 
 /**
  * HTTP Header implementation that adapts the Shared Library Http Headers

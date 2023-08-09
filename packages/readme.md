@@ -6,14 +6,16 @@ This directory contains Typescript libraries intended for use across various Bat
 
 These libraries consist of various NPM packages which are meant to be distributed (in the `packages/` directory), along with private utility packages which are for development only (in the `util/` directory).
 
-- `common` - A common package intended to be able to run in a Node.js environment as well as a web browser environment. Has minimal external dependencies, and provides various core functions and interfaces such as:
+- `bonito-core` - A common package intended to be able to run in a Node.js environment as well as a web browser environment. Has minimal external dependencies, and provides various core functions and interfaces such as:
 
     - A common HTTP layer which wraps specific implementations of HTTP auth and transport (such as the Azure Portal's `batch()` API for sending/receiving multiple logical HTTP requests in a single request/response)
     - A reactive data layer for forms, intended to act as a view model for a form UI
 
-- `service` - A package intended to act as a decoupled data access & business logic layer.
+- `bonito-ui` - A React-based component package specifically designed to be deployed in an Azure Portal ReactView blade. Its peerDependencies are tailored toward a specific version of the Azure Portal SDK, and should be kept up to date with the version of the SDK that we are targeting. This packages builds a small AMD-compatible file which excludes any dependencies which the Azure Portal already provides such as React, FluentUI and Redux.
 
-- `react` - A React-based component package specifically designed to be deployed in an Azure Portal ReactView blade. Its peerDependencies are tailored toward a specific version of the Azure Portal SDK, and should be kept up to date with the version of the SDK that we are targeting. This packages builds a small AMD-compatible file which excludes any dependencies which the Azure Portal already provides such as React, FluentUI and Redux.
+- `service` - A package intended to act as a decoupled data access & business logic layer for the Batch service.
+
+- `react` - A package containing Batch-specific UI components.
 
 - `playground` - A package containing the code to render a UI component playground for developing components in isolation and testing edge cases.
 

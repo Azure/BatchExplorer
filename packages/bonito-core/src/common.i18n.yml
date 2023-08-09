@@ -1,0 +1,10 @@
+arm:
+  location: Location
+  resourceGroup: Resource group
+  storageAccount: Storage account
+  subscription: Subscription
+
+close: Close
+learnMoreLinkText: Learn more
+notApplicable: N/A
+save: Save
