@@ -132,6 +132,20 @@ export async function mergeAllTranslations(outputPath: string) {
     console.log(`Merged translations have been saved in ${outputPath}`);
 }
 
+// Helper function that generates the TypeScript interface from the JSON content
+function generateTypeScriptInterface(
+    cleanedContent: Record<string, unknown>
+): string {
+    let tsContent = "export interface GeneratedResourceStrings {\n";
+
+    for (const key in cleanedContent) {
+        tsContent += `    "${key}": string;\n`;
+    }
+
+    tsContent += "}\n";
+    return tsContent;
+}
+
 // Function to generate English file for a package from its YAML files
 export async function createEnglishTranslations(
     sourcePath: string,
@@ -184,6 +198,21 @@ export async function createEnglishTranslations(
     console.log(
         `Saved stripped english translations to JSON file ${resourcesJsonPath}`
     );
+
+    // Generate and save the TypeScript interface
+    const tsContent = generateTypeScriptInterface(cleanContent);
+    const resourcesTsPath = path.join(
+        sourcePath,
+        "localization/generated/resources.ts"
+    );
+
+    if (!fs.existsSync(path.dirname(resourcesTsPath))) {
+        fs.mkdirSync(path.dirname(resourcesTsPath), { recursive: true });
+    }
+
+    fs.writeFileSync(resourcesTsPath, tsContent);
+
+    console.log(`Saved generated TypeScript interface to ${resourcesTsPath}`);
 }
 
 //load-dev-translations.ts

@@ -30,6 +30,7 @@
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",
     "clean:umd": "bux rmrf ./lib-umd",
+    "clean:localization": "bux rmrf ./src/explorer-web/localization/generated",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
     "test:all": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage",
