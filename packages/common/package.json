@@ -62,7 +62,7 @@
     "@types/luxon": "^2.0.2",
     "events": "^3.3.0",
     "lodash": "^4.17.20",
-    "luxon": "^2.0.2"
+    "luxon": "^2.5.2"
   },
   "devDependencies": {
     "@batch/common-config": "^1.0.0",
