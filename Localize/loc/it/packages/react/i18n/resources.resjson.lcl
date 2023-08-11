@@ -72,6 +72,42 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";lib.react.pool.infoBox.nodeCommsModeDiffers.message" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If the target node communication mode differs from the current mode, Batch will attempt to update the mode the next time the pool is resized down to zero compute nodes and back up.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Se la modalità di comunicazione del nodo di destinazione è diversa dalla modalità corrente, Batch proverà ad aggiornare la modalità in corrispondenza del successivo ridimensionamento del pool fino a zero nodi di calcolo e del backup.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";lib.react.pool.notFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No pool found]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non sono stati trovati pool]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";lib.react.pool.parameter.currentNodeCommunicationMode.label" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Current node communication mode]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Modalità di comunicazione tra nodi corrente]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";lib.react.pool.parameter.targetNodeCommunicationMode.label" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Target node communication mode]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Modalità di comunicazione del nodo di destinazione]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
     </Item>
   </Item>
 </LCX>
