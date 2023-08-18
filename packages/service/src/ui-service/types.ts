@@ -1,5 +1,5 @@
 import "@batch/ui-common";
-import { GeneratedResourceStrings } from "./localization/generated/resources";
+import { GeneratedResourceStrings } from "./generated/localization/resources";
 
 // This code augments the LocalizedStrings interface in
 // the common module with strings the service module uses.

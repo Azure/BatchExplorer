@@ -1,4 +1,4 @@
-import { GeneratedResourceStrings } from "./generated/resources";
+import { GeneratedResourceStrings } from "../generated/localization/resources";
 
 // This is the base interface in the common module for all localized strings.
 // Other packages can augment this type using a module declaration.

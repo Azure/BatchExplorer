@@ -1,6 +1,6 @@
 import "@batch/ui-common";
-import { GeneratedResourceStrings as ServiceResourceStrings } from "@batch/ui-service/lib/localization/generated/resources";
-import { GeneratedResourceStrings } from "./localization/generated/resources";
+import { GeneratedResourceStrings as ServiceResourceStrings } from "@batch/ui-service/lib/generated/localization/resources";
+import { GeneratedResourceStrings } from "./generated/localization/resources";
 
 // This code augments the LocalizedStrings interface in the
 // common module with strings the service and react modules use.

@@ -26,7 +26,7 @@
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",
     "clean:cjs": "bux rmrf ./lib-cjs",
-    "clean:localization": "bux rmrf ./src/ui-react/localization/generated",
+    "clean:generated": "bux rmrf ./src/ui-react/generated",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
     "test:all": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage",

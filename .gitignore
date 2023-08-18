@@ -15,9 +15,9 @@ Localize/out/
 /packages/service/resources/i18n/*
 web/dev-server/resources/i18n/*
 desktop/resources/i18n/*
-/packages/common/src/ui-common/localization/generated/*
-/packages/playground/src/ui-playground/localization/generated/*
-/packages/react/src/ui-react/localization/generated/*
-/packages/service/src/ui-service/localization/generated/*
-/web/src/explorer-web/localization/generated/*
-/desktop/src/localization/generated/*
+/packages/common/src/ui-common/generated/*
+/packages/playground/src/ui-playground/generated/*
+/packages/react/src/ui-react/generated/*
+/packages/service/src/ui-service/generated/*
+/web/src/explorer-web/generated/*
+/desktop/src/generated/*

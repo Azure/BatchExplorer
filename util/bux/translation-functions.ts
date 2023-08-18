@@ -203,7 +203,7 @@ export async function createEnglishTranslations(
     const tsContent = generateTypeScriptInterface(cleanContent);
     const resourcesTsPath = path.join(
         sourcePath,
-        "localization/generated/resources.ts"
+        "generated/localization/resources.ts"
     );
 
     if (!fs.existsSync(path.dirname(resourcesTsPath))) {
