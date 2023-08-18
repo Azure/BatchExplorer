@@ -342,32 +342,37 @@ export async function linkLocalProjects() {
     runLinkageTask((opts: LinkOptions) => {
         info(`Linking ${opts.versionedPackageName}`);
 
-        const nodeModulePath = path.join(
-            opts.targetPath,
-            "node_modules",
-            opts.packageName
-        );
+        const nodeModulesPath = path.join(opts.targetPath, "node_modules");
+        const targetPath = path.join(nodeModulesPath, opts.packageName);
 
-        if (!fs.existsSync(nodeModulePath)) {
+        if (!fs.existsSync(nodeModulesPath)) {
             throw new Error(
-                `Failed to link ${opts.packageName}: ${nodeModulePath} doesn't exist`
+                `Failed to link ${opts.packageName}: ${nodeModulesPath} doesn't exist`
+            );
+        }
+        if (!fs.lstatSync(nodeModulesPath).isDirectory()) {
+            throw new Error(
+                `Failed to link ${opts.packageName}: ${nodeModulesPath} is not a directory`
             );
         }
 
-        const stats = fs.lstatSync(nodeModulePath);
-        if (!stats.isDirectory()) {
-            throw new Error(
-                `Failed to link ${opts.packageName}: ${nodeModulePath} is not a directory`
-            );
-        }
-        if (stats.isSymbolicLink()) {
-            throw new Error(
-                `Failed to link ${opts.packageName}: ${nodeModulePath} is already a symlink`
+        if (fs.existsSync(targetPath)) {
+            if (fs.lstatSync(targetPath).isSymbolicLink()) {
+                // Early out if target is already a symlink
+                console.warn(
+                    `${targetPath} is already a symbolic link - skipping`
+                );
+                return;
+            } else {
+                shell.rm("-rf", targetPath);
+            }
+        } else {
+            console.warn(
+                `No directory for ${opts.packageName} found in node_modules.`
             );
         }
 
-        shell.rm("-rf", nodeModulePath);
-        shell.ln("-s", opts.packagePath, nodeModulePath);
+        shell.ln("-s", opts.packagePath, targetPath);
     });
 }
 
