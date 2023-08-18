@@ -6,6 +6,5 @@ import { GeneratedResourceStrings } from "./generated/localization/resources";
  */
 declare module "@azure/bonito-core" {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface LocalizedStrings
-        extends GeneratedResourceStrings {}
+    interface LocalizedStrings extends GeneratedResourceStrings {}
 }
