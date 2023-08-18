@@ -14,8 +14,8 @@
   "types": "./lib/index.d.ts",
   "test": "jest",
   "scripts": {
-    "build": "npm run compile && npm run build-translations",
-    "build:clean": "run-s clean compile",
+    "build": "npm run build-translations && npm run compile",
+    "build:clean": "run-s clean build-translations compile",
     "build:test": "run-s build test",
     "bux": "bux",
     "build-translations": "bux build-translations --src src/ui-react --dest i18n --outputPath resources/i18n/json --packageName lib.react",
@@ -26,6 +26,7 @@
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",
     "clean:cjs": "bux rmrf ./lib-cjs",
+    "clean:generated": "bux rmrf ./src/ui-react/generated",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
     "test:all": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage",

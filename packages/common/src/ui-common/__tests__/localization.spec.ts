@@ -1,5 +1,6 @@
 import { initMockEnvironment } from "../environment";
 import { translate } from "../localization/localization-util";
+import { LocalizedStrings } from "../localization/localized-strings";
 
 describe("Localization utilities", () => {
     beforeEach(() => {
@@ -13,8 +14,8 @@ describe("Localization utilities", () => {
     });
 
     test("Throw error if string is unknown", () => {
-        expect(() => translate("Invalid")).toThrowError(
-            "Unable to translate string Invalid"
-        );
+        expect(() =>
+            translate("Invalid" as unknown as keyof LocalizedStrings)
+        ).toThrowError("Unable to translate string Invalid");
     });
 });
