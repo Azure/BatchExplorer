@@ -3,13 +3,13 @@
 
 const path = require("path");
 
-const { ESBuildMinifyPlugin } = require("esbuild-loader");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TSConfigPathsWebpackPlugin = require("tsconfig-paths-webpack-plugin");
 const BundleAnalyzerWebpackPlugin =
     require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const webpack = require("webpack");
+const { EsbuildPlugin } = require("esbuild-loader");
 
 const MODE_DEV = "development";
 const MODE_PROD = "production";
@@ -112,9 +112,10 @@ module.exports = (env) => {
                 {
                     test: /\.tsx?$/,
                     loader: "esbuild-loader",
+                    include: [path.resolve(__dirname, "src")],
                     options: {
                         loader: "tsx",
-                        target: "es2015",
+                        target: "es2020",
                     },
                 },
                 {
@@ -144,8 +145,8 @@ module.exports = (env) => {
             minimizer: OPTS.DEV_MODE
                 ? []
                 : [
-                      new ESBuildMinifyPlugin({
-                          target: "es2015",
+                      new EsbuildPlugin({
+                          target: "es2020",
                       }),
                   ],
         },
