@@ -1,24 +1,36 @@
-import BatchExplorerHttpClient from "@batch-flask/core/batch-explorer-http-client";
 import {
     DependencyName,
     EnvironmentMode,
+    LiveLocationService,
+    LiveResourceGroupService,
+    LiveStorageAccountService,
+    LiveSubscriptionService,
     initEnvironment
-} from "@batch/ui-common";
-import { StandardClock } from "@batch/ui-common/lib/datetime";
-import { createConsoleLogger } from "@batch/ui-common/lib/logging";
-import { BrowserDependencyName, DefaultBrowserEnvironment } from "@batch/ui-react";
-import { DefaultFormControlResolver, DefaultFormLayoutProvider } from "@batch/ui-react/lib/components/form";
-import { LivePoolService, LiveSubscriptionService, LiveStorageAccountService } from "@batch/ui-service";
-import { LiveLocationService } from "@batch/ui-service/lib/location";
-import { LiveResourceGroupService } from "@batch/ui-service/lib/resource-group";
+} from "@azure/bonito-core";
+import { StandardClock } from "@azure/bonito-core/lib/datetime";
+import { createConsoleLogger } from "@azure/bonito-core/lib/logging";
+import { DefaultFormLayoutProvider } from "@azure/bonito-ui/lib/components/form";
+import { BrowserDependencyName, BrowserEnvironmentConfig, DefaultBrowserEnvironment } from "@azure/bonito-ui/lib/environment";
+import BatchExplorerHttpClient from "@batch-flask/core/batch-explorer-http-client";
+import { BatchBrowserDependencyFactories, BatchFormControlResolver } from "@batch/ui-react";
+import { LivePoolService } from "@batch/ui-service";
+import { BatchDependencyName } from "@batch/ui-service/lib/environment";
 import { DesktopLocalizer } from "app/localizer/desktop-localizer";
-import { AppTranslationsLoaderService, AuthService } from "app/services";
+import { AppTranslationsLoaderService, AuthService, BatchExplorerService } from "app/services";
 import { Environment } from "common/constants";
 
-export function initDesktopEnvironment(translationsLoaderService: AppTranslationsLoaderService, authService: AuthService): void {
-    initEnvironment(new DefaultBrowserEnvironment(
+export function initDesktopEnvironment(
+    translationsLoaderService: AppTranslationsLoaderService,
+    authService: AuthService,
+    batchExplorer: BatchExplorerService
+): void {
+    initEnvironment(new DefaultBrowserEnvironment<
+        BrowserEnvironmentConfig,
+        BatchBrowserDependencyFactories
+    >(
         {
-            mode: ENV === Environment.prod ? EnvironmentMode.Production : EnvironmentMode.Development
+            mode: ENV === Environment.prod ? EnvironmentMode.Production : EnvironmentMode.Development,
+            armUrl: batchExplorer.azureEnvironment.arm
         },
         {
             [DependencyName.Clock]: () => new StandardClock(),
@@ -27,18 +39,18 @@ export function initDesktopEnvironment(translationsLoaderService: AppTranslation
             [DependencyName.Localizer]: () => new DesktopLocalizer(translationsLoaderService),
             [DependencyName.HttpClient]:
                 () => new BatchExplorerHttpClient(authService),
-            [BrowserDependencyName.LocationService]: () =>
+            [DependencyName.LocationService]: () =>
                 new LiveLocationService(),
-            [BrowserDependencyName.PoolService]: () =>
+            [BatchDependencyName.PoolService]: () =>
                 new LivePoolService(),
-            [BrowserDependencyName.ResourceGroupService]: () =>
+            [DependencyName.ResourceGroupService]: () =>
                 new LiveResourceGroupService(),
-            [BrowserDependencyName.StorageAccountService]:
+            [DependencyName.StorageAccountService]:
                 () => new LiveStorageAccountService(),
-            [BrowserDependencyName.SubscriptionService]:
+            [DependencyName.SubscriptionService]:
                 () => new LiveSubscriptionService(),
             [BrowserDependencyName.FormControlResolver]:
-                () => new DefaultFormControlResolver(),
+                () => new BatchFormControlResolver(),
             [BrowserDependencyName.FormLayoutProvider]:
                 () => new DefaultFormLayoutProvider(),
         }

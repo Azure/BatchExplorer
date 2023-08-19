@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { Localizer } from "@batch/ui-common/lib/localization";
+import { Localizer } from "@azure/bonito-core/lib/localization";
 import { AppTranslationsLoaderService } from "app/services";
 
 export class DesktopLocalizer implements Localizer {

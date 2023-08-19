@@ -12,12 +12,13 @@ import {
     AuthService,
     AuthorizationHttpService,
     BatchAccountService,
+    BatchExplorerService,
     NavigatorService,
     NcjTemplateService,
     PredefinedFormulaService,
     PricingService,
     PythonRpcService,
-    ThemeService,
+    ThemeService
 } from "app/services";
 import { BEUserConfiguration } from "common";
 import { Subject, combineLatest } from "rxjs";
@@ -35,6 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
     @HostBinding("class.batch-explorer") public readonly beCls = true;
     @HostBinding("class.high-contrast") public isHighContrast = false;
 
+    private _envInitialized = false;
     private _destroy = new Subject();
 
     constructor(
@@ -57,10 +59,9 @@ export class AppComponent implements OnInit, OnDestroy {
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
         private workspaceService: WorkspaceService,
-        private translationsLoaderService: AppTranslationsLoaderService
+        private translationsLoaderService: AppTranslationsLoaderService,
+        private batchExplorer: BatchExplorerService
     ) {
-        initDesktopEnvironment(translationsLoaderService, authService);
-
         this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
         this._initWorkspaces();
         this.pricingService.init();
@@ -76,7 +77,13 @@ export class AppComponent implements OnInit, OnDestroy {
             userConfigurationService.config,
             workspaceService.haveWorkspacesLoaded,
         ).pipe(takeUntil(this._destroy)).subscribe((loadedArray) => {
-            this.isAppReady = loadedArray[0] && loadedArray[1];
+            const ready = loadedArray[0] && loadedArray[1];
+
+            if (ready && !this._envInitialized) {
+                initDesktopEnvironment(translationsLoaderService, authService, batchExplorer);
+            }
+
+            this.isAppReady = ready;
         });
 
         registerIcons(matIconRegistry, sanitizer);

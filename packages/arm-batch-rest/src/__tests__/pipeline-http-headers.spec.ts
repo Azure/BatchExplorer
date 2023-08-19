@@ -1,6 +1,6 @@
 import { RawHttpHeaders } from "@azure/core-rest-pipeline";
 import { PipelineHttpHeadersImpl } from "../http/pipeline-http-headers";
-import { MapHttpHeaders } from "@batch/ui-common/lib/http";
+import { MapHttpHeaders } from "@azure/bonito-core/lib/http";
 
 describe("PipelineHttpHeadersImpl", () => {
     test("Pipeline Initialization with MapHttpHeaders", () => {

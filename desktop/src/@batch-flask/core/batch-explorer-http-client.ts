@@ -1,4 +1,4 @@
-import { AbstractHttpClient, FetchHttpClient, HttpRequestInit, UrlOrRequestInit } from "@batch/ui-common";
+import { AbstractHttpClient, FetchHttpClient, HttpRequestInit, UrlOrRequestInit } from "@azure/bonito-core";
 import { TenantPlaceholders } from "client/core/aad/aad-constants";
 import { AuthService } from "../../app/services";
 import { AccessToken } from "./aad";

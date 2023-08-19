@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, Output } from "@angular/core";
-import { Action } from "@batch/ui-common/lib/action";
-import { FormValues } from "@batch/ui-common/lib/form";
-import { ActionForm, ActionFormProps } from "@batch/ui-react/lib/components/form";
+import { Action } from "@azure/bonito-core/lib/action";
+import { FormValues } from "@azure/bonito-core/lib/form";
+import { ActionForm, ActionFormProps } from "@azure/bonito-ui/lib/components/form";
 import { Observable } from "rxjs";
 import { FormSize } from "@batch-flask/ui/form";
 import { ContainerRef } from "@batch-flask/ui/form/form-base";
@@ -10,7 +10,7 @@ import { SidebarRef } from "@batch-flask/ui";
 
 import "./react-action-form.scss";
 import { autobind } from "@batch-flask/core";
-import { translate } from "@batch/ui-common";
+import { translate } from "@azure/bonito-core";
 
 /**
  * SimpleForm is an helper component that use a ComplexForm with only 1 page and section.
@@ -57,10 +57,10 @@ export class ReactActionFormComponent {
     public submit: (error?: unknown) => Observable<unknown> | null;
 
     @Input()
-    public submitText = translate("lib.common.save");
+    public submitText = translate("bonito.core.save");
 
     @Input()
-    public cancelText = translate("lib.common.close");
+    public cancelText = translate("bonito.core.close");
 
     @Input()
     public set action(action: Action) {

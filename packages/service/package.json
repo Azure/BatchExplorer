@@ -15,9 +15,9 @@
   "test": "jest",
   "scripts": {
     "build": "npm run build-translations && npm run compile",
-    "build:clean": "run-s clean build-translations compile",
+    "build:clean": "run-s clean build",
     "build:test": "run-s build test",
-    "build-translations": "bux build-translations --src src/ui-service --dest i18n --outputPath resources/i18n/json --packageName lib.service",
+    "build-translations": "bux build-translations --src src --dest i18n --outputPath resources/i18n/json --packageName lib.service",
     "compile": "run-p compile:*",
     "compile:esm": "tsc -b ./config/tsconfig.build.json",
     "compile:cjs": "tsc -b ./config/tsconfig.cjs.json",
@@ -63,8 +63,8 @@
     "tslib": "~2.3.1"
   },
   "dependencies": {
-    "@batch/arm-batch-rest": "^1.0.0",
-    "@batch/ui-common": "^1.0.0"
+    "@azure/bonito-core": "^1.0.0",
+    "@batch/arm-batch-rest": "^1.0.0"
   },
   "devDependencies": {
     "@batch/common-config": "^1.0.0",

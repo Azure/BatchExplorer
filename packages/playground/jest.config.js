@@ -5,8 +5,6 @@ module.exports = require("@batch/common-config/jest-common").createConfig(
     require("./tsconfig"),
     {
         testEnvironment: "jsdom",
-        setupFilesAfterEnv: [
-            "<rootDir>/src/ui-playground/__tests__/setup-tests.tsx",
-        ],
+        setupFilesAfterEnv: ["<rootDir>/src/__tests__/setup-tests.tsx"],
     }
 );

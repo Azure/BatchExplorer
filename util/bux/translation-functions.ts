@@ -27,7 +27,8 @@ export async function mergeAllTranslations(outputPath: string) {
 
     // Define resource directories (absolute paths)
     const resourceDirs = [
-        path.join(rootDir, "packages/common/resources/i18n/json"),
+        path.join(rootDir, "packages/bonito-core/resources/i18n/json"),
+        path.join(rootDir, "packages/bonito-ui/resources/i18n/json"),
         path.join(rootDir, "packages/playground/resources/i18n/json"),
         path.join(rootDir, "packages/react/resources/i18n/json"),
         path.join(rootDir, "packages/service/resources/i18n/json"),
@@ -39,7 +40,23 @@ export async function mergeAllTranslations(outputPath: string) {
 
     buildPackageEnglishPromises.push(
         createEnglishTranslations(
-            path.join(rootDir, "packages/react/src/ui-react"),
+            path.join(rootDir, "packages/bonito-core/src"),
+            path.join(rootDir, "packages/bonito-core/i18n"),
+            path.join(rootDir, "packages/bonito-core/resources/i18n/json"),
+            "bonito.core"
+        )
+    );
+    buildPackageEnglishPromises.push(
+        createEnglishTranslations(
+            path.join(rootDir, "packages/bonito-ui/src"),
+            path.join(rootDir, "packages/bonito-ui/i18n"),
+            path.join(rootDir, "packages/bonito-ui/resources/i18n/json"),
+            "bonito.ui"
+        )
+    );
+    buildPackageEnglishPromises.push(
+        createEnglishTranslations(
+            path.join(rootDir, "packages/react/src"),
             path.join(rootDir, "packages/react/i18n"),
             path.join(rootDir, "packages/react/resources/i18n/json"),
             "lib.react"
@@ -47,7 +64,7 @@ export async function mergeAllTranslations(outputPath: string) {
     );
     buildPackageEnglishPromises.push(
         createEnglishTranslations(
-            path.join(rootDir, "packages/playground/src/ui-playground"),
+            path.join(rootDir, "packages/playground/src"),
             path.join(rootDir, "packages/playground/i18n"),
             path.join(rootDir, "packages/playground/resources/i18n/json"),
             "lib.playground"
@@ -55,15 +72,7 @@ export async function mergeAllTranslations(outputPath: string) {
     );
     buildPackageEnglishPromises.push(
         createEnglishTranslations(
-            path.join(rootDir, "packages/common/src/ui-common"),
-            path.join(rootDir, "packages/common/i18n"),
-            path.join(rootDir, "packages/common/resources/i18n/json"),
-            "lib.common"
-        )
-    );
-    buildPackageEnglishPromises.push(
-        createEnglishTranslations(
-            path.join(rootDir, "packages/service/src/ui-service"),
+            path.join(rootDir, "packages/service/src"),
             path.join(rootDir, "packages/service/i18n"),
             path.join(rootDir, "packages/service/resources/i18n/json"),
             "lib.service"

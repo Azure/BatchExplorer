@@ -1,9 +1,9 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { AbstractAction } from "@batch/ui-common/lib/action";
-import { Form, StringParameter } from "@batch/ui-common/lib/form";
-import { createReactForm } from "@batch/ui-react";
+import { AbstractAction } from "@azure/bonito-core/lib/action";
+import { Form, StringParameter } from "@azure/bonito-core/lib/form";
+import { createReactForm } from "@azure/bonito-ui";
 import { getByLabelText, getByRole, waitFor } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { initMockDesktopEnvironment } from "app/environment/mock-desktop-environment";

@@ -20,8 +20,8 @@ import {
     DependencyName,
     getMockEnvironment,
     initMockEnvironment,
-} from "@batch/ui-common/lib/environment";
-import { MockHttpClient, MockHttpResponse } from "@batch/ui-common/lib/http";
+} from "@azure/bonito-core/lib/environment";
+import { MockHttpClient, MockHttpResponse } from "@azure/bonito-core/lib/http";
 
 const _SUFFIX = Math.random().toString(16).substr(2, 4);
 

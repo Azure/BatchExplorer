@@ -4,7 +4,10 @@
       "LanguageSet": "Azure_LanguagesExt",
       "LocItems": [
         {
-          "SourceFile": "packages\\common\\i18n\\resources.resjson"
+          "SourceFile": "packages\\bonito-core\\i18n\\resources.resjson"
+        },
+        {
+          "SourceFile": "packages\\bonito-ui\\i18n\\resources.resjson"
         },
         {
           "SourceFile": "packages\\playground\\i18n\\resources.resjson"

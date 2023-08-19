@@ -3,10 +3,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { FormModule, SidebarRef } from "@batch-flask/ui";
-import { fromIso } from "@batch/ui-common";
-import { AbstractAction } from "@batch/ui-common/lib/action";
-import { Form, StringParameter } from "@batch/ui-common/lib/form";
-import { createReactForm } from "@batch/ui-react";
+import { fromIso } from "@azure/bonito-core";
+import { AbstractAction } from "@azure/bonito-core/lib/action";
+import { Form, StringParameter } from "@azure/bonito-core/lib/form";
+import { createReactForm } from "@azure/bonito-ui";
 import { getAllByRole, getByLabelText, getByRole, waitFor } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { initMockDesktopEnvironment } from "app/environment/mock-desktop-environment";
@@ -116,7 +116,7 @@ describe("EditNodeCommsFormComponent", () => {
         expect(getAllByRole(el, "button").length).toBe(2);
 
         const saveButton = getByRole(el, "button", {
-            name: "lib.common.save"
+            name: "bonito.core.save"
         });
         expect(saveButton).toBeTruthy();
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { DataCacheTracker, GenericView } from "@batch-flask/core";
-import { destroyEnvironment } from "@batch/ui-common";
+import { destroyEnvironment } from "@azure/bonito-core";
 import { Observable } from "rxjs";
 import { MockEntityView, MockListView } from "test/utils/mocks";
 

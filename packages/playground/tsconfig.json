@@ -3,5 +3,10 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./build/cache/ts.buildinfo"
   },
-  "references": [{ "path": "../common" }, { "path": "../service" }]
+  "references": [
+    { "path": "../bonito-core" },
+    { "path": "../bonito-ui" },
+    { "path": "../react" },
+    { "path": "../service" }
+  ]
 }
