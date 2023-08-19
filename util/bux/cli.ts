@@ -56,7 +56,7 @@ yargs
                 })
                 .option("packageName", {
                     describe:
-                        "The name of the module (e.g. lib.common) that translations will be built for",
+                        "The name of the module (e.g. bonito.core) that translations will be built for",
                     default: "",
                     demandOption: false,
                 }),

@@ -19,7 +19,7 @@
     "build:clean": "run-s clean compile bundle:dev",
     "build:prod": "run-s clean compile bundle:prod",
     "build:test": "run-s build test",
-    "build-translations": "bux build-translations --src src/explorer-web --dest i18n --outputPath ./dev-server/resources/i18n",
+    "build-translations": "bux build-translations --src src --dest i18n --outputPath ./dev-server/resources/i18n",
     "bundle": "npm run bundle:dev",
     "bundle:analyze": "webpack --env.analyze",
     "bundle:dev": "webpack --env.dev",
@@ -30,7 +30,7 @@
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",
     "clean:umd": "bux rmrf ./lib-umd",
-    "clean:generated": "bux rmrf ./src/explorer-web/generated",
+    "clean:generated": "bux rmrf ./src/generated",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
     "test:all": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage",
@@ -71,8 +71,9 @@
     "tslib": "~2.3.1"
   },
   "dependencies": {
+    "@azure/bonito-core": "^1.0.0",
+    "@azure/bonito-ui": "^1.0.0",
     "@batch/common-config": "^1.0.0",
-    "@batch/ui-common": "^1.0.0",
     "@batch/ui-playground": "^1.0.0",
     "@batch/ui-react": "^1.0.0",
     "@batch/ui-service": "^1.0.0",

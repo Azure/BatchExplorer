@@ -12,7 +12,7 @@ if ($artifactsPath -eq "") {
     $sourceRoot = $artifactsPath
 }
 
-$packageNames = @("common", "service", "playground", "react", "web", "desktop")
+$packageNames = @("bonito-core", "bonito-ui", "service", "playground", "react", "web", "desktop")
 
 # Get language directories
 $languageDirs = Get-ChildItem -Path $sourceRoot -Directory

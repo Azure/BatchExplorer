@@ -89,7 +89,7 @@ module.exports = (env) => {
             },
         },
 
-        entry: "./src/explorer-web/index.tsx",
+        entry: "./src/index.tsx",
 
         resolve: {
             extensions: [".ts", ".tsx", ".js"],

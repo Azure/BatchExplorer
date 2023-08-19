@@ -1,14 +1,13 @@
 import {
-    DependencyFactories,
     DependencyName,
     initEnvironment,
     mockDependencyFactories,
     mockEnvironmentConfig
-} from "@batch/ui-common/lib/environment";
+} from "@azure/bonito-core/lib/environment";
+import { BrowserEnvironmentConfig, MockBrowserEnvironment } from "@azure/bonito-ui/lib/environment";
 import {
-    BrowserEnvironmentConfig,
-    MockBrowserEnvironment,
-    mockBrowserDepFactories
+    BatchBrowserDependencyFactories,
+    mockBatchBrowserDepFactories,
 } from "@batch/ui-react/lib/environment";
 import { FakeDesktopLocalizer } from "app/localizer/fake-desktop-localizer";
 
@@ -17,7 +16,7 @@ import { FakeDesktopLocalizer } from "app/localizer/fake-desktop-localizer";
  */
 export function initMockDesktopEnvironment(
     configOverrides: Partial<BrowserEnvironmentConfig> = {},
-    depFactoryOverrides: Partial<DependencyFactories> = {}
+    depFactoryOverrides: Partial<BatchBrowserDependencyFactories> = {}
 ): void {
     const config = { ...mockEnvironmentConfig, ...configOverrides };
 
@@ -28,7 +27,7 @@ export function initMockDesktopEnvironment(
 
     const depFactories = {
         ...mockDependencyFactories,
-        ...mockBrowserDepFactories,
+        ...mockBatchBrowserDepFactories,
         ...mockDesktopDepFactories,
         ...depFactoryOverrides,
     };

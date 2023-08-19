@@ -38,4 +38,4 @@ npm run build
 
 Invoking `npm test` will directly invoke Jest and run all the test suites as exists under __src/__. If you would like to test a particular test file, you can pass the test file relative path to the command i.e. `npm test -- .\src\__tests__\batch-management-client.spec.ts`.
 
-The tests defined in the `batch-management-client.spec.ts` file utilizes the MockHttpClient and MockEnvironment defined within the common/ui-common sub-module to test a BatchManagementClient instance. Rather than making direct REST API calls to the management plane, the API responses will be mocked.
+The tests defined in the `batch-management-client.spec.ts` file utilizes the MockHttpClient and MockEnvironment defined within the bonito-core sub-module to test a BatchManagementClient instance. Rather than making direct REST API calls to the management plane, the API responses will be mocked.

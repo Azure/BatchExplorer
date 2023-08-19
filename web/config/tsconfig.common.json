@@ -3,9 +3,9 @@
   "compilerOptions": {
     "jsx": "react",
     "outDir": "../lib",
-    "rootDir": "../src/explorer-web",
-    "baseUrl": "../src/explorer-web",
+    "rootDir": "../src",
+    "baseUrl": "../src",
     "typeRoots": ["../node_modules/@types"]
   },
-  "include": ["../src/explorer-web"]
+  "include": ["../src"]
 }
