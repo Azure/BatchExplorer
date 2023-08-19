@@ -1,9 +1,5 @@
 {
   "lib.react.account.parameter.name.label": "Account name",
-  "lib.react.arm.location": "Location",
-  "lib.react.arm.resourceGroup": "Resource group",
-  "lib.react.arm.storageAccount": "Storage account",
-  "lib.react.arm.subscription": "Subscription",
   "lib.react.pool.infoBox.nodeCommsModeDiffers.message": "If the target node communication mode differs from the current mode, Batch will attempt to update the mode the next time the pool is resized down to zero compute nodes and back up.",
   "lib.react.pool.notFound": "No pool found",
   "lib.react.pool.parameter.currentNodeCommunicationMode.label": "Current node communication mode",
