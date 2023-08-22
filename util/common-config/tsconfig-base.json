@@ -3,7 +3,7 @@
     "composite": true,
     "incremental": true,
     "strict": true,
-    "target": "ES5",
+    "target": "ES2015",
     "lib": ["DOM", "DOM.Iterable", "ES2018"],
     "esModuleInterop": true,
     "experimentalDecorators": true,

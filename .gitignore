@@ -12,7 +12,7 @@ Localize/out/
 
 /desktop/resources/i18n/*
 /packages/*/resources/i18n/*
-/web/dev-server/resources/i18n/*
+/web/resources/i18n/*
 
 /desktop/src/generated/*
 /packages/*/src/generated/*
