@@ -32,6 +32,15 @@ declare const ENV: {
     MODE: EnvironmentMode;
 };
 
+// Bootstrap the app
+const rootEl = document.getElementById("batch-explorer-root");
+if (!rootEl) {
+    throw new Error(
+        "Failed to initialize: No element with an ID of 'batch-explorer-root' found."
+    );
+}
+init(rootEl);
+
 export async function init(rootEl: HTMLElement): Promise<void> {
     const localizer = new HttpLocalizer();
     await localizer.loadTranslations();

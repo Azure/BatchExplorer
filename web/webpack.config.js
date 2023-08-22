@@ -40,6 +40,7 @@ module.exports = (env) => {
         new HtmlWebpackPlugin({
             template: "dev-server/index.html",
             inject: "head",
+            scriptLoading: "module",
         })
     );
 
@@ -67,7 +68,7 @@ module.exports = (env) => {
         mode: OPTS.DEV_MODE ? MODE_DEV : MODE_PROD,
         target: "web",
         devtool: OPTS.DEV_MODE ? "inline-source-map" : undefined,
-        watch: OPTS.WATCH_MODE ? true : false,
+        watch: OPTS.WATCH_MODE ? true : undefined,
 
         output: {
             path: path.join(__dirname, "lib-umd"),
@@ -79,9 +80,17 @@ module.exports = (env) => {
         devServer: {
             open: OPTS.LAUNCH_BROWSER ? true : false,
             host: "127.0.0.1",
-            contentBase: path.join(__dirname, "dev-server"),
+            hot: true,
+            static: [
+                {
+                    directory: "dev-server",
+                },
+                {
+                    directory: "resources",
+                    publicPath: "/resources",
+                },
+            ],
             historyApiFallback: true,
-            watchContentBase: true,
             port: 9000,
             compress: true,
             headers: {
