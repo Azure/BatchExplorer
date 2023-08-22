@@ -49,11 +49,7 @@ function Copy-Resources {
 
     if ($packageName -eq "web" -or $packageName -eq "desktop") {
         $sourcePath = Join-Path $languageDirFullName "$packageName/i18n/resources.resjson"
-        if ($packageName -eq "web") {
-            $targetDir = Join-Path $scriptDir "../$packageName/dev-server/resources/i18n"
-        } else {
-            $targetDir = Join-Path $scriptDir "../$packageName/resources/i18n"
-        }
+        $targetDir = Join-Path $scriptDir "../$packageName/resources/i18n"
         $targetPath = Join-Path $targetDir "resources.$languageId.json"
     } else {
         $sourcePath = Join-Path $languageDirFullName "packages/$packageName/i18n/resources.resjson"

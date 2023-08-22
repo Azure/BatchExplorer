@@ -13,7 +13,7 @@ import { AppRoot } from "./layout/app-root";
 import { Footer } from "./layout/footer";
 import { Header } from "./layout/header";
 import { Main } from "./layout/main";
-import { Stack, IStackTokens } from "@fluentui/react/";
+import { Stack, IStackTokens } from "@fluentui/react/lib/Stack";
 import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { translate } from "@azure/bonito-core";
 

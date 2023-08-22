@@ -6,7 +6,7 @@ To build the latest English translation file from the YAML files:
 
 * Run `npm run build-translations`
 
-* `web/dev-server/resources/i18n/resources.en.json` contains web English strings (web + all packages)
+* `web/resources/i18n/resources.en.json` contains web English strings (web + all packages)
 * `desktop/resources/i18n/resources.en.json` contains desktop English strings (desktop + all packages)
 
 ## Building Translations Files for Other Languages (Windows-Only)
