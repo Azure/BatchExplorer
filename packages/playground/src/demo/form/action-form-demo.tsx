@@ -20,6 +20,7 @@ import { DemoComponentContainer } from "../../layout/demo-component-container";
 import { DemoControlContainer } from "../../layout/demo-control-container";
 import { DemoPane } from "../../layout/demo-pane";
 import { ActionForm, Dropdown } from "@azure/bonito-ui/lib/components/form";
+import { UpdateAccessRulesAction } from "@batch/ui-react/lib/networking";
 
 type CarFormValues = {
     subscriptionId?: string;
@@ -133,6 +134,10 @@ const actions: { [name: string]: () => Action } = {
             "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo",
             "hobopool1"
         ),
+    updateAccessRules: () =>
+        new UpdateAccessRulesAction(
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo"
+        ),
 };
 
 export const ActionFormDemo: React.FC = () => {
@@ -195,6 +200,10 @@ export const ActionFormDemo: React.FC = () => {
                         {
                             label: "Update pool node communication mode",
                             value: "updateNodeComms",
+                        },
+                        {
+                            label: "Update network access rules",
+                            value: "updateAccessRules",
                         },
                     ]}
                     onChange={(_, value) => {
