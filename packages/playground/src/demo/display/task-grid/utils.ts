@@ -23,8 +23,8 @@ export async function loadDemoTasks(): Promise<ILoadMoreListResult<IDemoTask>> {
     const tasks: IDemoTask[] = [];
 
     let taskNum = 0;
-    if (Math.random() > 0.5) {
-        taskNum = Math.floor(Math.random() * 50);
+    if (Math.random() > 0.3) {
+        taskNum = Math.floor(Math.random() * 10);
     }
 
     for (let i = 0; i < taskNum; i++) {

@@ -6,7 +6,7 @@ import {
     IDetailsRowProps,
 } from "@fluentui/react/lib/DetailsList";
 import { ShimmeredDetailsList } from "@fluentui/react/lib/ShimmeredDetailsList";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo } from "react";
 import {} from "@fluentui/react-hooks";
 // import { Stack } from "@fluentui/react";
 
@@ -71,7 +71,23 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
         [noResult, noReusltText]
     );
 
-    const isLoadingMore = useRef(false);
+    // const isLoadingMore = useRef(false);
+
+    const triggerLoadMore = useCallback(() => {
+        const shouldLoadMore = onLoadMore && propsItems.length && hasMore;
+        // !isLoadingMore.current;
+        console.log("triggerLoadMore", {
+            shouldLoadMore,
+            // isLoadingMore: isLoadingMore.current,
+        });
+        if (!shouldLoadMore) {
+            return;
+        }
+        // isLoadingMore.current = true;
+        return onLoadMore().finally(() => {
+            // isLoadingMore.current = false;
+        });
+    }, [hasMore, onLoadMore, propsItems.length]);
 
     const onRenderCustomPlaceholder = useCallback(
         (
@@ -83,24 +99,14 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
             // onRenderCustomPlaceholder might be called for multiple times
             // before user scrolls to the bottom
             // see: https://github.com/microsoft/fluentui/issues/4050
-            const shouldTriggerLoadMore =
-                hasMore &&
-                // propsItems.length === 0 means it's initially loading, don't trigger load more
-                propsItems.length &&
-                index === items.length - 1 &&
-                !isLoadingMore.current &&
-                onLoadMore;
 
-            if (shouldTriggerLoadMore) {
-                isLoadingMore.current = true;
-                onLoadMore().finally(() => {
-                    isLoadingMore.current = false;
-                });
+            if (index === items.length - 1) {
+                triggerLoadMore();
             }
 
             return defaultRender?.(rowProps);
         },
-        [hasMore, items.length, onLoadMore, propsItems.length]
+        [items.length, triggerLoadMore]
     );
 
     return (

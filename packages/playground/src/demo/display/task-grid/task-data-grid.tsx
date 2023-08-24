@@ -2,36 +2,15 @@ import React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
 import { DataGrid } from "@azure/bonito-ui/lib/components/data-grid-load-more";
 import { IColumn } from "@fluentui/react/lib/components/DetailsList";
-import { IDemoTask, loadDemoTasks } from "./utils";
-import { useEffect } from "react";
+import { useLoadMore } from "./hooks";
+import { loadDemoTasks } from "./utils";
 
 export const DataGridLoadMoreDemo = () => {
-    const [items, setItems] = React.useState<IDemoTask[]>([]);
-    const [hasMore, setHasMore] = React.useState(true);
-    // const [isLoading, setIsLoading] = React.useState(false);
-
-    const loadMoreCallback = React.useCallback(() => {
-        return loadDemoTasks().then((result) => {
-            const { data, done } = result;
-            if (!done && !data.length) {
-                loadMoreCallback();
-                return;
-            }
-            if (done) {
-                setHasMore(false);
-                return;
-            }
-            setItems((oriItems) => [...oriItems, ...data]);
-        });
+    const loadFn = React.useCallback(() => {
+        return loadDemoTasks();
     }, []);
 
-    useEffect(() => {
-        // initial load
-        // setIsLoading(true);
-        loadMoreCallback().finally(() => {
-            // setIsLoading(false);
-        });
-    }, [loadMoreCallback]);
+    const { items, hasMore, loadMoreCallback } = useLoadMore(loadFn);
 
     return (
         <DemoPane title="Data grid load more">
@@ -40,10 +19,7 @@ export const DataGridLoadMoreDemo = () => {
                 colums={columns}
                 // isLoading={isLoading}
                 hasMore={hasMore}
-                onLoadMore={async () => {
-                    console.log("onLoadMore called");
-                    return loadMoreCallback();
-                }}
+                onLoadMore={loadMoreCallback}
             />
         </DemoPane>
     );
