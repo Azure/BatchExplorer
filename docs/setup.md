@@ -6,7 +6,7 @@ The following are instructions for building and running Batch Explorer in a deve
 
     Make sure the following are installed:
 
-    - Node.js 16 or higher
+    - Node.js 18 or higher
     - Python 3.6 or higher
 
     **On Windows:**
@@ -24,8 +24,6 @@ The following are instructions for building and running Batch Explorer in a deve
     ```shell
     git config --global core.longpaths true
     ```
-
-    > **Note:** There are presently a few issues running Batch Explorer with Node 17 or later.
 
 2. Install dependencies:
 

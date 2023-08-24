@@ -18,6 +18,7 @@ import {
     rmrf,
     printStatus,
     unlinkLocalProjects,
+    ConfigureCommandOptions,
 } from "./util";
 
 yargs
@@ -90,7 +91,9 @@ yargs
                     describe: "Print the resultant configuration object",
                     default: false,
                 }),
-        handler: (argv) => configure(argv),
+        handler: (argv) =>
+            // KLUDGE: This should be properly typed
+            configure(argv as unknown as ConfigureCommandOptions),
     })
     .command({
         command: "cp <src> <dest>",

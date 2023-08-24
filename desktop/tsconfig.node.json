@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "ES6",
     "module": "commonjs",
-    "outDir": "build",
+    "outDir": "build"
   },
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
