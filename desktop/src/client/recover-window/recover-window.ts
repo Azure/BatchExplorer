@@ -1,6 +1,6 @@
 import { BrowserWindow, nativeImage } from "electron";
 import { Constants } from "../client-constants";
-import { UniqueWindow } from "../core";
+import { UniqueWindow, enableRemoteForWindow } from "../core";
 
 const urls = Constants.urls.recover;
 const url = process.env.HOT ? urls.dev : urls.prod;
@@ -38,9 +38,10 @@ export class RecoverWindow extends UniqueWindow {
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
-                enableRemoteModule: true,
             },
         });
+        enableRemoteForWindow(window);
+
         window.loadURL(url);
         window.webContents.once("dom-ready", () => {
             this._sendMessageToWindow();

@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { remote } from "electron";
 import { IpcService } from "./ipc.service";
 
 // Uncomment bellow to check sendSync performance issues
@@ -25,10 +24,15 @@ export class ElectronRemote {
     // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
     public MenuItem: typeof Electron.MenuItem;
 
-    public _remote: Electron.Remote;
+    private _remote;
+
     constructor(private ipc: IpcService) {
-        this._remote = remote;
-        this.Menu = this._remote.Menu;
+        // Require here because importing @electron/remote fails for client
+        // unit tests
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        this._remote = require("@electron/remote");
+
+        this.Menu = this._remote.RemoteMenu;
         this.MenuItem = this._remote.MenuItem;
     }
 

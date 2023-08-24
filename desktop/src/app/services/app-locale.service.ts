@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Locale, LocaleService } from "@batch-flask/core";
-import { remote } from "electron";
+import { getCurrentWindow } from "@electron/remote";
 
 @Injectable({providedIn: "root"})
 export class AppLocaleService extends LocaleService {
@@ -8,7 +8,7 @@ export class AppLocaleService extends LocaleService {
 
     constructor() {
         super();
-        this._clientLocaleService = (remote.getCurrentWindow() as any).localeService;
+        this._clientLocaleService = (getCurrentWindow() as any).localeService;
         this.locale = this._clientLocaleService.locale;
     }
 

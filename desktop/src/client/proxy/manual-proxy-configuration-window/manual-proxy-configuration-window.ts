@@ -1,9 +1,10 @@
 import { autobind } from "@batch-flask/core";
 import { Constants } from "client/client-constants";
-import { BatchExplorerApplication, ClosedWindowError, GenericWindow } from "client/core";
+import { BatchExplorerApplication, ClosedWindowError, GenericWindow, enableRemoteForWindow } from "client/core";
 import { Deferred } from "common";
 import { BrowserWindow, app, ipcMain, nativeImage } from "electron";
 import { ProxySetting, ProxySettings } from "get-proxy-settings";
+
 const urls = Constants.urls.manualProxyConfiguration;
 const url = process.env.HOT ? urls.dev : urls.prod;
 
@@ -30,9 +31,10 @@ export class ManualProxyConfigurationWindow extends GenericWindow {
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
-                enableRemoteModule: true,
             },
         });
+        enableRemoteForWindow(window);
+
         if (this.currentSettings) {
             const setting = this.currentSettings.https || this.currentSettings.http;
             if (setting) {

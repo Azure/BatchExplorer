@@ -4,7 +4,7 @@ import { Form, createForm } from "@azure/bonito-core/lib/form";
 import { BasicFakeSet } from "@azure/bonito-core/lib/test-util";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { UserEvent } from "@testing-library/user-event/dist/types/setup";
+import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import * as React from "react";
 import { act } from "react-dom/test-utils";
 import { initMockBrowserEnvironment } from "../../../environment";
