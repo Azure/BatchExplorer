@@ -1,5 +1,6 @@
 {
   "lib.playground.checkbox.disabled": "Disabled status",
   "lib.playground.checkbox.label": "Checkbox Label",
-  "lib.playground.checkbox.placement": "Checkbox placement"
+  "lib.playground.checkbox.placement": "Checkbox placement",
+  "lib.playground.demo.title": "Playground Blade"
 }

@@ -20,5 +20,5 @@ To build the localization translations for all languages besides English:
 * Run `npm run loc:build` to build the translations, move them to the package directories, and combine them altogether in one directory
 * Run `npm run build-translations` to build the full, compiled translations for the web and desktop packages
 
-* `web/dev-server/resources/i18n` contains web translations (web + all packages)
+* `web/resources/i18n` contains web translations (web + all packages)
 * `desktop/resources/i18n` contains desktop translations (desktop + all packages)
