@@ -36,7 +36,7 @@ const baseConfig = {
         rules: [
             {
                 test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-                use: ["@ngtools/webpack"],
+                loader: '@ngtools/webpack',
                 exclude: [/\.spec\.ts/, /src\/test\//]
             },
             ...commonRules,
@@ -63,7 +63,7 @@ const baseConfig = {
             template: "src/app/index.html",
             chunksSortMode: (a, b) => {
                 const entryPoints = ["app", "vendor", "styles", "sw-register", "polyfills", "inline"];
-                return entryPoints.indexOf(b.names[0]) - entryPoints.indexOf(a.names[0]);
+                return entryPoints.indexOf(b) - entryPoints.indexOf(a);
             },
             inject: "body",
             metadata: METADATA,
@@ -77,6 +77,9 @@ const baseConfig = {
         }),
     ],
     target: "electron-renderer",
+    stats: {
+        errorDetails: true,
+    },
 };
 
 module.exports = baseConfig;
