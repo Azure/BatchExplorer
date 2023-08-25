@@ -1,5 +1,5 @@
 import { CssColor, ThemeElement } from "app/services/themes/theme-core";
-import * as tinycolor from "tinycolor2";
+import tinycolor from "tinycolor2";
 import { ChartColors } from "./chart-colors";
 import { EntityColorDefinition, ThemeDefinition } from "./theme-definition.model";
 

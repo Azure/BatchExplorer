@@ -44,23 +44,23 @@ config.module.rules = config.module.rules = [
      *
      * See: https://github.com/deepsweet/istanbul-instrumenter-loader
      */
-    {
-        enforce: "post",
-        test: /\.(js|ts)$/,
-        loader: "istanbul-instrumenter-loader",
-        query: {
-            esModules: true
-        },
-        include: [
-            helpers.root("app"),
-            helpers.root("src"),
-        ],
-        exclude: [
-            helpers.root("src/test"),
-            /\.(e2e|spec)\.(ts)$/,
-            /node_modules/
-        ]
-    }
+    // {
+    //     enforce: "post",
+    //     test: /\.(js|ts)$/,
+    //     loader: "istanbul-instrumenter-loader",
+    //     query: {
+    //         esModules: true
+    //     },
+    //     include: [
+    //         helpers.root("app"),
+    //         helpers.root("src"),
+    //     ],
+    //     exclude: [
+    //         helpers.root("src/test"),
+    //         /\.(e2e|spec)\.(ts)$/,
+    //         /node_modules/
+    //     ]
+    // }
     ]
 );
 

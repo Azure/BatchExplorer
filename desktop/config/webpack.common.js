@@ -19,7 +19,11 @@ const rules = {
     },
     font: {
         test: /\.woff(2)?(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/font-woff",
+        loader: "url-loader",
+        options: {
+            limit: 10000,
+            mimetype: "application/font-woff"
+        }
     },
 };
 
