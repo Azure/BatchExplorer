@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { TranslationsLoaderService } from "@batch-flask/core";
-import { remote } from "electron";
+import { getCurrentWindow } from "@electron/remote";
 
 @Injectable({providedIn: "root"})
 export class AppTranslationsLoaderService extends TranslationsLoaderService {
@@ -8,7 +8,7 @@ export class AppTranslationsLoaderService extends TranslationsLoaderService {
 
     constructor() {
         super();
-        const translationsLoader = (remote.getCurrentWindow() as any).translationsLoader;
+        const translationsLoader = (getCurrentWindow() as any).translationsLoader;
         this.translations = new Map(JSON.parse(translationsLoader.serializedTranslations));
     }
 }

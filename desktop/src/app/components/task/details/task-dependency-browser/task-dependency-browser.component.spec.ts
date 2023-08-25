@@ -142,20 +142,6 @@ describe("TaskDependenciesComponent", () => {
         });
     });
 
-    describe("more than 20 dependencies enables load more", () => {
-        beforeEach(() => {
-            testComponent.task = new Task({
-                id: "2001",
-                state: TaskState.completed,
-                dependsOn: {
-                    taskIdRanges: [{ start: 1, end: 25 }],
-                },
-            } as any);
-
-            fixture.detectChanges();
-        });
-    });
-
     describe("correctly decorates dependsOn of returned dependency", () => {
         beforeEach(() => {
             testComponent.task = new Task({

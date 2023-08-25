@@ -5,7 +5,7 @@ import { Property } from "../property";
 
 export type MatchingFunction<T> = (item: T, value: any, operator: Operator) => boolean;
 
-export class FilterMatcher<T> {
+export class FilterMatcher<T extends object> {
     public test(filter: Filter, item: T) {
         if (filter instanceof Property) {
             return this.testProperty(filter as Property, item);

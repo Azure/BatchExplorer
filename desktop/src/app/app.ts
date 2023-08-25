@@ -1,5 +1,6 @@
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
-import { ipcRenderer, remote } from "electron";
+import { ipcRenderer } from "electron";
+import { getCurrentWindow } from "@electron/remote";
 
 import "@batch-flask/extensions";
 
@@ -48,7 +49,7 @@ ipcRenderer.send("initializing");
 Promise.resolve().then(() => {
     if (process.env.NODE_ENV !== "production") {
         time("loadTranslations");
-        return (remote.getCurrentWindow() as any).translationsLoader.load();
+        return (getCurrentWindow() as any).translationsLoader.load();
     }
 }).then(() => {
     timeEnd("loadTranslations");

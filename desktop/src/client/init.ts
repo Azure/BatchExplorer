@@ -4,5 +4,6 @@
  */
 import * as path from "path";
 process.env.NODE_PATH = path.join(__dirname, "..");
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("module").Module._initPaths();

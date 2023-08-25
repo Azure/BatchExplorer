@@ -67,7 +67,7 @@ describe("AccessTokenCache", () => {
             expect(cache.getToken(tenant1, resource1)).toBeFalsy();
         });
 
-        it("should load the token from local storage if present and not expired", async (done) => {
+        it("should load the token from local storage if present and not expired", async () => {
             const data = {
                 [tenant1]: {
                     [resource1]: token1,
@@ -78,7 +78,6 @@ describe("AccessTokenCache", () => {
             const token = cache.getToken(tenant1, resource1);
             expect(token).not.toBeFalsy();
             expect(token.accessToken).toEqual("sometoken");
-            done();
         });
     });
 
