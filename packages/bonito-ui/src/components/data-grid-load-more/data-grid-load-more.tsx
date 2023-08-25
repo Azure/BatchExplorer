@@ -12,12 +12,11 @@ import {} from "@fluentui/react-hooks";
 
 const NUM_OF_LOAD_MORE_SHIMMER = 3;
 
-export interface DataGridProps {
+export interface DataGridLoadMoreProps {
     items: unknown[];
     colums: IColumn[];
-    // isLoading: boolean;
     hasMore?: boolean;
-    onLoadMore?: () => Promise<void>;
+    onLoadMore?: () => void;
     noReusltText?: string;
 }
 
@@ -25,11 +24,10 @@ export interface DataGridProps {
  * Displays a sortable, filterable grid. Wraps the Fluent UI DetailsList
  * component
  */
-export const DataGrid: React.FC<DataGridProps> = (props) => {
+export const DataGridLoadMore: React.FC<DataGridLoadMoreProps> = (props) => {
     const {
         items: propsItems,
         colums,
-        // isLoading,
         hasMore,
         noReusltText,
         onLoadMore,
@@ -43,7 +41,7 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
         if (noResult) {
             return [];
         }
-        // display 10 lines of shimmering items when loading
+        // display 10 lines of shimmering items when inital loading
         if (!propsItems.length) {
             return Array(10).fill(null);
         }
@@ -71,22 +69,15 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
         [noResult, noReusltText]
     );
 
-    // const isLoadingMore = useRef(false);
-
     const triggerLoadMore = useCallback(() => {
         const shouldLoadMore = onLoadMore && propsItems.length && hasMore;
         // !isLoadingMore.current;
-        console.log("triggerLoadMore", {
-            shouldLoadMore,
-            // isLoadingMore: isLoadingMore.current,
-        });
-        if (!shouldLoadMore) {
-            return;
+        // console.log("triggerLoadMore", {
+        //     shouldLoadMore,
+        // });
+        if (shouldLoadMore) {
+            onLoadMore();
         }
-        // isLoadingMore.current = true;
-        return onLoadMore().finally(() => {
-            // isLoadingMore.current = false;
-        });
     }, [hasMore, onLoadMore, propsItems.length]);
 
     const onRenderCustomPlaceholder = useCallback(

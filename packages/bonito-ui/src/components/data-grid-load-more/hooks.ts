@@ -1,7 +1,9 @@
-import { useEffect, useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
-import { ILoadMoreListResult } from "./utils";
-import React from "react";
+export interface ILoadMoreListResult<T> {
+    done: boolean;
+    list: T[];
+}
 
 export function useLoadMore<T>(loadFn: () => Promise<ILoadMoreListResult<T>>) {
     const [items, setItems] = React.useState<T[]>([]);
@@ -10,16 +12,20 @@ export function useLoadMore<T>(loadFn: () => Promise<ILoadMoreListResult<T>>) {
     const isLoading = useRef(false);
 
     const loadMore = React.useCallback(async (): Promise<void> => {
-        const { data, done } = await loadFn();
-        if (!done && !data.length) {
+        const { list, done } = await loadFn();
+        if (!done && !list.length) {
             // no more data, try again
             return loadMore();
         }
+        // Need to set isLoading to false before any set state call,
+        // otherwise, the DataGrid will rerender and won't trigger
+        // another load more even if the shimmer line is still in view
+        // because isLoading is still true
         isLoading.current = false;
         if (done) {
             setHasMore(false);
         }
-        setItems((oriItems) => [...oriItems, ...data]);
+        setItems((oriItems) => [...oriItems, ...list]);
     }, [loadFn]);
 
     /**
@@ -31,10 +37,8 @@ export function useLoadMore<T>(loadFn: () => Promise<ILoadMoreListResult<T>>) {
         if (isLoading.current) {
             return;
         }
-        // console.log("setting isLoading.current to true");
         isLoading.current = true;
         loadMore().catch(() => {
-            // console.log("setting isLoading.current to false");
             isLoading.current = false;
         });
     }, [loadMore]);
