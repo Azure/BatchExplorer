@@ -1,3 +1,8 @@
+import { CancelledPromiseError } from "@azure/bonito-core";
+import {
+    ICancellablePromise,
+    cancellablePromise,
+} from "@azure/bonito-core/lib/util";
 import React, { useRef, useEffect } from "react";
 
 export interface ILoadMoreListResult<T> {
@@ -9,49 +14,48 @@ export function useLoadMore<T>(loadFn: () => Promise<ILoadMoreListResult<T>>) {
     const [items, setItems] = React.useState<T[]>([]);
     const [hasMore, setHasMore] = React.useState(true);
 
-    const isLoading = useRef(false);
+    const pendingPromise = useRef<ICancellablePromise<
+        ILoadMoreListResult<T>
+    > | null>(null);
 
     const loadMore = React.useCallback(async (): Promise<void> => {
-        const { list, done } = await loadFn();
-        if (!done && !list.length) {
-            // no more data, try again
-            return loadMore();
-        }
-        // Need to set isLoading to false before any set state call,
-        // otherwise, the DataGrid will rerender and won't trigger
-        // another load more even if the shimmer line is still in view
-        // because isLoading is still true
-        isLoading.current = false;
-        if (done) {
-            setHasMore(false);
-        }
-        setItems((oriItems) => [...oriItems, ...list]);
-    }, [loadFn]);
-
-    /**
-     * Guarded load more function to prevent multiple load more calls
-     * triggered by the DataGrid rerender last shimmer event.
-     */
-    const guardedLoadMore = React.useCallback(async () => {
-        console.log("guardedLoadMore isLoading: ", isLoading.current);
-        if (isLoading.current) {
+        if (pendingPromise.current) {
             return;
         }
-        isLoading.current = true;
-        loadMore().catch(() => {
-            isLoading.current = false;
-        });
-    }, [loadMore]);
+        pendingPromise.current = cancellablePromise(loadFn());
+        try {
+            const { list, done } = await pendingPromise.current;
+            pendingPromise.current = null;
+            if (!done && !list.length) {
+                // no more data, try again
+                return loadMore();
+            }
+            if (done) {
+                setHasMore(false);
+            }
+            setItems((oriItems) => [...oriItems, ...list]);
+        } catch (error) {
+            if (!(error instanceof CancelledPromiseError)) {
+                pendingPromise.current = null;
+            }
+        }
+    }, [loadFn]);
 
     useEffect(() => {
         setItems([]);
         setHasMore(true);
-        guardedLoadMore();
-    }, [guardedLoadMore]);
+        loadMore();
+        return () => {
+            if (pendingPromise.current) {
+                pendingPromise.current.cancel();
+                pendingPromise.current = null;
+            }
+        };
+    }, [loadMore]);
 
     return {
         items,
         hasMore,
-        loadMoreCallback: guardedLoadMore,
+        loadMoreCallback: loadMore,
     };
 }

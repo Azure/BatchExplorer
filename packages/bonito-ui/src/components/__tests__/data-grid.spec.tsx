@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import * as React from "react";
 import { runAxe } from "../../test-util/a11y";
 import { initMockBrowserEnvironment } from "../../environment";
-import { DataGrid } from "../data-grid";
+import { DataGrid } from "../data-grid/data-grid";
 import { fromIso } from "@azure/bonito-core";
 
 const ignoredA11yRules = {

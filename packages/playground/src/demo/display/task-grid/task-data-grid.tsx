@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DemoPane } from "../../../layout/demo-pane";
 import {
     DataGridLoadMore,
@@ -25,6 +25,11 @@ export const DataGridLoadMoreDemo = () => {
             done: !result.nextToken,
             list: result.list,
         };
+    }, [filter]);
+
+    useEffect(() => {
+        // reset the next token when the filter changes
+        nextToken.current = undefined;
     }, [filter]);
 
     const { items, hasMore, loadMoreCallback } = useLoadMore(loadFn);

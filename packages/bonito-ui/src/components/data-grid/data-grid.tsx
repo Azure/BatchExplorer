@@ -4,7 +4,7 @@ import {
     IColumn,
     SelectionMode,
 } from "@fluentui/react/lib/DetailsList";
-import { useAppTheme } from "../theme";
+import { useAppTheme } from "../../theme";
 import { autoFormat } from "@azure/bonito-core";
 
 export interface DataGridProps {
@@ -65,6 +65,11 @@ export interface DataGridColumn {
      * Maximum width (in pixels) of the column
      */
     maxWidth?: number;
+
+    /**
+     * Custom renderer for cell content, instead of the default text rendering.
+     */
+    onRender?: (item?: unknown, index?: number, column?: IColumn) => unknown;
 }
 
 const defaultColumnMinWidth = 48;

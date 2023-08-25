@@ -35,7 +35,9 @@ export async function loadDemoTasks(params?: {
 
     for (let i = 0; i < taskNum; i++) {
         const task: IDemoTask = {
-            name: `Task-${filter || ""}${Math.random().toString(36).slice(-8)}`,
+            name: `Task-${filter + "-" || ""}${Math.random()
+                .toString(36)
+                .slice(-8)}`,
             state: Math.random() > 0.5 ? "active" : "completed",
             created: new Date().toDateString(),
             exitCode: Math.random() > 0.5 ? 0 : 1,
@@ -44,7 +46,7 @@ export async function loadDemoTasks(params?: {
     }
 
     await waitFor(1000);
-    log.info(`${tasks.length} tasks returned`);
+    log.info(`${filter}, ${nextToken}, ${tasks.length} tasks returned`);
 
     i++;
     const shouldFinish = i % 10 === 0 || (i + 1) % 10 === 0;
