@@ -20,7 +20,7 @@ import { FileViewer, FileViewerConfig } from "../file-viewer";
 
 import "./file-viewer-container.scss";
 
-const defaultConfig = Object.freeze({
+const defaultConfig: FileViewerConfig = Object.freeze({
     tailable: false,
     downloadEnabled: true,
 });

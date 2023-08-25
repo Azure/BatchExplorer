@@ -1,0 +1,43 @@
+diff --git a/node_modules/@azure/core-util/dist-esm/src/checkEnvironment.js b/node_modules/@azure/core-util/dist-esm/src/checkEnvironment.js
+index 5a89b5f..1c62028 100644
+--- a/node_modules/@azure/core-util/dist-esm/src/checkEnvironment.js
++++ b/node_modules/@azure/core-util/dist-esm/src/checkEnvironment.js
+@@ -17,7 +17,15 @@ export const isWebWorker = typeof self === "object" &&
+ /**
+  * A constant that indicates whether the environment the code is running is Node.JS.
+  */
+-export const isNode = typeof process !== "undefined" && Boolean(process.version) && Boolean((_d = process.versions) === null || _d === void 0 ? void 0 : _d.node);
++// KLUDGE: @azure/storage-blob uses isNode variable exported from @azure/core-util to
++// determine how it should process data. However, in the renderer process, isNode is
++// set to be true, which causes @azure/storage-blob fails to process data. Thus we need
++// to patch isNode to be false in the renderer process.
++// github issue: https://github.com/Azure/azure-sdk-for-js/issues/21110
++export const isNode =
++    typeof process !== "undefined" &&
++    !!process.env &&
++    !process.env.RENDERER;
+ /**
+  * A constant that indicates whether the environment the code is running is Deno.
+  */
+diff --git a/node_modules/@azure/core-util/dist/index.js b/node_modules/@azure/core-util/dist/index.js
+index 22d406a..b2f1205 100644
+--- a/node_modules/@azure/core-util/dist/index.js
++++ b/node_modules/@azure/core-util/dist/index.js
+@@ -268,7 +268,16 @@ const isWebWorker = typeof self === "object" &&
+ /**
+  * A constant that indicates whether the environment the code is running is Node.JS.
+  */
+-const isNode = typeof process !== "undefined" && Boolean(process.version) && Boolean((_d = process.versions) === null || _d === void 0 ? void 0 : _d.node);
++// KLUDGE: @azure/storage-blob uses isNode variable exported from @azure/core-util to
++// determine how it should process data. However, in the renderer process, isNode is
++// set to be true, which causes @azure/storage-blob fails to process data. Thus we need
++// to patch isNode to be false in the renderer process.
++// github issue: https://github.com/Azure/azure-sdk-for-js/issues/21110
++const isNode =
++    typeof process !== "undefined" &&
++    !!process.env &&
++    !process.env.RENDERER;
++
+ /**
+  * A constant that indicates whether the environment the code is running is Deno.
+  */

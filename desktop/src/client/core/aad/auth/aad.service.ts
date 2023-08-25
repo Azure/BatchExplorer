@@ -89,7 +89,7 @@ export class AADService {
         this._tenants.next([]);
         await this._clearUserSpecificCache();
         for (const [, window] of this.app.windows) {
-            window.webContents.session.clearStorageData({ storages: ["localStorage"] });
+            window.webContents.session.clearStorageData({ storages: ["localstorage"] });
         }
         if (closeWindows) {
             this.app.windows.closeAll();

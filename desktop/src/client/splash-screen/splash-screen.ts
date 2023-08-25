@@ -1,6 +1,7 @@
 import { BrowserWindow, nativeImage } from "electron";
 import { Constants } from "../client-constants";
 import { UniqueWindow } from "../core/unique-window";
+import { enableRemoteForWindow } from "client/core";
 
 const urls = Constants.urls.splash;
 const url = process.env.HOT ? urls.dev : urls.prod;
@@ -35,9 +36,10 @@ export class SplashScreen extends UniqueWindow {
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
-                enableRemoteModule: true,
             },
         });
+        enableRemoteForWindow(window);
+
         window.loadURL(url);
         window.once("ready-to-show", () => {
             this.show();

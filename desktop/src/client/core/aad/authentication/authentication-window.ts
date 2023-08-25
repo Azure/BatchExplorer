@@ -3,6 +3,7 @@ import { ClientConstants } from "client/client-constants";
 import { UniqueWindow } from "client/core/unique-window";
 import { BrowserWindow } from "electron";
 import { TenantPlaceholders } from "../aad-constants";
+import { enableRemoteForWindow } from "client/core/remote";
 
 export class AuthenticationWindow extends UniqueWindow {
     public createWindow() {
@@ -12,11 +13,11 @@ export class AuthenticationWindow extends UniqueWindow {
             show: false,
             center: true,
             webPreferences: {
-                enableRemoteModule: true,
                 preload: ClientConstants.urls.preloadInsecureTest,
             },
             title: loginTitle(this.properties.azureEnvironment.name),
         });
+        enableRemoteForWindow(window);
 
         window.on("page-title-updated", e => e.preventDefault());
 
