@@ -2,17 +2,9 @@ steps:
   - template: ../dependencies.yml
   - script: |
       set -e
-      echo "Homebrew version $(brew --version)"
-      brew install openssl readline sqlite3 xz zlib tcl-tk
-    displayName: Install MacOS Python dependencies
-  - script: |
-      set -e
       echo "Node.js version $(node --version)"
       echo "NPM version $(npm --version)"
       npm ci
+      npm run dev-setup
     displayName: Install MacOS JavaScript dependencies
-  - script: |
-      cd util/bux
-      npm pack
-      npm install -g batch-bux-1.0.0.tgz
-    displayName: Install Batch Utility CLI (bux)
+
