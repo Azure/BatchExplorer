@@ -5,7 +5,7 @@ import {
     IDetailsRowProps,
     SelectionMode,
 } from "@fluentui/react/lib/DetailsList";
-import { autoFormat } from "@azure/bonito-core";
+import { autoFormat, translate } from "@azure/bonito-core";
 import { ShimmeredDetailsList } from "@fluentui/react/lib/ShimmeredDetailsList";
 
 export interface DataGridProps {
@@ -161,8 +161,10 @@ function useColumns(
                         key: `column${i++}`,
                         name: c.label ?? c.prop,
                         fieldName: c.prop,
-                        onRender: (item) =>
-                            autoFormat(c.prop ? item[c.prop] : null),
+                        onRender:
+                            c.onRender ??
+                            ((item) =>
+                                autoFormat(c.prop ? item[c.prop] : null)),
                         minWidth: defaultColumnMinWidth,
                         maxWidth: c.maxWidth ?? columnDefaultMaxWidth,
                         isResizable: true,
@@ -192,11 +194,11 @@ function useLoadMoreItems(props: DataGridProps) {
         if (noResult) {
             return [];
         }
-        // display 10 lines of shimmering items when inital loading
+        // display 10 lines of shimmering when inital loading
         if (!propsItems.length) {
             return Array(10).fill(null);
         }
-        // display 3 more shimmering items when loading more
+        // display 3 more shimmering when loading more
         return [...propsItems, ...Array(hasMore ? 3 : 0).fill(null)];
     }, [propsItems, noResult, hasMore]);
 
@@ -204,7 +206,7 @@ function useLoadMoreItems(props: DataGridProps) {
         (props?: IDetailsFooterProps, defaultRender?) => {
             const onResultComp = noResult ? (
                 <div style={{ textAlign: "center" }}>
-                    {noReusltText || "No result"}
+                    {noReusltText || translate("bonito.ui.dataGrid.noResults")}
                 </div>
             ) : null;
             return (

@@ -3,7 +3,7 @@ import * as React from "react";
 import { runAxe } from "../../test-util/a11y";
 import { initMockBrowserEnvironment } from "../../environment";
 import { DataGrid } from "../data-grid/data-grid";
-import { fromIso } from "@azure/bonito-core";
+import { fromIso, translate } from "@azure/bonito-core";
 
 const ignoredA11yRules = {
     rules: {
@@ -25,10 +25,18 @@ describe("DataGrid component", () => {
         render(<DataGrid />);
         const gridEl = screen.getByRole("grid");
 
-        // One row: the column header
-        expect(gridEl.getAttribute("aria-rowcount")).toBe("1");
+        // 2 row: the column header + footer
+        // Possibile bugs for Fluent UI DetailsList
+        // DataGrid's aria-rowcount is one more than the actual number of rows,
+        // because it overwrites the onRenderDetailsFooter props of the Fluent
+        // UI DetailsList, so footer is not counted in the aria-rowcount even
+        // it's empty.
+        expect(gridEl.getAttribute("aria-rowcount")).toBe("2");
         expect(screen.getAllByRole("row").length).toBe(1);
         expect(screen.getAllByRole("columnheader").length).toBe(1);
+        expect(
+            screen.getByText(translate("bonito.ui.dataGrid.noResults"))
+        ).not.toBeNull();
     });
 
     test("Simple grid", async () => {
@@ -47,7 +55,7 @@ describe("DataGrid component", () => {
 
         // Header plus 2 data rows, sorted alphabetically by the first column
         const rows = screen.getAllByRole("row");
-        expect(gridEl.getAttribute("aria-rowcount")).toBe("3");
+        expect(gridEl.getAttribute("aria-rowcount")).toBe("4");
         expect(rows.length).toBe(3);
 
         const columnHeaders = screen.getAllByRole("columnheader");
@@ -100,7 +108,7 @@ describe("DataGrid component", () => {
 
         // Header plus 3 data rows
         const rows = screen.getAllByRole("row");
-        expect(gridEl.getAttribute("aria-rowcount")).toBe("4");
+        expect(gridEl.getAttribute("aria-rowcount")).toBe("5");
         expect(screen.getAllByRole("row").length).toBe(4);
 
         const columnHeaders = screen.getAllByRole("columnheader");

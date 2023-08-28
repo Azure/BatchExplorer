@@ -49,12 +49,13 @@ export async function loadDemoTasks(params?: {
     log.info(`${filter}, ${nextToken}, ${tasks.length} tasks returned`);
 
     i++;
-    const shouldFinish = i % 10 === 0 || (i + 1) % 10 === 0;
+    console.log(i);
+    // const shouldFinish = i % 10 === 0 || (i + 1) % 10 === 0;
 
     return {
-        nextToken: shouldFinish
-            ? undefined
-            : String(Number(nextToken || 0) + 1),
-        list: tasks,
+        // nextToken: shouldFinish
+        //     ? undefined
+        //     : String(Number(nextToken || 0) + 1),
+        list: [],
     };
 }

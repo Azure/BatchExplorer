@@ -14,6 +14,7 @@
   "bonito.core.notApplicable": "N/A",
   "bonito.core.save": "Save",
   "bonito.core.storage-account.error": "No storage accounts in subscription.",
+  "bonito.ui.dataGrid.noResults": "No results found",
   "bonito.ui.form.buttons.apply": "Apply",
   "bonito.ui.form.buttons.discardChanges": "Discard changes",
   "lib.playground.checkbox.disabled": "Disabled status",

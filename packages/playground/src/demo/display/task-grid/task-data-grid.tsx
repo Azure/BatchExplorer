@@ -23,7 +23,7 @@ export const DataGridLoadMoreDemo = () => {
         nextToken.current = result.nextToken;
         return {
             done: !result.nextToken,
-            list: result.list,
+            items: result.list,
         };
     }, [filter]);
 

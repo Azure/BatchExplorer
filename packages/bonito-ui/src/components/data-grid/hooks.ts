@@ -7,13 +7,15 @@ import React, { useRef, useEffect } from "react";
 
 export interface ILoadMoreListResult<T> {
     done: boolean;
-    list: T[];
+    items: T[];
 }
 
 /**
- * Hooks for load more items, should be used with the DataGrid component
- * Handles the load more callback throttling and cancellation, will auto
- * retry if the loadFn returns no items and there are more items to load.
+ * Hooks for loading more items, should be used with the DataGrid component.
+ * It handles the following:
+ * 1. Throttle the load more callback to avoid multiple calls.
+ * 2. Cancel the current loading if the loadFn changes.
+ * 3. Retry if the loadFn returns no items and there are more items to load.
  * @param loadFn function to load more items, change of reference will trigger
  * a new load and set the items to empty and hasMore to true.
  * @returns items, hasMore and loadMoreCallback
@@ -34,16 +36,16 @@ export function useLoadMoreItems<T>(
         }
         pendingPromise.current = cancellablePromise(loadFn());
         try {
-            const { list, done } = await pendingPromise.current;
+            const { items, done } = await pendingPromise.current;
             pendingPromise.current = null;
-            if (!done && !list.length) {
+            if (!done && !items.length) {
                 // no more data, try again
                 return loadMore();
             }
             if (done) {
                 setHasMore(false);
             }
-            setItems((oriItems) => [...oriItems, ...list]);
+            setItems((oriItems) => [...oriItems, ...items]);
         } catch (error) {
             if (!(error instanceof CancelledPromiseError)) {
                 pendingPromise.current = null;
