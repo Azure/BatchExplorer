@@ -1,11 +1,12 @@
 import * as React from "react";
 import {
-    DetailsList,
     IColumn,
+    IDetailsFooterProps,
+    IDetailsRowProps,
     SelectionMode,
 } from "@fluentui/react/lib/DetailsList";
-import { useAppTheme } from "../../theme";
 import { autoFormat } from "@azure/bonito-core";
+import { ShimmeredDetailsList } from "@fluentui/react/lib/ShimmeredDetailsList";
 
 export interface DataGridProps {
     /**
@@ -39,6 +40,29 @@ export interface DataGridProps {
      * checkboxes will not appear.
      */
     selectionMode?: "single" | "multiple" | "none";
+
+    /**
+     * Whether there are more items to load.
+     * If true, the grid will display 10 lines of shimmering when items is empty,
+     * indicating that the datagrid is initial loading, or 3 lines of shimmering
+     * when items is not empty, indicating that the datagrid is loading more data.
+     * If false/undefined, the grid will display "No result" when items is empty.
+     */
+    hasMore?: boolean;
+
+    /**
+     * Callback when the user scrolls to the bottom while hasMore is true.
+     * Note this callback might be called multiple times while the user scrolls,
+     * so it is up to the caller to implement throttling.
+     */
+    onLoadMore?: () => void;
+
+    /**
+     * Text to display when there is no result.
+     * Default to "No result".
+     * Only used when hasMore is undefined or false.
+     */
+    noReusltText?: string;
 }
 
 /**
@@ -79,13 +103,47 @@ const defaultColumnMinWidth = 48;
  * component
  */
 export const DataGrid: React.FC<DataGridProps> = (props) => {
-    const theme = useAppTheme();
+    const {
+        columns: propColumns,
+        columnDefaultMaxWidth,
+        selectionMode,
+        onActiveItemChanged,
+    } = props;
 
+    const columns = useColumns(propColumns, columnDefaultMaxWidth);
+
+    const { items, onRenderDetailsFooter, onRenderCustomPlaceholder } =
+        useLoadMoreItems(props);
+
+    return (
+        <ShimmeredDetailsList
+            onActiveItemChanged={onActiveItemChanged}
+            selectionMode={
+                selectionMode === "single"
+                    ? SelectionMode.single
+                    : selectionMode === "multiple"
+                    ? SelectionMode.multiple
+                    : selectionMode === "none"
+                    ? SelectionMode.none
+                    : undefined
+            }
+            columns={columns}
+            items={items}
+            onRenderDetailsFooter={onRenderDetailsFooter}
+            onRenderCustomPlaceholder={onRenderCustomPlaceholder}
+        />
+    );
+};
+
+function useColumns(
+    columns: DataGridProps["columns"],
+    columnDefaultMaxWidth: DataGridProps["columnDefaultMaxWidth"]
+): IColumn[] {
     const detailsListColumns = React.useMemo(() => {
         const detailsListCols: IColumn[] = [];
-        if (props.columns) {
+        if (columns) {
             let i = 1;
-            for (const c of props.columns) {
+            for (const c of columns) {
                 if (typeof c === "string") {
                     // Simple column names
                     detailsListCols.push({
@@ -94,7 +152,7 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
                         fieldName: c,
                         onRender: (item) => autoFormat(item[c]),
                         minWidth: defaultColumnMinWidth,
-                        maxWidth: props.columnDefaultMaxWidth,
+                        maxWidth: columnDefaultMaxWidth,
                         isResizable: true,
                     });
                 } else if (c.prop) {
@@ -106,7 +164,7 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
                         onRender: (item) =>
                             autoFormat(c.prop ? item[c.prop] : null),
                         minWidth: defaultColumnMinWidth,
-                        maxWidth: c.maxWidth ?? props.columnDefaultMaxWidth,
+                        maxWidth: c.maxWidth ?? columnDefaultMaxWidth,
                         isResizable: true,
                     });
                 } else {
@@ -118,23 +176,71 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
             }
         }
         return detailsListCols;
-    }, [props.columns, props.columnDefaultMaxWidth]);
+    }, [columns, columnDefaultMaxWidth]);
 
-    return (
-        <DetailsList
-            theme={theme}
-            onActiveItemChanged={props.onActiveItemChanged}
-            selectionMode={
-                props.selectionMode === "single"
-                    ? SelectionMode.single
-                    : props.selectionMode === "multiple"
-                    ? SelectionMode.multiple
-                    : props.selectionMode === "none"
-                    ? SelectionMode.none
-                    : undefined
-            }
-            columns={detailsListColumns}
-            items={props.items ?? []}
-        />
+    return detailsListColumns;
+}
+
+function useLoadMoreItems(props: DataGridProps) {
+    const { items: propsItems = [], hasMore, onLoadMore, noReusltText } = props;
+
+    const noResult = React.useMemo(() => {
+        return !propsItems.length && !hasMore;
+    }, [hasMore, propsItems.length]);
+
+    const items = React.useMemo(() => {
+        if (noResult) {
+            return [];
+        }
+        // display 10 lines of shimmering items when inital loading
+        if (!propsItems.length) {
+            return Array(10).fill(null);
+        }
+        // display 3 more shimmering items when loading more
+        return [...propsItems, ...Array(hasMore ? 3 : 0).fill(null)];
+    }, [propsItems, noResult, hasMore]);
+
+    const onRenderDetailsFooter = React.useCallback(
+        (props?: IDetailsFooterProps, defaultRender?) => {
+            const onResultComp = noResult ? (
+                <div style={{ textAlign: "center" }}>
+                    {noReusltText || "No result"}
+                </div>
+            ) : null;
+            return (
+                <div>
+                    {onResultComp}
+                    {defaultRender?.(props)}
+                </div>
+            );
+        },
+        [noResult, noReusltText]
     );
-};
+
+    const triggerLoadMore = React.useCallback(() => {
+        const shouldLoadMore = onLoadMore && propsItems.length && hasMore;
+        if (shouldLoadMore) {
+            onLoadMore();
+        }
+    }, [hasMore, onLoadMore, propsItems.length]);
+
+    const onRenderCustomPlaceholder = React.useCallback(
+        (
+            rowProps: IDetailsRowProps,
+            index?: number,
+            defaultRender?: (props: IDetailsRowProps) => React.ReactNode
+        ) => {
+            if (index === items.length - 1) {
+                triggerLoadMore();
+            }
+            return defaultRender?.(rowProps);
+        },
+        [items.length, triggerLoadMore]
+    );
+
+    return {
+        items,
+        onRenderDetailsFooter,
+        onRenderCustomPlaceholder,
+    };
+}

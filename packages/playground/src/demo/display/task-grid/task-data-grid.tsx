@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { DemoPane } from "../../../layout/demo-pane";
 import {
-    DataGridLoadMore,
+    DataGrid,
+    DataGridColumn,
     ILoadMoreListResult,
-    useLoadMore,
-} from "@azure/bonito-ui/lib/components/data-grid-load-more";
-import { IColumn } from "@fluentui/react/lib/components/DetailsList";
+    useLoadMoreItems,
+} from "@azure/bonito-ui/lib/components/data-grid";
 import { IDemoTask, loadDemoTasks } from "./utils";
 import { TextField } from "@fluentui/react/lib/TextField";
 
@@ -32,7 +32,7 @@ export const DataGridLoadMoreDemo = () => {
         nextToken.current = undefined;
     }, [filter]);
 
-    const { items, hasMore, loadMoreCallback } = useLoadMore(loadFn);
+    const { items, hasMore, loadMoreCallback } = useLoadMoreItems(loadFn);
 
     return (
         <DemoPane title="Data grid load more">
@@ -43,9 +43,9 @@ export const DataGridLoadMoreDemo = () => {
                     setFilter(newValue || "");
                 }}
             />
-            <DataGridLoadMore
+            <DataGrid
                 items={items}
-                colums={columns}
+                columns={columns}
                 hasMore={hasMore}
                 onLoadMore={loadMoreCallback}
             />
@@ -53,31 +53,28 @@ export const DataGridLoadMoreDemo = () => {
     );
 };
 
-const columns: IColumn[] = [
+const columns: DataGridColumn[] = [
     {
-        key: "name",
-        name: "Name",
-        fieldName: "name",
+        label: "Name",
+        prop: "name",
         minWidth: 100,
         maxWidth: 150,
-        isResizable: true,
     },
     {
-        key: "state",
-        name: "State",
-        fieldName: "state",
+        label: "State",
+        prop: "state",
         minWidth: 100,
+        maxWidth: 150,
     },
     {
-        key: "created",
-        name: "Created",
-        fieldName: "created",
+        label: "Created",
+        prop: "created",
         minWidth: 150,
+        maxWidth: 200,
     },
     {
-        key: "exitCode",
-        name: "Exit code",
-        fieldName: "exitCode",
-        minWidth: 100,
+        label: "Exit code",
+        prop: "exitCode",
+        minWidth: 150,
     },
 ];

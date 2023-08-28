@@ -104,7 +104,6 @@ export const DataGridLoadMore: React.FC<DataGridLoadMoreProps> = (props) => {
         <ShimmeredDetailsList
             columns={colums}
             items={items}
-            setKey="name"
             onRenderDetailsFooter={onRenderDetailsFooter}
             onRenderCustomPlaceholder={onRenderCustomPlaceholder}
         />
