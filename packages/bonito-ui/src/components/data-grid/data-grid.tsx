@@ -8,6 +8,9 @@ import {
 import { autoFormat, translate } from "@azure/bonito-core";
 import { ShimmeredDetailsList } from "@fluentui/react/lib/ShimmeredDetailsList";
 
+export const NUM_OF_SHIMMER_FULL = 10;
+export const NUM_OF_SHIMMER_MORE = 3;
+
 export interface DataGridProps {
     /**
      * A list of columns to display in the grid
@@ -196,10 +199,13 @@ function useLoadMoreItems(props: DataGridProps) {
         }
         // display 10 lines of shimmering when inital loading
         if (!propsItems.length) {
-            return Array(10).fill(null);
+            return Array(NUM_OF_SHIMMER_FULL).fill(null);
         }
         // display 3 more shimmering when loading more
-        return [...propsItems, ...Array(hasMore ? 3 : 0).fill(null)];
+        return [
+            ...propsItems,
+            ...Array(hasMore ? NUM_OF_SHIMMER_MORE : 0).fill(null),
+        ];
     }, [propsItems, noResult, hasMore]);
 
     const onRenderDetailsFooter = React.useCallback(
@@ -220,8 +226,7 @@ function useLoadMoreItems(props: DataGridProps) {
     );
 
     const triggerLoadMore = React.useCallback(() => {
-        const shouldLoadMore = onLoadMore && propsItems.length && hasMore;
-        if (shouldLoadMore) {
+        if (onLoadMore && propsItems.length && hasMore) {
             onLoadMore();
         }
     }, [hasMore, onLoadMore, propsItems.length]);
@@ -232,7 +237,8 @@ function useLoadMoreItems(props: DataGridProps) {
             index?: number,
             defaultRender?: (props: IDetailsRowProps) => React.ReactNode
         ) => {
-            if (index === items.length - 1) {
+            // check if it's the first shimmering row
+            if (index === items.length - NUM_OF_SHIMMER_MORE) {
                 triggerLoadMore();
             }
             return defaultRender?.(rowProps);

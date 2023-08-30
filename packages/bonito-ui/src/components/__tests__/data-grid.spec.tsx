@@ -2,8 +2,9 @@ import { render, screen } from "@testing-library/react";
 import * as React from "react";
 import { runAxe } from "../../test-util/a11y";
 import { initMockBrowserEnvironment } from "../../environment";
-import { DataGrid } from "../data-grid/data-grid";
+import { DataGrid, useLoadMoreItems } from "../data-grid";
 import { fromIso, translate } from "@azure/bonito-core";
+import { renderHook } from "@testing-library/react-hooks";
 
 const ignoredA11yRules = {
     rules: {
@@ -138,7 +139,7 @@ describe("DataGrid component", () => {
         expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
     });
 
-    test("Should display the correct number of shimmer lines when loading", async () => {
+    test("Shimmer lines", async () => {
         const { container, rerender } = render(
             <DataGrid columns={["data"]} hasMore={true} items={[]} />
         );
@@ -152,7 +153,7 @@ describe("DataGrid component", () => {
             <DataGrid
                 columns={["data"]}
                 hasMore={true}
-                items={addMoreItems([], 3)}
+                items={generateDataItems(3)}
             />
         );
 
@@ -164,7 +165,7 @@ describe("DataGrid component", () => {
             <DataGrid
                 columns={["data"]}
                 hasMore={false}
-                items={addMoreItems([], 3)}
+                items={generateDataItems(3)}
             />
         );
 
@@ -175,7 +176,7 @@ describe("DataGrid component", () => {
         expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
     });
 
-    test("Should trigger onLoadMore at the correct timing", async () => {
+    test("onLoadMore callback", async () => {
         const onLoadMore = jest.fn();
         const { container, rerender } = render(
             <DataGrid hasMore={true} items={[]} onLoadMore={onLoadMore} />
@@ -196,12 +197,16 @@ describe("DataGrid component", () => {
         expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
     });
 
-    test("Should implement virtual scrolling when there are more items", async () => {
+    test("Virtual scrolling", async () => {
+        // DetailsList of FluentUI utilizes virtual scrolling when items is more
+        // than 10
+
+        // Max number of tries to wait for virtual scrolling to kick in
         const maxTry = 10;
         const onLoadMore = jest.fn();
         let numTry = 0;
         let expectedOnLoadMoreCount = 0;
-        let items = addMoreItems([]);
+        let items = generateDataItems(1);
 
         // Render the grid in a scrollable container
         const renderGrid = () => (
@@ -216,42 +221,125 @@ describe("DataGrid component", () => {
         const { container, rerender } = render(renderGrid());
         const gridEl = screen.getByRole("grid");
 
+        expect(getOffsetRowCount()).toBe(items.length);
+        // aria-rowcount should iclude 3 lines of shimmering
+        expect(getOffsetAriaRowCount(gridEl)).toBe(items.length + 3);
+
         // getOffsetRowCount() === items.length means virtual scrolling is not
-        // working, retqry until it works or maxTry is reached
+        // working, retry until it works or maxTry is reached
         while (getOffsetRowCount() === items.length) {
-            console.log(
-                "retrying virtual scrolling",
-                numTry,
-                getNumOfShimmerLines(container)
-            );
             if (numTry++ > maxTry) {
                 throw new Error("Virtual scrolling is not working");
             }
-            // onLoadMore should be called once for each render, because the
-            // the virtual scrolling is not working, meaning that the shimmer
-            // lines should be in view and are rerendered, which triggers onLoadMore.
-            if (getNumOfShimmerLines(container) === 3) {
+            // If there is at least one shimmer line, onLoadMore should be
+            // triggered
+            if (getNumOfShimmerLines(container) >= 1) {
                 expectedOnLoadMoreCount++;
             }
 
-            items = addMoreItems(items);
+            items = generateDataItems(items.length + 5);
             rerender(renderGrid());
         }
+        expect(onLoadMore).toHaveBeenCalledTimes(expectedOnLoadMoreCount);
 
         // Virtual scrolling is working, the number of rows should be less than
-        // the number of items.
+        // the number of items, and all shimmer lines should not in view
         expect(getOffsetRowCount()).toBeLessThan(items.length);
-        // Includes 3 lines of shimmering
-        expect(getOffsetAriaRowCount(gridEl)).toBe(items.length + 3);
-
-        expect(onLoadMore).toHaveBeenCalledTimes(expectedOnLoadMoreCount);
-        console.log(
-            "final getNumOfShimmerLines",
-            getNumOfShimmerLines(container)
-        );
         expect(getNumOfShimmerLines(container)).toBe(0);
 
+        // aria-rowcount should iclude 3 lines of shimmering
+        expect(getOffsetAriaRowCount(gridEl)).toBe(items.length + 3);
+
         expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+    });
+
+    describe("useLoadMoreItems hooks", () => {
+        test("Throttle onLoadMore", async () => {
+            const loadFn = jest.fn(() =>
+                Promise.resolve({ done: false, items: [1] })
+            );
+            const { result, waitForNextUpdate } = renderHook(() =>
+                useLoadMoreItems(loadFn)
+            );
+            expect(result.current.hasMore).toBe(true);
+            expect(result.current.items).toEqual([]);
+            // trigger loadMoreCallback 3 times, but loadFn should only be
+            // called once, because it is throttled to wait for the previous
+            // call to finish
+            for (let i = 0; i < 3; i++) {
+                result.current.loadMoreCallback();
+            }
+            expect(loadFn).toHaveBeenCalledTimes(1);
+
+            // wait for the previous call to finish and state to be updated
+            await waitForNextUpdate();
+
+            expect(result.current.hasMore).toBe(true);
+            expect(result.current.items).toEqual([1]);
+
+            // trigger loadMoreCallback again, loadFn should be called again
+            result.current.loadMoreCallback();
+            expect(loadFn).toHaveBeenCalledTimes(2);
+        });
+
+        test("Cancel pending load", async () => {
+            const getNewLoadFn = (items: number[]) => {
+                return jest.fn(() => {
+                    return Promise.resolve({
+                        done: true,
+                        items: items,
+                    });
+                });
+            };
+            const loadFn1 = getNewLoadFn([1]);
+            const { result, rerender, waitForNextUpdate } = renderHook(
+                ({ loadFn }) => useLoadMoreItems(loadFn),
+                {
+                    initialProps: { loadFn: loadFn1 },
+                }
+            );
+
+            // change loadFn to a new one, the previous loadFn should be
+            // cancelled, which means it should not set items to [1]
+            const loadFn2 = getNewLoadFn([2]);
+            rerender({ loadFn: loadFn2 });
+
+            await waitForNextUpdate();
+
+            expect(result.current.hasMore).toBe(false);
+            expect(result.current.items).toEqual([2]);
+
+            expect(loadFn1).toHaveBeenCalledTimes(1);
+            expect(loadFn2).toHaveBeenCalledTimes(1);
+        });
+
+        test("No items", async () => {
+            const expectedNumOfCalls = 3;
+            const getLoadFn = () => {
+                let i = 0;
+                return jest.fn(() => {
+                    i += 1;
+                    const shouldFinish = i >= expectedNumOfCalls;
+                    return Promise.resolve({
+                        done: shouldFinish,
+                        items: shouldFinish ? [1] : [],
+                    });
+                });
+            };
+            const loadFn = getLoadFn();
+            const { result, waitForNextUpdate } = renderHook(() =>
+                useLoadMoreItems(loadFn)
+            );
+
+            await waitForNextUpdate();
+
+            // loadFn should be called 3 times, previous 2 calls return no items
+            // and done is false, should continue to call loadFn until done is
+            // true
+            expect(loadFn).toHaveBeenCalledTimes(expectedNumOfCalls);
+            expect(result.current.hasMore).toBe(false);
+            expect(result.current.items).toEqual([1]);
+        });
     });
 });
 
@@ -315,13 +403,14 @@ function getOffsetRowCount(): number {
     return screen.getAllByRole("row").length - 1;
 }
 
-function addMoreItems(
-    items: { data: number }[] = [],
-    num: number = 3
-): { data: number }[] {
-    const start = items.length;
-    const newArray = Array(num)
+/**
+ * Helper to generate an array of data items
+ * @param num The number of items to generate
+ * @returns The array of data items
+ */
+function generateDataItems(num: number = 3): { data: number }[] {
+    const arr = Array(num)
         .fill(0)
-        .map((_, i) => ({ data: i + start }));
-    return [...items, ...newArray];
+        .map((_, i) => ({ data: i }));
+    return arr;
 }
