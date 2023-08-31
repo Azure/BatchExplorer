@@ -32,7 +32,7 @@ export async function loadDemoTasks(params?: {
     if (Math.random() > 0.3) {
         taskNum = Math.floor(Math.random() * 20);
     }
-    taskNum = 100;
+    taskNum = 10;
 
     for (let i = 0; i < taskNum; i++) {
         const task: IDemoTask = {
@@ -46,11 +46,12 @@ export async function loadDemoTasks(params?: {
         tasks.push(task);
     }
 
-    await waitFor(100);
-    log.info(`${filter}, ${nextToken}, ${tasks.length} tasks returned`);
+    await waitFor(1000);
+    log.info(
+        `filter: ${filter}, nextToken: ${nextToken}, ${tasks.length} tasks returned`
+    );
 
     i++;
-    console.log(i);
     const shouldFinish = i % 10 === 0 || (i + 1) % 10 === 0;
 
     return {
