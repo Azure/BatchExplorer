@@ -1,5 +1,4 @@
 export * from "./action";
-export * from "./data-grid-load-more";
 export * from "./data-grid/data-grid";
 export * from "./layout";
 export * from "./property";

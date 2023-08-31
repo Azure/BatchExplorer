@@ -18,7 +18,7 @@ export interface ILoadMoreListResult<T> {
  * 3. Retry if the loadFn returns no items and there are more items to load.
  * @param loadFn function to load more items, change of reference will trigger
  * a new load and set the items to empty and hasMore to true.
- * @returns items, hasMore and loadMoreCallback
+ * @returns items, hasMore and onLoadMore
  */
 export function useLoadMoreItems<T>(
     loadFn: () => Promise<ILoadMoreListResult<T>>
@@ -68,6 +68,6 @@ export function useLoadMoreItems<T>(
     return {
         items,
         hasMore,
-        loadMoreCallback: loadMore,
+        onLoadMore: loadMore,
     };
 }

@@ -263,11 +263,11 @@ describe("DataGrid component", () => {
             );
             expect(result.current.hasMore).toBe(true);
             expect(result.current.items).toEqual([]);
-            // trigger loadMoreCallback 3 times, but loadFn should only be
+            // trigger onLoadMore 3 times, but loadFn should only be
             // called once, because it is throttled to wait for the previous
             // call to finish
             for (let i = 0; i < 3; i++) {
-                result.current.loadMoreCallback();
+                result.current.onLoadMore();
             }
             expect(loadFn).toHaveBeenCalledTimes(1);
 
@@ -277,8 +277,8 @@ describe("DataGrid component", () => {
             expect(result.current.hasMore).toBe(true);
             expect(result.current.items).toEqual([1]);
 
-            // trigger loadMoreCallback again, loadFn should be called again
-            result.current.loadMoreCallback();
+            // trigger onLoadMore again, loadFn should be called again
+            result.current.onLoadMore();
             expect(loadFn).toHaveBeenCalledTimes(2);
         });
 

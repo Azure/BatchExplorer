@@ -32,7 +32,7 @@ export const DataGridLoadMoreDemo = () => {
         nextToken.current = undefined;
     }, [filter]);
 
-    const { items, hasMore, loadMoreCallback } = useLoadMoreItems(loadFn);
+    const { items, hasMore, onLoadMore } = useLoadMoreItems(loadFn);
 
     return (
         <DemoPane title="Data grid load more">
@@ -47,7 +47,7 @@ export const DataGridLoadMoreDemo = () => {
                 items={items}
                 columns={columns}
                 hasMore={hasMore}
-                onLoadMore={loadMoreCallback}
+                onLoadMore={onLoadMore}
             />
         </DemoPane>
     );
