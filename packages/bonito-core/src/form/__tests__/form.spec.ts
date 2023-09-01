@@ -247,6 +247,42 @@ describe("Form tests", () => {
                 color: "red",
             },
         });
+
+        const subFormColor = subForm.param("color", StringParameter, {
+            value: "blue",
+        });
+        expect(subForm.values).toEqual({
+            color: "blue",
+        });
+
+        const subFormOnChangeSpy = jest.fn();
+        const formOnChangeSpy = jest.fn();
+
+        subForm.on("change", subFormOnChangeSpy);
+        form.on("change", formOnChangeSpy);
+
+        subFormColor.value = "green";
+        expect(subFormOnChangeSpy).toHaveBeenCalledWith(
+            { color: "green" },
+            { color: "blue" }
+        );
+
+        expect(formOnChangeSpy).toHaveBeenCalledWith(
+            {
+                applicant: "Sir Lancelot",
+                applicantHouseholdSize: 2,
+                answers: {
+                    color: "green",
+                },
+            },
+            {
+                applicant: "Sir Lancelot",
+                applicantHouseholdSize: 2,
+                answers: {
+                    color: "blue",
+                },
+            }
+        );
     });
 
     test("Validation", async () => {

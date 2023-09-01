@@ -141,6 +141,7 @@ export class SubForm<
         this.parentForm.updateValue(name, this.values as S);
 
         (this.parentForm as unknown as FormImpl<P>)._registerEntry(this);
+        this._subscribeFormChange();
     }
 
     childEntries(): IterableIterator<Entry<S>> {
@@ -249,5 +250,11 @@ export class SubForm<
 
     evaluate(): boolean {
         return this.form.evaluate();
+    }
+
+    private _subscribeFormChange(): void {
+        this.form.on("change", (newValues) => {
+            this.parentForm.updateValue(this.name, newValues);
+        });
     }
 }
