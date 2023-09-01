@@ -16,4 +16,5 @@ Localize/out/
 
 /desktop/src/generated/*
 /packages/*/src/generated/*
+/util/bux/__tests__/loc-source/generated
 /web/src/generated/*
