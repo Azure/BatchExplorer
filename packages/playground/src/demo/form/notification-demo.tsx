@@ -1,12 +1,12 @@
 import { DemoPane } from "../../layout/demo-pane";
 import { DefaultButton } from "@fluentui/react/lib/Button";
 import * as React from "react";
-import { Notification } from "@azure/bonito-core/lib/notification";
+import { Notifier } from "@azure/bonito-core/lib/notification";
 import { DependencyName } from "@azure/bonito-core";
 import { inject } from "@azure/bonito-core/lib/environment";
 
 export const NotificationDemo: React.FC = () => {
-    const notifier = inject<Notification>(DependencyName.Notifier);
+    const notifier = inject<Notifier>(DependencyName.Notifier);
 
     return (
         <DemoPane title="Notification">

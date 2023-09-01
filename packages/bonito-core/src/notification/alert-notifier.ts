@@ -1,11 +1,11 @@
 import {
-    Notification,
     NotificationConfig,
     LinkToReference,
     PendingNotification,
-} from "./notification";
+    Notifier,
+} from "./notifier";
 
-export class MockNotifier implements Notification {
+export class AlertNotifier implements Notifier {
     info(
         title: string,
         description: string,

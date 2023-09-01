@@ -6,7 +6,7 @@ import type { Logger, LoggerFactory, LoggingContext } from "../logging";
 import { ResourceGroupService } from "../resource-group";
 import { StorageAccountService } from "../storage";
 import { SubscriptionService } from "../subscription";
-import { Notification as Notifier } from "../notification";
+import { Notifier } from "../notification";
 
 /**
  * Represents the execution environment of the application. Acts as a

@@ -11,7 +11,7 @@ import { DependencyName } from "@azure/bonito-core/lib/environment";
 import { MockHttpClient } from "@azure/bonito-core/lib/http";
 import { HttpLocalizer } from "@azure/bonito-core/lib/localization";
 import { createConsoleLogger } from "@azure/bonito-core/lib/logging";
-import { MockNotifier } from "@azure/bonito-core/lib/notification/mock-notification";
+import { AlertNotifier } from "@azure/bonito-core/lib/notification/alert-notifier";
 import { DefaultBrowserEnvironment } from "@azure/bonito-ui";
 import { DefaultFormLayoutProvider } from "@azure/bonito-ui/lib/components/form";
 import {
@@ -61,7 +61,7 @@ export async function init(rootEl: HTMLElement): Promise<void> {
                 [DependencyName.HttpClient]: () => new MockHttpClient(),
                 [DependencyName.LocationService]: () =>
                     new FakeLocationService(),
-                [DependencyName.Notifier]: () => new MockNotifier(), // TODO: update with real notification implementation
+                [DependencyName.Notifier]: () => new AlertNotifier(), // TODO: update with real notification implementation
                 [BatchDependencyName.PoolService]: () => new FakePoolService(),
                 [DependencyName.ResourceGroupService]: () =>
                     new FakeResourceGroupService(),

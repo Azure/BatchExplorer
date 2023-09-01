@@ -7,7 +7,7 @@ export type NotificationLevel =
 
 export type NotificationStatus = "success" | "error";
 
-export interface Notification {
+export interface Notifier {
     info(
         title: string,
         description: string,

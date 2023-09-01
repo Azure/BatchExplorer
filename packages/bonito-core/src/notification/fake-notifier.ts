@@ -1,9 +1,9 @@
 import {
-    Notification,
+    Notifier,
     NotificationConfig,
     NotificationLevel,
     PendingNotification,
-} from "./notification";
+} from "./notifier";
 
 export interface ExpectedNotification {
     level: NotificationLevel;
@@ -11,7 +11,7 @@ export interface ExpectedNotification {
     config: NotificationConfig;
 }
 
-export class FakeNotification implements Notification {
+export class FakeNotifier implements Notifier {
     expectedNotifications: ExpectedNotification[] = [];
 
     expectInfo(notification: string, config: NotificationConfig): void {
@@ -96,10 +96,10 @@ export class FakeNotification implements Notification {
             expected.notification !== formattedNotification
         ) {
             throw new Error(
-                `Expected message did not match actual.\n\nExpected:\n${FakeNotification._formatSummary(
+                `Expected message did not match actual.\n\nExpected:\n${FakeNotifier._formatSummary(
                     expected.level,
                     expected.notification
-                )}\n\nActual:\n${FakeNotification._formatSummary(
+                )}\n\nActual:\n${FakeNotifier._formatSummary(
                     level,
                     formattedNotification
                 )}`
