@@ -62,6 +62,7 @@ export function RadioButton<
             }}
             onBlur={onBlur}
             onChange={(event, option) => {
+                param.value = option?.key as V[K];
                 if (hasFocused) {
                     setDirty(true);
                 }

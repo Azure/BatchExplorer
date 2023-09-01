@@ -99,22 +99,24 @@ const ListForm = <V extends FormValues>(props: ListFormProps<V>) => {
 
 function renderChildEntries<V extends FormValues>(
     entries: IterableIterator<Entry<V>>,
-    rows: JSX.Element[]
+    rows: JSX.Element[],
+    parentKey: string = ""
 ) {
     for (const entry of entries) {
+        const key = `${parentKey}.${entry.name}`;
         if (entry instanceof AbstractParameter) {
-            rows.push(<ParameterRow key={entry.name} param={entry} />);
+            rows.push(<ParameterRow key={key} param={entry} />);
         } else if (entry instanceof ReactItem) {
-            rows.push(<ItemRow key={entry.name} item={entry} />);
+            rows.push(<ItemRow key={key} item={entry} />);
         } else if (entry instanceof Section) {
-            rows.push(<SectionTitle key={entry.name} section={entry} />);
+            rows.push(<SectionTitle key={key} section={entry} />);
             if (entry.childEntriesCount > 0) {
-                renderChildEntries(entry.childEntries(), rows);
+                renderChildEntries(entry.childEntries(), rows, key);
             }
         } else if (entry instanceof SubForm) {
-            rows.push(<SubFormTitle key={entry.name} subForm={entry} />);
+            rows.push(<SubFormTitle key={key} subForm={entry} />);
             if (entry.childEntriesCount > 0) {
-                renderChildEntries(entry.childEntries(), rows);
+                renderChildEntries(entry.childEntries(), rows, key);
             }
         }
     }
