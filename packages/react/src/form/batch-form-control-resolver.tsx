@@ -9,10 +9,6 @@ import {
 } from "@azure/bonito-ui/lib/components/form";
 import * as React from "react";
 import { NodeCommsDropdown, NodeCommsParameter } from "../pool";
-import {
-    AccessRuleRadioButtons,
-    AccessRuleRadioButtonsParamter,
-} from "../networking";
 
 export class BatchFormControlResolver extends DefaultFormControlResolver {
     getFormControl<
@@ -25,15 +21,6 @@ export class BatchFormControlResolver extends DefaultFormControlResolver {
         if (param instanceof NodeCommsParameter) {
             return (
                 <NodeCommsDropdown
-                    id={id}
-                    key={param.name}
-                    param={param}
-                    onChange={onChange}
-                />
-            );
-        } else if (param instanceof AccessRuleRadioButtonsParamter) {
-            return (
-                <AccessRuleRadioButtons
                     id={id}
                     key={param.name}
                     param={param}

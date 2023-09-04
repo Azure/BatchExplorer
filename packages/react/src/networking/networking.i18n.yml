@@ -1,0 +1,5 @@
+networking:
+  accessRules:
+    allNetworks: Allow all networks
+    selectedNetworks: Allow selected networks
+    disabled: Deny all networks

@@ -9,6 +9,7 @@ import { DropdownDemo } from "./demo/form/dropdown-demo";
 import { RadioButtonDemo } from "./demo/form/radiobutton/radiobutton-demo";
 import { CheckboxDemo } from "./demo/form/checkbox/checkbox-demo";
 import { NotificationDemo } from "./demo/form/notification-demo";
+import { StringListDemo } from "./demo/form/stringlist/stringlist-demo";
 
 export const DEMO_MAP = {
     default: () => <DefaultPane />,
@@ -22,6 +23,7 @@ export const DEMO_MAP = {
     textfield: () => <TextFieldDemo />,
     notification: () => <NotificationDemo />,
     certificatedisplay: () => <CertificateDisplayDemo />,
+    stringlist: () => <StringListDemo />,
 };
 
 export type DemoName = keyof typeof DEMO_MAP;

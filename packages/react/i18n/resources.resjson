@@ -1,5 +1,8 @@
 {
   "lib.react.account.parameter.name.label": "Account name",
+  "lib.react.networking.accessRules.allNetworks": "Allow all networks",
+  "lib.react.networking.accessRules.disabled": "Deny all networks",
+  "lib.react.networking.accessRules.selectedNetworks": "Allow selected networks",
   "lib.react.pool.infoBox.nodeCommsModeDiffers.message": "If the target node communication mode differs from the current mode, Batch will attempt to update the mode the next time the pool is resized down to zero compute nodes and back up.",
   "lib.react.pool.notFound": "No pool found",
   "lib.react.pool.parameter.currentNodeCommunicationMode.label": "Current node communication mode",

@@ -1,11 +1,21 @@
 // import { translate } from "@azure/bonito-core/lib/localization";
+import { translate } from "@azure/bonito-core";
 import { AbstractAction } from "@azure/bonito-core/lib/action";
-import { Form, ValidationStatus } from "@azure/bonito-core/lib/form";
-import { createReactForm } from "@azure/bonito-ui";
 import {
-    AccessRuleRadioButtonsParamter,
-    AccessRuleType,
-} from "./access-rule-radio-parameter";
+    Form,
+    StringListParameter,
+    StringParameter,
+    ValidationStatus,
+} from "@azure/bonito-core/lib/form";
+import { createReactForm } from "@azure/bonito-ui";
+import { RadioButton, StringList } from "@azure/bonito-ui/lib/components/form";
+import React from "react";
+
+export enum AccessRuleType {
+    AllNetworks = "all-networks",
+    SelectedNetworks = "selected-networks",
+    Disabled = "disabled",
+}
 
 type IAccessRuleFormValue = {
     checkedValue: AccessRuleType;
@@ -66,38 +76,6 @@ export class UpdateAccessRulesAction extends AbstractAction<UpdateAccessRulesFor
             title: "Node Management Access Rules",
         });
 
-        // const accountSubForm = form.subForm(
-        //     "account",
-        //     createReactForm<IAccessRuleFormValue>({
-        //         values: initialValues.account || {
-        //             checkedValue: AccessRuleType.AllNetworks,
-        //         },
-        //     })
-        // );
-
-        // accountSubForm.param("checkedValue", AccessRuleRadioButtonsParamter, {
-        //     title: "Access Rule",
-        //     label: translate(
-        //         "lib.react.pool.parameter.currentNodeCommunicationMode.label"
-        //     ),
-        // });
-
-        // const nodeMgmtSubForm = form.subForm(
-        //     "nodeMgmt",
-        //     createReactForm<IAccessRuleFormValue>({
-        //         values: initialValues.account || {
-        //             checkedValue: AccessRuleType.AllNetworks,
-        //         },
-        //     })
-        // );
-
-        // nodeMgmtSubForm.param("checkedValue", AccessRuleRadioButtonsParamter, {
-        //     title: "Access Rule",
-        //     label: translate(
-        //         "lib.react.pool.parameter.currentNodeCommunicationMode.label"
-        //     ),
-        // });
-
         return form;
     }
 
@@ -115,9 +93,51 @@ export class UpdateAccessRulesAction extends AbstractAction<UpdateAccessRulesFor
                 checkedValue: AccessRuleType.AllNetworks,
             },
         });
-        subForm.param("checkedValue", AccessRuleRadioButtonsParamter, {
-            // title: "Access Rule",
+        subForm.param("checkedValue", StringParameter, {
             label: "Access Rule",
+            value: AccessRuleType.Disabled,
+            render(props) {
+                return (
+                    <RadioButton
+                        {...props}
+                        options={[
+                            // TODO i18n key
+                            {
+                                key: AccessRuleType.AllNetworks,
+                                text: translate(
+                                    "lib.react.networking.accessRules.allNetworks"
+                                ),
+                            },
+                            {
+                                key: AccessRuleType.SelectedNetworks,
+                                text: translate(
+                                    "lib.react.networking.accessRules.selectedNetworks"
+                                ),
+                            },
+                            {
+                                key: AccessRuleType.Disabled,
+                                text: translate(
+                                    "lib.react.networking.accessRules.disabled"
+                                ),
+                            },
+                        ]}
+                    />
+                );
+            },
+        });
+        subForm.param("ips", StringListParameter, {
+            label: "Address ranges",
+            value: [],
+            dynamic: {
+                hidden: (form) => {
+                    return (
+                        form.checkedValue !== AccessRuleType.SelectedNetworks
+                    );
+                },
+            },
+            render(props) {
+                return <StringList {...props} />;
+            },
         });
         return subForm;
     }
