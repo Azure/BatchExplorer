@@ -1,21 +1,29 @@
+import { FormValues, ParameterName } from "@azure/bonito-core/lib/form";
 import {
-    FormValues,
-    ParameterDependencies,
-    ParameterName,
-} from "@azure/bonito-core/lib/form";
-import { TextField as FluentTextField } from "@fluentui/react/lib/TextField";
+    TextField as FluentTextField,
+    ITextFieldProps,
+} from "@fluentui/react/lib/TextField";
 import * as React from "react";
 import { useFormParameter, useUniqueId } from "../../hooks";
 import { FormControlProps } from "./form-control";
+import { translate } from "@azure/bonito-core";
+
+export interface TextFieldProps<
+    V extends FormValues,
+    K extends ParameterName<V>
+> extends FormControlProps<V, K> {
+    /**
+     * The type of input to display.
+     */
+    type?: "text" | "password";
+}
 
 /**
  * A simple text input form control
  */
-export function TextField<
-    V extends FormValues,
-    K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
->(props: FormControlProps<V, K, D>): JSX.Element {
+export function TextField<V extends FormValues, K extends ParameterName<V>>(
+    props: TextFieldProps<V, K>
+): JSX.Element {
     const {
         ariaLabel,
         className,
@@ -31,6 +39,16 @@ export function TextField<
     const { validationError, setDirty } = useFormParameter(param);
 
     const [hasFocused, setHasFocused] = React.useState<boolean>(false);
+
+    const typeSpecificProps: ITextFieldProps = {};
+    const type = props.type ?? "text";
+    if (type === "password") {
+        typeSpecificProps.type = "password";
+        typeSpecificProps.canRevealPassword = true;
+        typeSpecificProps.revealPasswordAriaLabel = translate(
+            "bonito.ui.form.showPassword"
+        );
+    }
 
     return (
         <FluentTextField
@@ -59,6 +77,7 @@ export function TextField<
                     onChange(event, value);
                 }
             }}
+            {...typeSpecificProps}
         ></FluentTextField>
     );
 }
