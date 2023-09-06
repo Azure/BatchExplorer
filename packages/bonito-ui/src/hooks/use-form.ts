@@ -47,16 +47,11 @@ export function useForm<V extends FormValues, DataResult = never>(
         form.evaluate();
 
         const changeHandler = form.on("change", (newValues, oldValues) => {
-            const changed = form.evaluate();
-            // Don't do anything if evaluating the form resulted in
-            // changes, since another change event will be fired
-            if (!changed) {
-                setValues(newValues);
-                if (onFormChange) {
-                    onFormChange(newValues, oldValues);
-                }
-                form.validate();
+            setValues(newValues);
+            if (onFormChange) {
+                onFormChange(newValues, oldValues);
             }
+            form.validate();
         });
 
         const validationHandler = form.on("validate", (snapshot) => {
