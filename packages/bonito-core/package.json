@@ -25,7 +25,7 @@
     "clean:build": "bux rmrf ./build",
     "clean:esm": "bux rmrf ./lib",
     "clean:cjs": "bux rmrf ./lib-cjs",
-    "clean:generated": "bux rmrf ./src/ui-common/generated",
+    "clean:generated": "bux rmrf ./src/generated",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
     "test:all": "npm run test:coverage",
