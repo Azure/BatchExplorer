@@ -241,6 +241,7 @@ interface ButtonContainerProps {
 const ButtonContainer = (props: ButtonContainerProps) => {
     return (
         <Stack
+            style={{ paddingTop: 8 }}
             className="form-button-container"
             horizontal={true}
             tokens={{ childrenGap: "8px" }}
