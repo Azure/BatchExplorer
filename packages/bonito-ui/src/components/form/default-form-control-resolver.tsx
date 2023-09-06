@@ -4,6 +4,7 @@ import {
     NumberParameter,
     ParameterDependencies,
     ParameterName,
+    PasswordParameter,
     StringListParameter,
     StringParameter,
 } from "@azure/bonito-core/lib/form";
@@ -65,6 +66,16 @@ export class DefaultFormControlResolver implements FormControlResolver {
                     key={param.name}
                     param={param}
                     onChange={onChange}
+                />
+            );
+        } else if (param instanceof PasswordParameter) {
+            return (
+                <TextField
+                    id={id}
+                    key={param.name}
+                    param={param}
+                    onChange={onChange}
+                    type="password"
                 />
             );
         } else if (param instanceof SubscriptionParameter) {

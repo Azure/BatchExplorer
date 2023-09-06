@@ -2,3 +2,4 @@ form:
   buttons:
     apply: Apply
     discardChanges: Discard changes
+  showPassword: Show password
