@@ -187,7 +187,16 @@ export class FormImpl<V extends FormValues> implements Form<V> {
     }
 
     evaluate(): boolean {
-        const propsChanged = this._updateDynamicProperties(this.values);
+        let propsChanged = false;
+
+        for (const e of this.allEntries()) {
+            if (e instanceof SubForm) {
+                propsChanged = e.evaluate() || propsChanged;
+            }
+        }
+        propsChanged =
+            propsChanged || this._updateDynamicProperties(this.values);
+
         if (propsChanged) {
             this._emitChangeEvent(this.values, this.values);
         }
