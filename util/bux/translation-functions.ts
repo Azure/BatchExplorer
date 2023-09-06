@@ -16,6 +16,7 @@ const writeFile = promisify(fs.writeFile);
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
+// Generate bundled translations for web and desktop directories
 export async function mergeAllTranslations(outputPath: string) {
     const currentDirectory = process.cwd();
     const rootDir = path.resolve(currentDirectory, "..");
