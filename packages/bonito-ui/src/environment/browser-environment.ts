@@ -40,6 +40,7 @@ export interface BrowserEnvironment<
 
 export interface BrowserEnvironmentConfig extends EnvironmentConfig {
     enableA11yTesting?: boolean;
+    fluentIconsBaseUrl?: string;
 }
 
 /**
@@ -55,7 +56,7 @@ export class DefaultBrowserEnvironment<
     name = EnvironmentName.Browser;
 
     async beforeInit(): Promise<void> {
-        initFluentIcons();
+        initFluentIcons(this.config.fluentIconsBaseUrl);
     }
 
     async beforeDestroy(): Promise<void> {

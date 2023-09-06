@@ -22,10 +22,8 @@ describe("HttpLocalizer", () => {
         );
 
         jest.spyOn(httpLocalizer, "getLocale").mockReturnValue("en-US");
-        await httpLocalizer.loadTranslations();
-        expect(fetchMock).toHaveBeenCalledWith(
-            "/resources/i18n/resources.en.json"
-        );
+        await httpLocalizer.loadTranslations("/base/url");
+        expect(fetchMock).toHaveBeenCalledWith("/base/url/resources.en.json");
         expect(httpLocalizer.translate("hello")).toEqual("world");
     });
 
@@ -39,7 +37,7 @@ describe("HttpLocalizer", () => {
 
         // Simulate a French locale
         jest.spyOn(httpLocalizer, "getLocale").mockReturnValue("fr-FR");
-        await httpLocalizer.loadTranslations();
+        await httpLocalizer.loadTranslations("/resources/i18n");
         expect(fetchMock).toHaveBeenCalledWith(
             "/resources/i18n/resources.fr.json"
         );
@@ -56,7 +54,7 @@ describe("HttpLocalizer", () => {
 
         // Simulate an invalid locale
         jest.spyOn(httpLocalizer, "getLocale").mockReturnValue("abc");
-        await httpLocalizer.loadTranslations();
+        await httpLocalizer.loadTranslations("/resources/i18n");
         expect(fetchMock).toHaveBeenCalledWith(
             "/resources/i18n/resources.en.json"
         );
@@ -78,7 +76,7 @@ describe("HttpLocalizer", () => {
         );
 
         jest.spyOn(httpLocalizer, "getLocale").mockReturnValue("en-US");
-        await httpLocalizer.loadTranslations();
+        await httpLocalizer.loadTranslations("/resources/i18n");
         expect(httpLocalizer.translate("notFound")).toEqual("notFound");
     });
 });
