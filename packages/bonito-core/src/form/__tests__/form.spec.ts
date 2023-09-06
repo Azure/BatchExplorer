@@ -51,34 +51,35 @@ describe("Form tests", () => {
     });
 
     test("Dynamic parameters", () => {
-        type HelloWorldFormValues = {
-            hideMessage: boolean;
-            message: string;
-        };
-
-        const form = createForm<HelloWorldFormValues>({
-            values: {
-                hideMessage: false,
-                message: "Hello world!",
-            },
-        });
-
-        const hideMessageParam = form.param("hideMessage", BooleanParameter);
-        const messageParam = form.param("message", StringParameter, {
-            label: "Not evaluated yet",
-            dynamic: {
-                hidden: (values) => values.hideMessage,
-                label: (values) =>
-                    values.hideMessage == true
-                        ? "Hidden message"
-                        : "Visible message",
-            },
-        });
+        const { form, hideMessageParam, messageParam } =
+            createDynamicParamsForm();
 
         // Test dynamic property evaluation
         expect(messageParam.hidden).toBe(false);
         expect(messageParam.label).toEqual("Not evaluated yet");
         form.evaluate();
+        expect(messageParam.hidden).toBe(false);
+        expect(messageParam.label).toEqual("Visible message");
+        hideMessageParam.value = true;
+        expect(messageParam.hidden).toBe(true);
+        expect(messageParam.label).toEqual("Hidden message");
+    });
+
+    test("Subform dynamic parameters", () => {
+        const { form, hideMessageParam, messageParam } =
+            createDynamicParamsForm();
+
+        const parentForm = createForm({
+            values: {
+                child: {},
+            },
+        });
+
+        parentForm.subForm("child", form);
+        // Test dynamic property evaluation
+        expect(messageParam.hidden).toBe(false);
+        expect(messageParam.label).toEqual("Not evaluated yet");
+        parentForm.evaluate();
         expect(messageParam.hidden).toBe(false);
         expect(messageParam.label).toEqual("Visible message");
         hideMessageParam.value = true;
@@ -760,4 +761,36 @@ class ParkParameter<
 
         return new ValidationStatus("ok");
     }
+}
+
+function createDynamicParamsForm() {
+    type HelloWorldFormValues = {
+        hideMessage: boolean;
+        message: string;
+    };
+
+    const form = createForm<HelloWorldFormValues>({
+        values: {
+            hideMessage: false,
+            message: "Hello world!",
+        },
+    });
+
+    const hideMessageParam = form.param("hideMessage", BooleanParameter);
+    const messageParam = form.param("message", StringParameter, {
+        label: "Not evaluated yet",
+        dynamic: {
+            hidden: (values) => values.hideMessage,
+            label: (values) =>
+                values.hideMessage == true
+                    ? "Hidden message"
+                    : "Visible message",
+        },
+    });
+
+    return {
+        form,
+        hideMessageParam,
+        messageParam,
+    };
 }
