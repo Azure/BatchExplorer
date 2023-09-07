@@ -1,3 +1,5 @@
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+
 /**
  * AutoscaleLanguage class defines autoscale formula syntax highlight and keyword autocomplete features in
  * Monaco text editor. Autoscale text editor can be viewed directly in create pool flyout.
