@@ -6,6 +6,7 @@ import type { Logger, LoggerFactory, LoggingContext } from "../logging";
 import { ResourceGroupService } from "../resource-group";
 import { StorageAccountService } from "../storage";
 import { SubscriptionService } from "../subscription";
+import { Notifier } from "../notification";
 
 /**
  * Represents the execution environment of the application. Acts as a
@@ -93,6 +94,7 @@ export enum DependencyName {
     Localizer = "localizer",
     LocationService = "locationService",
     LoggerFactory = "loggerFactory",
+    Notifier = "notifier",
     ResourceGroupService = "resourceGroupService",
     StorageAccountService = "storageAccountService",
     SubscriptionService = "subscriptionService",
@@ -108,6 +110,7 @@ export interface DependencyFactories {
     [DependencyName.LocationService]: () => LocationService;
     [DependencyName.LoggerFactory]: () => LoggerFactory;
     [DependencyName.Localizer]: () => Localizer;
+    [DependencyName.Notifier]: () => Notifier;
     [DependencyName.ResourceGroupService]: () => ResourceGroupService;
     [DependencyName.StorageAccountService]: () => StorageAccountService;
     [DependencyName.SubscriptionService]: () => SubscriptionService;
