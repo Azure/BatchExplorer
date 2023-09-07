@@ -7,7 +7,7 @@ interface Translations {
 export class HttpLocalizer implements Localizer {
     private translations?: Translations;
 
-    async loadTranslations(): Promise<void> {
+    async loadTranslations(baseUrl: string): Promise<void> {
         const languageMap: Record<string, string> = {
             cs: "cs",
             de: "de",
@@ -43,7 +43,10 @@ export class HttpLocalizer implements Localizer {
         }
 
         try {
-            this.translations = await this.fetchTranslations(languageToLoad);
+            this.translations = await this.fetchTranslations(
+                baseUrl,
+                languageToLoad
+            );
         } catch (error) {
             // Fall back to English if translations are not available for the selected locale
             if (languageToLoad !== "en") {
@@ -54,6 +57,7 @@ export class HttpLocalizer implements Localizer {
                 );
                 languageToLoad = "en";
                 this.translations = await this.fetchTranslations(
+                    baseUrl,
                     languageToLoad
                 );
             } else {
@@ -66,8 +70,11 @@ export class HttpLocalizer implements Localizer {
         }
     }
 
-    private async fetchTranslations(lang: string): Promise<Translations> {
-        const response = await fetch(`/resources/i18n/resources.${lang}.json`);
+    private async fetchTranslations(
+        baseUrl: string,
+        lang: string
+    ): Promise<Translations> {
+        const response = await fetch(`${baseUrl}/resources.${lang}.json`);
 
         if (!response.ok) {
             throw new Error(

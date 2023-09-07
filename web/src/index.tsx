@@ -43,7 +43,7 @@ init(rootEl);
 
 export async function init(rootEl: HTMLElement): Promise<void> {
     const localizer = new HttpLocalizer();
-    await localizer.loadTranslations();
+    await localizer.loadTranslations("/resources/i18n");
     initEnvironment(
         new DefaultBrowserEnvironment<
             BrowserEnvironmentConfig,

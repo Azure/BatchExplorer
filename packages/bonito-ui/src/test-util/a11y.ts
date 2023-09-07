@@ -6,6 +6,7 @@ import type { AxeResults, RunOptions } from "axe-core";
 import type { JestAxe, JestAxeConfigureOptions } from "jest-axe";
 import { MockBrowserEnvironment } from "..";
 import { getMockBrowserEnvironment } from "../environment";
+import { act } from "react-dom/test-utils";
 
 // Globally configured axe instance
 let _axe: JestAxe | null = null;
@@ -13,7 +14,7 @@ let _axe: JestAxe | null = null;
 /**
  * A wrapper around react-testing-library's render() function which performs
  * accessibility tests after the container is rendered. Note that this is
- * an async function unlike render() because running aXe is async.
+ * an async function unlike render() because running Axe is async.
  *
  * @param ui The element to render
  * @param options Render options
@@ -66,7 +67,7 @@ export async function runAxe(
         // Give a slightly more useful exception if the current environment
         // isn't a mock browser env
         if (e instanceof Error) {
-            throw new Error("Unable to run aXe: " + e.message);
+            throw new Error("Unable to run Axe: " + e.message);
         }
         throw e;
     }
@@ -82,11 +83,19 @@ export async function runAxe(
         } as unknown as AxeResults;
     }
 
-    if (!_axe) {
-        throw new Error("aXe was not initialized properly");
+    let results: AxeResults | null = null;
+    await act(async () => {
+        if (!_axe) {
+            throw new Error("Axe was not initialized properly");
+        }
+        results = await _axe(html, options);
+    });
+
+    if (!results) {
+        throw new Error("Axe did not return results");
     }
 
-    return _axe(html, options);
+    return results;
 }
 
 /**

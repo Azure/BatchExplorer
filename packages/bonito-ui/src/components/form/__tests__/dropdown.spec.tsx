@@ -6,6 +6,7 @@ import { initMockBrowserEnvironment } from "../../../environment";
 import { createParam } from "../../../form";
 import { runAxe } from "../../../test-util/a11y";
 import { Dropdown } from "../dropdown";
+
 describe("Dropdown form control", () => {
     beforeEach(() => initMockBrowserEnvironment());
 

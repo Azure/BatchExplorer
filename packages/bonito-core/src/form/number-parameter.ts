@@ -1,3 +1,4 @@
+import { translate } from "../localization";
 import { FormValues } from "./form";
 import { AbstractParameter, ParameterName } from "./parameter";
 import { ValidationStatus } from "./validation-status";
@@ -19,7 +20,10 @@ export class NumberParameter<
 
     private _validate(): ValidationStatus {
         if (this.value != null && typeof this.value !== "number") {
-            return new ValidationStatus("error", "Value must be a number");
+            return new ValidationStatus(
+                "error",
+                translate("bonito.core.form.validation.numberValueError")
+            );
         }
         return new ValidationStatus("ok");
     }

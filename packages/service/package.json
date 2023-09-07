@@ -32,7 +32,7 @@
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --watch",
     "test:watch": "jest --watch",
     "lint": "eslint .",
-    "watch": "npm run compile:esm -- --watch --preserveWatchOutput",
+    "watch": "run-p 'compile:* -- --watch --preserveWatchOutput'",
     "workspace:build": "npm run build",
     "workspace:build:clean": "npm run build:clean",
     "workspace:build:desktop": "npm run build",
