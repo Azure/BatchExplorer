@@ -8,6 +8,7 @@ import { ActionFormDemo } from "./demo/form/action-form-demo";
 import { DropdownDemo } from "./demo/form/dropdown-demo";
 import { RadioButtonDemo } from "./demo/form/radiobutton/radiobutton-demo";
 import { CheckboxDemo } from "./demo/form/checkbox/checkbox-demo";
+import { NotificationDemo } from "./demo/form/notification-demo";
 
 export const DEMO_MAP = {
     default: () => <DefaultPane />,
@@ -19,6 +20,7 @@ export const DEMO_MAP = {
     dropdown: () => <DropdownDemo />,
     searchbox: () => <SearchBoxDemo />,
     textfield: () => <TextFieldDemo />,
+    notification: () => <NotificationDemo />,
     certificatedisplay: () => <CertificateDisplayDemo />,
 };
 
