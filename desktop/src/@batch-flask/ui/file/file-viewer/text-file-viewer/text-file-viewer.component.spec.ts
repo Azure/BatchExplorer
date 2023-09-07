@@ -87,7 +87,7 @@ describe("TextFileViewer", () => {
             },
             uri: Uri.file("foo.ts"),
             keybindings: [
-                { key: KeyMod.CtrlCmd | KeyCode.KEY_S, action: jasmine.anything() },
+                { key: KeyMod.CtrlCmd | KeyCode.KeyS, action: jasmine.anything() },
             ],
         });
     });
