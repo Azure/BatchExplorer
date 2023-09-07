@@ -52,7 +52,7 @@ export class TextFileViewerComponent extends FileViewer {
         const keybindings: EditorKeyBinding[] = [];
 
         if (this.fileLoader && !this.fileLoader.isReadonly) {
-            keybindings.push({ key: KeyMod.CtrlCmd | KeyCode.KEY_S, action: () => this.save() });
+            keybindings.push({ key: KeyMod.CtrlCmd | KeyCode.KeyS, action: () => this.save() });
         }
         this.editorConfig = {
             readOnly: Boolean(this.fileLoader && this.fileLoader.isReadonly),

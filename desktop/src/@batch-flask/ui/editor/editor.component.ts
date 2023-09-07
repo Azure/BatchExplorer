@@ -4,9 +4,7 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import * as elementResizeDetectorMaker from "element-resize-detector";
-import { Uri, editor } from "monaco-editor";
-import { AutoscaleLanguage } from "./monaco-languages";
-import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
+import type { Uri, editor, IDisposable } from "monaco-editor";
 
 import "./editor.scss";
 
@@ -63,9 +61,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     private _value = "";
     private _resizeDetector: any;
     private _config: EditorConfig;
-    private _editor: IStandaloneCodeEditor;
-    private _model: monaco.editor.IModel;
-    private _modelChangeSub: monaco.IDisposable;
+    private _editor: editor.IStandaloneCodeEditor | null = null;
+    private _model: editor.IModel | null = null;
+    private _modelChangeSub: IDisposable;
 
     @Input() public set value(v) {
         if (v !== this._value) {
@@ -114,7 +112,8 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
 
     public async initMonaco() {
-        const monaco = await import("monaco-editor");
+        const monaco = await import("monaco-editor/esm/vs/editor/editor.api");
+        const { AutoscaleLanguage } = await import("./monaco-languages");
         AutoscaleLanguage.define();
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         // const options: IEditorConstructionOptions = this.config;
@@ -125,7 +124,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         // Assign _model to existing model instead of create new one to avoid error
         const uri = this.config.uri as any;
         const model = uri ? monaco.editor.getModel(uri) : null;
-        this._model = model || monaco.editor.createModel(this._value || "", this.config.language, uri);
+        this._model = model ?? monaco.editor.createModel(this._value || "", this.config.language, uri);
         // Inject this because initMonaco() function is invoked after writeValue()
         // which causes reopen json editor with an incorrect value populated
         this._model.setValue(this._value);
@@ -142,7 +141,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
             }
         }
         this._modelChangeSub = this._model.onDidChangeContent((e) => {
-            this.updateValue(this._model.getValue());
+            this.updateValue(this._model?.getValue());
         });
     }
 
