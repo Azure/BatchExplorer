@@ -90,7 +90,7 @@
     "@types/react-dom": "^17.0.18",
     "@uifabric/azure-themes": "7.5.19",
     "jest": "^27.1.0",
-    "jest-axe": "^5.0.1",
+    "jest-axe": "^7.0.1",
     "jest-junit": "^12.2.0",
     "jest-mock-extended": "^2.0.6",
     "ts-jest": "^27.0.5"
