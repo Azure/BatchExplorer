@@ -14,6 +14,12 @@ import {
 import { AppTheme } from "./app-theme";
 import { useTheme } from "@fluentui/react-theme-provider";
 import { getLogger } from "@azure/bonito-core";
+import {
+    CycleThemeDark,
+    CycleThemeHighContrastDark,
+    CycleThemeHighContrastLight,
+    CycleThemeLight,
+} from "./azure-theme";
 
 export const BaseThemeLight = AzureThemeLight;
 export const BaseThemeDark = AzureThemeDark;
@@ -49,7 +55,7 @@ export interface ThemeInfo extends ThemeMapEntry {
  * @returns A list of objects which contain metadata on each theme
  */
 export function listThemes(): ThemeInfo[] {
-    const sortedNames = Object.keys(_themeMap).sort();
+    const sortedNames = Object.keys(_themeMap).sort() as ThemeName[];
     const themes: ThemeInfo[] = [];
     for (const n of sortedNames) {
         const entry = _themeMap[n];
@@ -62,18 +68,25 @@ export function listThemes(): ThemeInfo[] {
     return themes;
 }
 
+export type ThemeName = keyof typeof _themeMap;
+
 /**
  * Gets a theme by name
  *
  * @returns A FluentUI theme
  */
-export function getTheme(themeName: string): ThemeInfo {
-    let mapInfo = _themeMap[themeName];
-    if (!mapInfo) {
-        getLogger("getTheme").error(
-            `Unable to load theme ${themeName}: Falling back to default`
-        );
+export function getTheme(themeName: ThemeName | "default"): ThemeInfo {
+    let mapInfo;
+    if (themeName === "default") {
         mapInfo = _themeMap[defaultTheme];
+    } else {
+        mapInfo = _themeMap[themeName];
+        if (!mapInfo) {
+            getLogger("getTheme").error(
+                `Unable to load theme ${themeName}: Falling back to default`
+            );
+            mapInfo = _themeMap[defaultTheme];
+        }
     }
     return {
         name: themeName,
@@ -87,9 +100,55 @@ interface ThemeMapEntry {
     get: () => AppTheme;
 }
 
-const _themeMap: Record<string, ThemeMapEntry> = {
+const _themeMap = {
+    cycleLight: {
+        label: "Cycle Light",
+        get: () => {
+            return _getThemeLazy("cycleLight", BaseThemeLight, (baseTheme) => {
+                return mergeThemes(baseTheme, CycleThemeLight) as AppTheme;
+            });
+        },
+    },
+    cycleDark: {
+        label: "Cycle Dark",
+        get: () => {
+            return _getThemeLazy("cycleDark", BaseThemeDark, (baseTheme) => {
+                return mergeThemes(baseTheme, CycleThemeDark) as AppTheme;
+            });
+        },
+    },
+    cycleHighContrastLight: {
+        label: "Cycle High Contrast (Light)",
+        get: () => {
+            return _getThemeLazy(
+                "cycleHighContrastLight",
+                BaseThemeHighContrastLight,
+                (baseTheme) => {
+                    return mergeThemes(
+                        baseTheme,
+                        CycleThemeHighContrastLight
+                    ) as AppTheme;
+                }
+            );
+        },
+    },
+    cycleHighContrastDark: {
+        label: "Cycle High Contrast (Dark)",
+        get: () => {
+            return _getThemeLazy(
+                "cycleHighContrastDark",
+                BaseThemeHighContrastDark,
+                (baseTheme) => {
+                    return mergeThemes(
+                        baseTheme,
+                        CycleThemeHighContrastDark
+                    ) as AppTheme;
+                }
+            );
+        },
+    },
     explorerLight: {
-        label: "Light",
+        label: "Explorer Light",
         get: () => {
             return _getThemeLazy(
                 "explorerLight",
@@ -104,7 +163,7 @@ const _themeMap: Record<string, ThemeMapEntry> = {
         },
     },
     explorerDark: {
-        label: "Dark",
+        label: "Explorer Dark",
         get: () => {
             return _getThemeLazy("explorerDark", BaseThemeDark, (baseTheme) => {
                 return mergeThemes(baseTheme, ExplorerThemeDark) as AppTheme;
@@ -112,7 +171,7 @@ const _themeMap: Record<string, ThemeMapEntry> = {
         },
     },
     explorerHighContrastLight: {
-        label: "High Contrast (Light)",
+        label: "Explorer High Contrast (Light)",
         get: () => {
             return _getThemeLazy(
                 "explorerHighContrastLight",
@@ -127,7 +186,7 @@ const _themeMap: Record<string, ThemeMapEntry> = {
         },
     },
     explorerHighContrastDark: {
-        label: "High Contrast (Dark)",
+        label: "Explorer High Contrast (Dark)",
         get: () => {
             return _getThemeLazy(
                 "explorerHighContrastDark",
