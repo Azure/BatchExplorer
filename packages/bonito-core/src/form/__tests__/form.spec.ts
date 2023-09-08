@@ -347,7 +347,9 @@ describe("Form tests", () => {
         form.updateValue("parkName", "Yosemite");
         await form.validate();
         expect(form.validationStatus?.level).toEqual("error");
-        expect(form.validationStatus?.message).toEqual("2 errors found");
+        expect(form.validationStatus?.message).toEqual(
+            "Invalid park/state combination"
+        );
         expect(form.entryValidationStatus.parkName?.level).toEqual("error");
         expect(form.entryValidationStatus.parkName?.message).toEqual(
             "Cannot validate park name: no state selected"
@@ -359,15 +361,17 @@ describe("Form tests", () => {
 
         form.updateValue("state", "California");
         await form.validate();
-        // The state is now defined, but still invalid due to onValidate()
+        // The state is now defined, but still invalid due to the state
+        // parameter's validation function
         expect(form.validationStatus?.level).toEqual("error");
         expect(form.validationStatus?.message).toEqual(
             "State must be exactly 2 characters"
         );
 
-        form.updateValue("state", "CO");
+        form.updateValue("state", "NV");
         await form.validate();
-        // Park name parameter validation failure through dependency on state
+        // Overall form validation passes, but park name parameter validation
+        // fails through dependency on state
         expect(form.validationStatus?.level).toEqual("error");
         expect(form.validationStatus?.message).toEqual(
             "Invalid state selected. Valid options are: NY, New York, CA, California"
@@ -687,7 +691,13 @@ function createNationalParkForm() {
     const form = createForm<NationalParkFormValues>({
         values: {},
         onValidateSync: (values) => {
-            if (values.parkName === "Yosemite" && values.state !== "CA") {
+            if (
+                values.parkName === "Yosemite" &&
+                values.state !== "CA" &&
+                values.state !== "California" &&
+                // Note: Yosemite is not in Nevada, but we need another valid combo!
+                values.state !== "NV"
+            ) {
                 return new ValidationStatus(
                     "error",
                     "Invalid park/state combination"
