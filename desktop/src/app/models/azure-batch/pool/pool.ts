@@ -20,6 +20,7 @@ import { List } from "immutable";
 import { Duration } from "luxon";
 import { AutoScaleRun, AutoScaleRunAttributes } from "./auto-scale-run";
 import { PoolStatistics, PoolStatisticsAttributes } from "./pool-statistics";
+import { NodeCommunicationMode } from "app/models/node-communication-mode";
 
 export enum OSType {
     Windows = "windows",
@@ -57,6 +58,7 @@ export interface PoolAttributes {
     metadata: MetadataAttributes[];
     userAccounts: UserAccountAttributes[];
     applicationLicenses: string[];
+    targetNodeCommunicationMode: NodeCommunicationMode;
     autoScaleRun: AutoScaleRunAttributes;
     stats: PoolStatisticsAttributes;
 }
@@ -133,6 +135,8 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
     @ListProp(UserAccount) public userAccounts: List<UserAccount> = List([]);
 
     @ListProp(String) public applicationLicenses: List<string> = List([]);
+
+    @Prop() public targetNodeCommunicationMode: NodeCommunicationMode;
 
     /**
      * Tags are computed from the metadata using an internal key

@@ -5,6 +5,7 @@ import { ContainerConfiguration, ContainerConfigurationAttributes } from "./cont
 import { DiskEncryptionConfiguration, DiskEncryptionConfigurationAttributes } from "./disk-encryption-configuration";
 import { ImageReference, ImageReferenceAttributes } from "./image-reference";
 import { WindowsConfiguration } from "./windows-configuration";
+import { NodePlacementConfiguration } from "./node-placement-configuration";
 
 export interface VirtualMachineConfigurationAttributes {
     diskEncryptionConfiguration: DiskEncryptionConfigurationAttributes;
@@ -12,6 +13,7 @@ export interface VirtualMachineConfigurationAttributes {
     nodeAgentSKUId: string;
     windowsConfiguration: WindowsConfiguration;
     containerConfiguration: ContainerConfigurationAttributes;
+    nodePlacementConfiguration: NodePlacementConfiguration;
 }
 
 /**
@@ -24,6 +26,7 @@ export class VirtualMachineConfiguration extends Record<VirtualMachineConfigurat
     @Prop() public nodeAgentSKUId: string;
     @Prop() public windowsConfiguration: WindowsConfiguration;
     @Prop() public containerConfiguration: ContainerConfiguration;
+    @Prop() public nodePlacementConfiguration: NodePlacementConfiguration;
     @Prop() public licenseType: string;
     @ListProp(DataDisk) public dataDisks: List<DataDisk>;
 }
