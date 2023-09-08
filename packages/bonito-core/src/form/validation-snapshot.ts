@@ -75,13 +75,28 @@ export class ValidationSnapshot<V extends FormValues> {
             overallStatus = new ValidationStatus("ok");
         }
 
-        if (overallStatus.level === "ok" && this.onValidateSyncStatus) {
-            overallStatus = this.onValidateSyncStatus;
-        }
-
-        if (overallStatus.level === "ok" && this.onValidateAsyncStatus) {
-            overallStatus = this.onValidateAsyncStatus;
-        }
+        // Prefer parameter validation error, then async validation errors,
+        // then sync validation errors in that order
+        const computeOverallStatus = (validateStatus?: ValidationStatus) => {
+            if (validateStatus) {
+                if (
+                    overallStatus.level === "error" &&
+                    validateStatus.level === "error"
+                ) {
+                    overallStatus = validateStatus;
+                } else if (
+                    overallStatus.level === "warn" &&
+                    (validateStatus.level === "warn" ||
+                        validateStatus.level === "error")
+                ) {
+                    overallStatus = validateStatus;
+                } else if (overallStatus.level === "ok" && validateStatus) {
+                    overallStatus = validateStatus;
+                }
+            }
+        };
+        computeOverallStatus(this.onValidateAsyncStatus);
+        computeOverallStatus(this.onValidateSyncStatus);
 
         this.overallStatus = overallStatus;
     }
