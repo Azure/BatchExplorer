@@ -128,6 +128,7 @@ export class UpdateAccessRulesAction extends AbstractAction<UpdateAccessRulesFor
         subForm.param("ips", StringListParameter, {
             label: "Address ranges",
             value: [],
+            hidden: true,
             dynamic: {
                 hidden: (form) => {
                     return (
