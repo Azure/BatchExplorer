@@ -22,6 +22,7 @@ import { useAppTheme } from "../../theme";
 import { Button } from "../button";
 import { FormButton } from "./form-container";
 import { FormLayout, FormLayoutRenderOptions } from "./form-layout";
+import { MessageBar, MessageBarType } from "@fluentui/react/lib/MessageBar";
 
 // Enable to show debug info
 const DEBUG_MODE = false;
@@ -55,8 +56,6 @@ interface ListFormProps<V extends FormValues> {
 const ListForm = <V extends FormValues>(props: ListFormProps<V>) => {
     const { form, buttons, onFormChange, onValidate } = props;
 
-    const theme = useAppTheme();
-
     useForm(form, {
         onFormChange: onFormChange,
         onValidate: onValidate,
@@ -64,6 +63,13 @@ const ListForm = <V extends FormValues>(props: ListFormProps<V>) => {
 
     const rows: JSX.Element[] = [];
     renderChildEntries(form.childEntries(), rows);
+
+    let messageBarType: MessageBarType | undefined;
+    if (form.validationStatus?.level === "warn") {
+        messageBarType = MessageBarType.warning;
+    } else if (form.validationStatus?.level === "error") {
+        messageBarType = MessageBarType.error;
+    }
 
     return (
         <div role="form" className="form-root">
@@ -79,19 +85,16 @@ const ListForm = <V extends FormValues>(props: ListFormProps<V>) => {
                 >
                     {rows}
                 </Stack>
+
+                {messageBarType && (
+                    <div style={{ paddingTop: 8 }}>
+                        <MessageBar messageBarType={messageBarType}>
+                            {form.validationStatus?.message}
+                        </MessageBar>
+                    </div>
+                )}
+
                 <ButtonContainer buttons={buttons} />
-                <span
-                    data-validationlevel={form.validationStatus?.level}
-                    style={{
-                        color: theme.semanticColors.errorText,
-                        visibility:
-                            form.validationStatus?.level === "ok" ?? "ok"
-                                ? "hidden"
-                                : "visible",
-                    }}
-                >
-                    {form.validationStatus?.message}
-                </span>
             </Stack>
         </div>
     );
