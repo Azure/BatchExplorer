@@ -38,6 +38,7 @@ export type ValidationOpts = {
 export type FormEventMap<V extends FormValues> = {
     change: (newValues: V, oldValues: V) => void;
     validate: (snapshot: ValidationSnapshot<V>) => void;
+    evaluate: (propsChanged: boolean) => void;
 };
 
 /**
