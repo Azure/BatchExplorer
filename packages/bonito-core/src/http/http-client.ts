@@ -156,7 +156,7 @@ export interface HttpRequestMetadata {
 }
 
 export interface HttpRequestInit {
-    body?: Blob | ArrayBuffer | ArrayBufferView | string;
+    body?: Blob | BufferSource | FormData | URLSearchParams | string;
     headers?: HttpHeaders | Record<string, string>;
     method?: string;
     url?: string;
