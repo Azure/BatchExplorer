@@ -12,6 +12,7 @@ import * as ReactDOM from "react-dom";
 import {RootPane} from "@azure/bonito-ui/lib/components/layout";
 import { Subscription } from "rxjs";
 import { Theme, ThemeService } from "app/services";
+import { ThemeName } from "@azure/bonito-ui/lib/theme";
 
 export const ReactWrapper: React.FC = props => {
     return React.createElement(RootPane, {theme: "explorerDark"}, props.children);
@@ -37,7 +38,7 @@ export class ReactContainerComponent<P> implements OnChanges, OnDestroy, AfterVi
 
     private _subs: Subscription[] = [];
 
-    private _themeName: string = "explorerLight";
+    private _themeName: ThemeName = "explorerLight";
 
     private _themeService: ThemeService;
 
