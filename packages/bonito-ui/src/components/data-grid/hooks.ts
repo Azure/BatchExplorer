@@ -3,11 +3,14 @@ import {
     ICancellablePromise,
     cancellablePromise,
 } from "@azure/bonito-core/lib/util";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 
 export interface ILoadMoreListResult<T> {
     done: boolean;
     items: T[];
+}
+export interface ILoadMoreFn<T> {
+    (fresh: boolean): Promise<ILoadMoreListResult<T>>;
 }
 
 /**
@@ -21,7 +24,7 @@ export interface ILoadMoreListResult<T> {
  * @returns items, hasMore and onLoadMore
  */
 export function useLoadMoreItems<T>(
-    loadFn: () => Promise<ILoadMoreListResult<T>>
+    loadFn: (fresh: boolean) => Promise<ILoadMoreListResult<T>>
 ) {
     const [items, setItems] = React.useState<T[]>([]);
     const [hasMore, setHasMore] = React.useState(true);
@@ -30,44 +33,50 @@ export function useLoadMoreItems<T>(
         ILoadMoreListResult<T>
     > | null>(null);
 
-    const loadMore = React.useCallback(async (): Promise<void> => {
-        if (pendingPromise.current) {
-            return;
-        }
-        pendingPromise.current = cancellablePromise(loadFn());
-        try {
-            const { items, done } = await pendingPromise.current;
-            pendingPromise.current = null;
-            if (!done && !items.length) {
-                // no more data, try again
-                return loadMore();
+    const loadMore = useCallback(
+        async (fresh: boolean = false): Promise<void> => {
+            if (pendingPromise.current) {
+                return;
             }
-            if (done) {
-                setHasMore(false);
-            }
-            setItems((oriItems) => [...oriItems, ...items]);
-        } catch (error) {
-            if (!(error instanceof CancelledPromiseError)) {
+            pendingPromise.current = cancellablePromise(loadFn(fresh));
+            try {
+                const { items, done } = await pendingPromise.current;
                 pendingPromise.current = null;
+                if (!done && !items.length) {
+                    // no more data, try again
+                    return loadMore();
+                }
+                if (done) {
+                    setHasMore(false);
+                }
+                setItems((oriItems) => [...oriItems, ...items]);
+            } catch (error) {
+                if (!(error instanceof CancelledPromiseError)) {
+                    pendingPromise.current = null;
+                }
             }
-        }
-    }, [loadFn]);
+        },
+        [loadFn]
+    );
 
-    useEffect(() => {
+    const freshLoad = useCallback(() => {
+        if (pendingPromise.current) {
+            pendingPromise.current.cancel();
+            pendingPromise.current = null;
+        }
         setItems([]);
         setHasMore(true);
-        loadMore();
-        return () => {
-            if (pendingPromise.current) {
-                pendingPromise.current.cancel();
-                pendingPromise.current = null;
-            }
-        };
+        loadMore(true);
     }, [loadMore]);
+
+    useEffect(() => {
+        freshLoad();
+    }, [freshLoad]);
 
     return {
         items,
         hasMore,
         onLoadMore: loadMore,
+        refresh: freshLoad,
     };
 }

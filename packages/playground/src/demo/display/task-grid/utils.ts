@@ -1,4 +1,5 @@
 import { getLogger } from "@azure/bonito-core";
+import { ILoadMoreFn } from "@azure/bonito-ui/lib/components/data-grid";
 
 export interface IDemoTask {
     name: string;
@@ -15,49 +16,61 @@ async function waitFor(ms: number): Promise<void> {
     });
 }
 
-let i = 0;
-export async function loadDemoTasks(params?: {
-    filter?: string;
-    nextToken?: string;
-}): Promise<{
-    nextToken?: string;
-    list: IDemoTask[];
-}> {
-    const log = getLogger("task-grid-demo");
-    const { filter, nextToken } = params || {};
-    log.info(`loadDemoTasks: filter: ${filter}, nextToken: ${nextToken}`);
-    const tasks: IDemoTask[] = [];
+export class TasksLoader {
+    constructor(public filter?: string, public limit?: number) {}
 
-    let taskNum = 0;
-    if (Math.random() > 0.3) {
-        taskNum = Math.floor(Math.random() * 20);
-    }
-    taskNum = 10;
+    log = getLogger("tasks-loader");
 
-    for (let i = 0; i < taskNum; i++) {
-        const task: IDemoTask = {
-            name: `Task-${filter + "-" || ""}${Math.random()
-                .toString(36)
-                .slice(-8)}`,
-            state: Math.random() > 0.5 ? "active" : "completed",
-            created: new Date().toDateString(),
-            exitCode: Math.random() > 0.5 ? 0 : 1,
+    callCount = 0;
+
+    loadTasksFn: ILoadMoreFn<IDemoTask> = async (fresh: boolean = false) => {
+        if (fresh) {
+            this.callCount = 0;
+        }
+        this.callCount++;
+
+        this.log.info(`loadTasks param`, {
+            filter: this.filter,
+            limit: this.limit,
+            fresh,
+        });
+
+        const tasks = this.generateTasks(this.filter, this.limit);
+        const shouldFinish = this.callCount >= 10;
+        await waitFor(1000);
+
+        this.log.info(`loadTasks: returned`, {
+            filter: this.filter,
+            limit: this.limit,
+            fresh,
+            shouldFinish,
+            tasks: tasks.length,
+        });
+        return {
+            items: tasks,
+            done: shouldFinish,
         };
-        tasks.push(task);
-    }
-
-    await waitFor(1000);
-    log.info(
-        `filter: ${filter}, nextToken: ${nextToken}, ${tasks.length} tasks returned`
-    );
-
-    i++;
-    const shouldFinish = i % 10 === 0 || (i + 1) % 10 === 0;
-
-    return {
-        nextToken: shouldFinish
-            ? undefined
-            : String(Number(nextToken || 0) + 1),
-        list: tasks,
     };
+
+    generateTasks(filter: string = "", limit: number = 20): IDemoTask[] {
+        const tasks: IDemoTask[] = [];
+
+        let taskNum = 0;
+        if (Math.random() > 0.3) {
+            taskNum = Math.floor(Math.random() * limit);
+        }
+
+        for (let i = 0; i < taskNum; i++) {
+            const task: IDemoTask = {
+                name: `Task-${filter + "-" || ""}${Math.random()
+                    .toString(36)
+                    .slice(-8)}`,
+                state: Math.random() > 0.5 ? "active" : "completed",
+                created: new Date().toDateString(),
+                exitCode: Math.random() > 0.5 ? 0 : 1,
+            };
+            tasks.push(task);
+        }
+        return tasks;
+    }
 }

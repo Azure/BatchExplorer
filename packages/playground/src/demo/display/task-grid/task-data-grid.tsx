@@ -1,38 +1,24 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
 import {
     DataGrid,
     DataGridColumn,
-    ILoadMoreListResult,
     useLoadMoreItems,
 } from "@azure/bonito-ui/lib/components/data-grid";
-import { IDemoTask, loadDemoTasks } from "./utils";
+import { TasksLoader } from "./utils";
 import { TextField } from "@fluentui/react/lib/TextField";
+import { IconButton } from "@fluentui/react/lib/Button";
 
 export const DataGridLoadMoreDemo = () => {
     const [filter, setFilter] = React.useState<string>("");
-    const nextToken = React.useRef<string>();
+    const [limit, setLimit] = React.useState<number>(13);
 
-    const loadFn = React.useCallback(async (): Promise<
-        ILoadMoreListResult<IDemoTask>
-    > => {
-        const result = await loadDemoTasks({
-            filter,
-            nextToken: nextToken.current,
-        });
-        nextToken.current = result.nextToken;
-        return {
-            done: !result.nextToken,
-            items: result.list,
-        };
-    }, [filter]);
+    const loadFn = React.useMemo(() => {
+        const taskLoader = new TasksLoader(filter, limit);
+        return taskLoader.loadTasksFn;
+    }, [filter, limit]);
 
-    useEffect(() => {
-        // reset the next token when the filter changes
-        nextToken.current = undefined;
-    }, [filter]);
-
-    const { items, hasMore, onLoadMore } = useLoadMoreItems(loadFn);
+    const { items, hasMore, onLoadMore, refresh } = useLoadMoreItems(loadFn);
 
     return (
         <DemoPane title="Data grid load more">
@@ -43,6 +29,18 @@ export const DataGridLoadMoreDemo = () => {
                     setFilter(newValue || "");
                 }}
             />
+            <TextField
+                label="Limit"
+                type="number"
+                value={limit.toString()}
+                onChange={(_, newValue) => {
+                    const limit = Number(newValue);
+                    setLimit(Number.isNaN(limit) ? 10 : limit);
+                }}
+            />
+            <IconButton iconProps={{ iconName: "Refresh" }} onClick={refresh}>
+                Refresh
+            </IconButton>
             <DataGrid
                 items={items}
                 columns={columns}
