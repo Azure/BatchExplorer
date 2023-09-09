@@ -87,7 +87,10 @@ const ListForm = <V extends FormValues>(props: ListFormProps<V>) => {
                 </Stack>
 
                 {messageBarType && (
-                    <div style={{ paddingTop: 8 }}>
+                    <div
+                        data-testid="form-validation-message"
+                        style={{ paddingTop: 8 }}
+                    >
                         <MessageBar messageBarType={messageBarType}>
                             {form.validationStatus?.message}
                         </MessageBar>

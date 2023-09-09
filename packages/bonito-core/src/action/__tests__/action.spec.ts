@@ -2,7 +2,7 @@ import { initMockEnvironment } from "../../environment";
 import { createForm, Form, ValidationStatus } from "../../form";
 import { StringParameter } from "../../form/string-parameter";
 import { delay, mergeDeep } from "../../util";
-import { AbstractAction } from "../action";
+import { AbstractAction, ActionExecutionResult } from "../action";
 
 describe("Action tests", () => {
     beforeEach(() => initMockEnvironment());
@@ -44,7 +44,7 @@ describe("Action tests", () => {
 
         // Executing adds the sender
         const result = await action.execute();
-        expect(result.formValidationStatus.level).toEqual("ok");
+        expect(result.validationStatus.level).toEqual("ok");
         expect(action.message).toEqual("Hello planet from Contoso");
 
         // Can change form values and execute again
@@ -125,8 +125,26 @@ describe("Action tests", () => {
         expect(action.form.validationStatus?.level).toEqual("ok");
 
         // Execute action using form
-        await action.execute();
+        const successResult = await action.execute();
         expect(action.message).toEqual("Hello universe");
+        expect(successResult.success).toBe(true);
+        expect(successResult.error).toBeUndefined();
+        expect(successResult.validationStatus.level).toBe("ok");
+
+        // Execute again, but this time the execution will return a validation error
+        action.form.updateValue("subject", "invalid");
+        const failResult = await action.execute();
+        expect(failResult.success).toBe(false);
+        expect(failResult.error).toBeUndefined();
+        expect(failResult.validationStatus.level).toBe("error");
+
+        // Can fix the error and submit again
+        action.form.updateValue("subject", "valid subject");
+        const successResult2 = await action.execute();
+        expect(action.message).toEqual("Hello valid subject");
+        expect(successResult2.success).toBe(true);
+        expect(successResult2.error).toBeUndefined();
+        expect(successResult2.validationStatus.level).toBe("ok");
     });
 
     type HelloFormValues = {
@@ -203,14 +221,30 @@ describe("Action tests", () => {
             return new ValidationStatus("ok");
         }
 
-        async onExecute(formValues: HelloFormValues): Promise<void> {
-            return new Promise<void>((resolve) => {
+        async onExecute(
+            formValues: HelloFormValues
+        ): Promise<ActionExecutionResult> {
+            return new Promise<ActionExecutionResult>((resolve) => {
                 setTimeout(() => {
+                    const result: ActionExecutionResult = {
+                        success: true,
+                        validationStatus: new ValidationStatus("ok"),
+                    };
+
                     this.message = `Hello ${formValues.subject}`;
                     if (formValues.sender) {
                         this.message += ` from ${formValues.sender}`;
                     }
-                    resolve();
+
+                    if (formValues.subject === "invalid") {
+                        result.success = false;
+                        result.validationStatus = new ValidationStatus(
+                            "error",
+                            "Invalid subject"
+                        );
+                    }
+
+                    resolve(result);
                 }, 0);
             });
         }

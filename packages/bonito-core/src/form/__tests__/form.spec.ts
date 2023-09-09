@@ -425,6 +425,18 @@ describe("Form tests", () => {
         expect(form.validationStatus?.level).toEqual("ok");
         expect(form.validationStatus?.message).toBeUndefined();
 
+        // Can force a validation status externally
+        form.forceValidationStatus(
+            new ValidationStatus("error", "This is a forced error")
+        );
+        expect(form.validationStatus?.level).toBe("error");
+        expect(form.validationStatus?.message).toBe("This is a forced error");
+
+        // Running validation again clears the forced status
+        await form.validate();
+        expect(form.validationStatus?.level).toEqual("ok");
+        expect(form.validationStatus?.message).toBeUndefined();
+
         // When calling validate() multiple times in rapid succession,
         // the last call always wins
         form.updateValue("squareMiles", -1);

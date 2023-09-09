@@ -1,5 +1,8 @@
 import { createForm } from "@azure/bonito-core";
-import { AbstractAction } from "@azure/bonito-core/lib/action";
+import {
+    AbstractAction,
+    ActionExecutionResult,
+} from "@azure/bonito-core/lib/action";
 import {
     BooleanParameter,
     Form,
@@ -92,6 +95,72 @@ describe("Action form tests", () => {
             numberOfPets: 1,
         });
     });
+
+    test("Validation errors are shown properly", async () => {
+        userEvent.setup();
+
+        const action = new PetDogAction({
+            dogName: "Baron Maximilian Augustus von Woofington",
+        });
+
+        render(<ActionForm action={action} />);
+
+        const submitButton = await screen.findByRole("button", {
+            name: "Apply",
+        });
+        expect(submitButton).toBeDefined();
+
+        await act(async () => {
+            await userEvent.click(submitButton);
+            await action.waitForExecution();
+        });
+        expect(action.form.validationStatus?.level).toBe("error");
+        expect(action.lastExecutionResult?.validationStatus.level).toBe(
+            "error"
+        );
+
+        const alerts = await screen.findAllByRole("alert");
+        expect(alerts.length).toBe(2);
+        // Validation error on input
+        expect(alerts[0].textContent).toBe(
+            "Dog names cannot be greater than 10 characters"
+        );
+        // Validation error on summary
+        expect(alerts[1].textContent).toBe(
+            "Dog names cannot be greater than 10 characters"
+        );
+
+        await act(async () => {
+            action.form.updateValue("dogName", "f1d0");
+            await userEvent.click(submitButton);
+            await action.waitForExecution();
+        });
+        // Action execution failure cascades to the form as a validation error
+        expect(action.form.validationStatus?.level).toBe("error");
+        expect(action.form.validationStatus?.message).toBe(
+            "Dog names cannot contain numbers"
+        );
+        expect(action.lastExecutionResult?.validationStatus.level).toBe(
+            "error"
+        );
+        expect(action.lastExecutionResult?.validationStatus.message).toBe(
+            "Dog names cannot contain numbers"
+        );
+
+        const alert = await screen.findByRole("alert");
+        // Only one validation error this time because the error isn't associated
+        // with a form entry (it came from the action execution)
+        expect(alert.textContent).toBe("Dog names cannot contain numbers");
+
+        // Reset back to initial values
+        const resetButton = await screen.findByRole("button", {
+            name: "Discard changes",
+        });
+        await userEvent.click(resetButton);
+        expect(action.form.values).toStrictEqual({
+            dogName: "Baron Maximilian Augustus von Woofington",
+        });
+    });
 });
 
 type PetDogFormValues = {
@@ -99,6 +168,7 @@ type PetDogFormValues = {
     numberOfPets?: number;
     giveTreat?: boolean;
     throwInitializationError?: boolean;
+    throwExecutionError?: boolean;
 };
 
 class PetDogAction extends AbstractAction<PetDogFormValues> {
@@ -132,6 +202,15 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
 
         form.param("dogName", StringParameter, {
             label: "Dog name",
+            onValidateSync: (value) => {
+                if (value && value.length > 10) {
+                    return new ValidationStatus(
+                        "error",
+                        "Dog names cannot be greater than 10 characters"
+                    );
+                }
+                return new ValidationStatus("ok");
+            },
         });
 
         form.param("numberOfPets", NumberParameter, {
@@ -169,9 +248,25 @@ class PetDogAction extends AbstractAction<PetDogFormValues> {
         return new ValidationStatus("ok");
     }
 
-    async onExecute(formValues: PetDogFormValues): Promise<void> {
+    async onExecute(
+        formValues: PetDogFormValues
+    ): Promise<ActionExecutionResult> {
+        if (formValues.dogName?.match(/[0-9]/)) {
+            return {
+                success: false,
+                validationStatus: new ValidationStatus(
+                    "error",
+                    "Dog names cannot contain numbers"
+                ),
+            };
+        }
+
         if (this.onPet && formValues.numberOfPets != undefined) {
             this.onPet(formValues.numberOfPets);
         }
+        return {
+            success: true,
+            validationStatus: new ValidationStatus("ok"),
+        };
     }
 }
