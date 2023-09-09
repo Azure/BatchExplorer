@@ -48,7 +48,11 @@ export class FormImpl<V extends FormValues> implements Form<V> {
     }
 
     get validationStatus(): ValidationStatus | undefined {
-        return this._validationSnapshot?.overallStatus;
+        // Use the forced status if it is defined
+        return (
+            this._forcedValidationStatus ??
+            this._validationSnapshot?.overallStatus
+        );
     }
 
     get entryValidationStatus(): {
@@ -64,6 +68,8 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         this.values,
         true
     );
+
+    private _forcedValidationStatus?: ValidationStatus;
 
     _emitter = new EventEmitter() as TypedEventEmitter<{
         change: (newValues: V, oldValues: V) => void;
@@ -278,6 +284,11 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         if (!opts) {
             opts = defaultValidationOpts;
         }
+
+        // Clear any previously forced validation status each time validation
+        // runs
+        this._forcedValidationStatus = undefined;
+
         const snapshot = new ValidationSnapshot(this.values);
         const previousValidationInProgress =
             this._validationSnapshot.validationCompleteDeferred.done !== true;
@@ -333,8 +344,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         snapshot: ValidationSnapshot<V>,
         opts: ValidationOpts
     ): ValidationSnapshot<V> {
-        // Call validateAsync() for each entry but don't block
-        // on completion
+        // Call validateSync() for each entry
         for (const entry of this.allEntries()) {
             if (entry instanceof AbstractParameter) {
                 const entryName = entry.name as ParameterName<V>;
@@ -434,6 +444,16 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         snapshot.asyncValidationComplete = true;
 
         return snapshot;
+    }
+
+    /**
+     * Externally sets the validation status of the form. Note that the next
+     * time validation runs, this status will be cleared.
+     *
+     * @param status The validation to set.
+     */
+    forceValidationStatus(status: ValidationStatus): void {
+        this._forcedValidationStatus = status;
     }
 
     /**
