@@ -1,5 +1,5 @@
 import { getLogger } from "@azure/bonito-core";
-import { ILoadMoreFn } from "@azure/bonito-ui/lib/components/data-grid";
+import { ILoadMoreFn } from "@azure/bonito-ui/lib/hooks";
 
 export interface IDemoTask {
     name: string;
@@ -17,7 +17,11 @@ async function waitFor(ms: number): Promise<void> {
 }
 
 export class TasksLoader {
-    constructor(public filter?: string, public limit?: number) {}
+    constructor(
+        public filter?: string,
+        public limit?: number,
+        public noData?: boolean
+    ) {}
 
     log = getLogger("tasks-loader");
 
@@ -34,10 +38,17 @@ export class TasksLoader {
             limit: this.limit,
             fresh,
         });
+        await waitFor(1000);
+
+        if (this.noData) {
+            return {
+                items: [],
+                done: true,
+            };
+        }
 
         const tasks = this.generateTasks(this.filter, this.limit);
         const shouldFinish = this.callCount >= 10;
-        await waitFor(1000);
 
         this.log.info(`loadTasks: returned`, {
             filter: this.filter,
@@ -56,6 +67,7 @@ export class TasksLoader {
         const tasks: IDemoTask[] = [];
 
         let taskNum = 0;
+        // 30% chance to have no tasks
         if (Math.random() > 0.3) {
             taskNum = Math.floor(Math.random() * limit);
         }

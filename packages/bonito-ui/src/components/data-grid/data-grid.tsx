@@ -66,6 +66,12 @@ export interface DataGridProps {
      * Only used when hasMore is undefined or false.
      */
     noReusltText?: string;
+
+    /**
+     * Whether to render in compact mode.
+     * @defaultvalue false
+     */
+    compact?: boolean;
 }
 
 /**
@@ -111,6 +117,7 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
         columnDefaultMaxWidth,
         selectionMode,
         onActiveItemChanged,
+        compact,
     } = props;
 
     const columns = useColumns(propColumns, columnDefaultMaxWidth);
@@ -120,6 +127,7 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
 
     return (
         <ShimmeredDetailsList
+            compact={compact}
             onActiveItemChanged={onActiveItemChanged}
             selectionMode={
                 selectionMode === "single"

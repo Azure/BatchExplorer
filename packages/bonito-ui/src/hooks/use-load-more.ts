@@ -14,18 +14,16 @@ export interface ILoadMoreFn<T> {
 }
 
 /**
- * Hooks for loading more items, should be used with the DataGrid component.
+ * Hooks for loading more items
  * It handles the following:
  * 1. Throttle the load more callback to avoid multiple calls.
- * 2. Cancel the current loading if the loadFn changes.
+ * 2. Cancel the current loading if the loadFn changes or onRefresh is called.
  * 3. Retry if the loadFn returns no items and there are more items to load.
  * @param loadFn function to load more items, change of reference will trigger
  * a new load and set the items to empty and hasMore to true.
  * @returns items, hasMore and onLoadMore
  */
-export function useLoadMoreItems<T>(
-    loadFn: (fresh: boolean) => Promise<ILoadMoreListResult<T>>
-) {
+export function useLoadMore<T>(loadFn: ILoadMoreFn<T>) {
     const [items, setItems] = React.useState<T[]>([]);
     const [hasMore, setHasMore] = React.useState(true);
 
@@ -59,7 +57,7 @@ export function useLoadMoreItems<T>(
         [loadFn]
     );
 
-    const freshLoad = useCallback(() => {
+    const loadFresh = useCallback(() => {
         if (pendingPromise.current) {
             pendingPromise.current.cancel();
             pendingPromise.current = null;
@@ -70,13 +68,13 @@ export function useLoadMoreItems<T>(
     }, [loadMore]);
 
     useEffect(() => {
-        freshLoad();
-    }, [freshLoad]);
+        loadFresh();
+    }, [loadFresh]);
 
     return {
         items,
         hasMore,
         onLoadMore: loadMore,
-        refresh: freshLoad,
+        onRefresh: loadFresh,
     };
 }
