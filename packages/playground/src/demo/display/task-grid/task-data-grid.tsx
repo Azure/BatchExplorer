@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DemoPane } from "../../../layout/demo-pane";
 import {
     DataGrid,
@@ -10,19 +10,33 @@ import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { Checkbox } from "@fluentui/react/lib/Checkbox";
 import { useLoadMore } from "@azure/bonito-ui/lib/hooks";
+import { MessageBar, MessageBarType } from "@fluentui/react/lib/MessageBar";
 
 export const DataGridLoadMoreDemo = () => {
     const [filter, setFilter] = React.useState<string>("");
     const [limit, setLimit] = React.useState<number>(10);
     const [noData, setNoData] = React.useState<boolean>(false);
     const [isCompat, setIsCompat] = React.useState<boolean>(false);
+    const [hasError, setHasError] = React.useState<boolean>(false);
+    const [loadErrorMsg, setLoadErrorMsg] = React.useState<string>("");
 
-    const loadFn = React.useMemo(() => {
-        const taskLoader = new DemoTasksLoader(filter, limit, noData);
+    const onLoad = React.useMemo(() => {
+        const taskLoader = new DemoTasksLoader(filter, limit, noData, hasError);
         return taskLoader.loadTasksFn;
-    }, [filter, limit, noData]);
+    }, [filter, limit, noData, hasError]);
 
-    const { items, hasMore, onLoadMore, onRefresh } = useLoadMore(loadFn);
+    const onLoadError = (error: any) => {
+        setLoadErrorMsg(error?.message ?? "");
+    };
+
+    useEffect(() => {
+        setLoadErrorMsg("");
+    }, [onLoad]);
+
+    const { items, hasMore, onLoadMore, onRefresh } = useLoadMore(
+        onLoad,
+        onLoadError
+    );
 
     return (
         <DemoPane title="Data Grid: Load More">
@@ -30,6 +44,8 @@ export const DataGridLoadMoreDemo = () => {
                 horizontal={true}
                 tokens={{ childrenGap: "1em" }}
                 verticalAlign="center"
+                wrap={true}
+                styles={{ root: { marginBottom: "1em" } }}
             >
                 <Stack.Item grow={1}>
                     <TextField
@@ -70,14 +86,35 @@ export const DataGridLoadMoreDemo = () => {
                     />
                 </Stack.Item>
                 <Stack.Item grow={0}>
+                    <Checkbox
+                        label="Load Error"
+                        checked={hasError}
+                        onChange={() => {
+                            setHasError(!hasError);
+                        }}
+                    />
+                </Stack.Item>
+                <Stack.Item grow={0}>
                     <PrimaryButton
                         iconProps={{ iconName: "Refresh" }}
-                        onClick={onRefresh}
+                        onClick={() => {
+                            onRefresh();
+                            setLoadErrorMsg("");
+                        }}
                     >
                         Refresh
                     </PrimaryButton>
                 </Stack.Item>
             </Stack>
+            {loadErrorMsg && (
+                <MessageBar
+                    messageBarType={MessageBarType.error}
+                    isMultiline={false}
+                    dismissButtonAriaLabel="Close"
+                >
+                    {`Error: ${loadErrorMsg}, please refresh.`}
+                </MessageBar>
+            )}
             <DataGrid
                 compact={isCompat}
                 items={items}

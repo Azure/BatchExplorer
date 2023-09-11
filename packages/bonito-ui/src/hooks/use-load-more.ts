@@ -16,16 +16,22 @@ export interface ILoadMoreFn<T> {
 /**
  * Hooks for loading more items
  * It handles the following:
- * 1. Throttle the loadFn callback when it's loading to avoid multiple calls.
- * 2. Cancel the current loading if the loadFn changes or onRefresh is called.
- * 3. Retry if the loadFn returns no items and there are more items to load.
- * @param loadFn function to load more items, change of reference will trigger
- * a new load and set the items to empty and hasMore to true.
+ * 1. Throttle the onLoad callback when it's loading to avoid multiple calls.
+ * 2. Cancel the current loading if the onLoad changes or onRefresh is called.
+ * 3. Retry if the onLoad returns no items and there are more items to load.
+ * @param onLoad function to load more items, change of function identity will
+ * trigger a new load and set the items to empty and hasMore to true.
+ * @param onLoadError callback when onLoad throws an error
  * @returns items, hasMore, onLoadMore and onRefresh
  */
-export function useLoadMore<T>(loadFn: ILoadMoreFn<T>) {
+export function useLoadMore<T>(
+    onLoad: ILoadMoreFn<T>,
+    onLoadError?: (error: any) => void
+) {
     const [items, setItems] = React.useState<T[]>([]);
     const [hasMore, setHasMore] = React.useState(true);
+    const onLoadErrorRef = useRef(onLoadError);
+    onLoadErrorRef.current = onLoadError;
 
     const pendingPromise = useRef<ICancellablePromise<
         ILoadMoreListResult<T>
@@ -36,7 +42,7 @@ export function useLoadMore<T>(loadFn: ILoadMoreFn<T>) {
             if (pendingPromise.current) {
                 return;
             }
-            pendingPromise.current = cancellablePromise(loadFn(fresh));
+            pendingPromise.current = cancellablePromise(onLoad(fresh));
             try {
                 const { items, done } = await pendingPromise.current;
                 pendingPromise.current = null;
@@ -51,10 +57,11 @@ export function useLoadMore<T>(loadFn: ILoadMoreFn<T>) {
             } catch (error) {
                 if (!(error instanceof CancelledPromiseError)) {
                     pendingPromise.current = null;
+                    onLoadErrorRef.current?.(error);
                 }
             }
         },
-        [loadFn]
+        [onLoad]
     );
 
     const loadFresh = useCallback(() => {

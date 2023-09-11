@@ -4,21 +4,21 @@ import { act } from "@testing-library/react";
 
 describe("useLoadMore hooks", () => {
     test("Throttle onLoadMore", async () => {
-        const loadFn = jest.fn(() =>
+        const onLoad = jest.fn(() =>
             Promise.resolve({ done: false, items: [1] })
         );
         const { result, waitForNextUpdate } = renderHook(() =>
-            useLoadMore(loadFn)
+            useLoadMore(onLoad)
         );
         expect(result.current.hasMore).toBe(true);
         expect(result.current.items).toEqual([]);
-        // trigger onLoadMore 3 times, but loadFn should only be
+        // trigger onLoadMore 3 times, but onLoad should only be
         // called once, because it is throttled to wait for the previous
         // call to finish
         for (let i = 0; i < 3; i++) {
             result.current.onLoadMore();
         }
-        expect(loadFn.mock.calls).toEqual([[true]]);
+        expect(onLoad.mock.calls).toEqual([[true]]);
 
         // wait for the previous call to finish and state to be updated
         await waitForNextUpdate();
@@ -26,10 +26,10 @@ describe("useLoadMore hooks", () => {
         expect(result.current.hasMore).toBe(true);
         expect(result.current.items).toEqual([1]);
 
-        // trigger onLoadMore again, loadFn should be called again
+        // trigger onLoadMore again, onLoad should be called again
         result.current.onLoadMore();
         await waitForNextUpdate();
-        expect(loadFn.mock.calls).toEqual([[true], [false]]);
+        expect(onLoad.mock.calls).toEqual([[true], [false]]);
     });
 
     test("Cancel pending load", async () => {
@@ -43,16 +43,16 @@ describe("useLoadMore hooks", () => {
         };
         const loadFn1 = getNewLoadFn([1]);
         const { result, rerender, waitForNextUpdate } = renderHook(
-            ({ loadFn }) => useLoadMore(loadFn),
+            ({ onLoad }) => useLoadMore(onLoad),
             {
-                initialProps: { loadFn: loadFn1 },
+                initialProps: { onLoad: loadFn1 },
             }
         );
 
-        // change loadFn to a new one, the previous loadFn should be
+        // change onLoad to a new one, the previous onLoad should be
         // cancelled, which means it should not set items to [1]
         const loadFn2 = getNewLoadFn([2]);
-        rerender({ loadFn: loadFn2 });
+        rerender({ onLoad: loadFn2 });
 
         await waitForNextUpdate();
 
@@ -76,27 +76,27 @@ describe("useLoadMore hooks", () => {
                 });
             });
         };
-        const loadFn = getLoadFn();
+        const onLoad = getLoadFn();
         const { result, waitForNextUpdate } = renderHook(() =>
-            useLoadMore(loadFn)
+            useLoadMore(onLoad)
         );
 
         await waitForNextUpdate();
 
-        // loadFn should be called 3 times, previous 2 calls return no items
-        // and done is false, should continue to call loadFn until done is
+        // onLoad should be called 3 times, previous 2 calls return no items
+        // and done is false, should continue to call onLoad until done is
         // true
-        expect(loadFn).toHaveBeenCalledTimes(expectedNumOfCalls);
+        expect(onLoad).toHaveBeenCalledTimes(expectedNumOfCalls);
         expect(result.current.hasMore).toBe(false);
         expect(result.current.items).toEqual([1]);
     });
 
     test("onRefresh", async () => {
-        const loadFn = jest.fn(() =>
+        const onLoad = jest.fn(() =>
             Promise.resolve({ done: true, items: [1] })
         );
         const { result, waitForNextUpdate } = renderHook(() =>
-            useLoadMore(loadFn)
+            useLoadMore(onLoad)
         );
         act(() => {
             result.current.onRefresh();
@@ -106,6 +106,21 @@ describe("useLoadMore hooks", () => {
         expect(result.current.hasMore).toBe(false);
         expect(result.current.items).toEqual([1]);
 
-        expect(loadFn.mock.calls).toEqual([[true], [true]]);
+        expect(onLoad.mock.calls).toEqual([[true], [true]]);
+    });
+
+    test("onLoadError", async () => {
+        const rejectedPromise = Promise.reject("load error");
+        const onLoad = jest.fn(() => rejectedPromise);
+        const onLoadError = jest.fn();
+        const { result } = renderHook(() => useLoadMore(onLoad, onLoadError));
+        expect(result.current.hasMore).toBe(true);
+        expect(result.current.items).toEqual([]);
+
+        // wait for the onLoad's promise to reject
+        await rejectedPromise.catch(() => null);
+
+        expect(onLoad.mock.calls).toEqual([[true]]);
+        expect(onLoadError.mock.calls).toEqual([["load error"]]);
     });
 });

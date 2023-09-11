@@ -20,7 +20,8 @@ export class DemoTasksLoader {
     constructor(
         public filter?: string,
         public limit?: number,
-        public noData?: boolean
+        public noData?: boolean,
+        public loadError?: boolean
     ) {}
 
     log = getLogger("tasks-loader");
@@ -28,9 +29,6 @@ export class DemoTasksLoader {
     callCount = 0;
 
     loadTasksFn: ILoadMoreFn<IDemoTask> = async (fresh: boolean = false) => {
-        if (fresh) {
-            this.callCount = 0;
-        }
         this.callCount++;
 
         this.log.info(`loadTasks param`, {
@@ -39,6 +37,16 @@ export class DemoTasksLoader {
             fresh,
         });
         await waitFor(1000);
+
+        if (this.loadError) {
+            throw new Error(
+                "DemoTasksLoader: Error occurred when loading tasks"
+            );
+        }
+
+        if (fresh) {
+            this.callCount = 0;
+        }
 
         if (this.noData) {
             return {
