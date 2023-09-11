@@ -4,7 +4,7 @@ import {
     DataGrid,
     DataGridColumn,
 } from "@azure/bonito-ui/lib/components/data-grid";
-import { TasksLoader } from "./utils";
+import { DemoTasksLoader } from "./utils";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { Stack } from "@fluentui/react/lib/Stack";
@@ -18,19 +18,18 @@ export const DataGridLoadMoreDemo = () => {
     const [isCompat, setIsCompat] = React.useState<boolean>(false);
 
     const loadFn = React.useMemo(() => {
-        const taskLoader = new TasksLoader(filter, limit, noData);
+        const taskLoader = new DemoTasksLoader(filter, limit, noData);
         return taskLoader.loadTasksFn;
     }, [filter, limit, noData]);
 
     const { items, hasMore, onLoadMore, onRefresh } = useLoadMore(loadFn);
 
     return (
-        <DemoPane title="Data grid load more">
+        <DemoPane title="Data Grid: Load More">
             <Stack
                 horizontal={true}
                 tokens={{ childrenGap: "1em" }}
                 verticalAlign="center"
-                horizontalAlign="space-evenly"
             >
                 <Stack.Item grow={1}>
                     <TextField

@@ -1,7 +1,4 @@
-import {
-    cancellablePromise,
-    // ICancellablePromise
-} from "../../util";
+import { cancellablePromise } from "../cancellable-promise";
 
 import { CancelledPromiseError } from "../../errors";
 

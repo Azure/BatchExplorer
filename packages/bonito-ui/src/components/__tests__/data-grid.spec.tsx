@@ -206,7 +206,6 @@ describe("DataGrid component", () => {
         let expectedOnLoadMoreCount = 0;
         let items = generateDataItems(1);
 
-        // Render the grid in a scrollable container
         const renderGrid = () => (
             <DataGrid
                 hasMore={true}

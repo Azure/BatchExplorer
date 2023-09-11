@@ -72,7 +72,7 @@ export const DemoNavMenu: React.FC = () => {
                 },
                 {
                     key: "DataGridLoadMore",
-                    name: "Data grid load more",
+                    name: "Data Grid: Load More",
                     url: getDemoHash("dataGridLoadMore"),
                 },
             ],

@@ -29,7 +29,7 @@ describe("useLoadMore hooks", () => {
         // trigger onLoadMore again, loadFn should be called again
         result.current.onLoadMore();
         await waitForNextUpdate();
-        expect(loadFn).toHaveBeenCalledTimes(2);
+        expect(loadFn.mock.calls).toEqual([[true], [false]]);
     });
 
     test("Cancel pending load", async () => {

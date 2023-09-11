@@ -16,12 +16,12 @@ export interface ILoadMoreFn<T> {
 /**
  * Hooks for loading more items
  * It handles the following:
- * 1. Throttle the load more callback to avoid multiple calls.
+ * 1. Throttle the loadFn callback when it's loading to avoid multiple calls.
  * 2. Cancel the current loading if the loadFn changes or onRefresh is called.
  * 3. Retry if the loadFn returns no items and there are more items to load.
  * @param loadFn function to load more items, change of reference will trigger
  * a new load and set the items to empty and hasMore to true.
- * @returns items, hasMore and onLoadMore
+ * @returns items, hasMore, onLoadMore and onRefresh
  */
 export function useLoadMore<T>(loadFn: ILoadMoreFn<T>) {
     const [items, setItems] = React.useState<T[]>([]);

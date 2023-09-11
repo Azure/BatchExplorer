@@ -16,7 +16,7 @@ async function waitFor(ms: number): Promise<void> {
     });
 }
 
-export class TasksLoader {
+export class DemoTasksLoader {
     constructor(
         public filter?: string,
         public limit?: number,
