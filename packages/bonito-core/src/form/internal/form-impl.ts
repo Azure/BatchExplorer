@@ -256,6 +256,11 @@ export class FormImpl<V extends FormValues> implements Form<V> {
             return;
         }
         this._values = values;
+        for (const e of this.allEntries()) {
+            if (e instanceof SubForm) {
+                e.setValues(values[e.name]);
+            }
+        }
         this._formValuesChanged(values, oldValues);
     }
 
@@ -264,8 +269,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
             // No-op if the value hasn't changed
             return;
         }
-        const newValues = cloneDeep(this.values) as V;
-        newValues[name] = value;
+        const newValues = { ...this.values, [name]: value };
         this.setValues(newValues);
     }
 
