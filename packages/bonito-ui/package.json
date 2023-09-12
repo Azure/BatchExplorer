@@ -34,7 +34,7 @@
     "test:a11y": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test",
     "test:a11y:watch": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test:watch",
     "lint": "eslint .",
-    "watch": "run-p 'compile:* -- --watch --preserveWatchOutput'",
+    "watch": "run-p \"compile:* -- --watch --preserveWatchOutput\"",
     "workspace:build": "npm run build",
     "workspace:build:clean": "npm run build:clean",
     "workspace:build:desktop": "npm run build",
