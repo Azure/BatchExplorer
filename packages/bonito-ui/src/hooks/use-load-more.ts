@@ -1,16 +1,16 @@
 import { CancelledPromiseError } from "@azure/bonito-core";
 import {
-    ICancellablePromise,
+    CancellablePromise,
     cancellablePromise,
 } from "@azure/bonito-core/lib/util";
 import React, { useRef, useEffect, useCallback } from "react";
 
-export interface ILoadMoreListResult<T> {
+export interface LoadMoreListResult<T> {
     done: boolean;
     items: T[];
 }
-export interface ILoadMoreFn<T> {
-    (fresh: boolean): Promise<ILoadMoreListResult<T>>;
+export interface LoadMoreFn<T> {
+    (fresh: boolean): Promise<LoadMoreListResult<T>>;
 }
 
 /**
@@ -25,7 +25,7 @@ export interface ILoadMoreFn<T> {
  * @returns items, hasMore, onLoadMore and onRefresh
  */
 export function useLoadMore<T>(
-    onLoad: ILoadMoreFn<T>,
+    onLoad: LoadMoreFn<T>,
     onLoadError?: (error: any) => void
 ) {
     const [items, setItems] = React.useState<T[]>([]);
@@ -33,8 +33,8 @@ export function useLoadMore<T>(
     const onLoadErrorRef = useRef(onLoadError);
     onLoadErrorRef.current = onLoadError;
 
-    const pendingPromise = useRef<ICancellablePromise<
-        ILoadMoreListResult<T>
+    const pendingPromise = useRef<CancellablePromise<
+        LoadMoreListResult<T>
     > | null>(null);
 
     const loadMore = useCallback(

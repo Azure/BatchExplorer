@@ -1,7 +1,7 @@
 import { getLogger } from "@azure/bonito-core";
-import { ILoadMoreFn } from "@azure/bonito-ui/lib/hooks";
+import { LoadMoreFn } from "@azure/bonito-ui/lib/hooks";
 
-export interface IDemoTask {
+export interface DemoTask {
     name: string;
     state: "active" | "running" | "preparing" | "completed";
     created: string;
@@ -28,7 +28,7 @@ export class DemoTasksLoader {
 
     callCount = 0;
 
-    loadTasksFn: ILoadMoreFn<IDemoTask> = async (fresh: boolean = false) => {
+    loadTasksFn: LoadMoreFn<DemoTask> = async (fresh: boolean = false) => {
         this.callCount++;
 
         this.log.info(`loadTasks param`, {
@@ -71,8 +71,8 @@ export class DemoTasksLoader {
         };
     };
 
-    generateTasks(filter: string = "", limit: number = 20): IDemoTask[] {
-        const tasks: IDemoTask[] = [];
+    generateTasks(filter: string = "", limit: number = 20): DemoTask[] {
+        const tasks: DemoTask[] = [];
 
         let taskNum = 0;
         // 30% chance to have no tasks
@@ -81,7 +81,7 @@ export class DemoTasksLoader {
         }
 
         for (let i = 0; i < taskNum; i++) {
-            const task: IDemoTask = {
+            const task: DemoTask = {
                 name: `Task-${filter + "-" || ""}${Math.random()
                     .toString(36)
                     .slice(-8)}`,
