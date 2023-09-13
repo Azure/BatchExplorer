@@ -25,6 +25,8 @@
     "clean": "rimraf build/* dll/* python/dist/* python/build/* src/generated/*",
     "karma": "cross-env NODE_OPTIONS=--openssl-legacy-provider node --max_old_space_size=4096 node_modules/karma/bin/karma",
     "test": "npm run test-client:coverage && npm run test-app",
+    "test:all": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test-client:coverage && npm run test-app",
+    "test-app:a11y": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test-app",
     "test-app": "cross-env COVERAGE=1 npm run karma -- start",
     "test-app:mem": "cross-env DEBUG_MEM=1 npm run test-app",
     "test-app-watch": "npm run karma -- start --auto-watch --no-single-run",
@@ -83,7 +85,7 @@
     "workspace:start:desktop": "npm run dev-server",
     "workspace:test": "npm run test",
     "workspace:test:desktop": "npm run test",
-    "workspace:test:all": "npm run test"
+    "workspace:test:all": "npm run test:all"
   },
   "license": "MIT",
   "engines": {

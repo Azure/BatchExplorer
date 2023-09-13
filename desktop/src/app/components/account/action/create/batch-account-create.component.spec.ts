@@ -18,6 +18,7 @@ import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
 import { BatchAccountCreateComponent } from "./batch-account-create.component";
+import { runAxe } from "test/utils/helpers/axe-helpers";
 
 describe("BatchAccountCreateComponent ", () => {
     let fixture: ComponentFixture<BatchAccountCreateComponent>;
@@ -185,6 +186,10 @@ describe("BatchAccountCreateComponent ", () => {
 
     it("should show title and description", () => {
         expect(debugElement.nativeElement.textContent).toContain("Create batch account");
+    });
+
+    it("should pass accessibility test batch account create", async () => {
+        expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
     });
 
     describe("Batch account name", () => {

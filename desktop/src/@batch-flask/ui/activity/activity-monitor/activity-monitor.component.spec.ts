@@ -11,6 +11,7 @@ import { ActivityMonitorItemComponent } from "./activity-monitor-item";
 import { ActivityMonitorItemActionComponent } from "./activity-monitor-item/activity-monitor-item-action";
 import { ActivityMonitorTreeViewComponent } from "./activity-monitor-tree-view";
 import { ActivityMonitorComponent } from "./activity-monitor.component";
+import { runAxe } from "test/utils/helpers/axe-helpers";
 
 describe("ActivityMonitorComponent", () => {
     let fixture: ComponentFixture<ActivityMonitorComponent>;
@@ -86,5 +87,9 @@ describe("ActivityMonitorComponent", () => {
         component.cancelAll();
 
         expect(component.runningActivities.length).toBe(0);
+    });
+
+    it("should pass accessibility test activity monitor", async () => {
+        expect(await runAxe(fixture.nativeElement)).toHaveNoViolations();
     });
 });
