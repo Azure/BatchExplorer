@@ -65,7 +65,7 @@ export interface DataGridProps {
      * Default to "No result".
      * Only used when hasMore is undefined or false.
      */
-    noReusltText?: string;
+    noResultText?: string;
 
     /**
      * Whether to render in compact mode.
@@ -195,7 +195,7 @@ function useColumns(
 }
 
 function useLoadMoreItems(props: DataGridProps) {
-    const { items: propsItems = [], hasMore, onLoadMore, noReusltText } = props;
+    const { items: propsItems = [], hasMore, onLoadMore, noResultText } = props;
 
     const noResult = React.useMemo(() => {
         return !propsItems.length && !hasMore;
@@ -220,7 +220,7 @@ function useLoadMoreItems(props: DataGridProps) {
         (props?: IDetailsFooterProps, defaultRender?) => {
             const onResultComp = noResult ? (
                 <div style={{ textAlign: "center" }}>
-                    {noReusltText || translate("bonito.ui.dataGrid.noResults")}
+                    {noResultText || translate("bonito.ui.dataGrid.noResults")}
                 </div>
             ) : null;
             return (
@@ -230,7 +230,7 @@ function useLoadMoreItems(props: DataGridProps) {
                 </div>
             );
         },
-        [noResult, noReusltText]
+        [noResult, noResultText]
     );
 
     const triggerLoadMore = React.useCallback(() => {

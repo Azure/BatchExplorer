@@ -16,7 +16,7 @@ export const DataGridLoadMoreDemo = () => {
     const [filter, setFilter] = React.useState<string>("");
     const [limit, setLimit] = React.useState<number>(10);
     const [noData, setNoData] = React.useState<boolean>(false);
-    const [isCompat, setIsCompat] = React.useState<boolean>(false);
+    const [isCompact, setIsCompact] = React.useState<boolean>(false);
     const [hasError, setHasError] = React.useState<boolean>(false);
     const [loadErrorMsg, setLoadErrorMsg] = React.useState<string>("");
 
@@ -78,10 +78,10 @@ export const DataGridLoadMoreDemo = () => {
                 </Stack.Item>
                 <Stack.Item grow={0}>
                     <Checkbox
-                        label="Compat Mode"
-                        checked={isCompat}
+                        label="Compact Mode"
+                        checked={isCompact}
                         onChange={() => {
-                            setIsCompat(!isCompat);
+                            setIsCompact(!isCompact);
                         }}
                     />
                 </Stack.Item>
@@ -116,7 +116,7 @@ export const DataGridLoadMoreDemo = () => {
                 </MessageBar>
             )}
             <DataGrid
-                compact={isCompat}
+                compact={isCompact}
                 items={items}
                 columns={columns}
                 hasMore={hasMore}
