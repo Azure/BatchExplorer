@@ -269,7 +269,8 @@ export class FormImpl<V extends FormValues> implements Form<V> {
             // No-op if the value hasn't changed
             return;
         }
-        const newValues = { ...this.values, [name]: value };
+        const newValues = cloneDeep(this.values) as V;
+        newValues[name] = value;
         this.setValues(newValues);
     }
 
