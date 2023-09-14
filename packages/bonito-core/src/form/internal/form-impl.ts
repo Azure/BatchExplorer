@@ -256,6 +256,11 @@ export class FormImpl<V extends FormValues> implements Form<V> {
             return;
         }
         this._values = values;
+        for (const e of this.allEntries()) {
+            if (e instanceof SubForm) {
+                e.setValues(values[e.name]);
+            }
+        }
         this._formValuesChanged(values, oldValues);
     }
 

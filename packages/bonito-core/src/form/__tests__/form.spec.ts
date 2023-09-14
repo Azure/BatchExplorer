@@ -284,6 +284,18 @@ describe("Form tests", () => {
                 },
             }
         );
+
+        // form.setValues() should set the values of the subForm
+        form.setValues({
+            ...form.values,
+            answers: {
+                color: "yellow",
+            },
+        });
+
+        expect(subForm.values).toEqual({
+            color: "yellow",
+        });
     });
 
     test("Validation", async () => {
