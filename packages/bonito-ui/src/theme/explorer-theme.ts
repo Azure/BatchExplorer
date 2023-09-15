@@ -4,6 +4,7 @@ export const ExplorerThemeLight: PartialAppTheme = {
     semanticColors: {
         appHeaderBackground: "#2f71c4",
         appHeaderText: "#ffffff",
+        errorBackground: "#fef0f1",
     },
     palette: {
         themePrimary: "#2f71c4",
@@ -35,6 +36,7 @@ export const ExplorerThemeDark: PartialAppTheme = {
     semanticColors: {
         appHeaderBackground: "#333842",
         appHeaderText: "#ffffff",
+        errorBackground: "#442726",
     },
     palette: {
         themePrimary: "#2899f5",
@@ -47,8 +49,8 @@ export const ExplorerThemeDark: PartialAppTheme = {
         themeDark: "#1e74ba",
         themeDarker: "#165589",
         neutralLighterAlt: "#262a32",
-        neutralLighter: "#262931",
-        neutralLight: "#24282f",
+        neutralLighter: "#404040",
+        neutralLight: "#808080",
         neutralQuaternaryAlt: "#22252c",
         neutralQuaternary: "#20232a",
         neutralTertiaryAlt: "#1f2228",
@@ -66,6 +68,7 @@ export const ExplorerThemeHighContrastLight: PartialAppTheme = {
     semanticColors: {
         appHeaderBackground: "#ffffff",
         appHeaderText: "#000000",
+        errorBackground: "#fef0f1",
     },
 };
 
@@ -73,5 +76,6 @@ export const ExplorerThemeHighContrastDark: PartialAppTheme = {
     semanticColors: {
         appHeaderBackground: "#000000",
         appHeaderText: "#ffffff",
+        errorBackground: "#442726",
     },
 };
