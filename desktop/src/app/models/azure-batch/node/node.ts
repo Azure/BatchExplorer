@@ -9,6 +9,7 @@ import {
 } from "./compute-node-endpoint-configuration";
 import { ComputeNodeError, ComputeNodeErrorAttributes } from "./compute-node-error";
 import { NodeAgentInformation, NodeAgentInformationAttributes } from "./node-agent-information";
+import { VirtualMachineInfo } from "app/models/virtual-machine-info";
 
 export interface NodeAttributes {
     id: string;
@@ -34,6 +35,7 @@ export interface NodeAttributes {
     errors: ComputeNodeErrorAttributes[];
     nodeAgentInfo: NodeAgentInformationAttributes;
     endpointConfiguration: ComputeNodeEndpointConfigurationAttributes;
+    virtualMachineInfo: VirtualMachineInfo;
 }
 
 /**
@@ -61,6 +63,7 @@ export class Node extends Record<NodeAttributes> {
     @Prop() public startTask: StartTask;
     @Prop() public nodeAgentInfo: NodeAgentInformation;
     @Prop() public endpointConfiguration: ComputeNodeEndpointConfiguration;
+    @Prop() public virtualMachineInfo: VirtualMachineInfo;
 
     @ListProp(NodeRecentTask) public recentTasks: List<NodeRecentTask> = List([]);
     @ListProp(CertificateReference) public certificateReferences: List<CertificateReference> = List([]);

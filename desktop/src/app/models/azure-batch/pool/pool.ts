@@ -21,6 +21,7 @@ import { Duration } from "luxon";
 import { AutoScaleRun, AutoScaleRunAttributes } from "./auto-scale-run";
 import { PoolStatistics, PoolStatisticsAttributes } from "./pool-statistics";
 import { NodeCommunicationMode } from "app/models/node-communication-mode";
+import { BatchPoolIdentity } from "app/models/batch-pool-identity";
 
 export enum OSType {
     Windows = "windows",
@@ -61,6 +62,8 @@ export interface PoolAttributes {
     targetNodeCommunicationMode: NodeCommunicationMode;
     autoScaleRun: AutoScaleRunAttributes;
     stats: PoolStatisticsAttributes;
+    identity: BatchPoolIdentity;
+    currentNodeCommunicationMode: NodeCommunicationMode;
 }
 
 /**
@@ -146,6 +149,10 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
     @Prop() public autoScaleRun: AutoScaleRun;
 
     @Prop() public stats: PoolStatistics;
+
+    @Prop() public identity: BatchPoolIdentity;
+
+    @Prop() public currentNodeCommunicationMode: NodeCommunicationMode;
 
     /**
      * Computed field sum of dedicated and low pri nodes
