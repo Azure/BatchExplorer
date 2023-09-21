@@ -173,8 +173,13 @@ export class BlobStorageClientProxy implements StorageClient {
         containerName: string,
         options?: blob.RequestOptions
     ): Promise<blob.GetContainerPropertiesResult> {
-        return this.remote.send(storageIpc.getContainerProperties,
+        const result = await this.remote.send(storageIpc.getContainerProperties,
             { ...this.storageInfo, containerName, options });
+
+        // The container name is not returned by the API, but we add it here,
+        // since it's used by the UI model
+        result.data.name =  containerName;
+        return result;
     }
 
     /**

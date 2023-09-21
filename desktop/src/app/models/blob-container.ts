@@ -15,7 +15,7 @@ export interface BlobContainerAttributes {
 /**
  * Class for displaying blob container information.
  */
-@Model()
+@Model("BlobContainer")
 export class BlobContainer extends Record<BlobContainerAttributes> implements NavigableRecord {
     // container name
     @Prop() public id: string;

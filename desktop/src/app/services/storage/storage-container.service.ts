@@ -72,8 +72,11 @@ export class StorageContainerService {
                     continuationToken,
                     { maxResults: options && options.maxResults });
 
-                response.data.map(x => x.storageAccountId = params.storageAccountId);
-                return response;
+                const containers = response.data.map((container: BlobContainer) => {
+                    container.name = container.id;
+                    return container;
+                });
+                return { data: containers };
             },
             logIgnoreError: storageIgnoredErrors,
         });

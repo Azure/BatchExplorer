@@ -1,7 +1,7 @@
-import { BlobUploadCommonResponse, ContainerGetPropertiesResponse, CommonOptions, ContainerItem } from "@azure/storage-blob";
+import { BlobUploadCommonResponse, CommonOptions, ContainerGetPropertiesResponse } from "@azure/storage-blob";
 import { Model, Prop, Record } from "@batch-flask/core";
-import { SharedAccessPolicy } from "./shared-access-policy";
 import { BlobContainer } from "app/models";
+import { SharedAccessPolicy } from "./shared-access-policy";
 
 // Placeholder; we don't use any options to storage-blob API requests
 export type RequestOptions = Partial<CommonOptions>;
@@ -111,7 +111,7 @@ export interface StorageBlobResult<T> {
     continuationToken?: string;
 }
 
-export type ListContainersResult = StorageBlobResult<ContainerItem[]>;
+export type ListContainersResult = StorageBlobResult<BlobContainer[]>;
 export type GetBlobPropertiesResult = StorageBlobResult<BlobProperties>;
 export type ListBlobsResult = StorageBlobResult<BlobItem[]>;
 export type GetContainerPropertiesResult =
