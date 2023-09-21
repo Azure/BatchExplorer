@@ -140,16 +140,23 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         return null;
     }
 
-    public createFileGroup(dropdownValue: string) {
-        if (!dropdownValue) {
-            const dialog = this.dialogService.open(FileGroupCreateFormComponent);
-            dialog.afterClosed().subscribe((activity?: Activity) => {
-                const newFileGroupName = dialog.componentInstance.getCurrentValue().name;
-                this.value.setValue(this.fileGroupService.addFileGroupPrefix(newFileGroupName));
-                this.changeDetector.markForCheck();
-                this._uploadActivity.next(activity);
-            });
+    public fileGroupPicked(value: string) {
+        if (value) {
+            this.writeValue(value);
+            this.changeDetector.markForCheck();
+        } else {
+            this.createFileGroup();
         }
+    }
+
+    public createFileGroup() {
+        const dialog = this.dialogService.open(FileGroupCreateFormComponent);
+        dialog.afterClosed().subscribe((activity?: Activity) => {
+            const newFileGroupName = dialog.componentInstance.getCurrentValue().name;
+            this.value.setValue(this.fileGroupService.addFileGroupPrefix(newFileGroupName));
+            this.changeDetector.markForCheck();
+            this._uploadActivity.next(activity);
+        });
     }
 
     public trackFileGroup(_: number, fileGroup: BlobContainer) {
