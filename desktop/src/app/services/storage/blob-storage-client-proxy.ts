@@ -4,6 +4,7 @@ import { IpcEvent } from "common/constants";
 import { SharedAccessPolicy } from "./models";
 import * as blob from "./models/storage-blob";
 import { BlobContentResult } from "./storage-blob.service";
+import { StorageClient } from "./storage-client.service";
 
 const storageIpc = IpcEvent.storageBlob;
 
@@ -18,7 +19,7 @@ export interface ListBlobResponse {
     };
 }
 
-export class BlobStorageClientProxy {
+export class BlobStorageClientProxy implements StorageClient {
 
     private storageInfo: { url: string; account: string, key: string };
 

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/electron";
-import { StorageKeys } from "app/models";
+import { BlobContainer, StorageKeys } from "app/models";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { ArmResourceUtils } from "app/utils";
 import { Observable, throwError } from "rxjs";
@@ -10,6 +10,7 @@ import { BatchAccountService } from "../batch-account";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 import { StorageAccountKeysService } from "./storage-account-keys.service";
 import { StorageClientProxyFactory } from "./storage-client-proxy-factory";
+import { ListBlobsResult, ListContainersResult, StorageBlobResult } from "./models";
 
 export interface AutoStorageSettings {
     lastKeySync: Date;
@@ -21,6 +22,13 @@ export interface StorageKeyCachedItem {
     storageAccountName: string;
     settings: AutoStorageSettings;
     keys: StorageKeys;
+}
+
+export interface StorageClient {
+    listContainersWithPrefix(prefix: string, continuationToken?: string, options?: any):
+        Promise<ListContainersResult>;
+    listBlobs(containerName: string, options: any, continuationToken?: string):
+        Promise<ListBlobsResult>;
 }
 
 @Injectable({ providedIn: "root" })
