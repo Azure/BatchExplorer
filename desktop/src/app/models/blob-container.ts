@@ -8,7 +8,7 @@ export interface BlobContainerAttributes {
     name: string;
     publicAccessLevel: string;
     metadata?: any;
-    lastModified: Date;
+    lastModified?: Date;
     lease?: Partial<ContainerLeaseAttributes>;
 }
 
@@ -25,7 +25,7 @@ export class BlobContainer extends Record<BlobContainerAttributes> implements Na
 
     @Prop() public publicAccessLevel: string;
     @Prop() public metadata: any;
-    @Prop() public lastModified: Date;
+    @Prop() public lastModified?: Date;
     @Prop() public lease: ContainerLease;
     @Prop() public storageAccountId: string;
 
