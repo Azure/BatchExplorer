@@ -10,6 +10,7 @@ import * as React from "react";
 import { useCallback, useMemo } from "react";
 import { useFormParameter, useUniqueId } from "../../hooks";
 import { FormControlProps } from "./form-control";
+import { useAppTheme } from "../../theme";
 
 // export interface StringListProps<
 //     V extends FormValues,
@@ -82,23 +83,35 @@ export function StringList<
     );
 }
 
-function StringListItem(props: {
+interface StringListItemProps {
     index: number;
     value: string;
     onChange: (index: number, value: string) => void;
     onDelete: (index: number) => void;
     disableDelete?: boolean;
-}) {
+}
+
+function StringListItem(props: StringListItemProps) {
     const { index, value, onChange, onDelete, disableDelete } = props;
+    const styles = useStringListItemStyles(props);
     return (
-        <Stack key={index} horizontal>
-            <TextField
-                value={value}
-                onChange={(_, newValue) => {
-                    onChange(index, newValue || "");
-                }}
-            ></TextField>
+        <Stack
+            key={index}
+            horizontal
+            verticalAlign="center"
+            styles={styles.container}
+        >
+            <Stack.Item grow={1}>
+                <TextField
+                    styles={styles.input}
+                    value={value}
+                    onChange={(_, newValue) => {
+                        onChange(index, newValue || "");
+                    }}
+                ></TextField>
+            </Stack.Item>
             <IconButton
+                styles={styles.button}
                 iconProps={{ iconName: "Delete" }}
                 onClick={() => {
                     onDelete(index);
@@ -107,4 +120,41 @@ function StringListItem(props: {
             />
         </Stack>
     );
+}
+
+function useStringListItemStyles(props: StringListItemProps) {
+    const theme = useAppTheme();
+    const { disableDelete } = props;
+
+    const itemPadding = {
+        padding: "11px 8px 11px 12px",
+    };
+
+    return {
+        container: {
+            root: {
+                ":hover": {
+                    backgroundColor: theme.palette.neutralLighter,
+                },
+            },
+        },
+        input: {
+            root: {
+                ...itemPadding,
+            },
+            field: {
+                height: "24px",
+            },
+            fieldGroup: {
+                height: "24px",
+                "box-sizing": "content-box",
+            },
+        },
+        button: {
+            root: {
+                ...itemPadding,
+                visibility: disableDelete ? "hidden" : "initial",
+            },
+        },
+    };
 }
