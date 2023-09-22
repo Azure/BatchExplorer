@@ -47,6 +47,11 @@ export interface Environment<C extends EnvironmentConfig> {
     getLocalizer(): Localizer;
 
     /**
+     * Gets the notifier for the current environment
+     */
+    getNotifier(): Notifier;
+
+    /**
      * Gets the HTTP client for the current environment
      */
     getHttpClient<T extends HttpClient>(): T;
