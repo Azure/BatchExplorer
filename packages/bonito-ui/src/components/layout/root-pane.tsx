@@ -1,10 +1,10 @@
 import * as React from "react";
-import { getTheme } from "../../theme";
+import { ThemeName, getTheme } from "../../theme";
 import { ThemeProvider } from "@fluentui/react-theme-provider";
 import { loadTheme } from "@fluentui/react/lib/Styling";
 
 export interface RootPaneProps {
-    theme?: string;
+    theme?: ThemeName;
 }
 
 const themeProviderStyles: React.CSSProperties = {

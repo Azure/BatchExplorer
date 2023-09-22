@@ -180,6 +180,14 @@ export interface Form<V extends FormValues> {
     ): void;
 
     /**
+     * Externally sets the validation status of the form. Note that the next
+     * time validation runs, this status will be cleared.
+     *
+     * @param status The validation to set.
+     */
+    forceValidationStatus(status: ValidationStatus): void;
+
+    /**
      * Evaluate dynamic properties
      *
      * @returns True if the evaluation resulted in changes (and a change event

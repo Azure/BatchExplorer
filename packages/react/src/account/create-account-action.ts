@@ -1,4 +1,4 @@
-import { createForm } from "@azure/bonito-core";
+import { createForm, getNotifier } from "@azure/bonito-core";
 import { AbstractAction } from "@azure/bonito-core/lib/action";
 import {
     Form,
@@ -143,7 +143,8 @@ export class CreateAccountAction extends AbstractAction<CreateAccountFormValues>
     }
 
     async onExecute(formValues: CreateAccountFormValues): Promise<void> {
-        alert(
+        getNotifier().info(
+            "Account created",
             "Would write form values:\n" +
                 JSON.stringify(formValues, undefined, 4)
         );

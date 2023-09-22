@@ -12,6 +12,11 @@ export interface ExpectedNotification {
 }
 
 export class FakeNotifier implements Notifier {
+    /**
+     * Enable only when specifically testing what notifications are sent
+     */
+    enableChecking: boolean = false;
+
     expectedNotifications: ExpectedNotification[] = [];
 
     expectInfo(notification: string, config: NotificationConfig): void {
@@ -39,6 +44,11 @@ export class FakeNotifier implements Notifier {
         expectedNotification: string,
         config: NotificationConfig
     ): void {
+        if (!this.enableChecking) {
+            throw new Error(
+                "Set `FakeNotifier.enableChecking = true` to enable notification assertions"
+            );
+        }
         this.expectedNotifications.push({
             level: level,
             notification: expectedNotification,
