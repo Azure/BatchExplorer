@@ -106,6 +106,25 @@ describe("MockHttpClient", () => {
         );
     });
 
+    test("response URL and request URL can be different", async () => {
+        const client = new MockHttpClient();
+
+        client.addExpected(
+            new MockHttpResponse("https://contoso.net/foobar", {
+                status: 200,
+                body: "foobaz",
+            }),
+            {
+                method: "GET",
+                url: "/foobar",
+            }
+        );
+
+        const response = await client.fetch("/foobar");
+        expect(response.url).toBe("https://contoso.net/foobar");
+        expect(await response.text()).toBe("foobaz");
+    });
+
     test("can mock all methods", async () => {
         const client = new MockHttpClient();
 
