@@ -85,7 +85,11 @@ export class MockHttpClient extends AbstractHttpClient {
         response: MockHttpResponse,
         requestProps: HttpRequestInit = {}
     ): MockHttpClient {
-        const key = this._getKeyFromRequest(response.url, requestProps, true);
+        const key = this._getKeyFromRequest(
+            requestProps.url ?? response.url,
+            requestProps,
+            true
+        );
         const expected = this._expectedResponses[key] ?? [];
         expected.push(response);
         this._expectedResponses[key] = expected;
