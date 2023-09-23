@@ -101,16 +101,11 @@ export class MockHttpClient extends AbstractHttpClient {
         const method = requestProps.method ?? HttpRequestMethod.Get;
 
         let bodyId: string = "";
-        const reqBody = requestProps.body;
-        if (reqBody) {
-            if (typeof reqBody !== "string") {
-                throw new Error(
-                    "MockHttpClient only supports string request bodies"
-                );
-            }
-            if (this._expectedRequestBodies[reqBody]) {
+        if (requestProps.body) {
+            const bodyString = this.serializeBody(requestProps.body);
+            if (this._expectedRequestBodies[bodyString]) {
                 // Existing body identifier
-                const expectedBody = this._expectedRequestBodies[reqBody];
+                const expectedBody = this._expectedRequestBodies[bodyString];
                 if (updateBodyIds) {
                     expectedBody.refCount++;
                 }
@@ -118,12 +113,12 @@ export class MockHttpClient extends AbstractHttpClient {
             } else if (updateBodyIds) {
                 // New body identifier
                 bodyId = `body${this._bodyIdCounter++}`;
-                this._expectedRequestBodies[reqBody] = {
+                this._expectedRequestBodies[bodyString] = {
                     refCount: 1,
                     bodyId: bodyId,
                 };
             } else {
-                throw new Error(`Unexpected request body: ${reqBody}`);
+                throw new Error(`Unexpected request body: ${bodyString}`);
             }
         }
 
@@ -137,6 +132,19 @@ export class MockHttpClient extends AbstractHttpClient {
     remainingAssertions(): string[] {
         return Object.keys(this._expectedResponses).map(
             (key) => key.split("::")[1]
+        );
+    }
+
+    serializeBody(
+        body: string | Blob | BufferSource | FormData | URLSearchParams
+    ): string {
+        if (typeof body === "string") {
+            return body;
+        } else if (body instanceof URLSearchParams) {
+            return body.toString();
+        }
+        throw new Error(
+            "Unsupported request body type: MockHttpClient supports bodies of type string or URLSearchParams"
         );
     }
 }
