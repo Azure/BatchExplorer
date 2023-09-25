@@ -8,7 +8,11 @@ import {
     ValidationStatus,
 } from "@azure/bonito-core/lib/form";
 import { createReactForm } from "@azure/bonito-ui";
-import { RadioButton, StringList } from "@azure/bonito-ui/lib/components/form";
+import {
+    RadioButton,
+    StringList,
+    StringListValidationData,
+} from "@azure/bonito-ui/lib/components/form";
 import React from "react";
 
 export enum AccessRuleType {
@@ -128,7 +132,7 @@ export class UpdateAccessRulesAction extends AbstractAction<UpdateAccessRulesFor
         subForm.param("ips", StringListParameter, {
             label: "Address ranges",
             value: [],
-            hidden: true,
+            hidden: false,
             dynamic: {
                 hidden: (form) => {
                     return (
@@ -139,7 +143,29 @@ export class UpdateAccessRulesAction extends AbstractAction<UpdateAccessRulesFor
             render(props) {
                 return <StringList {...props} />;
             },
+            placeholder: "Enter IP address",
+            onValidateSync(value) {
+                const errorData: StringListValidationData = {};
+                value?.forEach((ip, index) => {
+                    if (!ip.match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/)) {
+                        errorData[index] = "Invalid IP address";
+                    }
+                });
+                if (Object.keys(errorData).length > 0) {
+                    return new ValidationStatus("error", "", errorData);
+                }
+                return new ValidationStatus("ok");
+            },
         });
         return subForm;
     }
 }
+
+function a(x: <X>(x: X) => void): any {
+    return x;
+}
+
+a(() => {
+    const x = 1;
+    return x;
+});

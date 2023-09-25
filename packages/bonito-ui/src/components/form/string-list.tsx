@@ -19,6 +19,10 @@ import { useAppTheme } from "../../theme";
 // > extends FormControlProps<V, K, D> {
 // }
 
+export interface StringListValidationData {
+    [key: number]: string;
+}
+
 export function StringList<
     V extends FormValues,
     K extends ParameterName<V>,
@@ -27,7 +31,7 @@ export function StringList<
     const { className, style, param, onChange } = props;
 
     const id = useUniqueId("form-control", props.id);
-    useFormParameter(param);
+    const { validationErrorData } = useFormParameter(param);
 
     // const [hasFocused, setHasFocused] = React.useState<boolean>(false);
 
@@ -68,11 +72,14 @@ export function StringList<
     return (
         <Stack key={id} style={style} className={className}>
             {items.map((item, index) => {
+                const errorMsg = validationErrorData?.[index];
                 return (
                     <StringListItem
                         key={index}
                         index={index}
                         value={item}
+                        errorMsg={errorMsg}
+                        placeholder={param.placeholder}
                         onChange={onItemChange}
                         onDelete={onItemDelete}
                         disableDelete={index === items.length - 1}
@@ -88,11 +95,21 @@ interface StringListItemProps {
     value: string;
     onChange: (index: number, value: string) => void;
     onDelete: (index: number) => void;
+    placeholder?: string;
     disableDelete?: boolean;
+    errorMsg?: string;
 }
 
 function StringListItem(props: StringListItemProps) {
-    const { index, value, onChange, onDelete, disableDelete } = props;
+    const {
+        index,
+        value,
+        onChange,
+        onDelete,
+        disableDelete,
+        errorMsg,
+        placeholder,
+    } = props;
     const styles = useStringListItemStyles(props);
     return (
         <Stack
@@ -105,10 +122,12 @@ function StringListItem(props: StringListItemProps) {
                 <TextField
                     styles={styles.input}
                     value={value}
+                    placeholder={placeholder}
+                    errorMessage={errorMsg}
                     onChange={(_, newValue) => {
                         onChange(index, newValue || "");
                     }}
-                ></TextField>
+                />
             </Stack.Item>
             <IconButton
                 styles={styles.button}

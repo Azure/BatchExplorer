@@ -56,7 +56,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
     }
 
     get entryValidationStatus(): {
-        [name in ParameterName<V>]?: ValidationStatus;
+        [name in ParameterName<V>]?: ValidationStatus<any>;
     } {
         return this._validationSnapshot.entryStatus;
     }
@@ -300,9 +300,9 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         this._validationSnapshot = snapshot;
         this.validateSync(snapshot, opts);
 
-        // Fire a validation event to allow updates after synchronous
-        // validation to happen immediately
-        this._emitValidateEvent(snapshot);
+        // // Fire a validation event to allow updates after synchronous
+        // // validation to happen immediately
+        // this._emitValidateEvent(snapshot);
 
         // Yield before doing any async validation to check if another validation
         // attempt has come in.
@@ -324,22 +324,22 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
         await this.validateAsync(snapshot, opts);
 
-        if (this._checkAndCancelValidationSnapshot(snapshot, opts.force)) {
-            return snapshot;
-        }
+        // if (this._checkAndCancelValidationSnapshot(snapshot, opts.force)) {
+        //     return snapshot;
+        // }
 
-        // This snapshot is done, and is now the current in-effect snapshot
-        snapshot.validationCompleteDeferred.resolve();
-        snapshot.updateOverallStatus();
-        this._validationSnapshot = snapshot;
+        // // This snapshot is done, and is now the current in-effect snapshot
+        // snapshot.validationCompleteDeferred.resolve();
+        // snapshot.updateOverallStatus();
+        // this._validationSnapshot = snapshot;
 
-        this._emitValidateEvent(snapshot);
+        // this._emitValidateEvent(snapshot);
 
-        if (!snapshot.overallStatus) {
-            // Hitting this indicates a bug. This shouldn't ever be undefined
-            // at this point.
-            throw new Error("Failed to compute overall validation status");
-        }
+        // if (!snapshot.overallStatus) {
+        //     // Hitting this indicates a bug. This shouldn't ever be undefined
+        //     // at this point.
+        //     throw new Error("Failed to compute overall validation status");
+        // }
 
         return snapshot;
     }
@@ -376,6 +376,10 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         }
 
         snapshot.syncValidationComplete = true;
+
+        // Fire a validation event to allow updates after synchronous
+        // validation to happen immediately
+        this._emitValidateEvent(snapshot);
 
         return snapshot;
     }
@@ -446,6 +450,23 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         }
 
         snapshot.asyncValidationComplete = true;
+
+        if (this._checkAndCancelValidationSnapshot(snapshot, opts.force)) {
+            return snapshot;
+        }
+
+        // This snapshot is done, and is now the current in-effect snapshot
+        snapshot.validationCompleteDeferred.resolve();
+        snapshot.updateOverallStatus();
+        this._validationSnapshot = snapshot;
+
+        this._emitValidateEvent(snapshot);
+
+        if (!snapshot.overallStatus) {
+            // Hitting this indicates a bug. This shouldn't ever be undefined
+            // at this point.
+            throw new Error("Failed to compute overall validation status");
+        }
 
         return snapshot;
     }
