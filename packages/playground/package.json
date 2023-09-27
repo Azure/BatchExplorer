@@ -32,7 +32,7 @@
     "test:all": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage",
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --watch",
     "test:watch": "jest --watch",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "watch": "run-p \"compile:* -- --watch --preserveWatchOutput\"",
     "workspace:watch:lib": "npm run watch",
     "workspace:build": "npm run build",
