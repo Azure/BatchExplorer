@@ -26,7 +26,7 @@ export interface LoadMoreFn<T> {
  */
 export function useLoadMore<T>(
     onLoad: LoadMoreFn<T>,
-    onLoadError?: (error: any) => void
+    onLoadError?: (error: unknown) => void
 ) {
     const [items, setItems] = React.useState<T[]>([]);
     const [hasMore, setHasMore] = React.useState(true);

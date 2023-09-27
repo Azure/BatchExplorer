@@ -25,8 +25,10 @@ export const DataGridLoadMoreDemo = () => {
         return taskLoader.loadTasksFn;
     }, [filter, limit, noData, hasError]);
 
-    const onLoadError = (error: any) => {
-        setLoadErrorMsg(error?.message ?? "");
+    const onLoadError = (error: unknown) => {
+        setLoadErrorMsg(
+            (error as { message: string })?.message ?? "unknown error"
+        );
     };
 
     useEffect(() => {
