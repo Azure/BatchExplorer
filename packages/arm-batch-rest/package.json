@@ -40,7 +40,7 @@
     "clean:esm": "bux rmrf ./lib",
     "clean:cjs": "bux rmrf ./lib-cjs",
     "generate:client": "autorest --typescript swagger/README.md",
-    "lint": "eslint",
+    "lint": "eslint . --max-warnings 0",
     "test": "jest",
     "test:all": "npm run test:coverage",
     "test:coverage": "jest --collect-coverage",
