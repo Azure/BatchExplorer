@@ -44,6 +44,12 @@ class InheritedTestRec extends SimpleTestRec {
     public d: number;
 }
 
+@Model("CustomName")
+class CustomNameRec extends Record<any> {
+    @Prop()
+    public id: string = "default-id";
+}
+
 describe("Record", () => {
     it("should throw an exeption when record doesn't extends Record class", () => {
         try {
@@ -175,5 +181,13 @@ describe("Record", () => {
     it("Should keep static methods", () => {
         expect(SimpleTestRec.isStaticMethod).not.toBeFalsy();
         expect(SimpleTestRec.isStaticMethod()).toBe(true);
+    });
+
+    it("should allow a custom record name to be set", () => {
+        const rec1 = new TestRec();
+        expect(rec1.constructor.name).toEqual("TestRec");
+
+        const rec2 = new CustomNameRec();
+        expect(rec2.constructor.name).toEqual("CustomName");
     });
 });
