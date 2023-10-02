@@ -31,7 +31,7 @@
     "test:all": "npm run test:coverage",
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --watch",
     "test:watch": "jest --watch",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "watch": "run-p \"compile:* -- --watch --preserveWatchOutput\"",
     "workspace:build": "npm run build",
     "workspace:build:clean": "npm run build:clean",
@@ -63,7 +63,8 @@
     "@types/luxon": "^2.0.2",
     "events": "^3.3.0",
     "lodash": "^4.17.20",
-    "luxon": "^2.5.2"
+    "luxon": "^2.5.2",
+    "typed-emitter": "^2.1.0"
   },
   "devDependencies": {
     "@batch/common-config": "^1.0.0",
@@ -71,8 +72,7 @@
     "@types/node": "20.5.4",
     "jest": "^27.1.0",
     "jest-junit": "^12.2.0",
-    "ts-jest": "^27.0.5",
-    "typed-emitter": "^2.1.0"
+    "ts-jest": "^27.0.5"
   },
   "files": [
     "lib",

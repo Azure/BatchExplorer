@@ -230,6 +230,10 @@ export class SubForm<
         return this.form.validateAsync(snapshot, opts);
     }
 
+    forceValidationStatus(status: ValidationStatus): void {
+        this.form.forceValidationStatus(status);
+    }
+
     async waitForValidation(): Promise<ValidationStatus | undefined> {
         return this.form.waitForValidation();
     }

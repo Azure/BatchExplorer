@@ -27,6 +27,7 @@ export function Checkbox<
     return (
         <FluentCheckbox
             id={id}
+            label={param.hideLabel ? param.label : undefined}
             ariaLabel={ariaLabel ?? param.label}
             className={className}
             disabled={disabled || param.disabled}

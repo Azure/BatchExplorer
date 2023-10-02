@@ -24,6 +24,12 @@ export interface Action<V extends FormValues = FormValues> {
     readonly isInitialized: boolean;
 
     /**
+     * The result the last time the action was executed (or undefined if
+     * the action hasn't been executed yet)
+     */
+    readonly lastExecutionResult?: ActionExecutionResult;
+
+    /**
      * Load data needed for the action and perform any other initialization.
      * Calls the onInitialize() callback.
      */
@@ -70,14 +76,14 @@ export interface Action<V extends FormValues = FormValues> {
      *
      * @param formValues The form values to use
      */
-    onExecute(formValues: V): Promise<void>;
+    onExecute(formValues: V): Promise<ActionExecutionResult | void>;
 
     /**
      * Returns a promise that resolves when action execution
      * has finished. If there is no execution currently in-progress,
      * the promise will resolve immediately.
      */
-    waitForExecution(): Promise<void>;
+    waitForExecution(): Promise<ActionExecutionResult | void>;
 
     /**
      * Returns a promise that resolves when action initialization
@@ -90,7 +96,7 @@ export interface Action<V extends FormValues = FormValues> {
 export type ActionExecutionResult = {
     success: boolean;
     error?: unknown;
-    formValidationStatus: ValidationStatus;
+    validationStatus: ValidationStatus;
 };
 
 export abstract class AbstractAction<V extends FormValues>
@@ -112,12 +118,18 @@ export abstract class AbstractAction<V extends FormValues>
         return this._logger;
     }
 
+    private _lastExecutionResult?: ActionExecutionResult;
+
+    get lastExecutionResult(): ActionExecutionResult | undefined {
+        return this._lastExecutionResult;
+    }
+
     protected _form?: Form<V>;
 
     private _isInitialized: boolean = false;
 
     private _isExecuting = false;
-    private _executionDeferred = new Deferred();
+    private _executionDeferred = new Deferred<ActionExecutionResult>();
 
     private _isInitializing = false;
     private _initializationDeferred = new Deferred();
@@ -172,9 +184,13 @@ export abstract class AbstractAction<V extends FormValues>
         }
     }
 
-    waitForExecution(): Promise<void> {
+    waitForExecution(): Promise<ActionExecutionResult | undefined> {
         if (!this._isExecuting || this._executionDeferred.done) {
-            return Promise.resolve();
+            if (this._executionDeferred.done) {
+                return Promise.resolve(this._executionDeferred.resolvedTo);
+            } else {
+                return Promise.resolve(undefined);
+            }
         } else {
             return this._executionDeferred.promise;
         }
@@ -195,10 +211,10 @@ export abstract class AbstractAction<V extends FormValues>
     }
 
     async execute(): Promise<ActionExecutionResult> {
-        const executionResult: ActionExecutionResult = {
+        let executionResult: ActionExecutionResult = {
             success: false,
             // Default to error status in case an exception is thrown
-            formValidationStatus: new ValidationStatus(
+            validationStatus: new ValidationStatus(
                 "error",
                 "Failed to execute action"
             ),
@@ -223,17 +239,27 @@ export abstract class AbstractAction<V extends FormValues>
                 );
             }
 
-            executionResult.formValidationStatus = validationStatus;
+            executionResult.validationStatus = validationStatus;
             if (validationStatus.level === "error") {
                 // Validation failed - early out
+                this._lastExecutionResult = executionResult;
                 return executionResult;
             }
 
             try {
-                await this.onExecute(formValues);
-                executionResult.success = true;
+                const result = await this.onExecute(formValues);
+                if (result) {
+                    executionResult = result;
+                } else {
+                    executionResult.success = true;
+                }
             } catch (e) {
-                executionResult.error = e;
+                executionResult.error =
+                    e ?? "Failed to execute action " + this.actionName;
+                executionResult.validationStatus = new ValidationStatus(
+                    "error",
+                    `${String(e)}`
+                );
                 this.logger.warn("Action failed to execute:", e);
             }
         } finally {
@@ -242,12 +268,21 @@ export abstract class AbstractAction<V extends FormValues>
             // Always resolve rather than reject. Waiting for execution
             // isn't the right place to handle errors. Instead, handle rejections
             // from execute() itself.
-            this._executionDeferred.resolve();
+            this._executionDeferred.resolve(executionResult);
 
             // Create a new deferred execution object since execution
             // can happen again and again
-            this._executionDeferred = new Deferred();
+            this._executionDeferred = new Deferred<ActionExecutionResult>();
         }
+
+        this._lastExecutionResult = executionResult;
+
+        if (!executionResult.success) {
+            this.form.forceValidationStatus(
+                this._lastExecutionResult.validationStatus
+            );
+        }
+
         return executionResult;
     }
 
@@ -255,7 +290,7 @@ export abstract class AbstractAction<V extends FormValues>
 
     abstract buildForm(initialValues: V): Form<V>;
 
-    abstract onExecute(formValues: V): Promise<void>;
+    abstract onExecute(formValues: V): Promise<ActionExecutionResult | void>;
 
     onValidateSync?(values: V): ValidationStatus;
 

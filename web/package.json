@@ -36,7 +36,7 @@
     "test:all": "cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage",
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --watch",
     "test:watch": "jest --watch",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "server": "webpack-dev-server",
     "start": "npm run start:dev",
     "start:dev": "npm run clean && npm run build-translations && npm run server -- --env dev",

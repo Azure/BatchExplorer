@@ -1,16 +1,14 @@
 import { initMockEnvironment } from "../../environment";
 import { FakeNotifier } from "../fake-notifier";
+import { getNotifier } from "../notification-util";
 
 describe("Fake notification tests", () => {
     let notifier: FakeNotifier;
 
     beforeEach(() => {
         initMockEnvironment();
-        notifier = new FakeNotifier();
-    });
-
-    afterEach(() => {
-        jest.restoreAllMocks();
+        notifier = getNotifier() as FakeNotifier;
+        notifier.enableChecking = true;
     });
 
     test("Each notifier function works as expected", () => {

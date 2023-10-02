@@ -106,6 +106,25 @@ describe("MockHttpClient", () => {
         );
     });
 
+    test("response URL and request URL can be different", async () => {
+        const client = new MockHttpClient();
+
+        client.addExpected(
+            new MockHttpResponse("https://contoso.net/foobar", {
+                status: 200,
+                body: "foobaz",
+            }),
+            {
+                method: "GET",
+                url: "/foobar",
+            }
+        );
+
+        const response = await client.fetch("/foobar");
+        expect(response.url).toBe("https://contoso.net/foobar");
+        expect(await response.text()).toBe("foobaz");
+    });
+
     test("can mock all methods", async () => {
         const client = new MockHttpClient();
 
@@ -221,5 +240,46 @@ describe("MockHttpClient", () => {
         expect(
             await (await client.put("/some/url", { body: "two" })).text()
         ).toBe("response two");
+    });
+
+    test("supports sending string bodies", async () => {
+        const client = new MockHttpClient();
+        client.addExpected(
+            new MockHttpResponse("/some/url", {
+                status: 200,
+            }),
+            {
+                method: "PUT",
+                body: "this is a string",
+            }
+        );
+        const response = await client.put("/some/url", {
+            body: "this is a string",
+        });
+        expect(response.status).toBe(200);
+    });
+
+    test("supports sending URLSearchParams bodies", async () => {
+        const client = new MockHttpClient();
+
+        const body = new URLSearchParams({
+            color: "red",
+            shape: "triangle",
+        });
+        expect(client.serializeBody(body)).toBe("color=red&shape=triangle");
+
+        client.addExpected(
+            new MockHttpResponse("/some/url", {
+                status: 200,
+            }),
+            {
+                method: "PUT",
+                body,
+            }
+        );
+        const response = await client.put("/some/url", {
+            body,
+        });
+        expect(response.status).toBe(200);
     });
 });

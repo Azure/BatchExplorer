@@ -32,6 +32,7 @@ export {
 } from "./http";
 export * from "./location";
 export { getLogger } from "./logging/logging-util";
+export { getNotifier } from "./notification";
 export * from "./resource-group";
 export * from "./service";
 export * from "./storage";

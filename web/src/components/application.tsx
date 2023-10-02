@@ -16,6 +16,7 @@ import { Main } from "./layout/main";
 import { Stack, IStackTokens } from "@fluentui/react/lib/Stack";
 import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { translate } from "@azure/bonito-core";
+import { ThemeName } from "@azure/bonito-ui/lib/theme";
 
 //DefaultButton
 const dropdownStyles: Partial<IDropdownStyles> = {
@@ -26,7 +27,7 @@ const dropdownStyles: Partial<IDropdownStyles> = {
  * Represents the entire application
  */
 export const Application: React.FC = () => {
-    const [theme, setTheme] = React.useState(defaultTheme);
+    const [theme, setTheme] = React.useState<ThemeName>(defaultTheme);
 
     const themeOptions = React.useMemo(() => {
         const options: IDropdownOption[] = [];
@@ -74,7 +75,7 @@ export const Application: React.FC = () => {
                             onRenderLabel={() => <></>}
                             onChange={(_, option) => {
                                 if (option) {
-                                    setTheme(String(option.key));
+                                    setTheme(option.key as ThemeName);
                                 }
                             }}
                         />

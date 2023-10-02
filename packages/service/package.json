@@ -31,7 +31,7 @@
     "test:all": "npm run test:coverage",
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --watch",
     "test:watch": "jest --watch",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "watch": "run-p \"compile:* -- --watch --preserveWatchOutput\"",
     "workspace:build": "npm run build",
     "workspace:build:clean": "npm run build:clean",

@@ -11,6 +11,7 @@ import {
     EnvironmentName,
 } from "./environment";
 import { Clock } from "../datetime/clock";
+import { Notifier } from "../notification";
 
 /**
  * Abstract base class for shared functionality across different environments
@@ -70,6 +71,22 @@ export abstract class AbstractEnvironment<
         return localizer;
     }
 
+    /**
+     * Get an instance of the global notifier
+     */
+    getNotifier(): Notifier {
+        const notifier = this.getInjectable<Notifier>(DependencyName.Notifier);
+        if (!notifier) {
+            throw new Error(
+                "No notifier configured for the current environment"
+            );
+        }
+        return notifier;
+    }
+
+    /**
+     * Get the currently configured HTTP client
+     */
     getHttpClient<T extends HttpClient>(): T {
         const httpClient = this.getInjectable<T>(DependencyName.HttpClient);
         if (!httpClient) {
