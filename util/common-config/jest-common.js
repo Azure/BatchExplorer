@@ -56,14 +56,19 @@ module.exports = {
             ],
             globals: {
                 __TEST_RESOURCE_STRINGS: combinedResourceStrings,
-                "ts-jest": {
-                    diagnostics: {
-                        // Squelch a warning with outputting ES6 modules (in tsconfig.json)
-                        ignoreCodes: [151001],
+            },
+            transform: {
+                "^.+\\.tsx?$": [
+                    "ts-jest",
+                    {
+                        diagnostics: {
+                            // Squelch a warning with outputting ES6 modules (in tsconfig.json)
+                            ignoreCodes: [151001],
+                        },
+                        // Greatly speed up tests at the expense of type checking
+                        isolatedModules: true,
                     },
-                },
-                // Greatly speed up tests at the expense of type checking
-                isolatedModules: true,
+                ],
             },
         };
 
