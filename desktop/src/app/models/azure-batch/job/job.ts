@@ -26,6 +26,8 @@ export interface JobAttributes {
     previousState: JobState;
     previousStateTransitionTime: Date;
     priority: number;
+    allowTaskPreemption: boolean;
+    maxParallelTasks: number;
     onAllTasksComplete: AllTasksCompleteAction;
     onTaskFailure: TaskFailureAction;
 
@@ -58,6 +60,8 @@ export class Job extends Record<JobAttributes> implements NavigableRecord {
     @Prop() public previousState: JobState;
     @Prop() public previousStateTransitionTime: Date;
     @Prop() public priority: number;
+    @Prop() public allowTaskPreemption: boolean;
+    @Prop() public maxParallelTasks: number;
     @Prop() public onAllTasksComplete: AllTasksCompleteAction = AllTasksCompleteAction.noaction;
     @Prop() public onTaskFailure: TaskFailureAction = TaskFailureAction.noaction;
 
