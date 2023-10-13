@@ -198,7 +198,10 @@ class SwaggerModelValidator {
                         this.addPropertyError(name, e.message);
                     }
                 }
-
+            } else if (swaggerType === "object") {
+                if (type !== Object) {
+                    this.addPropertyError(name, `Expected type to be an object but was ${type}`);
+                }
             } else {
                 console.log("Property", this.modelName, name, swaggerProperty, metadata[name]);
                 process.exit(1);

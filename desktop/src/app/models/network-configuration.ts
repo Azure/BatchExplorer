@@ -15,6 +15,7 @@ export interface NetworkConfigurationAttributes {
     endpointConfiguration: PoolEndpointConfigurationAttributes;
     dynamicVNetAssignmentScope: DynamicVNetAssignmentScope;
     publicIPAddressConfiguration: PublicIPAddressConfigurationAttributes;
+    enableAcceleratedNetworking: boolean;
 }
 
 /**
@@ -26,4 +27,5 @@ export class NetworkConfiguration extends Record<NetworkConfigurationAttributes>
     @Prop() public endpointConfiguration: PoolEndpointConfiguration;
     @Prop() public dynamicVNetAssignmentScope: DynamicVNetAssignmentScope = DynamicVNetAssignmentScope.None;
     @Prop() public publicIPAddressConfiguration: PublicIPAddressConfiguration;
+    @Prop() public enableAcceleratedNetworking: boolean;
 }

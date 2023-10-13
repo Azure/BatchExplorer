@@ -1,4 +1,5 @@
 import { Model, Prop, Record } from "@batch-flask/core";
+import { ComputeNodeIdentityReference } from "./compute-node-identity-reference";
 
 export interface ResourceFileAttributes {
     autoStorageContainerName?: string;
@@ -7,6 +8,7 @@ export interface ResourceFileAttributes {
     storageContainerUrl?: string;
     filePath: string;
     fileMode?: string;
+    identityReference?: ComputeNodeIdentityReference;
 }
 
 /**
@@ -25,6 +27,8 @@ export class ResourceFile extends Record<ResourceFileAttributes> {
     @Prop() public filePath: string;
 
     @Prop() public fileMode: string;
+
+    @Prop() public identityReference: ComputeNodeIdentityReference;
 
     public get id() {
         return this.filePath;
