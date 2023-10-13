@@ -1,3 +1,4 @@
+import { JsonObject } from "@azure/bonito-core";
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { List } from "immutable";
 
@@ -8,8 +9,8 @@ export interface VMExtensionAttributes {
     typeHandlerVersion: string,
     autoUpgradeMinorVersion: boolean,
     enableAutomaticUpgrade: boolean,
-    // settings: any, // TODO: swagger says this should be an object but doesn't specify properties?
-    // protectedSettings: any, // TODO: swagger says this should be an object but doesn't specify properties?
+    settings: JsonObject,
+    protectedSettings: JsonObject,
     provisionAfterExtensions: string[],
 }
 
@@ -21,7 +22,7 @@ export class VMExtension extends Record<VMExtensionAttributes> {
     @Prop() public typeHandlerVersion: string;
     @Prop() public autoUpgradeMinorVersion: boolean;
     @Prop() public enableAutomaticUpgrade: boolean;
-    // @Prop() public settings: any;
-    // @Prop() public protectedSettings: any;
+    @Prop() public settings: JsonObject;
+    @Prop() public protectedSettings: JsonObject;
     @ListProp(String) public provisionAfterExtensions: List<string>;
 }
