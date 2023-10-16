@@ -1,6 +1,11 @@
 import { StartTaskDecorator } from "app/decorators/start-task.decorator";
 import {
-    ApplicationPackageReference, CertificateReference, Pool, UserAccount, UserAccountElevationLevel,
+    ApplicationPackageReference,
+    CertificateReference,
+    NodeCommunicationMode,
+    Pool,
+    UserAccount,
+    UserAccountElevationLevel,
 } from "app/models";
 import { PoolUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
@@ -41,6 +46,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public networkSubnetId: string;
     public startTask: StartTaskDecorator;
     public applicationLicenses: string;
+    public targetNodeCommunicationMode?: string;
+    public currentNodeCommunicationMode?: string;
 
     public get routerLink() {
         return this.pool.routerLink;
@@ -69,6 +76,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.startTask = pool.startTask && new StartTaskDecorator(pool.startTask);
         this.lowPriorityNodes = PoolUtils.poolNodesStatus(pool,
             pool.currentLowPriorityNodes, pool.targetLowPriorityNodes);
+        this.targetNodeCommunicationMode = this._nodeCommsField(pool.targetNodeCommunicationMode);
+        this.currentNodeCommunicationMode = this._nodeCommsField(pool.currentNodeCommunicationMode);
 
         this.poolOs = this._computePoolOs();
 
@@ -93,5 +102,18 @@ export class PoolDecorator extends DecoratorBase<Pool> {
             return `${user.name} (admin)`;
         }
         return user.name;
+    }
+
+    private _nodeCommsField(value: NodeCommunicationMode): string {
+        switch (value) {
+            case "default":
+                return "Default";
+            case "classic":
+                return "Classic";
+            case "simplified":
+                return "Simplified";
+            default:
+                return value;
+        }
     }
 }
