@@ -1,4 +1,4 @@
-import { Component, Input, isDevMode } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
@@ -27,12 +27,24 @@ export class PoolConfigurationComponent {
     }
     public get pool() { return this._pool; }
 
-    public isDevMode: boolean = isDevMode();
-
     public decorator: PoolDecorator;
     public certificates: List<CertificateReference>;
     public appPackages: List<ApplicationPackageReference>;
     public metadata: List<Metadata> = List([]);
+
+    public get nodeCommSummary(): string {
+        const current = this._pool.currentNodeCommunicationMode;
+        const currentLabel = this.decorator.currentNodeCommunicationMode;
+
+        const target = this._pool.targetNodeCommunicationMode;
+        const targetLabel = this.decorator.targetNodeCommunicationMode;
+
+        if (target === "default" || current === target) {
+            return currentLabel;
+        } else {
+            return `${currentLabel} -> ${targetLabel}`;
+        }
+    }
 
     private _pool: Pool;
 
