@@ -1,4 +1,7 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { ComputeNodeIdentityReference } from "./compute-node-identity-reference";
+import { List } from "immutable";
+import { HttpHeader } from "./http-header";
 
 export interface TaskOutputFileAttributes {
     filePattern: string;
@@ -17,6 +20,8 @@ export interface TaskOutputFileUploadOptionsAttributes {
 export interface TaskOutputFileContainerAttributes {
     path?: string;
     containerUrl: string;
+    identityReference: ComputeNodeIdentityReference;
+    uploadHeaders: List<HttpHeader>;
 }
 
 export enum TaskOutputFileUploadCondition {
@@ -29,6 +34,8 @@ export enum TaskOutputFileUploadCondition {
 export class TaskOutputFileContainer extends Record<TaskOutputFileContainerAttributes> {
     @Prop() public path: string;
     @Prop() public containerUrl: string;
+    @Prop() public identityReference: ComputeNodeIdentityReference;
+    @ListProp(HttpHeader) public uploadHeaders: List<HttpHeader>;
 }
 
 @Model()
