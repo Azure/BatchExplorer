@@ -3,7 +3,7 @@ import * as React from "react";
 import { runAxe } from "../../test-util/a11y";
 import { initMockBrowserEnvironment } from "../../environment";
 import { DataGrid } from "../data-grid";
-import { fromIso } from "@azure/bonito-core";
+import { fromIso, translate } from "@azure/bonito-core";
 
 const ignoredA11yRules = {
     rules: {
@@ -25,10 +25,12 @@ describe("DataGrid component", () => {
         render(<DataGrid />);
         const gridEl = screen.getByRole("grid");
 
-        // One row: the column header
-        expect(gridEl.getAttribute("aria-rowcount")).toBe("1");
-        expect(screen.getAllByRole("row").length).toBe(1);
+        expect(getOffsetAriaRowCount(gridEl)).toBe(0);
+        expect(getOffsetRowCount()).toBe(0);
         expect(screen.getAllByRole("columnheader").length).toBe(1);
+        expect(
+            screen.getByText(translate("bonito.ui.dataGrid.noResults"))
+        ).not.toBeNull();
     });
 
     test("Simple grid", async () => {
@@ -45,10 +47,9 @@ describe("DataGrid component", () => {
         );
         const gridEl = screen.getByRole("grid");
 
-        // Header plus 2 data rows, sorted alphabetically by the first column
         const rows = screen.getAllByRole("row");
-        expect(gridEl.getAttribute("aria-rowcount")).toBe("3");
-        expect(rows.length).toBe(3);
+        expect(getOffsetAriaRowCount(gridEl)).toBe(2);
+        expect(getOffsetRowCount()).toBe(2);
 
         const columnHeaders = screen.getAllByRole("columnheader");
         // One extra column header for the select checkbox column
@@ -98,9 +99,9 @@ describe("DataGrid component", () => {
         );
         const gridEl = screen.getByRole("grid");
 
-        // Header plus 3 data rows
         const rows = screen.getAllByRole("row");
-        expect(gridEl.getAttribute("aria-rowcount")).toBe("4");
+        // header + 3 data rows + footer
+        expect(gridEl.getAttribute("aria-rowcount")).toBe("5");
         expect(screen.getAllByRole("row").length).toBe(4);
 
         const columnHeaders = screen.getAllByRole("columnheader");
@@ -136,6 +137,118 @@ describe("DataGrid component", () => {
 
         expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
     });
+
+    test("Shimmer lines", async () => {
+        const { container, rerender } = render(
+            <DataGrid columns={["data"]} hasMore={true} items={[]} />
+        );
+        const gridEl = screen.getByRole("grid");
+
+        // 10 shimmer lines
+        expect(getOffsetAriaRowCount(gridEl)).toBe(10);
+        expect(getNumOfShimmerLines(container)).toBe(10);
+
+        rerender(
+            <DataGrid
+                columns={["data"]}
+                hasMore={true}
+                items={generateDataItems(3)}
+            />
+        );
+
+        // 3 data rows + 3 shimmer lines
+        expect(getOffsetAriaRowCount(gridEl)).toBe(6);
+        expect(getNumOfShimmerLines(container)).toBe(3);
+
+        rerender(
+            <DataGrid
+                columns={["data"]}
+                hasMore={false}
+                items={generateDataItems(3)}
+            />
+        );
+
+        // 3 data rows
+        expect(getOffsetAriaRowCount(gridEl)).toBe(3);
+        expect(getNumOfShimmerLines(container)).toBe(0);
+
+        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+    });
+
+    test("onLoadMore callback", async () => {
+        const onLoadMore = jest.fn();
+        const { container, rerender } = render(
+            <DataGrid hasMore={true} items={[]} onLoadMore={onLoadMore} />
+        );
+        // initial loading, should not trigger onLoadMore
+        expect(onLoadMore).not.toHaveBeenCalled();
+        rerender(
+            <DataGrid
+                hasMore={true}
+                items={[{ data: 1 }]}
+                onLoadMore={onLoadMore}
+            />
+        );
+        // already has items, should trigger onLoadMore
+        expect(onLoadMore).toHaveBeenCalled();
+
+        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+    });
+
+    test("Virtual scrolling", async () => {
+        // DetailsList of FluentUI utilizes virtual scrolling when items is more
+        // than 10
+
+        // Max number of tries to wait for virtual scrolling to kick in
+        const maxTry = 10;
+        const onLoadMore = jest.fn();
+        let numTry = 0;
+        let expectedOnLoadMoreCount = 0;
+        let items = generateDataItems(1);
+
+        const renderGrid = () => (
+            <DataGrid
+                hasMore={true}
+                columns={["data"]}
+                items={items}
+                onLoadMore={onLoadMore}
+            />
+        );
+
+        const { container, rerender } = render(renderGrid());
+        const gridEl = screen.getByRole("grid");
+
+        expect(getOffsetRowCount()).toBe(items.length);
+        // aria-rowcount should iclude 3 lines of shimmering
+        expect(getOffsetAriaRowCount(gridEl)).toBe(items.length + 3);
+
+        // getOffsetRowCount() === items.length means virtual scrolling is not
+        // working, retry until it works or maxTry is reached
+        while (getOffsetRowCount() === items.length) {
+            if (numTry++ > maxTry) {
+                throw new Error("Virtual scrolling is not working");
+            }
+            // If there is at least one shimmer line, onLoadMore should be
+            // triggered
+            if (getNumOfShimmerLines(container) >= 1) {
+                expectedOnLoadMoreCount++;
+            }
+
+            items = generateDataItems(items.length + 5);
+            rerender(renderGrid());
+        }
+        expect(onLoadMore).toHaveBeenCalledTimes(expectedOnLoadMoreCount);
+
+        // Virtual scrolling is working, the number of rows should be less than
+        // the number of items, and all shimmer lines should not in view
+        expect(getOffsetRowCount()).toBeLessThan(items.length);
+        expect(getNumOfShimmerLines(container)).toBe(0);
+
+        // aria-rowcount should iclude 3 lines of shimmering
+        expect(getOffsetAriaRowCount(gridEl)).toBe(items.length + 3);
+
+        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+    });
 });
 
 /**
@@ -161,4 +274,51 @@ function getColumnHeaderText(columnHeader: HTMLElement): string {
         ".ms-DetailsHeader-cellName"
     );
     return el?.textContent ?? "";
+}
+
+/**
+ * Helper to get the shimmer lines in a data grid
+ * @param container The container element
+ * @returns The shimmer lines
+ */
+function getNumOfShimmerLines(container: HTMLElement): number {
+    return container.querySelectorAll(".ms-Shimmer-container").length;
+}
+
+/**
+ * Helper to get the value of aria-rowcount in a data grid, includes
+ * shimmer lines and doens't take into account the header and footer
+ * rows. The return number of rows is aria-rowcount - 2.
+ * @param gridEl The data grid element
+ * @returns The number of rows in the grid
+ */
+function getOffsetAriaRowCount(gridEl: HTMLElement): number {
+    const rowCount = gridEl.getAttribute("aria-rowcount");
+    if (!rowCount) {
+        throw new Error("aria-rowcount attribute not found");
+    }
+    // DataGrid's aria-rowcount is two more than the actual number of rows,
+    // one for the header and one for the footer.
+    return parseInt(rowCount, 10) - 2;
+}
+
+/**
+ * Helper to get the number of rows in a data grid, doens't take into
+ * account the header row or the shimmer lines, the return number of
+ * rows is the number of rows - 1.
+ */
+function getOffsetRowCount(): number {
+    return screen.getAllByRole("row").length - 1;
+}
+
+/**
+ * Helper to generate an array of data items
+ * @param num The number of items to generate
+ * @returns The array of data items
+ */
+function generateDataItems(num: number = 3): { data: number }[] {
+    const arr = Array(num)
+        .fill(0)
+        .map((_, i) => ({ data: i }));
+    return arr;
 }

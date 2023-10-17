@@ -1,4 +1,5 @@
 {
+  "bonito.ui.dataGrid.noResults": "No results found",
   "bonito.ui.form.buttons.apply": "Apply",
   "bonito.ui.form.buttons.discardChanges": "Discard changes",
   "bonito.ui.form.showPassword": "Show password"

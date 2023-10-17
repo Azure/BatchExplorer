@@ -3,7 +3,7 @@ import {
     AzureThemeDark,
     AzureThemeHighContrastLight,
     AzureThemeHighContrastDark,
-} from "@uifabric/azure-themes";
+} from "@fluentui/azure-themes";
 import { Theme, mergeThemes } from "@fluentui/theme";
 import {
     ExplorerThemeDark,
