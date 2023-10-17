@@ -9,6 +9,7 @@ import { DropdownDemo } from "./demo/form/dropdown-demo";
 import { RadioButtonDemo } from "./demo/form/radiobutton/radiobutton-demo";
 import { CheckboxDemo } from "./demo/form/checkbox/checkbox-demo";
 import { NotificationDemo } from "./demo/form/notification-demo";
+import { DataGridLoadMoreDemo } from "./demo/display/task-grid/task-data-grid";
 
 export const DEMO_MAP = {
     default: () => <DefaultPane />,
@@ -22,6 +23,7 @@ export const DEMO_MAP = {
     textfield: () => <TextFieldDemo />,
     notification: () => <NotificationDemo />,
     certificatedisplay: () => <CertificateDisplayDemo />,
+    dataGridLoadMore: () => <DataGridLoadMoreDemo />,
 };
 
 export type DemoName = keyof typeof DEMO_MAP;

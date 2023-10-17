@@ -70,6 +70,11 @@ export const DemoNavMenu: React.FC = () => {
                     name: "Certificate Display",
                     url: getDemoHash("certificatedisplay"),
                 },
+                {
+                    key: "DataGridLoadMore",
+                    name: "Data Grid: Load More",
+                    url: getDemoHash("dataGridLoadMore"),
+                },
             ],
         },
     ];
