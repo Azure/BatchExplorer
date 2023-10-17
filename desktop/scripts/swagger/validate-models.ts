@@ -14,6 +14,7 @@ import fetch from "node-fetch";
 import { metadataForCtr } from "../../src/@batch-flask/core/record/helpers";
 import * as models from "../../src/app/models";
 import { Constants } from "../../src/common";
+import { JsonObject } from "@azure/bonito-core";
 
 const dataPlaneVersion = Constants.ApiVersion.batchService;
 
@@ -33,7 +34,194 @@ interface SwaggerDefinition {
     enum?: string[];
 }
 
+type SwaggerModelMapping = {[name in keyof typeof models]: "data" | "arm"};
+
+const modelMapping: SwaggerModelMapping = {
+    AccountKeys: "data",
+    AppInsightsTableColumnType: "data",
+    ApplicationAction: "data",
+    ApplicationLicense: "data",
+    ApplicationPackageReference: "data",
+    Application: "data",
+    ArmLocation: "data",
+    ArmSubscription: "data",
+    RoleAssignmentPrincipalType: "data",
+    RoleAssignmentProperties: "data",
+    RoleAssignment: "data",
+    RoleDefinitionProperties: "data",
+    RoleDefinition: "data",
+    AutoUserSpecification: "data",
+    AutoUserScope: "data",
+    AutoscaleFormula: "data",
+    AutoScaleFormulaEvaluation: "data",
+    ComputeNodeInformation: "data",
+    Node: "data",
+    NodeState: "data",
+    NodeSchedulingState: "data",
+    ComputeNodeError: "data",
+    NodeAgentInformation: "data",
+    InboundEndpoint: "data",
+    ComputeNodeEndpointConfiguration: "data",
+    TaskExecutionResult: "data",
+    OSType: "data",
+    Pool: "data",
+    PoolState: "data",
+    PoolAllocationState: "data",
+    AutoScaleRunError: "data",
+    AutoScaleRun: "data",
+    ResourceStatistics: "data",
+    UsageStatistics: "data",
+    PoolStatistics: "data",
+    Task: "data",
+    TaskState: "data",
+    TaskResult: "data",
+    AffinityInformation: "data",
+    TaskStatistics: "data",
+    StorageAccountType: "data",
+    CachingType: "data",
+    DataDisk: "data",
+    PoolSpecification: "data",
+    PoolLifetimeOption: "data",
+    AutoPoolSpecification: "data",
+    PoolInformation: "data",
+    Job: "data",
+    JobState: "data",
+    AuthenticationTokenSettings: "data",
+    BatchApplicationProperties: "data",
+    BatchApplication: "data",
+    BatchApplicationPackageProperties: "data",
+    BatchApplicationPackage: "data",
+    PackageState: "data",
+    PoolAllocationMode: "arm",
+    BatchAccountProvisingState: "arm",
+    LOCAL_BATCH_ACCOUNT_PREFIX: "data",
+    AutoStorageAccount: "arm",
+    BatchAccountProperties: "arm",
+    ArmBatchAccount: "arm",
+    LocalBatchAccount: "arm",
+    UserAssignedIdentity: "data",
+    BatchPoolIdentity: "data",
+    BatchSoftwareLicense: "data",
+    BlobContainer: "data",
+    CertificateVisibility: "data",
+    CertificateStoreLocation: "data",
+    CommonStoreName: "data",
+    CertificateReference: "data",
+    DeleteCertificateError: "data",
+    Certificate: "data",
+    CertificateState: "data",
+    CloudServiceConfiguration: "data",
+    CloudServiceOsFamily: "data",
+    ContainerLease: "data",
+    ContainerType: "data",
+    ContainerRegistry: "data",
+    TaskContainerSettings: "data",
+    ContainerConfiguration: "data",
+    ComputeNodeIdentityReference: "data",
+    DiskEncryptionConfiguration: "data",
+    FailureInfo: "data",
+    HttpHeader: "data",
+    ImageReference: "data",
+    JobAction: "data",
+    AllTasksCompleteAction: "data",
+    TaskFailureAction: "data",
+    JobConstraints: "data",
+    JobTerminateReason: "data",
+    JobSchedulingError: "data",
+    JobExecutionInformation: "data",
+    JobHookTaskState: "data",
+    JobHookTaskExecutionInfo: "data",
+    JobHookTask: "data",
+    JobManagerTask: "data",
+    JobPreparationTask: "data",
+    JobReleaseTask: "data",
+    JobScheduleExecutionInformation: "data",
+    JobScheduleStats: "data",
+    JobSchedule: "data",
+    JobScheduleState: "data",
+    JobStatistics: "data",
+    JobTaskCounts: "data",
+    JobTaskSlotCounts: "data",
+    JobTaskCountsResult: "data",
+    defaultKeybindings: "data",
+    Metadata: "data",
+    MultiInstanceSettings: "data",
+    NameValuePair: "data",
+    NcjParameterRawType: "data",
+    NcjTemplateType: "data",
+    NcjTemplateMode: "data",
+    DynamicVNetAssignmentScope: "data",
+    NetworkConfiguration: "data",
+    VerificationType: "data",
+    ImageInformation: "data",
+    NodeCommunicationMode: "data",
+    IaasNodeConnectionSettings: "data",
+    ConnectionType: "data",
+    NodeConnectionSettings: "data",
+    NodePlacementConfiguration: "data",
+    NodePlacementPolicyType: "data",
+    NodeRecentTask: "data",
+    NodeUser: "data",
+    DiffDiskPlacement: "data",
+    DiffDiskSettings: "data",
+    OSDisk: "data",
+    InboundEndpointProtocol: "data",
+    NetworkSecurityGroupRuleAccess: "data",
+    NetworkSecurityGroupRule: "data",
+    InboundNATPool: "data",
+    PoolEndpointConfiguration: "data",
+    PoolOsSkus: "data",
+    PublicIPAddressConfiguration: "data",
+    RecentJob: "data",
+    ResizeError: "data",
+    ResizeErrorCode: "data",
+    SubscriptionDescriptor: "data",
+    ResourceGroupDescriptor: "data",
+    ResourceDescriptor: "data",
+    ResourceFile: "data",
+    ResourceGroup: "data",
+    Schedule: "data",
+    SoftwareBillingUnit: "data",
+    SSHPublicKey: "data",
+    StartTaskInfo: "data",
+    StartTask: "data",
+    StorageAccount: "data",
+    StorageKeys: "data",
+    SubtaskInformation: "data",
+    TaskConstraints: "data",
+    TaskContainerExecutionInfo: "data",
+    TaskDependencies: "data",
+    TaskDependency: "data",
+    TaskExecutionInformation: "data",
+    DependencyAction: "data",
+    ExitOptions: "data",
+    ExitCodeMapping: "data",
+    ExitCodeRangeMapping: "data",
+    TaskExitConditions: "data",
+    TaskOutputFileUploadCondition: "data",
+    TaskOutputFileContainer: "data",
+    TaskOutputFileDestination: "data",
+    TaskOutputFileUploadOptions: "data",
+    TaskOutputFile: "data",
+    TaskSchedulingPolicy: "data",
+    NodeFillType: "data",
+    TenantDetails: "data",
+    UserAccountElevationLevel: "data",
+    LoginMode: "data",
+    WindowsUserConfiguration: "data",
+    LinuxUserConfiguration: "data",
+    UserAccount: "data",
+    UserIdentity: "data",
+    VirtualMachineConfiguration: "data",
+    VirtualMachineInfo: "data",
+    VMExtension: "data",
+    mapResourceSkuToVmSize: "data",
+    VmSize: "data",
+    WindowsConfiguration: "data"
+};
+
 const nameMapping = [
+    { swagger: "AutoStorageProperties", app: "AutoStorageAccount" },
     { swagger: "TaskContainerExecutionInformation", app: "TaskContainerExecutionInfo" },
     { swagger: "TaskFailureInformation", app: "FailureInfo" },
     { swagger: "CloudTask", app: "Task" },
@@ -62,15 +250,21 @@ for (const mapping of nameMapping) {
 
 async function getSpecs() {
     const baseUrl = `https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/batch`;
-    const url = `${baseUrl}/data-plane/Microsoft.Batch/stable/${dataPlaneVersion}/BatchService.json`;
+    const url = `${baseUrl}/resource-manager/Microsoft.Batch/stable/2023-05-01/BatchManagement.json`;
     const response = await fetch(url);
     return response.json();
+}
+
+type ModelMapping = {
+    name: string,
+    model: unknown,
+    definition: JsonObject
 }
 
 async function getMapping() {
     const specs = await getSpecs();
 
-    const mappings: any[] = [];
+    const mappings: ModelMapping[] = [];
 
     for (const name of Object.keys(specs.definitions)) {
         if (name in models) {
@@ -146,6 +340,7 @@ class SwaggerModelValidator {
 
     private checkPropertyTypes(metadata) {
         for (const name of Object.keys(metadata)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const swaggerProperty = this.definition.properties![name];
             if (!swaggerProperty) {
                 // this.addPropertyError(name, `Swagger is missing property`);
@@ -247,8 +442,13 @@ async function run() {
     console.log("Validating models...");
     const { mappings, specs } = await getMapping();
 
+    const plane = "arm";
+
     let errors: ValidationError[] = [];
     for (const mapping of mappings) {
+        if (modelMapping[mapping.name] !== plane) {
+            continue;
+        }
         const validator = new SwaggerModelValidator(specs, mapping.name, mapping.model, mapping.definition);
         validator.validate();
         errors = errors.concat(validator.errors);
