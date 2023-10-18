@@ -1,6 +1,12 @@
 import { DependencyName, getEnvironment, getLogger } from "@azure/bonito-core";
 import { MockHttpClient, MockHttpResponse } from "@azure/bonito-core/lib/http";
-import { action, IObservableArray, makeObservable, observable } from "mobx";
+import {
+    action,
+    IObservableArray,
+    makeObservable,
+    observable,
+    runInAction,
+} from "mobx";
 import { AbstractModelListView, SelectableListView } from "../view";
 import { Certificate } from "./certificate-models";
 import type { CertificateService } from "./certificate-service";
@@ -14,6 +20,7 @@ export class CertificateListView
 {
     @observable selectedItems: IObservableArray<Certificate>;
     @observable batchAccount: string;
+    @observable isLoading: boolean = false;
 
     private _logger = getLogger("CertificateListView");
 
@@ -58,6 +65,9 @@ export class CertificateListView
      * Gets new models from the service and updates the model list
      */
     async load(): Promise<void> {
+        runInAction(() => {
+            this.isLoading = true;
+        });
         // KLUDGE: Mock out the call to list certificates until HTTP auth is supported
         const httpClient: MockHttpClient = getEnvironment().getInjectable(
             DependencyName.HttpClient
@@ -100,8 +110,14 @@ export class CertificateListView
                 }),
             })
         );
-
-        const result = await this.service.listAll();
-        this.update(result.models);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        try {
+            const result = await this.service.listAll();
+            this.update(result.models);
+        } finally {
+            runInAction(() => {
+                this.isLoading = false;
+            });
+        }
     }
 }
