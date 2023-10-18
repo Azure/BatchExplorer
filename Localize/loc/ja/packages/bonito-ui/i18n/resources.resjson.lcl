@@ -13,7 +13,7 @@
         <Str Cat="Text">
           <Val><![CDATA[No results found]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[一致する項目はありません]]></Val>
+            <Val><![CDATA[結果が見つかりません]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
