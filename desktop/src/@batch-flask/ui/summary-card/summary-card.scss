@@ -29,6 +29,10 @@ bl-summary-card {
 
                 > .details {
                     color: $secondary-text;
+
+                    bl-clickable {
+                        color: $primary-color;
+                    }
                 }
             }
         }
