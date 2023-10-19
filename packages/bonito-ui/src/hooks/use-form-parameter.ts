@@ -22,9 +22,10 @@ export function useFormParameter<
     V extends FormValues,
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = never,
-    DataResult = never
+    DataResult = never,
+    VD = undefined
 >(
-    param: Parameter<V, K, D>,
+    param: Parameter<V, K, D, VD>,
     opts: {
         /**
          * Callback for whenever the parameter value changes
@@ -78,6 +79,7 @@ export function useFormParameter<
     const [validationError, setValidationError] = useState<
         string | undefined
     >();
+    const [validationData, setValidationData] = useState<VD>();
     const [validationStatus, setValidationStatus] = useState<
         ValidationStatus | undefined
     >();
@@ -178,6 +180,7 @@ export function useFormParameter<
                 setValidationStatus(snapshot.entryStatus[param.name]);
                 if (dirty || param.validationStatus?.forced) {
                     const msg = param.validationStatus?.message;
+                    const data = param.validationStatus?.data;
                     // Only set a visible validation error if the user has
                     // interacted with the form control (ie: the parameter is
                     // dirty) or validation is forced (usually the result of
@@ -185,8 +188,10 @@ export function useFormParameter<
                     // form)
                     if (param.validationStatus?.level === "error") {
                         setValidationError(msg);
+                        setValidationData(data);
                     } else {
                         setValidationError(undefined);
+                        setValidationData(undefined);
                     }
                     setDirty(true);
                 }
@@ -213,5 +218,6 @@ export function useFormParameter<
         loadingPromise,
         validationError,
         validationStatus,
+        validationData,
     };
 }

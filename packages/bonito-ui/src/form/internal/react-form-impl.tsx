@@ -20,13 +20,17 @@ export class ReactFormImpl<V extends FormValues> extends FormImpl<V> {
     param<
         K extends ParameterName<V>,
         D extends ParameterDependencies<V> = ParameterDependencies<V>,
-        T extends ReactParameter<V, K, D> = ReactParameter<V, K, D>
+        VD = undefined
     >(
         name: K,
-        parameterConstructor: ParameterConstructor<V, K, D, T>,
-        init?: ReactParameterInit<V, K, D>
-    ): T {
-        const param = new parameterConstructor(this, name, init);
+        parameterConstructor: ParameterConstructor<V, K, D, VD>,
+        init?: ReactParameterInit<V, K, D, VD>
+    ): ReactParameter<V, K, D, VD> {
+        const param = new parameterConstructor(
+            this,
+            name,
+            init
+        ) as ReactParameter<V, K, D, VD>;
         if (init?.render) {
             param.render = init.render;
         }

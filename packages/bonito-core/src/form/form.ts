@@ -76,12 +76,13 @@ export interface Form<V extends FormValues> {
 
     param<
         K extends ParameterName<V>,
-        D extends ParameterDependencies<V> = NoDependencies
+        D extends ParameterDependencies<V> = NoDependencies,
+        VD = undefined
     >(
         name: K,
-        parameterConstructor: ParameterConstructor<V, K, D>,
-        init?: ParameterInit<V, K, D>
-    ): Parameter<V, K, D>;
+        parameterConstructor: ParameterConstructor<V, K, D, VD>,
+        init?: ParameterInit<V, K, D, VD>
+    ): Parameter<V, K, D, VD>;
 
     getParam<K extends ParameterName<V>>(name: K): Parameter<V, K>;
 

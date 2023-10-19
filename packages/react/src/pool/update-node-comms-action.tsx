@@ -1,6 +1,8 @@
 import { AbstractAction } from "@azure/bonito-core/lib/action";
 import {
     Form,
+    StringListParameter,
+    StringListVData,
     StringParameter,
     ValidationStatus,
 } from "@azure/bonito-core/lib/form";
@@ -25,6 +27,7 @@ import { createReactForm } from "@azure/bonito-ui/lib/form";
 export type UpdateNodeCommsFormValues = {
     currentNodeCommunicationMode?: string;
     targetNodeCommunicationMode?: NodeCommunicationMode;
+    stringList?: string[];
 };
 
 export class UpdateNodeCommsAction extends AbstractAction<UpdateNodeCommsFormValues> {
@@ -82,6 +85,32 @@ export class UpdateNodeCommsAction extends AbstractAction<UpdateNodeCommsFormVal
             label: translate(
                 "lib.react.pool.parameter.targetNodeCommunicationMode.label"
             ),
+        });
+
+        const a = (value: any) => {
+            const data = {
+                1: "1",
+                2: "2",
+            };
+            return new ValidationStatus(
+                "ok",
+                "",
+                data
+            ) as ValidationStatus<StringListVData>;
+        };
+
+        form.param("stringList", StringListParameter, {
+            label: translate(
+                "lib.react.pool.parameter.targetNodeCommunicationMode.label"
+            ),
+            // xxx: "xxx" as StringListVData,
+            onValidateSync: () => {
+                const data: StringListVData = {
+                    1: "1",
+                    2: "2",
+                };
+                return new ValidationStatus("ok", "", data);
+            },
         });
 
         form.item("help", {

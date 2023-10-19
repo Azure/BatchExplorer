@@ -27,17 +27,19 @@ export type ParameterDependencyName<
 export type ParameterConstructor<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = NoDependencies
-> = new (form: Form<V>, name: K, init?: ParameterInit<V, K, D>) => Parameter<
-    V,
-    K,
-    D
->;
+    D extends ParameterDependencies<V> = NoDependencies,
+    VD = undefined
+> = new (
+    form: Form<V>,
+    name: K,
+    init?: ParameterInit<V, K, D, VD>
+) => Parameter<V, K, D, VD>;
 
 export interface ParameterInit<
     V extends FormValues,
     K extends ParameterName<V> = ParameterName<V>,
-    D extends ParameterDependencies<V> = NoDependencies
+    D extends ParameterDependencies<V> = NoDependencies,
+    VD = undefined
 > extends ValuedEntryInit<V, K> {
     label?: string;
     hideLabel?: boolean;
@@ -45,8 +47,9 @@ export interface ParameterInit<
     placeholder?: string;
     dependencies?: D;
     dynamic?: DynamicParameterProperties<V, K>;
-    onValidateSync?(value: V[K]): ValidationStatus;
-    onValidateAsync?(value: V[K]): Promise<ValidationStatus>;
+    onValidateSync?: (value: V[K]) => ValidationStatus<VD>;
+    onValidateAsync?: (value: V[K]) => Promise<ValidationStatus<VD>>;
+    // xxx?: VD;
 }
 
 export interface DynamicParameterProperties<
@@ -63,7 +66,8 @@ export interface DynamicParameterProperties<
 export interface Parameter<
     V extends FormValues,
     K extends ParameterName<V> = ParameterName<V>,
-    D extends ParameterDependencies<V> = NoDependencies
+    D extends ParameterDependencies<V> = NoDependencies,
+    VD = undefined
 > extends ValuedEntry<V, K> {
     /**
      * A reference to the form containing this parameter.
@@ -157,19 +161,19 @@ export interface Parameter<
      * The current validation status of the parameter. If validation has
      * not yet been performed, this will be undefined.
      */
-    readonly validationStatus?: ValidationStatus;
+    readonly validationStatus?: ValidationStatus<VD>;
 
     /**
      * Perform sync validations only
      */
-    validateSync(): ValidationStatus;
+    validateSync(): ValidationStatus<VD>;
 
     /**
      * Perform async validations only. If no onValidateAsync property is
      * defined on this parameter, this doesn't need to be called during
      * validation as it will always return an "ok" status in that case.
      */
-    validateAsync(): Promise<ValidationStatus>;
+    validateAsync(): Promise<ValidationStatus<VD>>;
 
     /**
      * A callback to do synchronous validation of this parameter
@@ -177,7 +181,7 @@ export interface Parameter<
      * @param value The value to validate
      * @returns A ValidationStatus object with the results of the validation
      */
-    onValidateSync?: (value: V[K]) => ValidationStatus;
+    onValidateSync?: (value: V[K]) => ValidationStatus<VD>;
 
     /**
      * A callback to do async validation of this parameter
@@ -185,7 +189,7 @@ export interface Parameter<
      * @param value The value to validate
      * @returns A promise which resolves to a ValidationStatus object
      */
-    onValidateAsync?: (value: V[K]) => Promise<ValidationStatus>;
+    onValidateAsync?: (value: V[K]) => Promise<ValidationStatus<VD>>;
 
     /**
      * Get the value of a parameter dependency but do not perform
@@ -212,8 +216,9 @@ export interface Parameter<
 export abstract class AbstractParameter<
     V extends FormValues,
     K extends ParameterName<V> = ParameterName<V>,
-    D extends ParameterDependencies<V> = NoDependencies
-> implements Parameter<V, K, D>
+    D extends ParameterDependencies<V> = NoDependencies,
+    VD = undefined
+> implements Parameter<V, K, D, VD>
 {
     private _logger: Logger;
 
@@ -275,11 +280,17 @@ export abstract class AbstractParameter<
         this.parentForm.updateValue(this.name, newValue);
     }
 
-    get validationStatus(): ValidationStatus | undefined {
-        return this.parentForm.entryValidationStatus[this.name];
+    get validationStatus(): ValidationStatus<VD> | undefined {
+        return this.parentForm.entryValidationStatus[
+            this.name
+        ] as ValidationStatus<VD>;
     }
 
-    constructor(parentForm: Form<V>, name: K, init?: ParameterInit<V, K, D>) {
+    constructor(
+        parentForm: Form<V>,
+        name: K,
+        init?: ParameterInit<V, K, D, VD>
+    ) {
         this.parentForm = parentForm;
         this.parentSection = init?.parentSection;
 
@@ -313,14 +324,14 @@ export abstract class AbstractParameter<
         (this.parentForm as unknown as FormImpl<V>)._registerEntry(this);
     }
 
-    onValidateSync?: (value: V[K]) => ValidationStatus;
-    onValidateAsync?: (value: V[K]) => Promise<ValidationStatus>;
+    onValidateSync?: (value: V[K]) => ValidationStatus<VD>;
+    onValidateAsync?: (value: V[K]) => Promise<ValidationStatus<VD>>;
 
-    validateSync(): ValidationStatus {
-        let status: ValidationStatus | undefined;
+    validateSync(): ValidationStatus<VD> {
+        let status: ValidationStatus<VD> | undefined;
 
         if (this.required && this.value == null) {
-            status = new ValidationStatus(
+            status = new ValidationStatus<VD>(
                 "error",
                 `${capitalizeFirst(this.label ?? this.name)} is required`
             );
@@ -331,21 +342,21 @@ export abstract class AbstractParameter<
         }
 
         if (!status) {
-            status = new ValidationStatus("ok");
+            status = new ValidationStatus<VD>("ok");
         }
 
         return status;
     }
 
-    async validateAsync(): Promise<ValidationStatus> {
-        let status: ValidationStatus | undefined;
+    async validateAsync(): Promise<ValidationStatus<VD>> {
+        let status: ValidationStatus<VD> | undefined;
 
         if (this.onValidateAsync) {
             status = await this.onValidateAsync(this.value);
         }
 
         if (!status) {
-            status = new ValidationStatus("ok");
+            status = new ValidationStatus<VD>("ok");
         }
 
         return status;

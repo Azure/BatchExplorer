@@ -163,12 +163,13 @@ export class SubForm<
 
     param<
         SK extends ParameterName<S>,
-        D extends ParameterDependencies<S> = NoDependencies
+        D extends ParameterDependencies<S> = NoDependencies,
+        VD = undefined
     >(
         name: SK,
-        parameterConstructor: ParameterConstructor<S, SK, D>,
-        init?: ParameterInit<S, SK, D>
-    ): Parameter<S, SK, D> {
+        parameterConstructor: ParameterConstructor<S, SK, D, VD>,
+        init?: ParameterInit<S, SK, D, VD>
+    ): Parameter<S, SK, D, VD> {
         return this.form.param(name, parameterConstructor, init);
     }
 

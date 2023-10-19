@@ -1,5 +1,6 @@
 import {
     FormValues,
+    NoDependencies,
     Parameter,
     ParameterDependencies,
     ParameterName,
@@ -11,11 +12,12 @@ import { ReactParameter } from "../../form";
  */
 export interface FormControlProps<
     V extends FormValues,
-    K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>,
-    T extends ReactParameter<V, K, D> | Parameter<V, K, D> =
-        | ReactParameter<V, K, D>
-        | Parameter<V, K, D>
+    K extends ParameterName<V> = ParameterName<V>,
+    D extends ParameterDependencies<V> = NoDependencies,
+    VD = undefined,
+    T extends ReactParameter<V, K, D, VD> | Parameter<V, K, D, VD> =
+        | ReactParameter<V, K, D, VD>
+        | Parameter<V, K, D, VD>
 > {
     /**
      * The unique HTML ID of the input element
