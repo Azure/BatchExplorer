@@ -2,6 +2,7 @@ import type {
     Form,
     FormInit,
     FormValues,
+    NoDependencies,
     Parameter,
     ParameterConstructor,
     ParameterDependencies,
@@ -16,13 +17,12 @@ export interface ReactForm<V extends FormValues> extends Form<V> {
 
     param<
         K extends ParameterName<V>,
-        D extends ParameterDependencies<V> = ParameterDependencies<V>,
-        T extends Parameter<V, K, D> = Parameter<V, K, D>
+        D extends ParameterDependencies<V> = NoDependencies
     >(
         name: K,
-        parameterConstructor: ParameterConstructor<V, K, D, T>,
+        parameterConstructor: ParameterConstructor<V, K, D>,
         init?: ReactParameterInit<V, K, D>
-    ): T;
+    ): Parameter<V, K, D>;
 }
 
 /**
@@ -47,20 +47,12 @@ interface StandaloneForm<S> extends FormValues {
  */
 export function createParam<
     S,
-    D extends ParameterDependencies<StandaloneForm<S>> = ParameterDependencies<
-        StandaloneForm<S>
-    >,
-    T extends Parameter<StandaloneForm<S>, "_standaloneParam", D> = Parameter<
-        StandaloneForm<S>,
-        "_standaloneParam",
-        D
-    >
+    D extends ParameterDependencies<StandaloneForm<S>> = NoDependencies
 >(
     parameterConstructor: ParameterConstructor<
         StandaloneForm<S>,
         "_standaloneParam",
-        D,
-        T
+        D
     >,
     init?: ReactParameterInit<StandaloneForm<S>, "_standaloneParam", D>
 ) {

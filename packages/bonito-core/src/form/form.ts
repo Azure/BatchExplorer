@@ -3,6 +3,7 @@ import type { Entry, EntryInit } from "./entry";
 import { FormImpl } from "./internal/form-impl";
 import { Item } from "./item";
 import type {
+    NoDependencies,
     Parameter,
     ParameterConstructor,
     ParameterDependencies,
@@ -75,13 +76,12 @@ export interface Form<V extends FormValues> {
 
     param<
         K extends ParameterName<V>,
-        D extends ParameterDependencies<V> = ParameterDependencies<V>,
-        T extends Parameter<V, K, D> = Parameter<V, K, D>
+        D extends ParameterDependencies<V> = NoDependencies
     >(
         name: K,
-        parameterConstructor: ParameterConstructor<V, K, D, T>,
+        parameterConstructor: ParameterConstructor<V, K, D>,
         init?: ParameterInit<V, K, D>
-    ): T;
+    ): Parameter<V, K, D>;
 
     getParam<K extends ParameterName<V>>(name: K): Parameter<V, K>;
 

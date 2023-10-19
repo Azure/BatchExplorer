@@ -10,8 +10,10 @@ import { FormImpl } from "./internal/form-impl";
 import type { Section } from "./section";
 import { ValidationStatus } from "./validation-status";
 
+export type NoDependencies = Record<never, never>;
+
 export type ParameterDependencies<
-    V extends FormValues = FormValues,
+    V extends FormValues,
     D extends string = string
 > = Record<D, ParameterName<V>>;
 
@@ -25,14 +27,17 @@ export type ParameterDependencyName<
 export type ParameterConstructor<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>,
-    T extends Parameter<V, K, D> = Parameter<V, K, D>
-> = new (form: Form<V>, name: K, init?: ParameterInit<V, K, D>) => T;
+    D extends ParameterDependencies<V> = NoDependencies
+> = new (form: Form<V>, name: K, init?: ParameterInit<V, K, D>) => Parameter<
+    V,
+    K,
+    D
+>;
 
 export interface ParameterInit<
     V extends FormValues,
-    K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    K extends ParameterName<V> = ParameterName<V>,
+    D extends ParameterDependencies<V> = NoDependencies
 > extends ValuedEntryInit<V, K> {
     label?: string;
     hideLabel?: boolean;
@@ -57,8 +62,8 @@ export interface DynamicParameterProperties<
 
 export interface Parameter<
     V extends FormValues,
-    K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    K extends ParameterName<V> = ParameterName<V>,
+    D extends ParameterDependencies<V> = NoDependencies
 > extends ValuedEntry<V, K> {
     /**
      * A reference to the form containing this parameter.
@@ -206,8 +211,8 @@ export interface Parameter<
 
 export abstract class AbstractParameter<
     V extends FormValues,
-    K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    K extends ParameterName<V> = ParameterName<V>,
+    D extends ParameterDependencies<V> = NoDependencies
 > implements Parameter<V, K, D>
 {
     private _logger: Logger;

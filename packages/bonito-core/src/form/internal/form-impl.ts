@@ -12,6 +12,7 @@ import type {
 import { Item } from "../item";
 import {
     AbstractParameter,
+    NoDependencies,
     Parameter,
     ParameterConstructor,
     ParameterDependencies,
@@ -138,13 +139,12 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
     param<
         K extends ParameterName<V>,
-        D extends ParameterDependencies<V> = ParameterDependencies<V>,
-        T extends Parameter<V, K, D> = Parameter<V, K, D>
+        D extends ParameterDependencies<V> = NoDependencies
     >(
         name: K,
-        parameterConstructor: ParameterConstructor<V, K, D, T>,
+        parameterConstructor: ParameterConstructor<V, K, D>,
         init?: ParameterInit<V, K, D>
-    ): T {
+    ): Parameter<V, K, D> {
         return new parameterConstructor(this, name, init);
     }
 

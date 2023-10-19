@@ -11,6 +11,7 @@ import type { Form, FormEventMap, FormValues, ValidationOpts } from "./form";
 import type { FormImpl } from "./internal/form-impl";
 import { Item } from "./item";
 import type {
+    NoDependencies,
     Parameter,
     ParameterConstructor,
     ParameterDependencies,
@@ -162,13 +163,12 @@ export class SubForm<
 
     param<
         SK extends ParameterName<S>,
-        D extends ParameterDependencies<S> = ParameterDependencies<S>,
-        T extends Parameter<S, SK, D> = Parameter<S, SK, D>
+        D extends ParameterDependencies<S> = NoDependencies
     >(
         name: SK,
-        parameterConstructor: ParameterConstructor<S, SK, D, T>,
+        parameterConstructor: ParameterConstructor<S, SK, D>,
         init?: ParameterInit<S, SK, D>
-    ): T {
+    ): Parameter<S, SK, D> {
         return this.form.param(name, parameterConstructor, init);
     }
 
