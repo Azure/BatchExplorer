@@ -18,11 +18,17 @@ export interface ReactForm<V extends FormValues> extends Form<V> {
     param<
         K extends ParameterName<V>,
         D extends ParameterDependencies<V> = NoDependencies,
-        VD = undefined
+        VD = unknown,
+        INIT extends ReactParameterInit<V, K, D, VD> = ReactParameterInit<
+            V,
+            K,
+            D,
+            VD
+        >
     >(
         name: K,
-        parameterConstructor: ParameterConstructor<V, K, D, VD>,
-        init?: ReactParameterInit<V, K, D, VD>
+        parameterConstructor: ParameterConstructor<V, K, D, VD, INIT>,
+        init?: INIT
     ): Parameter<V, K, D, VD>;
 }
 
@@ -35,7 +41,7 @@ export interface ReactForm<V extends FormValues> extends Form<V> {
 export function createReactForm<V extends FormValues>(
     init: FormInit<V>
 ): ReactForm<V> {
-    return new ReactFormImpl(init);
+    return new ReactFormImpl(init) as ReactForm<V>;
 }
 
 interface StandaloneForm<S> extends FormValues {

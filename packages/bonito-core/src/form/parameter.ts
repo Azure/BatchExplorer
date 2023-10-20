@@ -28,18 +28,15 @@ export type ParameterConstructor<
     V extends FormValues,
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = NoDependencies,
-    VD = undefined
-> = new (
-    form: Form<V>,
-    name: K,
-    init?: ParameterInit<V, K, D, VD>
-) => Parameter<V, K, D, VD>;
+    VD = unknown,
+    INIT extends ParameterInit<V, K, D, VD> = ParameterInit<V, K, D, VD>
+> = new (form: Form<V>, name: K, init?: INIT) => Parameter<V, K, D, VD>;
 
 export interface ParameterInit<
     V extends FormValues,
     K extends ParameterName<V> = ParameterName<V>,
     D extends ParameterDependencies<V> = NoDependencies,
-    VD = undefined
+    VD = unknown
 > extends ValuedEntryInit<V, K> {
     label?: string;
     hideLabel?: boolean;
@@ -47,8 +44,8 @@ export interface ParameterInit<
     placeholder?: string;
     dependencies?: D;
     dynamic?: DynamicParameterProperties<V, K>;
-    onValidateSync?: (value: V[K]) => ValidationStatus<VD>;
-    onValidateAsync?: (value: V[K]) => Promise<ValidationStatus<VD>>;
+    onValidateSync?(value: V[K]): ValidationStatus<VD>;
+    onValidateAsync?(value: V[K]): Promise<ValidationStatus<VD>>;
     // xxx?: VD;
 }
 
@@ -67,7 +64,7 @@ export interface Parameter<
     V extends FormValues,
     K extends ParameterName<V> = ParameterName<V>,
     D extends ParameterDependencies<V> = NoDependencies,
-    VD = undefined
+    VD = unknown
 > extends ValuedEntry<V, K> {
     /**
      * A reference to the form containing this parameter.
@@ -181,7 +178,7 @@ export interface Parameter<
      * @param value The value to validate
      * @returns A ValidationStatus object with the results of the validation
      */
-    onValidateSync?: (value: V[K]) => ValidationStatus<VD>;
+    onValidateSync?(value: V[K]): ValidationStatus<VD>;
 
     /**
      * A callback to do async validation of this parameter
@@ -189,7 +186,7 @@ export interface Parameter<
      * @param value The value to validate
      * @returns A promise which resolves to a ValidationStatus object
      */
-    onValidateAsync?: (value: V[K]) => Promise<ValidationStatus<VD>>;
+    onValidateAsync?(value: V[K]): Promise<ValidationStatus<VD>>;
 
     /**
      * Get the value of a parameter dependency but do not perform
@@ -217,7 +214,7 @@ export abstract class AbstractParameter<
     V extends FormValues,
     K extends ParameterName<V> = ParameterName<V>,
     D extends ParameterDependencies<V> = NoDependencies,
-    VD = undefined
+    VD = unknown
 > implements Parameter<V, K, D, VD>
 {
     private _logger: Logger;
@@ -324,8 +321,8 @@ export abstract class AbstractParameter<
         (this.parentForm as unknown as FormImpl<V>)._registerEntry(this);
     }
 
-    onValidateSync?: (value: V[K]) => ValidationStatus<VD>;
-    onValidateAsync?: (value: V[K]) => Promise<ValidationStatus<VD>>;
+    onValidateSync?(value: V[K]): ValidationStatus<VD>;
+    onValidateAsync?(value: V[K]): Promise<ValidationStatus<VD>>;
 
     validateSync(): ValidationStatus<VD> {
         let status: ValidationStatus<VD> | undefined;

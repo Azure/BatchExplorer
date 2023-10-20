@@ -11,25 +11,25 @@ export interface ReactParameterInit<
     V extends FormValues,
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = ParameterDependencies<V>,
-    VD = undefined
+    VD = unknown
 > extends ParameterInit<V, K, D, VD> {
-    render?: (props: FormControlProps<V, K, D>) => JSX.Element;
+    render?: (props: FormControlProps<V, K, D, VD>) => JSX.Element;
 }
 
 export interface ReactParameter<
     V extends FormValues,
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = ParameterDependencies<V>,
-    VD = undefined
+    VD = unknown
 > extends Parameter<V, K, D, VD> {
-    render?: (props: FormControlProps<V, K, D>) => JSX.Element;
+    render?: (props: FormControlProps<V, K, D, VD>) => JSX.Element;
 }
 
 export function isReactParameter<
     V extends FormValues,
     K extends ParameterName<V>,
     D extends ParameterDependencies<V>,
-    VD = undefined
+    VD = unknown
 >(param: Parameter<V, K, D, VD>): param is ReactParameter<V, K, D, VD> {
     return (param as ReactParameter<V, K, D>).render != null;
 }

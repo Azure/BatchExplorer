@@ -2,7 +2,6 @@ import {
     FormValues,
     NoDependencies,
     ParameterName,
-    StringListParameter,
     StringListVData,
 } from "@azure/bonito-core/lib/form";
 import { IconButton } from "@fluentui/react/lib/Button";
@@ -26,13 +25,7 @@ export interface StringListValidationData {
 }
 
 export function StringList<V extends FormValues, K extends ParameterName<V>>(
-    props: FormControlProps<
-        V,
-        K,
-        NoDependencies,
-        StringListVData,
-        StringListParameter<V, K>
-    >
+    props: FormControlProps<V, K, NoDependencies, StringListVData>
 ): JSX.Element {
     const { className, style, param, onChange } = props;
 

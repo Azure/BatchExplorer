@@ -140,11 +140,12 @@ export class FormImpl<V extends FormValues> implements Form<V> {
     param<
         K extends ParameterName<V>,
         D extends ParameterDependencies<V> = NoDependencies,
-        VD = undefined
+        VD = unknown,
+        INIT extends ParameterInit<V, K, D, VD> = ParameterInit<V, K, D, VD>
     >(
         name: K,
-        parameterConstructor: ParameterConstructor<V, K, D, VD>,
-        init?: ParameterInit<V, K, D, VD>
+        parameterConstructor: ParameterConstructor<V, K, D, VD, INIT>,
+        init?: INIT
     ): Parameter<V, K, D, VD> {
         return new parameterConstructor(this, name, init);
     }

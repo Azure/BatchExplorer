@@ -17,6 +17,7 @@ export function ResourceGroupDropdown<
         V,
         K,
         ResourceGroupDependencies<V>,
+        undefined,
         ResourceGroupParameter<V, K, ResourceGroupDependencies<V>>
     >
 ): JSX.Element {

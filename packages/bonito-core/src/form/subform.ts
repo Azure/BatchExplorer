@@ -164,7 +164,7 @@ export class SubForm<
     param<
         SK extends ParameterName<S>,
         D extends ParameterDependencies<S> = NoDependencies,
-        VD = undefined
+        VD = unknown
     >(
         name: SK,
         parameterConstructor: ParameterConstructor<S, SK, D, VD>,

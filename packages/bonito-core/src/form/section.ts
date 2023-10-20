@@ -1,6 +1,7 @@
 import {
     Parameter,
     ParameterDependencies,
+    ParameterConstructor,
     ParameterInit,
     ParameterName,
 } from "./parameter";
@@ -102,16 +103,13 @@ export class Section<V extends FormValues> implements Entry<V> {
 
     param<
         K extends ParameterName<V>,
-        D extends ParameterDependencies<V> = ParameterDependencies<V>
+        D extends ParameterDependencies<V> = ParameterDependencies<V>,
+        VD = unknown
     >(
         name: K,
-        parameterConstructor: new (
-            form: Form<V>,
-            name: K,
-            init?: ParameterInit<V, K, D>
-        ) => Parameter<V, K, D>,
-        init?: ParameterInit<V, K, D>
-    ): Parameter<V, K, D> {
+        parameterConstructor: ParameterConstructor<V, K, D, VD>,
+        init?: ParameterInit<V, K, D, VD>
+    ): Parameter<V, K, D, VD> {
         const paramInit = init ?? {};
         paramInit.parentSection = this;
 
