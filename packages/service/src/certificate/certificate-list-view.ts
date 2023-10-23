@@ -1,12 +1,6 @@
 import { DependencyName, getEnvironment, getLogger } from "@azure/bonito-core";
 import { MockHttpClient, MockHttpResponse } from "@azure/bonito-core/lib/http";
-import {
-    action,
-    IObservableArray,
-    makeObservable,
-    observable,
-    runInAction,
-} from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { AbstractModelListView, SelectableListView } from "../view";
 import { Certificate } from "./certificate-models";
 import type { CertificateService } from "./certificate-service";
@@ -18,26 +12,16 @@ export class CertificateListView
     extends AbstractModelListView<CertificateService, Certificate>
     implements SelectableListView<Certificate>
 {
-    @observable selectedItems: IObservableArray<Certificate>;
+    @observable selectedItems: Certificate[] = [];
     @observable batchAccount: string;
-    @observable isLoading: boolean = false;
 
     private _logger = getLogger("CertificateListView");
 
     constructor(service: CertificateService, models: Certificate[] = []) {
         super(service, models);
-        this.selectedItems = observable([]);
         // TODO: Get Batch account either from the URL or the context
         this.batchAccount = "prodtest1";
         makeObservable(this);
-    }
-
-    @action
-    update(items: Certificate[]): void {
-        this.clear();
-        for (const cert of items) {
-            this.items.push(cert);
-        }
     }
 
     firstSelection(): Certificate | null {
@@ -58,16 +42,14 @@ export class CertificateListView
 
     @action
     clearSelection(): void {
-        this.selectedItems.clear();
+        this.selectedItems = [];
     }
 
     /**
      * Gets new models from the service and updates the model list
      */
     async load(): Promise<void> {
-        runInAction(() => {
-            this.isLoading = true;
-        });
+        this.loading = true;
         // KLUDGE: Mock out the call to list certificates until HTTP auth is supported
         const httpClient: MockHttpClient = getEnvironment().getInjectable(
             DependencyName.HttpClient
@@ -113,11 +95,12 @@ export class CertificateListView
         await new Promise((resolve) => setTimeout(resolve, 1000));
         try {
             const result = await this.service.listAll();
-            this.update(result.models);
-        } finally {
             runInAction(() => {
-                this.isLoading = false;
+                this.loading = false;
+                this.items = result.models;
             });
+        } finally {
+            this.loading = false;
         }
     }
 }

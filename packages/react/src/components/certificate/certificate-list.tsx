@@ -28,8 +28,8 @@ export const CertificateList = observer((props: CertificateListProps) => {
                 { prop: "state", label: "State" },
                 { prop: "stateTransitionTime", label: "Last Updated" },
             ]}
-            items={[...view.items]}
-            hasMore={view.isLoading}
+            items={view.items}
+            hasMore={view.loading}
         />
     );
 });
