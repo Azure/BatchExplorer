@@ -13,13 +13,6 @@ import { useFormParameter, useUniqueId } from "../../hooks";
 import { FormControlProps } from "./form-control";
 import { useAppTheme } from "../../theme";
 
-// export interface StringListProps<
-//     V extends FormValues,
-//     K extends ParameterName<V>,
-//     D extends ParameterDependencies<V> = ParameterDependencies<V>
-// > extends FormControlProps<V, K, D> {
-// }
-
 export interface StringListValidationData {
     [key: number]: string;
 }
@@ -30,6 +23,7 @@ export function StringList<V extends FormValues, K extends ParameterName<V>>(
     const { className, style, param, onChange } = props;
 
     const id = useUniqueId("form-control", props.id);
+    // NOTE: controls knows validationData has type StringListVData
     const { validationData } = useFormParameter(param);
 
     // const [hasFocused, setHasFocused] = React.useState<boolean>(false);

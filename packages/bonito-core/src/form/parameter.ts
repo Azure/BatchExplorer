@@ -28,9 +28,12 @@ export type ParameterConstructor<
     V extends FormValues,
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = NoDependencies,
-    VD = unknown,
-    INIT extends ParameterInit<V, K, D, VD> = ParameterInit<V, K, D, VD>
-> = new (form: Form<V>, name: K, init?: INIT) => Parameter<V, K, D, VD>;
+    VD = unknown
+> = new (
+    form: Form<V>,
+    name: K,
+    init?: ParameterInit<V, K, D, VD>
+) => Parameter<V, K, D, VD>;
 
 export interface ParameterInit<
     V extends FormValues,
