@@ -29,7 +29,7 @@ export class ReactFormImpl<V extends FormValues> extends FormImpl<V> {
         init?: ReactParameterInit<V, K, D, VD>
     ): ReactParameter<V, K, D, VD> {
         const param = new parameterConstructor(
-            this as ReactForm<V>,
+            this,
             name,
             init
         ) as ReactParameter<V, K, D, VD>;

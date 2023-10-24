@@ -26,8 +26,6 @@ export function StringList<V extends FormValues, K extends ParameterName<V>>(
     // NOTE: controls knows validationData has type StringListVData
     const { validationData } = useFormParameter(param);
 
-    // const [hasFocused, setHasFocused] = React.useState<boolean>(false);
-
     const items = useMemo<string[]>(() => {
         const items: string[] = [];
         if (param.value && Array.isArray(param.value)) {

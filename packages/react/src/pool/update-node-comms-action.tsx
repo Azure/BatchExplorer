@@ -25,7 +25,6 @@ import { createReactForm } from "@azure/bonito-ui/lib/form";
 export type UpdateNodeCommsFormValues = {
     currentNodeCommunicationMode?: string;
     targetNodeCommunicationMode?: NodeCommunicationMode;
-    stringList?: string[];
 };
 
 export class UpdateNodeCommsAction extends AbstractAction<UpdateNodeCommsFormValues> {

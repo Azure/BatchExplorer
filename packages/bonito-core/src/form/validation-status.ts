@@ -13,36 +13,3 @@ export class ValidationStatus<VD extends undefined | any = any> {
         public data?: VD
     ) {}
 }
-
-// class A<T> {
-//     data?: T;
-// }
-
-// declare let a1: A<undefined | string>;
-
-// declare let a2: A<string>;
-
-// declare let b1: undefined | string;
-
-// declare let b2: unknown;
-
-// a1 = a2;
-// a1 = a2;
-
-// b2 = b1;
-// b2 = b1;
-// // b1 = b2;
-// // b1 = b2;
-
-// function fun1<A, B, C>(
-//     param: { a?: A; b?: B; c?: C },
-//     callback?: (data: { a?: A; b?: B; c?: C }) => void
-// ) {
-//     console.log(param, callback);
-// }
-
-// function callback(a: 1, b: 2, c:3) {
-//     console.log(a, b, c);
-// }
-
-// fun1({a:2, b:3, c:4}, callback)
