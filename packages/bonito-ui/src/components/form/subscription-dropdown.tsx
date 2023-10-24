@@ -23,7 +23,7 @@ export function SubscriptionDropdown<
         V,
         K,
         ParameterDependencies<V>,
-        undefined,
+        unknown,
         SubscriptionParameter<V, K>
     >
 ): JSX.Element {

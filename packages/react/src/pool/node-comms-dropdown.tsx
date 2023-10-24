@@ -25,7 +25,7 @@ export function NodeCommsDropdown<
         V,
         K,
         ParameterDependencies<V>,
-        undefined,
+        unknown,
         NodeCommsParameter<V, K>
     >
 ): JSX.Element {

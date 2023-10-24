@@ -9,7 +9,6 @@ import {
 import { FormImpl } from "@azure/bonito-core/lib/form/internal/form-impl";
 import { ReactItem, ReactItemInit } from "../react-item";
 import { ReactParameter, ReactParameterInit } from "../react-parameter";
-import { ReactForm } from "../react-form";
 
 /**
  * A form implementation that supports inline React components

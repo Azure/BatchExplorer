@@ -17,7 +17,7 @@ export function StorageAccountDropdown<
         V,
         K,
         StorageAccountDependencies<V>,
-        undefined,
+        unknown,
         StorageAccountParameter<V, K, StorageAccountDependencies<V>>
     >
 ): JSX.Element {

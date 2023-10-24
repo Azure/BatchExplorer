@@ -49,7 +49,6 @@ export interface ParameterInit<
     dynamic?: DynamicParameterProperties<V, K>;
     onValidateSync?(value: V[K]): ValidationStatus<VD>;
     onValidateAsync?(value: V[K]): Promise<ValidationStatus<VD>>;
-    // xxx?: VD;
 }
 
 export interface DynamicParameterProperties<
