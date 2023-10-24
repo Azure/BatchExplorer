@@ -197,6 +197,10 @@ mat-button-toggle-group {
     }
 }
 
+mat-calendar .mat-calendar-table-header {
+    color: rgba(0, 0, 0, 0.87);
+}
+
 .cdk-high-contrast-active .mat-drawer.mat-drawer-end {
     border-left: none;
 }

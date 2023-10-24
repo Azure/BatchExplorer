@@ -73,7 +73,7 @@ bl-quick-list-row-render {
         padding: 5px;
 
         i {
-            padding-left: 4px;
+            padding: 2px;
         }
 
         .fa-hourglass-half {
@@ -123,7 +123,6 @@ bl-quick-list-row-render {
     .quick-list-details {
         flex: 1 1 auto;
         overflow: hidden;
-        padding: 3px;
         text-overflow: ellipsis;
         min-width: 0;
 
@@ -143,6 +142,10 @@ bl-quick-list-row-render {
             right: 0;
 
         }
+    }
+
+    .focus-outline.focus-visible {
+        outline-color: $card-background;
     }
 }
 
