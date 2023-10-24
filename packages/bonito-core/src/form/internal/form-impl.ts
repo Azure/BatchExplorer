@@ -296,10 +296,6 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         this._validationSnapshot = snapshot;
         this.validateSync(snapshot, opts);
 
-        // Fire a validation event to allow updates after synchronous
-        // validation to happen immediately
-        this._emitValidateEvent(snapshot);
-
         // Yield before doing any async validation to check if another validation
         // attempt has come in.
         let delayMs = 0;
@@ -320,26 +316,13 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
         await this.validateAsync(snapshot, opts);
 
-        if (this._checkAndCancelValidationSnapshot(snapshot, opts.force)) {
-            return snapshot;
-        }
-
-        // This snapshot is done, and is now the current in-effect snapshot
-        snapshot.validationCompleteDeferred.resolve();
-        snapshot.updateOverallStatus();
-        this._validationSnapshot = snapshot;
-
-        this._emitValidateEvent(snapshot);
-
-        if (!snapshot.overallStatus) {
-            // Hitting this indicates a bug. This shouldn't ever be undefined
-            // at this point.
-            throw new Error("Failed to compute overall validation status");
-        }
-
         return snapshot;
     }
 
+    /**
+     * Perform synchronous validation
+     * @param opts Validation options
+     */
     validateSync(
         snapshot: ValidationSnapshot<V>,
         opts: ValidationOpts
@@ -373,9 +356,17 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
         snapshot.syncValidationComplete = true;
 
+        // Fire a validation event to allow updates after synchronous
+        // validation to happen immediately
+        this._emitValidateEvent(snapshot);
+
         return snapshot;
     }
 
+    /**
+     * Perform asynchronous validation
+     * @param opts Validation options
+     */
     async validateAsync(
         snapshot: ValidationSnapshot<V>,
         opts: ValidationOpts
@@ -442,6 +433,23 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         }
 
         snapshot.asyncValidationComplete = true;
+
+        if (this._checkAndCancelValidationSnapshot(snapshot, opts.force)) {
+            return snapshot;
+        }
+
+        // This snapshot is done, and is now the current in-effect snapshot
+        snapshot.validationCompleteDeferred.resolve();
+        snapshot.updateOverallStatus();
+        this._validationSnapshot = snapshot;
+
+        this._emitValidateEvent(snapshot);
+
+        if (!snapshot.overallStatus) {
+            // Hitting this indicates a bug. This shouldn't ever be undefined
+            // at this point.
+            throw new Error("Failed to compute overall validation status");
+        }
 
         return snapshot;
     }

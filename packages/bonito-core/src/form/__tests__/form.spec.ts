@@ -528,6 +528,33 @@ describe("Form tests", () => {
         expect(validationStatus).toBe(form.validationStatus);
     });
 
+    test("Subform validate event", async () => {
+        type HelloWorldFormValues = {
+            message: string;
+        };
+
+        const form = createForm<HelloWorldFormValues>({
+            values: {
+                message: "Hello world!",
+            },
+        });
+
+        const parentForm = createForm({
+            values: {
+                child: {},
+            },
+        });
+
+        parentForm.subForm("child", form);
+
+        const validateSpy = jest.fn();
+        form.on("validate", validateSpy);
+        parentForm.validate();
+        expect(validateSpy).toHaveBeenCalled();
+        await parentForm.waitForValidation();
+        expect(validateSpy).toHaveBeenCalledTimes(2);
+    });
+
     test("Events", () => {
         type ElfType = {
             name: string;

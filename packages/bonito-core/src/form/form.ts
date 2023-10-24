@@ -130,24 +130,6 @@ export interface Form<V extends FormValues> {
     validate(opts?: ValidationOpts): Promise<ValidationSnapshot<V>>;
 
     /**
-     * Perform synchronous validation
-     * @param opts Validation options
-     */
-    validateSync(
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ): ValidationSnapshot<V>;
-
-    /**
-     * Perform asynchronous validation
-     * @param opts Validation options
-     */
-    validateAsync(
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ): Promise<ValidationSnapshot<V>>;
-
-    /**
      * Returns a promise that resolves when any current form validation is
      * finished. If there is no validation in progress, returns a promise which
      * resolves to either undefined (if no validation has been performed) or the
