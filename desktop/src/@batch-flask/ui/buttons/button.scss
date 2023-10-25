@@ -180,5 +180,9 @@ bl-button {
 @media (forced-colors: active) {
     bl-button {
         border: 1px solid currentColor;
+
+        &.disabled {
+            opacity: 0.3;
+        }
     }
 }
