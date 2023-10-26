@@ -11,7 +11,7 @@
             (contextmenu)="onContextMenu(favorite)">
 
             <bl-clickable class="dropdown-item favorite-item" (do)="gotoFavorite(favorite)">
-                <span aria-hidden="true">
+                <span attr.aria-label="{{favorite.name || favorite.id}}">
                     <i class="entity-type fa" [ngClass]="entityIcon(favorite)"
                     [title]="entityType(favorite)"></i>
                     {{favorite.name || favorite.id}}
