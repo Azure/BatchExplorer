@@ -1,15 +1,14 @@
-import { action, computed, IObservableArray, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 import { View } from "./view";
 
 export interface ModelListView<S, T> extends View {
     readonly service: S;
-    readonly items: IObservableArray<T>;
+    readonly items: T[];
     length: number;
-    update(items: T[]): void;
 }
 
 export interface SelectableListView<T> {
-    readonly selectedItems: IObservableArray<T>;
+    readonly selectedItems: T[];
     selectByIndex(index: number): void;
     clearSelection(): void;
 }
@@ -19,8 +18,8 @@ export abstract class AbstractModelListView<S, T>
 {
     readonly service: S;
 
-    @observable items: IObservableArray<T>;
-    @observable loading: boolean;
+    @observable items: T[] = [];
+    @observable loading: boolean = false;
 
     @computed
     get length(): number {
@@ -29,15 +28,11 @@ export abstract class AbstractModelListView<S, T>
 
     constructor(service: S, items: T[] = []) {
         this.service = service;
-        this.items = observable([]);
-        this.loading = false;
-        this.update(items);
+        this.items = items;
     }
 
     @action
     clear(): void {
-        this.items.clear();
+        this.items = [];
     }
-
-    abstract update(items: T[]): void;
 }
