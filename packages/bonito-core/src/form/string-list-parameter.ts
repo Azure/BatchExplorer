@@ -3,9 +3,9 @@ import { FormValues } from "./form";
 import { AbstractParameter, ParameterName } from "./parameter";
 import { ValidationStatus } from "./validation-status";
 
-export type StringListVData = {
+export interface StringListvalidationDetails {
     [key: number]: string;
-};
+}
 
 /**
  * A parameter with a value that is a list of strings
@@ -23,7 +23,7 @@ export class StringListParameter<
     }
     private _validate(): ValidationStatus {
         let hasError = false;
-        const vData: StringListVData = {};
+        const vData: StringListvalidationDetails = {};
         if (this.value != null && Array.isArray(this.value)) {
             for (const [i, v] of this.value.entries()) {
                 if (typeof v !== "string") {

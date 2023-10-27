@@ -36,12 +36,13 @@ export function StringList<V extends FormValues, K extends ParameterName<V>>(
 
     const onItemChange = useCallback(
         (index: number, value: string) => {
+            const newItems = [...items];
             if (index === items.length - 1) {
                 // Last item, add a new one
-                items.push("");
+                newItems.push("");
             }
-            items[index] = value;
-            param.value = items.slice(0, items.length - 1) as V[K];
+            newItems[index] = value;
+            param.value = newItems.slice(0, newItems.length - 1) as V[K];
             onChange?.(null, param.value);
         },
         [items, param, onChange]
@@ -49,8 +50,9 @@ export function StringList<V extends FormValues, K extends ParameterName<V>>(
 
     const onItemDelete = useCallback(
         (index: number) => {
-            items.splice(index, 1);
-            param.value = items.slice(0, items.length - 1) as V[K];
+            const newItems = [...items];
+            newItems.splice(index, 1);
+            param.value = newItems.slice(0, newItems.length - 1) as V[K];
             onChange?.(null, param.value);
         },
         [items, param, onChange]
