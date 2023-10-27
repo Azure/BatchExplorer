@@ -7,6 +7,7 @@ export class ValidationStatus {
     constructor(
         public level: "ok" | "warn" | "error" | "canceled",
         public message?: string,
+        // TODO: Make this a generic type
         public details?: unknown
     ) {}
 }
