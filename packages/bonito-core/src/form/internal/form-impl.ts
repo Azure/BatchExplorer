@@ -71,10 +71,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
     private _forcedValidationStatus?: ValidationStatus;
 
-    _emitter = new EventEmitter() as TypedEventEmitter<{
-        change: (newValues: V, oldValues: V) => void;
-        validate: (snapshot: ValidationSnapshot<V>) => void;
-    }>;
+    _emitter = new EventEmitter() as TypedEventEmitter<FormEventMap<V>>;
 
     get childEntriesCount(): number {
         return this._childEntries.size;
@@ -206,6 +203,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
         if (propsChanged) {
             this._emitChangeEvent(this.values, this.values);
         }
+        this._emitEvaluateEvent(propsChanged);
         return propsChanged;
     }
 
@@ -253,6 +251,10 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
     private _emitValidateEvent(snapshot: ValidationSnapshot<V>) {
         this._emitter.emit("validate", snapshot);
+    }
+
+    private _emitEvaluateEvent(propsChanged: boolean) {
+        this._emitter.emit("evaluate", propsChanged);
     }
 
     setValues(values: V): void {

@@ -32,9 +32,15 @@ export function useForm<V extends FormValues, DataResult = never>(
          * @param snapshot The latest validation snapshot
          */
         onValidate?: (snapshot?: ValidationSnapshot<V>) => void;
+
+        /**
+         * Callback for whenever the form.evaluate() is called
+         * @param propsChanged True if the props have changed during evaluation
+         */
+        onEvaluate?: (propsChanged?: boolean) => void;
     } = {}
 ) {
-    const { onFormChange, onValidate } = opts;
+    const { onFormChange, onValidate, onEvaluate } = opts;
 
     const [values, setValues] = useState<V>(form.values);
     const [validationSnapshot, setValidationSnapshot] = useState<
@@ -61,11 +67,18 @@ export function useForm<V extends FormValues, DataResult = never>(
             }
         });
 
+        const evaluateHandler = form.on("evaluate", (propsChanged) => {
+            if (onEvaluate) {
+                onEvaluate(propsChanged);
+            }
+        });
+
         return () => {
             form.off("change", changeHandler);
             form.off("validate", validationHandler);
+            form.off("evaluate", evaluateHandler);
         };
-    }, [form, onFormChange, onValidate]);
+    }, [form, onFormChange, onValidate, onEvaluate]);
 
     return {
         validationSnapshot,

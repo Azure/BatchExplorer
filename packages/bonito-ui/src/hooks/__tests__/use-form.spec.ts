@@ -10,7 +10,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { initMockBrowserEnvironment } from "../../environment";
 import { useForm } from "../use-form";
 
-describe("useFormParameter hook", () => {
+describe("useForm hook", () => {
     beforeEach(() => initMockEnvironment());
 
     beforeEach(() => initMockBrowserEnvironment());
@@ -35,22 +35,21 @@ describe("useFormParameter hook", () => {
             },
         });
 
-        let changeCount = 0;
-        let validateCount = 0;
+        const onChangeSpy = jest.fn();
+        const onValidateSpy = jest.fn();
+        const onEvaluateSpy = jest.fn();
 
         const { result, waitForNextUpdate } = renderHook(() => {
             return useForm(form, {
-                onFormChange: () => {
-                    changeCount++;
-                },
-                onValidate: () => {
-                    validateCount++;
-                },
+                onFormChange: onChangeSpy,
+                onValidate: onValidateSpy,
+                onEvaluate: onEvaluateSpy,
             });
         });
 
-        expect(changeCount).toBe(0);
-        expect(validateCount).toBe(0);
+        expect(onChangeSpy).toBeCalledTimes(0);
+        expect(onValidateSpy).toBeCalledTimes(0);
+        expect(onEvaluateSpy).toBeCalledTimes(0);
         expect(result.current.validationSnapshot).toBeUndefined();
 
         act(() => {
@@ -58,7 +57,7 @@ describe("useFormParameter hook", () => {
         });
 
         // Sync validation has happened
-        expect(validateCount).toBe(1);
+        expect(onValidateSpy).toBeCalledTimes(1);
         expect(result.current.validationSnapshot?.syncValidationComplete).toBe(
             true
         );
@@ -69,8 +68,11 @@ describe("useFormParameter hook", () => {
         await waitForNextUpdate();
 
         // Async validation has happened
-        expect(changeCount).toBe(1);
-        expect(validateCount).toBe(2);
+        expect(onChangeSpy).toBeCalledTimes(1);
+        expect(onValidateSpy).toBeCalledTimes(2);
+        // No manual evaluation, so no onEvaluate call
+        expect(onEvaluateSpy).toBeCalledTimes(0);
+
         expect(result.current.validationSnapshot?.asyncValidationComplete).toBe(
             true
         );

@@ -54,6 +54,9 @@ describe("Form tests", () => {
         const { form, hideMessageParam, messageParam } =
             createDynamicParamsForm();
 
+        const onEvaluateSpy = jest.fn();
+        form.on("evaluate", onEvaluateSpy);
+
         // Test dynamic property evaluation
         expect(messageParam.hidden).toBe(false);
         expect(messageParam.label).toEqual("Not evaluated yet");
@@ -63,6 +66,8 @@ describe("Form tests", () => {
         hideMessageParam.value = true;
         expect(messageParam.hidden).toBe(true);
         expect(messageParam.label).toEqual("Hidden message");
+
+        expect(onEvaluateSpy).toHaveBeenCalledTimes(1);
     });
 
     test("Subform dynamic parameters", () => {
@@ -75,6 +80,10 @@ describe("Form tests", () => {
             },
         });
 
+        const onEvaluateSpy = jest.fn();
+        form.on("evaluate", onEvaluateSpy);
+        parentForm.on("evaluate", onEvaluateSpy);
+
         parentForm.subForm("child", form);
         // Test dynamic property evaluation
         expect(messageParam.hidden).toBe(false);
@@ -85,6 +94,9 @@ describe("Form tests", () => {
         hideMessageParam.value = true;
         expect(messageParam.hidden).toBe(true);
         expect(messageParam.label).toEqual("Hidden message");
+
+        // one for the parent form, one for the child
+        expect(onEvaluateSpy).toHaveBeenCalledTimes(2);
     });
 
     test("Multiple parameters with nested sections", async () => {
