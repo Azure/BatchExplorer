@@ -9,7 +9,7 @@ import { FormControlProps } from "./form-control";
 import { useAppTheme } from "../../theme";
 import { translate } from "@azure/bonito-core";
 
-export interface StringListvalidationDetails {
+export interface StringListValidationDetails {
     [key: number]: string;
 }
 
@@ -20,7 +20,7 @@ export function StringList<V extends FormValues, K extends ParameterName<V>>(
 
     const id = useUniqueId("form-control", props.id);
     const validationDetails = useFormParameter(param)
-        .validationDetails as StringListvalidationDetails;
+        .validationDetails as StringListValidationDetails;
 
     const items = useMemo<string[]>(() => {
         const items: string[] = [];
@@ -140,35 +140,36 @@ function useStringListItemStyles(props: StringListItemProps) {
     const theme = useAppTheme();
     const { disableDelete } = props;
 
-    const itemPadding = {
-        padding: "11px 8px 11px 12px",
-    };
-
-    return {
-        container: {
-            root: {
-                ":hover": {
-                    backgroundColor: theme.palette.neutralLighter,
+    return React.useMemo(() => {
+        const itemPadding = {
+            padding: "11px 8px 11px 12px",
+        };
+        return {
+            container: {
+                root: {
+                    ":hover": {
+                        backgroundColor: theme.palette.neutralLighter,
+                    },
                 },
             },
-        },
-        input: {
-            root: {
-                ...itemPadding,
+            input: {
+                root: {
+                    ...itemPadding,
+                },
+                field: {
+                    height: "24px",
+                },
+                fieldGroup: {
+                    height: "24px",
+                    "box-sizing": "content-box",
+                },
             },
-            field: {
-                height: "24px",
+            button: {
+                root: {
+                    ...itemPadding,
+                    visibility: disableDelete ? "hidden" : "initial",
+                },
             },
-            fieldGroup: {
-                height: "24px",
-                "box-sizing": "content-box",
-            },
-        },
-        button: {
-            root: {
-                ...itemPadding,
-                visibility: disableDelete ? "hidden" : "initial",
-            },
-        },
-    };
+        };
+    }, [theme.palette.neutralLighter, disableDelete]);
 }

@@ -21,6 +21,7 @@ import { FormControlResolver } from "./form-control-resolver";
 import { LocationDropdown } from "./location-dropdown";
 import { ResourceGroupDropdown } from "./resource-group-dropdown";
 import { StorageAccountDropdown } from "./storage-account-dropdown";
+import { StringList } from "./string-list";
 import { SubscriptionDropdown } from "./subscription-dropdown";
 import { TextField } from "./text-field";
 
@@ -43,7 +44,7 @@ export class DefaultFormControlResolver implements FormControlResolver {
             );
         } else if (param instanceof StringListParameter) {
             return (
-                <TextField
+                <StringList
                     id={id}
                     key={param.name}
                     param={param}

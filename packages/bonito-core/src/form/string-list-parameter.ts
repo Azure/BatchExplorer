@@ -3,7 +3,7 @@ import { FormValues } from "./form";
 import { AbstractParameter, ParameterName } from "./parameter";
 import { ValidationStatus } from "./validation-status";
 
-export interface StringListvalidationDetails {
+export interface StringListValidationDetails {
     [key: number]: string;
 }
 
@@ -23,7 +23,7 @@ export class StringListParameter<
     }
     private _validate(): ValidationStatus {
         let hasError = false;
-        const vData: StringListvalidationDetails = {};
+        const vData: StringListValidationDetails = {};
         if (this.value != null && Array.isArray(this.value)) {
             for (const [i, v] of this.value.entries()) {
                 if (typeof v !== "string") {
