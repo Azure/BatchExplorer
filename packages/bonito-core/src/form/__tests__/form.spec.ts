@@ -54,6 +54,9 @@ describe("Form tests", () => {
         const { form, hideMessageParam, messageParam } =
             createDynamicParamsForm();
 
+        const onEvaluateSpy = jest.fn();
+        form.on("evaluate", onEvaluateSpy);
+
         // Test dynamic property evaluation
         expect(messageParam.hidden).toBe(false);
         expect(messageParam.label).toEqual("Not evaluated yet");
@@ -63,6 +66,8 @@ describe("Form tests", () => {
         hideMessageParam.value = true;
         expect(messageParam.hidden).toBe(true);
         expect(messageParam.label).toEqual("Hidden message");
+
+        expect(onEvaluateSpy).toHaveBeenCalledTimes(1);
     });
 
     test("Subform dynamic parameters", () => {
@@ -75,6 +80,10 @@ describe("Form tests", () => {
             },
         });
 
+        const onEvaluateSpy = jest.fn();
+        form.on("evaluate", onEvaluateSpy);
+        parentForm.on("evaluate", onEvaluateSpy);
+
         parentForm.subForm("child", form);
         // Test dynamic property evaluation
         expect(messageParam.hidden).toBe(false);
@@ -85,6 +94,9 @@ describe("Form tests", () => {
         hideMessageParam.value = true;
         expect(messageParam.hidden).toBe(true);
         expect(messageParam.label).toEqual("Hidden message");
+
+        // one for the parent form, one for the child
+        expect(onEvaluateSpy).toHaveBeenCalledTimes(2);
     });
 
     test("Multiple parameters with nested sections", async () => {
@@ -526,6 +538,33 @@ describe("Form tests", () => {
         // Form's validation status and the one returned by waitForValidation()
         // should be the exact same object reference
         expect(validationStatus).toBe(form.validationStatus);
+    });
+
+    test("Subform validate event", async () => {
+        type HelloWorldFormValues = {
+            message: string;
+        };
+
+        const form = createForm<HelloWorldFormValues>({
+            values: {
+                message: "Hello world!",
+            },
+        });
+
+        const parentForm = createForm({
+            values: {
+                child: {},
+            },
+        });
+
+        parentForm.subForm("child", form);
+
+        const validateSpy = jest.fn();
+        form.on("validate", validateSpy);
+        parentForm.validate();
+        expect(validateSpy).toHaveBeenCalled();
+        await parentForm.waitForValidation();
+        expect(validateSpy).toHaveBeenCalledTimes(2);
     });
 
     test("Events", () => {

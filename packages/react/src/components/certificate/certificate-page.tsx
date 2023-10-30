@@ -19,6 +19,14 @@ export const CertificatePage = observer(() => {
         new CertificateListView(new CertificateService())
     );
 
+    const onCertificateSelected = React.useCallback(
+        (_, index) => {
+            certListView.clearSelection();
+            certListView.selectByIndex(index);
+        },
+        [certListView]
+    );
+
     useAsyncEffect(async () => {
         await certListView.load();
     }, [certListView]);
@@ -27,10 +35,7 @@ export const CertificatePage = observer(() => {
         <Stack tokens={{ childrenGap: 16 }}>
             <CertificateList
                 view={certListView}
-                onCertificateSelected={(_, index) => {
-                    certListView.clearSelection();
-                    certListView.selectByIndex(index);
-                }}
+                onCertificateSelected={onCertificateSelected}
             />
             <DisplayPane
                 title="Certificates"

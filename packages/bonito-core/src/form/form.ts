@@ -38,6 +38,7 @@ export type ValidationOpts = {
 export type FormEventMap<V extends FormValues> = {
     change: (newValues: V, oldValues: V) => void;
     validate: (snapshot: ValidationSnapshot<V>) => void;
+    evaluate: (propsChanged: boolean) => void;
 };
 
 /**
@@ -128,24 +129,6 @@ export interface Form<V extends FormValues> {
      * @param opts Validation options
      */
     validate(opts?: ValidationOpts): Promise<ValidationSnapshot<V>>;
-
-    /**
-     * Perform synchronous validation
-     * @param opts Validation options
-     */
-    validateSync(
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ): ValidationSnapshot<V>;
-
-    /**
-     * Perform asynchronous validation
-     * @param opts Validation options
-     */
-    validateAsync(
-        snapshot: ValidationSnapshot<V>,
-        opts: ValidationOpts
-    ): Promise<ValidationSnapshot<V>>;
 
     /**
      * Returns a promise that resolves when any current form validation is

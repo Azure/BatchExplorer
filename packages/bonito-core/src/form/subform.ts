@@ -220,14 +220,14 @@ export class SubForm<
         snapshot: ValidationSnapshot<S>,
         opts: ValidationOpts
     ): ValidationSnapshot<S> {
-        return this.form.validateSync(snapshot, opts);
+        return (this.form as FormImpl<S>).validateSync(snapshot, opts);
     }
 
     async validateAsync(
         snapshot: ValidationSnapshot<S>,
         opts: ValidationOpts
     ): Promise<ValidationSnapshot<S>> {
-        return this.form.validateAsync(snapshot, opts);
+        return (this.form as FormImpl<S>).validateAsync(snapshot, opts);
     }
 
     forceValidationStatus(status: ValidationStatus): void {
