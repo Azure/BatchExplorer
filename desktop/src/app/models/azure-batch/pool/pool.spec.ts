@@ -1,4 +1,4 @@
-import { ContainerType } from "app/models";
+import { ContainerRegistry, ContainerType } from "app/models";
 import { List } from "immutable";
 import { Pool } from "./pool";
 
@@ -13,7 +13,7 @@ describe("Pool Model", () => {
                             username: "abc",
                             password: "foo",
                             registryServer: "hub.docker.com",
-                        },
+                        } as ContainerRegistry,
                     ],
                 },
             },

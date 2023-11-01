@@ -6,7 +6,7 @@ import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
 import { FormModule } from "@batch-flask/ui/form";
 import { ContainerConfigurationAttributes, ContainerType } from "app/models";
-import { ContainerConfigurationDto } from "app/models/dtos";
+import { ContainerConfigurationDto, ContainerRegistryDto } from "app/models/dtos";
 import { ContainerConfigurationPickerComponent } from "./container-configuration-picker.component";
 import { ContainerImagesPickerComponent } from "./images-picker/container-images-picker.component";
 import { ContainerRegistryPickerComponent } from "./registry-picker/container-registry-picker.component";
@@ -97,7 +97,7 @@ describe("ContainerConfigurationPickerComponent", () => {
             type: ContainerType.DockerCompatible,
             containerImageNames: [],
             containerRegistries: [
-                { username: "foo", password: "pass123!", registryServer: "https://bar.com" },
+                { username: "foo", password: "pass123!", registryServer: "https://bar.com" } as ContainerRegistryDto,
             ],
         }));
     });

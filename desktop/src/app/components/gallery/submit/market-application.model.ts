@@ -38,9 +38,12 @@ export class NcjParameterWrapper {
     }
 
     private _computeDefaultValue() {
-        if (this.param.defaultValue) {
-            this.defaultValue = this.param.defaultValue;
+        let defaultValue = this.param.defaultValue;
+        if (typeof defaultValue === "string" &&
+            defaultValue.toLowerCase().trim() === "none") {
+            defaultValue = "";
         }
+        this.defaultValue = this.param.defaultValue = defaultValue;
     }
 
     private _computeDescription() {

@@ -56,13 +56,12 @@ export function ListProp<T>(type: any) {
     };
 }
 
-export function Model() {
+export function Model(name?: string) {
     return <T extends new(...args: any[]) => {}>(ctr: T) => {
         if (!(ctr.prototype instanceof Record)) {
             throw new RecordMissingExtendsError(ctr);
         }
-
-        return (class extends ctr {
+        const model = (class extends ctr {
             constructor(...args: any[]) {
                 const [data] = args;
                 if (data instanceof ctr) {
@@ -72,5 +71,7 @@ export function Model() {
                 (this as any)._completeInitialization();
             }
         });
+        Object.defineProperty(model, "name", { value: name || ctr.name });
+        return model;
     };
 }
