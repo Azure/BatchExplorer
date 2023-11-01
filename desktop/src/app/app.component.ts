@@ -114,9 +114,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
     private async _initWorkspaces() {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const adminWorkspace = JSON.parse(require("app/components/workspace/json-templates/admin-workspace.json"));
+        const adminWorkspace = JSON.parse(require("app/components/workspace/json-templates/admin-workspace.json").default);
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templates/end-user-workspace.json"));
+        const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templates/end-user-workspace.json").default);
         this.workspaceService.init([
             new Workspace({ ...adminWorkspace }),
             new Workspace({ ...endUserWorkspace }),

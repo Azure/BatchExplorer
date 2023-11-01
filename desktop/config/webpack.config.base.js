@@ -3,7 +3,7 @@ const helpers = require("./helpers");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const { AngularCompilerPlugin } = require("@ngtools/webpack");
+const { AngularWebpackPlugin } = require("@ngtools/webpack");
 const { commonRules } = require("./webpack.common");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
@@ -44,11 +44,13 @@ const baseConfig = {
     },
     plugins: [
         new MonacoWebpackPlugin(),
-        new AngularCompilerPlugin({
-            skipCodeGeneration: !AOT,
-            tsConfigPath: "./tsconfig.browser.json",
-            mainPath: "./src/app/app.ts",              // will auto-detect the root NgModule.
-            sourceMap: true,
+        new AngularWebpackPlugin({
+            // skipCodeGeneration: !AOT,
+            tsconfig: "./tsconfig.browser.json",
+            // mainPath: "./src/app/app.ts",              // will auto-detect the root NgModule.
+            compilerOptions:{
+                sourceMap: true,
+            }
             // forkTypeChecker: !AOT,
         }),
         new CopyWebpackPlugin({
