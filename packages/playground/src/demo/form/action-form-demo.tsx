@@ -1,6 +1,7 @@
 import { AbstractAction, Action } from "@azure/bonito-core/lib/action";
 import {
     Form,
+    NumberParameter,
     StringParameter,
     ValidationStatus,
 } from "@azure/bonito-core/lib/form";
@@ -19,14 +20,18 @@ import * as React from "react";
 import { DemoComponentContainer } from "../../layout/demo-component-container";
 import { DemoControlContainer } from "../../layout/demo-control-container";
 import { DemoPane } from "../../layout/demo-pane";
-import { ActionForm, Dropdown } from "@azure/bonito-ui/lib/components/form";
+import {
+    ActionForm,
+    Dropdown,
+    TabSelector,
+} from "@azure/bonito-ui/lib/components/form";
 
 type CarFormValues = {
     subscriptionId?: string;
     make?: string;
     model?: string;
     description?: string;
-    milesPerChange?: number;
+    milesPerCharge?: number;
 };
 
 class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
@@ -34,7 +39,7 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
 
     async onInitialize(): Promise<CarFormValues> {
         return {
-            milesPerChange: 300,
+            milesPerCharge: 300,
         };
     }
 
@@ -42,6 +47,23 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
         const form = createReactForm<CarFormValues>({
             title: "Example Form",
             values: initialValues,
+        });
+
+        form.param("milesPerCharge", NumberParameter, {
+            label: "Miles per charge",
+            render: (props) => {
+                return (
+                    <TabSelector
+                        options={[
+                            { value: 100 },
+                            { value: 200 },
+                            { value: 300 },
+                            { value: 400 },
+                        ]}
+                        {...props}
+                    />
+                );
+            },
         });
 
         form.param("subscriptionId", SubscriptionParameter, {
