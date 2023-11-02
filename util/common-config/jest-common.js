@@ -131,6 +131,10 @@ function getCombinedResourceStrings() {
             __dirname,
             "../../packages/playground/resources/i18n/json/resources.en.json"
         )),
+        require(path.join(
+            __dirname,
+            "../../web/resources/i18n/resources.en.json"
+        )),
     ];
 
     const allResourceStrings = {};
