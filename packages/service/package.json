@@ -26,6 +26,7 @@
     "clean:esm": "bux rmrf ./lib",
     "clean:cjs": "bux rmrf ./lib-cjs",
     "clean:generated": "bux rmrf ./src/ui-service/generated",
+    "generate:arm-client": "autorest --typescript swagger/README.md",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
     "test:all": "npm run test:coverage",
@@ -63,13 +64,19 @@
     "tslib": "~2.3.1"
   },
   "dependencies": {
+    "@azure-rest/core-client": "^1.1.4",
     "@azure/bonito-core": "^1.0.0",
-    "@batch/arm-batch-rest": "^1.0.0"
+    "@azure/core-auth": "^1.3.0",
+    "@azure/core-lro": "^2.2.0",
+    "@azure/core-paging": "^1.2.0",
+    "@azure/core-rest-pipeline": "^1.8.0",
+    "@azure/logger": "^1.0.0"
   },
   "devDependencies": {
     "@batch/common-config": "^1.0.0",
     "@types/jest": "^27.0.1",
     "@types/node": "20.5.4",
+    "autorest": "^3.6.3",
     "jest": "^27.1.0",
     "jest-junit": "^12.2.0",
     "ts-jest": "^27.0.5"
@@ -78,5 +85,6 @@
     "lib",
     "lib-cjs",
     "resources"
-  ]
+  ],
+  "sideEffects": false
 }

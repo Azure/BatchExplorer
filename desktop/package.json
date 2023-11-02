@@ -187,6 +187,7 @@
     "yesno": "^0.0.1"
   },
   "dependencies": {
+    "@azure/core-util": "1.4.0",
     "@angular/animations": "^11.0.0",
     "@angular/cdk": "^11.0.0",
     "@angular/common": "^11.0.0",
@@ -247,6 +248,7 @@
   },
   "overrides": {
     "json5": "^2.2.3",
-    "ajv": "^6.12.6"
+    "ajv": "^6.12.6",
+    "@azure/core-util": "1.4.0"
   }
 }

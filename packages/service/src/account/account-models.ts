@@ -1,1 +1,1 @@
-export { BatchAccountOutput } from "@batch/arm-batch-rest";
+export { BatchAccountOutput } from "../internal/arm-batch-rest";

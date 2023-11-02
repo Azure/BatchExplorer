@@ -94,5 +94,6 @@
     "lib",
     "lib-cjs",
     "resources"
-  ]
+  ],
+  "sideEffects": false
 }

@@ -13,6 +13,10 @@ import {
 } from "@azure/bonito-core";
 import { AbstractFakeSet, FakeSet } from "@azure/bonito-core/lib/test-util";
 import { BatchAccountOutput } from "../account/account-models";
+import {
+    BatchNodeOutput,
+    BatchNodeVMExtensionOutput,
+} from "../node/node-models";
 import { Pool, PoolOutput } from "../pool/pool-models";
 
 /**
@@ -59,15 +63,28 @@ export interface BatchFakeSet extends FakeSet {
      * @param subscriptionId The full ARM resource ID of the account
      */
     listPoolsByAccount(accountId: string): PoolOutput[];
+
+    listBatchNodes(poolId: string): BatchNodeOutput[];
+
+    listBatchNodeExtensions(nodeId: string): BatchNodeVMExtensionOutput[];
 }
 
-export abstract class AbstractBatchFakeSet extends AbstractFakeSet {
+export abstract class AbstractBatchFakeSet
+    extends AbstractFakeSet
+    implements BatchFakeSet
+{
     abstract defaultTenantArmId: string;
 
     protected abstract batchAccounts: {
         [accountId: string]: BatchAccountOutput;
     };
     protected abstract batchPools: { [poolId: string]: PoolOutput };
+
+    protected abstract batchNodes: { [poolId: string]: BatchNodeOutput[] };
+
+    protected abstract batchNodeExtensions: {
+        [nodeId: string]: BatchNodeVMExtensionOutput[];
+    };
 
     getBatchAccount(batchAccountId: string): BatchAccountOutput | undefined {
         return this.batchAccounts[batchAccountId.toLowerCase()];
@@ -125,6 +142,14 @@ export abstract class AbstractBatchFakeSet extends AbstractFakeSet {
         }
 
         return this.patchPool(pool);
+    }
+
+    listBatchNodes(poolId: string): BatchNodeOutput[] {
+        return this.batchNodes[poolId] ?? [];
+    }
+
+    listBatchNodeExtensions(nodeId: string): BatchNodeVMExtensionOutput[] {
+        return this.batchNodeExtensions[nodeId] ?? [];
     }
 }
 
@@ -507,6 +532,7 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                     userAccounts: [
                         {
                             name: "username1",
+                            password: "password1",
                             elevationLevel: "Admin",
                             linuxUserConfiguration: {
                                 uid: 1234,
@@ -525,6 +551,84 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                     },
                 },
             },
+    };
+
+    batchNodes: { [poolId: string]: BatchNodeOutput[] } = {
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1":
+            [
+                {
+                    id: "tvmps_id1",
+                    url: "https://account.region.batch.azure.com/pools/hobopool1/nodes/tvmps_id1",
+                    state: "starting",
+                    schedulingState: "enabled",
+                    stateTransitionTime: "2023-11-09T07:20:55.000Z",
+                    allocationTime: "2023-11-09T07:20:45.000Z",
+                    ipAddress: "10.0.0.4",
+                    affinityId:
+                        "TVM:tvmps_7b5797648c5d43f7a15b952e5ada3c082ccac8de5eb95f5518ab1242bc79aa3b_d",
+                    vmSize: "standard_d2_v2",
+                    totalTasksRun: 0,
+                    runningTasksCount: 0,
+                    runningTaskSlotsCount: 0,
+                    totalTasksSucceeded: 0,
+                    isDedicated: true,
+                    endpointConfiguration: {
+                        inboundEndpoints: [
+                            {
+                                name: "SSHRule.0",
+                                protocol: "tcp",
+                                publicIPAddress: "20.24.241.25",
+                                publicFQDN:
+                                    "cloudservice.region.cloudapp.azure.com",
+                                frontendPort: 50000,
+                                backendPort: 3389,
+                            },
+                        ],
+                    },
+                    virtualMachineInfo: {
+                        imageReference: {
+                            publisher: "microsoftwindowsserver",
+                            offer: "windowsserver",
+                            sku: "2022-datacenter",
+                            version: "latest",
+                            exactVersion: "20348.2031.231006",
+                        },
+                    },
+                },
+            ],
+    };
+
+    batchNodeExtensions: { [nodeId: string]: BatchNodeVMExtensionOutput[] } = {
+        tvmps_id1: [
+            {
+                provisioningState: "Succeeded",
+                instanceView: {
+                    name: "CustomExtension100",
+                    statuses: [
+                        {
+                            code: "ProvisioningState/succeeded",
+                            level: "0",
+                            displayStatus: "Provisioning succeeded",
+                            message:
+                                "ExtensionOperation:enable. Status:Success",
+                            time: "11/9/2023 7:44:19 AM",
+                        },
+                    ],
+                },
+                vmExtension: {
+                    name: "CustomExtension100",
+                    publisher: "Microsoft.Azure.Geneva",
+                    type: "GenevaMonitoring",
+                    typeHandlerVersion: "2.0",
+                    autoUpgradeMinorVersion: true,
+                    enableAutomaticUpgrade: true,
+                    settings: {
+                        applicationId: "settings1",
+                        version: "3.3.3",
+                    },
+                },
+            },
+        ],
     };
 }
 

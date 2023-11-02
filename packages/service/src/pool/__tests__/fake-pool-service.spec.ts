@@ -7,6 +7,9 @@ describe("FakePoolService", () => {
     const hoboAcctId =
         "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo";
 
+    const hoboPoolArmId = `${hoboAcctId}/pools/hobopool1`;
+    const newTestPoolArmId = `${hoboAcctId}/pools/newtestpool`;
+
     let service: FakePoolService;
     let fakeSet: BatchFakeSet;
 
@@ -23,9 +26,7 @@ describe("FakePoolService", () => {
     });
 
     test("Get by resource ID", async () => {
-        const pool = await service.get(
-            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1"
-        );
+        const pool = await service.get(hoboPoolArmId);
         expect(pool?.name).toEqual("hobopool1");
     });
 
@@ -57,7 +58,7 @@ describe("FakePoolService", () => {
             },
         };
 
-        const pool = await service.createOrUpdate(newPool);
+        const pool = await service.createOrUpdate(newTestPoolArmId, newPool);
         expect(pool?.name).toEqual("newtestpool");
 
         const pools = await service.listByAccountId(hoboAcctId);
@@ -93,7 +94,7 @@ describe("FakePoolService", () => {
             },
         };
 
-        const pool = await service.createOrUpdate(poolUpdate);
+        const pool = await service.createOrUpdate(hoboPoolArmId, poolUpdate);
         expect(pool?.name).toEqual("hobopool1");
 
         // Updated an existing pool rather than created a new one
@@ -116,7 +117,7 @@ describe("FakePoolService", () => {
             },
         };
 
-        const pool = await service.patch(update);
+        const pool = await service.patch(hoboPoolArmId, update);
         expect(pool?.name).toEqual("hobopool1");
         expect(
             pool?.properties?.scaleSettings?.fixedScale?.targetDedicatedNodes
