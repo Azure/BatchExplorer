@@ -15,7 +15,7 @@ export const DemoNavMenu: React.FC = () => {
             links: [
                 {
                     key: "ActionForm",
-                    name: "ActionForm",
+                    name: "Action Form",
                     url: getDemoHash("actionform"),
                 },
                 {
@@ -35,7 +35,7 @@ export const DemoNavMenu: React.FC = () => {
                 },
                 {
                     key: "ComboBox",
-                    name: "ComboBox",
+                    name: "Combo Box",
                     url: getDemoHash("combobox"),
                 },
                 {
@@ -45,12 +45,17 @@ export const DemoNavMenu: React.FC = () => {
                 },
                 {
                     key: "SearchBox",
-                    name: "SearchBox",
+                    name: "Search Box",
                     url: getDemoHash("searchbox"),
                 },
                 {
+                    key: "TabSelector",
+                    name: "Tab Selector",
+                    url: getDemoHash("tabselector"),
+                },
+                {
                     key: "TextField",
-                    name: "TextField",
+                    name: "Text Field",
                     url: getDemoHash("textfield"),
                 },
                 {

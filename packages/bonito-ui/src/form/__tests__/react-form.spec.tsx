@@ -48,6 +48,9 @@ describe("ReactForm tests", () => {
         expect(screen.getByTestId("custom-item-render")).toBeDefined();
         expect(bannerEl).toBeDefined();
         expect(bannerEl.textContent).toEqual("Message was Hello world!");
+
+        // Parameters inside forms have standalone set to undefined by default
+        expect(form.getParam("message").standalone).toBeUndefined();
     });
 
     test("Standalone parameter creation", () => {
@@ -59,5 +62,8 @@ describe("ReactForm tests", () => {
         expect(param.parentForm.values).toStrictEqual({
             [param.name]: "testing 1 2 3",
         });
+
+        // Always set to true when using createParam()
+        expect(param.standalone).toBe(true);
     });
 });
