@@ -64,7 +64,8 @@
   },
   "dependencies": {
     "@azure/bonito-core": "^1.0.0",
-    "@batch/arm-batch-rest": "^1.0.0"
+    "@batch/arm-batch-rest": "^1.0.0",
+    "@batch/batch-rest": "^1.0.0"
   },
   "devDependencies": {
     "@batch/common-config": "^1.0.0",

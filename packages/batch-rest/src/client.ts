@@ -10,7 +10,7 @@ import { BatchClient } from "./generated";
 import createClient from "./generated/batchClient";
 import { BatchHttpClient } from "./http/batch-http-client";
 
-export default function generateBatchClient(
+export function generateBatchClient(
     endpoint: string,
     options: ClientOptions = {},
     credential?: TokenCredential

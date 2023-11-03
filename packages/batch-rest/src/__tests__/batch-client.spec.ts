@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import generateBatchClient from "../client";
+import { generateBatchClient } from "../client";
 import { BATCH_API_VERSION } from "./utils/client";
 import {
     DependencyName,
