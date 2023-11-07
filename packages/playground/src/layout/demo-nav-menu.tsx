@@ -63,6 +63,11 @@ export const DemoNavMenu: React.FC = () => {
                     name: "Notification",
                     url: getDemoHash("notification"),
                 },
+                {
+                    key: "StringList",
+                    name: "StringList",
+                    url: getDemoHash("stringlist"),
+                },
             ],
         },
         {

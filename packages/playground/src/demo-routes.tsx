@@ -11,6 +11,7 @@ import { CheckboxDemo } from "./demo/form/checkbox/checkbox-demo";
 import { NotificationDemo } from "./demo/form/notification-demo";
 import { DataGridLoadMoreDemo } from "./demo/display/task-grid/task-data-grid";
 import { TabSelectorDemo } from "./demo/form/tab-selector-demo";
+import { StringListDemo } from "./demo/form/stringlist/stringlist-demo";
 
 export const DEMO_MAP = {
     default: () => <DefaultPane />,
@@ -26,6 +27,7 @@ export const DEMO_MAP = {
     notification: () => <NotificationDemo />,
     certificatedisplay: () => <CertificateDisplayDemo />,
     dataGridLoadMore: () => <DataGridLoadMoreDemo />,
+    stringlist: () => <StringListDemo />,
 };
 
 export type DemoName = keyof typeof DEMO_MAP;

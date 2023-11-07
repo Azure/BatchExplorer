@@ -2,6 +2,7 @@ import { AbstractAction, Action } from "@azure/bonito-core/lib/action";
 import {
     Form,
     NumberParameter,
+    StringListParameter,
     StringParameter,
     ValidationStatus,
 } from "@azure/bonito-core/lib/form";
@@ -32,6 +33,7 @@ type CarFormValues = {
     model?: string;
     description?: string;
     milesPerCharge?: number;
+    addOns?: string[];
 };
 
 class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
@@ -112,6 +114,10 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
                     }
                 },
             },
+        });
+
+        carSection.param("addOns", StringListParameter, {
+            label: "Add-ons",
         });
 
         form.item("summary", {

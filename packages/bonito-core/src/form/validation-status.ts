@@ -2,12 +2,12 @@
  * Represents the result of a given validation
  */
 export class ValidationStatus {
-    level: "ok" | "warn" | "error" | "canceled";
-    message?: string;
     forced?: boolean = false;
 
-    constructor(level: "ok" | "warn" | "error" | "canceled", message?: string) {
-        this.level = level;
-        this.message = message;
-    }
+    constructor(
+        public level: "ok" | "warn" | "error" | "canceled",
+        public message?: string,
+        // TODO: Make this a generic type
+        public details?: unknown
+    ) {}
 }
