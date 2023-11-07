@@ -27,3 +27,7 @@ bl-job-details {
         }
     }
 }
+
+bl-summary-card > .main-tile > .content-container > .content > .details {
+    color: $primary-text !important;
+}
