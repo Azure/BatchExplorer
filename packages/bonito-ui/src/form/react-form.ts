@@ -64,6 +64,9 @@ export function createParam<
     >,
     init?: ReactParameterInit<StandaloneForm<S>, "_standaloneParam", D>
 ) {
+    init = init ?? {};
+    init.standalone = true;
+
     const form = createReactForm<StandaloneForm<S>>({
         values: {
             _standaloneParam: init?.value,

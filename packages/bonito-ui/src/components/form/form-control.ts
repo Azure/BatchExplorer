@@ -63,5 +63,5 @@ export interface FormControlProps<
     /**
      * Callback for when the value of the control changes
      */
-    onChange?: (event: React.FormEvent, value: V[K]) => void;
+    onChange?: (event: React.FormEvent | null, value: V[K]) => void;
 }

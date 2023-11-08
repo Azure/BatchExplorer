@@ -1,9 +1,37 @@
-import { ContainerItem, BlobUploadCommonResponse, ContainerGetPropertiesResponse, CommonOptions } from "@azure/storage-blob";
+import { BlobUploadCommonResponse, CommonOptions, ContainerGetPropertiesResponse } from "@azure/storage-blob";
 import { Model, Prop, Record } from "@batch-flask/core";
+import { BlobContainer } from "app/models";
 import { SharedAccessPolicy } from "./shared-access-policy";
 
 // Placeholder; we don't use any options to storage-blob API requests
 export type RequestOptions = Partial<CommonOptions>;
+
+export interface BlobProperties {
+    name: string;
+    url: string;
+    isDirectory: boolean;
+    properties: {
+        contentLength: number;
+        contentType: string;
+        creationTime: Date | string;
+        lastModified?: Date | string;
+    };
+}
+
+export type ContainerProperties = ContainerGetPropertiesResponse;
+
+@Model()
+export class BlobItem extends Record<BlobProperties> {
+    @Prop() name: string;
+    @Prop() url: string;
+    @Prop() isDirectory: boolean;
+    @Prop() properties: {
+        contentLength: number;
+        contentType: string;
+        creationTime: Date | string;
+        lastModified?: Date | string;
+    }
+}
 
 export interface BaseParams {
     url: string;
@@ -83,7 +111,7 @@ export interface StorageBlobResult<T> {
     continuationToken?: string;
 }
 
-export type ListContainersResult = StorageBlobResult<ContainerItem[]>;
+export type ListContainersResult = StorageBlobResult<BlobContainer[]>;
 export type GetBlobPropertiesResult = StorageBlobResult<BlobProperties>;
 export type ListBlobsResult = StorageBlobResult<BlobItem[]>;
 export type GetContainerPropertiesResult =
@@ -94,32 +122,6 @@ export interface GetBlobContentResult {
     content: string;
 }
 
-export interface BlobProperties {
-    name: string;
-    url: string;
-    isDirectory: boolean;
-    properties: {
-        contentLength: number;
-        contentType: string;
-        creationTime: Date | string;
-        lastModified: Date | string;
-    };
-}
-
-@Model()
-export class BlobItem extends Record<BlobProperties> {
-    @Prop() name: string;
-    @Prop() url: string;
-    @Prop() isDirectory: boolean;
-    @Prop() properties: {
-        contentLength: number;
-        contentType: string;
-        creationTime: Date | string;
-        lastModified: Date | string;
-    }
-}
-
-export type ContainerProperties = ContainerGetPropertiesResponse;
 
 export interface ListBlobOptions {
     /**

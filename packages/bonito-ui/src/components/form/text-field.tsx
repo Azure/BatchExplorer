@@ -50,6 +50,14 @@ export function TextField<V extends FormValues, K extends ParameterName<V>>(
         );
     }
 
+    // Properties to use only if this control is being rendered
+    // by itself outside of a form layout
+    const standaloneProps: ITextFieldProps = {};
+    if (param.standalone) {
+        standaloneProps.label = param.label;
+        standaloneProps.description = param.description;
+    }
+
     return (
         <FluentTextField
             id={id}
@@ -78,6 +86,7 @@ export function TextField<V extends FormValues, K extends ParameterName<V>>(
                 }
             }}
             {...typeSpecificProps}
+            {...standaloneProps}
         ></FluentTextField>
     );
 }

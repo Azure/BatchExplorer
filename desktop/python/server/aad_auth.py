@@ -1,5 +1,14 @@
 import azext.batch
 from msrestazure.azure_active_directory import AdalAuthentication
+from azure.core.credentials import TokenCredential, AccessToken
+
+class BatchExplorerTokenCredential(TokenCredential):
+    def __init__(self, access_token) -> None:
+        super().__init__()
+        self.access_token = access_token
+
+    def get_token(self, *scopes, **kwargs):
+        return AccessToken(token=self.access_token, expires_on=0)
 
 class BatchAccount:
     def __init__(self, account_id: str, name: str, account_endpoint: str, subscription_id: str):
@@ -22,8 +31,8 @@ class AADAuth:
     def __init__(self, batchToken: str, armToken: str, armUrl: str, storage_endpoint: str, account: BatchAccount):
         self.batchCreds = AdalAuthentication(
             lambda: {'accessToken': batchToken, 'tokenType': 'Bearer'})
-        self.armCreds = AdalAuthentication(
-            lambda: {'accessToken': armToken, 'tokenType': 'Bearer'})
+
+        self.armCreds = BatchExplorerTokenCredential(armToken)
         self.armUrl = armUrl
         self.storage_endpoint = storage_endpoint
         self.account = account

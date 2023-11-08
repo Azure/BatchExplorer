@@ -38,6 +38,7 @@ export interface ParameterInit<
     hideLabel?: boolean;
     required?: boolean;
     placeholder?: string;
+    standalone?: boolean;
     dependencies?: D;
     dynamic?: DynamicParameterProperties<V, K>;
     onValidateSync?(value: V[K]): ValidationStatus;
@@ -146,6 +147,13 @@ export interface Parameter<
      */
     placeholder?: string;
 
+    /**
+     * If true, this parameter is being rendered by itself outside of a
+     * form layout component, and should be responsible for rendering its own
+     * label, description, etc.
+     */
+    standalone?: boolean;
+
     dynamic?: DynamicParameterProperties<V, K>;
 
     /**
@@ -219,6 +227,7 @@ export abstract class AbstractParameter<
     description?: string;
     placeholder?: string;
     dependencies?: D;
+    standalone?: boolean;
     dynamic?: DynamicParameterProperties<V, K>;
 
     private _disabled?: boolean;
@@ -288,6 +297,7 @@ export abstract class AbstractParameter<
         this.hidden = init?.hidden;
         this.hideLabel = init?.hideLabel;
         this.required = init?.required;
+        this.standalone = init?.standalone;
         this.dynamic = init?.dynamic;
 
         if (init?.value !== undefined) {
