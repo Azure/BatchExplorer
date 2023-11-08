@@ -1,3 +1,20 @@
+# 2.19.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/53?closed=1)
+
+### feature:
+
+
+### bug:
+
+
+### other:
+
+* Add Indonesian translations [\#2838](https://github.com/Azure/BatchExplorer/issues/2838)
+* Restore job creation forms in Gallery  [\#2837](https://github.com/Azure/BatchExplorer/issues/2837)
+* Fix storage functionality on data views [\#2836](https://github.com/Azure/BatchExplorer/issues/2836)
+* Multiple accessibility improvements for color contrast [\#2835](https://github.com/Azure/BatchExplorer/issues/2835)
+* Update Batch Explorer dataplane API usage [\#2834](https://github.com/Azure/BatchExplorer/issues/2834)
+
 # 2.18.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/52?closed=1)
