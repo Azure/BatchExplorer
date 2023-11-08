@@ -1,4 +1,5 @@
 # 2.19.0
+
 [All items](https://github.com/Azure/BatchExplorer/milestone/53?closed=1)
 
 ### Features
