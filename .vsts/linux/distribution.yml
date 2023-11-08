@@ -23,10 +23,10 @@ steps:
       packagePath: ./packages/bonito-ui
       packageName: "@azure/bonito-ui"
 
-  - template: ./publish-npm-package.yml
-    parameters:
-      packagePath: ./packages/arm-batch-rest
-      packageName: "@batch/arm-batch-rest"
+  # - template: ./publish-npm-package.yml
+  #   parameters:
+  #     packagePath: ./packages/arm-batch-rest
+  #     packageName: "@batch/arm-batch-rest"
 
   - template: ./publish-npm-package.yml
     parameters:
