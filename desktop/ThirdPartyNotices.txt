@@ -25,49 +25,50 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 16. @batch/ui-playground (https://github.com/Azure/BatchExplorer) - MIT
 17. @batch/ui-react (https://github.com/Azure/BatchExplorer) - MIT
 18. @batch/ui-service (https://github.com/Azure/BatchExplorer) - MIT
-19. applicationinsights (https://github.com/microsoft/ApplicationInsights-node.js) - MIT
-20. chart.js (https://www.chartjs.org) - MIT
-21. chokidar (https://github.com/paulmillr/chokidar) - MIT
-22. commander (https://github.com/tj/commander.js) - MIT
-23. d3 (https://d3js.org) - ISC
-24. decode-uri-component (https://github.com/SamVerschueren/decode-uri-component) - MIT
-25. electron-updater (https://github.com/electron-userland/electron-builder) - MIT
-26. element-resize-detector (https://github.com/wnr/element-resize-detector) - MIT
-27. extract-zip (https://github.com/maxogden/extract-zip) - BSD-2-Clause
-28. focus-visible (https://github.com/WICG/focus-visible) - W3C
-29. font-awesome (http://fontawesome.io/) - (OFL-1.1 AND MIT)
-30. get-proxy-settings (https://github.com/Azure/get-proxy-settings) - MIT
-31. glob (https://github.com/isaacs/node-glob) - ISC
-32. hammerjs (http://hammerjs.github.io/) - MIT
-33. https-proxy-agent (https://github.com/TooTallNate/node-https-proxy-agent) - MIT
-34. immutable (https://facebook.github.com/immutable-js) - MIT
-35. inflection (https://github.com/dreamerslab/node.inflection) - MIT
-36. js-yaml (https://github.com/nodeca/js-yaml) - MIT
-37. jschardet (https://github.com/aadsm/jschardet) - LGPL-2.1+
-38. keytar (http://atom.github.io/node-keytar) - MIT
-39. load-json-file (https://github.com/sindresorhus/load-json-file) - MIT
-40. luxon (https://github.com/moment/luxon) - MIT
-41. make-dir (https://github.com/sindresorhus/make-dir) - MIT
-42. mkdirp (https://github.com/isaacs/node-mkdirp) - MIT
-43. monaco-editor (https://github.com/Microsoft/monaco-editor) - MIT
-44. node-abi (https://github.com/lgeiger/node-abi#readme) - MIT
-45. node-downloader-helper (https://github.com/hgouveia/node-downloader-helper) - MIT
-46. node-forge (https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
-47. patternomaly (https://github.com/ashiguruma/patternomaly) - MIT
-48. reflect-metadata (http://rbuckton.github.io/reflect-metadata) - Apache-2.0
-49. rxjs (https://github.com/ReactiveX/RxJS) - Apache-2.0
-50. strip-json-comments (https://github.com/sindresorhus/strip-json-comments) - MIT
-51. tinycolor2 (https://github.com/bgrins/TinyColor) - MIT
-52. winston (https://github.com/winstonjs/winston) - MIT
-53. winston-daily-rotate-file (https://github.com/winstonjs/winston-daily-rotate-file#readme) - MIT
-54. write-file-webpack-plugin (https://github.com/gajus/write-file-webpack-plugin) - BSD-3-Clause
-55. xml2js (https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
-56. zone.js (https://github.com/angular/angular) - MIT
-57. websockets (https://github.com/aaugustin/websockets) - BSD-3-Clause
-58. azure-batch-cli-extensions (https://github.com/Azure/azure-batch-cli-extensions) - MIT
-59. node.js (https://nodejs.org/en/) - MIT
-60. python (https://www.python.org/) - PSF
-61. Electron (https://electronjs.org/) - electron
+19. @electron/remote (https://github.com/electron/remote) - MIT
+20. applicationinsights (https://github.com/microsoft/ApplicationInsights-node.js) - MIT
+21. chart.js (https://www.chartjs.org) - MIT
+22. chokidar (https://github.com/paulmillr/chokidar) - MIT
+23. commander (https://github.com/tj/commander.js) - MIT
+24. d3 (https://d3js.org) - ISC
+25. decode-uri-component (https://github.com/SamVerschueren/decode-uri-component) - MIT
+26. electron-updater (https://github.com/electron-userland/electron-builder) - MIT
+27. element-resize-detector (https://github.com/wnr/element-resize-detector) - MIT
+28. extract-zip (https://github.com/maxogden/extract-zip) - BSD-2-Clause
+29. focus-visible (https://github.com/WICG/focus-visible) - W3C
+30. font-awesome (http://fontawesome.io/) - (OFL-1.1 AND MIT)
+31. get-proxy-settings (https://github.com/Azure/get-proxy-settings) - MIT
+32. glob (https://github.com/isaacs/node-glob) - ISC
+33. hammerjs (http://hammerjs.github.io/) - MIT
+34. https-proxy-agent (https://github.com/TooTallNate/node-https-proxy-agent) - MIT
+35. immutable (https://facebook.github.com/immutable-js) - MIT
+36. inflection (https://github.com/dreamerslab/node.inflection) - MIT
+37. js-yaml (https://github.com/nodeca/js-yaml) - MIT
+38. jschardet (https://github.com/aadsm/jschardet) - LGPL-2.1+
+39. keytar (http://atom.github.io/node-keytar) - MIT
+40. load-json-file (https://github.com/sindresorhus/load-json-file) - MIT
+41. luxon (https://github.com/moment/luxon) - MIT
+42. make-dir (https://github.com/sindresorhus/make-dir) - MIT
+43. mkdirp (https://github.com/isaacs/node-mkdirp) - MIT
+44. monaco-editor (https://github.com/microsoft/monaco-editor) - MIT
+45. node-abi (https://github.com/lgeiger/node-abi#readme) - MIT
+46. node-downloader-helper (https://github.com/hgouveia/node-downloader-helper) - MIT
+47. node-forge (https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
+48. patternomaly (https://github.com/ashiguruma/patternomaly) - MIT
+49. reflect-metadata (http://rbuckton.github.io/reflect-metadata) - Apache-2.0
+50. rxjs (https://github.com/ReactiveX/RxJS) - Apache-2.0
+51. strip-json-comments (https://github.com/sindresorhus/strip-json-comments) - MIT
+52. tinycolor2 (https://github.com/bgrins/TinyColor) - MIT
+53. winston (https://github.com/winstonjs/winston) - MIT
+54. winston-daily-rotate-file (https://github.com/winstonjs/winston-daily-rotate-file#readme) - MIT
+55. write-file-webpack-plugin (https://github.com/gajus/write-file-webpack-plugin) - BSD-3-Clause
+56. xml2js (https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
+57. zone.js (https://github.com/angular/angular) - MIT
+58. websockets (https://github.com/aaugustin/websockets) - BSD-3-Clause
+59. azure-batch-cli-extensions (https://github.com/Azure/azure-batch-cli-extensions) - MIT
+60. node.js (https://nodejs.org/en/) - MIT
+61. python (https://www.python.org/) - PSF
+62. Electron (https://electronjs.org/) - electron
 
 ============================================================
     Start license for @angular/animations
@@ -548,6 +549,34 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ------------------------------------------------------------
     End license for @batch/ui-service
+============================================================
+
+============================================================
+    Start license for @electron/remote
+------------------------------------------------------------
+Copyright (c) 2019-2022 Electron contributors
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------
+    End license for @electron/remote
 ============================================================
 
 ============================================================
@@ -2820,19 +2849,30 @@ The externally maintained libraries used by Node.js are:
 
 - c-ares, located at deps/cares, is licensed as follows:
   """
-    Copyright (c) 2007 - 2018, Daniel Stenberg with many contributors, see AUTHORS
+    MIT License
+
+    Copyright (c) 1998 Massachusetts Institute of Technology
+    Copyright (c) 2007 - 2023 Daniel Stenberg with many contributors, see AUTHORS
     file.
 
-    Copyright 1998 by the Massachusetts Institute of Technology.
+    Permission is hereby granted, free of charge, to any person obtaining a copy of
+    this software and associated documentation files (the "Software"), to deal in
+    the Software without restriction, including without limitation the rights to
+    use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+    the Software, and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
 
-    Permission to use, copy, modify, and distribute this software and its
-    documentation for any purpose and without fee is hereby granted, provided that
-    the above copyright notice appear in all copies and that both that copyright
-    notice and this permission notice appear in supporting documentation, and that
-    the name of M.I.T. not be used in advertising or publicity pertaining to
-    distribution of the software without specific, written prior permission.
-    M.I.T. makes no representations about the suitability of this software for any
-    purpose.  It is provided "as is" without express or implied warranty.
+    The above copyright notice and this permission notice (including the next
+    paragraph) shall be included in all copies or substantial portions of the
+    Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
   """
 
 - cjs-module-lexer, located at deps/cjs-module-lexer, is licensed as follows:
