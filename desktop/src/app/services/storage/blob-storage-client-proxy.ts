@@ -4,6 +4,7 @@ import { IpcEvent } from "common/constants";
 import { SharedAccessPolicy } from "./models";
 import * as blob from "./models/storage-blob";
 import { BlobContentResult } from "./storage-blob.service";
+import { StorageClient } from "./storage-client.service";
 
 const storageIpc = IpcEvent.storageBlob;
 
@@ -18,7 +19,7 @@ export interface ListBlobResponse {
     };
 }
 
-export class BlobStorageClientProxy {
+export class BlobStorageClientProxy implements StorageClient {
 
     private storageInfo: { url: string; account: string, key: string };
 
@@ -172,8 +173,13 @@ export class BlobStorageClientProxy {
         containerName: string,
         options?: blob.RequestOptions
     ): Promise<blob.GetContainerPropertiesResult> {
-        return this.remote.send(storageIpc.getContainerProperties,
+        const result = await this.remote.send(storageIpc.getContainerProperties,
             { ...this.storageInfo, containerName, options });
+
+        // The container name is not returned by the API, but we add it here,
+        // since it's used by the UI model
+        result.data.name =  containerName;
+        return result;
     }
 
     /**

@@ -78,6 +78,8 @@ export function useFormParameter<
     const [validationError, setValidationError] = useState<
         string | undefined
     >();
+    const [validationDetails, setValidationDetails] =
+        useState<unknown>(undefined);
     const [validationStatus, setValidationStatus] = useState<
         ValidationStatus | undefined
     >();
@@ -178,6 +180,7 @@ export function useFormParameter<
                 setValidationStatus(snapshot.entryStatus[param.name]);
                 if (dirty || param.validationStatus?.forced) {
                     const msg = param.validationStatus?.message;
+                    const details = param.validationStatus?.details;
                     // Only set a visible validation error if the user has
                     // interacted with the form control (ie: the parameter is
                     // dirty) or validation is forced (usually the result of
@@ -185,8 +188,10 @@ export function useFormParameter<
                     // form)
                     if (param.validationStatus?.level === "error") {
                         setValidationError(msg);
+                        setValidationDetails(details);
                     } else {
                         setValidationError(undefined);
+                        setValidationDetails(undefined);
                     }
                     setDirty(true);
                 }
@@ -213,5 +218,6 @@ export function useFormParameter<
         loadingPromise,
         validationError,
         validationStatus,
+        validationDetails,
     };
 }

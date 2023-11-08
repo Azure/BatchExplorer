@@ -19,7 +19,7 @@ import { Constants } from "common";
 import { AsyncSubject, Observable, from, of, throwError } from "rxjs";
 import { catchError, concat, concatMap, map, share, switchMap, take } from "rxjs/operators";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
-import { StorageClientService } from "./storage-client.service";
+import { StorageClient, StorageClientService } from "./storage-client.service";
 
 export interface ListBlobParams {
     storageAccountId: string;
@@ -42,7 +42,10 @@ export interface BlobContentResult {
     content: string;
 }
 
-export type StorageContainerProperties = ContainerProperties;
+export interface StorageContainerProperties extends Omit<ContainerProperties, "lastModified" | "etag"> {
+    lastModified?: Date;
+    etag?: string;
+}
 
 export interface NavigateBlobsOptions {
     /**
@@ -117,8 +120,7 @@ export class StorageBlobService {
 
         this._blobListGetter = new StorageListGetter(FileRecord, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
-            getData: (client: BlobStorageClientProxy,
-                params, options, continuationToken) => {
+            getData: async (client: StorageClient, params, options, continuationToken) => {
                 const blobOptions: ListBlobOptions = {
                     folder: options.original.folder,
                     recursive: options.original.recursive,
@@ -126,12 +128,8 @@ export class StorageBlobService {
                     maxPageSize: this.maxBlobPageSize
                 };
 
-                // N.B. `BlobItem` and `FileRecord` are nearly identical
-                return client.listBlobs(
-                    params.container,
-                    blobOptions,
-                    continuationToken,
-                ) as Promise<StorageBlobResult<FileRecord[]>>;
+                const blobs = await client.listBlobs(params.container, blobOptions, continuationToken);
+                return { data: blobs.data.map(blob => new FileRecord(blob)) };
             },
             logIgnoreError: storageIgnoredErrors,
         });

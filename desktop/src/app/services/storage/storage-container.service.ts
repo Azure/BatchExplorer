@@ -14,7 +14,7 @@ import { SharedAccessPolicy } from "app/services/storage/models";
 import { Observable, Subject, from, throwError } from "rxjs";
 import { catchError, flatMap, share } from "rxjs/operators";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
-import { StorageClientService } from "./storage-client.service";
+import { StorageClient, StorageClientService } from "./storage-client.service";
 
 export interface GetContainerParams {
     storageAccountId: string;
@@ -62,7 +62,7 @@ export class StorageContainerService {
         });
         this._containerListGetter = new StorageListGetter(BlobContainer, this.storageClient, {
             cache: params => this._containerCache.getCache(params),
-            getData: async (client, params, options, continuationToken) => {
+            getData: async (client: StorageClient, params, options, continuationToken) => {
                 let prefix = null;
                 if (options && options.filter) {
                     prefix = options.filter.value;
@@ -72,8 +72,11 @@ export class StorageContainerService {
                     continuationToken,
                     { maxResults: options && options.maxResults });
 
-                response.data.map(x => x.storageAccountId = params.storageAccountId);
-                return response;
+                const containers = response.data.map((container: BlobContainer) => {
+                    container.name = container.id;
+                    return container;
+                });
+                return { data: containers };
             },
             logIgnoreError: storageIgnoredErrors,
         });
