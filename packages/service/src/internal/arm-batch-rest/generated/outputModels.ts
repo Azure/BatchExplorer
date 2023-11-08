@@ -185,16 +185,14 @@ export interface PrivateLinkServiceConnectionStateOutput {
 
 /** A definition of an Azure resource. */
 export interface ProxyResourceOutput {
-    // KLUDGE (dawatrou): Manually fixed up 'id', 'name' and 'type' to be non-nullable.
-    //                    Need to follow up with the JS SDK team about this.
-    /** The ID of the resource. */
-    id: string;
-    /** The name of the resource. */
-    name: string;
-    /** The type of the resource. */
-    type: string;
-    /** The ETag of the resource, used for concurrency statements. */
-    etag?: string;
+  /** The ID of the resource. */
+  id?: string;
+  /** The name of the resource. */
+  name?: string;
+  /** The type of the resource. */
+  type?: string;
+  /** The ETag of the resource, used for concurrency statements. */
+  etag?: string;
 }
 
 /** Contains information about the auto-storage account associated with a Batch account. */
@@ -863,20 +861,16 @@ export interface TaskSchedulingPolicyOutput {
 
 /** Properties used to create a user on an Azure Batch node. */
 export interface UserAccountOutput {
-    /** The name of the user account. Names can contain any Unicode characters up to a maximum length of 20. */
-    name: string;
-    /**
-     * KLUDGE (dawatrou): Manually removed incorred "password" property. This is a secret and isn't returned by the service.
-     *                    This should be fixed in the Swagger so x-ms-secret is true.
-     * The password for the user account.
-     * */
-    // password: string;
-    /** nonAdmin - The auto user is a standard user without elevated access. admin - The auto user is a user with elevated access and operates with full Administrator permissions. The default value is nonAdmin. */
-    elevationLevel?: "NonAdmin" | "Admin";
-    /** This property is ignored if specified on a Windows pool. If not specified, the user is created with the default options. */
-    linuxUserConfiguration?: LinuxUserConfigurationOutput;
-    /** This property can only be specified if the user is on a Windows pool. If not specified and on a Windows pool, the user is created with the default options. */
-    windowsUserConfiguration?: WindowsUserConfigurationOutput;
+  /** The name of the user account. Names can contain any Unicode characters up to a maximum length of 20. */
+  name: string;
+  /** The password for the user account. */
+  password: string;
+  /** nonAdmin - The auto user is a standard user without elevated access. admin - The auto user is a user with elevated access and operates with full Administrator permissions. The default value is nonAdmin. */
+  elevationLevel?: "NonAdmin" | "Admin";
+  /** This property is ignored if specified on a Windows pool. If not specified, the user is created with the default options. */
+  linuxUserConfiguration?: LinuxUserConfigurationOutput;
+  /** This property can only be specified if the user is on a Windows pool. If not specified and on a Windows pool, the user is created with the default options. */
+  windowsUserConfiguration?: WindowsUserConfigurationOutput;
 }
 
 /** Properties used to create a user account on a Linux node. */
@@ -913,7 +907,7 @@ export interface StartTaskOutput {
   environmentSettings?: Array<EnvironmentSettingOutput>;
   /** If omitted, the task runs as a non-administrative user unique to the task. */
   userIdentity?: UserIdentityOutput;
-  /** The Batch service retries a task if its exit code is nonzero. Note that this value specifically controls the number of retries. The Batch service will try the task once, and may then retry up to this limit. For example, if the maximum retry count is 3, Batch tries the task up to 4 times (one initial try and 3 retries). If the maximum retry count is 0, the Batch service does not retry the task. If the maximum retry count is -1, the Batch service retries the task without limit. */
+  /** The Batch service retries a task if its exit code is nonzero. Note that this value specifically controls the number of retries. The Batch service will try the task once, and may then retry up to this limit. For example, if the maximum retry count is 3, Batch tries the task up to 4 times (one initial try and 3 retries). If the maximum retry count is 0, the Batch service does not retry the task. If the maximum retry count is -1, the Batch service retries the task without limit. Default is 0. */
   maxTaskRetryCount?: number;
   /** If true and the start task fails on a compute node, the Batch service retries the start task up to its maximum retry count (maxTaskRetryCount). If the task has still not completed successfully after all retries, then the Batch service marks the compute node unusable, and will not schedule tasks to it. This condition can be detected via the node state and scheduling error detail. If false, the Batch service will not wait for the start task to complete. In this case, other tasks can start executing on the compute node while the start task is still running; and even if the start task fails, new tasks will continue to be scheduled on the node. The default is true. */
   waitForSuccess?: boolean;
