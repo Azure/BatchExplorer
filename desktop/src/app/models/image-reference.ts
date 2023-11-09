@@ -24,4 +24,5 @@ export class ImageReference extends Record<ImageReferenceAttributes> {
     @Prop() public sku: string;
     @Prop() public version: string;
     @Prop() public virtualMachineImageId: string;
+    @Prop() public exactVersion: string;
 }

@@ -4,6 +4,11 @@
 
 const { pathsToModuleNameMapper } = require("ts-jest");
 
+const { readFileSync } = require("fs");
+const path = require("path");
+
+const combinedResourceStrings = getCombinedResourceStrings();
+
 module.exports = {
     /**
      * Creates a Jest configuration object with optional overrides.
@@ -50,14 +55,20 @@ module.exports = {
                 ],
             ],
             globals: {
-                "ts-jest": {
-                    diagnostics: {
-                        // Squelch a warning with outputting ES6 modules (in tsconfig.json)
-                        ignoreCodes: [151001],
+                __TEST_RESOURCE_STRINGS: combinedResourceStrings,
+            },
+            transform: {
+                "^.+\\.tsx?$": [
+                    "ts-jest",
+                    {
+                        diagnostics: {
+                            // Squelch a warning with outputting ES6 modules (in tsconfig.json)
+                            ignoreCodes: [151001],
+                        },
+                        // Greatly speed up tests at the expense of type checking
+                        isolatedModules: true,
                     },
-                },
-                // Greatly speed up tests at the expense of type checking
-                isolatedModules: true,
+                ],
             },
         };
 
@@ -85,8 +96,10 @@ module.exports = {
             "@fluentui/react/lib-commonjs/$1";
 
         // Local packages
-        baseConfig.moduleNameMapper["@batch/ui-common/lib/(.*)$"] =
-            "@batch/ui-common/lib-cjs/$1";
+        baseConfig.moduleNameMapper["@azure/bonito-core/lib/(.*)$"] =
+            "@azure/bonito-core/lib-cjs/$1";
+        baseConfig.moduleNameMapper["@azure/bonito-ui/lib/(.*)$"] =
+            "@azure/bonito-ui/lib-cjs/$1";
         baseConfig.moduleNameMapper["@batch/ui-react/lib/(.*)$"] =
             "@batch/ui-react/lib-cjs/$1";
         baseConfig.moduleNameMapper["@batch/ui-service/lib/(.*)$"] =
@@ -95,3 +108,39 @@ module.exports = {
         return Object.assign({}, baseConfig, overrides);
     },
 };
+
+function getCombinedResourceStrings() {
+    const resourceStrings = [
+        require(path.join(
+            __dirname,
+            "../../packages/bonito-core/resources/i18n/json/resources.en.json"
+        )),
+        require(path.join(
+            __dirname,
+            "../../packages/bonito-ui/resources/i18n/json/resources.en.json"
+        )),
+        require(path.join(
+            __dirname,
+            "../../packages/service/resources/i18n/json/resources.en.json"
+        )),
+        require(path.join(
+            __dirname,
+            "../../packages/react/resources/i18n/json/resources.en.json"
+        )),
+        require(path.join(
+            __dirname,
+            "../../packages/playground/resources/i18n/json/resources.en.json"
+        )),
+        require(path.join(
+            __dirname,
+            "../../web/resources/i18n/resources.en.json"
+        )),
+    ];
+
+    const allResourceStrings = {};
+    resourceStrings.forEach((strings) => {
+        Object.assign(allResourceStrings, strings);
+    });
+
+    return allResourceStrings;
+}

@@ -1,7 +1,7 @@
 import { ErrorHandler, Injectable } from "@angular/core";
 import { TelemetryService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { remote } from "electron";
+import { getCurrentWindow } from "@electron/remote";
 
 function extractMessage(error: any): string {
     return error instanceof Error ? error.message : error.toString();
@@ -30,7 +30,7 @@ export function handleCoreError(error, telemetryService?: TelemetryService) {
         telemetryService.trackError(error);
     }
 
-    const window = remote.getCurrentWindow();
+    const window = getCurrentWindow();
     if (!window.isVisible()) {
         window.show();
     }

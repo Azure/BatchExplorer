@@ -1,0 +1,6 @@
+form:
+  delete: Delete
+  buttons:
+    apply: Apply
+    discardChanges: Discard changes
+  showPassword: Show password

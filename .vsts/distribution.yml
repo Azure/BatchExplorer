@@ -35,6 +35,7 @@ stages:
           - template: ./linux/distribution.yml
 
       - job: MacOS
+        timeoutInMinutes: 120  # Needed because Codesign and Notarization add 20+ minutes
         pool:
           vmImage: macOS-11
           demands: xcode

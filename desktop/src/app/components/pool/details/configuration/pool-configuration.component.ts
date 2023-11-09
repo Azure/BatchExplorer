@@ -9,7 +9,7 @@ import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 import { List } from "immutable";
 import { flatMap } from "rxjs/operators";
-import { EditAppPackageFormComponent, EditCertificateReferencesComponent } from "../../action/edit";
+import { EditAppPackageFormComponent, EditCertificateReferencesComponent, EditNodeCommsFormComponent } from "../../action/edit";
 import { ElectronShell } from "@batch-flask/electron";
 
 import "./pool-configuration.scss";
@@ -31,6 +31,20 @@ export class PoolConfigurationComponent {
     public certificates: List<CertificateReference>;
     public appPackages: List<ApplicationPackageReference>;
     public metadata: List<Metadata> = List([]);
+
+    public get nodeCommSummary(): string {
+        const current = this._pool.currentNodeCommunicationMode;
+        const currentLabel = this.decorator.currentNodeCommunicationMode;
+
+        const target = this._pool.targetNodeCommunicationMode;
+        const targetLabel = this.decorator.targetNodeCommunicationMode;
+
+        if (target === "default" || current === target) {
+            return currentLabel;
+        } else {
+            return `${currentLabel} -> ${targetLabel}`;
+        }
+    }
 
     private _pool: Pool;
 
@@ -68,6 +82,12 @@ export class PoolConfigurationComponent {
     @autobind()
     public editCertificates() {
         const ref = this.sidebarManager.open(`edit-certificates-${this._pool.id}`, EditCertificateReferencesComponent);
+        ref.component.pool = this.pool;
+    }
+
+    @autobind()
+    public editNodeComms() {
+        const ref = this.sidebarManager.open(`edit-node-comms-${this._pool.id}`, EditNodeCommsFormComponent);
         ref.component.pool = this.pool;
     }
 

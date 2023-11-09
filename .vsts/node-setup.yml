@@ -1,7 +1,7 @@
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '16.x.x'
+      versionSpec: '18.x.x'
     displayName: Set NodeJS version
 
   - script: cp .vsts/pipelines.npmrc $(Agent.TempDirectory)/.npmrc

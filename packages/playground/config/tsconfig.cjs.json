@@ -7,7 +7,9 @@
   },
   "exclude": ["../**/__mocks__/**/*", "../**/__tests__/**/*"],
   "references": [
-    { "path": "../../common/config/tsconfig.cjs.json" },
+    { "path": "../../bonito-core/config/tsconfig.cjs.json" },
+    { "path": "../../bonito-ui/config/tsconfig.cjs.json" },
+    { "path": "../../react/config/tsconfig.cjs.json" },
     { "path": "../../service/config/tsconfig.cjs.json" }
   ]
 }

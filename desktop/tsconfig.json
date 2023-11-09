@@ -55,9 +55,9 @@
   "include": [
     "src/**/*.ts",
     "test/**/*.ts",
-    "package.json",
+    "package.json"
   ],
   "exclude": [
-    "**/testing/**/*",
+    "**/testing/**/*"
   ]
 }

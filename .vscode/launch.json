@@ -43,7 +43,7 @@
       }
     },
     {
-      "name": "Common: Test Watch",
+      "name": "Bonito Core: Test Watch",
       "type": "node",
       "request": "launch",
       "runtimeArgs": [
@@ -53,12 +53,31 @@
         "--testTimeout=3600000",
         "--watch"
       ],
-      "cwd": "${workspaceRoot}/packages/common",
+      "cwd": "${workspaceRoot}/packages/bonito-core",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "presentation": {
         "group": "Packages",
         "order": 10
+      }
+    },
+    {
+      "name": "Bonito UI: Test Watch",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "./node_modules/.bin/jest",
+        "--runInBand",
+        "--testTimeout=3600000",
+        "--watch"
+      ],
+      "cwd": "${workspaceRoot}/packages/bonito-ui",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "presentation": {
+        "group": "Packages",
+        "order": 20
       }
     },
     {

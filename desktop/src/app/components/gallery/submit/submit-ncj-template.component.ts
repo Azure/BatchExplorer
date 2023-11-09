@@ -347,7 +347,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             let validator = Validators.required;
             if (exists(template.parameters[key].defaultValue)) {
                 defaultValue = String(template.parameters[key].defaultValue);
-                if (template.parameters[key].defaultValue === "") {
+                if (defaultValue.trim() === "") {
                     validator = null;
                 }
             }

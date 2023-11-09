@@ -18,6 +18,7 @@ import {
     rmrf,
     printStatus,
     unlinkLocalProjects,
+    ConfigureCommandOptions,
 } from "./util";
 
 yargs
@@ -34,7 +35,7 @@ yargs
         command: "build-translations",
         aliases: ["translate"],
         describe:
-            "Localize YAML files in src and convert them to RESJSON in dest",
+            "Localize YAML files, convert them to RESJSON, and generate English JSON file",
         builder: (yargs: yargs.Argv) =>
             yargs
                 .option("src", {
@@ -44,18 +45,29 @@ yargs
                 })
                 .option("dest", {
                     describe:
-                        "The destination directory for RESJSON output files",
+                        "The destination directory for the English RESJSON file used by the localization team",
+                    default: "",
+                    demandOption: true,
+                })
+                .option("outputPath", {
+                    describe:
+                        "The directory that contains the generated English JSON translation file",
                     default: "",
                     demandOption: true,
                 })
                 .option("packageName", {
                     describe:
-                        "The name of the module (e.g. lib.common) that translations will be built for",
+                        "The name of the module (e.g. bonito.core) that translations will be built for",
                     default: "",
                     demandOption: false,
                 }),
         handler: (argv) =>
-            buildTranslations(argv.src, argv.dest, argv.packageName),
+            buildTranslations(
+                argv.src,
+                argv.dest,
+                argv.outputPath,
+                argv.packageName
+            ),
     })
     .command({
         command: "configure",
@@ -79,7 +91,9 @@ yargs
                     describe: "Print the resultant configuration object",
                     default: false,
                 }),
-        handler: (argv) => configure(argv),
+        handler: (argv) =>
+            // KLUDGE: This should be properly typed
+            configure(argv as unknown as ConfigureCommandOptions),
     })
     .command({
         command: "cp <src> <dest>",

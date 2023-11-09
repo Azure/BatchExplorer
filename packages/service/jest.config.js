@@ -4,8 +4,6 @@ module.exports = require("@batch/common-config/jest-common").createConfig(
     "ui-service",
     require("./tsconfig.json"),
     {
-        setupFilesAfterEnv: [
-            "<rootDir>/src/ui-service/__tests__/setup-tests.ts",
-        ],
+        setupFilesAfterEnv: ["<rootDir>/src/__tests__/setup-tests.ts"],
     }
 );

@@ -9,7 +9,10 @@ import inquirer from "inquirer";
 import * as os from "os";
 import * as path from "path";
 import * as shell from "shelljs";
-import { createEnglishTranslations } from "./translation-functions";
+import {
+    createEnglishTranslations,
+    mergeAllTranslations,
+} from "./translation-functions";
 
 export const defaultBatchExplorerHome = path.resolve(__dirname, "../../");
 export const configFile = path.resolve(os.homedir(), ".config/batch/bux.json");
@@ -104,6 +107,7 @@ export function copyFiles(sourcePath: string, destPath: string) {
 export async function buildTranslations(
     sourcePath: string,
     destPathRESJSON: string,
+    outputPath: string,
     packageName?: string
 ) {
     if (!sourcePath) {
@@ -126,7 +130,22 @@ export async function buildTranslations(
         });
     }
 
-    await createEnglishTranslations(sourcePath, destPathRESJSON, packageName);
+    if (!outputPath) {
+        error("Failed to build translations: No output path specified");
+        return;
+    }
+
+    await createEnglishTranslations(
+        sourcePath,
+        destPathRESJSON,
+        outputPath,
+        packageName
+    );
+
+    // If no packageName, merge all translations (for web/desktop). packageName indicates package-specific operation.
+    if (!packageName) {
+        await mergeAllTranslations(outputPath);
+    }
 }
 
 export function mkdirp(targetPath: string) {
@@ -301,8 +320,8 @@ export async function gatherBuildResults(basePath: string) {
 
     // packages
     doCopy(
-        path.join(basePath, "packages", "common", "build"),
-        path.join(baseBuildDir, "common")
+        path.join(basePath, "packages", "bonito-core", "build"),
+        path.join(baseBuildDir, "bonito-core")
     );
     doCopy(
         path.join(basePath, "packages", "react", "build"),
@@ -323,32 +342,37 @@ export async function linkLocalProjects() {
     runLinkageTask((opts: LinkOptions) => {
         info(`Linking ${opts.versionedPackageName}`);
 
-        const nodeModulePath = path.join(
-            opts.targetPath,
-            "node_modules",
-            opts.packageName
-        );
+        const nodeModulesPath = path.join(opts.targetPath, "node_modules");
+        const targetPath = path.join(nodeModulesPath, opts.packageName);
 
-        if (!fs.existsSync(nodeModulePath)) {
+        if (!fs.existsSync(nodeModulesPath)) {
             throw new Error(
-                `Failed to link ${opts.packageName}: ${nodeModulePath} doesn't exist`
+                `Failed to link ${opts.packageName}: ${nodeModulesPath} doesn't exist`
+            );
+        }
+        if (!fs.lstatSync(nodeModulesPath).isDirectory()) {
+            throw new Error(
+                `Failed to link ${opts.packageName}: ${nodeModulesPath} is not a directory`
             );
         }
 
-        const stats = fs.lstatSync(nodeModulePath);
-        if (!stats.isDirectory()) {
-            throw new Error(
-                `Failed to link ${opts.packageName}: ${nodeModulePath} is not a directory`
-            );
-        }
-        if (stats.isSymbolicLink()) {
-            throw new Error(
-                `Failed to link ${opts.packageName}: ${nodeModulePath} is already a symlink`
+        if (fs.existsSync(targetPath)) {
+            if (fs.lstatSync(targetPath).isSymbolicLink()) {
+                // Early out if target is already a symlink
+                console.warn(
+                    `${targetPath} is already a symbolic link - skipping`
+                );
+                return;
+            } else {
+                shell.rm("-rf", targetPath);
+            }
+        } else {
+            console.warn(
+                `No directory for ${opts.packageName} found in node_modules.`
             );
         }
 
-        shell.rm("-rf", nodeModulePath);
-        shell.ln("-s", opts.packagePath, nodeModulePath);
+        shell.ln("-s", opts.packagePath, targetPath);
     });
 }
 

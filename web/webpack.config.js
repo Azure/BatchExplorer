@@ -3,13 +3,13 @@
 
 const path = require("path");
 
-const { ESBuildMinifyPlugin } = require("esbuild-loader");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TSConfigPathsWebpackPlugin = require("tsconfig-paths-webpack-plugin");
 const BundleAnalyzerWebpackPlugin =
     require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const webpack = require("webpack");
+const { EsbuildPlugin } = require("esbuild-loader");
 
 const MODE_DEV = "development";
 const MODE_PROD = "production";
@@ -40,6 +40,7 @@ module.exports = (env) => {
         new HtmlWebpackPlugin({
             template: "dev-server/index.html",
             inject: "head",
+            scriptLoading: "module",
         })
     );
 
@@ -67,7 +68,7 @@ module.exports = (env) => {
         mode: OPTS.DEV_MODE ? MODE_DEV : MODE_PROD,
         target: "web",
         devtool: OPTS.DEV_MODE ? "inline-source-map" : undefined,
-        watch: OPTS.WATCH_MODE ? true : false,
+        watch: OPTS.WATCH_MODE ? true : undefined,
 
         output: {
             path: path.join(__dirname, "lib-umd"),
@@ -79,9 +80,17 @@ module.exports = (env) => {
         devServer: {
             open: OPTS.LAUNCH_BROWSER ? true : false,
             host: "127.0.0.1",
-            contentBase: path.join(__dirname, "dev-server"),
+            hot: true,
+            static: [
+                {
+                    directory: "dev-server",
+                },
+                {
+                    directory: "resources",
+                    publicPath: "/resources",
+                },
+            ],
             historyApiFallback: true,
-            watchContentBase: true,
             port: 9000,
             compress: true,
             headers: {
@@ -89,7 +98,7 @@ module.exports = (env) => {
             },
         },
 
-        entry: "./src/explorer-web/index.tsx",
+        entry: "./src/index.tsx",
 
         resolve: {
             extensions: [".ts", ".tsx", ".js"],
@@ -112,9 +121,10 @@ module.exports = (env) => {
                 {
                     test: /\.tsx?$/,
                     loader: "esbuild-loader",
+                    include: [path.resolve(__dirname, "src")],
                     options: {
                         loader: "tsx",
-                        target: "es2015",
+                        target: "es2020",
                     },
                 },
                 {
@@ -144,8 +154,8 @@ module.exports = (env) => {
             minimizer: OPTS.DEV_MODE
                 ? []
                 : [
-                      new ESBuildMinifyPlugin({
-                          target: "es2015",
+                      new EsbuildPlugin({
+                          target: "es2020",
                       }),
                   ],
         },

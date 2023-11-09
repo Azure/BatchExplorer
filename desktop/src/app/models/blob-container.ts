@@ -8,14 +8,14 @@ export interface BlobContainerAttributes {
     name: string;
     publicAccessLevel: string;
     metadata?: any;
-    lastModified: Date;
+    lastModified?: Date;
     lease?: Partial<ContainerLeaseAttributes>;
 }
 
 /**
  * Class for displaying blob container information.
  */
-@Model()
+@Model("BlobContainer")
 export class BlobContainer extends Record<BlobContainerAttributes> implements NavigableRecord {
     // container name
     @Prop() public id: string;
@@ -25,7 +25,7 @@ export class BlobContainer extends Record<BlobContainerAttributes> implements Na
 
     @Prop() public publicAccessLevel: string;
     @Prop() public metadata: any;
-    @Prop() public lastModified: Date;
+    @Prop() public lastModified?: Date;
     @Prop() public lease: ContainerLease;
     @Prop() public storageAccountId: string;
 

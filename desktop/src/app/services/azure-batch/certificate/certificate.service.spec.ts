@@ -127,14 +127,16 @@ describe("CertificateService", () => {
         expect(certificate.password).toBe("batchtest");
     });
 
-    it("parse a cer certificate", async (done) => {
+    it("parse a cer certificate", async () => {
         const file = await loadCertificate("batchtest2.cer");
-        certificateService.parseCertificate(file, "batchtest").subscribe((certificate) => {
-            expect(certificate.thumbprint).toBe("227341ea44f8deffb6972532818fccf797f7339e");
-            expect(certificate.thumbprintAlgorithm).toBe("sha1");
-            expect(certificate.certificateFormat).toBe("cer");
-            expect(certificate.password).toBeUndefined();
-            done();
+        return new Promise<void>((resolve) => {
+            certificateService.parseCertificate(file, "batchtest").subscribe((certificate) => {
+                expect(certificate.thumbprint).toBe("227341ea44f8deffb6972532818fccf797f7339e");
+                expect(certificate.thumbprintAlgorithm).toBe("sha1");
+                expect(certificate.certificateFormat).toBe("cer");
+                expect(certificate.password).toBeUndefined();
+                resolve();
+            });
         });
     });
 });

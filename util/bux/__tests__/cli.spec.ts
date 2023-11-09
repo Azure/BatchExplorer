@@ -54,19 +54,22 @@ describe("CLI", () => {
         if (err) throw err;
     });
 
-    //Test that localization build script works correctly WITHOUT packageName parameter
+    //Test that localization build script works correctly
     test("Localization", async () => {
         await util.buildTranslations(
             "./__tests__/loc-source",
-            "./build/test-results/loc-results-1"
+            "./build/test-results/loc-results-1/resjson",
+            "./build/test-results/loc-results-1/json",
+            "lib.common"
         );
     });
 
-    //Test that localization build script works correctly WITH packageName parameter
+    //Test that localization build script works correctly
     test("Localization with package name", async () => {
         await util.buildTranslations(
             "./__tests__/loc-source",
-            "./build/test-results/loc-results-2",
+            "./build/test-results/loc-results-2/resjson",
+            "./build/test-results/loc-results-2/json",
             "lib.common"
         );
     });
@@ -74,7 +77,7 @@ describe("CLI", () => {
     //Check that the RESJSON file with the packageName parameter contains the package name in its contents
     test("Check if RESJSON file with packageName parameter contains the package name", () => {
         const data = fs.readFileSync(
-            "./build/test-results/loc-results-2/resources.resjson"
+            "./build/test-results/loc-results-2/resjson/resources.resjson"
         );
         expect(data.toString()).toContain("lib.common");
     });
@@ -85,12 +88,15 @@ describe("CLI", () => {
         await expect(
             createEnglishTranslations(
                 "./__tests__/loc-source-2",
-                "./build/test-results/loc-results-3"
+                "./build/test-results/loc-results-3/resjson",
+                "./build/test-results/loc-results-3/json"
             )
         ).rejects.toThrow(Error);
 
         // expect destination directory to be empty due to error
-        const files = fs.readdirSync("./build/test-results/loc-results-3");
-        expect(files.length).toBe(0);
+        const directoryContents = fs.readdirSync(
+            "./build/test-results/loc-results-3"
+        );
+        expect(directoryContents.length).toBe(0);
     });
 });

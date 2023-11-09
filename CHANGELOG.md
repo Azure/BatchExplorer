@@ -1,3 +1,18 @@
+# 2.19.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/53?closed=1)
+
+### Features
+
+* Add Indonesian translations [\#2838](https://github.com/Azure/BatchExplorer/issues/2838)
+* Update Batch Explorer dataplane API usage [\#2834](https://github.com/Azure/BatchExplorer/issues/2834)
+
+### Bugs
+
+* Restore job creation forms in Gallery  [\#2837](https://github.com/Azure/BatchExplorer/issues/2837)
+* Fix storage functionality on data views [\#2836](https://github.com/Azure/BatchExplorer/issues/2836)
+* Multiple accessibility improvements for color contrast [\#2835](https://github.com/Azure/BatchExplorer/issues/2835)
+
 # 2.18.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/52?closed=1)
@@ -9,7 +24,7 @@
 * Pool list showed pools from previously selected Batch accounts [\#2732](https://github.com/Azure/BatchExplorer/issues/2732)
 * Multiple accessibility bug fixes [\#2754](https://github.com/Azure/BatchExplorer/issues/2754)
 
-### other
+### Other
 
 * Migrates AADGraph API calls to MSGraph [\#2755](https://github.com/Azure/BatchExplorer/issues/2755)
 * Add deprecation warning for certificates for pool creation, pool details, and certificate creation [\#2753](https://github.com/Azure/BatchExplorer/issues/2753)

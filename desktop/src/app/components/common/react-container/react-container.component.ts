@@ -9,9 +9,10 @@ import {
 } from "@angular/core";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {RootPane} from "@batch/ui-react/lib/components/layout";
+import {RootPane} from "@azure/bonito-ui/lib/components/layout";
 import { Subscription } from "rxjs";
 import { Theme, ThemeService } from "app/services";
+import { ThemeName } from "@azure/bonito-ui/lib/theme";
 
 export const ReactWrapper: React.FC = props => {
     return React.createElement(RootPane, {theme: "explorerDark"}, props.children);
@@ -22,14 +23,14 @@ export const NoComponentFound: React.FC = props => {
 };
 
 @Component({
-    selector: "bl-reactcontainer",
+    selector: "be-reactcontainer",
     template: `<ng-container *ngIf="themeInitialized"><div class="react-root" #container></div></ng-container>`,
 })
 export class ReactContainerComponent<P> implements OnChanges, OnDestroy, AfterViewChecked {
 
     @ViewChild('container') rootElement: ElementRef;
 
-    @Input() public component: React.FC<P> | React.ComponentClass<P>
+    @Input() public component: React.FC<P> | React.ComponentClass<P>;
     @Input() public props: P;
     public themeInitialized: boolean = false;
 
@@ -37,7 +38,7 @@ export class ReactContainerComponent<P> implements OnChanges, OnDestroy, AfterVi
 
     private _subs: Subscription[] = [];
 
-    private _themeName: string = "explorerLight";
+    private _themeName: ThemeName = "explorerLight";
 
     private _themeService: ThemeService;
 

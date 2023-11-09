@@ -41,11 +41,10 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
         this._subs.push(this.parameterValue.valueChanges.pipe(
             distinctUntilChanged(),
         ).subscribe((query: string) => {
-                if (this._propagateChange) {
-                    this._propagateChange(query);
-                }
-            }),
-        );
+            if (this._propagateChange) {
+                this._propagateChange(query);
+            }
+        }));
     }
 
     public ngOnChanges(changes) {

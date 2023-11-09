@@ -14,6 +14,7 @@
   ],
   "ignorePatterns": [
     "**/coverage/*",
+    "**/generated/*",
     "**/lib/**/*",
     "**/lib-*/**/*",
     "**/node_modules/**/*"
@@ -85,8 +86,16 @@
             "message": "Import from @fluentui/react/lib/* instead: office-ui-fabric-react is deprecated"
           },
           {
+            "group": ["@azure/*/src/*"],
+            "message": "Import from @azure/*/lib instead of @azure/*/src"
+          },
+          {
             "group": ["@batch/*/src/*"],
             "message": "Import from @batch/*/lib instead of @batch/*/src"
+          },
+          {
+            "group": ["@azure/**/internal/*"],
+            "message": "Importing from package internals is not allowed"
           },
           {
             "group": ["@batch/**/internal/*"],

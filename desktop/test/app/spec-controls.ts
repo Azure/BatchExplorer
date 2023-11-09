@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { DataCacheTracker, GenericView } from "@batch-flask/core";
+import { destroyEnvironment } from "@azure/bonito-core";
 import { Observable } from "rxjs";
 import { MockEntityView, MockListView } from "test/utils/mocks";
 
@@ -10,6 +11,10 @@ import { MockEntityView, MockListView } from "test/utils/mocks";
 afterEach(() => {
     // Remove all caches created
     DataCacheTracker.disposeAll();
+});
+
+afterEach(() => {
+    destroyEnvironment();
 });
 
 // Generic view

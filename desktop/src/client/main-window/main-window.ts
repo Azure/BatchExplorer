@@ -4,7 +4,7 @@ import { TelemetryManager } from "client/core/telemetry";
 import { BrowserWindow, app, ipcMain, nativeImage } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
-import { BatchExplorerApplication, GenericWindow } from "../core";
+import { BatchExplorerApplication, GenericWindow, enableRemoteForWindow } from "../core";
 
 // Webpack dev server url when using HOT=1
 const devServerUrl = Constants.urls.main.dev;
@@ -76,9 +76,9 @@ export class MainWindow extends GenericWindow {
                 allowRunningInsecureContent: false,
                 nodeIntegration: true,
                 contextIsolation: false,
-                enableRemoteModule: true,
             },
         });
+        enableRemoteForWindow(window);
 
         const url = process.env.HOT ? devServerUrl : buildFileUrl;
         this._setupEvents(window);
@@ -106,9 +106,9 @@ export class MainWindow extends GenericWindow {
     }
 
     private _setupEvents(window: Electron.BrowserWindow) {
-        window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
-            log.error("There was a crash", { event, killed });
-            this.batchExplorerApp.recoverWindow.createWithError("The window has crashed: killed=" + event.returnValue);
+        window.webContents.on("render-process-gone", (event, details) => {
+            log.error("Render process crashed", { event, details });
+            this.batchExplorerApp.recoverWindow.createWithError(`The window has crashed: reason=${details.reason}, exitCode=${details.exitCode}`);
         });
 
         ipcMain.once("app-ready", (event) => {

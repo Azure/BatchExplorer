@@ -1,0 +1,7 @@
+form:
+  validation:
+    booleanValueError: Value must be a boolean
+    invalidEnumValue: Invalid value
+    numberValueError: Value must be a number
+    stringListValueError: All values must be strings
+    stringValueError: Value must be a string

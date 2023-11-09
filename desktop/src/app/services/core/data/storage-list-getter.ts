@@ -1,5 +1,6 @@
 import { Type } from "@angular/core";
 import { ContinuationToken, ListGetter, ListGetterConfig, Record, ServerError } from "@batch-flask/core";
+import { BlobStorageClientProxy } from "app/services/storage";
 import { StorageBlobResult } from "app/services/storage/models";
 import { StorageClientService } from "app/services/storage/storage-client.service";
 import { Observable, from, throwError } from "rxjs";
@@ -12,13 +13,15 @@ export interface StorageBaseParams {
 export interface StorageListConfig<TEntity extends Record<any>, TParams extends StorageBaseParams>
     extends ListGetterConfig<TEntity, TParams> {
 
-    getData: (client: any, params: TParams, options: any, token: any) => Promise<StorageBlobResult<TEntity[]>>;
+    getData: (client: BlobStorageClientProxy, params: TParams, options: any, token: any) =>
+        Promise<StorageBlobResult<TEntity[]>>;
 }
 
 export class StorageListGetter<TEntity extends Record<any>, TParams extends StorageBaseParams>
     extends ListGetter<TEntity, TParams> {
 
-    private _getData: (client: any, params: TParams, options: any, token: any) => Promise<StorageBlobResult<TEntity[]>>;
+    private _getData: (client: BlobStorageClientProxy, params: TParams, options: any, token: any) =>
+        Promise<StorageBlobResult<TEntity[]>>;
 
     constructor(
         type: Type<TEntity>,

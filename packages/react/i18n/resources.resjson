@@ -1,4 +1,7 @@
 {
-  "lib.react.create-account-action.location": "Location",
-  "lib.react.create-account-action.storageAccount": "Storage Account"
+  "lib.react.account.parameter.name.label": "Account name",
+  "lib.react.pool.infoBox.nodeCommsModeDiffers.message": "If the target node communication mode differs from the current mode, Batch will attempt to update the mode the next time the pool is resized down to zero compute nodes and back up.",
+  "lib.react.pool.notFound": "No pool found",
+  "lib.react.pool.parameter.currentNodeCommunicationMode.label": "Current node communication mode",
+  "lib.react.pool.parameter.targetNodeCommunicationMode.label": "Target node communication mode"
 }

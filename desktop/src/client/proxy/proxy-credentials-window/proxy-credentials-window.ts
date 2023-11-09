@@ -1,8 +1,9 @@
 import { Constants } from "client/client-constants";
-import { BatchExplorerApplication, ClosedWindowError, UniqueWindow } from "client/core";
+import { BatchExplorerApplication, ClosedWindowError, UniqueWindow, enableRemoteForWindow } from "client/core";
 import { Deferred } from "common";
 import { BrowserWindow, app, ipcMain, nativeImage } from "electron";
 import { ProxyCredentials } from "get-proxy-settings";
+
 const urls = Constants.urls.proxyCredentials;
 const url = process.env.HOT ? urls.dev : urls.prod;
 
@@ -29,9 +30,10 @@ export class ProxyCredentialsWindow extends UniqueWindow {
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
-                enableRemoteModule: true,
             },
         });
+        enableRemoteForWindow(window);
+
         window.loadURL(url);
         window.once("ready-to-show", () => {
             this.show();
