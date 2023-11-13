@@ -75,6 +75,11 @@ export const DemoNavMenu: React.FC = () => {
                     name: "Data Grid: Load More",
                     url: getDemoHash("dataGridLoadMore"),
                 },
+                {
+                    key: "VMExtensionList",
+                    name: "VMExtension List Display",
+                    url: getDemoHash("vmExtensionList"),
+                },
             ],
         },
     ];

@@ -1,5 +1,5 @@
 /// <reference lib="esnext.asynciterable" />
-export * from "./generated/batchClient";
+export * from "./generated/batchManagementClient";
 export * from "./generated/parameters";
 export * from "./generated/responses";
 export * from "./generated/clientDefinitions";
