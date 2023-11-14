@@ -1,8 +1,8 @@
 import { inject } from "@azure/bonito-core/lib/environment";
-import { ArmBatchModels, NodeService } from "@batch/ui-service";
+import { NodeService } from "@batch/ui-service";
 import { BatchDependencyName } from "@batch/ui-service/lib/environment";
 import React from "react";
-import { VmExtensionList } from "./vm-extension-list";
+import { VmExtensionList, VmExtItem } from "./vm-extension-list";
 
 interface NodeVmExtensionListProps {
     accountEndpoint: string;
@@ -13,9 +13,7 @@ interface NodeVmExtensionListProps {
 export const NodeVMExtList = (props: NodeVmExtensionListProps) => {
     const { accountEndpoint, poolId, nodeId } = props;
 
-    const [extensions, setExtensions] = React.useState<
-        ArmBatchModels.VMExtension[]
-    >([]);
+    const [extensions, setExtensions] = React.useState<VmExtItem[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
 
     const nodeService: NodeService = React.useMemo(() => {
@@ -30,7 +28,12 @@ export const NodeVMExtList = (props: NodeVmExtensionListProps) => {
                 const exts = [];
                 if (resList) {
                     for (const ext of resList) {
-                        ext.vmExtension && exts.push(ext.vmExtension);
+                        ext.vmExtension &&
+                            exts.push({
+                                ...ext.vmExtension,
+                                provisioningState: ext.provisioningState,
+                                instanceView: ext.instanceView,
+                            });
                     }
                 }
                 setExtensions(exts);

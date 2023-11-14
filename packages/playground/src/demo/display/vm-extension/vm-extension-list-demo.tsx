@@ -1,9 +1,11 @@
-import { ArmBatchModels } from "@batch/ui-service";
 import React from "react";
-import { VmExtensionList } from "@batch/ui-react/lib/pool/vm-extension/vm-extension-list";
+import {
+    VmExtensionList,
+    VmExtItem,
+} from "@batch/ui-react/lib/pool/vm-extension/vm-extension-list";
 import { DemoPane } from "../../../layout/demo-pane";
 
-const extensions: ArmBatchModels.VMExtension[] = [
+const extensions: VmExtItem[] = [
     {
         name: "CustomExtension100",
         publisher: "Microsoft.Azure.Geneva",

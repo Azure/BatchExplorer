@@ -1,8 +1,8 @@
 import { inject } from "@azure/bonito-core/lib/environment";
-import { ArmBatchModels, PoolService } from "@batch/ui-service";
+import { PoolService } from "@batch/ui-service";
 import { BatchDependencyName } from "@batch/ui-service/lib/environment";
 import React from "react";
-import { VmExtensionList } from "./vm-extension-list";
+import { VmExtensionList, VmExtItem } from "./vm-extension-list";
 
 interface PoolVmExtensionListProps {
     subscriptionId: string;
@@ -15,9 +15,7 @@ export const PoolVMExtList = (props: PoolVmExtensionListProps) => {
     const { subscriptionId, resourceGroupName, batchAccountName, poolName } =
         props;
 
-    const [extensions, setExtensions] = React.useState<
-        ArmBatchModels.VMExtension[]
-    >([]);
+    const [extensions, setExtensions] = React.useState<VmExtItem[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
 
     const poolService: PoolService = React.useMemo(() => {
@@ -34,7 +32,7 @@ export const PoolVMExtList = (props: PoolVmExtensionListProps) => {
                 const extensions =
                     pool?.properties?.deploymentConfiguration
                         ?.virtualMachineConfiguration?.extensions ?? [];
-                setExtensions(extensions);
+                setExtensions(extensions as VmExtItem[]);
                 setLoading(false);
             });
     }, [
