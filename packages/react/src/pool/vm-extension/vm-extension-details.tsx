@@ -12,59 +12,7 @@ interface VmExtensionDetailsProps {
     vme: VmExtItem | null;
 }
 
-// export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
-//     const { vme } = props;
-
-//     if (!vme?.vmExtension) {
-//         return null;
-//     }
-//     const extension = vme.vmExtension;
-
-//     const fields = [
-//         {
-//             label: "Type",
-//             value: extension.type,
-//         },
-//         {
-//             label: "Version",
-//             value: extension.typeHandlerVersion,
-//         },
-//         {
-//             label: "Publisher",
-//             value: extension.publisher,
-//         },
-//         {
-//             label: "Enable automatic upgrade",
-//             value: extension.enableAutomaticUpgrade ? "Yes" : "No",
-//         },
-//         {
-//             label: "settings",
-//             value: (
-//                 <TextField
-//                     autoAdjustHeight
-//                     multiline
-//                     contentEditable={false}
-//                     value={JSON.stringify(vme.settings, null, 4)}
-//                     resizable={false}
-//                 ></TextField>
-//             ),
-//         },
-//     ];
-
-//     // render all properties
-//     return (
-//         <div style={{ paddingTop: "20px" }}>
-//             {fields.map((field) => (
-//                 <div key={field.label} style={{ paddingBottom: "15px" }}>
-//                     <div style={{ marginBottom: "4px" }}>{field.label}</div>
-//                     <div>{field.value}</div>
-//                 </div>
-//             ))}
-//         </div>
-//     );
-// };
-
-export const VmExtensionDetails2 = (props: VmExtensionDetailsProps) => {
+export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
     const { vme } = props;
 
     if (!vme) {
@@ -108,6 +56,10 @@ export const VmExtensionDetails2 = (props: VmExtensionDetailsProps) => {
                         label="Status message"
                         value={vme.instanceView?.statuses?.[0]?.message}
                     />
+                    <TextProperty
+                        label="Status time"
+                        value={vme.instanceView?.statuses?.[0]?.time}
+                    />
                 </PropertyGroup>
             )}
         </PropertyList>
@@ -134,7 +86,7 @@ export const VmExtensionDetailsPanel = (
             type={PanelType.custom}
             customWidth="650px"
         >
-            <VmExtensionDetails2 vme={vme} />
+            <VmExtensionDetails vme={vme} />
         </Panel>
     );
 };

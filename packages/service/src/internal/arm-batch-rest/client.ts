@@ -18,6 +18,9 @@ export function createARMBatchClient(
         options = {
             ...options,
             httpClient: new BatchHttpClient(),
+            retryOptions: {
+                maxRetries: 0,
+            },
         };
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

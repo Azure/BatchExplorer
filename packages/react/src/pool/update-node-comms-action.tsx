@@ -39,9 +39,13 @@ export class UpdateNodeCommsAction extends AbstractAction<UpdateNodeCommsFormVal
     private _pool?: PoolOutput;
 
     async onInitialize(): Promise<UpdateNodeCommsFormValues> {
-        this._pool = await this._poolService.get(this._poolArmId, {
-            commandName: "UpdateNodeCommsAction/GetPool",
-        });
+        this._pool = await this._poolService.get(
+            this._batchAccountId,
+            this._poolName,
+            {
+                commandName: "UpdateNodeCommsAction/GetPool",
+            }
+        );
 
         if (!this._pool) {
             return {};
@@ -136,6 +140,8 @@ export class UpdateNodeCommsAction extends AbstractAction<UpdateNodeCommsFormVal
 
     async onExecute(values: UpdateNodeCommsFormValues): Promise<void> {
         await this._poolService.patch(
+            this._batchAccountId,
+            this._poolName,
             {
                 id: this._poolArmId,
                 properties: {

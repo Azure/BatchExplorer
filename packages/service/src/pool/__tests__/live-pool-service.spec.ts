@@ -11,8 +11,8 @@ import { initMockBatchEnvironment } from "../../environment";
 describe("LivePoolService", () => {
     const hoboAcctId =
         "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo";
-    const hoboPoolOneId =
-        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1";
+    const hoboPoolName = "hobopool1";
+    const hoboPoolOneId = `${hoboAcctId}/pools/${hoboPoolName}`;
 
     let service: PoolService;
     let fakeSet: BatchFakeSet;
@@ -59,9 +59,12 @@ describe("LivePoolService", () => {
             )
         );
 
-        expect(() => service.listByAccountId(hoboAcctId)).rejects.toThrowError(
-            `Failed to list pools under account ${hoboAcctId} [unexpected 500 status]\nResponse body:\nBoom`
-        );
+        await expect(() => service.listByAccountId(hoboAcctId)).rejects
+            .toMatchInlineSnapshot(`
+                    [Error: The Batch data plane returned an unexpected status code [unexpected 500 status]
+                    Response body:
+                    "Boom"]
+                `);
     });
 
     test("Get by resource ID", async () => {
@@ -77,7 +80,7 @@ describe("LivePoolService", () => {
             )
         );
 
-        const pool = await service.get(hoboPoolOneId);
+        const pool = await service.get(hoboAcctId, "hobopool1");
         expect(pool?.name).toEqual("hobopool1");
     });
 
@@ -94,9 +97,12 @@ describe("LivePoolService", () => {
             )
         );
 
-        expect(() => service.get(hoboPoolOneId)).rejects.toThrowError(
-            `Failed to get pool by ID ${hoboPoolOneId} [unexpected 500 status]\nResponse body:\nBoom`
-        );
+        await expect(() => service.get(hoboAcctId, "hobopool1")).rejects
+            .toMatchInlineSnapshot(`
+                    [Error: The Batch data plane returned an unexpected status code [unexpected 500 status]
+                    Response body:
+                    "Boom"]
+                `);
     });
 
     test("Create, update, patch", async () => {
@@ -149,7 +155,11 @@ describe("LivePoolService", () => {
         );
 
         // Create
-        let pool = await service.createOrUpdate(newPool);
+        let pool = await service.createOrUpdate(
+            hoboAcctId,
+            "newtestpool",
+            newPool
+        );
         expect(pool?.name).toEqual("newtestpool");
 
         if (newPool.properties?.scaleSettings?.fixedScale) {
@@ -179,7 +189,7 @@ describe("LivePoolService", () => {
         );
 
         // Update
-        pool = await service.createOrUpdate(newPool);
+        pool = await service.createOrUpdate(hoboAcctId, "newtestpool", newPool);
         expect(pool?.name).toEqual("newtestpool");
 
         const patch: Pool = {
@@ -210,7 +220,7 @@ describe("LivePoolService", () => {
         );
 
         // Patch
-        pool = await service.patch(patch);
+        pool = await service.patch(hoboAcctId, "newtestpool", patch);
         expect(pool?.name).toEqual("newtestpool");
         expect(
             pool?.properties?.scaleSettings?.fixedScale?.targetDedicatedNodes

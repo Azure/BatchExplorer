@@ -9,11 +9,19 @@ export class FakePoolService implements PoolService {
         this.fakeSet = fakeSet;
     }
 
-    async createOrUpdate(pool: Pool): Promise<PoolOutput> {
+    async createOrUpdate(
+        batchAccountId: string,
+        poolName: string,
+        pool: Pool
+    ): Promise<PoolOutput> {
         return this.fakeSet.putPool(pool);
     }
 
-    async get(id: string): Promise<PoolOutput | undefined> {
+    async get(
+        batchAccountId: string,
+        poolName: string
+    ): Promise<PoolOutput | undefined> {
+        const id = `${batchAccountId}/pools/${poolName}`;
         return this.fakeSet.getPool(id);
     }
 
@@ -21,7 +29,11 @@ export class FakePoolService implements PoolService {
         return this.fakeSet.listPoolsByAccount(accountId);
     }
 
-    async patch(pool: Pool): Promise<PoolOutput> {
+    async patch(
+        batchAccountId: string,
+        poolName: string,
+        pool: Pool
+    ): Promise<PoolOutput> {
         return this.fakeSet.patchPool(pool);
     }
 }

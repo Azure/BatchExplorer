@@ -17,6 +17,19 @@ const extensions: VmExtItem[] = [
             applicationId: "settings1",
             version: "3.3.3",
         },
+        provisioningState: "Succeeded",
+        instanceView: {
+            name: "CustomExtension100",
+            statuses: [
+                {
+                    code: "ProvisioningState/succeeded",
+                    level: "Info",
+                    displayStatus: "Provisioning succeeded",
+                    message: "Provisioning succeeded",
+                    time: "2021-06-15T21:59:14.0000000Z",
+                },
+            ],
+        },
     },
     {
         name: "batchextension1",
@@ -30,6 +43,19 @@ const extensions: VmExtItem[] = [
             authenticationSettingsKey: "authenticationSettingsValue",
         },
         provisionAfterExtensions: ["CustomExtension100"],
+        provisioningState: "Failed",
+        instanceView: {
+            name: "batchextension1",
+            statuses: [
+                {
+                    code: "ProvisioningState/failed",
+                    level: "Error",
+                    displayStatus: "Provisioning failed",
+                    message: "Provisioning failed",
+                    time: "2021-06-15T21:59:14.0000000Z",
+                },
+            ],
+        },
     },
 ];
 

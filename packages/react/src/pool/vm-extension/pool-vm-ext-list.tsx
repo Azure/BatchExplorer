@@ -5,15 +5,12 @@ import React from "react";
 import { VmExtensionList, VmExtItem } from "./vm-extension-list";
 
 interface PoolVmExtensionListProps {
-    subscriptionId: string;
-    resourceGroupName: string;
-    batchAccountName: string;
+    batchAccountId: string;
     poolName: string;
 }
 
 export const PoolVMExtList = (props: PoolVmExtensionListProps) => {
-    const { subscriptionId, resourceGroupName, batchAccountName, poolName } =
-        props;
+    const { batchAccountId, poolName } = props;
 
     const [extensions, setExtensions] = React.useState<VmExtItem[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
@@ -24,24 +21,14 @@ export const PoolVMExtList = (props: PoolVmExtensionListProps) => {
 
     React.useEffect(() => {
         setLoading(true);
-        poolService
-            .get(
-                `/subscriptions/${subscriptionId}/resourceGroups/${resourceGroupName}/providers/Microsoft.Batch/batchAccounts/${batchAccountName}/pools/${poolName}`
-            )
-            .then((pool) => {
-                const extensions =
-                    pool?.properties?.deploymentConfiguration
-                        ?.virtualMachineConfiguration?.extensions ?? [];
-                setExtensions(extensions as VmExtItem[]);
-                setLoading(false);
-            });
-    }, [
-        batchAccountName,
-        poolName,
-        poolService,
-        resourceGroupName,
-        subscriptionId,
-    ]);
+        poolService.get(batchAccountId, poolName).then((pool) => {
+            const extensions =
+                pool?.properties?.deploymentConfiguration
+                    ?.virtualMachineConfiguration?.extensions ?? [];
+            setExtensions(extensions as VmExtItem[]);
+            setLoading(false);
+        });
+    }, [batchAccountId, poolName, poolService]);
 
     return <VmExtensionList extensions={extensions} loading={loading} />;
 };
