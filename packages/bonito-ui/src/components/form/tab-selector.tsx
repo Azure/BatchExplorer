@@ -4,7 +4,7 @@ import {
     ParameterName,
 } from "@azure/bonito-core/lib/form";
 import { delayedCallback } from "@azure/bonito-core/lib/util";
-import { Pivot, PivotItem } from "@fluentui/react/lib/Pivot";
+import { IPivotStyles, Pivot, PivotItem } from "@fluentui/react/lib/Pivot";
 import * as React from "react";
 import { useFormParameter, useUniqueId } from "../../hooks";
 import { FormControlProps } from "./form-control";
@@ -14,7 +14,7 @@ export interface TabSelectorProps<
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = ParameterDependencies<V>
 > extends FormControlProps<V, K, D> {
-    overflowBehavior?: "none" | "menu";
+    overflowBehavior?: "none" | "menu" | "wrap";
     options: TabOption<V, K>[];
     valueToKey?: (value?: V[K]) => string;
 }
@@ -84,13 +84,23 @@ export function TabSelector<
 
     const toKey = valueToKey ?? defaultValueToKey;
 
+    let pivotOverflow: "none" | "menu" = "menu";
+    let pivotStyles: Partial<IPivotStyles> | undefined = undefined;
+    if (overflowBehavior === "wrap") {
+        pivotOverflow = "none";
+        pivotStyles = { root: { display: "flex", flexWrap: "wrap" } };
+    } else if (overflowBehavior) {
+        pivotOverflow = overflowBehavior;
+    }
+
     return (
         <Pivot
             id={id}
             aria-label={ariaLabel ?? param.label}
             className={className}
             style={style}
-            overflowBehavior={overflowBehavior ?? "menu"}
+            styles={pivotStyles}
+            overflowBehavior={pivotOverflow}
             // TODO: Support disabled, errorMessage
             // disabled={disabled || param.disabled}
             // errorMessage={validationError}

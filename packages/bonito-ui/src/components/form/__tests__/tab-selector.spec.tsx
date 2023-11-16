@@ -7,7 +7,7 @@ import { createParam } from "../../../form";
 import { runAxe } from "../../../test-util/a11y";
 import { TabSelector } from "../tab-selector";
 
-describe("Dropdown form control", () => {
+describe("Tab selector control", () => {
     beforeEach(() => initMockBrowserEnvironment());
 
     test("Render simple tab selector", async () => {
