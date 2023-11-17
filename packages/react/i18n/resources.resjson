@@ -1,7 +1,23 @@
 {
   "lib.react.account.parameter.name.label": "Account name",
+  "lib.react.common.general": "General",
+  "lib.react.common.message": "Message",
+  "lib.react.common.name": "Name",
+  "lib.react.common.no": "No",
+  "lib.react.common.time": "Time",
+  "lib.react.common.yes": "yes",
   "lib.react.pool.infoBox.nodeCommsModeDiffers.message": "If the target node communication mode differs from the current mode, Batch will attempt to update the mode the next time the pool is resized down to zero compute nodes and back up.",
   "lib.react.pool.notFound": "No pool found",
   "lib.react.pool.parameter.currentNodeCommunicationMode.label": "Current node communication mode",
-  "lib.react.pool.parameter.targetNodeCommunicationMode.label": "Target node communication mode"
+  "lib.react.pool.parameter.targetNodeCommunicationMode.label": "Target node communication mode",
+  "lib.react.vmExtension.enableAutoUpdate": "Enable automatic upgrade",
+  "lib.react.vmExtension.latestStatus": "Latest status",
+  "lib.react.vmExtension.name": "Name",
+  "lib.react.vmExtension.noResult": "No VM extensions found",
+  "lib.react.vmExtension.provisioningState": "Provisioning state",
+  "lib.react.vmExtension.publisher": "Publisher",
+  "lib.react.vmExtension.settings": "Settings",
+  "lib.react.vmExtension.status": "Status",
+  "lib.react.vmExtension.type": "Type",
+  "lib.react.vmExtension.version": "Version"
 }

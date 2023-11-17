@@ -8,13 +8,23 @@ export class LiveNodeService
     extends AbstractHttpService
     implements NodeService
 {
+    private _ensureHttpsEndpoint(accountEndpoint: string): string {
+        if (!accountEndpoint.startsWith("https://")) {
+            return `https://${accountEndpoint}`;
+        }
+
+        return accountEndpoint;
+    }
+
     async listBatchNodes(
         accountEndpoint: string,
         poolId: string,
         opts?: OperationOptions | undefined
     ): Promise<BatchNodeOutput[] | undefined> {
         const listNodePath = "/pools/{poolId}/nodes";
-        const batchClient = createBatchClient(accountEndpoint);
+        const batchClient = createBatchClient(
+            this._ensureHttpsEndpoint(accountEndpoint)
+        );
         const res = await batchClient.path(listNodePath, poolId).get();
 
         if (isUnexpected(res)) {
@@ -32,7 +42,9 @@ export class LiveNodeService
     ): Promise<BatchNodeVMExtensionOutput[] | undefined> {
         const listNodeExtensionPath =
             "/pools/{poolId}/nodes/{nodeId}/extensions";
-        const batchClient = createBatchClient(accountEndpoint);
+        const batchClient = createBatchClient(
+            this._ensureHttpsEndpoint(accountEndpoint)
+        );
         const res = await batchClient
             .path(listNodeExtensionPath, poolId, nodeId)
             .get();

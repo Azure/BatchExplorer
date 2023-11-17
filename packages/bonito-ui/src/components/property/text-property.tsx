@@ -4,6 +4,7 @@ import { PropertyField } from "./property-field";
 export interface TextPropertyProps {
     label?: string;
     value?: string;
+    hideCopyButton?: boolean;
 }
 
 function getText(value?: string): string {
@@ -18,6 +19,7 @@ export const TextProperty: React.FC<TextPropertyProps> = (props) => {
         <PropertyField
             label={props.label}
             value={props.value}
+            hideCopyButton={props.hideCopyButton}
             renderLabel={(label) => {
                 return <label>{label ? label : "-"}</label>;
             }}

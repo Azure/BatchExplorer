@@ -6,6 +6,7 @@ import { copyToClipboard } from "@azure/bonito-core";
 export interface PropertyFieldProps<T> {
     label?: string;
     value?: T;
+    hideCopyButton?: boolean;
     getText?: (value?: T) => string;
     renderLabel?: (label?: string) => React.ReactNode;
     renderValue?: (value?: T) => React.ReactNode;
@@ -115,13 +116,15 @@ export function PropertyField<T>(props: PropertyFieldProps<T>): JSX.Element {
                                 visibility: "hidden",
                             }}
                         >
-                            <IconButton
-                                // Line height is 24px, icon height is 32px. Need
-                                // to move the icon up 4px to align center with text
-                                style={{ marginTop: "-4px" }}
-                                iconProps={{ iconName: "copy" }}
-                                onClick={clipboardClickHandler}
-                            />
+                            {props.hideCopyButton || (
+                                <IconButton
+                                    // Line height is 24px, icon height is 32px. Need
+                                    // to move the icon up 4px to align center with text
+                                    style={{ marginTop: "-4px" }}
+                                    iconProps={{ iconName: "copy" }}
+                                    onClick={clipboardClickHandler}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,11 @@
+vmExtension:
+  noResult: No VM extensions found
+  name: Name
+  type: Type
+  version: Version
+  enableAutoUpdate: Enable automatic upgrade
+  provisioningState: Provisioning state
+  publisher: Publisher
+  settings: Settings
+  latestStatus: Latest status
+  status: Status

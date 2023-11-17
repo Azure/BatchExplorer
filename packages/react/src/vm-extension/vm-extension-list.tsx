@@ -10,6 +10,7 @@ import {
     VmExtensionDetailsPanel,
 } from "./vm-extension-details";
 import { Link } from "@fluentui/react/lib/Link";
+import { translate } from "@azure/bonito-core";
 
 export type VmExtItem = BatchModels.VMExtensionOutput & {
     provisioningState?: string;
@@ -26,7 +27,7 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
 
     const [panelOpen, setPanelOpen] = React.useState<boolean>(false);
     const [selectedExtension, setSelectedExtension] =
-        React.useState<VmExtItem | null>(null);
+        React.useState<VmExtItem>();
 
     const hasProvisioningState = React.useMemo<boolean>(() => {
         return extensions.some((ext) => {
@@ -37,7 +38,7 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
     const columns = React.useMemo<DataGridColumn[]>(() => {
         const cols = [
             {
-                label: "Name",
+                label: translate("lib.react.vmExtension.name"),
                 prop: "name",
                 minWidth: 200,
                 onRender: (item: VmExtItem) => {
@@ -54,16 +55,16 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
                 },
             },
             {
-                label: "Type",
+                label: translate("lib.react.vmExtension.type"),
                 prop: "type",
                 minWidth: 200,
             },
             {
-                label: "Version",
+                label: translate("lib.react.vmExtension.version"),
                 prop: "typeHandlerVersion",
             },
             {
-                label: "Enable automatic upgrade",
+                label: translate("lib.react.vmExtension.enableAutoUpdate"),
                 prop: "enableAutomaticUpgrade",
                 minWidth: 200,
                 onRender: (item: VmExtItem) => {
@@ -73,7 +74,7 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
         ];
         if (hasProvisioningState) {
             cols.splice(cols.findIndex((c) => c.prop === "type") + 1, 0, {
-                label: "Provisioning state",
+                label: translate("lib.react.vmExtension.provisioningState"),
                 prop: "provisioningState",
                 minWidth: 200,
             });
@@ -87,7 +88,7 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
                 selectionMode="none"
                 columns={columns}
                 items={extensions}
-                noResultText="No extensions"
+                noResultText={translate("lib.react.vmExtension.noResult")}
                 hasMore={loading}
             />
             <VmExtensionDetailsPanel

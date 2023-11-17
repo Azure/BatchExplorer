@@ -2,7 +2,7 @@ import React from "react";
 import {
     VmExtensionList,
     VmExtItem,
-} from "@batch/ui-react/lib/pool/vm-extension/vm-extension-list";
+} from "@batch/ui-react/lib/vm-extension/vm-extension-list";
 import { DemoPane } from "../../../layout/demo-pane";
 
 const extensions: VmExtItem[] = [

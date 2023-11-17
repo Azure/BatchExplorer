@@ -1,0 +1,7 @@
+common:
+  yes: yes
+  no: No
+  name: Name
+  time: Time
+  message: Message
+  general: General
