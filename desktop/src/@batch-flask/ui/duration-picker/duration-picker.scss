@@ -13,7 +13,7 @@ bl-duration-picker {
         }
     }
 
-    > .error {
+    > .error-container > .error {
         color: $danger-color;
     }
 }
