@@ -39,6 +39,10 @@ bl-select-dropdown {
         &.focused {
             color: $primary-contrast-color;
             background: $primary-color-light;
+            padding-left: 3px;
+            border-width: 2px;
+            border-style: solid;
+            border-color: $primary-color;
         }
 
         &.disabled {
