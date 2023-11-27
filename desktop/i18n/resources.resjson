@@ -309,6 +309,8 @@
   "pool-details.deprecationWarning.imagePassedEndOfLife": "This pool's image is past its end-of-life date of {imageEndOfLifeDate}. Please recreate this pool using a different image afterwards.",
   "pool-details.estimatedCost": "Estimated cost of this pool at this current state",
   "pool-details.graphs": "Graphs",
+  "pool-details.learnMore": "Learn more",
+  "pool-details.learnMoreTitle": "Documentation on image end-of-life",
   "pool-details.openInNewWindow": "Open in a new window",
   "pool-graphs.application-insights": "Application Insights",
   "pool-graphs.available-nodes": "Available nodes",
