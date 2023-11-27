@@ -5,7 +5,6 @@ bl-pool-configuration {
     .certificate-deprecation-warning {
         > .warning {
             background-color: var(--color-warn-50);
-            // Primary text color was not dark enough to contrast with link color. Deepened it 6 shades.
             color: #201F1E;
 
             > .summary-container {
