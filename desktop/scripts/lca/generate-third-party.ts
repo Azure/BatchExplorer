@@ -61,7 +61,7 @@ const additionalDependencies: Dependency[] = [
     },
     {
         name: "node.js",
-        version: "20.9.0",
+        version: "18.16.1",
         url: "https://nodejs.org/en/",
         repoUrl: "https://github.com/nodejs/node",
         licenseType: "MIT",
