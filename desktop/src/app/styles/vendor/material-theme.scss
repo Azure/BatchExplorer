@@ -89,7 +89,9 @@ mat-radio-button {
         }
 
         .mat-radio-inner-circle {
-            background: $primary-color !important;
+            border-color: $primary-color !important;
+            border-width: 10px;
+            border-style: solid;
         }
     }
 }
