@@ -1,5 +1,7 @@
 import { Component, ContentChild, Input, TemplateRef, ViewChild } from "@angular/core";
 
+import "./tabs.scss";
+
 @Component({
     selector: "bl-tab-label",
     template: "<ng-template><ng-content></ng-content></ng-template>",

@@ -61,7 +61,7 @@ const additionalDependencies: Dependency[] = [
     },
     {
         name: "node.js",
-        version: "7.4.0",
+        version: "18.16.1",
         url: "https://nodejs.org/en/",
         repoUrl: "https://github.com/nodejs/node",
         licenseType: "MIT",
@@ -75,11 +75,18 @@ const additionalDependencies: Dependency[] = [
     },
     {
         name: "Electron",
-        version: "1.8.1",
+        version: "26.1.0",
         url: "https://electronjs.org/",
         repoUrl: "https://github.com/electron/electron",
         licenseType: "electron",
     },
+    {
+        name: "Chromium",
+        version: "116.0",
+        url: "https://www.chromium.org/",
+        repoUrl: "https://source.chromium.org/chromium/chromium/src",
+        licenseType: "BSD-3-Clause"
+    }
 ];
 
 function listDependencies(): string[] {
