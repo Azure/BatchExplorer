@@ -1,0 +1,9 @@
+@import "app/styles/variables";
+
+mat-tab-group {
+    &:not(.form-tabs) .mat-tab-label.cdk-keyboard-focused {
+        border-width: 1px;
+        border-style: solid;
+        border-color: $button-basic-text-color !important;
+    }
+}
