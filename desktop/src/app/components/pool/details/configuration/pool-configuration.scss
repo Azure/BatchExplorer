@@ -5,8 +5,7 @@ bl-pool-configuration {
     .certificate-deprecation-warning {
         > .warning {
             background-color: var(--color-warn-50);
-            // using the color from var(--color-text-primary)
-            color: #333333;
+            color: #201f1e;
 
             > .summary-container {
 
@@ -22,7 +21,6 @@ bl-pool-configuration {
     }
 
     .certificate-warning-alternative-link {
-        // using the color from var(--color-primary-800);
-        color: #1d54af;
+        color: var(--color-primary-600);
     }
 }
