@@ -2,6 +2,8 @@ pool-details:
   graphs: Graphs
   openInNewWindow: Open in a new window
   estimatedCost: Estimated cost of this pool at this current state
+  learnMore: Learn more
+  learnMoreTitle: Documentation on image end-of-life
   deprecationWarning:
     imageNearingEndOfLife: This pool's image is nearing its end-of-life date of {imageEndOfLifeDate}. After this date, it will not appear as an option when creating new pools. API calls to create or scale pools using the image may continue to function for up to 60 days afterwards.
     imageFarAwayFromEndOfLife: This pool's image has an end-of-life date of {imageEndOfLifeDate}. After this date, it will not appear as an option when creating new pools. API calls to create or scale pools using the image may continue to function for up to 60 days afterwards.
