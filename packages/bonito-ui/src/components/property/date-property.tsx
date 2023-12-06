@@ -6,6 +6,7 @@ export interface DatePropertyProps {
     label?: string;
     value?: Date;
     hideCopyButton?: boolean;
+    labalStyle?: React.CSSProperties;
 }
 
 function getText(value?: Date): string {
@@ -21,6 +22,7 @@ export const DateProperty: React.FC<DatePropertyProps> = (props) => {
             label={props.label}
             value={props.value}
             hideCopyButton={props.hideCopyButton}
+            labalStyle={props.labalStyle}
             getText={getText}
             renderLabel={(label) => {
                 return <label>{label}</label>;

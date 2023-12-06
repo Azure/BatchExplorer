@@ -7,6 +7,7 @@ export interface PropertyFieldProps<T> {
     label?: string;
     value?: T;
     hideCopyButton?: boolean;
+    labalStyle?: React.CSSProperties;
     getText?: (value?: T) => string;
     renderLabel?: (label?: string) => React.ReactNode;
     renderValue?: (value?: T) => React.ReactNode;
@@ -68,7 +69,7 @@ export function PropertyField<T>(props: PropertyFieldProps<T>): JSX.Element {
                 style={{
                     display: "flex",
                     maxWidth: "1200px",
-                    minWidth: "600px",
+                    minWidth: "500px",
                 }}
                 onMouseOver={mouseOverHandler}
                 onMouseOut={mouseOutHandler}
@@ -77,10 +78,11 @@ export function PropertyField<T>(props: PropertyFieldProps<T>): JSX.Element {
                     data-testid="label"
                     className="property-label"
                     style={{
-                        flexBasis: "160px",
+                        flexBasis: "180px",
                         flexShrink: 0,
                         height: "24px",
                         lineHeight: "24px",
+                        ...props.labalStyle,
                     }}
                 >
                     {props.renderLabel && props.renderLabel(props.label)}

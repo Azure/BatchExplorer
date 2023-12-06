@@ -4,6 +4,7 @@ import {
     VmExtItem,
 } from "@batch/ui-react/lib/vm-extension/vm-extension-list";
 import { DemoPane } from "../../../layout/demo-pane";
+import { VmExtensionDetailsPanel } from "@batch/ui-react";
 
 const extensions: VmExtItem[] = [
     {
@@ -16,6 +17,9 @@ const extensions: VmExtItem[] = [
         settings: {
             applicationId: "settings1",
             version: "3.3.3",
+            version1: "3.3.4",
+            version2: "3.3.5",
+            version3: "3.3.6",
         },
         provisioningState: "Succeeded",
         instanceView: {
@@ -60,9 +64,25 @@ const extensions: VmExtItem[] = [
 ];
 
 export const VmExtensionListDemo: React.FC = () => {
+    const [panelOpen, setPanelOpen] = React.useState<boolean>(false);
+    const [selectedExtension, setSelectedExtension] =
+        React.useState<VmExtItem>();
+
     return (
         <DemoPane title="VM Extension List">
-            <VmExtensionList extensions={extensions} loading={false} />
+            <VmExtensionList
+                extensions={extensions}
+                loading={false}
+                onItemClick={(item) => {
+                    setSelectedExtension(item);
+                    setPanelOpen(true);
+                }}
+            />
+            <VmExtensionDetailsPanel
+                isOpen={panelOpen}
+                vme={selectedExtension}
+                onDismiss={() => setPanelOpen(false)}
+            />
         </DemoPane>
     );
 };

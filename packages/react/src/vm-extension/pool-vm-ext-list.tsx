@@ -7,10 +7,11 @@ import { VmExtensionList, VmExtItem } from "./vm-extension-list";
 interface PoolVmExtensionListProps {
     batchAccountId: string;
     poolId: string;
+    onItemClick?: (item: VmExtItem) => void;
 }
 
 export const PoolVMExtList = (props: PoolVmExtensionListProps) => {
-    const { batchAccountId, poolId } = props;
+    const { batchAccountId, poolId, onItemClick } = props;
 
     const [extensions, setExtensions] = React.useState<VmExtItem[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
@@ -30,5 +31,11 @@ export const PoolVMExtList = (props: PoolVmExtensionListProps) => {
         });
     }, [batchAccountId, poolId, poolService]);
 
-    return <VmExtensionList extensions={extensions} loading={loading} />;
+    return (
+        <VmExtensionList
+            extensions={extensions}
+            loading={loading}
+            onItemClick={onItemClick}
+        />
+    );
 };

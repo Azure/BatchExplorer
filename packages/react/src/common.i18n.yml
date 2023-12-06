@@ -1,7 +1,8 @@
 common:
-  yes: yes
+  yes: Yes
   no: No
   name: Name
   time: Time
   message: Message
   general: General
+  search: Search

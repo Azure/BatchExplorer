@@ -5,12 +5,10 @@ import {
     DataGrid,
     DataGridColumn,
 } from "@azure/bonito-ui/lib/components/data-grid";
-import {
-    getEnableAutomaticUpgradeValue,
-    VmExtensionDetailsPanel,
-} from "./vm-extension-details";
+import { getEnableAutomaticUpgradeValue } from "./vm-extension-details";
 import { Link } from "@fluentui/react/lib/Link";
 import { translate } from "@azure/bonito-core";
+import { SearchBox } from "@fluentui/react/lib/SearchBox";
 
 export type VmExtItem = BatchModels.VMExtensionOutput & {
     provisioningState?: string;
@@ -20,20 +18,34 @@ export type VmExtItem = BatchModels.VMExtensionOutput & {
 interface VmExtensionListProps {
     loading: boolean;
     extensions: VmExtItem[];
+    onItemClick?: (item: VmExtItem) => void;
 }
 
 export const VmExtensionList = (props: VmExtensionListProps) => {
-    const { extensions, loading } = props;
-
-    const [panelOpen, setPanelOpen] = React.useState<boolean>(false);
-    const [selectedExtension, setSelectedExtension] =
-        React.useState<VmExtItem>();
+    const { extensions, loading, onItemClick } = props;
 
     const hasProvisioningState = React.useMemo<boolean>(() => {
         return extensions.some((ext) => {
             return ext?.provisioningState !== undefined;
         });
     }, [extensions]);
+
+    const [filterValue, setFilterValue] = React.useState<string>("");
+
+    const displayedExtensions = React.useMemo<VmExtItem[]>(() => {
+        if (!filterValue) {
+            return extensions;
+        }
+        const lowerFilter = filterValue.toLowerCase();
+        return extensions.filter((ext) => {
+            return (
+                ext.name.toLowerCase().includes(lowerFilter) ||
+                ext.type.toLowerCase().includes(lowerFilter) ||
+                ext.typeHandlerVersion?.toLowerCase().includes(lowerFilter) ||
+                ext.provisioningState?.toLowerCase().includes(lowerFilter)
+            );
+        });
+    }, [extensions, filterValue]);
 
     const columns = React.useMemo<DataGridColumn[]>(() => {
         const cols = [
@@ -45,8 +57,7 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
                     return (
                         <Link
                             onClick={() => {
-                                setSelectedExtension(item);
-                                setPanelOpen(true);
+                                onItemClick?.(item);
                             }}
                         >
                             {item.name}
@@ -80,21 +91,24 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
             });
         }
         return cols;
-    }, [hasProvisioningState]);
+    }, [hasProvisioningState, onItemClick]);
 
     return (
         <>
+            <SearchBox
+                value={filterValue}
+                onChange={(_, value) => {
+                    setFilterValue(value || "");
+                }}
+                placeholder={translate("lib.react.common.search")}
+            />
             <DataGrid
                 selectionMode="none"
+                compact
                 columns={columns}
-                items={extensions}
+                items={displayedExtensions}
                 noResultText={translate("lib.react.vmExtension.noResult")}
                 hasMore={loading}
-            />
-            <VmExtensionDetailsPanel
-                isOpen={panelOpen}
-                vme={selectedExtension}
-                onDismiss={() => setPanelOpen(false)}
             />
         </>
     );

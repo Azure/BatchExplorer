@@ -8,10 +8,11 @@ interface NodeVmExtensionListProps {
     accountEndpoint: string;
     poolId: string;
     nodeId: string;
+    onItemClick?: (item: VmExtItem) => void;
 }
 
 export const NodeVMExtList = (props: NodeVmExtensionListProps) => {
-    const { accountEndpoint, poolId, nodeId } = props;
+    const { accountEndpoint, poolId, nodeId, onItemClick } = props;
 
     const [extensions, setExtensions] = React.useState<VmExtItem[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
@@ -41,5 +42,11 @@ export const NodeVMExtList = (props: NodeVmExtensionListProps) => {
             });
     }, [accountEndpoint, nodeId, nodeService, poolId]);
 
-    return <VmExtensionList extensions={extensions} loading={loading} />;
+    return (
+        <VmExtensionList
+            extensions={extensions}
+            loading={loading}
+            onItemClick={onItemClick}
+        />
+    );
 };

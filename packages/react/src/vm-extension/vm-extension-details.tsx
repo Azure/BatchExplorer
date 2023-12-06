@@ -1,6 +1,5 @@
 import React from "react";
 import { TextField } from "@fluentui/react/lib/TextField";
-import { Panel, PanelType } from "@fluentui/react/lib/Panel";
 import {
     PropertyList,
     PropertyGroup,
@@ -9,22 +8,49 @@ import {
 } from "@azure/bonito-ui/lib/components";
 import { VmExtItem } from "./vm-extension-list";
 import { translate } from "@azure/bonito-core";
+import { useAppTheme } from "@azure/bonito-ui/lib/theme";
 
-interface VmExtensionDetailsProps {
+export interface VmExtensionDetailsProps {
     vme?: VmExtItem;
 }
 
 export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
+    const theme = useAppTheme();
     const { vme } = props;
 
     const latestStatus = React.useMemo(() => getLatestStatus(vme), [vme]);
+
+    const titleStyle = React.useMemo(() => {
+        return {
+            color: theme.palette.black,
+            fontSize: "14px",
+            fontWeight: "600",
+            marginTop: "0px",
+        };
+    }, [theme.palette.black]);
+
+    const groupStyle = React.useMemo(() => {
+        return {
+            paddingBottom: "20px",
+        };
+    }, []);
 
     if (!vme) {
         return null;
     }
     return (
         <PropertyList>
-            <PropertyGroup title={translate("lib.react.common.general")}>
+            <PropertyGroup
+                title={translate("lib.react.common.general")}
+                enableCollapse={false}
+                titleStyle={titleStyle}
+                containerStyle={groupStyle}
+            >
+                <TextProperty
+                    label={translate("lib.react.vmExtension.name")}
+                    value={vme.name}
+                    hideCopyButton={true}
+                />
                 <TextProperty
                     label={translate("lib.react.vmExtension.type")}
                     value={vme.type}
@@ -35,7 +61,6 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
                     value={vme.typeHandlerVersion}
                     hideCopyButton={true}
                 />
-
                 <TextProperty
                     label={translate("lib.react.vmExtension.publisher")}
                     value={vme.publisher}
@@ -56,22 +81,12 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
                     hideCopyButton={true}
                 />
             </PropertyGroup>
-            {vme.settings && (
-                <PropertyGroup
-                    title={translate("lib.react.vmExtension.settings")}
-                >
-                    <TextField
-                        autoAdjustHeight
-                        multiline
-                        contentEditable={false}
-                        value={JSON.stringify(vme.settings, null, 4)}
-                        resizable={false}
-                    ></TextField>
-                </PropertyGroup>
-            )}
             {latestStatus && (
                 <PropertyGroup
                     title={translate("lib.react.vmExtension.latestStatus")}
+                    enableCollapse={false}
+                    titleStyle={titleStyle}
+                    containerStyle={groupStyle}
                 >
                     <TextProperty
                         label={translate("lib.react.vmExtension.status")}
@@ -90,32 +105,23 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
                     />
                 </PropertyGroup>
             )}
+            {vme.settings && (
+                <PropertyGroup
+                    title={translate("lib.react.vmExtension.settings")}
+                    enableCollapse={false}
+                    titleStyle={titleStyle}
+                    containerStyle={groupStyle}
+                >
+                    <TextField
+                        autoAdjustHeight
+                        multiline
+                        contentEditable={false}
+                        value={JSON.stringify(vme.settings, null, 4)}
+                        resizable={false}
+                    ></TextField>
+                </PropertyGroup>
+            )}
         </PropertyList>
-    );
-};
-
-export const VmExtensionDetailsPanel = (
-    props: VmExtensionDetailsProps & {
-        isOpen: boolean;
-        onDismiss: () => void;
-    }
-) => {
-    const { vme, isOpen, onDismiss } = props;
-
-    const shouldOpen = React.useMemo(() => {
-        return Boolean(isOpen && vme);
-    }, [isOpen, vme]);
-    return (
-        <Panel
-            headerText={vme?.name}
-            isOpen={shouldOpen}
-            onDismiss={onDismiss}
-            isBlocking={false}
-            type={PanelType.custom}
-            customWidth="650px"
-        >
-            <VmExtensionDetails vme={vme} />
-        </Panel>
     );
 };
 

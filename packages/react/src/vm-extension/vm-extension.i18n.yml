@@ -9,3 +9,5 @@ vmExtension:
   settings: Settings
   latestStatus: Latest status
   status: Status
+  extensionProperties: Extension properties
+

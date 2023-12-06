@@ -5,6 +5,7 @@ export interface TextPropertyProps {
     label?: string;
     value?: string;
     hideCopyButton?: boolean;
+    labalStyle?: React.CSSProperties;
 }
 
 function getText(value?: string): string {
@@ -20,6 +21,7 @@ export const TextProperty: React.FC<TextPropertyProps> = (props) => {
             label={props.label}
             value={props.value}
             hideCopyButton={props.hideCopyButton}
+            labalStyle={props.labalStyle}
             renderLabel={(label) => {
                 return <label>{label ? label : "-"}</label>;
             }}
