@@ -5,21 +5,49 @@ import {
     PropertyGroup,
     TextProperty,
     DateProperty,
+    PropertyField,
 } from "@azure/bonito-ui/lib/components";
 import { VmExtItem } from "./vm-extension-list";
 import { translate } from "@azure/bonito-core";
 import { useAppTheme } from "@azure/bonito-ui/lib/theme";
+import { Button } from "@azure/bonito-ui/lib/components/button";
+import { BatchModels } from "@batch/ui-service";
 
 export interface VmExtensionDetailsProps {
     vme?: VmExtItem;
+    onViewDetailedStatus?: (
+        subStatues: Array<BatchModels.InstanceViewStatusOutput>
+    ) => void;
 }
 
 export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
     const theme = useAppTheme();
     const { vme } = props;
 
-    const latestStatus = React.useMemo(() => getLatestStatus(vme), [vme]);
+    const firstStatus = React.useMemo(() => getfirstStatus(vme), [vme]);
+    // const subStatues = React.useMemo(() => {
+    //     if (!vme?.instanceView) {
+    //         return [];
+    //     }
+    //     return vme.instanceView.subStatuses;
+    // }, [vme]);
 
+    const subStatues = [
+        {
+            code: "ProvisioningState/failed",
+            level: "Error",
+            displayStatus: "Provisioning failed",
+            message: "Provisioning failed",
+            time: "2021-06-15T21:59:14.0000000Z",
+        },
+        {
+            code: "ProvisioningState/failed",
+            level: "Error",
+            displayStatus: "Provisioning failed",
+            message: "Provisioning failed",
+            time: "2021-06-15T21:59:14.0000000Z",
+        },
+    ];
     const titleStyle = React.useMemo(() => {
         return {
             color: theme.palette.black,
@@ -38,6 +66,8 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
     if (!vme) {
         return null;
     }
+    // TODO: remove hideCopyButton when this is fixed:
+    // https://msazure.visualstudio.com/One/_workitems/edit/25071199
     return (
         <PropertyList>
             <PropertyGroup
@@ -66,43 +96,63 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
                     value={vme.publisher}
                     hideCopyButton={true}
                 />
-                {vme.provisioningState && (
-                    <TextProperty
-                        label={translate(
-                            "lib.react.vmExtension.provisioningState"
-                        )}
-                        value={vme.provisioningState}
-                        hideCopyButton={true}
-                    />
-                )}
                 <TextProperty
-                    label={translate("lib.react.vmExtension.enableAutoUpdate")}
+                    label={translate("lib.react.vmExtension.autoUpdate")}
                     value={getEnableAutomaticUpgradeValue(vme)}
                     hideCopyButton={true}
                 />
             </PropertyGroup>
-            {latestStatus && (
+            {firstStatus && (
                 <PropertyGroup
-                    title={translate("lib.react.vmExtension.latestStatus")}
+                    title={translate("lib.react.vmExtension.status")}
                     enableCollapse={false}
                     titleStyle={titleStyle}
                     containerStyle={groupStyle}
                 >
                     <TextProperty
                         label={translate("lib.react.vmExtension.status")}
-                        value={latestStatus.displayStatus}
+                        value={firstStatus.displayStatus}
                         hideCopyButton={true}
                     />
-                    <DateProperty
-                        label={translate("lib.react.common.time")}
-                        value={latestStatus.time}
+                    <TextProperty
+                        label={translate("lib.react.vmExtension.level")}
+                        value={firstStatus.level}
                         hideCopyButton={true}
                     />
                     <TextProperty
                         label={translate("lib.react.common.message")}
-                        value={latestStatus.message}
+                        value={firstStatus.message}
                         hideCopyButton={true}
                     />
+                    <DateProperty
+                        label={translate("lib.react.common.time")}
+                        value={firstStatus.time}
+                        hideCopyButton={true}
+                    />
+                    {subStatues && subStatues.length > 0 && (
+                        <PropertyField
+                            label={translate(
+                                "lib.react.vmExtension.detailedStatus"
+                            )}
+                            value={subStatues}
+                            hideCopyButton={true}
+                            renderValue={(value) => {
+                                return (
+                                    <Button
+                                        label={translate(
+                                            "lib.react.vmExtension.viewDetailedStatus"
+                                        )}
+                                        onClick={() => {
+                                            value &&
+                                                props.onViewDetailedStatus?.(
+                                                    value
+                                                );
+                                        }}
+                                    />
+                                );
+                            }}
+                        ></PropertyField>
+                    )}
                 </PropertyGroup>
             )}
             {vme.settings && (
@@ -130,29 +180,20 @@ export function getEnableAutomaticUpgradeValue(item: VmExtItem) {
         return "N/A";
     }
     return item.enableAutomaticUpgrade
-        ? translate("lib.react.common.yes")
-        : translate("lib.react.common.no");
+        ? translate("lib.react.common.enabled")
+        : translate("lib.react.common.disabled");
 }
 
-export function getLatestStatus(vme?: VmExtItem) {
+export function getfirstStatus(vme?: VmExtItem) {
     if (!vme?.instanceView) {
         return null;
     }
-    return vme.instanceView?.statuses
-        ?.map((it) => {
-            return {
-                ...it,
-                time: it.time ? new Date(it.time) : undefined,
-            };
-        })
-        .sort((a, b) => {
-            if (a.time && b.time) {
-                return new Date(b.time).getTime() - new Date(a.time).getTime();
-            }
-            // If time is undefined, we want to put it at the top
-            if (!a.time) {
-                return -1;
-            }
-            return 1;
-        })[0];
+    const firstStatus = vme.instanceView.statuses?.[0];
+    if (!firstStatus) {
+        return null;
+    }
+    return {
+        ...firstStatus,
+        time: firstStatus.time ? new Date(firstStatus.time) : undefined,
+    };
 }

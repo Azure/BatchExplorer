@@ -75,9 +75,9 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
                 prop: "typeHandlerVersion",
             },
             {
-                label: translate("lib.react.vmExtension.enableAutoUpdate"),
+                label: translate("lib.react.vmExtension.autoUpdate"),
                 prop: "enableAutomaticUpgrade",
-                minWidth: 200,
+                minWidth: 160,
                 onRender: (item: VmExtItem) => {
                     return getEnableAutomaticUpgradeValue(item);
                 },
@@ -96,11 +96,16 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
     return (
         <>
             <SearchBox
+                styles={{
+                    root: {
+                        width: "210px",
+                    },
+                }}
                 value={filterValue}
                 onChange={(_, value) => {
                     setFilterValue(value || "");
                 }}
-                placeholder={translate("lib.react.common.search")}
+                placeholder={translate("lib.react.vmExtension.search")}
             />
             <DataGrid
                 selectionMode="none"

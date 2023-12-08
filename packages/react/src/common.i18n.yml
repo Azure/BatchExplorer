@@ -6,3 +6,6 @@ common:
   message: Message
   general: General
   search: Search
+  close: Close
+  enabled: Enabled
+  disabled: Disabled

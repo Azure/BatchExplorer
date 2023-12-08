@@ -59,6 +59,35 @@ const extensions: VmExtItem[] = [
                     time: "2021-06-15T21:59:14.0000000Z",
                 },
             ],
+            subStatuses: [
+                {
+                    code: "ProvisioningState/failed",
+                    level: "Error",
+                    displayStatus: "Provisioning failed",
+                    message: "Provisioning failed",
+                    time: "2021-06-15T21:59:14.0000000Z",
+                },
+                {
+                    code: "ProvisioningState/failed",
+                    level: "Error",
+                    displayStatus: "Provisioning failed",
+                    message: "Provisioning failed",
+                    time: "2021-06-15T21:59:14.0000000Z",
+                },
+            ],
+        },
+    },
+    {
+        name: "batchextension2",
+        publisher: "Microsoft.Azure.KeyVault",
+        type: "KeyVaultForLinux",
+        typeHandlerVersion: "2.0",
+        autoUpgradeMinorVersion: true,
+        enableAutomaticUpgrade: false,
+        settings: {},
+        provisionAfterExtensions: ["CustomExtension100"],
+        instanceView: {
+            name: "batchextension1",
         },
     },
 ];
