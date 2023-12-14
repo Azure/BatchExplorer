@@ -1,6 +1,9 @@
 // import { initBladeEnvironment } from "../BladeEnvironment";
 import * as React from "react";
-import { BatchModels } from "@batch/ui-service";
+import {
+    VMExtensionOutput,
+    VMExtensionInstanceViewOutput,
+} from "@batch/ui-service/lib/batch-models";
 import {
     DataGrid,
     DataGridColumn,
@@ -10,9 +13,9 @@ import { Link } from "@fluentui/react/lib/Link";
 import { translate } from "@azure/bonito-core";
 import { SearchBox } from "@fluentui/react/lib/SearchBox";
 
-export type VmExtItem = BatchModels.VMExtensionOutput & {
+export type VmExtItem = VMExtensionOutput & {
     provisioningState?: string;
-    instanceView?: BatchModels.VMExtensionInstanceViewOutput;
+    instanceView?: VMExtensionInstanceViewOutput;
 };
 
 interface VmExtensionListProps {

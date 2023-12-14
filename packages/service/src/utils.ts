@@ -15,10 +15,13 @@ export interface BatchAccountIdInfo {
 }
 
 export function createUnexpectedStatusCodeError(
-    res: ErrorResponse
+    res: ErrorResponse,
+    isArm = true
 ): UnexpectedStatusCodeError {
     return new UnexpectedStatusCodeError(
-        "The Batch data plane returned an unexpected status code",
+        `The Batch ${
+            isArm ? "management plane" : "data plane"
+        } returned an unexpected status code`,
         +res.status,
         JSON.stringify(res.body)
     );

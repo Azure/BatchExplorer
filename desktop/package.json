@@ -187,6 +187,7 @@
     "yesno": "^0.0.1"
   },
   "dependencies": {
+    "@azure/core-util": "1.4.0",
     "@angular/animations": "^11.0.0",
     "@angular/cdk": "^11.0.0",
     "@angular/common": "^11.0.0",
@@ -244,5 +245,8 @@
     "write-file-webpack-plugin": "^4.5.1",
     "xml2js": "^0.4.23",
     "zone.js": "^0.11.0"
+  },
+  "overrides": {
+    "@azure/core-util": "1.4.0"
   }
 }

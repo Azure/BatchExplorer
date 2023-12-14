@@ -11,12 +11,12 @@ import { VmExtItem } from "./vm-extension-list";
 import { translate } from "@azure/bonito-core";
 import { useAppTheme } from "@azure/bonito-ui/lib/theme";
 import { Button } from "@azure/bonito-ui/lib/components/button";
-import { BatchModels } from "@batch/ui-service";
+import { InstanceViewStatusOutput } from "@batch/ui-service/lib/batch-models";
 
 export interface VmExtensionDetailsProps {
     vme?: VmExtItem;
     onViewDetailedStatus?: (
-        subStatues: Array<BatchModels.InstanceViewStatusOutput>
+        subStatues: Array<InstanceViewStatusOutput>
     ) => void;
 }
 

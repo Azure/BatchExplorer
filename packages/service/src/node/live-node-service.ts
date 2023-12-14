@@ -28,7 +28,7 @@ export class LiveNodeService
         const res = await batchClient.path(listNodePath, poolId).get();
 
         if (isUnexpected(res)) {
-            throw createUnexpectedStatusCodeError(res);
+            throw createUnexpectedStatusCodeError(res, false);
         }
 
         return res.body.value;
@@ -50,7 +50,7 @@ export class LiveNodeService
             .get();
 
         if (isUnexpected(res)) {
-            throw createUnexpectedStatusCodeError(res);
+            throw createUnexpectedStatusCodeError(res, false);
         }
 
         return res.body.value;

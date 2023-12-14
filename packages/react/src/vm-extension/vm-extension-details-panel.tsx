@@ -3,7 +3,7 @@ import { Panel } from "@azure/bonito-ui/lib/components/panel";
 import { VmExtItem } from "./vm-extension-list";
 import { VmExtensionDetails } from "./vm-extension-details";
 import { translate } from "@azure/bonito-core";
-import { BatchModels } from "@batch/ui-service";
+import { InstanceViewStatusOutput } from "@batch/ui-service/lib/batch-models";
 import { MonacoEditor } from "@azure/bonito-ui/lib/components";
 
 interface VmExtensionDetailsProps {
@@ -22,7 +22,7 @@ export const VmExtensionDetailsPanel = (
         React.useState<boolean>(false);
 
     const [selectedSubStatuses, setSelectedSubStatuses] = React.useState<
-        BatchModels.InstanceViewStatusOutput[] | undefined
+        InstanceViewStatusOutput[] | undefined
     >(undefined);
 
     const shouldOpen = React.useMemo(() => {
