@@ -12,8 +12,7 @@ describe("Update node communication mode action", () => {
 
     test("Validate form", async () => {
         const action = new UpdateNodeCommsAction(
-            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo",
-            "hobopool1"
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1"
         );
         await action.initialize();
 
@@ -49,8 +48,7 @@ describe("Update node communication mode action", () => {
     test("Render form", async () => {
         // const user = userEvent.setup();
         const action = new UpdateNodeCommsAction(
-            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo",
-            "hobopool1"
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1"
         );
 
         expect(action.isInitialized).toBe(false);
