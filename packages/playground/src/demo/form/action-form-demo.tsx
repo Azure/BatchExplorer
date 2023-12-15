@@ -130,8 +130,7 @@ const actions: { [name: string]: () => Action } = {
     createOrUpdateCar: () => new CreateOrUpdateCarAction(),
     updateNodeComms: () =>
         new UpdateNodeCommsAction(
-            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo",
-            "hobopool1"
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1"
         ),
 };
 

@@ -11,8 +11,8 @@ import { initMockBatchEnvironment } from "../../environment";
 describe("LivePoolService", () => {
     const hoboAcctId =
         "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo";
-    const hoboPoolName = "hobopool1";
-    const hoboPoolOneId = `${hoboAcctId}/pools/${hoboPoolName}`;
+    const hoboPoolArmId = `${hoboAcctId}/pools/hobopool1`;
+    const newTestPoolArmId = `${hoboAcctId}/pools/newtestpool`;
 
     let service: PoolService;
     let fakeSet: BatchFakeSet;
@@ -61,7 +61,7 @@ describe("LivePoolService", () => {
 
         await expect(() => service.listByAccountId(hoboAcctId)).rejects
             .toMatchInlineSnapshot(`
-                    [Error: The Batch data plane returned an unexpected status code [unexpected 500 status]
+                    [Error: The Batch management plane returned an unexpected status code [unexpected 500 status]
                     Response body:
                     "Boom"]
                 `);
@@ -70,24 +70,24 @@ describe("LivePoolService", () => {
     test("Get by resource ID", async () => {
         httpClient.addExpected(
             new MockHttpResponse(
-                `${getArmUrl()}${hoboPoolOneId}?api-version=${
+                `${getArmUrl()}${hoboPoolArmId}?api-version=${
                     BatchApiVersion.arm
                 }`,
                 {
                     status: 200,
-                    body: JSON.stringify(fakeSet.getPool(hoboPoolOneId)),
+                    body: JSON.stringify(fakeSet.getPool(hoboPoolArmId)),
                 }
             )
         );
 
-        const pool = await service.get(hoboAcctId, "hobopool1");
+        const pool = await service.get(hoboPoolArmId);
         expect(pool?.name).toEqual("hobopool1");
     });
 
     test("Get by resource ID error", async () => {
         httpClient.addExpected(
             new MockHttpResponse(
-                `${getArmUrl()}${hoboPoolOneId}?api-version=${
+                `${getArmUrl()}${hoboPoolArmId}?api-version=${
                     BatchApiVersion.arm
                 }`,
                 {
@@ -97,9 +97,9 @@ describe("LivePoolService", () => {
             )
         );
 
-        await expect(() => service.get(hoboAcctId, "hobopool1")).rejects
+        await expect(() => service.get(hoboPoolArmId)).rejects
             .toMatchInlineSnapshot(`
-                    [Error: The Batch data plane returned an unexpected status code [unexpected 500 status]
+                    [Error: The Batch management plane returned an unexpected status code [unexpected 500 status]
                     Response body:
                     "Boom"]
                 `);
@@ -155,11 +155,7 @@ describe("LivePoolService", () => {
         );
 
         // Create
-        let pool = await service.createOrUpdate(
-            hoboAcctId,
-            "newtestpool",
-            newPool
-        );
+        let pool = await service.createOrUpdate(newTestPoolArmId, newPool);
         expect(pool?.name).toEqual("newtestpool");
 
         if (newPool.properties?.scaleSettings?.fixedScale) {
@@ -189,7 +185,7 @@ describe("LivePoolService", () => {
         );
 
         // Update
-        pool = await service.createOrUpdate(hoboAcctId, "newtestpool", newPool);
+        pool = await service.createOrUpdate(newTestPoolArmId, newPool);
         expect(pool?.name).toEqual("newtestpool");
 
         const patch: Pool = {
@@ -220,7 +216,7 @@ describe("LivePoolService", () => {
         );
 
         // Patch
-        pool = await service.patch(hoboAcctId, "newtestpool", patch);
+        pool = await service.patch(newTestPoolArmId, patch);
         expect(pool?.name).toEqual("newtestpool");
         expect(
             pool?.properties?.scaleSettings?.fixedScale?.targetDedicatedNodes

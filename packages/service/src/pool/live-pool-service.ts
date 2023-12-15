@@ -2,18 +2,15 @@
 import type { Pool, PoolOutput } from "./pool-models";
 import type { PoolService } from "./pool-service";
 import {
-    // getHttpClient,
-    // StandardHttpHeaders,
-    // MediaType,
     AbstractHttpService,
     OperationOptions,
     getArmUrl,
-    // buildRequestMetadata,
 } from "@azure/bonito-core";
 import { createARMBatchClient, isUnexpected } from "../internal/arm-batch-rest";
 import {
-    createUnexpectedStatusCodeError,
+    createArmUnexpectedStatusCodeError,
     parseBatchAccountIdInfo,
+    parsePoolArmIdInfo,
 } from "../utils";
 
 const SINGLE_POOL_PATH =
@@ -27,8 +24,7 @@ export class LivePoolService
     implements PoolService
 {
     async createOrUpdate(
-        batchAccountId: string,
-        poolName: string,
+        poolArmId: string,
         pool: Pool,
         opts?: OperationOptions
     ): Promise<PoolOutput> {
@@ -36,8 +32,12 @@ export class LivePoolService
             baseUrl: getArmUrl(),
         });
 
-        const { subscriptionId, resourceGroupName, batchAccountName } =
-            parseBatchAccountIdInfo(batchAccountId);
+        const {
+            subscriptionId,
+            resourceGroupName,
+            batchAccountName,
+            poolName,
+        } = parsePoolArmIdInfo(poolArmId);
 
         const res = await armBatchClient
             .path(
@@ -53,23 +53,26 @@ export class LivePoolService
             });
 
         if (isUnexpected(res)) {
-            throw createUnexpectedStatusCodeError(res);
+            throw createArmUnexpectedStatusCodeError(res);
         }
 
         return res.body;
     }
 
     async get(
-        batchAccountId: string,
-        poolName: string,
+        poolArmId: string,
         opts?: OperationOptions
     ): Promise<PoolOutput | undefined> {
         const armBatchClient = createARMBatchClient({
             baseUrl: getArmUrl(),
         });
 
-        const { subscriptionId, resourceGroupName, batchAccountName } =
-            parseBatchAccountIdInfo(batchAccountId);
+        const {
+            subscriptionId,
+            resourceGroupName,
+            batchAccountName,
+            poolName,
+        } = parsePoolArmIdInfo(poolArmId);
 
         const res = await armBatchClient
             .path(
@@ -82,7 +85,7 @@ export class LivePoolService
             .get();
 
         if (isUnexpected(res)) {
-            throw createUnexpectedStatusCodeError(res);
+            throw createArmUnexpectedStatusCodeError(res);
         }
 
         return res.body;
@@ -109,15 +112,14 @@ export class LivePoolService
             .get();
 
         if (isUnexpected(res)) {
-            throw createUnexpectedStatusCodeError(res);
+            throw createArmUnexpectedStatusCodeError(res);
         }
 
         return res.body.value ?? [];
     }
 
     async patch(
-        batchAccountId: string,
-        poolName: string,
+        poolArmId: string,
         pool: Pool,
         opts?: OperationOptions
     ): Promise<PoolOutput> {
@@ -125,8 +127,12 @@ export class LivePoolService
             baseUrl: getArmUrl(),
         });
 
-        const { subscriptionId, resourceGroupName, batchAccountName } =
-            parseBatchAccountIdInfo(batchAccountId);
+        const {
+            subscriptionId,
+            resourceGroupName,
+            batchAccountName,
+            poolName,
+        } = parsePoolArmIdInfo(poolArmId);
 
         const res = await armBatchClient
             .path(
@@ -142,7 +148,7 @@ export class LivePoolService
             });
 
         if (isUnexpected(res)) {
-            throw createUnexpectedStatusCodeError(res);
+            throw createArmUnexpectedStatusCodeError(res);
         }
 
         return res.body;

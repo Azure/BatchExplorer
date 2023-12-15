@@ -2,7 +2,7 @@ import { AbstractHttpService, OperationOptions } from "@azure/bonito-core";
 import { BatchNodeOutput, BatchNodeVMExtensionOutput } from "./node-models";
 import { NodeService } from "./node-service";
 import { createBatchClient, isUnexpected } from "../internal/batch-rest";
-import { createUnexpectedStatusCodeError } from "../utils";
+import { createBatchUnexpectedStatusCodeError } from "../utils";
 
 export class LiveNodeService
     extends AbstractHttpService
@@ -28,7 +28,7 @@ export class LiveNodeService
         const res = await batchClient.path(listNodePath, poolId).get();
 
         if (isUnexpected(res)) {
-            throw createUnexpectedStatusCodeError(res, false);
+            throw createBatchUnexpectedStatusCodeError(res);
         }
 
         return res.body.value;
@@ -50,7 +50,7 @@ export class LiveNodeService
             .get();
 
         if (isUnexpected(res)) {
-            throw createUnexpectedStatusCodeError(res, false);
+            throw createBatchUnexpectedStatusCodeError(res);
         }
 
         return res.body.value;

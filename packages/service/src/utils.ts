@@ -14,14 +14,30 @@ export interface BatchAccountIdInfo {
     batchAccountName: string;
 }
 
+export function createArmUnexpectedStatusCodeError(
+    res: ErrorResponse
+): UnexpectedStatusCodeError {
+    return createUnexpectedStatusCodeError(
+        `The Batch management plane returned an unexpected status code`,
+        res
+    );
+}
+
+export function createBatchUnexpectedStatusCodeError(
+    res: ErrorResponse
+): UnexpectedStatusCodeError {
+    return createUnexpectedStatusCodeError(
+        `The Batch data plane returned an unexpected status code`,
+        res
+    );
+}
+
 export function createUnexpectedStatusCodeError(
-    res: ErrorResponse,
-    isArm = true
+    msg: string,
+    res: ErrorResponse
 ): UnexpectedStatusCodeError {
     return new UnexpectedStatusCodeError(
-        `The Batch ${
-            isArm ? "management plane" : "data plane"
-        } returned an unexpected status code`,
+        msg,
         +res.status,
         JSON.stringify(res.body)
     );
@@ -29,7 +45,7 @@ export function createUnexpectedStatusCodeError(
 
 /**
  *
- * @param batchAccountId is of the form:
+ * @param oriBatchAccountId is of the form:
  * /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}
  * case-insensitive
  */
@@ -49,6 +65,36 @@ export function parseBatchAccountIdInfo(
         subscriptionId,
         resourceGroupName,
         batchAccountName,
+    };
+}
+
+/**
+ *
+ * @param oriPoolArmId is of the form:
+ * /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/pools/{poolName}F
+ * case-insensitive
+ */
+export function parsePoolArmIdInfo(oriPoolArmId: string): {
+    subscriptionId: string;
+    resourceGroupName: string;
+    batchAccountName: string;
+    poolName: string;
+} {
+    // use regex to parse the batch account id
+    const poolArmId = ensureRelativeUrl(oriPoolArmId);
+    const regex =
+        /\/subscriptions\/(.*)\/resourceGroups\/(.*)\/providers\/Microsoft.Batch\/batchAccounts\/(.*)\/pools\/(.*)/i;
+    const match = poolArmId.match(regex);
+    if (!match) {
+        throw new Error(`Unable to parse pool ARM id: ${poolArmId}`);
+    }
+    const [, subscriptionId, resourceGroupName, batchAccountName, poolName] =
+        match;
+    return {
+        subscriptionId,
+        resourceGroupName,
+        batchAccountName,
+        poolName,
     };
 }
 
