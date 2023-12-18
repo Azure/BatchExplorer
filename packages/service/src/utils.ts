@@ -3,6 +3,12 @@ import { UnexpectedStatusCodeError } from "@azure/bonito-core";
 import { CloudErrorOutput } from "./internal/arm-batch-rest";
 import { BatchErrorOutput } from "./internal/batch-rest";
 
+const batchAccountIdRegex =
+    /\/subscriptions\/(.*)\/resourceGroups\/(.*)\/providers\/Microsoft.Batch\/batchAccounts\/(.*)/i;
+
+const poolArmIdRegex =
+    /\/subscriptions\/(.*)\/resourceGroups\/(.*)\/providers\/Microsoft.Batch\/batchAccounts\/(.*)\/pools\/(.*)/i;
+
 interface ErrorResponse extends AzureCoreHttpResponse {
     status: string;
     body: BatchErrorOutput | CloudErrorOutput;
@@ -54,9 +60,7 @@ export function parseBatchAccountIdInfo(
 ): BatchAccountIdInfo {
     // use regex to parse the batch account id
     const batchAccountId = ensureRelativeUrl(oriBatchAccountId);
-    const regex =
-        /\/subscriptions\/(.*)\/resourceGroups\/(.*)\/providers\/Microsoft.Batch\/batchAccounts\/(.*)/i;
-    const match = batchAccountId.match(regex);
+    const match = batchAccountId.match(batchAccountIdRegex);
     if (!match) {
         throw new Error(`Unable to parse batch account id: ${batchAccountId}`);
     }
@@ -82,9 +86,7 @@ export function parsePoolArmIdInfo(oriPoolArmId: string): {
 } {
     // use regex to parse the batch account id
     const poolArmId = ensureRelativeUrl(oriPoolArmId);
-    const regex =
-        /\/subscriptions\/(.*)\/resourceGroups\/(.*)\/providers\/Microsoft.Batch\/batchAccounts\/(.*)\/pools\/(.*)/i;
-    const match = poolArmId.match(regex);
+    const match = poolArmId.match(poolArmIdRegex);
     if (!match) {
         throw new Error(`Unable to parse pool ARM id: ${poolArmId}`);
     }
