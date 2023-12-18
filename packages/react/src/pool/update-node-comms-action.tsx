@@ -136,6 +136,7 @@ export class UpdateNodeCommsAction extends AbstractAction<UpdateNodeCommsFormVal
 
     async onExecute(values: UpdateNodeCommsFormValues): Promise<void> {
         await this._poolService.patch(
+            this._poolArmId,
             {
                 id: this._poolArmId,
                 properties: {
