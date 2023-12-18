@@ -5,7 +5,6 @@ This package intended to act as a decoupled data access & business logic layer f
 - [arm-batch-rest](#arm-batch-rest): Batch Management plane RLC
 - batch-rest: Batch Datap plane RLC
 
-<a name="arm-batch-rest"></a>
 ## BatchManagement REST client library
 
 `src/internal/arm-batch-rest` contains the Batch Management plane RLC (Rest Level Client) library intended for use within the Shared Library for Batch Explorer and the Portal. This package acts as a data and service communication layer for invoking REST API calls for the Batch Management plane. Currently, there is a lot of code duplication between the Portal and Batch Explorer, so this package acts as an environment agnostic library to be used in both the Portal and Batch Explorer to eliminate custom code duplication between the two environments. In this context, a RLC (Rest Level Client) is an Azure specific SDK flavor that emphasizes seamless developer experience by acting as a layer above raw HTTP calls. One of the major benefits of this SDK type is that they provide a compact, browser friendly bundle size footprint by relying on an abstract REST client and contains Batch specific Typescript type definitions as oppose to exportable classes. More information about RLCs can be found [here](https://devblogs.microsoft.com/azure-sdk/azure-rest-libraries-for-javascript/).
@@ -34,4 +33,3 @@ This will parse the command options from the README and regenerate the SDK code
 ### Building and Running Tests
 
 If this is the first time building the Batch Management plane client, then please consult the __Building and Running Tests__ section of the README under the <ROOT_DIR>/packages/ directory to install local dependencies and build common tools needed to build the Batch Management plane client.
-
