@@ -28,7 +28,7 @@ export default class BatchExplorerHttpClient extends AbstractHttpClient {
 
 
         const headers: Headers = new Headers();
-        if (requestProps.headers) {
+        if (requestProps?.headers) {
             if (typeof requestProps.headers.forEach === "function") {
                 // Headers object
                 requestProps.headers.forEach((value, key) => {
