@@ -21,7 +21,7 @@ export class EditNodeCommsFormComponent implements OnDestroy {
             //       of pulling in via onInitialize? We already have the pool,
             //       and could convert it to a regular Javascript object with
             //       pool.toJS()
-            this.action = new UpdateNodeCommsAction(`${this._accountArmId}/${pool.id}`);
+            this.action = new UpdateNodeCommsAction(`${this._accountArmId}/pools/${pool.id}`);
         } else {
             this.action = undefined;
         }
