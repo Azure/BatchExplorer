@@ -1,9 +1,7 @@
 import * as React from "react";
 import {
     BaseButton,
-    Button as FluentButton,
-    DefaultButton,
-    PrimaryButton,
+    DefaultButton as FluentButton,
 } from "@fluentui/react/lib/Button";
 
 type FluentOnClickElement =
@@ -36,8 +34,12 @@ export const Button: React.FC<ButtonProps> = (props) => {
             [onClick]
         );
 
-    const FluentButton = primary ? PrimaryButton : DefaultButton;
     return (
-        <FluentButton disabled={disabled} text={label} onClick={clickHandler} />
+        <FluentButton
+            primary={primary}
+            disabled={disabled}
+            text={label}
+            onClick={clickHandler}
+        />
     );
 };
