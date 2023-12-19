@@ -30,6 +30,7 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
     public fileUri = "create.task.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
     public userAccounts: any[] = [];
+    public displayDisableRequiredSlotsMsg = false;
 
     constructor(
         i18n: I18nService,
@@ -87,6 +88,7 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
                 });
             }
         });
+        this._subscribeMultiInstanceSettings();
     }
 
     public dtoToForm(task: TaskCreateDto) {
@@ -125,5 +127,21 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
                 fromDto: (value) => this.dtoToForm(value),
             },
         };
+    }
+
+    private _subscribeMultiInstanceSettings() {
+        const multiInstanceSettings = this.form.controls.multiInstanceSettings;
+        const requiredSlots = this.form.controls.requiredSlots;
+        multiInstanceSettings.valueChanges.subscribe((value) => {
+            if (value) {
+                // set requiredSlot to 1 & disable the control & display msg
+                requiredSlots.setValue(1);
+                requiredSlots.disable();
+                this.displayDisableRequiredSlotsMsg = true;
+            } else {
+                requiredSlots.enable();
+                this.displayDisableRequiredSlotsMsg = false;
+            }
+        });
     }
 }
