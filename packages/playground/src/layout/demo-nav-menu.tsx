@@ -49,11 +49,6 @@ export const DemoNavMenu: React.FC = () => {
                     url: getDemoHash("searchbox"),
                 },
                 {
-                    key: "TabSelector",
-                    name: "Tab Selector",
-                    url: getDemoHash("tabselector"),
-                },
-                {
                     key: "TextField",
                     name: "Text Field",
                     url: getDemoHash("textfield"),
@@ -84,6 +79,11 @@ export const DemoNavMenu: React.FC = () => {
                     key: "DataGridLoadMore",
                     name: "Data Grid: Load More",
                     url: getDemoHash("dataGridLoadMore"),
+                },
+                {
+                    key: "VMExtensionList",
+                    name: "VMExtension List Display",
+                    url: getDemoHash("vmExtensionList"),
                 },
             ],
         },

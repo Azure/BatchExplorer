@@ -84,7 +84,7 @@ export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
                 style={{
                     display: collapsed ? "none" : undefined,
                 }}
-                tokens={{ childrenGap: 8 }}
+                tokens={{ childrenGap: 10 }}
             >
                 {props.children}
             </Stack>
