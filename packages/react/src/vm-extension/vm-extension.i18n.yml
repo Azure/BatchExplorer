@@ -1,0 +1,17 @@
+vmExtension:
+  noResult: No VM extensions found
+  name: Name
+  type: Type
+  version: Version
+  autoUpdate: Automatic upgrade
+  provisioningState: Provisioning state
+  publisher: Publisher
+  settings: Settings
+  latestStatus: Latest status
+  status: Status
+  detailedStatus: Detailed status
+  viewDetailedStatus: View detailed status
+  level: Level
+  extensionProperties: Extension properties
+  search: Search to filter extensions...
+

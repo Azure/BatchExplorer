@@ -102,7 +102,11 @@ export interface DataGridColumn {
     /**
      * Custom renderer for cell content, instead of the default text rendering.
      */
-    onRender?: (item?: unknown, index?: number, column?: IColumn) => unknown;
+    onRender?: (
+        item: any,
+        index?: number,
+        column?: IColumn
+    ) => JSX.Element | null | string;
 }
 
 const defaultColumnMinWidth = 48;
@@ -176,7 +180,7 @@ function useColumns(
                             c.onRender ??
                             ((item) =>
                                 autoFormat(c.prop ? item[c.prop] : null)),
-                        minWidth: defaultColumnMinWidth,
+                        minWidth: c.minWidth ?? defaultColumnMinWidth,
                         maxWidth: c.maxWidth ?? columnDefaultMaxWidth,
                         isResizable: true,
                     });
