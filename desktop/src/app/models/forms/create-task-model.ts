@@ -49,6 +49,11 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): TaskCreateD
         data.applicationPackageReferences = formData.appPackages;
     }
 
+    // Remove required slots if multi-instance is enabled, backend will set it to 1.
+    if (formData.multiInstanceSettings) {
+        delete data.requiredSlots;
+    }
+
     return new TaskCreateDto(data);
 }
 

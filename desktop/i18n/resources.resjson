@@ -43,6 +43,7 @@
   "add-certificate-form.password.required": "Password is required if the certificate format is '.pfx'",
   "add-certificate-form.title": "Create certificate",
   "add-task-form.action": "Add",
+  "add-task-form.info.disable-required-slots": "Required slots must be 1 for multi-instance tasks",
   "add-task-form.subtitle": "Add a task to the selected job",
   "add-task-form.title": "Add task",
   "auth-service.activate-tenant": "Activate tenant to authorize",
