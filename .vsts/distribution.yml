@@ -27,6 +27,7 @@ stages:
     jobs:
 
       - job: Linux
+        timeoutInMinutes: 120 # Needed for Codesign + CodeQL
         pool:
           name: Azure-Pipelines-EO-Batch-Explorer
           demands:
@@ -35,7 +36,7 @@ stages:
           - template: ./linux/distribution.yml
 
       - job: MacOS
-        timeoutInMinutes: 120  # Needed because Codesign and Notarization add 20+ minutes
+        timeoutInMinutes: 120 # Needed for Codesign + Notarization + CodeQL
         pool:
           vmImage: macOS-11
           demands: xcode
@@ -47,6 +48,7 @@ stages:
           - template: ./darwin/distribution.yml
 
       - job: Windows
+        timeoutInMinutes: 120 # Needed for Codesign + CodeQL
         pool:
           name: Azure-Pipelines-EO-Batch-Explorer
           demands:
