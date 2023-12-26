@@ -26,7 +26,7 @@
     "clean:esm": "bux rmrf ./lib",
     "clean:cjs": "bux rmrf ./lib-cjs",
     "generate:arm-client": "autorest --typescript swagger/README.md",
-    "generate:client": "cd ./src/internal/batch-rest && powershell -ExecutionPolicy Bypass -File ./generate.ps1",
+    "generate:client": "powershell -ExecutionPolicy Bypass -File ./generate-client.ps1",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
     "test:all": "npm run test:coverage",

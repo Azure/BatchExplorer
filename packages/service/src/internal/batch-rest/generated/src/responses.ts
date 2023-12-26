@@ -27,7 +27,7 @@ import {
   BatchTaskListSubtasksResultOutput,
   BatchNodeFileListResultOutput,
   BatchNodeOutput,
-  BatchNodeRemoteLoginSettingsResultOutput,
+  BatchNodeRemoteLoginSettingsOutput,
   UploadBatchServiceLogsResultOutput,
   BatchNodeListResultOutput,
   BatchNodeVMExtensionOutput,
@@ -112,7 +112,7 @@ export interface CreatePool201Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -179,7 +179,7 @@ export interface PoolExists200Headers {
   "last-modified"?: string;
 }
 
-/** A response containing headers related to the Pool, if it exists. */
+/** The request has succeeded. */
 export interface PoolExists200Response extends HttpResponse {
   status: "200";
   headers: RawHttpHeaders & PoolExists200Headers;
@@ -227,7 +227,7 @@ export interface UpdatePool200Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -251,7 +251,7 @@ export interface DisablePoolAutoScale200Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -275,7 +275,7 @@ export interface EnablePoolAutoScale200Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -299,7 +299,7 @@ export interface EvaluatePoolAutoScale200Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -324,7 +324,7 @@ export interface ResizePool202Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -348,7 +348,7 @@ export interface StopPoolResize202Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -372,7 +372,7 @@ export interface ReplacePoolProperties204Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -396,7 +396,7 @@ export interface RemoveNodes202Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -439,6 +439,10 @@ export interface ListPoolNodeCounts200Headers {
   "client-request-id"?: string;
   /** A unique identifier for the request that was made to the Batch service. If a request is consistently failing and you have verified that the request is properly formulated, you may use this value to report the error to Microsoft. In your report, include the value of this request ID, the approximate time that the request was made, the Batch Account against which the request was made, and the region that Account resides in. */
   "request-id"?: string;
+  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
+  etag?: string;
+  /** The time at which the resource was last modified. */
+  "last-modified"?: string;
 }
 
 /** The request has succeeded. */
@@ -503,7 +507,7 @@ export interface UpdateJob200Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -527,7 +531,7 @@ export interface ReplaceJob200Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -551,7 +555,7 @@ export interface DisableJob202Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -575,7 +579,7 @@ export interface EnableJob202Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -599,7 +603,7 @@ export interface TerminateJob202Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -623,7 +627,7 @@ export interface CreateJob201Headers {
   etag?: string;
   /** The time at which the resource was last modified. */
   "last-modified"?: string;
-  /** The OData ID of the resource to which the request applied */
+  /** The OData ID of the resource to which the request applied. */
   dataserviceid: string;
 }
 
@@ -714,6 +718,10 @@ export interface GetJobTaskCounts200Headers {
   "client-request-id"?: string;
   /** A unique identifier for the request that was made to the Batch service. If a request is consistently failing and you have verified that the request is properly formulated, you may use this value to report the error to Microsoft. In your report, include the value of this request ID, the approximate time that the request was made, the Batch Account against which the request was made, and the region that Account resides in. */
   "request-id"?: string;
+  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
+  etag?: string;
+  /** The time at which the resource was last modified. */
+  "last-modified"?: string;
 }
 
 /** The request has succeeded. */
@@ -1131,6 +1139,10 @@ export interface CreateTaskCollection200Headers {
   "client-request-id"?: string;
   /** A unique identifier for the request that was made to the Batch service. If a request is consistently failing and you have verified that the request is properly formulated, you may use this value to report the error to Microsoft. In your report, include the value of this request ID, the approximate time that the request was made, the Batch Account against which the request was made, and the region that Account resides in. */
   "request-id"?: string;
+  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
+  etag?: string;
+  /** The time at which the resource was last modified. */
+  "last-modified"?: string;
 }
 
 /** The request has succeeded. */
@@ -1589,7 +1601,7 @@ export interface GetNodeRemoteLoginSettings200Headers {
 /** The request has succeeded. */
 export interface GetNodeRemoteLoginSettings200Response extends HttpResponse {
   status: "200";
-  body: BatchNodeRemoteLoginSettingsResultOutput;
+  body: BatchNodeRemoteLoginSettingsOutput;
   headers: RawHttpHeaders & GetNodeRemoteLoginSettings200Headers;
 }
 
@@ -1627,6 +1639,10 @@ export interface UploadNodeLogs200Headers {
   "client-request-id"?: string;
   /** A unique identifier for the request that was made to the Batch service. If a request is consistently failing and you have verified that the request is properly formulated, you may use this value to report the error to Microsoft. In your report, include the value of this request ID, the approximate time that the request was made, the Batch Account against which the request was made, and the region that Account resides in. */
   "request-id"?: string;
+  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
+  etag?: string;
+  /** The time at which the resource was last modified. */
+  "last-modified"?: string;
 }
 
 /** The request has succeeded. */

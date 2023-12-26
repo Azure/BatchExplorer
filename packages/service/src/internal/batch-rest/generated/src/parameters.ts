@@ -33,31 +33,31 @@ import {
 
 export interface ListApplicationsHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListApplicationsQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
 }
 
 export interface ListApplicationsQueryParam {
@@ -110,31 +110,31 @@ export type GetApplicationParameters = GetApplicationQueryParam &
 
 export interface ListPoolUsageMetricsHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListPoolUsageMetricsQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * The earliest time from which to include metrics. This must be at least two and
    * a half hours before the current time. If not specified this defaults to the
@@ -216,31 +216,31 @@ export type CreatePoolParameters = CreatePoolQueryParam &
 
 export interface ListPoolsHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListPoolsQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-pools.
@@ -279,29 +279,29 @@ export interface DeletePoolHeaders {
    */
   "ocp-date"?: string;
   /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * been modified since the specified time.
    */
-  "if-modified-since"?: string;
+  "If-Modified-Since"?: string;
   /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * not been modified since the specified time.
    */
-  "if-unmodified-since"?: string;
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
 }
 
 export interface DeletePoolQueryParamProperties {
@@ -339,29 +339,29 @@ export interface PoolExistsHeaders {
    */
   "ocp-date"?: string;
   /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * been modified since the specified time.
    */
-  "if-modified-since"?: string;
+  "If-Modified-Since"?: string;
   /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * not been modified since the specified time.
    */
-  "if-unmodified-since"?: string;
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
 }
 
 export interface PoolExistsQueryParamProperties {
@@ -386,6 +386,30 @@ export type PoolExistsParameters = PoolExistsQueryParam &
 
 export interface GetPoolHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -398,42 +422,18 @@ export interface GetPoolHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface GetPoolQueryParamProperties {
+  /** An OData $select clause. */
+  $select?: string[];
+  /** An OData $expand clause. */
+  $expand?: string[];
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
-  /** An OData $select clause. */
-  $select?: string[];
-  /** An OData $expand clause. */
-  $expand?: string[];
 }
 
 export interface GetPoolQueryParam {
@@ -450,6 +450,30 @@ export type GetPoolParameters = GetPoolQueryParam &
 
 export interface UpdatePoolHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -462,30 +486,6 @@ export interface UpdatePoolHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface UpdatePoolBodyParam {
@@ -558,6 +558,30 @@ export type DisablePoolAutoScaleParameters = DisablePoolAutoScaleQueryParam &
 
 export interface EnablePoolAutoScaleHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -570,30 +594,6 @@ export interface EnablePoolAutoScaleHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface EnablePoolAutoScaleBodyParam {
@@ -678,6 +678,30 @@ export type EvaluatePoolAutoScaleParameters = EvaluatePoolAutoScaleQueryParam &
 
 export interface ResizePoolHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -690,30 +714,6 @@ export interface ResizePoolHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface ResizePoolBodyParam {
@@ -750,6 +750,30 @@ export type ResizePoolParameters = ResizePoolQueryParam &
 
 export interface StopPoolResizeHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -762,30 +786,6 @@ export interface StopPoolResizeHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface StopPoolResizeQueryParamProperties {
@@ -858,6 +858,30 @@ export type ReplacePoolPropertiesParameters = ReplacePoolPropertiesQueryParam &
 
 export interface RemoveNodesHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -870,30 +894,6 @@ export interface RemoveNodesHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface RemoveNodesBodyParam {
@@ -930,31 +930,31 @@ export type RemoveNodesParameters = RemoveNodesQueryParam &
 
 export interface ListSupportedImagesHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListSupportedImagesQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-support-images.
@@ -976,31 +976,31 @@ export type ListSupportedImagesParameters = ListSupportedImagesQueryParam &
 
 export interface ListPoolNodeCountsHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListPoolNodeCountsQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-support-images.
@@ -1035,29 +1035,29 @@ export interface DeleteJobHeaders {
    */
   "ocp-date"?: string;
   /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * been modified since the specified time.
    */
-  "if-modified-since"?: string;
+  "If-Modified-Since"?: string;
   /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * not been modified since the specified time.
    */
-  "if-unmodified-since"?: string;
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
 }
 
 export interface DeleteJobQueryParamProperties {
@@ -1082,6 +1082,30 @@ export type DeleteJobParameters = DeleteJobQueryParam &
 
 export interface GetJobHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -1094,42 +1118,18 @@ export interface GetJobHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface GetJobQueryParamProperties {
+  /** An OData $select clause. */
+  $select?: string[];
+  /** An OData $expand clause. */
+  $expand?: string[];
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
-  /** An OData $select clause. */
-  $select?: string[];
-  /** An OData $expand clause. */
-  $expand?: string[];
 }
 
 export interface GetJobQueryParam {
@@ -1146,6 +1146,30 @@ export type GetJobParameters = GetJobQueryParam &
 
 export interface UpdateJobHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -1158,30 +1182,6 @@ export interface UpdateJobHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface UpdateJobBodyParam {
@@ -1218,6 +1218,30 @@ export type UpdateJobParameters = UpdateJobQueryParam &
 
 export interface ReplaceJobHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -1230,30 +1254,6 @@ export interface ReplaceJobHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface ReplaceJobBodyParam {
@@ -1290,6 +1290,30 @@ export type ReplaceJobParameters = ReplaceJobQueryParam &
 
 export interface DisableJobHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -1302,30 +1326,6 @@ export interface DisableJobHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface DisableJobBodyParam {
@@ -1362,6 +1362,30 @@ export type DisableJobParameters = DisableJobQueryParam &
 
 export interface EnableJobHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -1374,30 +1398,6 @@ export interface EnableJobHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface EnableJobQueryParamProperties {
@@ -1422,6 +1422,30 @@ export type EnableJobParameters = EnableJobQueryParam &
 
 export interface TerminateJobHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -1434,30 +1458,6 @@ export interface TerminateJobHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface TerminateJobBodyParam {
@@ -1542,31 +1542,31 @@ export type CreateJobParameters = CreateJobQueryParam &
 
 export interface ListJobsHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListJobsQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-jobs.
@@ -1592,31 +1592,31 @@ export type ListJobsParameters = ListJobsQueryParam &
 
 export interface ListJobsFromScheduleHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListJobsFromScheduleQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-jobs-in-a-job-schedule.
@@ -1642,31 +1642,31 @@ export type ListJobsFromScheduleParameters = ListJobsFromScheduleQueryParam &
 
 export interface ListJobPreparationAndReleaseTaskStatusHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListJobPreparationAndReleaseTaskStatusQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-job-preparation-and-release-status.
@@ -1775,31 +1775,31 @@ export type CreateCertificateParameters = CreateCertificateQueryParam &
 
 export interface ListCertificatesHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListCertificatesQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-certificates.
@@ -1911,13 +1911,13 @@ export interface GetCertificateHeaders {
 }
 
 export interface GetCertificateQueryParamProperties {
+  /** An OData $select clause. */
+  $select?: string[];
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
-  /** An OData $select clause. */
-  $select?: string[];
 }
 
 export interface GetCertificateQueryParam {
@@ -1947,29 +1947,29 @@ export interface JobScheduleExistsHeaders {
    */
   "ocp-date"?: string;
   /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * been modified since the specified time.
    */
-  "if-modified-since"?: string;
+  "If-Modified-Since"?: string;
   /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * not been modified since the specified time.
    */
-  "if-unmodified-since"?: string;
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
 }
 
 export interface JobScheduleExistsQueryParamProperties {
@@ -2007,29 +2007,29 @@ export interface DeleteJobScheduleHeaders {
    */
   "ocp-date"?: string;
   /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * been modified since the specified time.
    */
-  "if-modified-since"?: string;
+  "If-Modified-Since"?: string;
   /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * not been modified since the specified time.
    */
-  "if-unmodified-since"?: string;
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
 }
 
 export interface DeleteJobScheduleQueryParamProperties {
@@ -2054,6 +2054,30 @@ export type DeleteJobScheduleParameters = DeleteJobScheduleQueryParam &
 
 export interface GetJobScheduleHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -2066,42 +2090,18 @@ export interface GetJobScheduleHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface GetJobScheduleQueryParamProperties {
+  /** An OData $select clause. */
+  $select?: string[];
+  /** An OData $expand clause. */
+  $expand?: string[];
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
-  /** An OData $select clause. */
-  $select?: string[];
-  /** An OData $expand clause. */
-  $expand?: string[];
 }
 
 export interface GetJobScheduleQueryParam {
@@ -2118,6 +2118,30 @@ export type GetJobScheduleParameters = GetJobScheduleQueryParam &
 
 export interface UpdateJobScheduleHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -2130,30 +2154,6 @@ export interface UpdateJobScheduleHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface UpdateJobScheduleBodyParam {
@@ -2190,6 +2190,30 @@ export type UpdateJobScheduleParameters = UpdateJobScheduleQueryParam &
 
 export interface ReplaceJobScheduleHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -2202,30 +2226,6 @@ export interface ReplaceJobScheduleHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface ReplaceJobScheduleBodyParam {
@@ -2262,6 +2262,30 @@ export type ReplaceJobScheduleParameters = ReplaceJobScheduleQueryParam &
 
 export interface DisableJobScheduleHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -2274,30 +2298,6 @@ export interface DisableJobScheduleHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface DisableJobScheduleQueryParamProperties {
@@ -2322,6 +2322,30 @@ export type DisableJobScheduleParameters = DisableJobScheduleQueryParam &
 
 export interface EnableJobScheduleHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -2334,30 +2358,6 @@ export interface EnableJobScheduleHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface EnableJobScheduleQueryParamProperties {
@@ -2382,6 +2382,30 @@ export type EnableJobScheduleParameters = EnableJobScheduleQueryParam &
 
 export interface TerminateJobScheduleHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -2394,30 +2418,6 @@ export interface TerminateJobScheduleHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface TerminateJobScheduleQueryParamProperties {
@@ -2490,31 +2490,31 @@ export type CreateJobScheduleParameters = CreateJobScheduleQueryParam &
 
 export interface ListJobSchedulesHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListJobSchedulesQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-job-schedules.
@@ -2588,31 +2588,31 @@ export type CreateTaskParameters = CreateTaskQueryParam &
 
 export interface ListTasksHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListTasksQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-tasks.
@@ -2699,29 +2699,29 @@ export interface DeleteTaskHeaders {
    */
   "ocp-date"?: string;
   /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * been modified since the specified time.
    */
-  "if-modified-since"?: string;
+  "If-Modified-Since"?: string;
   /**
    * A timestamp indicating the last modified time of the resource known to the
    * client. The operation will be performed only if the resource on the service has
    * not been modified since the specified time.
    */
-  "if-unmodified-since"?: string;
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
 }
 
 export interface DeleteTaskQueryParamProperties {
@@ -2746,6 +2746,30 @@ export type DeleteTaskParameters = DeleteTaskQueryParam &
 
 export interface GetTaskHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -2758,42 +2782,18 @@ export interface GetTaskHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface GetTaskQueryParamProperties {
+  /** An OData $select clause. */
+  $select?: string[];
+  /** An OData $expand clause. */
+  $expand?: string[];
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
-  /** An OData $select clause. */
-  $select?: string[];
-  /** An OData $expand clause. */
-  $expand?: string[];
 }
 
 export interface GetTaskQueryParam {
@@ -2810,6 +2810,30 @@ export type GetTaskParameters = GetTaskQueryParam &
 
 export interface ReplaceTaskHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -2822,30 +2846,6 @@ export interface ReplaceTaskHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface ReplaceTaskBodyParam {
@@ -2897,13 +2897,13 @@ export interface ListSubTasksHeaders {
 }
 
 export interface ListSubTasksQueryParamProperties {
+  /** An OData $select clause. */
+  $select?: string[];
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
-  /** An OData $select clause. */
-  $select?: string[];
 }
 
 export interface ListSubTasksQueryParam {
@@ -2920,6 +2920,30 @@ export type ListSubTasksParameters = ListSubTasksQueryParam &
 
 export interface TerminateTaskHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -2932,30 +2956,6 @@ export interface TerminateTaskHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface TerminateTaskQueryParamProperties {
@@ -2980,6 +2980,30 @@ export type TerminateTaskParameters = TerminateTaskQueryParam &
 
 export interface ReactivateTaskHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service exactly matches the value specified by the client.
+   */
+  "If-Match"?: string;
+  /**
+   * An ETag value associated with the version of the resource known to the client.
+   * The operation will be performed only if the resource's current ETag on the
+   * service does not match the value specified by the client.
+   */
+  "If-None-Match"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -2992,30 +3016,6 @@ export interface ReactivateTaskHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service exactly matches the value specified by the client.
-   */
-  "if-match"?: string;
-  /**
-   * An ETag value associated with the version of the resource known to the client.
-   * The operation will be performed only if the resource's current ETag on the
-   * service does not match the value specified by the client.
-   */
-  "if-none-match"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface ReactivateTaskQueryParamProperties {
@@ -3083,6 +3083,23 @@ export type DeleteTaskFileParameters = DeleteTaskFileQueryParam &
 
 export interface GetTaskFileHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * The byte range to be retrieved. The default is to retrieve the entire file. The
+   * format is bytes=startRange-endRange.
+   */
+  "ocp-range"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -3095,23 +3112,6 @@ export interface GetTaskFileHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
-  /**
-   * The byte range to be retrieved. The default is to retrieve the entire file. The
-   * format is bytes=startRange-endRange.
-   */
-  "ocp-range"?: string;
 }
 
 export interface GetTaskFileQueryParamProperties {
@@ -3136,6 +3136,18 @@ export type GetTaskFileParameters = GetTaskFileQueryParam &
 
 export interface GetTaskFilePropertiesHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -3148,18 +3160,6 @@ export interface GetTaskFilePropertiesHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface GetTaskFilePropertiesQueryParamProperties {
@@ -3184,31 +3184,31 @@ export type GetTaskFilePropertiesParameters = GetTaskFilePropertiesQueryParam &
 
 export interface ListTaskFilesHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListTaskFilesQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-task-files.
@@ -3382,13 +3382,13 @@ export interface GetNodeHeaders {
 }
 
 export interface GetNodeQueryParamProperties {
+  /** An OData $select clause. */
+  $select?: string[];
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
-  /** An OData $select clause. */
-  $select?: string[];
 }
 
 export interface GetNodeQueryParam {
@@ -3707,31 +3707,31 @@ export type UploadNodeLogsParameters = UploadNodeLogsQueryParam &
 
 export interface ListNodesHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListNodesQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-nodes-in-a-pool.
@@ -3770,13 +3770,13 @@ export interface GetNodeExtensionHeaders {
 }
 
 export interface GetNodeExtensionQueryParamProperties {
+  /** An OData $select clause. */
+  $select?: string[];
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
-  /** An OData $select clause. */
-  $select?: string[];
 }
 
 export interface GetNodeExtensionQueryParam {
@@ -3793,31 +3793,31 @@ export type GetNodeExtensionParameters = GetNodeExtensionQueryParam &
 
 export interface ListNodeExtensionsHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListNodeExtensionsQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /** An OData $select clause. */
   $select?: string[];
 }
@@ -3879,6 +3879,23 @@ export type DeleteNodeFileParameters = DeleteNodeFileQueryParam &
 
 export interface GetNodeFileHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
+   * The byte range to be retrieved. The default is to retrieve the entire file. The
+   * format is bytes=startRange-endRange.
+   */
+  "ocp-range"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -3891,23 +3908,6 @@ export interface GetNodeFileHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
-  /**
-   * The byte range to be retrieved. The default is to retrieve the entire file. The
-   * format is bytes=startRange-endRange.
-   */
-  "ocp-range"?: string;
 }
 
 export interface GetNodeFileQueryParamProperties {
@@ -3932,6 +3932,18 @@ export type GetNodeFileParameters = GetNodeFileQueryParam &
 
 export interface GetNodeFilePropertiesHeaders {
   /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * been modified since the specified time.
+   */
+  "If-Modified-Since"?: string;
+  /**
+   * A timestamp indicating the last modified time of the resource known to the
+   * client. The operation will be performed only if the resource on the service has
+   * not been modified since the specified time.
+   */
+  "If-Unmodified-Since"?: string;
+  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
@@ -3944,18 +3956,6 @@ export interface GetNodeFilePropertiesHeaders {
    * directly.
    */
   "ocp-date"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * been modified since the specified time.
-   */
-  "if-modified-since"?: string;
-  /**
-   * A timestamp indicating the last modified time of the resource known to the
-   * client. The operation will be performed only if the resource on the service has
-   * not been modified since the specified time.
-   */
-  "if-unmodified-since"?: string;
 }
 
 export interface GetNodeFilePropertiesQueryParamProperties {
@@ -3980,31 +3980,31 @@ export type GetNodeFilePropertiesParameters = GetNodeFilePropertiesQueryParam &
 
 export interface ListNodeFilesHeaders {
   /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-  /**
    * The caller-generated request identity, in the form of a GUID with no decoration
    * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
    */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
+  /**
+   * The time the request was issued. Client libraries typically set this to the
+   * current system clock time; set it explicitly if you are calling the REST API
+   * directly.
+   */
+  "ocp-date"?: string;
 }
 
 export interface ListNodeFilesQueryParamProperties {
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
   /**
    * Sets the maximum time that the server can spend processing the request,
    * in seconds. The default is 30 seconds.
    */
   timeOut?: number;
+  /**
+   * The maximum number of items to return in the response. A maximum of 1000
+   * applications can be returned.
+   */
+  maxresults?: number;
   /**
    * An OData $filter clause. For more information on constructing this filter, see
    * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-compute-node-files.

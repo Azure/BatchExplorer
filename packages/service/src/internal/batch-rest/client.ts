@@ -6,8 +6,8 @@
 
 import { TokenCredential } from "@azure/core-auth";
 import { ClientOptions } from "@azure-rest/core-client";
-import { BatchClient } from "./generated";
-import createClient from "./generated/batchClient";
+import { BatchClient } from "./generated/src";
+import createClient from "./generated/src/batchClient";
 import { BatchHttpClient } from "../client-http/batch-http-client";
 
 export function createBatchClient(

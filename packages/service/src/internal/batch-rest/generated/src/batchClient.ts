@@ -18,16 +18,7 @@ export default function createClient(
   options: ClientOptions = {}
 ): BatchClient {
   const baseUrl = options.baseUrl ?? `${endpoint}`;
-  options.apiVersion = options.apiVersion ?? "2023-05-01.17.0";
-  options = {
-    ...options,
-    credentials: {
-      scopes: options.credentials?.scopes ?? [
-        "https://batch.core.windows.net//.default",
-      ],
-    },
-  };
-
+  options.apiVersion = options.apiVersion ?? "2023-11-01.18.0";
   const userAgentInfo = `azsdk-js-batch-rest/1.0.0-beta.1`;
   const userAgentPrefix =
     options.userAgentOptions && options.userAgentOptions.userAgentPrefix
@@ -40,6 +31,16 @@ export default function createClient(
     },
     loggingOptions: {
       logger: options.loggingOptions?.logger ?? logger.info,
+    },
+    telemetryOptions: {
+      clientRequestIdHeaderName:
+        options.telemetryOptions?.clientRequestIdHeaderName ??
+        "client-request-id",
+    },
+    credentials: {
+      scopes: options.credentials?.scopes ?? [
+        "https://batch.core.windows.net//.default",
+      ],
     },
   };
 

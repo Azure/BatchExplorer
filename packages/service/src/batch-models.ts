@@ -1,1 +1,1 @@
-export * from "./internal/batch-rest/generated/outputModels";
+export * from "./internal/batch-rest/generated/src/outputModels";
