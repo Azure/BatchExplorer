@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@azure-tools/typespec-ts": "latest",
+    "@azure-tools/typespec-autorest": "latest",
+    "@typespec/compiler": "latest",
+    "@typespec/openapi": "latest"
+  },
+  "private": true
+}
