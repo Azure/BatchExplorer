@@ -13,7 +13,7 @@ import {
     BatchNodeListResultOutput,
     BatchNodeVMExtensionListResultOutput,
     CreateJobParameters,
-} from "../generated";
+} from "../generated/src";
 
 const batchAccountEndpoint = "https://batchaccount.eastus2.batch.azure.com";
 const BATCH_API_VERSION = "2023-05-01.17.0";

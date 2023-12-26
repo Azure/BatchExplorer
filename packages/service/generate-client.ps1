@@ -1,6 +1,6 @@
 
 
-# override options for emitter: @azure-tools/typespec-ts
+# overrided options for emitter: @azure-tools/typespec-ts
 # see details: https://www.npmjs.com/package/@azure-tools/typespec-ts
 $options = (
     "generateMetadata=false; " +
