@@ -73,9 +73,11 @@
     "@azure/logger": "^1.0.0"
   },
   "devDependencies": {
+    "@azure-tools/typespec-client-generator-cli": "^0.3.0",
     "@batch/common-config": "^1.0.0",
     "@types/jest": "^27.0.1",
     "@types/node": "20.5.4",
+    "@typespec/compiler": "^0.50.0",
     "autorest": "^3.6.3",
     "jest": "^27.1.0",
     "jest-junit": "^12.2.0",
