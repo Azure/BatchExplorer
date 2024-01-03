@@ -10,13 +10,14 @@
             (mouseup)="handleMiddleMouseUp($event, favorite)"
             (contextmenu)="onContextMenu(favorite)">
 
-            <bl-clickable class="dropdown-item favorite-item" (do)="gotoFavorite(favorite)">
-                <span attr.aria-label="{{favorite.name || favorite.id}}">
+            <bl-clickable class="dropdown-item favorite-item" (do)="gotoFavorite(favorite)"
+                attr.aria-label="{{favorite.name || favorite.id}}">
+                <div>
                     <i class="entity-type fa" [ngClass]="entityIcon(favorite)"
                     [title]="entityType(favorite)"></i>
                     {{favorite.name || favorite.id}}
                     <i *ngIf="favorite.url === currentUrl" class="extra fa fa-check"></i>
-                </span>
+                </div>
             </bl-clickable>
             <bl-clickable class="dropdown-item delete" (do)="removeFavorite(favorite)" title="Remove from favorites" name="remove">
                 <i class="fa fa-times"  aria-hidden="true"></i>

@@ -35,6 +35,9 @@
                 <bl-form-field>
                     <input blInput formControlName="requiredSlots" placeholder="Required slots">
                 </bl-form-field>
+                <div *ngIf="displayDisableRequiredSlotsMsg" class="info-text">
+                    {{'add-task-form.info.disable-required-slots' | i18n}}
+                </div>
                 <bl-error controlName="requiredSlots" code="required">Required slots is a required field</bl-error>
                 <bl-error controlName="requiredSlots" code="min">Required slots value must be greater than or equal to 1</bl-error>
             </div>

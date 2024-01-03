@@ -41,7 +41,12 @@
                             <b *i18nParam="'imageEndOfLifeDate'">{{selectedImageEndOfLifeDate}}</b>
                         </bl-i18n>
                     </span>
-                    <a class="pool-details-summary-warning-alternative-link" *ngIf="hasDeprecationLink" (click)="openDeprecationLink()" href="javascript:void(0)">Learn more </a>
+                    <a class="pool-details-summary-warning-alternative-link"
+                        [title]="'pool-details.learnMoreTitle' | i18n"
+                        *ngIf="hasDeprecationLink" (click)="openDeprecationLink()"
+                        href="javascript:void(0)">
+                        {{ 'pool-details.learnMore' | i18n }}
+                    </a>
                 </div>
             </bl-banner>
         </ng-container>
