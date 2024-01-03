@@ -6,7 +6,7 @@
     </bl-clickable>
     <div *ngIf="item.category">
         <bl-clickable class="legend-item category" (do)="selectState(item.category, item.category)" [attr.aria-selected]="item.category === highlightedState" [class.highlighted]="item.category === highlightedState"
-            (contextmenu)="openContextMenu(item)">
+            (contextmenu)="openContextMenu(item)" [attr.aria-expanded]="item.category === expandedCategory">
             <div [style.backgroundColor]="item.color" class="color"></div>
             <div class="label">{{item.label}} ({{stateCounter.getCountforCategory(item.category)}})</div>
             <div class="category-expansion">
