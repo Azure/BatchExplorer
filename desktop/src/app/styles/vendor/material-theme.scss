@@ -211,4 +211,14 @@ mat-calendar .mat-calendar-table-header {
     mat-dialog-container {
         border: 1px solid currentColor;
     }
+    .mat-tab-label {
+        bl-button {
+            border: none;
+        }
+        &.mat-tab-label-active, &.mat-tab-label-active > .mat-tab-label-content {
+            background-color: Highlight;
+            color: Canvas;
+            forced-color-adjust: none;
+        }
+    }
 }
