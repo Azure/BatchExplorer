@@ -2,3 +2,5 @@ add-task-form:
   title: Add task
   subtitle: Add a task to the selected job
   action: Add
+  info:
+    disable-required-slots: Required slots must be 1 for multi-instance tasks

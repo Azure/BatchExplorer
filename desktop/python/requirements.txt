@@ -1,4 +1,4 @@
-pyinstaller==5.9
+pyinstaller==5.13.1
 pylint==2.17.0
 azure-batch==12.0.0
 azure-batch-extensions==9.0.0

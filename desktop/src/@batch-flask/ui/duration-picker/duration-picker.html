@@ -16,16 +16,18 @@
         </bl-select>
     </div>
 </div>
-<div class="error" role="alert" *ngIf="invalidTimeNumber">
-    Input should be a valid positive number
-</div>
-<div class="error" role="alert" *ngIf="required && !this.time">
-    Input is required
-</div>
-<div class="error" role="alert" *ngIf="invalidCustomDuration">
-    This is not a valid ISO 8601 duration <i>(e.g. PT1M, P1D)</i>
-</div>
-<div class="error" role="alert" *ngIf="invalidDurationValue">
-    Input must be less than 10675199 days
-</div>
 
+<div class="error-container">
+    <div class="error" role="alert" *ngIf="invalidTimeNumber">
+        Input should be a valid positive number
+    </div>
+    <div class="error" role="alert" *ngIf="required && !this.time">
+        Input is required
+    </div>
+    <div class="error" role="alert" *ngIf="invalidCustomDuration">
+        This is not a valid ISO 8601 duration <i>(e.g. PT1M, P1D)</i>
+    </div>
+    <div class="error" role="alert" *ngIf="invalidDurationValue">
+        Input must be less than 10675199 days
+    </div>
+</div>
