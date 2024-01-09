@@ -4,11 +4,9 @@ This package intended to act as a decoupled data access & business logic layer f
 
 RLC (Rest Level Client) is an Azure specific SDK flavor that emphasizes seamless developer experience by acting as a layer above raw HTTP calls. One of the major benefits of this SDK type is that they provide a compact, browser friendly bundle size footprint by relying on an abstract REST client and contains Batch specific Typescript type definitions as oppose to exportable classes. More information about RLCs can be found [here](https://devblogs.microsoft.com/azure-sdk/azure-rest-libraries-for-javascript/).
 
-
 ## Development Prerequisites
 
 Before developing against this library, please consult the __Developer Prerequisites__ section of `<ROOT_DIR>/packages/README.md`.
-
 
 ## Package Layout
 
@@ -22,11 +20,9 @@ Before developing against this library, please consult the __Developer Prerequis
 
 - `<ROOT_DIR>/eng/emitter-package.json` - This file is used by `tsp-client` to install the required dependencies to setup the local TypeSpec project for generating the Batch Data plane RLC, see more details in [Azure JS SDK RLC quickstart](https://github.com/Azure/azure-sdk-for-js/blob/main/documentation/RLC-quickstart.md) and [tsp-client npm readme](https://www.npmjs.com/package/@azure-tools/typespec-client-generator-cli)
 
-
 ## Generating the Batch Data Plane RLC
 
 Batch Data Plane RLC is generated based on our TypeSpec files. First make sure `src\internal\batch-rest\generated\tsp-location.yaml` is updated with the __github__ repo and the commit hash which has the targeted `tspconfig.yml` and `*.tsp` files. Then then run the following from the root of the `service` package:
-
 
 ```shell
 npm run generate:client
