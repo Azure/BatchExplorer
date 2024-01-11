@@ -12,6 +12,8 @@ import { getEnableAutomaticUpgradeValue } from "./vm-extension-details";
 import { Link } from "@fluentui/react/lib/Link";
 import { translate } from "@azure/bonito-core";
 import { SearchBox } from "@fluentui/react/lib/SearchBox";
+import { Icon } from "@fluentui/react/lib/Icon";
+import { useAppTheme } from "@azure/bonito-ui/lib/theme";
 
 export type VmExtItem = VMExtensionOutput & {
     provisioningState?: string;
@@ -26,6 +28,7 @@ interface VmExtensionListProps {
 
 export const VmExtensionList = (props: VmExtensionListProps) => {
     const { extensions, loading, onItemClick } = props;
+    const theme = useAppTheme();
 
     const hasProvisioningState = React.useMemo<boolean>(() => {
         return extensions.some((ext) => {
@@ -91,10 +94,50 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
                 label: translate("lib.react.vmExtension.provisioningState"),
                 prop: "provisioningState",
                 minWidth: 200,
+                onRender: (item: VmExtItem) => {
+                    const provisioningState = item.provisioningState;
+
+                    const shouldDisplayIcon = ["Succeeded", "Failed"].includes(
+                        provisioningState || ""
+                    );
+                    const iconName =
+                        provisioningState === "Succeeded"
+                            ? "SkypeCircleCheck"
+                            : "StatusErrorFull";
+
+                    const iconColor =
+                        provisioningState === "Succeeded"
+                            ? theme.semanticColors.successIcon
+                            : theme.semanticColors.errorIcon;
+                    return (
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "4px",
+                            }}
+                        >
+                            {shouldDisplayIcon && (
+                                <Icon
+                                    iconName={iconName}
+                                    style={{
+                                        color: iconColor,
+                                    }}
+                                />
+                            )}
+                            {item.provisioningState}
+                        </div>
+                    );
+                },
             });
         }
         return cols;
-    }, [hasProvisioningState, onItemClick]);
+    }, [
+        hasProvisioningState,
+        onItemClick,
+        theme.semanticColors.errorIcon,
+        theme.semanticColors.successIcon,
+    ]);
 
     return (
         <>

@@ -25,12 +25,7 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
     const { vme } = props;
 
     const firstStatus = React.useMemo(() => getfirstStatus(vme), [vme]);
-    // const subStatues = React.useMemo(() => {
-    //     if (!vme?.instanceView) {
-    //         return [];
-    //     }
-    //     return vme.instanceView.subStatuses;
-    // }, [vme]);
+    // const subStatues = vme?.instanceView?.subStatuses;
 
     const subStatues = [
         {
@@ -163,6 +158,7 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
                     containerStyle={groupStyle}
                 >
                     <TextField
+                        readOnly
                         autoAdjustHeight
                         multiline
                         contentEditable={false}
