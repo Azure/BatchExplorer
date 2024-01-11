@@ -84,7 +84,7 @@ const additionalDependencies: Dependency[] = [
         name: "Chromium",
         version: "116.0",
         url: "https://www.chromium.org/",
-        repoUrl: "https://source.chromium.org/chromium/chromium/src",
+        repoUrl: "https://github.com/chromium/chromium",
         licenseType: "BSD-3-Clause"
     }
 ];
