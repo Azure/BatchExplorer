@@ -6,15 +6,14 @@ import { translate } from "@azure/bonito-core";
 import { InstanceViewStatusOutput } from "@batch/ui-service/lib/batch-models";
 import { MonacoEditor } from "@azure/bonito-ui/lib/components";
 
-interface VmExtensionDetailsProps {
+interface VmExtensionDetailsPanelProps {
     vme?: VmExtItem;
+    isOpen: boolean;
+    onDismiss: () => void;
 }
 
 export const VmExtensionDetailsPanel = (
-    props: VmExtensionDetailsProps & {
-        isOpen: boolean;
-        onDismiss: () => void;
-    }
+    props: VmExtensionDetailsPanelProps
 ) => {
     const { vme, isOpen, onDismiss } = props;
 
