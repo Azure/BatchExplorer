@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { Panel as FluentPanel, PanelType } from "@fluentui/react/lib/Panel";
 import { ButtonProps } from "../button";
-import { PaneFooter } from "../pane-footer";
+import { PaneFooter } from "./pane-footer";
 
 export interface PanelProps {
     headerText?: string;

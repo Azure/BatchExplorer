@@ -1,6 +1,6 @@
 import React from "react";
-import { useAppTheme } from "../theme";
-import { Button, ButtonProps } from "./button";
+import { useAppTheme } from "../../theme";
+import { Button, ButtonProps } from "../button";
 
 export interface PaneFooterProps {
     buttons?: ButtonProps[];
