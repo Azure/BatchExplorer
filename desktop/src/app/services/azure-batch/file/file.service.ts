@@ -246,10 +246,12 @@ export class FileService {
     }
 
     public downloadFromNode(poolId: string, nodeId: string, filename: string, dest: string) {
+        filename = encodeURIComponent(filename);
         return this._download(`/pools/${poolId}/nodes/${nodeId}/files/${filename}`, dest);
     }
 
     public downloadFromTask(jobId: string, taskId: string, filename: string, dest: string) {
+        filename = encodeURIComponent(filename);
         return this._download(`/jobs/${jobId}/tasks/${taskId}/files/${filename}`, dest);
 
     }

@@ -1,3 +1,20 @@
+# 2.20.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/54?closed=1)
+
+### Features
+
+* Adds `requiredSlots` disable logic for multi-instance tasks [\#2876](https://github.com/Azure/BatchExplorer/issues/2876)
+* Multiple accessibility improvements [\#2874](https://github.com/Azure/BatchExplorer/issues/2874)
+
+### Bugs
+
+* Couldn't download filename contains "#" [\#2877](https://github.com/Azure/BatchExplorer/issues/2877)
+
+### Other
+
+* Updates 3rd party notices [\#2875](https://github.com/Azure/BatchExplorer/issues/2875)
+
 # 2.19.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/53?closed=1)
