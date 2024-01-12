@@ -2,8 +2,13 @@ import { render } from "@testing-library/react";
 import { Panel } from "../panel";
 import React from "react";
 import userEvent from "@testing-library/user-event";
+import { initMockBrowserEnvironment } from "../../../environment";
 
 describe("PaneFooter", () => {
+    beforeEach(() => {
+        initMockBrowserEnvironment();
+    });
+
     it("should render header text if isOpen", () => {
         const { getByText } = render(
             <Panel isOpen={true} headerText="Test header text"></Panel>
