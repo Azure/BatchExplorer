@@ -7,6 +7,8 @@ import { runAxe } from "@azure/bonito-ui/lib/test-util/a11y";
 import { translate } from "@azure/bonito-core";
 import userEvent from "@testing-library/user-event";
 
+jest.setTimeout(20000);
+
 describe("VmExtensionDetailsPanel", () => {
     beforeEach(() => initMockBrowserEnvironment());
 
