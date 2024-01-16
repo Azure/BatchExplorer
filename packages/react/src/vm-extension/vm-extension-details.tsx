@@ -25,24 +25,24 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
     const { vme } = props;
 
     const firstStatus = React.useMemo(() => getfirstStatus(vme), [vme]);
-    // const subStatues = vme?.instanceView?.subStatuses;
+    const subStatues = vme?.instanceView?.subStatuses;
 
-    const subStatues = [
-        {
-            code: "ProvisioningState/failed",
-            level: "Error",
-            displayStatus: "Provisioning failed",
-            message: "Provisioning failed",
-            time: "2021-06-15T21:59:14.0000000Z",
-        },
-        {
-            code: "ProvisioningState/failed",
-            level: "Error",
-            displayStatus: "Provisioning failed",
-            message: "Provisioning failed",
-            time: "2021-06-15T21:59:14.0000000Z",
-        },
-    ];
+    // const subStatues = [
+    //     {
+    //         code: "ProvisioningState/failed",
+    //         level: "Error",
+    //         displayStatus: "Provisioning failed",
+    //         message: "Provisioning failed",
+    //         time: "2021-06-15T21:59:14.0000000Z",
+    //     },
+    //     {
+    //         code: "ProvisioningState/failed",
+    //         level: "Error",
+    //         displayStatus: "Provisioning failed",
+    //         message: "Provisioning failed",
+    //         time: "2021-06-15T21:59:14.0000000Z",
+    //     },
+    // ];
     const titleStyle = React.useMemo(() => {
         return {
             color: theme.palette.black,

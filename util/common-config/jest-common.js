@@ -30,7 +30,11 @@ module.exports = {
         }
 
         const baseConfig = {
-            preset: "ts-jest",
+            // use "js-with-ts" preset to to transform some esm modules .js file to cjs
+            // for example, monaco-editor, which is a esm module, will be transformed to cjs
+            // so that jest can run it.
+            // https://stackoverflow.com/questions/61781271/jest-wont-transform-the-module-syntaxerror-cannot-use-import-statement-outsi
+            preset: "ts-jest/presets/js-with-ts",
             testEnvironment: "node",
             maxWorkers: "50%",
             testMatch: ["<rootDir>/src/**/__tests__/**/*.spec.(ts|tsx|js|jsx)"],
@@ -55,6 +59,12 @@ module.exports = {
                 ],
             ],
             globals: {
+                "ts-jest": {
+                    // js-with-ts preset require "allowJs": true in tsconfig.json
+                    // so making a "tsconfig.test.json" to override it
+                    tsconfig: "config/tsconfig.test.json",
+                    isolatedModules: true,
+                },
                 __TEST_RESOURCE_STRINGS: combinedResourceStrings,
             },
             transform: {
@@ -70,6 +80,10 @@ module.exports = {
                     },
                 ],
             },
+            // transform monaco-editor to cjs
+            transformIgnorePatterns: [
+                "node_modules/(?!(monaco-editor)).+\\.js$",
+            ],
         };
 
         if (
@@ -105,8 +119,15 @@ module.exports = {
         baseConfig.moduleNameMapper["@batch/ui-service/lib/(.*)$"] =
             "@batch/ui-service/lib-cjs/$1";
 
+        // css files
+        baseConfig.moduleNameMapper["^.+\\.css$"] = path.join(
+            __dirname,
+            "../mock-style.js"
+        );
+
         return Object.assign({}, baseConfig, overrides);
     },
+    getCombinedResourceStrings: getCombinedResourceStrings,
 };
 
 function getCombinedResourceStrings() {
