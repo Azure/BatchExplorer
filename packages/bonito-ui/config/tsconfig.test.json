@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.common.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "../build/cache/ts.build.buildinfo",
+    "allowJs": true
+  },
+  "include": ["../**/__mocks__/**/*", "../**/__tests__/**/*"]
+}

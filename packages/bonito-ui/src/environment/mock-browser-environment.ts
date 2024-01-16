@@ -38,6 +38,24 @@ export class MockBrowserEnvironment
                 this.config.enableA11yTesting = true;
             }
         }
+
+        // some JSDOM APIs are not implemented, so we need to mock them
+        // to make importing monaco-editor works
+        // https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
+        Object.defineProperty(window, "matchMedia", {
+            writable: true,
+            value: jest.fn().mockImplementation((query) => ({
+                matches: false,
+                media: query,
+                onchange: null,
+                addListener: jest.fn(), // deprecated
+                removeListener: jest.fn(), // deprecated
+                addEventListener: jest.fn(),
+                removeEventListener: jest.fn(),
+                dispatchEvent: jest.fn(),
+            })),
+        });
+        HTMLCanvasElement.prototype.getContext = jest.fn().mockReturnValue({});
     }
 
     getFormControl<
