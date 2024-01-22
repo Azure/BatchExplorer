@@ -159,5 +159,8 @@ module.exports = (env) => {
                       }),
                   ],
         },
+        watchOptions: {
+            ignored: ["**/packages/**/src", "**/node_modules"],
+        },
     };
 };
