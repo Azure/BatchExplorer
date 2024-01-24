@@ -25,12 +25,27 @@ export default class BatchExplorerHttpClient extends AbstractHttpClient {
 
         const accessToken: AccessToken =
             await this.authService.getAccessToken(tenantId);
-        const authRequestProps = {...requestProps};
-        if (!authRequestProps.headers) {
-            authRequestProps.headers = {};
+
+
+        const headers: Headers = new Headers();
+        if (requestProps?.headers) {
+            if (typeof requestProps.headers.forEach === "function") {
+                // Headers object
+                requestProps.headers.forEach((value, key) => {
+                    headers.set(key, value);
+                });
+            } else {
+                // Map of headers
+                const headerMap = requestProps.headers as Record<string, string>;
+                for (const [k, v] of Object.entries(headerMap)) {
+                    headers.set(k, v);
+                }
+            }
         }
-        authRequestProps.headers["Authorization"] =
-            `${accessToken.tokenType} ${accessToken.accessToken}`;
-        return this._delegate.fetch(urlOrRequest, authRequestProps);
+        headers.set("Authorization", `${accessToken.tokenType} ${accessToken.accessToken}`);
+        return this._delegate.fetch(urlOrRequest, {
+            ...requestProps,
+            headers,
+        });
     }
 }

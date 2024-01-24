@@ -1,0 +1,4 @@
+directory: specification/batch/Azure.Batch
+commit: e4b9c403b879114eabb38f23071161e5a6cd508e
+repo: wiboris/azure-rest-api-specs
+additionalDirectories:

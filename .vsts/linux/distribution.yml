@@ -25,11 +25,6 @@ steps:
 
   - template: ./publish-npm-package.yml
     parameters:
-      packagePath: ./packages/arm-batch-rest
-      packageName: "@batch/arm-batch-rest"
-
-  - template: ./publish-npm-package.yml
-    parameters:
       packagePath: ./packages/service
       packageName: "@batch/ui-service"
 

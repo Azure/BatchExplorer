@@ -9,6 +9,6 @@ export {
     PoolDisableAutoScaleParameters,
     PoolStopResizeParameters,
     PoolOutput,
-} from "@batch/arm-batch-rest";
+} from "../internal/arm-batch-rest";
 
 export type NodeCommunicationMode = "Default" | "Simplified" | "Classic";

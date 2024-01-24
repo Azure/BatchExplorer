@@ -30,14 +30,9 @@ describe("BatchExplorerHttpClient", () => {
 
             expect(fakeAuthService.getAccessToken).toHaveBeenCalledWith(
                 TenantPlaceholders.common);
-            expect(fakeFetchHttpClient.fetch).toHaveBeenCalledWith(
-                "/subscriptions",
-                {
-                    headers: {
-                        Authorization: "Token1Type token1"
-                    }
-                }
-            );
+            const [subscriptionUrl, requestProps] = fakeFetchHttpClient.fetch.calls.argsFor(0);
+            expect(subscriptionUrl).toEqual("/subscriptions");
+            expect(requestProps.headers.get('authorization')).toEqual("Token1Type token1");
         });
         it("uses the common tenant regardless of subscription in URL",
         async () => {

@@ -1,119 +1,156 @@
-import { BatchApiVersion } from "../constants";
-import type { ListPoolsResultOutput, Pool, PoolOutput } from "./pool-models";
+// import { BatchApiVersion } from "../constants";
+import type { Pool, PoolOutput } from "./pool-models";
 import type { PoolService } from "./pool-service";
 import {
-    getHttpClient,
-    StandardHttpHeaders,
-    MediaType,
     AbstractHttpService,
     OperationOptions,
     getArmUrl,
-    buildRequestMetadata,
-    UnexpectedStatusCodeError,
 } from "@azure/bonito-core";
+import { createARMBatchClient, isUnexpected } from "../internal/arm-batch-rest";
+import {
+    createArmUnexpectedStatusCodeError,
+    parseBatchAccountIdInfo,
+    parsePoolArmIdInfo,
+} from "../utils";
+
+const SINGLE_POOL_PATH =
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/pools/{poolName}";
+
+const POOLS_PATH =
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/pools";
 
 export class LivePoolService
     extends AbstractHttpService
     implements PoolService
 {
     async createOrUpdate(
+        poolArmId: string,
         pool: Pool,
         opts?: OperationOptions
     ): Promise<PoolOutput> {
-        const response = await getHttpClient().put(
-            `${getArmUrl()}${pool.id}?api-version=${BatchApiVersion.arm}`,
-            {
-                body: JSON.stringify(pool),
-                metadata: buildRequestMetadata(opts),
-            }
-        );
+        const armBatchClient = createARMBatchClient({
+            baseUrl: getArmUrl(),
+        });
 
-        if (response.status === 200) {
-            return (await response.json()) as PoolOutput;
+        const {
+            subscriptionId,
+            resourceGroupName,
+            batchAccountName,
+            poolName,
+        } = parsePoolArmIdInfo(poolArmId);
+
+        const res = await armBatchClient
+            .path(
+                SINGLE_POOL_PATH,
+                subscriptionId,
+                resourceGroupName,
+                batchAccountName,
+                poolName
+            )
+            .put({
+                body: pool,
+                headers: {},
+            });
+
+        if (isUnexpected(res)) {
+            throw createArmUnexpectedStatusCodeError(res);
         }
 
-        throw new UnexpectedStatusCodeError(
-            `Failed to create or update pool ${pool.id}`,
-            response.status,
-            await response.text()
-        );
+        return res.body;
     }
 
     async get(
-        id: string,
+        poolArmId: string,
         opts?: OperationOptions
     ): Promise<PoolOutput | undefined> {
-        const response = await getHttpClient().get(
-            `${getArmUrl()}${id}?api-version=${BatchApiVersion.arm}`,
-            {
-                metadata: buildRequestMetadata(opts),
-            }
-        );
+        const armBatchClient = createARMBatchClient({
+            baseUrl: getArmUrl(),
+        });
 
-        if (response.status === 404) {
-            return undefined;
+        const {
+            subscriptionId,
+            resourceGroupName,
+            batchAccountName,
+            poolName,
+        } = parsePoolArmIdInfo(poolArmId);
+
+        const res = await armBatchClient
+            .path(
+                SINGLE_POOL_PATH,
+                subscriptionId,
+                resourceGroupName,
+                batchAccountName,
+                poolName
+            )
+            .get();
+
+        if (isUnexpected(res)) {
+            throw createArmUnexpectedStatusCodeError(res);
         }
 
-        if (response.status === 200) {
-            return (await response.json()) as PoolOutput;
-        }
-
-        throw new UnexpectedStatusCodeError(
-            `Failed to get pool by ID ${id}`,
-            response.status,
-            await response.text()
-        );
+        return res.body;
     }
 
     async listByAccountId(
-        accountId: string,
+        batchAccountId: string,
         opts?: OperationOptions
     ): Promise<PoolOutput[]> {
-        const response = await getHttpClient().get(
-            `${getArmUrl()}${accountId}/pools?api-version=${
-                BatchApiVersion.arm
-            }`,
-            {
-                metadata: buildRequestMetadata(opts),
-            }
-        );
+        const armBatchClient = createARMBatchClient({
+            baseUrl: getArmUrl(),
+        });
 
-        if (response.status === 200) {
-            const json = (await response.json()) as ListPoolsResultOutput;
-            return json.value ?? [];
+        const { subscriptionId, resourceGroupName, batchAccountName } =
+            parseBatchAccountIdInfo(batchAccountId);
+
+        const res = await armBatchClient
+            .path(
+                POOLS_PATH,
+                subscriptionId,
+                resourceGroupName,
+                batchAccountName
+            )
+            .get();
+
+        if (isUnexpected(res)) {
+            throw createArmUnexpectedStatusCodeError(res);
         }
 
-        throw new UnexpectedStatusCodeError(
-            `Failed to list pools under account ${accountId}`,
-            response.status,
-            await response.text()
-        );
+        return res.body.value ?? [];
     }
 
-    async patch(pool: Pool, opts?: OperationOptions): Promise<PoolOutput> {
-        if (!pool.id) {
-            throw new Error("Pool ID must be defined");
+    async patch(
+        poolArmId: string,
+        pool: Pool,
+        opts?: OperationOptions
+    ): Promise<PoolOutput> {
+        const armBatchClient = createARMBatchClient({
+            baseUrl: getArmUrl(),
+        });
+
+        const {
+            subscriptionId,
+            resourceGroupName,
+            batchAccountName,
+            poolName,
+        } = parsePoolArmIdInfo(poolArmId);
+
+        const res = await armBatchClient
+            .path(
+                SINGLE_POOL_PATH,
+                subscriptionId,
+                resourceGroupName,
+                batchAccountName,
+                poolName
+            )
+            .patch({
+                body: pool,
+                headers: {},
+            });
+
+        if (isUnexpected(res)) {
+            throw createArmUnexpectedStatusCodeError(res);
         }
 
-        const response = await getHttpClient().patch(
-            `${getArmUrl()}${pool.id}?api-version=${BatchApiVersion.arm}`,
-            {
-                headers: {
-                    [StandardHttpHeaders.ContentType]: MediaType.Json,
-                },
-                body: JSON.stringify(pool),
-                metadata: buildRequestMetadata(opts),
-            }
-        );
-
-        if (response.status === 200) {
-            return (await response.json()) as PoolOutput;
-        }
-
-        throw new UnexpectedStatusCodeError(
-            `Failed to patch pool ${pool.id}`,
-            response.status,
-            await response.text()
-        );
+        return res.body;
     }
 }

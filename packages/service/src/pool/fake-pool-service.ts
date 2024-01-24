@@ -9,19 +9,19 @@ export class FakePoolService implements PoolService {
         this.fakeSet = fakeSet;
     }
 
-    async createOrUpdate(pool: Pool): Promise<PoolOutput> {
+    async createOrUpdate(poolArmId: string, pool: Pool): Promise<PoolOutput> {
         return this.fakeSet.putPool(pool);
     }
 
-    async get(id: string): Promise<PoolOutput | undefined> {
-        return this.fakeSet.getPool(id);
+    async get(poolArmId: string): Promise<PoolOutput | undefined> {
+        return this.fakeSet.getPool(poolArmId);
     }
 
     async listByAccountId(accountId: string): Promise<PoolOutput[]> {
         return this.fakeSet.listPoolsByAccount(accountId);
     }
 
-    async patch(pool: Pool): Promise<PoolOutput> {
+    async patch(poolArmId: string, pool: Pool): Promise<PoolOutput> {
         return this.fakeSet.patchPool(pool);
     }
 }
