@@ -4,7 +4,7 @@ import React from "react";
 import userEvent from "@testing-library/user-event";
 import { initMockBrowserEnvironment } from "../../../environment";
 
-describe("PaneFooter", () => {
+describe("Panel", () => {
     beforeEach(() => {
         initMockBrowserEnvironment();
     });

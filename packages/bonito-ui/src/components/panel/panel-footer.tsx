@@ -2,12 +2,12 @@ import React from "react";
 import { useAppTheme } from "../../theme";
 import { Button, ButtonProps } from "../button";
 
-export interface PaneFooterProps {
+export interface PanelFooterProps {
     buttons?: ButtonProps[];
     children?: React.ReactNode;
 }
 
-export const PaneFooter = (props: PaneFooterProps) => {
+export const PanelFooter = (props: PanelFooterProps) => {
     const { children, buttons } = props;
 
     const theme = useAppTheme();
@@ -23,14 +23,14 @@ export const PaneFooter = (props: PaneFooterProps) => {
     return (
         <div style={style}>
             <div style={{ flexGrow: 1 }}>
-                <PaneFooterButtons buttons={buttons} />
+                <PanelFooterButtons buttons={buttons} />
             </div>
             <div style={{ alignSelf: "right" }}>{children}</div>
         </div>
     );
 };
 
-export const PaneFooterButtons = (props: { buttons?: ButtonProps[] }) => {
+export const PanelFooterButtons = (props: { buttons?: ButtonProps[] }) => {
     const { buttons } = props;
     const style = React.useMemo(() => {
         return {

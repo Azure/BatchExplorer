@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { Panel as FluentPanel, PanelType } from "@fluentui/react/lib/Panel";
 import { ButtonProps } from "../button";
-import { PaneFooter } from "./pane-footer";
+import { PanelFooter } from "./panel-footer";
 
 export interface PanelProps {
     headerText?: string;
@@ -23,7 +23,7 @@ export const Panel: React.FC<PropsWithChildren<PanelProps>> = (props) => {
             type={PanelType.custom}
             customWidth="600px"
             onRenderFooterContent={() => (
-                <PaneFooter buttons={footerButtons}></PaneFooter>
+                <PanelFooter buttons={footerButtons}></PanelFooter>
             )}
             styles={{
                 footerInner: {
