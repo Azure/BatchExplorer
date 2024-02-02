@@ -103,6 +103,8 @@ export interface DataGridColumn {
      * Custom renderer for cell content, instead of the default text rendering.
      */
     onRender?: (
+        // can't use unknown here because it's a function's parameter, typescript
+        // check it contravariantly
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         item: any,
         index?: number,
