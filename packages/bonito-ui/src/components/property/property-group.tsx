@@ -67,6 +67,7 @@ export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
         >
             {enableCollapse && (
                 <Icon
+                    data-testid="collapse-icon"
                     iconName={collapsed ? "ChevronRight" : "ChevronDown"}
                     style={{ marginRight: "8px", verticalAlign: "middle" }}
                 ></Icon>

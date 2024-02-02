@@ -32,32 +32,21 @@ describe("VmExtensionDetails", () => {
         getAllByText("Provisioning succeeded");
     });
 
-    it("should render view detailed status if subStatus avaliable", async () => {
-        const onViewDetailedStatus = jest.fn();
+    it("should detailed status if subStatus avaliable", async () => {
         const { getByText } = render(
-            <VmExtensionDetails
-                vme={failedExtItem}
-                onViewDetailedStatus={onViewDetailedStatus}
-            />
+            <VmExtensionDetails vme={failedExtItem} />
         );
-        getByText(
-            translate("lib.react.vmExtension.viewDetailedStatus")
-        ).click();
-        expect(onViewDetailedStatus).toBeCalledWith(
-            failedExtItem.instanceView?.subStatuses
-        );
+        expect(
+            getByText(translate("lib.react.vmExtension.detailedStatus"))
+        ).toBeTruthy();
     });
 
-    it("should not render view detailed status if subStatus not avaliable", async () => {
-        const onViewDetailedStatus = jest.fn();
+    it("should not render detailed status if subStatus not avaliable", async () => {
         const { getByText } = render(
-            <VmExtensionDetails
-                vme={succeededExtItem}
-                onViewDetailedStatus={onViewDetailedStatus}
-            />
+            <VmExtensionDetails vme={succeededExtItem} />
         );
         expect(() =>
-            getByText(translate("lib.react.vmExtension.viewDetailedStatus"))
+            getByText(translate("lib.react.vmExtension.detailedStatus"))
         ).toThrow();
     });
 

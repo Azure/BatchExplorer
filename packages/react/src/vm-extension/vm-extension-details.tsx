@@ -5,19 +5,12 @@ import {
     PropertyGroup,
     TextProperty,
     DateProperty,
-    PropertyField,
 } from "@azure/bonito-ui/lib/components";
 import { VmExtItem } from "./vm-extension-list";
 import { translate } from "@azure/bonito-core";
 import { useAppTheme } from "@azure/bonito-ui/lib/theme";
-import { Button } from "@azure/bonito-ui/lib/components/button";
-import { InstanceViewStatusOutput } from "@batch/ui-service/lib/batch-models";
-
 export interface VmExtensionDetailsProps {
     vme?: VmExtItem;
-    onViewDetailedStatus?: (
-        subStatues: Array<InstanceViewStatusOutput>
-    ) => void;
 }
 
 export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
@@ -125,28 +118,14 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
                         hideCopyButton={true}
                     />
                     {subStatues && subStatues.length > 0 && (
-                        <PropertyField
+                        <TextProperty
                             label={translate(
                                 "lib.react.vmExtension.detailedStatus"
                             )}
-                            value={subStatues}
+                            value={JSON.stringify(subStatues, null, 4)}
                             hideCopyButton={true}
-                            renderValue={(value) => {
-                                return (
-                                    <Button
-                                        label={translate(
-                                            "lib.react.vmExtension.viewDetailedStatus"
-                                        )}
-                                        onClick={() => {
-                                            value &&
-                                                props.onViewDetailedStatus?.(
-                                                    value
-                                                );
-                                        }}
-                                    />
-                                );
-                            }}
-                        ></PropertyField>
+                            multiline
+                        />
                     )}
                 </PropertyGroup>
             )}
