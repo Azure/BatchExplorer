@@ -1,2 +1,2 @@
 export * from "./panel";
-export * from "./pane-footer";
+export * from "./panel-footer";
