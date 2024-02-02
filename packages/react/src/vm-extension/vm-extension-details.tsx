@@ -120,6 +120,7 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
                     containerStyle={groupStyle}
                 >
                     <TextField
+                        ariaLabel={translate("lib.react.vmExtension.settings")}
                         readOnly
                         autoAdjustHeight
                         multiline
