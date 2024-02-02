@@ -96,18 +96,18 @@ export function PropertyField<T>(props: PropertyFieldProps<T>): JSX.Element {
                 >
                     <div
                         style={{
-                            display: "inline-block",
+                            display: "flex",
                             wordBreak: "break-word",
-                            height: "24px",
                             lineHeight: "24px",
                         }}
                     >
-                        <span
+                        <div
+                            style={{ flex: "1 0 0" }}
                             data-testid="content"
                             className="property-content"
                         >
                             {renderValue(props.value)}
-                        </span>
+                        </div>
                         <div
                             className="clipboard-button"
                             style={{
@@ -120,6 +120,7 @@ export function PropertyField<T>(props: PropertyFieldProps<T>): JSX.Element {
                         >
                             {props.hideCopyButton || (
                                 <IconButton
+                                    data-testid="clipboard-button"
                                     // Line height is 24px, icon height is 32px. Need
                                     // to move the icon up 4px to align center with text
                                     style={{ marginTop: "-4px" }}
