@@ -49,6 +49,11 @@ export const DemoNavMenu: React.FC = () => {
                     url: getDemoHash("searchbox"),
                 },
                 {
+                    key: "TabSelector",
+                    name: "Tab Selector",
+                    url: getDemoHash("tabselector"),
+                },
+                {
                     key: "TextField",
                     name: "Text Field",
                     url: getDemoHash("textfield"),

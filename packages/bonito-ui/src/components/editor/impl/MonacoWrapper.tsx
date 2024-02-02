@@ -3,7 +3,6 @@ import { Stack } from "@fluentui/react/lib/Stack";
 import { Label } from "@fluentui/react/lib/Label";
 import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
 import type * as MonacoEditorImpl from "./MonacoEditorImpl";
-// import MonacoEditorLazy from "./MonacoEditorImpl";
 
 /**
  * Import monaco dynamically to allow for code splitting
