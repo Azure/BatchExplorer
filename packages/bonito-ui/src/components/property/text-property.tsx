@@ -33,6 +33,7 @@ export const TextProperty: React.FC<TextPropertyProps> = (props) => {
                 if (props.multiline) {
                     return (
                         <TextField
+                            ariaLabel={props.label}
                             data-testid="text-property-textfield"
                             readOnly
                             style={{
