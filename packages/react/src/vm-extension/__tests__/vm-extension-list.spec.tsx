@@ -13,6 +13,7 @@ import * as React from "react";
 import { initMockBrowserEnvironment } from "@azure/bonito-ui";
 import { runAxe } from "@azure/bonito-ui/lib/test-util/a11y";
 import { translate } from "@azure/bonito-core";
+import { dataGridIgnoredA11yRules } from "@azure/bonito-ui/lib/components/data-grid/test-ignore-a11y-rules";
 
 describe("VmExtensionList", () => {
     const user = userEvent.setup();
@@ -28,7 +29,9 @@ describe("VmExtensionList", () => {
         getByText(translate("lib.react.vmExtension.type"));
         getByText(translate("lib.react.vmExtension.version"));
         getByText(translate("lib.react.vmExtension.autoUpdate"));
-        expect(await runAxe(container)).toHaveNoViolations();
+        expect(
+            await runAxe(container, dataGridIgnoredA11yRules)
+        ).toHaveNoViolations();
     });
 
     it("should filter extensions", async () => {
