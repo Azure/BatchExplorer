@@ -14,12 +14,13 @@ afterAll(() => {
     jest.restoreAllMocks();
 });
 
-// KLUDGE: Mock out the monaco API so that imports to MonacoEditor do not error.
-// Note that the editor itself currently does not work in a Node.js
-// environment regardless
-jest.mock("monaco-editor/esm/vs/editor/editor.api", () => {
-    return {};
-});
+// Hoppe TODO
+// // KLUDGE: Mock out the monaco API so that imports to MonacoEditor do not error.
+// // Note that the editor itself currently does not work in a Node.js
+// // environment regardless
+// jest.mock("monaco-editor/esm/vs/editor/editor.api", () => {
+//     return {};
+// });
 
 // UI tests can be slow, especially with a11y tests enabled
 jest.setTimeout(30000);

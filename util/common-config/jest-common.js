@@ -76,7 +76,7 @@ module.exports = {
                             ignoreCodes: [151001],
                         },
                         // Greatly speed up tests at the expense of type checking
-                        isolatedModules: true,
+                        // isolatedModules: true,
                     },
                 ],
             },
