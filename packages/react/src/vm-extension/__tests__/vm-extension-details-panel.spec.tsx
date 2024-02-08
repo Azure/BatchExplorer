@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { VmExtensionDetailsPanel } from "../vm-extension-details-panel";
-import { succeededExtItem } from "../mock-vme-ext-items";
+import { succeededExtItem } from "../mock-vm-ext-items";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "@azure/bonito-ui";
 import { runAxe } from "@azure/bonito-ui/lib/test-util/a11y";
