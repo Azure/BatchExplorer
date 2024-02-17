@@ -1,5 +1,6 @@
+import { BatchApiVersion } from "../../../../constants";
+
 const ARM_API_BASE_URI = "https://management.azure.com";
-export const BATCH_API_VERSION = "2023-05-01";
 
 function getUrlBasePath(subscriptionId: string) {
     return `${ARM_API_BASE_URI}/subscriptions/${subscriptionId}`;
@@ -43,6 +44,6 @@ export function getUrlPoolPath(
         stringUrlBuilder.push(`/${poolName}`);
     }
 
-    stringUrlBuilder.push(`?api-version=${BATCH_API_VERSION}`);
+    stringUrlBuilder.push(`?api-version=${BatchApiVersion.arm}`);
     return stringUrlBuilder.join("");
 }

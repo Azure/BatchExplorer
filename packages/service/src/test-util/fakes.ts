@@ -410,6 +410,53 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                 id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/mercury",
                 type: "Microsoft.Batch/batchAccounts",
             },
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/visualization/providers/microsoft.batch/batchaccounts/byos":
+            {
+                id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/visualization/providers/Microsoft.Batch/batchAccounts/byos",
+                name: "byos",
+                type: "Microsoft.Batch/batchAccounts",
+                location: "eastus",
+                properties: {
+                    accountEndpoint: "byos.eastus.batch.azure.com",
+                    nodeManagementEndpoint:
+                        "6b5a23b7-ac5f-49a3-ab3d-b0a6c72292a5.eastus.service.batch.azure.com",
+                    provisioningState: "Succeeded",
+                    dedicatedCoreQuotaPerVMFamilyEnforced: true,
+                    poolQuota: 100,
+                    activeJobAndJobScheduleQuota: 300,
+                    poolAllocationMode: "UserSubscription",
+                    keyVaultReference: {
+                        id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/visualization/providers/Microsoft.KeyVault/vaults/byoskeyvault",
+                        url: "https://byoskeyvault.vault.azure.net/",
+                    },
+                    publicNetworkAccess: "Enabled",
+                    networkProfile: {
+                        accountAccess: {
+                            defaultAction: "Allow",
+                        },
+                    },
+                    privateEndpointConnections: [],
+                    encryption: {
+                        keySource: "Microsoft.Batch",
+                    },
+                    allowedAuthenticationModes: [
+                        "AAD",
+                        "TaskAuthenticationToken",
+                    ],
+                },
+                identity: {
+                    type: "UserAssigned",
+                    userAssignedIdentities: {
+                        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/visualization/providers/Microsoft.ManagedIdentity/userAssignedIdentities/byos-identity":
+                            {
+                                principalId:
+                                    "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                                clientId:
+                                    "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+                            },
+                    },
+                },
+            },
     };
 
     protected batchPools: { [poolId: string]: PoolOutput } = {
@@ -548,6 +595,84 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                         targetLowPriorityNodes: 100,
                         nodeDeallocationOption: "TaskCompletion",
                         resizeTimeout: "PT8M",
+                    },
+                },
+            },
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/visualization/providers/microsoft.batch/batchaccounts/byos/pools/byospool1":
+            {
+                id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/visualization/providers/Microsoft.Batch/batchAccounts/byos/pools/byospool1",
+                name: "byospool1",
+                type: "Microsoft.Batch/batchAccounts/pools",
+                etag: 'W/"0x8DC2F2FC68C6235"',
+                properties: {
+                    lastModified: "2024-02-16T20:42:22.0825141Z",
+                    creationTime: "2024-02-16T20:42:22.0825141Z",
+                    provisioningState: "Succeeded",
+                    provisioningStateTransitionTime:
+                        "2024-02-16T20:42:22.0825141Z",
+                    allocationState: "Steady",
+                    allocationStateTransitionTime:
+                        "2024-02-16T20:42:23.6365371Z",
+                    vmSize: "STANDARD_D2S_V3",
+                    interNodeCommunication: "Disabled",
+                    taskSlotsPerNode: 1,
+                    taskSchedulingPolicy: {
+                        nodeFillType: "Pack",
+                    },
+                    deploymentConfiguration: {
+                        virtualMachineConfiguration: {
+                            imageReference: {
+                                publisher: "canonical",
+                                offer: "0001-com-ubuntu-server-jammy",
+                                sku: "22_04-lts",
+                                version: "latest",
+                            },
+                            nodeAgentSkuId: "batch.node.ubuntu 22.04",
+                            osDisk: {
+                                caching: "None",
+                                managedDisk: {
+                                    storageAccountType: "Premium_LRS",
+                                },
+                            },
+                            nodePlacementConfiguration: {
+                                policy: "Regional",
+                            },
+                            securityProfile: {
+                                securityType: "trustedLaunch",
+                                uefiSettings: {
+                                    secureBootEnabled: true,
+                                },
+                            },
+                        },
+                    },
+                    networkConfiguration: {
+                        subnetId:
+                            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Network/virtualNetworks/vnetA/subnets/subnetA",
+                        publicIPAddressConfiguration: {
+                            provision: "BatchManaged",
+                        },
+                        dynamicVnetAssignmentScope: "none",
+                        enableAcceleratedNetworking: false,
+                    },
+                    scaleSettings: {
+                        fixedScale: {
+                            targetDedicatedNodes: 0,
+                            targetLowPriorityNodes: 0,
+                            resizeTimeout: "PT15M",
+                        },
+                    },
+                    resizeOperationStatus: {
+                        targetDedicatedNodes: 0,
+                        nodeDeallocationOption: "Requeue",
+                        resizeTimeout: "PT15M",
+                        startTime: "2024-02-16T20:42:22.0825141Z",
+                    },
+                    currentDedicatedNodes: 0,
+                    currentLowPriorityNodes: 0,
+                    targetNodeCommunicationMode: "Default",
+                    resourceTags: {
+                        tag1: "one",
+                        tag2: "two",
                     },
                 },
             },

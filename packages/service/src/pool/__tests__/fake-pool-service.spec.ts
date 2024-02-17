@@ -6,9 +6,12 @@ import { initMockBatchEnvironment } from "../../environment";
 describe("FakePoolService", () => {
     const hoboAcctId =
         "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo";
-
     const hoboPoolArmId = `${hoboAcctId}/pools/hobopool1`;
     const newTestPoolArmId = `${hoboAcctId}/pools/newtestpool`;
+
+    const byosAcctId =
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/visualization/providers/Microsoft.Batch/batchAccounts/byos";
+    const byosPoolArmId = `${byosAcctId}/pools/byospool1`;
 
     let service: FakePoolService;
     let fakeSet: BatchFakeSet;
@@ -26,8 +29,11 @@ describe("FakePoolService", () => {
     });
 
     test("Get by resource ID", async () => {
-        const pool = await service.get(hoboPoolArmId);
-        expect(pool?.name).toEqual("hobopool1");
+        const hoboPool = await service.get(hoboPoolArmId);
+        expect(hoboPool?.name).toEqual("hobopool1");
+
+        const byosPool = await service.get(byosPoolArmId);
+        expect(byosPool?.name).toEqual("byospool1");
     });
 
     test("Create", async () => {
