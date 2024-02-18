@@ -63,7 +63,8 @@ module.exports = {
                     // js-with-ts preset require "allowJs": true in tsconfig.json
                     // so making a "tsconfig.test.json" to override it
                     tsconfig: "config/tsconfig.test.json",
-                    // Greatly speed up tests at the expense of type checking
+                    // This is needed to work with the js-with-ts preset and to make
+                    // translation strings work in tests
                     isolatedModules: true,
                 },
                 __TEST_RESOURCE_STRINGS: combinedResourceStrings,
@@ -118,7 +119,7 @@ module.exports = {
         baseConfig.moduleNameMapper["@batch/ui-service/lib/(.*)$"] =
             "@batch/ui-service/lib-cjs/$1";
 
-        // css files
+        // needed for importing monaco-editor which imports css files
         baseConfig.moduleNameMapper["^.+\\.css$"] = path.join(
             __dirname,
             "../mock-style.js"

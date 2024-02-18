@@ -11,6 +11,11 @@ export interface PanelProps {
     footerButtons?: ButtonProps[];
 }
 
+/**
+ * A panel component that wraps the FluentUI Panel component and adds a footer
+ * with buttons. Should be used when a panel needs to have a footer with buttons.
+ **/
+
 export const Panel: React.FC<PropsWithChildren<PanelProps>> = (props) => {
     const { headerText, isOpen, onDismiss, isBlocking, footerButtons } = props;
     return (
