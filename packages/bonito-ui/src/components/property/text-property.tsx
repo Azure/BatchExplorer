@@ -8,7 +8,7 @@ export interface TextPropertyProps {
     multiline?: boolean;
     multilineMaxHeight?: number;
     hideCopyButton?: boolean;
-    labalStyle?: React.CSSProperties;
+    labelStyle?: React.CSSProperties;
 }
 
 function getText(value?: string): string {
@@ -24,7 +24,7 @@ export const TextProperty: React.FC<TextPropertyProps> = (props) => {
             label={props.label}
             value={props.value}
             hideCopyButton={props.hideCopyButton}
-            labalStyle={props.labalStyle}
+            labelStyle={props.labelStyle}
             renderLabel={(label) => {
                 return <label>{label ? label : "-"}</label>;
             }}
