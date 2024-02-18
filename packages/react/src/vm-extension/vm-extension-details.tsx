@@ -43,7 +43,7 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
         <PropertyList>
             <PropertyGroup
                 title={translate("lib.react.common.general")}
-                enableCollapse={false}
+                disableCollapse={true}
                 titleStyle={titleStyle}
                 containerStyle={groupStyle}
             >
@@ -76,7 +76,7 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
             {firstStatus && (
                 <PropertyGroup
                     title={translate("lib.react.vmExtension.status")}
-                    enableCollapse={false}
+                    disableCollapse={true}
                     titleStyle={titleStyle}
                     containerStyle={groupStyle}
                 >
@@ -115,7 +115,7 @@ export const VmExtensionDetails = (props: VmExtensionDetailsProps) => {
             {vme.settings && (
                 <PropertyGroup
                     title={translate("lib.react.vmExtension.settings")}
-                    enableCollapse={false}
+                    disableCollapse={true}
                     titleStyle={titleStyle}
                     containerStyle={groupStyle}
                 >
