@@ -63,6 +63,7 @@ module.exports = {
                     // js-with-ts preset require "allowJs": true in tsconfig.json
                     // so making a "tsconfig.test.json" to override it
                     tsconfig: "config/tsconfig.test.json",
+                    // Greatly speed up tests at the expense of type checking
                     isolatedModules: true,
                 },
                 __TEST_RESOURCE_STRINGS: combinedResourceStrings,
@@ -75,8 +76,6 @@ module.exports = {
                             // Squelch a warning with outputting ES6 modules (in tsconfig.json)
                             ignoreCodes: [151001],
                         },
-                        // Greatly speed up tests at the expense of type checking
-                        // isolatedModules: true,
                     },
                 ],
             },
