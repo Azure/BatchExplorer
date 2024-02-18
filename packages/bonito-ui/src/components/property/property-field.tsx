@@ -7,7 +7,7 @@ export interface PropertyFieldProps<T> {
     label?: string;
     value?: T;
     hideCopyButton?: boolean;
-    labalStyle?: React.CSSProperties;
+    labelStyle?: React.CSSProperties;
     getText?: (value?: T) => string;
     renderLabel?: (label?: string) => React.ReactNode;
     renderValue?: (value?: T) => React.ReactNode;
@@ -82,7 +82,7 @@ export function PropertyField<T>(props: PropertyFieldProps<T>): JSX.Element {
                         flexShrink: 0,
                         height: "24px",
                         lineHeight: "24px",
-                        ...props.labalStyle,
+                        ...props.labelStyle,
                     }}
                 >
                     {props.renderLabel && props.renderLabel(props.label)}
