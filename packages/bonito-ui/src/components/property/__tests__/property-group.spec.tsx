@@ -58,9 +58,9 @@ describe("PropertyGroup component", () => {
         expect(section.style.display).toBe("none");
     });
 
-    test('Should not be able to expand/collapse if "enableCollapse" is false', async () => {
+    test('Should not be able to expand/collapse if "disableCollapse" is true', async () => {
         await render(
-            <PropertyGroup title="Car" enableCollapse={false}>
+            <PropertyGroup title="Car" disableCollapse={true}>
                 <PropertyField label="Color" value="red" />
             </PropertyGroup>
         );

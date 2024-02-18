@@ -7,7 +7,7 @@ import { useAppTheme } from "../../theme";
 export interface PropertyGroupProps {
     title?: string;
     collapsed?: boolean;
-    enableCollapse?: boolean;
+    disableCollapse?: boolean;
     titleStyle?: React.CSSProperties;
     containerStyle?: React.CSSProperties;
 }
@@ -18,7 +18,7 @@ export interface PropertyGroupProps {
 export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
     const theme = useAppTheme();
 
-    const { enableCollapse = true, titleStyle, containerStyle } = props;
+    const { disableCollapse = false, titleStyle, containerStyle } = props;
 
     const [collapsed, setCollapsed] = React.useState<boolean>(
         props.collapsed ?? false
@@ -28,7 +28,7 @@ export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
         event: React.MouseEvent | React.KeyboardEvent
     ) => void = React.useCallback(
         (event) => {
-            if (!enableCollapse) {
+            if (disableCollapse) {
                 return;
             }
             let shouldToggle = false;
@@ -47,7 +47,7 @@ export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
                 setCollapsed(!collapsed);
             }
         },
-        [setCollapsed, collapsed, enableCollapse]
+        [setCollapsed, collapsed, disableCollapse]
     );
 
     const sectionId = uniqueElementId("property-group-section");
@@ -56,7 +56,7 @@ export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
         <h3
             style={{
                 color: theme.palette.themePrimary,
-                ...(enableCollapse ? { cursor: "pointer" } : {}),
+                ...(disableCollapse ? {} : { cursor: "pointer" }),
                 ...titleStyle,
             }}
             tabIndex={0}
@@ -65,7 +65,7 @@ export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
             aria-controls={sectionId}
             aria-expanded={collapsed ? false : true}
         >
-            {enableCollapse && (
+            {!disableCollapse && (
                 <Icon
                     data-testid="collapse-icon"
                     iconName={collapsed ? "ChevronRight" : "ChevronDown"}
