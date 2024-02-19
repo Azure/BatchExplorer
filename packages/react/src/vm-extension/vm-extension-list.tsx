@@ -1,4 +1,3 @@
-// import { initBladeEnvironment } from "../BladeEnvironment";
 import * as React from "react";
 import {
     VMExtensionOutput,
@@ -53,13 +52,13 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
         });
     }, [extensions, filterValue]);
 
-    const columns = React.useMemo<DataGridColumn[]>(() => {
-        const cols = [
+    const columns = React.useMemo(() => {
+        const cols: DataGridColumn<VmExtItem>[] = [
             {
                 label: translate("lib.react.vmExtension.name"),
                 prop: "name",
                 minWidth: 200,
-                onRender: (item: VmExtItem) => {
+                onRender: (item) => {
                     return (
                         <Link
                             onClick={() => {
@@ -84,7 +83,7 @@ export const VmExtensionList = (props: VmExtensionListProps) => {
                 label: translate("lib.react.vmExtension.autoUpdate"),
                 prop: "enableAutomaticUpgrade",
                 minWidth: 160,
-                onRender: (item: VmExtItem) => {
+                onRender: (item) => {
                     return getEnableAutomaticUpgradeValue(item);
                 },
             },
