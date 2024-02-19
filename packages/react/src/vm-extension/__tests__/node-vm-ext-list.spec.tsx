@@ -3,14 +3,16 @@ import React from "react";
 import { translate } from "@azure/bonito-core";
 import { initMockBatchBrowserEnvironment } from "../../environment";
 import { NodeVMExtList } from "../node-vm-ext-list";
+import { dataGridIgnoredA11yRules } from "@azure/bonito-ui/lib/components/data-grid/test-ignore-a11y-rules";
+import { runAxe } from "@azure/bonito-ui/lib/test-util/a11y";
 
-describe("PoolVMExtList", () => {
+describe("NodeVMExtList", () => {
     beforeEach(() => {
         initMockBatchBrowserEnvironment();
     });
 
     it("should render vm extension lists", async () => {
-        const { getByText } = render(
+        const { getByText, container } = render(
             <NodeVMExtList
                 accountEndpoint="dummy_endpoint"
                 poolId={"dummy_pool"}
@@ -19,6 +21,9 @@ describe("PoolVMExtList", () => {
         );
         getByText(translate("lib.react.vmExtension.name"));
         await waitFor(() => getByText("CustomExtension100"));
+        expect(
+            await runAxe(container, dataGridIgnoredA11yRules)
+        ).toHaveNoViolations();
     });
 
     it("should render vm extension lists with no result", async () => {
