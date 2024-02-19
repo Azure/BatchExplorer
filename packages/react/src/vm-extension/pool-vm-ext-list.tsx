@@ -20,14 +20,28 @@ export const PoolVMExtList = (props: PoolVmExtensionListProps) => {
     }, []);
 
     React.useEffect(() => {
+        let isMounted = true;
         setLoading(true);
-        poolService.get(poolArmId).then((pool) => {
-            const extensions =
-                pool?.properties?.deploymentConfiguration
-                    ?.virtualMachineConfiguration?.extensions ?? [];
-            setExtensions(extensions as VmExtItem[]);
-            setLoading(false);
-        });
+        poolService
+            .get(poolArmId)
+            .then((pool) => {
+                if (!isMounted) {
+                    return;
+                }
+                const extensions =
+                    pool?.properties?.deploymentConfiguration
+                        ?.virtualMachineConfiguration?.extensions ?? [];
+                setExtensions(extensions as VmExtItem[]);
+            })
+            .finally(() => {
+                if (!isMounted) {
+                    return;
+                }
+                setLoading(false);
+            });
+        return () => {
+            isMounted = false;
+        };
     }, [poolArmId, poolService]);
 
     return (

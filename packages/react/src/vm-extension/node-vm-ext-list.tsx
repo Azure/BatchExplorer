@@ -22,10 +22,14 @@ export const NodeVMExtList = (props: NodeVmExtensionListProps) => {
     }, []);
 
     React.useEffect(() => {
+        let isMounted = true;
         setLoading(true);
         nodeService
             .listBatchNodeExtensions(accountEndpoint, poolId, nodeId)
             .then((resList) => {
+                if (!isMounted) {
+                    return;
+                }
                 const exts = [];
                 if (resList) {
                     for (const ext of resList) {
@@ -38,8 +42,16 @@ export const NodeVMExtList = (props: NodeVmExtensionListProps) => {
                     }
                 }
                 setExtensions(exts);
+            })
+            .finally(() => {
+                if (!isMounted) {
+                    return;
+                }
                 setLoading(false);
             });
+        return () => {
+            isMounted = false;
+        };
     }, [accountEndpoint, nodeId, nodeService, poolId]);
 
     return (
