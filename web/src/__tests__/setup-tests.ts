@@ -1,8 +1,12 @@
 import { destroyEnvironment } from "@azure/bonito-core";
-import { initializeAxe } from "@azure/bonito-ui/lib/test-util";
+import {
+    initializeAxe,
+    mockJsdomMissingAPIs,
+} from "@azure/bonito-ui/lib/test-util";
 
 beforeAll(async () => {
     await initializeAxe();
+    mockJsdomMissingAPIs();
 });
 
 afterEach(() => {
