@@ -1,4 +1,4 @@
-import { VmExtItem } from "./vm-extension-list";
+import { VmExtItem } from "../vm-extension/vm-extension-list";
 
 export const succeededExtItem: VmExtItem = {
     name: "SuccessExtension",

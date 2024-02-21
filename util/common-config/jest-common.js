@@ -122,7 +122,7 @@ module.exports = {
         // needed for importing monaco-editor which imports css files
         baseConfig.moduleNameMapper["^.+\\.css$"] = path.join(
             __dirname,
-            "../mock-style.js"
+            "./mock-style.js"
         );
 
         return Object.assign({}, baseConfig, overrides);
