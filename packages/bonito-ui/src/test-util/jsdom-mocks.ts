@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
-import { mockNodeTestMissingAPIs } from "@azure/bonito-core/lib/test-util";
+import { mockNodeTestMissingAPIs } from "@azure/bonito-core/lib/test-util/test-mocks";
 
 // some JSDOM APIs are not implemented, so we need to mock them
 // to make UI tests work with JSDOM

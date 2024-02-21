@@ -1,5 +1,5 @@
 import { destroyEnvironment } from "../environment";
-import { mockNodeTestMissingAPIs } from "../test-util";
+import { mockNodeTestMissingAPIs } from "../test-util/test-mocks";
 
 beforeAll(() => {
     mockNodeTestMissingAPIs();
