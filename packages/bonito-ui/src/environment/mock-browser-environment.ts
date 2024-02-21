@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { MockEnvironment } from "@azure/bonito-core/lib/environment";
 import {
     FormValues,

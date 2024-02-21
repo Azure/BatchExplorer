@@ -1,5 +1,8 @@
 import { render } from "@testing-library/react";
-import { failedExtItem, succeededExtItem } from "../mock-vm-ext-items";
+import {
+    failedExtItem,
+    succeededExtItem,
+} from "../../test-util/mock-vm-ext-items";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "@azure/bonito-ui";
 import { runAxe } from "@azure/bonito-ui/lib/test-util/a11y";

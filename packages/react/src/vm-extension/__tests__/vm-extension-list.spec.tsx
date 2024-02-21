@@ -8,7 +8,7 @@ import {
     failedExtItem,
     noProvisioningStateExtItem,
     succeededExtItem,
-} from "../mock-vm-ext-items";
+} from "../../test-util/mock-vm-ext-items";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "@azure/bonito-ui";
 import { runAxe } from "@azure/bonito-ui/lib/test-util/a11y";

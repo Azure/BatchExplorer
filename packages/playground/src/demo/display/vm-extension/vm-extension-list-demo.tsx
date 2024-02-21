@@ -5,7 +5,7 @@ import {
 } from "@batch/ui-react/lib/vm-extension/vm-extension-list";
 import { DemoPane } from "../../../layout/demo-pane";
 import { VmExtensionDetailsPanel } from "@batch/ui-react";
-import { allExtItems } from "@batch/ui-react/lib/vm-extension/mock-vm-ext-items";
+import { allExtItems } from "@batch/ui-react/lib/test-util/mock-vm-ext-items";
 
 export const VmExtensionListDemo: React.FC = () => {
     const [panelOpen, setPanelOpen] = React.useState<boolean>(false);
