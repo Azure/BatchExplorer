@@ -81,6 +81,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
             if (ready && !this._envInitialized) {
                 initDesktopEnvironment(translationsLoaderService, authService, batchExplorer);
+                this._envInitialized = true;
             }
 
             this.isAppReady = ready;
