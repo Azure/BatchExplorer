@@ -14,6 +14,10 @@ describe("LivePoolService", () => {
     const hoboPoolArmId = `${hoboAcctId}/pools/hobopool1`;
     const newTestPoolArmId = `${hoboAcctId}/pools/newtestpool`;
 
+    const byosAcctId =
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/visualization/providers/Microsoft.Batch/batchAccounts/byos";
+    const byosPoolArmId = `${byosAcctId}/pools/byospool1`;
+
     let service: PoolService;
     let fakeSet: BatchFakeSet;
 
@@ -80,8 +84,23 @@ describe("LivePoolService", () => {
             )
         );
 
-        const pool = await service.get(hoboPoolArmId);
-        expect(pool?.name).toEqual("hobopool1");
+        const hoboPool = await service.get(hoboPoolArmId);
+        expect(hoboPool?.name).toEqual("hobopool1");
+
+        httpClient.addExpected(
+            new MockHttpResponse(
+                `${getArmUrl()}${byosPoolArmId}?api-version=${
+                    BatchApiVersion.arm
+                }`,
+                {
+                    status: 200,
+                    body: JSON.stringify(fakeSet.getPool(byosPoolArmId)),
+                }
+            )
+        );
+
+        const byosPool = await service.get(byosPoolArmId);
+        expect(byosPool?.name).toEqual("byospool1");
     });
 
     test("Get by resource ID error", async () => {

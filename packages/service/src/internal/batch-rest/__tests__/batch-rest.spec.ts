@@ -14,9 +14,9 @@ import {
     BatchNodeVMExtensionListResultOutput,
     CreateJobParameters,
 } from "../generated/src";
+import { BatchApiVersion } from "../../../constants";
 
 const batchAccountEndpoint = "https://batchaccount.eastus2.batch.azure.com";
-const BATCH_API_VERSION = "2023-05-01.17.0";
 
 describe("Batch Client With Mock Http Client Test", () => {
     let batchClient: BatchClient;
@@ -34,7 +34,7 @@ describe("Batch Client With Mock Http Client Test", () => {
     describe("Basic Job operations", () => {
         test("Create Batch Job", async () => {
             const jobPath = "/jobs";
-            const requestUrlJobPath = `${batchAccountEndpoint}${jobPath}?api-version=${BATCH_API_VERSION}`;
+            const requestUrlJobPath = `${batchAccountEndpoint}${jobPath}?api-version=${BatchApiVersion.data}`;
             const mockResponse = new MockHttpResponse(requestUrlJobPath, {
                 status: 201,
                 headers: {
@@ -65,7 +65,7 @@ describe("Batch Client With Mock Http Client Test", () => {
             const requestUrlJobPath = `${batchAccountEndpoint}${jobPath.replace(
                 "{jobId}",
                 jobId
-            )}?api-version=${BATCH_API_VERSION}`;
+            )}?api-version=${BatchApiVersion.data}`;
             const mockResponse = new MockHttpResponse(requestUrlJobPath, {
                 status: 200,
                 headers: {
@@ -91,7 +91,7 @@ describe("Batch Client With Mock Http Client Test", () => {
 
         test("list job", async () => {
             const jobPath = "/jobs";
-            const requestUrlJobPath = `${batchAccountEndpoint}${jobPath}?api-version=${BATCH_API_VERSION}`;
+            const requestUrlJobPath = `${batchAccountEndpoint}${jobPath}?api-version=${BatchApiVersion.data}`;
             const mockResponse = new MockHttpResponse(requestUrlJobPath, {
                 status: 200,
                 headers: {
@@ -126,7 +126,7 @@ describe("Batch Client With Mock Http Client Test", () => {
             const requestUrlJobPath = `${batchAccountEndpoint}${jobPath.replace(
                 "{jobId}",
                 jobId
-            )}?api-version=${BATCH_API_VERSION}`;
+            )}?api-version=${BatchApiVersion.data}`;
             const mockResponse = new MockHttpResponse(requestUrlJobPath, {
                 status: 204,
                 headers: {
@@ -150,7 +150,7 @@ describe("Batch Client With Mock Http Client Test", () => {
             const requestUrlNodePath = `${batchAccountEndpoint}${nodePath.replace(
                 "{poolId}",
                 poolId
-            )}?api-version=${BATCH_API_VERSION}`;
+            )}?api-version=${BatchApiVersion.data}`;
             const mockResponse = new MockHttpResponse(requestUrlNodePath, {
                 status: 200,
                 headers: {
@@ -186,7 +186,7 @@ describe("Batch Client With Mock Http Client Test", () => {
         const nodeExtensionPath = "/pools/{poolId}/nodes/{nodeId}/extensions";
         const requestUrlNodeExtensionPath = `${batchAccountEndpoint}${nodeExtensionPath
             .replace("{poolId}", poolId)
-            .replace("{nodeId}", nodeId)}?api-version=${BATCH_API_VERSION}`;
+            .replace("{nodeId}", nodeId)}?api-version=${BatchApiVersion.data}`;
         const mockResponse = new MockHttpResponse(requestUrlNodeExtensionPath, {
             status: 200,
             headers: {

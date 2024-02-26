@@ -12,7 +12,6 @@ import {
     PoolUpdateParameters,
 } from "../generated";
 import {
-    BATCH_API_VERSION,
     getUrlBatchAccountPath,
     getUrlPoolPath,
 } from "../__tests__/utils/client";
@@ -22,8 +21,9 @@ import {
     initMockEnvironment,
 } from "@azure/bonito-core/lib/environment";
 import { MockHttpClient, MockHttpResponse } from "@azure/bonito-core/lib/http";
+import { BatchApiVersion } from "../../../constants";
 
-const _SUFFIX = Math.random().toString(16).substr(2, 4);
+const _SUFFIX = Math.random().toString(16).substring(2, 6);
 
 function getPoolName(type: string) {
     return `jssdktest-${type}-${_SUFFIX}`;
@@ -325,7 +325,7 @@ describe("Batch Management Client With Mock Http Client Test", () => {
         test("should get information about batch account associated with a resource group successfully", async () => {
             const requestUrlPath =
                 getUrlBatchAccountPath(subscriptionId, resourceGroupName) +
-                `?api-version=${BATCH_API_VERSION}`;
+                `?api-version=${BatchApiVersion.arm}`;
 
             mockClient.addExpected(
                 new MockHttpResponse(requestUrlPath, {
