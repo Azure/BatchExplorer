@@ -1,1 +1,4 @@
-{}
+{
+  "lib.service.sku.eolWarning": "This SKU is scheduled for retirement on {eolDate}",
+  "lib.service.sku.notFound": "SKU '{skuName}' not found"
+}

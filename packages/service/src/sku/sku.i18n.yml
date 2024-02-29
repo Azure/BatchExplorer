@@ -1,0 +1,3 @@
+sku:
+  notFound: "SKU '{skuName}' not found"
+  eolWarning: "This SKU is scheduled for retirement on {eolDate}"
