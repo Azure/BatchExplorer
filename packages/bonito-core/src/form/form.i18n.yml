@@ -5,3 +5,4 @@ form:
     numberValueError: Value must be a number
     stringListValueError: All values must be strings
     stringValueError: Value must be a string
+    minLengthError: Value must be at least {length} characters long

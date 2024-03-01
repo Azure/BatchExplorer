@@ -1,4 +1,5 @@
-import { Localizer } from "./localizer";
+import { replaceTokens } from "./localization-util";
+import { Localizer, LocalizerTokenMap } from "./localizer";
 
 interface Translations {
     [key: string]: string;
@@ -85,12 +86,32 @@ export class HttpLocalizer implements Localizer {
         return await response.json();
     }
 
-    translate(message: string): string {
+    /**
+     * Translates a message using loaded translations and optional tokens.
+     *
+     * @param {string} message - The message to be translated.
+     * @param {LocalizerTokenMap} [tokens] - An optional map of tokens to replace in the translation.
+     * @returns {string} The translated message, or the original message if no translation was found.
+     * @throws {Error} If the translations have not been loaded.
+     *
+     * @example
+     * ```yaml
+     * foo: My name is {name}
+     * ```
+     *
+     * ```typescript
+     * translate("foo", { name: "Lucy Barton" }) // "My name is Lucy Barton"
+     * ```
+     */
+    translate(message: string, tokens?: LocalizerTokenMap): string {
         if (!this.translations) {
             throw new Error("Translation strings are not loaded " + message);
         }
         const translation = this.translations[message];
         if (translation != null) {
+            if (tokens) {
+                return replaceTokens(translation, tokens);
+            }
             return translation;
         } else {
             return message;
