@@ -18,6 +18,7 @@ import {
     BatchNodeVMExtensionOutput,
 } from "../node/node-models";
 import { Pool, PoolOutput } from "../pool/pool-models";
+import { SupportedSku, SupportedSkuType } from "../sku";
 
 /**
  * A fake dataset which includes Batch accounts, pools, etc.
@@ -67,6 +68,11 @@ export interface BatchFakeSet extends FakeSet {
     listBatchNodes(poolId: string): BatchNodeOutput[];
 
     listBatchNodeExtensions(nodeId: string): BatchNodeVMExtensionOutput[];
+
+    listSupportedSkus(
+        type: SupportedSkuType,
+        locationName: string
+    ): SupportedSku[];
 }
 
 export abstract class AbstractBatchFakeSet
@@ -84,6 +90,14 @@ export abstract class AbstractBatchFakeSet
 
     protected abstract batchNodeExtensions: {
         [nodeId: string]: BatchNodeVMExtensionOutput[];
+    };
+
+    protected abstract supportedVirtualMachineSkus: {
+        [location: string]: SupportedSku[];
+    };
+
+    protected abstract supportedCloudServiceSkus: {
+        [location: string]: SupportedSku[];
     };
 
     getBatchAccount(batchAccountId: string): BatchAccountOutput | undefined {
@@ -151,7 +165,36 @@ export abstract class AbstractBatchFakeSet
     listBatchNodeExtensions(nodeId: string): BatchNodeVMExtensionOutput[] {
         return this.batchNodeExtensions[nodeId] ?? [];
     }
+
+    listSupportedSkus(
+        type: SupportedSkuType,
+        locationName: string
+    ): SupportedSku[] {
+        const list =
+            type === SupportedSkuType.CloudService
+                ? this.supportedCloudServiceSkus
+                : this.supportedVirtualMachineSkus;
+        return list[locationName];
+    }
 }
+
+let locId = 100;
+const loc = (name: string, displayName: string): Location => ({
+    id: `${++locId}`,
+    name,
+    displayName,
+    regionalDisplayName: displayName,
+    metadata: {
+        regionType: "Logical",
+        regionCategory: "Recommended",
+    },
+});
+
+export const FakeLocations = {
+    Arrakis: loc("arrakis", "Arrakis"),
+    Valinor: loc("valinor", "Valinor"),
+    Winterfell: loc("winterfell", "Winterfell"),
+};
 
 export class BasicBatchFakeSet extends AbstractBatchFakeSet {
     defaultTenantArmId: string =
@@ -752,6 +795,103 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                         version: "3.3.3",
                     },
                 },
+            },
+        ],
+    };
+
+    supportedVirtualMachineSkus: { [location: string]: SupportedSku[] } = {
+        [FakeLocations.Arrakis.name]: [
+            {
+                name: "Standard_NC4as_T4_v3",
+                familyName: "Standard NCASv3_T4 Family",
+                capabilities: [],
+            },
+            {
+                name: "Standard_NC64as_T4_v3",
+                familyName: "Standard NCASv3_T4 Family",
+                capabilities: [
+                    { name: "GPUs", value: "1" },
+                    { name: "PremiumIO", value: "True" },
+                ],
+            },
+            {
+                name: "Standard_NC8as_T4_v3",
+                familyName: "Standard NCASv3_T4 Family",
+                batchSupportEndOfLife: "2024-08-31T00:00:00Z",
+            },
+            {
+                name: "Standard_NV36adms_A10_v5",
+                familyName: "StandardNVADSA10v5Family",
+                capabilities: [],
+            },
+        ],
+        [FakeLocations.Valinor.name]: [
+            {
+                name: "Standard_ND96asr_v4",
+                familyName: "Standard NDASv4_A100 Family",
+                capabilities: [],
+            },
+            {
+                name: "Standard_NV12ads_A10_v5",
+                familyName: "StandardNVADSA10v5Family",
+                capabilities: [],
+                batchSupportEndOfLife: "2018-04-01T00:00:00Z",
+            },
+            {
+                name: "Standard_NV18ads_A10_v5",
+                familyName: "StandardNVADSA10v5Family",
+                capabilities: [],
+            },
+        ],
+    };
+
+    supportedCloudServiceSkus: { [location: string]: SupportedSku[] } = {
+        [FakeLocations.Winterfell.name]: [
+            {
+                name: "Small",
+                familyName: "standardA0_A7Family",
+                capabilities: [
+                    { name: "MaxResourceVolumeMB", value: "20480" },
+                    { name: "vCPUs", value: "1" },
+                ],
+                batchSupportEndOfLife: "2022-12-31T00:00:00Z",
+            },
+            {
+                name: "A5",
+                familyName: "standardA0_A7Family",
+                batchSupportEndOfLife: "2024-08-31T00:00:00Z",
+                capabilities: [
+                    { name: "Cores", value: "2" },
+                    { name: "MemoryInMb", value: "14336" },
+                ],
+            },
+        ],
+        [FakeLocations.Arrakis.name]: [
+            {
+                name: "A5",
+                familyName: "standardA0_A7Family",
+                batchSupportEndOfLife: "2024-08-31T00:00:00Z",
+                capabilities: [
+                    { name: "Cores", value: "2" },
+                    { name: "MemoryInMb", value: "14336" },
+                ],
+            },
+            {
+                name: "A7",
+                familyName: "standardA0_A7Family",
+                capabilities: [
+                    { name: "Cores", value: "8" },
+                    { name: "MemoryInMb", value: "57344" },
+                    { name: "SupportedByWebWorkerRoles", value: "true" },
+                    { name: "SupportedByVirtualMachines", value: "true" },
+                    { name: "MaxDataDiskCount", value: "16" },
+                    { name: "WebWorkerResourceDiskSizeInMb", value: "2088960" },
+                    {
+                        name: "VirtualMachineResourceDiskSizeInMb",
+                        value: "619520",
+                    },
+                ],
+                batchSupportEndOfLife: "2024-08-31T00:00:00Z",
             },
         ],
     };

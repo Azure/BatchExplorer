@@ -22,7 +22,7 @@ import {
     BatchBrowserDependencyFactories,
     BatchFormControlResolver,
 } from "@batch/ui-react";
-import { FakeNodeService } from "@batch/ui-service";
+import { FakeNodeService, FakeSkuService } from "@batch/ui-service";
 import { BatchDependencyName } from "@batch/ui-service/lib/environment";
 import { FakePoolService } from "@batch/ui-service/lib/pool";
 import * as React from "react";
@@ -65,6 +65,7 @@ export async function init(rootEl: HTMLElement): Promise<void> {
                 [DependencyName.Notifier]: () => new AlertNotifier(), // TODO: update with real notification implementation
                 [BatchDependencyName.PoolService]: () => new FakePoolService(),
                 [BatchDependencyName.NodeService]: () => new FakeNodeService(),
+                [BatchDependencyName.SkuService]: () => new FakeSkuService(),
                 [DependencyName.ResourceGroupService]: () =>
                     new FakeResourceGroupService(),
                 [DependencyName.StorageAccountService]: () =>
