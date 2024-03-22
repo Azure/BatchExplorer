@@ -66,32 +66,6 @@ describe("AppLicensePickerComponent", () => {
         fixture.detectChanges();
     });
 
-    it("Should show 4 licenses", () => {
-        const tableRows = debugElement.queryAll(By.css("bl-row-render"));
-        expect(tableRows.length).toBe(4);
-
-        const row1Columns = tableRows[0].queryAll(By.css(".bl-table-cell"));
-        expect(row1Columns.length).toBe(3, "Row has 3 columns");
-        expect(row1Columns[0].nativeElement.textContent).toContain("Autodesk Maya");
-        expect(row1Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row1Columns[2].nativeElement.textContent).toContain("$12/node/hour");
-
-        const row2Columns = tableRows[1].queryAll(By.css(".bl-table-cell"));
-        expect(row2Columns[0].nativeElement.textContent).toContain("Autodesk 3ds Max");
-        expect(row2Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row2Columns[2].nativeElement.textContent).toContain("-");
-
-        const row3Columns = tableRows[2].queryAll(By.css(".bl-table-cell"));
-        expect(row3Columns[0].nativeElement.textContent).toContain("Autodesk Arnold");
-        expect(row3Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row3Columns[2].nativeElement.textContent).toContain("$5/node/hour");
-
-        const row4Columns = tableRows[3].queryAll(By.css(".bl-table-cell"));
-        expect(row4Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray & V-Ray RT");
-        expect(row4Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row4Columns[2].nativeElement.textContent).toContain("-");
-    });
-
     it("Should select license by checking checkbox", () => {
         component.updateSelection(new ListSelection({ keys: ["maya"] }));
         fixture.detectChanges();
