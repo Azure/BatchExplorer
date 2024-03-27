@@ -1,5 +1,3 @@
-// FILEPATH: /c:/Users/hoppe/work/sandbox/BatchExplorer/packages/react/src/vm-extension/__tests__/vm-extension-list.spec.tsx
-
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { VmExtensionList } from "../vm-extension-list";
