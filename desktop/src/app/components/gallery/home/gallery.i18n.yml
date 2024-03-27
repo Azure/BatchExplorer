@@ -1,2 +1,3 @@
 gallery:
   title: Gallery applications
+  deprecation-warning: Gallery applications are no longer supported as of {deprecationDate}. See the Azure Batch rendering VM images & licensing retirement announcement for details.
