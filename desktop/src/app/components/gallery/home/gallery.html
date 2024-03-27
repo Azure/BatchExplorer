@@ -6,8 +6,10 @@
     <div class="gallery-content">
         <bl-banner class="gallery-deprecation-warning" type="warning">
             <div message>
-                Gallery applications are no longer supported as of February 29, 2024. See the Azure Batch rendering VM images & licensing retirement announcement for details.
-                <a class="gallery-warning-alternative-link" (click)="openLink('https://azure.microsoft.com/updates/azure-batch-rendering-vm-images-licensing-will-be-retired-on-29-february-2024/')" href="javascript:void(0)">More info</a>
+                <bl-i18n key="gallery.deprecation-warning">
+                    <b *i18nParam="'deprecationDate'">{{deprecateRenderingDate}}</b>
+                </bl-i18n>
+                <a class="gallery-warning-alternative-link" (click)="openLink('https://azure.microsoft.com/updates/azure-batch-rendering-vm-images-licensing-will-be-retired-on-29-february-2024/')" href="javascript:void(0)">{{'common.learnMore' | i18n}}</a>
             </div>
         </bl-banner>
     </div>
