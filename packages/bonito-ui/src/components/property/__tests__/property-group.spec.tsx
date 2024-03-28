@@ -33,6 +33,7 @@ describe("PropertyGroup component", () => {
         const heading = screen.getByRole("heading");
         const section = screen.getByTestId("property-group-section");
 
+        expect(screen.queryByTestId("collapse-icon")).toBeTruthy();
         expect(heading.tabIndex).toBe(0);
         expect(section.id).toBeDefined();
         expect(heading.getAttribute("aria-controls")).toBe(section.id);
@@ -55,5 +56,29 @@ describe("PropertyGroup component", () => {
         fireEvent.keyDown(heading, { key: " " });
         expect(heading.getAttribute("aria-expanded")).toBe("false");
         expect(section.style.display).toBe("none");
+    });
+
+    test('Should not be able to expand/collapse if "disableCollapse" is true', async () => {
+        await render(
+            <PropertyGroup title="Car" disableCollapse={true}>
+                <PropertyField label="Color" value="red" />
+            </PropertyGroup>
+        );
+
+        expect(screen.queryByTestId("collapse-icon")).toBeNull();
+
+        const heading = screen.getByRole("heading");
+        const section = screen.getByTestId("property-group-section");
+
+        expect(heading.tabIndex).toBe(0);
+        expect(section.id).toBeDefined();
+        expect(heading.getAttribute("aria-controls")).toBe(section.id);
+
+        expect(heading.getAttribute("aria-expanded")).toBe("true");
+        expect(section.style.display).toBeFalsy();
+
+        fireEvent.click(heading);
+        expect(heading.getAttribute("aria-expanded")).toBe("true");
+        expect(section.style.display).toBeFalsy();
     });
 });

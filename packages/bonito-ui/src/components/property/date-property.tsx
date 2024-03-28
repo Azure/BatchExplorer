@@ -5,6 +5,8 @@ import { PropertyField } from "./property-field";
 export interface DatePropertyProps {
     label?: string;
     value?: Date;
+    hideCopyButton?: boolean;
+    labelStyle?: React.CSSProperties;
 }
 
 function getText(value?: Date): string {
@@ -19,6 +21,8 @@ export const DateProperty: React.FC<DatePropertyProps> = (props) => {
         <PropertyField
             label={props.label}
             value={props.value}
+            hideCopyButton={props.hideCopyButton}
+            labelStyle={props.labelStyle}
             getText={getText}
             renderLabel={(label) => {
                 return <label>{label}</label>;

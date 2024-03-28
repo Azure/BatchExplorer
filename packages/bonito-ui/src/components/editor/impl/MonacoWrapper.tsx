@@ -7,7 +7,10 @@ import type * as MonacoEditorImpl from "./MonacoEditorImpl";
 /**
  * Import monaco dynamically to allow for code splitting
  */
-const MonacoEditorLazy = React.lazy(() => import("./MonacoEditorImpl"));
+const MonacoEditorLazy = React.lazy(
+    () =>
+        import(/* webpackChunkName: "MonacoEditorImpl" */ "./MonacoEditorImpl")
+);
 
 const LoadingSpinner: React.FC = () => {
     return (

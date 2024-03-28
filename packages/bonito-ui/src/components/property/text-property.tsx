@@ -1,9 +1,14 @@
 import * as React from "react";
 import { PropertyField } from "./property-field";
+import { TextField } from "@fluentui/react/lib/TextField";
 
 export interface TextPropertyProps {
     label?: string;
     value?: string;
+    multiline?: boolean;
+    multilineMaxHeight?: number;
+    hideCopyButton?: boolean;
+    labelStyle?: React.CSSProperties;
 }
 
 function getText(value?: string): string {
@@ -18,12 +23,36 @@ export const TextProperty: React.FC<TextPropertyProps> = (props) => {
         <PropertyField
             label={props.label}
             value={props.value}
+            hideCopyButton={props.hideCopyButton}
+            labelStyle={props.labelStyle}
             renderLabel={(label) => {
                 return <label>{label ? label : "-"}</label>;
             }}
             renderValue={(value) => {
                 const text = getText(value);
-                return <span>{text !== "" ? text : "-"}</span>;
+                if (props.multiline) {
+                    return (
+                        <TextField
+                            ariaLabel={props.label}
+                            data-testid="text-property-textfield"
+                            readOnly
+                            style={{
+                                maxHeight: props.multilineMaxHeight || 160,
+                                overflow: "auto",
+                            }}
+                            value={text}
+                            autoAdjustHeight
+                            multiline
+                            contentEditable={false}
+                            resizable={false}
+                        ></TextField>
+                    );
+                }
+                return (
+                    <span data-testid="text-property-span">
+                        {text !== "" ? text : "-"}
+                    </span>
+                );
             }}
         />
     );

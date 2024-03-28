@@ -4,19 +4,7 @@ import { runAxe } from "../../test-util/a11y";
 import { initMockBrowserEnvironment } from "../../environment";
 import { DataGrid } from "../data-grid";
 import { fromIso, translate } from "@azure/bonito-core";
-
-const ignoredA11yRules = {
-    rules: {
-        // TODO: Re-enable this when DetailsList fixes this issue
-        "aria-toggle-field-name": { enabled: false },
-        // See https://github.com/microsoft/fluentui/issues/28706
-        "aria-required-children": { enabled: false },
-        // TODO: Figure out if this is a real issue. Started happening
-        //       after upgrading to jest-axe 7.x. May be this issue:
-        //       https://github.com/microsoft/fluentui/issues/18474
-        "empty-table-header": { enabled: false },
-    },
-};
+import { dataGridIgnoredA11yRules } from "../data-grid/test-ignore-a11y-rules";
 
 describe("DataGrid component", () => {
     beforeEach(() => initMockBrowserEnvironment());
@@ -72,7 +60,9 @@ describe("DataGrid component", () => {
             "2021-05-31T21:12:00.000-03:00"
         );
 
-        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+        expect(
+            await runAxe(container, dataGridIgnoredA11yRules)
+        ).toHaveNoViolations();
     });
 
     test("Custom grid columns", async () => {
@@ -135,7 +125,9 @@ describe("DataGrid component", () => {
         expect(thirdRowCells[2].textContent).toBe("black");
         expect(thirdRowCells[3].textContent).toBe("");
 
-        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+        expect(
+            await runAxe(container, dataGridIgnoredA11yRules)
+        ).toHaveNoViolations();
     });
 
     test("Shimmer lines", async () => {
@@ -172,7 +164,9 @@ describe("DataGrid component", () => {
         expect(getOffsetAriaRowCount(gridEl)).toBe(3);
         expect(getNumOfShimmerLines(container)).toBe(0);
 
-        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+        expect(
+            await runAxe(container, dataGridIgnoredA11yRules)
+        ).toHaveNoViolations();
     });
 
     test("onLoadMore callback", async () => {
@@ -192,7 +186,9 @@ describe("DataGrid component", () => {
         // already has items, should trigger onLoadMore
         expect(onLoadMore).toHaveBeenCalled();
 
-        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+        expect(
+            await runAxe(container, dataGridIgnoredA11yRules)
+        ).toHaveNoViolations();
     });
 
     test("Virtual scrolling", async () => {
@@ -247,7 +243,9 @@ describe("DataGrid component", () => {
         // aria-rowcount should iclude 3 lines of shimmering
         expect(getOffsetAriaRowCount(gridEl)).toBe(items.length + 3);
 
-        expect(await runAxe(container, ignoredA11yRules)).toHaveNoViolations();
+        expect(
+            await runAxe(container, dataGridIgnoredA11yRules)
+        ).toHaveNoViolations();
     });
 });
 

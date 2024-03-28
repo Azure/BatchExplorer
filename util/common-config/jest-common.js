@@ -30,7 +30,11 @@ module.exports = {
         }
 
         const baseConfig = {
-            preset: "ts-jest",
+            // use "js-with-ts" preset to to transform some esm modules .js file to cjs
+            // for example, monaco-editor, which is a esm module, will be transformed to cjs
+            // so that jest can run it.
+            // https://stackoverflow.com/questions/61781271/jest-wont-transform-the-module-syntaxerror-cannot-use-import-statement-outsi
+            preset: "ts-jest/presets/js-with-ts",
             testEnvironment: "node",
             maxWorkers: "50%",
             testMatch: ["<rootDir>/src/**/__tests__/**/*.spec.(ts|tsx|js|jsx)"],
@@ -55,6 +59,14 @@ module.exports = {
                 ],
             ],
             globals: {
+                "ts-jest": {
+                    // js-with-ts preset require "allowJs": true in tsconfig.json
+                    // so making a "tsconfig.test.json" to override it
+                    tsconfig: "config/tsconfig.test.json",
+                    // This is needed to work with the js-with-ts preset and to make
+                    // translation strings work in tests
+                    isolatedModules: true,
+                },
                 __TEST_RESOURCE_STRINGS: combinedResourceStrings,
             },
             transform: {
@@ -65,11 +77,13 @@ module.exports = {
                             // Squelch a warning with outputting ES6 modules (in tsconfig.json)
                             ignoreCodes: [151001],
                         },
-                        // Greatly speed up tests at the expense of type checking
-                        isolatedModules: true,
                     },
                 ],
             },
+            // transform monaco-editor to cjs
+            transformIgnorePatterns: [
+                "node_modules/(?!(monaco-editor)).+\\.js$",
+            ],
         };
 
         if (
@@ -105,8 +119,15 @@ module.exports = {
         baseConfig.moduleNameMapper["@batch/ui-service/lib/(.*)$"] =
             "@batch/ui-service/lib-cjs/$1";
 
+        // needed for importing monaco-editor which imports css files
+        baseConfig.moduleNameMapper["^.+\\.css$"] = path.join(
+            __dirname,
+            "./mock-style.js"
+        );
+
         return Object.assign({}, baseConfig, overrides);
     },
+    getCombinedResourceStrings: getCombinedResourceStrings,
 };
 
 function getCombinedResourceStrings() {

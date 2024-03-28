@@ -11,11 +11,11 @@ import { ShimmeredDetailsList } from "@fluentui/react/lib/ShimmeredDetailsList";
 export const NUM_OF_SHIMMER_FULL = 10;
 export const NUM_OF_SHIMMER_MORE = 3;
 
-export interface DataGridProps {
+export interface DataGridProps<T = unknown> {
     /**
      * A list of columns to display in the grid
      */
-    columns?: string[] | DataGridColumn[];
+    columns?: string[] | DataGridColumn<T>[];
 
     /**
      * Global default maximum width for all grid columns. When maxWidth is
@@ -26,14 +26,14 @@ export interface DataGridProps {
     /**
      * A list of objects to display in the grid
      */
-    items?: unknown[];
+    items?: T[];
 
     /**
      * Callback when a row in the grid becomes active by clicking or navigating
      * via the keyboard
      */
     onActiveItemChanged?: (
-        item?: unknown,
+        item?: T,
         index?: number,
         ev?: React.FocusEvent<HTMLElement>
     ) => void;
@@ -77,7 +77,7 @@ export interface DataGridProps {
 /**
  * Represents a single column of data in the grid
  */
-export interface DataGridColumn {
+export interface DataGridColumn<T = unknown> {
     /**
      * User-friendly column label (if not defined, the property name will be
      * used)
@@ -102,7 +102,11 @@ export interface DataGridColumn {
     /**
      * Custom renderer for cell content, instead of the default text rendering.
      */
-    onRender?: (item?: unknown, index?: number, column?: IColumn) => unknown;
+    onRender?: (
+        item: T,
+        index?: number,
+        column?: IColumn
+    ) => JSX.Element | null | string;
 }
 
 const defaultColumnMinWidth = 48;
@@ -111,7 +115,7 @@ const defaultColumnMinWidth = 48;
  * Displays a sortable, filterable grid. Wraps the Fluent UI DetailsList
  * component
  */
-export const DataGrid: React.FC<DataGridProps> = (props) => {
+export const DataGrid = <T = unknown,>(props: DataGridProps<T>) => {
     const {
         columns: propColumns,
         columnDefaultMaxWidth,
@@ -146,8 +150,8 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
     );
 };
 
-function useColumns(
-    columns: DataGridProps["columns"],
+function useColumns<T>(
+    columns: DataGridProps<T>["columns"],
     columnDefaultMaxWidth: DataGridProps["columnDefaultMaxWidth"]
 ): IColumn[] {
     const detailsListColumns = React.useMemo(() => {
@@ -176,7 +180,7 @@ function useColumns(
                             c.onRender ??
                             ((item) =>
                                 autoFormat(c.prop ? item[c.prop] : null)),
-                        minWidth: defaultColumnMinWidth,
+                        minWidth: c.minWidth ?? defaultColumnMinWidth,
                         maxWidth: c.maxWidth ?? columnDefaultMaxWidth,
                         isResizable: true,
                     });
@@ -194,7 +198,7 @@ function useColumns(
     return detailsListColumns;
 }
 
-function useLoadMoreItems(props: DataGridProps) {
+function useLoadMoreItems<T>(props: DataGridProps<T>) {
     const { items: propsItems = [], hasMore, onLoadMore, noResultText } = props;
 
     const noResult = React.useMemo(() => {

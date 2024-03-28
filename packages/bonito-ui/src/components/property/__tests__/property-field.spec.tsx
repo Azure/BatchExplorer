@@ -14,6 +14,7 @@ describe("PropertyField component", () => {
         );
         expect(screen.getByTestId("label").textContent).toEqual("Color");
         expect(screen.getByTestId("content").textContent).toEqual("blue");
+        expect(screen.getByTestId("clipboard-button")).toBeTruthy();
         expect(await runAxe(container)).toHaveNoViolations();
     });
 
@@ -21,6 +22,11 @@ describe("PropertyField component", () => {
         render(<PropertyField />);
         expect(screen.getByTestId("label").textContent).toEqual("-");
         expect(screen.getByTestId("content").textContent).toEqual("-");
+    });
+
+    test("Hide copy button", () => {
+        render(<PropertyField value="blue" hideCopyButton />);
+        expect(screen.queryByTestId("clipboard-button")).toBeNull();
     });
 
     test("Custom render functions", async () => {
