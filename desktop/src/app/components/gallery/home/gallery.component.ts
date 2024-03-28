@@ -11,8 +11,10 @@ import { Subject } from "rxjs";
 import { map, publishReplay, refCount, takeUntil } from "rxjs/operators";
 import { ApplicationSelection } from "../application-list";
 import { SubmitMarketApplicationComponent } from "../submit";
+import { formatDateTime } from "@azure/bonito-core/lib/datetime";
 
 import "./gallery.scss";
+import { DateTime } from "luxon";
 
 @Component({
     selector: "bl-gallery",
@@ -32,7 +34,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
     private _baseUrl: string;
     private _destroy = new Subject();
 
-    public deprecateRenderingDate = new Date(2024, 1, 29).toLocaleDateString()
+    public deprecateRenderingDate = formatDateTime(new Date(Date.parse("29 Feb 2024")), DateTime.DATE_SHORT)
 
     constructor(
         private changeDetector: ChangeDetectorRef,
