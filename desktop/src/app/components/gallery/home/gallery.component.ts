@@ -32,7 +32,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
     private _baseUrl: string;
     private _destroy = new Subject();
 
-    public deprecateRenderingDate = new Date(2024, 1, 29).toDateString()
+    public deprecateRenderingDate = new Date(2024, 1, 29).toLocaleDateString()
 
     constructor(
         private changeDetector: ChangeDetectorRef,
