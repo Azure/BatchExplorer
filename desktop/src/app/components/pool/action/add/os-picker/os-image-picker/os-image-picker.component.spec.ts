@@ -227,9 +227,9 @@ describe("OSImagePickerComponent", () => {
         return tabs[tabIndex].queryAll(By.css("bl-os-offer-tile"));
     }
 
-    it("Shows 5 tabs (Distribution, Data science, Rendering, Container,  Custom image)", () => {
+    it("Shows 4 tabs (Distribution, Data science, Container,  Custom image)", () => {
         const tabs = de.queryAll(By.css("mat-tab"));
-        expect(tabs.length).toBe(5);
+        expect(tabs.length).toBe(4);
     });
 
     it("shows 1 tile for each Distribution + CloudService in the distribution tab", () => {
@@ -240,14 +240,6 @@ describe("OSImagePickerComponent", () => {
         expect(tiles[2].nativeElement.textContent).toContain("oracle linux");
         expect(tiles[3].nativeElement.textContent).toContain("windowsserver");
         expect(tiles[4].nativeElement.textContent).toContain("WindowsServer(Cloud Service)");
-    });
-
-    it("shows 1 tile for each Distribution + CloudService in the container tab", () => {
-        const tiles = getTiles(3);
-        expect(tiles.length).toEqual(3);
-        expect(tiles[0].nativeElement.textContent).toContain("centos container");
-        expect(tiles[1].nativeElement.textContent).toContain("centos container rdma");
-        expect(tiles[2].nativeElement.textContent).toContain("windowsserver");
     });
 
     it("picks the latest cloud service family when clicking on the tile", () => {
