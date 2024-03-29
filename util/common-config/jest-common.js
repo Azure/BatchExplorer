@@ -24,7 +24,7 @@ module.exports = {
      * @param overrides Optional jest configuration options which will be
      *                  merged into the base config.
      */
-    createConfig: (projectName, tsconfig, overrides) => {
+    createConfig: (projectName, overrides) => {
         if (!overrides) {
             overrides = {};
         }
@@ -85,20 +85,6 @@ module.exports = {
                 "node_modules/(?!(monaco-editor)).+\\.js$",
             ],
         };
-
-        if (
-            tsconfig &&
-            tsconfig.compilerOptions &&
-            tsconfig.compilerOptions.paths
-        ) {
-            // If we were given a tsconfig, use it to generate module mappings
-            baseConfig.moduleNameMapper = pathsToModuleNameMapper(
-                tsconfig.compilerOptions.paths,
-                { prefix: "<rootDir>/" }
-            );
-        } else {
-            baseConfig.moduleNameMapper = {};
-        }
 
         // Force usage of the CommonJS versions since Jest
         // currently doesn't support ES modules
