@@ -45,6 +45,7 @@ module.exports = {
                 ["cobertura", { file: "cobertura.xml" }],
             ],
             moduleDirectories: ["src", "node_modules"],
+            moduleNameMapper: {},
             reporters: [
                 "default",
                 [
