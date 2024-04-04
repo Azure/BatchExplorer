@@ -18,7 +18,7 @@ import { Notifier } from "../notification";
  */
 export abstract class AbstractEnvironment<
     C extends EnvironmentConfig = EnvironmentConfig,
-    D extends DependencyFactories = DependencyFactories
+    D extends DependencyFactories = DependencyFactories,
 > implements Environment<C>
 {
     abstract readonly name: EnvironmentName;

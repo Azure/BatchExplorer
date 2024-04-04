@@ -15,7 +15,7 @@ let _currentEnvironment: Environment<EnvironmentConfig> | null = null;
  * @returns The current environment
  */
 export function getEnvironment<
-    C extends EnvironmentConfig = EnvironmentConfig
+    C extends EnvironmentConfig = EnvironmentConfig,
 >(): Environment<C> {
     if (!_currentEnvironment) {
         throw new Error(
@@ -60,7 +60,7 @@ export function inject<T>(id: string): T {
  * environment is not a mock.
  */
 export function getMockEnvironment<
-    C extends EnvironmentConfig = EnvironmentConfig
+    C extends EnvironmentConfig = EnvironmentConfig,
 >(): MockEnvironment<C> {
     if (!_currentEnvironment) {
         throw new Error(
@@ -103,7 +103,7 @@ export function initEnvironment<T extends Environment<EnvironmentConfig>>(
  */
 export function initMockEnvironment<
     C extends EnvironmentConfig = EnvironmentConfig,
-    D extends DependencyFactories = DependencyFactories
+    D extends DependencyFactories = DependencyFactories,
 >(
     configOverrides: Partial<C> = {},
     depFactoryOverrides: Partial<D> = {}

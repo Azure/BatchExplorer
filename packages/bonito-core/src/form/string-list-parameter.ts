@@ -12,7 +12,7 @@ export interface StringListValidationDetails {
  */
 export class StringListParameter<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 > extends AbstractParameter<V, K> {
     validateSync() {
         let status = super.validateSync();

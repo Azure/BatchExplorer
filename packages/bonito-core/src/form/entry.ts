@@ -61,7 +61,7 @@ export interface EntryInit<V extends FormValues> {
 
 export interface ValuedEntryInit<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 > extends EntryInit<V> {
     value?: V[K];
 }

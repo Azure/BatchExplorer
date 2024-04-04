@@ -8,7 +8,7 @@ import { FormControlProps } from "./form-control";
 
 export function LocationDropdown<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 >(
     props: FormControlProps<
         V,

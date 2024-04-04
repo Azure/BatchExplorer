@@ -20,7 +20,7 @@ export class ReactFormImpl<V extends FormValues> extends FormImpl<V> {
     param<
         K extends ParameterName<V>,
         D extends ParameterDependencies<V> = ParameterDependencies<V>,
-        T extends ReactParameter<V, K, D> = ReactParameter<V, K, D>
+        T extends ReactParameter<V, K, D> = ReactParameter<V, K, D>,
     >(
         name: K,
         parameterConstructor: ParameterConstructor<V, K, D, T>,

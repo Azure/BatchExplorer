@@ -85,9 +85,8 @@ export async function getEditorConfig(
     if (filePattern) {
         configPath += "/" + filePattern;
     }
-    const config: editorconfig.KnownProps = await editorconfig.parse(
-        configPath
-    );
+    const config: editorconfig.KnownProps =
+        await editorconfig.parse(configPath);
     return config[option];
 }
 

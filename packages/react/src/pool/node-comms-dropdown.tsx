@@ -19,7 +19,7 @@ import { useFormParameter, useUniqueId } from "@azure/bonito-ui/lib/hooks";
 
 export function NodeCommsDropdown<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 >(
     props: FormControlProps<
         V,

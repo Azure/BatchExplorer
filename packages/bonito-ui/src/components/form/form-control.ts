@@ -15,7 +15,7 @@ export interface FormControlProps<
     D extends ParameterDependencies<V> = ParameterDependencies<V>,
     T extends ReactParameter<V, K, D> | Parameter<V, K, D> =
         | ReactParameter<V, K, D>
-        | Parameter<V, K, D>
+        | Parameter<V, K, D>,
 > {
     /**
      * The unique HTML ID of the input element

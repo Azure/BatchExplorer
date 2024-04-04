@@ -17,7 +17,7 @@ export type StorageAccountDependencies<V extends FormValues> =
 export class StorageAccountParameter<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends StorageAccountDependencies<V>
+    D extends StorageAccountDependencies<V>,
 > extends AbstractParameter<V, K, D> {
     storageAccountService: StorageAccountService = inject(
         DependencyName.StorageAccountService

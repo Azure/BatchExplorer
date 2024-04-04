@@ -29,17 +29,18 @@ export interface SubFormInit<V extends FormValues, K extends ParameterName<V>>
 
 export interface DynamicSubformProperties<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 > extends DynamicEntryProperties<V> {
     expanded?: (values: V) => boolean;
     value?: (values: V) => V[K];
 }
 
 export class SubForm<
-    P extends FormValues,
-    PK extends ParameterName<P>,
-    S extends P[PK] & FormValues
-> implements ValuedEntry<P, PK>, Form<S>
+        P extends FormValues,
+        PK extends ParameterName<P>,
+        S extends P[PK] & FormValues,
+    >
+    implements ValuedEntry<P, PK>, Form<S>
 {
     readonly parentForm: Form<P>;
     readonly parentSection?: Section<P>;
@@ -163,7 +164,7 @@ export class SubForm<
     param<
         SK extends ParameterName<S>,
         D extends ParameterDependencies<S> = ParameterDependencies<S>,
-        T extends Parameter<S, SK, D> = Parameter<S, SK, D>
+        T extends Parameter<S, SK, D> = Parameter<S, SK, D>,
     >(
         name: SK,
         parameterConstructor: ParameterConstructor<S, SK, D, T>,

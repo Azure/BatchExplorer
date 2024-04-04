@@ -22,7 +22,7 @@ export function useFormParameter<
     V extends FormValues,
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = never,
-    DataResult = never
+    DataResult = never,
 >(
     param: Parameter<V, K, D>,
     opts: {
