@@ -11,7 +11,7 @@ import { FormControlProps } from "./form-control";
 export interface RadioButtonProps<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
 > extends FormControlProps<V, K, D> {
     options: RadioButtonOption[];
     defaultSelectedKey?: string;
@@ -25,7 +25,7 @@ export interface RadioButtonOption {
 export function RadioButton<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
 >(props: RadioButtonProps<V, K, D>): JSX.Element {
     const {
         className,

@@ -15,7 +15,7 @@ import { Checkbox as FluentCheckbox } from "@fluentui/react/lib/Checkbox";
 export function Checkbox<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
 >(props: FormControlProps<V, K, D>): JSX.Element {
     const { ariaLabel, className, disabled, onChange, param } = props;
 

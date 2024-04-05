@@ -111,30 +111,39 @@ module.exports = {
 
 function getCombinedResourceStrings() {
     const resourceStrings = [
-        require(path.join(
-            __dirname,
-            "../../packages/bonito-core/resources/i18n/json/resources.en.json"
-        )),
-        require(path.join(
-            __dirname,
-            "../../packages/bonito-ui/resources/i18n/json/resources.en.json"
-        )),
-        require(path.join(
-            __dirname,
-            "../../packages/service/resources/i18n/json/resources.en.json"
-        )),
-        require(path.join(
-            __dirname,
-            "../../packages/react/resources/i18n/json/resources.en.json"
-        )),
-        require(path.join(
-            __dirname,
-            "../../packages/playground/resources/i18n/json/resources.en.json"
-        )),
-        require(path.join(
-            __dirname,
-            "../../web/resources/i18n/resources.en.json"
-        )),
+        require(
+            path.join(
+                __dirname,
+                "../../packages/bonito-core/resources/i18n/json/resources.en.json"
+            )
+        ),
+        require(
+            path.join(
+                __dirname,
+                "../../packages/bonito-ui/resources/i18n/json/resources.en.json"
+            )
+        ),
+        require(
+            path.join(
+                __dirname,
+                "../../packages/service/resources/i18n/json/resources.en.json"
+            )
+        ),
+        require(
+            path.join(
+                __dirname,
+                "../../packages/react/resources/i18n/json/resources.en.json"
+            )
+        ),
+        require(
+            path.join(
+                __dirname,
+                "../../packages/playground/resources/i18n/json/resources.en.json"
+            )
+        ),
+        require(
+            path.join(__dirname, "../../web/resources/i18n/resources.en.json")
+        ),
     ];
 
     const allResourceStrings = {};

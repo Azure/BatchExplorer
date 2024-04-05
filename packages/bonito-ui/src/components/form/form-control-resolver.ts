@@ -7,7 +7,7 @@ import { FormControlProps } from "./form-control";
 
 export interface FormControlOptions<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 > {
     id?: string;
 
@@ -22,7 +22,7 @@ export interface FormControlResolver {
     getFormControl<
         V extends FormValues,
         K extends ParameterName<V>,
-        D extends ParameterDependencies<V> = ParameterDependencies<V>
+        D extends ParameterDependencies<V> = ParameterDependencies<V>,
     >(
         props: FormControlProps<V, K, D>
     ): JSX.Element;

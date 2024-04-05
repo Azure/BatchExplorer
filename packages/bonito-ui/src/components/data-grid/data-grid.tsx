@@ -133,10 +133,10 @@ export const DataGrid: React.FC<DataGridProps> = (props) => {
                 selectionMode === "single"
                     ? SelectionMode.single
                     : selectionMode === "multiple"
-                    ? SelectionMode.multiple
-                    : selectionMode === "none"
-                    ? SelectionMode.none
-                    : undefined
+                      ? SelectionMode.multiple
+                      : selectionMode === "none"
+                        ? SelectionMode.none
+                        : undefined
             }
             columns={columns}
             items={items}

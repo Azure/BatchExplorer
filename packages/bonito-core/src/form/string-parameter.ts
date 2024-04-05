@@ -8,7 +8,7 @@ import { ValidationStatus } from "./validation-status";
  */
 export class StringParameter<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 > extends AbstractParameter<V, K> {
     validateSync(): ValidationStatus {
         let status = super.validateSync();

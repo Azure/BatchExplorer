@@ -12,7 +12,7 @@ import { FormControlProps } from "./form-control";
 export interface TabSelectorProps<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
 > extends FormControlProps<V, K, D> {
     overflowBehavior?: "none" | "menu" | "wrap";
     options: TabOption<V, K>[];
@@ -34,7 +34,7 @@ const nullKey = "<<<None>>>";
 export function TabSelector<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
 >(props: TabSelectorProps<V, K, D>): JSX.Element {
     const {
         ariaLabel,

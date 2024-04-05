@@ -14,7 +14,7 @@ export class BatchFormControlResolver extends DefaultFormControlResolver {
     getFormControl<
         V extends FormValues,
         K extends ParameterName<V>,
-        D extends ParameterDependencies<V> = ParameterDependencies<V>
+        D extends ParameterDependencies<V> = ParameterDependencies<V>,
     >(props: FormControlProps<V, K, D>): JSX.Element {
         const { param, id, onChange } = props;
 

@@ -108,7 +108,7 @@ const beverageTestData: Beverage[] = [
 class BeverageParameter<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends BeverageDependencies<V>
+    D extends BeverageDependencies<V>,
 > extends AbstractParameter<V, K, D> {
     beverageLoadError: string | undefined = undefined;
 

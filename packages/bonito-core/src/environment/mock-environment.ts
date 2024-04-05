@@ -34,7 +34,7 @@ export const mockDependencyFactories: DependencyFactories = {
 };
 
 export class MockEnvironment<
-    C extends EnvironmentConfig
+    C extends EnvironmentConfig,
 > extends AbstractEnvironment<C, DependencyFactories> {
     name = EnvironmentName.Mock;
 
