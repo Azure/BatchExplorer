@@ -21,7 +21,7 @@ export function mockJsdomMissingAPIs() {
         }),
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    globalThis.HTMLCanvasElement.prototype.getContext = () => ({} as any);
+    globalThis.HTMLCanvasElement.prototype.getContext = () => ({}) as any;
 
     mockNodeTestMissingAPIs();
 }
