@@ -7,6 +7,9 @@ import { useAppTheme } from "../../theme";
 export interface PropertyGroupProps {
     title?: string;
     collapsed?: boolean;
+    disableCollapse?: boolean;
+    titleStyle?: React.CSSProperties;
+    containerStyle?: React.CSSProperties;
 }
 
 /**
@@ -14,6 +17,8 @@ export interface PropertyGroupProps {
  */
 export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
     const theme = useAppTheme();
+
+    const { disableCollapse = false, titleStyle, containerStyle } = props;
 
     const [collapsed, setCollapsed] = React.useState<boolean>(
         props.collapsed ?? false
@@ -23,6 +28,9 @@ export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
         event: React.MouseEvent | React.KeyboardEvent
     ) => void = React.useCallback(
         (event) => {
+            if (disableCollapse) {
+                return;
+            }
             let shouldToggle = false;
 
             const nativeEvent = event.nativeEvent;
@@ -39,30 +47,37 @@ export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
                 setCollapsed(!collapsed);
             }
         },
-        [setCollapsed, collapsed]
+        [setCollapsed, collapsed, disableCollapse]
     );
 
     const sectionId = uniqueElementId("property-group-section");
 
     const titleEl = props.title ? (
         <h3
-            style={{ color: theme.palette.themePrimary, cursor: "pointer" }}
+            style={{
+                color: theme.palette.themePrimary,
+                ...(disableCollapse ? {} : { cursor: "pointer" }),
+                ...titleStyle,
+            }}
             tabIndex={0}
             onClick={toggleCollapsed}
             onKeyDown={toggleCollapsed}
             aria-controls={sectionId}
             aria-expanded={collapsed ? false : true}
         >
-            <Icon
-                iconName={collapsed ? "ChevronRight" : "ChevronDown"}
-                style={{ marginRight: "8px", verticalAlign: "middle" }}
-            ></Icon>
+            {!disableCollapse && (
+                <Icon
+                    data-testid="collapse-icon"
+                    iconName={collapsed ? "ChevronRight" : "ChevronDown"}
+                    style={{ marginRight: "8px", verticalAlign: "middle" }}
+                ></Icon>
+            )}
             {props.title}
         </h3>
     ) : undefined;
 
     return (
-        <>
+        <div style={containerStyle}>
             {titleEl}
             <Stack
                 id={sectionId}
@@ -70,10 +85,10 @@ export const PropertyGroup: React.FC<PropertyGroupProps> = (props) => {
                 style={{
                     display: collapsed ? "none" : undefined,
                 }}
-                tokens={{ childrenGap: 8 }}
+                tokens={{ childrenGap: 10 }}
             >
                 {props.children}
             </Stack>
-        </>
+        </div>
     );
 };
