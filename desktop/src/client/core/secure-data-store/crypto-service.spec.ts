@@ -7,7 +7,8 @@ describe("CryptoService", () => {
     let masterKey: string | null = null;
 
     beforeEach(() => {
-        masterKey = "fbea88f2f4efeb0640cb411aa7df41cb";
+        // Fake testing key needs to be 32 characters long
+        masterKey = "------fake-key-for-testing------";
         keytarSpy = {
             setPassword: jasmine.createSpy("setPassword").and.callFake((x) => {
                 masterKey = x;
