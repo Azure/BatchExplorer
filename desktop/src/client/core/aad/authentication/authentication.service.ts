@@ -1,4 +1,4 @@
-import { SanitizedError } from "@batch-flask/utils";
+import { log, SanitizedError } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { Deferred } from "common";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -6,6 +6,9 @@ import { AADService } from "..";
 import { AADConfig } from "../aad-config";
 import * as AADConstants from "../aad-constants";
 import AuthProvider, { AuthorizationResult } from "../auth-provider";
+import { shell } from "electron";
+import { AuthError, InteractiveRequest, PublicClientApplication, SilentFlowRequest } from "@azure/msal-node";
+import { AuthLoopbackClient } from "../auth-loopback-client";
 
 export interface AuthorizeResult extends AuthorizationResult {
     code: string;
@@ -86,6 +89,9 @@ export class AuthenticationService {
     private _state = new BehaviorSubject(AuthenticationState.None);
     private _logoutDeferred: Deferred<void> | null;
 
+    // TODO: Make this a setting
+    public browserAuthMode: "external" | "builtin" = "external"
+
     constructor(
         private app: BatchExplorerApplication,
         private config: AADConfig,
@@ -158,22 +164,30 @@ export class AuthenticationService {
     }
 
     private async _authorizeNext() {
+        console.log("Authorize next");
         if (this._authQueue.authInProgress()) {
+            console.log("Already in progress... skipping");
             return;
         }
         const { tenantId, resourceURI, forceRefresh, deferred } =
             this._authQueue.shift();
 
         try {
+            console.log("Get token for resource", resourceURI);
             const authResult: AuthorizationResult =
                 await this.authProvider.getToken({
                     resourceURI,
+                    // TODO: Make this a setting
+                    browser: this.browserAuthMode,
                     tenantId,
                     forceRefresh,
-                    authCodeCallback: (url, tenant, silent) =>
+                    browserAuthCallback: (client, tokenRequest, url, tenant) =>
+                        this._browserAuthCallback(client, tokenRequest, url, tenant),
+                    builtInAuthCodeCallback: (url, tenant, silent) =>
                         this._authorizationCodeCallback(url, tenant, silent)
                 });
 
+            console.log("Setting state to authenticated");
             if (this._state.getValue() !== AuthenticationState.Authenticated) {
                 this._state.next(AuthenticationState.Authenticated);
             }
@@ -192,15 +206,49 @@ export class AuthenticationService {
         }
     }
 
+    private async _browserAuthCallback(client: PublicClientApplication,
+        tokenRequest: SilentFlowRequest, url: string, tenant: string) {
+        this._state.next(AuthenticationState.UserInput);
+
+        console.log("Browser auth callback");
+        try {
+            const loopbackClient = await AuthLoopbackClient.initialize(3874);
+
+            // opens a browser instance via Electron shell API
+            const openBrowser = async (url: string) => {
+                await shell.openExternal(url);
+            };
+            const interactiveRequest: InteractiveRequest = {
+                ...tokenRequest,
+                openBrowser,
+                loopbackClient
+            };
+
+            return await client.acquireTokenInteractive(interactiveRequest);
+        } catch (error) {
+            log.warn(`[${tenant}] Failed to authenticate using browser auth: ${error}`);
+            this._authQueue.rejectCurrent(error);
+            if (!this._authQueue.empty()) {
+                this._authorizeNext();
+            }
+        }
+    }
+
     private async _authorizationCodeCallback(url: string, tenant: string,
         silent = false) {
         this._state.next(AuthenticationState.UserInput);
+
         return await this._loadAuthWindow(url, { show: !silent, tenant });
     }
 
-    private _loadAuthWindow(url: string,
+    /**
+     * Authenticate using an Electron browser window
+     *
+     * @returns A promise which resolves to an auth code string
+     */
+    private async _loadAuthWindow(url: string,
         { clear = false, show = true, tenant = "" } = {}
-    ) {
+    ): Promise<string> {
         const authWindow = this.app.authenticationWindow;
         const deferred = new Deferred<string>();
         authWindow.create();
@@ -269,7 +317,7 @@ export class AuthenticationService {
         this._closeWindow();
         this._authQueue.rejectCurrent(new AuthorizeError({
             error: "Failed to authenticate",
-            error_description: `Failed to load the AAD login page (${code}:${description})`,
+            error_description: `Failed to load the Microsoft login page (${code}:${description})`,
         }));
         if (!this._authQueue.empty()) {
             this._authorizeNext();

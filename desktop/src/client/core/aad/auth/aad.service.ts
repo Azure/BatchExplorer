@@ -178,6 +178,7 @@ export class AADService {
         const defer = this._newAccessTokenSubject[subjectKey];
         delete this._newAccessTokenSubject[subjectKey];
         try {
+            console.log("Authorize resource", tenantId, this.properties.azureEnvironment[resource as string], forceRefresh);
             const result: AuthorizeResult =
                 await this.userAuthorization.authorizeResource(
                     tenantId,
