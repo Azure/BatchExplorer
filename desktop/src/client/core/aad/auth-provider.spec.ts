@@ -3,7 +3,7 @@ import AuthProvider from "./auth-provider";
 
 describe("AuthProvider", () => {
     let authProvider: AuthProvider;
-    const authCodeCallbackSpy = jasmine.createSpy("authCodeCallback")
+    const authCodeSpy = jasmine.createSpy("authCodeCallback")
         .and.returnValue("some-code");
     const appSpy: any = {
         properties: {
@@ -27,8 +27,11 @@ describe("AuthProvider", () => {
 
     it("authenticates interactively first, then silently", async () => {
         const call = async () => await authProvider.getToken({
-            resourceURI: "resourceURI1", tenantId: "tenant1",
-            authCodeCallback: authCodeCallbackSpy
+            resourceURI: "resourceURI1",
+            browser: "builtin",
+            tenantId: "tenant1",
+            browserAuthCallback: authCodeSpy,
+            builtInAuthCodeCallback: authCodeSpy
         });
         const clientSpy = makeClientApplicationSpy();
         spyOn<any>(authProvider, "_getClient").and.returnValue(clientSpy);
@@ -38,7 +41,7 @@ describe("AuthProvider", () => {
         returnToken(clientSpy.acquireTokenSilent, "silent-token-1");
 
         const result1 = await call();
-        expect(authCodeCallbackSpy).toHaveBeenCalled();
+        expect(authCodeSpy).toHaveBeenCalled();
         expect(clientSpy.getAuthCodeUrl).toHaveBeenCalled();
         expect(clientSpy.acquireTokenByCode).toHaveBeenCalled();
         expect(clientSpy.acquireTokenSilent).not.toHaveBeenCalled();
@@ -46,10 +49,10 @@ describe("AuthProvider", () => {
 
         clientSpy.getAuthCodeUrl.calls.reset();
         clientSpy.acquireTokenByCode.calls.reset();
-        authCodeCallbackSpy.calls.reset();
+        authCodeSpy.calls.reset();
 
         const result2 = await call();
-        expect(authCodeCallbackSpy).not.toHaveBeenCalled();
+        expect(authCodeSpy).not.toHaveBeenCalled();
         expect(clientSpy.getAuthCodeUrl).not.toHaveBeenCalled();
         expect(clientSpy.acquireTokenByCode).not.toHaveBeenCalled();
         expect(clientSpy.acquireTokenSilent).toHaveBeenCalled();
@@ -65,14 +68,18 @@ describe("AuthProvider", () => {
 
         const result1 = await authProvider.getToken({
             resourceURI: "resourceURI1",
+            browser: "builtin",
             tenantId: "tenant1",
-            authCodeCallback: authCodeCallbackSpy
+            browserAuthCallback: authCodeSpy,
+            builtInAuthCodeCallback: authCodeSpy
         });
 
         const result2 = await authProvider.getToken({
             resourceURI: "resourceURI1",
+            browser: "builtin",
             tenantId: "tenant2",
-            authCodeCallback: authCodeCallbackSpy
+            browserAuthCallback: authCodeSpy,
+            builtInAuthCodeCallback: authCodeSpy
         });
 
         expect(result1.accessToken).toEqual("tenant1-token");
@@ -103,8 +110,10 @@ describe("AuthProvider", () => {
             try {
                 await authProvider.getToken({
                     tenantId: "tenant1",
+                    browser: "builtin",
                     resourceURI: "resourceURI1",
-                    authCodeCallback: authCodeSpy
+                    browserAuthCallback: authCodeSpy,
+                    builtInAuthCodeCallback: authCodeSpy
                 });
                 if (!retryable) {
                     fail(`Should have thrown an error on code ${code}`);
@@ -171,8 +180,10 @@ describe("AuthProvider", () => {
         try {
             await authProvider.getToken({
                 tenantId: "tenant1",
+                browser: "builtin",
                 resourceURI: "resourceURI1",
-                authCodeCallback: authCodeSpy
+                browserAuthCallback: authCodeSpy,
+                builtInAuthCodeCallback: authCodeSpy
             });
         } catch (e) {
             fail(`Should not have thrown error: ${e}`);

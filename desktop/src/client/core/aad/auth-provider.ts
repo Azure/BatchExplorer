@@ -1,7 +1,8 @@
 import {
     AccountInfo,
     AuthenticationResult,
-    PublicClientApplication
+    PublicClientApplication,
+    SilentFlowRequest
 } from "@azure/msal-node";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "..";
@@ -15,7 +16,18 @@ const MSAL_SCOPES = ["user_impersonation"];
 
 export type AuthorizationResult = AuthenticationResult;
 
-export type AuthCodeCallback =
+/**
+ * A callback which performs interactive auth using an external
+ * web browser
+ */
+export type BrowserAuthCallback =
+    (client: PublicClientApplication, tokenRequest: SilentFlowRequest, url: string, tenant: string) => Promise<AuthorizationResult>;
+
+/**
+ * A callback which peforms silent or interactive auth using a built-in
+ * Electron window
+ */
+export type BuiltInAuthCodeCallback =
     (url: string, tenant: string, silent?: boolean) => Promise<string>;
 
 /**
@@ -52,15 +64,19 @@ export default class AuthProvider {
      */
     public async getToken(options: {
         resourceURI: string,
+        browser: "external" | "builtin",
         tenantId?: string,
         forceRefresh?: boolean,
-        authCodeCallback: AuthCodeCallback
+        browserAuthCallback: BrowserAuthCallback,
+        builtInAuthCodeCallback: BuiltInAuthCodeCallback,
     }): Promise<AuthorizationResult> {
         const {
             resourceURI,
+            browser,
             tenantId = defaultTenant,
             forceRefresh = false,
-            authCodeCallback
+            browserAuthCallback,
+            builtInAuthCodeCallback
         } = options;
 
         if (this._logoutPromise) {
@@ -77,52 +93,76 @@ export default class AuthProvider {
         const client = await this._getClient(tenantId);
 
         const authRequest = this._authRequest(resourceURI, tenantId);
+        let account: AccountInfo | null = null;
         try {
             log.debug(`[${tenantId}] Trying to silently acquire token`);
-            const account = await this._getAccount(tenantId);
 
+            account = await this._getAccount(tenantId);
             if (!account) {
                 throw new Error(
-                    "[internal] No account for silent token acquisition"
+                    "[internal] No valid account found for silent auth"
                 );
             }
+
             const result = await client.acquireTokenSilent({
                 ...authRequest, account, forceRefresh
             });
             return result;
         } catch (silentTokenException) {
-            log.debug(`[${tenantId}] Trying silent auth code flow (${silentTokenException})`);
-            let url, code;
+            let result: AuthorizationResult;
 
-            try {
-                // Attempt to get authorization code silently
-                url = await client.getAuthCodeUrl(
-                    { ...authRequest, prompt: "none" }
-                );
-                code = await authCodeCallback(url, tenantId, true);
-            } catch (silentAuthException) {
-                log.debug(`[${tenantId}] Silent auth failed (${silentAuthException})`);
-                if (silentAuthException instanceof AuthorizeError &&
-                    !this._isTenantAuthRetryable(silentAuthException)) {
-                    log.warn(`Fatal authentication exception for ${tenantId}:` +
-                        ` ${silentAuthException} (non-retryable error code ` +
-                        silentAuthException.errorCodes.join(";") + `)`);
-                    throw silentAuthException;
-                }
-                log.debug(
-                    `[${tenantId}] Trying interactive auth code flow (${silentAuthException})`);
-                url = await client.getAuthCodeUrl({
+            if (browser === "external") {
+                log.debug(`[${tenantId}] Trying browser interactive auth code flow (${silentTokenException})`);
+
+                const url = await client.getAuthCodeUrl({
                     ...authRequest,
                     domainHint: tenantId,
                     loginHint: this._primaryUsername
                 });
 
-                code = await authCodeCallback(url, tenantId);
+                result = await browserAuthCallback(client, {...authRequest, account, forceRefresh}, url, tenantId);
+            } else {
+                log.debug(`[${tenantId}] Trying silent auth code flow (${silentTokenException})`);
+
+                let code: string;
+                try {
+                    // Attempt to get authorization code silently
+                    const url = await client.getAuthCodeUrl(
+                        { ...authRequest, prompt: "none" }
+                    );
+                    code = await builtInAuthCodeCallback(url, tenantId, true);
+                } catch (silentAuthException) {
+                    log.debug(`[${tenantId}] Silent auth failed (${silentAuthException})`);
+                    if (silentAuthException instanceof AuthorizeError &&
+                        !this._isTenantAuthRetryable(silentAuthException)) {
+                        log.warn(`Fatal authentication exception for ${tenantId}:` +
+                            ` ${silentAuthException} (non-retryable error code ` +
+                            silentAuthException.errorCodes.join(";") + `)`);
+                        throw silentAuthException;
+                    }
+                    log.debug(
+                        `[${tenantId}] Trying built-in interactive auth code flow (${silentAuthException})`);
+                    const url = await client.getAuthCodeUrl({
+                        ...authRequest,
+                        domainHint: tenantId,
+                        loginHint: this._primaryUsername
+                    });
+
+                    code = await builtInAuthCodeCallback(url, tenantId);
+                }
+
+                result = await client.acquireTokenByCode({ ...authRequest, code });
             }
 
-            const result: AuthorizationResult =
-                await client.acquireTokenByCode({ ...authRequest, code });
-            this._processAccountInfo(result.account);
+            if (result.account) {
+                this._accounts[tenantId] = result.account;
+                if (!this._primaryUsername) {
+                    this._primaryUsername = result.account.username;
+                }
+            } else {
+                log.warn("Authentication result did not contain account information");
+            }
+
             return result;
         }
     }
@@ -228,16 +268,9 @@ export default class AuthProvider {
         }
 
         throw new Error(
-            `Unable to find a valid AAD account for tenant ${tenantId}`
+            `Unable to find a valid account for tenant ${tenantId}`
         );
     }
-
-    private _processAccountInfo(account: AccountInfo) {
-        if (!this._primaryUsername) {
-            this._primaryUsername = account.username;
-        }
-    }
-
     private _isTenantAuthRetryable(error: AuthorizeError) {
         for (const code of error.errorCodes) {
             if (unretryableAuthCodeErrors.includes(code)) {
