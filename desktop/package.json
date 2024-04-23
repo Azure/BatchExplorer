@@ -201,7 +201,7 @@
     "@angular/router": "^11.0.0",
     "@azure/bonito-core": "^1.0.0",
     "@azure/bonito-ui": "^1.0.0",
-    "@azure/msal-node": "^1.14.6",
+    "@azure/msal-node": "^2.7.0",
     "@azure/storage-blob": "^12.11.0",
     "@batch/ui-playground": "^1.0.0",
     "@batch/ui-react": "^1.0.0",
