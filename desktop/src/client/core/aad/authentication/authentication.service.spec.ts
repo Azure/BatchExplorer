@@ -38,6 +38,8 @@ describe("AuthenticationService", () => {
 
         userAuthorization = new AuthenticationService(appSpy, CONFIG,
             fakeAuthProvider, fakeAADService);
+        // TODO: Remove this line when this is a setting
+        userAuthorization.browserAuthMode = "builtin";
         fakeAuthWindow = appSpy.authenticationWindow;
         userAuthorization.state.subscribe(x => state = x);
     });
@@ -54,7 +56,7 @@ describe("AuthenticationService", () => {
             await delay();
         });
 
-        it("Should have called loadurl", async () => {
+        it("Should have called loadURL", async () => {
             fakeAuthWindow.notifyRedirect(CONFIG.redirectUri);
             await promise;
 
@@ -86,7 +88,7 @@ describe("AuthenticationService", () => {
             expect(result).toBeNull();
             expect(error).not.toBeNull();
             expect(error.error).toEqual("Failed to authenticate");
-            expect(error.description).toEqual("Failed to load the AAD login page (4:Foo bar)");
+            expect(error.description).toEqual("Failed to load the Microsoft login page (4:Foo bar)");
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
         });
