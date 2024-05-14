@@ -32,6 +32,11 @@ export interface Environment<C extends EnvironmentConfig> {
     readonly initialized: boolean;
 
     /**
+     * Get the global base URI path
+     */
+    getBasePath(): string;
+
+    /**
      * Gets the currently configured clock
      */
     getClock(): Clock;
@@ -135,6 +140,11 @@ export interface EnvironmentConfig {
      * cloud environment.
      */
     armUrl: string;
+
+    /**
+     * The base path applied to all relative URIs
+     */
+    basePath?: string;
 
     /**
      * Environment variables when running in a Node.js process

@@ -1,3 +1,4 @@
+import { getEnvironment, initMockEnvironment } from "../../environment";
 import { MockHttpClient, MockHttpResponse } from "../mock-http-client";
 
 const mockResponses = {
@@ -17,9 +18,19 @@ const mockResponses = {
                 "Content-Type": "application/json",
             },
         }),
+    savannah: () =>
+        new MockHttpResponse("/a/b/c/dogs/savannah", {
+            status: 200,
+            body: `{"name": "Savannah", "breed": "Husky"}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }),
 };
 
 describe("MockHttpClient", () => {
+    beforeEach(() => initMockEnvironment());
+
     test("can Mock a single GET request", async () => {
         const client = new MockHttpClient();
         client.addExpected(mockResponses.parker());
@@ -27,6 +38,18 @@ describe("MockHttpClient", () => {
         const response = await client.get("/dogs/parker");
         expect(await response.text()).toBe(
             `{"name": "Parker", "breed": "Schnauzer"}`
+        );
+    });
+
+    test("can use a non-default base path", async () => {
+        const client = new MockHttpClient();
+        client.addExpected(mockResponses.savannah());
+
+        getEnvironment().config.basePath = "/a/b/c";
+
+        const response = await client.get("/dogs/savannah");
+        expect(await response.text()).toBe(
+            `{"name": "Savannah", "breed": "Husky"}`
         );
     });
 

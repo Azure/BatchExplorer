@@ -13,6 +13,8 @@ import {
 import { Clock } from "../datetime/clock";
 import { Notifier } from "../notification";
 
+const DEFAULT_BASE_PATH = "/";
+
 /**
  * Abstract base class for shared functionality across different environments
  */
@@ -31,6 +33,13 @@ export abstract class AbstractEnvironment<
     }
 
     private _diContainer: DiContainer<D>;
+
+    /**
+     * Get the globally configured base path, or "/" if none is defined.
+     */
+    getBasePath(): string {
+        return this.config.basePath ?? DEFAULT_BASE_PATH;
+    }
 
     /**
      * Get the currently configured clock
