@@ -43,8 +43,10 @@ export {
     debounce,
     DebouncedFunction,
     delay,
+    getNormalizedBasePath,
     isPromiseLike,
     mergeDeep,
+    normalizeUrl,
     startsWithIgnoreCase,
     uniqueId,
 } from "./util";

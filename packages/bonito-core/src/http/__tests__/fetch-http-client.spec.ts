@@ -1,3 +1,4 @@
+import { getEnvironment, initMockEnvironment } from "../../environment";
 import { FetchHttpClient } from "../fetch-http-client";
 import { HttpHeaders } from "../http-client";
 import { MapHttpHeaders } from "../map-http-headers";
@@ -7,6 +8,8 @@ const RealHeaders = globalThis.Headers;
 
 describe("FetchHttpClient", () => {
     beforeEach(() => {
+        initMockEnvironment();
+
         // KLUDGE: Since JSDom doesn't support the Fetch API,
         //         it doesn't have a Headers object, so define
         //         one just for this test.
@@ -43,6 +46,16 @@ describe("FetchHttpClient", () => {
                     }
                 }
 
+                if (input.startsWith("/a/b/c")) {
+                    return new MockHttpResponse(input, {
+                        status: 200,
+                        body: "fake response from /a/b/c path",
+                        headers: {
+                            "Content-Type": "text/plain",
+                        },
+                    }) as unknown as Response;
+                }
+
                 return new MockHttpResponse(input, {
                     status: 200,
                     body: "fake response",
@@ -64,6 +77,14 @@ describe("FetchHttpClient", () => {
 
         const response = await client.fetch("/dogs/parker");
         expect(await response.text()).toBe("fake response");
+    });
+
+    test("url request with base path", async () => {
+        getEnvironment().config.basePath = "/a/b/c/";
+        const client = new FetchHttpClient();
+
+        const response = await client.fetch("/dogs/parker");
+        expect(await response.text()).toBe("fake response from /a/b/c path");
     });
 
     test("request using object", async () => {

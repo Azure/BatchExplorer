@@ -1,3 +1,4 @@
+import { normalizeUrl } from "../util/url";
 import { HttpRequestMethod } from "./constants";
 import {
     AbstractHttpClient,
@@ -34,6 +35,7 @@ export class MockHttpClient extends AbstractHttpClient {
             }
             url = urlOrRequest.url;
         }
+        url = normalizeUrl(url);
 
         const key = this._getKeyFromRequest(url, props);
         const expected = this._expectedResponses[key];

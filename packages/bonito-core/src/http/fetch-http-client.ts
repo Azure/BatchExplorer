@@ -1,3 +1,4 @@
+import { normalizeUrl } from "../util/url";
 import { CustomHttpHeaders } from "./constants";
 import { AbstractHttpClient, HttpRequestInit } from "./http-client";
 
@@ -28,6 +29,7 @@ export class FetchHttpClient extends AbstractHttpClient {
             }
             url = req.url;
         }
+        url = normalizeUrl(url);
 
         let responsePromise: Promise<Response>;
         if (!req) {
