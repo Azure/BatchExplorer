@@ -6,8 +6,9 @@ The following are instructions for building and running Batch Explorer in a deve
 
     Make sure the following are installed:
 
-    - Node.js 18 or higher
-    - Python 3.6 or higher
+    - Node.js LTS
+    - Python 3.6+
+    - Powershell 7+
 
     **On Windows:**
 

@@ -1,6 +1,6 @@
 steps:
   - template: ../dependencies.yml
-  - powershell: |
+  - pwsh: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       exec { Write-Host "Node.js version" $(node --version) }

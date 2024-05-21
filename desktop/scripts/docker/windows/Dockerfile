@@ -10,7 +10,7 @@ ENV GIT_VERSION 2.17.1
 
 LABEL Description="BatchLabs image for building for windows" Maintainer="batchexplorer@microsoft.com" Version="${node_version}"
 
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+SHELL ["pwsh", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 # Install node
 ADD https://nodejs.org/dist/v${node_version}/node-v${node_version}-win-x64.zip C:/build/node.zip
