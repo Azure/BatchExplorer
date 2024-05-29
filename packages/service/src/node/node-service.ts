@@ -1,17 +1,29 @@
 import { OperationOptions } from "@azure/bonito-core";
 import { BatchNodeOutput, BatchNodeVMExtensionOutput } from "./node-models";
+import { PagedAsyncIterableIterator } from "@azure/core-paging";
+
+export interface ListNodesOptions extends OperationOptions {
+    filter: string;
+}
 
 export interface NodeService {
-    listBatchNodes(
+    getNode(
         accountEndpoint: string,
-        poolId: string,
-        opts?: OperationOptions
-    ): Promise<BatchNodeOutput[] | undefined>;
-
-    listBatchNodeExtensions(
-        accountEndpoint: string,
-        poolId: string,
+        poolName: string,
         nodeId: string,
         opts?: OperationOptions
-    ): Promise<BatchNodeVMExtensionOutput[] | undefined>;
+    ): Promise<BatchNodeOutput>;
+
+    listNodes(
+        accountEndpoint: string,
+        poolName: string,
+        opts?: ListNodesOptions
+    ): Promise<PagedAsyncIterableIterator<BatchNodeOutput>>;
+
+    listVmExtensions(
+        accountEndpoint: string,
+        poolName: string,
+        nodeId: string,
+        opts?: OperationOptions
+    ): Promise<BatchNodeVMExtensionOutput[]>;
 }
