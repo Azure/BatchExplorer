@@ -25,7 +25,7 @@ export const NodeVMExtList = (props: NodeVmExtensionListProps) => {
         let isMounted = true;
         setLoading(true);
         nodeService
-            .listBatchNodeExtensions(accountEndpoint, poolId, nodeId)
+            .listVmExtensions(accountEndpoint, poolId, nodeId)
             .then((resList) => {
                 if (!isMounted) {
                     return;
