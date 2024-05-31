@@ -44,9 +44,9 @@ export interface BatchFakeSet extends FakeSet {
     /**
      * Get a Batch pool by case-insensitive ID
      *
-     * @param poolArmId The ARM resource ID of the pool
+     * @param poolResourceId The ARM resource ID of the pool
      */
-    getPool(poolArmId: string): PoolOutput | undefined;
+    getPool(poolResourceId: string): PoolOutput | undefined;
 
     /**
      * Patches a pool and returns it
@@ -65,15 +65,53 @@ export interface BatchFakeSet extends FakeSet {
      */
     listPoolsByAccount(accountId: string): PoolOutput[];
 
-    listBatchNodes(poolId: string): BatchNodeOutput[];
+    /**
+     * Get a single Batch node
+     *
+     * @param accountEndpoint The Batch account endpoint (with no protocol)
+     * @param poolName The name of the pool (globally unique for fakes)
+     * @param nodeId The 'id' property of the node
+     */
+    getNode(
+        accountEndpoint: string,
+        poolName: string,
+        nodeId: string
+    ): BatchNodeOutput;
 
-    listBatchNodeExtensions(nodeId: string): BatchNodeVMExtensionOutput[];
+    /**
+     * List Batch nodes
+     *
+     * @param accountEndpoint The Batch account endpoint (with no protocol)
+     * @param poolName The name of the pool (globally unique for fakes)
+     */
+    listNodes(accountEndpoint: string, poolName: string): BatchNodeOutput[];
 
+    /**
+     * List VM extensions for a given node
+     *
+     * @param nodeId The node ID (currently globally unique for fakes)
+     */
+    listVmExtensions(nodeId: string): BatchNodeVMExtensionOutput[];
+
+    /**
+     * Get a single task
+     *
+     * @param accountEndpoint
+     * @param jobId
+     * @param taskId
+     */
     getTask(
         accountEndpoint: string,
         jobId: string,
         taskId: string
     ): BatchTaskOutput;
+
+    /**
+     * List Task for a given job
+     *
+     * @param accountEndpoint
+     * @param jobId
+     */
     listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[];
 }
 
@@ -88,7 +126,11 @@ export abstract class AbstractBatchFakeSet
     };
     protected abstract batchPools: { [poolId: string]: PoolOutput };
 
-    protected abstract batchNodes: { [poolId: string]: BatchNodeOutput[] };
+    /**
+     * Node key is the account endpoint, pool name and node ID concatenated,
+     * colon-separated and lower-cased
+     */
+    protected abstract batchNodes: { [nodeKey: string]: BatchNodeOutput };
 
     protected abstract batchNodeExtensions: {
         [nodeId: string]: BatchNodeVMExtensionOutput[];
@@ -110,8 +152,8 @@ export abstract class AbstractBatchFakeSet
         );
     }
 
-    getPool(poolArmId: string): PoolOutput | undefined {
-        return this.batchPools[poolArmId.toLowerCase()];
+    getPool(poolResourceId: string): PoolOutput | undefined {
+        return this.batchPools[poolResourceId.toLowerCase()];
     }
 
     listPoolsByAccount(accountId: string): PoolOutput[] {
@@ -154,11 +196,35 @@ export abstract class AbstractBatchFakeSet
         return this.patchPool(pool);
     }
 
-    listBatchNodes(poolId: string): BatchNodeOutput[] {
-        return this.batchNodes[poolId] ?? [];
+    getNode(
+        accountEndpoint: string,
+        poolResourceId: string,
+        nodeId: string
+    ): BatchNodeOutput {
+        return this.batchNodes[
+            `${accountEndpoint}:${poolResourceId}:${nodeId}`.toLowerCase()
+        ];
     }
 
-    listBatchNodeExtensions(nodeId: string): BatchNodeVMExtensionOutput[] {
+    listNodes(
+        accountEndpoint: string,
+        poolResourceId: string
+    ): BatchNodeOutput[] {
+        if (!poolResourceId) {
+            return [];
+        }
+
+        return Object.entries(this.batchNodes)
+            .filter((entry) =>
+                startsWithIgnoreCase(
+                    entry[0],
+                    `${accountEndpoint}:${poolResourceId}`.toLowerCase()
+                )
+            )
+            .map((entry) => entry[1]);
+    }
+
+    listVmExtensions(nodeId: string): BatchNodeVMExtensionOutput[] {
         return this.batchNodeExtensions[nodeId] ?? [];
     }
 
@@ -171,10 +237,6 @@ export abstract class AbstractBatchFakeSet
             `${accountEndpoint}:${jobId}:${taskId}`.toLowerCase()
         ];
     }
-
-    // listTasks(jobId: string): BatchTaskOutput[] {
-    //     return this.batchTasks[jobId] ?? [];
-    // }
 
     listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[] {
         if (!jobId) {
@@ -717,49 +779,45 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
             },
     };
 
-    batchNodes: { [poolId: string]: BatchNodeOutput[] } = {
-        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1":
-            [
-                {
-                    id: "tvmps_id1",
-                    url: "https://account.region.batch.azure.com/pools/hobopool1/nodes/tvmps_id1",
-                    state: "starting",
-                    schedulingState: "enabled",
-                    stateTransitionTime: "2023-11-09T07:20:55.000Z",
-                    allocationTime: "2023-11-09T07:20:45.000Z",
-                    ipAddress: "10.0.0.4",
-                    affinityId:
-                        "TVM:tvmps_7b5797648c5d43f7a15b952e5ada3c082ccac8de5eb95f5518ab1242bc79aa3b_d",
-                    vmSize: "standard_d2_v2",
-                    totalTasksRun: 0,
-                    runningTasksCount: 0,
-                    runningTaskSlotsCount: 0,
-                    totalTasksSucceeded: 0,
-                    isDedicated: true,
-                    endpointConfiguration: {
-                        inboundEndpoints: [
-                            {
-                                name: "SSHRule.0",
-                                protocol: "tcp",
-                                publicIPAddress: "20.24.241.25",
-                                publicFQDN:
-                                    "cloudservice.region.cloudapp.azure.com",
-                                frontendPort: 50000,
-                                backendPort: 3389,
-                            },
-                        ],
+    batchNodes: { [nodeKey: string]: BatchNodeOutput } = {
+        "mercury.eastus.batch.azure.com:hobopool1:tvmps_id1": {
+            id: "tvmps_id1",
+            url: "https://account.region.batch.azure.com/pools/hobopool1/nodes/tvmps_id1",
+            state: "starting",
+            schedulingState: "enabled",
+            stateTransitionTime: "2023-11-09T07:20:55.000Z",
+            allocationTime: "2023-11-09T07:20:45.000Z",
+            ipAddress: "10.0.0.4",
+            affinityId:
+                "TVM:tvmps_7b5797648c5d43f7a15b952e5ada3c082ccac8de5eb95f5518ab1242bc79aa3b_d",
+            vmSize: "standard_d2_v2",
+            totalTasksRun: 0,
+            runningTasksCount: 0,
+            runningTaskSlotsCount: 0,
+            totalTasksSucceeded: 0,
+            isDedicated: true,
+            endpointConfiguration: {
+                inboundEndpoints: [
+                    {
+                        name: "SSHRule.0",
+                        protocol: "tcp",
+                        publicIPAddress: "20.24.241.25",
+                        publicFQDN: "cloudservice.region.cloudapp.azure.com",
+                        frontendPort: 50000,
+                        backendPort: 3389,
                     },
-                    virtualMachineInfo: {
-                        imageReference: {
-                            publisher: "microsoftwindowsserver",
-                            offer: "windowsserver",
-                            sku: "2022-datacenter",
-                            version: "latest",
-                            exactVersion: "20348.2031.231006",
-                        },
-                    },
+                ],
+            },
+            virtualMachineInfo: {
+                imageReference: {
+                    publisher: "microsoftwindowsserver",
+                    offer: "windowsserver",
+                    sku: "2022-datacenter",
+                    version: "latest",
+                    exactVersion: "20348.2031.231006",
                 },
-            ],
+            },
+        },
     };
 
     batchJobs: { [poolId: string]: BatchJobOutput[] } = {

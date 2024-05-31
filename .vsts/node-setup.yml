@@ -19,7 +19,7 @@ steps:
       echo "##vso[task.setvariable variable=npm_config_userconfig]$(Agent.TempDirectory)/.npmrc"
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
     displayName: Set NPM userconfig (Linux/MacOS)
-  - powershell: |
+  - pwsh: |
       Write-Host "##vso[task.setvariable variable=npm_config_userconfig]$env:AGENT_TEMPDIRECTORY\.npmrc"
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     displayName: Set NPM userconfig (Windows)

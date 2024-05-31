@@ -1,7 +1,9 @@
 import { OperationOptions } from "@azure/bonito-core";
 import { BatchFakeSet, BasicBatchFakeSet } from "../test-util/fakes";
 import { BatchNodeOutput, BatchNodeVMExtensionOutput } from "./node-models";
-import type { NodeService } from "./node-service";
+import type { ListNodesOptions, NodeService } from "./node-service";
+import { PagedAsyncIterableIterator } from "@azure/core-paging";
+import { createPagedArray } from "../test-util/paging-test-util";
 
 export class FakeNodeService implements NodeService {
     fakeSet: BatchFakeSet = new BasicBatchFakeSet();
@@ -10,20 +12,31 @@ export class FakeNodeService implements NodeService {
         this.fakeSet = fakeSet;
     }
 
-    async listBatchNodes(
+    async getNode(
         accountEndpoint: string,
-        poolId: string,
-        opts?: OperationOptions | undefined
-    ): Promise<BatchNodeOutput[] | undefined> {
-        return this.fakeSet.listBatchNodes(poolId);
+        poolName: string,
+        nodeId: string,
+        opts?: OperationOptions
+    ): Promise<BatchNodeOutput> {
+        return this.fakeSet.getNode(accountEndpoint, poolName, nodeId);
     }
 
-    async listBatchNodeExtensions(
+    async listNodes(
         accountEndpoint: string,
-        poolId: string,
+        poolName: string,
+        opts?: ListNodesOptions
+    ): Promise<PagedAsyncIterableIterator<BatchNodeOutput>> {
+        return createPagedArray(
+            this.fakeSet.listNodes(accountEndpoint, poolName)
+        );
+    }
+
+    async listVmExtensions(
+        accountEndpoint: string,
+        poolName: string,
         nodeId: string,
-        opts?: OperationOptions | undefined
-    ): Promise<BatchNodeVMExtensionOutput[] | undefined> {
-        return this.fakeSet.listBatchNodeExtensions(nodeId);
+        opts?: OperationOptions
+    ): Promise<BatchNodeVMExtensionOutput[]> {
+        return this.fakeSet.listVmExtensions(nodeId);
     }
 }

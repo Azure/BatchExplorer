@@ -3,8 +3,7 @@ import { BatchFakeSet, BasicBatchFakeSet } from "../../test-util/fakes";
 import { FakeNodeService } from "../fake-node-service";
 
 describe("FakeNodeService", () => {
-    const poolId = `/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1`;
-    const nodeId = `tvmps_id1`;
+    const hoboAcctEndpoint = "mercury.eastus.batch.azure.com";
 
     let service: FakeNodeService;
     let fakeSet: BatchFakeSet;
@@ -17,18 +16,24 @@ describe("FakeNodeService", () => {
     });
 
     test("List batch nodes", async () => {
-        const nodes = await service.listBatchNodes("", poolId);
-        expect(nodes?.map((node) => node.id)).toEqual([nodeId]);
+        const nodes = await service.listNodes(hoboAcctEndpoint, "hobopool1");
+
+        const allNodes = [];
+        for await (const node of nodes) {
+            allNodes.push(node);
+        }
+
+        expect(allNodes.map((node) => node.id)).toEqual(["tvmps_id1"]);
     });
 
     test("List batch node extensions", async () => {
-        const extensions = await service.listBatchNodeExtensions(
-            "",
-            "",
-            nodeId
+        const extensions = await service.listVmExtensions(
+            hoboAcctEndpoint,
+            "hobopool1",
+            "tvmps_id1"
         );
         expect(
-            extensions?.map((extension) => extension?.vmExtension?.name)
+            extensions.map((extension) => extension?.vmExtension?.name)
         ).toEqual(["CustomExtension100"]);
     });
 });
