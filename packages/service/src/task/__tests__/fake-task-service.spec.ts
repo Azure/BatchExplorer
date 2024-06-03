@@ -42,7 +42,7 @@ describe("FakeTaskService", () => {
             taskIdLetters
         );
 
-        expect(taskNums.id).toEqual(taskIdNums);
-        expect(taskLetters.id).toEqual(taskIdLetters);
+        expect(taskNums.id).toEqual("syn_20240529_123456");
+        expect(taskLetters.id).toEqual("syn_20240529_abcdef");
     });
 });
