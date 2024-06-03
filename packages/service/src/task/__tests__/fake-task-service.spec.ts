@@ -5,9 +5,7 @@ import { FakeTaskService } from "../fake-task-service";
 describe("FakeTaskService", () => {
     const accountEndpoint = "mercury.eastus.batch.azure.com";
     const jobId = `faketestjob1`;
-    const taskIds = ["syn_20240529_abcdef", "syn_20240529_123456"];
-    const taskIdNums = "syn_20240529_123456";
-    const taskIdLetters = "syn_20240529_abcdef";
+    const taskIds = ["taska", "task1"];
 
     let service: FakeTaskService;
     let fakeSet: BatchFakeSet;
@@ -31,18 +29,14 @@ describe("FakeTaskService", () => {
     });
 
     test("Get specific batch task", async () => {
-        const taskNums = await service.getTask(
+        const taskNum = await service.getTask(accountEndpoint, jobId, "task1");
+        const taskLetter = await service.getTask(
             accountEndpoint,
             jobId,
-            taskIdNums
-        );
-        const taskLetters = await service.getTask(
-            accountEndpoint,
-            jobId,
-            taskIdLetters
+            "taska"
         );
 
-        expect(taskNums.id).toEqual("syn_20240529_123456");
-        expect(taskLetters.id).toEqual("syn_20240529_abcdef");
+        expect(taskNum.id).toEqual("task1");
+        expect(taskLetter.id).toEqual("taska");
     });
 });

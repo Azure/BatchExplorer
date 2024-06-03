@@ -849,18 +849,18 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
     };
 
     batchTasks: { [taskKey: string]: BatchTaskOutput } = {
-        "mercury.eastus.batch.azure.com:faketestjob1:syn_20240529_abcdef": {
-            url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/Syn_20240529_abcdef",
-            id: "syn_20240529_abcdef",
+        "mercury.eastus.batch.azure.com:faketestjob1:taska": {
+            url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/taskA",
+            id: "taska",
             state: "active",
             executionInfo: {
                 retryCount: 0,
                 requeueCount: 0,
             },
         },
-        "mercury.eastus.batch.azure.com:faketestjob1:syn_20240529_123456": {
-            url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/Syn_20240529_123456",
-            id: "syn_20240529_123456",
+        "mercury.eastus.batch.azure.com:faketestjob1:task1": {
+            url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/task1",
+            id: "task1",
             state: "completed",
             executionInfo: {
                 retryCount: 0,
