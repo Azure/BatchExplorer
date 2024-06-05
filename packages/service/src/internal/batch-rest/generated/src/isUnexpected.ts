@@ -63,16 +63,6 @@ import {
   ListJobPreparationAndReleaseTaskStatusDefaultResponse,
   GetJobTaskCounts200Response,
   GetJobTaskCountsDefaultResponse,
-  CreateCertificate201Response,
-  CreateCertificateDefaultResponse,
-  ListCertificates200Response,
-  ListCertificatesDefaultResponse,
-  CancelCertificateDeletion204Response,
-  CancelCertificateDeletionDefaultResponse,
-  DeleteCertificate202Response,
-  DeleteCertificateDefaultResponse,
-  GetCertificate200Response,
-  GetCertificateDefaultResponse,
   JobScheduleExists200Response,
   JobScheduleExists404Response,
   JobScheduleExistsDefaultResponse,
@@ -130,16 +120,12 @@ import {
   GetNodeDefaultResponse,
   RebootNode202Response,
   RebootNodeDefaultResponse,
-  ReimageNode202Response,
-  ReimageNodeDefaultResponse,
   DisableNodeScheduling200Response,
   DisableNodeSchedulingDefaultResponse,
   EnableNodeScheduling200Response,
   EnableNodeSchedulingDefaultResponse,
   GetNodeRemoteLoginSettings200Response,
   GetNodeRemoteLoginSettingsDefaultResponse,
-  GetNodeRemoteDesktopFile200Response,
-  GetNodeRemoteDesktopFileDefaultResponse,
   UploadNodeLogs200Response,
   UploadNodeLogsDefaultResponse,
   ListNodes200Response,
@@ -156,7 +142,7 @@ import {
   GetNodeFilePropertiesDefaultResponse,
   ListNodeFiles200Response,
   ListNodeFilesDefaultResponse,
-} from "./responses";
+} from "./responses.js";
 
 const responseMap: Record<string, string[]> = {
   "GET /applications": ["200"],
@@ -189,14 +175,6 @@ const responseMap: Record<string, string[]> = {
   "GET /jobschedules/{jobScheduleId}/jobs": ["200"],
   "GET /jobs/{jobId}/jobpreparationandreleasetaskstatus": ["200"],
   "GET /jobs/{jobId}/taskcounts": ["200"],
-  "POST /certificates": ["201"],
-  "GET /certificates": ["200"],
-  "POST /certificates(thumbprintAlgorithm={thumbprintAlgorithm},thumbprint={thumbprint})/canceldelete":
-    ["204"],
-  "DELETE /certificates(thumbprintAlgorithm={thumbprintAlgorithm},thumbprint={thumbprint})":
-    ["202"],
-  "GET /certificates(thumbprintAlgorithm={thumbprintAlgorithm},thumbprint={thumbprint})":
-    ["200"],
   "HEAD /jobschedules/{jobScheduleId}": ["200", "404"],
   "DELETE /jobschedules/{jobScheduleId}": ["202"],
   "GET /jobschedules/{jobScheduleId}": ["200"],
@@ -225,11 +203,9 @@ const responseMap: Record<string, string[]> = {
   "PUT /pools/{poolId}/nodes/{nodeId}/users/{userName}": ["200"],
   "GET /pools/{poolId}/nodes/{nodeId}": ["200"],
   "POST /pools/{poolId}/nodes/{nodeId}/reboot": ["202"],
-  "POST /pools/{poolId}/nodes/{nodeId}/reimage": ["202"],
   "POST /pools/{poolId}/nodes/{nodeId}/disablescheduling": ["200"],
   "POST /pools/{poolId}/nodes/{nodeId}/enablescheduling": ["200"],
   "GET /pools/{poolId}/nodes/{nodeId}/remoteloginsettings": ["200"],
-  "GET /pools/{poolId}/nodes/{nodeId}/rdp": ["200"],
   "POST /pools/{poolId}/nodes/{nodeId}/uploadbatchservicelogs": ["200"],
   "GET /pools/{poolId}/nodes": ["200"],
   "GET /pools/{poolId}/nodes/{nodeId}/extensions/{extensionName}": ["200"],
@@ -241,268 +217,243 @@ const responseMap: Record<string, string[]> = {
 };
 
 export function isUnexpected(
-  response: ListApplications200Response | ListApplicationsDefaultResponse
+  response: ListApplications200Response | ListApplicationsDefaultResponse,
 ): response is ListApplicationsDefaultResponse;
 export function isUnexpected(
-  response: GetApplication200Response | GetApplicationDefaultResponse
+  response: GetApplication200Response | GetApplicationDefaultResponse,
 ): response is GetApplicationDefaultResponse;
 export function isUnexpected(
   response:
     | ListPoolUsageMetrics200Response
-    | ListPoolUsageMetricsDefaultResponse
+    | ListPoolUsageMetricsDefaultResponse,
 ): response is ListPoolUsageMetricsDefaultResponse;
 export function isUnexpected(
-  response: CreatePool201Response | CreatePoolDefaultResponse
+  response: CreatePool201Response | CreatePoolDefaultResponse,
 ): response is CreatePoolDefaultResponse;
 export function isUnexpected(
-  response: ListPools200Response | ListPoolsDefaultResponse
+  response: ListPools200Response | ListPoolsDefaultResponse,
 ): response is ListPoolsDefaultResponse;
 export function isUnexpected(
-  response: DeletePool202Response | DeletePoolDefaultResponse
+  response: DeletePool202Response | DeletePoolDefaultResponse,
 ): response is DeletePoolDefaultResponse;
 export function isUnexpected(
   response:
     | PoolExists200Response
     | PoolExists404Response
-    | PoolExistsDefaultResponse
+    | PoolExistsDefaultResponse,
 ): response is PoolExistsDefaultResponse;
 export function isUnexpected(
-  response: GetPool200Response | GetPoolDefaultResponse
+  response: GetPool200Response | GetPoolDefaultResponse,
 ): response is GetPoolDefaultResponse;
 export function isUnexpected(
-  response: UpdatePool200Response | UpdatePoolDefaultResponse
+  response: UpdatePool200Response | UpdatePoolDefaultResponse,
 ): response is UpdatePoolDefaultResponse;
 export function isUnexpected(
   response:
     | DisablePoolAutoScale200Response
-    | DisablePoolAutoScaleDefaultResponse
+    | DisablePoolAutoScaleDefaultResponse,
 ): response is DisablePoolAutoScaleDefaultResponse;
 export function isUnexpected(
-  response: EnablePoolAutoScale200Response | EnablePoolAutoScaleDefaultResponse
+  response: EnablePoolAutoScale200Response | EnablePoolAutoScaleDefaultResponse,
 ): response is EnablePoolAutoScaleDefaultResponse;
 export function isUnexpected(
   response:
     | EvaluatePoolAutoScale200Response
-    | EvaluatePoolAutoScaleDefaultResponse
+    | EvaluatePoolAutoScaleDefaultResponse,
 ): response is EvaluatePoolAutoScaleDefaultResponse;
 export function isUnexpected(
-  response: ResizePool202Response | ResizePoolDefaultResponse
+  response: ResizePool202Response | ResizePoolDefaultResponse,
 ): response is ResizePoolDefaultResponse;
 export function isUnexpected(
-  response: StopPoolResize202Response | StopPoolResizeDefaultResponse
+  response: StopPoolResize202Response | StopPoolResizeDefaultResponse,
 ): response is StopPoolResizeDefaultResponse;
 export function isUnexpected(
   response:
     | ReplacePoolProperties204Response
-    | ReplacePoolPropertiesDefaultResponse
+    | ReplacePoolPropertiesDefaultResponse,
 ): response is ReplacePoolPropertiesDefaultResponse;
 export function isUnexpected(
-  response: RemoveNodes202Response | RemoveNodesDefaultResponse
+  response: RemoveNodes202Response | RemoveNodesDefaultResponse,
 ): response is RemoveNodesDefaultResponse;
 export function isUnexpected(
-  response: ListSupportedImages200Response | ListSupportedImagesDefaultResponse
+  response: ListSupportedImages200Response | ListSupportedImagesDefaultResponse,
 ): response is ListSupportedImagesDefaultResponse;
 export function isUnexpected(
-  response: ListPoolNodeCounts200Response | ListPoolNodeCountsDefaultResponse
+  response: ListPoolNodeCounts200Response | ListPoolNodeCountsDefaultResponse,
 ): response is ListPoolNodeCountsDefaultResponse;
 export function isUnexpected(
-  response: DeleteJob202Response | DeleteJobDefaultResponse
+  response: DeleteJob202Response | DeleteJobDefaultResponse,
 ): response is DeleteJobDefaultResponse;
 export function isUnexpected(
-  response: GetJob200Response | GetJobDefaultResponse
+  response: GetJob200Response | GetJobDefaultResponse,
 ): response is GetJobDefaultResponse;
 export function isUnexpected(
-  response: UpdateJob200Response | UpdateJobDefaultResponse
+  response: UpdateJob200Response | UpdateJobDefaultResponse,
 ): response is UpdateJobDefaultResponse;
 export function isUnexpected(
-  response: ReplaceJob200Response | ReplaceJobDefaultResponse
+  response: ReplaceJob200Response | ReplaceJobDefaultResponse,
 ): response is ReplaceJobDefaultResponse;
 export function isUnexpected(
-  response: DisableJob202Response | DisableJobDefaultResponse
+  response: DisableJob202Response | DisableJobDefaultResponse,
 ): response is DisableJobDefaultResponse;
 export function isUnexpected(
-  response: EnableJob202Response | EnableJobDefaultResponse
+  response: EnableJob202Response | EnableJobDefaultResponse,
 ): response is EnableJobDefaultResponse;
 export function isUnexpected(
-  response: TerminateJob202Response | TerminateJobDefaultResponse
+  response: TerminateJob202Response | TerminateJobDefaultResponse,
 ): response is TerminateJobDefaultResponse;
 export function isUnexpected(
-  response: CreateJob201Response | CreateJobDefaultResponse
+  response: CreateJob201Response | CreateJobDefaultResponse,
 ): response is CreateJobDefaultResponse;
 export function isUnexpected(
-  response: ListJobs200Response | ListJobsDefaultResponse
+  response: ListJobs200Response | ListJobsDefaultResponse,
 ): response is ListJobsDefaultResponse;
 export function isUnexpected(
   response:
     | ListJobsFromSchedule200Response
-    | ListJobsFromScheduleDefaultResponse
+    | ListJobsFromScheduleDefaultResponse,
 ): response is ListJobsFromScheduleDefaultResponse;
 export function isUnexpected(
   response:
     | ListJobPreparationAndReleaseTaskStatus200Response
-    | ListJobPreparationAndReleaseTaskStatusDefaultResponse
+    | ListJobPreparationAndReleaseTaskStatusDefaultResponse,
 ): response is ListJobPreparationAndReleaseTaskStatusDefaultResponse;
 export function isUnexpected(
-  response: GetJobTaskCounts200Response | GetJobTaskCountsDefaultResponse
+  response: GetJobTaskCounts200Response | GetJobTaskCountsDefaultResponse,
 ): response is GetJobTaskCountsDefaultResponse;
-export function isUnexpected(
-  response: CreateCertificate201Response | CreateCertificateDefaultResponse
-): response is CreateCertificateDefaultResponse;
-export function isUnexpected(
-  response: ListCertificates200Response | ListCertificatesDefaultResponse
-): response is ListCertificatesDefaultResponse;
-export function isUnexpected(
-  response:
-    | CancelCertificateDeletion204Response
-    | CancelCertificateDeletionDefaultResponse
-): response is CancelCertificateDeletionDefaultResponse;
-export function isUnexpected(
-  response: DeleteCertificate202Response | DeleteCertificateDefaultResponse
-): response is DeleteCertificateDefaultResponse;
-export function isUnexpected(
-  response: GetCertificate200Response | GetCertificateDefaultResponse
-): response is GetCertificateDefaultResponse;
 export function isUnexpected(
   response:
     | JobScheduleExists200Response
     | JobScheduleExists404Response
-    | JobScheduleExistsDefaultResponse
+    | JobScheduleExistsDefaultResponse,
 ): response is JobScheduleExistsDefaultResponse;
 export function isUnexpected(
-  response: DeleteJobSchedule202Response | DeleteJobScheduleDefaultResponse
+  response: DeleteJobSchedule202Response | DeleteJobScheduleDefaultResponse,
 ): response is DeleteJobScheduleDefaultResponse;
 export function isUnexpected(
-  response: GetJobSchedule200Response | GetJobScheduleDefaultResponse
+  response: GetJobSchedule200Response | GetJobScheduleDefaultResponse,
 ): response is GetJobScheduleDefaultResponse;
 export function isUnexpected(
-  response: UpdateJobSchedule200Response | UpdateJobScheduleDefaultResponse
+  response: UpdateJobSchedule200Response | UpdateJobScheduleDefaultResponse,
 ): response is UpdateJobScheduleDefaultResponse;
 export function isUnexpected(
-  response: ReplaceJobSchedule200Response | ReplaceJobScheduleDefaultResponse
+  response: ReplaceJobSchedule200Response | ReplaceJobScheduleDefaultResponse,
 ): response is ReplaceJobScheduleDefaultResponse;
 export function isUnexpected(
-  response: DisableJobSchedule204Response | DisableJobScheduleDefaultResponse
+  response: DisableJobSchedule204Response | DisableJobScheduleDefaultResponse,
 ): response is DisableJobScheduleDefaultResponse;
 export function isUnexpected(
-  response: EnableJobSchedule204Response | EnableJobScheduleDefaultResponse
+  response: EnableJobSchedule204Response | EnableJobScheduleDefaultResponse,
 ): response is EnableJobScheduleDefaultResponse;
 export function isUnexpected(
   response:
     | TerminateJobSchedule202Response
-    | TerminateJobScheduleDefaultResponse
+    | TerminateJobScheduleDefaultResponse,
 ): response is TerminateJobScheduleDefaultResponse;
 export function isUnexpected(
-  response: CreateJobSchedule201Response | CreateJobScheduleDefaultResponse
+  response: CreateJobSchedule201Response | CreateJobScheduleDefaultResponse,
 ): response is CreateJobScheduleDefaultResponse;
 export function isUnexpected(
-  response: ListJobSchedules200Response | ListJobSchedulesDefaultResponse
+  response: ListJobSchedules200Response | ListJobSchedulesDefaultResponse,
 ): response is ListJobSchedulesDefaultResponse;
 export function isUnexpected(
-  response: CreateTask201Response | CreateTaskDefaultResponse
+  response: CreateTask201Response | CreateTaskDefaultResponse,
 ): response is CreateTaskDefaultResponse;
 export function isUnexpected(
-  response: ListTasks200Response | ListTasksDefaultResponse
+  response: ListTasks200Response | ListTasksDefaultResponse,
 ): response is ListTasksDefaultResponse;
 export function isUnexpected(
   response:
     | CreateTaskCollection200Response
-    | CreateTaskCollectionDefaultResponse
+    | CreateTaskCollectionDefaultResponse,
 ): response is CreateTaskCollectionDefaultResponse;
 export function isUnexpected(
-  response: DeleteTask200Response | DeleteTaskDefaultResponse
+  response: DeleteTask200Response | DeleteTaskDefaultResponse,
 ): response is DeleteTaskDefaultResponse;
 export function isUnexpected(
-  response: GetTask200Response | GetTaskDefaultResponse
+  response: GetTask200Response | GetTaskDefaultResponse,
 ): response is GetTaskDefaultResponse;
 export function isUnexpected(
-  response: ReplaceTask200Response | ReplaceTaskDefaultResponse
+  response: ReplaceTask200Response | ReplaceTaskDefaultResponse,
 ): response is ReplaceTaskDefaultResponse;
 export function isUnexpected(
-  response: ListSubTasks200Response | ListSubTasksDefaultResponse
+  response: ListSubTasks200Response | ListSubTasksDefaultResponse,
 ): response is ListSubTasksDefaultResponse;
 export function isUnexpected(
-  response: TerminateTask204Response | TerminateTaskDefaultResponse
+  response: TerminateTask204Response | TerminateTaskDefaultResponse,
 ): response is TerminateTaskDefaultResponse;
 export function isUnexpected(
-  response: ReactivateTask204Response | ReactivateTaskDefaultResponse
+  response: ReactivateTask204Response | ReactivateTaskDefaultResponse,
 ): response is ReactivateTaskDefaultResponse;
 export function isUnexpected(
-  response: DeleteTaskFile200Response | DeleteTaskFileDefaultResponse
+  response: DeleteTaskFile200Response | DeleteTaskFileDefaultResponse,
 ): response is DeleteTaskFileDefaultResponse;
 export function isUnexpected(
-  response: GetTaskFile200Response | GetTaskFileDefaultResponse
+  response: GetTaskFile200Response | GetTaskFileDefaultResponse,
 ): response is GetTaskFileDefaultResponse;
 export function isUnexpected(
   response:
     | GetTaskFileProperties200Response
-    | GetTaskFilePropertiesDefaultResponse
+    | GetTaskFilePropertiesDefaultResponse,
 ): response is GetTaskFilePropertiesDefaultResponse;
 export function isUnexpected(
-  response: ListTaskFiles200Response | ListTaskFilesDefaultResponse
+  response: ListTaskFiles200Response | ListTaskFilesDefaultResponse,
 ): response is ListTaskFilesDefaultResponse;
 export function isUnexpected(
-  response: CreateNodeUser201Response | CreateNodeUserDefaultResponse
+  response: CreateNodeUser201Response | CreateNodeUserDefaultResponse,
 ): response is CreateNodeUserDefaultResponse;
 export function isUnexpected(
-  response: DeleteNodeUser200Response | DeleteNodeUserDefaultResponse
+  response: DeleteNodeUser200Response | DeleteNodeUserDefaultResponse,
 ): response is DeleteNodeUserDefaultResponse;
 export function isUnexpected(
-  response: ReplaceNodeUser200Response | ReplaceNodeUserDefaultResponse
+  response: ReplaceNodeUser200Response | ReplaceNodeUserDefaultResponse,
 ): response is ReplaceNodeUserDefaultResponse;
 export function isUnexpected(
-  response: GetNode200Response | GetNodeDefaultResponse
+  response: GetNode200Response | GetNodeDefaultResponse,
 ): response is GetNodeDefaultResponse;
 export function isUnexpected(
-  response: RebootNode202Response | RebootNodeDefaultResponse
+  response: RebootNode202Response | RebootNodeDefaultResponse,
 ): response is RebootNodeDefaultResponse;
-export function isUnexpected(
-  response: ReimageNode202Response | ReimageNodeDefaultResponse
-): response is ReimageNodeDefaultResponse;
 export function isUnexpected(
   response:
     | DisableNodeScheduling200Response
-    | DisableNodeSchedulingDefaultResponse
+    | DisableNodeSchedulingDefaultResponse,
 ): response is DisableNodeSchedulingDefaultResponse;
 export function isUnexpected(
   response:
     | EnableNodeScheduling200Response
-    | EnableNodeSchedulingDefaultResponse
+    | EnableNodeSchedulingDefaultResponse,
 ): response is EnableNodeSchedulingDefaultResponse;
 export function isUnexpected(
   response:
     | GetNodeRemoteLoginSettings200Response
-    | GetNodeRemoteLoginSettingsDefaultResponse
+    | GetNodeRemoteLoginSettingsDefaultResponse,
 ): response is GetNodeRemoteLoginSettingsDefaultResponse;
 export function isUnexpected(
-  response:
-    | GetNodeRemoteDesktopFile200Response
-    | GetNodeRemoteDesktopFileDefaultResponse
-): response is GetNodeRemoteDesktopFileDefaultResponse;
-export function isUnexpected(
-  response: UploadNodeLogs200Response | UploadNodeLogsDefaultResponse
+  response: UploadNodeLogs200Response | UploadNodeLogsDefaultResponse,
 ): response is UploadNodeLogsDefaultResponse;
 export function isUnexpected(
-  response: ListNodes200Response | ListNodesDefaultResponse
+  response: ListNodes200Response | ListNodesDefaultResponse,
 ): response is ListNodesDefaultResponse;
 export function isUnexpected(
-  response: GetNodeExtension200Response | GetNodeExtensionDefaultResponse
+  response: GetNodeExtension200Response | GetNodeExtensionDefaultResponse,
 ): response is GetNodeExtensionDefaultResponse;
 export function isUnexpected(
-  response: ListNodeExtensions200Response | ListNodeExtensionsDefaultResponse
+  response: ListNodeExtensions200Response | ListNodeExtensionsDefaultResponse,
 ): response is ListNodeExtensionsDefaultResponse;
 export function isUnexpected(
-  response: DeleteNodeFile200Response | DeleteNodeFileDefaultResponse
+  response: DeleteNodeFile200Response | DeleteNodeFileDefaultResponse,
 ): response is DeleteNodeFileDefaultResponse;
 export function isUnexpected(
-  response: GetNodeFile200Response | GetNodeFileDefaultResponse
+  response: GetNodeFile200Response | GetNodeFileDefaultResponse,
 ): response is GetNodeFileDefaultResponse;
 export function isUnexpected(
   response:
     | GetNodeFileProperties200Response
-    | GetNodeFilePropertiesDefaultResponse
+    | GetNodeFilePropertiesDefaultResponse,
 ): response is GetNodeFilePropertiesDefaultResponse;
 export function isUnexpected(
-  response: ListNodeFiles200Response | ListNodeFilesDefaultResponse
+  response: ListNodeFiles200Response | ListNodeFilesDefaultResponse,
 ): response is ListNodeFilesDefaultResponse;
 export function isUnexpected(
   response:
@@ -567,16 +518,6 @@ export function isUnexpected(
     | ListJobPreparationAndReleaseTaskStatusDefaultResponse
     | GetJobTaskCounts200Response
     | GetJobTaskCountsDefaultResponse
-    | CreateCertificate201Response
-    | CreateCertificateDefaultResponse
-    | ListCertificates200Response
-    | ListCertificatesDefaultResponse
-    | CancelCertificateDeletion204Response
-    | CancelCertificateDeletionDefaultResponse
-    | DeleteCertificate202Response
-    | DeleteCertificateDefaultResponse
-    | GetCertificate200Response
-    | GetCertificateDefaultResponse
     | JobScheduleExists200Response
     | JobScheduleExists404Response
     | JobScheduleExistsDefaultResponse
@@ -634,16 +575,12 @@ export function isUnexpected(
     | GetNodeDefaultResponse
     | RebootNode202Response
     | RebootNodeDefaultResponse
-    | ReimageNode202Response
-    | ReimageNodeDefaultResponse
     | DisableNodeScheduling200Response
     | DisableNodeSchedulingDefaultResponse
     | EnableNodeScheduling200Response
     | EnableNodeSchedulingDefaultResponse
     | GetNodeRemoteLoginSettings200Response
     | GetNodeRemoteLoginSettingsDefaultResponse
-    | GetNodeRemoteDesktopFile200Response
-    | GetNodeRemoteDesktopFileDefaultResponse
     | UploadNodeLogs200Response
     | UploadNodeLogsDefaultResponse
     | ListNodes200Response
@@ -659,7 +596,7 @@ export function isUnexpected(
     | GetNodeFileProperties200Response
     | GetNodeFilePropertiesDefaultResponse
     | ListNodeFiles200Response
-    | ListNodeFilesDefaultResponse
+    | ListNodeFilesDefaultResponse,
 ): response is
   | ListApplicationsDefaultResponse
   | GetApplicationDefaultResponse
@@ -691,11 +628,6 @@ export function isUnexpected(
   | ListJobsFromScheduleDefaultResponse
   | ListJobPreparationAndReleaseTaskStatusDefaultResponse
   | GetJobTaskCountsDefaultResponse
-  | CreateCertificateDefaultResponse
-  | ListCertificatesDefaultResponse
-  | CancelCertificateDeletionDefaultResponse
-  | DeleteCertificateDefaultResponse
-  | GetCertificateDefaultResponse
   | JobScheduleExistsDefaultResponse
   | DeleteJobScheduleDefaultResponse
   | GetJobScheduleDefaultResponse
@@ -724,11 +656,9 @@ export function isUnexpected(
   | ReplaceNodeUserDefaultResponse
   | GetNodeDefaultResponse
   | RebootNodeDefaultResponse
-  | ReimageNodeDefaultResponse
   | DisableNodeSchedulingDefaultResponse
   | EnableNodeSchedulingDefaultResponse
   | GetNodeRemoteLoginSettingsDefaultResponse
-  | GetNodeRemoteDesktopFileDefaultResponse
   | UploadNodeLogsDefaultResponse
   | ListNodesDefaultResponse
   | GetNodeExtensionDefaultResponse
@@ -785,7 +715,7 @@ function getParametrizedPathSuccess(method: string, path: string): string[] {
         // {guid} ==> $
         // {guid}:export ==> :export$
         const isMatched = new RegExp(
-          `${candidateParts[i]?.slice(start, end)}`
+          `${candidateParts[i]?.slice(start, end)}`,
         ).test(pathParts[j] || "");
 
         if (!isMatched) {
