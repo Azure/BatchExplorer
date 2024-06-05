@@ -18,6 +18,7 @@ import {
     BatchNodeVMExtensionOutput,
 } from "../node/node-models";
 import { Pool, PoolOutput } from "../pool/pool-models";
+import { BatchJobOutput, BatchTaskOutput } from "../batch-models";
 
 /**
  * A fake dataset which includes Batch accounts, pools, etc.
@@ -91,6 +92,27 @@ export interface BatchFakeSet extends FakeSet {
      * @param nodeId The node ID (currently globally unique for fakes)
      */
     listVmExtensions(nodeId: string): BatchNodeVMExtensionOutput[];
+
+    /**
+     * Get a single task
+     *
+     * @param accountEndpoint
+     * @param jobId
+     * @param taskId
+     */
+    getTask(
+        accountEndpoint: string,
+        jobId: string,
+        taskId: string
+    ): BatchTaskOutput;
+
+    /**
+     * List Task for a given job
+     *
+     * @param accountEndpoint
+     * @param jobId
+     */
+    listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[];
 }
 
 export abstract class AbstractBatchFakeSet
@@ -113,6 +135,8 @@ export abstract class AbstractBatchFakeSet
     protected abstract batchNodeExtensions: {
         [nodeId: string]: BatchNodeVMExtensionOutput[];
     };
+
+    protected abstract batchTasks: { [taskKey: string]: BatchTaskOutput };
 
     getBatchAccount(batchAccountId: string): BatchAccountOutput | undefined {
         return this.batchAccounts[batchAccountId.toLowerCase()];
@@ -202,6 +226,31 @@ export abstract class AbstractBatchFakeSet
 
     listVmExtensions(nodeId: string): BatchNodeVMExtensionOutput[] {
         return this.batchNodeExtensions[nodeId] ?? [];
+    }
+
+    getTask(
+        accountEndpoint: string,
+        jobId: string,
+        taskId: string
+    ): BatchTaskOutput {
+        return this.batchTasks[
+            `${accountEndpoint}:${jobId}:${taskId}`.toLowerCase()
+        ];
+    }
+
+    listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[] {
+        if (!jobId) {
+            return [];
+        }
+
+        return Object.entries(this.batchTasks)
+            .filter((entry) =>
+                startsWithIgnoreCase(
+                    entry[0],
+                    `${accountEndpoint}:${jobId}`.toLowerCase()
+                )
+            )
+            .map((entry) => entry[1]);
     }
 }
 
@@ -767,6 +816,55 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                     version: "latest",
                     exactVersion: "20348.2031.231006",
                 },
+            },
+        },
+    };
+
+    batchJobs: { [poolId: string]: BatchJobOutput[] } = {
+        hobopool1: [
+            {
+                id: "faketestjob1",
+                usesTaskDependencies: false,
+                url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1",
+                lastModified: "2024-05-29T08:32:21.000Z",
+                creationTime: "2024-05-29T08:32:21.000Z",
+                state: "active",
+                stateTransitionTime: "2024-05-29T08:32:21.000Z",
+                priority: 2,
+                constraints: {
+                    maxWallClockTime: "P10675199DT2H48M5.4775807S",
+                    maxTaskRetryCount: 0,
+                },
+                poolInfo: {
+                    poolId: "hobopool1",
+                },
+                onAllTasksComplete: "noaction",
+                onTaskFailure: "noaction",
+                executionInfo: {
+                    startTime: "2024-05-29T08:32:21.000Z",
+                    poolId: "Syn_20240529_a0f9af6251964f449a0b1052b58",
+                },
+            },
+        ],
+    };
+
+    batchTasks: { [taskKey: string]: BatchTaskOutput } = {
+        "mercury.eastus.batch.azure.com:faketestjob1:taska": {
+            url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/taskA",
+            id: "taska",
+            state: "active",
+            executionInfo: {
+                retryCount: 0,
+                requeueCount: 0,
+            },
+        },
+        "mercury.eastus.batch.azure.com:faketestjob1:task1": {
+            url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/task1",
+            id: "task1",
+            state: "completed",
+            executionInfo: {
+                retryCount: 0,
+                requeueCount: 0,
             },
         },
     };
