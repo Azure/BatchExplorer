@@ -10,7 +10,7 @@ import { createARMBatchClient, isUnexpected } from "../internal/arm-batch-rest";
 import {
     createArmUnexpectedStatusCodeError,
     parseBatchAccountIdInfo,
-    parsePoolArmIdInfo,
+    parsePoolResourceIdInfo,
 } from "../utils";
 
 const SINGLE_POOL_PATH =
@@ -24,7 +24,7 @@ export class LivePoolService
     implements PoolService
 {
     async createOrUpdate(
-        poolArmId: string,
+        poolResourceId: string,
         pool: Pool,
         opts?: OperationOptions
     ): Promise<PoolOutput> {
@@ -37,7 +37,7 @@ export class LivePoolService
             resourceGroupName,
             batchAccountName,
             poolName,
-        } = parsePoolArmIdInfo(poolArmId);
+        } = parsePoolResourceIdInfo(poolResourceId);
 
         const res = await armBatchClient
             .path(
@@ -60,7 +60,7 @@ export class LivePoolService
     }
 
     async get(
-        poolArmId: string,
+        poolResourceId: string,
         opts?: OperationOptions
     ): Promise<PoolOutput | undefined> {
         const armBatchClient = createARMBatchClient({
@@ -72,7 +72,7 @@ export class LivePoolService
             resourceGroupName,
             batchAccountName,
             poolName,
-        } = parsePoolArmIdInfo(poolArmId);
+        } = parsePoolResourceIdInfo(poolResourceId);
 
         const res = await armBatchClient
             .path(
@@ -119,7 +119,7 @@ export class LivePoolService
     }
 
     async patch(
-        poolArmId: string,
+        poolResourceId: string,
         pool: Pool,
         opts?: OperationOptions
     ): Promise<PoolOutput> {
@@ -132,7 +132,7 @@ export class LivePoolService
             resourceGroupName,
             batchAccountName,
             poolName,
-        } = parsePoolArmIdInfo(poolArmId);
+        } = parsePoolResourceIdInfo(poolResourceId);
 
         const res = await armBatchClient
             .path(

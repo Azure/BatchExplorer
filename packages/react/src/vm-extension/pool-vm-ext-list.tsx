@@ -5,12 +5,12 @@ import React from "react";
 import { VmExtensionList, VmExtItem } from "./vm-extension-list";
 
 interface PoolVmExtensionListProps {
-    poolArmId: string;
+    poolResourceId: string;
     onItemClick?: (item: VmExtItem) => void;
 }
 
 export const PoolVMExtList = (props: PoolVmExtensionListProps) => {
-    const { poolArmId, onItemClick } = props;
+    const { poolResourceId, onItemClick } = props;
 
     const [extensions, setExtensions] = React.useState<VmExtItem[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
@@ -23,7 +23,7 @@ export const PoolVMExtList = (props: PoolVmExtensionListProps) => {
         let isMounted = true;
         setLoading(true);
         poolService
-            .get(poolArmId)
+            .get(poolResourceId)
             .then((pool) => {
                 if (!isMounted) {
                     return;
@@ -42,7 +42,7 @@ export const PoolVMExtList = (props: PoolVmExtensionListProps) => {
         return () => {
             isMounted = false;
         };
-    }, [poolArmId, poolService]);
+    }, [poolResourceId, poolService]);
 
     return (
         <VmExtensionList

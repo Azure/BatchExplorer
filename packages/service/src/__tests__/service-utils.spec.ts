@@ -1,11 +1,11 @@
-import { parseBatchAccountIdInfo, parsePoolArmIdInfo } from "../utils";
+import { parseBatchAccountIdInfo, parsePoolResourceIdInfo } from "../utils";
 
 describe("parse arm id", () => {
     it("should parse a valid arm id", () => {
         const batchAccountId =
             "/subscriptions/123/resourceGroups/rg/providers/Microsoft.Batch/batchAccounts/ba";
 
-        const poolArmId =
+        const poolResourceId =
             "/subscriptions/123/resourceGroups/rg/providers/Microsoft.Batch/batchAccounts/ba/pools/pool";
 
         const result1 = parseBatchAccountIdInfo(batchAccountId);
@@ -15,7 +15,7 @@ describe("parse arm id", () => {
             batchAccountName: "ba",
         });
 
-        const result2 = parsePoolArmIdInfo(poolArmId);
+        const result2 = parsePoolResourceIdInfo(poolResourceId);
         expect(result2).toEqual({
             subscriptionId: "123",
             resourceGroupName: "rg",
@@ -28,7 +28,7 @@ describe("parse arm id", () => {
         const batchAccountId =
             "https://example.com/subscriptions/123/resourceGroups/rg/providers/Microsoft.Batch/batchAccounts/ba";
 
-        const poolArmId =
+        const poolResourceId =
             "https://example.com/subscriptions/123/resourceGroups/rg/providers/Microsoft.Batch/batchAccounts/ba/pools/pool";
 
         const result1 = parseBatchAccountIdInfo(batchAccountId);
@@ -38,7 +38,7 @@ describe("parse arm id", () => {
             batchAccountName: "ba",
         });
 
-        const result2 = parsePoolArmIdInfo(poolArmId);
+        const result2 = parsePoolResourceIdInfo(poolResourceId);
         expect(result2).toEqual({
             subscriptionId: "123",
             resourceGroupName: "rg",
@@ -51,7 +51,7 @@ describe("parse arm id", () => {
         const batchAccountId =
             "/SuBscriptions/123/resourceGroups/rg/providers/Microsoft.Batch/batchAccounts/ba";
 
-        const poolArmId =
+        const poolResourceId =
             "/SuBscriptions/123/resourceGroups/rg/providers/Microsoft.Batch/batchAccounts/ba/pools/pool";
         const result1 = parseBatchAccountIdInfo(batchAccountId);
         expect(result1).toEqual({
@@ -60,7 +60,7 @@ describe("parse arm id", () => {
             batchAccountName: "ba",
         });
 
-        const result2 = parsePoolArmIdInfo(poolArmId);
+        const result2 = parsePoolResourceIdInfo(poolResourceId);
         expect(result2).toEqual({
             subscriptionId: "123",
             resourceGroupName: "rg",
@@ -75,8 +75,8 @@ describe("parse arm id", () => {
             "Unable to parse batch account id: /invalid/batch/account/id"
         );
 
-        const poolArmId = "/invalid/pool/arm/id";
-        expect(() => parsePoolArmIdInfo(poolArmId)).toThrowError(
+        const poolResourceId = "/invalid/pool/arm/id";
+        expect(() => parsePoolResourceIdInfo(poolResourceId)).toThrowError(
             "Unable to parse pool ARM id: /invalid/pool/arm/id"
         );
     });

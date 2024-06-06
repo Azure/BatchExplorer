@@ -17,7 +17,7 @@ describe("PoolVMExtList", () => {
 
     it("should render vm extension lists", async () => {
         const { getByText, container } = render(
-            <PoolVMExtList poolArmId={poolArmIdWithExt} />
+            <PoolVMExtList poolResourceId={poolArmIdWithExt} />
         );
         getByText(translate("lib.react.vmExtension.name"));
         await waitFor(() => getByText("batchextension1"));
@@ -29,7 +29,10 @@ describe("PoolVMExtList", () => {
     it("should render vm extension lists with no result", async () => {
         const { getByText } = render(
             <PoolVMExtList
-                poolArmId={poolArmIdWithExt.replace("hobopool1", "nonexist")}
+                poolResourceId={poolArmIdWithExt.replace(
+                    "hobopool1",
+                    "nonexist"
+                )}
             />
         );
         getByText(translate("lib.react.vmExtension.name"));

@@ -11,12 +11,12 @@ import { initMockBatchEnvironment } from "../../environment";
 describe("LivePoolService", () => {
     const hoboAcctId =
         "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo";
-    const hoboPoolArmId = `${hoboAcctId}/pools/hobopool1`;
-    const newTestPoolArmId = `${hoboAcctId}/pools/newtestpool`;
+    const hoboPoolResourceId = `${hoboAcctId}/pools/hobopool1`;
+    const newTestPoolResourceId = `${hoboAcctId}/pools/newtestpool`;
 
     const byosAcctId =
         "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/visualization/providers/Microsoft.Batch/batchAccounts/byos";
-    const byosPoolArmId = `${byosAcctId}/pools/byospool1`;
+    const byosPoolResourceId = `${byosAcctId}/pools/byospool1`;
 
     let service: PoolService;
     let fakeSet: BatchFakeSet;
@@ -74,39 +74,39 @@ describe("LivePoolService", () => {
     test("Get by resource ID", async () => {
         httpClient.addExpected(
             new MockHttpResponse(
-                `${getArmUrl()}${hoboPoolArmId}?api-version=${
+                `${getArmUrl()}${hoboPoolResourceId}?api-version=${
                     BatchApiVersion.arm
                 }`,
                 {
                     status: 200,
-                    body: JSON.stringify(fakeSet.getPool(hoboPoolArmId)),
+                    body: JSON.stringify(fakeSet.getPool(hoboPoolResourceId)),
                 }
             )
         );
 
-        const hoboPool = await service.get(hoboPoolArmId);
+        const hoboPool = await service.get(hoboPoolResourceId);
         expect(hoboPool?.name).toEqual("hobopool1");
 
         httpClient.addExpected(
             new MockHttpResponse(
-                `${getArmUrl()}${byosPoolArmId}?api-version=${
+                `${getArmUrl()}${byosPoolResourceId}?api-version=${
                     BatchApiVersion.arm
                 }`,
                 {
                     status: 200,
-                    body: JSON.stringify(fakeSet.getPool(byosPoolArmId)),
+                    body: JSON.stringify(fakeSet.getPool(byosPoolResourceId)),
                 }
             )
         );
 
-        const byosPool = await service.get(byosPoolArmId);
+        const byosPool = await service.get(byosPoolResourceId);
         expect(byosPool?.name).toEqual("byospool1");
     });
 
     test("Get by resource ID error", async () => {
         httpClient.addExpected(
             new MockHttpResponse(
-                `${getArmUrl()}${hoboPoolArmId}?api-version=${
+                `${getArmUrl()}${hoboPoolResourceId}?api-version=${
                     BatchApiVersion.arm
                 }`,
                 {
@@ -116,7 +116,7 @@ describe("LivePoolService", () => {
             )
         );
 
-        await expect(() => service.get(hoboPoolArmId)).rejects
+        await expect(() => service.get(hoboPoolResourceId)).rejects
             .toMatchInlineSnapshot(`
                     [Error: The Batch management plane returned an unexpected status code [unexpected 500 status]
                     Response body:
@@ -174,7 +174,7 @@ describe("LivePoolService", () => {
         );
 
         // Create
-        let pool = await service.createOrUpdate(newTestPoolArmId, newPool);
+        let pool = await service.createOrUpdate(newTestPoolResourceId, newPool);
         expect(pool?.name).toEqual("newtestpool");
 
         if (newPool.properties?.scaleSettings?.fixedScale) {
@@ -204,7 +204,7 @@ describe("LivePoolService", () => {
         );
 
         // Update
-        pool = await service.createOrUpdate(newTestPoolArmId, newPool);
+        pool = await service.createOrUpdate(newTestPoolResourceId, newPool);
         expect(pool?.name).toEqual("newtestpool");
 
         const patch: Pool = {
@@ -235,7 +235,7 @@ describe("LivePoolService", () => {
         );
 
         // Patch
-        pool = await service.patch(newTestPoolArmId, patch);
+        pool = await service.patch(newTestPoolResourceId, patch);
         expect(pool?.name).toEqual("newtestpool");
         expect(
             pool?.properties?.scaleSettings?.fixedScale?.targetDedicatedNodes

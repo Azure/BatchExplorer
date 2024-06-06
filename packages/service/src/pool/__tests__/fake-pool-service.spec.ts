@@ -6,12 +6,12 @@ import { initMockBatchEnvironment } from "../../environment";
 describe("FakePoolService", () => {
     const hoboAcctId =
         "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo";
-    const hoboPoolArmId = `${hoboAcctId}/pools/hobopool1`;
-    const newTestPoolArmId = `${hoboAcctId}/pools/newtestpool`;
+    const hoboPoolResourceId = `${hoboAcctId}/pools/hobopool1`;
+    const newTestPoolResourceId = `${hoboAcctId}/pools/newtestpool`;
 
     const byosAcctId =
         "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/visualization/providers/Microsoft.Batch/batchAccounts/byos";
-    const byosPoolArmId = `${byosAcctId}/pools/byospool1`;
+    const byosPoolResourceId = `${byosAcctId}/pools/byospool1`;
 
     let service: FakePoolService;
     let fakeSet: BatchFakeSet;
@@ -29,10 +29,10 @@ describe("FakePoolService", () => {
     });
 
     test("Get by resource ID", async () => {
-        const hoboPool = await service.get(hoboPoolArmId);
+        const hoboPool = await service.get(hoboPoolResourceId);
         expect(hoboPool?.name).toEqual("hobopool1");
 
-        const byosPool = await service.get(byosPoolArmId);
+        const byosPool = await service.get(byosPoolResourceId);
         expect(byosPool?.name).toEqual("byospool1");
     });
 
@@ -64,7 +64,10 @@ describe("FakePoolService", () => {
             },
         };
 
-        const pool = await service.createOrUpdate(newTestPoolArmId, newPool);
+        const pool = await service.createOrUpdate(
+            newTestPoolResourceId,
+            newPool
+        );
         expect(pool?.name).toEqual("newtestpool");
 
         const pools = await service.listByAccountId(hoboAcctId);
@@ -100,7 +103,10 @@ describe("FakePoolService", () => {
             },
         };
 
-        const pool = await service.createOrUpdate(hoboPoolArmId, poolUpdate);
+        const pool = await service.createOrUpdate(
+            hoboPoolResourceId,
+            poolUpdate
+        );
         expect(pool?.name).toEqual("hobopool1");
 
         // Updated an existing pool rather than created a new one
@@ -123,7 +129,7 @@ describe("FakePoolService", () => {
             },
         };
 
-        const pool = await service.patch(hoboPoolArmId, update);
+        const pool = await service.patch(hoboPoolResourceId, update);
         expect(pool?.name).toEqual("hobopool1");
         expect(
             pool?.properties?.scaleSettings?.fixedScale?.targetDedicatedNodes
