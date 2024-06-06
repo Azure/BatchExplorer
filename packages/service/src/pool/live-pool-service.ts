@@ -3,6 +3,7 @@ import type { Pool, PoolOutput } from "./pool-models";
 import type { PoolService } from "./pool-service";
 import {
     AbstractHttpService,
+    CustomHttpHeaders,
     OperationOptions,
     getArmUrl,
 } from "@azure/bonito-core";
@@ -49,7 +50,10 @@ export class LivePoolService
             )
             .put({
                 body: pool,
-                headers: {},
+                headers: {
+                    [CustomHttpHeaders.CommandName]:
+                        opts?.commandName ?? "CreateOrUpdatePool",
+                },
             });
 
         if (isUnexpected(res)) {
@@ -82,7 +86,12 @@ export class LivePoolService
                 batchAccountName,
                 poolName
             )
-            .get();
+            .get({
+                headers: {
+                    [CustomHttpHeaders.CommandName]:
+                        opts?.commandName ?? "GetPool",
+                },
+            });
 
         if (isUnexpected(res)) {
             throw createArmUnexpectedStatusCodeError(res);
@@ -109,7 +118,12 @@ export class LivePoolService
                 resourceGroupName,
                 batchAccountName
             )
-            .get();
+            .get({
+                headers: {
+                    [CustomHttpHeaders.CommandName]:
+                        opts?.commandName ?? "ListPools",
+                },
+            });
 
         if (isUnexpected(res)) {
             throw createArmUnexpectedStatusCodeError(res);
@@ -144,7 +158,10 @@ export class LivePoolService
             )
             .patch({
                 body: pool,
-                headers: {},
+                headers: {
+                    [CustomHttpHeaders.CommandName]:
+                        opts?.commandName ?? "PatchPool",
+                },
             });
 
         if (isUnexpected(res)) {
