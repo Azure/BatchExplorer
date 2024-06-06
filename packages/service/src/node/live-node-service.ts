@@ -93,7 +93,7 @@ export class LiveNodeService
             .get({
                 headers: {
                     [CustomHttpHeaders.CommandName]:
-                        opts?.commandName ?? "ListNodeExtensions",
+                        opts?.commandName ?? "ListNodeVmExtensions",
                 },
             });
 
