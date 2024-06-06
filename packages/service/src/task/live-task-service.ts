@@ -1,4 +1,8 @@
-import { AbstractHttpService } from "@azure/bonito-core";
+import {
+    AbstractHttpService,
+    CustomHttpHeaders,
+    OperationOptions,
+} from "@azure/bonito-core";
 import { BatchTaskOutput } from "../batch-models";
 import { createBatchClient, isUnexpected } from "../internal/batch-rest";
 import { createBatchUnexpectedStatusCodeError } from "../utils";
@@ -20,14 +24,20 @@ export class LiveTaskService
 
     async listTasks(
         accountResourceId: string,
-        jobId: string
+        jobId: string,
+        opts?: OperationOptions
     ): Promise<PagedAsyncIterableIterator<BatchTaskOutput>> {
         const listTaskPath = "/jobs/{jobId}/tasks";
         const batchClient = createBatchClient(
             this._ensureHttpsEndpoint(accountResourceId)
         );
 
-        const res = await batchClient.path(listTaskPath, jobId).get();
+        const res = await batchClient.path(listTaskPath, jobId).get({
+            headers: {
+                [CustomHttpHeaders.CommandName]:
+                    opts?.commandName ?? "ListTasks",
+            },
+        });
         if (isUnexpected(res)) {
             throw createBatchUnexpectedStatusCodeError(res);
         }
@@ -38,13 +48,18 @@ export class LiveTaskService
     async getTask(
         accountResourceId: string,
         jobId: string,
-        taskId: string
+        taskId: string,
+        opts?: OperationOptions
     ): Promise<BatchTaskOutput | undefined> {
         const taskPath = "/jobs/{jobId}/tasks/{taskId}";
         const batchClient = createBatchClient(
             this._ensureHttpsEndpoint(accountResourceId)
         );
-        const res = await batchClient.path(taskPath, jobId, taskId).get();
+        const res = await batchClient.path(taskPath, jobId, taskId).get({
+            headers: {
+                [CustomHttpHeaders.CommandName]: opts?.commandName ?? "GetTask",
+            },
+        });
 
         if (isUnexpected(res)) {
             throw createBatchUnexpectedStatusCodeError(res);
