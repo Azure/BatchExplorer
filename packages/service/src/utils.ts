@@ -6,7 +6,7 @@ import { BatchErrorOutput } from "./internal/batch-rest";
 const batchAccountIdRegex =
     /\/subscriptions\/(.*)\/resourceGroups\/(.*)\/providers\/Microsoft.Batch\/batchAccounts\/(.*)/i;
 
-const poolArmIdRegex =
+const poolResourceIdRegex =
     /\/subscriptions\/(.*)\/resourceGroups\/(.*)\/providers\/Microsoft.Batch\/batchAccounts\/(.*)\/pools\/(.*)/i;
 
 interface ErrorResponse extends AzureCoreHttpResponse {
@@ -86,7 +86,7 @@ export function parsePoolResourceIdInfo(oriPoolResourceId: string): {
 } {
     // use regex to parse the batch account id
     const poolResourceId = ensureRelativeUrl(oriPoolResourceId);
-    const match = poolResourceId.match(poolArmIdRegex);
+    const match = poolResourceId.match(poolResourceIdRegex);
     if (!match) {
         throw new Error(`Unable to parse pool ARM id: ${poolResourceId}`);
     }
