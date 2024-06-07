@@ -1,4 +1,4 @@
 export const BatchApiVersion = {
     arm: `2023-11-01`,
-    data: `2024-02-01.19.0`,
+    data: `2023-05-01.17.0`,
 };
