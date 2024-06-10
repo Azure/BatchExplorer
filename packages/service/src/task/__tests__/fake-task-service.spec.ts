@@ -17,6 +17,13 @@ describe("FakeTaskService", () => {
         service.setFakes(fakeSet);
     });
 
+    test("Generate tasks", async () => {
+        const task = await service.generateTasks(accountEndpoint, jobId, 3);
+        expect(task[0].id).toEqual("task1");
+        expect(task[1].id).toEqual("task2");
+        expect(task[2].id).toEqual("task3");
+    });
+
     test("List batch tasks", async () => {
         const tasks = await service.listTasks(accountEndpoint, jobId);
 
