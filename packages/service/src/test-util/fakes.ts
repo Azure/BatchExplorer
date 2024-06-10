@@ -113,6 +113,19 @@ export interface BatchFakeSet extends FakeSet {
      * @param jobId
      */
     listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[];
+
+    /**
+     * Generate tasks
+     *
+     * @param accountEndpoint
+     * @param jobId
+     * @param numOfTasks The number of tasks to generate
+     */
+    generateTasks(
+        accountEndpoint: string,
+        jobId: string,
+        numOfTasks: number
+    ): BatchTaskOutput[];
 }
 
 export abstract class AbstractBatchFakeSet
@@ -251,6 +264,30 @@ export abstract class AbstractBatchFakeSet
                 )
             )
             .map((entry) => entry[1]);
+    }
+
+    generateTasks(
+        accountEndPoint: string,
+        jobId: string,
+        numOfTasks: number
+    ): BatchTaskOutput[] {
+        if (!jobId) {
+            throw new Error("Cannot create a task without a valid job ID");
+        }
+
+        const taskOutput: BatchTaskOutput[] = [];
+
+        const baseTaskUrl = `https://${accountEndPoint}/jobs/${jobId}/tasks/`;
+
+        for (let i = 0; i < numOfTasks; i++) {
+            taskOutput.push({
+                url: `${baseTaskUrl}task${i + 1}`,
+                id: `task${i + 1}`,
+                state: "active",
+                executionInfo: { retryCount: 0, requeueCount: 0 },
+            });
+        }
+        return taskOutput;
     }
 }
 

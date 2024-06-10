@@ -13,7 +13,7 @@ import { DataGridLoadMoreDemo } from "./demo/display/task-grid/task-data-grid";
 import { TabSelectorDemo } from "./demo/form/tab-selector-demo";
 import { StringListDemo } from "./demo/form/stringlist/stringlist-demo";
 import { VmExtensionListDemo } from "./demo/display/vm-extension/vm-extension-list-demo";
-
+// add VmExtensionTaskListDemo here once created
 export const DEMO_MAP = {
     default: () => <DefaultPane />,
     actionform: () => <ActionFormDemo />,

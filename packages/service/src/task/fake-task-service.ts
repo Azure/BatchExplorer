@@ -25,4 +25,12 @@ export class FakeTaskService implements TaskService {
     ): Promise<PagedAsyncIterableIterator<BatchTaskOutput>> {
         return createPagedArray(this.fakeSet.listTasks(accountEndpoint, jobId));
     }
+
+    async generateTasks(
+        accountEndpoint: string,
+        jobId: string,
+        numOfTasks: number
+    ): Promise<BatchTaskOutput[]> {
+        return this.fakeSet.generateTasks(accountEndpoint, jobId, numOfTasks);
+    }
 }
