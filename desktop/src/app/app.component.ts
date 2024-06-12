@@ -114,16 +114,16 @@ export class AppComponent implements OnInit, OnDestroy {
         let initialNav = false;
         this.authService.isLoggedIn().pipe(takeUntil(this._destroy))
             .subscribe((isLoggedIn) => {
-            if (!isLoggedIn) {
-                // Always navigate to welcome page if not logged in
-                this.navigatorService.goto("/welcome");
-            } else {
-                if (!initialNav) {
-                    initialNav = true;
-                    this.navigatorService.goto("/accounts");
+                if (!isLoggedIn) {
+                    // Always navigate to welcome page if not logged in
+                    this.navigatorService.goto("/welcome");
+                } else {
+                    if (!initialNav) {
+                        initialNav = true;
+                        this.navigatorService.goto("/accounts");
+                    }
                 }
-            }
-        });
+            });
     }
 
     public ngOnInit() {

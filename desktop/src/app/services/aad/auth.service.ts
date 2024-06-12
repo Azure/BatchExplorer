@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable, NgZone, OnDestroy } from "@angular/core";
-import { AccessToken, AccessTokenCache, I18nService, ServerError, TenantSettings } from "@batch-flask/core";
+import { AccessToken, AccessTokenCache, AuthEvent, I18nService, ServerError, TenantSettings } from "@batch-flask/core";
 import { TenantSettingsService } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/electron";
 import { wrapMainObservable } from "@batch-flask/electron/utils";
@@ -229,13 +229,16 @@ export class AuthService implements OnDestroy {
             }
         }
 
-        const promise = this.remote.send(
+        const promise: Promise<AccessToken | AuthEvent> = this.remote.send(
             Constants.IpcEvent.AAD.accessTokenData,
             { tenantId, resource, forceRefresh }
         );
         promise.then((_) => this.authEvents["AuthComplete"].emit());
         const tokenObservable = from(promise).pipe(
-            map(tokenData => {
+            map((tokenData: AccessToken | AuthEvent) => {
+                if (isAuthEvent(tokenData)) {
+                    throw new AuthFlowException(tokenData);
+                }
                 const token = new AccessToken({ ...tokenData });
                 this.tokenCache.storeToken(tenantId, resource, token);
                 delete this.tokenObservableCache[key];
@@ -243,7 +246,9 @@ export class AuthService implements OnDestroy {
             }),
             catchError(error => {
                 delete this.tokenObservableCache[key];
-                return throwError(error);
+                if (!(error instanceof AuthFlowException)) {
+                    return throwError(error);
+                }
             })
         );
         this.tokenObservableCache[key] = tokenObservable;
@@ -286,4 +291,14 @@ export class AuthService implements OnDestroy {
         this.authEvents["AuthComplete"] = new EventEmitter();
         this.authEvents["Logout"] = new EventEmitter();
     }
+}
+
+class AuthFlowException extends Error {
+    constructor(public authEvent: AuthEvent) {
+        super(`Auth flow exception (${authEvent.type}): ${authEvent.message}`);
+    }
+}
+
+function isAuthEvent(obj: any): obj is AuthEvent {
+    return obj && (obj.type === "cancel" || obj.type === "signout");
 }

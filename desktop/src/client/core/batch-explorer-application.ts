@@ -1,5 +1,3 @@
-import { subscription } from './../../test/fixture';
-import { sendEvent } from 'test/utils/helpers';
 import { Injectable, Injector } from "@angular/core";
 import { LocaleService, TelemetryService, TranslationsLoaderService, UserConfigurationService } from "@batch-flask/core";
 import { AutoUpdateService } from "@batch-flask/electron";
@@ -48,6 +46,7 @@ export class BatchExplorerApplication {
     public state: Observable<BatchExplorerState>;
     public proxySettings: ProxySettingsManager;
     public userSettings: Observable<BEUserConfiguration>;
+    public appReady: Deferred<void>;
 
     private _state = new BehaviorSubject<BatchExplorerState>(BatchExplorerState.Loading);
     private _initializer: BatchExplorerInitializer;
@@ -68,6 +67,7 @@ export class BatchExplorerApplication {
     ) {
         this.windows = new MainWindowManager(this, this.telemetryManager);
         this.state = this._state.asObservable();
+        this.appReady = new Deferred<void>();
 
         this.userSettings = configurationStore.config;
 
@@ -76,6 +76,7 @@ export class BatchExplorerApplication {
     }
 
     public async init() {
+        console.log("BatchExplorerApplication init");
         await this.telemetryManager.init();
         await this.properties.init();
 
@@ -98,7 +99,6 @@ export class BatchExplorerApplication {
      * Start the app by showing the splash screen
      */
     public async start() {
-        const appReady = new Deferred();
         this.pythonServer.start();
         this._initializer.init();
 
@@ -123,10 +123,10 @@ export class BatchExplorerApplication {
                     break;
                 case WindowState.Ready:
                     this._initializer.completeTask("window");
-                    appReady.resolve();
+                    this.appReady.resolve();
             }
         });
-        await appReady.promise;
+        await this.appReady.promise;
 
         windowSub.unsubscribe();
 

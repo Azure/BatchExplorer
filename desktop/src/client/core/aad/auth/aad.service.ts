@@ -1,6 +1,6 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
-import { AccessToken, DataStore, ServerError } from "@batch-flask/core";
+import { AccessToken, AuthEvent, DataStore, ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { TenantDetails } from "app/models";
 import { AADResourceName, AzurePublic } from "client/azure-environment";
@@ -18,7 +18,11 @@ import { AADConfig } from "../aad-config";
 import { defaultTenant } from "../aad-constants";
 import AuthProvider from "../auth-provider";
 import {
-    AuthenticationService, AuthenticationState, AuthorizeResult, AuthCancelException, SignOutException
+    AuthCancelException,
+    AuthenticationService,
+    AuthenticationState,
+    AuthorizeResult,
+    SignOutException
 } from "../authentication";
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
@@ -29,18 +33,12 @@ const aadConfig: AADConfig = {
     redirectUri: "https://login.microsoftonline.com/common/oauth2/nativeclient",
 };
 
-interface AuthEvent {
-    type: "signout" | "cancel";
-    message?: string;
-}
-
 interface RetrieveAccessTokenOptions {
     tenantId?: string,
     resource?: AADResourceName,
     forceRefresh?: boolean,
     selectAuthMode?: boolean
 }
-
 
 @Injectable()
 export class AADService {
@@ -73,11 +71,22 @@ export class AADService {
         this.authenticationState = this._authenticationState.asObservable();
 
         ipcMain.on(IpcEvent.AAD.accessTokenData,
-            ({ tenantId, resource, forceRefresh }) =>
-                this.retrieveAccessToken({ tenantId, resource, forceRefresh }));
+            async ({ tenantId, resource, forceRefresh }) => {
+                const token = await this.retrieveAccessToken({ tenantId,
+                    resource, forceRefresh });
+                return { ...token, tenantId, resource };
+            });
+
 
         this.userAuthorization.state.subscribe((state) => {
             this._authenticationState.next(state);
+        });
+
+
+        this.authenticationState.subscribe((state) => {
+            if (state === AuthenticationState.Authenticated) {
+                 this._loadTenants();
+            }
         });
     }
 
@@ -93,7 +102,7 @@ export class AADService {
         const started = this._ensureTelemetryOptInNationalClouds();
         return {
             started,
-            done: started.then(() => this._loginInCurrentCloud()),
+            done: started.then(() => this._retrieveTokenAndTenants()),
         };
     }
 
@@ -131,12 +140,11 @@ export class AADService {
         return defer.promise;
     }
 
-    private async _loginInCurrentCloud() {
+    private async _retrieveTokenAndTenants() {
         await this.retrieveAccessToken({ selectAuthMode: false });
         this._authenticationState.next(AuthenticationState.Authenticated);
         try {
-            const tenants = await this._loadTenants();
-            this._tenants.next(tenants);
+            await this._loadTenants();
         } catch (error) {
             log.error("Error retrieving tenants", error);
             this._tenants.error(ServerError.fromARM(error));
@@ -152,6 +160,7 @@ export class AADService {
             try {
                 const user = JSON.parse(userStr);
                 this._currentUser.next(user);
+                this._authenticationState.next(AuthenticationState.Authenticated);
             } catch (e) {
                 this.localStorage.removeItem(Constants.localStorageKey.currentUser);
             }
@@ -217,6 +226,7 @@ export class AADService {
     }
 
     private async _loadTenants(): Promise<TenantDetails[]> {
+        await this.app.appReady.promise;
         const token = await this.retrieveAccessToken();
         if (!(token instanceof AccessToken)) {
             return;
@@ -231,7 +241,7 @@ export class AADService {
         const { value } = await response.json();
         const tenants = value as TenantDetails[];
         tenants.forEach(tenant => tenant.homeTenantId = token.homeTenantId);
-        return tenants;
+        this._tenants.next(tenants);
     }
 
     private _tenantURL() {
