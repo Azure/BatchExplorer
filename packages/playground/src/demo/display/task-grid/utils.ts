@@ -1,7 +1,6 @@
 import { getLogger } from "@azure/bonito-core";
 import { LoadMoreFn } from "@azure/bonito-ui/lib/hooks";
-// eslint-disable-next-line no-restricted-imports
-import { BatchTaskOutput } from "@batch/ui-service/src/batch-models"; // ask abt this
+import { BatchTaskOutput } from "@batch/ui-service/lib/batch-models";
 
 export interface DemoTask {
     name: string;
@@ -115,8 +114,11 @@ export function generateTasksForList(
         taskOutput.push({
             url: `${baseTaskUrl}task${i + 1}`,
             id: `task${i + 1}`,
-            state: "active",
-            executionInfo: { retryCount: 0, requeueCount: 0 },
+            state: Math.random() > 0.5 ? "active" : "completed",
+            executionInfo: {
+                retryCount: Math.random() > 0.5 ? 0 : 1,
+                requeueCount: Math.random() > 0.5 ? 0 : 1,
+            },
         });
     }
     return taskOutput;
