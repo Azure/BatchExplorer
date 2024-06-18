@@ -5,7 +5,6 @@ import {
     DataGridColumn,
 } from "@azure/bonito-ui/lib/components/data-grid";
 import { BatchTaskOutput } from "@batch/ui-service/lib/batch-models";
-import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { inject } from "@azure/bonito-core/lib/environment";
 import { BatchDependencyName } from "@batch/ui-service/lib/environment";
 import { TaskService } from "@batch/ui-service/lib/task/task-service";
@@ -34,10 +33,26 @@ export const TaskList = (props: TaskListProps) => {
             BatchDependencyName.TaskService
         );
 
-        taskService.listTasks(accountEndpoint, jobId).then((tasks) => {
+        const fetchTaskList = async () => {
             if (!isMounted) return;
 
-            console.log(tasks);
+            const tasks = await taskService.listTasks(accountEndpoint, jobId);
+
+            const auxList = [];
+            for await (const task of tasks) {
+                auxList.push({
+                    url: task.url,
+                    id: task.id,
+                    state: " " + task.state,
+                    executionInfo: task.executionInfo,
+                });
+            }
+
+            setItems(auxList);
+        };
+
+        fetchTaskList().catch((e) => {
+            console.log("Error: ", e);
         });
 
         return () => {
@@ -45,11 +60,7 @@ export const TaskList = (props: TaskListProps) => {
         };
     }, [accountEndpoint, jobId, numOfTasks]);
 
-    return (
-        <>
-            <DataGrid compact={isCompact} items={items} columns={columns} />
-        </>
-    );
+    return <DataGrid compact={isCompact} items={items} columns={columns} />;
 };
 
 const columns: DataGridColumn[] = [
@@ -90,5 +101,13 @@ const columns: DataGridColumn[] = [
         label: "ExecutionInfo",
         prop: "executioninfo",
         minWidth: 150,
+        onRender: (task: any) => {
+            return (
+                <div>
+                    Retry count: {task.executionInfo.retryCount} {"\n"}
+                    Requeue count: {task.executionInfo.requeueCount}
+                </div>
+            );
+        },
     },
 ];
