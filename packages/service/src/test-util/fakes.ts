@@ -119,12 +119,18 @@ export interface BatchFakeSet extends FakeSet {
      *
      * @param accountEndpoint
      * @param jobId
-     * @param numOfTasks The number of tasks to generate
      */
-    generateTasks(
+    generateTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[];
+
+    /**
+     * List hardcoded tasks in fakes
+     *
+     * @param accountEndpoint
+     * @param jobId
+     */
+    listHardcodedTask(
         accountEndpoint: string,
-        jobId: string,
-        numOfTasks: number
+        jobId: string
     ): BatchTaskOutput[];
 }
 
@@ -251,7 +257,43 @@ export abstract class AbstractBatchFakeSet
         ];
     }
 
+    generateTasks(accountEndPoint: string, jobId: string): BatchTaskOutput[] {
+        if (!jobId) {
+            throw new Error("Cannot create a task without a valid job ID");
+        }
+
+        const taskOutput: BatchTaskOutput[] = [];
+
+        const baseTaskUrl = `https://${accountEndPoint}/jobs/${jobId}/tasks/`;
+
+        for (let i = 0; i < 3; i++) {
+            taskOutput.push({
+                url: `${baseTaskUrl}task${i + 1}`,
+                id: `task${i + 1}`,
+                state: "active",
+                executionInfo: { retryCount: 0, requeueCount: 0 },
+            });
+        }
+        return taskOutput;
+    }
+
     listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[] {
+        if (!jobId) {
+            return [];
+        }
+
+        const tasks: BatchTaskOutput[] = this.generateTasks(
+            accountEndpoint,
+            jobId
+        );
+
+        return tasks;
+    }
+
+    listHardcodedTask(
+        accountEndpoint: string,
+        jobId: string
+    ): BatchTaskOutput[] {
         if (!jobId) {
             return [];
         }
@@ -264,30 +306,6 @@ export abstract class AbstractBatchFakeSet
                 )
             )
             .map((entry) => entry[1]);
-    }
-
-    generateTasks(
-        accountEndPoint: string,
-        jobId: string,
-        numOfTasks: number
-    ): BatchTaskOutput[] {
-        if (!jobId) {
-            throw new Error("Cannot create a task without a valid job ID");
-        }
-
-        const taskOutput: BatchTaskOutput[] = [];
-
-        const baseTaskUrl = `https://${accountEndPoint}/jobs/${jobId}/tasks/`;
-
-        for (let i = 0; i < numOfTasks; i++) {
-            taskOutput.push({
-                url: `${baseTaskUrl}task${i + 1}`,
-                id: `task${i + 1}`,
-                state: "active",
-                executionInfo: { retryCount: 0, requeueCount: 0 },
-            });
-        }
-        return taskOutput;
     }
 }
 

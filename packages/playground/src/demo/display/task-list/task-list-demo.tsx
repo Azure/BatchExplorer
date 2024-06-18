@@ -1,33 +1,39 @@
 import React from "react";
 import { TaskList } from "@batch/ui-react/lib/task/task-list";
 import { DemoPane } from "../../../layout/demo-pane";
+import { Stack } from "@fluentui/react/lib/Stack";
+import { Slider } from "@fluentui/react/lib/Slider";
 
-// TODO: look at vm-extension-list.tsx & vm-extension-list-demo.tsx
-// Donutchart created here too
 export const TaskListDemo: React.FC = () => {
-    // const [accountEndpoint] = React.useState<string>("accountTest");
-    //  const [jobId] = React.useState<string>("jobIdTest");
-    const [numOfTasks] = React.useState<number>(5);
+    const [taskNumberSlider, setTaskNumberSlider] = React.useState(0);
+    const taskNumberSliderOnChange = (value: number) => {
+        setTaskNumberSlider(value);
+    };
 
     return (
-        <DemoPane title="Task List">
+        <DemoPane title="Task List Demo">
+            <Stack
+                horizontal={true}
+                tokens={{ childrenGap: "1em" }}
+                verticalAlign="center"
+                wrap={true}
+                styles={{ root: { marginBottom: "1em" } }}
+            >
+                <Stack.Item grow={1}>
+                    <Slider
+                        label="Additional Tasks Slider"
+                        min={0}
+                        max={50}
+                        value={taskNumberSlider}
+                        onChange={taskNumberSliderOnChange}
+                    />
+                </Stack.Item>
+            </Stack>
             <TaskList
-                accountEndpoint={"accountTest"}
-                jobId={"jobTest"}
-                numOfTasks={numOfTasks}
+                accountEndpoint={"mercury.eastus.batch.azure.com"}
+                jobId={"faketestjob1"}
+                numOfTasks={taskNumberSlider}
             />
         </DemoPane>
     );
 };
-
-//DonutChart should be here under DemoPane
-/*
-  <DemoPane title="Task List">
-        <DonutChart />
-        <TaskList
-            accountEndpoint=varaible
-            jobId=variable
-            numOfTasks=variable
-        />
-    </DemoPane>
-*/
