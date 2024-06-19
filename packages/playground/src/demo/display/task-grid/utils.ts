@@ -1,6 +1,5 @@
 import { getLogger } from "@azure/bonito-core";
 import { LoadMoreFn } from "@azure/bonito-ui/lib/hooks";
-import { BatchTaskOutput } from "@batch/ui-service/lib/batch-models";
 
 export interface DemoTask {
     name: string;

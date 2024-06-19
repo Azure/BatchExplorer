@@ -7,10 +7,10 @@ import {
 import { BatchTaskOutput } from "@batch/ui-service/lib/batch-models";
 import { CiCircleChevDown } from "react-icons/ci";
 import { IconButton } from "@fluentui/react/lib/Button";
-import { PagedAsyncIterableIterator } from "@azure/core-paging";
+//import { PagedAsyncIterableIterator } from "@azure/core-paging";
 
 interface TaskListProps {
-    pagedTasks: PagedAsyncIterableIterator<BatchTaskOutput>;
+    pagedTasks: any;
 }
 
 interface taskRow extends BatchTaskOutput {
@@ -25,19 +25,21 @@ export const TaskList = (props: TaskListProps) => {
     const [isCompact] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        const taskArray = [];
+        const parseTasks = async () => {
+            const taskArray = [];
 
-        for await (const task of pagedTasks) {
-            taskArray.push({
-                url: task.url,
-                id: task.id,
-                state: task.state,
-                creationTime: task.creationTime,
-                executionInfo: task.executionInfo,
-            });
-        }
-
-        setItems(taskArray);
+            for await (const task of pagedTasks) {
+                taskArray.push({
+                    url: task.url,
+                    id: task.id,
+                    state: task.state,
+                    creationTime: task.creationTime,
+                    executionInfo: task.executionInfo,
+                });
+            }
+            setItems(taskArray);
+        };
+        parseTasks();
     }, [pagedTasks]);
 
     return (
