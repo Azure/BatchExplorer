@@ -7,7 +7,7 @@ import { initMockBatchBrowserEnvironment } from "../../environment";
 import { dataGridIgnoredA11yRules } from "@azure/bonito-ui/lib/components/data-grid/test-ignore-a11y-rules";
 import { runAxe } from "@azure/bonito-ui/lib/test-util/a11y";
 
-const poolArmIdWithExt =
+const poolResourceIdWithExt =
     "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/supercomputing/providers/microsoft.batch/batchaccounts/hobo/pools/hobopool1";
 
 describe("PoolVMExtList", () => {
@@ -17,7 +17,7 @@ describe("PoolVMExtList", () => {
 
     it("should render vm extension lists", async () => {
         const { getByText, container } = render(
-            <PoolVMExtList poolArmId={poolArmIdWithExt} />
+            <PoolVMExtList poolResourceId={poolResourceIdWithExt} />
         );
         getByText(translate("lib.react.vmExtension.name"));
         await waitFor(() => getByText("batchextension1"));
@@ -29,7 +29,10 @@ describe("PoolVMExtList", () => {
     it("should render vm extension lists with no result", async () => {
         const { getByText } = render(
             <PoolVMExtList
-                poolArmId={poolArmIdWithExt.replace("hobopool1", "nonexist")}
+                poolResourceId={poolResourceIdWithExt.replace(
+                    "hobopool1",
+                    "nonexist"
+                )}
             />
         );
         getByText(translate("lib.react.vmExtension.name"));

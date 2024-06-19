@@ -1,4 +1,8 @@
-import { AbstractHttpService, OperationOptions } from "@azure/bonito-core";
+import {
+    AbstractHttpService,
+    CustomHttpHeaders,
+    OperationOptions,
+} from "@azure/bonito-core";
 import { BatchNodeOutput, BatchNodeVMExtensionOutput } from "./node-models";
 import { ListNodesOptions, NodeService } from "./node-service";
 import {
@@ -33,7 +37,12 @@ export class LiveNodeService
 
         const res = await batchClient
             .path("/pools/{poolId}/nodes/{nodeId}", poolName, nodeId)
-            .get();
+            .get({
+                headers: {
+                    [CustomHttpHeaders.CommandName]:
+                        opts?.commandName ?? "GetNode",
+                },
+            });
 
         if (isUnexpected(res)) {
             throw createBatchUnexpectedStatusCodeError(res);
@@ -54,6 +63,10 @@ export class LiveNodeService
         const res = await batchClient.path(listNodePath, poolName).get({
             queryParameters: {
                 $filter: opts?.filter,
+            },
+            headers: {
+                [CustomHttpHeaders.CommandName]:
+                    opts?.commandName ?? "ListNodes",
             },
         });
 
@@ -77,7 +90,12 @@ export class LiveNodeService
         );
         const res = await batchClient
             .path(listNodeExtensionPath, poolName, nodeId)
-            .get();
+            .get({
+                headers: {
+                    [CustomHttpHeaders.CommandName]:
+                        opts?.commandName ?? "ListNodeExtensions",
+                },
+            });
 
         if (isUnexpected(res)) {
             throw createBatchUnexpectedStatusCodeError(res);

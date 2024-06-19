@@ -2,9 +2,9 @@ import { OperationOptions } from "@azure/bonito-core";
 import { Pool, PoolOutput } from "./pool-models";
 
 export interface PoolService {
-    createOrUpdate(poolArmId: string, pool: Pool): Promise<PoolOutput>;
+    createOrUpdate(poolResourceId: string, pool: Pool): Promise<PoolOutput>;
     get(
-        poolArmId: string,
+        poolResourceId: string,
         opts?: OperationOptions
     ): Promise<PoolOutput | undefined>;
     listByAccountId(
@@ -12,7 +12,7 @@ export interface PoolService {
         opts?: OperationOptions
     ): Promise<PoolOutput[]>;
     patch(
-        poolArmId: string,
+        poolResourceId: string,
         pool: Pool,
         opts?: OperationOptions
     ): Promise<PoolOutput>;
