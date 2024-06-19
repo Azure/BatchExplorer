@@ -258,6 +258,46 @@ export abstract class AbstractBatchFakeSet
     }
 
     generateTasks(accountEndPoint: string, jobId: string): BatchTaskOutput[] {
+        /*
+        function getRandomDateTime(): string {
+            const year = Math.floor(Math.random() * 50) + 2020;
+            const month = Math.floor(Math.random() * 12);
+            const day = Math.floor(Math.random() * 28) + 1;
+            const hours = Math.floor(Math.random() * 24);
+            const minutes = Math.floor(Math.random() * 60);
+            const seconds = Math.floor(Math.random() * 60); // Random second
+
+            const date = new Date(year, month, day, hours, minutes, seconds);
+            return date.toString();
+        }
+            */
+
+        function getRandomDateTime(): string {
+            const year = Math.floor(Math.random() * 50) + 2020;
+            const month = Math.floor(Math.random() * 12);
+            const day = Math.floor(Math.random() * 28); // Assume all months have 28 days for simplicity
+            const hours = Math.floor(Math.random() * 24);
+            const minutes = Math.floor(Math.random() * 60);
+            const seconds = Math.floor(Math.random() * 60);
+
+            const date = new Date(year, month, day, hours, minutes, seconds);
+
+            // Format the date and time
+            const formattedDateTime = date.toLocaleString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+            });
+
+            return formattedDateTime;
+        }
+
+        const randomGeneratedDateTime = getRandomDateTime();
+        console.log(randomGeneratedDateTime); // Example output: "Aug 17, 2022 14:50:40"
+
         if (!jobId) {
             throw new Error("Cannot create a task without a valid job ID");
         }
@@ -267,11 +307,34 @@ export abstract class AbstractBatchFakeSet
         const baseTaskUrl = `https://${accountEndPoint}/jobs/${jobId}/tasks/`;
 
         for (let i = 0; i < 3; i++) {
+            /*
+            const seed = Math.random();
+            const seedStr = seed.toString().substring(2);
+
+            let exitCode, state;
+
+            if (parseInt(seedStr[0]) <= 5) {
+                exitCode = "Success";
+            } else {
+                exitCode = "Failure";
+            }
+
+            if (exitCode === "Success") {
+                state = parseInt(seedStr[1]) <= 5 ? "Active" : "Completed";
+            } else {
+                state = parseInt(seedStr[1]) <= 5 ? "Error" : "Running";
+            }
+            */
+
             taskOutput.push({
                 url: `${baseTaskUrl}task${i + 1}`,
                 id: `task${i + 1}`,
-                state: "active",
-                executionInfo: { retryCount: 0, requeueCount: 0 },
+                state: Math.random() > 0.5 ? "active" : "completed",
+                creationTime: getRandomDateTime(),
+                executionInfo: {
+                    retryCount: Math.random() > 0.5 ? 0 : 1,
+                    requeueCount: Math.random() > 0.5 ? 0 : 1,
+                },
             });
         }
         return taskOutput;

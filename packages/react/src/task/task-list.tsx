@@ -1,5 +1,5 @@
 import React from "react";
-import { CiCircleCheck, CiClock1 } from "react-icons/ci";
+import { CiCircleCheck, CiAvocado } from "react-icons/ci";
 import {
     DataGrid,
     DataGridColumn,
@@ -8,11 +8,12 @@ import { BatchTaskOutput } from "@batch/ui-service/lib/batch-models";
 import { inject } from "@azure/bonito-core/lib/environment";
 import { BatchDependencyName } from "@batch/ui-service/lib/environment";
 import { TaskService } from "@batch/ui-service/lib/task/task-service";
+import { CiCircleChevDown } from "react-icons/ci";
+import { IconButton } from "@fluentui/react/lib/Button";
 
 interface TaskListProps {
     accountEndpoint: string;
     jobId: string;
-    numOfTasks: number;
 }
 
 interface taskRow extends BatchTaskOutput {
@@ -22,7 +23,7 @@ interface taskRow extends BatchTaskOutput {
 }
 
 export const TaskList = (props: TaskListProps) => {
-    const { accountEndpoint, jobId, numOfTasks } = props;
+    const { accountEndpoint, jobId } = props;
     const [isCompact] = React.useState<boolean>(false);
     const [items, setItems] = React.useState<taskRow[]>([]);
 
@@ -38,17 +39,18 @@ export const TaskList = (props: TaskListProps) => {
 
             const tasks = await taskService.listTasks(accountEndpoint, jobId);
 
-            const auxList = [];
+            const items = [];
             for await (const task of tasks) {
-                auxList.push({
+                items.push({
                     url: task.url,
                     id: task.id,
-                    state: " " + task.state,
+                    state: task.state,
+                    creationTime: task.creationTime,
                     executionInfo: task.executionInfo,
                 });
             }
 
-            setItems(auxList);
+            setItems(items);
         };
 
         fetchTaskList().catch((e) => {
@@ -58,20 +60,21 @@ export const TaskList = (props: TaskListProps) => {
         return () => {
             isMounted = false;
         };
-    }, [accountEndpoint, jobId, numOfTasks]);
+    }, [accountEndpoint, jobId]);
 
-    return <DataGrid compact={isCompact} items={items} columns={columns} />;
+    return (
+        <DataGrid
+            selectionMode="none"
+            compact={isCompact}
+            items={items}
+            columns={columns}
+        />
+    );
 };
 
 const columns: DataGridColumn[] = [
     {
-        label: "Url",
-        prop: "url",
-        minWidth: 100,
-        maxWidth: 150,
-    },
-    {
-        label: "Name",
+        label: "Task",
         prop: "id",
         minWidth: 100,
         maxWidth: 150,
@@ -87,10 +90,20 @@ const columns: DataGridColumn[] = [
         onRender: (task: any) => {
             return (
                 <div>
-                    {task.state == "completed" ? (
-                        <CiCircleCheck />
+                    {task.state === "completed" ? (
+                        <CiCircleCheck
+                            style={{
+                                marginRight: 6,
+                                color: "green",
+                            }}
+                        />
                     ) : (
-                        <CiClock1 />
+                        <CiAvocado
+                            style={{
+                                marginRight: 6,
+                                color: "green",
+                            }}
+                        />
                     )}
                     {task.state}
                 </div>
@@ -98,8 +111,17 @@ const columns: DataGridColumn[] = [
         },
     },
     {
-        label: "ExecutionInfo",
-        prop: "executioninfo",
+        label: "Created",
+        prop: "created",
+        minWidth: 150,
+        maxWidth: 200,
+        onRender: (task: any) => {
+            return <div>{task.creationTime}</div>;
+        },
+    },
+    {
+        label: "Exit Code",
+        prop: "exitcode",
         minWidth: 150,
         onRender: (task: any) => {
             return (
@@ -110,4 +132,24 @@ const columns: DataGridColumn[] = [
             );
         },
     },
+    {
+        label: " ",
+        prop: " ",
+        minWidth: 150,
+        onRender: (task: any) => {
+            return (
+                <div>
+                    <IconButton>
+                        <CiCircleChevDown />
+                    </IconButton>
+                </div>
+            );
+        },
+    },
 ];
+/**
+ <IconButton
+ name=""
+ iconProps={}
+ />
+ */
