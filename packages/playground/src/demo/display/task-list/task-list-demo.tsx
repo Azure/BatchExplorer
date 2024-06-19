@@ -6,21 +6,18 @@ import { Slider } from "@fluentui/react/lib/Slider";
 import { Stack } from "@fluentui/react/lib/Stack";
 import React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
-import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { BatchTaskOutput } from "@batch/ui-service/src/batch-models";
+import { TextField } from "@azure/bonito-ui/src/components/form";
+import { TextFieldOnChange } from "../../../functions";
+//import { PagedAsyncIterableIterator } from "@azure/core-paging";
 
 export const TaskListDemo: React.FC = () => {
-    const [taskNumberSlider, setTaskNumberSlider] = React.useState(0);
-    const [items, setItems] = React.useState<
-        PagedAsyncIterableIterator<BatchTaskOutput>
-    >([]);
-    const taskNumberSliderOnChange = (value: number) => {
-        setTaskNumberSlider(value);
-    };
-    const [accountEndpoint, setAccountEndpoint] = React.useState<string>(
+    const [taskNumberField, setTaskNumberField] = React.useState(0);
+    const [items, setItems] = React.useState<any>([]);
+
+    const [accountEndpoint] = React.useState<string>(
         "mercury.eastus.batch.azure.com"
     );
-    const [jobId, setJobId] = React.useState<string>("faketestjob1");
+    const [jobId] = React.useState<string>("faketestjob1");
 
     React.useEffect(() => {
         let isMounted = true;
@@ -56,12 +53,12 @@ export const TaskListDemo: React.FC = () => {
                 styles={{ root: { marginBottom: "1em" } }}
             >
                 <Stack.Item grow={1}>
-                    <Slider
-                        label="Additional Tasks Slider"
-                        min={0}
-                        max={50}
-                        value={taskNumberSlider}
-                        onChange={taskNumberSliderOnChange}
+                    <TextField
+                        value={taskNumberField}
+                        onChange={(_, newValue) => {
+                            const number = parseInt(`${newValue}`);
+                            setTaskNumberField(number);
+                        }}
                     />
                 </Stack.Item>
             </Stack>

@@ -19,10 +19,15 @@ describe("FakeTaskService", () => {
     });
 
     test("Generate tasks", async () => {
-        const task = await service.generateTasks(accountEndpoint, jobId);
-        expect(task[0].id).toEqual("task1");
-        expect(task[1].id).toEqual("task2");
-        expect(task[2].id).toEqual("task3");
+        const tasks = await service.listTasks(accountEndpoint, jobId, 3);
+        const allTasks = [];
+        for await (const task of tasks) {
+            allTasks.push(task);
+        }
+
+        expect(allTasks[0].id).toEqual("task1");
+        expect(allTasks[1].id).toEqual("task2");
+        expect(allTasks[2].id).toEqual("task3");
     });
 
     test("List batch tasks", async () => {
@@ -49,7 +54,7 @@ describe("FakeTaskService", () => {
     });
 
     test("List hardcoded batch tasks", async () => {
-        const tasks = await service.listHardcodedTasks(accountEndpoint, jobId);
+        const tasks = await service.listTasks(accountEndpoint, jobId);
 
         const allTasks = [];
 
