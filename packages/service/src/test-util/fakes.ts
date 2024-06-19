@@ -112,15 +112,11 @@ export interface BatchFakeSet extends FakeSet {
      * @param accountEndpoint
      * @param jobId
      */
-    listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[];
-
-    /**
-     * Generate tasks
-     *
-     * @param accountEndpoint
-     * @param jobId
-     */
-    generateTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[];
+    listTasks(
+        accountEndpoint: string,
+        jobId: string,
+        numOfTasks?: number
+    ): BatchTaskOutput[];
 
     /**
      * List hardcoded tasks in fakes
@@ -257,7 +253,11 @@ export abstract class AbstractBatchFakeSet
         ];
     }
 
-    generateTasks(accountEndPoint: string, jobId: string): BatchTaskOutput[] {
+    generateTasks(
+        accountEndPoint: string,
+        jobId: string,
+        numOfTasks: number
+    ): BatchTaskOutput[] {
         /*
         function getRandomDateTime(): string {
             const year = Math.floor(Math.random() * 50) + 2020;
@@ -306,7 +306,7 @@ export abstract class AbstractBatchFakeSet
 
         const baseTaskUrl = `https://${accountEndPoint}/jobs/${jobId}/tasks/`;
 
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < numOfTasks; i++) {
             /*
             const seed = Math.random();
             const seedStr = seed.toString().substring(2);
@@ -340,17 +340,20 @@ export abstract class AbstractBatchFakeSet
         return taskOutput;
     }
 
-    listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[] {
+    listTasks(
+        accountEndpoint: string,
+        jobId: string,
+        numOfTasks?: number
+    ): BatchTaskOutput[] {
         if (!jobId) {
             return [];
         }
 
-        const tasks: BatchTaskOutput[] = this.generateTasks(
-            accountEndpoint,
-            jobId
-        );
-
-        return tasks;
+        if (numOfTasks) {
+            return this.generateTasks(accountEndpoint, jobId, numOfTasks);
+        } else {
+            return this.listHardcodedTask(accountEndpoint, jobId);
+        }
     }
 
     listHardcodedTask(
