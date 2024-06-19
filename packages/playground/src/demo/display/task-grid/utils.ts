@@ -95,31 +95,3 @@ export class DemoTasksLoader {
         return tasks;
     }
 }
-
-// Duplicated code used for intern project
-export function generateTasksForList(
-    accountEndPoint: string,
-    jobId: string,
-    numOfTasks: number
-): BatchTaskOutput[] {
-    if (!jobId) {
-        throw new Error("Cannot create a task without a valid job ID");
-    }
-
-    const taskOutput: BatchTaskOutput[] = [];
-
-    const baseTaskUrl = `https://${accountEndPoint}/jobs/${jobId}/tasks/`;
-
-    for (let i = 0; i < numOfTasks; i++) {
-        taskOutput.push({
-            url: `${baseTaskUrl}task${i + 1}`,
-            id: `task${i + 1}`,
-            state: Math.random() > 0.5 ? "active" : "completed",
-            executionInfo: {
-                retryCount: Math.random() > 0.5 ? 0 : 1,
-                requeueCount: Math.random() > 0.5 ? 0 : 1,
-            },
-        });
-    }
-    return taskOutput;
-}
