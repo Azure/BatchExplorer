@@ -1,5 +1,5 @@
 import React from "react";
-import { CiCircleCheck, CiAvocado } from "react-icons/ci";
+import { CiCircleCheck } from "react-icons/ci";
 import {
     DataGrid,
     DataGridColumn,
@@ -7,6 +7,8 @@ import {
 import { BatchTaskOutput } from "@batch/ui-service/lib/batch-models";
 import { CiCircleChevDown } from "react-icons/ci";
 import { IconButton } from "@fluentui/react/lib/Button";
+import { MdOutlineRunningWithErrors } from "react-icons/md";
+import { RiProgress1Line, RiLoader3Fill } from "react-icons/ri";
 //import { PagedAsyncIterableIterator } from "@azure/core-paging";
 
 interface TaskListProps {
@@ -35,6 +37,7 @@ export const TaskList = (props: TaskListProps) => {
                     state: task.state,
                     creationTime: task.creationTime,
                     executionInfo: task.executionInfo,
+                    exitConditions: task.exitConditions?.exitCodes[0].code,
                 });
             }
             setItems(taskArray);
@@ -68,23 +71,38 @@ const columns: DataGridColumn[] = [
         minWidth: 150,
         maxWidth: 200,
         onRender: (task: any) => {
+            console.log(task.exitConditions);
             return (
                 <div>
-                    {task.state === "completed" ? (
+                    {task.state.toLowerCase() === "completed" ? (
                         <CiCircleCheck
                             style={{
-                                marginRight: 6,
+                                marginRight: 5,
                                 color: "green",
                             }}
                         />
-                    ) : (
-                        <CiAvocado
+                    ) : task.state.toLowerCase() === "active" ? (
+                        <RiLoader3Fill
                             style={{
-                                marginRight: 6,
-                                color: "green",
+                                marginRight: 5,
+                                color: "blue",
                             }}
                         />
-                    )}
+                    ) : task.state.toLowerCase() === "failed" ? (
+                        <MdOutlineRunningWithErrors
+                            style={{
+                                marginRight: 5,
+                                color: "red",
+                            }}
+                        />
+                    ) : task.state.toLowerCase() === "running" ? (
+                        <RiProgress1Line
+                            style={{
+                                marginRight: 5,
+                                color: "orange",
+                            }}
+                        />
+                    ) : null}
                     {task.state}
                 </div>
             );
@@ -100,16 +118,12 @@ const columns: DataGridColumn[] = [
         },
     },
     {
-        label: "Exit Code",
-        prop: "exitcode",
+        label: "Exit code",
+        prop: "exitCode",
         minWidth: 150,
+        maxWidth: 200,
         onRender: (task: any) => {
-            return (
-                <div>
-                    Retry count: {task.executionInfo.retryCount} {"\n"}
-                    Requeue count: {task.executionInfo.requeueCount}
-                </div>
-            );
+            return <div>{task.exitConditions}</div>;
         },
     },
     {
@@ -132,4 +146,8 @@ const columns: DataGridColumn[] = [
  name=""
  iconProps={}
  />
+
+
+ Retry count: {task.executionInfo.retryCount} {"\n"}
+Requeue count: {task.executionInfo.requeueCount}
  */

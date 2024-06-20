@@ -111,6 +111,7 @@ export interface BatchFakeSet extends FakeSet {
      *
      * @param accountEndpoint
      * @param jobId
+     * @param numOfTasks The number of tasks to generate
      */
     listTasks(
         accountEndpoint: string,
@@ -258,46 +259,6 @@ export abstract class AbstractBatchFakeSet
         jobId: string,
         numOfTasks: number
     ): BatchTaskOutput[] {
-        /*
-        function getRandomDateTime(): string {
-            const year = Math.floor(Math.random() * 50) + 2020;
-            const month = Math.floor(Math.random() * 12);
-            const day = Math.floor(Math.random() * 28) + 1;
-            const hours = Math.floor(Math.random() * 24);
-            const minutes = Math.floor(Math.random() * 60);
-            const seconds = Math.floor(Math.random() * 60); // Random second
-
-            const date = new Date(year, month, day, hours, minutes, seconds);
-            return date.toString();
-        }
-            */
-
-        function getRandomDateTime(): string {
-            const year = Math.floor(Math.random() * 50) + 2020;
-            const month = Math.floor(Math.random() * 12);
-            const day = Math.floor(Math.random() * 28); // Assume all months have 28 days for simplicity
-            const hours = Math.floor(Math.random() * 24);
-            const minutes = Math.floor(Math.random() * 60);
-            const seconds = Math.floor(Math.random() * 60);
-
-            const date = new Date(year, month, day, hours, minutes, seconds);
-
-            // Format the date and time
-            const formattedDateTime = date.toLocaleString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-            });
-
-            return formattedDateTime;
-        }
-
-        const randomGeneratedDateTime = getRandomDateTime();
-        console.log(randomGeneratedDateTime); // Example output: "Aug 17, 2022 14:50:40"
-
         if (!jobId) {
             throw new Error("Cannot create a task without a valid job ID");
         }
@@ -307,33 +268,34 @@ export abstract class AbstractBatchFakeSet
         const baseTaskUrl = `https://${accountEndPoint}/jobs/${jobId}/tasks/`;
 
         for (let i = 0; i < numOfTasks; i++) {
-            /*
             const seed = Math.random();
             const seedStr = seed.toString().substring(2);
 
             let exitCode, state;
 
             if (parseInt(seedStr[0]) <= 5) {
-                exitCode = "Success";
+                exitCode = 1;
             } else {
-                exitCode = "Failure";
+                exitCode = 0;
             }
 
-            if (exitCode === "Success") {
+            if (exitCode == 1) {
                 state = parseInt(seedStr[1]) <= 5 ? "Active" : "Completed";
             } else {
-                state = parseInt(seedStr[1]) <= 5 ? "Error" : "Running";
+                state = parseInt(seedStr[1]) <= 5 ? "Failed" : "Running";
             }
-            */
 
             taskOutput.push({
                 url: `${baseTaskUrl}task${i + 1}`,
                 id: `task${i + 1}`,
-                state: Math.random() > 0.5 ? "active" : "completed",
-                creationTime: getRandomDateTime(),
+                state: state,
+                creationTime: `Aug 15, 2022 14:${i}`,
                 executionInfo: {
-                    retryCount: Math.random() > 0.5 ? 0 : 1,
-                    requeueCount: Math.random() > 0.5 ? 0 : 1,
+                    retryCount: Math.floor(Math.random() * 10),
+                    requeueCount: Math.floor(Math.random() * 10),
+                },
+                exitConditions: {
+                    exitCodes: [{ code: exitCode, exitOptions: {} }],
                 },
             });
         }
@@ -974,19 +936,23 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
             url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/taskA",
             id: "taska",
             state: "active",
+            creationTime: "Aug 15, 2022 14:50:00",
             executionInfo: {
                 retryCount: 0,
                 requeueCount: 0,
             },
+            exitConditions: { exitCodes: [{ code: 1, exitOptions: {} }] },
         },
         "mercury.eastus.batch.azure.com:faketestjob1:task1": {
             url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/task1",
             id: "task1",
             state: "completed",
+            creationTime: "Aug 15, 2022 14:50:01",
             executionInfo: {
                 retryCount: 0,
                 requeueCount: 0,
             },
+            exitConditions: { exitCodes: [{ code: 0, exitOptions: {} }] },
         },
     };
 
