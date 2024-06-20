@@ -2,16 +2,15 @@ import { inject } from "@azure/bonito-core/lib/environment";
 import { TaskList } from "@batch/ui-react/lib/task/task-list";
 import { BatchDependencyName } from "@batch/ui-service/lib/environment/batch-dependencies";
 import { FakeTaskService } from "@batch/ui-service/lib/task/fake-task-service";
-import { Slider } from "@fluentui/react/lib/Slider";
 import { Stack } from "@fluentui/react/lib/Stack";
 import React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
-import { TextField } from "@azure/bonito-ui/src/components/form";
-import { TextFieldOnChange } from "../../../functions";
-//import { PagedAsyncIterableIterator } from "@azure/core-paging";
+import { TextField } from "@fluentui/react/lib/TextField";
 
 export const TaskListDemo: React.FC = () => {
-    const [taskNumberField, setTaskNumberField] = React.useState(0);
+    const [taskNumberField, setTaskNumberField] = React.useState<
+        string | undefined
+    >(undefined);
     const [items, setItems] = React.useState<any>([]);
 
     const [accountEndpoint] = React.useState<string>(
@@ -29,8 +28,13 @@ export const TaskListDemo: React.FC = () => {
         const fetchTaskList = async () => {
             if (!isMounted) return;
 
-            const tasks = await taskService.listTasks(accountEndpoint, jobId);
-
+            const tasks = taskNumberField
+                ? await taskService.listTasks(
+                      accountEndpoint,
+                      jobId,
+                      parseInt(taskNumberField)
+                  )
+                : await taskService.listTasks(accountEndpoint, jobId);
             setItems(tasks);
         };
 
@@ -41,10 +45,10 @@ export const TaskListDemo: React.FC = () => {
         return () => {
             isMounted = false;
         };
-    }, [accountEndpoint, jobId]);
+    }, [accountEndpoint, jobId, taskNumberField]);
 
     return (
-        <DemoPane title="Task List Demo">
+        <DemoPane title="Task List Demo Test">
             <Stack
                 horizontal={true}
                 tokens={{ childrenGap: "1em" }}
@@ -56,8 +60,7 @@ export const TaskListDemo: React.FC = () => {
                     <TextField
                         value={taskNumberField}
                         onChange={(_, newValue) => {
-                            const number = parseInt(`${newValue}`);
-                            setTaskNumberField(number);
+                            setTaskNumberField(newValue);
                         }}
                     />
                 </Stack.Item>
