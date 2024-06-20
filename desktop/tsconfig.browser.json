@@ -5,5 +5,8 @@
     "src/test/**/*.ts",
     "test/**/*.ts",
     "**/testing**/*"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": true
+  }
 }
