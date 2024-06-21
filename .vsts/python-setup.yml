@@ -15,7 +15,7 @@ steps:
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      pip install -r desktop/python/requirements.txt
+      pip3 install -r desktop/python/requirements.txt
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
     displayName: Install Python dependencies (Linux)
 
@@ -23,6 +23,6 @@ steps:
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
-      exec { pip install -r desktop/python/requirements.txt }
+      exec { pip3 install -r desktop/python/requirements.txt }
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     displayName: Install Python dependencies (Windows)
