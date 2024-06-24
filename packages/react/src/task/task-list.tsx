@@ -9,7 +9,6 @@ import { CiCircleChevDown } from "react-icons/ci";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { MdOutlineRunningWithErrors } from "react-icons/md";
 import { RiProgress1Line, RiLoader3Fill } from "react-icons/ri";
-//import { PagedAsyncIterableIterator } from "@azure/core-paging";
 
 interface TaskListProps {
     pagedTasks: any;
@@ -71,7 +70,6 @@ const columns: DataGridColumn[] = [
         minWidth: 150,
         maxWidth: 200,
         onRender: (task: any) => {
-            console.log(task.exitConditions);
             return (
                 <div>
                     {task.state.toLowerCase() === "completed" ? (
@@ -121,7 +119,6 @@ const columns: DataGridColumn[] = [
         label: "Exit code",
         prop: "exitCode",
         minWidth: 150,
-        maxWidth: 200,
         onRender: (task: any) => {
             return <div>{task.exitConditions}</div>;
         },
@@ -141,13 +138,3 @@ const columns: DataGridColumn[] = [
         },
     },
 ];
-/**
- <IconButton
- name=""
- iconProps={}
- />
-
-
- Retry count: {task.executionInfo.retryCount} {"\n"}
-Requeue count: {task.executionInfo.requeueCount}
- */
