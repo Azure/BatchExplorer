@@ -1,4 +1,10 @@
 steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET 6'
+    inputs:
+      packageType: sdk
+      version: 6.x
+
   - task: EsrpCodeSigning@2
     inputs:
       ConnectedServiceName: 'ESRP CodeSign'
