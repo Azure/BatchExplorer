@@ -45,7 +45,10 @@ module.exports = {
                 ["cobertura", { file: "cobertura.xml" }],
             ],
             moduleDirectories: ["src", "node_modules"],
-            moduleNameMapper: {},
+            moduleNameMapper: {
+                // batch RLC generates import has .js extension, so we need to remove it in test
+                "(.+)\\.js": "$1",
+            },
             reporters: [
                 "default",
                 [
