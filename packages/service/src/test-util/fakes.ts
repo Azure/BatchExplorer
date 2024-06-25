@@ -116,7 +116,8 @@ export interface BatchFakeSet extends FakeSet {
     listTasks(
         accountEndpoint: string,
         jobId: string,
-        numOfTasks?: number
+        numOfTasks?: number,
+        generateTasks?: boolean
     ): BatchTaskOutput[];
 
     /**
@@ -286,8 +287,8 @@ export abstract class AbstractBatchFakeSet
             }
 
             taskOutput.push({
-                url: `${baseTaskUrl}task${i + 1}`,
-                id: `task${i + 1}`,
+                url: `${baseTaskUrl}generatedTask${i + 1}`,
+                id: `generatedTask${i + 1}`,
                 state: state,
                 creationTime: `Aug 15, 2022 14:${i}`,
                 executionInfo: {
@@ -305,13 +306,14 @@ export abstract class AbstractBatchFakeSet
     listTasks(
         accountEndpoint: string,
         jobId: string,
-        numOfTasks?: number
+        numOfTasks: number = 100,
+        generateTasks: boolean = false
     ): BatchTaskOutput[] {
         if (!jobId) {
             return [];
         }
 
-        if (numOfTasks) {
+        if (generateTasks) {
             return this.generateTasks(accountEndpoint, jobId, numOfTasks);
         } else {
             return this.listHardcodedTask(accountEndpoint, jobId);

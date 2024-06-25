@@ -1,48 +1,60 @@
-import React from "react";
-import { CiCircleCheck } from "react-icons/ci";
+import { inject } from "@azure/bonito-core/lib/environment";
 import {
     DataGrid,
     DataGridColumn,
 } from "@azure/bonito-ui/lib/components/data-grid";
 import { BatchTaskOutput } from "@batch/ui-service/lib/batch-models";
-import { CiCircleChevDown } from "react-icons/ci";
+import { BatchDependencyName } from "@batch/ui-service/lib/environment";
+import { TaskService } from "@batch/ui-service/lib/task/task-service";
 import { IconButton } from "@fluentui/react/lib/Button";
+import React from "react";
+import { CiCircleCheck, CiCircleChevDown } from "react-icons/ci";
 import { MdOutlineRunningWithErrors } from "react-icons/md";
-import { RiProgress1Line, RiLoader3Fill } from "react-icons/ri";
+import { RiLoader3Fill, RiProgress1Line } from "react-icons/ri";
 
 interface TaskListProps {
-    pagedTasks: any;
+    accountEndpoint: string;
+    jobId: string;
 }
 
-interface taskRow extends BatchTaskOutput {
-    url?: string | undefined;
-    id?: string | undefined;
-    state?: string | undefined;
+interface TaskRow {
+    url?: string;
+    id?: string;
+    state?: string;
+    creationTime?: string;
+    exitCode?: number;
 }
 
 export const TaskList = (props: TaskListProps) => {
-    const { pagedTasks } = props;
-    const [items, setItems] = React.useState<taskRow[]>([]);
+    const { accountEndpoint, jobId } = props;
+    const [items, setItems] = React.useState<TaskRow[]>([]);
     const [isCompact] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        const parseTasks = async () => {
-            const taskArray = [];
+        let isMounted = true;
+        const taskService: TaskService = inject(
+            BatchDependencyName.TaskService
+        );
 
-            for await (const task of pagedTasks) {
-                taskArray.push({
-                    url: task.url,
-                    id: task.id,
-                    state: task.state,
-                    creationTime: task.creationTime,
-                    executionInfo: task.executionInfo,
-                    exitConditions: task.exitConditions?.exitCodes[0].code,
-                });
-            }
-            setItems(taskArray);
+        const fetchTaskList = async () => {
+            if (!isMounted) return;
+
+            const tasks = await taskService.listTasks(accountEndpoint, jobId);
+            const pages = tasks.byPage();
+            // .next not picking up BatchTaskOutput[] variable type
+            const res: IteratorResult<BatchTaskOutput[], BatchTaskOutput[]> =
+                await pages.next();
+            setItems(tasksToRows(res.value));
         };
-        parseTasks();
-    }, [pagedTasks]);
+
+        fetchTaskList().catch((e) => {
+            console.log("Error: ", e);
+        });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [accountEndpoint, jobId]);
 
     return (
         <DataGrid
@@ -53,6 +65,21 @@ export const TaskList = (props: TaskListProps) => {
         />
     );
 };
+
+function tasksToRows(tasks: BatchTaskOutput[]): TaskRow[] {
+    const rows = [];
+
+    for (const task of tasks) {
+        rows.push({
+            url: task.url,
+            id: task.id,
+            state: task.state,
+            creationTime: task.creationTime,
+            exitCode: task.exitConditions?.exitCodes?.[0].code,
+        });
+    }
+    return rows;
+}
 
 const columns: DataGridColumn[] = [
     {
