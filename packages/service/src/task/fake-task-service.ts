@@ -6,6 +6,8 @@ import { createPagedArray } from "../test-util/paging-test-util";
 
 export class FakeTaskService implements TaskService {
     fakeSet: BatchFakeSet = new BasicBatchFakeSet();
+    numOfTasks?: number;
+    generateTasks?: boolean;
 
     setFakes(fakeSet: BatchFakeSet): void {
         this.fakeSet = fakeSet;
@@ -21,11 +23,20 @@ export class FakeTaskService implements TaskService {
 
     async listTasks(
         accountEndpoint: string,
-        jobId: string,
-        numOfTasks?: number
+        jobId: string
     ): Promise<PagedAsyncIterableIterator<BatchTaskOutput>> {
         return createPagedArray(
-            this.fakeSet.listTasks(accountEndpoint, jobId, numOfTasks)
+            this.fakeSet.listTasks(
+                accountEndpoint,
+                jobId,
+                this.numOfTasks,
+                this.generateTasks
+            )
         );
     }
 }
+
+// add another memebr var numOfTasks, like line 8
+// can use in listTasks() but not as parameter
+// generate tasks or fake tasks
+// function can change, signature has to be same

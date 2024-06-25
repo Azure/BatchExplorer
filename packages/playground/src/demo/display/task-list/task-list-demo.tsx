@@ -5,47 +5,23 @@ import { FakeTaskService } from "@batch/ui-service/lib/task/fake-task-service";
 import { Stack } from "@fluentui/react/lib/Stack";
 import React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
-import { TextField } from "@fluentui/react/lib/TextField";
+import { Unstable_NumberInput as NumberInput } from "@mui/base/Unstable_NumberInput";
 
 export const TaskListDemo: React.FC = () => {
-    const [taskNumberField, setTaskNumberField] = React.useState<
-        string | undefined
-    >(undefined);
-    const [items, setItems] = React.useState<any>([]);
+    const taskService: FakeTaskService = inject(
+        BatchDependencyName.TaskService
+    );
 
+    const [taskNumberField, setTaskNumberField] = React.useState<
+        number | undefined
+    >(undefined);
     const [accountEndpoint] = React.useState<string>(
         "mercury.eastus.batch.azure.com"
     );
     const [jobId] = React.useState<string>("faketestjob1");
 
-    React.useEffect(() => {
-        let isMounted = true;
-
-        const taskService: FakeTaskService = inject(
-            BatchDependencyName.TaskService
-        );
-
-        const fetchTaskList = async () => {
-            if (!isMounted) return;
-
-            const tasks = taskNumberField
-                ? await taskService.listTasks(
-                      accountEndpoint,
-                      jobId,
-                      parseInt(taskNumberField)
-                  )
-                : await taskService.listTasks(accountEndpoint, jobId);
-            setItems(tasks);
-        };
-
-        fetchTaskList().catch((e) => {
-            console.log("Error: ", e);
-        });
-
-        return () => {
-            isMounted = false;
-        };
-    }, [accountEndpoint, jobId, taskNumberField]);
+    taskService.generateTasks = true;
+    taskService.numOfTasks = taskNumberField;
 
     return (
         <DemoPane title="Task List Demo Test">
@@ -57,15 +33,15 @@ export const TaskListDemo: React.FC = () => {
                 styles={{ root: { marginBottom: "1em" } }}
             >
                 <Stack.Item grow={1}>
-                    <TextField
+                    <NumberInput
                         value={taskNumberField}
                         onChange={(_, newValue) => {
-                            setTaskNumberField(newValue);
+                            setTaskNumberField(newValue!);
                         }}
                     />
                 </Stack.Item>
             </Stack>
-            <TaskList pagedTasks={items} />
+            <TaskList accountEndpoint={accountEndpoint} jobId={jobId} />
         </DemoPane>
     );
 };
