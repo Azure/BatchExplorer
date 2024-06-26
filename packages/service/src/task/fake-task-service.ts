@@ -29,14 +29,9 @@ export class FakeTaskService implements TaskService {
             this.fakeSet.listTasks(
                 accountEndpoint,
                 jobId,
-                this.numOfTasks,
-                this.generateTasks
+                this.generateTasks,
+                this.numOfTasks
             )
         );
     }
 }
-
-// add another memebr var numOfTasks, like line 8
-// can use in listTasks() but not as parameter
-// generate tasks or fake tasks
-// function can change, signature has to be same
