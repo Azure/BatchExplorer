@@ -111,13 +111,14 @@ export interface BatchFakeSet extends FakeSet {
      *
      * @param accountEndpoint
      * @param jobId
+     * @param generateTasks Generate tasks based on if live or fake service
      * @param numOfTasks The number of tasks to generate
      */
     listTasks(
         accountEndpoint: string,
         jobId: string,
-        numOfTasks?: number,
-        generateTasks?: boolean
+        generateTasks?: boolean,
+        numOfTasks?: number
     ): BatchTaskOutput[];
 
     /**
@@ -306,8 +307,8 @@ export abstract class AbstractBatchFakeSet
     listTasks(
         accountEndpoint: string,
         jobId: string,
-        numOfTasks: number = 100,
-        generateTasks: boolean = false
+        generateTasks: boolean = false,
+        numOfTasks: number = 100
     ): BatchTaskOutput[] {
         if (!jobId) {
             return [];

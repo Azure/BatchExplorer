@@ -5,7 +5,7 @@ import { FakeTaskService } from "@batch/ui-service/lib/task/fake-task-service";
 import { Stack } from "@fluentui/react/lib/Stack";
 import React from "react";
 import { DemoPane } from "../../../layout/demo-pane";
-import { Unstable_NumberInput as NumberInput } from "@mui/base/Unstable_NumberInput";
+import { SpinButton } from "@fluentui/react/lib/SpinButton";
 
 export const TaskListDemo: React.FC = () => {
     const taskService: FakeTaskService = inject(
@@ -33,10 +33,11 @@ export const TaskListDemo: React.FC = () => {
                 styles={{ root: { marginBottom: "1em" } }}
             >
                 <Stack.Item grow={1}>
-                    <NumberInput
-                        value={taskNumberField}
+                    <SpinButton
+                        label="Number of Tasks"
+                        // value={taskNumberField}
                         onChange={(_, newValue) => {
-                            setTaskNumberField(newValue!);
+                            setTaskNumberField(Number(newValue) ?? undefined);
                         }}
                     />
                 </Stack.Item>

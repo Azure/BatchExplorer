@@ -17,8 +17,8 @@ describe("FakeTaskService", () => {
     });
 
     test("Generate tasks", async () => {
-        service.numOfTasks = 3;
         service.generateTasks = true;
+        service.numOfTasks = 3;
 
         const tasks = await service.listTasks(accountEndpoint, jobId);
         const allTasks = [];

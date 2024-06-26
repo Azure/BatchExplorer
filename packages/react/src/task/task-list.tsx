@@ -37,9 +37,10 @@ export const TaskList = (props: TaskListProps) => {
         );
 
         const fetchTaskList = async () => {
+            const tasks = await taskService.listTasks(accountEndpoint, jobId);
+
             if (!isMounted) return;
 
-            const tasks = await taskService.listTasks(accountEndpoint, jobId);
             const pages = tasks.byPage();
             // .next not picking up BatchTaskOutput[] variable type
             const res: IteratorResult<BatchTaskOutput[], BatchTaskOutput[]> =
@@ -81,13 +82,13 @@ function tasksToRows(tasks: BatchTaskOutput[]): TaskRow[] {
     return rows;
 }
 
-const columns: DataGridColumn[] = [
+const columns: DataGridColumn<TaskRow>[] = [
     {
         label: "Task",
         prop: "id",
         minWidth: 100,
         maxWidth: 150,
-        onRender: (task: any) => {
+        onRender: (task) => {
             return <a href={task.url}>{task.id}</a>;
         },
     },
@@ -96,31 +97,31 @@ const columns: DataGridColumn[] = [
         prop: "state",
         minWidth: 150,
         maxWidth: 200,
-        onRender: (task: any) => {
+        onRender: (task) => {
             return (
                 <div>
-                    {task.state.toLowerCase() === "completed" ? (
+                    {task.state?.toLowerCase() === "completed" ? (
                         <CiCircleCheck
                             style={{
                                 marginRight: 5,
                                 color: "green",
                             }}
                         />
-                    ) : task.state.toLowerCase() === "active" ? (
+                    ) : task.state?.toLowerCase() === "active" ? (
                         <RiLoader3Fill
                             style={{
                                 marginRight: 5,
                                 color: "blue",
                             }}
                         />
-                    ) : task.state.toLowerCase() === "failed" ? (
+                    ) : task.state?.toLowerCase() === "failed" ? (
                         <MdOutlineRunningWithErrors
                             style={{
                                 marginRight: 5,
                                 color: "red",
                             }}
                         />
-                    ) : task.state.toLowerCase() === "running" ? (
+                    ) : task.state?.toLowerCase() === "running" ? (
                         <RiProgress1Line
                             style={{
                                 marginRight: 5,
@@ -138,7 +139,7 @@ const columns: DataGridColumn[] = [
         prop: "created",
         minWidth: 150,
         maxWidth: 200,
-        onRender: (task: any) => {
+        onRender: (task) => {
             return <div>{task.creationTime}</div>;
         },
     },
@@ -146,15 +147,15 @@ const columns: DataGridColumn[] = [
         label: "Exit code",
         prop: "exitCode",
         minWidth: 150,
-        onRender: (task: any) => {
-            return <div>{task.exitConditions}</div>;
+        onRender: (task) => {
+            return <div>{task.exitCode}</div>;
         },
     },
     {
         label: " ",
         prop: " ",
         minWidth: 150,
-        onRender: (task: any) => {
+        onRender: (task) => {
             return (
                 <div>
                     <IconButton>
