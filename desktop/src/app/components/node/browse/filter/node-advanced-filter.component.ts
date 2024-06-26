@@ -20,6 +20,7 @@ export class NodeAdvancedFilterComponent {
                 NodeState.idle, NodeState.running, NodeState.creating, NodeState.leavingPool,
                 NodeState.rebooting, NodeState.reimaging, NodeState.starting, NodeState.startTaskFailed,
                 NodeState.unknown, NodeState.unusable, NodeState.offline, NodeState.waitingForStartTask,
+                NodeState.upgradingos
             ]),
         });
 
