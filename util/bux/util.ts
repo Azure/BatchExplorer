@@ -323,8 +323,20 @@ export async function gatherBuildResults(basePath: string) {
         path.join(baseBuildDir, "bonito-core")
     );
     doCopy(
+        path.join(basePath, "packages", "bonito-ui", "build"),
+        path.join(baseBuildDir, "bonito-ui")
+    );
+    doCopy(
+        path.join(basePath, "packages", "playground", "build"),
+        path.join(baseBuildDir, "playground")
+    );
+    doCopy(
         path.join(basePath, "packages", "react", "build"),
         path.join(baseBuildDir, "react")
+    );
+    doCopy(
+        path.join(basePath, "packages", "service", "build"),
+        path.join(baseBuildDir, "service")
     );
 
     // web
@@ -334,6 +346,10 @@ export async function gatherBuildResults(basePath: string) {
     doCopy(
         path.join(basePath, "desktop", "coverage"),
         path.join(baseBuildDir, "desktop", "coverage")
+    );
+    doCopy(
+        path.join(basePath, "desktop", "release"),
+        path.join(baseBuildDir, "desktop", "release")
     );
 }
 
