@@ -1,3 +1,4 @@
+import * as React from "react";
 import { inject } from "@azure/bonito-core/lib/environment";
 import {
     DataGrid,
@@ -6,11 +7,9 @@ import {
 import { BatchTaskOutput } from "@batch/ui-service/lib/batch-models";
 import { BatchDependencyName } from "@batch/ui-service/lib/environment";
 import { TaskService } from "@batch/ui-service/lib/task/task-service";
+import { Icon } from "@fluentui/react/lib/Icon";
 import { IconButton } from "@fluentui/react/lib/Button";
-import React from "react";
-import { CiCircleCheck, CiCircleChevDown } from "react-icons/ci";
-import { MdOutlineRunningWithErrors } from "react-icons/md";
-import { RiLoader3Fill, RiProgress1Line } from "react-icons/ri";
+import { CiCircleChevDown } from "react-icons/ci";
 
 interface TaskListProps {
     accountEndpoint: string;
@@ -101,28 +100,32 @@ const columns: DataGridColumn<TaskRow>[] = [
             return (
                 <div>
                     {task.state?.toLowerCase() === "completed" ? (
-                        <CiCircleCheck
+                        <Icon
+                            iconName="SkypeCircleCheck"
                             style={{
                                 marginRight: 5,
                                 color: "green",
                             }}
                         />
                     ) : task.state?.toLowerCase() === "active" ? (
-                        <RiLoader3Fill
+                        <Icon
+                            iconName="SyncStatusSolid"
                             style={{
                                 marginRight: 5,
                                 color: "blue",
                             }}
                         />
                     ) : task.state?.toLowerCase() === "failed" ? (
-                        <MdOutlineRunningWithErrors
+                        <Icon
+                            iconName="StatusErrorFull"
                             style={{
                                 marginRight: 5,
                                 color: "red",
                             }}
                         />
                     ) : task.state?.toLowerCase() === "running" ? (
-                        <RiProgress1Line
+                        <Icon
+                            iconName="SkypeCircleClock"
                             style={{
                                 marginRight: 5,
                                 color: "orange",
