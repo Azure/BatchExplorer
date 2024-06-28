@@ -90,6 +90,11 @@ export const DemoNavMenu: React.FC = () => {
                     name: "VMExtension List Display",
                     url: getDemoHash("vmExtensionList"),
                 },
+                {
+                    key: "TaskList",
+                    name: "Task List Display",
+                    url: getDemoHash("taskList"),
+                },
             ],
         },
     ];

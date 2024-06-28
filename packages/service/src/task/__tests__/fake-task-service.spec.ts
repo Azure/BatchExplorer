@@ -5,7 +5,6 @@ import { FakeTaskService } from "../fake-task-service";
 describe("FakeTaskService", () => {
     const accountEndpoint = "mercury.eastus.batch.azure.com";
     const jobId = `faketestjob1`;
-    const taskIds = ["taska", "task1"];
 
     let service: FakeTaskService;
     let fakeSet: BatchFakeSet;
@@ -17,15 +16,20 @@ describe("FakeTaskService", () => {
         service.setFakes(fakeSet);
     });
 
-    test("List batch tasks", async () => {
+    test("Generate tasks", async () => {
+        service.generateTasks = true;
+        service.numOfTasks = 3;
+
         const tasks = await service.listTasks(accountEndpoint, jobId);
-
         const allTasks = [];
-
         for await (const task of tasks) {
             allTasks.push(task);
         }
-        expect(allTasks.map((task) => task.id)).toEqual(taskIds);
+
+        expect(allTasks.length).toEqual(3);
+        expect(allTasks[0].id).toEqual("generatedTask1");
+        expect(allTasks[1].id).toEqual("generatedTask2");
+        expect(allTasks[2].id).toEqual("generatedTask3");
     });
 
     test("Get specific batch task", async () => {
@@ -38,5 +42,16 @@ describe("FakeTaskService", () => {
 
         expect(taskNum.id).toEqual("task1");
         expect(taskLetter.id).toEqual("taska");
+    });
+
+    test("List hardcoded batch tasks", async () => {
+        const tasks = await service.listTasks(accountEndpoint, jobId);
+
+        const allTasks = [];
+
+        for await (const task of tasks) {
+            allTasks.push(task);
+        }
+        expect(allTasks.map((task) => task.id)).toEqual(["taska", "task1"]);
     });
 });

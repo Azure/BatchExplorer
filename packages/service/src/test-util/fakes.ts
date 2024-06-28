@@ -111,8 +111,26 @@ export interface BatchFakeSet extends FakeSet {
      *
      * @param accountEndpoint
      * @param jobId
+     * @param generateTasks Generate tasks based on if live or fake service
+     * @param numOfTasks The number of tasks to generate
      */
-    listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[];
+    listTasks(
+        accountEndpoint: string,
+        jobId: string,
+        generateTasks?: boolean,
+        numOfTasks?: number
+    ): BatchTaskOutput[];
+
+    /**
+     * List hardcoded tasks in fakes
+     *
+     * @param accountEndpoint
+     * @param jobId
+     */
+    listHardcodedTask(
+        accountEndpoint: string,
+        jobId: string
+    ): BatchTaskOutput[];
 }
 
 export abstract class AbstractBatchFakeSet
@@ -238,7 +256,75 @@ export abstract class AbstractBatchFakeSet
         ];
     }
 
-    listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[] {
+    generateTasks(
+        accountEndPoint: string,
+        jobId: string,
+        numOfTasks: number
+    ): BatchTaskOutput[] {
+        if (!jobId) {
+            throw new Error("Cannot create a task without a valid job ID");
+        }
+
+        const taskOutput: BatchTaskOutput[] = [];
+
+        const baseTaskUrl = `https://${accountEndPoint}/jobs/${jobId}/tasks/`;
+
+        for (let i = 0; i < numOfTasks; i++) {
+            const seed = Math.random();
+            const seedStr = seed.toString().substring(2);
+
+            let exitCode, state;
+
+            if (parseInt(seedStr[0]) <= 5) {
+                exitCode = 1;
+            } else {
+                exitCode = 0;
+            }
+
+            if (exitCode == 1) {
+                state = parseInt(seedStr[1]) <= 5 ? "Active" : "Completed";
+            } else {
+                state = parseInt(seedStr[1]) <= 5 ? "Failed" : "Running";
+            }
+
+            taskOutput.push({
+                url: `${baseTaskUrl}generatedTask${i + 1}`,
+                id: `generatedTask${i + 1}`,
+                state: state,
+                creationTime: `Aug 15, 2022 14:${i}`,
+                executionInfo: {
+                    retryCount: Math.floor(Math.random() * 10),
+                    requeueCount: Math.floor(Math.random() * 10),
+                },
+                exitConditions: {
+                    exitCodes: [{ code: exitCode, exitOptions: {} }],
+                },
+            });
+        }
+        return taskOutput;
+    }
+
+    listTasks(
+        accountEndpoint: string,
+        jobId: string,
+        generateTasks: boolean = false,
+        numOfTasks: number = 100
+    ): BatchTaskOutput[] {
+        if (!jobId) {
+            return [];
+        }
+
+        if (generateTasks) {
+            return this.generateTasks(accountEndpoint, jobId, numOfTasks);
+        } else {
+            return this.listHardcodedTask(accountEndpoint, jobId);
+        }
+    }
+
+    listHardcodedTask(
+        accountEndpoint: string,
+        jobId: string
+    ): BatchTaskOutput[] {
         if (!jobId) {
             return [];
         }
@@ -853,19 +939,23 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
             url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/taskA",
             id: "taska",
             state: "active",
+            creationTime: "Aug 15, 2022 14:50:00",
             executionInfo: {
                 retryCount: 0,
                 requeueCount: 0,
             },
+            exitConditions: { exitCodes: [{ code: 1, exitOptions: {} }] },
         },
         "mercury.eastus.batch.azure.com:faketestjob1:task1": {
             url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/task1",
             id: "task1",
             state: "completed",
+            creationTime: "Aug 15, 2022 14:50:01",
             executionInfo: {
                 retryCount: 0,
                 requeueCount: 0,
             },
+            exitConditions: { exitCodes: [{ code: 0, exitOptions: {} }] },
         },
     };
 

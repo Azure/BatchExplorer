@@ -23,13 +23,13 @@ export class LiveTaskService
     }
 
     async listTasks(
-        accountResourceId: string,
+        accountEndpoint: string,
         jobId: string,
         opts?: OperationOptions
     ): Promise<PagedAsyncIterableIterator<BatchTaskOutput>> {
         const listTaskPath = "/jobs/{jobId}/tasks";
         const batchClient = createBatchClient(
-            this._ensureHttpsEndpoint(accountResourceId)
+            this._ensureHttpsEndpoint(accountEndpoint)
         );
 
         const res = await batchClient.path(listTaskPath, jobId).get({
@@ -46,14 +46,14 @@ export class LiveTaskService
     }
 
     async getTask(
-        accountResourceId: string,
+        accountEndpoint: string,
         jobId: string,
         taskId: string,
         opts?: OperationOptions
     ): Promise<BatchTaskOutput | undefined> {
         const taskPath = "/jobs/{jobId}/tasks/{taskId}";
         const batchClient = createBatchClient(
-            this._ensureHttpsEndpoint(accountResourceId)
+            this._ensureHttpsEndpoint(accountEndpoint)
         );
         const res = await batchClient.path(taskPath, jobId, taskId).get({
             headers: {

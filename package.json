@@ -24,12 +24,12 @@
     "monaco-editor": "~0.31.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-icons": "^5.2.1",
     "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@azure-tools/typespec-client-generator-cli": "^0.3.0",
     "@lerna/legacy-package-management": "7.1.5",
-    "@typespec/compiler": "^0.50.0",
     "@octokit/core": "^3.5.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/react-hooks": "^8.0.0",
@@ -38,6 +38,7 @@
     "@types/react-dom": "^17.0.18",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
+    "@typespec/compiler": "^0.50.0",
     "autorest": "^3.6.3",
     "cross-env": "^7.0.3",
     "eslint": "^8.10.0",

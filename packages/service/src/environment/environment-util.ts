@@ -8,6 +8,7 @@ import {
 } from "@azure/bonito-core/lib/environment";
 import { FakeNodeService } from "../node";
 import { FakePoolService } from "../pool";
+import { FakeTaskService } from "../task/fake-task-service";
 import {
     BatchDependencyFactories,
     BatchDependencyName,
@@ -16,6 +17,7 @@ import {
 export const mockBatchDepFactories: Partial<BatchDependencyFactories> = {
     [BatchDependencyName.PoolService]: () => new FakePoolService(),
     [BatchDependencyName.NodeService]: () => new FakeNodeService(),
+    [BatchDependencyName.TaskService]: () => new FakeTaskService(),
 };
 
 /**
