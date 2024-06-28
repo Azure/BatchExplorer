@@ -1,5 +1,5 @@
-import { Injectable, NgZone, OnDestroy } from "@angular/core";
-import { AccessToken, AccessTokenCache, I18nService, ServerError, TenantSettings } from "@batch-flask/core";
+import { EventEmitter, Injectable, NgZone, OnDestroy } from "@angular/core";
+import { AccessToken, AccessTokenCache, AuthEvent, I18nService, ServerError, TenantSettings } from "@batch-flask/core";
 import { TenantSettingsService } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/electron";
 import { wrapMainObservable } from "@batch-flask/electron/utils";
@@ -13,6 +13,7 @@ import { Constants } from "common";
 import { Observable, from, throwError, combineLatest, forkJoin, of } from "rxjs";
 import { catchError, map, publishReplay, refCount, share, switchMap } from "rxjs/operators";
 import { TenantErrorService } from "./tenant-error.service";
+import { IpcEvent } from "common/constants";
 
 export const reauthenticateAll = "*";
 
@@ -30,10 +31,24 @@ export interface TenantAuthorization {
     messageDetails?: string;
 }
 
+export type AuthEventType = "AuthSelect" | "AuthSelectResult" | "AuthComplete" |
+    "Logout";
+
 type TenantAuthRequestOptions = {
     notifyOnError?: boolean;
     reauthenticate?: string; // "*" or tenantId
 };
+
+export interface AuthSelectResult {
+    result: "success" | "cancel";
+    requestId?: string;
+    externalBrowserAuth?: boolean;
+}
+
+export interface AuthSelectRequest {
+    tenantId?: string;
+    requestId?: string;
+}
 
 @Injectable({ providedIn: "root" })
 export class AuthService implements OnDestroy {
@@ -45,6 +60,8 @@ export class AuthService implements OnDestroy {
 
     private previousTenantState: StringMap<TenantAuthorization> = {};
     private tokenObservableCache: StringMap<Observable<any>> = {};
+
+    private authEvents = new Map<AuthEventType, EventEmitter<unknown>>();
 
     constructor(
         zone: NgZone,
@@ -69,16 +86,32 @@ export class AuthService implements OnDestroy {
             publishReplay(1),
             refCount(),
         );
+        this.initializeEventEmitters();
     }
 
     public ngOnDestroy() {
-        // Nothing to do
+        this.authEvents.forEach((event) => event.unsubscribe());
     }
 
-    public logout(closeWindows = true) {
-        this._aadService.logout(closeWindows);
+    public async logout() {
+        await this.remote.send(IpcEvent.logout);
+        await this.tokenCache.clear();
+        this.authEvents["Logout"].emit();
+        return;
     }
 
+    public async login() {
+        return this.remote.send(IpcEvent.login);
+    }
+
+    public isLoggedIn(): Observable<boolean> {
+        return this.currentUser.pipe(
+            map(user => !!user),
+            catchError(() => of(false))
+        );
+    }
+
+    /* Only used by Python-RPC */
     public accessTokenFor(tenantId: string, resource: AADResourceName = null) {
         return this.accessTokenData(tenantId, resource)
             .pipe(map((x: AccessToken) => x.accessToken));
@@ -105,8 +138,7 @@ export class AuthService implements OnDestroy {
             switchMap(authorizations => forkJoin(authorizations.map(
                 authorization =>
                     this.authorizeTenant(authorization, authOptions)
-            ))
-            ),
+            ))),
             share()
         );
     }
@@ -150,7 +182,7 @@ export class AuthService implements OnDestroy {
 
             return this.accessTokenData(tenantId, null, forceRefresh).pipe(
                 switchMap(token => {
-                    if (token) {
+                    if (token?.accessToken) {
                         authorization.status = TenantStatus.authorized;
                     }
                     return this.cacheAuthorization(authorization);
@@ -166,7 +198,7 @@ export class AuthService implements OnDestroy {
                         this.tenantErrorService.showError(authorization);
                     }
                     return this.cacheAuthorization(authorization);
-                }),
+                })
             );
         }
     }
@@ -180,11 +212,14 @@ export class AuthService implements OnDestroy {
      */
     public accessTokenData(
         tenantId: string, resource: AADResourceName = null, forceRefresh = false
-    ):
-        Observable<AccessToken> {
+    ): Observable<AccessToken> {
         const key = [tenantId, resource].join("|");
         if (key in this.tokenObservableCache) {
-            return this.tokenObservableCache[key];
+            if (forceRefresh) {
+                delete this.tokenObservableCache[key];
+            } else {
+                return this.tokenObservableCache[key];
+            }
         }
         if (this.tokenCache.hasToken(tenantId, resource)) {
             const token = this.tokenCache.getToken(tenantId, resource);
@@ -194,20 +229,26 @@ export class AuthService implements OnDestroy {
             }
         }
 
-        const promise = this.remote.send(
+        const promise: Promise<AccessToken | AuthEvent> = this.remote.send(
             Constants.IpcEvent.AAD.accessTokenData,
             { tenantId, resource, forceRefresh }
         );
+        promise.then((_) => this.authEvents["AuthComplete"].emit());
         const tokenObservable = from(promise).pipe(
-            map(x => {
-                const token = new AccessToken({ ...x });
+            map((tokenData: AccessToken | AuthEvent) => {
+                if (isAuthEvent(tokenData)) {
+                    throw new AuthFlowException(tokenData);
+                }
+                const token = new AccessToken({ ...tokenData });
                 this.tokenCache.storeToken(tenantId, resource, token);
                 delete this.tokenObservableCache[key];
                 return token;
             }),
             catchError(error => {
                 delete this.tokenObservableCache[key];
-                return throwError(error);
+                if (!(error instanceof AuthFlowException)) {
+                    return throwError(error);
+                }
             })
         );
         this.tokenObservableCache[key] = tokenObservable;
@@ -223,6 +264,18 @@ export class AuthService implements OnDestroy {
             .toPromise();
     }
 
+    public showAuthSelect(data) {
+        this.authEvents["AuthSelect"].emit(data);
+    }
+
+    public authSelectResult(result: AuthSelectResult) {
+        this.authEvents["AuthSelectResult"].emit(result);
+    }
+
+    public on(event: AuthEventType, callback: (data: any) => void) {
+        this.authEvents[event].subscribe(callback);
+    }
+
     // Caches current authorization state to avoid reauthenticating failed
     // tenants without user request.
     private cacheAuthorization(authorization: TenantAuthorization):
@@ -231,4 +284,21 @@ export class AuthService implements OnDestroy {
             authorization;
         return of(authorization);
     }
+
+    private initializeEventEmitters() {
+        this.authEvents["AuthSelect"] = new EventEmitter<AuthSelectRequest>();
+        this.authEvents["AuthSelectResult"] = new EventEmitter<AuthSelectResult>();
+        this.authEvents["AuthComplete"] = new EventEmitter();
+        this.authEvents["Logout"] = new EventEmitter();
+    }
+}
+
+class AuthFlowException extends Error {
+    constructor(public authEvent: AuthEvent) {
+        super(`Auth flow exception (${authEvent.type}): ${authEvent.message}`);
+    }
+}
+
+function isAuthEvent(obj: any): obj is AuthEvent {
+    return obj && (obj.type === "cancel" || obj.type === "signout");
 }

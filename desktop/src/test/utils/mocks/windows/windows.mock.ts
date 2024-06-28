@@ -1,3 +1,4 @@
+import { Deferred } from "common";
 import { Subject } from "rxjs";
 
 export class MockBrowserWindow {
@@ -76,13 +77,23 @@ export class MockUniqueWindow {
     public show: jasmine.Spy;
     public hide: jasmine.Spy;
     public destroy: jasmine.Spy;
+    public domReady: Promise<void>;
     private _visible: boolean = false;
+    private _domReadyDeferred: Deferred<void>;
 
     constructor() {
-        this.create = jasmine.createSpy("create");
+        this._domReadyDeferred = new Deferred();
+        this.domReady = this._domReadyDeferred.promise;
+
+        this.create = jasmine.createSpy("create").and.callFake(() => {
+            this._domReadyDeferred.resolve();
+        });
         this.show = jasmine.createSpy("show").and.callFake(() => this._visible = true);
         this.hide = jasmine.createSpy("hide").and.callFake(() => this._visible = false);
-        this.destroy = jasmine.createSpy("destroy");
+        this.destroy = jasmine.createSpy("destroy").and.callFake(() => {
+            this._domReadyDeferred = new Deferred();
+            this.domReady = this._domReadyDeferred.promise;
+        });
     }
 
     public isVisible() {
@@ -129,9 +140,9 @@ export class MockAuthenticationWindow extends MockUniqueWindow {
     }
 
     public notifyRedirect(newUrl) {
-        for (const callback of this._onRedirectCallbacks) {
+        this._onRedirectCallbacks.forEach((callback) => {
             callback(newUrl);
-        }
+        });
     }
 
     public notifyNavigate(newUrl) {

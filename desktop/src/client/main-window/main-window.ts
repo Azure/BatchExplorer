@@ -5,6 +5,7 @@ import { BrowserWindow, app, ipcMain, nativeImage } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
 import { BatchExplorerApplication, GenericWindow, enableRemoteForWindow } from "../core";
+import { is } from "immutable";
 
 // Webpack dev server url when using HOT=1
 const devServerUrl = Constants.urls.main.dev;
@@ -25,6 +26,9 @@ export enum WindowState {
      */
     FailedLoad,
 }
+
+const AllowedDevToolsModes = ["left", "right", "undocked", "detach", "bottom"] as const;
+type DevToolMode = typeof AllowedDevToolsModes[number];
 
 export class MainWindow extends GenericWindow {
     public appReady: Promise<void>;
@@ -99,7 +103,9 @@ export class MainWindow extends GenericWindow {
 
         // Open the DevTools.
         if (process.env.NODE_ENV !== "production") {
-            window.webContents.openDevTools({ mode: 'undocked' });
+            const mode = isDevToolsMode(process.env.DEV_TOOLS_MODE) ?
+                process.env.DEV_TOOLS_MODE : "undocked";
+            window.webContents.openDevTools({ mode });
         }
 
         return window;
@@ -134,4 +140,8 @@ export class MainWindow extends GenericWindow {
             this.batchExplorerApp.recoverWindow.createWithError(error.message);
         });
     }
+}
+
+function isDevToolsMode(value: any): value is DevToolMode {
+    return AllowedDevToolsModes.includes(value);
 }

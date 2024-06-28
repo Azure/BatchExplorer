@@ -208,7 +208,11 @@ export const IpcEvent = {
         clearTenantAuth: "AAD_CLEAR_TENANT_AUTH"
     },
     launchApplication: "LAUNCH_APPLICATION",
-    logoutAndLogin: "LOGOUT_AND_LOGIN",
+    login: "LOGIN",
+    logout: "LOGOUT",
+    userAuthSelectRequest: "USER_AUTH_SELECT",
+    userAuthSelectResponse:
+        (requestId: string) => `USER_AUTH_SELECT_${requestId}`,
     sendTelemetry: "SEND_TELEMETRY",
     log: "SEND_LOG",
     storageBlob: {

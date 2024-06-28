@@ -101,7 +101,8 @@ describe("AADService", () => {
             const newToken = new AccessToken({
                 accessToken: "newToken", expiresOn: DateTime.local().plus({ hours: 1 }),
             } as any);
-            spyOn(service, "accessTokenData").and.returnValue(new Promise((resolve) => resolve(newToken)));
+            spyOn<any>(service, "retrieveAccessToken")
+                .and.returnValue(Promise.resolve(newToken));
         });
 
         it("login to public cloud", async () => {

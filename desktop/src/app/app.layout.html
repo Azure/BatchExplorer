@@ -30,4 +30,8 @@
             <router-outlet></router-outlet>
         </mat-sidenav-container>
     </div>
+    <be-auth-overlay id="auth-overlay" *ngIf="showAuthOverlay"
+        [tenantId]="authTenantId"
+        [requestId]="authRequestId"
+    ></be-auth-overlay>
 </ng-container>

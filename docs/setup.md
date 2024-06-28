@@ -52,6 +52,21 @@ This command will enable hot reload for a better development experience. Simply 
 
 Please also take a look at the [coding guidelines](coding-guidelines.md) for this repo for best practices.
 
+In developer-mode, Batch Explorer starts with Chrome Developer Tools (DevTools) opened in "undocked" mode. To open DevTools in another mode, set the `DEV_TOOLS_MODE` environment variables. The allowed values are "left", "right", "bottom", "undocked", and "detach".
+
+**Linux shells:**
+
+```bash
+DEV_TOOLS_MODE=right npm run launch:desktop
+```
+
+**Powershell:**
+
+```powershell
+$Env:DEV_TOOLS_MODE = "right"
+npm run launch:desktop
+```
+
 ## Editor
 
 If you're using VSCode (recommended) we suggest you use the following extensions:
