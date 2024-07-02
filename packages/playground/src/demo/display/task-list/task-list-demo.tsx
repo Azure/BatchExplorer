@@ -12,16 +12,22 @@ export const TaskListDemo: React.FC = () => {
         BatchDependencyName.TaskService
     );
 
-    const [taskNumberField, setTaskNumberField] = React.useState<
-        number | undefined
-    >(undefined);
+    const [spinButtonValue, setSpinButton] = React.useState<number | undefined>(
+        undefined
+    );
     const [accountEndpoint] = React.useState<string>(
         "mercury.eastus.batch.azure.com"
     );
-    const [jobId] = React.useState<string>("faketestjob1");
+    const [jobId, setJobId] = React.useState<string>("faketestjob1");
 
     taskService.generateTasks = true;
-    taskService.numOfTasks = taskNumberField;
+    taskService.numOfTasks = spinButtonValue;
+
+    React.useEffect(() => {
+        taskService.numOfTasks = spinButtonValue;
+        setSpinButton(spinButtonValue);
+        setJobId("testjob" + spinButtonValue?.toString());
+    }, [spinButtonValue, taskService, jobId]);
 
     return (
         <DemoPane title="Task List Demo Test">
@@ -35,9 +41,26 @@ export const TaskListDemo: React.FC = () => {
                 <Stack.Item grow={1}>
                     <SpinButton
                         label="Number of Tasks"
-                        // value={taskNumberField}
+                        min={0}
+                        value={
+                            spinButtonValue != undefined
+                                ? spinButtonValue.toString()
+                                : ""
+                        }
+                        onIncrement={(value) => {
+                            const numberValue = Number(value);
+                            if (!isNaN(numberValue)) {
+                                setSpinButton(numberValue + 1);
+                            }
+                        }}
+                        onDecrement={(value) => {
+                            const numberValue = Number(value);
+                            if (!isNaN(numberValue)) {
+                                setSpinButton(numberValue - 1);
+                            }
+                        }}
                         onChange={(_, newValue) => {
-                            setTaskNumberField(Number(newValue) ?? undefined);
+                            setSpinButton(Number(newValue) ?? undefined);
                         }}
                     />
                 </Stack.Item>

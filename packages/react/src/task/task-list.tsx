@@ -10,6 +10,7 @@ import { TaskService } from "@batch/ui-service/lib/task/task-service";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { CiCircleChevDown } from "react-icons/ci";
+import { GridFooter } from "../components/grid-utils/grid-footer/data-grid-footer";
 
 interface TaskListProps {
     accountEndpoint: string;
@@ -27,7 +28,14 @@ interface TaskRow {
 export const TaskList = (props: TaskListProps) => {
     const { accountEndpoint, jobId } = props;
     const [items, setItems] = React.useState<TaskRow[]>([]);
-    const [isCompact] = React.useState<boolean>(false);
+    const [isCompact] = React.useState<boolean>(true);
+    const [pageSize] = React.useState<number>(20);
+    const [currentPage, setCurrentPage] = React.useState<number>(1);
+    const [totalItems, setTotalItems] = React.useState<number>(0);
+
+    // store result of iterator pages in state variable, want to be global and use in loadMore func
+    const [iterator, setIterator] =
+        React.useState<AsyncIterableIterator<BatchTaskOutput[]>>();
 
     React.useEffect(() => {
         let isMounted = true;
@@ -40,10 +48,11 @@ export const TaskList = (props: TaskListProps) => {
 
             if (!isMounted) return;
 
-            const pages = tasks.byPage();
-            // .next not picking up BatchTaskOutput[] variable type
+            const pages = tasks.byPage({ maxPageSize: pageSize });
+
             const res: IteratorResult<BatchTaskOutput[], BatchTaskOutput[]> =
                 await pages.next();
+            setIterator(pages);
             setItems(tasksToRows(res.value));
         };
 
@@ -54,15 +63,39 @@ export const TaskList = (props: TaskListProps) => {
         return () => {
             isMounted = false;
         };
-    }, [accountEndpoint, jobId]);
+    }, [accountEndpoint, jobId, pageSize]);
 
     return (
-        <DataGrid
-            selectionMode="none"
-            compact={isCompact}
-            items={items}
-            columns={columns}
-        />
+        <>
+            <DataGrid
+                selectionMode="none"
+                compact={isCompact}
+                items={items}
+                columns={columns}
+            />
+            <GridFooter
+                currentPage={currentPage}
+                pageSize={pageSize}
+                totalItems={totalItems}
+                nextPage={() => {
+                    iterator?.next().then((res) => {
+                        setItems(res.value);
+                    });
+                    setCurrentPage(currentPage + 1);
+                }}
+                previousPage={() => {
+                    return;
+                }}
+                firstPage={() => {
+                    //get page?
+                    return;
+                }}
+                lastPage={() => {
+                    //get page?
+                    return;
+                }}
+            />
+        </>
     );
 };
 
