@@ -11,7 +11,7 @@ export interface CacheManager {
      * @param key The key to look up
      * @param defaultValue The value to return if the key is not found
      */
-    get<T>(key: string, defaultValue?: T): Promise<T>;
+    get<T>(key: string, defaultValue?: T): Promise<T | undefined>;
 
     /**
      * Get a value from the cache, or add it if it is not found

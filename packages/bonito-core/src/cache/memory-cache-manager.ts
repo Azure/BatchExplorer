@@ -1,10 +1,10 @@
 import { CacheManager } from "./cache-manager";
 
 export class MemoryCacheManager implements CacheManager {
-    private cache: Map<string, any> = new Map();
+    private cache: Map<string, unknown> = new Map();
 
-    async get<T>(key: string, defaultValue?: T): Promise<T> {
-        return this.cache.has(key) ? this.cache.get(key) : defaultValue;
+    async get<T>(key: string, defaultValue?: T): Promise<T | undefined> {
+        return this.cache.has(key) ? (this.cache.get(key) as T) : defaultValue;
     }
 
     async getOrAdd<T>(
