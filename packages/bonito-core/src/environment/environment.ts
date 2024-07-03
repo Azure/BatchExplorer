@@ -58,7 +58,7 @@ export interface Environment<C extends EnvironmentConfig> {
     getNotifier(): Notifier;
 
     /**
-     * Gets the notifier for the current environment
+     * Gets the cache manager for the current environment
      */
     getCacheManager(): CacheManager;
 
