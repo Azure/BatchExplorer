@@ -10,7 +10,7 @@ import { TaskService } from "@batch/ui-service/lib/task/task-service";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { CiCircleChevDown } from "react-icons/ci";
-import { GridFooter } from "../components/grid-utils/grid-footer/data-grid-footer";
+import { useLoadMore } from "@azure/bonito-ui/lib/hooks";
 
 interface TaskListProps {
     accountEndpoint: string;
@@ -27,43 +27,57 @@ interface TaskRow {
 
 export const TaskList = (props: TaskListProps) => {
     const { accountEndpoint, jobId } = props;
-    const [items, setItems] = React.useState<TaskRow[]>([]);
     const [isCompact] = React.useState<boolean>(true);
-    const [pageSize] = React.useState<number>(20);
-    const [currentPage, setCurrentPage] = React.useState<number>(1);
-    const [totalItems, setTotalItems] = React.useState<number>(0);
+    const [pageSize] = React.useState<number>(100);
+    const [_, setLoadErrorMsg] = React.useState<string>("");
 
-    // store result of iterator pages in state variable, want to be global and use in loadMore func
-    const [iterator, setIterator] =
-        React.useState<AsyncIterableIterator<BatchTaskOutput[]>>();
+    const onLoad = React.useMemo(() => {
+        let iterator: AsyncIterableIterator<BatchTaskOutput[]>;
 
-    React.useEffect(() => {
-        let isMounted = true;
-        const taskService: TaskService = inject(
-            BatchDependencyName.TaskService
-        );
+        return (fresh: boolean) => {
+            const taskService: TaskService = inject(
+                BatchDependencyName.TaskService
+            );
 
-        const fetchTaskList = async () => {
-            const tasks = await taskService.listTasks(accountEndpoint, jobId);
+            const fetchTaskList = async () => {
+                if (fresh || !iterator) {
+                    const tasks = await taskService.listTasks(
+                        accountEndpoint,
+                        jobId
+                    );
+                    iterator = tasks.byPage({ maxPageSize: pageSize });
+                }
 
-            if (!isMounted) return;
+                const res: IteratorResult<
+                    BatchTaskOutput[],
+                    BatchTaskOutput[]
+                > = await iterator.next();
 
-            const pages = tasks.byPage({ maxPageSize: pageSize });
+                if (!res.done) {
+                    return {
+                        items: tasksToRows(res.value),
+                        done: false,
+                    };
+                } else {
+                    return {
+                        items: [],
+                        done: true,
+                    };
+                }
+            };
 
-            const res: IteratorResult<BatchTaskOutput[], BatchTaskOutput[]> =
-                await pages.next();
-            setIterator(pages);
-            setItems(tasksToRows(res.value));
-        };
-
-        fetchTaskList().catch((e) => {
-            console.log("Error: ", e);
-        });
-
-        return () => {
-            isMounted = false;
+            return fetchTaskList();
         };
     }, [accountEndpoint, jobId, pageSize]);
+
+    const onLoadError = (error: unknown) => {
+        setLoadErrorMsg((error as { message: string })?.message ?? "");
+    };
+
+    const { items, hasMore, onLoadMore } = useLoadMore<TaskRow>(
+        onLoad,
+        onLoadError
+    );
 
     return (
         <>
@@ -72,8 +86,10 @@ export const TaskList = (props: TaskListProps) => {
                 compact={isCompact}
                 items={items}
                 columns={columns}
+                hasMore={hasMore}
+                onLoadMore={onLoadMore}
             />
-            <GridFooter
+            {/* <GridFooter
                 currentPage={currentPage}
                 pageSize={pageSize}
                 totalItems={totalItems}
@@ -94,7 +110,7 @@ export const TaskList = (props: TaskListProps) => {
                     //get page?
                     return;
                 }}
-            />
+            /> */}
         </>
     );
 };
