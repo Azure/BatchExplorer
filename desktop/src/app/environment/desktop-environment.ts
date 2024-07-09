@@ -15,7 +15,7 @@ import { DefaultFormLayoutProvider } from "@azure/bonito-ui/lib/components/form"
 import { BrowserDependencyName, BrowserEnvironmentConfig, DefaultBrowserEnvironment } from "@azure/bonito-ui/lib/environment";
 import BatchExplorerHttpClient from "@batch-flask/core/batch-explorer-http-client";
 import { BatchBrowserDependencyFactories, BatchFormControlResolver } from "@batch/ui-react";
-import { LiveAccountService, LiveNodeService, LivePoolService } from "@batch/ui-service";
+import { LiveTaskService, LiveAccountService, LiveNodeService, LivePoolService } from "@batch/ui-service";
 import { BatchDependencyName } from "@batch/ui-service/lib/environment";
 import { DesktopLocalizer } from "app/localizer/desktop-localizer";
 import { AppTranslationsLoaderService, AuthService, BatchExplorerService } from "app/services";
@@ -48,6 +48,8 @@ export function initDesktopEnvironment(
                 new LivePoolService(),
             [BatchDependencyName.NodeService]: () =>
                 new LiveNodeService(),
+            [BatchDependencyName.TaskService]: () =>
+                new LiveTaskService(),
             [BatchDependencyName.AccountService]: () => new LiveAccountService(),
             [DependencyName.Notifier]: () =>
                 new AlertNotifier(), // TODO: update with real notification implementation

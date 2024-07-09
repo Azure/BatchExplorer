@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as React from "react";
 import { inject } from "@azure/bonito-core/lib/environment";
 import {
@@ -32,37 +33,52 @@ export const TaskList = (props: TaskListProps) => {
     const [_, setLoadErrorMsg] = React.useState<string>("");
 
     const onLoad = React.useMemo(() => {
+        console.log("onLoad");
+        console.log("update?");
+
         let iterator: AsyncIterableIterator<BatchTaskOutput[]>;
 
         return (fresh: boolean) => {
+            console.log("injecting service");
             const taskService: TaskService = inject(
                 BatchDependencyName.TaskService
             );
 
             const fetchTaskList = async () => {
+                console.log("fetching tasks");
+
                 if (fresh || !iterator) {
                     const tasks = await taskService.listTasks(
                         accountEndpoint,
                         jobId
                     );
+                    console.log("tasks fetched");
                     iterator = tasks.byPage({ maxPageSize: pageSize });
                 }
+                console.log("iterator set");
+                try {
+                    const res: IteratorResult<
+                        BatchTaskOutput[],
+                        BatchTaskOutput[]
+                    > = await iterator.next();
+                    console.log("res value", res.value);
 
-                const res: IteratorResult<
-                    BatchTaskOutput[],
-                    BatchTaskOutput[]
-                > = await iterator.next();
-
-                if (!res.done) {
-                    return {
-                        items: tasksToRows(res.value),
-                        done: false,
-                    };
-                } else {
-                    return {
-                        items: [],
-                        done: true,
-                    };
+                    if (!res.done) {
+                        console.log("!res", res.value);
+                        return {
+                            items: tasksToRows(res.value),
+                            done: false,
+                        };
+                    } else {
+                        console.log("res", res.value);
+                        return {
+                            items: tasksToRows(res.value),
+                            done: true,
+                        };
+                    }
+                } catch (e: any) {
+                    console.log(e);
+                    return { items: [], done: true };
                 }
             };
 

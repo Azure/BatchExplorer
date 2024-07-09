@@ -32,13 +32,41 @@ export class LiveTaskService
             this._ensureHttpsEndpoint(accountEndpoint)
         );
 
-        const res = await batchClient.path(listTaskPath, jobId).get({
+        console.log(
+            "service was called, entering try:",
+            accountEndpoint,
+            jobId
+        );
+        console.log("creating task interface");
+
+        const createTaskI = batchClient.path(listTaskPath, jobId);
+
+        console.log(createTaskI);
+
+        let res = null;
+
+        try {
+            res = await createTaskI.get({
+                headers: {
+                    [CustomHttpHeaders.CommandName]:
+                        opts?.commandName ?? "ListTasks",
+                },
+            });
+        } catch (e: any) {
+            console.log(e);
+        }
+
+        res = await createTaskI.get({
             headers: {
                 [CustomHttpHeaders.CommandName]:
                     opts?.commandName ?? "ListTasks",
             },
         });
+
+        console.log("service worked:", res);
+
         if (isUnexpected(res)) {
+            console.log("unexpected res: ", res);
             throw createBatchUnexpectedStatusCodeError(res);
         }
 

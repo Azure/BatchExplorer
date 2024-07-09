@@ -95,6 +95,11 @@ export const DemoNavMenu: React.FC = () => {
                     name: "Task List Display",
                     url: getDemoHash("taskList"),
                 },
+                {
+                    key: "LiveTaskList",
+                    name: "Task List Live",
+                    url: getDemoHash("liveTaskList"),
+                },
             ],
         },
     ];
