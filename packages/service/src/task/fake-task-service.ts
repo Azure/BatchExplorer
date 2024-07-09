@@ -6,6 +6,8 @@ import { createPagedArray } from "../test-util/paging-test-util";
 
 export class FakeTaskService implements TaskService {
     fakeSet: BatchFakeSet = new BasicBatchFakeSet();
+    numOfTasks?: number;
+    generateTasks?: boolean;
 
     setFakes(fakeSet: BatchFakeSet): void {
         this.fakeSet = fakeSet;
@@ -23,6 +25,13 @@ export class FakeTaskService implements TaskService {
         accountEndpoint: string,
         jobId: string
     ): Promise<PagedAsyncIterableIterator<BatchTaskOutput>> {
-        return createPagedArray(this.fakeSet.listTasks(accountEndpoint, jobId));
+        return createPagedArray(
+            this.fakeSet.listTasks(
+                accountEndpoint,
+                jobId,
+                this.generateTasks,
+                this.numOfTasks
+            )
+        );
     }
 }

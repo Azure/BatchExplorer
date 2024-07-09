@@ -25,9 +25,12 @@ import {
 import { FakeNodeService } from "@batch/ui-service";
 import { BatchDependencyName } from "@batch/ui-service/lib/environment";
 import { FakePoolService } from "@batch/ui-service/lib/pool";
+import { FakeTaskService } from "@batch/ui-service/lib/task/fake-task-service";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Application } from "./components";
+import { MemoryCacheManager } from "@azure/bonito-core/lib/cache";
+import { FakeAccountService } from "@batch/ui-service/lib/account";
 
 // Defined by webpack
 declare const ENV: {
@@ -63,8 +66,12 @@ export async function init(rootEl: HTMLElement): Promise<void> {
                 [DependencyName.LocationService]: () =>
                     new FakeLocationService(),
                 [DependencyName.Notifier]: () => new AlertNotifier(), // TODO: update with real notification implementation
+                [DependencyName.CacheManager]: () => new MemoryCacheManager(),
                 [BatchDependencyName.PoolService]: () => new FakePoolService(),
                 [BatchDependencyName.NodeService]: () => new FakeNodeService(),
+                [BatchDependencyName.TaskService]: () => new FakeTaskService(),
+                [BatchDependencyName.AccountService]: () =>
+                    new FakeAccountService(),
                 [DependencyName.ResourceGroupService]: () =>
                     new FakeResourceGroupService(),
                 [DependencyName.StorageAccountService]: () =>

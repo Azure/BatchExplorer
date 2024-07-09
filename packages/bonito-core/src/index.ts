@@ -33,6 +33,7 @@ export {
 export * from "./location";
 export { getLogger } from "./logging/logging-util";
 export { getNotifier } from "./notification";
+export { getCacheManager } from "./cache/cache-utils";
 export * from "./resource-group";
 export * from "./service";
 export * from "./storage";
