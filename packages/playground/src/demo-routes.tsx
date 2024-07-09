@@ -14,7 +14,6 @@ import { TabSelectorDemo } from "./demo/form/tab-selector-demo";
 import { StringListDemo } from "./demo/form/stringlist/stringlist-demo";
 import { VmExtensionListDemo } from "./demo/display/vm-extension/vm-extension-list-demo";
 import { TaskListDemo } from "./demo/display/task-list/task-list-demo";
-import { TaskListLiveDemo } from "./demo/display/task-list/task-list-live-demo";
 
 export const DEMO_MAP = {
     default: () => <DefaultPane />,
@@ -33,7 +32,6 @@ export const DEMO_MAP = {
     stringlist: () => <StringListDemo />,
     vmExtensionList: () => <VmExtensionListDemo />,
     taskList: () => <TaskListDemo />,
-    liveTaskList: () => <TaskListLiveDemo />,
 };
 
 export type DemoName = keyof typeof DEMO_MAP;

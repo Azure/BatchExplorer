@@ -33,44 +33,33 @@ export const TaskList = (props: TaskListProps) => {
     const [_, setLoadErrorMsg] = React.useState<string>("");
 
     const onLoad = React.useMemo(() => {
-        console.log("onLoad");
-        console.log("update?");
-
         let iterator: AsyncIterableIterator<BatchTaskOutput[]>;
 
         return (fresh: boolean) => {
-            console.log("injecting service");
             const taskService: TaskService = inject(
                 BatchDependencyName.TaskService
             );
 
             const fetchTaskList = async () => {
-                console.log("fetching tasks");
-
                 if (fresh || !iterator) {
                     const tasks = await taskService.listTasks(
                         accountEndpoint,
                         jobId
                     );
-                    console.log("tasks fetched");
                     iterator = tasks.byPage({ maxPageSize: pageSize });
                 }
-                console.log("iterator set");
                 try {
                     const res: IteratorResult<
                         BatchTaskOutput[],
                         BatchTaskOutput[]
                     > = await iterator.next();
-                    console.log("res value", res.value);
 
                     if (!res.done) {
-                        console.log("!res", res.value);
                         return {
                             items: tasksToRows(res.value),
                             done: false,
                         };
                     } else {
-                        console.log("res", res.value);
                         return {
                             items: tasksToRows(res.value),
                             done: true,
@@ -105,28 +94,6 @@ export const TaskList = (props: TaskListProps) => {
                 hasMore={hasMore}
                 onLoadMore={onLoadMore}
             />
-            {/* <GridFooter
-                currentPage={currentPage}
-                pageSize={pageSize}
-                totalItems={totalItems}
-                nextPage={() => {
-                    iterator?.next().then((res) => {
-                        setItems(res.value);
-                    });
-                    setCurrentPage(currentPage + 1);
-                }}
-                previousPage={() => {
-                    return;
-                }}
-                firstPage={() => {
-                    //get page?
-                    return;
-                }}
-                lastPage={() => {
-                    //get page?
-                    return;
-                }}
-            /> */}
         </>
     );
 };
