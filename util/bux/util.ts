@@ -17,18 +17,20 @@ import {
 export const defaultBatchExplorerHome = path.resolve(__dirname, "../../");
 export const configFile = path.resolve(os.homedir(), ".config/batch/bux.json");
 
-const portalReactPath = "src/src/BatchExtension/Client/ReactViews";
 const defaultJsonIndentSize = 2;
 const printJsonIndentSize = 4;
 
 export interface Configuration {
     paths: {
         batchExplorer?: string;
-        batchPortalExtension?: string;
     };
 }
 
 type ConfigPath = keyof Configuration["paths"];
+
+export interface BuxConfig {
+    rootPackage: string;
+}
 
 export const info = (...args: string[]) => console.log(color.blue(...args));
 export const warn = (...args: string[]) => console.warn(color.yellow(...args));
@@ -69,6 +71,23 @@ export function resolvePath(aPath: string) {
 
 export async function loadConfiguration(): Promise<Configuration> {
     return readJsonOrDefault(configFile);
+}
+
+// Recursively searches upward from startDir (the current working directory from which the command is run) for a bux.json configuration file
+export async function findBuxConfig(
+    startDir: string
+): Promise<BuxConfig | null> {
+    let currentDir = startDir;
+
+    while (currentDir !== path.parse(currentDir).root) {
+        const configPath = path.join(currentDir, "bux.json");
+        if (fs.existsSync(configPath)) {
+            return readJsonOrDefault(configPath);
+        }
+        currentDir = path.dirname(currentDir);
+    }
+
+    return null;
 }
 
 /**
@@ -222,7 +241,7 @@ function getGitInfo(path: string): GitInfo {
             });
     } catch (e) {
         if (e instanceof Error) {
-            error(`Error retreiving Git info: ${e.message}`);
+            error(`Error retrieving Git info: ${e.message}`);
         }
         throw e;
     }
@@ -252,26 +271,30 @@ function printInfo(name: string, repoPath?: string): void {
     }
 }
 
-async function printLinkStatus(): Promise<void> {
+async function printLinkStatus(rootPackage: string): Promise<void> {
     const linkChecks: boolean[] = [];
-    await runLinkageTask((opts: LinkOptions) => {
-        let isLinked = false;
+    await runLinkageTask(
+        (opts: LinkOptions) => {
+            let isLinked = false;
 
-        const nodeModulePath = path.join(
-            opts.targetPath,
-            "node_modules",
-            opts.packageName
-        );
+            const nodeModulePath = path.join(
+                opts.targetPath,
+                "node_modules",
+                opts.packageName
+            );
 
-        if (fs.existsSync(nodeModulePath)) {
-            const stats = fs.lstatSync(nodeModulePath);
-            if (stats.isSymbolicLink()) {
-                isLinked = true;
+            if (fs.existsSync(nodeModulePath)) {
+                const stats = fs.lstatSync(nodeModulePath);
+                if (stats.isSymbolicLink()) {
+                    isLinked = true;
+                }
             }
-        }
 
-        linkChecks.push(isLinked);
-    });
+            linkChecks.push(isLinked);
+        },
+        undefined,
+        rootPackage
+    );
 
     const allPackagesLinked = linkChecks.reduce((prev, curr) => prev && curr);
     let linkStatus;
@@ -285,13 +308,17 @@ async function printLinkStatus(): Promise<void> {
 
 export async function printStatus() {
     const config = await loadConfiguration();
+    const buxConfig = await findBuxConfig(process.cwd());
+
+    if (!buxConfig) {
+        error("No bux.json configuration found. Exiting...");
+        process.exit(1);
+    }
 
     try {
         printInfo("Batch Explorer", config.paths.batchExplorer);
         info("");
-        printInfo("Batch portal extension", config.paths.batchPortalExtension);
-        info("");
-        await printLinkStatus();
+        await printLinkStatus(buxConfig.rootPackage);
     } catch (e) {
         error("Config errors found. Run `bux configure` to re-configure.");
         throw e;
@@ -354,44 +381,62 @@ export async function gatherBuildResults(basePath: string) {
 }
 
 export async function linkLocalProjects() {
-    runLinkageTask((opts: LinkOptions) => {
-        info(`Linking ${opts.versionedPackageName}`);
+    const buxConfig = await findBuxConfig(process.cwd());
 
-        const nodeModulesPath = path.join(opts.targetPath, "node_modules");
-        const targetPath = path.join(nodeModulesPath, opts.packageName);
+    if (!buxConfig) {
+        error("No bux.json configuration found. Exiting...");
+        process.exit(1);
+    }
 
-        if (!fs.existsSync(nodeModulesPath)) {
-            throw new Error(
-                `Failed to link ${opts.packageName}: ${nodeModulesPath} doesn't exist`
-            );
-        }
-        if (!fs.lstatSync(nodeModulesPath).isDirectory()) {
-            throw new Error(
-                `Failed to link ${opts.packageName}: ${nodeModulesPath} is not a directory`
-            );
-        }
+    runLinkageTask(
+        (opts: LinkOptions) => {
+            info(`Linking ${opts.versionedPackageName}`);
 
-        if (fs.existsSync(targetPath)) {
-            if (fs.lstatSync(targetPath).isSymbolicLink()) {
-                // Early out if target is already a symlink
-                console.warn(
-                    `${targetPath} is already a symbolic link - skipping`
+            const nodeModulesPath = path.join(opts.targetPath, "node_modules");
+            const targetPath = path.join(nodeModulesPath, opts.packageName);
+
+            if (!fs.existsSync(nodeModulesPath)) {
+                throw new Error(
+                    `Failed to link ${opts.packageName}: ${nodeModulesPath} doesn't exist`
                 );
-                return;
-            } else {
-                shell.rm("-rf", targetPath);
             }
-        } else {
-            console.warn(
-                `No directory for ${opts.packageName} found in node_modules.`
-            );
-        }
+            if (!fs.lstatSync(nodeModulesPath).isDirectory()) {
+                throw new Error(
+                    `Failed to link ${opts.packageName}: ${nodeModulesPath} is not a directory`
+                );
+            }
 
-        shell.ln("-s", opts.packagePath, targetPath);
-    });
+            if (fs.existsSync(targetPath)) {
+                if (fs.lstatSync(targetPath).isSymbolicLink()) {
+                    // Early out if target is already a symlink
+                    console.warn(
+                        `${targetPath} is already a symbolic link - skipping`
+                    );
+                    return;
+                } else {
+                    shell.rm("-rf", targetPath);
+                }
+            } else {
+                console.warn(
+                    `No directory for ${opts.packageName} found in node_modules.`
+                );
+            }
+
+            shell.ln("-s", opts.packagePath, targetPath);
+        },
+        undefined,
+        buxConfig.rootPackage
+    );
 }
 
 export async function unlinkLocalProjects() {
+    const buxConfig = await findBuxConfig(process.cwd());
+
+    if (!buxConfig) {
+        error("No bux.json configuration found. Exiting...");
+        process.exit(1);
+    }
+
     runLinkageTask(
         (opts: LinkOptions) => {
             info(`Unlinking ${opts.versionedPackageName}`);
@@ -421,13 +466,13 @@ export async function unlinkLocalProjects() {
             info("Running `npm install` to restore packages...");
             shell.cd(targetPath);
             shell.exec(`npm install -s`);
-        }
+        },
+        buxConfig.rootPackage
     );
 }
 
 export type ConfigureCommandOptions = {
     "paths.batchExplorer"?: string;
-    "paths.batchPortalExtension"?: string;
     print: boolean;
 };
 
@@ -449,15 +494,9 @@ export async function configure(options: ConfigureCommandOptions) {
     } else {
         const answers = await inquirer.prompt([
             {
-                name: "batchPortalExtension",
-                message: "Path to Batch Portal Extension",
-                default: config.paths.batchPortalExtension,
-                validate: validateDirectory,
-                type: "string",
-            },
-            {
                 name: "batchExplorer",
-                message: "Path to Batch Explorer",
+                message:
+                    "Path to Batch Explorer (use /mnt/c/... for WSL, e.g., CycleCloud):",
                 default: config.paths.batchExplorer || defaultBatchExplorerHome,
                 validate: validateDirectory,
                 type: "string",
@@ -508,20 +547,17 @@ interface LinkOptions {
  */
 async function runLinkageTask(
     perPackageCallback: (opts: LinkOptions) => void,
-    cleanupCallback?: (targetPath: string) => void
+    cleanupCallback?: (targetPath: string) => void,
+    rootPackage?: string
 ) {
     const config = await loadConfiguration();
-    if (!config.paths || !config.paths.batchPortalExtension) {
+    if (!rootPackage) {
         error(
-            `Configuration does not contain portal paths. ` +
-                `Run the 'configure' command to fix.`
+            `No root package path found. Ensure bux.json contains the rootPackage path.`
         );
         return;
     }
-    const targetPath = path.join(
-        config.paths.batchPortalExtension,
-        portalReactPath
-    );
+    const targetPath = path.join(process.cwd(), rootPackage);
     const targetPackageJson = path.join(targetPath, "package.json");
     if (!fs.existsSync(targetPackageJson)) {
         error(`No package.json in target directory ${targetPath}`);
@@ -575,7 +611,7 @@ function isConfigurationObject(object: unknown): object is Configuration {
 }
 
 function isConfigPathKey(key: string): key is ConfigPath {
-    return ["batchExplorer", "batchPortalExtension"].includes(key);
+    return ["batchExplorer"].includes(key);
 }
 
 function printJson(json: object) {
