@@ -73,7 +73,7 @@ export abstract class CacheManagerBase implements CacheManager {
         this.lruCache.recordGet(key);
         return this.getInternal<T>(key, defaultValue);
     }
-    abstract getInternal<T>(
+    protected abstract getInternal<T>(
         key: string,
         defaultValue?: T
     ): Promise<T | undefined>;
@@ -82,17 +82,17 @@ export abstract class CacheManagerBase implements CacheManager {
         this.lruCache.recordSet(key);
         return this.setInternal(key, value);
     }
-    abstract setInternal<T>(key: string, value: T): Promise<void>;
+    protected abstract setInternal<T>(key: string, value: T): Promise<void>;
 
     async remove(key: string): Promise<void> {
         this.lruCache.recordRemove(key);
         return this.removeInternal(key);
     }
-    abstract removeInternal(key: string): Promise<void>;
+    protected abstract removeInternal(key: string): Promise<void>;
 
     async clear(): Promise<void> {
         this.lruCache.recordClear();
         return this.clearInternal();
     }
-    abstract clearInternal(): Promise<void>;
+    protected abstract clearInternal(): Promise<void>;
 }
