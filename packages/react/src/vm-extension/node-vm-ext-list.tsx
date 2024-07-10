@@ -25,6 +25,9 @@ export const NodeVMExtList = (props: NodeVmExtensionListProps) => {
 
     const fetchExtensions = React.useCallback(async () => {
         const accountData = await accountService.get(accountResourceId);
+        if (!accountData) {
+            throw new Error(`Account with id ${accountResourceId} not found`);
+        }
         const accountEndpoint = accountData.properties?.accountEndpoint;
         if (!accountEndpoint) {
             throw new Error(

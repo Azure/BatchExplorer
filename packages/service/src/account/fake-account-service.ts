@@ -13,11 +13,8 @@ export class FakeAccountService implements AccountService {
     async get(
         accountResouceId: string,
         opts?: OperationOptions
-    ): Promise<BatchAccountOutput> {
+    ): Promise<BatchAccountOutput | undefined> {
         const result = this.fakeSet.getBatchAccount(accountResouceId);
-        if (!result) {
-            throw new Error(`Account with id ${accountResouceId} not found`);
-        }
         return result;
     }
 }

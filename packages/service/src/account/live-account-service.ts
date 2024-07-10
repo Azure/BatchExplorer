@@ -16,7 +16,7 @@ export class LiveAccountService implements AccountService {
     async get(
         accountResouceId: string,
         opts?: OperationOptions
-    ): Promise<BatchAccountOutput> {
+    ): Promise<BatchAccountOutput | undefined> {
         const { subscriptionId, resourceGroupName, batchAccountName } =
             parseBatchAccountIdInfo(accountResouceId);
         const cacheManager = getCacheManager();
@@ -43,6 +43,9 @@ export class LiveAccountService implements AccountService {
                 });
 
             if (isUnexpected(res)) {
+                if (res.status === "404") {
+                    return undefined;
+                }
                 throw createArmUnexpectedStatusCodeError(res);
             }
 

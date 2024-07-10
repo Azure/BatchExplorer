@@ -20,9 +20,10 @@ describe("FakeAccountService", () => {
         expect(account?.name).toEqual("hobo");
     });
 
-    test("Get account by ARM resource ID not found", async () => {
-        await expect(service.get("bad-id")).rejects.toThrow(
-            "Account with id bad-id not found"
+    test("should return undefined ARM resource ID not found", async () => {
+        const account = await service.get(
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/not-hobo"
         );
+        expect(account).toBeUndefined();
     });
 });
