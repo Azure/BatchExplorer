@@ -5,5 +5,5 @@ export interface AccountService {
     get(
         accountResouceId: string,
         opts?: OperationOptions
-    ): Promise<BatchAccountOutput | undefined>;
+    ): Promise<BatchAccountOutput>;
 }

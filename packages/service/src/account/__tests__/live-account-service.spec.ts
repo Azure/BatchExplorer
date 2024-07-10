@@ -81,4 +81,23 @@ describe("LiveAccountService", () => {
                 "Boom"]
                 `);
     });
+
+    test("Get account by ARM resource ID not found", async () => {
+        httpClient.addExpected(
+            new MockHttpResponse(
+                `${getArmUrl()}${hoboAcctResId}?api-version=${BatchApiVersion.arm}`,
+                {
+                    status: 404,
+                    body: "Not found",
+                }
+            )
+        );
+
+        await expect(() => service.get(hoboAcctResId)).rejects
+            .toMatchInlineSnapshot(`
+                [Error: The Batch management plane returned an unexpected status code [unexpected 404 status]
+                Response body:
+                "Not found"]
+                `);
+    });
 });

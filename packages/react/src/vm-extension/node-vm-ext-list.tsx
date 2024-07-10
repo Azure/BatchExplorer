@@ -17,19 +17,14 @@ export const NodeVMExtList = (props: NodeVmExtensionListProps) => {
     const [extensions, setExtensions] = React.useState<VmExtItem[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
 
-    const nodeService: NodeService = React.useMemo(() => {
-        return inject(BatchDependencyName.NodeService);
-    }, []);
+    const nodeService: NodeService = inject(BatchDependencyName.NodeService);
 
-    const accountService: AccountService = React.useMemo(() => {
-        return inject(BatchDependencyName.AccountService);
-    }, []);
+    const accountService: AccountService = inject(
+        BatchDependencyName.AccountService
+    );
 
     const fetchExtensions = React.useCallback(async () => {
         const accountData = await accountService.get(accountResourceId);
-        if (!accountData) {
-            throw new Error(`Account with id ${accountResourceId} not found`);
-        }
         const accountEndpoint = accountData.properties?.accountEndpoint;
         if (!accountEndpoint) {
             throw new Error(

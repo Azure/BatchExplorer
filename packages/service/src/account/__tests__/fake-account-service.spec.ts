@@ -19,4 +19,10 @@ describe("FakeAccountService", () => {
         const account = await service.get(hoboAcctResId);
         expect(account?.name).toEqual("hobo");
     });
+
+    test("Get account by ARM resource ID not found", async () => {
+        await expect(service.get("bad-id")).rejects.toThrow(
+            "Account with id bad-id not found"
+        );
+    });
 });
