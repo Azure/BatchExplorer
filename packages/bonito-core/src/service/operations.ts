@@ -10,6 +10,12 @@ export interface OperationOptions {
      * convention. For example: "TaskForm/SubmitTask"
      */
     commandName?: string;
+
+    /**
+     * If true, the operation should bypass any cache and
+     * fetch the latest data from the server and update the cache.
+     */
+    bypassCache?: boolean;
 }
 
 /**
