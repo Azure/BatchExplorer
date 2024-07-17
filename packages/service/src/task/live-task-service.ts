@@ -67,4 +67,27 @@ export class LiveTaskService
 
         return res.body;
     }
+
+    async getTaskCounts(
+        accountEndpoint: string,
+        jobId: string,
+        opts?: OperationOptions
+    ): Promise<any | undefined> {
+        const countPath = `/jobs/{jobId}/taskcounts`;
+        const batchClient = createBatchClient(
+            this._ensureHttpsEndpoint(accountEndpoint)
+        );
+        const res = await batchClient.path(countPath, jobId).get({
+            headers: {
+                [CustomHttpHeaders.CommandName]:
+                    opts?.commandName ?? "GetJobTaskCounts", // What is the command name?
+            },
+        });
+
+        if (isUnexpected(res)) {
+            throw createBatchUnexpectedStatusCodeError(res);
+        }
+
+        return res.body;
+    }
 }

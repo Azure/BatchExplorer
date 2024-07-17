@@ -68,9 +68,8 @@ describe("LiveTaskService", () => {
         for await (const task of tasks) {
             allTasks.push(task);
         }
-        expect(allTasks.length).toBe(3);
-        expect(allTasks[0].id).toEqual("task1");
-        expect(allTasks[1].id).toEqual("task2");
-        expect(allTasks[2].id).toEqual("task3");
+        expect(allTasks.length).toBe(2);
+        expect(allTasks[0].id).toEqual("taska");
+        expect(allTasks[1].id).toEqual("task1");
     });
 });

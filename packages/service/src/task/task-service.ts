@@ -12,4 +12,6 @@ export interface TaskService {
         accountResourceId: string,
         jobId: string
     ): Promise<PagedAsyncIterableIterator<BatchTaskOutput>>;
+
+    getTaskCounts(accountResourceId: string, jobId: string): Promise<any>;
 }

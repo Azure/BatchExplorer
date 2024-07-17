@@ -11,6 +11,7 @@ import { Icon } from "@fluentui/react/lib/Icon";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { CiCircleChevDown } from "react-icons/ci";
 import { useLoadMore } from "@azure/bonito-ui/lib/hooks";
+import "./StickyHeader.css";
 
 interface TaskListProps {
     accountEndpoint: string;
@@ -30,8 +31,6 @@ export const TaskList = (props: TaskListProps) => {
     const [isCompact] = React.useState<boolean>(true);
     const [pageSize] = React.useState<number>(100);
     const [_, setLoadErrorMsg] = React.useState<string>("");
-
-    // store result of iterator pages in state variable, want to be global and use in loadMore func
 
     const onLoad = React.useMemo(() => {
         let iterator: AsyncIterableIterator<BatchTaskOutput[]>;

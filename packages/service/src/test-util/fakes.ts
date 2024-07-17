@@ -131,6 +131,14 @@ export interface BatchFakeSet extends FakeSet {
         accountEndpoint: string,
         jobId: string
     ): BatchTaskOutput[];
+
+    /**
+     * Get number of tasks
+     *
+     * @param accountEndpoint
+     * @param jobId
+     */
+    getTaskCounts(accountEndpoint: string, jobId: string): Promise<any>;
 }
 
 export abstract class AbstractBatchFakeSet
@@ -155,6 +163,8 @@ export abstract class AbstractBatchFakeSet
     };
 
     protected abstract batchTasks: { [taskKey: string]: BatchTaskOutput };
+
+    protected abstract batchTaskCounts: any;
 
     getBatchAccount(batchAccountId: string): BatchAccountOutput | undefined {
         return this.batchAccounts[batchAccountId.toLowerCase()];
@@ -337,6 +347,14 @@ export abstract class AbstractBatchFakeSet
                 )
             )
             .map((entry) => entry[1]);
+    }
+
+    getTaskCounts(accountEndpoint: string, jobId: string): Promise<any> {
+        if (!jobId) {
+            return Promise.resolve("not a  valid job");
+        }
+
+        return this.batchTaskCounts;
     }
 }
 
@@ -990,6 +1008,23 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                 },
             },
         ],
+    };
+
+    batchTaskCounts: any = {
+        taskCounts: {
+            active: 1,
+            running: 2,
+            completed: 3,
+            succeeded: 4,
+            failed: 5,
+        },
+        taskSlotCounts: {
+            active: 5,
+            running: 7,
+            completed: 5,
+            succeeded: 5,
+            failed: 5,
+        },
     };
 }
 

@@ -54,4 +54,20 @@ describe("FakeTaskService", () => {
         }
         expect(allTasks.map((task) => task.id)).toEqual(["taska", "task1"]);
     });
+
+    test("Get hardcoded batch tasks counts", async () => {
+        const res = await service.getTaskCounts(accountEndpoint, jobId);
+
+        expect(res.taskCounts.active).toEqual(1);
+        expect(res.taskCounts.running).toEqual(2);
+        expect(res.taskCounts.completed).toEqual(3);
+        expect(res.taskCounts.succeeded).toEqual(4);
+        expect(res.taskCounts.failed).toEqual(5);
+
+        expect(res.taskSlotCounts.active).toEqual(5);
+        expect(res.taskSlotCounts.running).toEqual(7);
+        expect(res.taskSlotCounts.completed).toEqual(5);
+        expect(res.taskSlotCounts.succeeded).toEqual(5);
+        expect(res.taskSlotCounts.failed).toEqual(5);
+    });
 });

@@ -34,4 +34,8 @@ export class FakeTaskService implements TaskService {
             )
         );
     }
+
+    async getTaskCounts(accountEndpoint: string, jobId: string): Promise<any> {
+        return this.fakeSet.getTaskCounts(accountEndpoint, jobId);
+    }
 }
