@@ -2,7 +2,6 @@
 import type { Pool, PoolOutput } from "./pool-models";
 import type { PoolService } from "./pool-service";
 import {
-    AbstractHttpService,
     CustomHttpHeaders,
     OperationOptions,
     getArmUrl,
@@ -20,10 +19,7 @@ const SINGLE_POOL_PATH =
 const POOLS_PATH =
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/pools";
 
-export class LivePoolService
-    extends AbstractHttpService
-    implements PoolService
-{
+export class LivePoolService implements PoolService {
     async createOrUpdate(
         poolResourceId: string,
         pool: Pool,

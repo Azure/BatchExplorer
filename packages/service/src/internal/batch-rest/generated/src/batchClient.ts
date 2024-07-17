@@ -2,23 +2,23 @@
 // Licensed under the MIT license.
 
 import { getClient, ClientOptions } from "@azure-rest/core-client";
-import { logger } from "./logger";
+import { logger } from "./logger.js";
 import { TokenCredential } from "@azure/core-auth";
-import { BatchClient } from "./clientDefinitions";
+import { BatchClient } from "./clientDefinitions.js";
 
 /**
  * Initialize a new instance of `BatchClient`
- * @param endpoint - Batch account endpoint (for example: https://batchaccount.eastus2.batch.azure.com).
+ * @param endpointParam - Batch account endpoint (for example: https://batchaccount.eastus2.batch.azure.com).
  * @param credentials - uniquely identify client credential
  * @param options - the parameter for all optional parameters
  */
 export default function createClient(
-  endpoint: string,
+  endpointParam: string,
   credentials: TokenCredential,
-  options: ClientOptions = {}
+  options: ClientOptions = {},
 ): BatchClient {
-  const baseUrl = options.baseUrl ?? `${endpoint}`;
-  options.apiVersion = options.apiVersion ?? "2023-11-01.18.0";
+  const endpointUrl = options.endpoint ?? options.baseUrl ?? `${endpointParam}`;
+  options.apiVersion = options.apiVersion ?? "2024-02-01.19.0";
   const userAgentInfo = `azsdk-js-batch-rest/1.0.0-beta.1`;
   const userAgentPrefix =
     options.userAgentOptions && options.userAgentOptions.userAgentPrefix
@@ -44,7 +44,7 @@ export default function createClient(
     },
   };
 
-  const client = getClient(baseUrl, credentials, options) as BatchClient;
+  const client = getClient(endpointUrl, credentials, options) as BatchClient;
 
   return client;
 }

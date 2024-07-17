@@ -51,7 +51,7 @@ module.exports = function(config) {
         customLaunchers: {
             CustomElectron: {
                 base: "Electron",
-                flags: ["--enable-precise-memory-info"],
+                flags: ["--enable-precise-memory-info", "--no-sandbox"],
                 browserWindowOptions: {
                     show: true,
                     webPreferences: {

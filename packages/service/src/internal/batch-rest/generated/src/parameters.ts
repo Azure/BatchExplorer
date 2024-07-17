@@ -4,32 +4,30 @@
 import { RawHttpHeadersInput } from "@azure/core-rest-pipeline";
 import { RequestParameters } from "@azure-rest/core-client";
 import {
-  BatchPoolCreateParameters,
-  BatchPoolUpdateParameters,
-  BatchPoolEnableAutoScaleParameters,
-  BatchPoolEvaluateAutoScaleParameters,
-  BatchPoolResizeParameters,
-  BatchPoolReplaceParameters,
-  BatchNodeRemoveParameters,
-  BatchJobUpdateParameters,
+  BatchPoolCreateContent,
+  BatchPoolUpdateContent,
+  BatchPoolEnableAutoScaleContent,
+  BatchPoolEvaluateAutoScaleContent,
+  BatchPoolResizeContent,
+  BatchPoolReplaceContent,
+  BatchNodeRemoveContent,
+  BatchJobUpdateContent,
   BatchJob,
-  BatchJobDisableParameters,
-  BatchJobTerminateParameters,
-  BatchJobCreateParameters,
-  BatchCertificate,
-  BatchJobScheduleUpdateParameters,
+  BatchJobDisableContent,
+  BatchJobTerminateContent,
+  BatchJobCreateContent,
+  BatchJobScheduleUpdateContent,
   BatchJobSchedule,
-  BatchJobScheduleCreateParameters,
-  BatchTaskCreateParameters,
-  BatchTaskCollection,
+  BatchJobScheduleCreateContent,
+  BatchTaskCreateContent,
+  BatchTaskGroup,
   BatchTask,
-  BatchNodeUserCreateParameters,
-  BatchNodeUserUpdateParameters,
-  BatchNodeRebootParameters,
-  BatchNodeReimageParameters,
-  BatchNodeDisableSchedulingParameters,
-  UploadBatchServiceLogsParameters,
-} from "./models";
+  BatchNodeUserCreateContent,
+  BatchNodeUserUpdateContent,
+  BatchNodeRebootContent,
+  BatchNodeDisableSchedulingContent,
+  UploadBatchServiceLogsContent,
+} from "./models.js";
 
 export interface ListApplicationsHeaders {
   /**
@@ -48,10 +46,7 @@ export interface ListApplicationsHeaders {
 }
 
 export interface ListApplicationsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -89,10 +84,7 @@ export interface GetApplicationHeaders {
 }
 
 export interface GetApplicationQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -125,10 +117,7 @@ export interface ListPoolUsageMetricsHeaders {
 }
 
 export interface ListPoolUsageMetricsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -184,14 +173,11 @@ export interface CreatePoolHeaders {
 
 export interface CreatePoolBodyParam {
   /** The Pool to be created. */
-  body: BatchPoolCreateParameters;
+  body: BatchPoolCreateContent;
 }
 
 export interface CreatePoolQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -231,10 +217,7 @@ export interface ListPoolsHeaders {
 }
 
 export interface ListPoolsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -305,10 +288,7 @@ export interface DeletePoolHeaders {
 }
 
 export interface DeletePoolQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -365,10 +345,7 @@ export interface PoolExistsHeaders {
 }
 
 export interface PoolExistsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -425,10 +402,7 @@ export interface GetPoolHeaders {
 }
 
 export interface GetPoolQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /** An OData $select clause. */
   $select?: string[];
@@ -490,14 +464,11 @@ export interface UpdatePoolHeaders {
 
 export interface UpdatePoolBodyParam {
   /** The pool properties to update. */
-  body: BatchPoolUpdateParameters;
+  body: BatchPoolUpdateContent;
 }
 
 export interface UpdatePoolQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -537,10 +508,7 @@ export interface DisablePoolAutoScaleHeaders {
 }
 
 export interface DisablePoolAutoScaleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -598,14 +566,11 @@ export interface EnablePoolAutoScaleHeaders {
 
 export interface EnablePoolAutoScaleBodyParam {
   /** The options to use for enabling automatic scaling. */
-  body: BatchPoolEnableAutoScaleParameters;
+  body: BatchPoolEnableAutoScaleContent;
 }
 
 export interface EnablePoolAutoScaleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -646,14 +611,11 @@ export interface EvaluatePoolAutoScaleHeaders {
 
 export interface EvaluatePoolAutoScaleBodyParam {
   /** The options to use for evaluating the automatic scaling formula. */
-  body: BatchPoolEvaluateAutoScaleParameters;
+  body: BatchPoolEvaluateAutoScaleContent;
 }
 
 export interface EvaluatePoolAutoScaleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -718,14 +680,11 @@ export interface ResizePoolHeaders {
 
 export interface ResizePoolBodyParam {
   /** The options to use for resizing the pool. */
-  body: BatchPoolResizeParameters;
+  body: BatchPoolResizeContent;
 }
 
 export interface ResizePoolQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -789,10 +748,7 @@ export interface StopPoolResizeHeaders {
 }
 
 export interface StopPoolResizeQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -826,14 +782,11 @@ export interface ReplacePoolPropertiesHeaders {
 
 export interface ReplacePoolPropertiesBodyParam {
   /** The options to use for replacing properties on the pool. */
-  body: BatchPoolReplaceParameters;
+  body: BatchPoolReplaceContent;
 }
 
 export interface ReplacePoolPropertiesQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -898,14 +851,11 @@ export interface RemoveNodesHeaders {
 
 export interface RemoveNodesBodyParam {
   /** The options to use for removing the node. */
-  body: BatchNodeRemoveParameters;
+  body: BatchNodeRemoveContent;
 }
 
 export interface RemoveNodesQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -945,10 +895,7 @@ export interface ListSupportedImagesHeaders {
 }
 
 export interface ListSupportedImagesQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -991,10 +938,7 @@ export interface ListPoolNodeCountsHeaders {
 }
 
 export interface ListPoolNodeCountsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -1061,10 +1005,7 @@ export interface DeleteJobHeaders {
 }
 
 export interface DeleteJobQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -1121,10 +1062,7 @@ export interface GetJobHeaders {
 }
 
 export interface GetJobQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /** An OData $select clause. */
   $select?: string[];
@@ -1186,14 +1124,11 @@ export interface UpdateJobHeaders {
 
 export interface UpdateJobBodyParam {
   /** The options to use for updating the Job. */
-  body: BatchJobUpdateParameters;
+  body: BatchJobUpdateContent;
 }
 
 export interface UpdateJobQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -1262,10 +1197,7 @@ export interface ReplaceJobBodyParam {
 }
 
 export interface ReplaceJobQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -1330,14 +1262,11 @@ export interface DisableJobHeaders {
 
 export interface DisableJobBodyParam {
   /** The options to use for disabling the Job. */
-  body: BatchJobDisableParameters;
+  body: BatchJobDisableContent;
 }
 
 export interface DisableJobQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -1401,10 +1330,7 @@ export interface EnableJobHeaders {
 }
 
 export interface EnableJobQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -1462,14 +1388,11 @@ export interface TerminateJobHeaders {
 
 export interface TerminateJobBodyParam {
   /** The options to use for terminating the Job. */
-  body?: BatchJobTerminateParameters;
+  body?: BatchJobTerminateContent;
 }
 
 export interface TerminateJobQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -1510,14 +1433,11 @@ export interface CreateJobHeaders {
 
 export interface CreateJobBodyParam {
   /** The Job to be created. */
-  body: BatchJobCreateParameters;
+  body: BatchJobCreateContent;
 }
 
 export interface CreateJobQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -1557,10 +1477,7 @@ export interface ListJobsHeaders {
 }
 
 export interface ListJobsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -1607,10 +1524,7 @@ export interface ListJobsFromScheduleHeaders {
 }
 
 export interface ListJobsFromScheduleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -1657,10 +1571,7 @@ export interface ListJobPreparationAndReleaseTaskStatusHeaders {
 }
 
 export interface ListJobPreparationAndReleaseTaskStatusQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -1706,10 +1617,7 @@ export interface GetJobTaskCountsHeaders {
 }
 
 export interface GetJobTaskCountsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -1723,213 +1631,6 @@ export interface GetJobTaskCountsHeaderParam {
 
 export type GetJobTaskCountsParameters = GetJobTaskCountsQueryParam &
   GetJobTaskCountsHeaderParam &
-  RequestParameters;
-
-export interface CreateCertificateHeaders {
-  /**
-   * The caller-generated request identity, in the form of a GUID with no decoration
-   * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
-   */
-  "client-request-id"?: string;
-  /** Whether the server should return the client-request-id in the response. */
-  "return-client-request-id"?: boolean;
-  /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-}
-
-export interface CreateCertificateBodyParam {
-  /** The Certificate to be created. */
-  body: BatchCertificate;
-}
-
-export interface CreateCertificateQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
-  timeOut?: number;
-}
-
-export interface CreateCertificateQueryParam {
-  queryParameters?: CreateCertificateQueryParamProperties;
-}
-
-export interface CreateCertificateHeaderParam {
-  headers?: RawHttpHeadersInput & CreateCertificateHeaders;
-}
-
-export interface CreateCertificateMediaTypesParam {
-  /** Type of content */
-  contentType: "application/json; odata=minimalmetadata";
-}
-
-export type CreateCertificateParameters = CreateCertificateQueryParam &
-  CreateCertificateHeaderParam &
-  CreateCertificateMediaTypesParam &
-  CreateCertificateBodyParam &
-  RequestParameters;
-
-export interface ListCertificatesHeaders {
-  /**
-   * The caller-generated request identity, in the form of a GUID with no decoration
-   * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
-   */
-  "client-request-id"?: string;
-  /** Whether the server should return the client-request-id in the response. */
-  "return-client-request-id"?: boolean;
-  /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-}
-
-export interface ListCertificatesQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
-  timeOut?: number;
-  /**
-   * The maximum number of items to return in the response. A maximum of 1000
-   * applications can be returned.
-   */
-  maxresults?: number;
-  /**
-   * An OData $filter clause. For more information on constructing this filter, see
-   * https://docs.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-certificates.
-   */
-  $filter?: string;
-  /** An OData $select clause. */
-  $select?: string[];
-}
-
-export interface ListCertificatesQueryParam {
-  queryParameters?: ListCertificatesQueryParamProperties;
-}
-
-export interface ListCertificatesHeaderParam {
-  headers?: RawHttpHeadersInput & ListCertificatesHeaders;
-}
-
-export type ListCertificatesParameters = ListCertificatesQueryParam &
-  ListCertificatesHeaderParam &
-  RequestParameters;
-
-export interface CancelCertificateDeletionHeaders {
-  /**
-   * The caller-generated request identity, in the form of a GUID with no decoration
-   * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
-   */
-  "client-request-id"?: string;
-  /** Whether the server should return the client-request-id in the response. */
-  "return-client-request-id"?: boolean;
-  /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-}
-
-export interface CancelCertificateDeletionQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
-  timeOut?: number;
-}
-
-export interface CancelCertificateDeletionQueryParam {
-  queryParameters?: CancelCertificateDeletionQueryParamProperties;
-}
-
-export interface CancelCertificateDeletionHeaderParam {
-  headers?: RawHttpHeadersInput & CancelCertificateDeletionHeaders;
-}
-
-export type CancelCertificateDeletionParameters =
-  CancelCertificateDeletionQueryParam &
-    CancelCertificateDeletionHeaderParam &
-    RequestParameters;
-
-export interface DeleteCertificateHeaders {
-  /**
-   * The caller-generated request identity, in the form of a GUID with no decoration
-   * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
-   */
-  "client-request-id"?: string;
-  /** Whether the server should return the client-request-id in the response. */
-  "return-client-request-id"?: boolean;
-  /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-}
-
-export interface DeleteCertificateQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
-  timeOut?: number;
-}
-
-export interface DeleteCertificateQueryParam {
-  queryParameters?: DeleteCertificateQueryParamProperties;
-}
-
-export interface DeleteCertificateHeaderParam {
-  headers?: RawHttpHeadersInput & DeleteCertificateHeaders;
-}
-
-export type DeleteCertificateParameters = DeleteCertificateQueryParam &
-  DeleteCertificateHeaderParam &
-  RequestParameters;
-
-export interface GetCertificateHeaders {
-  /**
-   * The caller-generated request identity, in the form of a GUID with no decoration
-   * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
-   */
-  "client-request-id"?: string;
-  /** Whether the server should return the client-request-id in the response. */
-  "return-client-request-id"?: boolean;
-  /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-}
-
-export interface GetCertificateQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
-  timeOut?: number;
-  /** An OData $select clause. */
-  $select?: string[];
-}
-
-export interface GetCertificateQueryParam {
-  queryParameters?: GetCertificateQueryParamProperties;
-}
-
-export interface GetCertificateHeaderParam {
-  headers?: RawHttpHeadersInput & GetCertificateHeaders;
-}
-
-export type GetCertificateParameters = GetCertificateQueryParam &
-  GetCertificateHeaderParam &
   RequestParameters;
 
 export interface JobScheduleExistsHeaders {
@@ -1973,10 +1674,7 @@ export interface JobScheduleExistsHeaders {
 }
 
 export interface JobScheduleExistsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2033,10 +1731,7 @@ export interface DeleteJobScheduleHeaders {
 }
 
 export interface DeleteJobScheduleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2093,10 +1788,7 @@ export interface GetJobScheduleHeaders {
 }
 
 export interface GetJobScheduleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /** An OData $select clause. */
   $select?: string[];
@@ -2158,14 +1850,11 @@ export interface UpdateJobScheduleHeaders {
 
 export interface UpdateJobScheduleBodyParam {
   /** The options to use for updating the Job Schedule. */
-  body: BatchJobScheduleUpdateParameters;
+  body: BatchJobScheduleUpdateContent;
 }
 
 export interface UpdateJobScheduleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2234,10 +1923,7 @@ export interface ReplaceJobScheduleBodyParam {
 }
 
 export interface ReplaceJobScheduleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2301,10 +1987,7 @@ export interface DisableJobScheduleHeaders {
 }
 
 export interface DisableJobScheduleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2361,10 +2044,7 @@ export interface EnableJobScheduleHeaders {
 }
 
 export interface EnableJobScheduleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2421,10 +2101,7 @@ export interface TerminateJobScheduleHeaders {
 }
 
 export interface TerminateJobScheduleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2458,14 +2135,11 @@ export interface CreateJobScheduleHeaders {
 
 export interface CreateJobScheduleBodyParam {
   /** The Job Schedule to be created. */
-  body: BatchJobScheduleCreateParameters;
+  body: BatchJobScheduleCreateContent;
 }
 
 export interface CreateJobScheduleQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2505,10 +2179,7 @@ export interface ListJobSchedulesHeaders {
 }
 
 export interface ListJobSchedulesQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -2556,14 +2227,11 @@ export interface CreateTaskHeaders {
 
 export interface CreateTaskBodyParam {
   /** The Task to be created. */
-  body: BatchTaskCreateParameters;
+  body: BatchTaskCreateContent;
 }
 
 export interface CreateTaskQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2603,10 +2271,7 @@ export interface ListTasksHeaders {
 }
 
 export interface ListTasksQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -2654,14 +2319,11 @@ export interface CreateTaskCollectionHeaders {
 
 export interface CreateTaskCollectionBodyParam {
   /** The Tasks to be added. */
-  body: BatchTaskCollection;
+  body: BatchTaskGroup;
 }
 
 export interface CreateTaskCollectionQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2725,10 +2387,7 @@ export interface DeleteTaskHeaders {
 }
 
 export interface DeleteTaskQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2785,10 +2444,7 @@ export interface GetTaskHeaders {
 }
 
 export interface GetTaskQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /** An OData $select clause. */
   $select?: string[];
@@ -2854,10 +2510,7 @@ export interface ReplaceTaskBodyParam {
 }
 
 export interface ReplaceTaskQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -2897,10 +2550,7 @@ export interface ListSubTasksHeaders {
 }
 
 export interface ListSubTasksQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /** An OData $select clause. */
   $select?: string[];
@@ -2959,10 +2609,7 @@ export interface TerminateTaskHeaders {
 }
 
 export interface TerminateTaskQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3019,10 +2666,7 @@ export interface ReactivateTaskHeaders {
 }
 
 export interface ReactivateTaskQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3055,10 +2699,7 @@ export interface DeleteTaskFileHeaders {
 }
 
 export interface DeleteTaskFileQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * Whether to delete children of a directory. If the filePath parameter represents
@@ -3115,10 +2756,7 @@ export interface GetTaskFileHeaders {
 }
 
 export interface GetTaskFileQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3163,10 +2801,7 @@ export interface GetTaskFilePropertiesHeaders {
 }
 
 export interface GetTaskFilePropertiesQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3199,10 +2834,7 @@ export interface ListTaskFilesHeaders {
 }
 
 export interface ListTaskFilesQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -3251,14 +2883,11 @@ export interface CreateNodeUserHeaders {
 
 export interface CreateNodeUserBodyParam {
   /** The options to use for creating the user. */
-  body: BatchNodeUserCreateParameters;
+  body: BatchNodeUserCreateContent;
 }
 
 export interface CreateNodeUserQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3298,10 +2927,7 @@ export interface DeleteNodeUserHeaders {
 }
 
 export interface DeleteNodeUserQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3335,14 +2961,11 @@ export interface ReplaceNodeUserHeaders {
 
 export interface ReplaceNodeUserBodyParam {
   /** The options to use for updating the user. */
-  body: BatchNodeUserUpdateParameters;
+  body: BatchNodeUserUpdateContent;
 }
 
 export interface ReplaceNodeUserQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3382,10 +3005,7 @@ export interface GetNodeHeaders {
 }
 
 export interface GetNodeQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /** An OData $select clause. */
   $select?: string[];
@@ -3421,14 +3041,11 @@ export interface RebootNodeHeaders {
 
 export interface RebootNodeBodyParam {
   /** The options to use for rebooting the Compute Node. */
-  body?: BatchNodeRebootParameters;
+  body?: BatchNodeRebootContent;
 }
 
 export interface RebootNodeQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3451,54 +3068,6 @@ export type RebootNodeParameters = RebootNodeQueryParam &
   RebootNodeBodyParam &
   RequestParameters;
 
-export interface ReimageNodeHeaders {
-  /**
-   * The caller-generated request identity, in the form of a GUID with no decoration
-   * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
-   */
-  "client-request-id"?: string;
-  /** Whether the server should return the client-request-id in the response. */
-  "return-client-request-id"?: boolean;
-  /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-}
-
-export interface ReimageNodeBodyParam {
-  /** The options to use for reimaging the Compute Node. */
-  body?: BatchNodeReimageParameters;
-}
-
-export interface ReimageNodeQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
-  timeOut?: number;
-}
-
-export interface ReimageNodeQueryParam {
-  queryParameters?: ReimageNodeQueryParamProperties;
-}
-
-export interface ReimageNodeHeaderParam {
-  headers?: RawHttpHeadersInput & ReimageNodeHeaders;
-}
-
-export interface ReimageNodeMediaTypesParam {
-  /** Type of content */
-  contentType: "application/json; odata=minimalmetadata";
-}
-
-export type ReimageNodeParameters = ReimageNodeQueryParam &
-  ReimageNodeHeaderParam &
-  ReimageNodeMediaTypesParam &
-  ReimageNodeBodyParam &
-  RequestParameters;
-
 export interface DisableNodeSchedulingHeaders {
   /**
    * The caller-generated request identity, in the form of a GUID with no decoration
@@ -3517,14 +3086,11 @@ export interface DisableNodeSchedulingHeaders {
 
 export interface DisableNodeSchedulingBodyParam {
   /** The options to use for disabling scheduling on the Compute Node. */
-  body?: BatchNodeDisableSchedulingParameters;
+  body?: BatchNodeDisableSchedulingContent;
 }
 
 export interface DisableNodeSchedulingQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3564,10 +3130,7 @@ export interface EnableNodeSchedulingHeaders {
 }
 
 export interface EnableNodeSchedulingQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3600,10 +3163,7 @@ export interface GetNodeRemoteLoginSettingsHeaders {
 }
 
 export interface GetNodeRemoteLoginSettingsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3618,43 +3178,6 @@ export interface GetNodeRemoteLoginSettingsHeaderParam {
 export type GetNodeRemoteLoginSettingsParameters =
   GetNodeRemoteLoginSettingsQueryParam &
     GetNodeRemoteLoginSettingsHeaderParam &
-    RequestParameters;
-
-export interface GetNodeRemoteDesktopFileHeaders {
-  /**
-   * The caller-generated request identity, in the form of a GUID with no decoration
-   * such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
-   */
-  "client-request-id"?: string;
-  /** Whether the server should return the client-request-id in the response. */
-  "return-client-request-id"?: boolean;
-  /**
-   * The time the request was issued. Client libraries typically set this to the
-   * current system clock time; set it explicitly if you are calling the REST API
-   * directly.
-   */
-  "ocp-date"?: string;
-}
-
-export interface GetNodeRemoteDesktopFileQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
-  timeOut?: number;
-}
-
-export interface GetNodeRemoteDesktopFileQueryParam {
-  queryParameters?: GetNodeRemoteDesktopFileQueryParamProperties;
-}
-
-export interface GetNodeRemoteDesktopFileHeaderParam {
-  headers?: RawHttpHeadersInput & GetNodeRemoteDesktopFileHeaders;
-}
-
-export type GetNodeRemoteDesktopFileParameters =
-  GetNodeRemoteDesktopFileQueryParam &
-    GetNodeRemoteDesktopFileHeaderParam &
     RequestParameters;
 
 export interface UploadNodeLogsHeaders {
@@ -3675,14 +3198,11 @@ export interface UploadNodeLogsHeaders {
 
 export interface UploadNodeLogsBodyParam {
   /** The Azure Batch service log files upload options. */
-  body: UploadBatchServiceLogsParameters;
+  body: UploadBatchServiceLogsContent;
 }
 
 export interface UploadNodeLogsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3722,10 +3242,7 @@ export interface ListNodesHeaders {
 }
 
 export interface ListNodesQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -3770,10 +3287,7 @@ export interface GetNodeExtensionHeaders {
 }
 
 export interface GetNodeExtensionQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /** An OData $select clause. */
   $select?: string[];
@@ -3808,10 +3322,7 @@ export interface ListNodeExtensionsHeaders {
 }
 
 export interface ListNodeExtensionsQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000
@@ -3851,10 +3362,7 @@ export interface DeleteNodeFileHeaders {
 }
 
 export interface DeleteNodeFileQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * Whether to delete children of a directory. If the filePath parameter represents
@@ -3911,10 +3419,7 @@ export interface GetNodeFileHeaders {
 }
 
 export interface GetNodeFileQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3959,10 +3464,7 @@ export interface GetNodeFilePropertiesHeaders {
 }
 
 export interface GetNodeFilePropertiesQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
 }
 
@@ -3995,10 +3497,7 @@ export interface ListNodeFilesHeaders {
 }
 
 export interface ListNodeFilesQueryParamProperties {
-  /**
-   * Sets the maximum time that the server can spend processing the request,
-   * in seconds. The default is 30 seconds.
-   */
+  /** The maximum time that the server can spend processing the request, in seconds. The default is 30 seconds. If the value is larger than 30, the default will be used instead.". */
   timeOut?: number;
   /**
    * The maximum number of items to return in the response. A maximum of 1000

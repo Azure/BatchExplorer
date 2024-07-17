@@ -12,6 +12,7 @@ import {
 } from "./environment";
 import { Clock } from "../datetime/clock";
 import { Notifier } from "../notification";
+import { CacheManager } from "../cache";
 
 const DEFAULT_BASE_PATH = "/";
 
@@ -91,6 +92,21 @@ export abstract class AbstractEnvironment<
             );
         }
         return notifier;
+    }
+
+    /**
+     * Get an instance of the global cache manager
+     */
+    getCacheManager(): CacheManager {
+        const cacheManager = this.getInjectable<CacheManager>(
+            DependencyName.CacheManager
+        );
+        if (!cacheManager) {
+            throw new Error(
+                "No cache manager configured for the current environment"
+            );
+        }
+        return cacheManager;
     }
 
     /**

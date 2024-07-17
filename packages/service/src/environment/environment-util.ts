@@ -13,11 +13,13 @@ import {
     BatchDependencyFactories,
     BatchDependencyName,
 } from "./batch-dependencies";
+import { FakeAccountService } from "../account/fake-account-service";
 
 export const mockBatchDepFactories: Partial<BatchDependencyFactories> = {
     [BatchDependencyName.PoolService]: () => new FakePoolService(),
     [BatchDependencyName.NodeService]: () => new FakeNodeService(),
     [BatchDependencyName.TaskService]: () => new FakeTaskService(),
+    [BatchDependencyName.AccountService]: () => new FakeAccountService(),
 };
 
 /**
