@@ -72,4 +72,26 @@ describe("LiveTaskService", () => {
         expect(allTasks[0].id).toEqual("taska");
         expect(allTasks[1].id).toEqual("task1");
     });
+
+    test("Get task counts", async () => {
+        httpClient.addExpected(
+            new MockHttpResponse(
+                `https://${hoboAcctEndpoint}/jobs/faketestjob1/taskcounts?api-version=${BatchApiVersion.data}`,
+                {
+                    status: 200,
+                    body: JSON.stringify(
+                        fakeSet.getTaskCounts(hoboAcctEndpoint, "faketestjob1")
+                    ),
+                }
+            )
+        );
+
+        const taskCounts = await service.getTaskCounts(
+            hoboAcctEndpoint,
+            "faketestjob1"
+        );
+        expect(taskCounts).toBeDefined();
+        expect(taskCounts?.taskCounts.active).toEqual(1);
+        expect(taskCounts?.taskSlotCounts.active).toEqual(5);
+    });
 });

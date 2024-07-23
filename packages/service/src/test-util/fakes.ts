@@ -18,7 +18,11 @@ import {
     BatchNodeVMExtensionOutput,
 } from "../node/node-models";
 import { Pool, PoolOutput } from "../pool/pool-models";
-import { BatchJobOutput, BatchTaskOutput } from "../batch-models";
+import {
+    BatchJobOutput,
+    BatchTaskCountsResultOutput,
+    BatchTaskOutput,
+} from "../batch-models";
 
 /**
  * A fake dataset which includes Batch accounts, pools, etc.
@@ -138,7 +142,10 @@ export interface BatchFakeSet extends FakeSet {
      * @param accountEndpoint
      * @param jobId
      */
-    getTaskCounts(accountEndpoint: string, jobId: string): Promise<any>;
+    getTaskCounts(
+        accountEndpoint: string,
+        jobId: string
+    ): BatchTaskCountsResultOutput;
 }
 
 export abstract class AbstractBatchFakeSet
@@ -164,7 +171,9 @@ export abstract class AbstractBatchFakeSet
 
     protected abstract batchTasks: { [taskKey: string]: BatchTaskOutput };
 
-    protected abstract batchTaskCounts: any;
+    protected abstract batchTaskCounts: {
+        [jobKey: string]: BatchTaskCountsResultOutput;
+    };
 
     getBatchAccount(batchAccountId: string): BatchAccountOutput | undefined {
         return this.batchAccounts[batchAccountId.toLowerCase()];
@@ -349,12 +358,17 @@ export abstract class AbstractBatchFakeSet
             .map((entry) => entry[1]);
     }
 
-    getTaskCounts(accountEndpoint: string, jobId: string): Promise<any> {
+    getTaskCounts(
+        accountEndpoint: string,
+        jobId: string
+    ): BatchTaskCountsResultOutput {
         if (!jobId) {
-            return Promise.resolve("not a  valid job");
+            throw new Error("jobId does not exist");
         }
 
-        return this.batchTaskCounts;
+        return this.batchTaskCounts[
+            `${accountEndpoint}:${jobId}`.toLowerCase()
+        ];
     }
 }
 
@@ -1010,20 +1024,22 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
         ],
     };
 
-    batchTaskCounts: any = {
-        taskCounts: {
-            active: 1,
-            running: 2,
-            completed: 3,
-            succeeded: 4,
-            failed: 5,
-        },
-        taskSlotCounts: {
-            active: 5,
-            running: 7,
-            completed: 5,
-            succeeded: 5,
-            failed: 5,
+    batchTaskCounts: { [jobId: string]: BatchTaskCountsResultOutput } = {
+        "mercury.eastus.batch.azure.com:faketestjob1": {
+            taskCounts: {
+                active: 1,
+                running: 2,
+                completed: 3,
+                succeeded: 4,
+                failed: 5,
+            },
+            taskSlotCounts: {
+                active: 5,
+                running: 7,
+                completed: 5,
+                succeeded: 5,
+                failed: 5,
+            },
         },
     };
 }

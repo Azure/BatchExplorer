@@ -11,7 +11,6 @@ import { Icon } from "@fluentui/react/lib/Icon";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { CiCircleChevDown } from "react-icons/ci";
 import { useLoadMore } from "@azure/bonito-ui/lib/hooks";
-import "./StickyHeader.css";
 
 interface TaskListProps {
     accountEndpoint: string;
@@ -66,6 +65,7 @@ export const TaskList = (props: TaskListProps) => {
                         };
                     }
                 } catch (e: any) {
+                    // eslint-disable-next-line no-console
                     console.log(e);
                     return { items: [], done: true };
                 }

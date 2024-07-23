@@ -1,5 +1,5 @@
 import { BatchFakeSet, BasicBatchFakeSet } from "../test-util/fakes";
-import { BatchTaskOutput } from "../batch-models";
+import { BatchTaskCountsResultOutput, BatchTaskOutput } from "../batch-models";
 import type { TaskService } from "./task-service";
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { createPagedArray } from "../test-util/paging-test-util";
@@ -35,7 +35,10 @@ export class FakeTaskService implements TaskService {
         );
     }
 
-    async getTaskCounts(accountEndpoint: string, jobId: string): Promise<any> {
+    async getTaskCounts(
+        accountEndpoint: string,
+        jobId: string
+    ): Promise<BatchTaskCountsResultOutput> {
         return this.fakeSet.getTaskCounts(accountEndpoint, jobId);
     }
 }

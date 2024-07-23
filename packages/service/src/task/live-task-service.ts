@@ -3,7 +3,7 @@ import {
     CustomHttpHeaders,
     OperationOptions,
 } from "@azure/bonito-core";
-import { BatchTaskOutput } from "../batch-models";
+import { BatchTaskCountsResultOutput, BatchTaskOutput } from "../batch-models";
 import { createBatchClient, isUnexpected } from "../internal/batch-rest";
 import { createBatchUnexpectedStatusCodeError } from "../utils";
 import { TaskService } from "./task-service";
@@ -72,7 +72,7 @@ export class LiveTaskService
         accountEndpoint: string,
         jobId: string,
         opts?: OperationOptions
-    ): Promise<any | undefined> {
+    ): Promise<BatchTaskCountsResultOutput | undefined> {
         const countPath = `/jobs/{jobId}/taskcounts`;
         const batchClient = createBatchClient(
             this._ensureHttpsEndpoint(accountEndpoint)
@@ -80,7 +80,7 @@ export class LiveTaskService
         const res = await batchClient.path(countPath, jobId).get({
             headers: {
                 [CustomHttpHeaders.CommandName]:
-                    opts?.commandName ?? "GetJobTaskCounts", // What is the command name?
+                    opts?.commandName ?? "GetJobTaskCounts", // What is the command
             },
         });
 

@@ -1,17 +1,24 @@
-import { BatchTaskOutput } from "../batch-models";
+import { OperationOptions } from "@azure/bonito-core";
+import { BatchTaskCountsResultOutput, BatchTaskOutput } from "../batch-models";
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 
 export interface TaskService {
     getTask(
-        accountResourceId: string,
+        accountEndpoint: string,
         jobId: string,
-        taskId: string
+        taskId: string,
+        opts?: OperationOptions
     ): Promise<BatchTaskOutput | undefined>;
 
     listTasks(
-        accountResourceId: string,
-        jobId: string
+        accountEndpoint: string,
+        jobId: string,
+        opts?: OperationOptions
     ): Promise<PagedAsyncIterableIterator<BatchTaskOutput>>;
 
-    getTaskCounts(accountResourceId: string, jobId: string): Promise<any>;
+    getTaskCounts(
+        accountEndpoint: string,
+        jobId: string,
+        opts?: OperationOptions
+    ): Promise<BatchTaskCountsResultOutput | undefined>;
 }
