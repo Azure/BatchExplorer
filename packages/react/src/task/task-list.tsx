@@ -22,7 +22,7 @@ interface TaskRow {
     id?: string;
     state?: string;
     creationTime?: string;
-    exitCode?: number;
+    exitCode?: string | number;
 }
 
 export const TaskList = (props: TaskListProps) => {
@@ -103,9 +103,11 @@ function tasksToRows(tasks: BatchTaskOutput[]): TaskRow[] {
         rows.push({
             url: task.url,
             id: task.id,
-            state: task.state,
+            state: `${task.state?.charAt(0).toUpperCase() + (task.state?.slice(1) || "")}`,
             creationTime: task.creationTime,
-            exitCode: task.exitConditions?.exitCodes?.[0].code,
+            exitCode:
+                task.executionInfo?.failureInfo?.code ||
+                task.executionInfo?.exitCode,
         });
     }
     return rows;
@@ -181,13 +183,13 @@ const columns: DataGridColumn<TaskRow>[] = [
         prop: "exitCode",
         minWidth: 150,
         onRender: (task) => {
-            return <div>{task.exitCode}</div>;
+            return <div style={{ marginRight: 5 }}>{task.exitCode}</div>;
         },
     },
     {
         label: " ",
         prop: " ",
-        minWidth: 150,
+        minWidth: 50,
         onRender: (task) => {
             return (
                 <div>
