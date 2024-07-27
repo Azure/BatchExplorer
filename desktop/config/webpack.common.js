@@ -3,8 +3,11 @@ const { DefinePlugin } = require("webpack");
 
 const rules = {
     html: {
-        test: /\.html$/,
+        test: /(\.html$)|(\.template$)/,
         loader: "raw-loader",
+        options: {
+            esModule: false,
+        },
         exclude: [/node_modules/, helpers.root("src/app/index.html")],
     },
     json: {
