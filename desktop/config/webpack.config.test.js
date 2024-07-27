@@ -2,6 +2,7 @@ const config = require("./webpack.config.base");
 const helpers = require("./helpers");
 const { commonRules, defineEnv } = require("./webpack.common");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+
 const ENV = "test";
 
 // We need to remove the app entry from the default config as this is defined in karma
@@ -28,15 +29,23 @@ config.module.rules = config.module.rules = [
         ],
         exclude: [/node_modules/, /\.node\.spec\.ts/],  // node.spec.ts are to be run in node environment
     },
-    ...commonRules,
+    {
+        test: /(\.html$)|(\.template$)/,
+        loader: "raw-loader",
+        options: {
+            esModule: false,
+        },
+        exclude: [/node_modules/, helpers.root("src/app/index.html")],
+    },
+    // ...commonRules.splice(commonRules.findIndex(rule => rule.test === /\.html$/), 1)
 ].concat(
     [{
         test: /\.scss$/,
-        loader: "style-loader!css-loader!sass-loader",
+        use: ["style-loader", "css-loader", "sass-loader"],
     },
     {
         test: /node_modules.*\.css$/,
-        loader: "style-loader!css-loader",
+        use: ["style-loader", "css-loader"],
     },
     /**
      * Instruments JS files with Istanbul for subsequent code coverage reporting.

@@ -1,5 +1,16 @@
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, ElementRef, HostBinding, Input, OnChanges, QueryList, Type, ViewChild,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    forwardRef,
+    HostBinding,
+    Input,
+    OnChanges,
+    QueryList,
+    Type,
+    ViewChild,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { AsyncTask, Dto, ServerError, autobind } from "@batch-flask/core";
@@ -69,7 +80,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
 
     @Input() @HostBinding("class.sticky-footer") public stickyFooter: boolean = true;
 
-    @ContentChildren(FormPageComponent) public pages: QueryList<FormPageComponent>;
+    @ContentChildren(forwardRef(() => FormPageComponent)) public pages: QueryList<FormPageComponent>;
 
     @ViewChild('formElement') formElement: ElementRef;
 

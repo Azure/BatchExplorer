@@ -4,6 +4,8 @@
     "src/@batch-flask/extensions/*",
     "src/app/environment.ts",
     "src/app/commands/**/*",
+    "test/**/*",
+    "src/test/**/*",
     "*.scss"
   ],
   "productName": "Batch Explorer",
@@ -92,9 +94,9 @@
     "node": ">=18.0.0"
   },
   "peerDependencies": {
+    "@fluentui/azure-themes": ">=8.6.34 < 9.0.0",
     "@fluentui/react": ">=8.97.2 <9.0.0",
     "@fluentui/react-theme-provider": ">=0.19.16 <1.0.0",
-    "@fluentui/azure-themes": ">=8.6.34 < 9.0.0",
     "mobx": "^6.3.2",
     "mobx-react-lite": "^3.2.0",
     "react": ">=17.0.2 <18.0.0",
@@ -140,6 +142,7 @@
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
+    "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.5.3",
     "jasmine": "~3.5.0",
     "jasmine-axe": "^1.1.0",
@@ -184,7 +187,6 @@
     "yesno": "^0.4.0"
   },
   "dependencies": {
-    "@azure/core-util": "1.9.1",
     "@angular/animations": "^12.0.0",
     "@angular/cdk": "^12.0.0",
     "@angular/common": "^12.0.0",
@@ -198,6 +200,7 @@
     "@angular/router": "^12.0.0",
     "@azure/bonito-core": "^1.0.0",
     "@azure/bonito-ui": "^1.0.0",
+    "@azure/core-util": "1.9.1",
     "@azure/msal-node": "^2.7.0",
     "@azure/storage-blob": "^12.23.0",
     "@batch/ui-playground": "^1.0.0",
