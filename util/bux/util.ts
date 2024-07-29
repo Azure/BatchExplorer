@@ -76,18 +76,21 @@ export async function loadConfiguration(): Promise<Configuration> {
 // Recursively searches upward from startDir (the current working directory from which the command is run) for a bux.json configuration file
 export async function findBuxConfig(
     startDir: string
-): Promise<BuxConfig | null> {
+): Promise<{ buxConfig: BuxConfig | null; rootDir: string }> {
     let currentDir = startDir;
 
     while (currentDir !== path.parse(currentDir).root) {
         const configPath = path.join(currentDir, "bux.json");
         if (fs.existsSync(configPath)) {
-            return readJsonOrDefault(configPath);
+            return {
+                buxConfig: readJsonOrDefault(configPath),
+                rootDir: currentDir,
+            };
         }
         currentDir = path.dirname(currentDir);
     }
 
-    return null;
+    return { buxConfig: null, rootDir: "" };
 }
 
 /**
@@ -296,7 +299,10 @@ async function printLinkStatus(rootPackage: string): Promise<void> {
         rootPackage
     );
 
-    const allPackagesLinked = linkChecks.reduce((prev, curr) => prev && curr);
+    const allPackagesLinked = linkChecks.reduce(
+        (prev, curr) => prev && curr,
+        true
+    );
     let linkStatus;
     if (allPackagesLinked) {
         linkStatus = color.green("active");
@@ -308,9 +314,9 @@ async function printLinkStatus(rootPackage: string): Promise<void> {
 
 export async function printStatus() {
     const config = await loadConfiguration();
-    const buxConfig = await findBuxConfig(process.cwd());
+    const { buxConfig, rootDir } = await findBuxConfig(process.cwd());
 
-    if (!buxConfig) {
+    if (!buxConfig || !rootDir) {
         error("No bux.json configuration found. Exiting...");
         process.exit(1);
     }
@@ -318,6 +324,11 @@ export async function printStatus() {
     try {
         printInfo("Batch Explorer", config.paths.batchExplorer);
         info("");
+        const gitRoot = findGitRoot(process.cwd());
+        if (gitRoot) {
+            printInfo("Current repository", gitRoot);
+            info("");
+        }
         await printLinkStatus(buxConfig.rootPackage);
     } catch (e) {
         error("Config errors found. Run `bux configure` to re-configure.");
@@ -381,9 +392,9 @@ export async function gatherBuildResults(basePath: string) {
 }
 
 export async function linkLocalProjects() {
-    const buxConfig = await findBuxConfig(process.cwd());
+    const { buxConfig, rootDir } = await findBuxConfig(process.cwd());
 
-    if (!buxConfig) {
+    if (!buxConfig || !rootDir) {
         error("No bux.json configuration found. Exiting...");
         process.exit(1);
     }
@@ -430,9 +441,9 @@ export async function linkLocalProjects() {
 }
 
 export async function unlinkLocalProjects() {
-    const buxConfig = await findBuxConfig(process.cwd());
+    const { buxConfig, rootDir } = await findBuxConfig(process.cwd());
 
-    if (!buxConfig) {
+    if (!buxConfig || !rootDir) {
         error("No bux.json configuration found. Exiting...");
         process.exit(1);
     }
@@ -557,7 +568,14 @@ async function runLinkageTask(
         );
         return;
     }
-    const targetPath = path.join(process.cwd(), rootPackage);
+
+    const { buxConfig, rootDir } = await findBuxConfig(process.cwd());
+    if (!buxConfig || !rootDir) {
+        error(`No bux.json configuration found. Exiting...`);
+        process.exit(1);
+    }
+
+    const targetPath = path.join(rootDir, rootPackage);
     const targetPackageJson = path.join(targetPath, "package.json");
     if (!fs.existsSync(targetPackageJson)) {
         error(`No package.json in target directory ${targetPath}`);
@@ -565,7 +583,6 @@ async function runLinkageTask(
     }
 
     const targetConf = readJsonOrDefault(targetPackageJson);
-
     const packageRoot = path.join(
         config.paths.batchExplorer || defaultBatchExplorerHome,
         "packages"
@@ -616,4 +633,14 @@ function isConfigPathKey(key: string): key is ConfigPath {
 
 function printJson(json: object) {
     info(JSON.stringify(json, null, printJsonIndentSize));
+}
+
+function findGitRoot(currentDir: string): string | null {
+    while (currentDir !== path.parse(currentDir).root) {
+        if (fs.existsSync(path.join(currentDir, ".git"))) {
+            return currentDir;
+        }
+        currentDir = path.dirname(currentDir);
+    }
+    return null;
 }
