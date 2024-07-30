@@ -9,10 +9,11 @@ import { AccountDefaultComponent, AccountDetailsComponent } from "./components/a
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { AccountMonitoringHomeComponent } from "./components/account/monitoring";
 import { PlaygroundRouteComponent } from "./components/misc/playground-route";
+import { WelcomeComponent } from "./components/welcome";
 
 
 export const routes: Routes = [
-    { path: "", redirectTo: "accounts", pathMatch: "full" },
+    { path: "", redirectTo: "welcome", pathMatch: "full" },
     {
         component: AccountHomeComponent,
         path: "accounts",
@@ -116,4 +117,8 @@ export const routes: Routes = [
         path: "keybindings",
         component: KeyBindingsComponent,
     },
+    {
+        path: "welcome",
+        component: WelcomeComponent,
+    }
 ];

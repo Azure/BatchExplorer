@@ -1,4 +1,4 @@
-import { SanitizedError } from "@batch-flask/utils";
+import { SanitizedError, SecureUtils } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { Deferred } from "common";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -6,6 +6,10 @@ import { AADService } from "..";
 import { AADConfig } from "../aad-config";
 import * as AADConstants from "../aad-constants";
 import AuthProvider, { AuthorizationResult } from "../auth-provider";
+import { AuthError } from "@azure/msal-node";
+import { AuthObserver, UserAuthSelection } from "../auth-observer";
+import { IpcEvent } from "common/constants";
+import { first } from "rxjs/operators";
 
 export interface AuthorizeResult extends AuthorizationResult {
     code: string;
@@ -58,33 +62,46 @@ export class AuthorizeError extends Error {
     }
 }
 
-interface AuthorizeQueueItem {
-    tenantId: string;
-    resourceURI: string;
-    forceRefresh: boolean;
-    deferred: Deferred<any>;
-}
-
 export enum AuthenticationState {
     None,
     UserInput,
     Authenticated,
+    SignedOut,
+    Canceled
 }
 
-export class LogoutError extends SanitizedError {
-    constructor() {
-        super("User logged out");
-    }
+enum TenantAuthState {
+    canceled,
+    pending,
+    completed,
+    signedOut,
+    failed
+}
+
+export class SignOutException extends SanitizedError {
+    constructor() { super("User logged out"); }
+}
+
+export class AuthCancelException extends SanitizedError {
+    constructor() { super("User canceled"); }
+}
+
+export interface AuthorizeResourceOptions {
+    tenantId: string;
+    resourceURI: string;
+    forceRefresh?: boolean;
+    selectAuthMode?: boolean;
 }
 
 /**
  * This will open a new window at the /authorize endpoint to get the user
  */
-export class AuthenticationService {
+export class AuthenticationService implements AuthObserver {
     public state: Observable<AuthenticationState>;
     private _authQueue = new AuthorizeQueue();
     private _state = new BehaviorSubject(AuthenticationState.None);
-    private _logoutDeferred: Deferred<void> | null;
+
+    public browserAuthMode: boolean;
 
     constructor(
         private app: BatchExplorerApplication,
@@ -93,6 +110,7 @@ export class AuthenticationService {
         private aadService: AADService
     ) {
         this.state = this._state.asObservable();
+        authProvider.setAuthObserver(this);
     }
 
     /**
@@ -101,9 +119,11 @@ export class AuthenticationService {
      */
     public async authorize(tenantId: string, forceRefresh = false):
     Promise<AuthorizeResult> {
-        return this.authorizeResource(
-            tenantId, this.app.properties.azureEnvironment.arm, forceRefresh
-        );
+        return this.authorizeResource({
+            tenantId,
+            resourceURI: this.app.properties.azureEnvironment.arm,
+            forceRefresh
+        });
     }
 
     /**
@@ -116,16 +136,27 @@ export class AuthenticationService {
      * @returns a promise with AuthorizedResult
      */
     public async authorizeResource(
-        tenantId: string, resourceURI: string, forceRefresh: boolean
+        options: AuthorizeResourceOptions
     ): Promise<AuthorizeResult> {
+        const {
+            tenantId,
+            resourceURI,
+            forceRefresh,
+            selectAuthMode = true
+        } = options;
         const existingAuth = this._authQueue.get(tenantId, resourceURI);
         if (existingAuth) {
-            return existingAuth.deferred.promise;
+            if (forceRefresh) {
+                existingAuth.cancel("Force refresh");
+            } else {
+                return this.convertToAuthResponse(existingAuth.promise());
+            }
         }
-        const deferred = this._authQueue.add(tenantId, resourceURI,
-            forceRefresh);
+        const authItem = this._authQueue.add({
+            tenantId, resourceURI, forceRefresh, selectAuthMode
+        });
         this._authorizeNext();
-        return deferred.promise;
+        return this.convertToAuthResponse(authItem.promise());
     }
 
     /**
@@ -134,83 +165,71 @@ export class AuthenticationService {
      * If a tenant is specified, only logout from that tenant
      */
     public async logout(tenant?: string) {
-        if (this._logoutDeferred) {
-            return this._logoutDeferred.promise;
-        }
-        let showWindow = true;
-
-        this.authProvider.logout(tenant);
+        await this.authProvider.logout(tenant);
 
         if (tenant) {
             this._authQueue.remove(tenant,
                 this.app.properties.azureEnvironment.arm);
-            showWindow = false;
         } else {
             this._authQueue.clear();
         }
-
-        const url = AADConstants.logoutUrl(
-            this.app.properties.azureEnvironment.aadUrl,
-            tenant || this.config.tenant
-        );
-        this._loadAuthWindow(url, { clear: true, tenant, show: showWindow });
-        return this._logoutDeferred = new Deferred();
     }
 
     private async _authorizeNext() {
         if (this._authQueue.authInProgress()) {
             return;
         }
-        const { tenantId, resourceURI, forceRefresh, deferred } =
-            this._authQueue.shift();
+        const authItem = this._authQueue.shift();
+        const { tenantId, resourceURI, forceRefresh } = authItem;
 
         try {
             const authResult: AuthorizationResult =
                 await this.authProvider.getToken({
                     resourceURI,
                     tenantId,
-                    forceRefresh,
-                    authCodeCallback: (url, tenant, silent) =>
-                        this._authorizationCodeCallback(url, tenant, silent)
+                    forceRefresh
                 });
 
             if (this._state.getValue() !== AuthenticationState.Authenticated) {
                 this._state.next(AuthenticationState.Authenticated);
             }
 
-            deferred.resolve({
+            authItem.complete({
                 ...authResult,
                 code: null,
                 id_token: null,
-                session_state: null
+                session_state: null,
+                state: null
             });
-        } catch (e) {
-            deferred.reject(e);
+        } catch (error) {
+            authItem.error(error);
         } finally {
             this._authQueue.current = null;
             this._authorizeNext();
         }
     }
 
-    private async _authorizationCodeCallback(url: string, tenant: string,
-        silent = false) {
-        this._state.next(AuthenticationState.UserInput);
-        return await this._loadAuthWindow(url, { show: !silent, tenant });
-    }
-
-    private _loadAuthWindow(url: string,
+    /**
+     * Authenticate using an Electron browser window
+     *
+     * @returns A promise which resolves to an auth code string
+     */
+    private async _loadAuthWindow(url: string,
         { clear = false, show = true, tenant = "" } = {}
-    ) {
+    ): Promise<string> {
         const authWindow = this.app.authenticationWindow;
-        const deferred = new Deferred<string>();
         authWindow.create();
         if (tenant !== "" && !(tenant in AADConstants.TenantPlaceholders)) {
             this._setAuthWindowTitle(tenant);
         }
-        authWindow.onRedirect(newUrl =>
-            this._authWindowRedirected(newUrl, deferred));
-        authWindow.onNavigate(newUrl => this._handleNavigate(newUrl));
-        authWindow.onError(error => this._handleError(error));
+        const deferred = new Deferred<string>();
+        authWindow.onRedirect(url => this._authWindowRedirected(url,
+            data => deferred.resolve(data)
+        ));
+        authWindow.onError(error => {
+            this._handleError(error);
+            deferred.reject(error);
+        });
         authWindow.onClose(() => this._authCanceled());
 
         if (clear) {
@@ -224,22 +243,14 @@ export class AuthenticationService {
         return deferred.promise;
     }
 
-    private _handleNavigate(url: string) {
-        if (this._logoutDeferred && AADConstants.isLogoutURL(url)) {
-            this._closeWindow();
-            const deferred = this._logoutDeferred;
-            this._logoutDeferred = null;
-            deferred.resolve();
-        }
-    }
-
     /**
      * Get called when the auth window redirect or navigate somewhere.
      * This is used to catch the final redirect_uri of AD'
      * @param url Url used for callback
      * @param callback Called with the result of the auth code
      */
-    private _authWindowRedirected(url: string, deferred: Deferred<string>) {
+    private _authWindowRedirected(url: string,
+        callback: (code: string) => void) {
         if (!this._isRedirectUrl(url) || !this._authQueue.hasCurrent()) {
             return;
         }
@@ -247,19 +258,13 @@ export class AuthenticationService {
         this._closeWindow();
         const params: AuthCodeResult = this._getRedirectUrlParams(url);
         if (params.error) {
-            deferred.reject(
-                new AuthorizeError(params as AuthorizeResponseError)
-            );
-        } else {
-            deferred.resolve(params.code);
+            throw new AuthorizeError(params as AuthorizeResponseError);
         }
+        callback(params.code);
     }
 
     private _authCanceled() {
-        this._authQueue.rejectCurrent(new AuthorizeError({
-            error: "Canceled authentication",
-            error_description: `User canceled authentication`
-        }));
+        this._authQueue.cancelCurrent("Canceled authentication");
         if (!this._authQueue.empty()) {
             this._authorizeNext();
         }
@@ -267,9 +272,9 @@ export class AuthenticationService {
 
     private _handleError({code, description}) {
         this._closeWindow();
-        this._authQueue.rejectCurrent(new AuthorizeError({
+        this._authQueue.failCurrent(new AuthorizeError({
             error: "Failed to authenticate",
-            error_description: `Failed to load the AAD login page (${code}:${description})`,
+            error_description: `Failed to load the Microsoft login page (${code}:${description})`,
         }));
         if (!this._authQueue.empty()) {
             this._authorizeNext();
@@ -312,6 +317,120 @@ export class AuthenticationService {
             }
         );
     }
+
+    public onAuthFailure(error: AuthError) {
+        if (this._authQueue.hasCurrent()) {
+            this._authQueue.failCurrent(error);
+            this._authorizeNext();
+        }
+    }
+
+    public async selectUserAuthMethod(tenantId: string): Promise<UserAuthSelection> {
+        if (this._authQueue.current?.selectAuthMode) {
+            this._state.next(AuthenticationState.UserInput);
+            return this._selectUserAuthMethod(tenantId);
+        } else {
+            return new Promise(resolve => {
+                this.app.userSettings.pipe(first()).subscribe(settings => {
+                    resolve({ externalBrowserAuth: settings.externalBrowserAuth });
+                });
+            });
+        }
+    }
+
+    private async _selectUserAuthMethod(tenantId: string): Promise<UserAuthSelection> {
+        return new Promise<UserAuthSelection>((resolve, reject) => {
+            const requestId = createUniqueId();
+            const responseEvent = IpcEvent.userAuthSelectResponse(requestId);
+            const listener = async (data) => {
+                if (data.result === "cancel") {
+                    this._authQueue.cancelCurrent("User canceled");
+                    reject({ message: "User canceled" });
+                } else {
+                    resolve(data);
+                }
+            };
+            this.app.onIPCEvent(responseEvent, data => listener(data));
+            this.app.sendIPCEvent(IpcEvent.userAuthSelectRequest, {
+                requestId,
+                tenantId
+            });
+        });
+    }
+
+    public fetchAuthCode(url: string, tenantId: string): Promise<string> {
+        return this._loadAuthWindow(url, { tenant: tenantId });
+    }
+
+    private convertToAuthResponse(promise: Promise<TenantAuthResult>): Promise<AuthorizeResult> {
+        return promise.then(result => {
+            if (result.type === TenantAuthState.completed) {
+                return result.result;
+            } else if (result.type === TenantAuthState.canceled) {
+                throw new AuthCancelException();
+            } else if (result.type === TenantAuthState.signedOut) {
+                throw new SignOutException();
+            } else {
+                throw new Error(result.message);
+            }
+        });
+    }
+}
+
+type TenantAuthResult = {
+    type: TenantAuthState,
+    message?: string;
+    result?: AuthorizeResult;
+};
+
+class AuthorizeQueueItem {
+    private deferred: Deferred<TenantAuthResult>;
+    private _state: TenantAuthState = TenantAuthState.pending;
+
+    constructor(
+        public tenantId: string,
+        public resourceURI: string,
+        public forceRefresh: boolean,
+        public selectAuthMode: boolean
+    ) {
+        this.deferred = new Deferred();
+    }
+
+    public promise() {
+        return this.deferred.promise;
+    }
+
+    public cancel(reason?: string) {
+        this.deferred.resolve({
+            type: TenantAuthState.canceled,
+            message: reason
+        });
+        this._state = TenantAuthState.canceled;
+    }
+
+    public complete(result: AuthorizeResult) {
+        this.deferred.resolve({
+            type: TenantAuthState.completed,
+            result
+        });
+        this._state = TenantAuthState.completed;
+    }
+
+    public error(error: Error) {
+        this.deferred.reject(error);
+        this._state = TenantAuthState.failed;
+    }
+
+    public signOut() {
+        this.deferred.resolve({
+            type: TenantAuthState.signedOut
+        });
+        this._state = TenantAuthState.signedOut;
+    }
+
+    public get state() {
+        return this._state;
+    }
 }
 
 /**
@@ -322,16 +441,20 @@ class AuthorizeQueue {
     public current: AuthorizeQueueItem = null;
 
     public clear() {
-        this.queue.forEach(
-            auth => auth.deferred.reject(new LogoutError()));
+        this.queue.forEach(auth => auth.cancel());
         this.queue.length = 0;
         this.current = null;
     }
 
-    public add(tenantId: string, resourceURI: string, forceRefresh = false) {
-        const deferred = new Deferred<AuthorizeResult>();
-        this.queue.push({ tenantId, resourceURI, forceRefresh, deferred });
-        return deferred;
+    public add(options: AuthorizeResourceOptions): AuthorizeQueueItem {
+        const item = new AuthorizeQueueItem(
+            options.tenantId,
+            options.resourceURI,
+            options.forceRefresh,
+            options.selectAuthMode
+        );
+        this.queue.push(item);
+        return item;
     }
 
     public shift(): AuthorizeQueueItem {
@@ -343,18 +466,18 @@ class AuthorizeQueue {
         return this.hasCurrent() || this.queue.length === 0;
     }
 
-    public resolveCurrent(callback) {
-        const deferred = this.current.deferred;
-        this.clearCurrent();
-        deferred.resolve(callback);
-        return deferred;
+    public cancelCurrent(message?: string) {
+        if (this.current) {
+            this.current.cancel(message);
+        }
     }
 
-    public rejectCurrent(callback) {
-        const deferred = this.current.deferred;
-        this.clearCurrent();
-        deferred.reject(callback);
-        return deferred;
+    public failCurrent(error: Error) {
+        if (this.current) {
+            this.current.error(error);
+        } else {
+            throw new Error(`No auth in progress. Original: ${error.message}`);
+        }
     }
 
     public get(tenantId: string, resourceURI: string): AuthorizeQueueItem {
@@ -367,16 +490,16 @@ class AuthorizeQueue {
 
     public remove(tenantId: string, resourceURI: string) {
         let index = 0;
-        let auth = null;
+        let auth: AuthorizeQueueItem = null;
         while (index < this.queue.length) {
             auth = this.queue[index];
             if (this.matches(auth, tenantId, resourceURI)) {
-                auth.deferred.reject(new LogoutError());
+                auth.signOut();
                 break;
             }
             index++;
         }
-        if (auth === this.current) {
+        if (auth?.tenantId === this.current?.tenantId) {
             this.shift();
         } else if (index < this.queue.length) {
             this.queue.splice(index, 1);
@@ -395,9 +518,8 @@ class AuthorizeQueue {
     public empty() {
         return this.queue.length === 0;
     }
+}
 
-    private clearCurrent() {
-        this.current = null;
-        this.queue = this.queue.filter(item => !!item);
-    }
+function createUniqueId(): string {
+    return SecureUtils.uuid();
 }
