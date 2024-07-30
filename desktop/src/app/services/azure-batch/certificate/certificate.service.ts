@@ -185,6 +185,8 @@ export class CertificateService {
                 const p12Der = forge.util.decode64(data);
                 // Set parseAllBytes to false to avoid regression.
                 // See: https://github.com/digitalbazaar/forge/issues/975
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore parseAllBytes is not in the @types/node-forge
                 const p12Asn1 = forge.asn1.fromDer(p12Der, {parseAllBytes: false});
                 const outCert = forge.pkcs12.pkcs12FromAsn1(p12Asn1, false, password);
                 const keyBags = outCert.getBags({ bagType: forge.pki.oids.certBag });
@@ -195,6 +197,8 @@ export class CertificateService {
             case CertificateFormat.cer:
                 // Set parseAllBytes to false to avoid regression.
                 // See: https://github.com/digitalbazaar/forge/issues/975
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore parseAllBytes is not in the @types/node-forge
                 const outAsn1 = forge.asn1.fromDer(data, {parseAllBytes: false});
                 certDer = forge.asn1.toDer(outAsn1).getBytes();
                 break;
@@ -203,6 +207,8 @@ export class CertificateService {
                     current certificate type is not supported.`);
         }
         const md = forge.md.sha1.create();
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore start is not in the @types/node-forge
         md.start();
         md.update(certDer);
         const digest = md.digest();

@@ -1,0 +1,56 @@
+diff --git a/node_modules/@azure/core-util/dist/browser/checkEnvironment.js b/node_modules/@azure/core-util/dist/browser/checkEnvironment.js
+index b7feb20..2d280f2 100644
+--- a/node_modules/@azure/core-util/dist/browser/checkEnvironment.js
++++ b/node_modules/@azure/core-util/dist/browser/checkEnvironment.js
+@@ -29,7 +29,8 @@ export const isBun = typeof Bun !== "undefined" && typeof Bun.version !== "undef
+  */
+ export const isNodeLike = typeof globalThis.process !== "undefined" &&
+     Boolean(globalThis.process.version) &&
+-    Boolean((_d = globalThis.process.versions) === null || _d === void 0 ? void 0 : _d.node);
++    Boolean((_d = globalThis.process.versions) === null || _d === void 0 ? void 0 : _d.node) &&
++    !Boolean(process.env.RENDERER);
+ /**
+  * A constant that indicates whether the environment the code is running is a Node.js compatible environment.
+  * @deprecated Use `isNodeLike` instead.
+diff --git a/node_modules/@azure/core-util/dist/commonjs/checkEnvironment.js b/node_modules/@azure/core-util/dist/commonjs/checkEnvironment.js
+index 3822c2c..337b32a 100644
+--- a/node_modules/@azure/core-util/dist/commonjs/checkEnvironment.js
++++ b/node_modules/@azure/core-util/dist/commonjs/checkEnvironment.js
+@@ -32,7 +32,8 @@ exports.isBun = typeof Bun !== "undefined" && typeof Bun.version !== "undefined"
+  */
+ exports.isNodeLike = typeof globalThis.process !== "undefined" &&
+     Boolean(globalThis.process.version) &&
+-    Boolean((_d = globalThis.process.versions) === null || _d === void 0 ? void 0 : _d.node);
++    Boolean((_d = globalThis.process.versions) === null || _d === void 0 ? void 0 : _d.node) &&
++    !Boolean(process.env.RENDERER);
+ /**
+  * A constant that indicates whether the environment the code is running is a Node.js compatible environment.
+  * @deprecated Use `isNodeLike` instead.
+diff --git a/node_modules/@azure/core-util/dist/esm/checkEnvironment.js b/node_modules/@azure/core-util/dist/esm/checkEnvironment.js
+index b7feb20..2d280f2 100644
+--- a/node_modules/@azure/core-util/dist/esm/checkEnvironment.js
++++ b/node_modules/@azure/core-util/dist/esm/checkEnvironment.js
+@@ -29,7 +29,8 @@ export const isBun = typeof Bun !== "undefined" && typeof Bun.version !== "undef
+  */
+ export const isNodeLike = typeof globalThis.process !== "undefined" &&
+     Boolean(globalThis.process.version) &&
+-    Boolean((_d = globalThis.process.versions) === null || _d === void 0 ? void 0 : _d.node);
++    Boolean((_d = globalThis.process.versions) === null || _d === void 0 ? void 0 : _d.node) &&
++    !Boolean(process.env.RENDERER);
+ /**
+  * A constant that indicates whether the environment the code is running is a Node.js compatible environment.
+  * @deprecated Use `isNodeLike` instead.
+diff --git a/node_modules/@azure/core-util/dist/react-native/checkEnvironment.js b/node_modules/@azure/core-util/dist/react-native/checkEnvironment.js
+index b7feb20..2d280f2 100644
+--- a/node_modules/@azure/core-util/dist/react-native/checkEnvironment.js
++++ b/node_modules/@azure/core-util/dist/react-native/checkEnvironment.js
+@@ -29,7 +29,8 @@ export const isBun = typeof Bun !== "undefined" && typeof Bun.version !== "undef
+  */
+ export const isNodeLike = typeof globalThis.process !== "undefined" &&
+     Boolean(globalThis.process.version) &&
+-    Boolean((_d = globalThis.process.versions) === null || _d === void 0 ? void 0 : _d.node);
++    Boolean((_d = globalThis.process.versions) === null || _d === void 0 ? void 0 : _d.node) &&
++    !Boolean(process.env.RENDERER);
+ /**
+  * A constant that indicates whether the environment the code is running is a Node.js compatible environment.
+  * @deprecated Use `isNodeLike` instead.

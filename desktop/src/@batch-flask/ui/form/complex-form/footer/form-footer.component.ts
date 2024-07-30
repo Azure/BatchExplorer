@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, Output, forwardRef,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { AsyncTask, ServerError } from "@batch-flask/core";
@@ -68,7 +68,11 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
     private _actionConfig: FormActionConfig;
     private _statusSub: Subscription;
 
-    constructor(public form: ComplexFormComponent, private changeDetector: ChangeDetectorRef) { }
+    public form: ComplexFormComponent;
+
+    constructor(@Inject(forwardRef(() => ComplexFormComponent)) form: ComplexFormComponent, private changeDetector: ChangeDetectorRef) {
+        this.form = form;
+    }
 
     public ngOnChanges(changes) {
         if (changes.currentPage) {

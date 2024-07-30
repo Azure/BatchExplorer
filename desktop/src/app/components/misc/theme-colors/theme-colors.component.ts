@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { ThemeService } from "app/services";
 import { Subscription } from "rxjs";
-import * as tinycolor from "tinycolor2";
+import tinycolor from "tinycolor2";
 
 import "./theme-colors.scss";
 

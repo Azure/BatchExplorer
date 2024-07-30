@@ -1,5 +1,5 @@
 import { StorageBlobAdapter } from "./storage-blob-adapter";
-import { isNode } from "@azure/core-http";
+import { isNode } from "@azure/core-util";
 
 describe("StorageBlobAdapter", () => {
     let adapter: StorageBlobAdapter;

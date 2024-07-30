@@ -6,6 +6,7 @@ import {
     ContentChildren,
     ElementRef,
     EventEmitter,
+    forwardRef,
     HostBinding,
     HostListener,
     Input,
@@ -80,7 +81,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     @Output() public dropOnRow = new EventEmitter<DropEvent>();
 
     @ViewChild(TableHeadComponent, { static: false }) public head: TableHeadComponent;
-    @ContentChildren(TableColumnComponent) public columnComponents: QueryList<TableColumnComponent>;
+    @ContentChildren(forwardRef(() => TableColumnComponent)) public columnComponents: QueryList<TableColumnComponent>;
     @HostBinding("class.drag-hover") public isDraging = 0;
     @HostBinding("class.activable") public get activable() {
         return this.config.activable;

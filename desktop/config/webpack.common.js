@@ -3,23 +3,22 @@ const { DefinePlugin } = require("webpack");
 
 const rules = {
     html: {
-        test: /\.html$/,
-        loader: "raw-loader",
+        test: /(\.html$)|(\.template$)/,
+        type: "asset/source",
         exclude: [/node_modules/, helpers.root("src/app/index.html")],
     },
     json: {
-        type: "javascript/auto",
         test: /\.json$/,
-        loader: "raw-loader",
+        type: "asset/source",
         exclude: [/node_modules/],
     },
     file: {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: "file-loader",
+        type: "asset/resource",
     },
     font: {
         test: /\.woff(2)?(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/font-woff",
+        type: "asset"
     },
 };
 

@@ -76,9 +76,12 @@ export class FormPageComponent implements OnChanges, AfterContentInit, OnDestroy
     public _statusSub: Subscription;
     private _valid = new BehaviorSubject(false);
 
+    private form: ComplexFormComponent;
+
     constructor(
-        @Inject(forwardRef(() => ComplexFormComponent)) private form: ComplexFormComponent,
+        @Inject(forwardRef(() => ComplexFormComponent)) form: ComplexFormComponent,
         private changeDetector: ChangeDetectorRef) {
+        this.form = form;  // Workaround for circular dep issues. See: https://github.com/angular/angular-cli/issues/14247#issuecomment-486582423
         this.valid = this._valid.asObservable();
     }
 
