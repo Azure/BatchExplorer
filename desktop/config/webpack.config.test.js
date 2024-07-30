@@ -1,5 +1,5 @@
 const config = require("./webpack.config.base");
-const helpers = require("./helpers");
+// const helpers = require("./helpers");
 const { commonRules, defineEnv } = require("./webpack.common");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
@@ -29,15 +29,7 @@ config.module.rules = config.module.rules = [
         ],
         exclude: [/node_modules/, /\.node\.spec\.ts/],  // node.spec.ts are to be run in node environment
     },
-    // {
-    //     test: /(\.html$)|(\.template$)/,
-    //     loader: "raw-loader",
-    //     options: {
-    //         esModule: false,
-    //     },
-    //     exclude: [/node_modules/, helpers.root("src/app/index.html")],
-    // },
-    ...commonRules.splice(commonRules.findIndex(rule => rule.test === /\.html$/), 1)
+    ...commonRules
 ].concat(
     [{
         test: /\.scss$/,
