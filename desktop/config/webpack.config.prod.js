@@ -1,6 +1,5 @@
 const config = require("./webpack.config.base");
 const helpers = require("./helpers");
-const LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 const merge = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { defineEnv } = require("./webpack.common");
@@ -62,7 +61,7 @@ module.exports = merge(config, {
 
     },
     plugins: [
-        new MiniCssExtractPlugin({ filename: "[name]-[hash].css", chunkFilename: "[name]-[chunkhash].css" }),
+        new MiniCssExtractPlugin({ filename: "[name]-[chunkhash].css", chunkFilename: "[name]-[chunkhash].css" }),
         defineEnv(ENV),
 
         // new LoaderOptionsPlugin({
