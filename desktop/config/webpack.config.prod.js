@@ -32,13 +32,6 @@ module.exports = merge(config, {
          */
         filename: "[name].[chunkhash].bundle.js",
 
-        /**
-         * The filename of the SourceMaps for the JavaScript files.
-         * They are inside the output.path directory.
-         *
-         * @see http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
-         */
-        sourceMapFilename: "[name].[chunkhash].bundle.map",
 
         /**
          * The filename of non-entry chunks as relative path
@@ -72,30 +65,30 @@ module.exports = merge(config, {
         new MiniCssExtractPlugin({ filename: "[name]-[hash].css", chunkFilename: "[name]-[chunkhash].css" }),
         defineEnv(ENV),
 
-        new LoaderOptionsPlugin({
-            minimize: true,
-            debug: false,
-            options: {
+        // new LoaderOptionsPlugin({
+        //     minimize: true,
+        //     debug: false,
+        //     options: {
 
-                /**
-                 * Html loader advanced options
-                 *
-                 * See: https://github.com/webpack/html-loader#advanced-options
-                 */
-                // TODO: Need to workaround Angular 2's html syntax => #id [bind] (event) *ngFor
-                htmlLoader: {
-                    minimize: true,
-                    removeAttributeQuotes: false,
-                    caseSensitive: true,
-                    customAttrSurround: [
-                        [/#/, /(?:)/],
-                        [/\*/, /(?:)/],
-                        [/\[?\(?/, /(?:)/]
-                    ],
-                    customAttrAssign: [/\)?\]?=/]
-                },
+        //         /**
+        //          * Html loader advanced options
+        //          *
+        //          * See: https://github.com/webpack/html-loader#advanced-options
+        //          */
+        //         // TODO: Need to workaround Angular 2's html syntax => #id [bind] (event) *ngFor
+        //         htmlLoader: {
+        //             minimize: true,
+        //             removeAttributeQuotes: false,
+        //             caseSensitive: true,
+        //             customAttrSurround: [
+        //                 [/#/, /(?:)/],
+        //                 [/\*/, /(?:)/],
+        //                 [/\[?\(?/, /(?:)/]
+        //             ],
+        //             customAttrAssign: [/\)?\]?=/]
+        //         },
 
-            }
-        }),
+        //     }
+        // }),
     ],
 });
