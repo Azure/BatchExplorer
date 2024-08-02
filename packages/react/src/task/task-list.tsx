@@ -1,5 +1,5 @@
 import * as React from "react";
-import { inject } from "@azure/bonito-core/lib/environment";
+import { DependencyName, inject } from "@azure/bonito-core/lib/environment";
 import {
     DataGrid,
     DataGridColumn,
@@ -11,6 +11,7 @@ import { Icon } from "@fluentui/react/lib/Icon";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { CiCircleChevDown } from "react-icons/ci";
 import { useLoadMore } from "@azure/bonito-ui/lib/hooks";
+import { Notifier } from "@azure/bonito-core/lib/notification";
 
 interface TaskListProps {
     accountEndpoint: string;
@@ -30,6 +31,11 @@ export const TaskList = (props: TaskListProps) => {
     const [isCompact] = React.useState<boolean>(true);
     const [pageSize] = React.useState<number>(100);
     const [_, setLoadErrorMsg] = React.useState<string>("");
+    const [requestCounter, setRequestCounter] = React.useState(0);
+    const [previousRequestTime, setPreviousRequestTime] = React.useState(
+        Date.now()
+    );
+    const notifier = inject<Notifier>(DependencyName.Notifier);
 
     const onLoad = React.useMemo(() => {
         let iterator: AsyncIterableIterator<BatchTaskOutput[]>;
@@ -40,6 +46,19 @@ export const TaskList = (props: TaskListProps) => {
             );
 
             const fetchTaskList = async () => {
+                const currentTime = Date.now();
+                const timeElapsed = (currentTime - previousRequestTime) / 1000;
+
+                if (timeElapsed > 30) {
+                    setRequestCounter(0);
+                    setPreviousRequestTime(currentTime);
+                }
+
+                if (requestCounter >= 10) {
+                    notifier.error("Error", "Throttled: Cannot display tasks");
+                    return { items: [], done: true };
+                }
+
                 if (fresh || !iterator) {
                     const tasks = await taskService.listTasks(
                         accountEndpoint,
@@ -52,6 +71,7 @@ export const TaskList = (props: TaskListProps) => {
                         BatchTaskOutput[],
                         BatchTaskOutput[]
                     > = await iterator.next();
+                    setRequestCounter(requestCounter + 1);
 
                     if (!res.done) {
                         return {
