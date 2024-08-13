@@ -2,7 +2,6 @@
 
 import { program } from "commander";
 import * as fs from "fs";
-import fetch, { HeaderInit } from "node-fetch";
 import * as path from "path";
 import { Constants } from "../../src/client/client-constants";
 
@@ -147,7 +146,7 @@ async function loadLicense(dependency: Dependency, anonymous = false):
     const { repoUrl = null } = dependency;
     const repoName = getRepoName(repoUrl);
     const licenseUrl = `https://api.github.com/repos/${repoName}/license`;
-    const headers: HeaderInit = anonymous ? {} :
+    const headers: HeadersInit = anonymous ? {} :
         { Authorization: `token ${process.env.GH_TOKEN}` };
 
     return fetch(licenseUrl, { headers }).then(async (res) => {

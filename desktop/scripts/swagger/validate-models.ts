@@ -10,7 +10,6 @@ import "zone.js";
 
 console.log("Nodepath", process.env.NODE_PATH);
 import { Duration } from "luxon";
-import fetch from "node-fetch";
 import { metadataForCtr } from "../../src/@batch-flask/core/record/helpers";
 import * as models from "../../src/app/models";
 import { Constants } from "../../src/common";
