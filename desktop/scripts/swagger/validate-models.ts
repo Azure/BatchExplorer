@@ -60,11 +60,11 @@ for (const mapping of nameMapping) {
     appMappings[mapping.app] = mapping.swagger;
 }
 
-async function getSpecs() {
+async function getSpecs(): Promise<{ definitions: Record<string, any>; }> {
     const baseUrl = `https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/batch`;
     const url = `${baseUrl}/data-plane/Microsoft.Batch/stable/${dataPlaneVersion}/BatchService.json`;
     const response = await fetch(url);
-    return response.json();
+    return response.json() as unknown as { definitions: Record<string, any> };
 }
 
 async function getMapping() {
