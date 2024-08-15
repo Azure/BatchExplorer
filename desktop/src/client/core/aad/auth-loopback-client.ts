@@ -1,7 +1,6 @@
 import { log } from "@batch-flask/utils";
 import { IncomingMessage, Server, ServerResponse, createServer } from "http";
 import { ILoopbackClient, ServerAuthorizationCodeResponse } from "@azure/msal-node";
-import type { AddressInfo } from "net";
 
 /**
  * Listen for an auth code response on the loopback address. Will use a preferred
@@ -44,7 +43,7 @@ export class AuthLoopbackClient implements ILoopbackClient {
      */
     async listenForAuthCode(successTemplate?: string, errorTemplate?: string): Promise<ServerAuthorizationCodeResponse> {
         if (!!this.server) {
-            throw new Error('Auth code listener already exists. Cannot create another.');
+            throw new Error("Auth code listener already exists. Cannot create another.");
         }
 
         const authCodeListener = new Promise<ServerAuthorizationCodeResponse>((resolve, reject) => {
@@ -52,7 +51,7 @@ export class AuthLoopbackClient implements ILoopbackClient {
                 const url = req.url;
                 if (!url) {
                     res.end(errorTemplate || "Login failed: Error occurred loading redirectUrl");
-                    reject(new Error('Auth code listener callback was invoked without a url.'));
+                    reject(new Error("Auth code listener callback was invoked without a url."));
                     return;
                 } else if (url === "/") {
                     res.end(successTemplate || "Successfully logged in to Batch Explorer. You may close this window.");
@@ -61,7 +60,7 @@ export class AuthLoopbackClient implements ILoopbackClient {
 
                 const authCodeResponse = AuthLoopbackClient.getDeserializedQueryString(url);
                 if (authCodeResponse.code) {
-                    const redirectUri = await this.getRedirectUri();
+                    const redirectUri = this.getRedirectUri();
                     res.writeHead(302, { location: redirectUri }); // Prevent auth code from being saved in the browser history
                     res.end();
                 }
@@ -76,7 +75,7 @@ export class AuthLoopbackClient implements ILoopbackClient {
             let ticks = 0;
             const id = setInterval(() => {
                 if ((5000 / 100) < ticks) {
-                    throw new Error('Timed out waiting for auth code listener to be registered.');
+                    throw new Error("Timed out waiting for auth code listener to be registered.");
                 }
 
                 if (this.server.listening) {
@@ -96,7 +95,7 @@ export class AuthLoopbackClient implements ILoopbackClient {
      */
     getRedirectUri(): string {
         if (!this.server) {
-            throw new Error('No auth code listener exists yet.');
+            throw new Error("No auth code listener exists yet.");
         }
 
         const addressInfo = this.server.address();
@@ -185,7 +184,7 @@ export class AuthLoopbackClient implements ILoopbackClient {
         const decode = (s: string) => decodeURIComponent(s.replace(/\+/g, " "));
         params.forEach((pair) => {
             if (pair.trim()) {
-                const [key, value] = pair.split(/=(.+)/g, 2); // Split on the first occurence of the '=' character
+                const [key, value] = pair.split(/=(.+)/g, 2); // Split on the first occurence of the "=" character
                 if (key && value) {
                     obj[decode(key)] = decode(value);
                 }

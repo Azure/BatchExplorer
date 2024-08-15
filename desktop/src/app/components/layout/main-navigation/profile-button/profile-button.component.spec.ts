@@ -45,6 +45,8 @@ describe("ProfileButtonComponent", () => {
         notificationServiceSpy = new NotificationServiceMock();
         authServiceSpy = {
             currentUser: new BehaviorSubject(null),
+            login: jasmine.createSpy("login"),
+            logout: jasmine.createSpy("logout"),
         };
 
         autoUpdateServiceSpy = {
@@ -133,6 +135,33 @@ describe("ProfileButtonComponent", () => {
         expect(items.length).toBe(14);
     });
 
+    describe("login/logout", () => {
+        it("shows sign-in when not signed in", () => {
+            click(clickableEl);
+            const items = contextMenuServiceSpy.lastMenu.items;
+            const signInItem = items[items.length - 1] as ContextMenuItem;
+            expect(signInItem.label).toBe("profile-button.sign-in");
+
+            // Perform the sign in
+            signInItem.click();
+            expect(authServiceSpy.login).toHaveBeenCalledOnce();
+        });
+
+        it("shows sign-out when signed in", () => {
+            authServiceSpy.currentUser.next({
+                name: "Some Name",
+                username: "somename"
+            });
+            click(clickableEl);
+            const items = contextMenuServiceSpy.lastMenu.items;
+            const signOutItem = items[items.length - 1] as ContextMenuItem;
+            expect(signOutItem.label).toBe("profile-button.sign-out");
+
+            // Perform the sign out
+            signOutItem.click();
+            expect(authServiceSpy.logout).toHaveBeenCalledOnce();
+        });
+    });
     describe("Clicking on the profile", () => {
         it("It shows a context menu", () => {
             click(clickableEl);
