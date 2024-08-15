@@ -2,8 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "target": "ES6",
-    "module": "commonjs",
-    "outDir": "build"
+    "module": "ESNext",
+    "moduleResolution": "Node",
   },
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
@@ -12,6 +12,7 @@
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "./src/client/init-esm.ts",
   ]
 }

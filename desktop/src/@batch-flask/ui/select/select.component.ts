@@ -491,11 +491,15 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
             },
         ];
 
-        const positionStrategy = this.overlay.position().connectedTo(this.elementRef,
-            { originX: "start", originY: "top" },
-            { overlayX: "start", overlayY: "bottom" });
+        const positionStrategy = this.overlay.position().flexibleConnectedTo(this.elementRef)
+            .withPositions([{
+                originX: "start",
+                originY: "top",
+                overlayX: "start",
+                overlayY: "bottom"
+            }]);
         positionStrategy.withPositions(positions);
-        positionStrategy.onPositionChange.subscribe((x) => {
+        positionStrategy.positionChanges.subscribe((x) => {
             if (this._dropdownRef) {
                 this._dropdownRef.instance.above = x.connectionPair.overlayY === "bottom";
             }

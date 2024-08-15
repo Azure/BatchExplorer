@@ -1,10 +1,10 @@
 const webpack = require("webpack");
-const helpers = require("./helpers");
+const helpers = require("./helpers.cjs");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { AngularWebpackPlugin } = require("@ngtools/webpack");
-const { commonRules } = require("./webpack.common");
+const { commonRules } = require("./webpack.common.cjs");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 const isDevServer = helpers.isWebpackDevServer();

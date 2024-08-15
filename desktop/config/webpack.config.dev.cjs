@@ -1,7 +1,7 @@
-const config = require("./webpack.config.base");
+const config = require("./webpack.config.base.cjs");
 const path = require("path");
 const merge = require("webpack-merge");
-const { defineEnv } = require("./webpack.common");
+const { defineEnv } = require("./webpack.common.cjs");
 const EvalSourceMapDevToolPlugin = require("webpack/lib/EvalSourceMapDevToolPlugin");
 
 merge.strategy({ plugins: "replace" });

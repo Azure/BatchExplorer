@@ -1,5 +1,5 @@
 // eslint-disable no-console
-import "../../src/client/init";
+import "../../src/client/esm";
 
 import * as fs from "fs";
 import * as mkdirp from "mkdirp";

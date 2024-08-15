@@ -1,7 +1,7 @@
-import * as fs from "fs";
-import * as globF from "glob";
-import * as jsyaml from "js-yaml";
-import * as util from "util";
+import fs from "fs";
+import globF from "glob";
+import jsyaml from "js-yaml";
+import util from "util";
 
 const glob = util.promisify(globF);
 const readFile = util.promisify(fs.readFile);

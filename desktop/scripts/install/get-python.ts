@@ -1,5 +1,5 @@
 // eslint-disable no-console
-import "../../src/client/init";
+import "../../src/client/esm";
 
 import { initLogger } from "../../src/client/logger";
 initLogger();

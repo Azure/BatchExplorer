@@ -1,8 +1,8 @@
-const config = require("./webpack.config.base");
-const helpers = require("./helpers");
+const config = require("./webpack.config.base.cjs");
+const helpers = require("./helpers.cjs");
 const merge = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { defineEnv } = require("./webpack.common");
+const { defineEnv } = require("./webpack.common.cjs");
 
 const ENV = "production";
 

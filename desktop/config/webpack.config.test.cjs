@@ -1,6 +1,6 @@
-const config = require("./webpack.config.base");
+const config = require("./webpack.config.base.cjs");
 // const helpers = require("./helpers");
-const { commonRules, defineEnv } = require("./webpack.common");
+const { commonRules, defineEnv } = require("./webpack.common.cjs");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const ENV = "test";
