@@ -1,9 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "ES6",
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "outDir": "build"
   },
   // This is not actually used for building but to let the editor know what files use this config
   "include": [

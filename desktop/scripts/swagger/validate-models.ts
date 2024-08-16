@@ -1,5 +1,5 @@
 // eslint-disable no-console
-import "../../src/client/esm";
+import "../../src/client/init-esm";
 
 import * as path from "path";
 process.env.NODE_PATH = process.env.NODE_PATH + path.delimiter + path.join(__dirname, "../..");

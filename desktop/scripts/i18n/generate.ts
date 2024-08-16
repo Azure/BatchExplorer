@@ -1,5 +1,5 @@
 // eslint-disable no-console
-import "../../src/client/esm";
+import "../../src/client/init-esm";
 
 import * as fs from "fs";
 import { promisify } from "util";
