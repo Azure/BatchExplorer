@@ -16,10 +16,10 @@ const METADATA = {
 };
 
 const baseConfig = {
-    entry: {
-        "polyfills": "./src/app/polyfills.browser",
-        "app": "./src/app/app.ts",
-    },
+    // entry: {
+    //     "polyfills": "./src/app/polyfills.browser",
+    //     "app": "./src/app/app.ts",
+    // },
 
     resolve: {
         extensions: [".ts", ".js", ".json", ".scss", ".css", ".html"],

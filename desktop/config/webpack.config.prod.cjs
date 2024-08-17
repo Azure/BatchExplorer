@@ -7,6 +7,11 @@ const { defineEnv } = require("./webpack.common.cjs");
 const ENV = "production";
 
 module.exports = merge(config, {
+    entry: {
+        "polyfills": "./src/app/polyfills.browser",
+        "app": "./src/app/app.ts",
+    },
+
     devtool: "source-map",
     mode: "production",
     optimization: {

@@ -11,6 +11,12 @@ const host = "localhost";
 const port = process.env.PORT || 3178;
 
 module.exports = merge(config, {
+
+    entry: {
+        "polyfills": "./src/app/polyfills.browser",
+        "app": "./src/app/app.ts",
+    },
+
     // devtool: "cheap-module-source-map",
     mode: "development",
     devServer: {

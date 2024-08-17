@@ -3,9 +3,7 @@
  * Make sure you import this file before any client imports
  */
 import * as path from "path";
-
-const __filename = new URL('', import.meta.url).pathname;
-const __dirname = path.dirname(__filename);
-
 process.env.NODE_PATH = path.join(__dirname, "..");
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require("module").Module._initPaths();

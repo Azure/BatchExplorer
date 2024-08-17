@@ -1,12 +1,14 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "build"
+    "outDir": "build",
+    "module": "commonjs",
   },
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
     "./src/client/**/*.ts",
-    "./src/common/**/*.ts"
+    "./src/common/**/*.ts",
+    "./src/@batch-flask/utils"
   ],
   "exclude": [
     "node_modules",
