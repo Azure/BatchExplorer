@@ -70,9 +70,6 @@ export class BatchExplorerApplication {
         this.appReady = new Deferred<void>();
 
         this.userSettings = configurationStore.config;
-
-        ipcMain.on(IpcEvent.login, () => this.login());
-        ipcMain.on(IpcEvent.logout, () => this.logout());
     }
 
     public async init() {
@@ -126,6 +123,9 @@ export class BatchExplorerApplication {
             }
         });
         await this.appReady.promise;
+
+        this.ipcMain.on(IpcEvent.login, () => this.login());
+        this.ipcMain.on(IpcEvent.logout, () => this.logout());
 
         windowSub.unsubscribe();
 
@@ -300,7 +300,7 @@ export class BatchExplorerApplication {
 
         // eslint-disable-next-line @typescript-eslint/ban-types
         process.on("uncaughtException" as any, (error: Error) => {
-            log.error("There was a uncaught exception", error);
+            log.error("There was an uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
             this.telemetryService.trackError(error);
             this.telemetryService.flush(true);
