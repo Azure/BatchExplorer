@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { UserConfigurationService } from "@batch-flask/core";
 import { I18nTestingModule, MockUserConfigurationService } from "@batch-flask/core/testing";
-import { FormModule, SelectComponent, SelectModule, ToolbarModule } from "@batch-flask/ui";
+import { FormModule, SelectComponent, SelectModule, SlideToggleComponent, ToolbarModule } from "@batch-flask/ui";
 import { ButtonComponent, ButtonsModule } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { SettingsComponent } from "app/components/settings";
@@ -24,6 +24,9 @@ describe("SettingsComponent", () => {
 
     let resetButtonEl: DebugElement;
     let resetButton: ButtonComponent;
+
+    let externalBrowserAuthToggleEl: DebugElement;
+    let externalBrowserAuthToggle: SlideToggleComponent;
 
     let settingsServiceSpy: MockUserConfigurationService<BEUserDesktopConfiguration>;
 
@@ -54,6 +57,11 @@ describe("SettingsComponent", () => {
         resetButtonEl = de.query(By.css("bl-button.reset"));
         resetButton = resetButtonEl.componentInstance;
 
+        externalBrowserAuthToggleEl = de.query(
+            By.css("be-slide-toggle[formControlName=externalBrowserAuth]"));
+        externalBrowserAuthToggle =
+            externalBrowserAuthToggleEl.componentInstance;
+
         themeSelect = de.query(By.css("bl-select[formControlName=theme]")).componentInstance;
 
     });
@@ -67,6 +75,17 @@ describe("SettingsComponent", () => {
         fixture.detectChanges();
         expect(resetButton.disabled).toBe(false);
     });
+
+    it("updates the externalBrowserAuth setting", fakeAsync(() => {
+        tick(400);
+        expect(settingsServiceSpy.current.externalBrowserAuth).toBe(true);
+        externalBrowserAuthToggleEl.triggerEventHandler("toggleChange", false);
+        tick(1000);
+        fixture.detectChanges();
+        expect(settingsServiceSpy.current.externalBrowserAuth).toBe(false);
+        tick(1000);
+        expect(settingsServiceSpy.current.externalBrowserAuth).toBe(false);
+    }));
 
     it("updates the theme", fakeAsync(() => {
         tick(400);

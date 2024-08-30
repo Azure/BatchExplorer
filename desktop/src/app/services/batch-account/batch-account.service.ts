@@ -165,6 +165,11 @@ export class BatchAccountService implements OnDestroy {
         });
     }
 
+    public clear() {
+        DataCacheTracker.clearAllCaches(this._cache);
+        this._currentAccountId.next(null);
+    }
+
     public load() {
         return forkJoin(
             this.localBatchAccountService.load(),
