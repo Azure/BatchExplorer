@@ -147,6 +147,7 @@ export default class AuthProvider {
         } catch (error) {
             log.warn(`[${tenantId}] Failed to authenticate with browser: ${error}`);
             this.authObserver.onAuthFailure(error);
+            throw error;
         }
     }
 
@@ -192,7 +193,8 @@ export default class AuthProvider {
         const interactiveRequest: InteractiveRequest = {
             ...authRequest,
             openBrowser,
-            loopbackClient
+            loopbackClient,
+            prompt: "select_account"
         };
         return interactiveRequest;
     }

@@ -1,6 +1,7 @@
 import { instrumentAuthProvider, instrumentForAuth } from "test/utils/mocks/auth";
 import AuthProvider from "./auth-provider";
 import { AuthObserver } from "./auth-observer";
+import { PublicClientApplication } from "@azure/msal-node";
 
 const FAKE_GET_TOKEN_ARGS = {
     resourceURI: "resourceURI1",
@@ -20,6 +21,7 @@ describe("AuthProvider", () => {
     };
     let mockAuthCode;
     let authObserver: jasmine.SpyObj<AuthObserver>;
+    let clientSpy: jasmine.SpyObj<PublicClientApplication>;
 
     instrumentForAuth(appSpy);
     const config: any = {
@@ -44,7 +46,7 @@ describe("AuthProvider", () => {
         authObserver.fetchAuthCode.and.returnValue(Promise.resolve(mockAuthCode));
 
         const call = async () => await authProvider.getToken(FAKE_GET_TOKEN_ARGS);
-        const clientSpy = createClientSpy();
+        clientSpy = createClientSpy();
         instrumentAuthProvider(authProvider);
 
         returnToken(clientSpy.acquireTokenSilent, "silent-token-1");
@@ -79,39 +81,48 @@ describe("AuthProvider", () => {
         expect(result2.accessToken).toEqual("tenant2-token");
     });
 
-    it("should use external browser when externalBrowserAuth is true", async () => {
-        createClientSpy();
-        authObserver.selectUserAuthMethod.and.returnValue(
-            Promise.resolve({ externalBrowserAuth: true })
-        );
-
-        const browserSpy =
-            spyOn<any>(authProvider, "_createExternalBrowserRequest");
-        await authProvider.getToken(FAKE_GET_TOKEN_ARGS);
-        expect(browserSpy).toHaveBeenCalled();
-    });
-
-    it("should use built-in window when externalBrowserAuth is false", async () => {
-        const clientSpy = createClientSpy();
-        authObserver.selectUserAuthMethod.and.returnValue(
-            Promise.resolve({ externalBrowserAuth: false })
-        );
-
-        await authProvider.getToken(FAKE_GET_TOKEN_ARGS);
-        expect(clientSpy.getAuthCodeUrl).toHaveBeenCalled();
-        expect(authObserver.fetchAuthCode).toHaveBeenCalled();
-        expect(clientSpy.acquireTokenByCode).toHaveBeenCalled();
+    describe("#_externalBrowserAuth", () => {
+        beforeEach(() => {
+            clientSpy = createClientSpy();
+            authObserver.selectUserAuthMethod.and.returnValue(
+                Promise.resolve({ externalBrowserAuth: true })
+            );
+        });
+        it("is called when externalBrowserAuth is true", async () => {
+            const browserSpy =
+                spyOn<any>(authProvider, "_createExternalBrowserRequest");
+            await authProvider.getToken(FAKE_GET_TOKEN_ARGS);
+            expect(browserSpy).toHaveBeenCalled();
+        });
+        it("handles error thrown by _createExternalBrowserRequest()", async () => {
+            const err = "fake external browser error";
+            spyOn<any>(authProvider, "_createExternalBrowserRequest")
+                .and.returnValue(Promise.reject(err));
+            await expectAsync(authProvider.getToken(FAKE_GET_TOKEN_ARGS))
+                .toBeRejectedWith(err);
+            expect(authObserver.onAuthFailure).toHaveBeenCalledWith(err);
+        });
+        it("calls acquireTokenInteractive() with select_account prompt", async () => {
+            await authProvider.getToken(FAKE_GET_TOKEN_ARGS);
+            expect(clientSpy.acquireTokenInteractive).toHaveBeenCalledWith(
+                jasmine.objectContaining({ prompt: "select_account" }));
+        });
     });
 
     describe("#_builtInWindowAuth", () => {
-        let clientSpy;
         beforeEach(() => {
             clientSpy = createClientSpy();
             authObserver.selectUserAuthMethod.and.returnValue(
                 Promise.resolve({ externalBrowserAuth: false })
             );
         });
-        it("should handle error thrown by client.getAuthCodeUrl()", async () => {
+        it("is called when externalBrowserAuth is false", async () => {
+            await authProvider.getToken(FAKE_GET_TOKEN_ARGS);
+            expect(clientSpy.getAuthCodeUrl).toHaveBeenCalled();
+            expect(authObserver.fetchAuthCode).toHaveBeenCalled();
+            expect(clientSpy.acquireTokenByCode).toHaveBeenCalled();
+        });
+        it("handles error thrown by client.getAuthCodeUrl()", async () => {
             const err = "fake getAuthCodeUrl error";
             clientSpy.getAuthCodeUrl.and.returnValue(Promise.reject(err));
             await expectAsync(authProvider.getToken(FAKE_GET_TOKEN_ARGS))
@@ -120,7 +131,7 @@ describe("AuthProvider", () => {
             expect(clientSpy.acquireTokenByCode).not.toHaveBeenCalled();
             expect(authObserver.fetchAuthCode).not.toHaveBeenCalled();
         });
-        it("should handle error thrown by fetchAuthCode()", async () => {
+        it("handles error thrown by fetchAuthCode()", async () => {
             const err = "fake fetchAuthCode error";
             authObserver.fetchAuthCode.and.returnValue(Promise.reject(err));
             await expectAsync(authProvider.getToken(FAKE_GET_TOKEN_ARGS))
@@ -153,7 +164,8 @@ const makeClientApplicationSpy = () => jasmine.createSpyObj(
         acquireTokenSilent: jasmine.anything,
         getAuthCodeUrl: jasmine.anything,
         acquireTokenByCode: jasmine.anything,
-        getTokenCache: makeTokenCacheSpy()
+        getTokenCache: makeTokenCacheSpy(),
+        acquireTokenInteractive: jasmine.anything
     }
 );
 
