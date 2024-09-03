@@ -21,6 +21,16 @@ steps:
       security default-keychain -s $keychain
       security unlock-keychain -p pwd $keychain
       echo "$(apple-developer-certificate)" | base64 -D > $dir/cert.p12
+
+      # Check if certificate is valid
+      if openssl pkcs12 -in $dir/cert.p12 -nokeys -passin pass:"$(apple-developer-certificate-key)" | \
+          openssl x509 -noout -dates -checkend 0; then
+        echo "Certificate is valid."
+      else
+        echo "##[error] Certificate is expired or invalid."
+        exit 1
+      fi
+
       security import $dir/cert.p12 -k $keychain -P "$(apple-developer-certificate-key)" -T /usr/bin/codesign
       security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k pwd $keychain
 
