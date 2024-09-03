@@ -55,7 +55,7 @@ steps:
 
   - template: ./sign.yml
 
-  - template: ./notarize.yml
+  # - template: ./notarize.yml
 
   - script: npm run package darwin-manifest
     workingDirectory: desktop
