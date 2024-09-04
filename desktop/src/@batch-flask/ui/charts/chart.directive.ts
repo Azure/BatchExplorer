@@ -10,7 +10,7 @@ import {
     Output,
     SimpleChanges,
 } from "@angular/core";
-import * as Chart from "chart.js";
+import Chart from "chart.js";
 import { getColors } from "./helpers";
 
 export enum ChartType {

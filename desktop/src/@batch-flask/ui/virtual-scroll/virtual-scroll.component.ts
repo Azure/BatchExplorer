@@ -19,7 +19,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import * as elementResizeDetectorMaker from "element-resize-detector";
+import elementResizeDetectorMaker from "element-resize-detector";
 import { VirtualScrollRowDirective } from "./virtual-scroll-row.directive";
 import { VirtualScrollTailComponent } from "./virtual-scroll-tail";
 

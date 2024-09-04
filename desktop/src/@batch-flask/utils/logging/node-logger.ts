@@ -1,5 +1,5 @@
 import * as winston from "winston";
-import * as DailyRotateFile from "winston-daily-rotate-file";
+import DailyRotateFile from "winston-daily-rotate-file";
 import * as Transport from "winston-transport";
 import { SanitizedError } from "../error";
 import { Logger } from "./base-logger";

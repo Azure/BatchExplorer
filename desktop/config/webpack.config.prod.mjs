@@ -1,17 +1,12 @@
-const config = require("./webpack.config.base.cjs");
-const helpers = require("./helpers.cjs");
-const merge = require("webpack-merge");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { defineEnv } = require("./webpack.common.cjs");
+import config from "./webpack.config.app-base.mjs";
+import * as helpers from "./helpers.js";
+import { merge } from "webpack-merge";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import { defineEnv } from "./webpack.common.mjs";
 
 const ENV = "production";
 
-module.exports = merge(config, {
-    entry: {
-        "polyfills": "./src/app/polyfills.browser",
-        "app": "./src/app/app.ts",
-    },
-
+export default merge(config, {
     devtool: "source-map",
     mode: "production",
     optimization: {

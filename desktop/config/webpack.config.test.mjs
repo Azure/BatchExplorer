@@ -1,7 +1,7 @@
-const config = require("./webpack.config.base.cjs");
-// const helpers = require("./helpers");
-const { commonRules, defineEnv } = require("./webpack.common.cjs");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+
+import config from "./webpack.config.base.mjs";
+import { commonRules, defineEnv } from "./webpack.common.mjs";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 
 const ENV = "test";
 
@@ -65,4 +65,4 @@ config.module.rules = config.module.rules = [
     ]
 );
 
-module.exports = config;
+export default config;

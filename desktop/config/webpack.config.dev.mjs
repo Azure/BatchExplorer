@@ -1,24 +1,17 @@
-const config = require("./webpack.config.base.cjs");
-const path = require("path");
-const merge = require("webpack-merge");
-const { defineEnv } = require("./webpack.common.cjs");
-const EvalSourceMapDevToolPlugin = require("webpack/lib/EvalSourceMapDevToolPlugin");
-
-merge.strategy({ plugins: "replace" });
+import config from "./webpack.config.app-base.mjs";
+import { merge } from "webpack-merge";
+import { defineEnv } from "./webpack.common.mjs";
+import EvalSourceMapDevToolPlugin from "webpack/lib/EvalSourceMapDevToolPlugin.js";
+import * as helpers from "./helpers.js";
 
 const ENV = "development";
 const host = "localhost";
 const port = process.env.PORT || 3178;
+console.log('dirname', helpers.root());
+export default merge(config, {
 
-module.exports = merge(config, {
-
-    entry: {
-        "polyfills": "./src/app/polyfills.browser",
-        "app": "./src/app/app.ts",
-    },
-
-    // devtool: "cheap-module-source-map",
     mode: "development",
+    devtool: "eval-source-map",
     devServer: {
         host,
         port,
@@ -35,7 +28,7 @@ module.exports = merge(config, {
         },
     },
     output: {
-        path: path.join(__dirname, "../build/"),
+        path: helpers.root("build"),
         filename: "[name].js",
         sourceMapFilename: "[name].js.map",
         chunkFilename: "[id].chunk.js",

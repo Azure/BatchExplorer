@@ -7,7 +7,7 @@ import { Activity, ActivityService } from "@batch-flask/ui/activity";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { SecureUtils } from "@batch-flask/utils";
 import { List } from "immutable";
-import * as minimatch from "minimatch";
+import minimatch from "minimatch";
 import * as path from "path";
 import { Observable, forkJoin, from, of } from "rxjs";
 import { flatMap, map, reduce } from "rxjs/operators";

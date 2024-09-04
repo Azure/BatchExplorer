@@ -1,5 +1,5 @@
 import { DownloaderHelper } from "node-downloader-helper";
-import * as extract from "extract-zip";
+import extract from "extract-zip";
 import * as path from "path";
 
 /**
