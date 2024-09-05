@@ -1,4 +1,4 @@
-import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core/record";
 import { NameValuePair } from ".";
 
 export interface DeleteCertificateErrorAttributes {

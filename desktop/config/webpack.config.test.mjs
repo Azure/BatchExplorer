@@ -1,7 +1,8 @@
-const config = require("./webpack.config.base");
-const helpers = require("./helpers");
-const { commonRules, defineEnv } = require("./webpack.common");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+
+import config from "./webpack.config.base.mjs";
+import { commonRules, defineEnv } from "./webpack.common.mjs";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
+
 const ENV = "test";
 
 // We need to remove the app entry from the default config as this is defined in karma
@@ -28,15 +29,15 @@ config.module.rules = config.module.rules = [
         ],
         exclude: [/node_modules/, /\.node\.spec\.ts/],  // node.spec.ts are to be run in node environment
     },
-    ...commonRules,
+    ...commonRules
 ].concat(
     [{
         test: /\.scss$/,
-        loader: "style-loader!css-loader!sass-loader",
+        use: ["style-loader", "css-loader", "sass-loader"],
     },
     {
         test: /node_modules.*\.css$/,
-        loader: "style-loader!css-loader",
+        use: ["style-loader", "css-loader"],
     },
     /**
      * Instruments JS files with Istanbul for subsequent code coverage reporting.
@@ -44,24 +45,24 @@ config.module.rules = config.module.rules = [
      *
      * See: https://github.com/deepsweet/istanbul-instrumenter-loader
      */
-    {
-        enforce: "post",
-        test: /\.(js|ts)$/,
-        loader: "istanbul-instrumenter-loader",
-        query: {
-            esModules: true
-        },
-        include: [
-            helpers.root("app"),
-            helpers.root("src"),
-        ],
-        exclude: [
-            helpers.root("src/test"),
-            /\.(e2e|spec)\.(ts)$/,
-            /node_modules/
-        ]
-    }
+    // {
+    //     enforce: "post",
+    //     test: /\.(js|ts)$/,
+    //     loader: "istanbul-instrumenter-loader",
+    //     query: {
+    //         esModules: true
+    //     },
+    //     include: [
+    //         helpers.root("app"),
+    //         helpers.root("src"),
+    //     ],
+    //     exclude: [
+    //         helpers.root("src/test"),
+    //         /\.(e2e|spec)\.(ts)$/,
+    //         /node_modules/
+    //     ]
+    // }
     ]
 );
 
-module.exports = config;
+export default config;

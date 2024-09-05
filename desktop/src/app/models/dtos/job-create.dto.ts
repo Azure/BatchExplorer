@@ -1,4 +1,4 @@
-import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core/dto";
 import { ApplicationPackageReference } from "../application-package-reference";
 import { EnvironmentSettingDto } from "./environment-setting.dto";
 import { JobConstraintDto } from "./job-constraints.dto";

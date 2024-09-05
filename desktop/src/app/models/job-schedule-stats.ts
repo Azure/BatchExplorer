@@ -1,4 +1,4 @@
-import { Model } from "@batch-flask/core";
+import { Model } from "@batch-flask/core/record";
 import { JobStatistics } from "./job-stats";
 
 /**

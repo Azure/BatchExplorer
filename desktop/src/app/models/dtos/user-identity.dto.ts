@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 import { UserAccountElevationLevel } from "../user-account";
 
 export class AutoUserDto extends Dto<AutoUserDto> {

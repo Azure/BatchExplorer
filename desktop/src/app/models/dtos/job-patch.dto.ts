@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 import { MetaDataDto } from "./metadata.dto";
 import { PoolCreateDto } from "./pool-create";
 import { TaskConstraintsDto } from "./task-constraints.dto";

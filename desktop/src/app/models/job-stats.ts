@@ -1,7 +1,7 @@
 /**
  * Statistics about an executed job
  */
-import { Model, Prop, Record } from "@batch-flask/core";
+import { Model, Record, Prop } from "@batch-flask/core/record";
 import { Duration } from "luxon";
 
 export interface JobStatisticsAttributes {

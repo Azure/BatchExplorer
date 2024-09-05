@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2015",
-    "module": "esnext",
+    "module": "ESNext",
     "lib": [
       "dom",
       "dom.iterable",
@@ -19,13 +19,14 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "noImplicitAny": false,
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "listEmittedFiles": false, // debug option
     "listFiles": false, // debug option
     // Base Url only applies to typescript compilation so tsc knows where the modules are.
     // This means absolute path only works in the browser environment you need to use relative import for the code in side the client folder
     // Node.js doesn't support custom load path yet
     "baseUrl": ".",
+    "esModuleInterop": true,
 
     // Defer TS checking to ESLint
     "noUnusedLocals": false,
@@ -49,7 +50,7 @@
   "files": [
     "definitions/index.d.ts",
     "definitions/missing-defs.d.ts",
-    "node_modules/monaco-editor/monaco.d.ts"
+    "../node_modules/monaco-editor/monaco.d.ts"
   ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [

@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { Model, Record, Prop } from "@batch-flask/core/record";
 import { TaskState } from "./azure-batch/task";
 import { TaskExecutionResult } from "./azure-batch/task-execution-result";
 import { FailureInfo, FailureInfoAttributes } from "./failure-info";

@@ -1,4 +1,4 @@
-import { Model } from "@batch-flask/core";
+import { Model } from "@batch-flask/core/record";
 import { Constraints } from "./constraints";
 
 /**

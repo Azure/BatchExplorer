@@ -1,30 +1,34 @@
-const config = require("./webpack.config.base");
-const path = require("path");
-const merge = require("webpack-merge");
-const WriteFilePlugin = require("write-file-webpack-plugin");
-const { defineEnv } = require("./webpack.common");
-const EvalSourceMapDevToolPlugin = require("webpack/lib/EvalSourceMapDevToolPlugin");
-
-merge.strategy({ plugins: "replace" });
+import config from "./webpack.config.app-base.mjs";
+import { merge } from "webpack-merge";
+import { defineEnv } from "./webpack.common.mjs";
+import EvalSourceMapDevToolPlugin from "webpack/lib/EvalSourceMapDevToolPlugin.js";
+import * as helpers from "./helpers.js";
 
 const ENV = "development";
 const host = "localhost";
 const port = process.env.PORT || 3178;
+console.log('dirname', helpers.root());
+export default merge(config, {
 
-module.exports = merge(config, {
-    // devtool: "cheap-module-source-map",
     mode: "development",
+    devtool: "eval-source-map",
     devServer: {
         host,
         port,
-        stats: {
-            // Angular emits warning which are spaming the console
-            warnings: false,
+        // static: {
+        //     directory: path.join(__dirname, 'app')
+        // },
+        client: {
+            logging: "error"
         },
-        clientLogLevel: "error",
+        devMiddleware: {
+            writeToDisk: (filePath) => {
+                return /vendor\/vs.*/.test(filePath);
+            }
+        },
     },
     output: {
-        path: path.join(__dirname, "../build/"),
+        path: helpers.root("build"),
         filename: "[name].js",
         sourceMapFilename: "[name].js.map",
         chunkFilename: "[id].chunk.js",
@@ -33,11 +37,11 @@ module.exports = merge(config, {
         rules: [
             {
                 test: /\.scss$/,
-                loader: [
+                use: [
                     {
                         loader: "style-loader",
                         options: {
-                            singleton: true,
+                            injectType: "singletonStyleTag",
                         },
                     },
                     "css-loader",
@@ -46,11 +50,11 @@ module.exports = merge(config, {
             },
             {
                 test: /\.css$/,
-                loader: [
+                use: [
                     {
                         loader: "style-loader",
                         options: {
-                            singleton: true,
+                            injectType: "singletonStyleTag",
                         },
                     },
                     "css-loader",
@@ -63,9 +67,6 @@ module.exports = merge(config, {
             moduleFilenameTemplate: "[resource-path]",
             sourceRoot: "webpack:///"
         }),
-        defineEnv(ENV),
-        new WriteFilePlugin({
-            test: /vendor\/vs.*/
-        }),
+        defineEnv(ENV)
     ],
 });

@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 import { AccountPatchDto } from "./account-patch.dto";
 
 export class AccountCreateDto extends Dto<AccountCreateDto> {

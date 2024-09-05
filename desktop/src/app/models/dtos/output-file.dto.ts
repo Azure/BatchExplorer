@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 
 export class OutputFileBlobContainerDestinationDto extends Dto<OutputFileBlobContainerDestinationDto> {
     @DtoAttr() public containerUrl: string;

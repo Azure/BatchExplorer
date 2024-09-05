@@ -1,4 +1,4 @@
-import { BatchFlaskUserConfiguration, EntityConfigurationView } from "@batch-flask/core";
+import type { BatchFlaskUserConfiguration, EntityConfigurationView } from "@batch-flask/core/user-configuration";
 
 /**
  * General configuration used both on browser and desktop
@@ -70,7 +70,7 @@ export const DEFAULT_BE_USER_CONFIGURATION: BEUserDesktopConfiguration = {
         sources: [],
     },
     entityConfiguration: {
-        defaultView: EntityConfigurationView.Pretty,
+        defaultView: 'pretty' as EntityConfigurationView.Pretty,
     },
     subscriptions: {
         ignore: [],

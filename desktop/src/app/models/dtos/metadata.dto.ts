@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 
 export class MetaDataDto extends Dto<MetaDataDto> {
     @DtoAttr() public name: string;

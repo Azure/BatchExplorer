@@ -1,6 +1,10 @@
 import { Injectable } from "@angular/core";
 import { App, app } from "electron";
 
+declare global {
+    const  __non_webpack_require__: typeof require;
+}
+
 @Injectable({ providedIn: "root" })
 export class ElectronApp {
     public _app: App;
@@ -13,9 +17,10 @@ export class ElectronApp {
             this._remote = require("@electron/remote");
             this._app = this._remote.app;
             this.require = this._remote.require;
+            console.log("ElectronApp: ", this._remote, this._remote.require);
         } else {
             this._app = app;
-            this.require = require;
+            this.require = __non_webpack_require__ ;
         }
 
     }

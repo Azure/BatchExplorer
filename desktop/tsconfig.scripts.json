@@ -1,12 +1,33 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "es6",
+    "target": "ESNext",
+    "useDefineForClassFields": false,
     "module": "commonjs",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "*": [
+        "src/*",
+      ],
+    },
+    "types": [
+      "node",
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "noEmit": true
   },
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
-    "./scripts/**/*.ts",
-  ]
+    "./src/@batch-flask/extensions/string.ts",
+    "./src/@batch-flask/extensions/array.ts",
+  ],
+  "files": [
+    "definitions/index.d.ts",
+    "definitions/missing-defs.d.ts",
+  ],
 }

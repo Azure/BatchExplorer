@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import * as globF from "glob";
+import globF from "glob";
 import * as jsyaml from "js-yaml";
 import * as util from "util";
 

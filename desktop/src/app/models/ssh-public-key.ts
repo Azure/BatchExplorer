@@ -1,5 +1,5 @@
-import { Model, Prop, Record } from "@batch-flask/core";
-import { SecureUtils } from "@batch-flask/utils";
+import { Model, Record, Prop } from "@batch-flask/core/record";
+import { SecureUtils } from "@batch-flask/utils/secure-utils";
 
 export interface SSHPublicKeyAttributes {
     id: string;

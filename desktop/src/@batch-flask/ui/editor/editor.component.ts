@@ -3,7 +3,7 @@ import {
     EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import * as elementResizeDetectorMaker from "element-resize-detector";
+import elementResizeDetectorMaker from "element-resize-detector";
 import type { Uri, editor, IDisposable } from "monaco-editor";
 
 import "./editor.scss";

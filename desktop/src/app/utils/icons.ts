@@ -1,4 +1,4 @@
-import { Icon, IconSources } from "@batch-flask/ui/icon";
+import { Icon, IconSources } from "@batch-flask/ui/icon/icon.model";
 
 /**
  * This contains some helper to pick icons to use with bl-icon

@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Dto } from "@batch-flask/core/dto";
-import { FormUtils } from "@batch-flask/utils";
+import { FormUtils } from "@batch-flask/utils/form-utils";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 

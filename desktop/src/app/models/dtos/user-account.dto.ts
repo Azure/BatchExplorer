@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 import { LoginMode, UserAccountElevationLevel } from "../user-account";
 
 export class WindowsUserConfigurationDto extends Dto<UserAccountDto> {

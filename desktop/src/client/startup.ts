@@ -1,4 +1,3 @@
-import { platformDynamicServer } from "@angular/platform-server";
 import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
@@ -81,7 +80,11 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
         app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors");
     }
 
-    const module = await platformDynamicServer().bootstrapModule(BatchExplorerClientModule);
+    const module = await import("@angular/platform-server").then((platform) => {
+        return platform.platformDynamicServer().bootstrapModule(BatchExplorerClientModule)
+    });
+
+    // const module = await platformDynamicServer().bootstrapModule(BatchExplorerClientModule);
     const localeService = module.injector.get(LocaleService) as ClientLocaleService;
     await localeService.load();
     const translationLoader = module.injector.get(TranslationsLoaderService) as ClientTranslationsLoaderService;

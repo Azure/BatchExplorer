@@ -2,7 +2,7 @@ import { Location } from "@angular/common";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { RetryableHttpCode } from "@batch-flask/core/constants";
-import { UrlUtils } from "@batch-flask/utils";
+import { UrlUtils } from "@batch-flask/utils/url-utils";
 import { Observable, of, range, throwError, timer } from "rxjs";
 import { flatMap, switchMap, zip } from "rxjs/operators";
 import { AccessToken } from "./aad/access-token";

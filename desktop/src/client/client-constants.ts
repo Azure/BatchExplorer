@@ -26,7 +26,7 @@ function getPort(port = portrange): Promise<number> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const packageConfig = require(`${root}/package.json`);
+const packageConfig = require("../../package.json");
 
 export function clientFileUrl(path: string, protocol = true): { dev: string, prod: string } {
     const prefix = protocol ? "file://" : "";

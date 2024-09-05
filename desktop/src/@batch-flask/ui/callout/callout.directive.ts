@@ -100,9 +100,13 @@ export class CalloutDirective {
             },
         ];
 
-        const positionStrategy = this.overlay.position().connectedTo(this.elementRef,
-            { originX: "start", originY: "top" },
-            { overlayX: "start", overlayY: "bottom" });
+        const positionStrategy = this.overlay.position().flexibleConnectedTo(this.elementRef)
+            .withPositions([{
+                originX: "start",
+                originY: "top",
+                overlayX: "start",
+                overlayY: "bottom"
+            }]);
         positionStrategy.withPositions(positions);
         return new OverlayConfig({
             positionStrategy: positionStrategy,

@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 
 export class CertificateReferenceDto extends Dto<CertificateReferenceDto> {
     @DtoAttr() public storeLocation: string;

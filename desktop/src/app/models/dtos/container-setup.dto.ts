@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 import { ContainerType } from "../container-setup";
 import { ContainerRegistryDto } from "./container-registry.dto";
 

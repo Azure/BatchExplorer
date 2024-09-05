@@ -1,4 +1,4 @@
-import { ArmRecord, Model, Prop, Record } from "@batch-flask/core";
+import { ArmRecord, Model, Prop, Record } from "@batch-flask/core/record";
 
 export enum RoleAssignmentPrincipalType {
     App = "ServicePrincipal",

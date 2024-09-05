@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { Model, Record, Prop } from "@batch-flask/core/record";
 import { JobTaskCounts, JobTaskCountsAttributes } from "./job-task-counts";
 import { JobTaskSlotCounts, JobTaskSlotCountsAttributes } from "./job-task-slot-counts";
 

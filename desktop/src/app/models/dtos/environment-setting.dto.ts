@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 
 export class EnvironmentSettingDto extends Dto<EnvironmentSettingDto> {
     @DtoAttr() public name: string;

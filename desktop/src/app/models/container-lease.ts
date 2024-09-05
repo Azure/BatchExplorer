@@ -1,5 +1,5 @@
 import { LeaseStateType, LeaseStatusType } from "@azure/storage-blob";
-import { Model, Prop, Record } from "@batch-flask/core";
+import { Model, Record, Prop } from "@batch-flask/core/record";
 
 export interface ContainerLeaseAttributes {
     status: LeaseStatus;

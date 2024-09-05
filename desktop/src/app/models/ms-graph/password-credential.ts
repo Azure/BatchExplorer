@@ -1,4 +1,4 @@
-import { Prop, Record } from "@batch-flask/core";
+import { Prop, Record } from "@batch-flask/core/record";
 
 export interface PasswordCredentialAttributes {
     keyId: string;

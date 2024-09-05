@@ -1,4 +1,4 @@
-import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core/record";
 import {
     ApplicationPackageReference, ApplicationPackageReferenceAttributes,
 } from "app/models/application-package-reference";
