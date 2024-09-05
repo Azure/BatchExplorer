@@ -1,4 +1,4 @@
-import { FeatureDefinition } from "@batch-flask/ui";
+import type { FeatureDefinition } from "@batch-flask/ui";
 
 /**
  * Define components in the UI that the end-user can choose to show or hide.

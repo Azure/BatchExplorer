@@ -1,4 +1,4 @@
-import { ArmRecord, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import { ArmRecord, Model, NavigableRecord, Prop, Record } from "@batch-flask/core/record";
 
 export interface BatchApplicationPropertiesAttributes {
     allowUpdates: boolean;

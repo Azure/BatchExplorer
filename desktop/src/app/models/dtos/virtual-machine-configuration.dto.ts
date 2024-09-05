@@ -1,4 +1,4 @@
-import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core/dto";
 import { CachingType, StorageAccountType } from "../azure-batch";
 import { ContainerConfigurationDto } from "./container-setup.dto";
 

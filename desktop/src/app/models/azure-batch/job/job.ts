@@ -1,4 +1,4 @@
-import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core/record";
 import { NetworkConfiguration } from "app/models/network-configuration";
 import { ModelUtils } from "app/utils";
 import { List } from "immutable";

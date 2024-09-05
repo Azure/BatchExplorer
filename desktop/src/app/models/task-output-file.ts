@@ -1,4 +1,4 @@
-import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core/record";
 import { ComputeNodeIdentityReference } from "./compute-node-identity-reference";
 import { List } from "immutable";
 import { HttpHeader } from "./http-header";

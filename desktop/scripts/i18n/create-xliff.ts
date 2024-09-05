@@ -1,8 +1,8 @@
 // eslint-disable no-console
-import "../../src/client/init-esm";
+import "../../src/client/init";
 
 import * as fs from "fs";
-import * as mkdirp from "mkdirp";
+import mkdirp from "mkdirp";
 import * as path from "path";
 import { promisify } from "util";
 import { XliffSerializer } from "../../src/@batch-flask/compiler";

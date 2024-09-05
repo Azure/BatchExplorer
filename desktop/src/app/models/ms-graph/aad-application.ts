@@ -1,4 +1,4 @@
-import { ListProp, Prop, Record } from "@batch-flask/core";
+import { ListProp, Prop, Record } from "@batch-flask/core/record";
 import { List } from "immutable";
 import { PasswordCredential, PasswordCredentialAttributes } from "./password-credential";
 

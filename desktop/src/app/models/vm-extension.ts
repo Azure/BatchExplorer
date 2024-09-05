@@ -1,5 +1,5 @@
 import { JsonObject } from "@azure/bonito-core";
-import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core/record";
 import { List } from "immutable";
 
 export interface VMExtensionAttributes {

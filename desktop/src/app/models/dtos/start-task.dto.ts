@@ -1,4 +1,4 @@
-import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core/dto";
 import { EnvironmentSettingDto } from "./environment-setting.dto";
 import { ResourceFileDto } from "./resource-file.dto";
 import { TaskContainerSettingsDto } from "./task-container-settings.dto";

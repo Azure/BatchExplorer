@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 import { ComputeNodeIdentityReference } from "../compute-node-identity-reference";
 
 export class ContainerRegistryDto extends Dto<ContainerRegistryDto> {

@@ -1,4 +1,4 @@
-import { Model, Prop } from "@batch-flask/core";
+import { Model, Prop } from "@batch-flask/core/record";
 import { Duration } from "luxon";
 import { Constraints } from "./constraints";
 

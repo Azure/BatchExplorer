@@ -1,4 +1,4 @@
-import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core/record";
 import { ModelUtils } from "app/utils";
 import { List } from "immutable";
 import { Job, JobAttributes } from "./azure-batch/job/job";

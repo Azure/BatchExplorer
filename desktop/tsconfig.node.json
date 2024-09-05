@@ -13,6 +13,5 @@
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
-    "./src/client/init-esm.ts",
   ]
 }

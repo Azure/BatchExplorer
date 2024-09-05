@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 
 export class ResourceFileDto extends Dto<ResourceFileDto> {
     @DtoAttr() public httpUrl: string;

@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { Model, Record, Prop } from "@batch-flask/core/record";
 import { AutoUserSpecification, AutoUserSpecificationAttributes } from "./auto-user";
 
 export interface UserIdentityAttributes {

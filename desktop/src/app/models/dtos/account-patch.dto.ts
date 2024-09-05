@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 
 export class AutoStoragePatchDto extends Dto<AutoStoragePatchDto> {
     @DtoAttr()

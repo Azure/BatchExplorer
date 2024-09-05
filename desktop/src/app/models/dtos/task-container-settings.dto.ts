@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 import { ContainerRegistryDto } from "./container-registry.dto";
 
 export class TaskContainerSettingsDto extends Dto<TaskContainerSettingsDto> {

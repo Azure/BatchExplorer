@@ -1,4 +1,4 @@
-import { Icon, IconSources } from "@batch-flask/ui/icon";
+import { Icon, IconSources } from "@batch-flask/ui/icon/icon.model";
 import { CloudServiceOsFamily, OSType, Pool, PoolAllocationState, VmSize } from "app/models";
 import { SoftwarePricing, VMPrices } from "app/services/pricing";
 import { List } from "immutable";

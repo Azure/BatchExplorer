@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr } from "@batch-flask/core/dto";
 import { Duration } from "luxon";
 
 export class TaskConstraintsDto extends Dto<TaskConstraintsDto> {

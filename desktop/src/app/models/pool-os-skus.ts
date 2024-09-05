@@ -1,4 +1,4 @@
-import { ObjectUtils } from "@batch-flask/utils";
+import { ObjectUtils } from "@batch-flask/utils/object-utils";
 import { List } from "immutable";
 import { ImageInformation } from "./image-information";
 

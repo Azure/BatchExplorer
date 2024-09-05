@@ -1,4 +1,4 @@
-import { ArmRecord, ArmRecordAttributes, Model, Prop, Record } from "@batch-flask/core";
+import { ArmRecord, ArmRecordAttributes, Model, Prop, Record } from "@batch-flask/core/record";
 
 interface PrimaryEndpointsAttributes {
     blob: string;

@@ -1,4 +1,4 @@
-import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core/record";
 import { List } from "immutable";
 import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./container-setup";
 import { NameValuePair } from "./name-value-pair";

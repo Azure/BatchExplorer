@@ -1,4 +1,4 @@
-import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core/dto";
 import { AppPackageReferenceDto } from "./application-package-reference.dto";
 import { CertificateReferenceDto } from "./certificate-reference.dto";
 import { MetaDataDto } from "./metadata.dto";

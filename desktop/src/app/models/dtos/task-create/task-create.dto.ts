@@ -1,4 +1,4 @@
-import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core/dto";
 import { ExitOptions } from "../../task-exit-conditions";
 import { AppPackageReferenceDto } from "../application-package-reference.dto";
 import { EnvironmentSetting } from "../metadata.dto";

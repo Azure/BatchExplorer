@@ -1,4 +1,4 @@
-import { ListProp, Model, Record } from "@batch-flask/core";
+import { ListProp, Model, Record } from "@batch-flask/core/record";
 import { List } from "immutable";
 
 export interface DiskEncryptionConfigurationAttributes {

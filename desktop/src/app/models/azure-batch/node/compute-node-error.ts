@@ -1,4 +1,4 @@
-import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core/record";
 import { NameValuePair, NameValuePairAttributes } from "app/models/name-value-pair";
 import { List } from "immutable";
 
