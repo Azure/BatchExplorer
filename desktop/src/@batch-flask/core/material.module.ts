@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatNativeDateModule } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
@@ -31,6 +32,7 @@ const modules = [
     MatDatepickerModule,
     MatDialogModule,
     MatSidenavModule,
+    MatSlideToggleModule,
     PortalModule,
     MatNativeDateModule,
 ];

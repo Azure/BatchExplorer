@@ -133,13 +133,19 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
             );
         }
 
-        items.push(
-            new ContextMenuSeparator(),
-            new ContextMenuItem({
-                label: this.i18n.t("profile-button.logout"),
+        items.push(new ContextMenuSeparator());
+
+        if (this.currentUserName === "") {
+            items.push(new ContextMenuItem({
+                label: this.i18n.t("profile-button.sign-in"),
+                click: () => this._login()
+            }));
+        } else {
+            items.push(new ContextMenuItem({
+                label: this.i18n.t("profile-button.sign-out"),
                 click: () => this._logout()
-            })
-        );
+            }));
+        }
 
         items.unshift(this._getAutoUpdateMenuItem());
         this.contextMenuService.openMenu(new ContextMenu(items));
@@ -194,7 +200,11 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private _logout() {
-        this.batchExplorer.logoutAndLogin();
+        this.authService.logout();
+    }
+
+    private _login() {
+        this.authService.login();
     }
 
     private async _checkForUpdates(showNotification = true) {
@@ -222,7 +232,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
         if (!OS.isLinux()) {
             setImmediate(async () => {
                 this.remote.electronApp.removeAllListeners("window-all-closed");
-                await this.authService.logout(false);
+                await this.authService.logout();
                 this.autoUpdateService.quitAndInstall();
                 this.remote.getCurrentWindow().close();
             });

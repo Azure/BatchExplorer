@@ -82,10 +82,6 @@ yargs
                     type: "string",
                     describe: "The path to Batch Explorer/Shared Libraries",
                 })
-                .option("paths.batchPortalExtension", {
-                    type: "string",
-                    describe: "The path to the Batch portal extension",
-                })
                 .option("print", {
                     type: "boolean",
                     describe: "Print the resultant configuration object",

@@ -1,0 +1,44 @@
+@import "app/styles/variables";
+
+.central-panel {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .central-panel-content {
+        padding: 5em;
+        text-align: center;
+        max-width: 500px;
+        color: $primary-text;
+        background-color: $main-background;
+        border-radius: 10px;
+        .description {
+            margin-bottom: 1em;
+            margin-top: 1em;
+        }
+        .central-button-group {
+            margin: 2em 0;
+            .central-button {
+                margin-bottom: 2em;
+                display: block;
+                font-size: 120%;
+                border-radius: 5px;
+                height: inherit; /* override hardcoded height */
+                padding: 6px;
+                &[color=light] {
+                    border: 1px solid $primary-color;
+                }
+            }
+        }
+        .caption {
+            font-size: 80%;
+            color: $secondary-text;
+        }
+        .footer {
+            margin-top: 2em;
+            font-size: 80%;
+            color: $secondary-text;
+        }
+    }
+}
