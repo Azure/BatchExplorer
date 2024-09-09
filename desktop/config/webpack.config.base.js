@@ -58,7 +58,8 @@ const baseConfig = {
         }),
         new CopyWebpackPlugin({
             patterns: [
-                { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },
+                { context: "src/client/splash-screen", from: "**/*.(html|svg)", to: "client/splash-screen" },
+                { context: "src/client/recover-window", from: "**/*.(html|svg)", to: "client/recover-window" },
                 { context: "src/client/proxy", from: "**/*", to: "client/proxy" },
                 { context: "src/client/resources", from: "**/*", to: "client/resources" },
                 { context: "src/app/assets", from: "**/*", to: "assets" },

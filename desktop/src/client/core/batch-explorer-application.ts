@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
+import { LocaleService, TelemetryService, TranslationsLoaderService, UserConfigurationService } from "@batch-flask/core";
 import { AutoUpdateService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import { AzureEnvironment } from "client/azure-environment";
@@ -10,7 +10,7 @@ import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
-import { BatchExplorerLink, Constants, Deferred } from "common";
+import { BEUserConfiguration, BatchExplorerLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
 import { app, dialog, ipcMain, protocol, session } from "electron";
 import { UpdateCheckResult } from "electron-updater";
@@ -21,10 +21,11 @@ import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
-import { AADService, AuthenticationState, AuthenticationWindow, LogoutError } from "./aad";
+import { AADService, AuthenticationWindow } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
 import { StorageBlobAdapter } from "./storage";
+import { filter, first, map } from "rxjs/operators";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = ClientConstants.isDev ? "-dev" : "";
@@ -44,27 +45,31 @@ export class BatchExplorerApplication {
     public aadService: AADService;
     public state: Observable<BatchExplorerState>;
     public proxySettings: ProxySettingsManager;
+    public userSettings: Observable<BEUserConfiguration>;
+    public appReady: Deferred<void>;
 
     private _state = new BehaviorSubject<BatchExplorerState>(BatchExplorerState.Loading);
     private _initializer: BatchExplorerInitializer;
     private _currentlyAskingForCredentials: Promise<any> | null;
+    private mainWindow: MainWindow;
 
     constructor(
         public autoUpdater: AutoUpdateService,
         public translationLoader: TranslationsLoaderService,
         public localeService: LocaleService,
         public injector: Injector,
+        public ipcMain: BlIpcMain,
         public properties: BatchExplorerProperties,
         private telemetryService: TelemetryService,
         private telemetryManager: TelemetryManager,
-        private ipcMain: BlIpcMain,
-        private storageBlobAdapter: StorageBlobAdapter) {
+        private storageBlobAdapter: StorageBlobAdapter,
+        configurationStore: UserConfigurationService<BEUserConfiguration>
+    ) {
         this.windows = new MainWindowManager(this, this.telemetryManager);
         this.state = this._state.asObservable();
+        this.appReady = new Deferred<void>();
 
-        ipcMain.on(IpcEvent.logoutAndLogin, () => {
-            return this.logoutAndLogin();
-        });
+        this.userSettings = configurationStore.config;
     }
 
     public async init() {
@@ -90,8 +95,6 @@ export class BatchExplorerApplication {
      * Start the app by showing the splash screen
      */
     public async start() {
-        const appReady = new Deferred();
-        const loggedIn = new Deferred();
         this.pythonServer.start();
         this._initializer.init();
 
@@ -99,20 +102,6 @@ export class BatchExplorerApplication {
         if (!window) { return; }
 
         this._setCommonHeaders(window);
-        const loginResponse = this.aadService.login();
-        loginResponse.done.catch((e) => {
-            if (e instanceof LogoutError) {
-                return;
-            }
-            log.error("Error while login", e);
-            dialog.showMessageBox({
-                title: "Error during login",
-                type: "error",
-                message: e.toString(),
-            });
-            this.logoutAndLogin();
-        });
-        await loginResponse.started;
 
         this._initializer.setTaskStatus("window", "Loading application");
 
@@ -130,27 +119,15 @@ export class BatchExplorerApplication {
                     break;
                 case WindowState.Ready:
                     this._initializer.completeTask("window");
-                    appReady.resolve();
+                    this.appReady.resolve();
             }
         });
-        const authSub = this.aadService.authenticationState.subscribe((state) => {
-            switch (state) {
-                case AuthenticationState.None:
-                    this._initializer.setLoginStatus("Login to azure active directory");
-                    break;
-                case AuthenticationState.UserInput:
-                    this._initializer.setLoginStatus("Prompting for user input");
-                    break;
-                case AuthenticationState.Authenticated:
-                    this._initializer.completeLogin();
-                    loggedIn.resolve();
-                    break;
-            }
-        });
-        await Promise.all([appReady.promise, loggedIn.promise]);
+        await this.appReady.promise;
+
+        this.ipcMain.on(IpcEvent.login, () => this.login());
+        this.ipcMain.on(IpcEvent.logout, () => this.logout());
 
         windowSub.unsubscribe();
-        authSub.unsubscribe();
 
         window.show();
     }
@@ -161,16 +138,30 @@ export class BatchExplorerApplication {
      */
     public async updateAzureEnvironment(env: AzureEnvironment) {
         await this.aadService.logout();
-        this.windows.closeAll();
         await this.properties.updateAzureEnvironment(env);
         await this.aadService.login().done;
-        this.windows.openNewWindow();
+        this.openMainWindow();
     }
 
-    public async logoutAndLogin() {
-        await this.aadService.logout();
+    public logout() {
+        return this.aadService.logout();
+    }
+
+    public async login() {
         await this.aadService.login().done;
-        this.windows.openNewWindow();
+        this.openMainWindow();
+    }
+
+    private openMainWindow(showWhenReady = true) {
+        if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+            if (!this.mainWindow.isVisible()) {
+                this.mainWindow.show();
+            }
+        } else {
+            this.mainWindow =
+                this.windows.openNewWindow(undefined, showWhenReady);
+        }
+        return this.mainWindow;
     }
 
     /**
@@ -192,12 +183,12 @@ export class BatchExplorerApplication {
 
     public async openFromArguments(argv: string[], showWhenReady = true): Promise<MainWindow | null> {
         if (ClientConstants.isDev) {
-            return this.windows.openNewWindow(undefined, showWhenReady);
+            return this.openMainWindow(showWhenReady);
         }
         const program = parseArguments(argv);
         const arg = program.args[0];
         if (!arg || arg.startsWith("data:")) {
-            return this.windows.openNewWindow(undefined, showWhenReady);
+            return this.openMainWindow(showWhenReady);
         }
         try {
             const link = new BatchExplorerLink(arg);
@@ -260,6 +251,28 @@ export class BatchExplorerApplication {
         return app.getVersion();
     }
 
+    public async getUserSetting(key: keyof BEUserConfiguration):
+    Promise<BEUserConfiguration[keyof BEUserConfiguration] | undefined> {
+        const settingValue = this.userSettings.pipe(
+            map(settings => settings[key]),
+            filter(value => value !== undefined),
+            first(),
+        );
+        return settingValue.toPromise();
+    }
+
+    public async sendIPCEvent(event: string, properties?: { [key: string]: string }): Promise<void> {
+        if (!this.mainWindow || this.mainWindow.isDestroyed()) {
+            throw new Error("Main window is not available");
+        }
+        return this.mainWindow.webContents.send(event, properties);
+    }
+
+    public onIPCEvent(event: string, listener: (...args) => Promise<void>): () => void {
+        const { unsubscribe } = this.ipcMain.on(event, listener);
+        return unsubscribe;
+    }
+
     private _setupProcessEvents() {
         ipcMain.on("reload", () => {
             this.pythonServer.restart();
@@ -287,7 +300,7 @@ export class BatchExplorerApplication {
 
         // eslint-disable-next-line @typescript-eslint/ban-types
         process.on("uncaughtException" as any, (error: Error) => {
-            log.error("There was a uncaught exception", error);
+            log.error("There was an uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
             this.telemetryService.trackError(error);
             this.telemetryService.flush(true);

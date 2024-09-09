@@ -1,3 +1,4 @@
+import { AuthService } from 'app/services';
 import { Injectable, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { IpcService } from "@batch-flask/electron";
@@ -7,6 +8,7 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { URLSearchParams } from "url";
 import { BatchAccountService } from "./batch-account";
+import { IpcEvent } from "common/constants";
 
 export interface GotoOptions {
     /**
@@ -23,7 +25,9 @@ export class NavigatorService implements OnDestroy {
     constructor(
         private accountService: BatchAccountService,
         private router: Router,
-        private ipc: IpcService) {
+        private ipc: IpcService,
+        private authService: AuthService
+    ) {
     }
 
     public ngOnDestroy() {
@@ -45,6 +49,11 @@ export class NavigatorService implements OnDestroy {
             setTimeout(() => {
                 this.goto(link);
             });
+        });
+        this.ipc.on(IpcEvent.userAuthSelectRequest).pipe(
+            takeUntil(this._destroy),
+        ).subscribe(([_, data]) => {
+            this.authService.showAuthSelect(data);
         });
     }
 

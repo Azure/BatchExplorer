@@ -61,55 +61,55 @@ describe("AADService", () => {
         dialogSpy = {
             showMessageBox: jasmine.createSpy("showMessageBox").and.returnValue(0),
         };
+    });
 
+    async function initService() {
         const mockAADService = mock("./aad.service", {
             electron: {
                 dialog: dialogSpy,
             },
         });
-
         service = new mockAADService.AADService(
-            appSpy, localStorage, propertiesSpy, telemetryManagerSpy, ipcMainMock);
+            appSpy, localStorage, propertiesSpy, telemetryManagerSpy, ipcMainMock
+        );
+        spyOn<any>(service, "_loadTenants").and.returnValue(Promise.resolve());
+        await service.init();
+    }
 
-        service.init();
-    });
-
-    it("when there is no item in the localstorage it should not set the id_token", () => {
+    it("when there is no item in the localstorage it should not set the id_token", async () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
-        const tmpService = new AADService(
-            appSpy, localStorage, propertiesSpy, telemetryManagerSpy, ipcMainMock);
-        tmpService.init();
+        await initService();
         let user: AADUser | null = null;
-        tmpService.currentUser.subscribe(x => user = x);
+        service.currentUser.subscribe(x => user = x);
         expect(user).toBeNull();
     });
 
     it("when localstorage has currentUser it should load it", async (done) => {
         await localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(sampleUser));
-        const tmpService = new AADService(
-            appSpy, localStorage, propertiesSpy, telemetryManagerSpy, ipcMainMock);
-        await tmpService.init();
+        await initService();
         let user: AADUser | null = null;
-        tmpService.currentUser.subscribe(x => user = x);
+        service.currentUser.subscribe(x => user = x);
         expect(user).not.toBeNull();
         expect(user.username).toEqual("frank.smith@example.com");
         done();
     });
 
-    describe("Login", () => {
-        beforeEach(() => {
+    describe("Sign-in", () => {
+        beforeEach(async () => {
             const newToken = new AccessToken({
                 accessToken: "newToken", expiresOn: DateTime.local().plus({ hours: 1 }),
             } as any);
-            spyOn(service, "accessTokenData").and.returnValue(new Promise((resolve) => resolve(newToken)));
+            await initService();
+            spyOn<any>(service, "retrieveAccessToken")
+                .and.returnValue(Promise.resolve(newToken));
         });
 
-        it("login to public cloud", async () => {
+        it("sign in to public cloud", async () => {
             await service.login().done;
             expect(dialogSpy.showMessageBox).not.toHaveBeenCalled();
         });
 
-        it("login to national cloud", async () => {
+        it("sign in to national cloud", async () => {
             propertiesSpy.azureEnvironment = AzureChina;
             await service.login().done;
             expect(dialogSpy.showMessageBox).toHaveBeenCalledTimes(1);
