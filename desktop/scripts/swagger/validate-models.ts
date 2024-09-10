@@ -10,7 +10,6 @@ import "zone.js";
 
 console.log("Nodepath", process.env.NODE_PATH);
 import { Duration } from "luxon";
-import fetch from "node-fetch";
 import { metadataForCtr } from "../../src/@batch-flask/core/record/helpers";
 import * as models from "../../src/app/models";
 import { Constants } from "../../src/common";
@@ -64,7 +63,7 @@ async function getSpecs() {
     const baseUrl = `https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/batch`;
     const url = `${baseUrl}/data-plane/Microsoft.Batch/stable/${dataPlaneVersion}/BatchService.json`;
     const response = await fetch(url);
-    return response.json();
+    return response.json() as unknown as { definitions: Record<string, any>; };
 }
 
 async function getMapping() {

@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import { issuesUrl, milestoneIssuesUrl, milestoneUrl, pullRequestsUrl } from "./github-urls";
 import { Issue, Milestone } from "./models";
 
