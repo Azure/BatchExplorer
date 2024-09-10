@@ -10,7 +10,11 @@ TestBed.initTestEnvironment(
     platformBrowserDynamicTesting(),
 );
 
-const webpackRequire: any = require;
+declare global {
+    interface NodeRequire {
+        context: any;
+    }
+}
 
 /*
  * Ok, this is kinda crazy. We can use the context method on
@@ -21,11 +25,11 @@ const webpackRequire: any = require;
  * any file that ends with spec.ts and get its path. By passing in true
  * we say do this recursivelyf
  */
-const testContext = webpackRequire.context(".", true, /\.spec\.ts/);
-const testAppContext = webpackRequire.context("../../src/app", true, /\.spec\.ts/);
-const testCommonContext = webpackRequire.context("../../src/common", true, /\.spec\.ts/);
+const testContext = require.context(".", true, /\.spec\.ts/);
+const testAppContext = require.context("../../src/app", true, /\.spec\.ts/);
+const testCommonContext = require.context("../../src/common", true, /\.spec\.ts/);
 // Exclude the @batch-flask/compiler folder
-const testBlCommonContext = webpackRequire.context("../../src/@batch-flask", true,
+const testBlCommonContext = require.context("../../src/@batch-flask", true,
     /^\.\/(?!compiler)(?!.*node\.spec\.ts).*\.spec\.ts$/);
 
 /*
