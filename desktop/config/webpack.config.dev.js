@@ -16,9 +16,6 @@ module.exports = merge(config, {
     devServer: {
         host,
         port,
-        // static: {
-        //     directory: path.join(__dirname, 'app')
-        // },
         client: {
             logging: "error"
         },

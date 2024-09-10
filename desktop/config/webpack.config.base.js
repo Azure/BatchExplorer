@@ -48,13 +48,10 @@ const baseConfig = {
     plugins: [
         new MonacoWebpackPlugin(),
         new AngularWebpackPlugin({
-            // skipCodeGeneration: !AOT,
             tsconfig: "./tsconfig.browser.json",
-            // mainPath: "./src/app/app.ts",              // will auto-detect the root NgModule.
             compilerOptions:{
                 sourceMap: true,
             }
-            // forkTypeChecker: !AOT,
         }),
         new CopyWebpackPlugin({
             patterns: [

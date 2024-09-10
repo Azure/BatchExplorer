@@ -1,8 +1,6 @@
 const config = require("./webpack.config.base");
-// const helpers = require("./helpers");
 const { commonRules, defineEnv } = require("./webpack.common");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-
 const ENV = "test";
 
 // We need to remove the app entry from the default config as this is defined in karma
@@ -46,23 +44,6 @@ config.module.rules = config.module.rules = [
      *
      * See: https://github.com/deepsweet/istanbul-instrumenter-loader
      */
-    // {
-    //     enforce: "post",
-    //     test: /\.(js|ts)$/,
-    //     loader: "istanbul-instrumenter-loader",
-    //     query: {
-    //         esModules: true
-    //     },
-    //     include: [
-    //         helpers.root("app"),
-    //         helpers.root("src"),
-    //     ],
-    //     exclude: [
-    //         helpers.root("src/test"),
-    //         /\.(e2e|spec)\.(ts)$/,
-    //         /node_modules/
-    //     ]
-    // }
     ]
 );
 
