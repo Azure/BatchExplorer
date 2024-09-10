@@ -19,6 +19,7 @@ config.module.rules = config.module.rules = [
     {
         test: /\.ts$/,
         use: [
+            "@jsdevtools/coverage-istanbul-loader",
             {
                 loader: "ts-loader",
                 options: {
