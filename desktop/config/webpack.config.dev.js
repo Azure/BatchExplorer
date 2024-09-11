@@ -17,7 +17,12 @@ module.exports = merge(config, {
         host,
         port,
         client: {
-            logging: "error"
+            logging: "error",
+            overlay: {
+                errors: true,
+                warnings: false,
+                runtimeErrors: true,
+            },
         },
         devMiddleware: {
             writeToDisk: (filePath) => {
