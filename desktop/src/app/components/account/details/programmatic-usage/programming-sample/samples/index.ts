@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 export const sampleTemplates = {
     sharedKey: {
-        python: require("raw-loader!./shared-key/python.py.template"),
-        csharp: require("raw-loader!./shared-key/csharp.cs.template"),
-        nodejs: require("raw-loader!./shared-key/node.js.template"),
-        doAzureParallel: require("raw-loader!./shared-key/doAzureParallel.json.template"),
+        python: require("./shared-key/python.py.template"),
+        csharp: require("./shared-key/csharp.cs.template"),
+        nodejs: require("./shared-key/node.js.template"),
+        doAzureParallel: require("./shared-key/doAzureParallel.json.template"),
     },
     aad: {
-        python: require("raw-loader!./aad/python.py.template"),
-        csharp: require("raw-loader!./aad/csharp.cs.template"),
-        nodejs: require("raw-loader!./aad/node.js.template"),
-        aztk: require("raw-loader!./aad/aztk.yaml.template"),
-        doAzureParallel: require("raw-loader!./aad/doAzureParallel.json.template"),
+        python: require("./aad/python.py.template"),
+        csharp: require("./aad/csharp.cs.template"),
+        nodejs: require("./aad/node.js.template"),
+        aztk: require("./aad/aztk.yaml.template"),
+        doAzureParallel: require("./aad/doAzureParallel.json.template"),
     },
 };
 
