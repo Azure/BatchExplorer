@@ -105,6 +105,11 @@ export const ActionForm = <V extends FormValues>(
     const [loading, setLoading] = React.useState<boolean>(true);
     const [submitting, setSubmitting] = React.useState<boolean>(false);
 
+    // Store the last typed values to re-populate fields after failure
+    const [lastTypedValues, setLastTypedValues] = React.useState<
+        V | undefined
+    >();
+
     React.useEffect(() => {
         let isMounted = true;
         setLoading(true);
@@ -146,6 +151,56 @@ export const ActionForm = <V extends FormValues>(
         return <></>;
     }
 
+    // Unified form submission logic
+    const handleSubmit = async () => {
+        setSubmitting(true);
+        try {
+            // Store current form values before execution
+            setLastTypedValues(action.form.values);
+
+            const { success, error } = await action.execute(action.form.values);
+
+            if (success) {
+                if (onExecuteSucceeded) {
+                    onExecuteSucceeded();
+                }
+            }
+
+            if (error) {
+                action.logger.error(
+                    "Action execution failed: " +
+                        (error instanceof Error ? error.message : String(error))
+                );
+                if (onExecuteFailed) {
+                    // Restore the form values on failure to avoid clearing, only if lastTypedValues exists
+                    if (lastTypedValues) {
+                        action.form.setValues(lastTypedValues);
+                    }
+                    onExecuteFailed(error);
+                }
+            }
+        } catch (e) {
+            action.logger.error(
+                `Unhandled error executing action: ${
+                    e instanceof Error ? e.message : String(e)
+                }`
+            );
+            if (onError) {
+                onError(e);
+            }
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    // Handle the Enter key submission
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === "Enter" && !submitting) {
+            event.preventDefault(); // Prevent form from submitting automatically
+            handleSubmit(); // Trigger form submission
+        }
+    };
+
     let allButtons: FormButton[] = [];
     if (hideSubmitButton !== true) {
         // Default submit button
@@ -156,43 +211,7 @@ export const ActionForm = <V extends FormValues>(
             primary: true,
             submitForm: true,
             disabled: submitting === true,
-            onClick: async () => {
-                setSubmitting(true);
-                try {
-                    const { success, error } = await action.execute(
-                        action.form.values
-                    );
-
-                    if (success) {
-                        if (onExecuteSucceeded) {
-                            onExecuteSucceeded();
-                        }
-                    }
-
-                    if (error) {
-                        action.logger.error(
-                            "Action execution failed: " +
-                                (error instanceof Error
-                                    ? error.message
-                                    : String(error))
-                        );
-                        if (onExecuteFailed) {
-                            onExecuteFailed(error);
-                        }
-                    }
-                } catch (e) {
-                    action.logger.error(
-                        `Unhandled error executing action: ${
-                            e instanceof Error ? e.message : String(e)
-                        }`
-                    );
-                    if (onError) {
-                        onError(e);
-                    }
-                } finally {
-                    setSubmitting(false);
-                }
-            },
+            onClick: handleSubmit, // Use the unified submit handler
         });
     }
     if (hideResetButton !== true) {
@@ -212,12 +231,14 @@ export const ActionForm = <V extends FormValues>(
     }
 
     return (
-        <FormContainer
-            form={action.form}
-            layout={layout}
-            onFormChange={onFormChange}
-            onValidate={onValidate}
-            buttons={allButtons}
-        />
+        <div onKeyDown={handleKeyDown}>
+            <FormContainer
+                form={action.form}
+                layout={layout}
+                onFormChange={onFormChange}
+                onValidate={onValidate}
+                buttons={allButtons}
+            />
+        </div>
     );
 };
