@@ -62,7 +62,7 @@ export async function startBatchExplorer(args: BatchExplorerArgs) {
     // But this is a false positive when using dev server has it doesn't seem to ignore localhost
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
 
-    app.commandLine.appendSwitch('js-flags', '--max-old-space-size=4096');
+    app.commandLine.appendSwitch('js-flags', '--max-old-space-size=8192');
 
     log.info("Program arguments", args);
     if (args.ignoreCertificateErrors) {
