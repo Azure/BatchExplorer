@@ -93,12 +93,16 @@
   "peerDependencies": {
     "@fluentui/azure-themes": ">=8.6.34 < 9.0.0",
     "@fluentui/react": ">=8.97.2 <9.0.0",
+<<<<<<< HEAD
     "@fluentui/react-theme-provider": ">=0.19.16 <1.0.0",
+=======
+    "@fluentui/azure-themes": ">=8.6.34 < 9.0.0",
+>>>>>>> 7fe3dbee (update peerDependencies tslib requirement and rm @fluentui/react-theme-provider dependency)
     "mobx": "^6.3.2",
     "mobx-react-lite": "^3.2.0",
     "react": ">=17.0.2 <18.0.0",
     "react-dom": ">=17.0.2 <18.0.0",
-    "tslib": "~2.3.1"
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@angular-eslint/eslint-plugin": "^13.2.1",
