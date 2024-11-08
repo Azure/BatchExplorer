@@ -12,7 +12,7 @@ import {
     ExplorerThemeLight,
 } from "./explorer-theme";
 import { AppTheme } from "./app-theme";
-import { useTheme } from "@fluentui/react-theme-provider";
+import { useTheme } from "@fluentui/react/lib/Theme";
 import { getLogger } from "@azure/bonito-core";
 import {
     CycleThemeDark,
