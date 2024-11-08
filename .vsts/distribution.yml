@@ -26,14 +26,16 @@ stages:
     condition: succeeded('Localization')
     jobs:
 
-      - job: Linux
-        timeoutInMinutes: 120 # Needed for Codesign + CodeQL
-        pool:
-          name: Azure-Pipelines-EO-Batch-Explorer
-          demands:
-          - ImageOverride -equals BatchExplorerBuildImage-Linux
-        steps:
-          - template: ./linux/distribution.yml
+      # @@
+      
+      # - job: Linux
+      #   timeoutInMinutes: 120 # Needed for Codesign + CodeQL
+      #   pool:
+      #     name: Azure-Pipelines-EO-Batch-Explorer
+      #     demands:
+      #     - ImageOverride -equals BatchExplorerBuildImage-Linux
+      #   steps:
+      #     - template: ./linux/distribution.yml
 
       - job: MacOS
         timeoutInMinutes: 120 # Needed for Codesign + Notarization + CodeQL
@@ -47,11 +49,11 @@ stages:
         steps:
           - template: ./darwin/distribution.yml
 
-      - job: Windows
-        timeoutInMinutes: 120 # Needed for Codesign + CodeQL
-        pool:
-          name: Azure-Pipelines-EO-Batch-Explorer
-          demands:
-          - ImageOverride -equals BatchExplorerBuildImage-Windows
-        steps:
-          - template: ./win/distribution.yml
+      # - job: Windows
+      #   timeoutInMinutes: 120 # Needed for Codesign + CodeQL
+      #   pool:
+      #     name: Azure-Pipelines-EO-Batch-Explorer
+      #     demands:
+      #     - ImageOverride -equals BatchExplorerBuildImage-Windows
+      #   steps:
+      #     - template: ./win/distribution.yml

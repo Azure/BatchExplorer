@@ -10,9 +10,7 @@ steps:
           {
             "KeyCode" : "CP-401337-Apple",
             "OperationCode" : "MacAppNotarize",
-            "Parameters" : {
-              "BundleId": "com.microsoft.azure.BatchExplorer"
-            },
+            "Parameters" : {},
             "ToolName" : "sign",
             "ToolVersion" : "1.0"
           }
