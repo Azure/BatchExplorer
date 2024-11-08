@@ -10,7 +10,7 @@ jobs:
 
   - job: MacOS
     pool:
-      vmImage: macOS-13
+      vmImage: macOS-12
       demands: xcode
     variables:
       - name: EOCompliance-Mac

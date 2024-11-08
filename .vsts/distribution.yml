@@ -38,7 +38,7 @@ stages:
       - job: MacOS
         timeoutInMinutes: 120 # Needed for Codesign + Notarization + CodeQL
         pool:
-          vmImage: macOS-15
+          vmImage: macOS-12
           demands: xcode
         variables:
           - group: BatchExplorer-Signing
