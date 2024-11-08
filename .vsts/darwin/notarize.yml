@@ -10,7 +10,9 @@ steps:
           {
             "KeyCode" : "CP-401337-Apple",
             "OperationCode" : "MacAppNotarize",
-            "Parameters" : {},
+            "Parameters" : {
+              "BundleId": "com.microsoft.esrp"
+            },
             "ToolName" : "sign",
             "ToolVersion" : "1.0"
           }

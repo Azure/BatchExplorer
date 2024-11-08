@@ -33,27 +33,29 @@ steps:
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run build-python
       npm run package darwin-app
-      cd ./release/mac
-      zip -y -r ../BatchExplorer-mac.zip ./BatchExplorer.app
-      cd ../..
-      rm -rf ./release/mac/*.app
-      mkdir ./release/keep
-      cp ./release/*.zip ./release/keep/before-code-sign.zip
+      find ./release -depth 2 -print
+      # cd ./release/mac
+      # zip -y -r ../BatchExplorer-mac.zip ./BatchExplorer.app
+      # cd ../..
+      # rm -rf ./release/mac/*.app
+      # mkdir ./release/keep
+      # cp ./release/*.zip ./release/keep/before-code-sign.zip
     workingDirectory: desktop
     displayName: Build .app
+
+  - template: ./sign.yml
 
   - script: |
       set -e
       . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      unzip ./release/BatchExplorer*.zip -d ./release/mac
-      ls ./release/mac
-      rm -f ./release/mac/*.pkg
+      # unzip ./release/BatchExplorer*.zip -d ./release/mac
+      # ls ./release/mac
+      # rm -f ./release/mac/*.pkg
       npm run package darwin-dmg
-      rm -rf ./release/mac/*
+      find ./release -print
+      # rm -rf ./release/mac/*
     workingDirectory: desktop
     displayName: Build dmg
-
-  - template: ./sign.yml
 
   - template: ./notarize.yml
 

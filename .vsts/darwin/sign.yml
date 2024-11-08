@@ -8,8 +8,8 @@ steps:
   - task: EsrpCodeSigning@2
     inputs:
       ConnectedServiceName: 'ESRP CodeSign'
-      FolderPath: ./desktop/release
-      Pattern: 'BatchExplorer-mac.zip,*.dmg'
+      FolderPath: ./release/mac
+      Pattern: 'BatchExplorer.app'
       signConfigType: inlineSignParams
       inlineOperation: |
         [
