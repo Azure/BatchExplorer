@@ -8,7 +8,7 @@ import {
     IDropdownStyles,
 } from "@fluentui/react/lib/Dropdown";
 import * as React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AppRoot } from "./layout/app-root";
 import { Footer } from "./layout/footer";
 import { Header } from "./layout/header";
@@ -82,30 +82,32 @@ export const Application: React.FC = () => {
                     </Stack>
                 </Header>
                 <Main>
-                    <Switch>
-                        <Route path="/playground">
-                            <PlaygroundExample />
-                        </Route>
-                        <Route path="/editor">
-                            <MonacoEditor
-                                language="json"
-                                containerStyle={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    flexGrow: 1,
-                                    width: "100%",
-                                }}
-                                editorOptions={{
-                                    minimap: {
-                                        enabled: false,
-                                    },
-                                }}
-                            />
-                        </Route>
-                        <Route path="/">
-                            <CertificatePage />
-                        </Route>
-                    </Switch>
+                    <Routes>
+                        <Route
+                            path="/playground"
+                            element={<PlaygroundExample />}
+                        />
+                        <Route
+                            path="/editor"
+                            element={
+                                <MonacoEditor
+                                    language="json"
+                                    containerStyle={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        flexGrow: 1,
+                                        width: "100%",
+                                    }}
+                                    editorOptions={{
+                                        minimap: {
+                                            enabled: false,
+                                        },
+                                    }}
+                                />
+                            }
+                        />
+                        <Route path="/" element={<CertificatePage />} />
+                    </Routes>
                 </Main>
                 <Footer />
             </BrowserRouter>
