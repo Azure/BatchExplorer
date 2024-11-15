@@ -194,7 +194,7 @@
     "@azure/bonito-ui": "^1.0.0",
     "@azure/core-util": "1.9.1",
     "@azure/msal-node": "^2.7.0",
-    "@azure/storage-blob": "^12.23.0",
+    "@azure/storage-blob": "^12.25.0",
     "@batch/ui-playground": "^1.0.0",
     "@batch/ui-react": "^1.0.0",
     "@batch/ui-service": "^1.0.0",
