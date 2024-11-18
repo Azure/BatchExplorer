@@ -55,7 +55,7 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
 
         this.updateReady = this._status.pipe(map(x => x === UpdateStatus.Ready));
 
-        autoUpdater.on("checking-for-update", (info) => {
+        autoUpdater.on("checking-for-update", () => {
             this._status.next(UpdateStatus.Checking);
         });
 
