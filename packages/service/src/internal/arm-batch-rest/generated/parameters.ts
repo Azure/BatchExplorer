@@ -166,20 +166,6 @@ export interface LocationListSupportedVirtualMachineSkusQueryParam {
 export type LocationListSupportedVirtualMachineSkusParameters = LocationListSupportedVirtualMachineSkusQueryParam &
   RequestParameters;
 
-export interface LocationListSupportedCloudServiceSkusQueryParamProperties {
-  /** The maximum number of items to return in the response. */
-  maxresults?: number;
-  /** OData filter expression. Valid properties for filtering are "familyName". */
-  $filter?: string;
-}
-
-export interface LocationListSupportedCloudServiceSkusQueryParam {
-  queryParameters?: LocationListSupportedCloudServiceSkusQueryParamProperties;
-}
-
-export type LocationListSupportedCloudServiceSkusParameters = LocationListSupportedCloudServiceSkusQueryParam &
-  RequestParameters;
-
 export interface LocationCheckNameAvailabilityBodyParam {
   /** Properties needed to check the availability of a name. */
   body: CheckNameAvailabilityParameters;

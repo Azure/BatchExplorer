@@ -372,20 +372,6 @@ export interface LocationListSupportedVirtualMachineSkusDefaultResponse
   body: CloudErrorOutput;
 }
 
-/** Gets the list of Batch supported Cloud Service VM sizes available at the given location. */
-export interface LocationListSupportedCloudServiceSkus200Response
-  extends HttpResponse {
-  status: "200";
-  body: SupportedSkusResultOutput;
-}
-
-/** Gets the list of Batch supported Cloud Service VM sizes available at the given location. */
-export interface LocationListSupportedCloudServiceSkusDefaultResponse
-  extends HttpResponse {
-  status: string;
-  body: CloudErrorOutput;
-}
-
 /** Checks whether the Batch account name is available in the specified region. */
 export interface LocationCheckNameAvailability200Response extends HttpResponse {
   status: "200";

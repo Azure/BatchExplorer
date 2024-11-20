@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
+// Licensed under the MIT License.
 
 import { RawHttpHeaders } from "@azure/core-rest-pipeline";
 import { HttpResponse } from "@azure-rest/core-client";
@@ -1197,7 +1197,7 @@ export interface DeleteTaskFileDefaultResponse extends HttpResponse {
 
 export interface GetTaskFile200Headers {
   /** The length of the file. */
-  "content-length": number;
+  "content-length": string;
   /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
   etag?: string;
   /** The time at which the resource was last modified. */
@@ -1214,6 +1214,8 @@ export interface GetTaskFile200Headers {
   "ocp-creation-time"?: string;
   /** A unique identifier for the request that was made to the Batch service. If a request is consistently failing and you have verified that the request is properly formulated, you may use this value to report the error to Microsoft. In your report, include the value of this request ID, the approximate time that the request was made, the Batch Account against which the request was made, and the region that Account resides in. */
   "request-id"?: string;
+  /** Type of content */
+  "content-type": "application/octet-stream";
 }
 
 /** The request has succeeded. */
@@ -1231,7 +1233,7 @@ export interface GetTaskFileDefaultResponse extends HttpResponse {
 
 export interface GetTaskFileProperties200Headers {
   /** The length of the file. */
-  "content-length": number;
+  "content-length": string;
   /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
   etag?: string;
   /** The time at which the resource was last modified. */
@@ -1393,6 +1395,78 @@ export interface RebootNode202Response extends HttpResponse {
 }
 
 export interface RebootNodeDefaultResponse extends HttpResponse {
+  status: string;
+  body: BatchErrorOutput;
+}
+
+export interface StartNode202Headers {
+  /** The OData ID of the resource to which the request applied. */
+  dataserviceid: string;
+  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
+  etag?: string;
+  /** The time at which the resource was last modified. */
+  "last-modified"?: string;
+  /** The client-request-id provided by the client during the request. This will be returned only if the return-client-request-id parameter was set to true. */
+  "client-request-id"?: string;
+  /** A unique identifier for the request that was made to the Batch service. If a request is consistently failing and you have verified that the request is properly formulated, you may use this value to report the error to Microsoft. In your report, include the value of this request ID, the approximate time that the request was made, the Batch Account against which the request was made, and the region that Account resides in. */
+  "request-id"?: string;
+}
+
+/** The request has been accepted for processing, but processing has not yet completed. */
+export interface StartNode202Response extends HttpResponse {
+  status: "202";
+  headers: RawHttpHeaders & StartNode202Headers;
+}
+
+export interface StartNodeDefaultResponse extends HttpResponse {
+  status: string;
+  body: BatchErrorOutput;
+}
+
+export interface DeallocateNode202Headers {
+  /** The OData ID of the resource to which the request applied. */
+  dataserviceid: string;
+  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
+  etag?: string;
+  /** The time at which the resource was last modified. */
+  "last-modified"?: string;
+  /** The client-request-id provided by the client during the request. This will be returned only if the return-client-request-id parameter was set to true. */
+  "client-request-id"?: string;
+  /** A unique identifier for the request that was made to the Batch service. If a request is consistently failing and you have verified that the request is properly formulated, you may use this value to report the error to Microsoft. In your report, include the value of this request ID, the approximate time that the request was made, the Batch Account against which the request was made, and the region that Account resides in. */
+  "request-id"?: string;
+}
+
+/** The request has been accepted for processing, but processing has not yet completed. */
+export interface DeallocateNode202Response extends HttpResponse {
+  status: "202";
+  headers: RawHttpHeaders & DeallocateNode202Headers;
+}
+
+export interface DeallocateNodeDefaultResponse extends HttpResponse {
+  status: string;
+  body: BatchErrorOutput;
+}
+
+export interface ReimageNode202Headers {
+  /** The OData ID of the resource to which the request applied. */
+  dataserviceid: string;
+  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
+  etag?: string;
+  /** The time at which the resource was last modified. */
+  "last-modified"?: string;
+  /** The client-request-id provided by the client during the request. This will be returned only if the return-client-request-id parameter was set to true. */
+  "client-request-id"?: string;
+  /** A unique identifier for the request that was made to the Batch service. If a request is consistently failing and you have verified that the request is properly formulated, you may use this value to report the error to Microsoft. In your report, include the value of this request ID, the approximate time that the request was made, the Batch Account against which the request was made, and the region that Account resides in. */
+  "request-id"?: string;
+}
+
+/** The request has been accepted for processing, but processing has not yet completed. */
+export interface ReimageNode202Response extends HttpResponse {
+  status: "202";
+  headers: RawHttpHeaders & ReimageNode202Headers;
+}
+
+export interface ReimageNodeDefaultResponse extends HttpResponse {
   status: string;
   body: BatchErrorOutput;
 }
@@ -1581,7 +1655,7 @@ export interface DeleteNodeFileDefaultResponse extends HttpResponse {
 
 export interface GetNodeFile200Headers {
   /** The length of the file. */
-  "content-length": number;
+  "content-length": string;
   /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
   etag?: string;
   /** The time at which the resource was last modified. */
@@ -1598,6 +1672,8 @@ export interface GetNodeFile200Headers {
   "ocp-creation-time"?: string;
   /** A unique identifier for the request that was made to the Batch service. If a request is consistently failing and you have verified that the request is properly formulated, you may use this value to report the error to Microsoft. In your report, include the value of this request ID, the approximate time that the request was made, the Batch Account against which the request was made, and the region that Account resides in. */
   "request-id"?: string;
+  /** Type of content */
+  "content-type": "application/octet-stream";
 }
 
 /** The request has succeeded. */
@@ -1615,7 +1691,7 @@ export interface GetNodeFileDefaultResponse extends HttpResponse {
 
 export interface GetNodeFileProperties200Headers {
   /** The length of the file. */
-  "content-length": number;
+  "content-length": string;
   /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Modified-Since, If-Unmodified-Since, If-Match or If-None-Match headers. */
   etag?: string;
   /** The time at which the resource was last modified. */

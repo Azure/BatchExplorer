@@ -19,7 +19,6 @@ export function createBatchClient(
         options = {
             ...options,
             httpClient: new BatchHttpClient(),
-            apiVersion: "2024-02-01.19.0",
         };
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
