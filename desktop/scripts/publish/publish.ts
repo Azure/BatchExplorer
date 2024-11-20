@@ -2,7 +2,7 @@ import { exec } from "child_process";
 import "colors";
 import * as fs from "fs";
 import * as path from "path";
-import { ask } from "yesno";
+import * as yesno from "yesno";
 import {
     createIssue, createPullRequest, getMilestone, githubToken, listMilestoneIssues, listPullRequests,
 } from "./github-api";
@@ -79,16 +79,15 @@ function getMilestoneId() {
 }
 
 async function confirmVersion(version: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-        ask(`Up program to be version ${version} (From milestone title) [Y/n]`, true, (ok) => {
-            if (ok) {
-                success(`A new release for version ${version} will be prepared`);
-                resolve(null);
-            } else {
-                reject(new Error("milestone version wasn't confirmed. Please change milestone title"));
-            }
-        });
+    const ok = await yesno({
+        question: `Bump to version ${version} (From milestone title) [Y/n]`,
+        defaultValue: true
     });
+    if (ok) {
+        success(`A new release for version ${version} will be prepared`);
+        return;
+    }
+    throw new Error("milestone version wasn't confirmed. Please change milestone title");
 }
 
 function calcNextVersion(version: string) {
