@@ -55,6 +55,7 @@
   "include": [
     "src/**/*.ts",
     "test/**/*.ts",
+    "scripts/**/*.ts",
     "package.json"
   ],
   "exclude": [
