@@ -4,6 +4,7 @@
 /**/lib-cjs
 /**/lib-umd
 /**/build
+/**/test-results
 /desktop/release/
 coverage/
 env/
@@ -18,3 +19,4 @@ Localize/out/
 /packages/*/src/generated/*
 /util/bux/__tests__/loc-source/generated
 /web/src/generated/*
+TempTypeSpecFiles

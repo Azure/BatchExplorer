@@ -3,6 +3,7 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
 import { AuthService, reauthenticateAll, TenantAuthorization } from "app/services";
 import { Subject, throwError } from "rxjs";
 import { catchError, first, takeUntil } from "rxjs/operators";
+import { autobind } from "@batch-flask/core";
 
 import "./tenant-picker.scss";
 
@@ -33,6 +34,8 @@ export class TenantPickerComponent implements ControlValueAccessor, OnDestroy {
 
     public tenantSettings = new FormControl<TenantAuthorization[]>([]);
     public saved: false;
+    public loggedIn: boolean;
+    public loaded = false;
 
     private _destroy = new Subject();
     private _propagateChange?: TenantSettingsChanged;
@@ -48,8 +51,14 @@ export class TenantPickerComponent implements ControlValueAccessor, OnDestroy {
                 this._propagateChange(value);
             }
         });
-        this.fetchTenantAuthorizations();
-        this.refresh = this.refresh.bind(this);
+        this.auth.isLoggedIn().subscribe((loggedIn) => {
+            this.loggedIn = loggedIn;
+            if (loggedIn) {
+                this.fetchTenantAuthorizations();
+            }
+            this.loaded = true;
+            this.changeDetector.markForCheck();
+        });
     }
 
     private fetchTenantAuthorizations(data: TenantRefreshModel = {}) {
@@ -89,6 +98,7 @@ export class TenantPickerComponent implements ControlValueAccessor, OnDestroy {
         // NOOP
     }
 
+    @autobind()
     public refresh() {
         // Refresh all tenants from the server
         this.fetchTenantAuthorizations({ reauthenticate: true });

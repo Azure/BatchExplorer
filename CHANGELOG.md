@@ -1,3 +1,20 @@
+# 2.21.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/55?closed=1)
+
+### Feature
+
+* Allows users to select browser for authentication during reauthenticate flow [\#2933](https://github.com/Azure/BatchExplorer/issues/2933)
+
+### Bug
+
+* Fix MacOS Notarization [\#2944](https://github.com/Azure/BatchExplorer/issues/2944)
+* Cannot use proxy settings window [\#2937](https://github.com/Azure/BatchExplorer/issues/2937)
+
+### Other
+
+* Dependency and component governance updates [\#2945](https://github.com/Azure/BatchExplorer/issues/2945)
+
 # 2.20.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/54?closed=1)

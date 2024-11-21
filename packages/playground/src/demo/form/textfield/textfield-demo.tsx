@@ -20,7 +20,7 @@ import {
     IStackTokens,
 } from "@fluentui/react/lib/Stack";
 import { ITextFieldStyles } from "@fluentui/react/lib/TextField";
-import { IStyleFunctionOrObject } from "@uifabric/merge-styles";
+import { IStyleFunctionOrObject } from "@fluentui/react/lib/Utilities";
 
 export const TextFieldDemo: React.FC = () => {
     /*

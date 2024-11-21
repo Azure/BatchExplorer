@@ -19,7 +19,7 @@ export type LocationDependencies<V extends FormValues> = ParameterDependencies<
 export class LocationParameter<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends LocationDependencies<V>
+    D extends LocationDependencies<V>,
 > extends AbstractParameter<V, K, D> {
     locationService: LocationService = inject(DependencyName.LocationService);
 
@@ -51,9 +51,8 @@ export class LocationParameter<
         let locations: Location[] = [];
         if (subId) {
             try {
-                locations = await this.locationService.listBySubscriptionId(
-                    subId
-                );
+                locations =
+                    await this.locationService.listBySubscriptionId(subId);
                 this.loadError = undefined;
             } catch (e) {
                 if (e instanceof Error) {

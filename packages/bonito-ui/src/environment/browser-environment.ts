@@ -25,12 +25,12 @@ import { initFluentIcons } from "./environment-util";
 import { MockBrowserEnvironment } from "./mock-browser-environment";
 
 export interface BrowserEnvironment<
-    C extends BrowserEnvironmentConfig = BrowserEnvironmentConfig
+    C extends BrowserEnvironmentConfig = BrowserEnvironmentConfig,
 > extends Environment<C> {
     getFormControl<
         V extends FormValues,
         K extends ParameterName<V>,
-        D extends ParameterDependencies<V> = ParameterDependencies<V>
+        D extends ParameterDependencies<V> = ParameterDependencies<V>,
     >(
         props: FormControlProps<V, K, D>
     ): JSX.Element;
@@ -48,7 +48,7 @@ export interface BrowserEnvironmentConfig extends EnvironmentConfig {
  */
 export class DefaultBrowserEnvironment<
         C extends BrowserEnvironmentConfig = BrowserEnvironmentConfig,
-        D extends BrowserDependencyFactories = BrowserDependencyFactories
+        D extends BrowserDependencyFactories = BrowserDependencyFactories,
     >
     extends AbstractEnvironment<C, D>
     implements BrowserEnvironment
@@ -69,7 +69,7 @@ export class DefaultBrowserEnvironment<
     getFormControl<
         V extends FormValues,
         K extends ParameterName<V>,
-        D extends ParameterDependencies<V> = ParameterDependencies<V>
+        D extends ParameterDependencies<V> = ParameterDependencies<V>,
     >(props: FormControlProps<V, K, D>): JSX.Element {
         // If the parameter has a render function, use it. Otherwise
         // look up the form control using a the configured resolver.

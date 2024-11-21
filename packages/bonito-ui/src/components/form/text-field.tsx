@@ -10,7 +10,7 @@ import { translate } from "@azure/bonito-core";
 
 export interface TextFieldProps<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 > extends FormControlProps<V, K> {
     /**
      * The type of input to display.

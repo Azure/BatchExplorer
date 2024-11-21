@@ -800,7 +800,7 @@ const allowedStates = ["NY", "New York", "CA", "California"];
 class ParkParameter<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V, "state">
+    D extends ParameterDependencies<V, "state">,
 > extends AbstractParameter<V, K, D> {
     async validateAsync(): Promise<ValidationStatus> {
         let status = await super.validateAsync();

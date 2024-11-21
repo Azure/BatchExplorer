@@ -3,7 +3,7 @@
 bl-all-job-graphs-home {
     $padding: 10px;
     $graph-header-height: 40px;
-    $graphs-content-height: calc(100% - #{$graph-header-height  + $padding * 2});
+    $graphs-content-height: calc(100% - #{$graph-header-height + $padding * 2});
 
     display: block;
     width: 100%;

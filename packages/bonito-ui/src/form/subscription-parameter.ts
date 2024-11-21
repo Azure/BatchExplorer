@@ -13,7 +13,7 @@ import {
  */
 export class SubscriptionParameter<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 > extends AbstractParameter<V, K> {
     subscriptionService: SubscriptionService = inject(
         DependencyName.SubscriptionService

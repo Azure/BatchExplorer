@@ -15,7 +15,7 @@ import { FormControlProps } from "./form-control";
 export interface DropdownProps<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
 > extends FormControlProps<V, K, D> {
     options: DropdownOption<V, K>[];
     valueToKey?: (value?: V[K]) => string;
@@ -23,7 +23,7 @@ export interface DropdownProps<
 
 export interface DropdownOption<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 > {
     key?: string;
     value: V[K];
@@ -39,7 +39,7 @@ const nullKey = "<<<None>>>";
 export function Dropdown<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
 >(props: DropdownProps<V, K, D>): JSX.Element {
     const {
         ariaLabel,

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ThemeName, getTheme } from "../../theme";
-import { ThemeProvider } from "@fluentui/react-theme-provider";
+import { ThemeProvider } from "@fluentui/react/lib/Theme";
 import { loadTheme } from "@fluentui/react/lib/Styling";
 
 export interface RootPaneProps {

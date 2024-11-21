@@ -102,7 +102,7 @@ export class Section<V extends FormValues> implements Entry<V> {
 
     param<
         K extends ParameterName<V>,
-        D extends ParameterDependencies<V> = ParameterDependencies<V>
+        D extends ParameterDependencies<V> = ParameterDependencies<V>,
     >(
         name: K,
         parameterConstructor: new (

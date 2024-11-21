@@ -17,7 +17,7 @@ import { FormControlProps } from "./form-control";
  */
 export function SubscriptionDropdown<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 >(
     props: FormControlProps<
         V,

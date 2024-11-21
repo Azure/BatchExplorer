@@ -17,7 +17,7 @@ export interface ReactForm<V extends FormValues> extends Form<V> {
     param<
         K extends ParameterName<V>,
         D extends ParameterDependencies<V> = ParameterDependencies<V>,
-        T extends Parameter<V, K, D> = Parameter<V, K, D>
+        T extends Parameter<V, K, D> = Parameter<V, K, D>,
     >(
         name: K,
         parameterConstructor: ParameterConstructor<V, K, D, T>,
@@ -54,7 +54,7 @@ export function createParam<
         StandaloneForm<S>,
         "_standaloneParam",
         D
-    >
+    >,
 >(
     parameterConstructor: ParameterConstructor<
         StandaloneForm<S>,

@@ -4,25 +4,25 @@ steps:
   - template: ./win-dependencies.yml
   - template: ../common/download-i18n-artifacts.yml
 
-  - powershell: |
+  - pwsh: |
       $(System.DefaultWorkingDirectory)/Localize/copy-translations.ps1 -artifactsPath "$(Agent.BuildDirectory)/drop/loc"
     displayName: 'Run copy-translations.ps1 with artifacts path (Windows)'
 
-  - powershell: |
+  - pwsh: |
       $version = npm run -s ts scripts/package/get-version
       Write-Host "Updating build number to $version"
       Write-Host "##vso[build.updatebuildnumber]$version"
     workingDirectory: desktop
     displayName: Update build version for packaging
 
-  - powershell: |
+  - pwsh: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
       exec { npm run build:prod }
     displayName: Build all packages
 
-  - powershell: |
+  - pwsh: |
       . ../.vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
@@ -41,7 +41,7 @@ steps:
         **/*.dll
         !**/python36.dll
 
-  - powershell: npm run package win-installer
+  - pwsh: npm run package win-installer
     workingDirectory: desktop
     displayName: Build installer
 
@@ -51,7 +51,7 @@ steps:
       pattern: |
         **/BatchExplorer*Setup*.exe
 
-  - powershell: npm run package win-manifest
+  - pwsh: npm run package win-manifest
     workingDirectory: desktop
     displayName: Create manifest
   - template: ../common/generate-sbom.yml

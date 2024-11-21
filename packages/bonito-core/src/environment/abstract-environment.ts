@@ -12,13 +12,16 @@ import {
 } from "./environment";
 import { Clock } from "../datetime/clock";
 import { Notifier } from "../notification";
+import { CacheManager } from "../cache";
+
+const DEFAULT_BASE_PATH = "/";
 
 /**
  * Abstract base class for shared functionality across different environments
  */
 export abstract class AbstractEnvironment<
     C extends EnvironmentConfig = EnvironmentConfig,
-    D extends DependencyFactories = DependencyFactories
+    D extends DependencyFactories = DependencyFactories,
 > implements Environment<C>
 {
     abstract readonly name: EnvironmentName;
@@ -31,6 +34,13 @@ export abstract class AbstractEnvironment<
     }
 
     private _diContainer: DiContainer<D>;
+
+    /**
+     * Get the globally configured base path, or "/" if none is defined.
+     */
+    getBasePath(): string {
+        return this.config.basePath ?? DEFAULT_BASE_PATH;
+    }
 
     /**
      * Get the currently configured clock
@@ -82,6 +92,21 @@ export abstract class AbstractEnvironment<
             );
         }
         return notifier;
+    }
+
+    /**
+     * Get an instance of the global cache manager
+     */
+    getCacheManager(): CacheManager {
+        const cacheManager = this.getInjectable<CacheManager>(
+            DependencyName.CacheManager
+        );
+        if (!cacheManager) {
+            throw new Error(
+                "No cache manager configured for the current environment"
+            );
+        }
+        return cacheManager;
     }
 
     /**

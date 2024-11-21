@@ -17,7 +17,7 @@ export type ResourceGroupDependencies<V extends FormValues> =
 export class ResourceGroupParameter<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ResourceGroupDependencies<V>
+    D extends ResourceGroupDependencies<V>,
 > extends AbstractParameter<V, K, D> {
     resourceGroupService: ResourceGroupService = inject(
         DependencyName.ResourceGroupService

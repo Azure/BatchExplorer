@@ -136,7 +136,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
     param<
         K extends ParameterName<V>,
         D extends ParameterDependencies<V> = ParameterDependencies<V>,
-        T extends Parameter<V, K, D> = Parameter<V, K, D>
+        T extends Parameter<V, K, D> = Parameter<V, K, D>,
     >(
         name: K,
         parameterConstructor: ParameterConstructor<V, K, D, T>,

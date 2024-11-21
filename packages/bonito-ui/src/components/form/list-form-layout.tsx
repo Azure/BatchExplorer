@@ -161,7 +161,7 @@ const SectionTitle = <V extends FormValues>(props: SectionTitleProps<V>) => {
 interface SubFormTitleProps<
     P extends FormValues,
     PK extends ParameterName<P>,
-    S extends P[PK] & FormValues
+    S extends P[PK] & FormValues,
 > {
     subForm: SubForm<P, PK, S>;
 }
@@ -169,7 +169,7 @@ interface SubFormTitleProps<
 const SubFormTitle = <
     P extends FormValues,
     PK extends ParameterName<P>,
-    S extends P[PK] & FormValues
+    S extends P[PK] & FormValues,
 >(
     props: SubFormTitleProps<P, PK, S>
 ) => {
@@ -269,7 +269,7 @@ const ButtonContainer = (props: ButtonContainerProps) => {
 
 export const EntryDebugInfo = <
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 >(props: {
     entry: Parameter<V, K>;
 }) => {

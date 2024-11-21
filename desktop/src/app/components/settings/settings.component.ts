@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { EntityConfigurationView, UserConfigurationService } from "@batch-flask/core";
+import { EntityConfigurationView, UserConfigurationService, autobind } from "@batch-flask/core";
 import { BEUserDesktopConfiguration, DEFAULT_BE_USER_CONFIGURATION } from "common";
 import { Subject } from "rxjs";
 import { debounceTime, takeUntil } from "rxjs/operators";
@@ -22,6 +22,7 @@ export interface SettingsSelection {
     microsoftPortfolioPath: string;
     defaultOutputFileGroup: string;
     theme: string;
+    externalBrowserAuth: boolean;
 }
 
 @Component({
@@ -47,6 +48,7 @@ export class SettingsComponent implements OnDestroy {
         formBuilder: FormBuilder) {
         this.form = formBuilder.group({
             theme: [null],
+            externalBrowserAuth: [true],
             entityConfigurationDefaultView: [null],
             subscriptionsIgnore: [[]],
             fileAssociations: [[]],
@@ -62,12 +64,13 @@ export class SettingsComponent implements OnDestroy {
             defaultOutputFileGroup: [""],
         });
 
-        this.userConfigurationService.config.pipe(takeUntil(this._destroy)).subscribe((config) => {
+        this.userConfigurationService.config.pipe(takeUntil(this._destroy)).subscribe((config: BEUserDesktopConfiguration) => {
             this.modified = JSON.stringify(config) !== JSON.stringify(DEFAULT_BE_USER_CONFIGURATION);
             this.changeDetector.markForCheck();
 
             const selection: SettingsSelection = {
                 theme: config.theme,
+                externalBrowserAuth: config.externalBrowserAuth,
                 entityConfigurationDefaultView: config.entityConfiguration.defaultView,
                 subscriptionsIgnore: config.subscriptions.ignore.map(x => ({ pattern: x })),
                 fileAssociations: config.fileAssociations,
@@ -102,6 +105,12 @@ export class SettingsComponent implements OnDestroy {
         });
     }
 
+    @autobind()
+    public updateExternalBrowserAuth(value: boolean) {
+        this.form.get("externalBrowserAuth").setValue(value);
+        this.changeDetector.markForCheck();
+    }
+
     public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();
@@ -114,6 +123,7 @@ export class SettingsComponent implements OnDestroy {
     private _buildConfig(selection: SettingsSelection): Partial<BEUserDesktopConfiguration> {
         return {
             theme: selection.theme,
+            externalBrowserAuth:  selection.externalBrowserAuth,
             fileAssociations: selection.fileAssociations,
             entityConfiguration: {
                 defaultView: selection.entityConfigurationDefaultView,

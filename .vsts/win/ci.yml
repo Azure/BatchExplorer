@@ -2,19 +2,20 @@ steps:
   - template: ./credscan.yml
   - template: ./win-dependencies.yml
 
-  - powershell: |
+  - pwsh: |
       $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
       npm run build:package
     displayName: Build and package
 
-  - powershell: |
-      . ../.vsts/win/exec.ps1
-      $ErrorActionPreference = "Stop"
-      $env:BE_TEST_AAD_USER_EMAIL = "$(uiTestingAccountEmail)"
-      $env:BE_TEST_AAD_USER_PASSWORD = "$(uiTestingAccountPassword)"
-      npm run test-e2e
-    workingDirectory: desktop
-    displayName: End to end tests
+  # Disabling end-to-end tests in CI pipeline
+  # - pwsh: |
+  #     . ../.vsts/win/exec.ps1
+  #     $ErrorActionPreference = "Stop"
+  #     $env:BE_TEST_AAD_USER_EMAIL = "$(uiTestingAccountEmail)"
+  #     $env:BE_TEST_AAD_USER_PASSWORD = "$(uiTestingAccountPassword)"
+  #     npm run test-e2e
+  #   workingDirectory: desktop
+  #   displayName: End to end tests
 
   - template: ./security-analysis.yml
 

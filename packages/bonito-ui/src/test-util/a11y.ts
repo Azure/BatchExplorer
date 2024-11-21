@@ -21,7 +21,7 @@ let _axe: JestAxe | null = null;
  */
 export async function renderA11y<
     Q extends Queries = typeof queries,
-    Container extends Element | DocumentFragment = HTMLElement
+    Container extends Element | DocumentFragment = HTMLElement,
 >(
     ui: React.ReactElement,
     options: RenderOptions<Q, Container>
@@ -32,7 +32,7 @@ export async function renderA11y(
 ): Promise<RenderResult & { axeResults: AxeResults }>;
 export async function renderA11y<
     Q extends Queries,
-    Container extends Element | DocumentFragment
+    Container extends Element | DocumentFragment,
 >(
     ui: React.ReactElement,
     options?: RenderOptions

@@ -7,6 +7,7 @@ import { ResourceGroupService } from "../resource-group";
 import { StorageAccountService } from "../storage";
 import { SubscriptionService } from "../subscription";
 import { Notifier } from "../notification";
+import { CacheManager } from "../cache";
 
 /**
  * Represents the execution environment of the application. Acts as a
@@ -32,6 +33,11 @@ export interface Environment<C extends EnvironmentConfig> {
     readonly initialized: boolean;
 
     /**
+     * Get the global base URI path
+     */
+    getBasePath(): string;
+
+    /**
      * Gets the currently configured clock
      */
     getClock(): Clock;
@@ -50,6 +56,11 @@ export interface Environment<C extends EnvironmentConfig> {
      * Gets the notifier for the current environment
      */
     getNotifier(): Notifier;
+
+    /**
+     * Gets the cache manager for the current environment
+     */
+    getCacheManager(): CacheManager;
 
     /**
      * Gets the HTTP client for the current environment
@@ -103,6 +114,7 @@ export enum DependencyName {
     ResourceGroupService = "resourceGroupService",
     StorageAccountService = "storageAccountService",
     SubscriptionService = "subscriptionService",
+    CacheManager = "cacheManager",
 }
 
 /**
@@ -119,6 +131,7 @@ export interface DependencyFactories {
     [DependencyName.ResourceGroupService]: () => ResourceGroupService;
     [DependencyName.StorageAccountService]: () => StorageAccountService;
     [DependencyName.SubscriptionService]: () => SubscriptionService;
+    [DependencyName.CacheManager]: () => CacheManager;
 }
 
 /**
@@ -135,6 +148,11 @@ export interface EnvironmentConfig {
      * cloud environment.
      */
     armUrl: string;
+
+    /**
+     * The base path applied to all relative URIs
+     */
+    basePath?: string;
 
     /**
      * Environment variables when running in a Node.js process

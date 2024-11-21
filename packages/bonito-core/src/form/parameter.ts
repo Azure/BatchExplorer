@@ -12,27 +12,27 @@ import { ValidationStatus } from "./validation-status";
 
 export type ParameterDependencies<
     V extends FormValues = FormValues,
-    D extends string = string
+    D extends string = string,
 > = Record<D, ParameterName<V>>;
 
 export type ParameterName<V extends FormValues> = Extract<keyof V, string>;
 
 export type ParameterDependencyName<
     V extends FormValues,
-    D extends ParameterDependencies<V>
+    D extends ParameterDependencies<V>,
 > = keyof D & string;
 
 export type ParameterConstructor<
     V extends FormValues,
     K extends ParameterName<V>,
     D extends ParameterDependencies<V> = ParameterDependencies<V>,
-    T extends Parameter<V, K, D> = Parameter<V, K, D>
+    T extends Parameter<V, K, D> = Parameter<V, K, D>,
 > = new (form: Form<V>, name: K, init?: ParameterInit<V, K, D>) => T;
 
 export interface ParameterInit<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
 > extends ValuedEntryInit<V, K> {
     label?: string;
     hideLabel?: boolean;
@@ -47,7 +47,7 @@ export interface ParameterInit<
 
 export interface DynamicParameterProperties<
     V extends FormValues,
-    K extends ParameterName<V>
+    K extends ParameterName<V>,
 > extends DynamicEntryProperties<V> {
     value?: (values: V) => V[K];
     label?: (values: V) => string;
@@ -59,7 +59,7 @@ export interface DynamicParameterProperties<
 export interface Parameter<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
 > extends ValuedEntry<V, K> {
     /**
      * A reference to the form containing this parameter.
@@ -215,7 +215,7 @@ export interface Parameter<
 export abstract class AbstractParameter<
     V extends FormValues,
     K extends ParameterName<V>,
-    D extends ParameterDependencies<V> = ParameterDependencies<V>
+    D extends ParameterDependencies<V> = ParameterDependencies<V>,
 > implements Parameter<V, K, D>
 {
     private _logger: Logger;

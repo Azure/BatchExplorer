@@ -1,6 +1,7 @@
 import { Settings, DateTime, Zone } from "luxon";
 import { getEnvironment } from "../environment";
 import { Clock } from "./clock";
+import { getLocalizer } from "../localization";
 
 // Stored so that the timezone can be reset to its original value in unit tests
 const initialSystemTimeZone = getSystemTimeZone();
@@ -107,4 +108,23 @@ export function toIsoUtc(date: Date): string {
  */
 export function isDate(obj: unknown): obj is Date {
     return obj instanceof Date;
+}
+
+/**
+ * Get a formatted date/time string based on the current environment's
+ * locale. See Luxon's {@link DateTime} object for some useful presets
+ * such as `DateTime.DATE_SHORT`.
+ *
+ * @param date    The date to format
+ * @param format  A date/time format using Intl.DateTimeFormat
+ *
+ * @returns A formatted date string
+ */
+export function formatDateTime(
+    date: Date,
+    format: Intl.DateTimeFormatOptions
+): string {
+    return DateTime.fromJSDate(date)
+        .setLocale(getLocalizer().getLocale())
+        .toLocaleString(format);
 }

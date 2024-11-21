@@ -24,8 +24,14 @@ const token2 = new AccessToken({
     tokenType: "Bearer"
 });
 
-describe("AuthService spec", () => {
-    let service: AuthService;
+class AuthServiceStub extends AuthService {
+    public getTokenCache() {
+        return (this as any).tokenCache;
+    }
+}
+
+describe("AuthService", () => {
+    let service: AuthServiceStub;
     let aadServiceSpy;
     let remoteSpy;
     let batchExplorerSpy;
@@ -83,7 +89,7 @@ describe("AuthService spec", () => {
             ]
         });
 
-        service = new AuthService(
+        service = new AuthServiceStub(
             zoneSpy,
             batchExplorerSpy,
             remoteSpy,
@@ -215,7 +221,58 @@ describe("AuthService spec", () => {
                     });
                 });
                 expect(remoteSpy.send).toHaveBeenCalledTimes(2);
+        });
+
+        it("returns cached token if available and not expired", (done) => {
+            const cachedToken = new AccessToken({
+                accessToken: "cachedToken",
+                expiresOn: DateTime.local().plus({ hours: 1 }).toJSDate(),
+                tokenType: "Bearer"
             });
+            service.getTokenCache().storeToken(FakeTenants.One, resource1, cachedToken);
+
+            service.accessTokenData(FakeTenants.One, resource1).subscribe((token) => {
+                expect(token).toEqual(cachedToken);
+                done();
+            });
+        });
+
+        it("fetches a new token if no cached token is available", (done) => {
+            service.getTokenCache().removeToken(FakeTenants.One, resource1);
+
+            service.accessTokenData(FakeTenants.One, resource1).subscribe((token) => {
+                expect(remoteSpy.send).toHaveBeenCalledOnce();
+                expect(token).toEqual(token1);
+                done();
+            });
+        });
+
+        it("fetches a new token if cached token is expired", (done) => {
+            const expiredToken = new AccessToken({
+                accessToken: "expiredToken",
+                expiresOn: DateTime.local().minus({ hours: 1 }).toJSDate(),
+                tokenType: "Bearer"
+            });
+            service.getTokenCache().storeToken(FakeTenants.One, resource1, expiredToken);
+
+            service.accessTokenData(FakeTenants.One, resource1).subscribe((token) => {
+                expect(remoteSpy.send).toHaveBeenCalledOnce();
+                expect(token).toEqual(token1);
+                done();
+            });
+        });
+
+        it("handles errors correctly", (done) => {
+            remoteSpy.send.and.returnValue(Promise.reject("some-error"));
+
+            service.accessTokenData(FakeTenants.One, resource1).subscribe({
+                next: () => fail("Should not have a next() call"),
+                error: (error) => {
+                    expect(error).toEqual("some-error");
+                    done();
+                }
+            });
+        });
     });
 
     it("updates the tenants when updated by the auth service", () => {
@@ -336,6 +393,138 @@ describe("AuthService spec", () => {
                 tenantId: FakeTenants.Two,
                 resource: null,
                 forceRefresh: true
+            });
+        });
+
+        it("doesn't notify on error if notifyOnError is false", async () => {
+            remoteSpy.send.and.callFake(async (_, { tenantId }) => {
+            if (tenantId === FakeTenants.One) {
+                throw new Error("Fake error for tenant-1");
+            } else {
+                return token2;
+            }
+            });
+            tenantSettingsServiceSpy.current.next({
+                [FakeTenants.One]: "active"
+            });
+            const authorizations = await auth({ notifyOnError: false });
+            expect(tenantErrorServiceSpy.showError).not.toHaveBeenCalled();
+        });
+
+        it("caches authorization state for failed tenants", async () => {
+            remoteSpy.send.and.callFake(async (_, { tenantId }) => {
+                if (tenantId === FakeTenants.One) {
+                    throw new Error("Fake error for tenant-1");
+                } else {
+                    return token2;
+                }
+            });
+            tenantSettingsServiceSpy.current.next({
+                [FakeTenants.One]: "active",
+                [FakeTenants.Two]: "active"
+            });
+            await auth();
+            remoteSpy.send.calls.reset();
+            const authorizations = await auth();
+            expect(remoteSpy.send).not.toHaveBeenCalledWith(
+                IpcEvent.AAD.accessTokenData, {
+                tenantId: FakeTenants.One,
+                resource: null,
+                forceRefresh: false
+            });
+            expect(authorizations[0].status).toEqual("failed");
+        });
+
+        it("refreshes token if forceRefresh is true", async () => {
+            tenantSettingsServiceSpy.current.next({
+                [FakeTenants.One]: "active"
+            });
+            await auth({ reauthenticate: FakeTenants.One });
+            expect(remoteSpy.send).toHaveBeenCalledWith(
+                IpcEvent.AAD.accessTokenData, {
+                tenantId: FakeTenants.One,
+                resource: null,
+                forceRefresh: true
+            });
+        });
+
+        it("does not refresh token if forceRefresh is false", async () => {
+            tenantSettingsServiceSpy.current.next({
+                [FakeTenants.One]: "active"
+            });
+            await auth();
+            expect(remoteSpy.send).toHaveBeenCalledWith(
+                IpcEvent.AAD.accessTokenData, {
+                tenantId: FakeTenants.One,
+                resource: null,
+                forceRefresh: false
+            });
+        });
+
+        it("emits AuthComplete event after fetching token", async () => {
+            tenantSettingsServiceSpy.current.next({
+                [FakeTenants.One]: "active"
+            });
+            const authCompleteSpy = jasmine.createSpy("authComplete");
+            service.on("AuthComplete", authCompleteSpy);
+            await auth();
+            expect(authCompleteSpy).toHaveBeenCalled();
+        });
+
+        it("does not emit AuthComplete event if fetching token fails", async () => {
+            tenantSettingsServiceSpy.current.next({
+                [FakeTenants.One]: "active"
+            });
+            const authCompleteSpy = jasmine.createSpy("authComplete");
+            service.on("AuthComplete", authCompleteSpy);
+            remoteSpy.send.and.callFake(async (_, { tenantId }) => {
+                if (tenantId === FakeTenants.One) {
+                    throw new Error("Fake error for tenant-1");
+                } else {
+                    return token2;
+                }
+            });
+            await auth();
+            expect(authCompleteSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("#logout", () => {
+        it("clears the token cache and emits Logout event", async () => {
+            const logoutSpy = jasmine.createSpy("logout");
+            service.on("Logout", logoutSpy);
+
+            await service.logout();
+
+            expect(remoteSpy.send).toHaveBeenCalledWith(IpcEvent.logout);
+            expect(service.getTokenCache().hasToken(FakeTenants.One, resource1)).toBeFalse();
+            expect(logoutSpy).toHaveBeenCalledOnce();
+        });
+    });
+
+    describe("#login", () => {
+        it("sends the login IPC event", async () => {
+            await service.login();
+            expect(remoteSpy.send).toHaveBeenCalledWith(IpcEvent.login);
+        });
+    });
+
+    describe("#isLoggedIn", () => {
+        it("returns true when user is logged in", (done) => {
+            aadServiceSpy.currentUser.next({ name: "test-user" });
+
+            service.isLoggedIn().subscribe((isLoggedIn) => {
+                expect(isLoggedIn).toBeTrue();
+                done();
+            });
+        });
+
+        it("returns false when user is not logged in", (done) => {
+            aadServiceSpy.currentUser.next(null);
+
+            service.isLoggedIn().subscribe((isLoggedIn) => {
+                expect(isLoggedIn).toBeFalse();
+                done();
             });
         });
     });

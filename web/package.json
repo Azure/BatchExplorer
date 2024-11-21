@@ -66,13 +66,11 @@
     "@batch/ui-playground": "^1.0.0",
     "@batch/ui-react": "^1.0.0",
     "@batch/ui-service": "^1.0.0",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
     "@types/node": "20.5.4",
-    "@types/react": "^17.0.53",
-    "@types/react-dom": "^17.0.18",
     "@types/react-router-dom": "^5.1.7",
     "css-loader": "^6.8.1",
     "esbuild-loader": "^4.0.1",

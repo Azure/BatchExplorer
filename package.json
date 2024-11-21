@@ -18,16 +18,17 @@
   "dependencies": {
     "@fluentui/azure-themes": "8.6.34",
     "@fluentui/react": "8.97.2",
-    "@fluentui/react-theme-provider": "0.19.16",
     "mobx": "^6.3.2",
     "mobx-react-lite": "^3.2.0",
     "monaco-editor": "~0.31.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "tslib": "^2.3.1"
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
+    "@azure-tools/typespec-client-generator-cli": "^0.3.0",
     "@lerna/legacy-package-management": "7.1.5",
+    "@typespec/compiler": "^0.50.0",
     "@octokit/core": "^3.5.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/react-hooks": "^8.0.0",
@@ -36,6 +37,7 @@
     "@types/react-dom": "^17.0.18",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
+    "autorest": "^3.6.3",
     "cross-env": "^7.0.3",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.5.0",
@@ -45,7 +47,7 @@
     "markdownlint": "^0.25.1",
     "markdownlint-cli2": "^0.4.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.5.1",
+    "prettier": "^3.0.0",
     "typescript": "^4.9.0",
     "which": "^2.0.2"
   },
@@ -69,8 +71,8 @@
     "lint": "prettier -c . && lerna run --parallel workspace:lint --stream && npm run -s lint:markdown",
     "lint:fix": "prettier -w . && lerna run --parallel workspace:lint:fix --stream && npm run -s lint:markdown",
     "lint:markdown": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules/**/*\" \"#SECURITY.md\"",
-    "loc:build": "powershell -ExecutionPolicy Bypass -File ./Localize/build.ps1 && powershell -ExecutionPolicy Bypass -File ./Localize/copy-translations.ps1",
-    "loc:restore": "cd Localize && powershell -ExecutionPolicy Bypass -File restore.ps1",
+    "loc:build": "pwsh -ExecutionPolicy Bypass -File ./Localize/build.ps1 && pwsh -ExecutionPolicy Bypass -File ./Localize/copy-translations.ps1",
+    "loc:restore": "cd Localize && pwsh -ExecutionPolicy Bypass -File restore.ps1",
     "start": "npm run -s start:web",
     "start:desktop": "lerna run --parallel workspace:start:desktop --stream",
     "start:web": "lerna run --parallel workspace:start:web --stream",

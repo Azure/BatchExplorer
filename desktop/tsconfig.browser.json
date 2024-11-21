@@ -1,9 +1,17 @@
 {
   "extends": "./tsconfig.json",
+  "include": [
+    "src/app",
+    "src/@batch-flask/utils/logging",
+  ],
   "exclude": [
     "**/*.spec.ts",
     "src/test/**/*.ts",
+    "src/client",
     "test/**/*.ts",
     "**/testing**/*"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": true
+  }
 }

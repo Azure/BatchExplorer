@@ -9,6 +9,7 @@ import { ServerErrorModule } from "@batch-flask/ui/server-error";
 import { ButtonsModule } from "../buttons";
 import { CopyableModule } from "../copyable";
 import { I18nUIModule } from "../i18n";
+import { FormPageComponent } from "./form-page";
 import { ComplexFormComponent } from "./complex-form";
 import { FormFooterComponent } from "./complex-form/footer";
 import { EditableTableModule } from "./editable-table";
@@ -16,7 +17,6 @@ import { ExpandingTextareaComponent } from "./expanding-textarea";
 import { FormErrorComponent } from "./form-error";
 import { FormFieldComponent, FormFieldPrefixDirective, FormFieldSuffixDirective } from "./form-field";
 import { FormJsonEditorComponent } from "./form-json-editor";
-import { FormPageComponent } from "./form-page";
 import { FormMultiPickerComponent, FormPickerComponent, FormPickerItemTemplateDirective } from "./form-picker";
 import { FormSectionComponent } from "./form-section";
 import { HintComponent } from "./hint";
@@ -24,6 +24,7 @@ import { InputDirective } from "./input";
 import { KeyValuePickerComponent } from "./key-value-picker";
 import { SimpleFormComponent } from "./simple-form";
 import { SingleLineTextareaDirective } from "./single-line-textarea";
+import { SlideToggleComponent } from "./slide-toggle";
 
 // components
 // Add submodules there
@@ -47,6 +48,7 @@ const components = [
     FormPickerItemTemplateDirective,
     FormSectionComponent,
     HintComponent,
+    SlideToggleComponent,
     InputDirective,
     KeyValuePickerComponent,
     SimpleFormComponent,

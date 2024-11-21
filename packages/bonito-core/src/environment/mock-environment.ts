@@ -15,6 +15,7 @@ import {
     EnvironmentMode,
 } from "./environment";
 import { FakeNotifier } from "../notification/fake-notifier";
+import { MemoryCacheManager } from "../cache";
 
 export const mockEnvironmentConfig: EnvironmentConfig = {
     mode: EnvironmentMode.Development,
@@ -31,10 +32,11 @@ export const mockDependencyFactories: DependencyFactories = {
     storageAccountService: () => new FakeStorageAccountService(),
     subscriptionService: () => new FakeSubscriptionService(),
     notifier: () => new FakeNotifier(),
+    cacheManager: () => new MemoryCacheManager(),
 };
 
 export class MockEnvironment<
-    C extends EnvironmentConfig
+    C extends EnvironmentConfig,
 > extends AbstractEnvironment<C, DependencyFactories> {
     name = EnvironmentName.Mock;
 

@@ -3,7 +3,7 @@ const helpers = require("./helpers");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const { AngularCompilerPlugin } = require("@ngtools/webpack");
+const { AngularWebpackPlugin } = require("@ngtools/webpack");
 const { commonRules } = require("./webpack.common");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
@@ -29,6 +29,9 @@ const baseConfig = {
             // (See https://github.com/facebook/react/issues/13991)
             react: path.resolve("../node_modules/react"),
             "react-dom": path.resolve('../node_modules/react-dom'),
+            // Since we are patching the core-util module' isNode variable,
+            // we need to make sure that the patched version is used by all
+            "@azure/core-util": path.resolve('./node_modules/@azure/core-util'),
         },
     },
 
@@ -36,7 +39,7 @@ const baseConfig = {
         rules: [
             {
                 test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-                use: ["@ngtools/webpack"],
+                loader: '@ngtools/webpack',
                 exclude: [/\.spec\.ts/, /src\/test\//]
             },
             ...commonRules,
@@ -44,16 +47,16 @@ const baseConfig = {
     },
     plugins: [
         new MonacoWebpackPlugin(),
-        new AngularCompilerPlugin({
-            skipCodeGeneration: !AOT,
-            tsConfigPath: "./tsconfig.browser.json",
-            mainPath: "./src/app/app.ts",              // will auto-detect the root NgModule.
-            sourceMap: true,
-            // forkTypeChecker: !AOT,
+        new AngularWebpackPlugin({
+            tsconfig: "./tsconfig.browser.json",
+            compilerOptions:{
+                sourceMap: true,
+            }
         }),
         new CopyWebpackPlugin({
             patterns: [
-                { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },
+                { context: "src/client/splash-screen", from: "**/*.(html|svg)", to: "client/splash-screen" },
+                { context: "src/client/recover-window", from: "**/*.(html|svg)", to: "client/recover-window" },
                 { context: "src/client/proxy", from: "**/*", to: "client/proxy" },
                 { context: "src/client/resources", from: "**/*", to: "client/resources" },
                 { context: "src/app/assets", from: "**/*", to: "assets" },
@@ -63,7 +66,7 @@ const baseConfig = {
             template: "src/app/index.html",
             chunksSortMode: (a, b) => {
                 const entryPoints = ["app", "vendor", "styles", "sw-register", "polyfills", "inline"];
-                return entryPoints.indexOf(b.names[0]) - entryPoints.indexOf(a.names[0]);
+                return entryPoints.indexOf(b) - entryPoints.indexOf(a);
             },
             inject: "body",
             metadata: METADATA,
@@ -77,6 +80,9 @@ const baseConfig = {
         }),
     ],
     target: "electron-renderer",
+    stats: {
+        errorDetails: true,
+    },
 };
 
 module.exports = baseConfig;

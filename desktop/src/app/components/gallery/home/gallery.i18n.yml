@@ -1,6 +1,3 @@
 gallery:
   title: Gallery applications
-  viewReadme: View readme
-  actions: Actions
-  recentTemplates: Recent templates
-  myLibrary: My library
+  deprecation-warning: Gallery applications are no longer supported as of {deprecationDate}. See the Azure Batch rendering VM images & licensing retirement announcement for details.

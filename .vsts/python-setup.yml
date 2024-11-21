@@ -19,7 +19,7 @@ steps:
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
     displayName: Install Python dependencies (Linux)
 
-  - powershell: |
+  - pwsh: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
       $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1

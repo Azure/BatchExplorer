@@ -1,6 +1,14 @@
 import { DateTime } from "luxon";
-import { fromIso, isDate, toIsoLocal, toIsoUtc } from "../datetime-util";
+import {
+    formatDateTime,
+    fromIso,
+    isDate,
+    toIsoLocal,
+    toIsoUtc,
+} from "../datetime-util";
 import { initMockEnvironment } from "../../environment";
+import { getLocalizer } from "../../localization";
+import { FakeLocalizer } from "../../localization/fake-localizer";
 
 describe("Date/time utilities", () => {
     beforeEach(() => initMockEnvironment());
@@ -42,5 +50,26 @@ describe("Date/time utilities", () => {
         expect(
             isDate(DateTime.fromISO("2020-12-03T00:12:00.000Z"))
         ).toBeFalsy();
+    });
+
+    test("formatDateTime() function", () => {
+        // Time zone for testing purposes defaults to -3 offset, so this
+        // should be 9PM on January 2nd in the local timezone
+        const date = new Date(Date.parse("03 Jan 2020 00:00:00 UTC"));
+
+        expect(formatDateTime(date, DateTime.DATE_SHORT)).toEqual("1/2/2020");
+        expect(formatDateTime(date, DateTime.TIME_SIMPLE)).toEqual("9:00 PM");
+        expect(formatDateTime(date, DateTime.DATETIME_FULL)).toEqual(
+            "January 2, 2020 at 9:00 PM GMT-3"
+        );
+
+        // Switching locale should switch format strings
+        (getLocalizer() as FakeLocalizer).setLocale("fr");
+
+        expect(formatDateTime(date, DateTime.DATE_SHORT)).toEqual("02/01/2020");
+        expect(formatDateTime(date, DateTime.TIME_SIMPLE)).toEqual("21:00");
+        expect(formatDateTime(date, DateTime.DATETIME_FULL)).toEqual(
+            "2 janvier 2020 à 21:00 UTC−3"
+        );
     });
 });
