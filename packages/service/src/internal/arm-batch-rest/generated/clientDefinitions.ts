@@ -26,7 +26,6 @@ import {
   ApplicationListParameters,
   LocationGetQuotasParameters,
   LocationListSupportedVirtualMachineSkusParameters,
-  LocationListSupportedCloudServiceSkusParameters,
   LocationCheckNameAvailabilityParameters,
   OperationsListParameters,
   CertificateListByBatchAccountParameters,
@@ -103,8 +102,6 @@ import {
   LocationGetQuotasDefaultResponse,
   LocationListSupportedVirtualMachineSkus200Response,
   LocationListSupportedVirtualMachineSkusDefaultResponse,
-  LocationListSupportedCloudServiceSkus200Response,
-  LocationListSupportedCloudServiceSkusDefaultResponse,
   LocationCheckNameAvailability200Response,
   LocationCheckNameAvailabilityDefaultResponse,
   OperationsList200Response,
@@ -362,16 +359,6 @@ export interface LocationListSupportedVirtualMachineSkus {
   ): StreamableMethod<
     | LocationListSupportedVirtualMachineSkus200Response
     | LocationListSupportedVirtualMachineSkusDefaultResponse
-  >;
-}
-
-export interface LocationListSupportedCloudServiceSkus {
-  /** Gets the list of Batch supported Cloud Service VM sizes available at the given location. */
-  get(
-    options?: LocationListSupportedCloudServiceSkusParameters
-  ): StreamableMethod<
-    | LocationListSupportedCloudServiceSkus200Response
-    | LocationListSupportedCloudServiceSkusDefaultResponse
   >;
 }
 
@@ -669,12 +656,6 @@ export interface Routes {
     subscriptionId: string,
     locationName: string
   ): LocationListSupportedVirtualMachineSkus;
-  /** Resource for '/subscriptions/\{subscriptionId\}/providers/Microsoft.Batch/locations/\{locationName\}/cloudServiceSkus' has methods for the following verbs: get */
-  (
-    path: "/subscriptions/{subscriptionId}/providers/Microsoft.Batch/locations/{locationName}/cloudServiceSkus",
-    subscriptionId: string,
-    locationName: string
-  ): LocationListSupportedCloudServiceSkus;
   /** Resource for '/subscriptions/\{subscriptionId\}/providers/Microsoft.Batch/locations/\{locationName\}/checkNameAvailability' has methods for the following verbs: post */
   (
     path: "/subscriptions/{subscriptionId}/providers/Microsoft.Batch/locations/{locationName}/checkNameAvailability",

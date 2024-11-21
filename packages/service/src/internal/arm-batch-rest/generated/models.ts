@@ -22,7 +22,7 @@ export interface BatchAccountCreateProperties {
   /** A reference to the Azure key vault associated with the Batch account. */
   keyVaultReference?: KeyVaultReference;
   /** If not specified, the default value is 'enabled'. */
-  publicNetworkAccess?: "Enabled" | "Disabled";
+  publicNetworkAccess?: "Enabled" | "Disabled" | "SecuredByPerimeter";
   /** The network profile only takes effect when publicNetworkAccess is enabled. */
   networkProfile?: NetworkProfile;
   /** Configures how customer data is encrypted inside the Batch account. By default, accounts are encrypted using a Microsoft managed key. For additional control, a customer-managed key can be used instead. */
@@ -122,7 +122,7 @@ export interface UserAssignedIdentities {
 }
 
 /** Contains information about a private link resource. */
-export interface PrivateEndpointConnection extends ProxyResource {
+export interface PrivateEndpointConnection extends AzureProxyResource {
   /** The properties associated with the private endpoint connection. */
   properties?: PrivateEndpointConnectionProperties;
 }
@@ -162,7 +162,7 @@ export interface PrivateLinkServiceConnectionState {
 }
 
 /** A definition of an Azure resource. */
-export interface ProxyResource {
+export interface AzureProxyResource {
   /** The ID of the resource. */
   id?: string;
   /** The name of the resource. */
@@ -171,6 +171,8 @@ export interface ProxyResource {
   type?: string;
   /** The ETag of the resource, used for concurrency statements. */
   etag?: string;
+  /** The tags of the resource. */
+  tags?: Record<string, string>;
 }
 
 /** Contains information about the auto-storage account associated with a Batch account. */
@@ -200,7 +202,7 @@ export interface BatchAccountUpdateProperties {
     "SharedKey" | "AAD" | "TaskAuthenticationToken"
   >;
   /** If not specified, the default value is 'enabled'. */
-  publicNetworkAccess?: "Enabled" | "Disabled";
+  publicNetworkAccess?: "Enabled" | "Disabled" | "SecuredByPerimeter";
   /** The network profile only takes effect when publicNetworkAccess is enabled. */
   networkProfile?: NetworkProfile;
 }
@@ -218,7 +220,7 @@ export interface ActivateApplicationPackageParameters {
 }
 
 /** An application package which represents a particular version of an application. */
-export interface ApplicationPackage extends ProxyResource {
+export interface ApplicationPackage extends AzureProxyResource {
   /** The properties associated with the Application Package. */
   properties?: ApplicationPackageProperties;
 }
@@ -238,7 +240,7 @@ export interface ApplicationPackageProperties {
 }
 
 /** Contains information about an application in a Batch account. */
-export interface Application extends ProxyResource {
+export interface Application extends AzureProxyResource {
   /** The properties associated with the Application. */
   properties?: ApplicationProperties;
 }
@@ -262,7 +264,7 @@ export interface CheckNameAvailabilityParameters {
 }
 
 /** Contains information about a certificate. */
-export interface Certificate extends ProxyResource {
+export interface Certificate extends AzureProxyResource {
   /** The properties associated with the certificate. */
   properties?: CertificateProperties;
 }
@@ -305,7 +307,8 @@ export interface CertificateBaseProperties {
 }
 
 /** Contains information about a certificate. */
-export interface CertificateCreateOrUpdateParameters extends ProxyResource {
+export interface CertificateCreateOrUpdateParameters
+  extends AzureProxyResource {
   /** The properties associated with the certificate. */
   properties?: CertificateCreateOrUpdateProperties;
 }
@@ -320,7 +323,7 @@ export interface CertificateCreateOrUpdateProperties
 }
 
 /** Contains the information for a detector. */
-export interface DetectorResponse extends ProxyResource {
+export interface DetectorResponse extends AzureProxyResource {
   /** The properties associated with the detector. */
   properties?: DetectorResponseProperties;
 }
@@ -332,7 +335,7 @@ export interface DetectorResponseProperties {
 }
 
 /** Contains information about a private link resource. */
-export interface PrivateLinkResource extends ProxyResource {
+export interface PrivateLinkResource extends AzureProxyResource {
   /** The properties associated with the private link resource. */
   properties?: PrivateLinkResourceProperties;
 }
@@ -348,7 +351,7 @@ export interface PrivateLinkResourceProperties {
 }
 
 /** Contains information about a pool. */
-export interface Pool extends ProxyResource {
+export interface Pool extends AzureProxyResource {
   /** The properties associated with the pool. */
   properties?: PoolProperties;
   /** The type of identity used for the Batch Pool. */
@@ -371,9 +374,9 @@ export interface PoolProperties {
   allocationState?: "Steady" | "Resizing" | "Stopping";
   /** The time at which the pool entered its current allocation state. */
   allocationStateTransitionTime?: Date | string;
-  /** For information about available sizes of virtual machines for Cloud Services pools (pools created with cloudServiceConfiguration), see Sizes for Cloud Services (https://azure.microsoft.com/documentation/articles/cloud-services-sizes-specs/). Batch supports all Cloud Services VM sizes except ExtraSmall. For information about available VM sizes for pools using images from the Virtual Machines Marketplace (pools created with virtualMachineConfiguration) see Sizes for Virtual Machines (Linux) (https://azure.microsoft.com/documentation/articles/virtual-machines-linux-sizes/) or Sizes for Virtual Machines (Windows) (https://azure.microsoft.com/documentation/articles/virtual-machines-windows-sizes/). Batch supports all Azure VM sizes except STANDARD_A0 and those with premium storage (STANDARD_GS, STANDARD_DS, and STANDARD_DSV2 series). */
+  /** For information about available VM sizes, see Sizes for Virtual Machines (Linux) (https://azure.microsoft.com/documentation/articles/virtual-machines-linux-sizes/) or Sizes for Virtual Machines (Windows) (https://azure.microsoft.com/documentation/articles/virtual-machines-windows-sizes/). Batch supports all Azure VM sizes except STANDARD_A0 and those with premium storage (STANDARD_GS, STANDARD_DS, and STANDARD_DSV2 series). */
   vmSize?: string;
-  /** Using CloudServiceConfiguration specifies that the nodes should be creating using Azure Cloud Services (PaaS), while VirtualMachineConfiguration uses Azure Virtual Machines (IaaS). */
+  /** Deployment configuration properties. */
   deploymentConfiguration?: DeploymentConfiguration;
   /** The number of dedicated compute nodes currently in the pool. */
   currentDedicatedNodes?: number;
@@ -415,24 +418,16 @@ export interface PoolProperties {
   targetNodeCommunicationMode?: "Default" | "Classic" | "Simplified";
   /** Determines how a pool communicates with the Batch service. */
   currentNodeCommunicationMode?: "Default" | "Classic" | "Simplified";
+  /** Describes an upgrade policy - automatic, manual, or rolling. */
+  upgradePolicy?: UpgradePolicy;
   /** The user-defined tags to be associated with the Azure Batch Pool. When specified, these tags are propagated to the backing Azure resources associated with the pool. This property can only be specified when the Batch account was created with the poolAllocationMode property set to 'UserSubscription'. */
   resourceTags?: Record<string, string>;
 }
 
 /** Deployment configuration properties. */
 export interface DeploymentConfiguration {
-  /** This property and virtualMachineConfiguration are mutually exclusive and one of the properties must be specified. This property cannot be specified if the Batch account was created with its poolAllocationMode property set to 'UserSubscription'. */
-  cloudServiceConfiguration?: CloudServiceConfiguration;
-  /** This property and cloudServiceConfiguration are mutually exclusive and one of the properties must be specified. */
+  /** The configuration for compute nodes in a pool based on the Azure Virtual Machines infrastructure. */
   virtualMachineConfiguration?: VirtualMachineConfiguration;
-}
-
-/** The configuration for nodes in a pool based on the Azure Cloud Services platform. */
-export interface CloudServiceConfiguration {
-  /** Possible values are: 2 - OS Family 2, equivalent to Windows Server 2008 R2 SP1. 3 - OS Family 3, equivalent to Windows Server 2012. 4 - OS Family 4, equivalent to Windows Server 2012 R2. 5 - OS Family 5, equivalent to Windows Server 2016. 6 - OS Family 6, equivalent to Windows Server 2019. For more information, see Azure Guest OS Releases (https://azure.microsoft.com/documentation/articles/cloud-services-guestos-update-matrix/#releases). */
-  osFamily: string;
-  /** The default value is * which specifies the latest operating system version for the specified OS family. */
-  osVersion?: string;
 }
 
 /** The configuration for compute nodes in a pool based on the Azure Virtual Machines infrastructure. */
@@ -481,6 +476,10 @@ export interface ImageReference {
   version?: string;
   /** This property is mutually exclusive with other properties. The Azure Compute Gallery Image must have replicas in the same region as the Azure Batch account. For information about the firewall settings for the Batch node agent to communicate with the Batch service see https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration. */
   id?: string;
+  /** This property is mutually exclusive with other properties and can be fetched from shared gallery image GET call. */
+  sharedGalleryImageId?: string;
+  /** This property is mutually exclusive with other properties and can be fetched from community gallery image GET call. */
+  communityGalleryImageId?: string;
 }
 
 /** Windows operating system settings to apply to the virtual machine. */
@@ -592,12 +591,20 @@ export interface DiffDiskSettings {
 export interface ManagedDisk {
   /** The storage account type for use in creating data disks or OS disk. */
   storageAccountType?: "Standard_LRS" | "Premium_LRS" | "StandardSSD_LRS";
+  /** Specifies the security profile settings for the managed disk. **Note**: It can only be set for Confidential VMs and is required when using Confidential VMs. */
+  securityProfile?: VMDiskSecurityProfile;
+}
+
+/** Specifies the security profile settings for the managed disk. **Note**: It can only be set for Confidential VMs and is required when using Confidential VMs. */
+export interface VMDiskSecurityProfile {
+  /** Specifies the EncryptionType of the managed disk. It is set to VMGuestStateOnly for encryption of just the VMGuestState blob, and NonPersistedTPM for not persisting firmware state in the VMGuestState blob. **Note**: It can be set for only Confidential VMs and required when using Confidential VMs. */
+  securityEncryptionType?: "NonPersistedTPM" | "VMGuestStateOnly";
 }
 
 /** Specifies the security profile settings for the virtual machine or virtual machine scale set. */
 export interface SecurityProfile {
   /** Specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UefiSettings. */
-  securityType?: "trustedLaunch";
+  securityType?: "trustedLaunch" | "confidentialVM";
   /** This property can be used by user in the request to enable or disable the Host Encryption for the virtual machine or virtual machine scale set. This will enable the encryption for all the disks including Resource/Temp disk at host itself. */
   encryptionAtHost?: boolean;
   /** Specifies the security settings like secure boot and vTPM used while creating the virtual machine. */
@@ -672,13 +679,13 @@ export interface AutoScaleRunError {
 
 /** The network configuration for a pool. */
 export interface NetworkConfiguration {
-  /** The virtual network must be in the same region and subscription as the Azure Batch account. The specified subnet should have enough free IP addresses to accommodate the number of nodes in the pool. If the subnet doesn't have enough free IP addresses, the pool will partially allocate compute nodes and a resize error will occur. The 'MicrosoftAzureBatch' service principal must have the 'Classic Virtual Machine Contributor' Role-Based Access Control (RBAC) role for the specified VNet. The specified subnet must allow communication from the Azure Batch service to be able to schedule tasks on the compute nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the compute nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the compute nodes to unusable. If the specified VNet has any associated Network Security Groups (NSG), then a few reserved system ports must be enabled for inbound communication. For pools created with a virtual machine configuration, enable ports 29876 and 29877, as well as port 22 for Linux and port 3389 for Windows. For pools created with a cloud service configuration, enable ports 10100, 20100, and 30100. Also enable outbound connections to Azure Storage on port 443. For cloudServiceConfiguration pools, only 'classic' VNETs are supported. For more details see: https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration */
+  /** The virtual network must be in the same region and subscription as the Azure Batch account. The specified subnet should have enough free IP addresses to accommodate the number of nodes in the pool. If the subnet doesn't have enough free IP addresses, the pool will partially allocate compute nodes and a resize error will occur. The 'MicrosoftAzureBatch' service principal must have the 'Classic Virtual Machine Contributor' Role-Based Access Control (RBAC) role for the specified VNet. The specified subnet must allow communication from the Azure Batch service to be able to schedule tasks on the compute nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the compute nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the compute nodes to unusable. If the specified VNet has any associated Network Security Groups (NSG), then a few reserved system ports must be enabled for inbound communication，including ports 29876 and 29877. Also enable outbound connections to Azure Storage on port 443. For more details see: https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration */
   subnetId?: string;
   /** The scope of dynamic vnet assignment. */
   dynamicVnetAssignmentScope?: "none" | "job";
-  /** Pool endpoint configuration is only supported on pools with the virtualMachineConfiguration property. */
+  /** The endpoint configuration for a pool. */
   endpointConfiguration?: PoolEndpointConfiguration;
-  /** This property is only supported on Pools with the virtualMachineConfiguration property. */
+  /** The public IP Address configuration of the networking configuration of a Pool. */
   publicIPAddressConfiguration?: PublicIPAddressConfiguration;
   /** Accelerated networking enables single root I/O virtualization (SR-IOV) to a VM, which may lead to improved networking performance. For more details, see: https://learn.microsoft.com/azure/virtual-network/accelerated-networking-overview. */
   enableAcceleratedNetworking?: boolean;
@@ -696,7 +703,7 @@ export interface InboundNatPool {
   name: string;
   /** The protocol of the endpoint. */
   protocol: "TCP" | "UDP";
-  /** This must be unique within a Batch pool. Acceptable values are between 1 and 65535 except for 22, 3389, 29876 and 29877 as these are reserved. If any reserved values are provided the request fails with HTTP status code 400. */
+  /** This must be unique within a Batch pool. Acceptable values are between 1 and 65535 except for 29876 and 29877 as these are reserved. If any reserved values are provided the request fails with HTTP status code 400. */
   backendPort: number;
   /** Acceptable values range between 1 and 65534 except ports from 50000 to 55000 which are reserved. All ranges within a pool must be distinct and cannot overlap. If any reserved or overlapping values are provided the request fails with HTTP status code 400. */
   frontendPortRangeStart: number;
@@ -758,7 +765,7 @@ export interface LinuxUserConfiguration {
 
 /** Properties used to create a user account on a Windows node. */
 export interface WindowsUserConfiguration {
-  /** Specifies login mode for the user. The default value for VirtualMachineConfiguration pools is interactive mode and for CloudServiceConfiguration pools is batch mode. */
+  /** Specifies login mode for the user. The default value is Interactive. */
   loginMode?: "Batch" | "Interactive";
 }
 
@@ -840,15 +847,31 @@ export interface TaskContainerSettings {
   registry?: ContainerRegistry;
   /** A flag to indicate where the container task working directory is. The default is 'taskWorkingDirectory'. */
   workingDirectory?: "TaskWorkingDirectory" | "ContainerImageDefault";
+  /** If this array is null or be not present, container task will mount entire temporary disk drive in windows (or AZ_BATCH_NODE_ROOT_DIR in Linux). It won't' mount any data paths into container if this array is set as empty. */
+  containerHostBatchBindMounts?: Array<ContainerHostBatchBindMountEntry>;
+}
+
+/** The entry of path and mount mode you want to mount into task container. */
+export interface ContainerHostBatchBindMountEntry {
+  /** The paths which will be mounted to container task's container. */
+  source?:
+    | "Shared"
+    | "Startup"
+    | "VfsMounts"
+    | "Task"
+    | "JobPrep"
+    | "Applications";
+  /** For Linux, if you mount this path as a read/write mode, this does not mean that all users in container have the read/write access for the path, it depends on the access in host VM. If this path is mounted read-only, all users within the container will not be able to modify the path. */
+  isReadOnly?: boolean;
 }
 
 /** Warning: This object is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
 export interface CertificateReference {
   /** The fully qualified ID of the certificate to install on the pool. This must be inside the same batch account as the pool. */
   id: string;
-  /** The default value is currentUser. This property is applicable only for pools configured with Windows nodes (that is, created with cloudServiceConfiguration, or with virtualMachineConfiguration using a Windows image reference). For Linux compute nodes, the certificates are stored in a directory inside the task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the task to query for this location. For certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and certificates are placed in that directory. */
+  /** The default value is currentUser. This property is applicable only for pools configured with Windows compute nodes. For Linux compute nodes, the certificates are stored in a directory inside the task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the task to query for this location. For certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and certificates are placed in that directory. */
   storeLocation?: "CurrentUser" | "LocalMachine";
-  /** This property is applicable only for pools configured with Windows nodes (that is, created with cloudServiceConfiguration, or with virtualMachineConfiguration using a Windows image reference). Common store names include: My, Root, CA, Trust, Disallowed, TrustedPeople, TrustedPublisher, AuthRoot, AddressBook, but any custom store name can also be used. The default value is My. */
+  /** This property is applicable only for pools configured with Windows compute nodes. Common store names include: My, Root, CA, Trust, Disallowed, TrustedPeople, TrustedPublisher, AuthRoot, AddressBook, but any custom store name can also be used. The default value is My. */
   storeName?: string;
   /** Which user accounts on the compute node should have access to the private data of the certificate. */
   visibility?: Array<"StartTask" | "Task" | "RemoteUser">;
@@ -958,6 +981,46 @@ export interface AzureFileShareConfiguration {
   relativeMountPath: string;
   /** These are 'net use' options in Windows and 'mount' options in Linux. */
   mountOptions?: string;
+}
+
+/** Describes an upgrade policy - automatic, manual, or rolling. */
+export interface UpgradePolicy {
+  /** Specifies the mode of an upgrade to virtual machines in the scale set.<br /><br /> Possible values are:<br /><br /> **Manual** - You  control the application of updates to virtual machines in the scale set. You do this by using the manualUpgrade action.<br /><br /> **Automatic** - All virtual machines in the scale set are automatically updated at the same time.<br /><br /> **Rolling** - Scale set performs updates in batches with an optional pause time in between. */
+  mode: "automatic" | "manual" | "rolling";
+  /** The configuration parameters used for performing automatic OS upgrade. */
+  automaticOSUpgradePolicy?: AutomaticOSUpgradePolicy;
+  /** The configuration parameters used while performing a rolling upgrade. */
+  rollingUpgradePolicy?: RollingUpgradePolicy;
+}
+
+/** The configuration parameters used for performing automatic OS upgrade. */
+export interface AutomaticOSUpgradePolicy {
+  /** Whether OS image rollback feature should be disabled. */
+  disableAutomaticRollback?: boolean;
+  /** Indicates whether OS upgrades should automatically be applied to scale set instances in a rolling fashion when a newer version of the OS image becomes available. <br /><br /> If this is set to true for Windows based pools, [WindowsConfiguration.enableAutomaticUpdates](https://learn.microsoft.com/en-us/rest/api/batchmanagement/pool/create?tabs=HTTP#windowsconfiguration) cannot be set to true. */
+  enableAutomaticOSUpgrade?: boolean;
+  /** Indicates whether rolling upgrade policy should be used during Auto OS Upgrade. Auto OS Upgrade will fallback to the default policy if no policy is defined on the VMSS. */
+  useRollingUpgradePolicy?: boolean;
+  /** Defer OS upgrades on the TVMs if they are running tasks. */
+  osRollingUpgradeDeferral?: boolean;
+}
+
+/** The configuration parameters used while performing a rolling upgrade. */
+export interface RollingUpgradePolicy {
+  /** Allow VMSS to ignore AZ boundaries when constructing upgrade batches. Take into consideration the Update Domain and maxBatchInstancePercent to determine the batch size. If this field is not set, Azure Azure Batch will not set its default value. The value of enableCrossZoneUpgrade on the created VirtualMachineScaleSet will be decided by the default configurations on VirtualMachineScaleSet. This field is able to be set to true or false only when using NodePlacementConfiguration as Zonal. */
+  enableCrossZoneUpgrade?: boolean;
+  /** The maximum percent of total virtual machine instances that will be upgraded simultaneously by the rolling upgrade in one batch. As this is a maximum, unhealthy instances in previous or future batches can cause the percentage of instances in a batch to decrease to ensure higher reliability. The value of this field should be between 5 and 100, inclusive. If both maxBatchInstancePercent and maxUnhealthyInstancePercent are assigned with value, the value of maxBatchInstancePercent should not be more than maxUnhealthyInstancePercent. */
+  maxBatchInstancePercent?: number;
+  /** The maximum percentage of the total virtual machine instances in the scale set that can be simultaneously unhealthy, either as a result of being upgraded, or by being found in an unhealthy state by the virtual machine health checks before the rolling upgrade aborts. This constraint will be checked prior to starting any batch. The value of this field should be between 5 and 100, inclusive. If both maxBatchInstancePercent and maxUnhealthyInstancePercent are assigned with value, the value of maxBatchInstancePercent should not be more than maxUnhealthyInstancePercent. */
+  maxUnhealthyInstancePercent?: number;
+  /** The maximum percentage of upgraded virtual machine instances that can be found to be in an unhealthy state. This check will happen after each batch is upgraded. If this percentage is ever exceeded, the rolling update aborts. The value of this field should be between 0 and 100, inclusive. */
+  maxUnhealthyUpgradedInstancePercent?: number;
+  /** The wait time between completing the update for all virtual machines in one batch and starting the next batch. The time duration should be specified in ISO 8601 format. */
+  pauseTimeBetweenBatches?: string;
+  /** Upgrade all unhealthy instances in a scale set before any healthy instances. */
+  prioritizeUnhealthyInstances?: boolean;
+  /** Rollback failed instances to previous model if the Rolling Upgrade policy is violated. */
+  rollbackFailedInstancesOnPolicyBreach?: boolean;
 }
 
 /** The identity of the Batch pool, if configured. If the pool identity is updated during update an existing pool, only the new vms which are created after the pool shrinks to 0 will have the updated identities */

@@ -55,8 +55,6 @@ import {
   LocationGetQuotasDefaultResponse,
   LocationListSupportedVirtualMachineSkus200Response,
   LocationListSupportedVirtualMachineSkusDefaultResponse,
-  LocationListSupportedCloudServiceSkus200Response,
-  LocationListSupportedCloudServiceSkusDefaultResponse,
   LocationCheckNameAvailability200Response,
   LocationCheckNameAvailabilityDefaultResponse,
   OperationsList200Response,
@@ -183,9 +181,6 @@ const responseMap: Record<string, string[]> = {
     "200"
   ],
   "GET /subscriptions/{subscriptionId}/providers/Microsoft.Batch/locations/{locationName}/virtualMachineSkus": [
-    "200"
-  ],
-  "GET /subscriptions/{subscriptionId}/providers/Microsoft.Batch/locations/{locationName}/cloudServiceSkus": [
     "200"
   ],
   "POST /subscriptions/{subscriptionId}/providers/Microsoft.Batch/locations/{locationName}/checkNameAvailability": [
@@ -366,11 +361,6 @@ export function isUnexpected(
 ): response is LocationListSupportedVirtualMachineSkusDefaultResponse;
 export function isUnexpected(
   response:
-    | LocationListSupportedCloudServiceSkus200Response
-    | LocationListSupportedCloudServiceSkusDefaultResponse
-): response is LocationListSupportedCloudServiceSkusDefaultResponse;
-export function isUnexpected(
-  response:
     | LocationCheckNameAvailability200Response
     | LocationCheckNameAvailabilityDefaultResponse
 ): response is LocationCheckNameAvailabilityDefaultResponse;
@@ -519,8 +509,6 @@ export function isUnexpected(
     | LocationGetQuotasDefaultResponse
     | LocationListSupportedVirtualMachineSkus200Response
     | LocationListSupportedVirtualMachineSkusDefaultResponse
-    | LocationListSupportedCloudServiceSkus200Response
-    | LocationListSupportedCloudServiceSkusDefaultResponse
     | LocationCheckNameAvailability200Response
     | LocationCheckNameAvailabilityDefaultResponse
     | OperationsList200Response
@@ -594,7 +582,6 @@ export function isUnexpected(
   | ApplicationListDefaultResponse
   | LocationGetQuotasDefaultResponse
   | LocationListSupportedVirtualMachineSkusDefaultResponse
-  | LocationListSupportedCloudServiceSkusDefaultResponse
   | LocationCheckNameAvailabilityDefaultResponse
   | OperationsListDefaultResponse
   | CertificateListByBatchAccountDefaultResponse
