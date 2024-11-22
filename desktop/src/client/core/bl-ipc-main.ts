@@ -79,7 +79,7 @@ export class BlIpcMain implements OnDestroy {
         const onFailure = (result) => {
             // send failure to ipc for renderer process.
             event.sender.send(IpcPromiseEvent.responseFailure, {
-                data: result,
+                data: failureResultToString(result),
                 eventName: arg.eventName,
                 id: arg.id,
             });
@@ -94,4 +94,13 @@ export class BlIpcMain implements OnDestroy {
         // emit to common event emitter for main process.
         eventEmitter.emit(arg.eventName, arg.id, arg.data, event);
     }
+}
+
+function failureResultToString(result) {
+    if (typeof(result) === "string") {
+        return result;
+    } else if (result instanceof Error) {
+        return `${result.name}: ${result.message}`;
+    }
+    return JSON.stringify(result);
 }

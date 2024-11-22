@@ -5,7 +5,11 @@ import { VirtualScrollRowDirective } from "./virtual-scroll-row.directive";
 import { VirtualScrollTailComponent } from "./virtual-scroll-tail";
 import { VirtualScrollComponent } from "./virtual-scroll.component";
 
-const publicComponents = [VirtualScrollTailComponent, VirtualScrollComponent, VirtualScrollRowDirective];
+const publicComponents = [
+    VirtualScrollTailComponent,
+    VirtualScrollComponent,
+    VirtualScrollRowDirective
+];
 
 @NgModule({
     imports: [CommonModule],

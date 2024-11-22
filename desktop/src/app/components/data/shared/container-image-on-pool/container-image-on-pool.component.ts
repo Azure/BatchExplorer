@@ -8,7 +8,7 @@ import {
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { ListView } from "@batch-flask/core";
-import { NcjTemplateMode, Pool } from "app/models";
+import { Pool } from "app/models";
 import { RenderApplication, RenderEngine } from "app/models/rendering-container-image";
 import { PoolListParams, PoolService, RenderingContainerImageService } from "app/services";
 import { BehaviorSubject, Subject, empty } from "rxjs";
@@ -38,7 +38,6 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
 
     public poolsData: ListView<Pool, PoolListParams>;
 
-    @Input() public ncjTemplateMode: NcjTemplateMode;
     @Input() public poolContainerImage: string;
     @Input() public poolId: string;
     @Input() public app: RenderApplication;
@@ -55,7 +54,6 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
 
     private _poolContainerImage = new BehaviorSubject(null);
     private _poolId = new BehaviorSubject(null);
-    private _ncjTemplateMode = new BehaviorSubject(null);
 
     private _destroy = new Subject();
 
@@ -114,23 +112,6 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
                 this.changeDetector.markForCheck();
             }
         });
-
-        this._ncjTemplateMode.pipe(takeUntil(this._destroy))
-            .subscribe((ncjTemplateMode: NcjTemplateMode) => {
-                this.ncjTemplateMode = ncjTemplateMode;
-                if (ncjTemplateMode === NcjTemplateMode.ExistingPoolAndJob) {
-                    this.showControls = true;
-                }
-                if (ncjTemplateMode === NcjTemplateMode.NewPool) {
-                    this.showControls = false;
-                }
-                if (ncjTemplateMode === NcjTemplateMode.NewPoolAndJob) {
-                    this.showControls = false;
-                }
-
-                this.changeDetector.markForCheck();
-            },
-        );
     }
 
     public writeValue(containerImageId: any) {
@@ -162,9 +143,6 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
         if (changes.poolId) {
             this._poolId.next(this.poolId);
         }
-        if (changes.ncjTemplateMode) {
-            this._ncjTemplateMode.next(this.ncjTemplateMode);
-        }
         if (changes.poolContainerImage) {
             this._poolContainerImage.next(this.poolContainerImage);
         }
@@ -175,7 +153,6 @@ export class ContainerImageOnPoolComponent implements ControlValueAccessor, OnCh
         this._destroy.complete();
         this._poolId.complete();
         this._poolContainerImage.complete();
-        this._ncjTemplateMode.complete();
     }
 
     private _upperCaseFirstChar(lower: string) {

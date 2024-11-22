@@ -66,13 +66,6 @@ const additionalDependencies: Dependency[] = [
         licenseType: "MIT",
     },
     {
-        name: "python",
-        version: "3.6.1",
-        url: "https://www.python.org/",
-        repoUrl: "https://github.com/python/cpython",
-        licenseType: "PSF",
-    },
-    {
         name: "Electron",
         version: "26.1.0",
         url: "https://electronjs.org/",

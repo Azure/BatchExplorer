@@ -9,7 +9,6 @@ steps:
 
   - script: |
       set -e
-      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run build:prod
     displayName: Build packages
 
@@ -40,8 +39,6 @@ steps:
 
   - script: |
       set -e
-      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
-      npm run build-python
       npm run package darwin-app
       cd ./release/mac
       zip -y -r ../BatchExplorer-mac.zip ./BatchExplorer.app
@@ -54,7 +51,6 @@ steps:
 
   - script: |
       set -e
-      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       unzip ./release/BatchExplorer*.zip -d ./release/mac
       ls ./release/mac
       rm -f ./release/mac/*.pkg

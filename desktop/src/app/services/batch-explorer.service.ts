@@ -4,7 +4,6 @@ import { wrapMainObservable } from "@batch-flask/electron/utils";
 import { AzureEnvironment } from "client/azure-environment";
 import { BatchExplorerApplication } from "client/core";
 import { AADService, AuthenticationWindow } from "client/core/aad";
-import { PythonRpcServerProcess } from "client/python-process";
 import { SplashScreen } from "client/splash-screen";
 import { BatchExplorerLink } from "common";
 import { IpcEvent } from "common/constants";
@@ -12,7 +11,6 @@ import { Observable, Subscription } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class BatchExplorerService implements OnDestroy {
-    public pythonServer: PythonRpcServerProcess;
     public aadService: AADService;
     /**
      * Root path of where BatchExplorer is running.
@@ -43,7 +41,6 @@ export class BatchExplorerService implements OnDestroy {
             this._azureEnvironment = { ...x };
         });
         this.aadService = this._app.aadService;
-        this.pythonServer = this._app.pythonServer;
         this.rootPath = this._app.rootPath;
         this.version = this._app.version;
         this.resourcesFolder = this._app.resourcesFolder;

@@ -4,13 +4,10 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { UserConfigurationService, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { DialogService } from "@batch-flask/ui";
-import { MICROSOFT_PORTFOLIO, NcjTemplateService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import { BEUserDesktopConfiguration, Constants } from "common";
 import { Subject } from "rxjs";
 import { map, publishReplay, refCount, takeUntil } from "rxjs/operators";
-import { ApplicationSelection } from "../application-list";
-import { SubmitMarketApplicationComponent } from "../submit";
 import { formatDateTime } from "@azure/bonito-core/lib/datetime";
 
 import "./gallery.scss";
@@ -21,15 +18,13 @@ import { DateTime } from "luxon";
     templateUrl: "gallery.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GalleryComponent implements OnInit, OnDestroy {
+export class GalleryComponent implements OnDestroy {
     public static breadcrumb() {
         return { name: "Gallery" };
     }
 
     public query: string = "";
     public quicksearch = new FormControl("");
-
-    public activeApplication: ApplicationSelection | null = null;
 
     private _baseUrl: string;
     private _destroy = new Subject();
@@ -42,7 +37,6 @@ export class GalleryComponent implements OnInit, OnDestroy {
         private activeRoute: ActivatedRoute,
         private electronShell: ElectronShell,
         private dialogService: DialogService,
-        private templateService: NcjTemplateService,
         public autoStorageService: AutoStorageService,
         private settingsService: UserConfigurationService<BEUserDesktopConfiguration>) {
 
@@ -71,24 +65,6 @@ export class GalleryComponent implements OnInit, OnDestroy {
         });
     }
 
-    public ngOnInit() {
-        this.activeRoute.params.pipe(takeUntil(this._destroy)).subscribe((params) => {
-            if ("applicationId" in params) {
-                this.activeApplication = {
-                    applicationId: params["applicationId"],
-                    portfolioId: params["portfolioId"] || MICROSOFT_PORTFOLIO.id,
-                };
-                this.changeDetector.markForCheck();
-            }
-            if ("actionId" in params) {
-                setTimeout(() => {
-                    this.submitAction(params["actionId"]);
-                });
-                this.changeDetector.markForCheck();
-            }
-        });
-    }
-
     public ngOnDestroy() {
         this._destroy.next();
         this._destroy.complete();
@@ -96,37 +72,13 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refresh() {
-        return this.templateService.refresh();
-    }
-
-    public selectApplication(application: ApplicationSelection) {
-        this.activeApplication = application;
-        this.changeDetector.markForCheck();
-        if (application) {
-            this.router.navigate(["/gallery", application.portfolioId, application.applicationId]);
-        } else {
-            this.router.navigate(["/gallery"]);
-        }
+        // no op
     }
 
     @autobind()
     public openReadme(applicationId: string) {
         const link = `${this._baseUrl}/${applicationId}/readme.md`;
         this.electronShell.openExternal(link, { activate: true });
-    }
-
-    public submitAction(actionId: string) {
-        const ref = this.dialogService.open(SubmitMarketApplicationComponent);
-        ref.componentInstance.configure({
-            portfolioId: this.activeApplication.portfolioId,
-            applicationId: this.activeApplication.applicationId,
-            actionId: actionId,
-        });
-        ref.afterClosed().pipe(takeUntil(this._destroy)).subscribe(() => {
-            this.router.navigate(["/gallery",
-                this.activeApplication.portfolioId,
-                this.activeApplication.applicationId]);
-        });
     }
 
     private _getRepoUrl(repo: string, branch: string, path: string) {

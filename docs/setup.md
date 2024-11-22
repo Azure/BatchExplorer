@@ -7,7 +7,6 @@ The following are instructions for building and running Batch Explorer in a deve
     Make sure the following are installed:
 
     - Node.js LTS
-    - Python 3.6+
     - Powershell 7+
 
     **On Windows:**
@@ -31,7 +30,6 @@ The following are instructions for building and running Batch Explorer in a deve
     ```shell
     npm install
     npm run dev-setup
-    pip install -r desktop/python/requirements.txt
     ```
 
 3. Build the repository:

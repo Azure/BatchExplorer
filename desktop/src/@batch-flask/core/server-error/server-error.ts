@@ -147,32 +147,6 @@ export class ServerError {
         });
     }
 
-    public static fromPython(error) {
-        const { message, requestId, timestamp } = parseMessage(error.message);
-
-        let details;
-        if (error.data) {
-            if (Array.isArray(error.data)) {
-                details = error.data;
-            } else if (typeof (error.data) === "string") {
-                details = [{ key: "Description", value: error.data }];
-            } else if (error.values) {
-                details = error.values;
-            } else {
-                log.error("Unknown Python server error format");
-            }
-        }
-        return new ServerError({
-            status: error.data && error.data.status,
-            code: ServerError._mapPythonErrorCode(error.code),
-            message: message || "",
-            details,
-            original: error,
-            requestId,
-            timestamp,
-        });
-    }
-
     public static fromMsGraph(response: HttpErrorResponse): ServerError {
         const { error } = response.error;
         let requestId = null;
@@ -199,17 +173,6 @@ export class ServerError {
             requestId,
             timestamp,
         });
-    }
-
-    private static _mapPythonErrorCode(code: number) {
-        switch (code) {
-            case -32602:
-                return "InvalidParameterValue";
-            case -32604:
-                return "BatchClientError";
-            default:
-                return null;
-        }
     }
 
     public status: number;
