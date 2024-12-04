@@ -29,8 +29,8 @@ describe("ServerError.model", () => {
         });
     });
 
-    describe("when creating from a arm error", () => {
-        it("assign all attributes", () => {
+    describe("when creating from an ARM error", () => {
+        it("assigns all attributes", () => {
             const error = ServerError.fromARM(new HttpErrorResponse({
                 status: 409,
                 error: {
@@ -45,6 +45,56 @@ describe("ServerError.model", () => {
             expect(error.status).toEqual(409);
             expect(error.code).toEqual("AlreadyExists");
             expect(error.message).toEqual("This is an error message");
+            expect(error.requestId).toEqual("abc-def");
+            expect(error.timestamp).toEqual(date);
+        });
+
+        it("assigns all attributes from response with nested error", () => {
+            const error = ServerError.fromARM(new HttpErrorResponse({
+                status: 409,
+                error: {
+                    error: {
+                        code: "AlreadyExists",
+                        message: "This is an error message",
+                    },
+                },
+                headers: new HttpHeaders({
+                    "x-ms-request-id": "abc-def",
+                    "Date": date.toISOString(),
+                }),
+            }));
+            expect(error.status).toEqual(409);
+            expect(error.code).toEqual("AlreadyExists");
+            expect(error.message).toEqual("This is an error message");
+            expect(error.requestId).toEqual("abc-def");
+            expect(error.timestamp).toEqual(date);
+        });
+
+        it("assign default values when error and headers are missing", () => {
+            const error = ServerError.fromARM(new HttpErrorResponse({
+                status: 409,
+                error: {},
+                headers: new HttpHeaders(),
+            }));
+            expect(error.status).toEqual(409);
+            expect(error.code).toBeUndefined();
+            expect(error.message).toEqual("");
+            expect(error.requestId).toBeNull();
+            expect(error.timestamp).toBeNull();
+        });
+
+        it("assigns handles null error object gracefully", () => {
+            const error = ServerError.fromARM(new HttpErrorResponse({
+                status: 409,
+                error: null,
+                headers: new HttpHeaders({
+                    "x-ms-request-id": "abc-def",
+                    "Date": date.toISOString(),
+                }),
+            }));
+            expect(error.status).toEqual(409);
+            expect(error.code).toBeUndefined();
+            expect(error.message).toEqual("");
             expect(error.requestId).toEqual("abc-def");
             expect(error.timestamp).toEqual(date);
         });

@@ -111,6 +111,9 @@ export class ServerError {
     }
 
     public static fromStorage(error: StorageError) {
+        if (error instanceof ServerError) {
+            return error;
+        }
         const { message, timestamp } = parseMessage(error.message);
 
         return new ServerError({
@@ -124,7 +127,14 @@ export class ServerError {
     }
 
     public static fromARM(response: HttpErrorResponse): ServerError {
-        const error = response.error || {};
+        // KLUDGE: Angular's request nests the error inside an error object
+        let error;
+        if (response.error?.error) {
+            error = response.error.error;
+        } else {
+            error = response.error;
+        }
+        error = error || {};
         let requestId: string | null = null;
         let timestamp: Date | null = null;
         const code = error.code;
