@@ -8,7 +8,6 @@
     "pool": true,
     "package": true,
     "certificate": true,
-    "data": true,
-    "gallery": true
+    "data": true
   }
 }

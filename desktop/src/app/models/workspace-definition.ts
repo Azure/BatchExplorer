@@ -17,7 +17,6 @@ export interface BatchLabsFeatureDefinition extends FeatureDefinition {
     package: boolean | PackageFeatures;
     certificate: boolean | CertificateFeatures;
     data: boolean | DataFeatures;
-    gallery: boolean | GalleryFeatures;
 }
 
 export interface CommonFeatures {
@@ -88,5 +87,3 @@ export interface DataFeatures extends CommonFeatures {
         pin: boolean;
     };
 }
-
-export type GalleryFeatures = CommonFeatures;

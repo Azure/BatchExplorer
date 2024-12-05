@@ -5,7 +5,7 @@ auto-storage-account-picker:
   warnings:
     no-accounts-same: You have no accounts in the same region
     no-accounts-other: You have no accounts in other regions
-    classic-incompatible: Classic storage accounts are not compatible with data and gallery
+    classic-incompatible: Classic storage accounts are not compatible with data
   fields:
     name: Name
     location: Location
