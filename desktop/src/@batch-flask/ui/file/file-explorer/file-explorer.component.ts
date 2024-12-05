@@ -257,7 +257,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
                 for (const dirFile of dirFiles) {
                     result.push({
                         localPath: path.join(file.path, dirFile),
-                        remotePath: CloudPathUtils.join(base, CloudPathUtils.normalize(dirFile)),
+                        remotePath: CloudPathUtils.join(base, file.name, CloudPathUtils.normalize(dirFile)),
                     });
                 }
             }
