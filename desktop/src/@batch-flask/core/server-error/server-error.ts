@@ -111,6 +111,9 @@ export class ServerError {
     }
 
     public static fromStorage(error: StorageError) {
+        if (error instanceof ServerError) {
+            return error;
+        }
         const { message, timestamp } = parseMessage(error.message);
 
         return new ServerError({
@@ -124,7 +127,14 @@ export class ServerError {
     }
 
     public static fromARM(response: HttpErrorResponse): ServerError {
-        const error = response.error || {};
+        // KLUDGE: Angular's request nests the error inside an error object
+        let error;
+        if (response.error?.error) {
+            error = response.error.error;
+        } else {
+            error = response.error;
+        }
+        error = error || {};
         let requestId: string | null = null;
         let timestamp: Date | null = null;
         const code = error.code;
@@ -142,32 +152,6 @@ export class ServerError {
             statusText: response.statusText,
             original: response,
             message: message || "",
-            requestId,
-            timestamp,
-        });
-    }
-
-    public static fromPython(error) {
-        const { message, requestId, timestamp } = parseMessage(error.message);
-
-        let details;
-        if (error.data) {
-            if (Array.isArray(error.data)) {
-                details = error.data;
-            } else if (typeof (error.data) === "string") {
-                details = [{ key: "Description", value: error.data }];
-            } else if (error.values) {
-                details = error.values;
-            } else {
-                log.error("Unknown Python server error format");
-            }
-        }
-        return new ServerError({
-            status: error.data && error.data.status,
-            code: ServerError._mapPythonErrorCode(error.code),
-            message: message || "",
-            details,
-            original: error,
             requestId,
             timestamp,
         });
@@ -199,17 +183,6 @@ export class ServerError {
             requestId,
             timestamp,
         });
-    }
-
-    private static _mapPythonErrorCode(code: number) {
-        switch (code) {
-            case -32602:
-                return "InvalidParameterValue";
-            case -32604:
-                return "BatchClientError";
-            default:
-                return null;
-        }
     }
 
     public status: number;

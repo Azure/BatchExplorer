@@ -111,27 +111,6 @@ function install-node-dependencies() {
     }
 }
 
-
-function install-python-dependencies() {
-    $python = [string](npm run ts .\scripts\install\get-python.ts)
-
-    if($lastExitCode -eq 0) {
-        Write-Host "Python path is $python"
-        add-success "Python version is valid. Using '$python'" -foreground "green";
-    } else {
-        add-failure "Invalid version of python installed. Needs python >= 3.5. You can either have globably available in the path as python, python3 or set the BL_PYTHON_PATH environment variable."
-    }
-
-    Write-Host "$python `"$root/scripts/install/install-python-dep.py`""
-    cmd /c "$python `"$root/scripts/install/install-python-dep.py`""
-
-    if($lastExitCode -eq 0) {
-        add-success "Installed python dependencies correctly" -foreground "green";
-    } else {
-        add-failure "Failed to install depdencies"
-    }
-}
-
 function build-batch-explorer() {
     npm run build:package
 
@@ -146,7 +125,6 @@ confirm-branch
 confirm-latest-commit
 confirm-node-version
 install-node-dependencies
-install-python-dependencies
 build-batch-explorer
 
 display-summary

@@ -9,4 +9,3 @@ logs/
 .nyc_output/
 coverage.lcov
 documentation/
-.python-version

@@ -18,15 +18,12 @@ steps:
   - pwsh: |
       . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
-      $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
       exec { npm run build:prod }
     displayName: Build all packages
 
   - pwsh: |
       . ../.vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
-      $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
-      exec { npm run build-python }
       exec { npm run package win-exe }
     workingDirectory: desktop
     displayName: Build .exe
@@ -39,7 +36,6 @@ steps:
       pattern: |
         **/*.exe
         **/*.dll
-        !**/python36.dll
 
   - pwsh: npm run package win-installer
     workingDirectory: desktop

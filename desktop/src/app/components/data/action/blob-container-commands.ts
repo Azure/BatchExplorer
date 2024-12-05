@@ -6,13 +6,10 @@ import {
     EntityCommand,
     EntityCommands,
     Permission,
-    SidebarManager,
 } from "@batch-flask/ui";
 import { BlobContainer } from "app/models";
-import { FileGroupCreateDto } from "app/models/dtos";
 import { PinnedEntityService } from "app/services";
 import { StorageBlobService, StorageContainerService } from "app/services/storage";
-import { FileGroupCreateFormComponent } from "./add";
 import { DeleteContainerDialogComponent } from "./delete";
 
 export interface StorageContainerParams {
@@ -22,14 +19,12 @@ export interface StorageContainerParams {
 @Injectable()
 export class BlobContainerCommands extends EntityCommands<BlobContainer, StorageContainerParams> {
     public delete: EntityCommand<BlobContainer, void>;
-    public addMoreFiles: EntityCommand<BlobContainer, void>;
     public download: EntityCommand<BlobContainer, void>;
     public pin: EntityCommand<BlobContainer, void>;
 
     constructor(
         injector: Injector,
         private dialog: DialogService,
-        private sidebarManager: SidebarManager,
         private pinnedEntityService: PinnedEntityService,
         private storageBlobService: StorageBlobService,
         private storageContainerService: StorageContainerService) {
@@ -61,17 +56,6 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
             permission: Permission.Write,
         });
 
-        this.addMoreFiles = this.simpleCommand({
-            name: "add",
-            ...COMMAND_LABEL_ICON.AddFile,
-            action: (container: BlobContainer) => this._addFilesToFileGroup(container),
-            enabled: (container) => container.isFileGroup,
-            multiple: false,
-            confirm: false,
-            notify: false,
-            permission: Permission.Write,
-        });
-
         this.download = this.simpleCommand({
             name: "download",
             ...COMMAND_LABEL_ICON.Download,
@@ -98,23 +82,9 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
 
         this.commands = [
             this.delete,
-            this.addMoreFiles,
             this.download,
             this.pin,
         ];
-    }
-
-    private _addFilesToFileGroup(container: BlobContainer) {
-        const sidebarRef = this.sidebarManager.open("Maintain a file group", FileGroupCreateFormComponent);
-        sidebarRef.component.setValue(new FileGroupCreateDto({
-            name: container.name,
-            includeSubDirectories: true,
-            paths: [],
-        }));
-
-        sidebarRef.afterCompletion.subscribe(() => {
-            this.storageContainerService.onContainerUpdated.next();
-        });
     }
 
     private _deleteFileGroup(container: BlobContainer) {

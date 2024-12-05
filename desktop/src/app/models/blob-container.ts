@@ -49,7 +49,7 @@ export class BlobContainer extends Record<BlobContainerAttributes> implements Na
     }
 
     public get isFileGroup() {
-        return this.id && this.id.startsWith(Constants.ncjFileGroupPrefix);
+        return this.id && this.id.startsWith(Constants.legacyFileGroupPrefix);
     }
 
     public get uid() {

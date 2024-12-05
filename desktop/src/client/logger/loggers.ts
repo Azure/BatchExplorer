@@ -11,12 +11,6 @@ export const logger = new NodeLogger({
     json: true,
 });
 
-export const pythonLogger = new NodeLogger({
-    name: "BatchExplorer Python",
-    path: path.join(logsFolder, "python-server.log"),
-    json: false,
-});
-
 export const rendererLogger = new NodeLogger({
     name: "BatchExplorer Renderer",
     path: path.join(logsFolder, "app.log"),

@@ -47,7 +47,6 @@ export * from "./list-result";
 export * from "./metadata";
 export * from "./multi-instance-settings";
 export * from "./name-value-pair";
-export * from "./ncj-job-template";
 export * from "./network-configuration";
 export * from "./image-information";
 export * from "./node-communication-mode";

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { EntityConfigurationView, UserConfigurationService, autobind } from "@batch-flask/core";
-import { BEUserDesktopConfiguration, DEFAULT_BE_USER_CONFIGURATION } from "common";
+import { BEUserConfiguration, DEFAULT_BE_USER_CONFIGURATION } from "common";
 import { Subject } from "rxjs";
 import { debounceTime, takeUntil } from "rxjs/operators";
 
@@ -17,10 +17,6 @@ export interface SettingsSelection {
     updateOnQuit: boolean;
     githubDataRepo: string;
     githubDataBranch: string;
-    microsoftPortfolioRepo: string;
-    microsoftPortfolioBranch: string;
-    microsoftPortfolioPath: string;
-    defaultOutputFileGroup: string;
     theme: string;
     externalBrowserAuth: boolean;
 }
@@ -43,7 +39,7 @@ export class SettingsComponent implements OnDestroy {
     private _lastValue: string | null = null;
 
     constructor(
-        private userConfigurationService: UserConfigurationService<BEUserDesktopConfiguration>,
+        private userConfigurationService: UserConfigurationService<BEUserConfiguration>,
         private changeDetector: ChangeDetectorRef,
         formBuilder: FormBuilder) {
         this.form = formBuilder.group({
@@ -58,13 +54,10 @@ export class SettingsComponent implements OnDestroy {
             updateOnQuit: [true],
             githubDataRepo: [""],
             githubDataBranch: [""],
-            microsoftPortfolioRepo: [""],
-            microsoftPortfolioBranch: [""],
-            microsoftPortfolioPath: [""],
-            defaultOutputFileGroup: [""],
         });
 
-        this.userConfigurationService.config.pipe(takeUntil(this._destroy)).subscribe((config: BEUserDesktopConfiguration) => {
+        this.userConfigurationService.config.pipe(takeUntil(this._destroy))
+        .subscribe((config: BEUserConfiguration) => {
             this.modified = JSON.stringify(config) !== JSON.stringify(DEFAULT_BE_USER_CONFIGURATION);
             this.changeDetector.markForCheck();
 
@@ -80,10 +73,6 @@ export class SettingsComponent implements OnDestroy {
                 updateOnQuit: config.update.updateOnQuit,
                 githubDataRepo: config.githubData.repo,
                 githubDataBranch: config.githubData.branch,
-                microsoftPortfolioRepo: config.microsoftPortfolio.repo,
-                microsoftPortfolioBranch: config.microsoftPortfolio.branch,
-                microsoftPortfolioPath: config.microsoftPortfolio.path,
-                defaultOutputFileGroup: config.jobTemplate.defaultOutputFileGroup,
             };
             this._lastValue = JSON.stringify(selection);
             this.form.patchValue(selection, { emitEvent: false });
@@ -120,7 +109,7 @@ export class SettingsComponent implements OnDestroy {
         this.userConfigurationService.reset();
     }
 
-    private _buildConfig(selection: SettingsSelection): Partial<BEUserDesktopConfiguration> {
+    private _buildConfig(selection: SettingsSelection): Partial<BEUserConfiguration> {
         return {
             theme: selection.theme,
             externalBrowserAuth:  selection.externalBrowserAuth,
@@ -145,15 +134,6 @@ export class SettingsComponent implements OnDestroy {
                 repo: selection.githubDataRepo,
                 branch: selection.githubDataBranch,
             },
-            microsoftPortfolio: {
-                repo: selection.microsoftPortfolioRepo,
-                branch: selection.microsoftPortfolioBranch,
-                path: selection.microsoftPortfolioPath,
-            },
-            jobTemplate: {
-                defaultOutputFileGroup: selection.defaultOutputFileGroup,
-            },
-
         };
     }
 }

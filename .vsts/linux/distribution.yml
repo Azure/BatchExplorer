@@ -9,7 +9,6 @@ steps:
 
   - script: |
       set -e
-      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run build:package
     displayName: Build and pack
 
@@ -40,7 +39,6 @@ steps:
 
   - script: |
       set -e
-      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run package linux-manifest
     workingDirectory: desktop
     displayName: Create manifest

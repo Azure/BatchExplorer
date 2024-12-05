@@ -8,6 +8,7 @@ bl-server-error {
         color: $danger-contrast-color;
         > .content {
             padding: 10px;
+            overflow-wrap: anywhere;
         }
 
         > .content > .main-content {

@@ -19,7 +19,6 @@ import * as os from "os";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
-import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
 import { AADService, AuthenticationWindow } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
@@ -41,7 +40,6 @@ export class BatchExplorerApplication {
     public authenticationWindow = new AuthenticationWindow(this);
     public recoverWindow = new RecoverWindow(this);
     public windows: MainWindowManager;
-    public pythonServer = new PythonRpcServerProcess();
     public aadService: AADService;
     public state: Observable<BatchExplorerState>;
     public proxySettings: ProxySettingsManager;
@@ -95,7 +93,6 @@ export class BatchExplorerApplication {
      * Start the app by showing the splash screen
      */
     public async start() {
-        this.pythonServer.start();
         this._initializer.init();
 
         const window = await this.openFromArguments(process.argv, false);
@@ -211,7 +208,6 @@ export class BatchExplorerApplication {
     }
 
     public quit() {
-        this.pythonServer.stop();
         app.quit();
     }
 
@@ -275,8 +271,6 @@ export class BatchExplorerApplication {
 
     private _setupProcessEvents() {
         ipcMain.on("reload", () => {
-            this.pythonServer.restart();
-
             // Destroy window and error window if applicable
             this.windows.closeAll();
             this.recoverWindow.destroy();

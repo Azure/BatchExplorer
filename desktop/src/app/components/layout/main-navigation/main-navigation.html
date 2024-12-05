@@ -33,11 +33,6 @@
                 <i class="fa fa-cloud-upload fa-lg" aria-hidden="true"></i><div class="label">{{'main-navigation.data' | i18n}}</div>
             </bl-clickable>
         </ng-container>
-        <ng-container *blHiddenIfNoAccount>
-            <bl-clickable *blFeatureOn="'gallery'" href="#" routerLink="market" routerLinkActive="active" title="Gallery">
-                <i class="fa fa-cubes" aria-hidden="true"></i><div class="label">{{'main-navigation.gallery' | i18n}}</div>
-            </bl-clickable>
-        </ng-container>
     </ng-container>
     <ng-container *ngIf="!loggedIn">
         <bl-clickable routerLink="welcome" routerLinkActive="active" title="Home">

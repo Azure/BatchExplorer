@@ -2,7 +2,6 @@
 
 Those files have the required software installed to build batch explorer from source
 
-    * python
     * node
     * git
 

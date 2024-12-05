@@ -2,7 +2,6 @@ steps:
   - template: ./darwin-dependencies.yml
   - script: |
       set -e
-      . "$(Agent.WorkFolder)/.venv/batchexplorer/bin/activate"
       npm run build:package
     displayName: Build and pack
   - template: ../common/publish-artifacts.yml
