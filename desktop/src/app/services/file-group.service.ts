@@ -7,7 +7,7 @@ import { AutoStorageService } from "./storage/auto-storage.service";
 import { StorageContainerService } from "./storage/storage-container.service";
 
 /**
- * Service to handle file-group calls to the Python RPC service.
+ * Service to handle file-group calls
  */
 @Injectable({providedIn: "root"})
 export class FileGroupService {

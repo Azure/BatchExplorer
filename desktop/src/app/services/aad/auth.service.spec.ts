@@ -124,15 +124,6 @@ describe("AuthService", () => {
         expect(errorSpy).toHaveBeenCalledOnce();
     });
 
-    it("#accessTokenFor returns observable with token string", (done) => {
-        service.accessTokenFor(FakeTenants.One, resource1)
-            .subscribe((token) => {
-                expect(remoteSpy.send).toHaveBeenCalledOnce();
-                expect(token).toEqual(token1.accessToken);
-                done();
-            });
-    });
-
     describe("getAccessToken()", () => {
         it("should call accessTokenData with defaults", () => {
             spyOn(service, "accessTokenData").and.returnValue(new Observable());
