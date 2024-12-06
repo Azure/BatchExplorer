@@ -483,6 +483,9 @@
       <Item ItemId=";auth.not-logged-in" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[You are not logged in. Please log in to continue.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Anda tidak masuk. Silakan masuk untuk melanjutkan.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -498,12 +501,18 @@
       <Item ItemId=";auth.tenant-sign-in-title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Sign in to {tenant}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Masuk ke {tenant}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";auth.welcome" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Welcome to Azure Batch Explorer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Selamat datang di Azure Batch Explorer]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1050,6 +1059,9 @@
       <Item ItemId=";common.welcome" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Welcome to Batch Explorer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Selamat datang di Batch Explorer]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3666,12 +3678,18 @@
       <Item ItemId=";settings.external-browser-auth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use system browser for authentication]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Gunakan browser sistem untuk autentikasi]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";settings.external-browser-auth-hint" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Organizations with certain access policies may require sign-in with an internal window. Unset if you experience issues.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Organisasi dengan kebijakan akses tertentu mungkin memerlukan Anda masuk dengan jendela internal. Batalkan pengaturan jika Anda mengalami masalah.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
