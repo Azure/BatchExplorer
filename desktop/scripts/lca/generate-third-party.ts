@@ -45,32 +45,11 @@ const defaultLicenses = {
 
 const additionalDependencies: Dependency[] = [
     {
-        name: "websockets",
-        version: "3.3",
-        url: "https://github.com/aaugustin/websockets",
-        repoUrl: "https://github.com/aaugustin/websockets",
-        licenseType: "BSD-3-Clause",
-    },
-    {
-        name: "azure-batch-cli-extensions",
-        version: "0.2.0",
-        url: "https://github.com/Azure/azure-batch-cli-extensions",
-        repoUrl: "https://github.com/Azure/azure-batch-cli-extensions",
-        licenseType: "MIT",
-    },
-    {
         name: "node.js",
         version: "18.16.1",
         url: "https://nodejs.org/en/",
         repoUrl: "https://github.com/nodejs/node",
         licenseType: "MIT",
-    },
-    {
-        name: "python",
-        version: "3.6.1",
-        url: "https://www.python.org/",
-        repoUrl: "https://github.com/python/cpython",
-        licenseType: "PSF",
     },
     {
         name: "Electron",

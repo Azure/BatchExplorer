@@ -49,11 +49,6 @@
     ],
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  // Python
-  "python.autoComplete.extraPaths": [
-    "${workspaceRoot}/python"
-  ],
-  "python.formatting.provider": "yapf",
   // Typescript
   "typescript.tsdk": "node_modules/typescript/lib",
   // General
@@ -63,7 +58,6 @@
     "**/build/**": true,
     "**/lib/**": true,
     "**/lib-*/**": true,
-    "desktop/python/build/**": true,
     "desktop/release/**": true,
     "desktop/dll/**": true
   },

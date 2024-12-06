@@ -81,7 +81,7 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
                 storageAccountId,
             };
             this.fileGroupsData.setOptions({
-                prefix: Constants.ncjFileGroupPrefix,
+                prefix: Constants.legacyFileGroupPrefix,
             });
             this.fileGroupsData.fetchNext();
         });

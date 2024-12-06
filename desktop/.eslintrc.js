@@ -3,7 +3,6 @@ module.exports = {
         "node_modules/**/*",
         "/lib/**/*",
         "/build/**/*",
-        "/python/**/*",
         "/docs/**/*",
         "/data/**/*"
     ],

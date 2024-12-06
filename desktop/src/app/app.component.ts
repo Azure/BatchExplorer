@@ -16,10 +16,8 @@ import {
     BatchAccountService,
     BatchExplorerService,
     NavigatorService,
-    NcjTemplateService,
     PredefinedFormulaService,
     PricingService,
-    PythonRpcService,
     ThemeService
 } from "app/services";
 import { BEUserConfiguration } from "common";
@@ -53,7 +51,6 @@ export class AppComponent implements OnInit, OnDestroy {
         private navigatorService: NavigatorService,
         userConfigurationService: UserConfigurationService<BEUserConfiguration>,
         private remote: ElectronRemote,
-        pythonRpcService: PythonRpcService,
         themeService: ThemeService,
         private route: ActivatedRoute,
         permissionService: PermissionService,
@@ -63,7 +60,6 @@ export class AppComponent implements OnInit, OnDestroy {
         keybindingService: KeyBindingsService,
         private telemetryService: TelemetryService,
         private pricingService: PricingService,
-        private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
         private workspaceService: WorkspaceService,
         private translationsLoaderService: AppTranslationsLoaderService,
@@ -75,8 +71,6 @@ export class AppComponent implements OnInit, OnDestroy {
         keybindingService.listen();
         this.navigatorService.init();
         this.accountService.loadInitialData();
-        this.ncjTemplateService.init();
-        pythonRpcService.init();
         this.predefinedFormulaService.init();
         themeService.init();
 

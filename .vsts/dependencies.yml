@@ -1,3 +1,2 @@
 steps:
   - template: ./node-setup.yml
-  - template: ./python-setup.yml

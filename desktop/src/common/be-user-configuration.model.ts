@@ -39,36 +39,7 @@ export interface BEUserConfiguration extends BatchFlaskUserConfiguration {
     }
 }
 
-/**
- * Configuration specific to the desktop version
- * Note this is the only version yet. Planning for the future.
- */
-export interface BEUserDesktopConfiguration extends BEUserConfiguration {
-    /**
-     * Local templates names and path to show in the template library
-     */
-    localTemplates: {
-        sources: Array<{ name: string, path: string }>,
-    };
-
-    jobTemplate: {
-        defaultOutputFileGroup: string | null,
-    };
-
-    /**
-     * Change the Microsoft portfolio source
-     */
-    microsoftPortfolio: {
-        repo: string,
-        branch: string,
-        path: string,
-    };
-}
-
-export const DEFAULT_BE_USER_CONFIGURATION: BEUserDesktopConfiguration = {
-    localTemplates: {
-        sources: [],
-    },
+export const DEFAULT_BE_USER_CONFIGURATION: BEUserConfiguration = {
     entityConfiguration: {
         defaultView: EntityConfigurationView.Pretty,
     },
@@ -89,14 +60,6 @@ export const DEFAULT_BE_USER_CONFIGURATION: BEUserDesktopConfiguration = {
     githubData: {
         repo: "Azure/BatchExplorer-data",
         branch: "master",
-    },
-    microsoftPortfolio: {
-        repo: "Azure/batch-extension-templates",
-        branch: "master",
-        path: "templates",
-    },
-    jobTemplate: {
-        defaultOutputFileGroup: null,
     },
     theme: "classic",
     externalBrowserAuth: true

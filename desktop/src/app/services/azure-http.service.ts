@@ -51,8 +51,8 @@ export class AzureHttpService {
                     this._setupRequestOptions(uri, options, accessToken)
                 ).pipe(
                     retryWhen(attempts => this._retryWhen(attempts)),
-                    catchError((error) => {
-                        const err = ServerError.fromARM(error);
+                    catchError((errorResponse) => {
+                        const err = ServerError.fromARM(errorResponse);
                         return throwError(err);
                     }),
                 )

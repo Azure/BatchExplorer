@@ -3,7 +3,6 @@ steps:
   - template: ./win-dependencies.yml
 
   - pwsh: |
-      $(Agent.WorkFolder)\.venv\batchexplorer\Scripts\Activate.ps1
       npm run build:package
     displayName: Build and package
 

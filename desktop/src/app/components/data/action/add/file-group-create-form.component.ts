@@ -3,24 +3,17 @@ import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatDialogRef } from "@angular/material/dialog";
 import { DynamicForm, autobind } from "@batch-flask/core";
-import { FileSystemService } from "@batch-flask/electron";
 import {
-    Activity,
-    ActivityResponse,
-    ActivityService,
-    ActivityStatus,
-    NotificationService,
     SidebarRef,
 } from "@batch-flask/ui";
-import { log } from "@batch-flask/utils";
 import { BlobContainer } from "app/models";
-import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
+import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";
-import { NcjFileGroupService } from "app/services";
+import { FileGroupService } from "app/services";
 import { StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
-import { Observable, Subject, from } from "rxjs";
-import { debounceTime, distinctUntilChanged, map, takeUntil } from "rxjs/operators";
+import { Observable, Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, takeUntil } from "rxjs/operators";
 
 import "./file-group-create-form.scss";
 
@@ -45,10 +38,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         @Optional() public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
         @Optional() public dialogRef: MatDialogRef<FileGroupCreateFormComponent>,
         private formBuilder: FormBuilder,
-        private fileGroupService: NcjFileGroupService,
-        private fs: FileSystemService,
-        private notificationService: NotificationService,
-        private activityService: ActivityService,
+        private fileGroupService: FileGroupService,
         private storageContainerService: StorageContainerService) {
         super(FileGroupCreateDto);
 
@@ -89,8 +79,6 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         if (this.createEmptyGroup) {
             return this._createEmptyFileGroup(formData.name);
         }
-
-        return this._uploadFileGroupData(formData);
     }
 
     @autobind()
@@ -149,85 +137,5 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         });
 
         return obs;
-    }
-
-    private _uploadFileGroupData(formData: FileGroupCreateDto) {
-        const state = {
-            totalUploads: 0,
-        };
-
-        const activity = new Activity("Uploading files to file group", () => {
-            return from(this._getValidPaths(formData.paths)).pipe(
-                map((validPaths) => {
-                    return validPaths.map(fileOrDirPath => this._createPathActivity(formData, fileOrDirPath, state));
-                }),
-            );
-        });
-
-        this.activityService.exec(activity);
-        activity.done.subscribe(status => {
-            if (status === ActivityStatus.Completed) {
-                const fileGroupName = this.fileGroupService.addFileGroupPrefix(formData.name);
-                this.storageContainerService.onContainerAdded.next(fileGroupName);
-                this.notificationService.success(
-                    "Create file group",
-                    `${state.totalUploads} files were successfully uploaded to the file group`,
-                );
-            }
-        });
-        activity.setUncancellable();
-        if (this.dialogRef) {
-            this.dialogRef.close(activity);
-        }
-        return activity.done;
-    }
-
-    private _createPathActivity(formData: FileGroupCreateDto, fileOrDirPath: string, state: any) {
-        return new Activity(`Syncing ${fileOrDirPath}`, () => {
-            let filesUploaded = 0;
-
-            // upload the file group
-            return this.fileGroupService.createOrUpdateFileGroup(
-                formData.name,
-                fileOrDirPath,
-                formData.options,
-                formData.includeSubDirectories).pipe(
-                    map((data) => {
-                        filesUploaded = data.uploaded;
-                        let progress;
-                        if (data.partial) {
-                            // the dividend is the files uploaded
-                            // plus the fractional portion of the partially uploaded file
-                            const dividend = data.uploaded + (data.partial / 100);
-                            progress = dividend / data.total * 100;
-                        } else {
-                            progress = data.uploaded / data.total * 100;
-                        }
-                        if (progress === 100) {
-                            state.totalUploads += filesUploaded;
-                        }
-                        return new ActivityResponse(progress);
-                    }),
-                );
-
-        }).setUncancellable();
-    }
-
-    /**
-     * Return only vaid paths to the caller as the user can enter any path they like.
-     * @param fileOrDirectoryPaths - path objects from the the file-or-directory-picker
-     */
-    private async _getValidPaths(fileOrDirectoryPaths: FileOrDirectoryDto[]): Promise<string[]> {
-        const result = [];
-        for (const fileOrDir of fileOrDirectoryPaths) {
-            const exists = await this.fs.exists(fileOrDir.path);
-            if (exists) {
-                result.push(fileOrDir.path);
-            } else {
-                log.warn("Bad path found, ignoring:", fileOrDir.path);
-            }
-        }
-
-        return result;
     }
 }

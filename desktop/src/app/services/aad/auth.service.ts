@@ -111,12 +111,6 @@ export class AuthService implements OnDestroy {
         );
     }
 
-    /* Only used by Python-RPC */
-    public accessTokenFor(tenantId: string, resource: AADResourceName = null) {
-        return this.accessTokenData(tenantId, resource)
-            .pipe(map((x: AccessToken) => x.accessToken));
-    }
-
     public getTenantAuthorizations(authOptions: TenantAuthRequestOptions = {
         notifyOnError: true
     }) {

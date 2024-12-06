@@ -63,11 +63,6 @@ const resourcesFolder = isAsar ? path.normalize(path.join(root, "..")) : root;
 
 mkdirp.sync(logsFolder);
 
-const pythonServerPort = {
-    dev: Promise.resolve(8765),
-    prod: getPort(),
-};
-
 // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 export const Constants = {
     isAsar,
@@ -76,7 +71,6 @@ export const Constants = {
     urls,
     logsFolder,
     resourcesFolder,
-    pythonServerPort,
     version: packageConfig.version,
 };
 

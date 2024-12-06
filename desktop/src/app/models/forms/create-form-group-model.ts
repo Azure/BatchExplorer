@@ -34,8 +34,8 @@ export function createFileGroupFormToJsonData(formData: CreateFileGroupModel): a
 export function fileGroupToFormModel(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
     return {
         // we don't want the prefix on the group name when editing.
-        name: fileGroup.name.startsWith(Constants.ncjFileGroupPrefix)
-            ? fileGroup.name.substr(Constants.ncjFileGroupPrefix.length, fileGroup.name.length)
+        name: fileGroup.name.startsWith(Constants.legacyFileGroupPrefix)
+            ? fileGroup.name.substr(Constants.legacyFileGroupPrefix.length, fileGroup.name.length)
             : fileGroup.name,
         paths: fileGroup.paths,
         includeSubDirectories: fileGroup.includeSubDirectories,

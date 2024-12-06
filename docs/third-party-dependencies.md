@@ -5,12 +5,8 @@ Each dependencies shipped with Batch Explorer must go through Microsoft open sou
 ## Which dependencies needs to be approved
 
 Any dependencies in the dependency list of the `package.json`. devDependencies are not required as they are not shipped.
-It also include non dev dependencies in `python/requirements.txt`
-
-There is also 2 more dependency which depends on what `travis` and `appveyor` build definition use(Don't ask for your local version). You must request approval accordingly
 
 * `node`
-* `python`
 
 ## ThirdPartyNotices.txt
 

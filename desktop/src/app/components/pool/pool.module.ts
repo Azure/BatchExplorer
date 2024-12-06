@@ -1,11 +1,9 @@
 import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 import {
-    AppLicensePickerComponent,
     AutoScaleFormulaPickerModule,
     DeallocationOptionPickerComponent,
     DeletePoolDialogComponent,
-    LicenseEulaDialogComponent,
     PoolCreateBasicDialogComponent,
     PoolOSPickerModule,
     PoolResizeDialogComponent,
@@ -27,10 +25,8 @@ import { PoolRoutingModule } from "./pool-routing.module";
 import { UserAccountsPickerModule } from "./user-accounts-picker";
 
 const components = [
-    AppLicensePickerComponent,
     DeallocationOptionPickerComponent,
     DeletePoolDialogComponent,
-    LicenseEulaDialogComponent,
     PoolAdvancedFilterComponent,
     PoolCreateBasicDialogComponent,
     PoolHomeComponent,
@@ -65,7 +61,6 @@ const publicModules = [
     imports: [...modules, ...publicModules],
     entryComponents: [
         DeletePoolDialogComponent,
-        LicenseEulaDialogComponent,
         PoolCreateBasicDialogComponent,
         PoolResizeDialogComponent,
     ],

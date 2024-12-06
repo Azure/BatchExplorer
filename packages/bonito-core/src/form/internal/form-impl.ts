@@ -71,7 +71,7 @@ export class FormImpl<V extends FormValues> implements Form<V> {
 
     private _forcedValidationStatus?: ValidationStatus;
 
-    _emitter = new EventEmitter() as TypedEventEmitter<FormEventMap<V>>;
+    _emitter: TypedEventEmitter<FormEventMap<V>>;
 
     get childEntriesCount(): number {
         return this._childEntries.size;
@@ -101,6 +101,14 @@ export class FormImpl<V extends FormValues> implements Form<V> {
     private _childEntries: OrderedMap<string, Entry<V>> = new OrderedMap();
 
     constructor(init: FormInit<V>) {
+        this._emitter = new EventEmitter() as TypedEventEmitter<
+            FormEventMap<V>
+        >;
+        // Prevent warnings for large numbers of listeners, which is expected
+        // since every form parameter will have multiple listeners for different
+        // events (change, validate, etc.)
+        this._emitter.setMaxListeners(600);
+
         this._values = init.values;
 
         // Clone a copy of the form's values so we can reset it

@@ -59,26 +59,6 @@ export const routes: Routes = [
         canActivate: [RequireActiveBatchAccountGuard],
         loadChildren: () => import("./components/certificate/certificate.module").then(m => m.CertificateModule),
     },
-    // Redirect for old Gallery URL not to break plugins using it
-    {
-        path: "market",
-        redirectTo: "gallery",
-        pathMatch: "full",
-    },
-    {
-        path: "market/:applicationId/actions",
-        redirectTo: "gallery/microsoft-offical/:applicationId",
-        pathMatch: "full",
-    },
-    {
-        path: "market/:applicationId/actions/:actionId/submit",
-        redirectTo: "gallery/microsoft-offical/:applicationId/:actionId/submit",
-    },
-    {
-        path: "gallery",
-        canActivate: [RequireActiveBatchAccountGuard],
-        loadChildren: () => import("./components/gallery/gallery.module").then(m => m.GalleryModule),
-    },
     {
         path: "applications",
         canActivate: [RequireActiveBatchAccountGuard],

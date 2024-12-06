@@ -1,43 +1,20 @@
 import { Injectable } from "@angular/core";
 import { BlobContainer } from "app/models";
-import { FileGroupOptionsDto } from "app/models/dtos";
 import { Constants } from "common";
 import { Observable } from "rxjs";
 import { flatMap, share } from "rxjs/operators";
-import { PythonRpcService } from "./python-rpc/python-rpc.service";
 import { AutoStorageService } from "./storage/auto-storage.service";
 import { StorageContainerService } from "./storage/storage-container.service";
 
 /**
- * Service to handle file-group calls to the Python RPC service.
+ * Service to handle file-group calls
  */
 @Injectable({providedIn: "root"})
-export class NcjFileGroupService {
+export class FileGroupService {
     constructor(
         private autoStorageService: AutoStorageService,
-        private storageContainerService: StorageContainerService,
-        private pythonRpcService: PythonRpcService) {
-    }
-
-    /**
-     * Calls the Batch CLI via Python to create a file-group in the Batch account's
-     * linked storage account.
-     */
-    public createOrUpdateFileGroup(
-        fileGroupName: string,
-        fileOrFolderPath: string,
-        options: FileGroupOptionsDto,
-        includeSubDirectories: boolean): Observable<any> {
-
-        /**
-         * NOTE: Have tweaked the progress callback to return percantage of any large file over 64MB
-         * as per storage client. Would still like to have a throughput fugure in here also.
-         */
-        return this.pythonRpcService.callWithAuth("create-file-group", [
-            fileGroupName,
-            fileOrFolderPath,
-            { ...options, recursive: includeSubDirectories },
-        ]);
+        private storageContainerService: StorageContainerService
+    ) {
     }
 
     /**
@@ -70,7 +47,7 @@ export class NcjFileGroupService {
      */
     public addFileGroupPrefix(fileGroupName: string) {
         return fileGroupName && !this.isFileGroup(fileGroupName)
-            ? `${Constants.ncjFileGroupPrefix}${fileGroupName}`
+            ? `${Constants.legacyFileGroupPrefix}${fileGroupName}`
             : fileGroupName;
     }
 
@@ -81,7 +58,7 @@ export class NcjFileGroupService {
      */
     public removeFileGroupPrefix(containerName: string) {
         return this.isFileGroup(containerName)
-            ? containerName.replace(Constants.ncjFileGroupPrefix, "")
+            ? containerName.replace(Constants.legacyFileGroupPrefix, "")
             : containerName;
     }
 
@@ -90,6 +67,6 @@ export class NcjFileGroupService {
      * @param fileGroup Name of the name to test
      */
     public isFileGroup(fileGroup: string) {
-        return fileGroup && fileGroup.startsWith(Constants.ncjFileGroupPrefix);
+        return fileGroup && fileGroup.startsWith(Constants.legacyFileGroupPrefix);
     }
 }

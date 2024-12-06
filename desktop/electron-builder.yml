@@ -14,10 +14,6 @@ files:
   - "!node_modules/@batch/"
 
 extraResources:
-  - from: "python/dist/main"
-    to: "python-rpc"
-    filter:
-      - "**/*"
   - "ThirdPartyNotices.txt"
   - "data"
   - "resources"

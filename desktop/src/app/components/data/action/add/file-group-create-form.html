@@ -17,26 +17,6 @@
                 </bl-form-field>
             </div>
             <p *ngIf="groupExists" class="exists">This file group already exists. Any new files will be added to this existing group, existing files will be uploaded only if they have been modified.</p>
-            <div class="form-element">
-                <mat-checkbox *ngIf="showCreateEmptyChk" (change)="createEmptyCheckChanged($event)" color="primary">Create an empty file group</mat-checkbox>
-            </div>
-        </bl-form-section>
-
-        <bl-form-section *ngIf="!createEmptyGroup" title="Files" subtitle="Drag and drop directories or files that you want to include in the file group">
-            <div class="form-element">
-                <bl-file-or-directory-picker formControlName="paths" dragMessage="Drag and drop files or folders here or select items with the buttons below"></bl-file-or-directory-picker>
-                <bl-directory-picker (onChange)="selectFolder($event)">Select a folder</bl-directory-picker>
-                <bl-directory-picker (onChange)="selectFolder($event)" [canPickFile]="true">Select a file</bl-directory-picker>
-            </div>
-            <div class="form-element">
-                <mat-checkbox formControlName="includeSubDirectories" color="primary">Include sub directories</mat-checkbox>
-            </div>
-        </bl-form-section>
-
-        <bl-form-section *ngIf="!createEmptyGroup" title="File options" subtitle="How data should be laid out in storage">
-            <div class="form-element">
-                <bl-file-group-options-picker formControlName="options"></bl-file-group-options-picker>
-            </div>
         </bl-form-section>
     </bl-form-page>
 </bl-complex-form>

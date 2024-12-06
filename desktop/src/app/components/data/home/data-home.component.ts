@@ -80,7 +80,7 @@ export class DataHomeComponent implements OnInit {
                 this.autoStorageService.getStorageAccountIdFromDataSource(this.dataSource)
                     .subscribe((storageAccountId) => {
                         if (this.dataSource === this.fileGroupsId) {
-                            this.containerTypePrefix.setValue(Constants.ncjFileGroupPrefix);
+                            this.containerTypePrefix.setValue(Constants.legacyFileGroupPrefix);
                         } else {
                             this.containerTypePrefix.setValue("");
                         }
@@ -108,7 +108,7 @@ export class DataHomeComponent implements OnInit {
                 Validators.pattern(validation.regex.fileGroup),
             ],
             asyncValidator: [
-                this._validateContainerUnique(fileGroup ? Constants.ncjFileGroupPrefix : ""),
+                this._validateContainerUnique(fileGroup ? Constants.legacyFileGroupPrefix : ""),
             ],
             validatorMessages: [
                 { code: "required", message: `The ${type} name is a required field` },
@@ -173,7 +173,7 @@ export class DataHomeComponent implements OnInit {
     }
 
     private _createEmptyContainer(name: string, fileGroup = false) {
-        const prefix = fileGroup ? Constants.ncjFileGroupPrefix : "";
+        const prefix = fileGroup ? Constants.legacyFileGroupPrefix : "";
         const container = `${prefix}${name}`;
         const obs = this.storageContainerService.create(this.storageAccountId, container);
         obs.subscribe({

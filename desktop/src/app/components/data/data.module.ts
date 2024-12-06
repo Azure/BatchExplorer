@@ -22,7 +22,8 @@ const components = [
     DataContainerConfigurationComponent,
     DataContainerFilesComponent,
     DataHomeComponent,
-    DataDefaultComponent, DataDetailsComponent,
+    DataDefaultComponent,
+    DataDetailsComponent,
     DeleteContainerDialogComponent,
     DataContainerListComponent,
 ];
@@ -31,9 +32,11 @@ const components = [
     declarations: components,
     exports: components,
     imports: [
-        DataRoutingModule, ...commonModules,
+        ...commonModules,
+        DataRoutingModule,
         DataSharedModule,
-        FileBrowseModule, FileModule,
+        FileBrowseModule,
+        FileModule,
         FileGroupCreateModule,
         BlobFilesBrowserModule,
         StorageAccountPickerModule,

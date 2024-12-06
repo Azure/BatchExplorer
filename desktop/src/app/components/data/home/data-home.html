@@ -10,7 +10,6 @@
             <button mat-menu-item (click)="openEmptyContainerForm()"> Empty container </button>
             <ng-container *ngIf="dataSource === fileGroupsId">
                 <button mat-menu-item (click)="openEmptyContainerForm(true)"> Empty file group </button>
-                <button mat-menu-item (click)="openFileGroupForm()"> From local folder(File group) </button>
             </ng-container>
         </mat-menu>
     </div>

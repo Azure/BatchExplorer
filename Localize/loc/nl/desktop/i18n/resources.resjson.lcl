@@ -484,6 +484,9 @@
       <Item ItemId=";auth.not-logged-in" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[You are not logged in. Please log in to continue.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[U bent niet aangemeld. Meld u aan om door te gaan.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -499,12 +502,18 @@
       <Item ItemId=";auth.tenant-sign-in-title" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Sign in to {tenant}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Aanmelden bij {tenant}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";auth.welcome" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Welcome to Azure Batch Explorer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Welkom bij Azure Batch Explorer]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1051,6 +1060,9 @@
       <Item ItemId=";common.welcome" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Welcome to Batch Explorer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Welkom bij Batch Explorer]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2372,7 +2384,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Home]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Start]]></Val>
+            <Val><![CDATA[Startpagina]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3667,12 +3679,18 @@
       <Item ItemId=";settings.external-browser-auth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use system browser for authentication]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Systeembrowser gebruiken voor verificatie]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";settings.external-browser-auth-hint" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Organizations with certain access policies may require sign-in with an internal window. Unset if you experience issues.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Organisaties met bepaalde toegangsbeleidsregels vereisen mogelijk aanmelding met een intern venster. Schakel uit als u problemen ondervindt.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

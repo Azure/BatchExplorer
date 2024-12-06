@@ -1,3 +1,17 @@
+# 2.22.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/56?closed=1)
+
+### Bug
+
+* Server errors appeared as blank alerts [\#2954](https://github.com/Azure/BatchExplorer/issues/2954)
+* Uploaded directories in File Explorer were flattened in the remote destination [\#2956](https://github.com/Azure/BatchExplorer/issues/2956)
+
+### Other
+
+* Removes Python from Batch Explorer [\#2955](https://github.com/Azure/BatchExplorer/issues/2955)
+* Removes Gallery from global navigation [\#2957](https://github.com/Azure/BatchExplorer/issues/2957)
+
 # 2.21.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/55?closed=1)

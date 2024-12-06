@@ -8,7 +8,6 @@ import { FilterBuilder, ListView } from "@batch-flask/core";
 import { Activity, DialogService } from "@batch-flask/ui";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
-import { NcjFileGroupService } from "app/services";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { List } from "immutable";
@@ -16,6 +15,7 @@ import { BehaviorSubject, Subject, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from "rxjs/operators";
 
 import "./file-group-picker.scss";
+import { FileGroupService } from "app/services";
 
 @Component({
     selector: "bl-file-group-picker",
@@ -42,7 +42,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     private _uploadActivity = new BehaviorSubject<Activity | null>(null);
 
     constructor(
-        private fileGroupService: NcjFileGroupService,
+        private fileGroupService: FileGroupService,
         private autoStorageService: AutoStorageService,
         private storageContainerService: StorageContainerService,
         private changeDetector: ChangeDetectorRef,
@@ -108,7 +108,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
             };
 
             this.fileGroupsData.setOptions({
-                filter: FilterBuilder.prop("name").startswith(Constants.ncjFileGroupPrefix),
+                filter: FilterBuilder.prop("name").startswith(Constants.legacyFileGroupPrefix),
             });
 
             this.fileGroupsData.fetchAll().subscribe(() => {
