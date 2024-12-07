@@ -573,10 +573,13 @@
       </Item>
       <Item ItemId=";auto-storage-account-picker.warnings.classic-incompatible" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Classic storage accounts are not compatible with data and gallery]]></Val>
+          <Val><![CDATA[Classic storage accounts are not compatible with data]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[经典存储帐户与数据和库不兼容]]></Val>
+            <Val><![CDATA[经典存储帐户与数据不兼容]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Classic storage accounts are not compatible with data and gallery]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1525,24 +1528,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";gallery.deprecation-warning" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery applications are no longer supported as of {deprecationDate}. See the Azure Batch rendering VM images & licensing retirement announcement for details.]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[自 {deprecationDate} 起不再支持库应用程序。有关详细信息，请参阅 Azure Batch 呈现 VM 映像和许可停用公告。]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";gallery.title" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery applications]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
-            <Val><![CDATA[库应用程序]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";info-box.infoIconTitle" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Information]]></Val>
@@ -2367,15 +2352,6 @@
           <Val><![CDATA[Data]]></Val>
           <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
             <Val><![CDATA[数据]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";main-navigation.gallery" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
-            <Val><![CDATA[库]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3690,15 +3666,6 @@
           <Val><![CDATA[Organizations with certain access policies may require sign-in with an internal window. Unset if you experience issues.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[具有特定访问策略的组织可能需要使用内部窗口进行登录。如果遇到问题，请取消设置。]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";settings.gallerySettings" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery settings]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[库设置]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
