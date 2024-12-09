@@ -573,10 +573,13 @@
       </Item>
       <Item ItemId=";auto-storage-account-picker.warnings.classic-incompatible" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Classic storage accounts are not compatible with data and gallery]]></Val>
+          <Val><![CDATA[Classic storage accounts are not compatible with data]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Las cuentas de almacenamiento clásicas no son compatibles con los datos y la galería]]></Val>
+            <Val><![CDATA[Las cuentas de almacenamiento clásicas no son compatibles con los datos]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Classic storage accounts are not compatible with data and gallery]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1525,24 +1528,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";gallery.deprecation-warning" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery applications are no longer supported as of {deprecationDate}. See the Azure Batch rendering VM images & licensing retirement announcement for details.]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Las aplicaciones de la galería ya no se admiten a partir del {deprecationDate}. Consulte el anuncio de retirada de licencias e imágenes de VM de Azure Batch Rendering para obtener más detalles.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";gallery.title" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery applications]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
-            <Val><![CDATA[Aplicaciones de Galería]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";info-box.infoIconTitle" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Information]]></Val>
@@ -2367,15 +2352,6 @@
           <Val><![CDATA[Data]]></Val>
           <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
             <Val><![CDATA[Datos]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";main-navigation.gallery" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
-            <Val><![CDATA[Galería]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3690,15 +3666,6 @@
           <Val><![CDATA[Organizations with certain access policies may require sign-in with an internal window. Unset if you experience issues.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Las organizaciones con determinadas directivas de acceso pueden requerir el inicio de sesión con una ventana interna. Desactívelo si experimenta problemas.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";settings.gallerySettings" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery settings]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Configuración de la galería]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

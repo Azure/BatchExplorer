@@ -573,10 +573,13 @@
       </Item>
       <Item ItemId=";auto-storage-account-picker.warnings.classic-incompatible" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Classic storage accounts are not compatible with data and gallery]]></Val>
+          <Val><![CDATA[Classic storage accounts are not compatible with data]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[A klasszikus tárfiókok nem kompatibilisek az adatokkal és a galériával]]></Val>
+            <Val><![CDATA[A klasszikus tárfiókok nem kompatibilisek az adatokkal]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Classic storage accounts are not compatible with data and gallery]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1525,24 +1528,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";gallery.deprecation-warning" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery applications are no longer supported as of {deprecationDate}. See the Azure Batch rendering VM images & licensing retirement announcement for details.]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[A katalógusbeli alkalmazások {deprecationDate} óta nem támogatottak. A részletekért tekintse meg az Azure Batch Rendering virtuális gépek lemezképeinek renderelésére és a licencelés megszüntetésére vonatkozó közleményt.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";gallery.title" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery applications]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Galériaalkalmazások]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";info-box.infoIconTitle" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Information]]></Val>
@@ -2367,15 +2352,6 @@
           <Val><![CDATA[Data]]></Val>
           <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
             <Val><![CDATA[Adatok]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";main-navigation.gallery" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
-            <Val><![CDATA[Gal??ria]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3690,15 +3666,6 @@
           <Val><![CDATA[Organizations with certain access policies may require sign-in with an internal window. Unset if you experience issues.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Adott hozzáférési szabályzatokkal rendelkező szervezetek megkövetelhetik a belső ablakkal történő bejelentkezést. Ha problémákat tapasztal, törölje a beállítását.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";settings.gallerySettings" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Gallery settings]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Galéria beállításai]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
