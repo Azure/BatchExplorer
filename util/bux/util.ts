@@ -336,7 +336,12 @@ export async function printStatus() {
     }
 }
 
-// integrations have one place to look for things like coverage reports
+/**
+ * Gather all build and test results into a single top-level 'build' directory.
+ * Used for both test/coverage reporting and release artifact upload.
+ *
+ * @param basePath The path to the top level of the repo
+ */
 export async function gatherBuildResults(basePath: string) {
     if (!basePath) {
         basePath =
@@ -345,14 +350,17 @@ export async function gatherBuildResults(basePath: string) {
     }
     const baseBuildDir = path.join(basePath, "build");
 
-    const doCopy = (src: string, dst: string) => {
-        info(`Copying build/test results from ${src}/* to ${dst}`);
+    const doCopy = (src: string, dst: string, patterns: string[] = ["*"]) => {
+        info(`Copying [${patterns.join(",")}] from ${src}/* to ${dst}}`);
         if (!fs.existsSync(src)) {
             warn(`${src} does not exist - skipping`);
             return;
         }
         mkdirp(dst);
-        shell.cp("-r", src + "/*", dst);
+
+        for (const pattern of patterns) {
+            shell.cp("-r", src + "/" + pattern, dst);
+        }
     };
 
     // packages
@@ -387,7 +395,8 @@ export async function gatherBuildResults(basePath: string) {
     );
     doCopy(
         path.join(basePath, "desktop", "release"),
-        path.join(baseBuildDir, "desktop", "release")
+        path.join(baseBuildDir, "desktop", "release"),
+        ["*.exe", "*.zip", "*.dmg", "*.deb", "*.rpm", "*.AppImage"]
     );
 }
 
