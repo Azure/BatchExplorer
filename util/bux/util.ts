@@ -396,7 +396,16 @@ export async function gatherBuildResults(basePath: string) {
     doCopy(
         path.join(basePath, "desktop", "release"),
         path.join(baseBuildDir, "desktop", "release"),
-        ["*.exe", "*.zip", "*.dmg", "*.deb", "*.rpm", "*.AppImage"]
+        [
+            "manifest.json",
+            "*.yml",
+            "*.exe",
+            "*.zip",
+            "*.dmg",
+            "*.deb",
+            "*.rpm",
+            "*.AppImage",
+        ]
     );
 }
 
