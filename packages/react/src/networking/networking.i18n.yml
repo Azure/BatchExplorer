@@ -3,3 +3,13 @@ networking:
     allNetworks: Allow all networks
     selectedNetworks: Allow selected networks
     disabled: Deny all networks
+  validation:
+    invalidIp: Invalid IP address
+    exactPrefix: The subnet prefix must be equal to {0}.
+    nonNullAddress: A non-null IP address is required.
+    nonNullSubnet: A non-null address range is required.
+    malformedSubnet: "Malformed address range. Address was: {0}."
+    octet: Octet {0} with value {1} is invalid. It must be between {3} and {4}.
+    formattedPrefix: The prefix must be between {0} and {1}.
+    malformedAddress: "Malformed IP Address: {0}"
+    invalidPublicIp: IP rules support public IP addresses only.
