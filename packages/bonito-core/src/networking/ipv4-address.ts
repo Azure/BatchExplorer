@@ -1,10 +1,9 @@
 /**
  * Copyright (c) Microsoft Corporation. All rights reserved.
- * ported from Portal repo
+ * ported from Portal codebase
  */
 
-import { translate } from "@azure/bonito-core";
-import { formatString } from "@azure/bonito-core/lib/localization";
+import { translate, formatString } from "../localization";
 
 export class IPv4Address {
     /**
@@ -27,7 +26,7 @@ export class IPv4Address {
     constructor(address: string, allowFirstOctetZero = false) {
         if (!address) {
             throw new Error(
-                translate("lib.react.networking.validation.nonNullAddress")
+                translate("bonito.core.networking.validation.nonNullAddress")
             );
         }
 
@@ -36,7 +35,7 @@ export class IPv4Address {
                 throw new Error(
                     formatString(
                         translate(
-                            "lib.react.networking.validation.malformedAddress"
+                            "bonito.core.networking.validation.malformedAddress"
                         ),
                         address
                     )
@@ -99,7 +98,7 @@ export class IPv4Address {
             throw new Error(
                 formatString(
                     translate(
-                        "lib.react.networking.validation.malformedAddress"
+                        "bonito.core.networking.validation.malformedAddress"
                     ),
                     this.address.join(".")
                 )
@@ -123,7 +122,7 @@ export class IPv4Address {
         ) {
             throw new Error(
                 formatString(
-                    translate("lib.react.networking.validation.octet"),
+                    translate("bonito.core.networking.validation.octet"),
                     octet + 1,
                     this.address[octet],
                     octet === 0 ? 1 : 0,

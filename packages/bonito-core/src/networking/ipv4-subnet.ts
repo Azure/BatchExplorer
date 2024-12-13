@@ -1,10 +1,9 @@
 /**
  * Copyright (c) Microsoft Corporation. All rights reserved.
- * ported from Portal repo
+ * ported from Portal codebase
  */
 
-import { translate } from "@azure/bonito-core";
-import { formatString } from "@azure/bonito-core/lib/localization";
+import { translate, formatString } from "../localization";
 import { IPv4Address } from "./ipv4-address";
 
 export class IPv4Subnet extends IPv4Address {
@@ -51,7 +50,7 @@ export class IPv4Subnet extends IPv4Address {
     ) {
         if (!subnetCidr) {
             throw new Error(
-                translate("lib.react.networking.validation.nonNullSubnet")
+                translate("bonito.core.networking.validation.nonNullSubnet")
             );
         }
 
@@ -65,7 +64,7 @@ export class IPv4Subnet extends IPv4Address {
         } else if (subnetTokens.length > 2) {
             // Too many slashes!
             formatString(
-                translate("lib.react.networking.validation.malformedSubnet"),
+                translate("bonito.core.networking.validation.malformedSubnet"),
                 subnetCidr
             );
             // throw new Error(
@@ -165,7 +164,7 @@ export class IPv4Subnet extends IPv4Address {
         ) {
             throw new Error(
                 formatString(
-                    translate("lib.react.networking.validation.octet"),
+                    translate("bonito.core.networking.validation.octet"),
                     octet + 1,
                     this.address[octet],
                     0,
@@ -188,7 +187,7 @@ export class IPv4Subnet extends IPv4Address {
             throw new Error(
                 formatString(
                     translate(
-                        "lib.react.networking.validation.formattedPrefix"
+                        "bonito.core.networking.validation.formattedPrefix"
                     ),
                     minPrefix,
                     maxPrefix

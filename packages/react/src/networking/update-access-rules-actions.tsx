@@ -1,5 +1,5 @@
 // import { translate } from "@azure/bonito-core/lib/localization";
-import { translate } from "@azure/bonito-core";
+import { translate, IPv4Subnet, safeGetIpv4Subnet } from "@azure/bonito-core";
 import { AbstractAction } from "@azure/bonito-core/lib/action";
 import {
     Form,
@@ -11,7 +11,6 @@ import {
 import { createReactForm } from "@azure/bonito-ui";
 import { RadioButton, StringList } from "@azure/bonito-ui/lib/components/form";
 import React from "react";
-import { IPv4Subnet, safeGetIpv4Subnet } from "./ipv4-subnet";
 
 export enum AccessRuleType {
     AllNetworks = "all-networks",
@@ -159,86 +158,86 @@ export class UpdateAccessRulesAction extends AbstractAction<UpdateAccessRulesFor
     }
 }
 
-function validateAccessRulesInputs(values: string[]): {
-    valid: boolean;
-    error: StringListValidationDetails;
-} {
-    // check if duplicate
-    let valid = true;
-    const errorData: StringListValidationDetails = {};
-    const uniqueValues = new Set<string>();
-    values.forEach((value, index) => {
-        if (uniqueValues.has(value)) {
-            valid = false;
-            errorData[index] = "Duplicate IP address";
-        }
-        uniqueValues.add(value);
-    });
+// function validateAccessRulesInputs(values: string[]): {
+//     valid: boolean;
+//     error: StringListValidationDetails;
+// } {
+//     // check if duplicate
+//     let valid = true;
+//     const errorData: StringListValidationDetails = {};
+//     const uniqueValues = new Set<string>();
+//     values.forEach((value, index) => {
+//         if (uniqueValues.has(value)) {
+//             valid = false;
+//             errorData[index] = "Duplicate IP address";
+//         }
+//         uniqueValues.add(value);
+//     });
 
-    if (!valid) {
-        return {
-            valid: false,
-            error: errorData,
-        };
-    }
-}
+//     if (!valid) {
+//         return {
+//             valid: false,
+//             error: errorData,
+//         };
+//     }
+// }
 
-function validateSingleInput(value: string): void {
-    const valueSplit = value.split("/");
-    if (
-        valueSplit.length === 1 &&
-        !getIPv4andIPv6AddressValidator(value, ko.observable(false), false)
-    ) {
-        // An IP address is expected
-        return Q({
-            valid: false,
-            message:
-                ClientResources.AccessControl.ClientIpExceptions
-                    .invalidIp4Address,
-        });
-    } else if (valueSplit.length > 1 && valueSplit[1]?.length === 0) {
-        // An IP address with a terminating '/' is expected.
-        return Q({
-            valid: false,
-            message:
-                ClientResources.AccessControl.ClientIpExceptions.invalidCidr,
-        });
-    } else if (valueSplit.length > 1) {
-        // A CIDR is expected
-        return Q(
-            performCidrValidation(
-                {
-                    prefixRequired: false,
-                    cidrBlockValidationRequired: true,
-                    minCidr: Constants.ExternalIpRange.minCidr,
-                    maxCidr: Constants.ExternalIpRange.maxCidr,
-                },
-                value
-            )
-        );
-    }
-}
+// function validateSingleInput(value: string): void {
+//     const valueSplit = value.split("/");
+//     if (
+//         valueSplit.length === 1 &&
+//         !getIPv4andIPv6AddressValidator(value, ko.observable(false), false)
+//     ) {
+//         // An IP address is expected
+//         return Q({
+//             valid: false,
+//             message:
+//                 ClientResources.AccessControl.ClientIpExceptions
+//                     .invalidIp4Address,
+//         });
+//     } else if (valueSplit.length > 1 && valueSplit[1]?.length === 0) {
+//         // An IP address with a terminating '/' is expected.
+//         return Q({
+//             valid: false,
+//             message:
+//                 ClientResources.AccessControl.ClientIpExceptions.invalidCidr,
+//         });
+//     } else if (valueSplit.length > 1) {
+//         // A CIDR is expected
+//         return Q(
+//             performCidrValidation(
+//                 {
+//                     prefixRequired: false,
+//                     cidrBlockValidationRequired: true,
+//                     minCidr: Constants.ExternalIpRange.minCidr,
+//                     maxCidr: Constants.ExternalIpRange.maxCidr,
+//                 },
+//                 value
+//             )
+//         );
+//     }
+// }
 
-function validatePublicIpRange(value: string): void {
-    // ACLs IP rules must be public IPs. See https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml
-    // Verified that the following ranges are also blocked by the server.
-    const nonPublicdSubnets = [
-        new IPv4Subnet("0.0.0.0/8"), // Local identification
-        new IPv4Subnet("10.0.0.0/8"), // Private IPs
-        new IPv4Subnet("172.16.0.0/12"), // Private IPs
-        new IPv4Subnet("192.168.0.0/16"), // Private IPs
-        new IPv4Subnet("224.0.0.0/3"), // 224.0.0.0 - 255.255.255.255 (Multicast & "Future use")
-    ];
+// function validatePublicIpRange(value: string): void {
+//     // ACLs IP rules must be public IPs. See https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml
+//     // Verified that the following ranges are also blocked by the server.
+//     const nonPublicdSubnets = [
+//         new IPv4Subnet("0.0.0.0/8"), // Local identification
+//         new IPv4Subnet("10.0.0.0/8"), // Private IPs
+//         new IPv4Subnet("172.16.0.0/12"), // Private IPs
+//         new IPv4Subnet("192.168.0.0/16"), // Private IPs
+//         new IPv4Subnet("224.0.0.0/3"), // 224.0.0.0 - 255.255.255.255 (Multicast & "Future use")
+//     ];
 
-    const address = safeGetIpv4Subnet(value);
+//     const address = safeGetIpv4Subnet(value);
 
-    if (address) {
-        nonPublicdSubnets.forEach((blacklistedSubnet) => {
-            if (blacklistedSubnet.doesSubnetOverlap(address)) {
-                throw new Error(
-                    translate("lib.react.networking.validation.invalidPublicIp")
-                );
-            }
-        });
-    }
-}
+//     if (address) {
+//         nonPublicdSubnets.forEach((blacklistedSubnet) => {
+//             if (blacklistedSubnet.doesSubnetOverlap(address)) {
+//                 throw new Error(
+//                     translate("lib.react.networking.validation.invalidPublicIp")
+//                 );
+//             }
+//         });
+//     }
+// }

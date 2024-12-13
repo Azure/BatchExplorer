@@ -1,0 +1,20 @@
+networking:
+  validation:
+    invalidIp: Invalid IP address.
+    exactPrefix: The subnet prefix must be equal to {0}.
+    nonNullAddress: A non-null IP address is required.
+    nonNullSubnet: A non-null address range is required.
+    malformedSubnet: "Malformed address range. Address was: {0}."
+    octet: Octet {0} with value {1} is invalid. It must be between {3} and {4}.
+    formattedPrefix: The prefix must be between {0} and {1}.
+    malformedAddress: "Malformed IP Address: {0}."
+    invalidPublicIp: IP rules support public IP addresses only.
+    ipv6NoPrefix: Malformed Ipv6 address. Prefix not expected.
+    invalidIPv6AddressRange: IPv6 Address range cannot be empty.
+    malformedIPv6: Malformed address range. Expected IPv6 address range.
+    ipv6PrefixMessage: Invalid Prefix. IPv6 address spaces should have prefixes from {0} to {1}.
+    leadingZerosIpAddress: The octet '{0}' in IP address '{1}' contains a leading zero.
+    cidrPrefix: The prefix must be between 1 and 32.
+    invalidCIDRBlockWithSuggestion: "{0} is not a valid CIDR block. Use {1}/{2} instead."
+    maxPrefix: The prefix must be smaller than or equal to {0}.
+    minPrefix: The prefix must be greater than or equal to {0}.
