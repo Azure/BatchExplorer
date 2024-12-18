@@ -28,8 +28,8 @@ import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
 
 const aadConfig: AADConfig = {
-    tenant: "common",
-    clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
+    tenant: "18c209a2-1706-4487-8d58-d0ec7163a699", // Test tenant
+    clientId: "bdade3f7-2a47-4f0f-818e-8bebad43c369",
     redirectUri: "https://login.microsoftonline.com/common/oauth2/nativeclient",
 };
 

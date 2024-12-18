@@ -1,8 +1,8 @@
 export * from "./unretryable-error-codes";
 
 export enum TenantPlaceholders {
-    common = "common",
-    organizations = "organizations",
+    common = "18c209a2-1706-4487-8d58-d0ec7163a699", // @@
+    organizations = "18c209a2-1706-4487-8d58-d0ec7163a699", // @@
     consumers = "consumers"
 }
 
