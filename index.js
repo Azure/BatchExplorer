@@ -7,7 +7,7 @@ let versionEl;
 
 const feedUrls = {
     stable: "https://batchexplorer.azureedge.net/stable",
-    insider: "https://batchexplorer.blob.core.windows.net/insider",
+    insider: "https://batchexplorer.azureedge.net/insider",
 };
 
 const feedUrl = feedUrls[buildType];
