@@ -28,7 +28,7 @@ import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
 
 const aadConfig: AADConfig = {
-    tenant: "18c209a2-1706-4487-8d58-d0ec7163a699", // Test tenant
+    tenant: "0adaca12-2e35-4d08-b22e-294e7232b173", // Test tenant
     clientId: "bdade3f7-2a47-4f0f-818e-8bebad43c369",
     redirectUri: "https://login.microsoftonline.com/common/oauth2/nativeclient",
 };
