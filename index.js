@@ -99,7 +99,7 @@ function getLinks(versionEl, downloadLinks) {
         downloadLinks["windowsZip"] = `${feedUrl}/${winVersion}/BatchExplorer-${winVersion}-win.zip`
         downloadLinks["linuxDeb"] = `${feedUrl}/${linuxVersion}/batch-explorer_${linuxVersion}_amd64.deb`;
         downloadLinks["linuxRpm"] = `${feedUrl}/${linuxVersion}/batch-explorer-${linuxVersion}.x86_64.rpm`;
-        downloadLinks["linuxAppimage"] = `${feedUrl}/${linuxVersion}/batch-explorer-${linuxVersion}-x86_64.AppImage`;
+        downloadLinks["linuxAppimage"] = `${feedUrl}/${linuxVersion}/BatchExplorer-${linuxVersion}.AppImage`;
         downloadLinks["osxDmg"] = `${feedUrl}/${macVersion}/BatchExplorer-${macVersion}.dmg`;
         downloadLinks["osxZip"] = `${feedUrl}/${macVersion}/BatchExplorer-${macVersion}-mac.zip`;
         updateDownloadLinks();
@@ -118,7 +118,7 @@ function getLinks(versionEl, downloadLinks) {
         versionEl.textContent = version;
         downloadLinks["linuxDeb"] = `${feedUrl}/${version}/batch-explorer_${version}_amd64.deb`;
         downloadLinks["linuxRpm"] = `${feedUrl}/${version}/batch-explorer-${version}.x86_64.rpm`;
-        downloadLinks["linuxAppimage"] = `${feedUrl}/${version}/batch-explorer-${version}-x86_64.AppImage`;
+        downloadLinks["linuxAppimage"] = `${feedUrl}/${version}/BatchExplorer-${version}.AppImage`;
         updateDownloadLinks();
     });
 
