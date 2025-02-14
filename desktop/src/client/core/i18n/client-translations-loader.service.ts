@@ -35,7 +35,7 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
 
     private async _loadDevelopementTranslations() {
         this.translations = await this.devTranslationsService.load((key, source) => {
-            log.error(`Translation with key ${key} already exists. ${source} is redefining it`);
+            log.warn(`Translation with key ${key} already exists. ${source} is redefining it`);
         });
         await this._loadLocaleTranslations();
     }
