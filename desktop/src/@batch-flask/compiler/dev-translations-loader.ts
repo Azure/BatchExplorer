@@ -16,7 +16,7 @@ export class DevTranslationsLoader {
         this.translations.clear();
         if (!this.translationFiles) {
             this.translationFiles = await glob("**/*.i18n.yml", {
-                ignore: "node_modules/**/*",
+                ignore: ["node_modules/**/*", "release/**/*"],
             });
         }
         await this._processFiles(this.translationFiles, duplicateCallback);
