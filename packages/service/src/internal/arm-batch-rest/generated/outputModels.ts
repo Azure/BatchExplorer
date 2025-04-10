@@ -545,7 +545,7 @@ export interface PoolPropertiesOutput {
   allocationState?: "Steady" | "Resizing" | "Stopping";
   /** The time at which the pool entered its current allocation state. */
   allocationStateTransitionTime?: string;
-  /** For information about available VM sizes, see Sizes for Virtual Machines (Linux) (https://azure.microsoft.com/documentation/articles/virtual-machines-linux-sizes/) or Sizes for Virtual Machines (Windows) (https://azure.microsoft.com/documentation/articles/virtual-machines-windows-sizes/). Batch supports all Azure VM sizes except STANDARD_A0 and those with premium storage (STANDARD_GS, STANDARD_DS, and STANDARD_DSV2 series). */
+  /** For information about available VM sizes, see Sizes for Virtual Machines in Azure (https://learn.microsoft.com/azure/virtual-machines/sizes/overview). Batch supports all Azure VM sizes except STANDARD_A0 and those with premium storage (STANDARD_GS, STANDARD_DS, and STANDARD_DSV2 series). */
   vmSize?: string;
   /** Deployment configuration properties. */
   deploymentConfiguration?: DeploymentConfigurationOutput;
@@ -645,7 +645,7 @@ export interface ImageReferenceOutput {
   sku?: string;
   /** A value of 'latest' can be specified to select the latest version of an image. If omitted, the default is 'latest'. */
   version?: string;
-  /** This property is mutually exclusive with other properties. The Azure Compute Gallery Image must have replicas in the same region as the Azure Batch account. For information about the firewall settings for the Batch node agent to communicate with the Batch service see https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration. */
+  /** This property is mutually exclusive with other properties. The Azure Compute Gallery Image must have replicas in the same region as the Azure Batch account. For information about the firewall settings for the Batch node agent to communicate with the Batch service see https://learn.microsoft.com/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration. */
   id?: string;
   /** This property is mutually exclusive with other properties and can be fetched from shared gallery image GET call. */
   sharedGalleryImageId?: string;
@@ -755,7 +755,7 @@ export interface OSDiskOutput {
 
 /** Specifies the ephemeral Disk Settings for the operating system disk used by the virtual machine. */
 export interface DiffDiskSettingsOutput {
-  /** This property can be used by user in the request to choose which location the operating system should be in. e.g., cache disk space for Ephemeral OS disk provisioning. For more information on Ephemeral OS disk size requirements, please refer to Ephemeral OS disk size requirements for Windows VMs at https://docs.microsoft.com/en-us/azure/virtual-machines/windows/ephemeral-os-disks#size-requirements and Linux VMs at https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ephemeral-os-disks#size-requirements. */
+  /** This property can be used by user in the request to choose which location the operating system should be in. e.g., cache disk space for Ephemeral OS disk provisioning. For more information on Ephemeral OS disk size requirements, please refer to Ephemeral OS disk size requirements for Windows VMs at https://learn.microsoft.com/azure/virtual-machines/windows/ephemeral-os-disks#size-requirements and Linux VMs at https://learn.microsoft.com/azure/virtual-machines/linux/ephemeral-os-disks#size-requirements. */
   placement?: "CacheDisk";
 }
 
@@ -850,7 +850,7 @@ export interface AutoScaleRunErrorOutput {
 
 /** The network configuration for a pool. */
 export interface NetworkConfigurationOutput {
-  /** The virtual network must be in the same region and subscription as the Azure Batch account. The specified subnet should have enough free IP addresses to accommodate the number of nodes in the pool. If the subnet doesn't have enough free IP addresses, the pool will partially allocate compute nodes and a resize error will occur. The 'MicrosoftAzureBatch' service principal must have the 'Classic Virtual Machine Contributor' Role-Based Access Control (RBAC) role for the specified VNet. The specified subnet must allow communication from the Azure Batch service to be able to schedule tasks on the compute nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the compute nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the compute nodes to unusable. If the specified VNet has any associated Network Security Groups (NSG), then a few reserved system ports must be enabled for inbound communication，including ports 29876 and 29877. Also enable outbound connections to Azure Storage on port 443. For more details see: https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration */
+  /** The virtual network must be in the same region and subscription as the Azure Batch account. The specified subnet should have enough free IP addresses to accommodate the number of nodes in the pool. If the subnet doesn't have enough free IP addresses, the pool will partially allocate compute nodes and a resize error will occur. The 'MicrosoftAzureBatch' service principal must have the 'Classic Virtual Machine Contributor' Role-Based Access Control (RBAC) role for the specified VNet. The specified subnet must allow communication from the Azure Batch service to be able to schedule tasks on the compute nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the compute nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the compute nodes to unusable. If the specified VNet has any associated Network Security Groups (NSG), then a few reserved system ports must be enabled for inbound communication，including ports 29876 and 29877. Also enable outbound connections to Azure Storage on port 443. For more details see: https://learn.microsoft.com/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration */
   subnetId?: string;
   /** The scope of dynamic vnet assignment. */
   dynamicVnetAssignmentScope?: "none" | "job";
@@ -1168,7 +1168,7 @@ export interface UpgradePolicyOutput {
 export interface AutomaticOSUpgradePolicyOutput {
   /** Whether OS image rollback feature should be disabled. */
   disableAutomaticRollback?: boolean;
-  /** Indicates whether OS upgrades should automatically be applied to scale set instances in a rolling fashion when a newer version of the OS image becomes available. <br /><br /> If this is set to true for Windows based pools, [WindowsConfiguration.enableAutomaticUpdates](https://learn.microsoft.com/en-us/rest/api/batchmanagement/pool/create?tabs=HTTP#windowsconfiguration) cannot be set to true. */
+  /** Indicates whether OS upgrades should automatically be applied to scale set instances in a rolling fashion when a newer version of the OS image becomes available. <br /><br /> If this is set to true for Windows based pools, [WindowsConfiguration.enableAutomaticUpdates](https://learn.microsoft.com/rest/api/batchmanagement/pool/create?tabs=HTTP#windowsconfiguration) cannot be set to true. */
   enableAutomaticOSUpgrade?: boolean;
   /** Indicates whether rolling upgrade policy should be used during Auto OS Upgrade. Auto OS Upgrade will fallback to the default policy if no policy is defined on the VMSS. */
   useRollingUpgradePolicy?: boolean;
@@ -1232,4 +1232,193 @@ export interface EndpointDependencyOutput {
 export interface EndpointDetailOutput {
   /** The port an endpoint is connected to. */
   port?: number;
+}
+
+/** Result of a list NSP (network security perimeter) configurations request. */
+export interface NetworkSecurityPerimeterConfigurationListResultOutput {
+  /** Array of network security perimeter results. */
+  value?: Array<NetworkSecurityPerimeterConfigurationOutput>;
+  /** The link used to get the next page of results. */
+  nextLink?: string;
+}
+
+/** Network security perimeter (NSP) configuration resource */
+export interface NetworkSecurityPerimeterConfigurationOutput
+  extends ProxyResourceOutput {
+  /** Network security configuration properties. */
+  properties?: NetworkSecurityPerimeterConfigurationPropertiesOutput;
+}
+
+/** Network security configuration properties. */
+export interface NetworkSecurityPerimeterConfigurationPropertiesOutput {
+  /** Provisioning state of a network security perimeter configuration that is being created or updated. */
+  provisioningState?:
+    | "Succeeded"
+    | "Creating"
+    | "Updating"
+    | "Deleting"
+    | "Accepted"
+    | "Failed"
+    | "Canceled";
+  /** List of provisioning issues, if any */
+  provisioningIssues?: Array<ProvisioningIssueOutput>;
+  /** Information about a network security perimeter (NSP) */
+  networkSecurityPerimeter?: NetworkSecurityPerimeterOutput;
+  /** Information about resource association */
+  resourceAssociation?: ResourceAssociationOutput;
+  /** Network security perimeter configuration profile */
+  profile?: NetworkSecurityProfileOutput;
+}
+
+/** Describes a provisioning issue for a network security perimeter configuration */
+export interface ProvisioningIssueOutput {
+  /** Name of the issue */
+  name?: string;
+  /** Details of a provisioning issue for a network security perimeter (NSP) configuration. Resource providers should generate separate provisioning issue elements for each separate issue detected, and include a meaningful and distinctive description, as well as any appropriate suggestedResourceIds and suggestedAccessRules */
+  properties?: ProvisioningIssuePropertiesOutput;
+}
+
+/** Details of a provisioning issue for a network security perimeter (NSP) configuration. Resource providers should generate separate provisioning issue elements for each separate issue detected, and include a meaningful and distinctive description, as well as any appropriate suggestedResourceIds and suggestedAccessRules */
+export interface ProvisioningIssuePropertiesOutput {
+  /** Type of issue */
+  issueType?:
+    | "Unknown"
+    | "ConfigurationPropagationFailure"
+    | "MissingPerimeterConfiguration"
+    | "MissingIdentityConfiguration";
+  /** Severity of the issue. */
+  severity?: "Warning" | "Error";
+  /** Description of the issue */
+  description?: string;
+  /** Fully qualified resource IDs of suggested resources that can be associated to the network security perimeter (NSP) to remediate the issue. */
+  suggestedResourceIds?: Array<string>;
+  /** Access rules that can be added to the network security profile (NSP) to remediate the issue. */
+  suggestedAccessRules?: Array<AccessRuleOutput>;
+}
+
+/** Access rule in a network security perimeter configuration profile */
+export interface AccessRuleOutput {
+  /** Name of the access rule */
+  name?: string;
+  /** Properties of Access Rule */
+  properties?: AccessRulePropertiesOutput;
+}
+
+/** Properties of Access Rule */
+export interface AccessRulePropertiesOutput {
+  /** Direction of Access Rule */
+  direction?: "Inbound" | "Outbound";
+  /** Address prefixes in the CIDR format for inbound rules */
+  addressPrefixes?: Array<string>;
+  /** Subscriptions for inbound rules */
+  subscriptions?: Array<AccessRulePropertiesSubscriptionsItemOutput>;
+  /** Network security perimeters for inbound rules */
+  networkSecurityPerimeters?: Array<NetworkSecurityPerimeterOutput>;
+  /** Fully qualified domain names (FQDN) for outbound rules */
+  fullyQualifiedDomainNames?: Array<string>;
+  /** Email addresses for outbound rules */
+  emailAddresses?: Array<string>;
+  /** Phone numbers for outbound rules */
+  phoneNumbers?: Array<string>;
+}
+
+/** Subscription identifiers */
+export interface AccessRulePropertiesSubscriptionsItemOutput {
+  /** The fully qualified Azure resource ID of the subscription e.g. ('/subscriptions/00000000-0000-0000-0000-000000000000') */
+  id?: string;
+}
+
+/** Information about a network security perimeter (NSP) */
+export interface NetworkSecurityPerimeterOutput {
+  /** Fully qualified Azure resource ID of the NSP resource */
+  id?: string;
+  /**
+   * Universal unique ID (UUID) of the network security perimeter
+   *
+   * Value may contain a UUID
+   */
+  perimeterGuid?: string;
+  /** Location of the network security perimeter */
+  location?: string;
+}
+
+/** Information about resource association */
+export interface ResourceAssociationOutput {
+  /** Name of the resource association */
+  name?: string;
+  /** Access mode of the resource association */
+  accessMode?: "Enforced" | "Learning" | "Audit";
+}
+
+/** Network security perimeter configuration profile */
+export interface NetworkSecurityProfileOutput {
+  /** Name of the profile */
+  name?: string;
+  /** Current access rules version */
+  accessRulesVersion?: number;
+  /** List of Access Rules */
+  accessRules?: Array<AccessRuleOutput>;
+  /** Current diagnostic settings version */
+  diagnosticSettingsVersion?: number;
+  /** List of log categories that are enabled */
+  enabledLogCategories?: Array<string>;
+}
+
+/** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
+export interface ProxyResourceOutput extends ResourceOutput {}
+
+/** Common fields that are returned in the response for all Azure Resource Manager resources */
+export interface ResourceOutput {
+  /** Fully qualified resource ID for the resource. E.g. "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}" */
+  id?: string;
+  /** The name of the resource */
+  name?: string;
+  /** The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts" */
+  type?: string;
+  /** Azure Resource Manager metadata containing createdBy and modifiedBy information. */
+  systemData?: SystemDataOutput;
+}
+
+/** Metadata pertaining to creation and last modification of the resource. */
+export interface SystemDataOutput {
+  /** The identity that created the resource. */
+  createdBy?: string;
+  /** The type of identity that created the resource. */
+  createdByType?: "User" | "Application" | "ManagedIdentity" | "Key";
+  /** The timestamp of resource creation (UTC). */
+  createdAt?: string;
+  /** The identity that last modified the resource. */
+  lastModifiedBy?: string;
+  /** The type of identity that last modified the resource. */
+  lastModifiedByType?: "User" | "Application" | "ManagedIdentity" | "Key";
+  /** The timestamp of resource last modification (UTC) */
+  lastModifiedAt?: string;
+}
+
+/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
+export interface ErrorResponseOutput {
+  /** The error object. */
+  error?: ErrorDetailOutput;
+}
+
+/** The error detail. */
+export interface ErrorDetailOutput {
+  /** The error code. */
+  code?: string;
+  /** The error message. */
+  message?: string;
+  /** The error target. */
+  target?: string;
+  /** The error details. */
+  details?: Array<ErrorDetailOutput>;
+  /** The error additional info. */
+  additionalInfo?: Array<ErrorAdditionalInfoOutput>;
+}
+
+/** The resource management error additional info. */
+export interface ErrorAdditionalInfoOutput {
+  /** The additional info type. */
+  type?: string;
+  /** The additional info. */
+  info?: Record<string, unknown>;
 }

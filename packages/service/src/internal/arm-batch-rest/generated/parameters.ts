@@ -384,3 +384,6 @@ export type PoolDeleteParameters = RequestParameters;
 export type PoolGetParameters = RequestParameters;
 export type PoolDisableAutoScaleParameters = RequestParameters;
 export type PoolStopResizeParameters = RequestParameters;
+export type NetworkSecurityPerimeterListConfigurationsParameters = RequestParameters;
+export type NetworkSecurityPerimeterGetConfigurationParameters = RequestParameters;
+export type NetworkSecurityPerimeterReconcileConfigurationParameters = RequestParameters;

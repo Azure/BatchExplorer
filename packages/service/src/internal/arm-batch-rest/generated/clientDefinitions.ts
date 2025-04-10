@@ -46,7 +46,10 @@ import {
   PoolDeleteParameters,
   PoolGetParameters,
   PoolDisableAutoScaleParameters,
-  PoolStopResizeParameters
+  PoolStopResizeParameters,
+  NetworkSecurityPerimeterListConfigurationsParameters,
+  NetworkSecurityPerimeterGetConfigurationParameters,
+  NetworkSecurityPerimeterReconcileConfigurationParameters
 } from "./parameters";
 import {
   BatchAccountCreate200Response,
@@ -149,7 +152,13 @@ import {
   PoolDisableAutoScale200Response,
   PoolDisableAutoScaleDefaultResponse,
   PoolStopResize200Response,
-  PoolStopResizeDefaultResponse
+  PoolStopResizeDefaultResponse,
+  NetworkSecurityPerimeterListConfigurations200Response,
+  NetworkSecurityPerimeterListConfigurationsDefaultResponse,
+  NetworkSecurityPerimeterGetConfiguration200Response,
+  NetworkSecurityPerimeterGetConfigurationDefaultResponse,
+  NetworkSecurityPerimeterReconcileConfiguration202Response,
+  NetworkSecurityPerimeterReconcileConfigurationDefaultResponse
 } from "./responses";
 import { Client, StreamableMethod } from "@azure-rest/core-client";
 
@@ -253,7 +262,7 @@ export interface BatchAccountGetDetector {
 }
 
 export interface BatchAccountListOutboundNetworkDependenciesEndpoints {
-  /** Lists the endpoints that a Batch Compute Node under this Batch Account may call as part of Batch service administration. If you are deploying a Pool inside of a virtual network that you specify, you must make sure your network allows outbound access to these endpoints. Failure to allow access to these endpoints may cause Batch to mark the affected nodes as unusable. For more information about creating a pool inside of a virtual network, see https://docs.microsoft.com/en-us/azure/batch/batch-virtual-network. */
+  /** Lists the endpoints that a Batch Compute Node under this Batch Account may call as part of Batch service administration. If you are deploying a Pool inside of a virtual network that you specify, you must make sure your network allows outbound access to these endpoints. Failure to allow access to these endpoints may cause Batch to mark the affected nodes as unusable. For more information about creating a pool inside of a virtual network, see https://learn.microsoft.com/azure/batch/batch-virtual-network. */
   get(
     options?: BatchAccountListOutboundNetworkDependenciesEndpointsParameters
   ): StreamableMethod<
@@ -541,6 +550,36 @@ export interface PoolStopResize {
   >;
 }
 
+export interface NetworkSecurityPerimeterListConfigurations {
+  /** Lists all of the NSP configurations in the specified account. */
+  get(
+    options?: NetworkSecurityPerimeterListConfigurationsParameters
+  ): StreamableMethod<
+    | NetworkSecurityPerimeterListConfigurations200Response
+    | NetworkSecurityPerimeterListConfigurationsDefaultResponse
+  >;
+}
+
+export interface NetworkSecurityPerimeterGetConfiguration {
+  /** Gets information about the specified NSP configuration. */
+  get(
+    options?: NetworkSecurityPerimeterGetConfigurationParameters
+  ): StreamableMethod<
+    | NetworkSecurityPerimeterGetConfiguration200Response
+    | NetworkSecurityPerimeterGetConfigurationDefaultResponse
+  >;
+}
+
+export interface NetworkSecurityPerimeterReconcileConfiguration {
+  /** Reconciles the specified NSP configuration. */
+  post(
+    options?: NetworkSecurityPerimeterReconcileConfigurationParameters
+  ): StreamableMethod<
+    | NetworkSecurityPerimeterReconcileConfiguration202Response
+    | NetworkSecurityPerimeterReconcileConfigurationDefaultResponse
+  >;
+}
+
 export interface Routes {
   /** Resource for '/subscriptions/\{subscriptionId\}/resourceGroups/\{resourceGroupName\}/providers/Microsoft.Batch/batchAccounts/\{accountName\}' has methods for the following verbs: put, patch, delete, get */
   (
@@ -748,6 +787,29 @@ export interface Routes {
     accountName: string,
     poolName: string
   ): PoolStopResize;
+  /** Resource for '/subscriptions/\{subscriptionId\}/resourceGroups/\{resourceGroupName\}/providers/Microsoft.Batch/batchAccounts/\{accountName\}/networkSecurityPerimeterConfigurations' has methods for the following verbs: get */
+  (
+    path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/networkSecurityPerimeterConfigurations",
+    subscriptionId: string,
+    resourceGroupName: string,
+    accountName: string
+  ): NetworkSecurityPerimeterListConfigurations;
+  /** Resource for '/subscriptions/\{subscriptionId\}/resourceGroups/\{resourceGroupName\}/providers/Microsoft.Batch/batchAccounts/\{accountName\}/networkSecurityPerimeterConfigurations/\{networkSecurityPerimeterConfigurationName\}' has methods for the following verbs: get */
+  (
+    path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/networkSecurityPerimeterConfigurations/{networkSecurityPerimeterConfigurationName}",
+    subscriptionId: string,
+    resourceGroupName: string,
+    accountName: string,
+    networkSecurityPerimeterConfigurationName: string
+  ): NetworkSecurityPerimeterGetConfiguration;
+  /** Resource for '/subscriptions/\{subscriptionId\}/resourceGroups/\{resourceGroupName\}/providers/Microsoft.Batch/batchAccounts/\{accountName\}/networkSecurityPerimeterConfigurations/\{networkSecurityPerimeterConfigurationName\}/reconcile' has methods for the following verbs: post */
+  (
+    path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/networkSecurityPerimeterConfigurations/{networkSecurityPerimeterConfigurationName}/reconcile",
+    subscriptionId: string,
+    resourceGroupName: string,
+    accountName: string,
+    networkSecurityPerimeterConfigurationName: string
+  ): NetworkSecurityPerimeterReconcileConfiguration;
 }
 
 export type BatchManagementClient = Client & {
