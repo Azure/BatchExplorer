@@ -102,7 +102,13 @@ import {
   PoolDisableAutoScale200Response,
   PoolDisableAutoScaleDefaultResponse,
   PoolStopResize200Response,
-  PoolStopResizeDefaultResponse
+  PoolStopResizeDefaultResponse,
+  NetworkSecurityPerimeterListConfigurations200Response,
+  NetworkSecurityPerimeterListConfigurationsDefaultResponse,
+  NetworkSecurityPerimeterGetConfiguration200Response,
+  NetworkSecurityPerimeterGetConfigurationDefaultResponse,
+  NetworkSecurityPerimeterReconcileConfiguration202Response,
+  NetworkSecurityPerimeterReconcileConfigurationDefaultResponse
 } from "./responses";
 
 const responseMap: Record<string, string[]> = {
@@ -249,6 +255,18 @@ const responseMap: Record<string, string[]> = {
   ],
   "POST /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/pools/{poolName}/stopResize": [
     "200"
+  ],
+  "GET /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/networkSecurityPerimeterConfigurations": [
+    "200"
+  ],
+  "GET /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/networkSecurityPerimeterConfigurations/{networkSecurityPerimeterConfigurationName}": [
+    "200"
+  ],
+  "POST /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/networkSecurityPerimeterConfigurations/{networkSecurityPerimeterConfigurationName}/reconcile": [
+    "202"
+  ],
+  "GET /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/networkSecurityPerimeterConfigurations/{networkSecurityPerimeterConfigurationName}/reconcile": [
+    "202"
   ]
 };
 
@@ -456,6 +474,21 @@ export function isUnexpected(
 ): response is PoolStopResizeDefaultResponse;
 export function isUnexpected(
   response:
+    | NetworkSecurityPerimeterListConfigurations200Response
+    | NetworkSecurityPerimeterListConfigurationsDefaultResponse
+): response is NetworkSecurityPerimeterListConfigurationsDefaultResponse;
+export function isUnexpected(
+  response:
+    | NetworkSecurityPerimeterGetConfiguration200Response
+    | NetworkSecurityPerimeterGetConfigurationDefaultResponse
+): response is NetworkSecurityPerimeterGetConfigurationDefaultResponse;
+export function isUnexpected(
+  response:
+    | NetworkSecurityPerimeterReconcileConfiguration202Response
+    | NetworkSecurityPerimeterReconcileConfigurationDefaultResponse
+): response is NetworkSecurityPerimeterReconcileConfigurationDefaultResponse;
+export function isUnexpected(
+  response:
     | BatchAccountCreate200Response
     | BatchAccountCreate202Response
     | BatchAccountCreateDefaultResponse
@@ -557,6 +590,12 @@ export function isUnexpected(
     | PoolDisableAutoScaleDefaultResponse
     | PoolStopResize200Response
     | PoolStopResizeDefaultResponse
+    | NetworkSecurityPerimeterListConfigurations200Response
+    | NetworkSecurityPerimeterListConfigurationsDefaultResponse
+    | NetworkSecurityPerimeterGetConfiguration200Response
+    | NetworkSecurityPerimeterGetConfigurationDefaultResponse
+    | NetworkSecurityPerimeterReconcileConfiguration202Response
+    | NetworkSecurityPerimeterReconcileConfigurationDefaultResponse
 ): response is
   | BatchAccountCreateDefaultResponse
   | BatchAccountUpdateDefaultResponse
@@ -602,7 +641,10 @@ export function isUnexpected(
   | PoolDeleteDefaultResponse
   | PoolGetDefaultResponse
   | PoolDisableAutoScaleDefaultResponse
-  | PoolStopResizeDefaultResponse {
+  | PoolStopResizeDefaultResponse
+  | NetworkSecurityPerimeterListConfigurationsDefaultResponse
+  | NetworkSecurityPerimeterGetConfigurationDefaultResponse
+  | NetworkSecurityPerimeterReconcileConfigurationDefaultResponse {
   const lroOriginal = response.headers["x-ms-original-url"];
   const url = new URL(lroOriginal ?? response.request.url);
   const method = response.request.method;

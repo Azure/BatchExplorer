@@ -26,7 +26,10 @@ import {
   ListPrivateEndpointConnectionsResultOutput,
   PrivateEndpointConnectionOutput,
   ListPoolsResultOutput,
-  PoolOutput
+  PoolOutput,
+  NetworkSecurityPerimeterConfigurationListResultOutput,
+  NetworkSecurityPerimeterConfigurationOutput,
+  ErrorResponseOutput
 } from "./outputModels";
 
 /** Creates a new Batch account with the specified parameters. Existing accounts cannot be updated with this API and should instead be updated with the Update Batch Account API. */
@@ -199,14 +202,14 @@ export interface BatchAccountGetDetectorDefaultResponse extends HttpResponse {
   body: CloudErrorOutput;
 }
 
-/** Lists the endpoints that a Batch Compute Node under this Batch Account may call as part of Batch service administration. If you are deploying a Pool inside of a virtual network that you specify, you must make sure your network allows outbound access to these endpoints. Failure to allow access to these endpoints may cause Batch to mark the affected nodes as unusable. For more information about creating a pool inside of a virtual network, see https://docs.microsoft.com/en-us/azure/batch/batch-virtual-network. */
+/** Lists the endpoints that a Batch Compute Node under this Batch Account may call as part of Batch service administration. If you are deploying a Pool inside of a virtual network that you specify, you must make sure your network allows outbound access to these endpoints. Failure to allow access to these endpoints may cause Batch to mark the affected nodes as unusable. For more information about creating a pool inside of a virtual network, see https://learn.microsoft.com/azure/batch/batch-virtual-network. */
 export interface BatchAccountListOutboundNetworkDependenciesEndpoints200Response
   extends HttpResponse {
   status: "200";
   body: OutboundEnvironmentEndpointCollectionOutput;
 }
 
-/** Lists the endpoints that a Batch Compute Node under this Batch Account may call as part of Batch service administration. If you are deploying a Pool inside of a virtual network that you specify, you must make sure your network allows outbound access to these endpoints. Failure to allow access to these endpoints may cause Batch to mark the affected nodes as unusable. For more information about creating a pool inside of a virtual network, see https://docs.microsoft.com/en-us/azure/batch/batch-virtual-network. */
+/** Lists the endpoints that a Batch Compute Node under this Batch Account may call as part of Batch service administration. If you are deploying a Pool inside of a virtual network that you specify, you must make sure your network allows outbound access to these endpoints. Failure to allow access to these endpoints may cause Batch to mark the affected nodes as unusable. For more information about creating a pool inside of a virtual network, see https://learn.microsoft.com/azure/batch/batch-virtual-network. */
 export interface BatchAccountListOutboundNetworkDependenciesEndpointsDefaultResponse
   extends HttpResponse {
   status: string;
@@ -765,4 +768,55 @@ export interface PoolStopResize200Response extends HttpResponse {
 export interface PoolStopResizeDefaultResponse extends HttpResponse {
   status: string;
   body: CloudErrorOutput;
+}
+
+/** Lists all of the NSP configurations in the specified account. */
+export interface NetworkSecurityPerimeterListConfigurations200Response
+  extends HttpResponse {
+  status: "200";
+  body: NetworkSecurityPerimeterConfigurationListResultOutput;
+}
+
+/** Lists all of the NSP configurations in the specified account. */
+export interface NetworkSecurityPerimeterListConfigurationsDefaultResponse
+  extends HttpResponse {
+  status: string;
+  body: CloudErrorOutput;
+}
+
+/** Gets information about the specified NSP configuration. */
+export interface NetworkSecurityPerimeterGetConfiguration200Response
+  extends HttpResponse {
+  status: "200";
+  body: NetworkSecurityPerimeterConfigurationOutput;
+}
+
+/** Gets information about the specified NSP configuration. */
+export interface NetworkSecurityPerimeterGetConfigurationDefaultResponse
+  extends HttpResponse {
+  status: string;
+  body: CloudErrorOutput;
+}
+
+export interface NetworkSecurityPerimeterReconcileConfiguration202Headers {
+  /** The URL of the resource used to check the status of the asynchronous operation. */
+  location?: string;
+  /** Suggested delay to check the status of the asynchronous operation. The value is an integer that specifies the delay in seconds. */
+  "retry-after"?: number;
+}
+
+/** Reconciles the specified NSP configuration. */
+export interface NetworkSecurityPerimeterReconcileConfiguration202Response
+  extends HttpResponse {
+  status: "202";
+  body: Record<string, unknown>;
+  headers: RawHttpHeaders &
+    NetworkSecurityPerimeterReconcileConfiguration202Headers;
+}
+
+/** Reconciles the specified NSP configuration. */
+export interface NetworkSecurityPerimeterReconcileConfigurationDefaultResponse
+  extends HttpResponse {
+  status: string;
+  body: ErrorResponseOutput;
 }
