@@ -6,7 +6,8 @@ export class NodeUtils {
         if (category === "error") {
             return [NodeState.startTaskFailed, NodeState.unusable, NodeState.unknown];
         } else if (category === "transition") {
-            return [NodeState.creating, NodeState.starting, NodeState.rebooting, NodeState.reimaging, NodeState.leavingPool];
+            return [NodeState.creating, NodeState.starting, NodeState.rebooting,
+                    NodeState.reimaging, NodeState.leavingPool, NodeState.upgradingos];
         } else if (category === "running") {
             return [NodeState.running25, NodeState.running50, NodeState.running75, NodeState.running99, NodeState.running100];
         }
