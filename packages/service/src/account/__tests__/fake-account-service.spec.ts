@@ -26,4 +26,19 @@ describe("FakeAccountService", () => {
         );
         expect(account).toBeUndefined();
     });
+
+    test("should patch account by ARM resource ID", async () => {
+        const account = await service.patch(hoboAcctResId, {
+            properties: {
+                publicNetworkAccess: "SecuredByPerimeter",
+            },
+            tags: { foo: "bar" },
+        });
+
+        expect(account?.name).toEqual("hobo");
+        expect(account?.properties?.publicNetworkAccess).toEqual(
+            "SecuredByPerimeter"
+        );
+        expect(account?.tags).toEqual({ foo: "bar" });
+    });
 });
