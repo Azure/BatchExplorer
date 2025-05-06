@@ -19,6 +19,7 @@ import {
 } from "../node/node-models";
 import { Pool, PoolOutput } from "../pool/pool-models";
 import { BatchJobOutput, BatchTaskOutput } from "../batch-models";
+import { AccountBatchUpdateParameters } from "../arm-batch-models";
 
 /**
  * A fake dataset which includes Batch accounts, pools, etc.
@@ -113,6 +114,19 @@ export interface BatchFakeSet extends FakeSet {
      * @param jobId
      */
     listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[];
+
+    /**
+     * update a batch account and return it
+     *
+     * @param accountResouceId The resource id of the account
+     * @param parameters The parameters to update the account with
+     * @param opts
+     *
+     */
+    patchBatchAccount(
+        accountResouceId: string,
+        parameters: AccountBatchUpdateParameters
+    ): BatchAccountOutput | undefined;
 }
 
 export abstract class AbstractBatchFakeSet
@@ -140,6 +154,20 @@ export abstract class AbstractBatchFakeSet
 
     getBatchAccount(batchAccountId: string): BatchAccountOutput | undefined {
         return this.batchAccounts[batchAccountId.toLowerCase()];
+    }
+
+    patchBatchAccount(
+        accountResouceId: string,
+        parameters: AccountBatchUpdateParameters
+    ): BatchAccountOutput | undefined {
+        const batchAccount = this.getBatchAccount(accountResouceId);
+        if (!batchAccount) {
+            throw new Error("No batch account with ID " + accountResouceId);
+        }
+
+        const oldAccount = cloneDeep(batchAccount);
+
+        return mergeDeep(oldAccount, parameters as BatchAccountOutput);
     }
 
     listBatchAccountsBySubscription(subId: string): BatchAccountOutput[] {

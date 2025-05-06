@@ -1,5 +1,8 @@
 import { OperationOptions } from "@azure/bonito-core";
-import { BatchAccountOutput } from "../arm-batch-models";
+import {
+    AccountBatchUpdateParameters,
+    BatchAccountOutput,
+} from "../arm-batch-models";
 import { AccountService } from "./account-service";
 import { BatchFakeSet, BasicBatchFakeSet } from "../test-util/fakes";
 
@@ -15,6 +18,18 @@ export class FakeAccountService implements AccountService {
         opts?: OperationOptions
     ): Promise<BatchAccountOutput | undefined> {
         const result = this.fakeSet.getBatchAccount(accountResouceId);
+        return result;
+    }
+
+    async patch(
+        accountResouceId: string,
+        parameters: AccountBatchUpdateParameters,
+        opts?: OperationOptions
+    ): Promise<BatchAccountOutput | undefined> {
+        const result = this.fakeSet.patchBatchAccount(
+            accountResouceId,
+            parameters
+        );
         return result;
     }
 }

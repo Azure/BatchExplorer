@@ -96,4 +96,77 @@ describe("LiveAccountService", () => {
         const account = await service.get(hoboAcctResId);
         expect(account).toBeUndefined();
     });
+
+    test("Patch account successfully", async () => {
+        const oriAccount = fakeSet.getBatchAccount(hoboAcctResId);
+        const patchBody = { tags: { key123: "value123" } };
+        const mockResponse = {
+            ...oriAccount,
+            ...patchBody,
+        };
+
+        httpClient.addExpected(
+            new MockHttpResponse(
+                `${getArmUrl()}${hoboAcctResId}?api-version=${BatchApiVersion.arm}`,
+                {
+                    status: 200,
+                    body: JSON.stringify(mockResponse),
+                }
+            ),
+            {
+                method: "PATCH",
+                body: JSON.stringify(patchBody),
+            }
+        );
+
+        const result = await service.patch(hoboAcctResId, patchBody);
+        expect(result).toBeDefined();
+        expect(result?.tags).toEqual({ key123: "value123" });
+    });
+
+    test("Patch account returns undefined if not found", async () => {
+        const patchBody = { tags: { key: "value" } };
+
+        httpClient.addExpected(
+            new MockHttpResponse(
+                `${getArmUrl()}${hoboAcctResId}?api-version=${BatchApiVersion.arm}`,
+                {
+                    status: 404,
+                    body: "Not found",
+                }
+            ),
+            {
+                method: "PATCH",
+                body: JSON.stringify(patchBody),
+            }
+        );
+
+        const result = await service.patch(hoboAcctResId, patchBody);
+        expect(result).toBeUndefined();
+    });
+
+    test("Patch account throws error on unexpected status", async () => {
+        const patchBody = { tags: { key: "value" } };
+
+        httpClient.addExpected(
+            new MockHttpResponse(
+                `${getArmUrl()}${hoboAcctResId}?api-version=${BatchApiVersion.arm}`,
+                {
+                    status: 500,
+                    body: "Internal Server Error",
+                }
+            ),
+            {
+                method: "PATCH",
+                body: JSON.stringify(patchBody),
+            }
+        );
+
+        await expect(() => service.patch(hoboAcctResId, patchBody)).rejects
+            .toMatchInlineSnapshot(`
+            [Error: The Batch management plane returned an unexpected status code [unexpected 500 status]
+            Response body:
+            "Internal Server Error"]
+            `);
+    });
 });
