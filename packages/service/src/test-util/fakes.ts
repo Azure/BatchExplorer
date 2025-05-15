@@ -19,7 +19,10 @@ import {
 } from "../node/node-models";
 import { Pool, PoolOutput } from "../pool/pool-models";
 import { BatchJobOutput, BatchTaskOutput } from "../batch-models";
-import { AccountBatchUpdateParameters } from "../arm-batch-models";
+import {
+    AccountBatchUpdateParameters,
+    NetworkSecurityPerimeterConfigurationListResultOutput,
+} from "../arm-batch-models";
 
 /**
  * A fake dataset which includes Batch accounts, pools, etc.
@@ -127,6 +130,10 @@ export interface BatchFakeSet extends FakeSet {
         accountResouceId: string,
         parameters: AccountBatchUpdateParameters
     ): BatchAccountOutput | undefined;
+
+    listNetworkSecurityPerimeterConfigurations(
+        accountResouceId: string
+    ): NetworkSecurityPerimeterConfigurationListResultOutput;
 }
 
 export abstract class AbstractBatchFakeSet
@@ -151,6 +158,12 @@ export abstract class AbstractBatchFakeSet
     };
 
     protected abstract batchTasks: { [taskKey: string]: BatchTaskOutput };
+
+    protected networkSecurityPerimeterConfigurations: {
+        [
+            accountId: string
+        ]: NetworkSecurityPerimeterConfigurationListResultOutput;
+    } = {};
 
     getBatchAccount(batchAccountId: string): BatchAccountOutput | undefined {
         return this.batchAccounts[batchAccountId.toLowerCase()];
@@ -279,6 +292,21 @@ export abstract class AbstractBatchFakeSet
                 )
             )
             .map((entry) => entry[1]);
+    }
+
+    listNetworkSecurityPerimeterConfigurations(
+        accountResouceId: string
+    ): NetworkSecurityPerimeterConfigurationListResultOutput {
+        const res =
+            this.networkSecurityPerimeterConfigurations[
+                accountResouceId.toLowerCase()
+            ];
+        if (!res) {
+            return {
+                value: [],
+            };
+        }
+        return res;
     }
 }
 
@@ -928,6 +956,98 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                 },
             },
         ],
+    };
+
+    networkSecurityPerimeterConfigurations: {
+        [
+            accountId: string
+        ]: NetworkSecurityPerimeterConfigurationListResultOutput;
+    } = {
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/supercomputing/providers/microsoft.batch/batchaccounts/hobo":
+            {
+                value: [
+                    {
+                        id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/supercomputing/providers/microsoft.batch/batchaccounts/hobo/networkSecurityPerimeterConfigurations/00000000-0000-0000-0000-000000000000.abcd",
+                        name: "00000000-0000-0000-0000-000000000000.resourceAssociationName",
+                        type: "Microsoft.Batch/batchAccounts/networkSecurityPerimeterConfigurations",
+                        properties: {
+                            provisioningState: "Succeeded",
+                            provisioningIssues: [
+                                {
+                                    name: "issue1",
+                                },
+                                {
+                                    name: "issue2",
+                                },
+                            ],
+                            networkSecurityPerimeter: {
+                                id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/npipv2/providers/Microsoft.Network/networkSecurityPerimeters/nspname",
+                                perimeterGuid:
+                                    "00000000-0000-0000-0000-000000000000",
+                                location: "eastus2euap",
+                            },
+                            resourceAssociation: {
+                                name: "resourceAssociationName",
+                                accessMode: "Enforced",
+                            },
+                            profile: {
+                                name: "default",
+                                accessRulesVersion: 5,
+                                accessRules: [
+                                    {
+                                        name: "test",
+                                        properties: {
+                                            direction: "Inbound",
+                                            addressPrefixes: [
+                                                "111.111.111.111/32",
+                                            ],
+                                            fullyQualifiedDomainNames: [],
+                                            subscriptions: [],
+                                            networkSecurityPerimeters: [],
+                                            emailAddresses: [],
+                                            phoneNumbers: [],
+                                        },
+                                    },
+                                    {
+                                        name: "rule2",
+                                        properties: {
+                                            direction: "Outbound",
+                                            addressPrefixes: [],
+                                            fullyQualifiedDomainNames: ["*"],
+                                            subscriptions: [],
+                                            networkSecurityPerimeters: [],
+                                            emailAddresses: [],
+                                            phoneNumbers: [],
+                                        },
+                                    },
+                                ],
+                                diagnosticSettingsVersion: 0,
+                                enabledLogCategories: [
+                                    "NspPublicInboundPerimeterRulesAllowed",
+                                    "NspPublicInboundPerimeterRulesDenied",
+                                    "NspPublicOutboundPerimeterRulesAllowed",
+                                    "NspPublicOutboundPerimeterRulesDenied",
+                                    "NspIntraPerimeterOutboundAllowed",
+                                    "NspPublicInboundResourceRulesAllowed",
+                                    "NspPublicInboundResourceRulesDenied",
+                                    "NspPublicOutboundResourceRulesAllowed",
+                                    "NspPublicOutboundResourceRulesDenied",
+                                    "NspPrivateInboundAllowed",
+                                    "NspIntraPerimeterInboundAllowed",
+                                    "NspOutboundAttempt",
+                                    "NspCrossPerimeterInboundAllowed",
+                                    "NspCrossPerimeterOutboundAllowed",
+                                ],
+                            },
+                        },
+                    },
+                ],
+            },
+        "/subscriptions/11111111-1111-1111-1111-111111111111/resourcegroups/test/providers/microsoft.batch/batchaccounts/hobo":
+            {
+                value: [],
+                nextLink: undefined,
+            },
     };
 }
 

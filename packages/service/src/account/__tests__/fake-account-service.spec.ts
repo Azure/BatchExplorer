@@ -41,4 +41,15 @@ describe("FakeAccountService", () => {
         );
         expect(account?.tags).toEqual({ foo: "bar" });
     });
+
+    test("should list network security perimeter configurations", async () => {
+        const config =
+            await service.listNetworkSecurityPerimeterConfigurations(
+                hoboAcctResId
+            );
+        expect(config?.value?.length).toEqual(1);
+        expect(config?.value?.[0].name).toEqual(
+            "00000000-0000-0000-0000-000000000000.resourceAssociationName"
+        );
+    });
 });

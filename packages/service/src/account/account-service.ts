@@ -2,6 +2,7 @@ import { OperationOptions } from "@azure/bonito-core";
 import {
     AccountBatchUpdateParameters,
     BatchAccountOutput,
+    NetworkSecurityPerimeterConfigurationListResultOutput,
 } from "../arm-batch-models";
 
 export interface AccountService {
@@ -26,4 +27,14 @@ export interface AccountService {
         parameters: AccountBatchUpdateParameters,
         opts?: OperationOptions
     ): Promise<BatchAccountOutput | undefined>;
+
+    /**
+     * list the network security perimeter configuration of a batch account
+     * @param accountResouceId The resource id of the account
+     * @param opts
+     */
+    listNetworkSecurityPerimeterConfigurations(
+        accountResouceId: string,
+        opts?: OperationOptions
+    ): Promise<NetworkSecurityPerimeterConfigurationListResultOutput>;
 }
