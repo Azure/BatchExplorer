@@ -7,6 +7,7 @@ import {
 import {
     AccountBatchUpdateParameters,
     BatchAccountOutput,
+    NetworkSecurityPerimeterConfigurationListResultOutput,
 } from "../arm-batch-models";
 import { AccountService } from "./account-service";
 import { createARMBatchClient, isUnexpected } from "../internal/arm-batch-rest";
@@ -87,6 +88,38 @@ export class LiveAccountService implements AccountService {
             if (res.status === "404") {
                 return undefined;
             }
+            throw createArmUnexpectedStatusCodeError(res);
+        }
+
+        return res.body;
+    }
+
+    async listNetworkSecurityPerimeterConfigurations(
+        accountResouceId: string,
+        opts?: OperationOptions
+    ): Promise<NetworkSecurityPerimeterConfigurationListResultOutput> {
+        const { subscriptionId, resourceGroupName, batchAccountName } =
+            parseBatchAccountIdInfo(accountResouceId);
+        const armBatchClient = createARMBatchClient({
+            baseUrl: getArmUrl(),
+        });
+
+        const res = await armBatchClient
+            .path(
+                "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/networkSecurityPerimeterConfigurations",
+                subscriptionId,
+                resourceGroupName,
+                batchAccountName
+            )
+            .get({
+                headers: {
+                    [CustomHttpHeaders.CommandName]:
+                        opts?.commandName ??
+                        "ListNetworkSecurityPerimeterConfigurations",
+                },
+            });
+
+        if (isUnexpected(res)) {
             throw createArmUnexpectedStatusCodeError(res);
         }
 

@@ -169,4 +169,29 @@ describe("LiveAccountService", () => {
             "Internal Server Error"]
             `);
     });
+
+    test("List network security perimeter configurations", async () => {
+        const mockConfig =
+            fakeSet.listNetworkSecurityPerimeterConfigurations(hoboAcctResId);
+
+        httpClient.addExpected(
+            new MockHttpResponse(
+                `${getArmUrl()}${hoboAcctResId}/networkSecurityPerimeterConfigurations?api-version=${BatchApiVersion.arm}`,
+                {
+                    status: 200,
+                    body: JSON.stringify(mockConfig),
+                }
+            )
+        );
+
+        const config =
+            await service.listNetworkSecurityPerimeterConfigurations(
+                hoboAcctResId
+            );
+        expect(config?.value?.length).toEqual(1);
+
+        expect(config?.value?.[0].name).toEqual(
+            "00000000-0000-0000-0000-000000000000.resourceAssociationName"
+        );
+    });
 });
