@@ -177,10 +177,7 @@ export abstract class AbstractBatchFakeSet
         if (!batchAccount) {
             throw new Error("No batch account with ID " + accountResouceId);
         }
-
-        const oldAccount = cloneDeep(batchAccount);
-
-        return mergeDeep(oldAccount, parameters as BatchAccountOutput);
+        return mergeDeep(batchAccount, parameters as BatchAccountOutput);
     }
 
     listBatchAccountsBySubscription(subId: string): BatchAccountOutput[] {

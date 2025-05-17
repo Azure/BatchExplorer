@@ -40,6 +40,13 @@ describe("FakeAccountService", () => {
             "SecuredByPerimeter"
         );
         expect(account?.tags).toEqual({ foo: "bar" });
+
+        const getNewAccount = await service.get(hoboAcctResId);
+        expect(getNewAccount?.name).toEqual("hobo");
+        expect(getNewAccount?.properties?.publicNetworkAccess).toEqual(
+            "SecuredByPerimeter"
+        );
+        expect(getNewAccount?.tags).toEqual({ foo: "bar" });
     });
 
     test("should list network security perimeter configurations", async () => {
