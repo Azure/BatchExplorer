@@ -97,6 +97,7 @@ export enum NodeState {
     unknown = "unknown",
     unusable = "unusable",
     preempted = "preempted",
+    upgradingos = "upgradingos",
 }
 
 export enum NodeSchedulingState {
