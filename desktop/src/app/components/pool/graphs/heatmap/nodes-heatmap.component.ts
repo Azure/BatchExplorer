@@ -60,6 +60,7 @@ const stateTree: StateTree = [
             { state: NodeState.rebooting, color: "#ffcc5c" },
             { state: NodeState.reimaging, color: "#ffc95c" },
             { state: NodeState.leavingPool, color: "#ff755c" },
+            { state: NodeState.upgradingos, color: "#e1d3e4" },
         ],
     }, {
         category: "error",
