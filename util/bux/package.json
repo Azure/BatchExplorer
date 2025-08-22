@@ -35,7 +35,7 @@
     "cli-color": "^2.0.2",
     "editorconfig": "^0.15.3",
     "glob": "^7.1.6",
-    "inquirer": "^8.2.3",
+    "inquirer": "^8.2.7",
     "js-yaml": "^4.1.0",
     "shelljs": "^0.8.4",
     "yargs": "^17.4.1"
