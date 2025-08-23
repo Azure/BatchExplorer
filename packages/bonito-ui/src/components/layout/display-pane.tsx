@@ -2,7 +2,7 @@ import { Stack } from "@fluentui/react/lib/Stack";
 import * as React from "react";
 import { ContentPane } from "./content-pane";
 
-interface DisplayPaneProps {
+interface DisplayPaneProps extends React.PropsWithChildren {
     title?: string;
     subtitle?: string;
 }
@@ -104,7 +104,7 @@ export class DisplayPane extends React.Component<
                         <>
                             <div>
                                 <strong>Component Info:</strong>
-                                <pre>{`${details.errorInfo.componentStack.trim()}`}</pre>
+                                <pre>{`${details.errorInfo.componentStack?.trim()}`}</pre>
                             </div>
                         </>
                     )}

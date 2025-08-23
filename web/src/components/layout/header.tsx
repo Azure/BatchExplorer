@@ -3,7 +3,7 @@ import * as React from "react";
 
 export const HEADER_HEIGHT = "48px";
 
-export const Header: React.FC = (props) => {
+export const Header: React.FC<React.PropsWithChildren> = (props) => {
     const theme = useAppTheme();
     return (
         <header

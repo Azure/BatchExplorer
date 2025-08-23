@@ -6,7 +6,7 @@ import type { AxeResults, RunOptions } from "axe-core";
 import type { JestAxe, JestAxeConfigureOptions } from "jest-axe";
 import { MockBrowserEnvironment } from "..";
 import { getMockBrowserEnvironment } from "../environment";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 
 // Globally configured axe instance
 let _axe: JestAxe | null = null;

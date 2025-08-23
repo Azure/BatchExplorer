@@ -5,6 +5,8 @@ import { PropertyField } from "../property-field";
 import { PropertyGroup } from "../property-group";
 import { renderA11y } from "../../../test-util/a11y";
 import { initMockBrowserEnvironment } from "../../../environment";
+import userEvent from "@testing-library/user-event";
+import { act } from "react";
 
 describe("PropertyGroup component", () => {
     beforeEach(() => initMockBrowserEnvironment());
@@ -41,19 +43,20 @@ describe("PropertyGroup component", () => {
         expect(heading.getAttribute("aria-expanded")).toBe("true");
         expect(section.style.display).toBeFalsy();
 
-        fireEvent.click(heading);
+        const user = userEvent.setup();
+        await act(async () => user.click(heading));
         expect(heading.getAttribute("aria-expanded")).toBe("false");
         expect(section.style.display).toBe("none");
 
-        fireEvent.keyDown(heading, { key: "ArrowLeft" });
+        await act(async () => user.keyboard("{arrowleft}"));
         expect(heading.getAttribute("aria-expanded")).toBe("false");
         expect(section.style.display).toBe("none");
 
-        fireEvent.keyDown(heading, { key: "Enter" });
+        await act(async () => user.keyboard("{enter}"));
         expect(heading.getAttribute("aria-expanded")).toBe("true");
         expect(section.style.display).toBeFalsy();
 
-        fireEvent.keyDown(heading, { key: " " });
+        await act(async () => user.keyboard(" "));
         expect(heading.getAttribute("aria-expanded")).toBe("false");
         expect(section.style.display).toBe("none");
     });

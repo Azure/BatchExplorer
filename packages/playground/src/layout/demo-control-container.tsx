@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export interface DemoControlContainerProps {
+export interface DemoControlContainerProps extends React.PropsWithChildren {
     hideDefaultControls?: boolean;
 }
 
