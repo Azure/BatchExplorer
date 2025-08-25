@@ -3,8 +3,8 @@ import { By } from "@angular/platform-browser";
 import { Theme, ThemeDefinition, ThemeService } from "app/services";
 import * as React from "react";
 import { BehaviorSubject } from "rxjs";
-import { waitFor } from "test/utils/helpers";
 import { ReactContainerComponent } from "./react-container.component";
+import { waitFor } from "@testing-library/dom";
 
 interface SimpleMessageProps {
     message?: string

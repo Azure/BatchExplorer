@@ -72,8 +72,6 @@
     "@types/jest": "^27.0.1",
     "@types/node": "20.5.4",
     "@types/react-router-dom": "^5.1.7",
-    "@types/react": "^18.3.4",
-    "@types/react-dom": "^18.3.0",
     "css-loader": "^6.8.1",
     "esbuild-loader": "^4.0.1",
     "file-loader": "^6.2.0",
