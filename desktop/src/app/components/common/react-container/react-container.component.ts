@@ -69,7 +69,9 @@ export class ReactContainerComponent<P> implements OnChanges, OnDestroy, AfterVi
     }
 
     private _render() {
-        this._root = createRoot(this.rootElement.nativeElement);
+        if (!this._root) {
+            this._root = createRoot(this.rootElement.nativeElement);
+        }
         this._root.render(
             React.createElement(RootPane, {theme : this._themeName},
                 React.createElement(this.component ?? NoComponentFound, this.props)
@@ -84,7 +86,10 @@ export class ReactContainerComponent<P> implements OnChanges, OnDestroy, AfterVi
         }
 
         if (this._initialized && this.rootElement) {
-            this._root.unmount();
+            if (this._root) {
+                this._root.unmount();
+                this._root = null;
+            }
         }
     }
 

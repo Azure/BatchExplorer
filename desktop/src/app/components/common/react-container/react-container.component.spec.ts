@@ -1,8 +1,9 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Theme, ThemeDefinition, ThemeService } from "app/services";
 import * as React from "react";
 import { BehaviorSubject } from "rxjs";
+import { waitFor } from "test/utils/helpers";
 import { ReactContainerComponent } from "./react-container.component";
 
 interface SimpleMessageProps {
@@ -40,11 +41,17 @@ describe("ReactContainerComponent", () => {
         testComponent = fixture.componentInstance;
     });
 
+    afterEach(() => {
+        themeSubject.next(undefined);
+        testComponent.ngOnDestroy();
+        fixture.destroy();
+    });
+
     function getRootEl() {
         return fixture.debugElement.query(By.css(".react-root"));
     }
 
-    it("can render a simple react component", () => {
+    it("can render a simple react component", async () => {
         themeSubject.next(testTheme);
 
         testComponent.component = SimpleMessage;
@@ -52,29 +59,35 @@ describe("ReactContainerComponent", () => {
             message: "Hello world!"
         };
         fixture.detectChanges();
+        await fixture.whenStable();
 
-        expect(getRootEl()).toBeTruthy();
+        await waitFor(() => {
+            expect(getRootEl()).toBeTruthy();
 
-        const rootEl: HTMLDivElement = getRootEl().nativeElement;
-        expect(rootEl).toBeDefined();
-        expect(rootEl.tagName).toEqual("DIV");
-        expect(rootEl.children[0]).toBeDefined();
-        expect(rootEl.children[0].textContent).toEqual("Hello world!");
+            const rootEl: HTMLDivElement = getRootEl().nativeElement;
+            expect(rootEl).toBeDefined();
+            expect(rootEl.tagName).toEqual("DIV");
+            expect(rootEl.children[0]).toBeDefined();
+            expect(rootEl.children[0].textContent).toEqual("Hello world!");
+        });
     });
 
-    it("waits for theme to load before rendering", () => {
+    it("waits for theme to load before rendering", async () => {
         testComponent.component = SimpleMessage;
         testComponent.props = {
-            message: "Hello world!"
+            message: "Hello world!!"
         };
-
+        fixture.detectChanges();
+        await fixture.whenStable();
         expect(getRootEl()).toBeNull();
 
         themeSubject.next(testTheme);
         fixture.detectChanges();
-        expect(getRootEl()).toBeTruthy();
-        expect(getRootEl().nativeElement.children[0].textContent).toEqual("Hello world!");
-
+        await fixture.whenStable();
+        await waitFor(() => {
+            expect(getRootEl()).toBeTruthy();
+            expect(getRootEl().nativeElement.children[0].textContent).toEqual("Hello world!!");
+        });
     });
 
 });
