@@ -86,7 +86,7 @@ export const routes: Routes = [
         component:  PlaygroundRouteComponent,
     },
     {
-        path: "playground/:component",
+        path: "demos/:component",
         component:  PlaygroundRouteComponent,
     },
     {
