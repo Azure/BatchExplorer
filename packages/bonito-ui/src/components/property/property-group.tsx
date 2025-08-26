@@ -4,7 +4,7 @@ import { Stack } from "@fluentui/react/lib/Stack";
 import * as React from "react";
 import { useAppTheme } from "../../theme";
 
-export interface PropertyGroupProps {
+export interface PropertyGroupProps extends React.PropsWithChildren {
     title?: string;
     collapsed?: boolean;
     disableCollapse?: boolean;

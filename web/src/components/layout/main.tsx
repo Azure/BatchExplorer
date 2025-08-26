@@ -8,6 +8,6 @@ const mainStyles: React.CSSProperties = {
     marginTop: HEADER_HEIGHT,
 };
 
-export const Main: React.FC = (props) => {
+export const Main: React.FC<React.PropsWithChildren> = (props) => {
     return <main style={mainStyles}>{props.children}</main>;
 };

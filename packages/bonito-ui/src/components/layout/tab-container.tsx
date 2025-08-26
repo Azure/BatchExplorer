@@ -2,7 +2,7 @@ import { Pivot, PivotItem } from "@fluentui/react/lib/Pivot";
 import * as React from "react";
 import { ContentPane } from "./content-pane";
 
-export interface TabContainerProps {
+export interface TabContainerProps extends React.PropsWithChildren {
     ariaLabel?: string;
 }
 

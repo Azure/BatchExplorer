@@ -2,7 +2,7 @@ import * as React from "react";
 import { RootPane } from "@azure/bonito-ui/lib/components";
 import { ThemeName } from "@azure/bonito-ui/lib/theme";
 
-export interface RootProps {
+export interface RootProps extends React.PropsWithChildren {
     theme?: ThemeName;
 }
 
