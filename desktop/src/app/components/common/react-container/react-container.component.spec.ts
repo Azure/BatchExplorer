@@ -3,8 +3,8 @@ import { By } from "@angular/platform-browser";
 import { Theme, ThemeDefinition, ThemeService } from "app/services";
 import * as React from "react";
 import { BehaviorSubject } from "rxjs";
+import { waitFor } from "@testing-library/react";
 import { ReactContainerComponent } from "./react-container.component";
-import { waitFor } from "@testing-library/dom";
 
 interface SimpleMessageProps {
     message?: string
@@ -48,7 +48,19 @@ describe("ReactContainerComponent", () => {
     });
 
     function getRootEl() {
-        return fixture.debugElement.query(By.css(".react-root"));
+        const el =  fixture.debugElement.query(By.css(".react-root")).nativeElement;
+        if (!el) {
+            throw new Error("Root element not found");
+        }
+        return el;
+    }
+
+    function getChildText() {
+        const rootEl = getRootEl();
+        if (rootEl.children.length === 0) {
+            throw new Error("No children found");
+        }
+        return rootEl.children[0].textContent;
     }
 
     it("can render a simple react component", async () => {
@@ -61,15 +73,11 @@ describe("ReactContainerComponent", () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        await waitFor(() => {
-            expect(getRootEl()).toBeTruthy();
+        const rootEl = await waitFor(getRootEl);
+        expect(rootEl.tagName).toEqual("DIV");
 
-            const rootEl: HTMLDivElement = getRootEl().nativeElement;
-            expect(rootEl).toBeDefined();
-            expect(rootEl.tagName).toEqual("DIV");
-            expect(rootEl.children[0]).toBeDefined();
-            expect(rootEl.children[0].textContent).toEqual("Hello world!");
-        });
+        const childText = await waitFor(getChildText);
+        expect(childText).toEqual("Hello world!");
     });
 
     it("waits for theme to load before rendering", async () => {
@@ -79,15 +87,14 @@ describe("ReactContainerComponent", () => {
         };
         fixture.detectChanges();
         await fixture.whenStable();
-        expect(getRootEl()).toBeNull();
+        expect(() => getRootEl()).toThrowError();
 
         themeSubject.next(testTheme);
         fixture.detectChanges();
         await fixture.whenStable();
-        await waitFor(() => {
-            expect(getRootEl()).toBeTruthy();
-            expect(getRootEl().nativeElement.children[0].textContent).toEqual("Hello world!!");
-        });
+
+        const childText = await waitFor(getChildText);
+        expect(childText).toEqual("Hello world!!");
     });
 
 });
