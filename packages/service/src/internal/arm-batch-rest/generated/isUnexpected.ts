@@ -59,20 +59,6 @@ import {
   LocationCheckNameAvailabilityDefaultResponse,
   OperationsList200Response,
   OperationsListDefaultResponse,
-  CertificateListByBatchAccount200Response,
-  CertificateListByBatchAccountDefaultResponse,
-  CertificateCreate200Response,
-  CertificateCreateDefaultResponse,
-  CertificateUpdate200Response,
-  CertificateUpdateDefaultResponse,
-  CertificateDelete200Response,
-  CertificateDelete202Response,
-  CertificateDelete204Response,
-  CertificateDeleteDefaultResponse,
-  CertificateGet200Response,
-  CertificateGetDefaultResponse,
-  CertificateCancelDeletion200Response,
-  CertificateCancelDeletionDefaultResponse,
   PrivateLinkResourceListByBatchAccount200Response,
   PrivateLinkResourceListByBatchAccountDefaultResponse,
   PrivateLinkResourceGet200Response,
@@ -193,26 +179,6 @@ const responseMap: Record<string, string[]> = {
     "200"
   ],
   "GET /providers/Microsoft.Batch/operations": ["200"],
-  "GET /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/certificates": [
-    "200"
-  ],
-  "PUT /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/certificates/{certificateName}": [
-    "200"
-  ],
-  "PATCH /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/certificates/{certificateName}": [
-    "200"
-  ],
-  "DELETE /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/certificates/{certificateName}": [
-    "200",
-    "202",
-    "204"
-  ],
-  "GET /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/certificates/{certificateName}": [
-    "200"
-  ],
-  "POST /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/certificates/{certificateName}/cancelDelete": [
-    "200"
-  ],
   "GET /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/privateLinkResources": [
     "200"
   ],
@@ -387,32 +353,6 @@ export function isUnexpected(
 ): response is OperationsListDefaultResponse;
 export function isUnexpected(
   response:
-    | CertificateListByBatchAccount200Response
-    | CertificateListByBatchAccountDefaultResponse
-): response is CertificateListByBatchAccountDefaultResponse;
-export function isUnexpected(
-  response: CertificateCreate200Response | CertificateCreateDefaultResponse
-): response is CertificateCreateDefaultResponse;
-export function isUnexpected(
-  response: CertificateUpdate200Response | CertificateUpdateDefaultResponse
-): response is CertificateUpdateDefaultResponse;
-export function isUnexpected(
-  response:
-    | CertificateDelete200Response
-    | CertificateDelete202Response
-    | CertificateDelete204Response
-    | CertificateDeleteDefaultResponse
-): response is CertificateDeleteDefaultResponse;
-export function isUnexpected(
-  response: CertificateGet200Response | CertificateGetDefaultResponse
-): response is CertificateGetDefaultResponse;
-export function isUnexpected(
-  response:
-    | CertificateCancelDeletion200Response
-    | CertificateCancelDeletionDefaultResponse
-): response is CertificateCancelDeletionDefaultResponse;
-export function isUnexpected(
-  response:
     | PrivateLinkResourceListByBatchAccount200Response
     | PrivateLinkResourceListByBatchAccountDefaultResponse
 ): response is PrivateLinkResourceListByBatchAccountDefaultResponse;
@@ -546,20 +486,6 @@ export function isUnexpected(
     | LocationCheckNameAvailabilityDefaultResponse
     | OperationsList200Response
     | OperationsListDefaultResponse
-    | CertificateListByBatchAccount200Response
-    | CertificateListByBatchAccountDefaultResponse
-    | CertificateCreate200Response
-    | CertificateCreateDefaultResponse
-    | CertificateUpdate200Response
-    | CertificateUpdateDefaultResponse
-    | CertificateDelete200Response
-    | CertificateDelete202Response
-    | CertificateDelete204Response
-    | CertificateDeleteDefaultResponse
-    | CertificateGet200Response
-    | CertificateGetDefaultResponse
-    | CertificateCancelDeletion200Response
-    | CertificateCancelDeletionDefaultResponse
     | PrivateLinkResourceListByBatchAccount200Response
     | PrivateLinkResourceListByBatchAccountDefaultResponse
     | PrivateLinkResourceGet200Response
@@ -623,12 +549,6 @@ export function isUnexpected(
   | LocationListSupportedVirtualMachineSkusDefaultResponse
   | LocationCheckNameAvailabilityDefaultResponse
   | OperationsListDefaultResponse
-  | CertificateListByBatchAccountDefaultResponse
-  | CertificateCreateDefaultResponse
-  | CertificateUpdateDefaultResponse
-  | CertificateDeleteDefaultResponse
-  | CertificateGetDefaultResponse
-  | CertificateCancelDeletionDefaultResponse
   | PrivateLinkResourceListByBatchAccountDefaultResponse
   | PrivateLinkResourceGetDefaultResponse
   | PrivateEndpointConnectionListByBatchAccountDefaultResponse

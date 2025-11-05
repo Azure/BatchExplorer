@@ -263,65 +263,6 @@ export interface CheckNameAvailabilityParameters {
   type: "Microsoft.Batch/batchAccounts";
 }
 
-/** Contains information about a certificate. */
-export interface Certificate extends AzureProxyResource {
-  /** The properties associated with the certificate. */
-  properties?: CertificateProperties;
-}
-
-/** Certificate properties. */
-export interface CertificateProperties extends CertificateBaseProperties {
-  provisioningState?: "Succeeded" | "Deleting" | "Failed";
-  /** The time at which the certificate entered its current state. */
-  provisioningStateTransitionTime?: Date | string;
-  /** The previous provisioned state of the resource */
-  previousProvisioningState?: "Succeeded" | "Deleting" | "Failed";
-  /** The time at which the certificate entered its previous state. */
-  previousProvisioningStateTransitionTime?: Date | string;
-  /** The public key of the certificate. */
-  publicData?: string;
-  /** This is only returned when the certificate provisioningState is 'Failed'. */
-  deleteCertificateError?: DeleteCertificateError;
-}
-
-/** An error response from the Batch service. */
-export interface DeleteCertificateError {
-  /** An identifier for the error. Codes are invariant and are intended to be consumed programmatically. */
-  code: string;
-  /** A message describing the error, intended to be suitable for display in a user interface. */
-  message: string;
-  /** The target of the particular error. For example, the name of the property in error. */
-  target?: string;
-  /** A list of additional details about the error. */
-  details?: Array<DeleteCertificateError>;
-}
-
-/** Base certificate properties. */
-export interface CertificateBaseProperties {
-  /** This must match the first portion of the certificate name. Currently required to be 'SHA1'. */
-  thumbprintAlgorithm?: string;
-  /** This must match the thumbprint from the name. */
-  thumbprint?: string;
-  /** The format of the certificate - either Pfx or Cer. If omitted, the default is Pfx. */
-  format?: "Pfx" | "Cer";
-}
-
-/** Contains information about a certificate. */
-export interface CertificateCreateOrUpdateParameters
-  extends AzureProxyResource {
-  /** The properties associated with the certificate. */
-  properties?: CertificateCreateOrUpdateProperties;
-}
-
-/** Certificate properties for create operations */
-export interface CertificateCreateOrUpdateProperties
-  extends CertificateBaseProperties {
-  /** The maximum size is 10KB. */
-  data: string;
-  /** This must not be specified if the certificate format is Cer. */
-  password?: string;
-}
-
 /** Contains the information for a detector. */
 export interface DetectorResponse extends AzureProxyResource {
   /** The properties associated with the detector. */
@@ -400,28 +341,14 @@ export interface PoolProperties {
   metadata?: Array<MetadataItem>;
   /** In an PATCH (update) operation, this property can be set to an empty object to remove the start task from the pool. */
   startTask?: StartTask;
-  /**
-   * For Windows compute nodes, the Batch service installs the certificates to the specified certificate store and location. For Linux compute nodes, the certificates are stored in a directory inside the task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the task to query for this location. For certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and certificates are placed in that directory.
-   *
-   * Warning: This property is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead.
-   */
-  certificates?: Array<CertificateReference>;
   /** Changes to application package references affect all new compute nodes joining the pool, but do not affect compute nodes that are already in the pool until they are rebooted or reimaged. There is a maximum of 10 application package references on any given pool. */
   applicationPackages?: Array<ApplicationPackageReference>;
-  /** The list of application licenses must be a subset of available Batch service application licenses. If a license is requested which is not supported, pool creation will fail. */
-  applicationLicenses?: Array<string>;
   /** Describes either the current operation (if the pool AllocationState is Resizing) or the previously completed operation (if the AllocationState is Steady). */
   resizeOperationStatus?: ResizeOperationStatus;
   /** This supports Azure Files, NFS, CIFS/SMB, and Blobfuse. */
   mountConfiguration?: Array<MountConfiguration>;
-  /** If omitted, the default value is Default. */
-  targetNodeCommunicationMode?: "Default" | "Classic" | "Simplified";
-  /** Determines how a pool communicates with the Batch service. */
-  currentNodeCommunicationMode?: "Default" | "Classic" | "Simplified";
   /** Describes an upgrade policy - automatic, manual, or rolling. */
   upgradePolicy?: UpgradePolicy;
-  /** The user-defined tags to be associated with the Azure Batch Pool. When specified, these tags are propagated to the backing Azure resources associated with the pool. This property can only be specified when the Batch account was created with the poolAllocationMode property set to 'UserSubscription'. */
-  resourceTags?: Record<string, string>;
 }
 
 /** Deployment configuration properties. */
@@ -511,6 +438,33 @@ export interface DataDisk {
    *  Premium_LRS - The data disk should use premium locally redundant storage.
    */
   storageAccountType?: "Standard_LRS" | "Premium_LRS" | "StandardSSD_LRS";
+  managedDisk?: ManagedDisk;
+}
+
+export interface ManagedDisk {
+  /** The storage account type for use in creating data disks or OS disk. */
+  storageAccountType?: "Standard_LRS" | "Premium_LRS" | "StandardSSD_LRS";
+  /** Specifies the security profile settings for the managed disk. **Note**: It can only be set for Confidential VMs and is required when using Confidential VMs. */
+  securityProfile?: VMDiskSecurityProfile;
+  /** Specifies the customer managed disk encryption set resource id for the managed disk. It can be set only in UserSubscription mode. */
+  diskEncryptionSet?: DiskEncryptionSetParameters;
+}
+
+/** Specifies the security profile settings for the managed disk. **Note**: It can only be set for Confidential VMs and is required when using Confidential VMs. */
+export interface VMDiskSecurityProfile {
+  /** Specifies the EncryptionType of the managed disk. It is set to DiskWithVMGuestState for encryption of the managed disk along with VMGuestState blob, VMGuestStateOnly for encryption of just the VMGuestState blob, and NonPersistedTPM for not persisting firmware state in the VMGuestState blob. **Note**: It can be set for only Confidential VMs and required when using Confidential VMs. */
+  securityEncryptionType?:
+    | "DiskWithVMGuestState"
+    | "VMGuestStateOnly"
+    | "NonPersistedTPM";
+  /** Specifies the customer managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob. It can be set only in UserSubscription mode. */
+  diskEncryptionSet?: DiskEncryptionSetParameters;
+}
+
+/** The ARM resource id of the disk encryption set. */
+export interface DiskEncryptionSetParameters {
+  /** The ARM resource id of the disk encryption set. The resource should be in the same subscription as the Batch account. */
+  id?: string;
 }
 
 /** The configuration for container-enabled pools. */
@@ -539,6 +493,24 @@ export interface ContainerRegistry {
 export interface DiskEncryptionConfiguration {
   /** On Linux pool, only "TemporaryDisk" is supported; on Windows pool, "OsDisk" and "TemporaryDisk" must be specified. */
   targets?: Array<"OsDisk" | "TemporaryDisk">;
+  /** Customer Managed Key will encrypt OS Disk by EncryptionAtRest, and by default we will encrypt the data disk as well. It can be used only when the pool is configured with an identity and OsDisk is set as one of the targets of DiskEncryption. */
+  customerManagedKey?: DiskCustomerManagedKey;
+}
+
+/** The Customer Managed Key reference to encrypt the Disk. */
+export interface DiskCustomerManagedKey {
+  /** Fully versioned Key Url pointing to a key in KeyVault. Version segment of the Url is required regardless of rotationToLatestKeyVersionEnabled value. */
+  keyUrl?: string;
+  /** Set this flag to true to enable auto-updating of the Disk Encryption to the latest key version. Default is false. */
+  rotationToLatestKeyVersionEnabled?: boolean;
+  /** The reference of one of the pool identities to encrypt Disk. This identity will be used to access the KeyVault. */
+  identityReference?: PoolIdentityReference;
+}
+
+/** The reference of one of the pool identities to encrypt Disk. This identity will be used to access the key vault. */
+export interface PoolIdentityReference {
+  /** The ARM resource id of the user assigned identity. This reference must be included in the pool identities. */
+  resourceId?: string;
 }
 
 /** Allocation configuration used by Batch Service to provision the nodes. */
@@ -588,19 +560,6 @@ export interface DiffDiskSettings {
   placement?: "CacheDisk";
 }
 
-export interface ManagedDisk {
-  /** The storage account type for use in creating data disks or OS disk. */
-  storageAccountType?: "Standard_LRS" | "Premium_LRS" | "StandardSSD_LRS";
-  /** Specifies the security profile settings for the managed disk. **Note**: It can only be set for Confidential VMs and is required when using Confidential VMs. */
-  securityProfile?: VMDiskSecurityProfile;
-}
-
-/** Specifies the security profile settings for the managed disk. **Note**: It can only be set for Confidential VMs and is required when using Confidential VMs. */
-export interface VMDiskSecurityProfile {
-  /** Specifies the EncryptionType of the managed disk. It is set to VMGuestStateOnly for encryption of just the VMGuestState blob, and NonPersistedTPM for not persisting firmware state in the VMGuestState blob. **Note**: It can be set for only Confidential VMs and required when using Confidential VMs. */
-  securityEncryptionType?: "NonPersistedTPM" | "VMGuestStateOnly";
-}
-
 /** Specifies the security profile settings for the virtual machine or virtual machine scale set. */
 export interface SecurityProfile {
   /** Specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UefiSettings. */
@@ -609,6 +568,8 @@ export interface SecurityProfile {
   encryptionAtHost?: boolean;
   /** Specifies the security settings like secure boot and vTPM used while creating the virtual machine. */
   uefiSettings?: UefiSettings;
+  /** Specifies ProxyAgent settings while creating the virtual machine. */
+  proxyAgentSettings?: ProxyAgentSettings;
 }
 
 /** Specifies the security settings like secure boot and vTPM used while creating the virtual machine. */
@@ -617,6 +578,24 @@ export interface UefiSettings {
   secureBootEnabled?: boolean;
   /** Specifies whether vTPM should be enabled on the virtual machine. */
   vTpmEnabled?: boolean;
+}
+
+/** Specifies ProxyAgent settings while creating the virtual machine. */
+export interface ProxyAgentSettings {
+  /** Specifies whether Metadata Security Protocol feature should be enabled on the virtual machine or virtual machine scale set. Default is False. */
+  enabled?: boolean;
+  /** Specifies particular host endpoint settings. */
+  imds?: HostEndpointSettings;
+  /** Specifies particular host endpoint settings. */
+  wireServer?: HostEndpointSettings;
+}
+
+/** Specifies particular host endpoint settings. */
+export interface HostEndpointSettings {
+  /** Specifies the access control policy execution mode. */
+  mode?: "Audit" | "Enforce";
+  /** Specifies the reference to the InVMAccessControlProfileVersion resource id in the form of /subscriptions/{SubscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Compute/galleries/{galleryName}/inVMAccessControlProfiles/{profile}/versions/{version}. */
+  inVMAccessControlProfileReferenceId?: string;
 }
 
 /** Specifies the service artifact reference id used to set same image version for all virtual machines in the scale set when using 'latest' image version. */
@@ -731,10 +710,23 @@ export interface PublicIPAddressConfiguration {
   provision?: "BatchManaged" | "UserManaged" | "NoPublicIPAddresses";
   /** The number of IPs specified here limits the maximum size of the Pool - 100 dedicated nodes or 100 Spot/low-priority nodes can be allocated for each public IP. For example, a pool needing 250 dedicated VMs would need at least 3 public IPs specified. Each element of this collection is of the form: /subscriptions/{subscription}/resourceGroups/{group}/providers/Microsoft.Network/publicIPAddresses/{ip}. */
   ipAddressIds?: Array<string>;
+  /** IP families are used to determine single-stack or dual-stack pools. For single-stack, the expected value is IPv4. For dual-stack, the expected values are IPv4 and IPv6. */
+  ipFamilies?: Array<"IPv4" | "IPv6">;
+  /** IP Tags that will applied to new Public IPs that Batch creates. */
+  ipTags?: Array<IpTag>;
+}
+
+export interface IpTag {
+  /** Example: FirstPartyUsage. */
+  ipTagType?: string;
+  /** Example: SQL. */
+  tag?: string;
 }
 
 /** Specifies how tasks should be distributed across compute nodes. */
 export interface TaskSchedulingPolicy {
+  /** If not specified, the default is none. */
+  jobDefaultOrder?: "None" | "CreationTime";
   /** How tasks should be distributed across compute nodes. */
   nodeFillType: "Spread" | "Pack";
 }
@@ -831,7 +823,7 @@ export interface UserIdentity {
 
 /** Specifies the parameters for the auto user that runs a task on the Batch service. */
 export interface AutoUserSpecification {
-  /** The default value is Pool. If the pool is running Windows a value of Task should be specified if stricter isolation between tasks is required. For example, if the task mutates the registry in a way which could impact other tasks, or if certificates have been specified on the pool which should not be accessible by normal tasks but should be accessible by start tasks. */
+  /** The default value is Pool. If the pool is running Windows a value of Task should be specified if stricter isolation between tasks is required. For example, if the task mutates the registry in a way which could impact other tasks. */
   scope?: "Task" | "Pool";
   /** The default value is nonAdmin. */
   elevationLevel?: "NonAdmin" | "Admin";
@@ -865,21 +857,9 @@ export interface ContainerHostBatchBindMountEntry {
   isReadOnly?: boolean;
 }
 
-/** Warning: This object is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateReference {
-  /** The fully qualified ID of the certificate to install on the pool. This must be inside the same batch account as the pool. */
-  id: string;
-  /** The default value is currentUser. This property is applicable only for pools configured with Windows compute nodes. For Linux compute nodes, the certificates are stored in a directory inside the task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the task to query for this location. For certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and certificates are placed in that directory. */
-  storeLocation?: "CurrentUser" | "LocalMachine";
-  /** This property is applicable only for pools configured with Windows compute nodes. Common store names include: My, Root, CA, Trust, Disallowed, TrustedPeople, TrustedPublisher, AuthRoot, AddressBook, but any custom store name can also be used. The default value is My. */
-  storeName?: string;
-  /** Which user accounts on the compute node should have access to the private data of the certificate. */
-  visibility?: Array<"StartTask" | "Task" | "RemoteUser">;
-}
-
-/** Link to an application package inside the batch account */
+/** Link to an application package inside the Batch account */
 export interface ApplicationPackageReference {
-  /** The ID of the application package to install. This must be inside the same batch account as the pool. This can either be a reference to a specific version or the default version if one exists. */
+  /** The ID of the application package to install. This must be inside the same Batch account as the pool. This can either be a reference to a specific version or the default version if one exists. */
   id: string;
   /** If this is omitted, and no default version is specified for this application, the request fails with the error code InvalidApplicationPackageReferences. If you are calling the REST API directly, the HTTP status code is 409. */
   version?: string;
