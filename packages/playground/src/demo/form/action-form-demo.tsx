@@ -16,7 +16,6 @@ import {
     EditorController,
     MonacoEditor,
 } from "@azure/bonito-ui/lib/components";
-import { UpdateNodeCommsAction } from "@batch/ui-react/lib/pool";
 import * as React from "react";
 import { DemoComponentContainer } from "../../layout/demo-component-container";
 import { DemoControlContainer } from "../../layout/demo-control-container";
@@ -156,11 +155,6 @@ class CreateOrUpdateCarAction extends AbstractAction<CarFormValues> {
 const actions: { [name: string]: () => Action } = {
     createAccount: () => new CreateAccountAction({}),
     createOrUpdateCar: () => new CreateOrUpdateCarAction(),
-    updateNodeComms: () =>
-        new UpdateNodeCommsAction(
-            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo",
-            "hobopool1"
-        ),
 };
 
 export const ActionFormDemo: React.FC = () => {
