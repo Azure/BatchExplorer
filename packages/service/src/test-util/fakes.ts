@@ -861,7 +861,7 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                     },
                 ],
             },
-            nodeAgentInfo:{
+            nodeAgentInfo: {
                 version: "1.0",
                 lastUpdateTime: "2024-11-09T07:20:45.000Z",
             },
@@ -914,7 +914,7 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
             state: "active",
             lastModified: "2024-05-29T08:32:21.000Z",
             creationTime: "2024-05-29T08:32:21.000Z",
-            stateTransitionTime:  "2024-05-29T08:32:21.000Z",
+            stateTransitionTime: "2024-05-29T08:32:21.000Z",
             commandLine: "hostname",
             executionInfo: {
                 retryCount: 0,
@@ -928,7 +928,7 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
             state: "completed",
             lastModified: "2024-05-29T08:32:21.000Z",
             creationTime: "2024-05-29T08:32:21.000Z",
-            stateTransitionTime:  "2024-05-29T08:32:21.000Z",
+            stateTransitionTime: "2024-05-29T08:32:21.000Z",
             commandLine: "hostname",
             executionInfo: {
                 retryCount: 0,
