@@ -49,7 +49,7 @@ npm run generate:arm-client
 
 This will parse the command options from the README and regenerate the SDK code
 
-To generate Batch Management RLCclient for on a PR branch for an api version that is not merged to azure-rest-api-branch repo main branch yet, you can specify the PR branch name in input-file as shown below:
+To generate Batch Management RLC for on a PR branch for an api version that is not merged to azure-rest-api-branch repo main branch yet, you can specify the PR branch name in input-file as shown below:
 
 - `https://raw.githubusercontent.com/Azure/azure-rest-api-specs/Batch-MagementPlane-2025-06-01/specification/batch/resource-manager/Microsoft.Batch/stable/2025-06-01/BatchManagement.json`
 - `https://raw.githubusercontent.com/Azure/azure-rest-api-specs/Batch-MagementPlane-2025-06-01/specification/batch/resource-manager/Microsoft.Batch/stable/2025-06-01/NetworkSecurityPerimeter.json`
