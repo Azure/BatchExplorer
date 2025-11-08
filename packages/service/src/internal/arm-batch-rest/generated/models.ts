@@ -347,7 +347,11 @@ export interface PoolProperties {
   resizeOperationStatus?: ResizeOperationStatus;
   /** This supports Azure Files, NFS, CIFS/SMB, and Blobfuse. */
   mountConfiguration?: Array<MountConfiguration>;
-  /** Describes an upgrade policy - automatic, manual, or rolling. */
+  /** If omitted, the default value is Default. */
+  targetNodeCommunicationMode?: "Default" | "Classic" | "Simplified";
+  /** Determines how a pool communicates with the Batch service. */
+  currentNodeCommunicationMode?: "Default" | "Classic" | "Simplified";
+    /** Describes an upgrade policy - automatic, manual, or rolling. */
   upgradePolicy?: UpgradePolicy;
 }
 
