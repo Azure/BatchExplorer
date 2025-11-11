@@ -17,7 +17,12 @@ import {
     BatchNodeOutput,
     BatchNodeVMExtensionOutput,
 } from "../node/node-models";
-import { Pool, PoolOutput } from "../pool/pool-models";
+import {
+    LegacyPool,
+    LegacyPoolOutput,
+    Pool,
+    PoolOutput,
+} from "../pool/pool-models";
 import { BatchJobOutput, BatchTaskOutput } from "../batch-models";
 import {
     AccountBatchUpdateParameters,
@@ -53,9 +58,21 @@ export interface BatchFakeSet extends FakeSet {
     getPool(poolResourceId: string): PoolOutput | undefined;
 
     /**
+     * Get a Batch pool in the 2024-07-01 API version format by case-insensitive ID
+     *
+     * @param poolResourceId The ARM resource ID of the pool
+     */
+    getLegacyPool(poolResourceId: string): LegacyPoolOutput | undefined;
+
+    /**
      * Patches a pool and returns it
      */
     patchPool(pool: Pool): PoolOutput;
+
+    /**
+     * Patches a pool using the 2024-07-01 API version format and returns it
+     */
+    patchLegacyPool(pool: LegacyPool): LegacyPoolOutput;
 
     /**
      * Creates or updates a pool and returns it
@@ -145,7 +162,10 @@ export abstract class AbstractBatchFakeSet
     protected abstract batchAccounts: {
         [accountId: string]: BatchAccountOutput;
     };
+
     protected abstract batchPools: { [poolId: string]: PoolOutput };
+
+    protected abstract legacyPools: { [poolId: string]: LegacyPoolOutput };
 
     /**
      * Node key is the account endpoint, pool name and node ID concatenated,
@@ -197,6 +217,10 @@ export abstract class AbstractBatchFakeSet
         return this.batchPools[poolResourceId.toLowerCase()];
     }
 
+    getLegacyPool(poolResourceId: string): LegacyPoolOutput | undefined {
+        return this.legacyPools[poolResourceId.toLowerCase()];
+    }
+
     listPoolsByAccount(accountId: string): PoolOutput[] {
         if (!accountId) {
             return [];
@@ -217,6 +241,19 @@ export abstract class AbstractBatchFakeSet
         }
 
         return mergeDeep(oldPool, poolToOutput(pool));
+    }
+
+    patchLegacyPool(pool: LegacyPool): LegacyPoolOutput {
+        if (!pool.id) {
+            throw new Error("Cannot patch a pool without a valid ID");
+        }
+
+        const oldPool = this.getLegacyPool(pool.id);
+        if (!oldPool) {
+            throw new Error("No pool with ID " + pool.id);
+        }
+
+        return mergeDeep(oldPool, legacyPoolToOutput(pool));
     }
 
     putPool(pool: Pool): PoolOutput {
@@ -835,6 +872,28 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
             },
     };
 
+    protected legacyPools: { [poolId: string]: LegacyPoolOutput } = {
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/supercomputing/providers/microsoft.batch/batchaccounts/hobo/pools/hobopool1":
+            {
+                id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1",
+                name: "hobopool1",
+                type: "Microsoft.Batch/batchAccounts/pools",
+                properties: {
+                    targetNodeCommunicationMode: "Default",
+                },
+            },
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/visualization/providers/microsoft.batch/batchaccounts/byos/pools/byospool1":
+            {
+                id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/visualization/providers/Microsoft.Batch/batchAccounts/byos/pools/byospool1",
+                name: "byospool1",
+                type: "Microsoft.Batch/batchAccounts/pools",
+                properties: {
+                    targetNodeCommunicationMode: "Default",
+                    currentNodeCommunicationMode: "Simplified",
+                },
+            },
+    };
+
     batchNodes: { [nodeKey: string]: BatchNodeOutput } = {
         "mercury.eastus.batch.azure.com:hobopool1:tvmps_id1": {
             id: "tvmps_id1",
@@ -1065,4 +1124,20 @@ function poolToOutput(pool: Pool): PoolOutput {
     clone.properties.lastModified = toIsoLocal(getClock().now());
 
     return clone as PoolOutput;
+}
+
+/**
+ * Convert a Pool model to a PoolOutput model using the 2024-07-01 API version
+ * model format
+ *
+ * @param pool The input pool
+ * @returns The output model with a lastModified date of now
+ */
+function legacyPoolToOutput(pool: LegacyPool): LegacyPoolOutput {
+    const clone = cloneDeep(pool);
+
+    // KLUDGE: Properties shouldn't be nullable, but since it is right now, handle it.
+    clone.properties = clone.properties ?? {};
+
+    return clone as LegacyPoolOutput;
 }

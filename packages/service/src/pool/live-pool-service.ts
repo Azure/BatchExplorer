@@ -1,10 +1,18 @@
 // import { BatchApiVersion } from "../constants";
-import type { Pool, PoolOutput } from "./pool-models";
+import type {
+    LegacyPool,
+    LegacyPoolOutput,
+    Pool,
+    PoolOutput,
+} from "./pool-models";
 import type { PoolService } from "./pool-service";
 import {
     CustomHttpHeaders,
+    HttpRequestMetadata,
     OperationOptions,
+    UnexpectedStatusCodeError,
     getArmUrl,
+    getHttpClient,
 } from "@azure/bonito-core";
 import { createARMBatchClient, isUnexpected } from "../internal/arm-batch-rest";
 import {
@@ -96,6 +104,33 @@ export class LivePoolService implements PoolService {
         return res.body;
     }
 
+    async getLegacy(
+        poolResourceId: string,
+        opts?: OperationOptions
+    ): Promise<LegacyPoolOutput | undefined> {
+        let metadata: HttpRequestMetadata | undefined;
+        if (opts?.commandName) {
+            metadata = { commandName: opts.commandName };
+        }
+
+        const response = await getHttpClient().get(
+            `${getArmUrl()}${poolResourceId}?api-version=2024-07-01`,
+            {
+                metadata,
+            }
+        );
+
+        if (response.status !== 200) {
+            throw new UnexpectedStatusCodeError(
+                `Failed to get pool ${poolResourceId}`,
+                response.status,
+                await response.text()
+            );
+        }
+
+        return (await response.json()) as LegacyPoolOutput;
+    }
+
     async listByAccountId(
         batchAccountId: string,
         opts?: OperationOptions
@@ -165,5 +200,39 @@ export class LivePoolService implements PoolService {
         }
 
         return res.body;
+    }
+
+    async patchLegacy(
+        poolResourceId: string,
+        pool: LegacyPool,
+        opts?: OperationOptions
+    ): Promise<LegacyPoolOutput> {
+        let metadata: HttpRequestMetadata | undefined;
+        if (opts?.commandName) {
+            metadata = { commandName: opts.commandName };
+        }
+
+        // Use 2024-07-01 API version since node communication mode properties
+        // were removed in subsequent versions.
+        const response = await getHttpClient().patch(
+            `${getArmUrl()}${poolResourceId}?api-version=2024-07-01`,
+            {
+                body: JSON.stringify(pool),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                metadata,
+            }
+        );
+
+        if (response.status !== 200) {
+            throw new UnexpectedStatusCodeError(
+                `Failed to update pool ${poolResourceId}`,
+                response.status,
+                await response.text()
+            );
+        }
+
+        return (await response.json()) as LegacyPoolOutput;
     }
 }

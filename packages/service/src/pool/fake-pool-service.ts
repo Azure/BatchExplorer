@@ -1,5 +1,10 @@
 import { BasicBatchFakeSet, BatchFakeSet } from "../test-util/fakes";
-import type { Pool, PoolOutput } from "./pool-models";
+import type {
+    LegacyPool,
+    LegacyPoolOutput,
+    Pool,
+    PoolOutput,
+} from "./pool-models";
 import type { PoolService } from "./pool-service";
 
 export class FakePoolService implements PoolService {
@@ -20,11 +25,24 @@ export class FakePoolService implements PoolService {
         return this.fakeSet.getPool(poolResourceId);
     }
 
+    async getLegacy(
+        poolResourceId: string
+    ): Promise<LegacyPoolOutput | undefined> {
+        return this.fakeSet.getLegacyPool(poolResourceId);
+    }
+
     async listByAccountId(accountId: string): Promise<PoolOutput[]> {
         return this.fakeSet.listPoolsByAccount(accountId);
     }
 
     async patch(poolResourceId: string, pool: Pool): Promise<PoolOutput> {
         return this.fakeSet.patchPool(pool);
+    }
+
+    async patchLegacy(
+        poolResourceId: string,
+        pool: LegacyPool
+    ): Promise<LegacyPoolOutput> {
+        return this.fakeSet.patchLegacyPool(pool);
     }
 }
