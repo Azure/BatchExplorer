@@ -6,16 +6,6 @@ steps:
       npm run build:package
     displayName: Build and package
 
-  # Disabling end-to-end tests in CI pipeline
-  # - pwsh: |
-  #     . ../.vsts/win/exec.ps1
-  #     $ErrorActionPreference = "Stop"
-  #     $env:BE_TEST_AAD_USER_EMAIL = "$(uiTestingAccountEmail)"
-  #     $env:BE_TEST_AAD_USER_PASSWORD = "$(uiTestingAccountPassword)"
-  #     npm run test-e2e
-  #   workingDirectory: desktop
-  #   displayName: End to end tests
-
   - template: ./security-analysis.yml
 
   - template: ../common/publish-artifacts.yml
