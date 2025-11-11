@@ -351,7 +351,7 @@ export interface PoolProperties {
   targetNodeCommunicationMode?: "Default" | "Classic" | "Simplified";
   /** Determines how a pool communicates with the Batch service. */
   currentNodeCommunicationMode?: "Default" | "Classic" | "Simplified";
-    /** Describes an upgrade policy - automatic, manual, or rolling. */
+  /** Describes an upgrade policy - automatic, manual, or rolling. */
   upgradePolicy?: UpgradePolicy;
 }
 
