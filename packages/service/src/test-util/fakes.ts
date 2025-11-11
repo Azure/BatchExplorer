@@ -863,11 +863,6 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                     },
                     currentDedicatedNodes: 0,
                     currentLowPriorityNodes: 0,
-                    targetNodeCommunicationMode: "Default",
-                    resourceTags: {
-                        tag1: "one",
-                        tag2: "two",
-                    },
                 },
             },
     };
@@ -902,7 +897,9 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
             schedulingState: "enabled",
             stateTransitionTime: "2023-11-09T07:20:55.000Z",
             allocationTime: "2023-11-09T07:20:45.000Z",
+            lastBootTime: "2023-11-09T07:20:45.000Z",
             ipAddress: "10.0.0.4",
+            ipv6Address: "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
             affinityId:
                 "TVM:tvmps_7b5797648c5d43f7a15b952e5ada3c082ccac8de5eb95f5518ab1242bc79aa3b_d",
             vmSize: "standard_d2_v2",
@@ -923,6 +920,10 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                     },
                 ],
             },
+            nodeAgentInfo: {
+                version: "1.0",
+                lastUpdateTime: "2024-11-09T07:20:45.000Z",
+            },
             virtualMachineInfo: {
                 imageReference: {
                     publisher: "microsoftwindowsserver",
@@ -939,6 +940,7 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
         hobopool1: [
             {
                 id: "faketestjob1",
+                eTag: "eTag",
                 usesTaskDependencies: false,
                 url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1",
                 lastModified: "2024-05-29T08:32:21.000Z",
@@ -967,7 +969,12 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
         "mercury.eastus.batch.azure.com:faketestjob1:taska": {
             url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/taskA",
             id: "taska",
+            eTag: "eTag",
             state: "active",
+            lastModified: "2024-05-29T08:32:21.000Z",
+            creationTime: "2024-05-29T08:32:21.000Z",
+            stateTransitionTime: "2024-05-29T08:32:21.000Z",
+            commandLine: "hostname",
             executionInfo: {
                 retryCount: 0,
                 requeueCount: 0,
@@ -976,7 +983,12 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
         "mercury.eastus.batch.azure.com:faketestjob1:task1": {
             url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/task1",
             id: "task1",
+            eTag: "eTag",
             state: "completed",
+            lastModified: "2024-05-29T08:32:21.000Z",
+            creationTime: "2024-05-29T08:32:21.000Z",
+            stateTransitionTime: "2024-05-29T08:32:21.000Z",
+            commandLine: "hostname",
             executionInfo: {
                 retryCount: 0,
                 requeueCount: 0,

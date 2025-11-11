@@ -15,8 +15,8 @@ license-header: MICROSOFT_MIT_NO_VERSION
 output-folder: ../src/internal/arm-batch-rest
 source-code-folder-path: ./generated
 input-file:
-  - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/batch/resource-manager/Microsoft.Batch/stable/2024-07-01/BatchManagement.json
-  - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/batch/resource-manager/Microsoft.Batch/stable/2024-07-01/NetworkSecurityPerimeter.json
+  - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/batch/resource-manager/Microsoft.Batch/stable/2025-06-01/BatchManagement.json
+  - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/batch/resource-manager/Microsoft.Batch/stable/2025-06-01/NetworkSecurityPerimeter.json
 package-version: 1.0.0-beta.1
 rest-level-client: true
 add-credentials: true

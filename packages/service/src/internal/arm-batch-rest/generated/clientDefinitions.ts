@@ -28,12 +28,6 @@ import {
   LocationListSupportedVirtualMachineSkusParameters,
   LocationCheckNameAvailabilityParameters,
   OperationsListParameters,
-  CertificateListByBatchAccountParameters,
-  CertificateCreateParameters,
-  CertificateUpdateParameters,
-  CertificateDeleteParameters,
-  CertificateGetParameters,
-  CertificateCancelDeletionParameters,
   PrivateLinkResourceListByBatchAccountParameters,
   PrivateLinkResourceGetParameters,
   PrivateEndpointConnectionListByBatchAccountParameters,
@@ -109,20 +103,6 @@ import {
   LocationCheckNameAvailabilityDefaultResponse,
   OperationsList200Response,
   OperationsListDefaultResponse,
-  CertificateListByBatchAccount200Response,
-  CertificateListByBatchAccountDefaultResponse,
-  CertificateCreate200Response,
-  CertificateCreateDefaultResponse,
-  CertificateUpdate200Response,
-  CertificateUpdateDefaultResponse,
-  CertificateDelete200Response,
-  CertificateDelete202Response,
-  CertificateDelete204Response,
-  CertificateDeleteDefaultResponse,
-  CertificateGet200Response,
-  CertificateGetDefaultResponse,
-  CertificateCancelDeletion200Response,
-  CertificateCancelDeletionDefaultResponse,
   PrivateLinkResourceListByBatchAccount200Response,
   PrivateLinkResourceListByBatchAccountDefaultResponse,
   PrivateLinkResourceGet200Response,
@@ -390,60 +370,6 @@ export interface OperationsList {
   >;
 }
 
-export interface CertificateListByBatchAccount {
-  /** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-  get(
-    options?: CertificateListByBatchAccountParameters
-  ): StreamableMethod<
-    | CertificateListByBatchAccount200Response
-    | CertificateListByBatchAccountDefaultResponse
-  >;
-}
-
-export interface CertificateCreate {
-  /** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-  put(
-    options: CertificateCreateParameters
-  ): StreamableMethod<
-    CertificateCreate200Response | CertificateCreateDefaultResponse
-  >;
-  /** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-  patch(
-    options: CertificateUpdateParameters
-  ): StreamableMethod<
-    CertificateUpdate200Response | CertificateUpdateDefaultResponse
-  >;
-  /** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-  delete(
-    options?: CertificateDeleteParameters
-  ): StreamableMethod<
-    | CertificateDelete200Response
-    | CertificateDelete202Response
-    | CertificateDelete204Response
-    | CertificateDeleteDefaultResponse
-  >;
-  /** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-  get(
-    options?: CertificateGetParameters
-  ): StreamableMethod<
-    CertificateGet200Response | CertificateGetDefaultResponse
-  >;
-}
-
-export interface CertificateCancelDeletion {
-  /**
-   * If you try to delete a certificate that is being used by a pool or compute node, the status of the certificate changes to deleteFailed. If you decide that you want to continue using the certificate, you can use this operation to set the status of the certificate back to active. If you intend to delete the certificate, you do not need to run this operation after the deletion failed. You must make sure that the certificate is not being used by any resources, and then you can try again to delete the certificate.
-   *
-   * Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead.
-   */
-  post(
-    options?: CertificateCancelDeletionParameters
-  ): StreamableMethod<
-    | CertificateCancelDeletion200Response
-    | CertificateCancelDeletionDefaultResponse
-  >;
-}
-
 export interface PrivateLinkResourceListByBatchAccount {
   /** Lists all of the private link resources in the specified account. */
   get(
@@ -703,29 +629,6 @@ export interface Routes {
   ): LocationCheckNameAvailability;
   /** Resource for '/providers/Microsoft.Batch/operations' has methods for the following verbs: get */
   (path: "/providers/Microsoft.Batch/operations"): OperationsList;
-  /** Resource for '/subscriptions/\{subscriptionId\}/resourceGroups/\{resourceGroupName\}/providers/Microsoft.Batch/batchAccounts/\{accountName\}/certificates' has methods for the following verbs: get */
-  (
-    path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/certificates",
-    subscriptionId: string,
-    resourceGroupName: string,
-    accountName: string
-  ): CertificateListByBatchAccount;
-  /** Resource for '/subscriptions/\{subscriptionId\}/resourceGroups/\{resourceGroupName\}/providers/Microsoft.Batch/batchAccounts/\{accountName\}/certificates/\{certificateName\}' has methods for the following verbs: put, patch, delete, get */
-  (
-    path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/certificates/{certificateName}",
-    subscriptionId: string,
-    resourceGroupName: string,
-    accountName: string,
-    certificateName: string
-  ): CertificateCreate;
-  /** Resource for '/subscriptions/\{subscriptionId\}/resourceGroups/\{resourceGroupName\}/providers/Microsoft.Batch/batchAccounts/\{accountName\}/certificates/\{certificateName\}/cancelDelete' has methods for the following verbs: post */
-  (
-    path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/certificates/{certificateName}/cancelDelete",
-    subscriptionId: string,
-    resourceGroupName: string,
-    accountName: string,
-    certificateName: string
-  ): CertificateCancelDeletion;
   /** Resource for '/subscriptions/\{subscriptionId\}/resourceGroups/\{resourceGroupName\}/providers/Microsoft.Batch/batchAccounts/\{accountName\}/privateLinkResources' has methods for the following verbs: get */
   (
     path: "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/privateLinkResources",

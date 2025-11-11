@@ -304,7 +304,7 @@ describe("LivePoolService", () => {
 
         httpClient.addExpected(
             new MockHttpResponse(
-                `${getArmUrl()}${hoboPoolResourceId}?api-version=${BatchApiVersion.arm}`,
+                `${getArmUrl()}${hoboPoolResourceId}?api-version=2024-07-01`,
                 {
                     status: 200,
                     body: JSON.stringify(fakeOutput),
