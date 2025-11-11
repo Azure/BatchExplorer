@@ -1,5 +1,5 @@
 import { OperationOptions } from "@azure/bonito-core";
-import { Pool, PoolOutput } from "./pool-models";
+import { LegacyPool, LegacyPoolOutput, Pool, PoolOutput } from "./pool-models";
 
 export interface PoolService {
     /**
@@ -33,7 +33,7 @@ export interface PoolService {
     getLegacy(
         poolResourceId: string,
         opts?: OperationOptions
-    ): Promise<PoolOutput | undefined>;
+    ): Promise<LegacyPoolOutput | undefined>;
 
     /**
      * List pools by Batch account resource ID.
@@ -70,7 +70,7 @@ export interface PoolService {
      */
     patchLegacy(
         poolResourceId: string,
-        pool: Pool,
+        pool: LegacyPool,
         opts?: OperationOptions
-    ): Promise<PoolOutput>;
+    ): Promise<LegacyPoolOutput>;
 }
