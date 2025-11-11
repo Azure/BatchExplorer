@@ -5,8 +5,8 @@ import {
     ValidationStatus,
 } from "@azure/bonito-core/lib/form";
 import {
+    LegacyPoolOutput,
     NodeCommunicationMode,
-    PoolOutput,
     PoolService,
 } from "@batch/ui-service/lib/pool";
 import { Link } from "@fluentui/react/lib/Link";
@@ -36,10 +36,10 @@ export class UpdateNodeCommsAction extends AbstractAction<UpdateNodeCommsFormVal
     private _poolName: string;
     private _poolResourceId: string;
 
-    private _pool?: PoolOutput;
+    private _pool?: LegacyPoolOutput;
 
     async onInitialize(): Promise<UpdateNodeCommsFormValues> {
-        this._pool = await this._poolService.get(this._poolResourceId, {
+        this._pool = await this._poolService.getLegacy(this._poolResourceId, {
             commandName: "UpdateNodeCommsAction/GetPool",
         });
 
@@ -135,7 +135,7 @@ export class UpdateNodeCommsAction extends AbstractAction<UpdateNodeCommsFormVal
     }
 
     async onExecute(values: UpdateNodeCommsFormValues): Promise<void> {
-        await this._poolService.patch(
+        await this._poolService.patchLegacy(
             this._poolResourceId,
             {
                 id: this._poolResourceId,
