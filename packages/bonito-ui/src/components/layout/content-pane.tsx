@@ -7,7 +7,7 @@ const contentPaneStyles: React.CSSProperties = {
 /**
  * A block element container which contains padded content
  */
-export const ContentPane: React.FC = (props) => {
+export const ContentPane: React.FC<React.PropsWithChildren> = (props) => {
     return (
         <div className="be-content-pane" style={contentPaneStyles}>
             {props.children}

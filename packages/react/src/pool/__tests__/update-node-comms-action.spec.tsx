@@ -1,6 +1,6 @@
 import { screen, render } from "@testing-library/react";
 import * as React from "react";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 import { UpdateNodeCommsAction } from "../update-node-comms-action";
 import { NodeCommunicationMode } from "@batch/ui-service";
 import { initMockBatchBrowserEnvironment } from "../../environment";

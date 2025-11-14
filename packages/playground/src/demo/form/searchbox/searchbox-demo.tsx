@@ -41,17 +41,17 @@ export const SearchBoxDemo: React.FC = () => {
      * onChange methods
      */
     const onDisabledAnimationChange = React.useCallback(
-        (ev, checked?: boolean) => setDisableAnimationKey(!!checked),
+        (ev: unknown, checked?: boolean) => setDisableAnimationKey(!!checked),
         []
     );
 
     const onUnderlineChange = React.useCallback(
-        (ev, checked?: boolean) => setUnderlineKey(!!checked),
+        (ev: unknown, checked?: boolean) => setUnderlineKey(!!checked),
         []
     );
 
     const onDisabledChange = React.useCallback(
-        (ev, checked?: boolean) => setDisabledKey(!!checked),
+        (ev: unknown, checked?: boolean) => setDisabledKey(!!checked),
         []
     );
 

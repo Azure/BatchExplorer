@@ -5,8 +5,8 @@ import {
     ValidationStatus,
 } from "@azure/bonito-core/lib/form";
 import { initMockEnvironment } from "@azure/bonito-core/lib/environment";
-import { act } from "@testing-library/react";
-import { renderHook } from "@testing-library/react-hooks";
+import { act } from "react";
+import { renderHook, waitFor } from "@testing-library/react";
 import { initMockBrowserEnvironment } from "../../environment";
 import { useForm } from "../use-form";
 
@@ -39,7 +39,7 @@ describe("useForm hook", () => {
         const onValidateSpy = jest.fn();
         const onEvaluateSpy = jest.fn();
 
-        const { result, waitForNextUpdate } = renderHook(() => {
+        const { result } = renderHook(() => {
             return useForm(form, {
                 onFormChange: onChangeSpy,
                 onValidate: onValidateSpy,
@@ -65,7 +65,11 @@ describe("useForm hook", () => {
             false
         );
 
-        await waitForNextUpdate();
+        await waitFor(() => {
+            expect(
+                result.current.validationSnapshot?.asyncValidationComplete
+            ).toBe(true);
+        });
 
         // Async validation has happened
         expect(onChangeSpy).toBeCalledTimes(1);

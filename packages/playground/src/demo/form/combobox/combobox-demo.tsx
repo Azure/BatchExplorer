@@ -94,22 +94,23 @@ export const ComboBoxDemo: React.FC = () => {
      * React onChange functions
      */
     const onFreeformChange = React.useCallback(
-        (ev, checked?: boolean) => setFreeformValue(!!checked),
+        (ev: unknown, checked?: boolean) => setFreeformValue(!!checked),
         []
     );
 
     const onMultiSelectChange = React.useCallback(
-        (ev, checked?: boolean) => setMultiSelectValue(!!checked),
+        (ev: unknown, checked?: boolean) => setMultiSelectValue(!!checked),
         []
     );
 
     const onDisabledChange = React.useCallback(
-        (ev, checked?: boolean) => setDisabledValue(!!checked),
+        (ev: unknown, checked?: boolean) => setDisabledValue(!!checked),
         []
     );
 
     const onStaticErrorMessageChange = React.useCallback(
-        (ev, checked?: boolean) => setStaticErrorMessageBool(!!checked),
+        (ev: unknown, checked?: boolean) =>
+            setStaticErrorMessageBool(!!checked),
         []
     );
 
@@ -120,7 +121,7 @@ export const ComboBoxDemo: React.FC = () => {
     );
 
     const onAutoCompleteChange = React.useCallback(
-        (ev, checked?: boolean) => setAutoCompleteValue(!!checked),
+        (ev: unknown, checked?: boolean) => setAutoCompleteValue(!!checked),
         []
     );
 

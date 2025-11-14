@@ -20,7 +20,7 @@ export const CertificatePage = observer(() => {
     );
 
     const onCertificateSelected = React.useCallback(
-        (_, index) => {
+        (_: unknown, index: number) => {
             certListView.clearSelection();
             certListView.selectByIndex(index);
         },

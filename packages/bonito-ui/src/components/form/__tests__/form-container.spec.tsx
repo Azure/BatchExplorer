@@ -1,6 +1,6 @@
 import { createForm } from "@azure/bonito-core";
 import { BooleanParameter, StringParameter } from "@azure/bonito-core/lib/form";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
 import { runAxe } from "../../../test-util/a11y";
@@ -69,7 +69,7 @@ describe("Form container tests", () => {
             ).parentElement?.style.display
         ).toEqual("");
 
-        act(() => form.updateValue("hideMessage", true));
+        React.act(() => form.updateValue("hideMessage", true));
 
         expect(
             await screen.findByText("hideMessage", {

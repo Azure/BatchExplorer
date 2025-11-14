@@ -16,13 +16,13 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@fluentui/azure-themes": "8.6.34",
-    "@fluentui/react": "8.97.2",
+    "@fluentui/azure-themes": "8.6.53",
+    "@fluentui/react": "8.122.16",
     "mobx": "^6.3.2",
     "mobx-react-lite": "^3.2.0",
     "monaco-editor": "~0.31.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
@@ -30,11 +30,10 @@
     "@lerna/legacy-package-management": "7.1.5",
     "@typespec/compiler": "^0.50.0",
     "@octokit/core": "^3.5.1",
-    "@testing-library/react": "^12.0.0",
-    "@testing-library/react-hooks": "^8.0.0",
+    "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.0.0",
-    "@types/react": "^17.0.53",
-    "@types/react-dom": "^17.0.18",
+    "@types/react": "^18.3.4",
+    "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
     "autorest": "^3.6.3",

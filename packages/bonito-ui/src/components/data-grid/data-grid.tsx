@@ -221,7 +221,12 @@ function useLoadMoreItems<T>(props: DataGridProps<T>) {
     }, [propsItems, noResult, hasMore]);
 
     const onRenderDetailsFooter = React.useCallback(
-        (props?: IDetailsFooterProps, defaultRender?) => {
+        (
+            props?: IDetailsFooterProps,
+            defaultRender?: (
+                props: IDetailsFooterProps | undefined
+            ) => React.ReactNode
+        ) => {
             const onResultComp = noResult ? (
                 <div style={{ textAlign: "center" }}>
                     {noResultText || translate("bonito.ui.dataGrid.noResults")}

@@ -3,6 +3,7 @@ import { By } from "@angular/platform-browser";
 import { Theme, ThemeDefinition, ThemeService } from "app/services";
 import * as React from "react";
 import { BehaviorSubject } from "rxjs";
+import { waitFor } from "@testing-library/react";
 import { ReactContainerComponent } from "./react-container.component";
 
 interface SimpleMessageProps {
@@ -40,41 +41,60 @@ describe("ReactContainerComponent", () => {
         testComponent = fixture.componentInstance;
     });
 
-    function getRootEl() {
-        return fixture.debugElement.query(By.css(".react-root"));
-    }
-
-    it("can render a simple react component", () => {
-        themeSubject.next(testTheme);
-
-        testComponent.component = SimpleMessage;
-        testComponent.props = {
-            message: "Hello world!"
-        };
-        fixture.detectChanges();
-
-        expect(getRootEl()).toBeTruthy();
-
-        const rootEl: HTMLDivElement = getRootEl().nativeElement;
-        expect(rootEl).toBeDefined();
-        expect(rootEl.tagName).toEqual("DIV");
-        expect(rootEl.children[0]).toBeDefined();
-        expect(rootEl.children[0].textContent).toEqual("Hello world!");
+    afterEach(() => {
+        themeSubject.next(undefined);
+        testComponent.ngOnDestroy();
+        fixture.destroy();
     });
 
-    it("waits for theme to load before rendering", () => {
+    function getRootEl() {
+        const el =  fixture.debugElement.query(By.css(".react-root")).nativeElement;
+        if (!el) {
+            throw new Error("Root element not found");
+        }
+        return el;
+    }
+
+    function getChildText() {
+        const rootEl = getRootEl();
+        if (rootEl.children.length === 0) {
+            throw new Error("No children found");
+        }
+        return rootEl.children[0].textContent;
+    }
+
+    it("can render a simple react component", async () => {
+        themeSubject.next(testTheme);
+
         testComponent.component = SimpleMessage;
         testComponent.props = {
             message: "Hello world!"
         };
+        fixture.detectChanges();
+        await fixture.whenStable();
 
-        expect(getRootEl()).toBeNull();
+        const rootEl = await waitFor(getRootEl);
+        expect(rootEl.tagName).toEqual("DIV");
+
+        const childText = await waitFor(getChildText);
+        expect(childText).toEqual("Hello world!");
+    });
+
+    it("waits for theme to load before rendering", async () => {
+        testComponent.component = SimpleMessage;
+        testComponent.props = {
+            message: "Hello world!!"
+        };
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(() => getRootEl()).toThrowError();
 
         themeSubject.next(testTheme);
         fixture.detectChanges();
-        expect(getRootEl()).toBeTruthy();
-        expect(getRootEl().nativeElement.children[0].textContent).toEqual("Hello world!");
+        await fixture.whenStable();
 
+        const childText = await waitFor(getChildText);
+        expect(childText).toEqual("Hello world!!");
     });
 
 });
