@@ -13,6 +13,9 @@ import MSALCachePlugin from "./msal-cache-plugin";
 import { AuthObserver } from "./auth-observer";
 import { shell } from "electron";
 import { AuthLoopbackClient } from "./auth-loopback-client";
+import { ProxyNetworkClient } from "./proxy-network-client";
+
+import "global-agent/bootstrap";
 
 const MSAL_SCOPES = ["user_impersonation"];
 
@@ -245,10 +248,13 @@ export default class AuthProvider {
     private async _createClient(tenantId: string):
         Promise<PublicClientApplication> {
         const proxyUrl = await this._loadProxyUrl();
+        let networkClient;
 
         if (proxyUrl) {
             log.info(`[${tenantId}] Proxying auth endpoints through ` +
                 proxyUrl);
+            process.env.GLOBAL_AGENT_HTTP_PROXY = proxyUrl;
+            networkClient = new ProxyNetworkClient(proxyUrl);
         }
 
         const authority =
@@ -256,7 +262,7 @@ export default class AuthProvider {
 
         return new PublicClientApplication({
             system: {
-                proxyUrl
+                networkClient
             },
             auth: {
                 clientId: this.config.clientId,

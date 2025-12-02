@@ -86,6 +86,7 @@ export class BatchExplorerApplication {
         this._setupProcessEvents();
         this._registerFileProtocol();
         await this.proxySettings.init();
+        this._applyProxySettings();
         this.storageBlobAdapter.init();
     }
 
@@ -363,6 +364,46 @@ export class BatchExplorerApplication {
 
             details.requestHeaders["User-Agent"] = userAgent;
             callback({ cancel: false, requestHeaders: details.requestHeaders });
+        });
+    }
+
+    private async _trustedDomains(): Promise<string[]> {
+        return [
+            "https://raw.githubusercontent.com",
+            "https://batch.azure.com", // Public data-plane API calls
+            this.properties.azureEnvironment.aadUrl,
+            this.properties.azureEnvironment.arm,
+            this.properties.azureEnvironment.batch,
+            this.properties.azureEnvironment.msGraph,
+            this.properties.azureEnvironment.storageEndpoint
+        ].map(url => {
+            try {
+                // Ensure the URL has a protocol (default to "https://")
+                const normalized = url.startsWith("http") ? url : `https://${url}`;
+                return new URL(normalized).hostname;
+            } catch (error) {
+                console.error(`Invalid URL: ${url}`, error);
+                return null; // Handle invalid URLs gracefully
+            }
+        }).filter(Boolean);
+    }
+
+    private async _applyProxySettings() {
+        const settings = await this.proxySettings.settings;
+
+        const conf = settings.http || settings.https;
+        const proxyUrl = `${conf.protocol}://${conf.host}:${conf.port}`;
+
+        session.defaultSession.setProxy({ proxyRules: proxyUrl });
+
+        const trustedDomains = await this._trustedDomains();
+        session.defaultSession.setCertificateVerifyProc((request, verifyCert) => {
+            if (trustedDomains.some(host => request.hostname.includes(host))) {
+                verifyCert(0); // trust the certificate
+            } else {
+                console.error("Untrusted certificate", request.hostname);
+                verifyCert(-3);
+            }
         });
     }
 }
