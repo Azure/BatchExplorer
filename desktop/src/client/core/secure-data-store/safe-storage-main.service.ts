@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
+import { BlIpcMain } from "../bl-ipc-main";
 import { safeStorage } from "electron";
 import { GlobalStorage } from "@batch-flask/core";
+import { IpcEvent } from "common/constants";
 
 /**
  * Handles safeStorage operations using Electron's safeStorage API.
@@ -9,7 +11,32 @@ import { GlobalStorage } from "@batch-flask/core";
 export class SafeStorageMainService {
     private _storageKey = "safeStorageData";
 
-    constructor(private _storage: GlobalStorage) {
+    constructor(
+        private ipcMain: BlIpcMain,
+        private _storage: GlobalStorage
+    ) {
+    }
+
+    public init() {
+        this._setupIpcHandlers();
+    }
+
+    private _setupIpcHandlers() {
+        this.ipcMain.on(IpcEvent.safeStorage.setPassword, async (data) => {
+            return this.setPassword(data.key, data.password);
+        });
+
+        this.ipcMain.on(IpcEvent.safeStorage.getPassword, async (data) => {
+            return this.getPassword(data.key);
+        });
+
+        this.ipcMain.on(IpcEvent.safeStorage.deletePassword, async (data) => {
+            return this.deletePassword(data.key);
+        });
+
+        this.ipcMain.on(IpcEvent.safeStorage.isEncryptionAvailable, async () => {
+            return safeStorage.isEncryptionAvailable();
+        });
     }
 
     public async setPassword(key: string, password: string): Promise<void> {

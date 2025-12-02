@@ -228,6 +228,12 @@ export const IpcEvent = {
         downloadBlob: "STORAGE_BLOB_DOWNLOAD_BLOB",
         uploadFile: "STORAGE_BLOB_UPLOAD_FILE",
         deleteBlob: "STORAGE_BLOB_DELETE_BLOB",
+    },
+    safeStorage: {
+        setPassword: "SafeStorage:setPassword",
+        getPassword: "SafeStorage:getPassword",
+        deletePassword: "SafeStorage:deletePassword",
+        isEncryptionAvailable: "SafeStorage:isEncryptionAvailable",
     }
 };
 

@@ -33,3 +33,4 @@ export * from "./themes";
 export * from "./network";
 export * from "./user-configuration";
 export * from "./version";
+export * from "./safe-storage.service";
