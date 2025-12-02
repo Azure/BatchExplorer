@@ -51,6 +51,8 @@
   "auth-service.tenant-error": "Cannot access resources for tenant {tenantName}",
   "auth-settings.title": "Authentication Settings",
   "auth.cancel-button.label": "Cancel",
+  "auth.encryption-unavailable.message": "Secure credential storage is unavailable. You will need to sign in each time you start the application. On Linux, install libsecret to enable credential storage.",
+  "auth.encryption-unavailable.title": "Secure Storage Unavailable",
   "auth.not-logged-in": "You are not logged in. Please log in to continue.",
   "auth.signin-button.label": "Sign in",
   "auth.tenant-sign-in-title": "Sign in to {tenant}",

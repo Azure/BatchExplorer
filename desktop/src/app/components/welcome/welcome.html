@@ -1,6 +1,12 @@
 <div class="central-panel">
     <div class="central-panel-content">
         <h1>{{"common.welcome" | i18n}}</h1>
+
+        <bl-banner *ngIf="encryptionUnavailable" type="warning" [collapsible]="false">
+            <div message>{{"auth.encryption-unavailable.title" | i18n}}</div>
+            <div details>{{"auth.encryption-unavailable.message" | i18n}}</div>
+        </bl-banner>
+
         <div class="central-button-group">
             <bl-button type="wide" class="central-button"
                 [action]="signIn">

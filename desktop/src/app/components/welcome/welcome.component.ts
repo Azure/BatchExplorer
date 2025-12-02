@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { AuthService, NavigatorService } from "app/services";
+import { Component, OnInit } from "@angular/core";
+import { AuthService, NavigatorService, SafeStorageService } from "app/services";
 import { autobind } from "@batch-flask/core";
 import { first } from "rxjs/operators";
 
@@ -7,15 +7,28 @@ import { first } from "rxjs/operators";
     selector: "be-welcome",
     templateUrl: "./welcome.html",
 })
-export class WelcomeComponent {
+export class WelcomeComponent implements OnInit {
+    public encryptionUnavailable = false;
+
     public static breadcrumb() {
         return { name: "Home" };
     }
 
     constructor(
         private authService: AuthService,
-        private navigationService: NavigatorService
+        private navigationService: NavigatorService,
+        private safeStorage: SafeStorageService
     ) {}
+
+    public async ngOnInit() {
+        // Check if encryption is available
+        try {
+            this.encryptionUnavailable = !(await this.safeStorage.isEncryptionAvailable());
+        } catch (error) {
+            console.warn("Failed to check encryption availability:", error);
+            this.encryptionUnavailable = true;
+        }
+    }
 
     @autobind()
     public async signIn() {
