@@ -80,7 +80,7 @@ deb:
     - libxtst6
     - libnss3
     # --- Default END
-    - libsecret-1-0 # This is needed for keytar on linux
+    - libsecret-1-0 # This is needed for safeStorage on linux
 
 directories:
   buildResources: "resources"
