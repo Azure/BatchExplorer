@@ -24,6 +24,8 @@ import { AADService, AuthenticationWindow } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
 import { StorageBlobAdapter } from "./storage";
+import { SafeStorageMainService } from "./secure-data-store/safe-storage-main.service";
+import { SecureDataStore } from "./secure-data-store/secure-data-store";
 import { filter, first, map } from "rxjs/operators";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
@@ -61,6 +63,7 @@ export class BatchExplorerApplication {
         private telemetryService: TelemetryService,
         private telemetryManager: TelemetryManager,
         private storageBlobAdapter: StorageBlobAdapter,
+        private safeStorageMainService: SafeStorageMainService,
         configurationStore: UserConfigurationService<BEUserConfiguration>
     ) {
         this.windows = new MainWindowManager(this, this.telemetryManager);
@@ -81,7 +84,10 @@ export class BatchExplorerApplication {
         this.proxySettings = this.injector.get(ProxySettingsManager);
 
         this.ipcMain.init();
+        this.safeStorageMainService.init();
         await this.aadService.init();
+
+        await this._checkForLegacyCredentials();
         this._registerProtocol();
         this._setupProcessEvents();
         this._registerFileProtocol();
@@ -364,5 +370,13 @@ export class BatchExplorerApplication {
             details.requestHeaders["User-Agent"] = userAgent;
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         });
+    }
+
+    private async _checkForLegacyCredentials() {
+        const secureDataStore = this.injector.get(SecureDataStore);
+        if (await secureDataStore.legacyDataDetected()) {
+            log.warn("Logging out to clear legacy encrypted credentials.");
+            await this.aadService.logout();
+        }
     }
 }

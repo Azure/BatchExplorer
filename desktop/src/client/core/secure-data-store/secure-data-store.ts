@@ -3,7 +3,7 @@ import { DataStore, InMemoryDataStore } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import * as path from "path";
-import { CryptoService } from "./crypto-service";
+import { CryptoService, UnsupportedEncryptionVersionError } from "./crypto-service";
 
 const SECRET_DATA_FILE = "data/secure.enc";
 
@@ -13,10 +13,16 @@ const SECRET_DATA_FILE = "data/secure.enc";
 @Injectable({ providedIn: "root" })
 export class SecureDataStore extends InMemoryDataStore implements DataStore {
     private _loadPromise: Promise<void>;
+    private _legacyDataDetected = false;
 
     constructor(private fs: FileSystemService, private crypto: CryptoService) {
         super();
         this._loadPromise = this._load();
+    }
+
+    public async legacyDataDetected(): Promise<boolean> {
+        await this._loadPromise;
+        return this._legacyDataDetected;
     }
 
     public async setItem<T = string>(key: string, value: T) {
@@ -56,13 +62,18 @@ export class SecureDataStore extends InMemoryDataStore implements DataStore {
         if (!encryptedContent) {
             return;
         }
-        const content = await this.crypto.decrypt(encryptedContent);
 
         try {
+            const content = await this.crypto.decrypt(encryptedContent);
             const data = JSON.parse(content);
             this._data = new Map(Object.entries(data));
         } catch (e) {
-            log.error("Invalid JSON in the secret store file. This could be because we lost the master key.");
+            if (e instanceof UnsupportedEncryptionVersionError) {
+                log.warn("Legacy credential encryption detected.");
+                this._legacyDataDetected = true;
+            } else {
+                log.error("Invalid JSON in the secret store file. This could be because we lost the master key.", e);
+            }
         }
     }
 
