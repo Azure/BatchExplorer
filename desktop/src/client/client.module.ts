@@ -24,6 +24,7 @@ import { LocalDataStore } from "./core/local-data-store";
 import { BatchExplorerProperties } from "./core/properties";
 import { ClientTelemetryModule } from "./core/telemetry";
 import { TerminalService } from "./core/terminal";
+import { SafeStorageMainService } from "./core/secure-data-store/safe-storage-main.service";
 import { MenuModule } from "./menu/menu.module";
 import { ProxySettingsManager } from "./proxy";
 
@@ -32,6 +33,7 @@ import { ProxySettingsManager } from "./proxy";
  */
 const servicesToInitialize = [
     TerminalService,
+    SafeStorageMainService,
 ];
 
 // make sure that the services are created on app start
