@@ -17,6 +17,10 @@ function defaultGetText(value: unknown): string {
     return value ? String(value) : "";
 }
 
+function defaultRenderLabel(label: string | undefined): React.ReactNode {
+    return label ? label : "-";
+}
+
 function mouseOutHandler(event: React.MouseEvent<HTMLElement, MouseEvent>) {
     const btn = event.currentTarget.getElementsByClassName(
         "clipboard-button"
@@ -30,6 +34,7 @@ function mouseOutHandler(event: React.MouseEvent<HTMLElement, MouseEvent>) {
  */
 export function PropertyField<T>(props: PropertyFieldProps<T>): JSX.Element {
     const getText = props.getText ?? defaultGetText;
+    const renderLabel = props.renderLabel ?? defaultRenderLabel;
 
     const defaultRenderValue: (value?: T) => React.ReactNode =
         React.useCallback(
@@ -85,7 +90,7 @@ export function PropertyField<T>(props: PropertyFieldProps<T>): JSX.Element {
                         ...props.labelStyle,
                     }}
                 >
-                    {props.renderLabel && props.renderLabel(props.label)}
+                    {renderLabel(props.label)}
                 </div>
                 <div
                     style={{
@@ -135,7 +140,3 @@ export function PropertyField<T>(props: PropertyFieldProps<T>): JSX.Element {
         </>
     );
 }
-PropertyField.defaultProps = {
-    getText: (value: unknown) => (value ? String(value) : ""),
-    renderLabel: (label: string) => (label ? label : "-"),
-};

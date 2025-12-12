@@ -1,5 +1,6 @@
-import { renderHook, act } from "@testing-library/react-hooks";
+import { renderHook } from "@testing-library/react";
 import { useAsyncEffect } from "../use-async-effect";
+import { act } from "react";
 
 describe("useAsyncEffect hook", () => {
     test("Can pass in an async effect callback", () => {

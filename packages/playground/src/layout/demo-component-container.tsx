@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export interface DemoComponentContainerProps {
+export interface DemoComponentContainerProps extends React.PropsWithChildren {
     centered?: boolean;
     minWidth?: string;
     maxWidth?: string;
@@ -10,7 +10,11 @@ export interface DemoComponentContainerProps {
  * Container component for individual components being demoed
  */
 export const DemoComponentContainer: React.FC<DemoComponentContainerProps> = (
-    props
+    props = {
+        centered: true,
+        minWidth: "100%",
+        maxWidth: "100%",
+    }
 ) => {
     const { centered, children, minWidth, maxWidth } = props;
     return (
@@ -31,9 +35,4 @@ export const DemoComponentContainer: React.FC<DemoComponentContainerProps> = (
             </div>
         </div>
     );
-};
-DemoComponentContainer.defaultProps = {
-    centered: true,
-    minWidth: "100%",
-    maxWidth: "100%",
 };

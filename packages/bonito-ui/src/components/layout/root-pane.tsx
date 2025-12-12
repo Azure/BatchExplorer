@@ -3,7 +3,7 @@ import { ThemeName, getTheme } from "../../theme";
 import { ThemeProvider } from "@fluentui/react/lib/Theme";
 import { loadTheme } from "@fluentui/react/lib/Styling";
 
-export interface RootPaneProps {
+export interface RootPaneProps extends React.PropsWithChildren {
     theme?: ThemeName;
 }
 

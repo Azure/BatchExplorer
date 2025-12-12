@@ -6,7 +6,6 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import * as React from "react";
-import { act } from "react-dom/test-utils";
 import { initMockBrowserEnvironment } from "../../../environment";
 import {
     StorageAccountDependencies,
@@ -163,7 +162,7 @@ describe("Storage account dropdown", () => {
         expect(screen.getByText("Bad Subscription")).toBeDefined();
 
         await user.click(storageDropdown);
-        await act(async () => {
+        await React.act(async () => {
             // Need to run with force so that errors are displayed (this acts
             // like an on-submit validation)
             await form.validate({ force: true });

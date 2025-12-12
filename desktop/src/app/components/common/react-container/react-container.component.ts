@@ -8,13 +8,13 @@ import {
     AfterViewChecked, ChangeDetectionStrategy
 } from "@angular/core";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import {RootPane} from "@azure/bonito-ui/lib/components/layout";
 import { Subscription } from "rxjs";
 import { Theme, ThemeService } from "app/services";
 import { ThemeName } from "@azure/bonito-ui/lib/theme";
+import { createRoot, Root } from 'react-dom/client';
 
-export const ReactWrapper: React.FC = props => {
+export const ReactWrapper: React.FC<React.PropsWithChildren> = props => {
     return React.createElement(RootPane, {theme: "explorerDark"}, props.children);
 };
 
@@ -42,6 +42,8 @@ export class ReactContainerComponent<P> implements OnChanges, OnDestroy, AfterVi
 
     private _themeService: ThemeService;
 
+    private _root: Root;
+
     constructor(themeService: ThemeService) {
         this._themeService = themeService;
 
@@ -67,11 +69,14 @@ export class ReactContainerComponent<P> implements OnChanges, OnDestroy, AfterVi
     }
 
     private _render() {
-        ReactDOM.render(
+        if (!this._root) {
+            this._root = createRoot(this.rootElement.nativeElement);
+        }
+        this._root.render(
             React.createElement(RootPane, {theme : this._themeName},
                 React.createElement(this.component ?? NoComponentFound, this.props)
             )
-        , this.rootElement.nativeElement);
+        );
 
     }
 
@@ -81,7 +86,10 @@ export class ReactContainerComponent<P> implements OnChanges, OnDestroy, AfterVi
         }
 
         if (this._initialized && this.rootElement) {
-            ReactDOM.unmountComponentAtNode(this.rootElement.nativeElement);
+            if (this._root) {
+                this._root.unmount();
+                this._root = null;
+            }
         }
     }
 

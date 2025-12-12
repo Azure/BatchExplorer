@@ -10,7 +10,8 @@ import {
     StringParameter,
     ValidationStatus,
 } from "@azure/bonito-core/lib/form";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import { act } from "react";
 import userEvent from "@testing-library/user-event";
 import * as React from "react";
 import { initMockBrowserEnvironment } from "../../../environment";
@@ -121,14 +122,17 @@ describe("Action form tests", () => {
 
         const alerts = await screen.findAllByRole("alert");
         expect(alerts.length).toBe(2);
-        // Validation error on input
-        expect(alerts[0].textContent).toBe(
-            "Dog names cannot be greater than 10 characters"
-        );
-        // Validation error on summary
-        expect(alerts[1].textContent).toBe(
-            "Dog names cannot be greater than 10 characters"
-        );
+
+        await waitFor(() => {
+            // Validation error on input
+            expect(alerts[0].textContent).toBe(
+                "Dog names cannot be greater than 10 characters"
+            );
+            // Validation error on summary
+            expect(alerts[1].textContent).toBe(
+                "Dog names cannot be greater than 10 characters"
+            );
+        });
 
         await act(async () => {
             action.form.updateValue("dogName", "f1d0");

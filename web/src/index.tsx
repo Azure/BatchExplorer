@@ -26,7 +26,7 @@ import { FakeNodeService } from "@batch/ui-service";
 import { BatchDependencyName } from "@batch/ui-service/lib/environment";
 import { FakePoolService } from "@batch/ui-service/lib/pool";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Application } from "./components";
 import { MemoryCacheManager } from "@azure/bonito-core/lib/cache";
 import { FakeAccountService } from "@batch/ui-service/lib/account";
@@ -83,5 +83,5 @@ export async function init(rootEl: HTMLElement): Promise<void> {
             }
         )
     );
-    ReactDOM.render(<Application />, rootEl);
+    createRoot(rootEl).render(<Application />);
 }

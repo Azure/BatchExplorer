@@ -1,11 +1,15 @@
 import * as React from "react";
 import { headingStyle } from "../style";
 
-export interface DemoPaneProps {
+export interface DemoPaneProps extends React.PropsWithChildren {
     title?: string;
 }
 
-export const DemoPane: React.FC<DemoPaneProps> = (props) => {
+export const DemoPane: React.FC<DemoPaneProps> = (
+    props = {
+        title: "Untitled",
+    }
+) => {
     const { title, children } = props;
     return (
         <div style={{ flex: 1, padding: "16px" }}>
@@ -13,7 +17,4 @@ export const DemoPane: React.FC<DemoPaneProps> = (props) => {
             {children}
         </div>
     );
-};
-DemoPane.defaultProps = {
-    title: "Untitled",
 };

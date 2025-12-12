@@ -7,8 +7,8 @@ import {
     ParameterName,
     StringParameter,
 } from "@azure/bonito-core/lib/form";
-import { act } from "@testing-library/react";
-import { renderHook } from "@testing-library/react-hooks";
+import { act } from "react";
+import { renderHook, waitFor } from "@testing-library/react";
 import { useCallback } from "react";
 import { initMockBrowserEnvironment } from "../../environment";
 import { useFormParameter } from "../use-form-parameter";
@@ -35,7 +35,7 @@ describe("useFormParameter hook", () => {
         // let callCount = 0;
         let loadCount = 0;
 
-        const { result, waitForNextUpdate } = renderHook(() => {
+        const { result } = renderHook(() => {
             const loadData = useCallback(async () => {
                 loadCount++;
                 const beverages = await beverageParam.loadBeverages();
@@ -51,12 +51,12 @@ describe("useFormParameter hook", () => {
         expect(loadCount).toBe(1);
         expect(result.current.data).toBeUndefined();
 
-        await waitForNextUpdate();
         await result.current.loadingPromise;
 
-        // Initial data finished loading
-        expect(result.current.data).toEqual([]);
-        expect(result.current.loading).toBe(false);
+        await waitFor(() => {
+            expect(result.current.data).toEqual([]);
+            expect(result.current.loading).toBe(false);
+        });
 
         // Changing a dependency triggers a 2nd data load
         act(() => {
@@ -64,13 +64,14 @@ describe("useFormParameter hook", () => {
         });
         expect(result.current.loading).toBe(true);
 
-        await waitForNextUpdate();
         await result.current.loadingPromise;
 
         // 2nd data load finished
-        expect(loadCount).toBe(2);
-        expect(result.current.loading).toBe(false);
-        expect(result.current.data).toEqual(["coffee", "hot tea"]);
+        await waitFor(() => {
+            expect(loadCount).toBe(2);
+            expect(result.current.loading).toBe(false);
+            expect(result.current.data).toEqual(["coffee", "hot tea"]);
+        });
 
         // Changing a parameter that's not a dependency doesn't trigger loading
         act(() => {
@@ -83,12 +84,13 @@ describe("useFormParameter hook", () => {
             tempParam.value = "cold";
         });
 
-        await waitForNextUpdate();
         await result.current.loadingPromise;
 
         // Dropdown has updated
-        expect(loadCount).toBe(3);
-        expect(result.current.data).toEqual(["iced latte", "iced tea"]);
+        await waitFor(() => {
+            expect(loadCount).toBe(3);
+            expect(result.current.data).toEqual(["iced latte", "iced tea"]);
+        });
     });
 });
 
