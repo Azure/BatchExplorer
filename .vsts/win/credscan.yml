@@ -3,6 +3,6 @@ steps:
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3
     displayName: "Run CredScan"
     inputs:
-      suppressionsFile: .vsts/cred-scan-exclude.json
+      suppressionsFile: .vsts/win/cred-scan-exclude.json
       debugMode: false
 

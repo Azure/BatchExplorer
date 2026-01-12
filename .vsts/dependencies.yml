@@ -1,2 +1,0 @@
-steps:
-  - template: ./node-setup.yml
