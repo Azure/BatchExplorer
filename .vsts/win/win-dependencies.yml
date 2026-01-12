@@ -1,10 +1,11 @@
 steps:
-  - template: ../dependencies.yml
+  - template: ../common/dependencies.yml
   - pwsh: |
-      . .vsts/win/exec.ps1
       $ErrorActionPreference = "Stop"
-      exec { Write-Host "Node.js version" $(node --version) }
-      exec { Write-Host "NPM version" $(npm --version) }
-      exec { npm ci }
-      exec { npm run dev-setup }
+      Write-Host "Node.js version $(node --version)"
+      Write-Host "NPM version $(npm --version)"
+      npm ci
+      if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      npm run dev-setup
+      if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     displayName: Install Windows dependencies

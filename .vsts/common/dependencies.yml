@@ -4,7 +4,7 @@ steps:
       versionSpec: '18.x.x'
     displayName: Set NodeJS version
 
-  - script: cp .vsts/pipelines.npmrc $(Agent.TempDirectory)/.npmrc
+  - script: cp .vsts/common/pipelines.npmrc $(Agent.TempDirectory)/.npmrc
     displayName: Stage .npmrc file
 
   - task: npmAuthenticate@0
@@ -13,7 +13,7 @@ steps:
       workingFile: $(Agent.TempDirectory)/.npmrc
 
   # Using the 'script' task as-written below doesn't work properly on Windows.
-  # It seem to be adding an extra quote character somehow. Using a separate
+  # It seems to be adding an extra quote character somehow. Using a separate
   # powershell task for Windows gets around this issue.
   - script: |
       echo "##vso[task.setvariable variable=npm_config_userconfig]$(Agent.TempDirectory)/.npmrc"
