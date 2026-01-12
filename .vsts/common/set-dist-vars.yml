@@ -1,3 +1,0 @@
-steps:
-  - pwsh: $(Build.SourcesDirectory)/.vsts/common/build-vars.ps1 "$(Build.SourceBranch)" "$(Build.BuildNumber)"
-    displayName: Resolve build info
