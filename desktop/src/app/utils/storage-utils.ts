@@ -107,7 +107,7 @@ export class StorageUtils {
     private static async _getJobIdHash(jobId: string): Promise<string> {
         const jobIdBytes = new TextEncoder().encode(jobId);
 
-        const hash = await crypto.subtle.digest("SHA-1", jobIdBytes);
+        const hash = await crypto.subtle.digest("SHA-1", jobIdBytes); // CodeQL [SM04514] SHA-1 is only used for generating unique identifiers, not for security purposes
         return this._hex(hash);
     }
 

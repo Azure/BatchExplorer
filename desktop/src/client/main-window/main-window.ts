@@ -76,7 +76,6 @@ export class MainWindow extends GenericWindow {
             show: false, // Don't show the window until it is ready
             titleBarStyle: process.platform === "darwin" ? "hidden" : "default",
             webPreferences: {
-                webSecurity: false,
                 allowRunningInsecureContent: false,
                 nodeIntegration: true,
                 contextIsolation: false,

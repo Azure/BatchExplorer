@@ -7,8 +7,6 @@ import {
     createIssue, createPullRequest, getMilestone, githubToken, listMilestoneIssues, listPullRequests,
 } from "./github-api";
 
-const MAIN_BRANCH = "main";
-
 const root = path.resolve(path.join(__dirname, "../../.."));
 const allMessages: string[] = [];
 const repoName = "Azure/BatchExplorer";
@@ -34,7 +32,7 @@ function success(message: string) {
 
 async function run(command: string): Promise<{ stdout: string, stderr: string }> {
     return new Promise<{ stdout: string, stderr: string }>((resolve, reject) => {
-        exec(command, { maxBuffer: 100_000_000 }, (error, stdout, stderr) => {
+        exec(command, { maxBuffer: 100_000_000 }, (error, stdout, stderr) => { // CodeQL [SM01509] This is a dev tool, not used in production or by customers.
             if (error) {
                 reject(error);
                 return;
@@ -57,9 +55,9 @@ function checkGithubToken() {
  * This goes back to the main branch and pulls the latest
  */
 async function gotoMainBranch() {
-    await run(`git checkout ${MAIN_BRANCH}`);
+    await run(`git checkout main`);
     await run("git pull");
-    success(`Checkout to ${MAIN_BRANCH} branch and pulled latest`);
+    success(`Checkout to main branch and pulled latest`);
 }
 
 async function loadMilestone(milestoneId: number) {

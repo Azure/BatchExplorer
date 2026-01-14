@@ -210,7 +210,7 @@ export class CertificateService {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore start is not in the @types/node-forge
         md.start();
-        md.update(certDer);
+        md.update(certDer); // CodeQL [SM01510] Used only to generate identification thumbprint, not for security purposes
         const digest = md.digest();
         return digest.toHex();
     }
