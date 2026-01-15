@@ -1,3 +1,18 @@
+# 2.23.0
+
+[All items](https://github.com/Azure/BatchExplorer/milestone/57?closed=1)
+
+### Bug
+
+* Fixes auto-update on MacOS installs [\#3003](https://github.com/Azure/BatchExplorer/issues/3003)
+
+### Other
+
+* Replaces keytar library with Electron's `safeStorage` API [\#3001](https://github.com/Azure/BatchExplorer/issues/3001)
+* Updates @azure/msal-node from 2.7.0 to 2.15.0 [\#3002](https://github.com/Azure/BatchExplorer/issues/3002)
+* Updates Batch Service API version to 2025-06-01 [\#3004](https://github.com/Azure/BatchExplorer/issues/3004)
+* Updates NPM dependencies [\#3005](https://github.com/Azure/BatchExplorer/issues/3005)
+
 # 2.22.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/56?closed=1)
