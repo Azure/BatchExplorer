@@ -14,7 +14,7 @@ export default function createClient(
   options: ClientOptions = {}
 ): BatchManagementClient {
   const baseUrl = options.baseUrl ?? `https://management.azure.com`;
-  options.apiVersion = options.apiVersion ?? "2024-07-01";
+  options.apiVersion = options.apiVersion ?? "2025-06-01";
   options = {
     ...options,
     credentials: {

@@ -2,7 +2,7 @@ import { getMockEnvironment } from "@azure/bonito-core/lib/environment";
 import { MockHttpClient, MockHttpResponse } from "@azure/bonito-core/lib/http";
 import { LivePoolService } from "../live-pool-service";
 import { PoolService } from "../pool-service";
-import type { Pool } from "../pool-models";
+import type { LegacyPool, Pool } from "../pool-models";
 import { cloneDeep, getArmUrl, mergeDeep } from "@azure/bonito-core";
 import { BasicBatchFakeSet, BatchFakeSet } from "../../test-util/fakes";
 import { BatchApiVersion } from "../../constants";
@@ -101,6 +101,50 @@ describe("LivePoolService", () => {
 
         const byosPool = await service.get(byosPoolResourceId);
         expect(byosPool?.name).toEqual("byospool1");
+    });
+
+    test("Get by resource ID using 2024-07-01 API version", async () => {
+        httpClient.addExpected(
+            new MockHttpResponse(
+                `${getArmUrl()}${hoboPoolResourceId}?api-version=2024-07-01`,
+                {
+                    status: 200,
+                    body: JSON.stringify(
+                        fakeSet.getLegacyPool(hoboPoolResourceId)
+                    ),
+                }
+            )
+        );
+
+        const hoboPool = await service.getLegacy(hoboPoolResourceId);
+        expect(hoboPool?.name).toEqual("hobopool1");
+        expect(hoboPool?.properties?.targetNodeCommunicationMode).toBe(
+            "Default"
+        );
+        expect(
+            hoboPool?.properties?.currentNodeCommunicationMode
+        ).toBeUndefined();
+
+        httpClient.addExpected(
+            new MockHttpResponse(
+                `${getArmUrl()}${byosPoolResourceId}?api-version=2024-07-01`,
+                {
+                    status: 200,
+                    body: JSON.stringify(
+                        fakeSet.getLegacyPool(byosPoolResourceId)
+                    ),
+                }
+            )
+        );
+
+        const byosPool = await service.getLegacy(byosPoolResourceId);
+        expect(byosPool?.name).toEqual("byospool1");
+        expect(byosPool?.properties?.targetNodeCommunicationMode).toBe(
+            "Default"
+        );
+        expect(byosPool?.properties?.currentNodeCommunicationMode).toBe(
+            "Simplified"
+        );
     });
 
     test("Get by resource ID error", async () => {
@@ -243,5 +287,43 @@ describe("LivePoolService", () => {
         expect(
             pool?.properties?.scaleSettings?.fixedScale?.targetLowPriorityNodes
         ).toEqual(5);
+    });
+
+    test("Patch using 2024-07-01 API version", async () => {
+        const pool: LegacyPool = {
+            id: hoboPoolResourceId,
+            properties: {
+                targetNodeCommunicationMode: "Simplified",
+            },
+        };
+
+        const fakeOutput = fakeSet.getLegacyPool(hoboPoolResourceId);
+        if (fakeOutput?.properties) {
+            fakeOutput.properties.targetNodeCommunicationMode = "Simplified";
+        }
+
+        httpClient.addExpected(
+            new MockHttpResponse(
+                `${getArmUrl()}${hoboPoolResourceId}?api-version=2024-07-01`,
+                {
+                    status: 200,
+                    body: JSON.stringify(fakeOutput),
+                }
+            ),
+            {
+                method: "PATCH",
+                body: JSON.stringify(pool),
+            }
+        );
+
+        // Patch
+        const poolOutput = await service.patchLegacy(hoboPoolResourceId, pool);
+        expect(poolOutput?.name).toEqual("hobopool1");
+        expect(poolOutput?.properties?.targetNodeCommunicationMode).toEqual(
+            "Simplified"
+        );
+        expect(
+            poolOutput?.properties?.currentNodeCommunicationMode
+        ).toBeUndefined();
     });
 });

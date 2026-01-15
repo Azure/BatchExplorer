@@ -11,7 +11,6 @@ import {
   ApplicationPackage,
   Application,
   CheckNameAvailabilityParameters,
-  CertificateCreateOrUpdateParameters,
   PrivateEndpointConnection,
   Pool
 } from "./models";
@@ -181,75 +180,6 @@ export type LocationCheckNameAvailabilityParameters = LocationCheckNameAvailabil
   RequestParameters;
 export type OperationsListParameters = RequestParameters;
 
-export interface CertificateListByBatchAccountQueryParamProperties {
-  /** The maximum number of items to return in the response. */
-  maxresults?: number;
-  /** Comma separated list of properties that should be returned. e.g. "properties/provisioningState". Only top level properties under properties/ are valid for selection. */
-  $select?: string;
-  /** OData filter expression. Valid properties for filtering are "properties/provisioningState", "properties/provisioningStateTransitionTime", "name". */
-  $filter?: string;
-}
-
-export interface CertificateListByBatchAccountQueryParam {
-  queryParameters?: CertificateListByBatchAccountQueryParamProperties;
-}
-
-export type CertificateListByBatchAccountParameters = CertificateListByBatchAccountQueryParam &
-  RequestParameters;
-
-export interface CertificateCreateHeaders {
-  /** The entity state (ETag) version of the certificate to update. A value of "*" can be used to apply the operation only if the certificate already exists. If omitted, this operation will always be applied. */
-  "If-Match"?: string;
-  /** Set to '*' to allow a new certificate to be created, but to prevent updating an existing certificate. Other values will be ignored. */
-  "If-None-Match"?: string;
-}
-
-export interface CertificateCreateBodyParam {
-  /** Additional parameters for certificate creation. */
-  body: CertificateCreateOrUpdateParameters;
-}
-
-export interface CertificateCreateHeaderParam {
-  headers: RawHttpHeadersInput & CertificateCreateHeaders;
-}
-
-export interface CertificateCreateMediaTypesParam {
-  /** Request content type */
-  contentType?: "application/json";
-}
-
-export type CertificateCreateParameters = CertificateCreateHeaderParam &
-  CertificateCreateMediaTypesParam &
-  CertificateCreateBodyParam &
-  RequestParameters;
-
-export interface CertificateUpdateHeaders {
-  /** The entity state (ETag) version of the certificate to update. This value can be omitted or set to "*" to apply the operation unconditionally. */
-  "If-Match"?: string;
-}
-
-export interface CertificateUpdateBodyParam {
-  /** Certificate entity to update. */
-  body: CertificateCreateOrUpdateParameters;
-}
-
-export interface CertificateUpdateHeaderParam {
-  headers: RawHttpHeadersInput & CertificateUpdateHeaders;
-}
-
-export interface CertificateUpdateMediaTypesParam {
-  /** Request content type */
-  contentType?: "application/json";
-}
-
-export type CertificateUpdateParameters = CertificateUpdateHeaderParam &
-  CertificateUpdateMediaTypesParam &
-  CertificateUpdateBodyParam &
-  RequestParameters;
-export type CertificateDeleteParameters = RequestParameters;
-export type CertificateGetParameters = RequestParameters;
-export type CertificateCancelDeletionParameters = RequestParameters;
-
 export interface PrivateLinkResourceListByBatchAccountQueryParamProperties {
   /** The maximum number of items to return in the response. */
   maxresults?: number;
@@ -384,3 +314,6 @@ export type PoolDeleteParameters = RequestParameters;
 export type PoolGetParameters = RequestParameters;
 export type PoolDisableAutoScaleParameters = RequestParameters;
 export type PoolStopResizeParameters = RequestParameters;
+export type NetworkSecurityPerimeterListConfigurationsParameters = RequestParameters;
+export type NetworkSecurityPerimeterGetConfigurationParameters = RequestParameters;
+export type NetworkSecurityPerimeterReconcileConfigurationParameters = RequestParameters;

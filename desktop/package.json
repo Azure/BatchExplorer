@@ -18,7 +18,7 @@
     "name": "Microsoft Corporation",
     "email": "batchexplorer@microsoft.com"
   },
-  "version": "2.22.0",
+  "version": "2.23.0",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json --files",
@@ -192,7 +192,7 @@
     "@azure/bonito-core": "^1.0.0",
     "@azure/bonito-ui": "^1.0.0",
     "@azure/core-util": "1.9.1",
-    "@azure/msal-node": "^2.7.0",
+    "@azure/msal-node": "^2.15.0",
     "@azure/storage-blob": "^12.25.0",
     "@batch/ui-playground": "^1.0.0",
     "@batch/ui-react": "^1.0.0",
@@ -217,7 +217,6 @@
     "inflection": "^1.12.0",
     "js-yaml": "^3.14.0",
     "jschardet": "^2.2.1",
-    "keytar": "^7.7.0",
     "load-json-file": "^5.3.0",
     "luxon": "^1.28.1",
     "make-dir": "^2.1.0",

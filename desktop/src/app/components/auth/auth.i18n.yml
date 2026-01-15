@@ -6,3 +6,6 @@ auth:
     label: Sign in
   cancel-button:
     label: Cancel
+  encryption-unavailable:
+    title: Secure Storage Unavailable
+    message: Secure credential storage is unavailable. You will need to sign in each time you start the application. On Linux, install libsecret to enable credential storage.

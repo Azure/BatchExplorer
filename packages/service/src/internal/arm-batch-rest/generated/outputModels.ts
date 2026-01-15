@@ -394,74 +394,6 @@ export interface CheckNameAvailabilityResultOutput {
 }
 
 /** Values returned by the List operation. */
-export interface ListCertificatesResultOutput {
-  /** The collection of returned certificates. */
-  value?: Array<CertificateOutput>;
-  /** The continuation token. */
-  nextLink?: string;
-}
-
-/** Contains information about a certificate. */
-export interface CertificateOutput extends AzureProxyResourceOutput {
-  /** The properties associated with the certificate. */
-  properties?: CertificatePropertiesOutput;
-}
-
-/** Certificate properties. */
-export interface CertificatePropertiesOutput
-  extends CertificateBasePropertiesOutput {
-  provisioningState?: "Succeeded" | "Deleting" | "Failed";
-  /** The time at which the certificate entered its current state. */
-  provisioningStateTransitionTime?: string;
-  /** The previous provisioned state of the resource */
-  previousProvisioningState?: "Succeeded" | "Deleting" | "Failed";
-  /** The time at which the certificate entered its previous state. */
-  previousProvisioningStateTransitionTime?: string;
-  /** The public key of the certificate. */
-  publicData?: string;
-  /** This is only returned when the certificate provisioningState is 'Failed'. */
-  deleteCertificateError?: DeleteCertificateErrorOutput;
-}
-
-/** An error response from the Batch service. */
-export interface DeleteCertificateErrorOutput {
-  /** An identifier for the error. Codes are invariant and are intended to be consumed programmatically. */
-  code: string;
-  /** A message describing the error, intended to be suitable for display in a user interface. */
-  message: string;
-  /** The target of the particular error. For example, the name of the property in error. */
-  target?: string;
-  /** A list of additional details about the error. */
-  details?: Array<DeleteCertificateErrorOutput>;
-}
-
-/** Base certificate properties. */
-export interface CertificateBasePropertiesOutput {
-  /** This must match the first portion of the certificate name. Currently required to be 'SHA1'. */
-  thumbprintAlgorithm?: string;
-  /** This must match the thumbprint from the name. */
-  thumbprint?: string;
-  /** The format of the certificate - either Pfx or Cer. If omitted, the default is Pfx. */
-  format?: "Pfx" | "Cer";
-}
-
-/** Contains information about a certificate. */
-export interface CertificateCreateOrUpdateParametersOutput
-  extends AzureProxyResourceOutput {
-  /** The properties associated with the certificate. */
-  properties?: CertificateCreateOrUpdatePropertiesOutput;
-}
-
-/** Certificate properties for create operations */
-export interface CertificateCreateOrUpdatePropertiesOutput
-  extends CertificateBasePropertiesOutput {
-  /** The maximum size is 10KB. */
-  data: string;
-  /** This must not be specified if the certificate format is Cer. */
-  password?: string;
-}
-
-/** Values returned by the List operation. */
 export interface DetectorListResultOutput {
   /** The collection of Batch account detectors returned by the listing operation. */
   value?: Array<DetectorResponseOutput>;
@@ -545,7 +477,7 @@ export interface PoolPropertiesOutput {
   allocationState?: "Steady" | "Resizing" | "Stopping";
   /** The time at which the pool entered its current allocation state. */
   allocationStateTransitionTime?: string;
-  /** For information about available VM sizes, see Sizes for Virtual Machines (Linux) (https://azure.microsoft.com/documentation/articles/virtual-machines-linux-sizes/) or Sizes for Virtual Machines (Windows) (https://azure.microsoft.com/documentation/articles/virtual-machines-windows-sizes/). Batch supports all Azure VM sizes except STANDARD_A0 and those with premium storage (STANDARD_GS, STANDARD_DS, and STANDARD_DSV2 series). */
+  /** For information about available VM sizes, see Sizes for Virtual Machines in Azure (https://learn.microsoft.com/azure/virtual-machines/sizes/overview). Batch supports all Azure VM sizes except STANDARD_A0 and those with premium storage (STANDARD_GS, STANDARD_DS, and STANDARD_DSV2 series). */
   vmSize?: string;
   /** Deployment configuration properties. */
   deploymentConfiguration?: DeploymentConfigurationOutput;
@@ -571,16 +503,8 @@ export interface PoolPropertiesOutput {
   metadata?: Array<MetadataItemOutput>;
   /** In an PATCH (update) operation, this property can be set to an empty object to remove the start task from the pool. */
   startTask?: StartTaskOutput;
-  /**
-   * For Windows compute nodes, the Batch service installs the certificates to the specified certificate store and location. For Linux compute nodes, the certificates are stored in a directory inside the task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the task to query for this location. For certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and certificates are placed in that directory.
-   *
-   * Warning: This property is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead.
-   */
-  certificates?: Array<CertificateReferenceOutput>;
   /** Changes to application package references affect all new compute nodes joining the pool, but do not affect compute nodes that are already in the pool until they are rebooted or reimaged. There is a maximum of 10 application package references on any given pool. */
   applicationPackages?: Array<ApplicationPackageReferenceOutput>;
-  /** The list of application licenses must be a subset of available Batch service application licenses. If a license is requested which is not supported, pool creation will fail. */
-  applicationLicenses?: Array<string>;
   /** Describes either the current operation (if the pool AllocationState is Resizing) or the previously completed operation (if the AllocationState is Steady). */
   resizeOperationStatus?: ResizeOperationStatusOutput;
   /** This supports Azure Files, NFS, CIFS/SMB, and Blobfuse. */
@@ -591,8 +515,6 @@ export interface PoolPropertiesOutput {
   currentNodeCommunicationMode?: "Default" | "Classic" | "Simplified";
   /** Describes an upgrade policy - automatic, manual, or rolling. */
   upgradePolicy?: UpgradePolicyOutput;
-  /** The user-defined tags to be associated with the Azure Batch Pool. When specified, these tags are propagated to the backing Azure resources associated with the pool. This property can only be specified when the Batch account was created with the poolAllocationMode property set to 'UserSubscription'. */
-  resourceTags?: Record<string, string>;
 }
 
 /** Deployment configuration properties. */
@@ -645,7 +567,7 @@ export interface ImageReferenceOutput {
   sku?: string;
   /** A value of 'latest' can be specified to select the latest version of an image. If omitted, the default is 'latest'. */
   version?: string;
-  /** This property is mutually exclusive with other properties. The Azure Compute Gallery Image must have replicas in the same region as the Azure Batch account. For information about the firewall settings for the Batch node agent to communicate with the Batch service see https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration. */
+  /** This property is mutually exclusive with other properties. The Azure Compute Gallery Image must have replicas in the same region as the Azure Batch account. For information about the firewall settings for the Batch node agent to communicate with the Batch service see https://learn.microsoft.com/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration. */
   id?: string;
   /** This property is mutually exclusive with other properties and can be fetched from shared gallery image GET call. */
   sharedGalleryImageId?: string;
@@ -682,6 +604,33 @@ export interface DataDiskOutput {
    *  Premium_LRS - The data disk should use premium locally redundant storage.
    */
   storageAccountType?: "Standard_LRS" | "Premium_LRS" | "StandardSSD_LRS";
+  managedDisk?: ManagedDiskOutput;
+}
+
+export interface ManagedDiskOutput {
+  /** The storage account type for use in creating data disks or OS disk. */
+  storageAccountType?: "Standard_LRS" | "Premium_LRS" | "StandardSSD_LRS";
+  /** Specifies the security profile settings for the managed disk. **Note**: It can only be set for Confidential VMs and is required when using Confidential VMs. */
+  securityProfile?: VMDiskSecurityProfileOutput;
+  /** Specifies the customer managed disk encryption set resource id for the managed disk. It can be set only in UserSubscription mode. */
+  diskEncryptionSet?: DiskEncryptionSetParametersOutput;
+}
+
+/** Specifies the security profile settings for the managed disk. **Note**: It can only be set for Confidential VMs and is required when using Confidential VMs. */
+export interface VMDiskSecurityProfileOutput {
+  /** Specifies the EncryptionType of the managed disk. It is set to DiskWithVMGuestState for encryption of the managed disk along with VMGuestState blob, VMGuestStateOnly for encryption of just the VMGuestState blob, and NonPersistedTPM for not persisting firmware state in the VMGuestState blob. **Note**: It can be set for only Confidential VMs and required when using Confidential VMs. */
+  securityEncryptionType?:
+    | "DiskWithVMGuestState"
+    | "VMGuestStateOnly"
+    | "NonPersistedTPM";
+  /** Specifies the customer managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob. It can be set only in UserSubscription mode. */
+  diskEncryptionSet?: DiskEncryptionSetParametersOutput;
+}
+
+/** The ARM resource id of the disk encryption set. */
+export interface DiskEncryptionSetParametersOutput {
+  /** The ARM resource id of the disk encryption set. The resource should be in the same subscription as the Batch account. */
+  id?: string;
 }
 
 /** The configuration for container-enabled pools. */
@@ -710,6 +659,24 @@ export interface ContainerRegistryOutput {
 export interface DiskEncryptionConfigurationOutput {
   /** On Linux pool, only "TemporaryDisk" is supported; on Windows pool, "OsDisk" and "TemporaryDisk" must be specified. */
   targets?: Array<"OsDisk" | "TemporaryDisk">;
+  /** Customer Managed Key will encrypt OS Disk by EncryptionAtRest, and by default we will encrypt the data disk as well. It can be used only when the pool is configured with an identity and OsDisk is set as one of the targets of DiskEncryption. */
+  customerManagedKey?: DiskCustomerManagedKeyOutput;
+}
+
+/** The Customer Managed Key reference to encrypt the Disk. */
+export interface DiskCustomerManagedKeyOutput {
+  /** Fully versioned Key Url pointing to a key in KeyVault. Version segment of the Url is required regardless of rotationToLatestKeyVersionEnabled value. */
+  keyUrl?: string;
+  /** Set this flag to true to enable auto-updating of the Disk Encryption to the latest key version. Default is false. */
+  rotationToLatestKeyVersionEnabled?: boolean;
+  /** The reference of one of the pool identities to encrypt Disk. This identity will be used to access the KeyVault. */
+  identityReference?: PoolIdentityReferenceOutput;
+}
+
+/** The reference of one of the pool identities to encrypt Disk. This identity will be used to access the key vault. */
+export interface PoolIdentityReferenceOutput {
+  /** The ARM resource id of the user assigned identity. This reference must be included in the pool identities. */
+  resourceId?: string;
 }
 
 /** Allocation configuration used by Batch Service to provision the nodes. */
@@ -755,21 +722,8 @@ export interface OSDiskOutput {
 
 /** Specifies the ephemeral Disk Settings for the operating system disk used by the virtual machine. */
 export interface DiffDiskSettingsOutput {
-  /** This property can be used by user in the request to choose which location the operating system should be in. e.g., cache disk space for Ephemeral OS disk provisioning. For more information on Ephemeral OS disk size requirements, please refer to Ephemeral OS disk size requirements for Windows VMs at https://docs.microsoft.com/en-us/azure/virtual-machines/windows/ephemeral-os-disks#size-requirements and Linux VMs at https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ephemeral-os-disks#size-requirements. */
+  /** This property can be used by user in the request to choose which location the operating system should be in. e.g., cache disk space for Ephemeral OS disk provisioning. For more information on Ephemeral OS disk size requirements, please refer to Ephemeral OS disk size requirements for Windows VMs at https://learn.microsoft.com/azure/virtual-machines/windows/ephemeral-os-disks#size-requirements and Linux VMs at https://learn.microsoft.com/azure/virtual-machines/linux/ephemeral-os-disks#size-requirements. */
   placement?: "CacheDisk";
-}
-
-export interface ManagedDiskOutput {
-  /** The storage account type for use in creating data disks or OS disk. */
-  storageAccountType?: "Standard_LRS" | "Premium_LRS" | "StandardSSD_LRS";
-  /** Specifies the security profile settings for the managed disk. **Note**: It can only be set for Confidential VMs and is required when using Confidential VMs. */
-  securityProfile?: VMDiskSecurityProfileOutput;
-}
-
-/** Specifies the security profile settings for the managed disk. **Note**: It can only be set for Confidential VMs and is required when using Confidential VMs. */
-export interface VMDiskSecurityProfileOutput {
-  /** Specifies the EncryptionType of the managed disk. It is set to VMGuestStateOnly for encryption of just the VMGuestState blob, and NonPersistedTPM for not persisting firmware state in the VMGuestState blob. **Note**: It can be set for only Confidential VMs and required when using Confidential VMs. */
-  securityEncryptionType?: "NonPersistedTPM" | "VMGuestStateOnly";
 }
 
 /** Specifies the security profile settings for the virtual machine or virtual machine scale set. */
@@ -780,6 +734,8 @@ export interface SecurityProfileOutput {
   encryptionAtHost?: boolean;
   /** Specifies the security settings like secure boot and vTPM used while creating the virtual machine. */
   uefiSettings?: UefiSettingsOutput;
+  /** Specifies ProxyAgent settings while creating the virtual machine. */
+  proxyAgentSettings?: ProxyAgentSettingsOutput;
 }
 
 /** Specifies the security settings like secure boot and vTPM used while creating the virtual machine. */
@@ -788,6 +744,24 @@ export interface UefiSettingsOutput {
   secureBootEnabled?: boolean;
   /** Specifies whether vTPM should be enabled on the virtual machine. */
   vTpmEnabled?: boolean;
+}
+
+/** Specifies ProxyAgent settings while creating the virtual machine. */
+export interface ProxyAgentSettingsOutput {
+  /** Specifies whether Metadata Security Protocol feature should be enabled on the virtual machine or virtual machine scale set. Default is False. */
+  enabled?: boolean;
+  /** Specifies particular host endpoint settings. */
+  imds?: HostEndpointSettingsOutput;
+  /** Specifies particular host endpoint settings. */
+  wireServer?: HostEndpointSettingsOutput;
+}
+
+/** Specifies particular host endpoint settings. */
+export interface HostEndpointSettingsOutput {
+  /** Specifies the access control policy execution mode. */
+  mode?: "Audit" | "Enforce";
+  /** Specifies the reference to the InVMAccessControlProfileVersion resource id in the form of /subscriptions/{SubscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Compute/galleries/{galleryName}/inVMAccessControlProfiles/{profile}/versions/{version}. */
+  inVMAccessControlProfileReferenceId?: string;
 }
 
 /** Specifies the service artifact reference id used to set same image version for all virtual machines in the scale set when using 'latest' image version. */
@@ -850,7 +824,7 @@ export interface AutoScaleRunErrorOutput {
 
 /** The network configuration for a pool. */
 export interface NetworkConfigurationOutput {
-  /** The virtual network must be in the same region and subscription as the Azure Batch account. The specified subnet should have enough free IP addresses to accommodate the number of nodes in the pool. If the subnet doesn't have enough free IP addresses, the pool will partially allocate compute nodes and a resize error will occur. The 'MicrosoftAzureBatch' service principal must have the 'Classic Virtual Machine Contributor' Role-Based Access Control (RBAC) role for the specified VNet. The specified subnet must allow communication from the Azure Batch service to be able to schedule tasks on the compute nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the compute nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the compute nodes to unusable. If the specified VNet has any associated Network Security Groups (NSG), then a few reserved system ports must be enabled for inbound communication，including ports 29876 and 29877. Also enable outbound connections to Azure Storage on port 443. For more details see: https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration */
+  /** The virtual network must be in the same region and subscription as the Azure Batch account. The specified subnet should have enough free IP addresses to accommodate the number of nodes in the pool. If the subnet doesn't have enough free IP addresses, the pool will partially allocate compute nodes and a resize error will occur. The 'MicrosoftAzureBatch' service principal must have the 'Classic Virtual Machine Contributor' Role-Based Access Control (RBAC) role for the specified VNet. The specified subnet must allow communication from the Azure Batch service to be able to schedule tasks on the compute nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the compute nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the compute nodes to unusable. If the specified VNet has any associated Network Security Groups (NSG), then a few reserved system ports must be enabled for inbound communication，including ports 29876 and 29877. Also enable outbound connections to Azure Storage on port 443. For more details see: https://learn.microsoft.com/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration */
   subnetId?: string;
   /** The scope of dynamic vnet assignment. */
   dynamicVnetAssignmentScope?: "none" | "job";
@@ -902,10 +876,23 @@ export interface PublicIPAddressConfigurationOutput {
   provision?: "BatchManaged" | "UserManaged" | "NoPublicIPAddresses";
   /** The number of IPs specified here limits the maximum size of the Pool - 100 dedicated nodes or 100 Spot/low-priority nodes can be allocated for each public IP. For example, a pool needing 250 dedicated VMs would need at least 3 public IPs specified. Each element of this collection is of the form: /subscriptions/{subscription}/resourceGroups/{group}/providers/Microsoft.Network/publicIPAddresses/{ip}. */
   ipAddressIds?: Array<string>;
+  /** IP families are used to determine single-stack or dual-stack pools. For single-stack, the expected value is IPv4. For dual-stack, the expected values are IPv4 and IPv6. */
+  ipFamilies?: Array<"IPv4" | "IPv6">;
+  /** IP Tags that will applied to new Public IPs that Batch creates. */
+  ipTags?: Array<IpTagOutput>;
+}
+
+export interface IpTagOutput {
+  /** Example: FirstPartyUsage. */
+  ipTagType?: string;
+  /** Example: SQL. */
+  tag?: string;
 }
 
 /** Specifies how tasks should be distributed across compute nodes. */
 export interface TaskSchedulingPolicyOutput {
+  /** If not specified, the default is none. */
+  jobDefaultOrder?: "None" | "CreationTime";
   /** How tasks should be distributed across compute nodes. */
   nodeFillType: "Spread" | "Pack";
 }
@@ -1002,7 +989,7 @@ export interface UserIdentityOutput {
 
 /** Specifies the parameters for the auto user that runs a task on the Batch service. */
 export interface AutoUserSpecificationOutput {
-  /** The default value is Pool. If the pool is running Windows a value of Task should be specified if stricter isolation between tasks is required. For example, if the task mutates the registry in a way which could impact other tasks, or if certificates have been specified on the pool which should not be accessible by normal tasks but should be accessible by start tasks. */
+  /** The default value is Pool. If the pool is running Windows a value of Task should be specified if stricter isolation between tasks is required. For example, if the task mutates the registry in a way which could impact other tasks. */
   scope?: "Task" | "Pool";
   /** The default value is nonAdmin. */
   elevationLevel?: "NonAdmin" | "Admin";
@@ -1036,21 +1023,9 @@ export interface ContainerHostBatchBindMountEntryOutput {
   isReadOnly?: boolean;
 }
 
-/** Warning: This object is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateReferenceOutput {
-  /** The fully qualified ID of the certificate to install on the pool. This must be inside the same batch account as the pool. */
-  id: string;
-  /** The default value is currentUser. This property is applicable only for pools configured with Windows compute nodes. For Linux compute nodes, the certificates are stored in a directory inside the task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the task to query for this location. For certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and certificates are placed in that directory. */
-  storeLocation?: "CurrentUser" | "LocalMachine";
-  /** This property is applicable only for pools configured with Windows compute nodes. Common store names include: My, Root, CA, Trust, Disallowed, TrustedPeople, TrustedPublisher, AuthRoot, AddressBook, but any custom store name can also be used. The default value is My. */
-  storeName?: string;
-  /** Which user accounts on the compute node should have access to the private data of the certificate. */
-  visibility?: Array<"StartTask" | "Task" | "RemoteUser">;
-}
-
-/** Link to an application package inside the batch account */
+/** Link to an application package inside the Batch account */
 export interface ApplicationPackageReferenceOutput {
-  /** The ID of the application package to install. This must be inside the same batch account as the pool. This can either be a reference to a specific version or the default version if one exists. */
+  /** The ID of the application package to install. This must be inside the same Batch account as the pool. This can either be a reference to a specific version or the default version if one exists. */
   id: string;
   /** If this is omitted, and no default version is specified for this application, the request fails with the error code InvalidApplicationPackageReferences. If you are calling the REST API directly, the HTTP status code is 409. */
   version?: string;
@@ -1168,7 +1143,7 @@ export interface UpgradePolicyOutput {
 export interface AutomaticOSUpgradePolicyOutput {
   /** Whether OS image rollback feature should be disabled. */
   disableAutomaticRollback?: boolean;
-  /** Indicates whether OS upgrades should automatically be applied to scale set instances in a rolling fashion when a newer version of the OS image becomes available. <br /><br /> If this is set to true for Windows based pools, [WindowsConfiguration.enableAutomaticUpdates](https://learn.microsoft.com/en-us/rest/api/batchmanagement/pool/create?tabs=HTTP#windowsconfiguration) cannot be set to true. */
+  /** Indicates whether OS upgrades should automatically be applied to scale set instances in a rolling fashion when a newer version of the OS image becomes available. <br /><br /> If this is set to true for Windows based pools, [WindowsConfiguration.enableAutomaticUpdates](https://learn.microsoft.com/rest/api/batchmanagement/pool/create?tabs=HTTP#windowsconfiguration) cannot be set to true. */
   enableAutomaticOSUpgrade?: boolean;
   /** Indicates whether rolling upgrade policy should be used during Auto OS Upgrade. Auto OS Upgrade will fallback to the default policy if no policy is defined on the VMSS. */
   useRollingUpgradePolicy?: boolean;
@@ -1232,4 +1207,193 @@ export interface EndpointDependencyOutput {
 export interface EndpointDetailOutput {
   /** The port an endpoint is connected to. */
   port?: number;
+}
+
+/** Result of a list NSP (network security perimeter) configurations request. */
+export interface NetworkSecurityPerimeterConfigurationListResultOutput {
+  /** Array of network security perimeter results. */
+  value?: Array<NetworkSecurityPerimeterConfigurationOutput>;
+  /** The link used to get the next page of results. */
+  nextLink?: string;
+}
+
+/** Network security perimeter (NSP) configuration resource */
+export interface NetworkSecurityPerimeterConfigurationOutput
+  extends ProxyResourceOutput {
+  /** Network security configuration properties. */
+  properties?: NetworkSecurityPerimeterConfigurationPropertiesOutput;
+}
+
+/** Network security configuration properties. */
+export interface NetworkSecurityPerimeterConfigurationPropertiesOutput {
+  /** Provisioning state of a network security perimeter configuration that is being created or updated. */
+  provisioningState?:
+    | "Succeeded"
+    | "Creating"
+    | "Updating"
+    | "Deleting"
+    | "Accepted"
+    | "Failed"
+    | "Canceled";
+  /** List of provisioning issues, if any */
+  provisioningIssues?: Array<ProvisioningIssueOutput>;
+  /** Information about a network security perimeter (NSP) */
+  networkSecurityPerimeter?: NetworkSecurityPerimeterOutput;
+  /** Information about resource association */
+  resourceAssociation?: ResourceAssociationOutput;
+  /** Network security perimeter configuration profile */
+  profile?: NetworkSecurityProfileOutput;
+}
+
+/** Describes a provisioning issue for a network security perimeter configuration */
+export interface ProvisioningIssueOutput {
+  /** Name of the issue */
+  name?: string;
+  /** Details of a provisioning issue for a network security perimeter (NSP) configuration. Resource providers should generate separate provisioning issue elements for each separate issue detected, and include a meaningful and distinctive description, as well as any appropriate suggestedResourceIds and suggestedAccessRules */
+  properties?: ProvisioningIssuePropertiesOutput;
+}
+
+/** Details of a provisioning issue for a network security perimeter (NSP) configuration. Resource providers should generate separate provisioning issue elements for each separate issue detected, and include a meaningful and distinctive description, as well as any appropriate suggestedResourceIds and suggestedAccessRules */
+export interface ProvisioningIssuePropertiesOutput {
+  /** Type of issue */
+  issueType?:
+    | "Unknown"
+    | "ConfigurationPropagationFailure"
+    | "MissingPerimeterConfiguration"
+    | "MissingIdentityConfiguration";
+  /** Severity of the issue. */
+  severity?: "Warning" | "Error";
+  /** Description of the issue */
+  description?: string;
+  /** Fully qualified resource IDs of suggested resources that can be associated to the network security perimeter (NSP) to remediate the issue. */
+  suggestedResourceIds?: Array<string>;
+  /** Access rules that can be added to the network security profile (NSP) to remediate the issue. */
+  suggestedAccessRules?: Array<AccessRuleOutput>;
+}
+
+/** Access rule in a network security perimeter configuration profile */
+export interface AccessRuleOutput {
+  /** Name of the access rule */
+  name?: string;
+  /** Properties of Access Rule */
+  properties?: AccessRulePropertiesOutput;
+}
+
+/** Properties of Access Rule */
+export interface AccessRulePropertiesOutput {
+  /** Direction of Access Rule */
+  direction?: "Inbound" | "Outbound";
+  /** Address prefixes in the CIDR format for inbound rules */
+  addressPrefixes?: Array<string>;
+  /** Subscriptions for inbound rules */
+  subscriptions?: Array<AccessRulePropertiesSubscriptionsItemOutput>;
+  /** Network security perimeters for inbound rules */
+  networkSecurityPerimeters?: Array<NetworkSecurityPerimeterOutput>;
+  /** Fully qualified domain names (FQDN) for outbound rules */
+  fullyQualifiedDomainNames?: Array<string>;
+  /** Email addresses for outbound rules */
+  emailAddresses?: Array<string>;
+  /** Phone numbers for outbound rules */
+  phoneNumbers?: Array<string>;
+}
+
+/** Subscription identifiers */
+export interface AccessRulePropertiesSubscriptionsItemOutput {
+  /** The fully qualified Azure resource ID of the subscription e.g. ('/subscriptions/00000000-0000-0000-0000-000000000000') */
+  id?: string;
+}
+
+/** Information about a network security perimeter (NSP) */
+export interface NetworkSecurityPerimeterOutput {
+  /** Fully qualified Azure resource ID of the NSP resource */
+  id?: string;
+  /**
+   * Universal unique ID (UUID) of the network security perimeter
+   *
+   * Value may contain a UUID
+   */
+  perimeterGuid?: string;
+  /** Location of the network security perimeter */
+  location?: string;
+}
+
+/** Information about resource association */
+export interface ResourceAssociationOutput {
+  /** Name of the resource association */
+  name?: string;
+  /** Access mode of the resource association */
+  accessMode?: "Enforced" | "Learning" | "Audit";
+}
+
+/** Network security perimeter configuration profile */
+export interface NetworkSecurityProfileOutput {
+  /** Name of the profile */
+  name?: string;
+  /** Current access rules version */
+  accessRulesVersion?: number;
+  /** List of Access Rules */
+  accessRules?: Array<AccessRuleOutput>;
+  /** Current diagnostic settings version */
+  diagnosticSettingsVersion?: number;
+  /** List of log categories that are enabled */
+  enabledLogCategories?: Array<string>;
+}
+
+/** The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location */
+export interface ProxyResourceOutput extends ResourceOutput {}
+
+/** Common fields that are returned in the response for all Azure Resource Manager resources */
+export interface ResourceOutput {
+  /** Fully qualified resource ID for the resource. E.g. "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}" */
+  id?: string;
+  /** The name of the resource */
+  name?: string;
+  /** The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts" */
+  type?: string;
+  /** Azure Resource Manager metadata containing createdBy and modifiedBy information. */
+  systemData?: SystemDataOutput;
+}
+
+/** Metadata pertaining to creation and last modification of the resource. */
+export interface SystemDataOutput {
+  /** The identity that created the resource. */
+  createdBy?: string;
+  /** The type of identity that created the resource. */
+  createdByType?: "User" | "Application" | "ManagedIdentity" | "Key";
+  /** The timestamp of resource creation (UTC). */
+  createdAt?: string;
+  /** The identity that last modified the resource. */
+  lastModifiedBy?: string;
+  /** The type of identity that last modified the resource. */
+  lastModifiedByType?: "User" | "Application" | "ManagedIdentity" | "Key";
+  /** The timestamp of resource last modification (UTC) */
+  lastModifiedAt?: string;
+}
+
+/** Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.). */
+export interface ErrorResponseOutput {
+  /** The error object. */
+  error?: ErrorDetailOutput;
+}
+
+/** The error detail. */
+export interface ErrorDetailOutput {
+  /** The error code. */
+  code?: string;
+  /** The error message. */
+  message?: string;
+  /** The error target. */
+  target?: string;
+  /** The error details. */
+  details?: Array<ErrorDetailOutput>;
+  /** The error additional info. */
+  additionalInfo?: Array<ErrorAdditionalInfoOutput>;
+}
+
+/** The resource management error additional info. */
+export interface ErrorAdditionalInfoOutput {
+  /** The additional info type. */
+  type?: string;
+  /** The additional info. */
+  info?: Record<string, unknown>;
 }

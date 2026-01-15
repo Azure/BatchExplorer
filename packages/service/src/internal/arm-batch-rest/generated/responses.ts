@@ -19,14 +19,15 @@ import {
   SupportedSkusResultOutput,
   CheckNameAvailabilityResultOutput,
   OperationListResultOutput,
-  ListCertificatesResultOutput,
-  CertificateOutput,
   ListPrivateLinkResourcesResultOutput,
   PrivateLinkResourceOutput,
   ListPrivateEndpointConnectionsResultOutput,
   PrivateEndpointConnectionOutput,
   ListPoolsResultOutput,
-  PoolOutput
+  PoolOutput,
+  NetworkSecurityPerimeterConfigurationListResultOutput,
+  NetworkSecurityPerimeterConfigurationOutput,
+  ErrorResponseOutput
 } from "./outputModels";
 
 /** Creates a new Batch account with the specified parameters. Existing accounts cannot be updated with this API and should instead be updated with the Update Batch Account API. */
@@ -199,14 +200,14 @@ export interface BatchAccountGetDetectorDefaultResponse extends HttpResponse {
   body: CloudErrorOutput;
 }
 
-/** Lists the endpoints that a Batch Compute Node under this Batch Account may call as part of Batch service administration. If you are deploying a Pool inside of a virtual network that you specify, you must make sure your network allows outbound access to these endpoints. Failure to allow access to these endpoints may cause Batch to mark the affected nodes as unusable. For more information about creating a pool inside of a virtual network, see https://docs.microsoft.com/en-us/azure/batch/batch-virtual-network. */
+/** Lists the endpoints that a Batch Compute Node under this Batch Account may call as part of Batch service administration. If you are deploying a Pool inside of a virtual network that you specify, you must make sure your network allows outbound access to these endpoints. Failure to allow access to these endpoints may cause Batch to mark the affected nodes as unusable. For more information about creating a pool inside of a virtual network, see https://learn.microsoft.com/azure/batch/batch-virtual-network. */
 export interface BatchAccountListOutboundNetworkDependenciesEndpoints200Response
   extends HttpResponse {
   status: "200";
   body: OutboundEnvironmentEndpointCollectionOutput;
 }
 
-/** Lists the endpoints that a Batch Compute Node under this Batch Account may call as part of Batch service administration. If you are deploying a Pool inside of a virtual network that you specify, you must make sure your network allows outbound access to these endpoints. Failure to allow access to these endpoints may cause Batch to mark the affected nodes as unusable. For more information about creating a pool inside of a virtual network, see https://docs.microsoft.com/en-us/azure/batch/batch-virtual-network. */
+/** Lists the endpoints that a Batch Compute Node under this Batch Account may call as part of Batch service administration. If you are deploying a Pool inside of a virtual network that you specify, you must make sure your network allows outbound access to these endpoints. Failure to allow access to these endpoints may cause Batch to mark the affected nodes as unusable. For more information about creating a pool inside of a virtual network, see https://learn.microsoft.com/azure/batch/batch-virtual-network. */
 export interface BatchAccountListOutboundNetworkDependenciesEndpointsDefaultResponse
   extends HttpResponse {
   status: string;
@@ -393,131 +394,6 @@ export interface OperationsList200Response extends HttpResponse {
 
 /** Lists available operations for the Microsoft.Batch provider */
 export interface OperationsListDefaultResponse extends HttpResponse {
-  status: string;
-  body: CloudErrorOutput;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateListByBatchAccount200Response extends HttpResponse {
-  status: "200";
-  body: ListCertificatesResultOutput;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateListByBatchAccountDefaultResponse
-  extends HttpResponse {
-  status: string;
-  body: CloudErrorOutput;
-}
-
-export interface CertificateCreate200Headers {
-  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Match or If-None-Match headers. */
-  etag?: string;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateCreate200Response extends HttpResponse {
-  status: "200";
-  body: CertificateOutput;
-  headers: RawHttpHeaders & CertificateCreate200Headers;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateCreateDefaultResponse extends HttpResponse {
-  status: string;
-  body: CloudErrorOutput;
-}
-
-export interface CertificateUpdate200Headers {
-  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Match or If-None-Match headers. */
-  etag?: string;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateUpdate200Response extends HttpResponse {
-  status: "200";
-  body: CertificateOutput;
-  headers: RawHttpHeaders & CertificateUpdate200Headers;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateUpdateDefaultResponse extends HttpResponse {
-  status: string;
-  body: CloudErrorOutput;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateDelete200Response extends HttpResponse {
-  status: "200";
-  body: Record<string, unknown>;
-}
-
-export interface CertificateDelete202Headers {
-  /** The URL of the resource used to check the status of the asynchronous operation. */
-  location?: string;
-  /** Suggested delay to check the status of the asynchronous operation. The value is an integer that represents the seconds. */
-  "retry-after"?: number;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateDelete202Response extends HttpResponse {
-  status: "202";
-  body: Record<string, unknown>;
-  headers: RawHttpHeaders & CertificateDelete202Headers;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateDelete204Response extends HttpResponse {
-  status: "204";
-  body: Record<string, unknown>;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateDeleteDefaultResponse extends HttpResponse {
-  status: string;
-  body: CloudErrorOutput;
-}
-
-export interface CertificateGet200Headers {
-  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Match or If-None-Match headers. */
-  etag?: string;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateGet200Response extends HttpResponse {
-  status: "200";
-  body: CertificateOutput;
-  headers: RawHttpHeaders & CertificateGet200Headers;
-}
-
-/** Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead. */
-export interface CertificateGetDefaultResponse extends HttpResponse {
-  status: string;
-  body: CloudErrorOutput;
-}
-
-export interface CertificateCancelDeletion200Headers {
-  /** The ETag HTTP response header. This is an opaque string. You can use it to detect whether the resource has changed between requests. In particular, you can pass the ETag to one of the If-Match or If-None-Match headers. */
-  etag?: string;
-}
-
-/**
- * If you try to delete a certificate that is being used by a pool or compute node, the status of the certificate changes to deleteFailed. If you decide that you want to continue using the certificate, you can use this operation to set the status of the certificate back to active. If you intend to delete the certificate, you do not need to run this operation after the deletion failed. You must make sure that the certificate is not being used by any resources, and then you can try again to delete the certificate.
- *
- * Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead.
- */
-export interface CertificateCancelDeletion200Response extends HttpResponse {
-  status: "200";
-  body: CertificateOutput;
-  headers: RawHttpHeaders & CertificateCancelDeletion200Headers;
-}
-
-/**
- * If you try to delete a certificate that is being used by a pool or compute node, the status of the certificate changes to deleteFailed. If you decide that you want to continue using the certificate, you can use this operation to set the status of the certificate back to active. If you intend to delete the certificate, you do not need to run this operation after the deletion failed. You must make sure that the certificate is not being used by any resources, and then you can try again to delete the certificate.
- *
- * Warning: This operation is deprecated and will be removed after February, 2024. Please use the [Azure KeyVault Extension](https://learn.microsoft.com/azure/batch/batch-certificate-migration-guide) instead.
- */
-export interface CertificateCancelDeletionDefaultResponse extends HttpResponse {
   status: string;
   body: CloudErrorOutput;
 }
@@ -765,4 +641,55 @@ export interface PoolStopResize200Response extends HttpResponse {
 export interface PoolStopResizeDefaultResponse extends HttpResponse {
   status: string;
   body: CloudErrorOutput;
+}
+
+/** Lists all of the NSP configurations in the specified account. */
+export interface NetworkSecurityPerimeterListConfigurations200Response
+  extends HttpResponse {
+  status: "200";
+  body: NetworkSecurityPerimeterConfigurationListResultOutput;
+}
+
+/** Lists all of the NSP configurations in the specified account. */
+export interface NetworkSecurityPerimeterListConfigurationsDefaultResponse
+  extends HttpResponse {
+  status: string;
+  body: CloudErrorOutput;
+}
+
+/** Gets information about the specified NSP configuration. */
+export interface NetworkSecurityPerimeterGetConfiguration200Response
+  extends HttpResponse {
+  status: "200";
+  body: NetworkSecurityPerimeterConfigurationOutput;
+}
+
+/** Gets information about the specified NSP configuration. */
+export interface NetworkSecurityPerimeterGetConfigurationDefaultResponse
+  extends HttpResponse {
+  status: string;
+  body: CloudErrorOutput;
+}
+
+export interface NetworkSecurityPerimeterReconcileConfiguration202Headers {
+  /** The URL of the resource used to check the status of the asynchronous operation. */
+  location?: string;
+  /** Suggested delay to check the status of the asynchronous operation. The value is an integer that specifies the delay in seconds. */
+  "retry-after"?: number;
+}
+
+/** Reconciles the specified NSP configuration. */
+export interface NetworkSecurityPerimeterReconcileConfiguration202Response
+  extends HttpResponse {
+  status: "202";
+  body: Record<string, unknown>;
+  headers: RawHttpHeaders &
+    NetworkSecurityPerimeterReconcileConfiguration202Headers;
+}
+
+/** Reconciles the specified NSP configuration. */
+export interface NetworkSecurityPerimeterReconcileConfigurationDefaultResponse
+  extends HttpResponse {
+  status: string;
+  body: ErrorResponseOutput;
 }

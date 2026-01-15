@@ -1,5 +1,5 @@
 import { FakePoolService } from "../fake-pool-service";
-import { Pool } from "../pool-models";
+import { LegacyPool, Pool } from "../pool-models";
 import { BasicBatchFakeSet, BatchFakeSet } from "../../test-util/fakes";
 import { initMockBatchEnvironment } from "../../environment";
 
@@ -34,6 +34,26 @@ describe("FakePoolService", () => {
 
         const byosPool = await service.get(byosPoolResourceId);
         expect(byosPool?.name).toEqual("byospool1");
+    });
+
+    test("Get by resource ID using 2024-07-01 API version", async () => {
+        const hoboPool = await service.getLegacy(hoboPoolResourceId);
+        expect(hoboPool?.name).toEqual("hobopool1");
+        expect(hoboPool?.properties?.targetNodeCommunicationMode).toBe(
+            "Default"
+        );
+        expect(
+            hoboPool?.properties?.currentNodeCommunicationMode
+        ).toBeUndefined();
+
+        const byosPool = await service.getLegacy(byosPoolResourceId);
+        expect(byosPool?.name).toEqual("byospool1");
+        expect(byosPool?.properties?.targetNodeCommunicationMode).toBe(
+            "Default"
+        );
+        expect(byosPool?.properties?.currentNodeCommunicationMode).toBe(
+            "Simplified"
+        );
     });
 
     test("Create", async () => {
@@ -138,5 +158,22 @@ describe("FakePoolService", () => {
         // Updated an existing pool rather than created a new one
         const pools = await service.listByAccountId(hoboAcctId);
         expect(pools.map((pool) => pool.name)).toEqual(["hobopool1"]);
+    });
+
+    test("Patch using 2024-07-01 API version", async () => {
+        const update: LegacyPool = {
+            id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1",
+            name: "hobopool1",
+            type: "Microsoft.Batch/batchAccounts/pools",
+            properties: {
+                targetNodeCommunicationMode: "Simplified",
+            },
+        };
+
+        const pool = await service.patchLegacy(hoboPoolResourceId, update);
+        expect(pool?.name).toEqual("hobopool1");
+        expect(pool?.properties?.targetNodeCommunicationMode).toBe(
+            "Simplified"
+        );
     });
 });

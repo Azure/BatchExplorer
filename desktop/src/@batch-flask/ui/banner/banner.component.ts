@@ -57,6 +57,8 @@ export class BannerComponent implements OnChanges {
 
     @Input() public height: string = "standard";
 
+    @Input() public collapsible: boolean = true;
+
     @ContentChildren(BannerOtherFixDirective)
     public otherFixes: QueryList<BannerOtherFixDirective>;
 

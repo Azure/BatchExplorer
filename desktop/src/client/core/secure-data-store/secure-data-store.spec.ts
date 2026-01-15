@@ -1,5 +1,6 @@
 import * as path from "path";
 import { SecureDataStore } from "./secure-data-store";
+import { UnsupportedEncryptionVersionError } from "./crypto-service";
 
 describe("SecureDataStore", () => {
     let store: SecureDataStore;
@@ -25,6 +26,7 @@ describe("SecureDataStore", () => {
                 fileContent = x;
                 return Promise.resolve();
             }),
+            delete: jasmine.createSpy("delete").and.returnValue(Promise.resolve()),
         };
 
         cryptoSpy = {
@@ -71,6 +73,26 @@ describe("SecureDataStore", () => {
             expect(fsSpy.saveFile).toHaveBeenCalledWith(path.join("/home/userdata", "data/secure.enc"),
                 "==encryptedtext==");
             expect(fileContent).toEqual("==encryptedtext==");
+        });
+    });
+
+    describe("When file has legacy encrypted data", () => {
+        beforeEach(async () => {
+            fileContent = "legacy-encrypted-content";
+            cryptoSpy.decrypt = jasmine.createSpy("decrypt").and.returnValue(
+                Promise.reject(new UnsupportedEncryptionVersionError(1))
+            );
+
+            store = new SecureDataStore(fsSpy, cryptoSpy);
+        });
+
+        it("sets legacyDataDetected flag to true", async () => {
+            expect(await store.legacyDataDetected()).toBe(true);
+        });
+
+        it("starts with empty store", async () => {
+            const value = await store.getItem("key1");
+            expect(value).toBeUndefined();
         });
     });
 });

@@ -17,8 +17,17 @@ import {
     BatchNodeOutput,
     BatchNodeVMExtensionOutput,
 } from "../node/node-models";
-import { Pool, PoolOutput } from "../pool/pool-models";
+import {
+    LegacyPool,
+    LegacyPoolOutput,
+    Pool,
+    PoolOutput,
+} from "../pool/pool-models";
 import { BatchJobOutput, BatchTaskOutput } from "../batch-models";
+import {
+    AccountBatchUpdateParameters,
+    NetworkSecurityPerimeterConfigurationListResultOutput,
+} from "../arm-batch-models";
 
 /**
  * A fake dataset which includes Batch accounts, pools, etc.
@@ -49,9 +58,21 @@ export interface BatchFakeSet extends FakeSet {
     getPool(poolResourceId: string): PoolOutput | undefined;
 
     /**
+     * Get a Batch pool in the 2024-07-01 API version format by case-insensitive ID
+     *
+     * @param poolResourceId The ARM resource ID of the pool
+     */
+    getLegacyPool(poolResourceId: string): LegacyPoolOutput | undefined;
+
+    /**
      * Patches a pool and returns it
      */
     patchPool(pool: Pool): PoolOutput;
+
+    /**
+     * Patches a pool using the 2024-07-01 API version format and returns it
+     */
+    patchLegacyPool(pool: LegacyPool): LegacyPoolOutput;
 
     /**
      * Creates or updates a pool and returns it
@@ -113,6 +134,23 @@ export interface BatchFakeSet extends FakeSet {
      * @param jobId
      */
     listTasks(accountEndpoint: string, jobId: string): BatchTaskOutput[];
+
+    /**
+     * update a batch account and return it
+     *
+     * @param accountResouceId The resource id of the account
+     * @param parameters The parameters to update the account with
+     * @param opts
+     *
+     */
+    patchBatchAccount(
+        accountResouceId: string,
+        parameters: AccountBatchUpdateParameters
+    ): BatchAccountOutput | undefined;
+
+    listNetworkSecurityPerimeterConfigurations(
+        accountResouceId: string
+    ): NetworkSecurityPerimeterConfigurationListResultOutput;
 }
 
 export abstract class AbstractBatchFakeSet
@@ -124,7 +162,10 @@ export abstract class AbstractBatchFakeSet
     protected abstract batchAccounts: {
         [accountId: string]: BatchAccountOutput;
     };
+
     protected abstract batchPools: { [poolId: string]: PoolOutput };
+
+    protected abstract legacyPools: { [poolId: string]: LegacyPoolOutput };
 
     /**
      * Node key is the account endpoint, pool name and node ID concatenated,
@@ -138,8 +179,28 @@ export abstract class AbstractBatchFakeSet
 
     protected abstract batchTasks: { [taskKey: string]: BatchTaskOutput };
 
+    protected networkSecurityPerimeterConfigurations: {
+        [
+            accountId: string
+        ]: NetworkSecurityPerimeterConfigurationListResultOutput;
+    } = {};
+
     getBatchAccount(batchAccountId: string): BatchAccountOutput | undefined {
         return this.batchAccounts[batchAccountId.toLowerCase()];
+    }
+
+    patchBatchAccount(
+        accountResouceId: string,
+        parameters: AccountBatchUpdateParameters
+    ): BatchAccountOutput | undefined {
+        const batchAccount = this.getBatchAccount(accountResouceId);
+        if (!batchAccount) {
+            throw new Error("No batch account with ID " + accountResouceId);
+        }
+
+        const oldAccount = cloneDeep(batchAccount);
+
+        return mergeDeep(oldAccount, parameters as BatchAccountOutput);
     }
 
     listBatchAccountsBySubscription(subId: string): BatchAccountOutput[] {
@@ -154,6 +215,10 @@ export abstract class AbstractBatchFakeSet
 
     getPool(poolResourceId: string): PoolOutput | undefined {
         return this.batchPools[poolResourceId.toLowerCase()];
+    }
+
+    getLegacyPool(poolResourceId: string): LegacyPoolOutput | undefined {
+        return this.legacyPools[poolResourceId.toLowerCase()];
     }
 
     listPoolsByAccount(accountId: string): PoolOutput[] {
@@ -176,6 +241,19 @@ export abstract class AbstractBatchFakeSet
         }
 
         return mergeDeep(oldPool, poolToOutput(pool));
+    }
+
+    patchLegacyPool(pool: LegacyPool): LegacyPoolOutput {
+        if (!pool.id) {
+            throw new Error("Cannot patch a pool without a valid ID");
+        }
+
+        const oldPool = this.getLegacyPool(pool.id);
+        if (!oldPool) {
+            throw new Error("No pool with ID " + pool.id);
+        }
+
+        return mergeDeep(oldPool, legacyPoolToOutput(pool));
     }
 
     putPool(pool: Pool): PoolOutput {
@@ -251,6 +329,21 @@ export abstract class AbstractBatchFakeSet
                 )
             )
             .map((entry) => entry[1]);
+    }
+
+    listNetworkSecurityPerimeterConfigurations(
+        accountResouceId: string
+    ): NetworkSecurityPerimeterConfigurationListResultOutput {
+        const res =
+            this.networkSecurityPerimeterConfigurations[
+                accountResouceId.toLowerCase()
+            ];
+        if (!res) {
+            return {
+                value: [],
+            };
+        }
+        return res;
     }
 }
 
@@ -770,11 +863,28 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                     },
                     currentDedicatedNodes: 0,
                     currentLowPriorityNodes: 0,
+                },
+            },
+    };
+
+    protected legacyPools: { [poolId: string]: LegacyPoolOutput } = {
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/supercomputing/providers/microsoft.batch/batchaccounts/hobo/pools/hobopool1":
+            {
+                id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/supercomputing/providers/Microsoft.Batch/batchAccounts/hobo/pools/hobopool1",
+                name: "hobopool1",
+                type: "Microsoft.Batch/batchAccounts/pools",
+                properties: {
                     targetNodeCommunicationMode: "Default",
-                    resourceTags: {
-                        tag1: "one",
-                        tag2: "two",
-                    },
+                },
+            },
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/visualization/providers/microsoft.batch/batchaccounts/byos/pools/byospool1":
+            {
+                id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/visualization/providers/Microsoft.Batch/batchAccounts/byos/pools/byospool1",
+                name: "byospool1",
+                type: "Microsoft.Batch/batchAccounts/pools",
+                properties: {
+                    targetNodeCommunicationMode: "Default",
+                    currentNodeCommunicationMode: "Simplified",
                 },
             },
     };
@@ -787,7 +897,9 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
             schedulingState: "enabled",
             stateTransitionTime: "2023-11-09T07:20:55.000Z",
             allocationTime: "2023-11-09T07:20:45.000Z",
+            lastBootTime: "2023-11-09T07:20:45.000Z",
             ipAddress: "10.0.0.4",
+            ipv6Address: "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
             affinityId:
                 "TVM:tvmps_7b5797648c5d43f7a15b952e5ada3c082ccac8de5eb95f5518ab1242bc79aa3b_d",
             vmSize: "standard_d2_v2",
@@ -808,6 +920,10 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
                     },
                 ],
             },
+            nodeAgentInfo: {
+                version: "1.0",
+                lastUpdateTime: "2024-11-09T07:20:45.000Z",
+            },
             virtualMachineInfo: {
                 imageReference: {
                     publisher: "microsoftwindowsserver",
@@ -824,6 +940,7 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
         hobopool1: [
             {
                 id: "faketestjob1",
+                eTag: "eTag",
                 usesTaskDependencies: false,
                 url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1",
                 lastModified: "2024-05-29T08:32:21.000Z",
@@ -852,7 +969,12 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
         "mercury.eastus.batch.azure.com:faketestjob1:taska": {
             url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/taskA",
             id: "taska",
+            eTag: "eTag",
             state: "active",
+            lastModified: "2024-05-29T08:32:21.000Z",
+            creationTime: "2024-05-29T08:32:21.000Z",
+            stateTransitionTime: "2024-05-29T08:32:21.000Z",
+            commandLine: "hostname",
             executionInfo: {
                 retryCount: 0,
                 requeueCount: 0,
@@ -861,7 +983,12 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
         "mercury.eastus.batch.azure.com:faketestjob1:task1": {
             url: "https://batchsyntheticsprod.eastus2euap.batch.azure.com/jobs/faketestjob1/tasks/task1",
             id: "task1",
+            eTag: "eTag",
             state: "completed",
+            lastModified: "2024-05-29T08:32:21.000Z",
+            creationTime: "2024-05-29T08:32:21.000Z",
+            stateTransitionTime: "2024-05-29T08:32:21.000Z",
+            commandLine: "hostname",
             executionInfo: {
                 retryCount: 0,
                 requeueCount: 0,
@@ -901,6 +1028,98 @@ export class BasicBatchFakeSet extends AbstractBatchFakeSet {
             },
         ],
     };
+
+    networkSecurityPerimeterConfigurations: {
+        [
+            accountId: string
+        ]: NetworkSecurityPerimeterConfigurationListResultOutput;
+    } = {
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/supercomputing/providers/microsoft.batch/batchaccounts/hobo":
+            {
+                value: [
+                    {
+                        id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/supercomputing/providers/microsoft.batch/batchaccounts/hobo/networkSecurityPerimeterConfigurations/00000000-0000-0000-0000-000000000000.abcd",
+                        name: "00000000-0000-0000-0000-000000000000.resourceAssociationName",
+                        type: "Microsoft.Batch/batchAccounts/networkSecurityPerimeterConfigurations",
+                        properties: {
+                            provisioningState: "Succeeded",
+                            provisioningIssues: [
+                                {
+                                    name: "issue1",
+                                },
+                                {
+                                    name: "issue2",
+                                },
+                            ],
+                            networkSecurityPerimeter: {
+                                id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/npipv2/providers/Microsoft.Network/networkSecurityPerimeters/nspname",
+                                perimeterGuid:
+                                    "00000000-0000-0000-0000-000000000000",
+                                location: "eastus2euap",
+                            },
+                            resourceAssociation: {
+                                name: "resourceAssociationName",
+                                accessMode: "Enforced",
+                            },
+                            profile: {
+                                name: "default",
+                                accessRulesVersion: 5,
+                                accessRules: [
+                                    {
+                                        name: "test",
+                                        properties: {
+                                            direction: "Inbound",
+                                            addressPrefixes: [
+                                                "111.111.111.111/32",
+                                            ],
+                                            fullyQualifiedDomainNames: [],
+                                            subscriptions: [],
+                                            networkSecurityPerimeters: [],
+                                            emailAddresses: [],
+                                            phoneNumbers: [],
+                                        },
+                                    },
+                                    {
+                                        name: "rule2",
+                                        properties: {
+                                            direction: "Outbound",
+                                            addressPrefixes: [],
+                                            fullyQualifiedDomainNames: ["*"],
+                                            subscriptions: [],
+                                            networkSecurityPerimeters: [],
+                                            emailAddresses: [],
+                                            phoneNumbers: [],
+                                        },
+                                    },
+                                ],
+                                diagnosticSettingsVersion: 0,
+                                enabledLogCategories: [
+                                    "NspPublicInboundPerimeterRulesAllowed",
+                                    "NspPublicInboundPerimeterRulesDenied",
+                                    "NspPublicOutboundPerimeterRulesAllowed",
+                                    "NspPublicOutboundPerimeterRulesDenied",
+                                    "NspIntraPerimeterOutboundAllowed",
+                                    "NspPublicInboundResourceRulesAllowed",
+                                    "NspPublicInboundResourceRulesDenied",
+                                    "NspPublicOutboundResourceRulesAllowed",
+                                    "NspPublicOutboundResourceRulesDenied",
+                                    "NspPrivateInboundAllowed",
+                                    "NspIntraPerimeterInboundAllowed",
+                                    "NspOutboundAttempt",
+                                    "NspCrossPerimeterInboundAllowed",
+                                    "NspCrossPerimeterOutboundAllowed",
+                                ],
+                            },
+                        },
+                    },
+                ],
+            },
+        "/subscriptions/11111111-1111-1111-1111-111111111111/resourcegroups/test/providers/microsoft.batch/batchaccounts/hobo":
+            {
+                value: [],
+                nextLink: undefined,
+            },
+    };
 }
 
 /**
@@ -917,4 +1136,20 @@ function poolToOutput(pool: Pool): PoolOutput {
     clone.properties.lastModified = toIsoLocal(getClock().now());
 
     return clone as PoolOutput;
+}
+
+/**
+ * Convert a Pool model to a PoolOutput model using the 2024-07-01 API version
+ * model format
+ *
+ * @param pool The input pool
+ * @returns The output model with a lastModified date of now
+ */
+function legacyPoolToOutput(pool: LegacyPool): LegacyPoolOutput {
+    const clone = cloneDeep(pool);
+
+    // KLUDGE: Properties shouldn't be nullable, but since it is right now, handle it.
+    clone.properties = clone.properties ?? {};
+
+    return clone as LegacyPoolOutput;
 }

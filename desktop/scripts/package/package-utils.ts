@@ -5,7 +5,7 @@ export const root = path.resolve(path.join(__dirname, "../.."));
 export const releasePath = path.join(root, "release");
 const packageDef = JSON.parse(fs.readFileSync(path.join(root, "package.json")).toString());
 
-const buildVersion = process.env.BUILD_NUMBER;
+const buildVersion = process.env.BATCHEXPLORER_BUILD_NUMBER;
 export const buildType: BuildType = process.env.BUILD_TYPE || "dev" as any;
 
 export enum BuildType {
