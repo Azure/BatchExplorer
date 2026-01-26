@@ -91,6 +91,9 @@
     "webpack-merge": "^5.9.0",
     "webpack-sources": "^3.2.3"
   },
+  "overrides": {
+    "@babel/traverse": "^7.23.6"
+  },
   "files": [
     "lib",
     "lib-umd"
