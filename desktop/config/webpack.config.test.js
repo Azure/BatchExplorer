@@ -1,6 +1,5 @@
 const config = require("./webpack.config.base");
 const { commonRules, defineEnv } = require("./webpack.common");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const ENV = "test";
 
 // We need to remove the app entry from the default config as this is defined in karma
@@ -11,7 +10,6 @@ config.devtool = "inline-source-map";
 // Karma webpack doesn't support CommonChunkPlugin yet https://github.com/webpack-contrib/karma-webpack/issues/24
 config.plugins = [
     defineEnv(ENV),
-    new ForkTsCheckerWebpackPlugin(),
 ];
 config.module.rules = config.module.rules = [
     {
@@ -24,7 +22,7 @@ config.module.rules = config.module.rules = [
                     transpileOnly: true
                 },
             },
-            "angular2-template-loader",
+            require.resolve("./angular-template-loader"),
         ],
         exclude: [/node_modules/, /\.node\.spec\.ts/],  // node.spec.ts are to be run in node environment
     },
