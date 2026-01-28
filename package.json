@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@azure-tools/typespec-client-generator-cli": "^0.3.0",
-    "@lerna/legacy-package-management": "7.1.5",
+    "@lerna/legacy-package-management": "8.2.4",
     "@typespec/compiler": "^0.50.0",
     "@octokit/core": "^3.5.1",
     "@testing-library/react": "^12.0.0",
@@ -43,7 +43,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-security": "^1.7.1",
-    "lerna": "7.1.5",
+    "lerna": "9.0.3",
     "markdownlint": "^0.25.1",
     "markdownlint-cli2": "^0.4.0",
     "npm-run-all": "^4.1.5",
