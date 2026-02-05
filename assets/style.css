@@ -163,9 +163,18 @@ a {
     color: #CCCCCC;
 }
 
-.insider-builds-link  {
+.links-container {
+    background-color:#e3e3e3;
+    padding: 20px 0;
+}
+
+.links-container-section {
     margin-top: 10px;
     text-align: center;
+}
+
+.links-container-section a.text-link {
+    color: #0065b3;
 }
 
 h2.heading-sm {
