@@ -1,3 +1,12 @@
+# Unreleased
+
+### Security
+
+* Tracking: CVE-2025-66035 in `@angular/common` 12.2.17 (High) — ADO Component Governance alert 215328 / id 13734978. A fix is only available in `@angular/common` 19.2.16 / 20.3.14 / 21.0.1. The minimal viable target is `@angular/common` 19.2.16 with the full `@angular/*` suite moved to `^19.2.x`. This is deferred as a coordinated migration because a version-only bump would break compilation. Migration scope (desktop/ workspace):
+  * Move all 12 `@angular/*` packages together to `^19.2.x`: animations, cdk, common, compiler, compiler-cli, core, forms, material, platform-browser, platform-browser-dynamic, platform-server, router.
+  * Peer toolchain upgrades: TypeScript `~4.6.0` → `~5.5`, RxJS `^6.6.7` → `^7.8`, zone.js `^0.11.4` → `~0.15`, `@ngtools/webpack` `^12` → `^19` (likely introducing `@angular/cli`, currently absent).
+  * Cross-major migrations 13→19 (Ivy-only, ngcc removal, standalone/control-flow, RxJS 7, Material theming API changes, deprecated API removals); run `ng update` per major.
+
 # 2.23.0
 
 [All items](https://github.com/Azure/BatchExplorer/milestone/57?closed=1)
