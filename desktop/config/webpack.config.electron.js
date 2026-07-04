@@ -20,11 +20,25 @@
  *    (e.g. main.prod.ts sets NODE_ENV="production" at runtime).
  */
 const path = require("path");
+const fs = require("fs");
 const webpack = require("webpack");
 const helpers = require("./helpers");
 
 const NODE_ENV = process.env.NODE_ENV;
 const isProd = NODE_ENV === "production" || NODE_ENV === "prod";
+
+// First-party absolute-import roots. The base tsconfig maps "*" -> "src/*", so any
+// top-level entry under src/ can be imported as a bare specifier (e.g. `common`,
+// `client/menu`, `@batch-flask/core`). These must all be BUNDLED, not externalized —
+// the previous tsc build emitted them under build/ and relied on a runtime NODE_PATH
+// hack, which no longer applies once the main process is bundled.
+const srcRoots = new Set(
+    fs.readdirSync(helpers.root("src")).map((name) => name.replace(/\.(ts|js)$/, "")),
+);
+
+function firstSegment(request) {
+    return request.split("/")[0];
+}
 
 module.exports = {
     target: "electron-main",
@@ -89,13 +103,13 @@ module.exports = {
             if (/^@angular[\\/]/.test(request)) {
                 return callback();
             }
-            // Bundle first-party source (relative + absolute src imports).
+            // Bundle first-party source: relative imports, absolute paths, and any
+            // bare specifier whose first segment is a top-level src/ root
+            // (e.g. `common`, `client/...`, `@batch-flask/core`).
             if (
                 request.startsWith(".") ||
-                request.startsWith("@batch-flask/") ||
-                request.startsWith("client/") ||
-                request.startsWith("common/") ||
-                path.isAbsolute(request)
+                path.isAbsolute(request) ||
+                srcRoots.has(firstSegment(request))
             ) {
                 return callback();
             }
