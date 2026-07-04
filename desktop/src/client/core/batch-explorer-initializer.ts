@@ -15,7 +15,10 @@ export class BatchExplorerInitializer {
     private _sub: Subscription;
     private _tasks = new BehaviorSubject<Map<string, InitializerTask>>(new Map());
     constructor(
-        @Inject(forwardRef(() => BatchExplorerApplication)) batchExplorerApplication: BatchExplorerApplication) {
+        // Typed `any` to avoid an eager `design:paramtypes` reference to
+        // BatchExplorerApplication (circular dep). DI still resolves it via forwardRef;
+        // without this the webpack-bundled main process throws a TDZ ReferenceError.
+        @Inject(forwardRef(() => BatchExplorerApplication)) batchExplorerApplication: any) {
         this.splashScreen = new SplashScreen(batchExplorerApplication);
         this._sub = this._tasks.subscribe(() => {
             this._updateSplashScreen();
