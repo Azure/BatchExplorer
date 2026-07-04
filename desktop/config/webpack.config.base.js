@@ -83,6 +83,15 @@ const baseConfig = {
     stats: {
         errorDetails: true,
     },
+    // ElectronApp intentionally captures the real Node `require` for runtime module
+    // lookups (app.require(...)). webpack can't statically analyse that and emits a
+    // benign "Critical dependency" warning; suppress it just for that module.
+    ignoreWarnings: [
+        {
+            module: /electron-app\.service\.ts$/,
+            message: /Critical dependency: require function is used/,
+        },
+    ],
 };
 
 module.exports = baseConfig;
