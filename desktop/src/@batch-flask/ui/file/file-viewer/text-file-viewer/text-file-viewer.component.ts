@@ -7,6 +7,7 @@ import { FileViewer } from "../file-viewer";
 import "./text-file-viewer.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-text-file-viewer",
     templateUrl: "text-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

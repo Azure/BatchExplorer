@@ -38,12 +38,6 @@ const publicComponents = [
         I18nUIModule,
         DateModule,
     ],
-    entryComponents: [
-        FileDialogViewerComponent,
-        LogFileViewerComponent,
-        ImageFileViewerComponent,
-        TextFileViewerComponent,
-    ],
 })
 export class FileViewerModule {
 

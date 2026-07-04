@@ -11,6 +11,7 @@ import { BatchApplicationCommands } from "../action";
 import "./application-list.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-application-list",
     templateUrl: "application-list.html",
     providers: [BatchApplicationCommands, {

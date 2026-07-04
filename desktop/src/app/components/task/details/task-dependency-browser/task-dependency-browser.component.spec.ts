@@ -19,6 +19,7 @@ const taskMap: Map<string, Task> = new Map()
     .set("2", new Task({ id: "2", dependsOn: { taskIds: ["3", "4", "5"] } } as any));
 
 @Component({
+    standalone: false,
     template: `<bl-task-dependency-browser [jobId]="jobId" [task]="task"></bl-task-dependency-browser>`,
 })
 class TestComponent {

@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "@batch-flask/core";
@@ -18,13 +18,14 @@ import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 
 @Component({
+    standalone: false,
     template: `
         <bl-app-package-picker [formControl]="references" >
         </bl-app-package-picker>
     `,
 })
 class TestComponent {
-    public references = new FormControl<ApplicationPackageReferenceAttributes[]>([]);
+    public references = new UntypedFormControl([]);
 }
 
 const applications = {
@@ -95,7 +96,7 @@ describe("AppPackagePickerComponent", () => {
                 { provide: BatchApplicationService, useValue: applicationServiceSpy },
                 { provide: BatchApplicationPackageService, useValue: applicationPackageServiceSpy },
                 { provide: AutoStorageService, useValue: autoStorageServiceSpy },
-                { provide: FormBuilder, useValue: new FormBuilder() },
+                { provide: UntypedFormBuilder, useValue: new UntypedFormBuilder() },
                 { provide: PermissionService, useValue: {} },
             ],
         });

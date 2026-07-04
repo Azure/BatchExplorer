@@ -8,6 +8,7 @@ import { ExternalLinks } from "common/constants";
 import { map } from "rxjs/operators";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-error-display",
     templateUrl: "pool-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

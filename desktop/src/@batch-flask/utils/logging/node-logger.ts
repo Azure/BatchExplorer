@@ -47,7 +47,7 @@ export class NodeLogger implements Logger {
                 format = winston.format.simple();
             }
 
-            transports.push(new DailyRotateFile({
+            transports.push(new (DailyRotateFile as any)({
                 maxFiles: 3,
                 filename: config.path,
                 format,

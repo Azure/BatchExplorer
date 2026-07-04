@@ -23,6 +23,7 @@ import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mock
 import { ProfileButtonComponent } from "./profile-button.component";
 
 @Component({
+    standalone: false,
     template: `<bl-profile-button></bl-profile-button>`,
 })
 class TestComponent {

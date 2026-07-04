@@ -12,6 +12,7 @@ import { FileViewer, FileViewerCommand, FileViewerConfig } from "../../file-view
 import "./file-viewer-header.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-file-viewer-header",
     templateUrl: "file-viewer-header.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

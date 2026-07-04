@@ -15,6 +15,7 @@ import { KeyBindingListenerDirective } from "./keybindings-listener.directive";
 import { KeyBindingsComponent } from "./keybindings.component";
 
 @Component({
+    standalone: false,
     template: `<bl-keybindings></bl-keybindings>`,
 })
 class TestComponent {

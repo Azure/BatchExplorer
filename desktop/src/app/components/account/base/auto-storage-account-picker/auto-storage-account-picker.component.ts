@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, forwardRef, ViewChild } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { MatTooltip } from "@angular/material/tooltip";
 import { ListSelection } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -10,6 +10,7 @@ import { List } from "immutable";
 import "./auto-storage-account-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-auto-storage-account-picker",
     templateUrl: "auto-storage-account-picker.html",
     providers: [
@@ -56,7 +57,7 @@ export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAc
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

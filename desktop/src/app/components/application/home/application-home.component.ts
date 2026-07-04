@@ -1,16 +1,17 @@
 import { Component } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { ApplicationCreateDialogComponent } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-application-home",
     templateUrl: "application-home.html",
 })
 export class ApplicationHomeComponent {
-    public quickSearchQuery = new FormControl();
+    public quickSearchQuery = new UntypedFormControl();
     public filter: Filter = FilterBuilder.none();
     public quickFilter: Filter = FilterBuilder.none();
 

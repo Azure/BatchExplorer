@@ -2,6 +2,7 @@ import { Component, Input } from "@angular/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 
 @Component({
+    standalone: false,
     selector: "bl-loading",
     template: `<ng-content></ng-content>`,
 })

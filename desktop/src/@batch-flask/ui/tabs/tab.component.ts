@@ -3,6 +3,7 @@ import { Component, ContentChild, Input, TemplateRef, ViewChild } from "@angular
 import "./tabs.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-tab-label",
     template: "<ng-template><ng-content></ng-content></ng-template>",
 })
@@ -12,6 +13,7 @@ export class TabLabelComponent {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-tab",
     template: "<ng-template><ng-content></ng-content></ng-template>",
 })

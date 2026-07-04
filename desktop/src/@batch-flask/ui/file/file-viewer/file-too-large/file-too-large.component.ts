@@ -7,6 +7,7 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import "./file-too-large.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-file-too-large",
     templateUrl: "file-too-large.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

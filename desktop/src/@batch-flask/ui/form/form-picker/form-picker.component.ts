@@ -1,10 +1,11 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from "@angular/forms";
+import { ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from "@angular/forms";
 import { FormPageComponent } from "../form-page";
 
 import "./form-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-form-picker",
     templateUrl: "form-picker.html",
     providers: [
@@ -30,7 +31,7 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     public open = new EventEmitter();
 
     @Input()
-    public nestedValue = new FormControl();
+    public nestedValue = new UntypedFormControl();
 
     public hasValue = false;
 
@@ -98,7 +99,7 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

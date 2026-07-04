@@ -3,13 +3,14 @@ import {
     ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 import { FormPageComponent } from "../form-page";
 
 import "./form-multi-picker.scss";
 
 @Directive({
+    standalone: false,
     selector: "[blFormPickerItem]",
 })
 export class FormPickerItemTemplateDirective {
@@ -18,6 +19,7 @@ export class FormPickerItemTemplateDirective {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-form-multi-picker",
     templateUrl: "form-multi-picker.html",
     providers: [
@@ -41,7 +43,7 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     public itemTemplate: FormPickerItemTemplateDirective;
 
     public values: any[];
-    public currentEditValue = new FormControl(null);
+    public currentEditValue = new UntypedFormControl(null);
 
     public hasValue = false;
 
@@ -71,7 +73,7 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         this._registerTouched = fn;
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

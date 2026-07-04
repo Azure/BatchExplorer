@@ -1,19 +1,21 @@
 import { Component, DebugElement, forwardRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ControlValueAccessor, FormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from "@angular/forms";
+import { ControlValueAccessor, UntypedFormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { FormModule } from "@batch-flask/ui/form";
 import { updateInput } from "test/utils/helpers";
 import { MultiInstanceSettingsPickerComponent } from "./multi-instance-settings-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-multi-instance-settings-picker [formControl]="control"></bl-multi-instance-settings-picker>`,
 })
 class TestComponent {
-    public control = new FormControl();
+    public control = new UntypedFormControl();
 }
 
 @Component({
+    standalone: false,
     selector: "bl-resourcefile-picker",
     template: "",
     providers: [

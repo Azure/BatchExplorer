@@ -45,13 +45,6 @@ const modules = [
         TimeRangePickerModule,
         MatButtonToggleModule,
     ],
-    entryComponents: [
-        AddLocalBatchAccountComponent,
-        EditLocalBatchAccountComponent,
-        BatchAccountCreateComponent,
-        DeleteAccountDialogComponent,
-        EditStorageAccountFormComponent,
-    ],
 })
 export class AccountModule {
 }

@@ -8,6 +8,7 @@ import { FailureInfo, NameValuePair, Pool, StartTaskInfo } from "app/models";
 import { NodeService } from "app/services";
 
 @Component({
+    standalone: false,
     selector: "bl-start-task-error-display",
     templateUrl: "start-task-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

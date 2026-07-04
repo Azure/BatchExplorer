@@ -7,6 +7,7 @@ import "./theme-colors.scss";
 
 const varRegex = /var\((.*)\)/;
 @Component({
+    standalone: false,
     selector: "bl-theme-colors",
     templateUrl: "theme-colors.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

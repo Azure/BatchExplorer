@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Input } 
 import "./property-content.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-property-content",
     templateUrl: "property-content.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

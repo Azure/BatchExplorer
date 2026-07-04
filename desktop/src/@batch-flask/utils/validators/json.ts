@@ -1,4 +1,4 @@
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { Observable, of } from "rxjs";
 import { debounceTime, map } from "rxjs/operators";
 
@@ -8,7 +8,7 @@ const stripJsonComments = require("strip-json-comments");
 /**
  * Validator that requires controls to have a valid json
  */
-export function validJsonConfig(c: FormControl): Observable<any> {
+export function validJsonConfig(c: UntypedFormControl): Observable<any> {
     return of(null).pipe(
         debounceTime(400),
         map(() => {

@@ -8,6 +8,7 @@ import { ActivityMonitorItemActionComponent } from "./activity-monitor-item-acti
 import { ActivityMonitorItemComponent } from "./activity-monitor-item.component";
 
 @Component({
+    standalone: false,
     template: `
     <bl-activity-monitor-item
         [activity]="activity"

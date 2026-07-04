@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Metadata } from "app/models";
@@ -7,6 +7,7 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-edit-metadata-form",
     templateUrl: "edit-metadata-form.html",
 })
@@ -17,7 +18,7 @@ export class EditMetadataFormComponent {
 
     public save: (metadata: Metadata[]) => Observable<any>;
 
-    public form = new FormControl([]);
+    public form = new UntypedFormControl([]);
 
     constructor(public sidebarRef: SidebarRef<any>) {
     }

@@ -17,7 +17,7 @@ describe("JobScheduleService", () => {
                 JobScheduleService,
             ],
         });
-        jobScheduleService = new JobScheduleService(TestBed.get(HttpClient));
+        jobScheduleService = new JobScheduleService(TestBed.inject(HttpClient));
         httpMock = TestBed.inject(HttpTestingController);
     });
 

@@ -38,6 +38,7 @@ export const countryCodes = {
 };
 
 @Component({
+    standalone: false,
     selector: "bl-location",
     templateUrl: "location.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

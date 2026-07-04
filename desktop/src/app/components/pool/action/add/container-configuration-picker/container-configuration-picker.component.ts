@@ -1,9 +1,9 @@
 import { Component, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     Validators,
@@ -14,6 +14,7 @@ import { ContainerConfigurationDto } from "app/models/dtos";
 import "./container-configuration-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-container-configuration-picker",
     templateUrl: "container-configuration-picker.html",
     providers: [
@@ -27,9 +28,9 @@ import "./container-configuration-picker.scss";
 })
 export class ContainerConfigurationPickerComponent implements ControlValueAccessor {
     public ContainerType = ContainerType;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
      private _propagateChange: (value: ContainerConfigurationAttributes) => void = null;
-     constructor(formBuilder: FormBuilder) {
+     constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             type: [ContainerType.DockerCompatible, Validators.required],
             containerImageNames: [[]],
@@ -67,7 +68,7 @@ export class ContainerConfigurationPickerComponent implements ControlValueAccess
      public registerOnTouched() {
         // Do nothing
     }
-     public validate(c: FormControl) {
+     public validate(c: UntypedFormControl) {
         const valid = this.form.valid;
         if (!valid) {
             return {

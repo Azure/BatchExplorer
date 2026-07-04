@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { DynamicForm, autobind } from "@batch-flask/core";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -17,6 +17,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 import "./add-job-form.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-add-job-form",
     templateUrl: "add-job-form.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +35,7 @@ export class AddJobFormComponent extends DynamicForm<Job, JobCreateDto> {
         },
     };
 
-    public constraintsGroup: FormGroup;
+    public constraintsGroup: UntypedFormGroup;
     public showJobReleaseTask: boolean;
     public title = "Create job";
     public subtitle = null;
@@ -43,7 +44,7 @@ export class AddJobFormComponent extends DynamicForm<Job, JobCreateDto> {
 
     constructor(
         public sidebarRef: SidebarRef<AddJobFormComponent>,
-        protected formBuilder: FormBuilder,
+        protected formBuilder: UntypedFormBuilder,
         protected jobService: JobService,
         protected changeDetector: ChangeDetectorRef,
         protected notificationService: NotificationService,

@@ -11,6 +11,7 @@ import { Observable } from "rxjs";
 import "./sub-tasks-browser.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-sub-tasks-browser",
     templateUrl: "sub-tasks-browser.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

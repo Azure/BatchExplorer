@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { Observable } from "rxjs";
 import { FormSize } from "../complex-form";
 import { ContainerRef } from "../form-base";
@@ -10,6 +10,7 @@ import "./simple-form.scss";
  * SimpleForm is an helper component that use a ComplexForm with only 1 page and section.
  */
 @Component({
+    standalone: false,
     selector: "bl-simple-form",
     templateUrl: "simple-form.html",
 })
@@ -27,7 +28,7 @@ export class SimpleFormComponent {
     public multiUse = true;
 
     @Input()
-    public formGroup: FormGroup = new FormGroup({});
+    public formGroup: UntypedFormGroup = new UntypedFormGroup({});
 
     @Input()
     public actionName = "Save";

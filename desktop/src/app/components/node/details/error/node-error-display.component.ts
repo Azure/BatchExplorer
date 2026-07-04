@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { ComputeNodeError, NameValuePair, Node } from "app/models";
 
 @Component({
+    standalone: false,
     selector: "bl-node-error-display",
     templateUrl: "node-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

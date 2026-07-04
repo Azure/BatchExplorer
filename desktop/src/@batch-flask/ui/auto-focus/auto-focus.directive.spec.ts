@@ -4,6 +4,7 @@ import { By } from "@angular/platform-browser";
 import { AutoFocusDirective } from "./auto-focus.directive";
 
 @Component({
+    standalone: false,
     template: `<input autofocus>`,
 })
 class TestComponent {

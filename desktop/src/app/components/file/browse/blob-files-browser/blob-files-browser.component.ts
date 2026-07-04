@@ -3,6 +3,7 @@ import { FileExplorerConfig, FileNavigator } from "@batch-flask/ui";
 import { StorageBlobService } from "app/services/storage";
 
 @Component({
+    standalone: false,
     selector: "bl-blob-files-browser",
     templateUrl: "blob-files-browser.html",
 })

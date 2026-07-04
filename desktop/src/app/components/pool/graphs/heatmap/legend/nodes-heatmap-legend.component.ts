@@ -9,6 +9,7 @@ import { CategoryNode, StateNode, StateTree } from "../state-tree";
 import "./nodes-heatmap-legend.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-nodes-heatmap-legend",
     templateUrl: "nodes-heatmap-legend.html",
 })

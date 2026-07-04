@@ -3,6 +3,7 @@ import { UserConfigurationService, autobind } from "@batch-flask/core";
 import { BEUserConfiguration } from "common";
 
 @Component({
+    standalone: false,
     selector: "be-external-browser-auth-toggle",
     templateUrl: "external-browser-auth-toggle.html",
 })

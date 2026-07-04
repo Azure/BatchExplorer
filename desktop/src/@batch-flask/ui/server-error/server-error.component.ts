@@ -5,6 +5,7 @@ import { log } from "@batch-flask/utils";
 import "./server-error.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-server-error",
     templateUrl: "server-error.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

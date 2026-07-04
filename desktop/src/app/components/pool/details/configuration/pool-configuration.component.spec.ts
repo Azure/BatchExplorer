@@ -11,6 +11,7 @@ import { PoolConfigurationComponent } from "./pool-configuration.component";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 
 @Component({
+    standalone: false,
     template: `<bl-pool-configuration [pool]="pool"></bl-pool-configuration>`,
 })
 class TestComponent {

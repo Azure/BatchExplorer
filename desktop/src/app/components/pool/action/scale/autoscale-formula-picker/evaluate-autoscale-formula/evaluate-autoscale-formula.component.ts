@@ -8,6 +8,7 @@ import { List } from "immutable";
 import "./evaluate-autoscale-formula.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-evaluate-autoscale-formula",
     templateUrl: "evaluate-autoscale-formula.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

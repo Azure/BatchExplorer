@@ -14,6 +14,7 @@ import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { Subscription } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-entity-command-button",
     templateUrl: "entity-command-button.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

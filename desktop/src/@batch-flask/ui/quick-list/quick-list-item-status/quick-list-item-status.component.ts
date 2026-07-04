@@ -17,6 +17,7 @@ export enum QuickListItemStatus {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-quick-list-item-status",
     template: `
         <div *ngIf="tooltip"

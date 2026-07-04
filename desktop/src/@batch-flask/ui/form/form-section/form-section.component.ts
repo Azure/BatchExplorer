@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild } from "@angular/core";
 
 @Component({
+    standalone: false,
     selector: "bl-form-section",
     templateUrl: "form-section.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

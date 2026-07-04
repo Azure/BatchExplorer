@@ -52,6 +52,7 @@ const acc1 = new ArmBatchAccount({
 });
 
 @Component({
+    standalone: false,
     template: `<bl-account-summary-card [account]="account"></bl-account-summary-card>`,
 })
 class TestComponent {
@@ -59,6 +60,7 @@ class TestComponent {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-account-quotas-card",
     template: "",
 })
@@ -67,6 +69,7 @@ class AccountQuotasCardMockComponent {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-storage-account-card",
     template: "",
 })

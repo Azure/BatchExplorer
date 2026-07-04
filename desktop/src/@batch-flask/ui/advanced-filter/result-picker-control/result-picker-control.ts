@@ -1,5 +1,5 @@
 import { Component, HostBinding, Input } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import * as FilterBuilder from "@batch-flask/core/filter-builder";
 import { AdvancedFilter } from "../advanced-filter";
 import { AdvancedFilterControlBase } from "../control-base";
@@ -11,12 +11,12 @@ export class ResultPickerControl extends AdvancedFilterControlBase {
         super(label);
     }
 
-    public formGroup(): FormGroup {
+    public formGroup(): UntypedFormGroup {
         const controls = this.results.reduce((map, result) => {
-            map[result] = new FormControl(false);
+            map[result] = new UntypedFormControl(false);
             return map;
         }, {});
-        return new FormGroup(controls);
+        return new UntypedFormGroup(controls);
     }
 
     public buildFilter(data: { [key: string]: boolean }): FilterBuilder.Filter {
@@ -28,6 +28,7 @@ export class ResultPickerControl extends AdvancedFilterControlBase {
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-adv-filter-resultpicker",
     templateUrl: "result-picker-control.html",
 })

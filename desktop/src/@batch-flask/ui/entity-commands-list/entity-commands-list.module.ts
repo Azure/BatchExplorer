@@ -16,7 +16,6 @@ const privateComponents = [
     imports: [CommonModule, ButtonsModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class EntityCommandsListModule {
 }

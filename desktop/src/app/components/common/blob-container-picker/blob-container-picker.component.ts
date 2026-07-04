@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { ListView, LoadingStatus } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
@@ -24,6 +24,7 @@ export enum BlobContainerPickerOutput {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-blob-container-picker",
     templateUrl: "blob-container-picker.html",
     providers: [
@@ -51,7 +52,7 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnCha
     @Input() public sasPermissions: PermissionType[] = ["r"];
 
     public containers: List<BlobContainer>;
-    public container = new FormControl();
+    public container = new UntypedFormControl();
     public containersData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
 
@@ -134,7 +135,7 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnCha
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { BrowserDynamicTestingModule }
     from "@angular/platform-browser-dynamic/testing";
@@ -22,10 +22,11 @@ import { FileGroupPickerComponent } from "./file-group-picker.component";
 import { FileGroupPickerModule } from "./file-group-picker.module";
 
 @Component({
+    standalone: false,
     template: `<bl-file-group-picker [formControl]="control"></bl-file-group-picker>`,
 })
 class TestComponent {
-    public control = new FormControl();
+    public control = new UntypedFormControl();
 }
 
 describe("FileGroupPickerComponent", () => {

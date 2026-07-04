@@ -12,6 +12,7 @@ import { Subscription } from "rxjs";
 import "./header.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-header",
     templateUrl: "header.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

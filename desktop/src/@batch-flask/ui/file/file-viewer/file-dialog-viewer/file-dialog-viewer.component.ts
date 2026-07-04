@@ -4,6 +4,7 @@ import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import "./file-dialog-viewer.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-file-dialog-viewer",
     templateUrl: "file-dialog-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

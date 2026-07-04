@@ -23,6 +23,7 @@ export const NoComponentFound: React.FC = props => {
 };
 
 @Component({
+    standalone: false,
     selector: "be-reactcontainer",
     template: `<ng-container *ngIf="themeInitialized"><div class="react-root" #container></div></ng-container>`,
 })

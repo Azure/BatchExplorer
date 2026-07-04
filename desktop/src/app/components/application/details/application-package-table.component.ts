@@ -13,6 +13,7 @@ import {
 } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-application-package-table",
     templateUrl: "application-package-table.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

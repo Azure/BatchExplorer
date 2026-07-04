@@ -8,6 +8,7 @@ import { ClickableComponent } from "@batch-flask/ui/buttons";
 import "./table-property.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-table-property-header",
     template: `
         <ng-template><ng-content></ng-content></ng-template>
@@ -21,6 +22,7 @@ export class TablePropertyHeaderComponent {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-table-property-row",
     template: `
         <ng-template><ng-content></ng-content></ng-template>
@@ -36,6 +38,7 @@ export class TablePropertyRowComponent {
 
 let idCounter = 0;
 @Component({
+    standalone: false,
     selector: "bl-tp-cell",
     template: `
         <div class="cell-value" aria-keyshortcuts="Enter Space">
@@ -86,12 +89,13 @@ export class TablePropertyCellComponent extends ClickableComponent {
     }
 
     @HostListener("(focus)")
-    public focusContent(event: FocusEvent) {
+    public focusContent(event?: FocusEvent) {
         window.getSelection().selectAllChildren(event.target as any);
     }
 }
 
 @Component({
+    standalone: false,
     selector: "bl-tp-plain-cell",
     template: `
         <ng-content></ng-content>
@@ -108,6 +112,7 @@ export class TablePropertyCellPlainComponent extends ClickableComponent {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-table-property",
     templateUrl: "table-property.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

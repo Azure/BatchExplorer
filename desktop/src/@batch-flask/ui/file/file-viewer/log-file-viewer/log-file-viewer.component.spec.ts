@@ -9,6 +9,7 @@ import { FileViewerConfig } from "../file-viewer";
 import { LogFileViewerComponent } from "./log-file-viewer.component";
 
 @Component({
+    standalone: false,
     template: `<bl-log-file-viewer [fileLoader]="fileLoader" [config]="config"></bl-log-file-viewer>`,
 })
 class TestComponent {

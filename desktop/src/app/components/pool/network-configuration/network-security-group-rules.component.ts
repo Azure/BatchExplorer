@@ -1,6 +1,6 @@
 import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { EditableTableColumnType } from "@batch-flask/ui/form/editable-table";
 import { NetworkSecurityGroupRule, NetworkSecurityGroupRuleAccess } from "app/models";
@@ -8,6 +8,7 @@ import { Subscription } from "rxjs";
 import * as EndpointHelper from "./pool-endpoint-helper";
 
 @Component({
+    standalone: false,
     selector: "bl-network-security-group-rules",
     templateUrl: "network-security-group-rules.html",
     providers: [
@@ -17,7 +18,7 @@ import * as EndpointHelper from "./pool-endpoint-helper";
 })
 export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor, OnDestroy {
     public EditableTableColumnType = EditableTableColumnType;
-    public rules: FormControl;
+    public rules: UntypedFormControl;
     public allowSelections: string[] = [
         NetworkSecurityGroupRuleAccess.Allow,
         NetworkSecurityGroupRuleAccess.Deny,
@@ -26,7 +27,7 @@ export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor,
     private _propagateChange: (value: NetworkSecurityGroupRule[]) => void = null;
     private _sub: Subscription;
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: UntypedFormBuilder) {
         this.rules = this.formBuilder.control([]);
         this._sub = this.rules.valueChanges.subscribe((rules) => {
             const decoratedRules = rules ? rules.map(rule => {
@@ -62,7 +63,7 @@ export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor,
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         if (Array.isArray(c.value)) {
             if (c.value.length > EndpointHelper.MAXIMUM_SECURITY_GROUP_RULES) {
                 return {

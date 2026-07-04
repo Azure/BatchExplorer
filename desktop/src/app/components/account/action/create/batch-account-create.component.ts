@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
@@ -23,12 +23,13 @@ import "./batch-account-create.scss";
 const accountIdSuffix = ".batch.azure.com";
 
 @Component({
+    standalone: false,
     selector: "bl-batch-account-create",
     templateUrl: "batch-account-create.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BatchAccountCreateComponent implements OnDestroy {
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public resourceGroups: ResourceGroup[] = [];
     public title = "Create batch account";
 
@@ -42,7 +43,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
         public subscriptionService: SubscriptionService,
         public sidebarRef: SidebarRef<BatchAccountCreateComponent>,
         private changeDetector: ChangeDetectorRef,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private notificationService: NotificationService) {
         this.form = this._buildCreateForm();
         this._subs.push(this._subscriptionOnChangeSub());
@@ -222,7 +223,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
 
     @autobind()
     private _availabilityValidator() {
-        return (control: FormControl): Observable<{ [key: string]: any }> => {
+        return (control: UntypedFormControl): Observable<{ [key: string]: any }> => {
             const accountName = control.value;
             const subscription = this.form.controls.subscription.value;
             const location = this.form.controls.location.value;
@@ -250,7 +251,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
 
     @autobind()
     private _resourceGroupPermissionValidator() {
-        return (control: FormControl): Observable<{ [key: string]: any }> => {
+        return (control: UntypedFormControl): Observable<{ [key: string]: any }> => {
             let resourceGroup = control.value;
             if (!resourceGroup) {
                 return of(null);
@@ -283,7 +284,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
 
     @autobind()
     private _accountQuotaValidator() {
-        return (control: FormControl): Observable<{ [key: string]: any }> => {
+        return (control: UntypedFormControl): Observable<{ [key: string]: any }> => {
             const location = control.value;
             const subscription = this.form.controls.subscription.value;
             return this.accountService.accountQuota(subscription, location).pipe(

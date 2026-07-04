@@ -1,6 +1,6 @@
 import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { NodeDeallocationOption } from "app/models/dtos";
 import { Subscription } from "rxjs";
@@ -9,6 +9,7 @@ import { distinctUntilChanged } from "rxjs/operators";
 import "./deallocation-option-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-deallocation-option-picker",
     templateUrl: "deallocation-option-picker.html",
     providers: [
@@ -18,14 +19,14 @@ import "./deallocation-option-picker.scss";
     ],
 })
 export class DeallocationOptionPickerComponent implements OnDestroy, ControlValueAccessor {
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public NodeDeallocationOption = NodeDeallocationOption;
     public nodeActionInfo: string;
 
     private _propagateChange: (value: any) => void;
     private _sub: Subscription;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             nodeDeallocationOption: NodeDeallocationOption.requeue,
         });
@@ -58,7 +59,7 @@ export class DeallocationOptionPickerComponent implements OnDestroy, ControlValu
         // Nothing to do
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const valid = this.form.valid;
         if (valid) {
             return null;

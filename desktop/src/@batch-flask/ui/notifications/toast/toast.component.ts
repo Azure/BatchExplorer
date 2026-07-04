@@ -7,6 +7,7 @@ import { NotificationService } from "../notification-service";
 import "./toast.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-toast",
     templateUrl: "toast.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +37,7 @@ export class ToastComponent extends ClickableComponent {
     }
 
     @HostListener("mouseup", ["$event"])
-    public handleMouseUp(event: MouseEvent, tab) {
+    public handleMouseUp(event: MouseEvent) {
         if (event.button === MouseButton.middle) { // Middle click
             this.dismiss();
         }

@@ -1,23 +1,24 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { FormBuilder, FormControl } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl } from "@angular/forms";
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { JobScheduleCreateBasicDialogComponent } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-job-schedule-home",
     templateUrl: "job-schedule-home.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobScheduleHomeComponent {
-    public quickSearchQuery = new FormControl();
+    public quickSearchQuery = new UntypedFormControl();
 
     public filter: Filter = FilterBuilder.none();
     public quickFilter: Filter = FilterBuilder.none();
     public advancedFilter: Filter = FilterBuilder.none();
 
-    constructor(formBuilder: FormBuilder, private sidebarManager: SidebarManager) {
+    constructor(formBuilder: UntypedFormBuilder, private sidebarManager: SidebarManager) {
         this.quickSearchQuery.valueChanges.pipe(
             debounceTime(400),
             distinctUntilChanged(),

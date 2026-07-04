@@ -9,6 +9,7 @@ import { PerformanceGraphComponent } from "../performance-graph.component";
 import "./gpu-memory-usage-graph.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-gpu-memory-usage-graph",
     templateUrl: "gpu-memory-usage-graph.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

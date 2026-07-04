@@ -3,6 +3,7 @@ import { BatchAccountService } from "app/services";
 import { Subscription } from "rxjs";
 
 @Directive({
+    standalone: false,
     selector: "[blHiddenIfNoAccount]",
 })
 export class HiddenIfNoAccountDirective implements OnInit, OnDestroy  {

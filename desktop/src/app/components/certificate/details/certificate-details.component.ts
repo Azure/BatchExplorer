@@ -15,6 +15,7 @@ import {
 import "./certificate-details.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-certificate-details",
     templateUrl: "certificate-details.html",
     providers: [CertificateCommands],

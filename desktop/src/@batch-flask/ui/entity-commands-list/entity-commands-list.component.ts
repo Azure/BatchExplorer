@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { EntityCommand, EntityCommands } from "../entity-commands";
 
 @Component({
+    standalone: false,
     selector: "bl-commands-list",
     templateUrl: "entity-commands-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

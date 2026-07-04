@@ -6,6 +6,7 @@ import { TreeRow } from "..";
 import "./file-tree-view-row.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-file-tree-view-row",
     templateUrl: "file-tree-view-row.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

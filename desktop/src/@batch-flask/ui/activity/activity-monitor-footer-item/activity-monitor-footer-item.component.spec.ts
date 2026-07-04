@@ -6,6 +6,7 @@ import { ActivityMonitorFooterItemComponent } from "@batch-flask/ui/activity";
 import { BehaviorSubject } from "rxjs";
 
 @Component({
+    standalone: false,
     template: `
         <bl-activity-monitor-footer-item [activity]=activity>
         </bl-activity-monitor-footer-item>

@@ -6,6 +6,7 @@ import { AsyncSubject, Observable } from "rxjs";
 import "./confirmation-dialog.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-confirmation-dialog",
     templateUrl: "confirmation-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

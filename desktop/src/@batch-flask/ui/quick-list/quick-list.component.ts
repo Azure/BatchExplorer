@@ -27,6 +27,7 @@ import "./quick-list.scss";
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-quick-list",
     templateUrl: "quick-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

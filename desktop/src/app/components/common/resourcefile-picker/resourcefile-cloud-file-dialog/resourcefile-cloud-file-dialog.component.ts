@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { autobind } from "@batch-flask/core";
 import { FileExplorerConfig, FileExplorerSelectable } from "@batch-flask/ui";
@@ -17,13 +17,14 @@ import {
 import "./resourcefile-cloud-file-dialog.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-resourcefile-cloud-file-dialog",
     templateUrl: "resourcefile-cloud-file-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public storageAccountName: string | null;
     public storageAccountId: string | null;
     public containerName: string | null;
@@ -40,7 +41,7 @@ export class ResourceFileCloudFileDialogComponent implements OnInit, OnDestroy {
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private accountService: BatchAccountService,
         private storageAccountService: StorageAccountService,
         private autoStorageService: AutoStorageService,

@@ -1,6 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { ServerError } from "@batch-flask/core";
 import { JobService } from "app/services";
@@ -9,10 +9,11 @@ import * as Fixtures from "test/fixture";
 import { JobIdComponent } from "./job-id.component";
 
 @Component({
+    standalone: false,
     template: `<bl-job-id [formControl]="jobId"></bl-job-id>`,
 })
 class TestComponent {
-    public jobId = new FormControl("");
+    public jobId = new UntypedFormControl("");
 }
 
 describe("JobIdComponent", () => {

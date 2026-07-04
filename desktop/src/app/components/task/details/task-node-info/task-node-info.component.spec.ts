@@ -13,6 +13,7 @@ import { click } from "test/utils/helpers";
 import { TaskNodeInfoComponent } from "./task-node-info.component";
 
 @Component({
+    standalone: false,
     template: `<bl-task-node-info [nodeInfo]="nodeInfo"></bl-task-node-info>`,
 })
 class TestComponent {

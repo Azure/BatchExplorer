@@ -1,6 +1,7 @@
 import { Directive, Input, TemplateRef } from "@angular/core";
 
 @Directive({
+    standalone: false,
     selector: "[blVirtualRow]",
 })
 export class VirtualScrollRowDirective<T> {

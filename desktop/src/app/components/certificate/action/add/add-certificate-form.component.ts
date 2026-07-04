@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -14,6 +14,7 @@ import "./add-certificate-form.scss";
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-add-certificate-form",
     templateUrl: "add-certificate-form.html",
 })
@@ -21,11 +22,11 @@ export class AddCertificateFormComponent {
     @Input() public id = `bl-add-certificate-form-${idCounter++}`;
 
     public file: File;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public title = "Add certificate";
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public sidebarRef: SidebarRef<AddCertificateFormComponent>,
         private certificateService: CertificateService,
         private notificationService: NotificationService,
@@ -86,7 +87,7 @@ export class AddCertificateFormComponent {
     }
 
     private _passwordValidator() {
-        return (control: FormControl): { [key: string]: any } => {
+        return (control: UntypedFormControl): { [key: string]: any } => {
             if (this.showPassword) {
                 if (!control.value) {
                     return {

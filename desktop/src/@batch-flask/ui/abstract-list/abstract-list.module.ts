@@ -11,7 +11,6 @@ const privateComponents = [];
     imports: [CommonModule, I18nUIModule, ButtonsModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class AbstractListModule {
 }

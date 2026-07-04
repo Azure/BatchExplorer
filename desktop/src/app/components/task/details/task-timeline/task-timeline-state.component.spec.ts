@@ -5,6 +5,7 @@ import { TaskTimelineStateComponent } from "app/components/task/details/task-tim
 import { TaskState } from "app/models";
 
 @Component({
+    standalone: false,
     template: `
         <bl-task-timeline-state [state]="state" [currentState]="currentState" [error]="error">
             Additional content info

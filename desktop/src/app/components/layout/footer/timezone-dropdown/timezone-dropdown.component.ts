@@ -7,6 +7,7 @@ import { takeUntil } from "rxjs/operators";
 import "./timezone-dropdown.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-timezone-dropdown",
     templateUrl: "timezone-dropdown.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

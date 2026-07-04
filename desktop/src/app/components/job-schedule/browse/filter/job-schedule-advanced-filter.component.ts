@@ -4,6 +4,7 @@ import { AdvancedFilter, StatePickerControl } from "@batch-flask/ui/advanced-fil
 import { JobScheduleState } from "app/models";
 
 @Component({
+    standalone: false,
     selector: "bl-job-schedule-advanced-filter",
     templateUrl: "job-schedule-advanced-filter.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

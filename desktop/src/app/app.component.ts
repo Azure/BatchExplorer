@@ -27,6 +27,7 @@ import { initDesktopEnvironment } from "./environment/desktop-environment";
 import { IpcEvent } from "common/constants";
 
 @Component({
+    standalone: false,
     selector: "bl-app",
     templateUrl: "app.layout.html",
 })

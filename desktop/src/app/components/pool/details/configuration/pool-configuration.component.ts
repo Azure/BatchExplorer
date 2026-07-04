@@ -16,6 +16,7 @@ import "./pool-configuration.scss";
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     selector: "bl-pool-configuration",
     templateUrl: "pool-configuration.html",
 })

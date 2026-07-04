@@ -17,6 +17,7 @@ import { ActivityAction } from "./activity-monitor-item-action";
 import "./activity-monitor-item.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-activity-monitor-item",
     templateUrl: "activity-monitor-item.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
 import { FormModule } from "@batch-flask/ui/form";
@@ -11,10 +11,11 @@ import { BehaviorSubject } from "rxjs";
 import { SubscriptionPickerComponent } from "./subscription-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-subscription-picker [formControl]="subscription"></bl-subscription-picker>`,
 })
 class TestComponent {
-    public subscription = new FormControl(null);
+    public subscription = new UntypedFormControl(null);
 }
 
 const sub1 = new ArmSubscription({ id: "subs/sub-1", subscriptionId: "sub-1", displayName: "Sub 1" });

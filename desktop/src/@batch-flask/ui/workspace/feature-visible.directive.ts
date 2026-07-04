@@ -13,6 +13,7 @@ import { Workspace } from "./workspace.model";
 import { WorkspaceService } from "./workspace.service";
 
 @Directive({
+    standalone: false,
     selector: "[blFeatureOn]",
 })
 export class FeatureVisibleDirective implements OnInit, OnDestroy, OnChanges  {

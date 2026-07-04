@@ -1,4 +1,4 @@
-import { ComponentPortal, PortalHostDirective } from "@angular/cdk/portal";
+import { CdkPortalOutlet, ComponentPortal } from "@angular/cdk/portal";
 import {
     Component,
     ComponentRef,
@@ -17,13 +17,14 @@ import { SidebarRef } from "../sidebar-ref";
 import "./sidebar-content.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-sidebar-content",
     templateUrl: "sidebar-content.html",
 })
 export class SidebarContentComponent implements OnInit {
     @Input()  private sidebar: MatSidenav;
 
-    @ViewChild(PortalHostDirective, { static: false }) private portalHost: PortalHostDirective;
+    @ViewChild(CdkPortalOutlet, { static: false }) private portalHost: CdkPortalOutlet;
 
     private currentComponentRef: ComponentRef<SidebarPageComponent>;
 

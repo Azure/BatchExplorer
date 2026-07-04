@@ -13,6 +13,7 @@ import { catchError } from "rxjs/operators";
 import "./aad-app-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-aad-app-picker",
     templateUrl: "aad-app-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

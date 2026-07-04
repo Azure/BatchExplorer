@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { FormModule, SelectComponent, SelectModule } from "@batch-flask/ui";
 import { AutoUserScope, UserAccount, UserAccountElevationLevel, UserIdentityAttributes } from "app/models";
@@ -17,12 +17,13 @@ const user2 = new UserAccount({
 });
 
 @Component({
+    standalone: false,
     template: `
         <bl-user-identity-picker [userAccounts]="userAccounts" [formControl]="control"></bl-user-identity-picker>
     `,
 })
 class TestComponent {
-    public control = new FormControl<UserIdentityAttributes | null>(null);
+    public control = new UntypedFormControl(null);
     public userAccounts: UserAccount[] = [user1, user2];
 }
 

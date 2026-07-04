@@ -11,6 +11,7 @@ import { BehaviorSubject } from "rxjs";
 import { StorageErrorDisplayComponent } from "./storage-error-display.component";
 
 @Component({
+    standalone: false,
     template: `<bl-storage-error-display [noClassic]="noClassic"></bl-storage-error-display>`,
 })
 class TestComponent {

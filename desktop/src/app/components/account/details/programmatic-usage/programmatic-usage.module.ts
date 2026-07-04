@@ -37,9 +37,6 @@ const modules = [
     exports: [
         ...publicComponents,
     ],
-    entryComponents: [
-        ProgrammaticUsageComponent,
-    ],
     imports: modules,
 })
 export class ProgrammaticUsageModule {

@@ -26,6 +26,7 @@ const outputTabs = [
     { key: OutputType.logs, label: "Saved logs" },
 ];
 @Component({
+    standalone: false,
     selector: "bl-task-outputs",
     templateUrl: "task-outputs.html",
 })

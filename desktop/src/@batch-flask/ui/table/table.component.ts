@@ -66,6 +66,7 @@ export interface DropEvent {
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-table",
     templateUrl: "table.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

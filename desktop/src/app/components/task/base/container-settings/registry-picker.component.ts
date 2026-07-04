@@ -1,11 +1,12 @@
 import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { ContainerRegistryDto } from "app/models/dtos";
 import { Subscription } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-registry-picker",
     templateUrl: "registry-picker.html",
     providers: [
@@ -15,7 +16,7 @@ import { Subscription } from "rxjs";
     ],
 })
 export class RegistryPickerComponent implements ControlValueAccessor, OnDestroy {
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public customValue: boolean;
     public registry: ContainerRegistryDto;
 
@@ -23,7 +24,7 @@ export class RegistryPickerComponent implements ControlValueAccessor, OnDestroy 
 
     private _sub: Subscription;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group( {
             username: [null],
             password: [null],
@@ -64,7 +65,7 @@ export class RegistryPickerComponent implements ControlValueAccessor, OnDestroy 
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 }

@@ -15,6 +15,7 @@ import { FileViewer } from "../file-viewer";
 import "./log-file-viewer.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-log-file-viewer",
     templateUrl: "log-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { DynamicForm, I18nService, autobind } from "@batch-flask/core";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -14,6 +14,7 @@ import { Constants } from "common";
 import { Observable } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-add-task-form",
     templateUrl: "add-task-form.html",
 })
@@ -24,8 +25,8 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
 
     public jobId: string;
     public complexFormConfig: ComplexFormConfig;
-    public constraintsGroup: FormGroup;
-    public resourceFiles: FormArray;
+    public constraintsGroup: UntypedFormGroup;
+    public resourceFiles: UntypedFormArray;
     public multiUse = true;
     public fileUri = "create.task.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
@@ -34,7 +35,7 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
 
     constructor(
         i18n: I18nService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public sidebarRef: SidebarRef<AddTaskFormComponent>,
         protected taskService: TaskService,
         private notificationService: NotificationService,

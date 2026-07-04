@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, SimpleChanges,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { ListView, PollObservable, PollService, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
@@ -30,6 +30,7 @@ const refreshRate = 5000;
 const appInsightsRefreshRate = 60 * 1000; // Every minute(Aggregation is minimum 1 min)
 
 @Component({
+    standalone: false,
     selector: "bl-pool-graphs",
     templateUrl: "pool-graphs.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,7 +63,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public runningNodesHistory = new NodesStateHistoryData([NodeState.running, NodeState.idle]);
     public maxRunningTasks = 0;
 
-    public selectedHistoryLength = new FormControl(historyLength.TenMinute);
+    public selectedHistoryLength = new UntypedFormControl(historyLength.TenMinute);
     public performanceData: PerformanceData;
     public performanceMetrics: BatchPerformanceMetrics;
 

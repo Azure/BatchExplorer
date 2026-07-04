@@ -8,6 +8,7 @@ import { TenantCardComponent } from ".";
 import { By } from "@angular/platform-browser";
 
 @Component({
+    standalone: false,
     template: `<be-tenant-picker></be-tenant-picker>`,
 })
 class TestComponent {

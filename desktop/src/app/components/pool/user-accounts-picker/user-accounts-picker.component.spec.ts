@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { BrowserModule, By } from "@angular/platform-browser";
@@ -13,6 +13,7 @@ import { UserAccountPickerComponent } from "./user-account-picker/user-account-p
 import { UserAccountsPickerComponent } from "./user-accounts-picker.component";
 
 @Component({
+    standalone: false,
     template: `
         <bl-complex-form>
             <bl-form-page main-form-page>
@@ -24,7 +25,7 @@ import { UserAccountsPickerComponent } from "./user-accounts-picker.component";
     `,
 })
 class TestComponent {
-    public userAccounts = new FormControl<UserAccountDto[]>();
+    public userAccounts = new UntypedFormControl();
 }
 
 describe("UserAccountsPickerComponent", () => {

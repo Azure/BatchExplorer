@@ -4,6 +4,7 @@ import { BlobContainer } from "app/models";
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     selector: "bl-data-container-configuration",
     templateUrl: "data-container-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

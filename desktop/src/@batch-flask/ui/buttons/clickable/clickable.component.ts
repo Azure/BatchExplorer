@@ -21,6 +21,7 @@ import { Subscription } from "rxjs";
 import "./clickable.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-clickable",
     template: `<ng-content></ng-content>`,
 })
@@ -119,7 +120,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
         this.do.emit(event);
 
         if (this._routerLink) {
-            this._routerLink.onClick();
+            this._routerLink.onClick(0, false, false, false, false);
         }
     }
 

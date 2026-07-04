@@ -5,6 +5,7 @@ import { PoolNodesPreviewComponent } from "app/components/pool/base";
 import { Pool } from "app/models";
 
 @Component({
+    standalone: false,
     template: `<bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>`,
 })
 class TestComponent {

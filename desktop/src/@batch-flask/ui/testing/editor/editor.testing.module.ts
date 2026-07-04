@@ -3,6 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { EditorConfig } from "@batch-flask/ui/editor";
 
 @Component({
+    standalone: false,
     selector: "bl-editor",
     template: `<textarea [value]="value"></textarea>`,
     providers: [

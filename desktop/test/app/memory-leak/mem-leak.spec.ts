@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Component } from "@angular/core";
-import { TestBed, async } from "@angular/core/testing";
+import { TestBed, waitForAsync } from "@angular/core/testing";
 import { TaskDetailsModule } from "app/components/task/details";
 
 export function main() {
@@ -8,7 +8,7 @@ export function main() {
     fdescribe("Memory leak Testing", () => {
         for (let i = 0; i < 100000; i++) {
             describe(`${i}`, () => {
-                beforeEach(async(() => {
+                beforeEach(waitForAsync(() => {
                     TestBed.configureTestingModule({
                         imports: [TaskDetailsModule],
                         // imports: [BaseModule],
@@ -45,8 +45,10 @@ export function main() {
 // Uncomment below to focus the above tests
 // main();
 
-@Component({ selector: "bl-cmp", template: "<div></div>" })
+@Component({
+    standalone: false, selector: "bl-cmp", template: "<div></div>" })
 class TestComponent { }
 
-@Component({ selector: "bl-big", templateUrl: "./test-big-component.html" })
+@Component({
+    standalone: false, selector: "bl-big", templateUrl: "./test-big-component.html" })
 class TestBigComponent { }

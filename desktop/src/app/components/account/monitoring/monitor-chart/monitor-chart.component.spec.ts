@@ -11,6 +11,7 @@ import { MonitorChartComponent } from "./monitor-chart.component";
 const date1 = DateTime.local().minus({ hours: 1 }).toJSDate();
 const date2 = new Date();
 @Component({
+    standalone: false,
     template: `
         <bl-monitor-chart [metrics]="metrics" [timeRange]="timeRange" [chartType]="chartType">
         </bl-monitor-chart>

@@ -24,8 +24,6 @@ const modules = [
     declarations: components,
     exports: [...modules, ...components],
     imports: [JobBaseModule, ...modules],
-    entryComponents: [
-    ],
 })
 export class JobModule {
 }

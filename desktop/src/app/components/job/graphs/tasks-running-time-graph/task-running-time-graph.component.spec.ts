@@ -34,6 +34,7 @@ const taskWithoutNodeInfo = new Task({
 });
 
 @Component({
+    standalone: false,
     template: `<bl-tasks-running-time-graph [job]="job" [tasks]="tasks"></bl-tasks-running-time-graph>`,
 })
 class TestComponent {

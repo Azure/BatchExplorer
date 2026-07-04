@@ -11,6 +11,7 @@ import { runAxe } from "test/utils/helpers/axe-helpers";
 import { PartialSortWarningComponent } from "./partial-sort-warning.component";
 
 @Component({
+    standalone: false,
     template: `<bl-partial-sort-warning [data]="data" [presenter]="presenter"></bl-partial-sort-warning>`,
 })
 class TestComponent {

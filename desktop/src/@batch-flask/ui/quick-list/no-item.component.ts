@@ -3,6 +3,7 @@ import { Filter } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 
 @Component({
+    standalone: false,
     selector: "bl-no-item",
     template: `
         <div

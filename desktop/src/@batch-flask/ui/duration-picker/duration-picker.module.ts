@@ -15,7 +15,6 @@ const privateComponents = [];
     imports: [CommonModule, FormsModule, SelectModule, FormModule, I18nUIModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class DurationPickerModule {
 }

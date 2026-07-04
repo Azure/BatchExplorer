@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { ENTER, KeyCode } from "@batch-flask/core/keys";
 import { I18nTestingModule } from "@batch-flask/core/testing";
@@ -12,6 +12,7 @@ import { click, createKeyboardEvent, updateInput } from "test/utils/helpers";
 import { EditableTableSelectCellComponent } from "./select-cell";
 
 @Component({
+    standalone: false,
     template: `
         <bl-editable-table [formControl]="items">
             <bl-editable-table-column name="key">Key</bl-editable-table-column>
@@ -20,7 +21,7 @@ import { EditableTableSelectCellComponent } from "./select-cell";
     `,
 })
 class TestComponent {
-    public items = new FormControl([]);
+    public items = new UntypedFormControl([]);
 }
 
 describe("EditableTableComponent", () => {

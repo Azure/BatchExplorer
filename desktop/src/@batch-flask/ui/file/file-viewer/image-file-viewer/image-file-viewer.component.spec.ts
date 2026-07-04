@@ -6,6 +6,7 @@ import { Subject, of } from "rxjs";
 import { ImageFileViewerComponent } from "./image-file-viewer.component";
 
 @Component({
+    standalone: false,
     template: `<bl-image-file-viewer [fileLoader]="fileLoader"></bl-image-file-viewer>`,
 })
 class TestComponent {

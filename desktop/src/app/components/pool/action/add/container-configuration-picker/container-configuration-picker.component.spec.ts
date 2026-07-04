@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
@@ -12,10 +12,11 @@ import { ContainerImagesPickerComponent } from "./images-picker/container-images
 import { ContainerRegistryPickerComponent } from "./registry-picker/container-registry-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-container-configuration-picker [formControl]="containerConfig"></bl-container-configuration-picker>`,
 })
 class TestComponent {
-    public containerConfig = new FormControl(null);
+    public containerConfig = new UntypedFormControl(null);
 }
 
 describe("ContainerConfigurationPickerComponent", () => {

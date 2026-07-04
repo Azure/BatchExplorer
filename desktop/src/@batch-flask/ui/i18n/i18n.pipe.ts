@@ -4,6 +4,7 @@ import { I18nService } from "@batch-flask/core";
 export const I18N_NAMESPACE = new InjectionToken("I18N_NAMESPACE");
 
 @Pipe({
+    standalone: false,
     name: "i18n",
     pure: true,
 })

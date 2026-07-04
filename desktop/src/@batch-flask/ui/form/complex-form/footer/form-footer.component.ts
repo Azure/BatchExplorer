@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, Output, forwardRef,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { AsyncTask, ServerError } from "@batch-flask/core";
 import { FormPageComponent } from "@batch-flask/ui/form/form-page";
 import { Subscription } from "rxjs";
@@ -43,6 +43,7 @@ const defaultActionConfig: FormActionConfig = {
 };
 
 @Component({
+    standalone: false,
     selector: "bl-form-footer",
     templateUrl: "form-footer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +56,7 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
         this._actionConfig = { ...defaultActionConfig, ...actionConfig };
     }
     public get actionConfig() { return this._actionConfig; }
-    @Input() public jsonValue: FormControl;
+    @Input() public jsonValue: UntypedFormControl;
     @Input() public showJsonEditor: boolean;
     @Input() public currentPage: FormPageComponent;
     @Input() public error: ServerError;

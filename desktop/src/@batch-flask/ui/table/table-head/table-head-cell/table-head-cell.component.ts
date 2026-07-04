@@ -11,6 +11,7 @@ import { Subscription } from "rxjs";
 import "./table-head-cell.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-table-head-cell",
     templateUrl: "table-head-cell.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

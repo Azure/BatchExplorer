@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, Pipe, PipeTransform, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
+    ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
 import { I18nService, autobind } from "@batch-flask/core";
 import { Certificate, CertificateReferenceAttributes, OSType } from "app/models";
@@ -11,6 +11,7 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
 @Pipe({
+    standalone: false,
     name: "trimThumbprint",
     pure: true,
 })
@@ -25,6 +26,7 @@ export class TrimThumbprintPipe implements PipeTransform {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-certificate-references-picker",
     templateUrl: "certificate-references-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,7 +45,7 @@ export class CertificateReferencesPickerComponent implements OnInit, OnDestroy, 
 
     public certificates: Certificate[] = [];
 
-    public references = new FormControl<CertificateReferenceAttributes[]>([], this._duplicateValidator);
+    public references = new UntypedFormControl([], this._duplicateValidator);
     public _propagateChange: (value: CertificateReferenceAttributes[]) => void;
 
     private _destroy = new Subject();
@@ -72,7 +74,7 @@ export class CertificateReferencesPickerComponent implements OnInit, OnDestroy, 
         this._destroy.complete();
     }
 
-    public validate(c: FormControl): ValidationErrors | null {
+    public validate(c: UntypedFormControl): ValidationErrors | null {
         if (this.references.valid) {
             return null;
         } else {
@@ -101,7 +103,7 @@ export class CertificateReferencesPickerComponent implements OnInit, OnDestroy, 
     }
 
     @autobind()
-    private _duplicateValidator(control: FormControl<CertificateReferenceAttributes[]>): ValidationErrors | null {
+    private _duplicateValidator(control: UntypedFormControl): ValidationErrors | null {
         const certificates = control.value;
         if (certificates === null) {
             return null;

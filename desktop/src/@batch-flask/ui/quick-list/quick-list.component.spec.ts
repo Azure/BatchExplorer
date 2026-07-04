@@ -31,6 +31,7 @@ interface TestItem {
 }
 /* eslint-disable  */
 @Component({
+    standalone: false,
     template: `
         <div style="height: 1000px">
             <bl-quick-list id="quick-1" [data]="items" [config]="config">

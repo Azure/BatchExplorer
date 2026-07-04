@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
 } from "@angular/forms";
 import { LoginMode, OSType, UserAccountElevationLevel } from "app/models";
 import { UserAccountDto } from "app/models/dtos";
@@ -58,6 +58,7 @@ function userAccountToDto(value: UserAccountFormModel, osType: OSType): UserAcco
 }
 
 @Component({
+    standalone: false,
     selector: "bl-user-account-picker",
     templateUrl: "user-account-picker.html",
     providers: [
@@ -72,12 +73,12 @@ export class UserAccountPickerComponent implements ControlValueAccessor, Validat
 
     @Input() public osType: OSType;
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     private _propagateChange: (value: UserAccountDto) => void = null;
     private _destroy = new Subject();
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             name: ["", Validators.required],
             password: ["", Validators.required],
@@ -137,7 +138,7 @@ export class UserAccountPickerComponent implements ControlValueAccessor, Validat
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const valid = this.form.valid;
         if (!valid) {
             return {

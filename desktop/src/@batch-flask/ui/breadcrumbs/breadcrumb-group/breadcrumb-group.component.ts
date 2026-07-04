@@ -13,6 +13,7 @@ import { BreadcrumbService } from "../breadcrumb.service";
 import "./breadcrumb-group.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-breadcrumb-group",
     templateUrl: "breadcrumb-group.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

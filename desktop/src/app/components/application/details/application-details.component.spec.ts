@@ -18,6 +18,7 @@ import { LoadingMockComponent } from "test/utils/mocks/components";
 
 // mock application properties component
 @Component({
+    standalone: false,
     selector: "bl-application-properties",
     template: "",
 })
@@ -33,6 +34,7 @@ class ApplicationPropertiesMockComponent {
 
 // mock application packages component
 @Component({
+    standalone: false,
     selector: "bl-application-packages",
     template: "",
 })
@@ -42,6 +44,7 @@ class ApplicationPackagesMockComponent {
 
 // mock application error component
 @Component({
+    standalone: false,
     selector: "bl-application-error-display",
     template: "",
 })

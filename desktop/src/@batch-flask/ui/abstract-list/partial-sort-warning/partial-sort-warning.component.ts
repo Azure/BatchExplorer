@@ -9,6 +9,7 @@ import { SortingStatus } from "../list-data-sorter";
 import "./partial-sort-warning.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-partial-sort-warning",
     templateUrl: "partial-sort-warning.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -74,6 +74,7 @@ class TestComponent {
 }
 
 @Component({
+    standalone: false,
     template: `
         <div [routerLink]="['some', 'other']">
             <bl-clickable [disabled]="disabled" (do)="trigger()"></bl-clickable>
@@ -83,6 +84,7 @@ class ClickableWithRouterLinkOnParent extends TestComponent {
 }
 
 @Component({
+    standalone: false,
     template: `
         <bl-clickable [disabled]="disabled" [routerLink]="['/some', 'other']" (do)="trigger()"></bl-clickable>
     `,

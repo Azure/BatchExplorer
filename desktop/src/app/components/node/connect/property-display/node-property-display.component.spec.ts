@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { By } from "@angular/platform-browser";
 import { UserConfigurationService } from "@batch-flask/core";
@@ -23,6 +23,7 @@ import { SSHKeyPickerDialogComponent } from "../ssh-key-picker-dialog";
 import { NodePropertyDisplayComponent, UserConfiguration } from "./node-property-display.component";
 
 @Component({
+    standalone: false,
     template: `<bl-node-property-display
         [connectionSettings]="connectionSettings"
         [node]="node"
@@ -77,7 +78,7 @@ describe("NodePropertyDisplay", () => {
         dialogServiceSpy = {
             open: jasmine.createSpy("openDialog").and.returnValue({
                 componentInstance: {
-                    sshPublicKey: new FormControl(),
+                    sshPublicKey: new UntypedFormControl(),
                 },
                 afterClosed: () => of("rsa picked-key"),
             }),

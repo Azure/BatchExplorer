@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { BatchAccount } from "app/models";
 import { AADApplication } from "app/models/ms-graph";
@@ -10,6 +10,7 @@ import { AADApplicationService, ServicePrincipalService } from "app/services/ms-
 import "./generate-aad-app-secret.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-generate-aad-app-secret",
     templateUrl: "generate-aad-app-secret.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +22,7 @@ export class GenerateAADAppSecretComponent implements OnChanges {
     @Output() public cancel = new EventEmitter();
 
     public principalId: string;
-    public secret = new FormControl({});
+    public secret = new UntypedFormControl({});
     public get storageAccountId() {
         const autoStorage = this.account && this.account.autoStorage;
         return autoStorage && autoStorage.storageAccountId;

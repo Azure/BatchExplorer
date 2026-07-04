@@ -25,6 +25,7 @@ interface Tab {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-file-explorer-tabs",
     templateUrl: "file-explorer-tabs.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

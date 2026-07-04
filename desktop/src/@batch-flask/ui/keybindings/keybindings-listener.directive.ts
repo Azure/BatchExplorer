@@ -3,6 +3,7 @@ import { KeyBinding } from "@batch-flask/core";
 import { KeyCode } from "@batch-flask/core/keys";
 
 @Directive({
+    standalone: false,
     selector: "[blKeyBindingListener]",
 })
 export class KeyBindingListenerDirective {

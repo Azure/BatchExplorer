@@ -7,6 +7,7 @@ import { Job, JobState, JobTerminateReason } from "app/models";
 import { JobStateComponent } from "./job-state.component";
 
 @Component({
+    standalone: false,
     template: `<bl-job-state [job]="job"></bl-job-state>`,
 })
 class TestComponent {

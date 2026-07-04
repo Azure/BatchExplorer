@@ -4,6 +4,7 @@ import { ElectronShell } from "@batch-flask/electron";
 import "./enable-app-insights-doc.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-enable-app-insights-doc",
     templateUrl: "enable-app-insights-doc.html",
 })

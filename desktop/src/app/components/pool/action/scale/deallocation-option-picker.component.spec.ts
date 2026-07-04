@@ -1,12 +1,13 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
 import { DeallocationOptionPickerComponent } from "app/components/pool/action/scale";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
+    standalone: false,
     template: `<bl-deallocation-option-picker [(ngModel)]="taskAction"></bl-deallocation-option-picker>`,
 })
 class TestComponent {
@@ -26,7 +27,7 @@ describe("DeallocationOptionPickerComponent", () => {
             declarations: [BannerMockComponent, DeallocationOptionPickerComponent, TestComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
-                { provide: FormBuilder, useValue: new FormBuilder() },
+                { provide: UntypedFormBuilder, useValue: new UntypedFormBuilder() },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);

@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
@@ -14,6 +14,7 @@ import { CertificatePickerComponent } from "./certificate-picker";
 import { CertificateReferencesPickerComponent, TrimThumbprintPipe } from "./certificate-references-picker.component";
 
 @Component({
+    standalone: false,
     template: `
         <bl-complex-form>
             <bl-form-page main-form-page>
@@ -25,7 +26,7 @@ import { CertificateReferencesPickerComponent, TrimThumbprintPipe } from "./cert
     `,
 })
 class TestComponent {
-    public references = new FormControl<CertificateReferenceAttributes[]>();
+    public references = new UntypedFormControl();
 }
 
 const certificates: Certificate[] = [

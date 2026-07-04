@@ -18,9 +18,6 @@ const privateComponents = [];
 
 @NgModule({
     declarations: [...publicComponents, ...privateComponents],
-    entryComponents: [
-        SidebarPageComponent,
-    ],
     exports: [...publicComponents],
     imports: [
         CommonModule,

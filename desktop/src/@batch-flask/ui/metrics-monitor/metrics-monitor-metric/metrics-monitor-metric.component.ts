@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild } fro
 import "./metrics-monitor-metric.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-metrics-monitor-metric",
     templateUrl: "metrics-monitor-metric.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

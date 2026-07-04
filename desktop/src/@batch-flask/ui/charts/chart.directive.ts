@@ -10,7 +10,7 @@ import {
     Output,
     SimpleChanges,
 } from "@angular/core";
-import * as Chart from "chart.js";
+import Chart from "chart.js";
 import { getColors } from "./helpers";
 
 export enum ChartType {
@@ -21,7 +21,8 @@ export enum ChartType {
     Pie = "pie",
 }
 
-@Directive({ selector: "canvas[blChart]" })
+@Directive({
+    standalone: false, selector: "canvas[blChart]" })
 export class ChartDirective implements OnDestroy, OnChanges, OnInit {
 
     @Input() public data: number[] | any[];

@@ -1,6 +1,6 @@
 import { Component, forwardRef } from "@angular/core";
 import {
-    FormBuilder,
+    UntypedFormBuilder,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     Validators,
@@ -26,6 +26,7 @@ const INVALID_RESPONSE = {
 };
 
 @Component({
+    standalone: false,
     selector: "bl-job-preparation-task-picker",
     templateUrl: "job-preparation-task-picker.html",
     providers: [
@@ -35,7 +36,7 @@ const INVALID_RESPONSE = {
     ],
 })
 export class JobPreparationTaskPickerComponent extends JobTaskBaseComponent {
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         super(formBuilder, DEFAULT_JOBPREPARATION, INVALID_RESPONSE);
         this._baseFormControls["id"] = [DEFAULT_JOBPREPARATION_ID, Validators.required];
         this._baseFormControls["rerunOnNodeRebootAfterSuccess"] = [true];

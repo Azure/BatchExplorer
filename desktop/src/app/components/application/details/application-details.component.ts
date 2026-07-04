@@ -7,6 +7,7 @@ import { Subscription } from "rxjs";
 import { BatchApplicationCommands } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-application-details",
     templateUrl: "application-details.html",
     providers: [BatchApplicationCommands],

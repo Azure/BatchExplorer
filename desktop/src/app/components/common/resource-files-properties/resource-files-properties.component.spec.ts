@@ -21,6 +21,7 @@ const file3 = new ResourceFile({
 });
 
 @Component({
+    standalone: false,
     template: `
         <bl-resource-files-properties [files]="files"></bl-resource-files-properties>
     `,

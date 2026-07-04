@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener, Input } from "@angula
 import { ENTER, SPACE } from "@batch-flask/core/keys";
 
 @Component({
+    standalone: false,
     selector: "bl-link-property",
     templateUrl: "link-property.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

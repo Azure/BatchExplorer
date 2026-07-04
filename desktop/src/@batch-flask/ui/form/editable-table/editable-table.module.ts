@@ -20,7 +20,6 @@ const privateComponents = [
     imports: [CommonModule, I18nUIModule, FormsModule, ReactiveFormsModule, ButtonsModule, SelectModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class EditableTableModule {
 }

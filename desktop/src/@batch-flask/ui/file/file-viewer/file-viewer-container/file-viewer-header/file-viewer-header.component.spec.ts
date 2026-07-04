@@ -16,6 +16,7 @@ import { FileViewerConfig } from "../../file-viewer";
 import { FileViewerHeaderComponent } from "./file-viewer-header.component";
 
 @Component({
+    standalone: false,
     template: `<bl-file-viewer-header [fileLoader]="fileLoader" [config]="config"></bl-file-viewer-header>`,
 })
 class TestComponent {

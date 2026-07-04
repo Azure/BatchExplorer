@@ -1,6 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { ServerError, autobind } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
@@ -17,6 +17,7 @@ import { click } from "test/utils/helpers";
 const date = new Date(2017, 9, 13, 23, 43, 38);
 
 @Component({
+    standalone: false,
     template: `
         <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" >
             <bl-form-page title="Main page" subtitle="Main subtitle" [formGroup]="form">
@@ -41,7 +42,7 @@ export class FormTestComponent {
     @ViewChild("banner", { static: false })
     public createForm: ComplexFormComponent;
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     public sidebarRef = {
         destroy: jasmine.createSpy("sidebarRef.destroy"),
@@ -49,7 +50,7 @@ export class FormTestComponent {
 
     public submitSpy = jasmine.createSpy("submit");
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             id: ["", Validators.required],
             state: [""],

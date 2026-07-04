@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import "./slide-toggle.scss";
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatSlideToggleChange } from "@angular/material/slide-toggle";
 
 @Component({
+    standalone: false,
     selector: "be-slide-toggle",
     templateUrl: "./slide-toggle.html",
     providers: [{

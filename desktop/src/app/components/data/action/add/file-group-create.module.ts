@@ -21,7 +21,6 @@ const privateComponents = [FileGroupOptionsPickerComponent];
     ],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [FileGroupCreateFormComponent],
 })
 export class FileGroupCreateModule {
 }

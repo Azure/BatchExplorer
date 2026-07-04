@@ -2,6 +2,7 @@ import { Component, Type, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
+    standalone: false,
     selector: "bl-mock-control-value-accessor",
     template: "",
 })

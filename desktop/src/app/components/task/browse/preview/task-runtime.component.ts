@@ -8,6 +8,7 @@ import "./task-runtime.scss";
  * Handles both task and subTask
  */
 @Component({
+    standalone: false,
     selector: "bl-task-runtime",
     templateUrl: "task-runtime.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

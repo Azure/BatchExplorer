@@ -7,6 +7,7 @@ import { click } from "test/utils/helpers";
 import { ToggleFilterButtonComponent } from "./toggle-filter-button.component";
 
 @Component({
+    standalone: false,
     template: `<bl-toggle-filter-button [advancedFilter]="filter" (do)="toggle()"></bl-toggle-filter-button>`,
 })
 class TestComponent {

@@ -9,7 +9,7 @@ import {
     ViewChild,
     forwardRef,
 } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { AutoscaleFormula, Pool } from "app/models";
@@ -21,6 +21,7 @@ import { Subscription } from "rxjs";
 import "./autoscale-formula-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-autoscale-formula-picker",
     templateUrl: "autoscale-formula-picker.html",
     providers: [
@@ -100,7 +101,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this._propagateTouch = fn;
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

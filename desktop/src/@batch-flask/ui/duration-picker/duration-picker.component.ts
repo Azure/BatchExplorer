@@ -49,6 +49,7 @@ let nextUniqueId = 0;
  * to server. This picker also includes a 'unlimited' mode which set current duration to null
  */
 @Component({
+    standalone: false,
     selector: "bl-duration-picker",
     templateUrl: "duration-picker.html",
     providers: [

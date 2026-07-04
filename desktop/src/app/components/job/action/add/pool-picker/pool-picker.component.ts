@@ -4,8 +4,8 @@ import {
 } from "@angular/core";
 import {
     ControlValueAccessor,
-    FormBuilder,
-    FormGroup,
+    UntypedFormBuilder,
+    UntypedFormGroup,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -38,6 +38,7 @@ interface Inputs {
 const CLOUD_SERVICE_OFFER = "cloudservice-windows";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-picker",
     templateUrl: "pool-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +56,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
 
     public pickedPool: string;
     public displayedPools: List<Pool> = List([]);
-    public filters: FormGroup;
+    public filters: UntypedFormGroup;
     public offers: any[] = [];
 
     private _vmSizeCoresMap = new Map<string, number>();
@@ -64,7 +65,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnChanges, OnD
     private _inputs = new BehaviorSubject<Inputs | null>(null);
 
     constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         private poolService: PoolService,
         private poolOsService: PoolOsService,
         private vmSizeService: VmSizeService,

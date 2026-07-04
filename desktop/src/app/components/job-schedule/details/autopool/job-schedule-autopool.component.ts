@@ -4,6 +4,7 @@ import { AutoPoolSpecification, Pool } from "app/models";
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     selector: "bl-job-schedule-autopool",
     templateUrl: "job-schedule-autopool.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

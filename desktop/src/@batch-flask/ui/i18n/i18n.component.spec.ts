@@ -4,12 +4,14 @@ import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 
 @Component({
+    standalone: false,
     template: `<bl-i18n key="my-key.label"></bl-i18n>`,
 })
 class SimpleI18nComponent {
 }
 
 @Component({
+    standalone: false,
     template: `
     <bl-i18n key="my-param.label">
         <span *i18nParam="'count'" class="count">4</span>

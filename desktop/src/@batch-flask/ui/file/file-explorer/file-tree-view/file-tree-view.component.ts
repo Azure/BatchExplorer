@@ -28,6 +28,7 @@ export interface TreeRow {
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-file-tree-view",
     templateUrl: "file-tree-view.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

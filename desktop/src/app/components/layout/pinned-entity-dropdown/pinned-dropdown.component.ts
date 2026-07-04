@@ -10,6 +10,7 @@ import { filter } from "rxjs/operators";
 import "./pinned-dropdown.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-pinned-dropdown",
     templateUrl: "pinned-dropdown.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

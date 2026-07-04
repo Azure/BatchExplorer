@@ -33,6 +33,7 @@ export enum SubmitStatus {
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-button",
     templateUrl: "button.html",
     animations: [

@@ -13,6 +13,7 @@ import { BEUserConfiguration, DEFAULT_BE_USER_CONFIGURATION } from "common";
 import { updateInput } from "test/utils/helpers";
 
 @Component({
+    standalone: false,
     template: `<bl-settings></bl-settings>`,
 })
 class TestComponent {

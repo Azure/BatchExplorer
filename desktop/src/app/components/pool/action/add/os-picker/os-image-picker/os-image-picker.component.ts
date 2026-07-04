@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { ImageInformation, Offer, PoolOsSkus, Resource, Sku } from "app/models";
 import { PoolOsService } from "app/services";
 import { Subject, Subscription } from "rxjs";
@@ -46,12 +46,13 @@ const cloudServiceOsFamilies = [{
  * CloudService vs VirtualMachine
  */
 @Component({
+    standalone: false,
     selector: "bl-os-image-picker",
     templateUrl: "os-image-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OSImagePickerComponent implements OnChanges, OnDestroy {
-    @Input() public formGroup: FormGroup<OSImageSelection>;
+    @Input() public formGroup: UntypedFormGroup;
 
     // Shared to the view
     public cloudServiceOsFamilies = cloudServiceOsFamilies;

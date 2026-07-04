@@ -19,6 +19,7 @@ interface TreeRow {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-activity-monitor-tree-view",
     templateUrl: "activity-monitor-tree-view.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

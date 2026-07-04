@@ -3,6 +3,7 @@ import { NameValuePair, SubtaskInformation, Task } from "app/models";
 import { List } from "immutable";
 
 @Component({
+    standalone: false,
     selector: "bl-sub-task-properties",
     templateUrl: "sub-task-properties.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

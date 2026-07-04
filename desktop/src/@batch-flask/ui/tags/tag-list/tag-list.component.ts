@@ -4,6 +4,7 @@ import { List } from "immutable";
 import "./tag-list.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-tag-list",
     templateUrl: "tag-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

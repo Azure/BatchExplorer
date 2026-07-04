@@ -9,6 +9,7 @@ import { VirtualScrollComponent } from "./virtual-scroll.component";
 /* eslint-disable  */
 
 @Component({
+    standalone: false,
     template: `
         <bl-virtual-scroll style="width: 400px;height: 500px"
             [childHeight]="100"

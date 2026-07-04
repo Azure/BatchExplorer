@@ -7,6 +7,7 @@ import { NumberUtils } from "app/utils";
 import { Aggregation, PerformanceGraphComponent } from "../performance-graph.component";
 
 @Component({
+    standalone: false,
     selector: "bl-memory-usage-graph",
     templateUrl: "memory-usage-graph.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
     HostListener, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { KeyCode } from "@batch-flask/core/keys";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
@@ -16,6 +16,7 @@ import "./file-path-navigator.scss";
 const AUTOCOMPLETE_LIMIT = 5;
 
 @Component({
+    standalone: false,
     selector: "bl-file-path-navigator",
     templateUrl: "file-path-navigator.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,7 +39,7 @@ export class FilePathNavigatorComponent implements OnInit, OnChanges, OnDestroy 
      */
     @Output() public navigate = new EventEmitter();
 
-    public control = new FormControl("");
+    public control = new UntypedFormControl("");
     public availablePaths: List<File> = List([]);
 
     @ViewChild(MatAutocompleteTrigger, { static: false }) public _autocomplete: MatAutocompleteTrigger;

@@ -6,6 +6,7 @@ import { List } from "immutable";
 import "./resource-files-properties.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-resource-files-properties",
     templateUrl: "resource-files-properties.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

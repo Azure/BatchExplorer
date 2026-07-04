@@ -13,6 +13,7 @@ const availableStates = new Set([
  * Component for browsing node files.
  */
 @Component({
+    standalone: false,
     selector: "bl-node-file-browse",
     templateUrl: "node-file-browse.html",
 })

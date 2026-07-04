@@ -15,6 +15,7 @@ import { TableComponent } from "../table.component";
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-column",
     template: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,

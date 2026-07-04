@@ -21,7 +21,7 @@ export class ThemeElement<ThemeInput> {
         }
         for (const { attr, metadata } of this._getAttrs()) {
             const { name, type } = metadata;
-            if (name in data) {
+            if (name in (data as object)) {
                 const value = data[name];
                 if (type.name === "String") {
                     this[attr] = value;

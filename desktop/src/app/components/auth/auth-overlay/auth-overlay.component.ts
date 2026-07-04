@@ -4,6 +4,7 @@ import { autobind } from "@batch-flask/core";
 import { ExternalBrowserAuthToggleComponent } from "..";
 
 @Component({
+    standalone: false,
     selector: "be-auth-overlay",
     templateUrl: "auth-overlay.html",
 })

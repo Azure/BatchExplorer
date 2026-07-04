@@ -11,6 +11,7 @@ import { Subscription } from "rxjs";
 import "./account-quotas-card.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-account-quotas-card",
     templateUrl: "account-quotas-card.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

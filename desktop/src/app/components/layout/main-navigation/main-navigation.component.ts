@@ -6,6 +6,7 @@ import { Subscription } from "rxjs";
 import "./main-navigation.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-app-nav",
     templateUrl: "main-navigation.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

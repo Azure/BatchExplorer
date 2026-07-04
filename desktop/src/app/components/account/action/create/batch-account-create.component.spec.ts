@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
-import { FormBuilder } from "@angular/forms";
+import { UntypedFormBuilder } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule, ServerError } from "@batch-flask/core";
@@ -167,7 +167,7 @@ describe("BatchAccountCreateComponent ", () => {
             imports: [MaterialModule, NoopAnimationsModule, LocationPickerModule, I18nTestingModule],
             declarations: [...complexFormMockComponents, BatchAccountCreateComponent, ServerErrorMockComponent],
             providers: [
-                { provide: FormBuilder, useValue: new FormBuilder() },
+                { provide: UntypedFormBuilder, useValue: new UntypedFormBuilder() },
                 { provide: SidebarRef, useValue: null },
                 { provide: ArmBatchAccountService, useValue: accountServiceSpy },
                 { provide: AuthorizationHttpService, useValue: authServiceSpy },

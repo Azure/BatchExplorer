@@ -13,7 +13,6 @@ const components = [
     declarations: components,
     exports: components,
     imports: [...commonModules, JobActionModule, BaseModule],
-    entryComponents: components,
 })
 export class CertificateActionModule {
 }

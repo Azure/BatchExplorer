@@ -11,7 +11,6 @@ const privateComponents = [];
     imports: [CommonModule, ButtonsModule, I18nUIModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class ServerErrorModule {
 }

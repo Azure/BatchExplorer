@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
@@ -10,6 +10,7 @@ import { BehaviorSubject, of } from "rxjs";
 import { VirtualNetworkPickerComponent } from "./virtual-network-picker.component";
 
 @Component({
+    standalone: false,
     template: `
         <bl-virtual-network-picker [formControl]="control" [armNetworkOnly]="armNetworkOnly">
         </bl-virtual-network-picker>
@@ -17,7 +18,7 @@ import { VirtualNetworkPickerComponent } from "./virtual-network-picker.componen
 })
 class TestComponent {
     public armNetworkOnly = false;
-    public control = new FormControl(null);
+    public control = new UntypedFormControl(null);
 }
 
 const sub1 = new ArmSubscription({

@@ -3,7 +3,7 @@ import * as globF from "glob";
 import * as jsyaml from "js-yaml";
 import * as util from "util";
 
-const glob = util.promisify(globF);
+const glob = util.promisify(globF as any) as (pattern: string, options?: any) => Promise<string[]>;
 const readFile = util.promisify(fs.readFile);
 
 type DuplicateCallback = (key: string, source: string) => void;

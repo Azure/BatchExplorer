@@ -9,6 +9,7 @@ import { CurrentNode, FileExplorerWorkspace } from "../file-explorer-workspace";
 import { FileExplorerTabsComponent } from "./file-explorer-tabs.component";
 
 @Component({
+    standalone: false,
     template: `<bl-file-explorer-tabs [workspace]="workspace"></bl-file-explorer-tabs>`,
 })
 class TestComponent {

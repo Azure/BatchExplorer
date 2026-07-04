@@ -1,6 +1,6 @@
 import { Component, forwardRef } from "@angular/core";
 import {
-    AbstractControl, ControlValueAccessor, FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    AbstractControl, ControlValueAccessor, UntypedFormBuilder, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 import { DateTime } from "luxon";
 
@@ -14,6 +14,7 @@ enum Expire {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-aad-app-secret-picker",
     templateUrl: "aad-app-secret-picker.html",
     providers: [
@@ -24,10 +25,10 @@ enum Expire {
 export class AADAppSecretPickerComponent implements ControlValueAccessor, Validator {
 
     public Expire = Expire;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     private _propagateChanges: any;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             name: [""],
             value: [""],

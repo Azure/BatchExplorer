@@ -10,6 +10,7 @@ import { TaskResult, TaskState } from "app/models";
 import { ODataFields } from "common/constants";
 
 @Component({
+    standalone: false,
     selector: "bl-task-advanced-filter",
     templateUrl: "task-advanced-filter.html",
 })

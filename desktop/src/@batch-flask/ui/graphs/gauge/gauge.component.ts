@@ -32,6 +32,7 @@ const startingAngle = 240;
 const padRad = 0.025;
 
 @Component({
+    standalone: false,
     selector: "bl-gauge",
     templateUrl: "gauge.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

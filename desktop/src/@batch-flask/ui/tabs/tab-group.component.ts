@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { TabComponent } from "./tab.component";
 
 @Component({
+    standalone: false,
     selector: "bl-tab-group",
     templateUrl: "tab-group.html",
 })

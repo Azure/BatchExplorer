@@ -1,6 +1,6 @@
 import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS,
+    AbstractControl, ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS,
     NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
 import { Constants } from "common";
@@ -8,6 +8,7 @@ import { Subscription } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
 
 @Component({
+    standalone: false,
     selector: "bl-file-group-options-picker",
     templateUrl: "file-group-options-picker.html",
     providers: [
@@ -16,13 +17,13 @@ import { distinctUntilChanged } from "rxjs/operators";
     ],
 })
 export class FileGroupOptionsPickerComponent implements OnDestroy, ControlValueAccessor {
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     private _propagateChange: (value: any) => void;
     private _propagateTouched: (value: boolean) => void = null;
     private _valueChangeSub: Subscription;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             prefix: [null, Validators.pattern(Constants.forms.validation.regex.id)],
             flatten: [false, this._validateFlatten()],
@@ -56,7 +57,7 @@ export class FileGroupOptionsPickerComponent implements OnDestroy, ControlValueA
      * Return validation result to the parent form
      * @param control
      */
-    public validate(control: FormControl) {
+    public validate(control: UntypedFormControl) {
         const valid = this.form.valid;
         if (valid) {
             return null;
@@ -71,7 +72,7 @@ export class FileGroupOptionsPickerComponent implements OnDestroy, ControlValueA
      * Cannot have both Flatten and FullPath selected at the same time
      */
     private _validateFullPath(): { [key: string]: any } {
-        return (control: FormControl): { [key: string]: any } => {
+        return (control: UntypedFormControl): { [key: string]: any } => {
             return this._validateOtherControl(control, this.form && this.form.controls.flatten);
         };
     }
@@ -80,12 +81,12 @@ export class FileGroupOptionsPickerComponent implements OnDestroy, ControlValueA
      * Cannot have both Flatten and FullPath selected at the same time
      */
     private _validateFlatten(): { [key: string]: any } {
-        return (control: FormControl): { [key: string]: any } => {
+        return (control: UntypedFormControl): { [key: string]: any } => {
             return this._validateOtherControl(control, this.form && this.form.controls.fullPath);
         };
     }
 
-    private _validateOtherControl(control: FormControl, otherControl: AbstractControl) {
+    private _validateOtherControl(control: UntypedFormControl, otherControl: AbstractControl) {
         if (!this.form || !otherControl || !otherControl.value) {
             return null;
         }

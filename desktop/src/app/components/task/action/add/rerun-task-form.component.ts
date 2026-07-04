@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { UntypedFormBuilder } from "@angular/forms";
 import { I18nService, autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -11,13 +11,14 @@ import { catchError } from "rxjs/operators";
 import { AddTaskFormComponent } from "./add-task-form.component";
 
 @Component({
+    standalone: false,
     selector: "bl-rerun-task-form",
     templateUrl: "add-task-form.html",
 })
 export class RerunTaskFormComponent extends AddTaskFormComponent {
     constructor(
         i18n: I18nService,
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         sidebarRef: SidebarRef<RerunTaskFormComponent>,
         taskService: TaskService,
         jobService: JobService,

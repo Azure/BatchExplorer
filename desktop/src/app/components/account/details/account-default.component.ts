@@ -6,6 +6,7 @@ import { Subscription } from "rxjs";
 import { BatchAccountCreateComponent } from "../action/create";
 
 @Component({
+    standalone: false,
     selector: "bl-account-details-home",
     template: `
         <div class="no-entity-home">

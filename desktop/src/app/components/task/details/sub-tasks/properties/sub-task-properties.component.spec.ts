@@ -35,6 +35,7 @@ const subtaskWithError = new SubtaskInformation({
 });
 
 @Component({
+    standalone: false,
     template: `<bl-sub-task-properties [task]="task" [parentTask]="parentTask"></bl-sub-task-properties>`,
 })
 class TestComponent {

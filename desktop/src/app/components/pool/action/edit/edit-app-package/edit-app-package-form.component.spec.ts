@@ -14,6 +14,7 @@ import { NotificationServiceMock } from "test/utils/mocks";
 import { EditAppPackageFormComponent } from "./edit-app-package-form.component";
 
 @Component({
+    standalone: false,
     selector: "bl-app-package-picker", template: "",
     providers: [controlValueAccessorProvider(() => FakeAppPackagePickerComponent)],
 })

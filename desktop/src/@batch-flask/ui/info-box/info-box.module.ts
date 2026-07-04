@@ -9,7 +9,6 @@ const components = [
 
 @NgModule({
     declarations: components,
-    entryComponents: [],
     exports: [...components],
     imports: [RouterModule, I18nUIModule],
 })

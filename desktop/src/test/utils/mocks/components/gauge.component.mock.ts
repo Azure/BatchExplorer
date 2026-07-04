@@ -2,6 +2,7 @@ import { Component, Input } from "@angular/core";
 import { GaugeConfig } from "@batch-flask/ui/graphs/gauge";
 
 @Component({
+    standalone: false,
     selector: "bl-gauge",
     template: `<div></div>`,
 })

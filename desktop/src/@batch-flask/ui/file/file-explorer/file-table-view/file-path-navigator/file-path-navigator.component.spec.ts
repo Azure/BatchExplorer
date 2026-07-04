@@ -2,7 +2,8 @@ import { DOWN_ARROW } from "@angular/cdk/keycodes";
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
-import { MatAutocompleteModule, MatAutocompleteTrigger, _MatAutocompleteBase } from "@angular/material/autocomplete";
+import { MatAutocompleteModule, MatAutocompleteTrigger } from "@angular/material/autocomplete";
+import { _MatAutocompleteBase } from "@angular/material/autocomplete";
 import { By } from "@angular/platform-browser";
 import { KeyCode } from "@batch-flask/core/keys";
 import { I18nTestingModule } from "@batch-flask/core/testing";
@@ -23,6 +24,7 @@ const files = [
 ];
 
 @Component({
+    standalone: false,
     template: `
         <bl-file-path-navigator [navigator]="navigator" [path]="path" [name]="name" (navigate)="navigate($event)">
         </bl-file-path-navigator>

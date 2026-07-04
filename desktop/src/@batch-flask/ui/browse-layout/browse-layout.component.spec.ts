@@ -15,6 +15,7 @@ import { BrowseLayoutComponent } from "./browse-layout.component";
 import { ToggleFilterButtonComponent } from "./toggle-filter-button";
 
 @Component({
+    standalone: false,
     selector: "bl-fake-list",
     template: `
     `,
@@ -30,6 +31,7 @@ class FakeListComponent extends ListBaseComponent {
 }
 
 @Component({
+    standalone: false,
     template: `
         <bl-browse-layout>
             <div blBrowseLayoutTitle>

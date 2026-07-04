@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn } from "@angular/forms";
+import { AsyncValidatorFn, UntypedFormControl, UntypedFormGroup, ValidatorFn } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { autobind } from "@batch-flask/core";
 import { AsyncSubject, Observable } from "rxjs";
 import { ValidatorMessage } from "../dialog.service";
 
 @Component({
+    standalone: false,
     selector: "bl-prompt-dialog",
     templateUrl: "prompt-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,8 +15,8 @@ export class PromptDialogComponent {
     public title: string;
     public description: string;
     public execute: (value: string) => Observable<any>;
-    public promptControl = new FormControl();
-    public form: FormGroup;
+    public promptControl = new UntypedFormControl();
+    public form: UntypedFormGroup;
     public validatorMessages: ValidatorMessage[];
 
     public set validator(validator: ValidatorFn | ValidatorFn[] | null) {
@@ -29,7 +30,7 @@ export class PromptDialogComponent {
 
     constructor(public dialogRef: MatDialogRef<PromptDialogComponent>) {
         this.response.next(null);
-        this.form = new FormGroup({
+        this.form = new UntypedFormGroup({
             prompt: this.promptControl,
         });
     }

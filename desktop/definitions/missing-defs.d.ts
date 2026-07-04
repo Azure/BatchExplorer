@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-namespace-keyword */
+declare module "*.scss";
+declare module "*.css";
+
 declare module "element-resize-detector" {
     module ElementResizeDetectorMaker {
 

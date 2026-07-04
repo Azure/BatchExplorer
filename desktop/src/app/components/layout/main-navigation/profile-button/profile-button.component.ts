@@ -24,6 +24,7 @@ import { takeUntil } from "rxjs/operators";
 import "./profile-button.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-profile-button",
     templateUrl: "profile-button.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

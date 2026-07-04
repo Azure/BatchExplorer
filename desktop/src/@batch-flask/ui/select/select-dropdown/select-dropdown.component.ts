@@ -12,6 +12,7 @@ import "./select-dropdown.scss";
 const unselectAllOptionId = "_bl-select-option-unselect-all";
 
 @Component({
+    standalone: false,
     selector: "bl-select-dropdown",
     templateUrl: "select-dropdown.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

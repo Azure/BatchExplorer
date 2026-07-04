@@ -10,6 +10,7 @@ export interface DeletePoolOutput {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-delete-pool-dialog",
     templateUrl: "delete-pool-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

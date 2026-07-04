@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { By } from "@angular/platform-browser";
 import { TranslationsLoaderService } from "@batch-flask/core";
@@ -13,16 +13,18 @@ import { List } from "immutable";
 import { StartTaskPickerComponent } from "./start-task-picker.component";
 
 @Component({
+    standalone: false,
     template: `
         <bl-start-task-picker>
         </bl-start-task-picker>
     `,
 })
 class TestComponent {
-    public form = FormGroup;
+    public form = UntypedFormGroup;
 }
 
 @Component({
+    standalone: false,
     selector: "bl-user-identity-picker", template: "",
     providers: [controlValueAccessorProvider(() => MockUserIdentityPickerComponent)],
 })
@@ -31,6 +33,7 @@ class MockUserIdentityPickerComponent extends MockControlValueAccessorComponent<
 }
 
 @Component({
+    standalone: false,
     selector: "bl-container-settings-picker", template: "",
     providers: [controlValueAccessorProvider(() => MockContainerSettingsPickerComponent)],
 })
@@ -39,6 +42,7 @@ class MockContainerSettingsPickerComponent extends MockControlValueAccessorCompo
 }
 
 @Component({
+    standalone: false,
     selector: "bl-resourcefile-picker", template: "",
     providers: [controlValueAccessorProvider(() => MockResourceFilePickerComponent)],
 })
@@ -69,7 +73,7 @@ describe("StartTaskPickerComponent", () => {
                 MockResourceFilePickerComponent,
             ],
             providers: [
-                FormBuilder,
+                UntypedFormBuilder,
                 TranslationsLoaderService,
             ],
         });

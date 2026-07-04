@@ -22,6 +22,7 @@ interface ResizeRef {
     initialSizeRight?: number;
 }
 @Component({
+    standalone: false,
     selector: "bl-thead",
     templateUrl: "table-head.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

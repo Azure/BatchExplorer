@@ -1,6 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ButtonsModule, SelectComponent, SelectModule } from "@batch-flask/ui";
@@ -14,16 +14,18 @@ import { click, updateInput } from "test/utils/helpers";
 import { GithubDataServiceMock } from "test/utils/mocks";
 
 @Component({
+    standalone: false,
     template: `
         <bl-pool-picker [formControl]="poolInfo">
         </bl-pool-picker>
     `,
 })
 class SimpleTestComponent {
-    public poolInfo = new FormControl({});
+    public poolInfo = new UntypedFormControl({});
 }
 
 @Component({
+    standalone: false,
     template: `
         <bl-pool-picker [formControl]="poolInfo"
             [app]="app" [renderEngine]="renderEngine" [imageReferenceId]="imageReferenceId">
@@ -31,7 +33,7 @@ class SimpleTestComponent {
     `,
 })
 class TestComponent extends SimpleTestComponent {
-    public poolInfo = new FormControl({});
+    public poolInfo = new UntypedFormControl({});
 
     public app: RenderApplication;
     public renderEngine: RenderEngine;

@@ -9,6 +9,7 @@ import { Subscription } from "rxjs";
 import { BlobContainerCommands } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-data-details",
     templateUrl: "data-details.html",
     providers: [BlobContainerCommands],

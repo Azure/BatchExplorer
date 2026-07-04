@@ -22,6 +22,7 @@ import { UserConfiguration } from "./property-display";
 import "./node-connect.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-node-connect",
     templateUrl: "node-connect.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

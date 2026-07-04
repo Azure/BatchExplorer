@@ -7,6 +7,7 @@ import { NotificationService } from "../notification-service";
 import "./toasts-container.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-toasts-container",
     templateUrl: "toasts-container.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

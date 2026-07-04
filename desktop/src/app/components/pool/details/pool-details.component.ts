@@ -20,6 +20,7 @@ export enum ImageEOLState {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-pool-details",
     templateUrl: "pool-details.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

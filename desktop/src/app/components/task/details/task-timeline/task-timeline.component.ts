@@ -7,6 +7,7 @@ import { DateTime } from "luxon";
 import "./task-timeline.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-task-timeline",
     templateUrl: "task-timeline.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

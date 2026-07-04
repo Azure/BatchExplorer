@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
     ComponentRef,
     Input,
     OnChanges,
@@ -26,6 +25,7 @@ const defaultConfig: FileViewerConfig = Object.freeze({
 });
 
 @Component({
+    standalone: false,
     selector: "bl-file-viewer-container",
     templateUrl: "file-viewer-container.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +55,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     private _viewerContainer: ViewContainerRef;
 
     constructor(
-        private resolver: ComponentFactoryResolver,
         private fileAssociationService: FileTypeAssociationService,
         private changeDetector: ChangeDetectorRef) {
     }
@@ -146,8 +145,7 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         }
         this._clearViewer();
         if (!this.componentType) { return; }
-        const componentFactory = this.resolver.resolveComponentFactory<FileViewer>(this.componentType);
-        const ref = this.viewRef = this._viewerContainer.createComponent(componentFactory);
+        const ref = this.viewRef = this._viewerContainer.createComponent<FileViewer>(this.componentType);
         ref.instance.fileLoader = this.fileLoader;
         ref.instance.config = this.config;
     }

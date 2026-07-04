@@ -10,6 +10,7 @@ import "./job-progress-status.scss";
 const refreshRate = 5000;
 
 @Component({
+    standalone: false,
     selector: "bl-job-progress-status",
     templateUrl: "job-progress-status.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

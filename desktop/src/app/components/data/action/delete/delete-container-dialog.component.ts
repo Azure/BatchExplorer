@@ -7,6 +7,7 @@ import { BlobContainer } from "app/models";
 import "./delete-container-dialog.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-delete-container-dialog",
     templateUrl: "delete-container-dialog.html",
 })

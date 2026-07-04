@@ -40,6 +40,7 @@ const resultWithErrors = new AutoScaleFormulaEvaluation({
     }),
 });
 @Component({
+    standalone: false,
     template: `
         <bl-evaluate-autoscale-formula [formula]="formula" [pool]="pool">
         </bl-evaluate-autoscale-formula>

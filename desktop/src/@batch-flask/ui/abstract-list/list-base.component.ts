@@ -17,7 +17,7 @@ export interface ListBaseComponent {
     onScrollToBottom?();
 }
 
-@Directive()
+@Directive({ standalone: false })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class ListBaseComponent extends SelectableList implements OnDestroy {
     @Input() public set quicklist(quicklist: boolean) {

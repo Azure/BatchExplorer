@@ -8,6 +8,7 @@ import { StorageAccountService } from "app/services";
 import "./storage-account-card.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-storage-account-card",
     templateUrl: "storage-account-card.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

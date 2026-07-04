@@ -10,7 +10,7 @@ import { Node, NodeState, Pool } from "app/models";
 import { ComponentUtils, NodeUtils } from "app/utils";
 import * as d3 from "d3";
 import { BaseType, Selection } from "d3";
-import * as elementResizeDetectorMaker from "element-resize-detector";
+import elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 import { HeatmapColor } from "./heatmap-color";
@@ -77,6 +77,7 @@ const maxNodes = 2500;
 const maxTileSize = 100;
 
 @Component({
+    standalone: false,
     selector: "bl-nodes-heatmap",
     templateUrl: "nodes-heatmap.html",
     viewProviders: [

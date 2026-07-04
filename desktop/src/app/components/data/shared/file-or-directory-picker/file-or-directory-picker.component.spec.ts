@@ -1,6 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { FileSystemService } from "@batch-flask/electron";
@@ -8,10 +8,11 @@ import { EditableTableColumnComponent, EditableTableComponent } from "@batch-fla
 import { FileOrDirectoryPickerComponent } from "./file-or-directory-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-file-or-directory-picker [formControl]="paths"></bl-file-or-directory-picker>`,
 })
 class TestComponent {
-    public paths = new FormControl([]);
+    public paths = new UntypedFormControl([]);
 }
 
 describe("FileOrDirectoryPickerComponent", () => {

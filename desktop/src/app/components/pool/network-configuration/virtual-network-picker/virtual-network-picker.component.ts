@@ -3,7 +3,7 @@ import {
     Input, OnChanges, OnDestroy, SimpleChanges, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { ArmBatchAccount } from "app/models";
@@ -15,6 +15,7 @@ import { filter, switchMap, takeUntil, tap } from "rxjs/operators";
 import "./virtual-network-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-virtual-network-picker",
     templateUrl: "virtual-network-picker.html",
     providers: [
@@ -27,8 +28,8 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
 
     @Input() public armNetworkOnly: boolean = true;
 
-    public virtualNetworkControl = new FormControl<string | null>(null);
-    public subnetControl = new FormControl<string | null>(null);
+    public virtualNetworkControl = new UntypedFormControl(null);
+    public subnetControl = new UntypedFormControl(null);
     public subnets: Subnet[] = [];
     public subscriptionId: string;
     public location: string;

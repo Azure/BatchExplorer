@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { log } from "@batch-flask/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Subject, of } from "rxjs";
@@ -9,12 +9,13 @@ import { catchError, switchMap, takeUntil } from "rxjs/operators";
 import { EditableTableSelectOptions } from "../editable-table-column.component";
 
 @Component({
+    standalone: false,
     selector: "bl-editable-table-select-cell",
     templateUrl: "editable-table-select-cell.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditableTableSelectCellComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() public control: FormControl;
+    @Input() public control: UntypedFormControl;
     @Input() public options: EditableTableSelectOptions;
     @Input() public rowValue: StringMap<any>;
 

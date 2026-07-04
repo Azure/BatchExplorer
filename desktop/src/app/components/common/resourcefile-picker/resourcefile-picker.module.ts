@@ -33,7 +33,6 @@ const privateComponents = [
     ],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [ResourceFileCloudFileDialogComponent],
 })
 export class ResourceFilePickerModule {
 }

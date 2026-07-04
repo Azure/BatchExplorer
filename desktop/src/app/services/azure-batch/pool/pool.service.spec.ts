@@ -18,7 +18,7 @@ describe("PoolService", () => {
                 PoolService,
             ],
         });
-        poolService = new PoolService(TestBed.get(HttpClient));
+        poolService = new PoolService(TestBed.inject(HttpClient));
         httpMock = TestBed.inject(HttpTestingController);
     });
 

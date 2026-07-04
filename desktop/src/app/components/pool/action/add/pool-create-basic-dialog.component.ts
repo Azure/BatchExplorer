@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, ValidationErrors, Validators } from "@angular/forms";
+import { AbstractControl, AsyncValidatorFn, UntypedFormBuilder, UntypedFormControl, ValidationErrors, Validators } from "@angular/forms";
 import { DynamicForm, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/electron";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
@@ -25,6 +25,7 @@ export enum ImageEOLState {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-pool-create-basic-dialog",
     templateUrl: "pool-create-basic-dialog.html",
 })
@@ -79,13 +80,13 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public imageEOLState = ImageEOLState;
     public endOfLifeProximity: ImageEOLState = ImageEOLState.None;
 
-    private _osControl: FormControl;
+    private _osControl: UntypedFormControl;
     private _renderingSkuSelected: boolean = false;
     private _subs: Subscription[] = [];
     private _lastFormValue: CreatePoolModel;
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public sidebarRef: SidebarRef<PoolCreateBasicDialogComponent>,
         private poolService: PoolService,
         private accountService: BatchAccountService,

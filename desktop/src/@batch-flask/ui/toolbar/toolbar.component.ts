@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, HostBinding } from "@angular/core";
 import "./toolbar.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-toolbar",
     templateUrl: "toolbar.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

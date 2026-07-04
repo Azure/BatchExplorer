@@ -1,4 +1,4 @@
-import { ComponentPortal, PortalHostDirective } from "@angular/cdk/portal";
+import { CdkPortalOutlet, ComponentPortal } from "@angular/cdk/portal";
 import {
     Component,
     ComponentRef,
@@ -14,11 +14,12 @@ import { SidebarInjector } from "./sidebar-injector";
 import { SidebarRef } from "./sidebar-ref";
 
 @Component({
+    standalone: false,
     encapsulation: ViewEncapsulation.None,
     selector: "bl-sidebar-page",
     template: `
         <div [hidden]="!display" style="height: 100%">
-                <ng-template portalHost></ng-template>
+                <ng-template cdkPortalOutlet></ng-template>
         </div>
     `,
 })
@@ -28,8 +29,8 @@ export class SidebarPageComponent implements OnDestroy {
     @HostBinding("attr.role") public role = "dialog";
     @HostBinding("attr.aria-modal") public ariaModal = true;
 
-    @ViewChild(PortalHostDirective, { static: true })
-    private portalHost: PortalHostDirective;
+    @ViewChild(CdkPortalOutlet, { static: true })
+    private portalHost: CdkPortalOutlet;
 
     private componentRef: ComponentRef<any> = null;
     private onSideBarOpenEvent: any;

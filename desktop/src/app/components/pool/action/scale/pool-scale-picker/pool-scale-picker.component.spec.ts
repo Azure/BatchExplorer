@@ -1,6 +1,6 @@
 import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatRadioGroup, MatRadioModule } from "@angular/material/radio";
 import { By } from "@angular/platform-browser";
 import {
@@ -13,10 +13,11 @@ import { click, updateInput } from "test/utils/helpers";
 import { PoolScalePickerComponent } from "./pool-scale-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-pool-scale-picker [formControl]="control"></bl-pool-scale-picker>`,
 })
 class TestComponent {
-    public control = new FormControl();
+    public control = new UntypedFormControl();
 }
 
 export interface Inputs {
@@ -28,6 +29,7 @@ export interface Inputs {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-autoscale-formula-picker", template: "",
     providers: [controlValueAccessorProvider(() => MockAutoscaleFormulaPickerComponent)],
 })

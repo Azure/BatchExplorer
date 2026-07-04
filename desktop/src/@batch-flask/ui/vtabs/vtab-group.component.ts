@@ -5,6 +5,7 @@ import { log } from "@batch-flask/utils";
 import { VTabComponent } from "./vtab.component";
 
 @Component({
+    standalone: false,
     selector: "bl-vtab-group",
     templateUrl: "vtab-group.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

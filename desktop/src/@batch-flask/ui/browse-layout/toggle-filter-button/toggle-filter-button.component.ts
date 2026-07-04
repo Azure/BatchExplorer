@@ -12,6 +12,7 @@ import { Filter, FilterBuilder } from "@batch-flask/core";
 import "./toggle-filter-button.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-toggle-filter-button",
     templateUrl: "toggle-filter-button.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

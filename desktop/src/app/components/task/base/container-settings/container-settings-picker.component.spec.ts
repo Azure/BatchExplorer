@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { By } from "@angular/platform-browser";
@@ -10,10 +10,11 @@ import { ContainerSettingsPickerComponent } from "./container-settings-picker.co
 import { RegistryPickerComponent } from "./registry-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-container-settings-picker [formControl]="containerSettings"></bl-container-settings-picker>`,
 })
 class TestComponent {
-    public containerSettings = new FormControl(null);
+    public containerSettings = new UntypedFormControl(null);
 }
 
 describe("ContainerSettingsPickerComponent", () => {

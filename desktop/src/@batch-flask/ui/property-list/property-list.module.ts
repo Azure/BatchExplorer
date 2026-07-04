@@ -45,7 +45,6 @@ const privateComponents = [
 
 @NgModule({
     declarations: [...publicComponents, ...privateComponents],
-    entryComponents: [],
     exports: publicComponents,
     imports: [
         ButtonsModule,

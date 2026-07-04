@@ -19,6 +19,7 @@ export interface AADCredential {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-programmatic-usage",
     templateUrl: "programmatic-usage.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

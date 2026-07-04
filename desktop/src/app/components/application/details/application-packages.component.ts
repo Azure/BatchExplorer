@@ -6,6 +6,7 @@ import { ComponentUtils } from "app/utils";
 import { BatchApplicationPackageCommands } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-application-packages",
     templateUrl: "application-packages.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

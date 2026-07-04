@@ -29,6 +29,7 @@ export interface OptionParent {
 let _uniqueIdCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-option",
     template: "",
     changeDetection: ChangeDetectionStrategy.OnPush,

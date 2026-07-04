@@ -37,6 +37,7 @@ const defaultConfig: SplitPaneConfig = {
 };
 
 @Component({
+    standalone: false,
     selector: "bl-split-pane",
     templateUrl: "split-pane.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

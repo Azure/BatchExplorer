@@ -14,7 +14,6 @@ const privateComponents = [SelectDropdownComponent];
     imports: [CommonModule, ReactiveFormsModule, FormsModule, ButtonsModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [SelectDropdownComponent],
 })
 export class SelectModule {
 }

@@ -9,6 +9,7 @@ import { of } from "rxjs";
 import { click } from "test/utils/helpers";
 
 @Component({
+    standalone: false,
     template: `<bl-tags [tags]="tags" [editable]="editable" [save]="save"></bl-tags>`,
 })
 class TestComponent {

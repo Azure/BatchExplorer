@@ -17,6 +17,7 @@ import { BehaviorSubject, of } from "rxjs";
 import { updateInput } from "test/utils/helpers";
 
 @Component({
+    standalone: false,
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,
 })
 class TestComponent {

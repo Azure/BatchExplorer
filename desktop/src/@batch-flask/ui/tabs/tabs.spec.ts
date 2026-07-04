@@ -8,6 +8,7 @@ import { TabsModule } from "@batch-flask/ui/tabs";
 import { BehaviorSubject } from "rxjs";
 
 @Component({
+    standalone: false,
     template: `
         <bl-tab-group>
             <bl-tab key="first">

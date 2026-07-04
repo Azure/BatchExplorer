@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { InputDirective } from "./input.directive";
 
@@ -125,6 +125,7 @@ describe("InputDirective", () => {
 });
 
 @Component({
+    standalone: false,
     template: `<input blInput [placeholder]="placeholder">`,
 })
 class BlInputWithPlaceholder {
@@ -132,6 +133,7 @@ class BlInputWithPlaceholder {
 }
 
 @Component({
+    standalone: false,
     template: `<input blInput [disabled]="disabled">`,
 })
 class BlInputWithDisabled {
@@ -139,16 +141,18 @@ class BlInputWithDisabled {
 }
 
 @Component({
+    standalone: false,
     template: `<input blInput [required]="required">`,
 })
 class BlInputWithRequired {
     public required: boolean;
-    public formControl = new FormControl();
+    public formControl = new UntypedFormControl();
 }
 
 @Component({
+    standalone: false,
     template: `<input blInput [formControl]="formControl">`,
 })
 class BlInputWithFormControl {
-    public formControl = new FormControl();
+    public formControl = new UntypedFormControl();
 }

@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { Filter, and, none, or, prop } from "@batch-flask/core";
 import { AdvancedFilter } from "../advanced-filter";
 import { AdvancedFilterControlBase } from "../control-base";
@@ -35,7 +35,7 @@ export interface ListFilterParsedValue {
 }
 
 export class ListFilterControl extends AdvancedFilterControlBase {
-    private _valueControl = new FormControl("");
+    private _valueControl = new UntypedFormControl("");
 
     constructor(label: string, private _config: ListFilterControlConfig = {}) {
         super(label);
@@ -44,9 +44,9 @@ export class ListFilterControl extends AdvancedFilterControlBase {
         }
     }
 
-    public formGroup(): FormGroup {
-        return new FormGroup({
-            type: new FormControl(ListFilterType.Include),
+    public formGroup(): UntypedFormGroup {
+        return new UntypedFormGroup({
+            type: new UntypedFormControl(ListFilterType.Include),
             value: this._valueControl,
         });
     }
@@ -142,6 +142,7 @@ export class ListFilterControl extends AdvancedFilterControlBase {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-adv-filter-list",
     templateUrl: "list-filter-control.html",
 })

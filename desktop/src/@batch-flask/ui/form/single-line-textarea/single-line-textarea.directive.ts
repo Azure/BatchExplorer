@@ -3,6 +3,7 @@ import { Directive,  HostListener } from "@angular/core";
 import "./single-line-textarea.scss";
 
 @Directive({
+    standalone: false,
     selector: "[blSingleLineTextarea]",
 })
 export class SingleLineTextareaDirective {

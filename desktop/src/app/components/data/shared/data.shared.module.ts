@@ -31,7 +31,6 @@ const modules = [
         ...modules,
         BlobFilesBrowserModule,
     ],
-    entryComponents: [CloudFilePickerDialogComponent],
 })
 export class DataSharedModule {
 }

@@ -28,8 +28,6 @@ const modules = [
     declarations: components,
     exports: [...modules, ...components],
     imports: [...modules, ...commonModules, PoolGraphsModule],
-    entryComponents: [
-    ],
 })
 export class NodeModule {
 }

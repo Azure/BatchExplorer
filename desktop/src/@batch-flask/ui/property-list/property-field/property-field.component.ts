@@ -6,6 +6,7 @@ import "./property-field.scss";
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-property-field",
     templateUrl: "property-field.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,7 +2,7 @@ import { Component, Directive, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { ButtonAction } from "./button.component";
 
-@Directive()
+@Directive({ standalone: false })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class BaseButton {
     @Input() public action: ButtonAction;
@@ -11,6 +11,7 @@ export class BaseButton {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-loading-button",
     template: `
         <bl-button color="light" type="wide" [action]="action">
@@ -25,6 +26,7 @@ export class LoadingButtonComponent extends BaseButton {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-clear-list-selection",
     template: `
         <bl-button color="accent" [action]="onClick" matTooltip="Clear selection">
@@ -44,6 +46,7 @@ export class ClearListSelectionButtonComponent extends BaseButton {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-download-button",
     template: `
         <bl-button color="light" [action]="action" [disabled]="!enabled" title="Download" icon="fa fa-download"

@@ -9,6 +9,7 @@ import { click, dblclick } from "test/utils/helpers";
 import { TimezoneDropdownComponent } from "./timezone-dropdown.component";
 
 @Component({
+    standalone: false,
     template: `<bl-timezone-dropdown></bl-timezone-dropdown>`,
 })
 class TestComponent {
@@ -30,7 +31,7 @@ describe("TimezoneDropdownComponent", () => {
         de = fixture.debugElement.query(By.css("bl-timezone-dropdown"));
         fixture.detectChanges();
 
-        timeZoneService = TestBed.get(TimeZoneService);
+        timeZoneService = TestBed.inject(TimeZoneService);
         dropDownButton = de.query(By.css(".dropdown-btn-container"));
 
     });

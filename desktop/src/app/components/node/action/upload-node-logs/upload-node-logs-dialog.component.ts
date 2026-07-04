@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
@@ -23,6 +23,7 @@ enum TimeRangePreset {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-upload-node-logs-dialog",
     templateUrl: "upload-node-logs-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,7 +43,7 @@ export class UploadNodeLogsDialogComponent {
     }
     public get node() { return this._node; }
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public warningTimeRange = false;
     private _pool: Pool;
     private _node: Node;
@@ -57,7 +58,7 @@ export class UploadNodeLogsDialogComponent {
         private storageBlobService: StorageBlobService,
         private notificationService: NotificationService,
         private router: Router,
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
     ) {
         this.form = formBuilder.group({
             container: ["", Validators.required],

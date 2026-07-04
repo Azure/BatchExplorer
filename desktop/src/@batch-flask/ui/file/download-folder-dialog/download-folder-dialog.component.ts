@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { autobind } from "@batch-flask/core";
 import { ElectronShell, FileSystemService } from "@batch-flask/electron";
@@ -7,7 +7,7 @@ import { Activity, ActivityService } from "@batch-flask/ui/activity";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { SecureUtils } from "@batch-flask/utils";
 import { List } from "immutable";
-import * as minimatch from "minimatch";
+import minimatch from "minimatch";
 import * as path from "path";
 import { Observable, forkJoin, from, of } from "rxjs";
 import { flatMap, map, reduce } from "rxjs/operators";
@@ -15,6 +15,7 @@ import { flatMap, map, reduce } from "rxjs/operators";
 import "./download-folder-dialog.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-download-folder-dialog",
     templateUrl: "download-folder-dialog.html",
 })
@@ -28,8 +29,8 @@ export class DownloadFolderComponent {
     }
     public get navigator() { return this._navigator; }
 
-    public patterns = new FormControl("**/*");
-    public downloadFolder = new FormControl("");
+    public patterns = new UntypedFormControl("**/*");
+    public downloadFolder = new UntypedFormControl("");
     public subfolder: string = "";
     /**
      * Folder to download. Leave blank to download all files under navigator

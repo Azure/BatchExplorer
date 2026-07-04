@@ -7,6 +7,7 @@ import { NodeParams, NodeService } from "app/services";
 import "./job-hook-task-details.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-job-hook-task-details",
     templateUrl: "job-hook-task-details.html",
 })

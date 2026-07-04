@@ -25,10 +25,6 @@ const components = [
     declarations: components,
     exports: components,
     imports: [...commonModules, JobActionModule, BaseModule, DatetimePickerModule],
-    entryComponents: [
-        JobScheduleCreateBasicDialogComponent, DeleteJobScheduleDialogComponent, DisableJobScheduleDialogComponent,
-        EnableJobScheduleDialogComponent, TerminateJobScheduleDialogComponent, PatchJobScheduleComponent,
-    ],
 })
 export class JobScheduleActionModule {
 }

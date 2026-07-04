@@ -25,7 +25,7 @@ export interface FileViewerConfig {
 /**
  * Generic file viewer
  */
-@Directive()
+@Directive({ standalone: false })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class FileViewer implements OnDestroy {
     /**

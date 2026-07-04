@@ -12,9 +12,6 @@ const publicComponents = [
     imports: [...commonModules, BlobContainerPickerModule],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,
-    entryComponents: [
-        UploadNodeLogsDialogComponent,
-    ],
 })
 export class NodeActionModule {
 

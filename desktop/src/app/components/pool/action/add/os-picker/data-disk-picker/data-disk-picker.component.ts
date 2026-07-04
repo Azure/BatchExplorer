@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, forwardRef } from "@angular/core";
 import {
-    AbstractControl, ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
+    AbstractControl, ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
 import { CachingType, StorageAccountType } from "app/models";
 import { DataDiskDto } from "app/models/dtos/virtual-machine-configuration.dto";
 
 @Component({
+    standalone: false,
     selector: "bl-data-disk-picker",
     templateUrl: "data-disk-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +19,7 @@ export class DataDiskPickerComponent implements ControlValueAccessor, Validator 
     public storageAccountTypes = Object.values(StorageAccountType);
     public cachingOptions = Object.values(CachingType);
 
-    public disks = new FormControl<Array<Partial<AttrOf<DataDiskDto>>>>();
+    public disks = new UntypedFormControl();
     private _changeCallback: (disks: DataDiskDto[]) => void;
     private _touchedCallback: () => void;
 

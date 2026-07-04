@@ -8,6 +8,7 @@ import { List } from "immutable";
 import "./node-list-display.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-node-list-display",
     templateUrl: "node-list-display.html",
 })

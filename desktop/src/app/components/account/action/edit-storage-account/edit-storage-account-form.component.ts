@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ArmBatchAccount } from "app/models";
@@ -10,6 +10,7 @@ import { Observable } from "rxjs";
 import "./edit-storage-account-form.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-edit-storage-account-form",
     templateUrl: "edit-storage-account-form.html",
 })
@@ -23,7 +24,7 @@ export class EditStorageAccountFormComponent {
     }
     public get account() { return this._account; }
 
-    public storageAccountId = new FormControl();
+    public storageAccountId = new UntypedFormControl();
 
     private _account: ArmBatchAccount;
 

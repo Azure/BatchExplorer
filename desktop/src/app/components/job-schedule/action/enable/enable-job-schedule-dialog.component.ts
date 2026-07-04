@@ -4,6 +4,7 @@ import { autobind } from "@batch-flask/core";
 import { JobScheduleService } from "app/services";
 
 @Component({
+    standalone: false,
     selector: "bl-enable-job-schedule-dialog",
     templateUrl: "enable-job-schedule-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -12,7 +12,6 @@ const privateComponents = [];
     imports: [CommonModule, MatDatepickerModule, FormsModule, ReactiveFormsModule, I18nUIModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class DatetimePickerModule {
 }

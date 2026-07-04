@@ -1,4 +1,4 @@
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { Filter } from "@batch-flask/core";
 import { AdvancedFilter } from "./advanced-filter";
 
@@ -8,6 +8,6 @@ export abstract class AdvancedFilterControlBase {
 
     constructor(public label: string) { }
 
-    public abstract formGroup(): FormGroup;
+    public abstract formGroup(): UntypedFormGroup;
     public abstract buildFilter(data: any): Filter;
 }

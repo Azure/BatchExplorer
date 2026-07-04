@@ -14,7 +14,7 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 import { SecureUtils } from "@batch-flask/utils";
-import * as elementResizeDetectorMaker from "element-resize-detector";
+import elementResizeDetectorMaker from "element-resize-detector";
 import { ScrollableService } from "./scrollable.service";
 
 enum Orientation {
@@ -23,6 +23,7 @@ enum Orientation {
 }
 
 @Component({
+    standalone: false,
     encapsulation: ViewEncapsulation.None,
     selector: "bl-scrollable",
     templateUrl: "scrollable.html",

@@ -13,6 +13,7 @@ const date1 = new Date(Date.UTC(2017, 8, 3));
 const date2 = new Date(Date.UTC(2015, 9, 4));
 
 @Component({
+    standalone: false,
     template: `<bl-date-property label="My date label" [value]="date"></bl-date-property>`,
 })
 class TestComponent {
@@ -38,7 +39,7 @@ describe("DatePropertyComponent", () => {
         fixture.detectChanges();
         valueEl = de.query(By.css("bl-property-content"));
 
-        timeZoneServiceSpy = TestBed.get(TimeZoneService);
+        timeZoneServiceSpy = TestBed.inject(TimeZoneService);
     });
 
     it("shows the pretty date in the current timezone", () => {

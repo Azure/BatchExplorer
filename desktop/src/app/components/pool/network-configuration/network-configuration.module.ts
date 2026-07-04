@@ -16,7 +16,6 @@ const components = [InboundNATPoolPickerComponent, NetworkSecurityGroupRulesComp
     exports: components,
     imports: [CommonModule, MaterialModule, RouterModule, FormsModule, ReactiveFormsModule,
         BaseModule, TaskBaseModule],
-    entryComponents: [InboundNATPoolPickerComponent],
 })
 export class NetworkConfigurationModule {
 

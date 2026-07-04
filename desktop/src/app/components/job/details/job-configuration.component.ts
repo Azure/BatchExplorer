@@ -15,6 +15,7 @@ import { flatMap } from "rxjs/operators";
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     selector: "bl-job-configuration",
     templateUrl: "job-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

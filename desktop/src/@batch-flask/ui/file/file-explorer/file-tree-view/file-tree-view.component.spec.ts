@@ -31,6 +31,7 @@ const files = [
     new File({ name: "package-lock.json", properties: {} }),
 ];
 @Component({
+    standalone: false,
     template: `
         <bl-file-tree-view
             name="MyTreeView"

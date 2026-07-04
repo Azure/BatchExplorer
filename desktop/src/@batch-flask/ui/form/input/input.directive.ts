@@ -11,7 +11,7 @@ import {
     Optional,
     Self,
 } from "@angular/core";
-import { FormControl, FormGroupDirective, NgControl, NgForm } from "@angular/forms";
+import { UntypedFormControl, FormGroupDirective, NgControl, NgForm } from "@angular/forms";
 import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SanitizedError } from "@batch-flask/utils";
@@ -35,6 +35,7 @@ const INPUT_INVALID_TYPES = [
 let nextUniqueId = 0;
 
 @Directive({
+    standalone: false,
     selector: `input[blInput], textarea[blInput]`,
     providers: [{ provide: FormFieldControl, useExisting: InputDirective }],
 })
@@ -81,7 +82,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
         }
         if (this.ngControl?.control?.validator) {
             return this.ngControl.control
-                .validator({} as FormControl)?.required;
+                .validator({} as UntypedFormControl)?.required;
         }
         return false;
     }
@@ -242,11 +243,11 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
 
     private _computeErrorState() {
         const parent = this._parentFormGroup || this._parentForm;
-        const control = this.ngControl ? this.ngControl.control as FormControl : null;
+        const control = this.ngControl ? this.ngControl.control as UntypedFormControl : null;
         this.invalid = this._isInErrorState(control, parent);
     }
 
-    private _isInErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    private _isInErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
         return !!(control && control.invalid && (control.touched || (form && form.submitted)));
     }
 }

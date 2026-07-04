@@ -49,9 +49,6 @@ const modules = [
     declarations: [
         AppComponent,
     ],
-    entryComponents: [
-        // imported in specific area modules
-    ],
     imports: [
         NoopAnimationsModule,
         BrowserModule,
@@ -64,7 +61,6 @@ const modules = [
             useHash: false,
             paramsInheritanceStrategy: "always",
             preloadingStrategy: PreloadAllModules,
-            relativeLinkResolution: "legacy"
         }),
         BaseModule,
         KeyBindingsModule,

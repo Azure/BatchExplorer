@@ -14,6 +14,7 @@ import { ReactActionFormComponent } from "../react-action-form";
 import { ReactContainerComponent } from "../react-container";
 
 @Component({
+    standalone: false,
     template: `
         <be-react-action-form
             [containerRef]="dialogRef"

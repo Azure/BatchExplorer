@@ -4,18 +4,21 @@ import { I18nTestingModule } from "@batch-flask/core/testing";
 import { I18N_NAMESPACE } from "./i18n.pipe";
 
 @Component({
+    standalone: false,
     template: `{{'my-key.label' | i18n}}`,
 })
 class SimplePipeComponent {
 }
 
 @Component({
+    standalone: false,
     template: `{{'my-param.label' | i18n: {count: 4} }}`,
 })
 class ParameterPipeComponent {
 }
 
 @Component({
+    standalone: false,
     template: `{{'foo.label' | i18n }}`,
 })
 class NamespacePipeComponent {

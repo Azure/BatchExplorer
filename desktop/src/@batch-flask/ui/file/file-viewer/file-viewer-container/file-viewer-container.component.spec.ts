@@ -20,6 +20,7 @@ import { FileViewerContainerComponent } from "./file-viewer-container.component"
 import { FileViewerHeaderComponent } from "./file-viewer-header";
 
 @Component({
+    standalone: false,
     template: `<bl-file-viewer-container [fileLoader]="fileLoader" [config]="config"></bl-file-viewer-container>`,
 })
 class TestComponent {
@@ -77,7 +78,6 @@ describe("FileViewerContainerComponent", () => {
         });
         TestBed.overrideModule(BrowserDynamicTestingModule, {
             set: {
-                entryComponents: [ImageFileViewerComponent],
             },
         });
         fixture = TestBed.createComponent(TestComponent);

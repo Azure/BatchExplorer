@@ -5,6 +5,7 @@ import { NumberUtils } from "app/utils";
 import { PerformanceGraphComponent } from "../performance-graph.component";
 
 @Component({
+    standalone: false,
     selector: "bl-network-usage-graph",
     templateUrl: "network-usage-graph.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

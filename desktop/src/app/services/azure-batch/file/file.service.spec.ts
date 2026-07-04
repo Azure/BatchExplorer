@@ -20,7 +20,7 @@ describe("FileService", () => {
                 FileService,
             ],
         });
-        fileService = new FileService(TestBed.get(HttpClient), null as any);
+        fileService = new FileService(TestBed.inject(HttpClient), null as any);
         httpMock = TestBed.inject(HttpTestingController);
     });
 

@@ -3,6 +3,7 @@ import { BaseButton } from "@batch-flask/ui/buttons";
 import { Job, JobState } from "app/models";
 
 @Component({
+    standalone: false,
     selector: "bl-enable-button",
     template: `
         <bl-button color="light" *ngIf="visible" [action]="action" [disabled]="!enabled" title="Enable"

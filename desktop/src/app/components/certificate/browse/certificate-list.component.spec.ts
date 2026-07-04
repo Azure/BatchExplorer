@@ -18,6 +18,7 @@ import { MockListView } from "test/utils/mocks";
 import { CertificateListComponent } from "./certificate-list.component";
 
 @Component({
+    standalone: false,
     template: `<bl-certificate-list [quicklist]="quicklist"></bl-certificate-list>`,
 })
 class TestComponent {

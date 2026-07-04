@@ -48,6 +48,7 @@ const costs: BatchAccountCost = {
 };
 
 @Component({
+    standalone: false,
     selector: "bl-time-range-picker", template: "",
     providers: [controlValueAccessorProvider(() => FakeTimeRangePickerComponent)],
 })
@@ -57,6 +58,7 @@ class FakeTimeRangePickerComponent extends MockControlValueAccessorComponent<Tim
 }
 
 @Component({
+    standalone: false,
     template: `<bl-account-cost-card></bl-account-cost-card>`,
 })
 class TestComponent {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { ServerError, autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -11,6 +11,7 @@ import { filter, share, switchMap, take, timeoutWith } from "rxjs/operators";
 import { PoolScaleSelection } from "../scale";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-resize-dialog",
     templateUrl: "pool-resize-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,14 +32,14 @@ export class PoolResizeDialogComponent {
     }
     public get pool() { return this._pool; }
 
-    public form: FormGroup;
-    public scale: FormControl;
-    public taskAction: FormControl;
+    public form: UntypedFormGroup;
+    public scale: UntypedFormControl;
+    public taskAction: UntypedFormControl;
 
     private _pool: Pool;
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public sidebarRef: SidebarRef<PoolResizeDialogComponent>,
         private notificationService: NotificationService,
         private poolService: PoolService) {

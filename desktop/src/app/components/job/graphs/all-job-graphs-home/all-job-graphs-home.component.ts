@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { FilterBuilder, autobind } from "@batch-flask/core";
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
@@ -15,6 +15,7 @@ enum TimeRange {
     week = 3,
 }
 @Component({
+    standalone: false,
     selector: "bl-all-job-graphs-home",
     templateUrl: "all-job-graphs-home.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,7 +25,7 @@ export class AllJobGraphsComponent implements OnInit, OnDestroy {
     public jobs: List<Job>;
     public loading = false;
 
-    public selectedTimeRange = new FormControl(TimeRange.day);
+    public selectedTimeRange = new UntypedFormControl(TimeRange.day);
 
     private _sub: Subscription;
     constructor(private jobService: JobService, private changeDetector: ChangeDetectorRef) {

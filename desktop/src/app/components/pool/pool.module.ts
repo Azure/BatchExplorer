@@ -59,11 +59,6 @@ const publicModules = [
     declarations: components,
     exports: [...modules, ...publicModules, ...components],
     imports: [...modules, ...publicModules],
-    entryComponents: [
-        DeletePoolDialogComponent,
-        PoolCreateBasicDialogComponent,
-        PoolResizeDialogComponent,
-    ],
 })
 export class PoolModule {
 }

@@ -27,6 +27,7 @@ export interface FocusableElement {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-form-page",
     templateUrl: "form-page.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -9,6 +9,7 @@ import { click } from "test/utils/helpers";
 import { runAxe } from "test/utils/helpers/axe-helpers";
 
 @Component({
+    standalone: false,
     template: `
         <bl-button [disabled]="disabled" icon="fa fa-stop" [action]="onAction" title="Stop" [color]="color"
             [type]="type">

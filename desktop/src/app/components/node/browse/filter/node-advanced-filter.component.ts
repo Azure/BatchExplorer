@@ -4,6 +4,7 @@ import { AdvancedFilter, StatePickerControl } from "@batch-flask/ui/advanced-fil
 import { NodeState } from "app/models";
 
 @Component({
+    standalone: false,
     selector: "bl-node-advanced-filter",
     templateUrl: "node-advanced-filter.html",
 })

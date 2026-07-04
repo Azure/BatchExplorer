@@ -1,6 +1,6 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder } from "@angular/forms";
+import { UntypedFormBuilder } from "@angular/forms";
 import { ServerError } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -84,7 +84,7 @@ describe("AddJobFormComponent ", () => {
             imports: [I18nTestingModule],
             declarations: [...complexFormMockComponents, AddJobFormComponent, ServerErrorMockComponent],
             providers: [
-                { provide: FormBuilder, useValue: new FormBuilder() },
+                { provide: UntypedFormBuilder, useValue: new UntypedFormBuilder() },
                 { provide: SidebarRef, useValue: sidebarRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
                 { provide: PoolService, useValue: poolServiceSpy },

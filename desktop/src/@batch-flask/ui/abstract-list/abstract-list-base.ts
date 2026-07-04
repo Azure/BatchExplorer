@@ -85,7 +85,7 @@ const lastSorting: StringMap<SortingInfo> = {};
  * 1. Extend class
  * 2. Refefine items with @ContentChildren and the class that inherit fSelectableListItemBase
  */
-@Directive()
+@Directive({ standalone: false })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class AbstractListBase extends SelectableList
 implements OnDestroy, OnInit {

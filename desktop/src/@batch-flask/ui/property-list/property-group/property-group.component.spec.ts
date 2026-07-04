@@ -6,6 +6,7 @@ import { PropertyGroupComponent } from "@batch-flask/ui/property-list";
 import { click } from "test/utils/helpers";
 
 @Component({
+    standalone: false,
     template: `
         <bl-property-group label="Main group" [collapsed]="collapsed" [warningMessage]="warningMessage">
             <div collapsed-preview>Preview of content</div>

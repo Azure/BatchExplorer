@@ -8,6 +8,7 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
 @Component({
+    standalone: false,
     selector: "bl-storage-error-display",
     templateUrl: "storage-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

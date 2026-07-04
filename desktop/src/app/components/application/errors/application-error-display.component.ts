@@ -7,6 +7,7 @@ import { BatchAccountService } from "app/services";
 import { Subscription } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-application-error-display",
     templateUrl: "application-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

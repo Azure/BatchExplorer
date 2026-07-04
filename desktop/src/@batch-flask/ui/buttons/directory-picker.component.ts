@@ -4,6 +4,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@
  * Combine a button and a file input control into one better looking control.
  */
 @Component({
+    standalone: false,
     selector: "bl-directory-picker",
     templateUrl: "directory-picker.html",
 })

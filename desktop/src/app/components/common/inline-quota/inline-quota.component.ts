@@ -18,6 +18,7 @@ const labels = {
 };
 
 @Component({
+    standalone: false,
     selector: "bl-inline-quota",
     templateUrl: "inline-quota.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

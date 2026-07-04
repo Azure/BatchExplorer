@@ -11,6 +11,7 @@ const date1 = new Date(Date.UTC(2017, 8, 3));
 const date2 = new Date(Date.UTC(2015, 9, 4));
 
 @Component({
+    standalone: false,
     template: `<bl-date [date]="date"></bl-date>`,
 })
 class TestComponent {

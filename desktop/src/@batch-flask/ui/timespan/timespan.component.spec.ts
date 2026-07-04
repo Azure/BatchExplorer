@@ -5,6 +5,7 @@ import { DateTime } from "luxon";
 import { TimespanComponent, TimespanDisplayType } from "./timespan.component";
 
 @Component({
+    standalone: false,
     template: `
         <bl-timespan [startTime]="startTime" [endTime]="endTime" type="type">
         </bl-timespan>

@@ -71,6 +71,7 @@ const fileExplorerDefaultConfig: FileExplorerConfig = {
  * File explorer is a combination of the tree view and the file preview.
  */
 @Component({
+    standalone: false,
     selector: "bl-file-explorer",
     templateUrl: "file-explorer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

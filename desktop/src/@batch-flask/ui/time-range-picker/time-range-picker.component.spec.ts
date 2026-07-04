@@ -1,7 +1,7 @@
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { TimeZoneService } from "@batch-flask/core";
 import {
@@ -16,6 +16,7 @@ import { TimeRangePickerComponent } from "./time-range-picker.component";
 import { QuickRanges, TimeRange } from "./time-range.model";
 
 @Component({
+    standalone: false,
     selector: "bl-datetime-picker", template: "",
     providers: [controlValueAccessorProvider(() => FakeDateTimePickerComponent)],
 })
@@ -24,10 +25,11 @@ class FakeDateTimePickerComponent extends MockControlValueAccessorComponent<Date
 }
 
 @Component({
+    standalone: false,
     template: `<bl-time-range-picker [formControl]="control"></bl-time-range-picker>`,
 })
 class TestComponent {
-    public control = new FormControl(QuickRanges.last24h);
+    public control = new UntypedFormControl(QuickRanges.last24h);
 }
 
 describe("TimeRangePickerComponent", () => {

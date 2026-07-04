@@ -6,6 +6,7 @@ import { MetricsMonitorGraphComponent } from "./metrics-monitor-metric";
 import "./metrics-monitor.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-metrics-monitor",
     templateUrl: "metrics-monitor.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

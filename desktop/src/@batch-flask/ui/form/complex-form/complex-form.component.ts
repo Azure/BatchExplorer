@@ -12,7 +12,7 @@ import {
     Type,
     ViewChild,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { AsyncTask, Dto, ServerError, autobind } from "@batch-flask/core";
 import { SanitizedError, log } from "@batch-flask/utils";
 import { validJsonConfig } from "@batch-flask/utils/validators";
@@ -43,6 +43,7 @@ export const defaultComplexFormConfig: ComplexFormConfig = {
 };
 
 @Component({
+    standalone: false,
     selector: "bl-complex-form",
     templateUrl: "complex-form.html",
 })
@@ -87,7 +88,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
     public mainPage: FormPageComponent;
     public currentPage: FormPageComponent;
     public showJsonEditor = false;
-    public jsonValue = new FormControl(null, null, validJsonConfig);
+    public jsonValue = new UntypedFormControl(null, null, validJsonConfig);
     public waitingForAsyncTask = false;
     public asyncTaskList: AsyncTask[];
     public actionConfig: FormActionConfig;

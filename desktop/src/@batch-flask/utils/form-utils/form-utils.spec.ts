@@ -1,22 +1,22 @@
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { FormUtils } from "./form-utils";
 
 describe("FormUtils", () => {
 
     describe("#getControl", () => {
-        let control1: FormControl;
-        let control2: FormControl;
+        let control1: UntypedFormControl;
+        let control2: UntypedFormControl;
 
         beforeEach(() => {
-            control1 = new FormControl();
-            control2 = new FormControl();
+            control1 = new UntypedFormControl();
+            control2 = new UntypedFormControl();
 
             control1.setValue("Control 1");
             control2.setValue("Control 2");
         });
 
         it("should get a simple control", () => {
-            const group = new FormGroup({
+            const group = new UntypedFormGroup({
                 control1,
                 control2,
             });
@@ -26,11 +26,11 @@ describe("FormUtils", () => {
         });
 
         it("should get a nested control", () => {
-            const group = new FormGroup({
-                group1: new FormGroup({
+            const group = new UntypedFormGroup({
+                group1: new UntypedFormGroup({
                     control1,
                 }),
-                group2: new FormGroup({
+                group2: new UntypedFormGroup({
                     control2,
                 }),
             });
@@ -40,8 +40,8 @@ describe("FormUtils", () => {
         });
 
         it("should throws an error when not found", () => {
-            const group = new FormGroup({
-                group1: new FormGroup({
+            const group = new UntypedFormGroup({
+                group1: new UntypedFormGroup({
                     control1,
                 }),
                 control2,

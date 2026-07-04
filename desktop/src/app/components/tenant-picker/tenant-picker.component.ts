@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, NgZone, OnDestroy } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { AuthService, reauthenticateAll, TenantAuthorization } from "app/services";
 import { Subject, throwError } from "rxjs";
 import { catchError, first, takeUntil } from "rxjs/operators";
@@ -16,6 +16,7 @@ export interface TenantRefreshModel {
 }
 
 @Component({
+    standalone: false,
     selector: "be-tenant-picker",
     templateUrl: "tenant-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,7 +33,7 @@ export class TenantPickerComponent implements ControlValueAccessor, OnDestroy {
         return { name: "Tenants" };
     }
 
-    public tenantSettings = new FormControl<TenantAuthorization[]>([]);
+    public tenantSettings = new UntypedFormControl([]);
     public saved: false;
     public loggedIn: boolean;
     public loaded = false;

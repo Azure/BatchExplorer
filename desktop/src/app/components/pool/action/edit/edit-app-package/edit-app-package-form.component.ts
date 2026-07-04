@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { I18nService, autobind } from "@batch-flask/core";
 import { NotificationService, SidebarRef } from "@batch-flask/ui";
 import { Pool } from "app/models";
@@ -10,6 +10,7 @@ import { share, switchMap } from "rxjs/operators";
 import "./edit-app-package-form.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-edit-app-package-form",
     templateUrl: "edit-app-package-form.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +23,7 @@ export class EditAppPackageFormComponent {
     }
     public get pool() { return this._pool; }
 
-    public appPackages = new FormControl([]);
+    public appPackages = new UntypedFormControl([]);
 
     private _pool: Pool;
 

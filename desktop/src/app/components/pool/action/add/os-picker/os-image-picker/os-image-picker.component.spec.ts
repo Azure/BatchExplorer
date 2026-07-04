@@ -1,6 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatMenuModule } from "@angular/material/menu";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -16,16 +16,18 @@ import { OsOfferTileComponent } from "../os-offer-tile";
 import { OSImagePickerComponent, OSImageSelection } from "./os-image-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-os-image-picker [formGroup]="form"></bl-os-image-picker>`,
 })
 class TestComponent {
-    public form = new FormGroup<OSImageSelection>({
-        cloudServiceConfiguration: new FormControl(),
-        virtualMachineConfiguration: new FormControl(),
+    public form = new UntypedFormGroup({
+        cloudServiceConfiguration: new UntypedFormControl(),
+        virtualMachineConfiguration: new UntypedFormControl(),
     });
 }
 
 @Component({
+    standalone: false,
     selector: "bl-sig-image-picker", template: "",
     providers: [controlValueAccessorProvider(() => FakeCustomImagePickerComponent)],
 })

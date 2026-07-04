@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { FilterBuilder } from "@batch-flask/core";
 import { Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
@@ -11,6 +11,7 @@ import "./entity-details-list.scss";
  * Adds a search box and a refresh button
  */
 @Component({
+    standalone: false,
     selector: "bl-entity-details-list",
     templateUrl: "entity-details-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +60,7 @@ export class EntityDetailsListComponent {
     public onAddEntity: EventEmitter<Event> = new EventEmitter<Event>();
 
     public filter = FilterBuilder.none();
-    public searchQuery = new FormControl();
+    public searchQuery = new UntypedFormControl();
 
     constructor(changeDetector: ChangeDetectorRef) {
         this.searchQuery.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((query: string) => {

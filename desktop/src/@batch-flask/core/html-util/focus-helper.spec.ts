@@ -4,6 +4,7 @@ import { By } from "@angular/platform-browser";
 import { focusWithin } from "./focus-helper";
 
 @Component({
+    standalone: false,
     template: `
 <div id="container">
     <span></span>

@@ -1,9 +1,9 @@
 import { Directive, Input } from "@angular/core";
 import {
     ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
     Validators,
 } from "@angular/forms";
 import { RangeValidator } from "@batch-flask/ui/validation";
@@ -11,18 +11,18 @@ import { UserAccount, VirtualMachineConfiguration } from "app/models";
 import { Constants } from "common";
 import { List } from "immutable";
 
-@Directive()
+@Directive({ standalone: false })
 export class JobTaskBaseComponent implements ControlValueAccessor {
     @Input() public userAccounts: List<UserAccount> | UserAccount[];
     @Input() public virtualMachineConfiguration: VirtualMachineConfiguration;
 
-    public form: FormGroup;
-    public constraintsGroup: FormGroup;
+    public form: UntypedFormGroup;
+    public constraintsGroup: UntypedFormGroup;
     protected _propagateChange: (value: any) => void = null;
     protected _baseFormControls: any;
     protected _defaultValue: any;
     protected _invalidResponse: any;
-    constructor(formBuilder: FormBuilder, defaultValue: any, invalidResponse: any) {
+    constructor(formBuilder: UntypedFormBuilder, defaultValue: any, invalidResponse: any) {
         const validation = Constants.forms.validation;
         this.constraintsGroup = formBuilder.group({
             maxWallClockTime: null,
@@ -67,7 +67,7 @@ export class JobTaskBaseComponent implements ControlValueAccessor {
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const valid = this.form.valid;
         if (!valid) {
             return this._invalidResponse;

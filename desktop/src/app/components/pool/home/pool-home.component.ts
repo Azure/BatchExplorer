@@ -4,6 +4,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PoolCreateBasicDialogComponent } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-home",
     templateUrl: "pool-home.html",
 })

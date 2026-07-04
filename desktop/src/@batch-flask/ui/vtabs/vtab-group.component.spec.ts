@@ -12,6 +12,7 @@ const tabDefs = [
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     template: `
         <bl-vtab-group>
             <bl-vtab *ngFor="let tab of tabs">

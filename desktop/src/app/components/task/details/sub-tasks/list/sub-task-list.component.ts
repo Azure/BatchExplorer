@@ -8,6 +8,7 @@ import { SubtaskInformation, TaskState } from "app/models";
 import { List } from "immutable";
 
 @Component({
+    standalone: false,
     selector: "bl-sub-task-list",
     templateUrl: "sub-task-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -16,6 +16,7 @@ import { of } from "rxjs";
 import { ResourceFileCloudFileDialogComponent } from "./resourcefile-cloud-file-dialog.component";
 
 @Component({
+    standalone: false,
     selector: "bl-storage-account-picker", template: "",
     providers: [controlValueAccessorProvider(() => FakeStorageAccountPickerComponent)],
 })
@@ -24,6 +25,7 @@ class FakeStorageAccountPickerComponent extends MockControlValueAccessorComponen
 }
 
 @Component({
+    standalone: false,
     selector: "bl-blob-container-picker", template: "",
     providers: [controlValueAccessorProvider(() => FakeBlobContainerPickerComponent)],
 })
@@ -33,6 +35,7 @@ class FakeBlobContainerPickerComponent extends MockControlValueAccessorComponent
 }
 
 @Component({
+    standalone: false,
     selector: "bl-blob-files-browser", template: "",
 })
 class FakeBlobFileBrowserComponent {

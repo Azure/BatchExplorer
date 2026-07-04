@@ -5,6 +5,7 @@ import { ConfirmationDialog } from "@batch-flask/ui/dialogs";
 import { BatchAccount } from "app/models";
 
 @Component({
+    standalone: false,
     selector: "bl-delete-account-dialog",
     templateUrl: "delete-account-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

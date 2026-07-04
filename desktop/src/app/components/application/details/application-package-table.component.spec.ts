@@ -38,6 +38,7 @@ const packages = {
     [applications.noPackages.id]: [],
 };
 @Component({
+    standalone: false,
     template: `
         <bl-application-package-table [application]="application" [filter]="filter">
         </bl-application-package-table>

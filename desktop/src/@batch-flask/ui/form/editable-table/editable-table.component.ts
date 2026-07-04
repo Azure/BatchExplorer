@@ -3,7 +3,7 @@ import {
     Component, ContentChildren, HostListener, Input, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    ControlValueAccessor, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 import { ENTER } from "@batch-flask/core/keys";
 import { ReplaySubject, Subject, combineLatest } from "rxjs";
@@ -13,6 +13,7 @@ import { EditableTableColumnComponent, EditableTableColumnType } from "./editabl
 import "./editable-table.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-editable-table",
     templateUrl: "editable-table.html",
     providers: [
@@ -28,12 +29,12 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     @ContentChildren(EditableTableColumnComponent)
     public columns: QueryList<EditableTableColumnComponent>;
     public EditableTableColumnType = EditableTableColumnType;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     private _propagateChange: (items: any[]) => void;
     private _valueUpdated = new ReplaySubject<any[]>(1);
     private _destroy = new Subject();
-    constructor(private formBuilder: FormBuilder, private changeDetector: ChangeDetectorRef) {
+    constructor(private formBuilder: UntypedFormBuilder, private changeDetector: ChangeDetectorRef) {
         this.form = formBuilder.group({ items: this.formBuilder.array([]) });
     }
 
@@ -78,8 +79,8 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         }
     }
 
-    public get items(): FormArray {
-        return this.form.controls.items as FormArray;
+    public get items(): UntypedFormArray {
+        return this.form.controls.items as UntypedFormArray;
     }
 
     public addNewItem(columns: EditableTableColumnComponent[]) {
@@ -108,7 +109,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 
@@ -126,7 +127,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
 
     private _buildControlsFromValue(items: any[], columns: EditableTableColumnComponent[]) {
         if (Array.isArray(items) && items.length > 0) {
-            const controls: FormGroup[] = Object.values(this.items.controls).slice(0, items.length) as any;
+            const controls: UntypedFormGroup[] = Object.values(this.items.controls).slice(0, items.length) as any;
             if (controls.length < items.length) {
                 for (const _ of items.slice(controls.length)) {
                     controls.push(this._createEmptyRow(columns));
@@ -139,14 +140,14 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
             for (const [index, value] of items.entries()) {
                 controls[index].patchValue(value);
             }
-            this.form.setControl("items", new FormArray(controls));
+            this.form.setControl("items", new UntypedFormArray(controls));
         } else {
-            this.form.setControl("items", new FormArray([this._createEmptyRow(columns)]));
+            this.form.setControl("items", new UntypedFormArray([this._createEmptyRow(columns)]));
         }
         this.changeDetector.markForCheck();
     }
 
-    private _createEmptyRow(columns: EditableTableColumnComponent[]): FormGroup {
+    private _createEmptyRow(columns: EditableTableColumnComponent[]): UntypedFormGroup {
         const obj = {};
         for (const column of columns) {
             obj[column.name] = [column.default];

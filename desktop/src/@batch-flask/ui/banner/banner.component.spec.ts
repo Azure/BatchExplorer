@@ -7,6 +7,7 @@ import { mouseenter } from "test/utils/helpers";
 import { ClickableComponent } from "../buttons";
 
 @Component({
+    standalone: false,
     template: `
         <bl-banner #banner [fix]="fix1" fixMessage="Main fix" [type]="type" [id]="bannerId">
             <div code>Error 404</div>

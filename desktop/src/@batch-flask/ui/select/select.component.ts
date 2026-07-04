@@ -50,6 +50,7 @@ export class SelectInjector implements Injector {
 let nextUniqueId = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-select",
     templateUrl: "select.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -491,11 +492,11 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
             },
         ];
 
-        const positionStrategy = this.overlay.position().connectedTo(this.elementRef,
-            { originX: "start", originY: "top" },
-            { overlayX: "start", overlayY: "bottom" });
+        const positionStrategy = this.overlay.position().flexibleConnectedTo(this.elementRef)
+            .withFlexibleDimensions(false)
+            .withPush(false);
         positionStrategy.withPositions(positions);
-        positionStrategy.onPositionChange.subscribe((x) => {
+        positionStrategy.positionChanges.subscribe((x) => {
             if (this._dropdownRef) {
                 this._dropdownRef.instance.above = x.connectionPair.overlayY === "bottom";
             }

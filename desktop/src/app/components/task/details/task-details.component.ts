@@ -8,6 +8,7 @@ import { Subscription } from "rxjs";
 import { TaskCommands } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-task-details",
     templateUrl: "task-details.html",
     providers: [TaskCommands],

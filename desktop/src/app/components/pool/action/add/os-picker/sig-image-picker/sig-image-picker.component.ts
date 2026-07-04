@@ -3,7 +3,7 @@ import {
     Input, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import {
-    AbstractControl, ControlValueAccessor, FormControl, FormGroup,
+    AbstractControl, ControlValueAccessor, UntypedFormControl, UntypedFormGroup,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
 import { ServerError } from "@batch-flask/core";
@@ -23,6 +23,7 @@ export interface SigImageSelection {
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-sig-image-picker",
     templateUrl: "sig-image-picker.html",
     providers: [
@@ -37,8 +38,8 @@ export class SigImagePickerComponent implements OnInit, OnDestroy, ControlValueA
     public sigImages: Resource[] = [];
     public supportedImages: ImageInformation[] = [];
 
-    public sigImage = new FormControl();
-    public nodeAgentSku = new FormControl();
+    public sigImage = new UntypedFormControl();
+    public nodeAgentSku = new UntypedFormControl();
 
     public LoadingStatus = LoadingStatus;
     public loadingStatus = LoadingStatus.Loading;
@@ -46,7 +47,7 @@ export class SigImagePickerComponent implements OnInit, OnDestroy, ControlValueA
     public errorMessage: string;
 
     private _destroy = new Subject();
-    private _form: FormGroup;
+    private _form: UntypedFormGroup;
 
     constructor(
         private accountService: BatchAccountService,
@@ -54,7 +55,7 @@ export class SigImagePickerComponent implements OnInit, OnDestroy, ControlValueA
         private poolOsService: PoolOsService,
         private changeDetector: ChangeDetectorRef) {
 
-        this._form = new FormGroup({
+        this._form = new UntypedFormGroup({
             sigImage: this.sigImage,
             nodeAgentSku: this.nodeAgentSku,
         });

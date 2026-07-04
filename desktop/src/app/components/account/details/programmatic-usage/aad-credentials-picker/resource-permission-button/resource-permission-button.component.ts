@@ -15,6 +15,7 @@ const allowedRoleNames = new Set([
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-resource-permission-button",
     templateUrl: "resource-permission-button.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
