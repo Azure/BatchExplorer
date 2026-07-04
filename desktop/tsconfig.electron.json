@@ -1,0 +1,24 @@
+{
+  // Used by config/webpack.config.electron.js (ts-loader) to build the Electron
+  // main process bundle. Uses "bundler" module resolution so the ESM-only
+  // Angular packages (which expose types via their package.json "exports" map)
+  // resolve correctly. Webpack converts the bundled ESM output to CommonJS.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "sourceMap": true,
+    "types": [
+      "node",
+      "electron"
+    ]
+  },
+  "include": [
+    "src/client/**/*.ts",
+    "src/common/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/testing/**/*",
+    "src/test/**/*"
+  ]
+}
