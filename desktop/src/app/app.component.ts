@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
@@ -64,7 +64,8 @@ export class AppComponent implements OnInit, OnDestroy {
         private predefinedFormulaService: PredefinedFormulaService,
         private workspaceService: WorkspaceService,
         private translationsLoaderService: AppTranslationsLoaderService,
-        private batchExplorer: BatchExplorerService
+        private batchExplorer: BatchExplorerService,
+        private changeDetector: ChangeDetectorRef
     ) {
         this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
         this._initWorkspaces();
@@ -87,6 +88,10 @@ export class AppComponent implements OnInit, OnDestroy {
             }
 
             this.isAppReady = ready;
+            // The config observable is bridged from the main process (see
+            // RendererConfigurationStore/wrapMainObservable). Its emissions no longer
+            // reliably schedule change detection on Angular 22, so trigger it explicitly.
+            this.changeDetector.markForCheck();
         });
 
         registerIcons(matIconRegistry, sanitizer);

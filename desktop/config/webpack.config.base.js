@@ -42,6 +42,21 @@ const baseConfig = {
                 loader: '@ngtools/webpack',
                 exclude: [/\.spec\.ts/, /src\/test\//]
             },
+            {
+                // Run the Angular Linker on the framework's partially-compiled (Ivy
+                // "partial") library code shipped as ESM (.mjs). This performs full AOT
+                // linking at build time so the app does NOT need the JIT compiler at
+                // runtime. Required because BatchExplorer bans `eval` in production
+                // (see src/@batch-flask/extensions/security.ts), which JIT relies on.
+                test: /\.mjs$/,
+                include: /node_modules/,
+                loader: 'babel-loader',
+                options: {
+                    compact: false,
+                    plugins: ['@angular/compiler-cli/linker/babel'],
+                    cacheDirectory: true,
+                },
+            },
             ...commonRules,
         ],
     },

@@ -1,6 +1,6 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
-import { ErrorHandler, NgModule } from "@angular/core";
+import { ErrorHandler, NgModule, provideZoneChangeDetection } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -68,6 +68,11 @@ const modules = [
         ...modules,
     ],
     providers: [
+        // Explicitly install zone.js-based change detection. On Angular 22 in this
+        // custom (non-CLI) webpack + Electron setup, NgZone auto-detection fell back to
+        // NoopNgZone, which disabled automatic change detection (the app rendered a blank
+        // page because view bindings never updated). This guarantees a real NgZone.
+        provideZoneChangeDetection(),
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
         { provide: LocaleService, useClass: AppLocaleService },
