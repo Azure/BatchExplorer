@@ -4,6 +4,21 @@ steps:
       versionSpec: '22.x'
     displayName: Set NodeJS version
 
+  # electron-builder 26 (app-builder-lib) require()s ESM-only @noble/hashes,
+  # which needs Node's native require(ESM) support (Node >= 20.19 / >= 22.12).
+  # OneBranch build containers may ignore NodeTool@0 and keep a baked-in Node
+  # on PATH, so verify the ACTIVE node version here and fail fast with a clear
+  # message instead of a cryptic ERR_REQUIRE_ESM during build:package.
+  - pwsh: |
+      $raw = (node --version).TrimStart('v')
+      Write-Host "Active Node.js version: $raw"
+      $v = [version]$raw
+      if ($v -lt [version]'22.12.0') {
+        Write-Error "Node.js $raw is too old. electron-builder 26 requires Node >= 22.12.0 (native require(ESM)). The build container/agent must provide Node 22.12+ on PATH."
+        exit 1
+      }
+    displayName: Verify Node.js version
+
   - script: cp .vsts/common/pipelines.npmrc $(Agent.TempDirectory)/.npmrc
     displayName: Stage .npmrc file
 
