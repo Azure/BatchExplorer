@@ -7,6 +7,10 @@ require("module").Module._initPaths();
 
 import "reflect-metadata";
 import "zone.js";
+// Angular 22 ships partially-compiled (Ivy partial) declarations. Loading them
+// in a plain Node process (no AOT linker) falls back to the JIT compiler, so
+// @angular/compiler must be present before any Angular declaration is evaluated.
+import "@angular/compiler";
 
 console.log("Nodepath", process.env.NODE_PATH);
 import { Duration } from "luxon";
