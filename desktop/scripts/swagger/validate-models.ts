@@ -25,6 +25,7 @@ interface SwaggerProperty {
     format: "date-time" | "duration" | "double" | undefined;
     $ref: string | undefined;
     title: string;
+    enum?: string[];
 }
 
 interface SwaggerProperties {
@@ -167,7 +168,11 @@ class SwaggerModelValidator {
                     this.addPropertyError(name, `Expected type to be a duration but was ${type}`);
                 }
             } else if (swaggerType === "string") {
-                if (type !== String) {
+                // Inline string enums (type: string + enum: [...]) are often modeled as
+                // typed string enums/unions (e.g. JobAction) whose emitted design:type
+                // erases to Object; accept Object for those. Plain strings still require String.
+                const isInlineEnum = Array.isArray(swaggerProperty.enum);
+                if (type !== String && !(isInlineEnum && type === Object)) {
                     this.addPropertyError(name, `Expected type to be a string but was ${type}`);
                 }
             } else if (swaggerType === "integer" || swaggerType === "number") {
@@ -187,7 +192,10 @@ class SwaggerModelValidator {
                 const refTypeName = swaggerProperty.$ref.replace("#/definitions/", "");
                 const nestedType = this.specs.getDefinition(refTypeName);
                 if (nestedType.enum) {
-                    if (type !== String) {
+                    // Enums are string-based; models may type them as typed enums/unions
+                    // (e.g. UserAccountElevationLevel) whose emitted design:type erases to
+                    // Object, so accept String or Object.
+                    if (type !== String && type !== Object) {
                         this.addPropertyError(name, `Expected type to be a enum ${refTypeName} but was ${type}`);
                     }
                 } else {
