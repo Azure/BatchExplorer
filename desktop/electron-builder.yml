@@ -64,6 +64,9 @@ nsis:
 
 # Linux configuration
 linux:
+  # electron-builder 26's icon tool cannot extract a PNG frame from icon.icns
+  # (its 256/512 entries are JPEG2000, not PNG), so provide an explicit PNG.
+  icon: "src/app/assets/images/icon.png"
   category: Development
   target:
     - "AppImage"
