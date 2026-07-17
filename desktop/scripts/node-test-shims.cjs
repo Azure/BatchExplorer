@@ -1,7 +1,8 @@
-// CommonJS preload (loaded via NODE_OPTIONS="--require ...") that sets up the
-// Node environment for scripts which load the Angular app's source in a plain
-// Node process (e.g. `npm run test-models`, which introspects model decorator
-// metadata). It has NO effect on the webpack builds or the packaged app.
+// CommonJS shim that sets up the Node environment for scripts/tests which load
+// the Angular app's source in a plain Node process — e.g. `npm run test-models`
+// (introspects model decorator metadata) and `npm run test-client` (jasmine
+// client tests). Loaded via NODE_OPTIONS="--require ..." or required directly.
+// It has NO effect on the webpack builds or the packaged app.
 //
 // It installs two shims:
 //
@@ -59,4 +60,12 @@ for (const ext of ASSET_EXTENSIONS) {
     require.extensions[ext] = (module) => {
         module.exports = {};
     };
+}
+
+// The client (main process) is bundled with webpack, which replaces
+// __non_webpack_require__ with the real Node require. When the app source is
+// loaded outside webpack (e.g. under ts-node for tests), provide it so files
+// such as client-constants.ts can require real files (package.json, etc.).
+if (typeof globalThis.__non_webpack_require__ === "undefined") {
+    globalThis.__non_webpack_require__ = require;
 }

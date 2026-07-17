@@ -40,7 +40,7 @@
     "test-client-watch": "npm run test-client -- --watch",
     "test-e2e": "playwright test",
     "test-e2e:debug": "playwright test --debug",
-    "test-models": "cross-env TS_NODE_TRANSPILE_ONLY=1 NODE_OPTIONS=\"--require ./scripts/test-models-node-shims.cjs\" npm run ts scripts/swagger/validate-models.ts",
+    "test-models": "cross-env TS_NODE_TRANSPILE_ONLY=1 NODE_OPTIONS=\"--require ./scripts/node-test-shims.cjs\" npm run ts scripts/swagger/validate-models.ts",
     "build-client": "cross-env NODE_ENV=production npm run webpack -- --config config/webpack.config.electron.js",
     "build-client:dev": "npm run webpack -- --config config/webpack.config.electron.js",
     "build-app": "npm run webpack -- --profile",
