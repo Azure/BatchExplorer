@@ -207,8 +207,15 @@ describe("KeyBindingsComponent", () => {
         beforeEach(async () => {
             click(recordKeyBtn);
             fixture.detectChanges();
-            await fixture.whenStable();
             searchEl = de.query(By.css("input.search"));
+            // Headless test browsers don't reliably move native focus on a detached
+            // fixture, so assert the component focuses the search box rather than
+            // relying on document.activeElement.
+            spyOn(searchEl.nativeElement, "focus");
+            await fixture.whenStable();
+            // The component focuses the search box from a setTimeout that whenStable
+            // does not drain, so flush the macrotask queue to let it run.
+            await new Promise((resolve) => setTimeout(resolve));
         });
 
         it("highlight the button", () => {
@@ -216,7 +223,7 @@ describe("KeyBindingsComponent", () => {
         });
 
         it("focus the search box", () => {
-            expect(document.activeElement).toEqual(searchEl.nativeElement);
+            expect(searchEl.nativeElement.focus).toHaveBeenCalled();
         });
 
         it("update the search box with the key presseed", () => {
