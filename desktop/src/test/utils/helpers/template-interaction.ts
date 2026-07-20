@@ -176,8 +176,10 @@ export function createKeyboardEvent(type: string, code: KeyCode, keyCode?: numbe
     });
 
     // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
+    // `configurable: true` allows the descriptor to be re-defined when
+    // `preventDefault` is invoked more than once on the same synthetic event.
     event.preventDefault = function (...args) {
-        Object.defineProperty(event, "defaultPrevented", { get: () => true });
+        Object.defineProperty(event, "defaultPrevented", { configurable: true, get: () => true });
         return originalPreventDefault.apply(this, args);
     };
 

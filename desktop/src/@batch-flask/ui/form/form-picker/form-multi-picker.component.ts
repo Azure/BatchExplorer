@@ -14,8 +14,7 @@ import "./form-multi-picker.scss";
     selector: "[blFormPickerItem]",
 })
 export class FormPickerItemTemplateDirective {
-    @ContentChild(TemplateRef, { static: false })
-    public template: TemplateRef<any>;
+    constructor(public template: TemplateRef<any>) { }
 }
 
 @Component({

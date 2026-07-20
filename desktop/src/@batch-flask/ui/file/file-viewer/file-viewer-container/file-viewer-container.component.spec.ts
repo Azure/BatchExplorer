@@ -47,6 +47,8 @@ describe("FileViewerContainerComponent", () => {
         fsSpy = {
             ensureDir: jasmine.createSpy("ensureDir").and.returnValue(Promise.resolve(true)),
             saveFile: jasmine.createSpy("saveFile").and.returnValue(Promise.resolve(true)),
+            exists: jasmine.createSpy("exists").and.returnValue(Promise.resolve(true)),
+            commonFolders: { temp: "/tmp" },
         };
         propertyGetterSpy = jasmine.createSpy("propertiesGetter").and.callFake(() => of(file));
         contentSpy = jasmine.createSpy("content").and.returnValue(of({ content: "export const foo = 123;" }));

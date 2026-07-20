@@ -2,6 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/c
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ServerError, autobind } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
@@ -90,7 +91,7 @@ describe("ComplexFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, I18nTestingModule],
+            imports: [FormsModule, ReactiveFormsModule, I18nTestingModule, NoopAnimationsModule],
             declarations: [
                 ButtonComponent,
                 FormTestComponent,

@@ -53,7 +53,7 @@ describe("SlideToggleComponent", () => {
         component.isDisabled = true;
         fixture.detectChanges();
         const slideToggle = fixture.debugElement.query(By.css("mat-slide-toggle"));
-        expect(slideToggle.attributes["ng-reflect-disabled"]).toBe("true");
+        expect(slideToggle.componentInstance.disabled).toBe(true);
     });
 
     it("should call registerOnChange", () => {

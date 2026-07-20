@@ -212,7 +212,8 @@ export class FileLoader {
     }
 
     private _hashFilename(file: File) {
-        const hash = file.properties.lastModified.getTime().toString(36);
+        const lastModified = file.properties.lastModified;
+        const hash = (lastModified ? lastModified.getTime() : 0).toString(36);
         // clean any unwanted : characters from the file path
         const cleaned = decodeURIComponent(file.name).replace(":", "");
         const segements = cleaned.split(/[\\\/]/);

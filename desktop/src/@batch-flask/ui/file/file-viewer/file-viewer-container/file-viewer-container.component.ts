@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -30,7 +31,7 @@ const defaultConfig: FileViewerConfig = Object.freeze({
     templateUrl: "file-viewer-container.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileViewerContainerComponent implements OnChanges, OnDestroy {
+export class FileViewerContainerComponent implements OnChanges, AfterViewInit, OnDestroy {
     @Input() public fileLoader: FileLoader;
     @Input() public set config(config: FileViewerConfig) {
         this._config = { ...defaultConfig, ...config };
@@ -50,6 +51,7 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     private _propertiesSub: Subscription;
     private _config = defaultConfig;
     private _fileType: string;
+    private _pendingViewerCompute = false;
 
     @ViewChild("viewerContainer", { read: ViewContainerRef, static: false })
     private _viewerContainer: ViewContainerRef;
@@ -97,6 +99,17 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         }
     }
 
+    public ngAfterViewInit() {
+        // The viewer container is only available once the view is initialized.
+        // If the file properties resolved synchronously (e.g. in tests) before
+        // this point, `_computeViewer` deferred its work; run it now.
+        if (this._pendingViewerCompute) {
+            this._pendingViewerCompute = false;
+            this._computeViewer();
+            this.changeDetector.markForCheck();
+        }
+    }
+
     public ngOnDestroy() {
         this._clearPropertiesSub();
     }
@@ -135,11 +148,18 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     }
 
     private _clearViewer() {
-        this._viewerContainer.clear();
+        if (this._viewerContainer) {
+            this._viewerContainer.clear();
+        }
         this.viewRef = null;
     }
 
     private _computeViewer() {
+        if (!this._viewerContainer) {
+            // View not initialized yet; defer until `ngAfterViewInit`.
+            this._pendingViewerCompute = true;
+            return;
+        }
         if (this.viewRef && this.viewRef.componentType === this.componentType) {
             return; // Don't recreate if the component is already there
         }

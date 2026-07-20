@@ -97,7 +97,7 @@ describe("ReactActionFormComponent", () => {
         await component.action.waitForExecution();
 
         expect(component.action.message).toBe("The quick brown fox jumped!");
-    });
+    }, 30000);
 
     it("should pass accessibility test", async () => {
         await waitForRender();

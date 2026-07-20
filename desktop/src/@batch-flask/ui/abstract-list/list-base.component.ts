@@ -27,6 +27,7 @@ export abstract class ListBaseComponent extends SelectableList implements OnDest
     public get quicklist() { return this._quicklist; }
 
     @Input() public set filter(filter: Filter) {
+        filter = filter || FilterBuilder.none();
         this._filter = filter;
         if (this._applyFilterSub) { this._applyFilterSub.unsubscribe(); }
         this._applyFilterSub = this.handleFilter(filter).subscribe((count) => {
