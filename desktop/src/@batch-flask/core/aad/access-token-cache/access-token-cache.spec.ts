@@ -42,18 +42,20 @@ describe("AccessTokenCache", () => {
     });
 
     describe("when using localstorage", () => {
-        localStorageSpy = new InMemoryDataStore();
         beforeEach(() => {
+            // Use a fresh store per test so leftover tokens from a previous test
+            // can't leak into the next one.
+            localStorageSpy = new InMemoryDataStore();
             cache = new AccessTokenCache(localStorageSpy as any);
         });
 
-        it("doesn't set the access token if not in localstorage", () => {
+        it("doesn't set the access token if not in localstorage", async () => {
             localStorageSpy.removeItem(DataStoreKeys.currentAccessToken);
-            cache.init();
+            await cache.init();
             expect((cache as any)._tokens).toEqual({});
         });
 
-        it("if token in local storage is expired it doesn't set it", () => {
+        it("if token in local storage is expired it doesn't set it", async () => {
             const token = {
                 [tenant1]: {
                     [resource1]: {
@@ -63,7 +65,7 @@ describe("AccessTokenCache", () => {
                 },
             };
             localStorageSpy.setItem(DataStoreKeys.currentAccessToken, JSON.stringify(token));
-            cache.init();
+            await cache.init();
             expect(cache.getToken(tenant1, resource1)).toBeFalsy();
         });
 

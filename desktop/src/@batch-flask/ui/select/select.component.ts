@@ -324,7 +324,11 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
         }
         if (this.filterable) {
             setTimeout(() => {
-                this._filterInputEl.nativeElement.focus();
+                // The dropdown (and its filter input) may already be gone by the
+                // time this runs, so guard against the missing view child.
+                if (this._filterInputEl) {
+                    this._filterInputEl.nativeElement.focus();
+                }
             });
         }
 
@@ -343,7 +347,9 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
         }
         if (focus) {
             setTimeout(() => {
-                this._selectButtonEl.nativeElement.focus();
+                if (this._selectButtonEl) {
+                    this._selectButtonEl.nativeElement.focus();
+                }
             });
         }
 

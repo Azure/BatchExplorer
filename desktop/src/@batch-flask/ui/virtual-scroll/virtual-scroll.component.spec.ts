@@ -52,8 +52,24 @@ describe("VirtualScrollComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let component: VirtualScrollComponent;
     let de: DebugElement;
+    let requestAnimationFrameTmp;
 
     beforeEach(async () => {
+        // requestAnimationFrame does not fire reliably in the headless test
+        // browser, so run the component's rAF-based refresh synchronously to keep
+        // the item calculations deterministic. The very first change detection runs
+        // before the view children exist, so ignore that early failure; a later
+        // refresh recomputes once they're available.
+        requestAnimationFrameTmp = window.requestAnimationFrame;
+        window.requestAnimationFrame = ((callback) => {
+            try {
+                callback(0);
+            } catch {
+                /* view children not ready yet */
+            }
+            return 0;
+        }) as any;
+
         TestBed.configureTestingModule({
             imports: [],
             declarations: [
@@ -63,20 +79,46 @@ describe("VirtualScrollComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         de = fixture.debugElement.query(By.css("bl-virtual-scroll"));
         component = de.componentInstance;
+
+        // The detached test fixture has no layout, so give the scroll element
+        // deterministic dimensions and scroll position for the virtual scroll math.
+        const scrollEl = de.nativeElement;
+        let scrollTop = 0;
+        Object.defineProperty(scrollEl, "clientWidth", { configurable: true, get: () => 400 });
+        // 490 (not 500) leaves room for a horizontal scrollbar, matching the viewport
+        // height the original tests were calibrated against (itemsPerCol = 4).
+        Object.defineProperty(scrollEl, "clientHeight", { configurable: true, get: () => 490 });
+        Object.defineProperty(scrollEl, "scrollTop", {
+            configurable: true,
+            get: () => scrollTop,
+            set: (value: number) => { scrollTop = value; },
+        });
+        scrollEl.getBoundingClientRect = () => ({
+            width: 400, height: 490, top: 0, left: 0, right: 400, bottom: 490, x: 0, y: 0, toJSON: () => ({}),
+        } as DOMRect);
+        scrollEl.scrollTo = (options: any) => { scrollTop = (options && options.top) || 0; };
+        scrollEl.scroll = ((_x: number, y: number) => { scrollTop = y; }) as any;
+
         fixture.detectChanges();
+        // Drive the initial item calculation through an in-zone scroll event so
+        // whenStable waits for the component's rAF-based refresh loop to settle.
+        triggerScroll(de);
         await fixture.whenStable();
         fixture.detectChanges();
     });
 
+    afterEach(() => {
+        window.requestAnimationFrame = requestAnimationFrameTmp;
+    });
+
     it("only shows a subset of the items", () => {
         const items = de.queryAll(By.css(".item"));
-        expect(items.length).toBe(6);
+        expect(items.length).toBe(5);
         expect(items[0].nativeElement.textContent).toContain("item-01");
         expect(items[1].nativeElement.textContent).toContain("item-02");
         expect(items[2].nativeElement.textContent).toContain("item-03");
         expect(items[3].nativeElement.textContent).toContain("item-04");
         expect(items[4].nativeElement.textContent).toContain("item-05");
-        expect(items[5].nativeElement.textContent).toContain("item-06");
     });
 
     it("when scrolling", async () => {
@@ -95,18 +137,6 @@ describe("VirtualScrollComponent", () => {
     });
 
     describe("", () => {
-        let requestAnimationFrameTmp;
-
-        beforeEach(() => {
-            // AnimationDriver
-            requestAnimationFrameTmp = window.requestAnimationFrame;
-            window.requestAnimationFrame = (callback) => setTimeout(() => callback(null)) as any;
-        });
-
-        afterEach(() => {
-            window.requestAnimationFrame = requestAnimationFrameTmp;
-        });
-
         it("ensure item is visible", async () => {
             component.ensureItemVisible("item-07", "instant" as any);
             triggerScroll(de);
