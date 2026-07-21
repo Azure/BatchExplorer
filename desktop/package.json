@@ -240,6 +240,7 @@
     "fast-xml-parser": "4.5.4",
     "json5": "^2.2.3",
     "@azure/core-util": "1.9.1",
-    "minimatch@3.1.2": "3.1.4"
+    "minimatch@3.1.2": "3.1.4",
+    "immutable@3.8.2": "3.8.3"
   }
 }
