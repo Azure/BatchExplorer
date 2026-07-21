@@ -86,11 +86,5 @@
     "postinstall": "lerna bootstrap -- --legacy-peer-deps && node ./util/bux/check-cli-path",
     "dev-setup": "cd ./util/bux && npm pack --pack-destination ./build && npm install -g ./build/batch-bux-1.0.0.tgz && echo 'bux CLI tool installed'",
     "watch:lib": "lerna run --parallel workspace:watch:lib --stream"
-  },
-  "overrides": {
-    "minimatch@^8.0.2": "8.0.6",
-    "minimatch@3.1.2": "3.1.4",
-    "picomatch@2.3.1": "2.3.2",
-    "lodash@4.17.21": "4.18.0"
   }
 }
