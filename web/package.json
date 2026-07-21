@@ -95,7 +95,8 @@
     "@babel/traverse": "^7.23.6",
     "minimatch@3.1.2": "3.1.4",
     "@remix-run/router@1.21.0": "1.23.2",
-    "picomatch@2.3.1": "2.3.2"
+    "picomatch@2.3.1": "2.3.2",
+    "lodash@4.17.21": "4.18.0"
   },
   "files": [
     "lib",
