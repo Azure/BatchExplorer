@@ -94,7 +94,8 @@
   "overrides": {
     "@babel/traverse": "^7.23.6",
     "minimatch@3.1.2": "3.1.4",
-    "@remix-run/router@1.21.0": "1.23.2"
+    "@remix-run/router@1.21.0": "1.23.2",
+    "picomatch@2.3.1": "2.3.2"
   },
   "files": [
     "lib",
