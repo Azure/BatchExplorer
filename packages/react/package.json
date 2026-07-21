@@ -92,5 +92,8 @@
     "lib-cjs",
     "resources"
   ],
-  "sideEffects": false
+  "sideEffects": false,
+  "overrides": {
+    "minimatch@3.1.2": "3.1.4"
+  }
 }

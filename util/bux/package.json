@@ -59,5 +59,8 @@
   "files": [
     "bin",
     "lib"
-  ]
+  ],
+  "overrides": {
+    "minimatch@3.1.2": "3.1.4"
+  }
 }

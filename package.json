@@ -88,6 +88,7 @@
     "watch:lib": "lerna run --parallel workspace:watch:lib --stream"
   },
   "overrides": {
-    "minimatch@^8.0.2": "8.0.6"
+    "minimatch@^8.0.2": "8.0.6",
+    "minimatch@3.1.2": "3.1.4"
   }
 }
