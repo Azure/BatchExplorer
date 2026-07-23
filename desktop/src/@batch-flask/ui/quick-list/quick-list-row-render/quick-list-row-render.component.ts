@@ -20,6 +20,7 @@ import {
 import "./quick-list-row-render.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-quick-list-row-render",
     templateUrl: "quick-list-row-render.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

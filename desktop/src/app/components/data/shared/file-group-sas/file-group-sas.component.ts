@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { ListView, autobind } from "@batch-flask/core";
 import { BlobContainer } from "app/models";
@@ -16,6 +16,7 @@ import "./file-group-sas.scss";
 
 /* eslint-disable @angular-eslint/no-forward-ref */
 @Component({
+    standalone: false,
     selector: "bl-file-group-sas",
     templateUrl: "file-group-sas.html",
     providers: [
@@ -38,7 +39,7 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     @Input() public allowWrite: boolean;
 
     public fileGroups: List<BlobContainer>;
-    public value = new FormControl();
+    public value = new UntypedFormControl();
     public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
 
@@ -104,7 +105,7 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
         this.value.markAsTouched();
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

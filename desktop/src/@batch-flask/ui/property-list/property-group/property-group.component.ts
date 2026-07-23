@@ -6,6 +6,7 @@ import "./property-group.scss";
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-property-group",
     templateUrl: "property-group.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

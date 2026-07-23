@@ -28,7 +28,7 @@ const sizeD = { id: "size_d", name: "Size D", numberOfCores: 2, resourceDiskSize
 /* eslint-disable @angular-eslint/component-class-suffix */
 /* eslint-disable  */
 
-@Directive()
+@Directive({ standalone: false })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 class BaseTestComponent {
     public sizes: any[] = [];
@@ -37,6 +37,7 @@ class BaseTestComponent {
 }
 
 @Component({
+    standalone: false,
     template: `
         <bl-table id="mytable-1" [data]="sizes" [(activeItem)]="pickedSize" [config]="tableConfig" style="width: 600px">
             <bl-column name="name">
@@ -457,6 +458,7 @@ describe("TableComponent", () => {
 });
 
 @Component({
+    standalone: false,
     template: `
         <bl-table [data]="sizes">
             <bl-column>
@@ -470,6 +472,7 @@ class MissingColumnName extends BaseTestComponent {
 }
 
 @Component({
+    standalone: false,
     template: `
         <bl-table [data]="sizes">
             <bl-column name="cores">
@@ -487,6 +490,7 @@ class DuplicateColumnName extends BaseTestComponent {
 }
 
 @Component({
+    standalone: false,
     template: `
         <bl-table [data]="sizes">
             <bl-column name="name">

@@ -7,6 +7,7 @@ import { List } from "immutable";
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     selector: "bl-task-configuration",
     templateUrl: "task-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

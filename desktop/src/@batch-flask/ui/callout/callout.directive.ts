@@ -7,6 +7,7 @@ import { Subscription } from "rxjs";
 import { CalloutComponent } from "./callout.component";
 
 @Directive({
+    standalone: false,
     selector: "[blCallout]",
 })
 export class CalloutDirective {
@@ -100,9 +101,9 @@ export class CalloutDirective {
             },
         ];
 
-        const positionStrategy = this.overlay.position().connectedTo(this.elementRef,
-            { originX: "start", originY: "top" },
-            { overlayX: "start", overlayY: "bottom" });
+        const positionStrategy = this.overlay.position().flexibleConnectedTo(this.elementRef)
+            .withFlexibleDimensions(false)
+            .withPush(false);
         positionStrategy.withPositions(positions);
         return new OverlayConfig({
             positionStrategy: positionStrategy,

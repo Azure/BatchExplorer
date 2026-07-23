@@ -5,6 +5,7 @@ import { BatchApplication } from "app/models";
 import { ApplicationPreviewComponent } from "./application-preview.component";
 
 @Component({
+    standalone: false,
     template: `<bl-application-preview [application]="application"></bl-application-preview>`,
 })
 class TestComponent {

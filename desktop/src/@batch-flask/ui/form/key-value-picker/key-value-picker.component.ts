@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
@@ -10,6 +10,7 @@ interface KeyValue {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-key-value-picker",
     templateUrl: "key-value-picker.html",
     providers: [
@@ -21,12 +22,12 @@ export class KeyValuePickerComponent implements ControlValueAccessor, OnDestroy 
     @Input() public label: string;
     @Input() public hideCaption = false;
 
-    public items: FormControl;
+    public items: UntypedFormControl;
 
     private _propagateChange: (value: KeyValue[]) => void = null;
     private _sub: Subscription;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.items = formBuilder.control([]);
         this._sub = this.items.valueChanges.subscribe((items) => {
             if (this._propagateChange) {
@@ -53,7 +54,7 @@ export class KeyValuePickerComponent implements ControlValueAccessor, OnDestroy 
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 }

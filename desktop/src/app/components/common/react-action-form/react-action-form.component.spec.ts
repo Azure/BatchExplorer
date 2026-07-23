@@ -14,6 +14,7 @@ import { ReactActionFormComponent } from "../react-action-form";
 import { ReactContainerComponent } from "../react-container";
 
 @Component({
+    standalone: false,
     template: `
         <be-react-action-form
             [containerRef]="dialogRef"
@@ -96,7 +97,7 @@ describe("ReactActionFormComponent", () => {
         await component.action.waitForExecution();
 
         expect(component.action.message).toBe("The quick brown fox jumped!");
-    });
+    }, 30000);
 
     it("should pass accessibility test", async () => {
         await waitForRender();

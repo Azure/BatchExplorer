@@ -12,6 +12,7 @@ import { GaugeMockComponent } from "test/utils/mocks/components";
 import { JobProgressStatusComponent } from "./job-progress-status.component";
 
 @Component({
+    standalone: false,
     template: `<bl-job-progress-status [job]="job" [poolId]="poolId"></bl-job-progress-status>`,
 })
 class TestComponent {

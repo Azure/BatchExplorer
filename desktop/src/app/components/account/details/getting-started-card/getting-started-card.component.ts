@@ -6,6 +6,7 @@ import { CredentialType, ProgrammaticUsageComponent } from "../programmatic-usag
 import "./getting-started-card.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-getting-started-card",
     templateUrl: "getting-started-card.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

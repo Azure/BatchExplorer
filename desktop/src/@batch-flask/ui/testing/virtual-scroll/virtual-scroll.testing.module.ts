@@ -3,6 +3,7 @@ import { Component, ContentChild, EventEmitter, Input, NgModule, OnChanges, Outp
 import { VirtualScrollComponent, VirtualScrollRowDirective } from "@batch-flask/ui/virtual-scroll";
 
 @Component({
+    standalone: false,
     selector: "bl-virtual-scroll",
     template: `
         <ng-template *ngFor="let item of items;trackBy: rowDef.trackBy"
@@ -31,6 +32,7 @@ export class VirtualScrollMockComponent implements OnChanges {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-virtual-scroll-tail",
     template: "<ng-content></ng-content>",
 })

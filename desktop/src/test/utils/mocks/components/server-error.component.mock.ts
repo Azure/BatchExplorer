@@ -2,6 +2,7 @@ import { Component, Input } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 
 @Component({
+    standalone: false,
     selector: "bl-server-error",
     template: `<div>{{fixMessage}}<ng-content></ng-content></div>`,
 })

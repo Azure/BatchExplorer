@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy,  Component, Injector, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
@@ -17,6 +17,7 @@ import { map } from "rxjs/operators";
 import { JobScheduleCommands } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-job-schedule-list",
     templateUrl: "job-schedule-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +31,7 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
     public LoadingStatus = LoadingStatus;
 
     public data: ListView<JobSchedule, JobScheduleListParams>;
-    public searchQuery = new FormControl();
+    public searchQuery = new UntypedFormControl();
 
     private _baseOptions = {};
     private _onJobScheduleAddedSub: Subscription;

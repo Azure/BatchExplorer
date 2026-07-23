@@ -7,6 +7,7 @@ import { Subscription } from "rxjs";
 import "./account-dropdown.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-account-dropdown",
     templateUrl: "account-dropdown.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

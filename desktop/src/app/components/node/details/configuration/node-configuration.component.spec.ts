@@ -28,6 +28,7 @@ const pool1 = new Pool({
 const node1 = new Node({ id: "node-1", state: NodeState.idle });
 
 @Component({
+    standalone: false,
     template: `<bl-node-configuration [pool]="pool" [node]="node"></bl-node-configuration>`,
 })
 class TestComponent {

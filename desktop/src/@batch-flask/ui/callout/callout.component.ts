@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from "@ang
 import "./callout.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-callout",
     templateUrl: "callout.html",
     exportAs: "blCallout",

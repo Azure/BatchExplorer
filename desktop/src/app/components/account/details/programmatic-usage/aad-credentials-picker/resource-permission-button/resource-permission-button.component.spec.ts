@@ -29,6 +29,7 @@ const customRole = new RoleDefinition({
 } as any);
 
 @Component({
+    standalone: false,
     template: `
         <bl-resource-permission-button [resourceId]="resourceId" [principalId]="principalId">
         </bl-resource-permission-button>

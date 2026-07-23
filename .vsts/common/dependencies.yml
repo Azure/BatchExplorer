@@ -1,8 +1,23 @@
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '18.x.x'
+      versionSpec: '24.x'
     displayName: Set NodeJS version
+
+  # electron-builder 26 (app-builder-lib) require()s ESM-only @noble/hashes,
+  # which needs Node's native require(ESM) support (Node >= 20.19 / >= 22.12).
+  # OneBranch build containers may ignore NodeTool@0 and keep a baked-in Node
+  # on PATH, so verify the ACTIVE node version here and fail fast with a clear
+  # message instead of a cryptic ERR_REQUIRE_ESM during build:package.
+  - pwsh: |
+      $raw = (node --version).TrimStart('v')
+      Write-Host "Active Node.js version: $raw"
+      $v = [version]$raw
+      if ($v -lt [version]'24.0.0') {
+        Write-Error "Node.js $raw is too old. electron-builder 26 requires Node >= 24.0.0 (native require(ESM)). The build container/agent must provide Node 24+ on PATH."
+        exit 1
+      }
+    displayName: Verify Node.js version
 
   - script: cp .vsts/common/pipelines.npmrc $(Agent.TempDirectory)/.npmrc
     displayName: Stage .npmrc file
@@ -23,3 +38,17 @@ steps:
       Write-Host "##vso[task.setvariable variable=npm_config_userconfig]$env:AGENT_TEMPDIRECTORY\.npmrc"
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     displayName: Set NPM userconfig (Windows)
+
+  # Pin a known-good npm across all agents. NodeTool@0 '24.x' (and any baked-in
+  # container Node) can resolve to different patch releases per agent, and Node
+  # 24.12.0 ships npm 11.6.2 - which has a bug in @npmcli/package-json 'normalize'
+  # that calls path.resolve() with an undefined package path for registry
+  # manifests declaring "directories.bin". That crashes `npm install -g` (e.g.
+  # installing the bux CLI during dev-setup) on the Windows agent, while
+  # Linux/macOS agents that resolved a newer Node 24 patch (npm 11.12.1+) pass.
+  # Installing a fixed npm here removes the version drift. Runs after the
+  # authenticated .npmrc is staged so npm resolves from the feed.
+  - script: |
+      npm install -g npm@11.16.0
+      npm --version
+    displayName: Pin npm version

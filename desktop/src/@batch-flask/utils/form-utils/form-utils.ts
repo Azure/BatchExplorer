@@ -1,10 +1,10 @@
-import { AbstractControl, FormControl, FormGroup } from "@angular/forms";
+import { AbstractControl, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { Observable, of } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
 import { SanitizedError } from "../error";
 
 export class FormUtils {
-    public static getControl(formGroup: FormGroup, path: string | string[]): AbstractControl {
+    public static getControl(formGroup: UntypedFormGroup, path: string | string[]): AbstractControl {
         const actualPath = Array.isArray(path) ? path : [path];
         let current: AbstractControl | null = formGroup;
         for (const segment of actualPath) {
@@ -16,7 +16,7 @@ export class FormUtils {
         return current;
     }
 
-    public static passValidation(control: FormControl, processErrors?: (errors: any) => any): Observable<any> {
+    public static passValidation(control: UntypedFormControl, processErrors?: (errors: any) => any): Observable<any> {
         const errorProcessor = processErrors || ((errors) => errors);
 
         if (control.status === "PENDING") {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { validJsonConfig } from "@batch-flask/utils/validators";
 import { Subscription } from "rxjs";
@@ -9,6 +9,7 @@ import "./form-json-editor.scss";
 const emptyJson = "{\n\n}";
 
 @Component({
+    standalone: false,
     selector: "bl-form-json-editor",
     templateUrl: "form-json-editor.html",
     providers: [
@@ -17,7 +18,7 @@ const emptyJson = "{\n\n}";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy {
-    public jsonControl = new FormControl(emptyJson, null, validJsonConfig);
+    public jsonControl = new UntypedFormControl(emptyJson, null, validJsonConfig);
 
     public editorConfig: EditorConfig;
 

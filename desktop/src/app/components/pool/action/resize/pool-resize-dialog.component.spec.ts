@@ -16,6 +16,7 @@ import { PoolScaleSelection } from "../scale";
 import { PoolResizeDialogComponent } from "./pool-resize-dialog.component";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-scale-picker", template: "",
     providers: [controlValueAccessorProvider(() => FakeScalePickerComponent)],
 })
@@ -25,6 +26,7 @@ class FakeScalePickerComponent extends MockControlValueAccessorComponent<PoolSca
 }
 
 @Component({
+    standalone: false,
     selector: "bl-deallocation-option-picker", template: "",
     providers: [controlValueAccessorProvider(() => FakeDealocationOptionPickerComponent)],
 })

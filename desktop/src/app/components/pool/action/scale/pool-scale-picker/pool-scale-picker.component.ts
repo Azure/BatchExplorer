@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
 import { Pool } from "app/models";
 import { Duration } from "luxon";
@@ -36,6 +36,7 @@ function cleanSelection(value: PoolScaleSelection): PoolScaleSelection {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-pool-scale-picker",
     templateUrl: "pool-scale-picker.html",
     providers: [
@@ -47,17 +48,17 @@ function cleanSelection(value: PoolScaleSelection): PoolScaleSelection {
 export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor {
     @Input() public pool: Pool;
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     private _propagateChange: (value: PoolScaleSelection) => void;
     private _subs: Subscription[] = [];
 
-    private _enableAutoScaleControl = new FormControl(false);
-    private _autoScaleFormulaControl = new FormControl("");
-    private _targetDedicatedNodes = new FormControl(0);
-    private _targetLowPriorityNodes = new FormControl(0);
+    private _enableAutoScaleControl = new UntypedFormControl(false);
+    private _autoScaleFormulaControl = new UntypedFormControl("");
+    private _targetDedicatedNodes = new UntypedFormControl(0);
+    private _targetLowPriorityNodes = new UntypedFormControl(0);
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             enableAutoScale: this._enableAutoScaleControl,
             autoScaleFormula: this._autoScaleFormulaControl,
@@ -108,7 +109,7 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
         // Nothing to do
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const valid = this.form.valid;
         if (valid) {
             return null;

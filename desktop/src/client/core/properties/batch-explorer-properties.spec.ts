@@ -1,9 +1,13 @@
 import { InMemoryDataStore } from "@batch-flask/core";
 import { AzureChina, AzureEnvironment, AzureGermany, AzurePublic } from "client/azure-environment";
 import { Constants } from "common";
-import * as proxyquire from "proxyquire";
 import { Subscription } from "rxjs";
 import { BatchExplorerProperties } from "./batch-explorer-properties";
+
+// proxyquire is a callable function; under ts-node transpile-only a namespace
+// import (__importStar) would not be callable, so require it directly.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const proxyquire = require("proxyquire");
 
 interface MockRequires {
     electron: {

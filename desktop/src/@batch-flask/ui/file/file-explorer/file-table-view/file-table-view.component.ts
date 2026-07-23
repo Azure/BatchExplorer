@@ -9,6 +9,7 @@ import { FileDropEvent } from "../file-explorer.component";
 import "./file-table-view.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-file-table-view",
     templateUrl: "file-table-view.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

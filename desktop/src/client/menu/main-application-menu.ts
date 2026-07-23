@@ -51,13 +51,18 @@ function setupOSXSpecificMenu(template) {
  */
 @Injectable()
 export class MainApplicationMenu {
+    private app: BatchExplorerApplication;
     constructor(
         private helpMenu: HelpMenu,
         private telemetryManager: TelemetryManager,
         private proxySettings: ProxySettingsManager,
         private environmentService: AzureEnvironmentService,
-        @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
+        // `app` typed `any` to avoid an eager `design:paramtypes` reference to
+        // BatchExplorerApplication (circular dep). DI resolves it via forwardRef; the typed
+        // field above preserves type-safety. Without this the bundled main process TDZ-throws.
+        @Inject(forwardRef(() => BatchExplorerApplication)) app: any,
         private properties: BatchExplorerProperties) {
+        this.app = app;
     }
 
     public async applyMenu() {

@@ -92,7 +92,8 @@
     "webpack-sources": "^3.2.3"
   },
   "overrides": {
-    "@babel/traverse": "^7.23.6"
+    "@babel/traverse": "^7.23.6",
+    "@remix-run/router@1.21.0": "1.23.2"
   },
   "files": [
     "lib",

@@ -41,9 +41,6 @@ const components = [
         BlobFilesBrowserModule,
         StorageAccountPickerModule,
     ],
-    entryComponents: [
-        DeleteContainerDialogComponent,
-    ],
 })
 export class DataModule {
 }

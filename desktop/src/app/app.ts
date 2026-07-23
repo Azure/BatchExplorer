@@ -1,3 +1,9 @@
+// zone.js MUST be imported/evaluated before @angular/core in this same entry so that
+// Angular detects it and installs a real (zone-based) NgZone. Relying only on the
+// separate polyfills chunk proved unreliable here (Angular 22 fell back to NoopNgZone,
+// disabling change detection). A direct import guarantees zone.js patches the runtime
+// before AppModule/@angular/core is evaluated below.
+import "zone.js";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { ipcRenderer } from "electron";
 import { getCurrentWindow } from "@electron/remote";

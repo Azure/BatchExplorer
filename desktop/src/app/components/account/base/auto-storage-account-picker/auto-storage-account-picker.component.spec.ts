@@ -21,6 +21,7 @@ const account = new ArmBatchAccount({
 } as any);
 
 @Component({
+    standalone: false,
     template: `
         <bl-auto-storage-account-picker [account]="account" [(ngModel)]="storageAccountId">
         </bl-auto-storage-account-picker>

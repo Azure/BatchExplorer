@@ -23,6 +23,7 @@ const disabledApp = new BatchApplication({
 });
 
 @Component({
+    standalone: false,
     template: `<bl-application-packages [application]="application"></bl-application-packages>`,
 })
 class TestComponent {
@@ -36,6 +37,7 @@ class TestComponent {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-application-package-table",
     template: "",
 })

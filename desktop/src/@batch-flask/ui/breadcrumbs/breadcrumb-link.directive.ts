@@ -2,6 +2,7 @@ import { Directive, HostListener, Input } from "@angular/core";
 import { Router } from "@angular/router";
 
 @Directive({
+    standalone: false,
     selector: "[blBreadcrumbLink]",
 })
 export class BreadcrumbLinkDirective {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { SidebarRef } from "@batch-flask/ui";
 import { UrlUtils } from "@batch-flask/utils";
@@ -9,19 +9,20 @@ import { LocalBatchAccountService } from "app/services";
 import "./add-local-batch-account.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-edit-local-batch-account",
     templateUrl: "add-local-batch-account.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditLocalBatchAccountComponent {
     public title = "Edit local batch account";
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     private _existingAccount: LocalBatchAccount;
 
     constructor(
         public sidebarRef: SidebarRef<any>,
         private localAccountService: LocalBatchAccountService,
-        formBuilder: FormBuilder) {
+        formBuilder: UntypedFormBuilder) {
 
         this.form = formBuilder.group({
             displayName: [""],

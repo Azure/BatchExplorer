@@ -9,6 +9,7 @@ import { Subject, of } from "rxjs";
 import { TextFileViewerComponent } from "./text-file-viewer.component";
 
 @Component({
+    standalone: false,
     template: `<bl-text-file-viewer [fileLoader]="fileLoader"></bl-text-file-viewer>`,
 })
 class TestComponent {

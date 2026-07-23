@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectComponent, SelectModule } from "@batch-flask/ui";
@@ -12,10 +12,11 @@ import { BehaviorSubject, of } from "rxjs";
 import { StorageAccountPickerComponent } from "./storage-account-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-storage-account-picker [formControl]="control"></bl-storage-account-picker>`,
 })
 class TestComponent {
-    public control = new FormControl<string>(null);
+    public control = new UntypedFormControl(null);
 }
 
 const sub1 = new ArmSubscription({

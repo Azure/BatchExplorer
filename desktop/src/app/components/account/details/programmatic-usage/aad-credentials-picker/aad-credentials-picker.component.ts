@@ -14,6 +14,7 @@ enum Step {
     createApplication,
 }
 @Component({
+    standalone: false,
     selector: "bl-aad-credentials-picker",
     templateUrl: "aad-credentials-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

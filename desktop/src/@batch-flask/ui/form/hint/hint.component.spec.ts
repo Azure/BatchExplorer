@@ -4,6 +4,7 @@ import { By } from "@angular/platform-browser";
 import { HintComponent } from "./hint.component";
 
 @Component({
+    standalone: false,
     template: `<bl-hint [align]="align">My foo hint</bl-hint>`,
 })
 class TestComponent {

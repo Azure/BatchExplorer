@@ -109,9 +109,6 @@ const components = [
 
 @NgModule({
     declarations: components,
-    entryComponents: [
-        SimpleDialogComponent,
-    ],
     exports: [...modules, ...components],
     imports: [
         CommonModule,

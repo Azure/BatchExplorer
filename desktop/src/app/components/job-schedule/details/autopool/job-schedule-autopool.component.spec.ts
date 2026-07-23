@@ -21,6 +21,7 @@ const poolWithStartTask = new AutoPoolSpecification({
     } as any,
 });
 @Component({
+    standalone: false,
     template: `<bl-job-schedule-autopool [properties]="specs"></bl-job-schedule-autopool>`,
 })
 class TestComponent {

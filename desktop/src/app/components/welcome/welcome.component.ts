@@ -4,6 +4,7 @@ import { autobind } from "@batch-flask/core";
 import { first } from "rxjs/operators";
 
 @Component({
+    standalone: false,
     selector: "be-welcome",
     templateUrl: "./welcome.html",
 })

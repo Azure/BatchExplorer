@@ -6,6 +6,7 @@ import { FailureInfo, Task, TaskState } from "app/models";
 import { TaskStateComponent } from "./task-state.component";
 
 @Component({
+    standalone: false,
     template: `<bl-task-state [task]="task"></bl-task-state>`,
 })
 class TestComponent {

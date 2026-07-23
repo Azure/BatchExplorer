@@ -20,9 +20,6 @@ const publicModules = [
     declarations: [...privateComponents, ...publicComponents],
     exports: [...publicModules, ...publicComponents],
     imports: [FormModule, FormsModule, ReactiveFormsModule,  ButtonsModule, ...publicModules],
-    entryComponents: [
-        DownloadFolderComponent,
-    ],
 })
 export class FileModule {
 }

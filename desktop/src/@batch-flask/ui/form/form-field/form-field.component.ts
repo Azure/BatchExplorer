@@ -18,6 +18,7 @@ import { FormFieldPrefixDirective, FormFieldSuffixDirective } from "./form-field
 import "./form-field.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-form-field",
     templateUrl: "form-field.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

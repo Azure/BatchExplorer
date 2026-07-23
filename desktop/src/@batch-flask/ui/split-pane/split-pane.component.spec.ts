@@ -6,6 +6,7 @@ import { SplitPaneComponent, SplitPaneConfig } from "./split-pane.component";
 import { SplitSeparatorComponent } from "./split-separator";
 
 @Component({
+    standalone: false,
     template: `
         <div style="width: 600px; height: 300px">
             <bl-split-pane [config]="config">

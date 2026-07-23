@@ -12,6 +12,7 @@ import {
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     template: `
         <bl-table-property label="Files">
             <bl-table-property-header>

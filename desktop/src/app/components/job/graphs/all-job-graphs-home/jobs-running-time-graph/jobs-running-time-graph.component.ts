@@ -8,6 +8,7 @@ import { DateTime } from "luxon";
 import "./jobs-running-time-graph.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-jobs-running-time-graph",
     templateUrl: "jobs-running-time-graph.html",
 })

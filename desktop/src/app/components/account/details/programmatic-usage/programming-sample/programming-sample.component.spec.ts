@@ -12,6 +12,7 @@ import { ProgrammingSampleComponent } from "./programming-sample.component";
 
 const account1 = Fixtures.account.create();
 @Component({
+    standalone: false,
     template: `
         <bl-programming-sample [target]="target"
             [sharedKeyCredentials]="sharedKeyCredentials" [account]="account">

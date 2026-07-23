@@ -13,6 +13,7 @@ import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
+    standalone: false,
     template: `<bl-pool-error-display [pool]="pool"></bl-pool-error-display>`,
 })
 class TestPoolErrorDisplayComponent {
@@ -44,7 +45,7 @@ describe("PoolErrorDisplayComponent", () => {
 
         fixture = TestBed.createComponent(TestPoolErrorDisplayComponent);
         testComponent = fixture.componentInstance;
-        shellSpy = TestBed.get(ElectronShell);
+        shellSpy = TestBed.inject(ElectronShell);
         fixture.detectChanges();
     });
 

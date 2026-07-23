@@ -3,6 +3,7 @@ import {
 } from "@angular/core";
 
 @Directive({
+    standalone: false,
     selector: "[blQuickListRowStatus]",
 })
 export class QuickListRowStatusDirective {
@@ -10,6 +11,7 @@ export class QuickListRowStatusDirective {
 }
 
 @Directive({
+    standalone: false,
     selector: "[blQuickListRowTitle]",
 })
 export class QuickListRowTitleDirective {
@@ -17,6 +19,7 @@ export class QuickListRowTitleDirective {
 }
 
 @Directive({
+    standalone: false,
     selector: "[blQuickListRowState]",
 })
 export class QuickListRowStateDirective {
@@ -24,6 +27,7 @@ export class QuickListRowStateDirective {
 }
 
 @Directive({
+    standalone: false,
     selector: "[blQuickListRowExtra]",
 })
 export class QuickListRowExtraDirective {

@@ -3,7 +3,11 @@ import * as globF from "glob";
 import * as jsyaml from "js-yaml";
 import * as util from "util";
 
-const glob = util.promisify(globF);
+// glob v7's CommonJS export is itself the callable; some module-interop emits
+// (e.g. ts-node transpile-only) expose it under `.default`, so unwrap first.
+const globFn = ((globF as any).default || globF) as
+    (pattern: string, options: Record<string, unknown>, cb: (err: Error | null, matches: string[]) => void) => void;
+const glob = util.promisify(globFn) as (pattern: string, options?: any) => Promise<string[]>;
 const readFile = util.promisify(fs.readFile);
 
 type DuplicateCallback = (key: string, source: string) => void;

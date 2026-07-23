@@ -16,10 +16,6 @@ const components = [
     declarations: components,
     exports: components,
     imports: [...commonModules],
-    entryComponents: [
-        NodeConnectComponent,
-        SSHKeyPickerDialogComponent,
-    ],
 })
 export class NodeConnectModule {
 }

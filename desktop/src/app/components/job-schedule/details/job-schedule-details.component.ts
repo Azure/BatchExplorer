@@ -12,6 +12,7 @@ import { JobScheduleCommands } from "../action";
 import "./job-schedule-details.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-job-schedule-details",
     templateUrl: "job-schedule-details.html",
     providers: [JobScheduleCommands],

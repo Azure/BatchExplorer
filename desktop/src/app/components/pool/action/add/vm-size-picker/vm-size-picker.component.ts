@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { LoadingStatus } from "@batch-flask/ui";
 import { TableConfig } from "@batch-flask/ui/table";
@@ -62,6 +62,7 @@ export class VmSizeDecorator {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-vm-size-picker",
     templateUrl: "vm-size-picker.html",
     providers: [
@@ -83,7 +84,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     public filteredCategories: VmSizeDecorator[];
     public prices: OSPricing = null;
     public categoriesDisplayName = categoriesDisplayName;
-    public basicInput = new FormControl();
+    public basicInput = new UntypedFormControl();
     public isCloudService = false;
 
     public tableConfig: TableConfig = {
@@ -171,7 +172,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

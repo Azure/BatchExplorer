@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { ArmResourceUtils } from "app/utils";
 @Component({
+    standalone: false,
     selector: "bl-application-default",
     template: `
         <div class="no-entity-home">

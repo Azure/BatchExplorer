@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { UserConfigurationService } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
@@ -17,10 +17,11 @@ import { ResourceFileContainerSourceComponent } from "./resourcefile-container-s
 import { ResourceFilePickerRowComponent } from "./resourcefile-picker-row";
 
 @Component({
+    standalone: false,
     template: `<bl-resourcefile-picker [formControl]="files"></bl-resourcefile-picker>`,
 })
 class TestComponent {
-    public files = new FormControl([]);
+    public files = new UntypedFormControl([]);
 }
 
 const storageDialogResult: ResourceFileAttributes = {

@@ -37,10 +37,12 @@ describe("DropdownComponent", () => {
     });
 });
 
-@Component({ template: `<bl-dropdown [title]="title"></bl-dropdown>` })
+@Component({
+    standalone: false, template: `<bl-dropdown [title]="title"></bl-dropdown>` })
 class TestComponent { }
 
 @Component({
+    standalone: false,
     template: `<bl-dropdown [title]="title">
         <div bl-dropdown-btn button-title="Host title">Button</div>
     </bl-dropdown>`

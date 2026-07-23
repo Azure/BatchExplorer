@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { BatchAccount, RoleDefinition } from "app/models";
@@ -27,6 +27,7 @@ export interface AppCreatedEvent {
 const maxRetry = 36;
 
 @Component({
+    standalone: false,
     selector: "bl-create-new-aad-app",
     templateUrl: "create-new-aad-app.html",
 })
@@ -35,7 +36,7 @@ export class CreateNewAadAppComponent {
     @Output() public appCreated = new EventEmitter<AppCreatedEvent>();
     @Output() public cancel = new EventEmitter<void>();
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public set createStatus(status: string) {
         this._createStatus = status;
         this.changeDetector.markForCheck();
@@ -44,7 +45,7 @@ export class CreateNewAadAppComponent {
     private _createStatus: string;
 
     constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         private changeDetector: ChangeDetectorRef,
         private aadApplicationService: AADApplicationService,
         private servicePrincipalService: ServicePrincipalService,

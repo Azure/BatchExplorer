@@ -13,6 +13,12 @@ const devServerUrl = Constants.urls.main.dev;
 // Webpack build output
 const buildFileUrl = Constants.urls.main.prod;
 
+// When running against the webpack dev server (HOT=1), the dev server and Electron are
+// started in parallel, so the server may not be listening (or may still be building) when
+// the window first loads. Retry loading for up to (interval * maxRetries) before giving up.
+const DEV_SERVER_RETRY_INTERVAL = 1000;
+const DEV_SERVER_MAX_RETRIES = 60;
+
 export enum WindowState {
     Closed,
     Loading,
@@ -40,6 +46,7 @@ export class MainWindow extends GenericWindow {
 
     private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
     private _resolveAppReady: (value?: any) => void;
+    private _devServerRetries = 0;
 
     constructor(batchExplorerApp: BatchExplorerApplication, private telemetryManager: TelemetryManager) {
         super(batchExplorerApp);
@@ -128,7 +135,33 @@ export class MainWindow extends GenericWindow {
             }
         });
 
-        window.webContents.on("did-fail-load", (event, errorCode, errorDescription) => {
+        window.webContents.on("did-finish-load", () => {
+            // Loaded successfully; reset the dev-server retry counter so a later
+            // navigation (e.g. dev server restart) can retry again if needed.
+            this._devServerRetries = 0;
+        });
+
+        window.webContents.on("did-fail-load", (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+            // Ignore sub-frame failures and user-initiated aborts (ERR_ABORTED = -3),
+            // which are not real main-window load failures.
+            if (isMainFrame === false || errorCode === -3) {
+                return;
+            }
+
+            // In dev (HOT) mode the webpack dev server may not be ready yet when the window
+            // first loads. Retry until it comes up instead of leaving a blank failed window.
+            if (process.env.HOT && this._devServerRetries < DEV_SERVER_MAX_RETRIES) {
+                this._devServerRetries++;
+                log.warn(`Main window failed to load from dev server (${errorDescription}); `
+                    + `retry ${this._devServerRetries}/${DEV_SERVER_MAX_RETRIES} in ${DEV_SERVER_RETRY_INTERVAL}ms`);
+                setTimeout(() => {
+                    if (this._window && !this._window.isDestroyed()) {
+                        this._window.loadURL(devServerUrl);
+                    }
+                }, DEV_SERVER_RETRY_INTERVAL);
+                return;
+            }
+
             this._state.next(WindowState.FailedLoad);
             log.error(`Failed to load main window: ${errorDescription} (Error code ${errorCode})`);
         });

@@ -12,6 +12,7 @@ import { Subscription } from "rxjs";
 import "./activity-monitor-footer-item.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-activity-monitor-footer-item",
     templateUrl: "activity-monitor-footer-item.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

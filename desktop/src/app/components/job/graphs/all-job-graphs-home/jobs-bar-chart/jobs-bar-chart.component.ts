@@ -7,6 +7,7 @@ import { List } from "immutable";
 import "./jobs-bar-chart.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-jobs-bar-chart",
     templateUrl: "jobs-bar-chart.html",
 })

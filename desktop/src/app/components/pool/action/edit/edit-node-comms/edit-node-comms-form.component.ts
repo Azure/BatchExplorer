@@ -8,6 +8,7 @@ import { Subscription } from "rxjs";
 import { of } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-edit-node-comms-form",
     templateUrl: "edit-node-comms-form.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -5,6 +5,7 @@ import { Subscription } from "rxjs";
 import { AdvancedFilter } from "./advanced-filter";
 
 @Component({
+    standalone: false,
     selector: "bl-adv-filter",
     template: `
         <form [formGroup]="advancedFilter.group" *ngIf="advancedFilter">

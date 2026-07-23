@@ -10,6 +10,7 @@ import { Duration } from "luxon";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
+    standalone: false,
     template: `<bl-job-error-display [job]="job"></bl-job-error-display>`,
 })
 class TestJobErrorDisplayComponent {

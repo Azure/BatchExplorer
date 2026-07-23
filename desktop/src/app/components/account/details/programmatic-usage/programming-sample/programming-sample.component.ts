@@ -23,6 +23,7 @@ const engineLanguages = {
 };
 
 @Component({
+    standalone: false,
     selector: "bl-programming-sample",
     templateUrl: "programming-sample.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

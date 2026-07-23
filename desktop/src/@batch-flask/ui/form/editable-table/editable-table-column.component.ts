@@ -25,6 +25,7 @@ export type PipeableSelectOptions = OperatorFunction<StringMap<any>, string[]>;
 export type EditableTableSelectOptions = string[] | List<string> |  (() => PipeableSelectOptions);
 
 @Component({
+    standalone: false,
     selector: "bl-editable-table-column",
     template: `<ng-template><ng-content></ng-content></ng-template>`,
 })

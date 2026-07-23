@@ -5,6 +5,7 @@ import { Job, JobState, JobTerminateReason } from "app/models";
 import "./job-state.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-job-state",
     templateUrl: "job-state.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -7,6 +7,7 @@ import { Task, TaskState } from "app/models";
 import "./task-state.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-task-state",
     templateUrl: "task-state.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

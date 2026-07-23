@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-details-home",
     template: `
         <div class="no-entity-home">

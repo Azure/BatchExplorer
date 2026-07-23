@@ -8,6 +8,7 @@ import { BatchAccountCommands } from "../../action";
 import "./account-summary-card.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-account-summary-card",
     templateUrl: "account-summary-card.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

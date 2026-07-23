@@ -52,6 +52,7 @@ const linuxCustomImage = new Pool({
 });
 
 @Component({
+    standalone: false,
     template: `<bl-pool-os-icon [pool]="pool"></bl-pool-os-icon>`,
 })
 class TestComponent {

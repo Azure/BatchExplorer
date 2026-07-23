@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
@@ -13,6 +13,7 @@ import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.compo
 import "./cloud-file-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-cloud-file-picker",
     templateUrl: "cloud-file-picker.html",
     providers: [
@@ -34,7 +35,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
      */
     @Input() public wildcards: string;
 
-    public value = new FormControl();
+    public value = new UntypedFormControl();
     public warning = false;
 
     private _propagateChange: (value: any[]) => void = null;
@@ -79,7 +80,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
         this.value.markAsTouched();
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

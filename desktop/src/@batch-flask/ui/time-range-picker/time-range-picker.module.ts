@@ -24,7 +24,6 @@ const privateComponents = [];
     ],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class TimeRangePickerModule {
 }

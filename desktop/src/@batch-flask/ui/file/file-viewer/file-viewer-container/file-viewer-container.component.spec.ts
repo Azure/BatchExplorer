@@ -20,6 +20,7 @@ import { FileViewerContainerComponent } from "./file-viewer-container.component"
 import { FileViewerHeaderComponent } from "./file-viewer-header";
 
 @Component({
+    standalone: false,
     template: `<bl-file-viewer-container [fileLoader]="fileLoader" [config]="config"></bl-file-viewer-container>`,
 })
 class TestComponent {
@@ -46,6 +47,8 @@ describe("FileViewerContainerComponent", () => {
         fsSpy = {
             ensureDir: jasmine.createSpy("ensureDir").and.returnValue(Promise.resolve(true)),
             saveFile: jasmine.createSpy("saveFile").and.returnValue(Promise.resolve(true)),
+            exists: jasmine.createSpy("exists").and.returnValue(Promise.resolve(true)),
+            commonFolders: { temp: "/tmp" },
         };
         propertyGetterSpy = jasmine.createSpy("propertiesGetter").and.callFake(() => of(file));
         contentSpy = jasmine.createSpy("content").and.returnValue(of({ content: "export const foo = 123;" }));
@@ -77,7 +80,6 @@ describe("FileViewerContainerComponent", () => {
         });
         TestBed.overrideModule(BrowserDynamicTestingModule, {
             set: {
-                entryComponents: [ImageFileViewerComponent],
             },
         });
         fixture = TestBed.createComponent(TestComponent);

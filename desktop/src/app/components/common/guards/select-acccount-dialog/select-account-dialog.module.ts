@@ -11,7 +11,6 @@ const privateComponents = [];
     imports: [CommonModule, QuickListModule, LocationModule, ToolbarModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [SelectAccountDialogComponent],
 })
 export class SelectAccountDialogModule {
 }

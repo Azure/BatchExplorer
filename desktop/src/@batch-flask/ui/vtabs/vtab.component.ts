@@ -3,6 +3,7 @@ import { Component, Input, TemplateRef, ViewChild } from "@angular/core";
 import "./vtab.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-vtab",
     templateUrl: "vtab.html",
 })

@@ -1,4 +1,4 @@
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import * as FilterBuilder from "@batch-flask/core/filter-builder";
 import { log } from "@batch-flask/utils";
 import { Map } from "immutable";
@@ -7,7 +7,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { AdvancedFilterControlBase } from "./control-base";
 
 export class AdvancedFilter {
-    public group: FormGroup;
+    public group: UntypedFormGroup;
     public filterChange: Observable<FilterBuilder.Filter>;
 
     private _filterChange = new BehaviorSubject<FilterBuilder.Filter>(FilterBuilder.none());
@@ -28,11 +28,11 @@ export class AdvancedFilter {
         });
     }
 
-    private _buildFormGroup(): FormGroup {
+    private _buildFormGroup(): UntypedFormGroup {
         const controls = Map(this.controls).map((value) => {
             return value.formGroup();
         }).toObject();
-        return new FormGroup(controls);
+        return new UntypedFormGroup(controls);
     }
 
     private _handleFormChange(data: any) {

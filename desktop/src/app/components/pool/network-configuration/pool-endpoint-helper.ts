@@ -1,4 +1,4 @@
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { InboundNATPoolAttributes } from "app/models";
 
 export const MININUM_PORT = 1;
@@ -22,7 +22,7 @@ export const ENDPOINTNAME_LENGTH = 77;
  * 3, Backend port must be unique within Batch pool
  */
 export function backendPortValidator(inboundNATPools: InboundNATPoolAttributes[]) {
-    return (control: FormControl): {[key: string]: any} => {
+    return (control: UntypedFormControl): {[key: string]: any} => {
         if (control.value === null) {
             return null;
         }
@@ -69,7 +69,7 @@ export function backendPortValidator(inboundNATPools: InboundNATPoolAttributes[]
  * 2, Frontend port must not be between 50000 and 55000 which are reserved ports
  */
 export function frontendPortValidator() {
-    return (control: FormControl): {[key: string]: any} => {
+    return (control: UntypedFormControl): {[key: string]: any} => {
         if (control.value === null) {
             return null;
         }
@@ -101,7 +101,7 @@ export function frontendPortValidator() {
 export function frontendPortRangeValidator(frontendPortRangeStart: string,
                                            frontendPortRangeEnd: string,
                                            inboundNATPools: InboundNATPoolAttributes[]) {
-    return (group: FormGroup): {[key: string]: any} => {
+    return (group: UntypedFormGroup): {[key: string]: any} => {
         const start = group.controls[frontendPortRangeStart];
         const end = group.controls[frontendPortRangeEnd];
         if (start.value === null || end.value === null) {
@@ -157,7 +157,7 @@ export function frontendPortRangeValidator(frontendPortRangeStart: string,
  * 2, Endponit name must be unique within a Batch pool
  */
 export function nameValidator(inboundNATPools: InboundNATPoolAttributes[]) {
-    return (control: FormControl): {[key: string]: any} => {
+    return (control: UntypedFormControl): {[key: string]: any} => {
         if (control.value === null) {
             return null;
         }
@@ -195,7 +195,7 @@ export function nameValidator(inboundNATPools: InboundNATPoolAttributes[]) {
  */
 export function networkSecurityGroupRuleValidator(networkSecurityGroupRules: string,
                                                   inboundNATPools: InboundNATPoolAttributes[]) {
-    return (group: FormGroup): {[key: string]: any} => {
+    return (group: UntypedFormGroup): {[key: string]: any} => {
         const control = group.controls[networkSecurityGroupRules];
         if (control.value === null) {
             return null;

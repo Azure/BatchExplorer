@@ -112,6 +112,7 @@ const nodeCounts = new Map()
         },
     }));
 @Component({
+    standalone: false,
     template: `<bl-pool-state-graph [pool]="pool" [interactive]="interactive"></bl-pool-state-graph>`,
 })
 class TestComponent {

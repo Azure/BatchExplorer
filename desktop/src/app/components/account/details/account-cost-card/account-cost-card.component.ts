@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { QuickRange, QuickRanges, TimeRange } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
@@ -15,6 +15,7 @@ import { catchError, filter, startWith, switchMap, takeUntil } from "rxjs/operat
 import "./account-cost-card.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-account-cost-card",
     templateUrl: "account-cost-card.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +37,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         QuickRanges.thisYearRange,
     ];
 
-    public timeRange = new FormControl<TimeRange>(QuickRanges.thisMonthRange);
+    public timeRange = new UntypedFormControl(QuickRanges.thisMonthRange);
 
     public costMangementUrl: string | null = null;
 

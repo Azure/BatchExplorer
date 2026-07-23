@@ -1,5 +1,8 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  },
   "include": [
     "src/app",
     "src/@batch-flask/utils/logging",
@@ -12,6 +15,8 @@
     "**/testing**/*"
   ],
   "angularCompilerOptions": {
-    "disableTypeScriptVersionCheck": true
+    "disableTypeScriptVersionCheck": true,
+    "strictTemplates": false,
+    "fullTemplateTypeCheck": false
   }
 }

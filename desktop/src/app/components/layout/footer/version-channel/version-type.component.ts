@@ -4,6 +4,7 @@ import { VersionService, VersionType } from "app/services";
 import "./version-type.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-version-type",
     templateUrl: "version-type.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

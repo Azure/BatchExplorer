@@ -12,8 +12,6 @@ const modules = [
     declarations: components,
     exports: [...modules, ...components],
     imports: [...modules],
-    entryComponents: [
-    ],
 })
 export class FileModule {
 }

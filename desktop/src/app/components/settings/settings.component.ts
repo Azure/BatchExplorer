@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { EntityConfigurationView, UserConfigurationService, autobind } from "@batch-flask/core";
 import { BEUserConfiguration, DEFAULT_BE_USER_CONFIGURATION } from "common";
 import { Subject } from "rxjs";
@@ -22,6 +22,7 @@ export interface SettingsSelection {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-settings",
     templateUrl: "settings.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +32,7 @@ export class SettingsComponent implements OnDestroy {
         return { name: "Settings" };
     }
 
-    public form: FormGroup<SettingsSelection>;
+    public form: UntypedFormGroup;
     public viewerOptions = ["log", "code", "image"];
     public saved = false;
     public modified = false;
@@ -41,7 +42,7 @@ export class SettingsComponent implements OnDestroy {
     constructor(
         private userConfigurationService: UserConfigurationService<BEUserConfiguration>,
         private changeDetector: ChangeDetectorRef,
-        formBuilder: FormBuilder) {
+        formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             theme: [null],
             externalBrowserAuth: [true],

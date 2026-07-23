@@ -12,6 +12,7 @@ export interface ActivityAction {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-activity-monitor-item-action",
     templateUrl: "activity-monitor-item-action.html",
 })

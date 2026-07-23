@@ -37,7 +37,6 @@ const publicModules = [
     imports: [NgCommonModule, BaseModule, FormsModule, ReactiveFormsModule, MaterialModule, ...publicModules],
     declarations: [...privateComponents, publicComponents],
     exports: [...publicComponents, ...publicModules],
-    entryComponents: [EditMetadataFormComponent],
 })
 export class CommonModule {
 

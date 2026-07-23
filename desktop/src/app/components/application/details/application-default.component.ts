@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 
 @Component({
+    standalone: false,
     selector: "bl-application-default",
     template: `
         <bl-application-error-display></bl-application-error-display>

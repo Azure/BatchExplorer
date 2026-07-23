@@ -12,6 +12,7 @@ import { map } from "rxjs/operators";
 import { NodeCommands } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-node-list",
     templateUrl: "node-list.html",
     providers: [NodeCommands, {

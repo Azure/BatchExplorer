@@ -16,6 +16,7 @@ import { translate } from "@azure/bonito-core";
  * SimpleForm is an helper component that use a ComplexForm with only 1 page and section.
  */
 @Component({
+    standalone: false,
     selector: "be-react-action-form",
     templateUrl: "react-action-form.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

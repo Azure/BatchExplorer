@@ -14,6 +14,7 @@ import { DisplayStatus, LoadingStatus } from "./loading-status";
 import "./loading.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-loading",
     templateUrl: "loading.html",
 })

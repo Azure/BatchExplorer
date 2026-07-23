@@ -9,6 +9,7 @@ import { ResourceFileCloudFileDialogComponent } from "../resourcefile-cloud-file
 import "./resourcefile-container-source.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-resourcefile-container-source",
     templateUrl: "resourcefile-container-source.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

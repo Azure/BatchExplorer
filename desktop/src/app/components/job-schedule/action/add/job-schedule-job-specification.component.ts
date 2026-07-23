@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     Validators,
@@ -16,6 +16,7 @@ import { Subscription, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
 
 @Component({
+    standalone: false,
     selector: "bl-job-schedule-job-specification",
     templateUrl: "job-schedule-job-specification.html",
     providers: [
@@ -35,8 +36,8 @@ import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
 export class JobScheduleJobSpecificationComponent implements ControlValueAccessor, OnDestroy {
     public AllTasksCompleteAction = AllTasksCompleteAction;
     public TaskFailureAction = TaskFailureAction;
-    public form: FormGroup;
-    public constraintsGroup: FormGroup;
+    public form: UntypedFormGroup;
+    public constraintsGroup: UntypedFormGroup;
     public virtualMachineConfiguration: VirtualMachineConfiguration | null = null;
     public showJobReleaseTask: boolean;
 
@@ -46,7 +47,7 @@ export class JobScheduleJobSpecificationComponent implements ControlValueAccesso
     constructor(
         private changeDetector: ChangeDetectorRef,
         private poolService: PoolService,
-        private formBuilder: FormBuilder) {
+        private formBuilder: UntypedFormBuilder) {
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
             maxWallClockTime: null,
@@ -132,7 +133,7 @@ export class JobScheduleJobSpecificationComponent implements ControlValueAccesso
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const valid = this.form.valid;
         if (!valid) {
             return {

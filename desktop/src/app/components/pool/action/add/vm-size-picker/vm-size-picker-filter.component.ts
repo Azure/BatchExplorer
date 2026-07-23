@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { distinctUntilChanged } from "rxjs/operators";
 
 export interface VmSizeFilterValue {
@@ -8,6 +8,7 @@ export interface VmSizeFilterValue {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-vm-size-picker-filter",
     templateUrl: "vm-size-picker-filter.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,9 +16,9 @@ export interface VmSizeFilterValue {
 export class VmSizePickerFilterComponent {
     @Input() public categoriesDisplayName: {[key: string]: string };
     @Output() public filterChange = new EventEmitter<VmSizeFilterValue>();
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             category: ["all"],
             searchName: [],

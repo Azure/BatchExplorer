@@ -7,6 +7,7 @@ import { Subscription } from "rxjs";
 import "./activity-monitor.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-activity-monitor",
     templateUrl: "activity-monitor.html",
 })

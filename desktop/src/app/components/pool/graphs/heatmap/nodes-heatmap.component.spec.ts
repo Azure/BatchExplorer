@@ -20,6 +20,7 @@ const defaultRunningTasksCount = 2;
 const defaultRunningTaskSlotsCount = 2;
 
 @Component({
+    standalone: false,
     template: `
         <div [style.width]="width" [style.height]="height" [style.position]="'relative'">
             <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [interactive]="interactive"></bl-nodes-heatmap>

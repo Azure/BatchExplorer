@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "target": "es2015",
     "module": "esnext",
     "lib": [
@@ -43,7 +44,8 @@
       "jasmine"
     ],
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "node_modules"
     ],
   },
   "files": [

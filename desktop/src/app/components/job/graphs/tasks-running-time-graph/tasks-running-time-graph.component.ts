@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { DateUtils } from "@batch-flask/utils";
 import { Job, Task } from "app/models";
@@ -23,6 +23,7 @@ export enum SortOption {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-tasks-running-time-graph",
     templateUrl: "tasks-running-time-graph.html",
 })
@@ -45,7 +46,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
 
     public loading = false;
 
-    public sortControl = new FormControl(SortOption.default);
+    public sortControl = new UntypedFormControl(SortOption.default);
 
     private _failedTasks: TaskPoint[];
     private _succeededTasks: TaskPoint[];
@@ -117,7 +118,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
                     ticks: {
                         min: 0,
                         callback: (value) => {
-                            if (value > 180) {
+                            if (value as number > 180) {
                                 if (value as number % 60 === 0) {
                                     return value as number / 60 + "m";
                                 }

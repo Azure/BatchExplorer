@@ -10,8 +10,8 @@ import {
 import {
     AsyncValidator,
     ControlValueAccessor,
-    FormBuilder,
-    FormControl,
+    UntypedFormBuilder,
+    UntypedFormControl,
     NG_ASYNC_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -25,6 +25,7 @@ import { map } from "rxjs/operators";
 import "./file-or-directory-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-file-or-directory-picker",
     templateUrl: "file-or-directory-picker.html",
     providers: [
@@ -38,7 +39,7 @@ export class FileOrDirectoryPickerComponent implements AsyncValidator, ControlVa
 
     public invalidPath: string;
     public isDraging = 0;
-    public paths: FormControl<FileOrDirectoryDto[]>;
+    public paths: UntypedFormControl;
 
     private _propagateChange: (value: FileOrDirectoryDto[]) => void = null;
     private _sub: Subscription;
@@ -46,7 +47,7 @@ export class FileOrDirectoryPickerComponent implements AsyncValidator, ControlVa
     constructor(
         private fs: FileSystemService,
         private changeDetector: ChangeDetectorRef,
-        private formBuilder: FormBuilder) {
+        private formBuilder: UntypedFormBuilder) {
 
         this.paths = this.formBuilder.control([], null, this._validatePaths);
         this._sub = this.paths.valueChanges.subscribe((paths) => {
@@ -74,7 +75,7 @@ export class FileOrDirectoryPickerComponent implements AsyncValidator, ControlVa
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return this._validatePaths(c);
     }
 
@@ -123,7 +124,7 @@ export class FileOrDirectoryPickerComponent implements AsyncValidator, ControlVa
     }
 
     @autobind()
-    private _validatePaths(control: FormControl) {
+    private _validatePaths(control: UntypedFormControl) {
         return from(this._validatePathsAsync(control.value)).pipe(map((path) => {
             if (path) {
                 return {

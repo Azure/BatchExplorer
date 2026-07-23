@@ -14,7 +14,6 @@ export class TestTranslatationsLoaderService extends TranslationsLoaderService {
     imports: [CommonModule, I18nUIModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: [...publicComponents, I18nUIModule],
-    entryComponents: [],
     providers: [
         { provide: TranslationsLoaderService, useClass: TestTranslatationsLoaderService },
     ],

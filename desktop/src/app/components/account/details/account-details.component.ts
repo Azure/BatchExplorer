@@ -14,6 +14,7 @@ import { takeUntil } from "rxjs/operators";
 import "./account-details.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-account-details",
     templateUrl: "account-details.html",
 })

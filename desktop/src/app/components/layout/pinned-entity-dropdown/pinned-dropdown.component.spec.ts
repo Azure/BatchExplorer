@@ -13,6 +13,7 @@ import * as Fixtures from "test/fixture";
 import { PinnedDropDownComponent } from "./pinned-dropdown.component";
 
 @Component({
+    standalone: false,
     template: "<bl-pinned-dropdown></bl-pinned-dropdown>",
 })
 class TestComponent {

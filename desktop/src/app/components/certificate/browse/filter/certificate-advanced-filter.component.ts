@@ -4,6 +4,7 @@ import { AdvancedFilter, StatePickerControl } from "@batch-flask/ui/advanced-fil
 import { CertificateState } from "app/models";
 
 @Component({
+    standalone: false,
     selector: "bl-certificate-advanced-filter",
     templateUrl: "certificate-advanced-filter.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

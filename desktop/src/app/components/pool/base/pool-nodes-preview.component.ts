@@ -5,6 +5,7 @@ import { PoolUtils } from "app/utils";
 import "./pool-nodes-preview.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-nodes-preview",
     templateUrl: "pool-nodes-preview.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

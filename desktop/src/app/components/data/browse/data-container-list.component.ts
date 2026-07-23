@@ -20,6 +20,7 @@ const defaultListOptions = {
     pageSize: Constants.ListPageSizes.default,
 };
 @Component({
+    standalone: false,
     selector: "bl-data-container-list",
     templateUrl: "data-container-list.html",
     providers: [BlobContainerCommands, {

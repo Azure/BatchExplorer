@@ -5,6 +5,7 @@ import { By } from "@angular/platform-browser";
 import { CalloutDirective } from "..";
 
 @Component({
+    standalone: false,
     template: `<input [blCallout] />`
 })
 class HostComponent {

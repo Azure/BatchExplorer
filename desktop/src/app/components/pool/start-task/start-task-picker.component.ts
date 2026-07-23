@@ -1,11 +1,12 @@
 import { Component, Input, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
 import { UserAccount, VirtualMachineConfiguration } from "app/models";
 import { List } from "immutable";
 
 @Component({
+    standalone: false,
     selector: "bl-start-task-picker",
     templateUrl: "start-task-picker.html",
     providers: [
@@ -18,11 +19,11 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
     @Input() public userAccounts: List<UserAccount> | UserAccount[];
     @Input() public virtualMachineConfiguration: VirtualMachineConfiguration = null;
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     private _propagateChange: (value: any) => void = null;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             commandLine: ["", Validators.required],
             maxTaskRetryCount: [0],
@@ -63,7 +64,7 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const valid = this.form.valid;
 
         if (!valid) {

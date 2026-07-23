@@ -10,6 +10,7 @@ import { JobService } from "app/services";
 import { JobScheduleJobSpecificationComponent } from "./job-schedule-job-specification.component";
 
 @Component({
+    standalone: false,
     template: `<bl-job-schedule-job-specification [job]="job"></bl-job-schedule-job-specification>`,
 })
 class TestComponent {

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
+    standalone: false,
     selector: "bl-certificate-details-home",
     template: `
         <div class="no-entity-home">

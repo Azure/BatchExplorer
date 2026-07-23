@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { FormModule, SelectComponent, SelectModule } from "@batch-flask/ui";
@@ -11,10 +11,11 @@ import { of } from "rxjs";
 import { SigImagePickerComponent } from "./sig-image-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-sig-image-picker [formControl]="control"></bl-sig-image-picker>`,
 })
 class TestComponent {
-    public control = new FormControl();
+    public control = new UntypedFormControl();
 }
 
 const sub1 = new ArmSubscription({ id: "/subs/sub-1", subscriptionId: "sub-1" });

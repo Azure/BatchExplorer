@@ -7,6 +7,7 @@ import { PoolParams, PoolService } from "app/services";
 import "./pool-standalone-graphs.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-standalone-graphs",
     templateUrl: "pool-standalone-graphs.html",
 })

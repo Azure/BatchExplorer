@@ -6,6 +6,7 @@ import { JobService } from "app/services";
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     selector: "bl-job-schedule-job-specification",
     templateUrl: "job-schedule-job-specification.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

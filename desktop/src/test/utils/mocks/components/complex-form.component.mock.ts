@@ -1,6 +1,7 @@
 import { Component, Input } from "@angular/core";
 
 @Component({
+    standalone: false,
     selector: "bl-complex-form",
     template: `
         <bl-server-error [error]="error"></bl-server-error>
@@ -14,6 +15,7 @@ export class ComplexFormMockComponent {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-form-page",
     template: `
         <h2>{{title}}</h2>

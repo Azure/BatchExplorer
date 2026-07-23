@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { FormBuilder, FormControl } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl } from "@angular/forms";
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { AddCertificateFormComponent } from "../action/add";
 
 @Component({
+    standalone: false,
     selector: "bl-certificate-home",
     templateUrl: "certificate-home.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CertificateHomeComponent {
-    public quickSearchQuery = new FormControl();
+    public quickSearchQuery = new UntypedFormControl();
 
     public filter: Filter = FilterBuilder.none();
     public quickFilter: Filter = FilterBuilder.none();
@@ -23,7 +24,7 @@ export class CertificateHomeComponent {
         keyField: "thumbprint",
     };
 
-    constructor(formBuilder: FormBuilder, private sidebarManager: SidebarManager) {
+    constructor(formBuilder: UntypedFormBuilder, private sidebarManager: SidebarManager) {
         this.quickSearchQuery.valueChanges.pipe(
             debounceTime(400),
             distinctUntilChanged(),

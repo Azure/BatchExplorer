@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef,
 } from "@angular/core";
-import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { AutoUserScope, UserAccount, UserAccountElevationLevel, UserIdentityAttributes } from "app/models";
 import { UserIdentityDto } from "app/models/dtos";
 import { List } from "immutable";
@@ -48,6 +48,7 @@ const defaultUsers = [
 const defaultSelectedUser = defaultUsers[0];
 
 @Component({
+    standalone: false,
     selector: "bl-user-identity-picker",
     templateUrl: "user-identity-picker.html",
     providers: [
@@ -60,7 +61,7 @@ export class UserIdentityPickerComponent implements OnChanges, OnDestroy {
     @Input() public userAccounts: List<UserAccount> | UserAccount[];
 
     public options: UserOption[];
-    public selected = new FormControl<UserIdentityAttributes>();
+    public selected = new UntypedFormControl();
     private _propagateChange: (value: UserIdentityAttributes) => void = null;
     private _sub: Subscription;
 
@@ -109,7 +110,7 @@ export class UserIdentityPickerComponent implements OnChanges, OnDestroy {
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

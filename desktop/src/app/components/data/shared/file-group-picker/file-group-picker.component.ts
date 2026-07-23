@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { FilterBuilder, ListView } from "@batch-flask/core";
 import { Activity, DialogService } from "@batch-flask/ui";
@@ -18,6 +18,7 @@ import "./file-group-picker.scss";
 import { FileGroupService } from "app/services";
 
 @Component({
+    standalone: false,
     selector: "bl-file-group-picker",
     templateUrl: "file-group-picker.html",
     providers: [
@@ -31,7 +32,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     @Input() public hint: string;
 
     public fileGroups: List<BlobContainer>;
-    public value = new FormControl();
+    public value = new UntypedFormControl();
     public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
     public uploadProgress: number | null;
@@ -136,7 +137,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

@@ -11,6 +11,7 @@ export enum TimespanDisplayType {
     compact = "compact",
 }
 @Component({
+    standalone: false,
     selector: "bl-timespan",
     template: `{{formattedValue}}`,
     changeDetection: ChangeDetectionStrategy.OnPush,

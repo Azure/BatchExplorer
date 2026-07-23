@@ -2,6 +2,7 @@ import { Component, Input } from "@angular/core";
 import { Icon } from "./icon.model";
 
 @Component({
+    standalone: false,
     selector: "bl-icon",
     templateUrl: "icon.html",
 })

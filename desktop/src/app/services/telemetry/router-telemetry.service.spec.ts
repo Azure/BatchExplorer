@@ -6,6 +6,7 @@ import { TelemetryService } from "@batch-flask/core";
 import { RouterTelemetryService } from "./router-telemetry.service";
 
 @Component({
+    standalone: false,
     selector: "bl-pools",
     template: "<div></div>",
 })
@@ -14,6 +15,7 @@ export class PoolsComponent {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-home",
     template: "<div></div>",
 })

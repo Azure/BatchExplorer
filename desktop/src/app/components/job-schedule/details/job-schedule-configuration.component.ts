@@ -7,6 +7,7 @@ import { Subscription } from "rxjs";
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     selector: "bl-job-schedule-configuration",
     templateUrl: "job-schedule-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

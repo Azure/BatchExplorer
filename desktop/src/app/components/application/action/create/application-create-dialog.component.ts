@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -14,19 +14,20 @@ import { Observable, of, throwError } from "rxjs";
 import { catchError, share, switchMap, tap } from "rxjs/operators";
 
 @Component({
+    standalone: false,
     selector: "bl-application-create-dialog",
     templateUrl: "application-create-dialog.html",
 })
 export class ApplicationCreateDialogComponent {
     public file: File;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public blockCount: number = 0;
     public progress: string;
     public title: string = "Create application package";
     public description: string = "Upload an application package and give it an identifier to create your application";
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public sidebarRef: SidebarRef<ApplicationCreateDialogComponent>,
         private applicationService: BatchApplicationService,
         private packageService: BatchApplicationPackageService,

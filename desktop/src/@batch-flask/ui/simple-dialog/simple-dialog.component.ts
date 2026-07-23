@@ -8,6 +8,7 @@ import "./simple-dialog.scss";
  * SimpleDialog is an helper component that displays a standard message dialog and a close button.
  */
 @Component({
+    standalone: false,
     selector: "bl-simple-dialog",
     templateUrl: "simple-dialog.html",
 })

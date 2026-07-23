@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from "@angular/core";
 
 @Component({
+    standalone: false,
     selector: "bl-bool-property",
     templateUrl: "bool-property.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

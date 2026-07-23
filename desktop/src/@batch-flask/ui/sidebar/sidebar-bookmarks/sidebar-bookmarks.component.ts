@@ -13,6 +13,7 @@ import { SidebarRef } from "../sidebar-ref";
 import "./sidebar-bookmarks.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-sidebar-bookmarks",
     templateUrl: "sidebar-bookmarks.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, forwardRef } from "@angular/core";
 import {
-    AbstractControl, ControlValueAccessor, FormBuilder, FormGroup,
+    AbstractControl, ControlValueAccessor, UntypedFormBuilder, UntypedFormGroup,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator, Validators,
 } from "@angular/forms";
 import { MultiInstanceSettingsAttributes } from "app/models";
@@ -8,6 +8,7 @@ import { MultiInstanceSettingsAttributes } from "app/models";
 import "./multi-instance-settings-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-multi-instance-settings-picker",
     templateUrl: "multi-instance-settings-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,11 +19,11 @@ import "./multi-instance-settings-picker.scss";
     ],
 })
 export class MultiInstanceSettingsPickerComponent implements ControlValueAccessor, Validator {
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     private _propagateChangeFn: (value: MultiInstanceSettingsAttributes) => void;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             numberOfInstances: [1, [Validators.min(0), Validators.required]],
             coordinationCommandLine: ["", Validators.required],

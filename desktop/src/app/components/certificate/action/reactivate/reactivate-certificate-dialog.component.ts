@@ -4,6 +4,7 @@ import { autobind } from "@batch-flask/core";
 import { CertificateService } from "app/services";
 
 @Component({
+    standalone: false,
     selector: "bl-reactivate-certificate-dialog",
     templateUrl: "reactivate-certificate-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

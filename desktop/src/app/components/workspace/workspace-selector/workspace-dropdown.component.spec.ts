@@ -12,6 +12,7 @@ import * as Fixtures from "test/fixture";
 import { WorkspaceDropDownComponent } from "./workspace-dropdown.component";
 
 @Component({
+    standalone: false,
     template: "<bl-workspace-dropdown></bl-workspace-dropdown>",
 })
 class TestComponent {

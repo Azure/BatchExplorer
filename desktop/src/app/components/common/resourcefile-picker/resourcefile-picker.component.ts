@@ -2,7 +2,7 @@ import {
     ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnDestroy, Output, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormArray, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { UserConfigurationService } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/electron";
@@ -26,6 +26,7 @@ export interface UploadResourceFileEvent {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-resourcefile-picker",
     templateUrl: "resourcefile-picker.html",
     providers: [
@@ -40,7 +41,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
      * Event emitted when a file is being uploaded, use this to add async task to the form
      */
     @Output() public upload = new EventEmitter();
-    public files: FormArray;
+    public files: UntypedFormArray;
     public isDraging = 0;
     public uploadingFiles: string[] = [];
 
@@ -54,7 +55,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     private _folderId: string;
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private autoStorageService: AutoStorageService,
         private storageBlobService: StorageBlobService,
         private storageContainerService: StorageContainerService,
@@ -89,7 +90,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     }
 
     public addUrlResourceFile() {
-        this.files.push(new FormControl({ httpUrl: "", filePath: "" }));
+        this.files.push(new UntypedFormControl({ httpUrl: "", filePath: "" }));
         this.changeDetector.markForCheck();
     }
 
@@ -97,7 +98,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         const ref = this.dialogService.open(ResourceFileCloudFileDialogComponent);
         ref.afterClosed().subscribe((file) => {
             if (file) {
-                this.files.push(new FormControl(file));
+                this.files.push(new UntypedFormControl(file));
                 this.changeDetector.markForCheck();
             }
         });
@@ -116,7 +117,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 
@@ -222,7 +223,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     }
 
     private _addResourceFile(httpUrl: string, filePath: string) {
-        this.files.push(new FormControl({
+        this.files.push(new UntypedFormControl({
             httpUrl,
             filePath,
         }));

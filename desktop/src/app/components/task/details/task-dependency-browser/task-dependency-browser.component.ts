@@ -5,6 +5,7 @@ import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 
 @Component({
+    standalone: false,
     selector: "bl-task-dependency-browser",
     templateUrl: "task-dependency-browser.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

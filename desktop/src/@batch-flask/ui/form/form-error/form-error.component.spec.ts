@@ -1,9 +1,10 @@
 import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { FormErrorComponent } from "@batch-flask/ui/form/form-error";
 
 @Component({
+    standalone: false,
     template: `
         <form [formGroup]="form">
             <input formControlName="id">
@@ -27,9 +28,9 @@ export class FormErrorTestComponent {
     @ViewChild("osNameError", { static: false })
     public osNameError: FormErrorComponent;
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             id: ["", [Validators.required, Validators.maxLength(5)]],
             os: formBuilder.group({

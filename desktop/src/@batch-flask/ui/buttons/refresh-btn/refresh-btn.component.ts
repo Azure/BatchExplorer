@@ -16,6 +16,7 @@ export enum RefreshStatus {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-refresh-btn",
     templateUrl: "refresh-btn.html",
     animations: [

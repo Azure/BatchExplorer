@@ -18,7 +18,6 @@ const privateComponents = [
     imports: [CommonModule, FormsModule, ReactiveFormsModule, FormModule, SelectModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class ContainerConfigurationPickerModule {
 }

@@ -4,6 +4,7 @@ import { OSType, Pool } from "app/models";
 import "./pool-os-icon.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-os-icon",
     templateUrl: "pool-os-icon.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

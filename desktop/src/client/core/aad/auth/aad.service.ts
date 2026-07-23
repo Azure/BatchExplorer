@@ -55,14 +55,19 @@ export class AADService {
 
     private _currentUser = new BehaviorSubject<AADUser | null>(null);
     private _tenants = new BehaviorSubject<TenantDetails[]>([]);
+    private app: BatchExplorerApplication;
 
     constructor(
-        @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
+        // `app` typed `any` to avoid an eager `design:paramtypes` reference to
+        // BatchExplorerApplication (circular dep). DI resolves it via forwardRef; the typed
+        // field above preserves type-safety. Without this the bundled main process TDZ-throws.
+        @Inject(forwardRef(() => BatchExplorerApplication)) app: any,
         private localStorage: DataStore,
         private properties: BatchExplorerProperties,
         private telemetryManager: TelemetryManager,
         ipcMain: BlIpcMain
     ) {
+        this.app = app;
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenants = this._tenants.asObservable();

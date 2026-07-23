@@ -4,6 +4,7 @@ import { AdvancedFilter, StatePickerControl } from "@batch-flask/ui/advanced-fil
 import { PoolAllocationState, PoolState } from "app/models";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-advanced-filter",
     templateUrl: "pool-advanced-filter.html",
 })

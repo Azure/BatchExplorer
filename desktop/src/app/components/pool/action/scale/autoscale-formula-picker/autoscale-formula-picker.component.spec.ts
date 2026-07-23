@@ -1,6 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { ClickableComponent, DialogService } from "@batch-flask/ui";
 import { EditorMockComponent, EditorTestingModule } from "@batch-flask/ui/testing";
@@ -18,10 +18,11 @@ const predefinedFormulas = [
 ];
 
 @Component({
+    standalone: false,
     template: `<bl-autoscale-formula-picker [formControl]="formula"></bl-autoscale-formula-picker>`,
 })
 class TestComponent {
-    public formula = new FormControl("");
+    public formula = new UntypedFormControl("");
 }
 
 describe("AutoscaleFormulaPickerComponent", () => {

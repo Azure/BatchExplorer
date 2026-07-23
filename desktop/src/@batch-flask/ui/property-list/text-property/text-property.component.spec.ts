@@ -4,6 +4,7 @@ import { By } from "@angular/platform-browser";
 import { TextPropertyComponent } from "./text-property.component";
 
 @Component({
+    standalone: false,
     template: `
         <bl-text-property [label]="label" [value]="value" [copyable]="copyable">
         </bl-text-property>

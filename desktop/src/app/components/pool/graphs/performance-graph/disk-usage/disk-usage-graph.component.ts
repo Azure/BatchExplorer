@@ -12,6 +12,7 @@ interface Disk {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-disk-usage-graph",
     templateUrl: "disk-usage-graph.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

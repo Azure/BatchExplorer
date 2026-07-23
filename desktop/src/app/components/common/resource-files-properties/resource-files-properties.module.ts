@@ -10,7 +10,6 @@ const privateComponents = [];
     imports: [CommonModule, PropertyListModule, ButtonsModule, I18nUIModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class ResourceFilesPropertiesModule {
 }

@@ -10,6 +10,7 @@ import { NodeCommands, UploadNodeLogsDialogComponent } from "../action";
 import "./node-details.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-node-details",
     templateUrl: "node-details.html",
     providers: [NodeCommands],

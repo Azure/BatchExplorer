@@ -25,7 +25,7 @@ export class FileUtils {
 
     public unzip(source: string, dest: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            extract(source, { dir: dest }, (err) => {
+            (extract as any)(source, { dir: dest }, (err) => {
                 if (err) {
                     return reject(err);
                 }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { Subject } from "rxjs";
@@ -9,6 +9,7 @@ import { takeUntil } from "rxjs/operators";
 import "./pool-os-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-os-picker",
     templateUrl: "pool-os-picker.html",
     providers: [
@@ -18,7 +19,7 @@ import "./pool-os-picker.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     // Container configuration
     public showDataDiskPicker: boolean = false;
@@ -26,7 +27,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     private _destroy = new Subject();
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private changeDetector: ChangeDetectorRef) {
 
         this.form = this.formBuilder.group({
@@ -97,7 +98,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
         this._destroy.complete();
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const value = this.form.value;
         if (!value || (!value.virtualMachineConfiguration && !value.cloudServiceConfiguration)) {
             return {

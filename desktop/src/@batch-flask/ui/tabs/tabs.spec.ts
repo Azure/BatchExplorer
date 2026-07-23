@@ -8,6 +8,7 @@ import { TabsModule } from "@batch-flask/ui/tabs";
 import { BehaviorSubject } from "rxjs";
 
 @Component({
+    standalone: false,
     template: `
         <bl-tab-group>
             <bl-tab key="first">
@@ -70,7 +71,7 @@ describe("Tabs", () => {
     });
 
     it("clicking on a tab label should update the route", async () => {
-        const labels = fixture.debugElement.queryAll(By.css(".mat-tab-label"));
+        const labels = fixture.debugElement.queryAll(By.css(".mat-mdc-tab"));
         expect(labels.length).toBe(2);
         labels[1].nativeElement.click();
         fixture.detectChanges();

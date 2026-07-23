@@ -25,9 +25,6 @@ const components = [
     exports: components,
     imports: [...commonModules, TaskBaseModule, BaseModule, SidebarModule,
         ResourceFilePickerModule, I18nUIModule],
-    entryComponents: [
-        AddJobFormComponent, DisableJobDialogComponent, PatchJobComponent,
-    ],
 })
 export class JobActionModule {
 

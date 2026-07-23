@@ -23,6 +23,7 @@ export enum Aggregation {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-performance-graph",
     templateUrl: "performance-graph.html",
 })

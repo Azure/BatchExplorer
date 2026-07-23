@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { UntypedFormBuilder } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -10,6 +10,7 @@ import { Observable } from "rxjs";
 import { AddJobFormComponent } from "./add-job-form.component";
 
 @Component({
+    standalone: false,
     selector: "bl-patch-job-form",
     templateUrl: "add-job-form.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +27,7 @@ export class PatchJobComponent extends AddJobFormComponent {
     }
 
     constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         sidebarRef: SidebarRef<AddJobFormComponent>,
         jobService: JobService,
         poolService: PoolService,

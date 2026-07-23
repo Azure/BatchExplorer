@@ -14,6 +14,7 @@ import { Observable } from "rxjs";
 import "./tags.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-tags",
     templateUrl: "tags.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

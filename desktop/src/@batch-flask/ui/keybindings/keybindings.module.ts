@@ -17,7 +17,6 @@ const privateComponents = [];
     ],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [KeyBindingsComponent, KeyBindingPickerDialogComponent],
 })
 export class KeyBindingsModule {
 }

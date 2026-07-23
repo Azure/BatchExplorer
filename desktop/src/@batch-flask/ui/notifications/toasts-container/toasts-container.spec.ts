@@ -12,6 +12,7 @@ import { PermissionService } from "@batch-flask/ui/permission";
 import { List } from "immutable";
 
 @Component({
+    standalone: false,
     template: `<bl-toasts-container></bl-toasts-container>`,
 })
 class FakeAppComponent {

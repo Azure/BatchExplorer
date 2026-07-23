@@ -28,6 +28,7 @@ const accountWithInvalidStorage = new ArmBatchAccount({
 const storage1 = new StorageAccount({ id: "sub-1/storage-1", name: "storage-1", location: "westus" } as any);
 
 @Component({
+    standalone: false,
     template: `<bl-storage-account-card [account]="account"></bl-storage-account-card>`,
 })
 class TestComponent {

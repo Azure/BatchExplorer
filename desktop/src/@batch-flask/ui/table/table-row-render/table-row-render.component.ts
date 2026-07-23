@@ -17,6 +17,7 @@ import { TableColumnRef } from "../table-column-manager";
 import { TableComponent, TableConfig } from "../table.component";
 
 @Component({
+    standalone: false,
     selector: "bl-row-render",
     templateUrl: "table-row-render.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

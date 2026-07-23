@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { FilterBuilder, ListView } from "@batch-flask/core";
 import { Job, JobHookTask, JobHookTaskState } from "app/models";
 import { TaskExecutionResult } from "app/models/azure-batch";
@@ -15,13 +15,14 @@ enum HookTaskType {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-job-hook-task-browser",
     templateUrl: "job-hook-task-browser.html",
 })
 export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
     public HookTaskType = HookTaskType;
 
-    public onlyFailedControl = new FormControl(false);
+    public onlyFailedControl = new UntypedFormControl(false);
 
     @Input()
     public job: Job;

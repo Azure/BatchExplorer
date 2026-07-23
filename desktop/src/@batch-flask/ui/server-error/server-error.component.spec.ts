@@ -10,6 +10,7 @@ import { ServerErrorComponent } from "./server-error.component";
 const date = new Date(2017, 9, 13, 23, 43, 38);
 
 @Component({
+    standalone: false,
     template: `
        <bl-server-error #errorComponent [error]="error"></bl-server-error>
     `,

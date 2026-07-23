@@ -1,7 +1,13 @@
 import { Platform } from "@batch-flask/utils";
-import * as cp from "child_process";
 import * as process from "process";
 import { TerminalService } from "./terminal.service";
+
+// The service under test imports child_process as a namespace. Under ts-node
+// transpile-only that namespace is emitted via __importStar (read-only getters),
+// so spawn must be mocked on the underlying (writable) module object, which the
+// namespace getters read from live.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const childProcess = require("child_process");
 
 describe("TerminalService", () => {
     let terminalService: TerminalService;
@@ -21,8 +27,8 @@ describe("TerminalService", () => {
                 once: () => null,
             };
         });
-        spawnTmp = cp.spawn;
-        (cp as any).spawn = spawnSpy;
+        spawnTmp = childProcess.spawn;
+        childProcess.spawn = spawnSpy;
         osServiceSpy =  {
             platform: "",
             isWindows: () => platform === Platform.Windows,
@@ -46,7 +52,7 @@ describe("TerminalService", () => {
     });
 
     afterEach(() => {
-        (cp as any).spawn = spawnTmp;
+        childProcess.spawn = spawnTmp;
     });
 
     describe("when os is windows", () => {

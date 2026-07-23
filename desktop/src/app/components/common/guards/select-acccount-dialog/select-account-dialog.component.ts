@@ -10,6 +10,7 @@ import { takeUntil } from "rxjs/operators";
 import "./select-account-dialog.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-select-account-dialog",
     templateUrl: "select-account-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { ArmSubscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import { Subscription } from "rxjs";
@@ -7,6 +7,7 @@ import { Subscription } from "rxjs";
 import "./subscription-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-subscription-picker",
     templateUrl: "subscription-picker.html",
     providers: [
@@ -16,7 +17,7 @@ import "./subscription-picker.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionPickerComponent implements ControlValueAccessor, OnDestroy {
-    public subscriptionId = new FormControl<string>();
+    public subscriptionId = new UntypedFormControl();
     public subscriptionList: ArmSubscription[];
 
     private _propagateChange: (value: ArmSubscription) => void = null;
@@ -58,7 +59,7 @@ export class SubscriptionPickerComponent implements ControlValueAccessor, OnDest
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

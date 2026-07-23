@@ -3,6 +3,7 @@ import { Component } from "@angular/core";
 import "./jobs-dashboard.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-jobs-dashboard",
     template: `
         <bl-all-job-graphs-home></bl-all-job-graphs-home>

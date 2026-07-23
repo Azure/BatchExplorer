@@ -15,7 +15,6 @@ const privateComponents = [];
     imports: [CommonModule, FormModule, PoolBaseModule, ReactiveFormsModule, FormsModule, I18nUIModule, ...commonModules],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [EditAppPackageFormComponent, EditCertificateReferencesComponent, EditNodeCommsFormComponent],
 })
 export class EditPoolModule {
 }

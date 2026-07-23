@@ -1,12 +1,12 @@
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 
-export function validateControl(formGroup: FormGroup, controlName: string) {
+export function validateControl(formGroup: UntypedFormGroup, controlName: string) {
     return new Validate(formGroup, controlName);
 }
 
 class Validate {
     constructor(
-        private formGroup: FormGroup,
+        private formGroup: UntypedFormGroup,
         private controlName: string) {
     }
 
@@ -21,7 +21,7 @@ class Validate {
 
 class With {
     constructor(
-        private formGroup: FormGroup,
+        private formGroup: UntypedFormGroup,
         private controlName: string,
         private validator: string,
         private hasError: boolean) {

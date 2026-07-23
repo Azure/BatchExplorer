@@ -8,6 +8,7 @@ import { TaskService } from "app/services";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
+    standalone: false,
     template: `<bl-task-error-display jobId="job-1" [task]="task"></bl-task-error-display>`,
 })
 class TaskErrorDisplayMockComponent {

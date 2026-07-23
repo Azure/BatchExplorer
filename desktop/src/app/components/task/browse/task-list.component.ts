@@ -25,6 +25,7 @@ import { TaskCommands } from "../action";
 import "./task-list.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-task-list",
     templateUrl: "task-list.html",
     providers: [TaskCommands, {

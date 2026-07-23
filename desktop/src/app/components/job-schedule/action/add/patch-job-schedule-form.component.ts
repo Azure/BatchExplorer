@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { UntypedFormBuilder } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -9,6 +9,7 @@ import { Observable } from "rxjs";
 import { JobScheduleCreateBasicDialogComponent } from "./job-schedule-create-basic-dialog.component";
 
 @Component({
+    standalone: false,
     selector: "bl-patch-job-schedule-form",
     templateUrl: "job-schedule-create-basic-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +26,7 @@ export class PatchJobScheduleComponent extends JobScheduleCreateBasicDialogCompo
     }
 
     constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         sidebarRef: SidebarRef<JobScheduleCreateBasicDialogComponent>,
         jobScheduleService: JobScheduleService,
         notificationService: NotificationService,

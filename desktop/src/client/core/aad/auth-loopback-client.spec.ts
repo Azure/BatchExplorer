@@ -1,7 +1,12 @@
-import * as http from "http";
 import { AuthLoopbackClient } from "./auth-loopback-client";
 import { ServerAuthorizationCodeResponse } from "@azure/msal-node";
 import { IncomingMessage, ServerResponse } from "http";
+
+// The client under test imports createServer from "http". Under ts-node
+// transpile-only the namespace import is read-only, so spy on the underlying
+// (writable) module object that the namespace getters read from.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const http = require("http");
 
 describe("AuthLoopbackClient", () => {
     let authLoopbackClient: AuthLoopbackClient;

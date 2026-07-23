@@ -3,6 +3,7 @@ import { Component, EventEmitter, HostBinding, Input, Output } from "@angular/co
 import "./split-separator.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-split-separator",
     templateUrl: "split-separator.html",
 })

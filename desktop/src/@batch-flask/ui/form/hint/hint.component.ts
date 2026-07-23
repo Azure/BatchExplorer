@@ -5,6 +5,7 @@ import "./hint.scss";
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-hint",
     template: "<ng-content></ng-content>",
     changeDetection: ChangeDetectionStrategy.OnPush,

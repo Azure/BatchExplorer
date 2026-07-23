@@ -8,6 +8,7 @@ import { TenantRefreshModel } from ".";
 import "./tenant-card.scss";
 
 @Component({
+    standalone: false,
     selector: "be-tenant-card",
     templateUrl: "tenant-card.html",
     changeDetection: ChangeDetectionStrategy.OnPush

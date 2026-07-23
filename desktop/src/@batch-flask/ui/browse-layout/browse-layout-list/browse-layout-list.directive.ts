@@ -3,6 +3,7 @@ import { ListBaseComponent } from "@batch-flask/ui/abstract-list";
 import { SanitizedError, log } from "@batch-flask/utils";
 
 @Directive({
+    standalone: false,
     selector: "[blBrowseLayoutList]",
 })
 export class BrowseLayoutListDirective {

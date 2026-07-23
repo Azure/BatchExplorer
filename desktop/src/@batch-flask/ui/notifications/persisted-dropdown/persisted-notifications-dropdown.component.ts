@@ -7,6 +7,7 @@ import { NotificationService } from "../notification-service";
 import "./persisted-notifications.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-persisted-notifications-dropdown",
     templateUrl: "persisted-notifications-dropdown.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

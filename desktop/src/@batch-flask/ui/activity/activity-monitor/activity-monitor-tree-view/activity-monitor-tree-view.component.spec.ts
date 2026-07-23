@@ -11,6 +11,7 @@ import { ActivityMonitorItemActionComponent } from "../activity-monitor-item/act
 import { ActivityMonitorTreeViewComponent } from "./activity-monitor-tree-view.component";
 
 @Component({
+    standalone: false,
     template: `
     <bl-activity-monitor-tree-view
         [activities]="runningActivities"

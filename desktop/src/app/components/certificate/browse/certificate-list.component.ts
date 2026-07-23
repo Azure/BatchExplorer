@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, Component, Injector, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, FilterMatcher, ListSelection, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
@@ -15,6 +15,7 @@ import { Observable, Subscription, of } from "rxjs";
 import { CertificateCommands } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-certificate-list",
     templateUrl: "certificate-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +29,7 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
     public displayedCertificates: List<Certificate> = List([]);
     public LoadingStatus = LoadingStatus;
     public data: ListView<Certificate, CertificateListParams>;
-    public searchQuery = new FormControl();
+    public searchQuery = new UntypedFormControl();
 
     private _onCertificateAddedSub: Subscription;
 

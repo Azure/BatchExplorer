@@ -10,7 +10,6 @@ const privateComponents = [];
     imports: [CommonModule, MatTooltipModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class JobBaseModule {
 }

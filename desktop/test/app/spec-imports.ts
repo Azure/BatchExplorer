@@ -5,13 +5,8 @@ jasmine.MAX_PRETTY_PRINT_DEPTH = 3;
 import "reflect-metadata";
 
 /* eslint-disable @typescript-eslint/no-var-requires */
-require("zone.js/dist/zone");
-require("zone.js/dist/long-stack-trace-zone");
-require("zone.js/dist/proxy"); // since zone.js 0.6.15
-require("zone.js/dist/sync-test");
-require("zone.js/dist/jasmine-patch"); // put here since zone.js 0.6.14
-require("zone.js/dist/async-test");
-require("zone.js/dist/fake-async-test");
+require("zone.js");
+require("zone.js/testing");
 
 import "@batch-flask/extensions";
 import "hammerjs";

@@ -8,6 +8,7 @@ import { BehaviorSubject } from "rxjs";
 import { HeaderComponent } from "./header.component";
 
 @Component({
+    standalone: false,
     template: `<bl-header></bl-header>`,
 })
 class TestComponent {

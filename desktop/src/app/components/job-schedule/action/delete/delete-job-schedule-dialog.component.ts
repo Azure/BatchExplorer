@@ -5,6 +5,7 @@ import { Activity, ActivityService } from "@batch-flask/ui";
 import { JobScheduleService } from "app/services";
 
 @Component({
+    standalone: false,
     selector: "bl-delete-job-schedule-dialog",
     templateUrl: "delete-job-schedule-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

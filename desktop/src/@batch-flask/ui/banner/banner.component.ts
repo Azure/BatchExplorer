@@ -18,6 +18,7 @@ export enum BannerType {
 import "./banner.scss";
 
 @Directive({
+    standalone: false,
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: "[other-fix]",
 })
@@ -34,6 +35,7 @@ export class BannerOtherFixDirective {
  * - Detail content that is hidden by default
  */
 @Component({
+    standalone: false,
     selector: "bl-banner",
     templateUrl: "banner.html",
     // TODO-Change-Detection This require updating all the ng-content

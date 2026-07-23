@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatNativeDateModule } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { By } from "@angular/platform-browser";
@@ -10,10 +10,11 @@ import { updateInput } from "test/utils/helpers";
 import { DatetimePickerComponent } from "./datetime-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-datetime-picker [formControl]="control"></bl-datetime-picker>`,
 })
 class TestComponent {
-    public control = new FormControl();
+    public control = new UntypedFormControl();
 }
 
 describe("DatetimePickerComponent", () => {
@@ -41,7 +42,7 @@ describe("DatetimePickerComponent", () => {
         de = fixture.debugElement.query(By.css("bl-datetime-picker"));
         fixture.detectChanges();
 
-        timezoneService = TestBed.get(TimeZoneService);
+        timezoneService = TestBed.inject(TimeZoneService);
 
         dateInputEl = de.query(By.css("input[formControlName=date]"));
         timeInputEl = de.query(By.css("input[formControlName=time]"));

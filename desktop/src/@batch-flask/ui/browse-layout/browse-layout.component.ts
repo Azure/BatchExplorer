@@ -4,7 +4,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component,
     ContentChild, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, FilterBuilder, I18nService, autobind } from "@batch-flask/core";
 import { KeyCode } from "@batch-flask/core/keys";
@@ -42,6 +42,7 @@ const defaultConfig: BrowseLayoutConfig = {
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-browse-layout",
     templateUrl: "browse-layout.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,7 +79,7 @@ export class BrowseLayoutComponent implements OnInit, AfterViewInit, AfterConten
         separatorThickness: 0,
     };
 
-    public quickSearchQuery = new FormControl("");
+    public quickSearchQuery = new UntypedFormControl("");
     public filter: Filter = FilterBuilder.none();
     public quickFilter: Filter = FilterBuilder.none();
     public advancedFilter: Filter = FilterBuilder.none();

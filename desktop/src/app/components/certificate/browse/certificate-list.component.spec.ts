@@ -13,11 +13,12 @@ import { ServerErrorModule } from "@batch-flask/ui/server-error";
 import { QuickListTestingModule, TableTestingModule } from "@batch-flask/ui/testing";
 import { Certificate } from "app/models";
 import { CertificateService, PinnedEntityService } from "app/services";
-import { of } from "rxjs";
+import { Subject, of } from "rxjs";
 import { MockListView } from "test/utils/mocks";
 import { CertificateListComponent } from "./certificate-list.component";
 
 @Component({
+    standalone: false,
     template: `<bl-certificate-list [quicklist]="quicklist"></bl-certificate-list>`,
 })
 class TestComponent {
@@ -39,7 +40,8 @@ describe("CertificateListComponent", () => {
             listView: () => new MockListView(Certificate, {
                 items: [cert1, cert2, cert3],
             }),
-            onCertificateAdded: of(null),
+            get: () => of(cert1),
+            onCertificateAdded: new Subject(),
         };
         TestBed.configureTestingModule({
             imports: [

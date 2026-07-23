@@ -1,6 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
@@ -13,10 +13,11 @@ import { BehaviorSubject, of } from "rxjs";
 import { click } from "test/utils/helpers";
 
 @Component({
+    standalone: false,
     template: `<bl-ssh-key-picker [formControl]="sshValue"></bl-ssh-key-picker>`,
 })
 class TestComponent {
-    public sshValue = new FormControl("");
+    public sshValue = new UntypedFormControl("");
 }
 
 describe("SSHKeyPickerComponent", () => {

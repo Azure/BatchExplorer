@@ -14,6 +14,7 @@ import * as Fixtures from "test/fixture";
 import { MockStorageListGetter } from "test/utils/mocks";
 
 @Component({
+    standalone: false,
     template: `<bl-task-outputs [jobId]="jobId" [task]="task"></bl-task-outputs>`,
 })
 class TestComponent {

@@ -1,6 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
@@ -10,6 +10,7 @@ import { ServerErrorComponent } from "@batch-flask/ui/server-error";
 import { complexFormMockComponents } from "test/utils/mocks/components";
 
 @Component({
+    standalone: false,
     template: `
         <bl-simple-form
             [submit]="submit"
@@ -24,7 +25,7 @@ export class FormTestComponent {
     @ViewChild("banner", { static: false })
     public actionForm: SimpleFormComponent;
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     public dialogRef = {
         close: jasmine.createSpy("dialogRef.close"),
@@ -32,7 +33,7 @@ export class FormTestComponent {
 
     public submit = jasmine.createSpy("submit");
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             id: ["", Validators.required],
             state: [""],

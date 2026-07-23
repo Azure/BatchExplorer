@@ -9,6 +9,7 @@ import { PerformanceGraphComponent } from "../performance-graph.component";
 import "./cpu-usage-graph.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-cpu-usage-graph",
     templateUrl: "cpu-usage-graph.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

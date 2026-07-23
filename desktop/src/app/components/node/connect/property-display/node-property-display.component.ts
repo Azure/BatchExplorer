@@ -39,6 +39,7 @@ export interface UserConfiguration {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-node-property-display",
     templateUrl: "node-property-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

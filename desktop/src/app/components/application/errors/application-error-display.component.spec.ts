@@ -10,6 +10,7 @@ import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
+    standalone: false,
     template: `<bl-application-error-display [application]="application"></bl-application-error-display>`,
 })
 class TestApplicationErrorDisplayComponent {

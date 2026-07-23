@@ -4,6 +4,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import "./expanding-textarea.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-expanding-textarea",
     templateUrl: "expanding-textarea.html",
     providers: [

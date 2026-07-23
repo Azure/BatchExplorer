@@ -1,6 +1,7 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, flush } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ServerError } from "@batch-flask/core";
 import { TimeZoneTestingModule } from "@batch-flask/core/testing";
 import { ElectronRemote, ElectronShell } from "@batch-flask/electron";
@@ -16,6 +17,7 @@ import { FileViewerConfig } from "../../file-viewer";
 import { FileViewerHeaderComponent } from "./file-viewer-header.component";
 
 @Component({
+    standalone: false,
     template: `<bl-file-viewer-header [fileLoader]="fileLoader" [config]="config"></bl-file-viewer-header>`,
 })
 class TestComponent {
@@ -50,7 +52,7 @@ describe("FileViewerHeaderComponent", () => {
 
         notificationSpy = new NotificationServiceMock();
         TestBed.configureTestingModule({
-            imports: [ButtonsModule, ElectronTestingModule, DateModule, TimeZoneTestingModule],
+            imports: [ButtonsModule, ElectronTestingModule, DateModule, TimeZoneTestingModule, NoopAnimationsModule],
             declarations: [FileViewerHeaderComponent, TestComponent],
             providers: [
                 notificationSpy.asProvider(),

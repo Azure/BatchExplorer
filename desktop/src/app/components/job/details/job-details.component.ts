@@ -12,6 +12,7 @@ import { JobCommands } from "../action";
 import "./job-details.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-job-details",
     templateUrl: "job-details.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -4,6 +4,7 @@ import { By } from "@angular/platform-browser";
 import { LocationComponent } from "./location.component";
 
 @Component({
+    standalone: false,
     template: `<bl-location [location]="location"></bl-location>`,
 })
 class TestComponent {

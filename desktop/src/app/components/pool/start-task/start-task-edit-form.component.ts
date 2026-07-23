@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -9,6 +9,7 @@ import { NodeService, PoolService } from "app/services";
 import { flatMap, share } from "rxjs/operators";
 
 @Component({
+    standalone: false,
     selector: "bl-start-task-edit-form",
     templateUrl: "start-task-edit-form.html",
 })
@@ -33,12 +34,12 @@ export class StartTaskEditFormComponent {
 
     public get pool() { return this._pool; }
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     private _pool: Pool;
 
     constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         private poolService: PoolService,
         private nodeService: NodeService,
         public sidebarRef: SidebarRef<any>,

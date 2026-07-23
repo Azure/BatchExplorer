@@ -17,6 +17,7 @@ enum AvailableGraph {
     progress,
 }
 @Component({
+    standalone: false,
     selector: "bl-job-graphs-home",
     templateUrl: "job-graphs-home.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

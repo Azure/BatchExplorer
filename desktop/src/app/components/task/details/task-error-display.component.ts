@@ -8,6 +8,7 @@ import { TaskService } from "app/services";
 import { ObservableUtils } from "app/utils";
 
 @Component({
+    standalone: false,
     selector: "bl-task-error-display",
     templateUrl: "task-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

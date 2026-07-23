@@ -13,6 +13,7 @@ enum EntityStatus {
     NotFound,
 }
 @Component({
+    standalone: false,
     selector: "bl-task-node-info",
     templateUrl: "task-node-info.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

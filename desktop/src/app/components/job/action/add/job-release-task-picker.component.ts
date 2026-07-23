@@ -1,6 +1,6 @@
 import { Component, forwardRef } from "@angular/core";
 import {
-    FormBuilder,
+    UntypedFormBuilder,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     Validators,
@@ -24,6 +24,7 @@ const INVALID_RESPONSE = {
 };
 
 @Component({
+    standalone: false,
     selector: "bl-job-release-task-picker",
     templateUrl: "job-release-task-picker.html",
     providers: [
@@ -33,7 +34,7 @@ const INVALID_RESPONSE = {
     ],
 })
 export class JobReleaseTaskPickerComponent extends JobTaskBaseComponent {
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         super(formBuilder, DEFAULT_JOBRELEASE, INVALID_RESPONSE);
         this._baseFormControls["id"] = [DEFAULT_JOBRELEASE_ID, Validators.required];
         this.form = formBuilder.group(this._baseFormControls);

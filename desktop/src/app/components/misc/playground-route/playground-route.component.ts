@@ -5,6 +5,7 @@ import "./playground-route.scss";
 
 import { PlaygroundExample, PlaygroundExampleProps } from "@batch/ui-playground";
 @Component({
+    standalone: false,
     selector: "bl-theme-colors",
     templateUrl: "playground-route.html",
 })

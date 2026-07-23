@@ -23,10 +23,6 @@ const modules = [
     exports: [
         ...publicComponents,
     ],
-    entryComponents: [
-        ThemeColorsComponent,
-        PlaygroundRouteComponent
-    ],
     imports: modules,
 })
 export class MiscModule {

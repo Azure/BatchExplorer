@@ -7,6 +7,7 @@ import { EditorConfig } from "@batch-flask/ui/editor";
 import "./entity-configuration.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-entity-configuration",
     templateUrl: "entity-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

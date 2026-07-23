@@ -3,6 +3,7 @@ import { HistoryItem } from "app/components/pool/graphs/history-data/history-dat
 import { DateTime } from "luxon";
 
 @Component({
+    standalone: false,
     selector: "bl-history-graph",
     templateUrl: "history-graph.html",
 })

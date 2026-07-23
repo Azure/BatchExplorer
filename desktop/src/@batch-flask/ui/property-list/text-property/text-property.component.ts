@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import "./text-property.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-text-property",
     templateUrl: "text-property.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

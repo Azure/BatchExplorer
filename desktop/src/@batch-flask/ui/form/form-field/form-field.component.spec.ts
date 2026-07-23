@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { FormErrorComponent } from "../form-error";
 import { HintComponent } from "../hint";
@@ -8,6 +8,7 @@ import { InputDirective } from "../input";
 import { FormFieldComponent } from "./form-field.component";
 
 @Component({
+    standalone: false,
     template: `
         <bl-form-field>
             <input blInput placeholder="My input label" id="input-custom-1" [formControl]="control">
@@ -17,7 +18,7 @@ import { FormFieldComponent } from "./form-field.component";
     `,
 })
 class TestComponent {
-    public control = new FormControl("");
+    public control = new UntypedFormControl("");
 }
 
 describe("FormFieldComponent", () => {

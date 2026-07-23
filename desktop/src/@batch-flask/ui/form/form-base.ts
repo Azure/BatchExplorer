@@ -1,5 +1,5 @@
 import { Directive, EventEmitter, Input, Output } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { ServerError, autobind } from "@batch-flask/core";
 import { SidebarRef } from "../sidebar";
@@ -12,7 +12,7 @@ export interface GenericContainer {
     destroy();
 }
 
-@Directive()
+@Directive({ standalone: false })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class FormBase {
     @Output() public done = new EventEmitter();
@@ -26,7 +26,7 @@ export class FormBase {
     /**
      * Form group used in this form
      */
-    @Input() public formGroup: FormGroup;
+    @Input() public formGroup: UntypedFormGroup;
 
     public loading = false;
     public error: ServerError = null;

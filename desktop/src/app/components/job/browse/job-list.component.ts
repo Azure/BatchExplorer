@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Injector, OnDestroy, OnInit, forwardRef } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListSelection, ListView, autobind } from "@batch-flask/core";
 import { AbstractListBaseConfig, ListBaseComponent } from "@batch-flask/ui";
@@ -19,6 +19,7 @@ import {
 } from "../action";
 
 @Component({
+    standalone: false,
     selector: "bl-job-list",
     templateUrl: "job-list.html",
     providers: [JobCommands, {
@@ -32,7 +33,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     public LoadingStatus = LoadingStatus;
 
     public data: ListView<Job, JobListParams>;
-    public searchQuery = new FormControl();
+    public searchQuery = new UntypedFormControl();
 
     public listConfig: AbstractListBaseConfig<Job> = {
         id: "job-list",

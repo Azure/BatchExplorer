@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { Dto } from "@batch-flask/core/dto";
 import { FormUtils } from "@batch-flask/utils";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -12,7 +12,7 @@ export interface AsyncTask {
 
 export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {
     public originalData: TDto;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public readonly asyncTasks: Observable<AsyncTask[]>;
     public readonly hasAsyncTask: Observable<boolean>;
 

@@ -8,6 +8,7 @@ import { CopyableDirective } from "./copyable.directive";
 const sampleText = "target clipboard text";
 
 @Component({
+    standalone: false,
     template: `<div beCopyable>${sampleText}</div>`
 })
 class TestCopyableComponent {}

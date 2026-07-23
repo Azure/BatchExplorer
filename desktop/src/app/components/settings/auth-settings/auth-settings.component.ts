@@ -4,6 +4,7 @@ import { Subject } from "rxjs";
 import "./auth-settings.scss";
 
 @Component({
+    standalone: false,
     selector: "be-auth-settings",
     templateUrl: "auth-settings.html",
     changeDetection: ChangeDetectionStrategy.OnPush

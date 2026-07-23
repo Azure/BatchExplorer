@@ -4,6 +4,7 @@ import { Certificate } from "app/models";
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     selector: "bl-certificate-configuration",
     templateUrl: "certificate-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

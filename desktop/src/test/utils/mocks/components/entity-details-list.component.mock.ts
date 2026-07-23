@@ -1,6 +1,7 @@
 import { Component, Input } from "@angular/core";
 
 @Component({
+    standalone: false,
     selector: "bl-entity-details-list",
     template: `
         <button title="{{addButtonHoverText}}"></button>

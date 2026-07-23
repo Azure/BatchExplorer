@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
 } from "@angular/forms";
 import { InboundEndpointProtocol, InboundNATPoolAttributes } from "app/models";
 import { Subscription } from "rxjs";
@@ -9,6 +9,7 @@ import * as EndpointHelper from "./pool-endpoint-helper";
 import "./inbound-nat-pool-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-inbound-nat-pool-picker",
     templateUrl: "inbound-nat-pool-picker.html",
     providers: [
@@ -22,12 +23,12 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
 
     public InboundEndpointProtocol = InboundEndpointProtocol;
     public EndpointHelper = EndpointHelper;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     private _propagateChange: (value: InboundNATPoolAttributes) => void = null;
     private _sub: Subscription;
 
-    constructor(public formBuilder: FormBuilder) {
+    constructor(public formBuilder: UntypedFormBuilder) {
         this.form = this.formBuilder.group({
             backendPort: [""],
             frontendPortRangeEnd: ["", [
@@ -71,7 +72,7 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const valid = this.form.valid;
         if (valid) {
             return null;

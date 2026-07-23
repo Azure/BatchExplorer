@@ -27,6 +27,7 @@ const aggregationAttributes = {
 
 let idCounter = 0;
 @Component({
+    standalone: false,
     selector: "bl-monitor-chart",
     templateUrl: "monitor-chart.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

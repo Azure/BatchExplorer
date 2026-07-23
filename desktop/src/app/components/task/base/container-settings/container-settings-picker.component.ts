@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { ContainerConfigurationDto, TaskContainerSettingsDto } from "app/models/dtos";
 import { Subscription } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-container-settings-picker",
     templateUrl: "container-settings-picker.html",
     providers: [
@@ -16,12 +17,12 @@ import { Subscription } from "rxjs";
 })
 export class ContainerSettingsPickerComponent implements ControlValueAccessor, OnDestroy {
     @Input() public containerConfiguration: ContainerConfigurationDto = null;
-    public containerSettings: FormGroup;
+    public containerSettings: UntypedFormGroup;
 
     private _propagateChange: (value: TaskContainerSettingsDto) => void = null;
     private _sub: Subscription;
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: UntypedFormBuilder) {
         this.containerSettings = this.formBuilder.group({
             imageName: [""],
             containerRunOptions: [null],
@@ -61,7 +62,7 @@ export class ContainerSettingsPickerComponent implements ControlValueAccessor, O
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const valid = this.containerSettings.valid;
         if (!valid) {
             return {

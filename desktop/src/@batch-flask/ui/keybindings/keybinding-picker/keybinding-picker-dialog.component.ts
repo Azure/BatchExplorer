@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { Command, KeyBinding, KeyBindingsService } from "@batch-flask/core";
 import { Subject, combineLatest } from "rxjs";
@@ -8,6 +8,7 @@ import { takeUntil } from "rxjs/operators";
 import "./keybinding-picker-dialog.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-keybinding-picker-dialog",
     templateUrl: "keybinding-picker-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,7 +20,7 @@ export class KeyBindingPickerDialogComponent implements OnDestroy {
     }
     public get command() { return this._command; }
 
-    public keybinding = new FormControl("");
+    public keybinding = new UntypedFormControl("");
     public commandAlreadyUsed = false;
     public otherCommands: Command[];
 

@@ -3,7 +3,7 @@ import {
     Input, OnChanges, OnDestroy, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
+    ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
 import { isNotNullOrUndefined } from "@batch-flask/core";
 import { I18N_NAMESPACE, LoadingStatus } from "@batch-flask/ui";
@@ -15,6 +15,7 @@ import { filter, switchMap, tap } from "rxjs/operators";
 import "./location-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-location-picker",
     templateUrl: "location-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,7 +33,7 @@ export class LocationPickerComponent implements OnChanges, OnDestroy, ControlVal
      * Show location only for the given resources
      */
     @Input() public resourceType?: string;
-    public location = new FormControl<string>();
+    public location = new UntypedFormControl();
     public locations: ArmLocation[] = [];
     public loadingStatus = LoadingStatus.Loading;
 

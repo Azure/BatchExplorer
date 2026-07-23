@@ -1,9 +1,9 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideLocationMocks } from "@angular/common/testing";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { By } from "@angular/platform-browser";
-import { Router } from "@angular/router";
-import { RouterTestingModule } from "@angular/router/testing";
+import { provideRouter, Router, RouterModule } from "@angular/router";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ButtonComponent } from "@batch-flask/ui";
 import { ComputeNodeInformation } from "app/models";
@@ -13,6 +13,7 @@ import { click } from "test/utils/helpers";
 import { TaskNodeInfoComponent } from "./task-node-info.component";
 
 @Component({
+    standalone: false,
     template: `<bl-task-node-info [nodeInfo]="nodeInfo"></bl-task-node-info>`,
 })
 class TestComponent {
@@ -39,7 +40,7 @@ describe("TaskNodeInfoComponent", () => {
     let poolServiceSpy;
     let nodeServiceSpy;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         poolServiceSpy = {
             exist: jasmine.createSpy("pool.exist").and.callFake(({ id }) => of(id === "pool-1")),
         };
@@ -48,9 +49,11 @@ describe("TaskNodeInfoComponent", () => {
             exist: jasmine.createSpy("node.exist").and.callFake(({ id }) => of(id === "node-1")),
         };
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule.withRoutes(routes), I18nTestingModule, MatTooltipModule],
+            imports: [RouterModule, I18nTestingModule, MatTooltipModule],
             declarations: [TaskNodeInfoComponent, TestComponent, ButtonComponent],
             providers: [
+                provideRouter(routes),
+                provideLocationMocks(),
                 { provide: PoolService, useValue: poolServiceSpy },
                 { provide: NodeService, useValue: nodeServiceSpy },
             ],
@@ -60,6 +63,7 @@ describe("TaskNodeInfoComponent", () => {
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-task-node-info"));
         fixture.detectChanges();
+        await fixture.whenStable();
 
         poolButtonEl = de.query(By.css(".pool-link"));
         poolButton = poolButtonEl.componentInstance;

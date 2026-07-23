@@ -24,6 +24,7 @@ import * as Fixtures from "test/fixture";
 import { delay } from "test/utils/helpers";
 
 @Component({
+    standalone: false,
     template: `<bl-node-connect [pool]="pool" [node]="node"></bl-node-connect>`,
 })
 class TestComponent {

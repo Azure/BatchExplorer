@@ -6,6 +6,7 @@ import { concatMap } from "rxjs/operators";
 import "./online-status.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-online-status",
     templateUrl: "online-status.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

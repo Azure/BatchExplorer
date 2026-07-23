@@ -8,6 +8,7 @@ import { ODataFields } from "common/constants";
 import { of } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-job-error-display",
     templateUrl: "job-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

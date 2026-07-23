@@ -22,16 +22,7 @@
   "rules": {
     "@typescript-eslint/no-inferrable-types": "off",
     "@typescript-eslint/no-unused-vars": "off",
-    "max-len": [
-      "error",
-      {
-        "code": 140,
-        "ignoreComments": true,
-        "ignoreUrls": true,
-        "ignoreTemplateLiterals": true,
-        "ignoreRegExpLiterals": true
-      }
-    ],
+    "max-len": "off",
     "no-console": [
       "warn",
       {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
+import { UntypedFormControl, Validators } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, FilterBuilder, Property, autobind } from "@batch-flask/core";
@@ -16,6 +16,7 @@ import { FileGroupCreateFormComponent } from "../action";
 import "./data-home.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-data-home",
     templateUrl: "data-home.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +36,7 @@ export class DataHomeComponent implements OnInit {
     public quickSearchQuery: string = "";
     public filter: Filter = FilterBuilder.none();
     public hasAutoStorage = true;
-    public containerTypePrefix = new FormControl("");
+    public containerTypePrefix = new UntypedFormControl("");
     public storageAccountId: string;
 
     /**
@@ -191,7 +192,7 @@ export class DataHomeComponent implements OnInit {
      * the existing group and not creating a new one.
      */
     private _validateContainerUnique(prefix = "") {
-        return (control: FormControl) => {
+        return (control: UntypedFormControl) => {
             const containerName = `${prefix}${control.value}`;
             return of(null).pipe(
                 debounceTime(500),

@@ -8,7 +8,7 @@ import {
 } from "@angular/core";
 import {
     ControlValueAccessor,
-    FormControl,
+    UntypedFormControl,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     ValidationErrors,
@@ -43,6 +43,7 @@ interface PackageReference {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-app-package-picker",
     templateUrl: "app-package-picker.html",
     providers: [
@@ -61,7 +62,7 @@ interface PackageReference {
 })
 export class AppPackagePickerComponent
     implements ControlValueAccessor, Validator, OnInit, OnDestroy {
-    public references = new FormControl<PackageReference[]>(
+    public references = new UntypedFormControl(
         [],
         this._duplicateValidator,
     );
@@ -124,7 +125,7 @@ export class AppPackagePickerComponent
         // Nothing to do
     }
 
-    public validate(c: FormControl): ValidationErrors | null {
+    public validate(c: UntypedFormControl): ValidationErrors | null {
         if (this.references.valid) {
             return null;
         } else {
@@ -154,7 +155,7 @@ export class AppPackagePickerComponent
 
     @autobind()
     private _duplicateValidator(
-        control: FormControl<PackageReference[]>,
+        control: UntypedFormControl,
     ): ValidationErrors | null {
         const references = control.value;
         if (references === null) {

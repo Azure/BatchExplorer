@@ -14,6 +14,7 @@ import { filter, switchMap, takeUntil } from "rxjs/operators";
 import "./storage-account-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-storage-account-picker",
     templateUrl: "storage-account-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

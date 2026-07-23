@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 
 @Component({
+    standalone: false,
     selector: "bl-no-item",
     template: `
         <ng-content></ng-content>

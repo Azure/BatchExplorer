@@ -26,6 +26,7 @@ interface MockCommandOptions {
 }
 
 @Component({
+    standalone: false,
     template: `<bl-entity-command-button [command]="command" [entity]="entity"></bl-entity-command-button>`,
 })
 class TestComponent {

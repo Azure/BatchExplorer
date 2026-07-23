@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectComponent } from "@batch-flask/ui";
@@ -11,6 +11,7 @@ import { DurationPickerComponent, DurationUnit } from "./duration-picker.compone
 import { DurationPickerModule } from "./duration-picker.module";
 
 @Component({
+    standalone: false,
     template: `
         <bl-duration-picker label="My duration picker"
             [formControl]="control"
@@ -20,10 +21,11 @@ import { DurationPickerModule } from "./duration-picker.module";
 })
 class TestComponent {
     public allowUnlimited = true;
-    public control = new FormControl<Duration>();
+    public control = new UntypedFormControl();
 }
 
 @Component({
+    standalone: false,
     template: `
         <bl-form-field>
             <bl-duration-picker label="My duration picker"
@@ -37,6 +39,7 @@ class TestWithFormFieldComponent extends TestComponent {
 }
 
 @Component({
+    standalone: false,
     template: `
         <bl-duration-picker label="My duration picker"
             [formControl]="control"
@@ -47,7 +50,7 @@ class TestWithFormFieldComponent extends TestComponent {
 })
 class TestWithDefaultComponent {
     public allowUnlimited = false;
-    public control = new FormControl<Duration>();
+    public control = new UntypedFormControl();
     public default = "7";
 }
 

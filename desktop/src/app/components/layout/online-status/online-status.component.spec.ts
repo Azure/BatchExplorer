@@ -6,6 +6,7 @@ import { NavigatorService } from "app/services";
 import { OnlineStatusComponent } from "./online-status.component";
 
 @Component({
+    standalone: false,
     template: `<bl-online-status></bl-online-status>`,
 })
 class TestComponent {

@@ -5,6 +5,7 @@ import { PoolUtils } from "app/utils";
 import "./os-offer-tile.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-os-offer-tile",
     templateUrl: "os-offer-tile.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

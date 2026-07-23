@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
+    ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
 import { I18nService, autobind } from "@batch-flask/core";
 import { CertificateReferenceAttributes, OSType, UserAccountElevationLevel } from "app/models";
@@ -9,6 +9,7 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
 @Component({
+    standalone: false,
     selector: "bl-user-accounts-picker",
     templateUrl: "user-accounts-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +26,7 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
     public UserAccountElevationLevel = UserAccountElevationLevel;
     @Input() public osType: OSType;
 
-    public userAccounts = new FormControl<UserAccountDto[]>([], this._duplicateValidator);
+    public userAccounts = new UntypedFormControl([], this._duplicateValidator);
 
     private _propagateChange?: (value: UserAccountDto[]) => void;
     private _destroy = new Subject();
@@ -42,7 +43,7 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
         this._destroy.next();
         this._destroy.complete();
     }
-    public validate(c: FormControl): ValidationErrors | null {
+    public validate(c: UntypedFormControl): ValidationErrors | null {
         if (this.userAccounts.valid) {
             return null;
         } else {
@@ -71,7 +72,7 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
     }
 
     @autobind()
-    private _duplicateValidator(control: FormControl<UserAccountDto[]>): ValidationErrors | null {
+    private _duplicateValidator(control: UntypedFormControl): ValidationErrors | null {
         const users = control.value;
         if (users === null) {
             return null;

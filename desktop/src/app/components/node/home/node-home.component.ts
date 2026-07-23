@@ -3,6 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-node-home",
     templateUrl: "node-home.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

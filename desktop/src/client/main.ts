@@ -9,6 +9,13 @@
  *   5. Call startBatchExplorer from startup.ts
  */
 
+// 0. Load the Angular JIT compiler BEFORE any Angular library code is evaluated.
+// The main process is bundled with ts-loader (no AOT/linker step, unlike the
+// renderer's AngularWebpackPlugin), so Angular's partially-compiled libraries and
+// the client NgModule (bootstrapped via platformServer().bootstrapModule) are
+// compiled with JIT at runtime. This replaces the removed `platformDynamicServer`.
+import "@angular/compiler";
+
 // 1. Add the src/ folder to the NODE_PATH to be able to do absolute import(Relative to src folder)
 import * as path from "path";
 import "./init";

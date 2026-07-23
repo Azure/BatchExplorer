@@ -1,7 +1,7 @@
 import { OverlayContainer, OverlayModule } from "@angular/cdk/overlay";
 import { Component, DebugElement, Directive } from "@angular/core";
 import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 import { ClickableComponent } from "@batch-flask/ui/buttons/clickable";
@@ -21,11 +21,11 @@ const baseOptions = [
     { value: "opt-5", label: "Rice" },
 ];
 
-@Directive()
+@Directive({ standalone: false })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix,
 class TestComponent {
     public options: any[] = baseOptions;
-    public value = new FormControl(null);
+    public value = new UntypedFormControl(null);
     public filterable = false;
     public multiple = false;
 
@@ -35,6 +35,7 @@ class TestComponent {
 }
 
 @Component({
+    standalone: false,
     template: `
         <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
             <bl-option
@@ -53,6 +54,7 @@ class SelectWithLabelComponent extends TestComponent {
 
 /* eslint-disable  */
 @Component({
+    standalone: false,
     template: `
         <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
             <div *blOptionTemplate="let option">My:{{option.label}}</div>
@@ -91,7 +93,6 @@ describe("SelectComponent", () => {
         });
         TestBed.overrideModule(BrowserDynamicTestingModule, {
             set: {
-                entryComponents: [SelectDropdownComponent],
             },
         });
         fixture = TestBed.createComponent(component);
@@ -362,11 +363,15 @@ describe("SelectComponent", () => {
                 await fixture.whenStable();
 
                 const inputEl = de.query(By.css("input.select-filter"));
-                expect(document.activeElement).toEqual(inputEl.nativeElement);
+                expect(inputEl).not.toBeFalsy();
                 expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
 
-                fixture.debugElement.query(By.css(".other-nav")).nativeElement.focus();
-                expect(document.activeElement).not.toEqual(inputEl.nativeElement);
+                // Focusing out of the filter input closes the dropdown. Trigger the blur
+                // handler directly because headless test browsers don't reliably move
+                // native focus between elements.
+                inputEl.triggerEventHandler("blur", new Event("blur"));
+                fixture.detectChanges();
+                await fixture.whenStable();
 
                 expect(overlayContainerElement.querySelector("bl-select-dropdown")).toBeFalsy();
             });

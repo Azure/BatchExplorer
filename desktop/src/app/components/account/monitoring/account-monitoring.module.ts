@@ -15,9 +15,6 @@ const publicComponents = [
     imports: [CommonModule, ...commonModules, TimeRangePickerModule],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,
-    entryComponents: [
-        AccountMonitoringHomeComponent,
-    ],
 })
 export class AccountMonitoringModule {
 

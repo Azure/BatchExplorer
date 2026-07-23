@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { QuickRange, QuickRanges, TimeRange } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
@@ -19,6 +19,7 @@ import "./pool-cost-card.scss";
 const partialDataDate = new Date(2019, 3, 1).getTime();
 
 @Component({
+    standalone: false,
     selector: "bl-pool-cost-card",
     templateUrl: "pool-cost-card.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +42,7 @@ export class PoolCostCardComponent implements OnInit, OnChanges, OnDestroy {
         QuickRanges.thisYearRange,
     ];
 
-    public timeRange = new FormControl<TimeRange>(QuickRanges.thisMonthRange);
+    public timeRange = new UntypedFormControl(QuickRanges.thisMonthRange);
     public loading: boolean = false;
     // If the start time is less than april 1st 2019 billing was done per account not per pool
     public showPartialDataWarning: boolean = false;

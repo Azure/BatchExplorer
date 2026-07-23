@@ -10,6 +10,7 @@ import { Job, Task, TaskState } from "app/models";
 import { DateTime } from "luxon";
 
 @Component({
+    standalone: false,
     template: `
         <bl-task-timeline [job]="job" [task]="task">
             Additional content info

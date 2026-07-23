@@ -1,6 +1,6 @@
 import { Component, forwardRef } from "@angular/core";
 import {
-    FormBuilder,
+    UntypedFormBuilder,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     Validators,
@@ -23,6 +23,7 @@ const INVALID_RESPONSE = {
 };
 
 @Component({
+    standalone: false,
     selector: "bl-job-manager-task-picker",
     templateUrl: "job-manager-task-picker.html",
     providers: [
@@ -31,7 +32,7 @@ const INVALID_RESPONSE = {
     ],
 })
 export class JobManagerTaskPickerComponent extends JobTaskBaseComponent {
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: UntypedFormBuilder) {
         super(formBuilder, DEFAULT_JOBMANAGER, INVALID_RESPONSE);
         this._baseFormControls["displayName"] = [null];
         this._baseFormControls["killJobOnCompletion"] = [true];

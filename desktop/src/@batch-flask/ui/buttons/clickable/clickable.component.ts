@@ -21,6 +21,7 @@ import { Subscription } from "rxjs";
 import "./clickable.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-clickable",
     template: `<ng-content></ng-content>`,
 })
@@ -118,8 +119,12 @@ export class ClickableComponent implements OnChanges, OnDestroy {
         }
         this.do.emit(event);
 
-        if (this._routerLink) {
-            this._routerLink.onClick();
+        // For click events the RouterLink directive's own click handler already
+        // performs the navigation, so only trigger it explicitly for other
+        // interactions (e.g. keyboard Enter/Space) to avoid a double navigation
+        // that races and leaves the router's `currentNavigation` null in v22.
+        if (this._routerLink && event.type !== "click") {
+            this._routerLink.onClick(0, false, false, false, false);
         }
     }
 

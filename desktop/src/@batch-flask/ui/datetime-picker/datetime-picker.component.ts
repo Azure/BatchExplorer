@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor,
-    FormBuilder,
-    FormGroup,
+    UntypedFormBuilder,
+    UntypedFormGroup,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -19,6 +19,7 @@ let idCounter = 0;
  * DatetimePickerComponent is used in schedule of job schedule
  */
 @Component({
+    standalone: false,
     selector: "bl-datetime-picker",
     templateUrl: "datetime-picker.html",
     providers: [
@@ -32,7 +33,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     @Input() public label: string;
     @Input() public timePicker: boolean = true;
 
-    public datetime: FormGroup;
+    public datetime: UntypedFormGroup;
     public currentTimeZone: TimeZone;
 
     private _datetime = null;
@@ -42,7 +43,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     constructor(
         private changeDetector: ChangeDetectorRef,
         private timezoneService: TimeZoneService,
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
     ) {
         this.timezoneService.current.pipe(takeUntil(this._destroy)).subscribe((current) => {
             this.currentTimeZone = current;

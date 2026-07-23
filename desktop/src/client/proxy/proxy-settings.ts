@@ -18,10 +18,19 @@ export interface ProxySettingConfiguration {
 @Injectable()
 export class ProxySettingsManager {
     private _settings = new BehaviorSubject<ProxySettingConfiguration | null>(null);
+    private batchExplorerApp: BatchExplorerApplication;
     constructor(
-        @Inject(forwardRef(() => BatchExplorerApplication)) private batchExplorerApp: BatchExplorerApplication,
+        // NOTE: `batchExplorerApp` is typed `any` (not BatchExplorerApplication) on purpose.
+        // BatchExplorerApplication <-> ProxySettingsManager form a circular dependency. The
+        // DI token is supplied via `forwardRef` (lazy), but with `emitDecoratorMetadata` a
+        // `BatchExplorerApplication` param type would also be emitted eagerly in
+        // `design:paramtypes`, which throws a TDZ ReferenceError once the code is bundled by
+        // webpack. Keeping the param untyped avoids that eager reference; the typed private
+        // field below preserves type-safety for internal usage.
+        @Inject(forwardRef(() => BatchExplorerApplication)) batchExplorerApp: any,
         private batchExplorerProcess: BatchExplorerProcess,
         private storage: DataStore) {
+        this.batchExplorerApp = batchExplorerApp;
     }
 
     public async init() {

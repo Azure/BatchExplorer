@@ -26,7 +26,6 @@ const components = [
 
 @NgModule({
     declarations: components,
-    entryComponents: [],
     exports: [...components],
     imports: [CommonModule, MaterialModule, RouterModule],
 })

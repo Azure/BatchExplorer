@@ -8,6 +8,7 @@ import { DateTime } from "luxon";
 import "./jobs-cpu-wait-time-graph.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-jobs-cpu-wait-time-graph",
     templateUrl: "jobs-cpu-wait-time-graph.html",
 })

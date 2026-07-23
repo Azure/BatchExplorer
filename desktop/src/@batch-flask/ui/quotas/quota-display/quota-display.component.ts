@@ -10,6 +10,7 @@ export enum QuotaDisplayType {
 }
 
 @Component({
+    standalone: false,
     selector: "bl-quota-display",
     templateUrl: "quota-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

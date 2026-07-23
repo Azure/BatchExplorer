@@ -3,6 +3,7 @@ import { BaseButton } from "@batch-flask/ui/buttons";
 import { Job, JobState } from "../../../../models/azure-batch/job/job";
 
 @Component({
+    standalone: false,
     selector: "bl-disable-button",
     template: `
         <bl-button color="light" [action]="action" *ngIf="visible" icon="fa fa-pause"

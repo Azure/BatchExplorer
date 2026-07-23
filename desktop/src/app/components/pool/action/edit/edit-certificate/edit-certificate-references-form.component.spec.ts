@@ -15,6 +15,7 @@ import { NotificationServiceMock } from "test/utils/mocks";
 import { EditCertificateReferencesComponent } from "./edit-certificate-references-form.component";
 
 @Component({
+    standalone: false,
     selector: "bl-certificate-references-picker", template: "",
     providers: [controlValueAccessorProvider(() => FakeCertificateReferencesPickerComponent)],
 })

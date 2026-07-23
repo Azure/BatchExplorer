@@ -4,6 +4,7 @@ import { BreadcrumbService } from "../breadcrumb.service";
 import { Breadcrumb } from "../breadcrumbs.model";
 
 @Component({
+    standalone: false,
     selector: "bl-breadcrumb",
     templateUrl: "breadcrumb.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

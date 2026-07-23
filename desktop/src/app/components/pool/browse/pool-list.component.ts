@@ -18,6 +18,7 @@ import { PoolCommands } from "../action";
 import "./pool-list.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-pool-list",
     templateUrl: "pool-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

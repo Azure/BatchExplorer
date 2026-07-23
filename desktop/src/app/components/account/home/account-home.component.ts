@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui";
 import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
@@ -14,6 +14,7 @@ import { BatchAccountCreateComponent } from "../action/create";
 import "./account-home.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-account-home",
     templateUrl: "account-home.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +27,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
     @ViewChild("layout", { static: true })
     public layout: BrowseLayoutComponent;
 
-    public subscriptionIds = new FormControl();
+    public subscriptionIds = new UntypedFormControl();
 
     private _subs = [];
 

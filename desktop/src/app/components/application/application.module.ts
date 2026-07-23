@@ -21,10 +21,6 @@ const components = [
     declarations: components,
     exports: components,
     imports: [BatchApplicationRoutingModule, ...commonModules ],
-    entryComponents: [
-        ApplicationCreateDialogComponent,
-        ApplicationEditDialogComponent,
-    ],
 })
 export class ApplicationModule {
 }

@@ -5,6 +5,7 @@ import { VersionService, VersionType } from "app/services";
 import { VersionTypeComponent } from "./version-type.component";
 
 @Component({
+    standalone: false,
     template: `<bl-version-type></bl-version-type>`,
 })
 class TestComponent {

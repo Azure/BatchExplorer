@@ -5,6 +5,7 @@ import { Subscription, interval } from "rxjs";
  * Loading showing a simple loading text.
  */
 @Component({
+    standalone: false,
     selector: "bl-simple-loading",
     template: `{{message}}`,
 })

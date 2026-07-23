@@ -12,7 +12,6 @@ const privateComponents = [EvaluateAutoScaleForumlaComponent];
     imports: [BaseModule, CommonModule, FormsModule],
     declarations: [...publicComponents, ...privateComponents],
     exports: publicComponents,
-    entryComponents: [],
 })
 export class AutoScaleFormulaPickerModule {
 }

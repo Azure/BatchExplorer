@@ -38,6 +38,7 @@ const lowPriColor = colors.map(x => pattern.draw("diagonal", x));
 const emptyNodeCount = new NodeCounts().toJS();
 
 @Component({
+    standalone: false,
     selector: "bl-pool-state-graph",
     templateUrl: "pool-state-graph.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

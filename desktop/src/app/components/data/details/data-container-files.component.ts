@@ -5,6 +5,7 @@ import { StorageContainerService } from "app/services/storage";
 import { Subscription } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-data-container-files",
     templateUrl: "data-container-files.html",
 })

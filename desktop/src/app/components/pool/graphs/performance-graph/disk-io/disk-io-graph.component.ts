@@ -5,6 +5,7 @@ import { NumberUtils } from "app/utils";
 import { PerformanceGraphComponent } from "../performance-graph.component";
 
 @Component({
+    standalone: false,
     selector: "bl-disk-io-graph",
     templateUrl: "disk-io-graph.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

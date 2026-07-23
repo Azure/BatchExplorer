@@ -13,6 +13,7 @@ import { takeUntil } from "rxjs/operators";
 import "./account-list.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-account-list",
     templateUrl: "account-list.html",
     providers: [

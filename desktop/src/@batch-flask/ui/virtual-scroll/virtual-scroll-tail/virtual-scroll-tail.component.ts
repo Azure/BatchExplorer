@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, Input } from "@angular
 import "./virtual-scroll-tail.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-virtual-scroll-tail",
     templateUrl: "virtual-scroll-tail.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

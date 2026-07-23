@@ -10,6 +10,7 @@ import { AsyncSubject, of } from "rxjs";
 import "./cloud-file-picker-dialog.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-cloud-file-picker-dialog",
     templateUrl: "cloud-file-picker-dialog.html",
 })

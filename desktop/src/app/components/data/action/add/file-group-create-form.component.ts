@@ -1,5 +1,5 @@
 import { Component, OnDestroy, Optional } from "@angular/core";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, Validators } from "@angular/forms";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatDialogRef } from "@angular/material/dialog";
 import { DynamicForm, autobind } from "@batch-flask/core";
@@ -18,6 +18,7 @@ import { debounceTime, distinctUntilChanged, takeUntil } from "rxjs/operators";
 import "./file-group-create-form.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-file-group-create-form",
     templateUrl: "file-group-create-form.html",
 })
@@ -32,12 +33,12 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     public modifyExisting: boolean = false;
 
     private _destroy = new Subject();
-    private _pathsControl: FormControl;
+    private _pathsControl: UntypedFormControl;
 
     constructor(
         @Optional() public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
         @Optional() public dialogRef: MatDialogRef<FileGroupCreateFormComponent>,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private fileGroupService: FileGroupService,
         private storageContainerService: StorageContainerService) {
         super(FileGroupCreateDto);

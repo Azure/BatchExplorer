@@ -9,6 +9,7 @@ import { ToastComponent } from "./toast.component";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 
 @Component({
+    standalone: false,
     template: `<bl-toast [notification]="notification"></bl-toast>`,
 })
 class TestComponent {

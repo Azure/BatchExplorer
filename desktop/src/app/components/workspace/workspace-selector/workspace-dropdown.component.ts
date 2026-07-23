@@ -6,6 +6,7 @@ import { Observable, Subscription } from "rxjs";
 import "./workspace-dropdown.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-workspace-dropdown",
     templateUrl: "workspace-dropdown.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

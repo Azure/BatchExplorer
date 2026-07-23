@@ -1,11 +1,12 @@
 import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { ContainerImage } from "app/models/dtos";
 import { Subscription } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-container-images-picker",
     templateUrl: "container-images-picker.html",
     providers: [
@@ -14,12 +15,12 @@ import { Subscription } from "rxjs";
     ],
 })
 export class ContainerImagesPickerComponent implements ControlValueAccessor, OnDestroy {
-    public images: FormControl;
+    public images: UntypedFormControl;
 
     private _propagateChange: (value: ContainerImage[]) => void = null;
     private _sub: Subscription;
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: UntypedFormBuilder) {
         this.images = this.formBuilder.control([]);
         this._sub = this.images.valueChanges.subscribe((images) => {
             if (this._propagateChange) {
@@ -46,7 +47,7 @@ export class ContainerImagesPickerComponent implements ControlValueAccessor, OnD
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 }

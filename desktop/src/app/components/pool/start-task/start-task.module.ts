@@ -24,7 +24,6 @@ const components = [StartTaskEditFormComponent, StartTaskPickerComponent];
         TaskBaseModule,
         ResourceFilePickerModule,
     ],
-    entryComponents: [StartTaskEditFormComponent],
 })
 export class StartTaskModule {
 

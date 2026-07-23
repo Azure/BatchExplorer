@@ -50,6 +50,7 @@ export class SelectInjector implements Injector {
 let nextUniqueId = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-select",
     templateUrl: "select.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -323,7 +324,11 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
         }
         if (this.filterable) {
             setTimeout(() => {
-                this._filterInputEl.nativeElement.focus();
+                // The dropdown (and its filter input) may already be gone by the
+                // time this runs, so guard against the missing view child.
+                if (this._filterInputEl) {
+                    this._filterInputEl.nativeElement.focus();
+                }
             });
         }
 
@@ -342,7 +347,9 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
         }
         if (focus) {
             setTimeout(() => {
-                this._selectButtonEl.nativeElement.focus();
+                if (this._selectButtonEl) {
+                    this._selectButtonEl.nativeElement.focus();
+                }
             });
         }
 
@@ -491,11 +498,11 @@ export class SelectComponent<TValue = any> implements FormFieldControl<any>, Opt
             },
         ];
 
-        const positionStrategy = this.overlay.position().connectedTo(this.elementRef,
-            { originX: "start", originY: "top" },
-            { overlayX: "start", overlayY: "bottom" });
+        const positionStrategy = this.overlay.position().flexibleConnectedTo(this.elementRef)
+            .withFlexibleDimensions(false)
+            .withPush(false);
         positionStrategy.withPositions(positions);
-        positionStrategy.onPositionChange.subscribe((x) => {
+        positionStrategy.positionChanges.subscribe((x) => {
             if (this._dropdownRef) {
                 this._dropdownRef.instance.above = x.connectionPair.overlayY === "bottom";
             }

@@ -9,6 +9,7 @@ import { GlobalSidebarService } from "./sidebar-manager";
 import { SidebarModule } from "./sidebar.module";
 
 @Component({
+    standalone: false,
     template: "<h1>{{text}}</h1>",
 })
 export class FakeComponent {
@@ -19,6 +20,7 @@ export class FakeComponent {
  * This is a test component that simulate an app with a sidebar.
  */
 @Component({
+    standalone: false,
     template: `
         <mat-sidenav-container>
                 <mat-sidenav #rightSidebar align="end">
@@ -55,7 +57,6 @@ export function setupSidebarTest() {
 
     TestBed.overrideModule(BrowserDynamicTestingModule, {
         set: {
-            entryComponents: [AppTestComponent, FakeComponent],
         },
     });
     TestBed.compileComponents();

@@ -6,6 +6,7 @@ import { I18nService } from "@batch-flask/core";
 import "./dropdown.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-dropdown",
     templateUrl: "dropdown.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

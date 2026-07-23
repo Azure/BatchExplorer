@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { ChangeDetectorRef, Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -12,11 +12,12 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 @Component({
+    standalone: false,
     selector: "bl-application-edit-dialog",
     templateUrl: "application-edit-dialog.html",
 })
 export class ApplicationEditDialogComponent {
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public application: BatchApplication;
     public packages: List<BatchApplicationPackage>;
     public title: string = "Edit application";
@@ -24,7 +25,7 @@ export class ApplicationEditDialogComponent {
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public sidebarRef: SidebarRef<ApplicationEditDialogComponent>,
         private applicationService: BatchApplicationService,
         private packageService: BatchApplicationPackageService,

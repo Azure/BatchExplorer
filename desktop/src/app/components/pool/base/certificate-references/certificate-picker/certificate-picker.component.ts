@@ -3,7 +3,7 @@ import {
     Input, OnChanges, OnDestroy, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
 } from "@angular/forms";
 import { Certificate, CertificateStoreLocation, CertificateVisibility, CommonStoreName, OSType } from "app/models";
 import { defaultThumbprintAlgorithm } from "app/services";
@@ -26,6 +26,7 @@ const defaultVisibility = [
 ];
 
 @Component({
+    standalone: false,
     selector: "bl-certificate-picker",
     templateUrl: "certificate-picker.html",
     providers: [
@@ -43,7 +44,7 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
     @Input() public certificates: Certificate[] = [];
     @Input() public currentCertificates: Certificate[] = [];
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public linuxStoreLocationMessage = `For Linux compute nodes, the certificates are stored in a `
         + `directory inside the task working directory and an environment variable  AZ_BATCH_CERTIFICATES_DIR `
         + `is supplied to the task to query for this location. For certificates with visibility of "remoteUser", `
@@ -58,7 +59,7 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
     private _sub: Subscription;
 
     constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         private changeDetector: ChangeDetectorRef) {
 
         this.form = formBuilder.group({
@@ -110,7 +111,7 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const valid = this.form.valid;
         if (!valid) {
             return {

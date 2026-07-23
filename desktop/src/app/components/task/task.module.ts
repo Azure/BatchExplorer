@@ -27,10 +27,6 @@ const modules = [
     declarations: components,
     exports: [...modules, ...components],
     imports: [...modules, ResourceFilePickerModule],
-    entryComponents: [
-        RerunTaskFormComponent,
-        AddTaskFormComponent,
-    ],
 })
 export class TaskModule {
 }

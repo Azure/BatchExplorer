@@ -49,7 +49,7 @@ describe("EntityCommand", () => {
         });
 
         injector = TestBed.inject(Injector);
-        telemetryServiceSpy = TestBed.get(TelemetryService);
+        telemetryServiceSpy = TestBed.inject(TelemetryService);
     });
 
     function newCommand<TEntity extends ActionableEntity>(options: EntityCommandAttributes<TEntity>) {

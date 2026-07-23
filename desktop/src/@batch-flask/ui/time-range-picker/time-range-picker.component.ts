@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, forwardRef,
 } from "@angular/core";
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ValidationErrors } from "@angular/forms";
+import { ControlValueAccessor, UntypedFormBuilder, UntypedFormGroup, NG_VALUE_ACCESSOR, ValidationErrors } from "@angular/forms";
 import { I18nService, TimeZoneService } from "@batch-flask/core";
 import { DateUtils } from "@batch-flask/utils";
 import { DateTime, Duration } from "luxon";
@@ -14,6 +14,7 @@ import "./time-range-picker.scss";
 let idCounter = 0;
 
 @Component({
+    standalone: false,
     selector: "bl-time-range-picker",
     templateUrl: "time-range-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +34,7 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
     ];
 
     @Input() public showLabel = true;
-    public customRange: FormGroup;
+    public customRange: UntypedFormGroup;
     public current: QuickRange | TimeRangeAttributes | null = null;
     public currentLabel: string;
     public _currentTimezone: string;
@@ -45,7 +46,7 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
         private changeDetector: ChangeDetectorRef,
         private i18n: I18nService,
         timezoneService: TimeZoneService,
-        formBuilder: FormBuilder) {
+        formBuilder: UntypedFormBuilder) {
         this.customRange = formBuilder.group(
             {
                 start: [null],
@@ -153,7 +154,7 @@ export class TimeRangePickerComponent implements ControlValueAccessor, OnDestroy
         return DateUtils.prettyDate(DateTime.fromJSDate(date).setZone(this._currentTimezone));
     }
 
-    private _validateCustomRange(c: FormGroup): ValidationErrors {
+    private _validateCustomRange(c: UntypedFormGroup): ValidationErrors {
         let { start, end } = c.value;
         if (!start && !end) {
             return {

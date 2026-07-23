@@ -5,7 +5,8 @@ import { ClipboardService } from "@batch-flask/electron";
 
 import "./copyable.scss";
 
-@Directive({ selector: "[beCopyable]" })
+@Directive({
+    standalone: false, selector: "[beCopyable]" })
 export class CopyableDirective {
     private button: HTMLElement;
     private copiedAlert: HTMLElement;

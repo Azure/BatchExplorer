@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { ListView } from "@batch-flask/core";
 import { BlobContainer } from "app/models";
@@ -11,6 +11,7 @@ import { Observable, Subscription } from "rxjs";
 
 /* eslint-disable @angular-eslint/no-forward-ref */
 @Component({
+    standalone: false,
     selector: "bl-file-groups-picker",
     templateUrl: "file-groups-picker.html",
     providers: [
@@ -19,7 +20,7 @@ import { Observable, Subscription } from "rxjs";
     ],
 })
 export class FileGroupsPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
-    public fileGroups: FormControl;
+    public fileGroups: UntypedFormControl;
     public data: ListView<BlobContainer, ListContainerParams>;
     public groups: List<string>;
     public filteredOptions: Observable<string[]>;
@@ -30,7 +31,7 @@ export class FileGroupsPickerComponent implements ControlValueAccessor, OnInit, 
     // TODO: handle no autostorage, hide file group control if account has no autostorage settings.
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private autoStorageService: AutoStorageService,
         private storageContainerService: StorageContainerService) {
 
@@ -80,7 +81,7 @@ export class FileGroupsPickerComponent implements ControlValueAccessor, OnInit, 
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null;
     }
 

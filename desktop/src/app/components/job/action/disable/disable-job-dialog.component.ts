@@ -5,6 +5,7 @@ import { ConfirmationDialog } from "@batch-flask/ui";
 import { Job } from "app/models";
 
 @Component({
+    standalone: false,
     selector: "bl-disable-job-dialog",
     templateUrl: "disable-job-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

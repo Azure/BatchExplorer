@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, forwardRef } from "@angular/core";
 import {
-    AbstractControl, ControlValueAccessor, FormControl,
-    FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
+    AbstractControl, ControlValueAccessor, UntypedFormControl,
+    UntypedFormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
 import { exists } from "@batch-flask/utils";
 import { ResourceFileAttributes } from "app/models";
@@ -13,6 +13,7 @@ enum ResourceFileType {
     Container,
 }
 @Component({
+    standalone: false,
     selector: "bl-resourcefile-picker-row",
     templateUrl: "resourcefile-picker-row.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,15 +27,15 @@ export class ResourceFilePickerRowComponent implements ControlValueAccessor, Val
 
     public ResourceFileType = ResourceFileType;
     public type: ResourceFileType = ResourceFileType.Url;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public file: ResourceFileAttributes;
 
     private _propagateFn: (value: ResourceFileAttributes) => void;
 
     constructor(private changeDetector: ChangeDetectorRef) {
-        this.form = new FormGroup({
-            filePath: new FormControl(""),
-            httpUrl: new FormControl(""),
+        this.form = new UntypedFormGroup({
+            filePath: new UntypedFormControl(""),
+            httpUrl: new UntypedFormControl(""),
         });
 
         this.form.valueChanges.subscribe(() => {

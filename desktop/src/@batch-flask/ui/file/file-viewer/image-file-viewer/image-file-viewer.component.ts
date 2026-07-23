@@ -5,6 +5,7 @@ import { FileViewer } from "../file-viewer";
 import "./image-file-viewer.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-image-file-viewer",
     templateUrl: "image-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -7,6 +7,7 @@ import { NodeConnectService } from "app/services";
 import { ComponentUtils, PoolUtils } from "app/utils";
 
 @Component({
+    standalone: false,
     selector: "bl-node-configuration",
     templateUrl: "node-configuration.html",
     providers: [

@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import {
     AsyncValidator,
     ControlValueAccessor,
-    FormBuilder,
-    FormControl,
+    UntypedFormBuilder,
+    UntypedFormControl,
     NG_ASYNC_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -17,6 +17,7 @@ import { catchError,  distinctUntilChanged,  map, switchMap } from "rxjs/operato
 import "./job-id.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-job-id",
     templateUrl: "job-id.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +30,7 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
     @Input() public label: string;
     @Input() public hint: string;
 
-    public value: FormControl<string>;
+    public value: UntypedFormControl;
     public warning = false;
 
     private _propagateChange: (value: any) => void = null;
@@ -37,7 +38,7 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private jobService: JobService) {
 
         this.value = this.formBuilder.control([], null, this._validateJobUnique);
@@ -65,12 +66,12 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return FormUtils.passValidation(this.value);
     }
 
     @autobind()
-    private _validateJobUnique(control: FormControl) {
+    private _validateJobUnique(control: UntypedFormControl) {
         // on init, value is an empty array.
         if (!control.value || (Array.isArray(control.value) && control.value.length === 0)) {
             return of(null);

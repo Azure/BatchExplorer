@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { Command, CommandRegistry, KeyBinding, KeyBindingsService } from "@batch-flask/core";
 import { SanitizedError } from "@batch-flask/utils";
 import { Subject, combineLatest } from "rxjs";
@@ -31,6 +31,7 @@ interface KeyBindingFilter {
 const SEARCH_BY_BINDING_REGEX = /"([^"]*)"?/i;
 
 @Component({
+    standalone: false,
     selector: "bl-keybindings",
     templateUrl: "keybindings.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +42,7 @@ export class KeyBindingsComponent implements OnInit, OnDestroy {
     }
 
     public displayedCommands: DisplayedCommand[] = [];
-    public search = new FormControl("");
+    public search = new UntypedFormControl("");
     public searchByKeyBinding = false;
 
     public tableConfig: TableConfig = {

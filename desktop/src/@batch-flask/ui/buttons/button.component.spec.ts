@@ -1,5 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MatTooltip } from "@angular/material/tooltip";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "@batch-flask/core";
@@ -9,6 +10,7 @@ import { click } from "test/utils/helpers";
 import { runAxe } from "test/utils/helpers/axe-helpers";
 
 @Component({
+    standalone: false,
     template: `
         <bl-button [disabled]="disabled" icon="fa fa-stop" [action]="onAction" title="Stop" [color]="color"
             [type]="type">
@@ -54,7 +56,7 @@ describe("ButtonComponent", () => {
 
     it("Should have the tooltip specified with title", () => {
         expect(de.attributes["aria-label"]).toBe("Stop");
-        const tooltipTrigger = de.query(By.css(".mat-tooltip-trigger"));
+        const tooltipTrigger = de.query(By.directive(MatTooltip));
         expect(tooltipTrigger).not.toBeFalsy();
     });
 

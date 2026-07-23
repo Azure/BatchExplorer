@@ -1,6 +1,6 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { SelectModule } from "@batch-flask/ui";
@@ -12,6 +12,7 @@ import { LocationModule } from "../location";
 import { LocationPickerComponent } from "./location-picker.component";
 
 @Component({
+    standalone: false,
     template: `<bl-location-picker
         [subscription]="subscription"
         [formControl]="location"
@@ -19,7 +20,7 @@ import { LocationPickerComponent } from "./location-picker.component";
     ></bl-location-picker>`,
 })
 class TestComponent {
-    public location = new FormControl();
+    public location = new UntypedFormControl();
     public subscription = new ArmSubscription({ subscriptionId: "dummy-1", displayName: "Dummy one" });
     public resourceType?: string;
 }

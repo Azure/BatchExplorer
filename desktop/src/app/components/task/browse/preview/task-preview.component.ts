@@ -8,6 +8,7 @@ import "./task-preview.scss";
  * Handles both task and subTask
  */
 @Component({
+    standalone: false,
     selector: "bl-task-preview",
     templateUrl: "task-preview.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

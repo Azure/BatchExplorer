@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild, forwardRef,
 } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { SSHPublicKey } from "app/models";
@@ -13,6 +13,7 @@ import { takeUntil } from "rxjs/operators";
 import "./ssh-key-picker.scss";
 
 @Component({
+    standalone: false,
     selector: "bl-ssh-key-picker",
     templateUrl: "ssh-key-picker.html",
     providers: [
@@ -23,7 +24,7 @@ import "./ssh-key-picker.scss";
 })
 export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
     public savedSSHKeys: List<SSHPublicKey> = List([]);
-    public sshKeyValue = new FormControl("");
+    public sshKeyValue = new UntypedFormControl("");
 
     @ViewChild("nameInput", { static: false })
     public nameInput: ElementRef;
@@ -79,7 +80,7 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
         // Do nothing
     }
 
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const valid = this.sshKeyValue.valid;
 
         if (!valid) {
