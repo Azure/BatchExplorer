@@ -17,7 +17,8 @@ extraResources:
   - "ThirdPartyNotices.txt"
   - "data"
   - "resources"
-  - "node_modules/jschardet/"
+  - from: "node_modules/jschardet"
+    to: "node_modules/jschardet"
 
 protocols:
   - name: "BatchExplorer protocol"
