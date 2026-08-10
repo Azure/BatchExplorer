@@ -13,7 +13,9 @@ const { EsbuildPlugin } = require("esbuild-loader");
 
 const MODE_DEV = "development";
 const MODE_PROD = "production";
-
+const ANALYZE_MODE = true;
+const WATCH_MODE = true;
+const LAUNCH_BROWSER = true;
 /**
  * Build a bundle which can be imported into a regular web page and used without
  * any external dependencies.

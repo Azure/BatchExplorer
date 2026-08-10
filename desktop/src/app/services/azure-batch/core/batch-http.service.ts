@@ -33,40 +33,49 @@ export class AzureBatchHttpService extends HttpService {
         options = this._addApiVersion(uri, options);
         return this.accountService.currentAccount.pipe(
             take(1),
-            flatMap((account) => {
-                const url = this._computeUrl(uri, account);
-                let obs;
-                if (account instanceof ArmBatchAccount) {
-                    obs = this._setupRequestForArm(account, options);
-                } else if (account instanceof LocalBatchAccount) {
-                    obs = this._setupRequestForSharedKey(account, method, url, options);
-                } else {
-                    throw new InvalidAccountError(`Invalid account type ${account}`);
-                }
-                return obs.pipe(
-                    flatMap((options) => {
-                        return super.request(
-                            method,
-                            url,
-                            options).pipe(
-                                retryWhen(attempts => this.retryWhen(attempts)),
-                                catchError((error) => {
-                                    if (error.status === 0) {
-                                        return throwError(new ServerError({
-                                            status: error.status,
-                                            statusText: error.statusText,
-                                            message: error.message,
-                                            code: error.name,
-                                        }));
-                                    }
-                                    const err = ServerError.fromBatchHttp(error);
-                                    return throwError(err);
-                                }),
-                            );
-                    }),
-                );
-            }),
+            flatMap((account) => this._requestWithAccount(account, method, uri, options)),
             shareReplay(1),
+        );
+    }
+
+    public requestForAccount(account: BatchAccount, method: any, uri?: any, options?: any): Observable<any> {
+        options = this._addApiVersion(uri, options);
+        return this._requestWithAccount(account, method, uri, options).pipe(
+            shareReplay(1),
+        );
+    }
+
+    private _requestWithAccount(account: BatchAccount, method: any, uri: any, options: any): Observable<any> {
+        const url = this._computeUrl(uri, account);
+        let obs;
+        if (account instanceof ArmBatchAccount) {
+            obs = this._setupRequestForArm(account, options);
+        } else if (account instanceof LocalBatchAccount) {
+            obs = this._setupRequestForSharedKey(account, method, url, options);
+        } else {
+            throw new InvalidAccountError(`Invalid account type ${account}`);
+        }
+        return obs.pipe(
+            flatMap((options) => {
+                return super.request(
+                    method,
+                    url,
+                    options).pipe(
+                        retryWhen(attempts => this.retryWhen(attempts)),
+                        catchError((error) => {
+                            if (error.status === 0) {
+                                return throwError(new ServerError({
+                                    status: error.status,
+                                    statusText: error.statusText,
+                                    message: error.message,
+                                    code: error.name,
+                                }));
+                            }
+                            const err = ServerError.fromBatchHttp(error);
+                            return throwError(err);
+                        }),
+                    );
+            }),
         );
     }
 

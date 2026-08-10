@@ -1,0 +1,391 @@
+C:\Users\m4x\BatchExplorer\desktop\package.json
+  ts: ts-node --project tsconfig.node.json --files
+  ts:fast: npm run ts -T
+  start: npm run electron:prod
+  clean: rimraf build/* dll/* src/generated/*
+  karma: cross-env NODE_OPTIONS=--openssl-legacy-provider node --max_old_space_size=4096 node_modules/karma/bin/karma
+  test: npm run test-client:coverage && npm run test-app
+  test:all: cross-env BE_ENABLE_A11Y_TESTING=true npm run test-client:coverage && npm run test-app
+  test-app:a11y: cross-env BE_ENABLE_A11Y_TESTING=true npm run test-app
+  test-app: cross-env COVERAGE=1 npm run karma -- start
+  test-app:mem: cross-env DEBUG_MEM=1 npm run test-app
+  test-app-watch: npm run karma -- start --auto-watch --no-single-run
+  test-app-watch:time: cross-env DEBUG_TIME=1 npm run test-app-watch
+  test-browser: npm run test-app
+  test-browser-watch: npm run test-app-watch
+  test-client: cross-env NODE_ENV=test node test/client/run-jasmine.js
+  test-client:coverage: nyc -e .ts -x "*.spec.ts" npm run test-client && nyc report --reporter=text-lcov > coverage.lcov
+  test-client-watch: npm run test-client -- --watch
+  test-e2e: playwright test
+  test-e2e:debug: playwright test --debug
+  test-models: npm run ts scripts/swagger/validate-models.ts
+  build-client:  tsc -p tsconfig.node.json
+  build-client:dev:  tsc -p tsconfig.node.json --noUnusedLocals false
+  build-app: npm run webpack -- --profile
+  build: npm run clean && npm run build-translations && npm run build-client && npm run build-app
+  build:clean: npm run build
+  build:package: npm run build:prod && npm run package
+  build:prod: cross-env NODE_ENV=production npm run build
+  build:test: npm run build && npm run test
+  build-translations: bux build-translations --src src --dest i18n --outputPath resources/i18n
+  watch: npm run webpack -- --watch --progress --profile
+  electron: electron build/client/main.js
+  electron:prod: cross-env NODE_ENV=production electron build/client/main.js
+  dev: concurrently --kill-others "npm run dev-server" "npm run dev-electron"
+  dev-electron: cross-env HOT=1 electron build/client/main.js
+  dev-server: npm run webpack-dev-server
+  eslint: eslint -c .eslintrc.js . --quiet
+  eslint:verbose: eslint -c .eslintrc.js .
+  stylelint: stylelint --custom-syntax postcss-scss "src/app/**/*.scss"
+  lint: npm run eslint && npm run stylelint
+  lint:fix: npm run eslint --fix && npm run stylelint
+  package: npm run ts scripts/package/package.ts
+  postinstall: npm run rebuild:app-deps && npx patch-package
+  start-publish: npm run ts scripts/publish/publish.ts
+  webpack: cross-env node --trace-deprecation --max_old_space_size=4096 node_modules/webpack/bin/webpack.js
+  webpack:stats: cross-env NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider npm run webpack -- --profile --json > coverage/webpack-stats.json
+  webpack-dev-server: cross-env NODE_OPTIONS=--openssl-legacy-provider node --trace-deprecation --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js
+  rebuild:app-deps: electron-builder install-app-deps
+  workspace:build: npm run build
+  workspace:build:clean: npm run build
+  workspace:build:desktop: npm run build
+  workspace:build:desktop:client: npm run build-client:dev
+  workspace:build:package: npm run build:package
+  workspace:build:prod: npm run build:prod
+  workspace:build:test: npm run build:test
+  workspace:build-translations: npm run build-translations
+  workspace:clean: npm run clean
+  workspace:launch:desktop: npm run dev
+  workspace:lint: npm run lint
+  workspace:lint:fix: npm run lint:fix
+  workspace:start:desktop: npm run dev-server
+  workspace:test: npm run test
+  workspace:test:desktop: npm run test
+  workspace:test:all: npm run test:all
+
+C:\Users\m4x\BatchExplorer\package.json
+  build: lerna run workspace:build --stream
+  build:clean: lerna run workspace:build:clean --stream
+  build:desktop: lerna run workspace:build:desktop --stream
+  build:desktop:client: lerna run workspace:build:desktop:client --stream
+  build:lib: lerna run workspace:build:lib --stream
+  build:web: lerna run workspace:build:web --stream
+  build:package: lerna run workspace:build:package --stream
+  build:prod: lerna run workspace:build:prod --stream
+  build:test: lerna run workspace:build:test --stream
+  build-translations: lerna run workspace:build-translations --stream
+  clean: lerna run --parallel workspace:clean --stream && bux rmrf ./Localize/out
+  gather-build-results: bux gather-build-results
+  launch: npm run -s launch:web
+  launch:desktop: lerna run --parallel workspace:launch:desktop --stream
+  launch:dev-electron: cd desktop && npm run dev-electron
+  launch:web: lerna run --parallel workspace:launch:web --stream
+  lint: prettier -c . && lerna run --parallel workspace:lint --stream && npm run -s lint:markdown
+  lint:fix: prettier -w . && lerna run --parallel workspace:lint:fix --stream && npm run -s lint:markdown
+  lint:markdown: markdownlint-cli2 "**/*.md" "#**/node_modules/**/*" "#SECURITY.md"
+  loc:build: pwsh -ExecutionPolicy Bypass -File ./Localize/build.ps1 && pwsh -ExecutionPolicy Bypass -File ./Localize/copy-translations.ps1
+  loc:restore: cd Localize && pwsh -ExecutionPolicy Bypass -File restore.ps1
+  start: npm run -s start:web
+  start:desktop: lerna run --parallel workspace:start:desktop --stream
+  start:web: lerna run --parallel workspace:start:web --stream
+  test: lerna run workspace:test --stream && npm run gather-build-results
+  test:all: lerna run workspace:test:all --stream && npm run gather-build-results
+  test:desktop: lerna run workspace:test:desktop --stream && npm run gather-build-results
+  test:lib: lerna run workspace:test:lib --stream && npm run gather-build-results
+  test:lib:all: lerna run workspace:test:lib:all --stream && npm run gather-build-results
+  test:web: lerna run workspace:test:web --stream && npm run gather-build-results
+  test:web:all: lerna run workspace:test:web:all --stream && npm run gather-build-results
+  postinstall: lerna bootstrap -- --legacy-peer-deps && node ./util/bux/check-cli-path
+  dev-setup: cd ./util/bux && npm pack --pack-destination ./build && npm install -g ./build/batch-bux-1.0.0.tgz && echo 'bux CLI tool installed'
+  watch:lib: lerna run --parallel workspace:watch:lib --stream
+
+C:\Users\m4x\BatchExplorer\packages\bonito-core\package.json
+  build: npm run build-translations && npm run compile
+  build:clean: run-s clean build
+  build:test: run-s build test
+  build-translations: bux build-translations --src src --dest i18n --outputPath resources/i18n/json --packageName bonito.core
+  compile: run-p compile:*
+  compile:esm: tsc -b ./config/tsconfig.build.json
+  compile:cjs: tsc -b ./config/tsconfig.cjs.json
+  clean: run-p clean:*
+  clean:build: bux rmrf ./build
+  clean:esm: bux rmrf ./lib
+  clean:cjs: bux rmrf ./lib-cjs
+  clean:generated: bux rmrf ./src/generated
+  test: jest
+  test:coverage: jest --collect-coverage
+  test:all: npm run test:coverage
+  test:debug: node --inspect-brk ./node_modules/.bin/jest --runInBand --watch
+  test:watch: jest --watch
+  lint: eslint . --max-warnings 0
+  watch: run-p "compile:* -- --watch --preserveWatchOutput"
+  workspace:build: npm run build
+  workspace:build:clean: npm run build:clean
+  workspace:build:desktop: npm run build
+  workspace:build:lib: npm run build
+  workspace:build:web: npm run build
+  workspace:build:package: npm run build:clean
+  workspace:build:prod: npm run build:clean
+  workspace:build:test: npm run build:test
+  workspace:build-translations: npm run build-translations
+  workspace:clean: npm run clean
+  workspace:launch:desktop: npm run watch
+  workspace:launch:web: npm run watch
+  workspace:lint: npm run lint
+  workspace:lint:fix: npm run lint -- --fix
+  workspace:start:desktop: npm run watch
+  workspace:start:web: npm run watch
+  workspace:test: npm run test
+  workspace:test:all: npm run test:all
+  workspace:test:desktop: npm run test
+  workspace:test:lib: npm run test
+  workspace:test:lib:all: npm run test:all
+  workspace:test:web: npm run test
+  workspace:test:web:all: npm run test:all
+  workspace:watch:lib: npm run watch
+
+C:\Users\m4x\BatchExplorer\packages\bonito-ui\package.json
+  build: npm run build-translations && npm run compile
+  build:clean: run-s clean build
+  build:test: run-s build test
+  bux: bux
+  build-translations: bux build-translations --src src --dest i18n --outputPath resources/i18n/json --packageName bonito.ui
+  compile: run-p compile:*
+  compile:esm: tsc -b ./config/tsconfig.build.json
+  compile:cjs: tsc -b ./config/tsconfig.cjs.json
+  clean: run-p clean:*
+  clean:build: bux rmrf ./build
+  clean:esm: bux rmrf ./lib
+  clean:cjs: bux rmrf ./lib-cjs
+  test: jest
+  test:coverage: jest --collect-coverage
+  test:all: cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage
+  test:debug: node --inspect-brk ./node_modules/.bin/jest --runInBand --watch
+  test:watch: jest --watch
+  test:a11y: cross-env BE_ENABLE_A11Y_TESTING=true npm run test
+  test:a11y:watch: cross-env BE_ENABLE_A11Y_TESTING=true npm run test:watch
+  lint: eslint . --max-warnings 0
+  watch: run-p "compile:* -- --watch --preserveWatchOutput"
+  workspace:build: npm run build
+  workspace:build:clean: npm run build:clean
+  workspace:build:desktop: npm run build
+  workspace:build:lib: npm run build
+  workspace:build:web: npm run build
+  workspace:build:package: npm run build:clean
+  workspace:build:prod: npm run build:clean
+  workspace:build:test: npm run build:test
+  workspace:build-translations: npm run build-translations
+  workspace:clean: npm run clean
+  workspace:launch:desktop: npm run watch
+  workspace:launch:web: npm run watch
+  workspace:lint: npm run lint
+  workspace:lint:fix: npm run lint -- --fix
+  workspace:start:desktop: npm run watch
+  workspace:start:web: npm run watch
+  workspace:test: npm run test
+  workspace:test:all: npm run test:all
+  workspace:test:desktop: npm run test
+  workspace:test:lib: npm run test
+  workspace:test:lib:all: npm run test:all
+  workspace:test:web: npm run test
+  workspace:test:web:all: npm run test:all
+  workspace:watch:lib: npm run watch
+
+C:\Users\m4x\BatchExplorer\packages\playground\package.json
+  build: npm run build-translations && npm run compile
+  build:clean: run-s clean build
+  build:test: run-s build test
+  bux: bux
+  build-translations: bux build-translations --src src --dest i18n --outputPath resources/i18n/json --packageName lib.playground
+  compile: run-p compile:*
+  compile:esm: tsc -b ./config/tsconfig.build.json
+  compile:cjs: tsc -b ./config/tsconfig.cjs.json
+  clean: run-p clean:*
+  clean:build: bux rmrf ./build
+  clean:esm: bux rmrf ./lib
+  clean:cjs: bux rmrf ./lib-cjs
+  clean:generated: bux rmrf ./src/ui-playground/generated
+  test: jest
+  test:coverage: jest --collect-coverage
+  test:all: cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage
+  test:debug: node --inspect-brk ./node_modules/.bin/jest --runInBand --watch
+  test:watch: jest --watch
+  lint: eslint . --max-warnings 0
+  watch: run-p "compile:* -- --watch --preserveWatchOutput"
+  workspace:watch:lib: npm run watch
+  workspace:build: npm run build
+  workspace:build:clean: npm run build:clean
+  workspace:build:web: npm run build
+  workspace:build:lib: npm run build
+  workspace:build:package: npm run build:clean
+  workspace:build:prod: npm run build:clean
+  workspace:build:test: npm run build:test
+  workspace:build-translations: npm run build-translations
+  workspace:clean: npm run clean
+  workspace:launch:desktop: npm run watch
+  workspace:launch:web: npm run watch
+  workspace:lint: npm run lint
+  workspace:lint:fix: npm run lint --fix
+  workspace:start:desktop: npm run watch
+  workspace:start:web: npm run watch
+  workspace:test: npm run test
+  workspace:test:all: npm run test:all
+  workspace:test:desktop: npm run test
+  workspace:test:web: npm run test
+  workspace:test:web:all: npm run test:all
+
+C:\Users\m4x\BatchExplorer\packages\react\package.json
+  build: npm run build-translations && npm run compile
+  build:clean: run-s clean build
+  build:test: run-s build test
+  bux: bux
+  build-translations: bux build-translations --src src --dest i18n --outputPath resources/i18n/json --packageName lib.react
+  compile: run-p compile:*
+  compile:esm: tsc -b ./config/tsconfig.build.json
+  compile:cjs: tsc -b ./config/tsconfig.cjs.json
+  clean: run-p clean:*
+  clean:build: bux rmrf ./build
+  clean:esm: bux rmrf ./lib
+  clean:cjs: bux rmrf ./lib-cjs
+  clean:generated: bux rmrf ./src/ui-react/generated
+  test: jest
+  test:coverage: jest --collect-coverage
+  test:all: cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage
+  test:debug: node --inspect-brk ./node_modules/.bin/jest --runInBand --watch
+  test:watch: jest --watch
+  test:a11y: cross-env BE_ENABLE_A11Y_TESTING=true npm run test
+  test:a11y:watch: cross-env BE_ENABLE_A11Y_TESTING=true npm run test:watch
+  lint: eslint . --max-warnings 0
+  watch: run-p "compile:* -- --watch --preserveWatchOutput"
+  workspace:build: npm run build
+  workspace:build:clean: npm run build:clean
+  workspace:build:desktop: npm run build
+  workspace:build:lib: npm run build
+  workspace:build:web: npm run build
+  workspace:build:package: npm run build:clean
+  workspace:build:prod: npm run build:clean
+  workspace:build:test: npm run build:test
+  workspace:build-translations: npm run build-translations
+  workspace:clean: npm run clean
+  workspace:launch:desktop: npm run watch
+  workspace:launch:web: npm run watch
+  workspace:lint: npm run lint
+  workspace:lint:fix: npm run lint -- --fix
+  workspace:start:desktop: npm run watch
+  workspace:start:web: npm run watch
+  workspace:test: npm run test
+  workspace:test:all: npm run test:all
+  workspace:test:desktop: npm run test
+  workspace:test:lib: npm run test
+  workspace:test:lib:all: npm run test:all
+  workspace:test:web: npm run test
+  workspace:test:web:all: npm run test:all
+  workspace:watch:lib: npm run watch
+
+C:\Users\m4x\BatchExplorer\packages\service\package.json
+  build: npm run build-translations && npm run compile
+  build:clean: run-s clean build
+  build:test: run-s build test
+  build-translations: bux build-translations --src src --dest i18n --outputPath resources/i18n/json --packageName lib.service
+  compile: run-p compile:*
+  compile:esm: tsc -b ./config/tsconfig.build.json
+  compile:cjs: tsc -b ./config/tsconfig.cjs.json
+  clean: run-p clean:*
+  clean:build: bux rmrf ./build
+  clean:esm: bux rmrf ./lib
+  clean:cjs: bux rmrf ./lib-cjs
+  generate:arm-client: autorest --typescript swagger/README.md
+  generate:client: pwsh -ExecutionPolicy Bypass -File ./generate-client.ps1
+  test: jest
+  test:coverage: jest --collect-coverage
+  test:all: npm run test:coverage
+  test:debug: node --inspect-brk ./node_modules/.bin/jest --runInBand --watch
+  test:watch: jest --watch
+  lint: eslint . --max-warnings 0
+  watch: run-p "compile:* -- --watch --preserveWatchOutput"
+  workspace:build: npm run build
+  workspace:build:clean: npm run build:clean
+  workspace:build:desktop: npm run build
+  workspace:build:lib: npm run build
+  workspace:build:web: npm run build
+  workspace:build:package: npm run build:clean
+  workspace:build:prod: npm run build:clean
+  workspace:build:test: npm run build:test
+  workspace:build-translations: npm run build-translations
+  workspace:clean: npm run clean
+  workspace:launch:desktop: npm run watch
+  workspace:launch:web: npm run watch
+  workspace:lint: npm run lint
+  workspace:lint:fix: npm run lint --fix
+  workspace:start:desktop: npm run watch
+  workspace:start:web: npm run watch
+  workspace:test: npm run test
+  workspace:test:all: npm run test:all
+  workspace:test:desktop: npm run test
+  workspace:test:lib: npm run test
+  workspace:test:lib:all: npm run test:all
+  workspace:test:web: npm run test
+  workspace:test:web:all: npm run test:all
+  workspace:watch:lib: npm run watch
+
+C:\Users\m4x\BatchExplorer\util\bux\package.json
+  build: tsc -b ./config/tsconfig.build.json && node ./bin/bux chmodx ./bin/bux
+  bux: npm run build && node ./bin/bux
+  clean: rimraf ./lib && rimraf ./build
+  lint: eslint . --max-warnings 0
+  lint:fix: npm run lint --fix
+  build:clean: run-s clean build
+  prepack: npm run build:clean
+  test: jest
+  test:watch: npm test -- --watch
+  workspace:clean: npm run clean
+  workspace:lint: npm run lint
+  workspace:lint:fix: npm run lint:fix
+  workspace:test:all: npm run build:clean && npm test
+
+C:\Users\m4x\BatchExplorer\web\package.json
+  build: run-s compile bundle:dev
+  build:analyze: run-s clean compile bundle:analyze
+  build:clean: run-s clean compile bundle:dev
+  build:prod: run-s clean compile bundle:prod
+  build:test: run-s build test
+  build-translations: bux build-translations --src src --dest i18n --outputPath ./resources/i18n
+  bundle: npm run bundle:dev
+  bundle:analyze: webpack --env analyze
+  bundle:dev: webpack --env dev
+  bundle:prod: webpack
+  bux: bux
+  compile: npm run build-translations && tsc -b ./config/tsconfig.build.json
+  clean: run-p clean:*
+  clean:build: bux rmrf ./build
+  clean:esm: bux rmrf ./lib
+  clean:umd: bux rmrf ./lib-umd
+  clean:generated: bux rmrf ./src/generated
+  test: jest
+  test:coverage: jest --collect-coverage
+  test:all: cross-env BE_ENABLE_A11Y_TESTING=true npm run test:coverage
+  test:debug: node --inspect-brk ./node_modules/.bin/jest --runInBand --watch
+  test:watch: jest --watch
+  lint: eslint . --max-warnings 0
+  server: webpack-dev-server
+  start: npm run start:dev
+  start:dev: npm run clean && npm run build-translations && npm run server -- --env dev
+  start:prod: npm run clean && npm run server
+  watch: npm run compile -- --env watch
+  workspace:build: npm run build
+  workspace:build:clean: npm run build:clean
+  workspace:build:web: npm run build
+  workspace:build:package: npm run build:prod
+  workspace:build:prod: npm run build:prod
+  workspace:build:test: npm run build:test
+  workspace:build-translations: npm run build-translations
+  workspace:clean: npm run clean
+  workspace:launch:web: npm run start -- --env launch
+  workspace:lint: npm run lint
+  workspace:lint:fix: npm run lint -- --fix
+  workspace:start:web: npm run start
+  workspace:test: npm run test
+  workspace:test:all: npm run test:all
+  workspace:test:web: npm run test
+  workspace:test:web:all: npm run test:all
+

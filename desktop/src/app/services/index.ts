@@ -17,6 +17,7 @@ export * from "./http-upload-service";
 export * from "./monitoring";
 export * from "./navigator.service";
 export * from "./pinned-entity";
+export * from "./pool-bootstrap";
 export * from "./file-group.service";
 export * from "./pricing.service";
 export * from "./quota.service";

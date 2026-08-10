@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
-import { ArmBatchAccount, JobState, Pool } from "app/models";
+import { ArmBatchAccount, BatchApplication, JobState, Pool } from "app/models";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, Subject, combineLatest, forkJoin, of } from "rxjs";
-import { filter, map, publishReplay, refCount, switchMap, takeUntil } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subject, combineLatest, forkJoin, of, throwError } from "rxjs";
+import { catchError, filter, map, publishReplay, refCount, switchMap, takeUntil } from "rxjs/operators";
 import { BatchApplicationService } from "./azure-batch/batch-application/batch-application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";
@@ -118,7 +118,17 @@ export class QuotaService implements OnDestroy {
     public updateApplicationUsage() {
         const obs = this.applicationService.listAll({
             select: "id",
-        });
+        }).pipe(
+            catchError((error) => {
+                if (this.applicationService.isAutoStorageError(error)) {
+                    this._applicationUsage.next({
+                        applications: 0,
+                    });
+                    return of(List<BatchApplication>());
+                }
+                return throwError(error);
+            }),
+        );
         obs.subscribe((applications) => {
             this._applicationUsage.next({
                 applications: applications.size,

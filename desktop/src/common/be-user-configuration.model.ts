@@ -8,6 +8,25 @@ export interface BEUserConfiguration extends BatchFlaskUserConfiguration {
 
     externalBrowserAuth: boolean;
 
+    features: {
+        multiRegionPoolBootstrap: boolean,
+    };
+
+    multiRegionPoolBootstrap: {
+        scope: {
+            maxTargetPerAccount: number,
+        };
+        pool: {
+            vmSize: string,
+        };
+        execution: {
+            retryBackoffSeconds: number[],
+        };
+        policy: {
+            dedicatedOnly: boolean,
+        };
+    };
+
     subscriptions: {
         ignore: string[],
     };
@@ -42,6 +61,23 @@ export interface BEUserConfiguration extends BatchFlaskUserConfiguration {
 export const DEFAULT_BE_USER_CONFIGURATION: BEUserConfiguration = {
     entityConfiguration: {
         defaultView: EntityConfigurationView.Pretty,
+    },
+    features: {
+        multiRegionPoolBootstrap: false,
+    },
+    multiRegionPoolBootstrap: {
+        scope: {
+            maxTargetPerAccount: 20,
+        },
+        pool: {
+            vmSize: "Standard_D2s_v3",
+        },
+        execution: {
+            retryBackoffSeconds: [2, 4, 8, 16, 32],
+        },
+        policy: {
+            dedicatedOnly: true,
+        },
     },
     subscriptions: {
         ignore: [],
