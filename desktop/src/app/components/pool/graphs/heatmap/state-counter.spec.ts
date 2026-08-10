@@ -35,15 +35,17 @@ describe("Statecounter", () => {
         expect(counter.get(NodeState.offline).getValue()).toBe(1);
         expect(counter.get(NodeState.leavingPool).getValue()).toBe(0);
         expect(counter.get(NodeState.rebooting).getValue()).toBe(0);
+        expect(counter.get(NodeState.upgradingos).getValue()).toBe(0);
     });
 
     it("should update the count when updating the nodes", () => {
         nodes.shift();
         nodes.push(Fixtures.node.create({ state: NodeState.rebooting }));
         nodes.push(Fixtures.node.create({ state: NodeState.running }));
+        nodes.push(Fixtures.node.create({ state: NodeState.upgradingos }));
         const pool2 = new Pool({
             id: "pool-2", vmSize: "standard_a2",
-            targetDedicatedNodes: 10,
+            targetDedicatedNodes: 11,
         });
         counter.updateCount(List(nodes), pool2);
 
@@ -54,5 +56,6 @@ describe("Statecounter", () => {
         expect(counter.get(NodeState.offline).getValue()).toBe(1);
         expect(counter.get(NodeState.leavingPool).getValue()).toBe(0);
         expect(counter.get(NodeState.rebooting).getValue()).toBe(1);
+        expect(counter.get(NodeState.upgradingos).getValue()).toBe(1);
     });
 });
